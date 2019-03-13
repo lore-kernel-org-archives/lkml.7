@@ -2,97 +2,245 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8379C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EC9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74CCA20643
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:03:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HAIUAFIb"
+	by mail.kernel.org (Postfix) with ESMTP id C15F7206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfCMQDg (ORCPT
+        id S1726643AbfCMQFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:03:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54592 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfCMQDg (ORCPT
+        Wed, 13 Mar 2019 12:05:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43114 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725907AbfCMQFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:03:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uNI5X/3NiZwWGw9ll+SGYgUYDbq0/M8f6aJJzFdlRg8=; b=HAIUAFIbqsW3BMxa/FP5NX1sG
-        yw88chlyXN2ibo/Qu5d+gI4KxTZuL7AbNlHF0jJlGUzB21qP16G260680a2VUZLeipWU05Mn99LAu
-        PpqWc6IqgqhyIMLkJEcfN72nGVnUjHbzkIcfuVkd6VEn+tXvqAXZavNAS5s0lksDJ73gRqY7kPQ1l
-        JBqGDM9SN+rIsNP5uhBsIKXyqajBBvmyhH7qgWPZReT9+cYuPLpQDXyYo0hYgy6iZxpT1IxQlRJiI
-        3WWBkZ6SbAAmf4MBUw1zyzXRfAEkSmW5eamvKicLBu/pT0jDDL1fpCBp+a72ig51Y279e15azLyL7
-        29XFmWulA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h46Lf-0004Jg-Kg; Wed, 13 Mar 2019 16:03:19 +0000
-Date:   Wed, 13 Mar 2019 09:03:19 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Christopher Lameter <cl@linux.com>, john.hubbard@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v3 0/1] mm: introduce put_user_page*(), placeholder
- versions
-Message-ID: <20190313160319.GA15134@infradead.org>
-References: <20190306235455.26348-1-jhubbard@nvidia.com>
- <010001695b4631cd-f4b8fcbf-a760-4267-afce-fb7969e3ff87-000000@email.amazonses.com>
- <20190310224742.GK26298@dastard>
- <01000169705aecf0-76f2b83d-ac18-4872-9421-b4b6efe19fc7-000000@email.amazonses.com>
- <20190312103932.GD1119@iweiny-DESK2.sc.intel.com>
- <20190312221113.GF23020@dastard>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312221113.GF23020@dastard>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 13 Mar 2019 12:05:13 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DG4Iqr129255
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:05:12 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r73g4dcv7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:05:11 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Wed, 13 Mar 2019 16:05:08 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Mar 2019 16:05:06 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2DG54D416318718
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 13 Mar 2019 16:05:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D9E0AA404D;
+        Wed, 13 Mar 2019 16:05:04 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 77020A4040;
+        Wed, 13 Mar 2019 16:05:04 +0000 (GMT)
+Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.152.224.140])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Mar 2019 16:05:04 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: [PATCH v5 0/7] vfio: ap: AP Queue Interrupt Control
+Date:   Wed, 13 Mar 2019 17:04:57 +0100
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19031316-0008-0000-0000-000002CC2DB8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031316-0009-0000-0000-000022385317
+Message-Id: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=872 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903130114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 09:11:13AM +1100, Dave Chinner wrote:
-> On Tue, Mar 12, 2019 at 03:39:33AM -0700, Ira Weiny wrote:
-> > IMHO I don't think that the copy_file_range() is going to carry us through the
-> > next wave of user performance requirements.  RDMA, while the first, is not the
-> > only technology which is looking to have direct access to files.  XDP is
-> > another.[1]
-> 
-> Sure, all I doing here was demonstrating that people have been
-> trying to get local direct access to file mappings to DMA directly
-> into them for a long time. Direct Io games like these are now
-> largely unnecessary because we now have much better APIs to do
-> zero-copy data transfer between files (which can do hardware offload
-> if it is available!).
+This patch implement PQAP/AQIC interception in KVM.
 
-And that is just the file to file case.  There are tons of other
-users of get_user_pages, including various drivers that do large
-amounts of I/O like video capture.  For them it makes tons of sense
-to transfer directly to/from a mmap()ed file.
+To implement this we need to add a new structure, vfio_ap_queue,to be
+able to retrieve the mediated device associated with a queue and specific
+values needed to register/unregister the interrupt structures:
+ - APQN: to be able to issue the commands and search for queue structures
+ - NIB : to unpin the NIB on clear IRQ
+ - ISC : to unregister with the GIB interface
+ - MATRIX: a pointer to the matrix mediated device
+ - LIST: the list_head to handle the vfio_queue life cycle
+
+Having this structure and the list management greatly ease the handling
+of the AP queues and diminues the LOCs needed in the vfio_ap driver by
+more than 150 lines in comparison with the previous version.
+
+
+0) Queues life cycle
+
+vfio_ap_queues are created on probe
+
+We define one bucket on the matrix device to store the free vfio_ap_queues,
+the queues not assign to any matrix mediated device.
+
+We define one bucket on each matrix mediated device to hold the
+vfio_ap_queues belonging to it.
+
+vfio_ap_queues are deleted on remove
+
+This makes the search for a queue easy and the detection of assignent
+incoherency obvious (the queue is not avilable) and simplifies assignment.
+
+
+1) Phase 1, probe and remove from vfio_ap_queue
+
+The vfio_ap_queue structures are dynamically allocated and setup
+when a queue is probed by the ap_vfio_driver.
+The vfio_ap_queue is linked to the ap_queue device as the driver data.
+
+The new The vfio_ap_queue is put on a free_list belonging to the
+matrix device.
+
+The vfio_ap_queue are free during remove.
+
+
+2) Phase 2, assignment of vfio_ap_queue to a mediated device
+
+When a APID is assigned we look for APQI already assigned to
+the matrix mediated device and associate all the queue with the
+APQN = (APID,APQI) to the mediated device by adding them to
+the mediated device queue list.
+We do the same when a APQI is assigned.
+
+If any queue with a matching APQN can not be found on the matrix
+device free list it means it is already associated to another matrix
+mediated device and no queue is added to the matrix mediated device.
+
+3) Phase 3, starting the guest
+
+When the VFIO device is opened the PQAP callback and a pointer to
+the matrix mediated device are set inside KVM during the open callback.
+
+When the device is closed or if a queue is removed, the vfio_ap_queue is
+dissociated from the mediated device.
+
+
+4) Phase 3 intercepting the PQAP/AQIC instruction
+
+On interception of the PQAP/AQIC instruction, the interception code
+makes sure the pqap_hook is initialized and allowed to be called
+and call it.
+Otherwise it reports the usual -EOPNOTSUPP return code to let
+QEMU handle the fault.
+  
+the pqap callback search for the queue asociated with the APQN
+stored in the register 0, setting the code to "illegal APQN"
+if the vfio_ap_queue can not be found.
+
+Depending on the "i" bit of the register 1, the pqap callback
+setup or clear the interruption by calling the host format PQAP/AQIC
+instruction.
+When seting up the interruption it uses the NIB and the guest ISC
+provided by the guest and the host ISC provided by the registration
+to the GIB code, pin the NIB and also stores ISC and NIB inside
+the vfio_ap_queue structure.
+When clearing the interrupt it retrieves the host ISC to unregister
+with the GIB code and unpin the NIB.
+
+We take care when enabling GISA that the guest may have issued a
+reset and will not need to disable the interuptions before
+re-enabling interruptions.
+
+To make sure that the module holding the callback does not disapear
+we use a module reference counting in the structure containing the
+callback.
+
+
+5) Phase 4 clean dissociation from the mediated device on remove
+
+On removing of the AP device the remove callback is called.
+To be sure that the guest will not access the queue anymore
+we clear the APID CRYCB bit.
+Cleaning the APID, over the APQI, is chosen because the architecture
+specifies that only the APID can be dynamically changed outside IPL.
+
+To be sure that the IRQ is cleared before the GISA is free we use
+the KVM reference counting, raise it in open, lower it on release.
+
+
+6) Associated QEMU patch
+
+There is a QEMU patch which is needed to enable the PQAP/AQIC
+facility in the guest.
+
+Posted in qemu-devel@nongnu.org as:
+Message-Id: <1550146494-21085-1-git-send-email-pmorel@linux.ibm.com>
+
+
+
+Pierre Morel (7):
+  s390: ap: kvm: add PQAP interception for AQIC
+  s390: ap: new vfio_ap_queue structure
+  vfio: ap: register IOMMU VFIO notifier
+  s390: ap: setup relation betwen KVM and mediated device
+  s390: ap: implement PAPQ AQIC interception in kernel
+  s390: ap: Cleanup on removing the AP device
+  s390: ap: kvm: Enable PQAP/AQIC facility for the guest
+
+ arch/s390/include/asm/kvm_host.h      |   8 +
+ arch/s390/kvm/priv.c                  |  62 +++
+ arch/s390/tools/gen_facilities.c      |   1 +
+ drivers/s390/crypto/ap_bus.h          |   1 +
+ drivers/s390/crypto/vfio_ap_drv.c     |  69 +++-
+ drivers/s390/crypto/vfio_ap_ops.c     | 727 +++++++++++++++++++++++-----------
+ drivers/s390/crypto/vfio_ap_private.h |  20 +
+ 7 files changed, 658 insertions(+), 230 deletions(-)
+
+-- 
+2.7.4
+
+Changelog from v4:
+- Add forgotten locking for vfio_get_queue() in pqap callback
+  (Conny / Halil)
+- Add KVM reference counting to make sure GISA is free after IRQ
+  (Christian / Halil)
+- Take care that ISC = 0 is a valid ISC
+  (Halil)
+- Integrate the PQAP call back in a structure with module owner
+  reference counting to make sure the callback does not disappear.
+- Restrict functionality to always open KVM before opening the
+  VFIO device.
+- Search all devices in the vfio_ap driver list when associating
+  a queue to a mediated device
+  (Halil / Tony)
+- Get vfio_ap_free_irq() out of vfio_ap_mdev_reset_queue() to call
+  it always, whatever the result of the reset.
+  (Tony)
+
+Changelog from v3:
+- Associating the vfio_queues during APID/APQI assign
+  (Tony)
+- Dissociating the vfio_queues during APID/APQI unassign
+  (Tony)
+- Taking care that the guest can directly disable the interrupt
+  by using a RESET
+  (Halil)
+- Remove the patch creating the matrix bus to accelerate its
+  integration in Linux stable
+  (Christian)
+
