@@ -2,119 +2,100 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF5DC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C501C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0DB620693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEC220693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fOWlZGWE"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=lucaceresoli.net header.i=@lucaceresoli.net header.b="h/rzoTk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfCMPft (ORCPT
+        id S1726442AbfCMPfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:35:49 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:46767 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfCMPfs (ORCPT
+        Wed, 13 Mar 2019 11:35:54 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:56553 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725870AbfCMPfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:35:48 -0400
-Received: by mail-ua1-f66.google.com with SMTP id j8so791492uae.13
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 08:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5fkZ1R4sQEMo0zPoMAkzRXZhF754qG1NDK5UVkeCsEw=;
-        b=fOWlZGWEVn0MCbN4pbgoP2zKmNPjl5jA0QapjarN8eTRKf1QL/YmUvEDHR3ddi8zwy
-         v8z/Bo777HByP3RdljwTtmsASTcwt5WD/WhJ2GvsthQfGrJZUz91fNQPjKwJjhFAYG5U
-         DIFR23GoaBYbVRf4aCoccz6Ld4KrTT7rjPcZY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5fkZ1R4sQEMo0zPoMAkzRXZhF754qG1NDK5UVkeCsEw=;
-        b=Pff65nVn5Wmh92RyU+acPBTlnuwK7QkOHDVU+aDKgEr/pJlP5Ij2AKh1wdlcU0wzTG
-         PdVUdWexULvUVSQZfM7RGtK+ODOh2tp0mqzXjYwyhaAcp9il0LmBgfgbrlhFJU/1Km7k
-         E0jbW3TLWuJbFXyFLEAP2Ht966sclaB7ULbaRgDy6P/rRf8gDZAy4GVJ86ZHuUMODIv2
-         ZmyxPBwRQZM+TZHLq1qp8Wnkws6T1JNDaZJWTGRdkgBqTxQ0U/TCxmzFsj3MZp+vjVyx
-         vx+Vf96Ce/Kd6VoyRHF6CvelL08meCoMOumCM4uo36orCXECh1nabSkpvAWWHF0Y0uTu
-         sd1g==
-X-Gm-Message-State: APjAAAVZGhMuuhabuCxQr8DddBTvust27439BD/MHAHf0zVh30BUtg99
-        CkDu0CGV8jUzDyTsig4dcHNlzwVmFgA=
-X-Google-Smtp-Source: APXvYqxwy7K8PQFAl+1F+cb8fEg6Xyu2wTHFCNX+insQjBqWMjqR6Cd1d/EvuxwRWv7l/hyRECJJYw==
-X-Received: by 2002:ab0:6513:: with SMTP id w19mr23253555uam.19.1552491346627;
-        Wed, 13 Mar 2019 08:35:46 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id q12sm4907220vkf.42.2019.03.13.08.35.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 08:35:45 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id e126so1068438vse.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 08:35:45 -0700 (PDT)
-X-Received: by 2002:a67:fa94:: with SMTP id f20mr7091272vsq.172.1552491344698;
- Wed, 13 Mar 2019 08:35:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <00000000000016f7d40583d79bd9@google.com> <CAGXu5jKjWwYk5N3mOH1A8fXX_0BT3r1At_3MzN9M+Ckg5irKXg@mail.gmail.com>
- <20190313143503.GD9108@quack2.suse.cz>
-In-Reply-To: <20190313143503.GD9108@quack2.suse.cz>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 13 Mar 2019 08:35:33 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+_Ao_CU8DG9nrTbx5ioDkJUFw0cGcLBMWnvNLe_eFJ4A@mail.gmail.com>
-Message-ID: <CAGXu5j+_Ao_CU8DG9nrTbx5ioDkJUFw0cGcLBMWnvNLe_eFJ4A@mail.gmail.com>
-Subject: Re: WARNING: bad usercopy in fanotify_read
-To:     Jan Kara <jack@suse.cz>
-Cc:     syzbot <syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, cai@lca.pw,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 Mar 2019 11:35:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lucaceresoli.net; s=default; h=Message-Id:Date:Subject:Cc:To:From:Sender:
+        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9x0SdaQ/UR+3QVnWRcnw2G400A9yUOYAdhgvPFq06vk=; b=h/rzoTk95VkT4Vpqheg18ALaKL
+        HSvLxoHmv+1j5a4SUxeeUvftyZ00mAaKrbgrKIyKvOr1Ngi3fXbJX1o03f3PYeviWWA/6s/x3tpmH
+        EJ5F6cbCf3vjeix7/aiY4VP7P2OHRe+MfA2lkpzJ6BjN/QP2dNTumJ2q+ojDkxb3kvzw=;
+Received: from [109.168.11.45] (port=48894 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.91)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1h45v3-007FSg-Pi; Wed, 13 Mar 2019 16:35:49 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        Luca Ceresoli <luca@lucaceresoli.net>
+Subject: [PATCH 1/2] drm/doc: fix kerneldoc syntax
+Date:   Wed, 13 Mar 2019 16:35:36 +0100
+Message-Id: <20190313153537.22654-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.17.1
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 7:35 AM Jan Kara <jack@suse.cz> wrote:
-> On Tue 12-03-19 23:26:22, Kees Cook wrote:
-> > On Mon, Mar 11, 2019 at 1:42 PM syzbot
-> > <syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com> wrote:
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ee410b200000
-> > > [...]
-> > > ------------[ cut here ]------------
-> > > Bad or missing usercopy whitelist? Kernel memory exposure attempt detected
-> > > from SLAB object 'fanotify_event' (offset 40, size 8)!
-> > > [...]
-> > >   copy_to_user include/linux/uaccess.h:151 [inline]
-> > >   copy_fid_to_user fs/notify/fanotify/fanotify_user.c:236 [inline]
-> > >   copy_event_to_user fs/notify/fanotify/fanotify_user.c:294 [inline]
-> >
-> > Looks like this is the fh/ext_fh union in struct fanotify_fid, field
-> > "fid" in struct fanotify_event. Given that "fid" is itself in a union
-> > against a struct path, I think instead of a whitelist using
-> > KMEM_CACHE_USERCOPY(), this should just use a bounce buffer to avoid
-> > leaving a whitelist open for path or ext_fh exposure.
->
-> Do you mean to protect it from a situation when some other code (i.e. not
-> copy_fid_to_user()) would be tricked into copying ext_fh containing slab
-> pointer to userspace?
+The probe() reference renders incorrectly and without a link, fix it.
 
-Yes. That's the design around the usercopy hardening. The
-"whitelisting" is either via code (with a bounce buffer, so only the
-specific "expected" code path can copy it), with a
-kmem_create_usercopy() range marking (generally best for areas that
-are not unions or when bounce buffers would be too big/slow), or with
-implicit whitelisting (via a constant copy size that cannot change at
-run-time, like: copy_to_user(dst, src, 6)).
+Also fix a typo reported by checkpatch in the context lines.
 
-In this case, since there are multiple unions in place and
-FANOTIFY_INLINE_FH_LEN is small, it seemed best to go with a bounce
-buffer.
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+---
+ drivers/gpu/drm/drm_drv.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index 381581b01d48..585f5d079046 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -264,13 +264,13 @@ void drm_minor_release(struct drm_minor *minor)
+  * DOC: driver instance overview
+  *
+  * A device instance for a drm driver is represented by &struct drm_device. This
+- * is initialized with drm_dev_init(), usually from bus-specific ->probe()
+- * callbacks implemented by the driver. The driver then needs to initialize all
+- * the various subsystems for the drm device like memory management, vblank
+- * handling, modesetting support and intial output configuration plus obviously
+- * initialize all the corresponding hardware bits. Finally when everything is up
+- * and running and ready for userspace the device instance can be published
+- * using drm_dev_register().
++ * is initialized with drm_dev_init(), usually from bus-specific
++ * &drm_driver.probe() callbacks implemented by the driver. The driver then
++ * needs to initialize all the various subsystems for the drm device like memory
++ * management, vblank handling, modesetting support and initial output
++ * configuration plus obviously initialize all the corresponding hardware
++ * bits. Finally when everything is up and running and ready for userspace the
++ * device instance can be published using drm_dev_register().
+  *
+  * There is also deprecated support for initalizing device instances using
+  * bus-specific helpers and the &drm_driver.load callback. But due to
 -- 
-Kees Cook
+2.17.1
+
