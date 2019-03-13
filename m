@@ -2,372 +2,287 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939B9C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBF0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FFD21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="k5bTII6m"
+	by mail.kernel.org (Postfix) with ESMTP id 15F192171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfCMIa5 (ORCPT
+        id S1727003AbfCMIco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 04:30:57 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8146 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbfCMIa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 04:30:56 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44K4mY5PmKz9tyrd;
-        Wed, 13 Mar 2019 09:30:53 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=k5bTII6m; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id N3m-iwTTaOPI; Wed, 13 Mar 2019 09:30:53 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44K4mY3r7mz9tyrc;
-        Wed, 13 Mar 2019 09:30:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1552465853; bh=F5JTSj0EKRNSYJFj7ms1WVqX0kxTHelYwQrRn+ttTuU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=k5bTII6moSKy1bvEZpgKzp45cE5OMvSh80wVVbSsxZenQC4SGvLD0ItR4BdS3KXpa
-         RcY2D8NSbYmJEP3tS10maYnCcPndp6V+IjMGJq0LIej/+3Pz+Z5FbrnCBqplasblxK
-         Afo+7uSrMtZif1LKhx2wz/iXspSvfnfWT4RSD6jI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E0238B8F5;
-        Wed, 13 Mar 2019 09:30:54 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id WLtVhVvMuPXD; Wed, 13 Mar 2019 09:30:54 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B842F8B8EE;
-        Wed, 13 Mar 2019 09:30:53 +0100 (CET)
-Subject: Re: [PATCH RFC v3 18/18] powerpc: KASAN for 64bit Book3E
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Daniel Axtens <dja@axtens.net>
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com
-References: <cover.1552428161.git.christophe.leroy@c-s.fr>
- <3e97aba429c769bd99ccd8d6f16eda98f7d378a7.1552428161.git.christophe.leroy@c-s.fr>
- <62ba1b83-cc75-82a4-a1c0-5a54464c963b@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <c3631234-66ac-7de7-cd35-d6dbd6ad8938@c-s.fr>
-Date:   Wed, 13 Mar 2019 09:30:53 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 13 Mar 2019 04:32:44 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49125 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfCMIcn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 04:32:43 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h3zJM-00067H-Uf; Wed, 13 Mar 2019 09:32:28 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h3zJK-0001sW-VA; Wed, 13 Mar 2019 09:32:26 +0100
+Date:   Wed, 13 Mar 2019 09:32:26 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/5] pwm: Add i.MX TPM PWM driver support
+Message-ID: <20190313083226.qgnldzd6pc3arooc@pengutronix.de>
+References: <1552288273-31028-1-git-send-email-Anson.Huang@nxp.com>
+ <1552288273-31028-3-git-send-email-Anson.Huang@nxp.com>
+ <20190311092644.a2x53zgxv2iseqao@pengutronix.de>
+ <AM6PR0402MB391160F820907ABE8ECA4C26F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <62ba1b83-cc75-82a4-a1c0-5a54464c963b@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM6PR0402MB391160F820907ABE8ECA4C26F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any, the build is clean, see 
-http://kisskb.ellerman.id.au/kisskb/head/3e97aba429c769bd99ccd8d6f16eda98f7d378a7/
+Hello,
 
-Only s390 defconfig and powerpc randconfig failed for unrelated reasons.
+On Wed, Mar 13, 2019 at 07:28:24AM +0000, Anson Huang wrote:
+> > On Mon, Mar 11, 2019 at 07:16:16AM +0000, Anson Huang wrote:
+> > > +
+> > >  config PWM_JZ4740
+> > >  	tristate "Ingenic JZ47xx PWM support"
+> > >  	depends on MACH_INGENIC
+> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile index
+> > > 9c676a0..64e036c 100644
+> > > --- a/drivers/pwm/Makefile
+> > > +++ b/drivers/pwm/Makefile
+> > > @@ -18,6 +18,7 @@ obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
+> > >  obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
+> > >  obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
+> > >  obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
+> > > +obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+> > >  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+> > >  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
+> > >  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
+> > > diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+> > new
+> > > file mode 100644 index 0000000..a53256a
+> > > --- /dev/null
+> > > +++ b/drivers/pwm/pwm-imx-tpm.c
+> > > @@ -0,0 +1,277 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright 2018-2019 NXP.
+> > > + */
+> > 
+> > Please add a link to the reference manual to the header.
+> 
+> I checked the NXP website, looks like i.MX7ULP reference manual is NOT
+> published yet, should be published very soon.
 
-Christophe
+ok.
 
-Le 13/03/2019 à 08:02, Christophe Leroy a écrit :
-> Why does snowpatch reports not being able to apply it to any branch ?
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/clk.h>
+> > > +#include <linux/err.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/pwm.h>
+> > > +#include <linux/slab.h>
+> > > +
+> > > +#define TPM_GLOBAL	0x8
+> > > +#define TPM_SC		0x10
+> > > +#define TPM_CNT		0x14
+> > > +#define TPM_MOD		0x18
+> > > +#define TPM_C0SC	0x20
+> > > +#define TPM_C0V		0x24
+> > > +
+> > > +#define SC_CMOD		3
+> > 
+> > This seems to be an offset, why not defining it as BIT(3) instead?
 > 
-> I built the serie on top of merge branch, but it also cleanly applies on 
-> next branch.
+> SC_CMOD field as 2 bits, I will use below in V2 patch set:
 > 
-> Could it be because the begining of the series is names 'v10' while the 
-> end of it is 'RFC v3' as it comes from Daniel's RFC v2 ?
+> #define TPM_SC_CMOD_SHIFT       3
+> #define TPM_SC_CMOD_MASK        (0x3 << TPM_SC_CMOD_SHIFT)
+
+I suggest
+
+	#define PWM_IMX_TPM_SC_CMOD	GENMASK(1, 0)
+
+instead. See include/linux/bitfield.h for details.
+Also note that "TPM" isn't a great prefix given that we have:
+
+	$ git ls-files | grep -c tpm
+	82
+
+. Even though PWM_IMX_TPM is longer I think it's worth the extra bytes.
+Then if you use pwm_imx_tpm als prefix for your function it's obvious
+that they all belong together. For extra credits also adapt the driver
+name to match.
+
+> > > +		ret = clk_prepare_enable(tpm->clk);
+> > > +		if (ret) {
+> > > +			dev_err(chip->dev,
+> > > +				"failed to prepare or enable clk %d\n", ret);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	val = readl(tpm->base + TPM_SC);
+> > > +	val &= ~TPM_SC_PS_MASK;
+> > > +	val |= div;
+> > > +	writel(val, tpm->base + TPM_SC);
+> > 
+> > If the unit ran with (say) div == 5 and a high duty cycle before and for the
+> > new configuration you need div == 6 with a low duty cycle, can it happen
+> > here that the output uses the new div value already with the high duty cycle?
+> > If so, this is bad.
 > 
-> Christophe
+> As the TPM counter is shared between 2 channels, so I will make this prescale setting
+> to be initialized ONLY once, ONLY first channel will config it, this makes things simple
+> and the other channel should use same prescale value as first channel and ONLY adjust
+> its own duty cycle and polarity etc..
+
+So the two channels have to share the period length? If so please note
+this in the header of the driver like it was done in
+https://www.spinics.net/lists/linux-pwm/msg09149.html (search for
+"Limitations"). You also need some logic to assert that setting the 2nd
+channel doesn't modify the first (if the first is in use).
+
+> > > +	period_cycles = c;
+> > > +	c *= duty_ns;
+> > > +	do_div(c, period_ns);
+> > > +	duty_cycles = c;
+> > > +
+> > > +	writel(period_cycles & TPM_MOD_MOD_MASK, tpm->base +
+> > TPM_MOD);
+> > 
+> > Don't you need to add pwm->hwpwm * TPM_CHn_ADDR_OFFSET to the
+> > register offset here? And if not, I assume this affects the other PWMs
+> > provided by this hardware unit which is bad.
 > 
-> Le 12/03/2019 à 23:16, Christophe Leroy a écrit :
->> From: Daniel Axtens <dja@axtens.net>
->>
->> Wire up KASAN. Only outline instrumentation is supported.
->>
->> The KASAN shadow area is mapped into vmemmap space:
->> 0x8000 0400 0000 0000 to 0x8000 0600 0000 0000.
->> To do this we require that vmemmap be disabled. (This is the default
->> in the kernel config that QorIQ provides for the machine in their
->> SDK anyway - they use flat memory.)
->>
->> Only the kernel linear mapping (0xc000...) is checked. The vmalloc and
->> ioremap areas (also in 0x800...) are all mapped to the zero page. As
->> with the Book3S hash series, this requires overriding the memory <->
->> shadow mapping.
->>
->> Also, as with both previous 64-bit series, early instrumentation is not
->> supported.  It would allow us to drop the check_return_arch_not_ready()
->> hook in the KASAN core, but it's tricky to get it set up early enough:
->> we need it setup before the first call to instrumented code like 
->> printk().
->> Perhaps in the future.
->>
->> Only KASAN_MINIMAL works.
->>
->> Tested on e6500. KVM, kexec and xmon have not been tested.
->>
->> The test_kasan module fires warnings as expected, except for the
->> following tests:
->>
->>   - Expected/by design:
->> kasan test: memcg_accounted_kmem_cache allocate memcg accounted object
->>
->>   - Due to only supporting KASAN_MINIMAL:
->> kasan test: kasan_stack_oob out-of-bounds on stack
->> kasan test: kasan_global_oob out-of-bounds global variable
->> kasan test: kasan_alloca_oob_left out-of-bounds to left on alloca
->> kasan test: kasan_alloca_oob_right out-of-bounds to right on alloca
->> kasan test: use_after_scope_test use-after-scope on int
->> kasan test: use_after_scope_test use-after-scope on array
->>
->> Thanks to those who have done the heavy lifting over the past several
->> years:
->>   - Christophe's 32 bit series: 
->> https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-February/185379.html
->>   - Aneesh's Book3S hash series: https://lwn.net/Articles/655642/
->>   - Balbir's Book3S radix series: 
->> https://patchwork.ozlabs.org/patch/795211/
->>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
->> Cc: Balbir Singh <bsingharora@gmail.com>
->> Signed-off-by: Daniel Axtens <dja@axtens.net>
->> [- Removed EXPORT_SYMBOL of the static key
->>   - Fixed most checkpatch problems
->>   - Replaced kasan_zero_page[] by kasan_early_shadow_page[]
->>   - Reduced casting mess by using intermediate locals
->>   - Fixed build failure on pmac32_defconfig]
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/Kconfig                         |  1 +
->>   arch/powerpc/Kconfig.debug                   |  2 +-
->>   arch/powerpc/include/asm/kasan.h             | 71 
->> ++++++++++++++++++++++++++++
->>   arch/powerpc/mm/Makefile                     |  2 +
->>   arch/powerpc/mm/kasan/Makefile               |  1 +
->>   arch/powerpc/mm/kasan/kasan_init_book3e_64.c | 50 ++++++++++++++++++++
->>   6 files changed, 126 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/powerpc/mm/kasan/kasan_init_book3e_64.c
->>
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index d9364368329b..51ef9fac6c5d 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -174,6 +174,7 @@ config PPC
->>       select HAVE_ARCH_AUDITSYSCALL
->>       select HAVE_ARCH_JUMP_LABEL
->>       select HAVE_ARCH_KASAN            if PPC32
->> +    select HAVE_ARCH_KASAN            if PPC_BOOK3E_64 && 
->> !SPARSEMEM_VMEMMAP
->>       select HAVE_ARCH_KGDB
->>       select HAVE_ARCH_MMAP_RND_BITS
->>       select HAVE_ARCH_MMAP_RND_COMPAT_BITS    if COMPAT
->> diff --git a/arch/powerpc/Kconfig.debug b/arch/powerpc/Kconfig.debug
->> index 61febbbdd02b..fc1f5fa7554e 100644
->> --- a/arch/powerpc/Kconfig.debug
->> +++ b/arch/powerpc/Kconfig.debug
->> @@ -369,5 +369,5 @@ config PPC_FAST_ENDIAN_SWITCH
->>   config KASAN_SHADOW_OFFSET
->>       hex
->> -    depends on KASAN
->> +    depends on KASAN && PPC32
->>       default 0xe0000000
->> diff --git a/arch/powerpc/include/asm/kasan.h 
->> b/arch/powerpc/include/asm/kasan.h
->> index 296e51c2f066..ae410f0e060d 100644
->> --- a/arch/powerpc/include/asm/kasan.h
->> +++ b/arch/powerpc/include/asm/kasan.h
->> @@ -21,12 +21,15 @@
->>   #define KASAN_SHADOW_START    (KASAN_SHADOW_OFFSET + \
->>                    (PAGE_OFFSET >> KASAN_SHADOW_SCALE_SHIFT))
->> +#ifdef CONFIG_PPC32
->>   #define KASAN_SHADOW_OFFSET    ASM_CONST(CONFIG_KASAN_SHADOW_OFFSET)
->>   #define KASAN_SHADOW_END    0UL
->>   #define KASAN_SHADOW_SIZE    (KASAN_SHADOW_END - KASAN_SHADOW_START)
->> +#endif /* CONFIG_PPC32 */
->> +
->>   #ifdef CONFIG_KASAN
->>   void kasan_early_init(void);
->>   void kasan_mmu_init(void);
->> @@ -36,5 +39,73 @@ static inline void kasan_init(void) { }
->>   static inline void kasan_mmu_init(void) { }
->>   #endif
->> +#ifdef CONFIG_PPC_BOOK3E_64
->> +#include <asm/pgtable.h>
->> +#include <linux/jump_label.h>
->> +
->> +/*
->> + * We don't put this in Kconfig as we only support KASAN_MINIMAL, and
->> + * that will be disabled if the symbol is available in Kconfig
->> + */
->> +#define KASAN_SHADOW_OFFSET    ASM_CONST(0x6800040000000000)
->> +
->> +#define KASAN_SHADOW_SIZE    (KERN_VIRT_SIZE >> 
->> KASAN_SHADOW_SCALE_SHIFT)
->> +
->> +extern struct static_key_false powerpc_kasan_enabled_key;
->> +extern unsigned char kasan_early_shadow_page[];
->> +
->> +static inline bool kasan_arch_is_ready_book3e(void)
->> +{
->> +    if (static_branch_likely(&powerpc_kasan_enabled_key))
->> +        return true;
->> +    return false;
->> +}
->> +#define kasan_arch_is_ready kasan_arch_is_ready_book3e
->> +
->> +static inline void *kasan_mem_to_shadow_book3e(const void *ptr)
->> +{
->> +    unsigned long addr = (unsigned long)ptr;
->> +
->> +    if (addr >= KERN_VIRT_START && addr < KERN_VIRT_START + 
->> KERN_VIRT_SIZE)
->> +        return kasan_early_shadow_page;
->> +
->> +    return (void *)(addr >> KASAN_SHADOW_SCALE_SHIFT) + 
->> KASAN_SHADOW_OFFSET;
->> +}
->> +#define kasan_mem_to_shadow kasan_mem_to_shadow_book3e
->> +
->> +static inline void *kasan_shadow_to_mem_book3e(const void *shadow_addr)
->> +{
->> +    /*
->> +     * We map the entire non-linear virtual mapping onto the zero 
->> page so if
->> +     * we are asked to map the zero page back just pick the beginning 
->> of that
->> +     * area.
->> +     */
->> +    if (shadow_addr >= (void *)kasan_early_shadow_page &&
->> +        shadow_addr < (void *)(kasan_early_shadow_page + PAGE_SIZE))
->> +        return (void *)KERN_VIRT_START;
->> +
->> +    return (void *)(((unsigned long)shadow_addr - 
->> KASAN_SHADOW_OFFSET) <<
->> +            KASAN_SHADOW_SCALE_SHIFT);
->> +}
->> +#define kasan_shadow_to_mem kasan_shadow_to_mem_book3e
->> +
->> +static inline bool kasan_addr_has_shadow_book3e(const void *ptr)
->> +{
->> +    unsigned long addr = (unsigned long)ptr;
->> +
->> +    /*
->> +     * We want to specifically assert that the addresses in the 
->> 0x8000...
->> +     * region have a shadow, otherwise they are considered by the kasan
->> +     * core to be wild pointers
->> +     */
->> +    if (addr >= KERN_VIRT_START && addr < (KERN_VIRT_START + 
->> KERN_VIRT_SIZE))
->> +        return true;
->> +
->> +    return (ptr >= kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
->> +}
->> +#define kasan_addr_has_shadow kasan_addr_has_shadow_book3e
->> +
->> +#endif /* CONFIG_PPC_BOOK3E_64 */
->> +
->>   #endif /* __ASSEMBLY */
->>   #endif
->> diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
->> index 80382a2d169b..fc49231f807c 100644
->> --- a/arch/powerpc/mm/Makefile
->> +++ b/arch/powerpc/mm/Makefile
->> @@ -8,9 +8,11 @@ ccflags-$(CONFIG_PPC64)    := $(NO_MINIMAL_TOC)
->>   CFLAGS_REMOVE_slb.o = $(CC_FLAGS_FTRACE)
->>   KASAN_SANITIZE_ppc_mmu_32.o := n
->> +KASAN_SANITIZE_fsl_booke_mmu.o := n
->>   ifdef CONFIG_KASAN
->>   CFLAGS_ppc_mmu_32.o          += -DDISABLE_BRANCH_PROFILING
->> +CFLAGS_fsl_booke_mmu.o        += -DDISABLE_BRANCH_PROFILING
->>   endif
->>   obj-y                := fault.o mem.o pgtable.o mmap.o \
->> diff --git a/arch/powerpc/mm/kasan/Makefile 
->> b/arch/powerpc/mm/kasan/Makefile
->> index 6577897673dd..f8f164ad8ade 100644
->> --- a/arch/powerpc/mm/kasan/Makefile
->> +++ b/arch/powerpc/mm/kasan/Makefile
->> @@ -3,3 +3,4 @@
->>   KASAN_SANITIZE := n
->>   obj-$(CONFIG_PPC32)           += kasan_init_32.o
->> +obj-$(CONFIG_PPC_BOOK3E_64)   += kasan_init_book3e_64.o
->> diff --git a/arch/powerpc/mm/kasan/kasan_init_book3e_64.c 
->> b/arch/powerpc/mm/kasan/kasan_init_book3e_64.c
->> new file mode 100644
->> index 000000000000..f116c211d83c
->> --- /dev/null
->> +++ b/arch/powerpc/mm/kasan/kasan_init_book3e_64.c
->> @@ -0,0 +1,50 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#define DISABLE_BRANCH_PROFILING
->> +
->> +#include <linux/kasan.h>
->> +#include <linux/printk.h>
->> +#include <linux/memblock.h>
->> +#include <linux/sched/task.h>
->> +#include <asm/pgalloc.h>
->> +
->> +DEFINE_STATIC_KEY_FALSE(powerpc_kasan_enabled_key);
->> +
->> +static void __init kasan_init_region(struct memblock_region *reg)
->> +{
->> +    void *start = __va(reg->base);
->> +    void *end = __va(reg->base + reg->size);
->> +    unsigned long k_start, k_end, k_cur;
->> +
->> +    if (start >= end)
->> +        return;
->> +
->> +    k_start = (unsigned long)kasan_mem_to_shadow(start);
->> +    k_end = (unsigned long)kasan_mem_to_shadow(end);
->> +
->> +    for (k_cur = k_start; k_cur < k_end; k_cur += PAGE_SIZE) {
->> +        void *va = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
->> +
->> +        map_kernel_page(k_cur, __pa(va), PAGE_KERNEL);
->> +    }
->> +    flush_tlb_kernel_range(k_start, k_end);
->> +}
->> +
->> +void __init kasan_init(void)
->> +{
->> +    struct memblock_region *reg;
->> +
->> +    for_each_memblock(memory, reg)
->> +        kasan_init_region(reg);
->> +
->> +    /* map the zero page RO */
->> +    map_kernel_page((unsigned long)kasan_early_shadow_page,
->> +            __pa(kasan_early_shadow_page), PAGE_KERNEL_RO);
->> +
->> +    /* Turn on checking */
->> +    static_branch_inc(&powerpc_kasan_enabled_key);
->> +
->> +    /* Enable error messages */
->> +    init_task.kasan_depth = 0;
->> +    pr_info("KASAN init done (64-bit Book3E)\n");
->> +}
->>
+> The MOD register is shared between different channels, ONLY 1 register there.
+> This register will be same as SC, ONLY configured ONCE by first channel.
+> 
+> > 
+> > > +	writel(duty_cycles & TPM_MOD_MOD_MASK, tpm->base +
+> > > +	       TPM_C0V + pwm->hwpwm * TPM_CHn_ADDR_OFFSET);
+> > > +
+> > > +	/* if pwm is not enabled, disable clk after setting */
+> > > +	if (!pwm_is_enabled(pwm))
+> > > +		clk_disable_unprepare(tpm->clk);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int tpm_pwm_enable(struct pwm_chip *chip, struct pwm_device
+> > > +*pwm) {
+> > > +	struct tpm_pwm_chip *tpm = to_tpm_pwm_chip(chip);
+> > > +	int ret;
+> > > +	u32 val;
+> > > +
+> > > +	ret = clk_prepare_enable(tpm->clk);
+> > > +	if (ret) {
+> > > +		dev_err(chip->dev,
+> > > +			"failed to prepare or enable clk %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * To enable a tpm channel, CPWMS = 0, MSnB:MSnA = 0x0,
+> > > +	 * for TPM normal polarity ELSnB:ELSnA = 2b'10,
+> > > +	 * inverse ELSnB:ELSnA = 2b'01
+> > > +	 */
+> > > +	val = readl(tpm->base + TPM_C0SC + pwm->hwpwm * TPM_CHn_ADDR_OFFSET);
+
+You could make it obvious which channels are shared and which have one
+instance per pwm by doing:
+
+	#define PWM_IMX_TPM_C0SC(hwid)	(0x20 + hwid * 4)
+
+> > > +	val |= pwm->state.polarity ? ELSnA : ELSnB;
+> > > +
+> > > +	writel(val, tpm->base + TPM_C0SC + pwm->hwpwm *
+> > > +TPM_CHn_ADDR_OFFSET);
+> > > +
+> > > +	/* start the counter */
+> > > +	val = readl(tpm->base + TPM_SC);
+> > > +	val |= 0x1 << SC_CMOD;
+> > > +	writel(val, tpm->base + TPM_SC);
+> > 
+> > If tpm_pwm_enable is called for the first PWM provided by the hardware,
+> > how does this writel affect the second one?
+> 
+> I will make the TPM counter enabled for every channel enabled, if ONLY disabled
+> when both channels are disabled.
+
+So you have to make sure that:
+
+ - if you disable one channel while the other is still running, just set
+   the duty cycle to zero to not interfere with the other
+ - if you enable one channel while the other is still off/unused, make
+   sure that other channel doesn't start to wiggle.
+
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int tpm_pwm_remove(struct platform_device *pdev) {
+> > > +	struct tpm_pwm_chip *tpm = platform_get_drvdata(pdev);
+> > > +
+> > > +	return pwmchip_remove(&tpm->chip);
+> > > +}
+> > > +
+> > > +static int __maybe_unused tpm_pwm_suspend(struct device *dev) {
+> > > +	struct tpm_pwm_chip *tpm = dev_get_drvdata(dev);
+> > > +
+> > > +	clk_disable_unprepare(tpm->clk);
+> > 
+> > If the PWM is in use, it shouldn't stop on suspend.
+> 
+> I think PWM should be disabled when suspend, if a device is suspended, but PWM
+> is still enabled, we will see backlight is enabled. This is weird. Unless the backlight
+> driver will guarantee that pwm is disabled before suspend?
+
+No, on suspend it's the responsibility of the backlight driver to
+disable the pwm. Otherwise the PWM changes its behaviour without the
+consumer's consent which depending on the purpose of the PWM is bad.
+ 
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
