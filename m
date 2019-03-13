@@ -2,126 +2,116 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A7BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF560C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84B220693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3D620693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:40:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KgpbwLjH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O7xVoJzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfCMTjZ (ORCPT
+        id S1727145AbfCMTkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:39:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40680 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfCMTjY (ORCPT
+        Wed, 13 Mar 2019 15:40:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38906 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfCMTkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:39:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mkAEJ6osON4cSSNuJ8mxtyGzpNSZBltB7dt4tPBVi9g=; b=KgpbwLjHM6V8njnyaCm0cmoXB
-        2bvSK+juXv3zR861JbkUiHZBwry8kN3ETgAqPCmhYwwGqdfD8yE7yNYz9Rv55bSo9TFGTSWTB5ML5
-        ZDwJfdJwdzM5Gy3tKHhcPVHxBbwXjfI27yxyL9GmhVE5bbYYocpLS8qbcmwa0j6QKtbRA2eI3S5dD
-        dPm43VyA1lvfgFHh72xuPjqGpWWr7N/EN7MXaRLxpmnQ6G6wZa1mfoOCPbD+B0W0EUxlbHWddWWOR
-        YCvOLCbi3v/P53FmGVIczlW2xTLDXjoIw4MqD6Rc8nogu+bDFCkZTipXbc1b+nHDZGtabvU2GUod9
-        4uJ/0Nlzg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h49ih-0007sD-DM; Wed, 13 Mar 2019 19:39:19 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A9FE69826C0; Wed, 13 Mar 2019 20:39:16 +0100 (CET)
-Date:   Wed, 13 Mar 2019 20:39:16 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190313193916.GQ2482@worktop.programming.kicks-ass.net>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190313135238.GC5922@hirez.programming.kicks-ass.net>
- <20190313155954.jse2tyn5iqxm6wle@e110439-lin>
+        Wed, 13 Mar 2019 15:40:08 -0400
+Received: by mail-pf1-f193.google.com with SMTP id n125so2094365pfn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:40:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=snc6Ork/CbnW4aA+r4q79osqVivb9WQcalZI9jap9gg=;
+        b=O7xVoJzWE1v+zkAKfm6mI3UNTFfkHJZ5INYqgJkoN0ngJb/KOHAhTfJ4WLcKi4tydE
+         HmIfV/EWx+4OSZLqjZys++/4XRo8wDdYG0KFcWS8neMu0z1C28tfsDqZ7wc3T4Ixg9Fp
+         t/InlYoObDlv+ANWezKsPx+BigM/t5gphefKWS5GH4LrKlpAD3YaxV89Gpf5j6SWcDp8
+         m7G51OY9kyZl+HSPbHCFDHS0hzjjSfShJ+trSc/CoyLSP16jNoNWdmG2sAc97cxts+gt
+         xgLBvyMo9r5sXbbD58unycsZBMP0lL7TGiD6CxRYxC3vp7w0WddOuRef0yZOEnOHgHvn
+         ir7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=snc6Ork/CbnW4aA+r4q79osqVivb9WQcalZI9jap9gg=;
+        b=ci0lVjIt6/9cZz1XVBjcT46PUHpeOyfUEK53OmdGhJOEBhWc7eLtAyuq4n04Nh2g9p
+         TuVv7tDpujyTxI1K2+UN/zpTckSStOnwbvmxuDXumZivYxePxu1qbURw0e4T8vxV9IwW
+         fiuwl8gRr0DG4FM3HfB+r77bOii5pDT+QRfsce9hgTv1CqgY5ErCIXMUyjSDgDw3zK2H
+         0kxaWKZr8Jkao7KME+WMHME3I4cl/lwKd2GkrKEplFZs9oeNb8ltZY5zhbzhNAMYuW/S
+         MbirSF6+hXVHU0OuycFUgc6n2IXZTCW3eY2SvMseu0WmTkcschS2dH8oBxF4rBcMvgsy
+         ckPw==
+X-Gm-Message-State: APjAAAU3vCwq7IQL/1sa+trIowd3071Bv0jVFj2Da/31NDOcJ2N5fQQl
+        7toKpD1VIy38IFu7diu1O1A/Ig==
+X-Google-Smtp-Source: APXvYqxDmArVyp8k+FmTaBseTMT9ZD2T2Y4XtWqxT59tGvT0RaBPdteJaIsXLmkmPW8Md7hauqJMWw==
+X-Received: by 2002:a63:fb0b:: with SMTP id o11mr24119027pgh.222.1552506007745;
+        Wed, 13 Mar 2019 12:40:07 -0700 (PDT)
+Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:ad22:1cbb:d8fa:7d55])
+        by smtp.googlemail.com with ESMTPSA id c19sm11427006pgc.45.2019.03.13.12.40.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 12:40:06 -0700 (PDT)
+Subject: Re: [PATCH] percpu/module resevation: change resevation size iff
+ X86_VSMP is set
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Dennis Zhou <dennis@kernel.org>, Eial Czerwacki <eial@scalemp.com>,
+        tj@kernel.org, linux-kernel@vger.kernel.org,
+        Shai Fultheim <shai@scalemp.com>,
+        Oren Twaig <oren@scalemp.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+References: <1548071251-1849-1-git-send-email-eial@scalemp.com>
+ <a7eff2ed-0e80-edae-2a97-a3fdab2d05f5@google.com>
+ <20190301203455.GA97188@dennisz-mbp.dhcp.thefacebook.com>
+ <c72402f2-967e-cd56-99d8-9139c9e7f267@google.com>
+ <010001693b404440-248fa987-624c-4587-940b-56e2ed4226d9-000000@email.amazonses.com>
+From:   Barret Rhoden <brho@google.com>
+Message-ID: <85726648-82f3-6b6b-a749-03c4159e78f3@google.com>
+Date:   Wed, 13 Mar 2019 15:40:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313155954.jse2tyn5iqxm6wle@e110439-lin>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <010001693b404440-248fa987-624c-4587-940b-56e2ed4226d9-000000@email.amazonses.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 03:59:54PM +0000, Patrick Bellasi wrote:
-> On 13-Mar 14:52, Peter Zijlstra wrote:
+Hi -
 
-> Because of backetization, we potentially end up tracking tasks with
-> different requested clamp values in the same bucket.
+On 03/01/2019 04:54 PM, Christopher Lameter wrote:
+> On Fri, 1 Mar 2019, Barret Rhoden wrote:
 > 
-> For example, with 20% bucket size, we can have:
->   Task1: util_min=25%
->   Task2: util_min=35%
-> accounted in the same bucket.
-
-> > Given all that, what is to stop the bucket value to climbing to
-> > uclamp_bucket_value(+1)-1 and staying there (provided there's someone
-> > runnable)?
+>> I'm not familiar with VSMP - how bad is it to use L1 cache alignment instead
+>> of 4K page alignment?  Maybe some structures can use the smaller alignment?
+>> Or maybe have VSMP require SRCU-using modules to be built-in?
 > 
-> Nothing... but that's an expected consequence of bucketization.
-
-No, it is not.
-
-> > Why are we doing this... ?
+> It is very expensive. VMSP exchanges 4K segments via RDMA between servers
+> to build a large address space and run a kernel in the large address
+> space. Using smaller segments can cause a lot of
+> "cacheline" bouncing (meaning transfers of 4K segments back and forth
+> between servers).
 > 
-> You can either decide to:
-> 
->  a) always boost tasks to just the bucket nominal value
->     thus always penalizing both Task1 and Task2 of the example above
 
-This is the expected behaviour. When was the last time your histogram
-did something like b?
+Given that these are large machines, would it be OK to statically 
+reserve 64K on them for modules' percpu data?
 
->  b) always boost tasks to the bucket "max" value
->     thus always overboosting both Task1 and Task2 of the example above
-> 
-> The solution above instead has a very good property: in systems
-> where you have only few and well defined clamp values we always
-> provide the exact boost.
-> 
-> For example, if your system requires only 23% and 47% boost values
-> (totally random numbers), then you can always get the exact boost
-> required using just 3 bucksts or ~33% size each.
-> 
-> In systems where you don't know which boost values you will have, you
-> can still defined the maximum overboost granularity you accept for
-> each task by just tuning the number of clamp groups. For example, with
-> 20 groups you can have a 5% max overboost.
+The bug that led me to here was from someone running on a non-VSMP 
+machine but had that config set.  Perhaps we make it more clear in the 
+Kconfig option to not set it on other machines.  That might make it less 
+likely anyone on a non-VSMP machine pays the 64K overhead.
 
-Maybe, but this is not a direct concequence of buckets, but an
-additional heuristic that might work well in this case.
+Are there any other alternatives?  Not using static SRCU in any code 
+that could be built as a module seems a little harsh.
 
-Maybe split this out in a separate patch? So start with the trivial
-bucket, and then do this change on top with the above few paragraphs as
-changelog?
+Thanks,
+
+Barret
+
