@@ -1,197 +1,208 @@
 Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2BEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA692C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D5521019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552517902;
-	bh=2ahqxAgvfZGqlCeryB/iuAaGlSF0aUs1b7MGXuNWKyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xcn/0lYeuTIEeBUKAuebsjpus+NvhE7w8PTkFPKKEyXdpBqbU7FDf1kWUowMLMddd
-	 gKeYFlvxud5kRZcozzhGY5pl4f6VRUbonpj2aCE8B2YWKisYK/dLYNMBEg+GAc2A2P
-	 EDKKJuZ1qRoQi9SCwISf9RqyuQa0N6xgiQ8Re4sw=
+	by mail.kernel.org (Postfix) with ESMTP id 639302146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:58:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R5S4yBdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfCMW6U (ORCPT
+        id S1727129AbfCMW61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbfCMW6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:58:20 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CACE21019;
-        Wed, 13 Mar 2019 22:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552517898;
-        bh=2ahqxAgvfZGqlCeryB/iuAaGlSF0aUs1b7MGXuNWKyg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lt9XB/wJKnFDwzyJHNljLPkyXxWz8LkXF96MbFZG/gZ6x32ToTzb8GypgszUxGLbs
-         +QInpBgBqyS0KkbXy23D6JpSs9dejuX7QCEFBNLMLCPc5DZO9nQ/l4091JqB0P1J9s
-         DwKnFZTZT9xJysxOp/wRmx0HZo2GOVz/9cKuEQuY=
-Date:   Wed, 13 Mar 2019 15:58:17 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, Amir Goldstein <amir73il@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Lawrence <paullawrence@google.com>
-Subject: Re: overlayfs vs. fscrypt
-Message-ID: <20190313225816.GG10169@gmail.com>
-References: <20190313164439.GF672@mit.edu>
- <1552499104.3022.44.camel@HansenPartnership.com>
- <20190313185826.GA4685@mit.edu>
- <1552504672.3022.59.camel@HansenPartnership.com>
- <20190313195713.GC10169@gmail.com>
- <1552507566.3022.65.camel@HansenPartnership.com>
- <20190313202519.GD10169@gmail.com>
- <1552511069.3022.77.camel@HansenPartnership.com>
- <20190313221325.GE10169@gmail.com>
- <1552516183.2808.14.camel@HansenPartnership.com>
+        Wed, 13 Mar 2019 18:58:27 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:39615 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfCMW60 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 18:58:26 -0400
+Received: by mail-vs1-f67.google.com with SMTP id w14so2088300vso.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 15:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Pw4Vuq3TzOLDE/NhyBJ4D931rldDgs2N1sir0Z7lN90=;
+        b=R5S4yBdhd04EqoZz/cIf1yuuOss5j9AlEZBodoAKxgsceG1zk9W/hAvs4hI+7kuztr
+         XCtMp6PzfPvvm+zEk+lh0GQoCoFH+B8mCITEdO3j3YBFyQYeflFnBeimcrRjJiBFmXkj
+         9bvrYvKNnX/M1dk9biTc7iJLjZxls2k/uzrs0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Pw4Vuq3TzOLDE/NhyBJ4D931rldDgs2N1sir0Z7lN90=;
+        b=udk4AMFJby3oIEZSANXOsviZQ8ETC3gskdsQRAHns2a00Y1Sk4YoEjODwvupxrs7QA
+         liy3hpxd09QdQJHEHgxAht+JqdQqHNOnEBBSKRvggT8gdQp3rO3JzaWQqNXBky5KZZbp
+         WdUgFx64o8exZQHwDkkHmeL/CKeX8lQ5hN9Y8GFDAeaEhfPXoO78Bo7Jz+NVNsOm8DkK
+         m1XvBGkI+bX3EXyrj1fn7gLosvK3qaMFR1Fbe+4Tce/xDkO+qxe19kjZH65uBLxcTEBE
+         JdAeDhjqS4xPn2c/I0kqLLo0YP1GCdVS2w47ipVOZT/IGMr2DJMcRx0pQ9C7vURFKXpW
+         qjGg==
+X-Gm-Message-State: APjAAAU59mcEytqFcjuLdzD2waXJ1vbQ+aB1a4OpztlVn5RYUs9+6B9A
+        BURr2+dcdTcnKQ5QosjTMtrWwLlXIrU=
+X-Google-Smtp-Source: APXvYqzcVfwbQwqUw6D4ITwq5xRUwLfWogVHdhtulZhyfrsOLj39hRfw0ES5jXnSOx2poaO/bHm9VA==
+X-Received: by 2002:a67:cb19:: with SMTP id b25mr25040683vsl.145.1552517904455;
+        Wed, 13 Mar 2019 15:58:24 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id w68sm6155589vkw.9.2019.03.13.15.58.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 15:58:23 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id u6so2085062vso.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 15:58:23 -0700 (PDT)
+X-Received: by 2002:a67:ed0c:: with SMTP id l12mr6241086vsp.66.1552517902631;
+ Wed, 13 Mar 2019 15:58:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552516183.2808.14.camel@HansenPartnership.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190312173248.13490-1-alisaidi@amazon.com> <20190312173248.13490-3-alisaidi@amazon.com>
+In-Reply-To: <20190312173248.13490-3-alisaidi@amazon.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 13 Mar 2019 15:58:10 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com>
+Message-ID: <CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in mmap_base
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Anthony Liguori <aliguori@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 03:29:43PM -0700, James Bottomley wrote:
-> On Wed, 2019-03-13 at 15:13 -0700, Eric Biggers wrote:
-> > On Wed, Mar 13, 2019 at 02:04:29PM -0700, James Bottomley wrote:
-> > > On Wed, 2019-03-13 at 13:25 -0700, Eric Biggers wrote:
-> > > > On Wed, Mar 13, 2019 at 01:06:06PM -0700, James Bottomley wrote:
-> > > > > On Wed, 2019-03-13 at 12:57 -0700, Eric Biggers wrote:
-> > > 
-> > > [...]
-> > > > > > fscrypt would allow the data to be stored encrypted on the
-> > > > > > local disk, so it's protected against offline compromise of
-> > > > > > the disk.
-> > > > > 
-> > > > > Container images are essentially tars of the overlays.  They
-> > > > > only become actual filesystems when instantiated at
-> > > > > runtime.  The current encrypted container image is an overlay
-> > > > > or set of overlays which is tarred then encrypted.  So to
-> > > > > instantiate it is decrypted then untarred.
-> > > > > 
-> > > > > The thing I was wondering about was whether instead of a tar
-> > > > > encrypt we could instead produce an encrypted image from a
-> > > > > fscrypt filesystem.
-> > > > > 
-> > > > 
-> > > > Why do you care whether the container image is encrypted on the
-> > > > local disk, when you're extracting it in plaintext onto the local
-> > > > disk anyway each time it runs? Even after the runtime files are
-> > > > "deleted", they may still be recoverable from the disk.  Are you
-> > > > using shred and BLKSECDISCARD, and a non-COW filesystem?
-> > > > 
-> > > > Now, if you wanted to avoid writing the plaintext to disk
-> > > > entirely (and thereby use encryption to actually achieve a useful
-> > > > security property that can't be achieved through file
-> > > > permissions), fscrypt is a good solution for that.
-> > > 
-> > > OK let's start with a cloud and container 101: A container is an
-> > > exactly transportable IaaS environment containing an
-> > > application.  The format for the exact transport is the "container
-> > > image" I've been describing (layered tar file set deployed with
-> > > overlays).  These images are usually stored in cloud based
-> > > registries which may or may not have useful access controls.  I
-> > > take it the reason for image encryption to protect confidentiality
-> > > within the registry is obvious.
-> > > 
-> > > Because of the exact transport, the deployment may be on my laptop,
-> > > on my test system or in some type of public or private cloud.  In
-> > > all cases bar the laptop, I won't actually own the physical system
-> > > which ends up deploying the container.  So in exchange for security
-> > > guarantees from the physical system owner, I agree to turn over my
-> > > decryption key and possibly a cash payment.  One of these
-> > > guarantees is usually that they shred the key after use and that
-> > > they deploy a useful key escrow system like vault or keyprotect to
-> > > guard it even while the decryption is being done.
-> > 
-> > 
-> > > Another is that all traces of the container be shredded after the
-> > > execution is finished.
-> > 
-> > Well, sounds like that's not the case currently even with an
-> > encrypted container image, because the actual runtime files are not
-> > encrypted on disk.
-> 
-> Shredding means destroying all trace including in the on-disk image. 
-> However, one problem with the current implementation is there's a
-> window between container run and container stop where the unencrypted
-> files are in memory and on local disk.  Access or cockup in that window
-> can leak confidential data.
+On Tue, Mar 12, 2019 at 10:33 AM Ali Saidi <alisaidi@amazon.com> wrote:
+>
+> Increase mmap_base by the worst-case brk randomization so that
+> the stack and heap remain apart.
+>
+> In Linux 4.13 a change was committed that special cased the kernel ELF
+> loader when the loader is invoked directly (eab09532d400; binfmt_elf: use
+> ELF_ET_DYN_BASE only for PIE). Generally, the loader isn=E2=80=99t invoke=
+d
+> directly and this issue is limited to cases where it is, (e.g to set a
+> non-inheritable LD_LIBRARY_PATH, testing new versions of the loader). In
+> those rare cases, the loader doesn't take into account the amount of brk
+> randomization that will be applied by arch_randomize_brk(). This can
+> lead to the stack and heap being arbitrarily close to each other.
 
-Well, another problem is that it almost certainly doesn't actually work, because
-some plaintext will still be recoverable from disk or the raw flash.  Actually
-erasing data on modern filesystems and storage devices is extremely difficult.
-To start, you'd have to run BLKSECDISCARD on every single block ever written to
-disk to prepare the container, or written by the container during its execution.
+In the case of using the loader directly, brk (so helpfully identified
+as "[heap]") is allocated with the _loader_ not the binary. For
+example, with ASLR entirely disabled, you can see this more clearly:
 
-That's one reason to use storage encryption: it reduces the secure deletion
-problem to just erasing the encryption key.
+$ /bin/cat /proc/self/maps
+555555554000-55555555c000 r-xp 00000000 fd:02 34603015
+  /bin/cat
+55555575b000-55555575c000 r--p 00007000 fd:02 34603015
+  /bin/cat
+55555575c000-55555575d000 rw-p 00008000 fd:02 34603015
+  /bin/cat
+55555575d000-55555577e000 rw-p 00000000 00:00 0                          [h=
+eap]
+...
+7ffff7ff7000-7ffff7ffa000 r--p 00000000 00:00 0                          [v=
+var]
+7ffff7ffa000-7ffff7ffc000 r-xp 00000000 00:00 0                          [v=
+dso]
+7ffff7ffc000-7ffff7ffd000 r--p 00027000 fd:02 49287483
+  /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffd000-7ffff7ffe000 rw-p 00028000 fd:02 49287483
+  /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffe000-7ffff7fff000 rw-p 00000000 00:00 0
+7ffffffde000-7ffffffff000 rw-p 00000000 00:00 0                          [s=
+tack]
 
-> 
-> >   Encrypting the runtime files using fscrypt with an ephemeral key
-> > would be useful here.  IOW, randomly generate an encryption key when
-> > the container starts, never store it anywhere, and wipe it when the
-> > container stops.
-> > 
-> > Note that this is separate from the container *image* encryption.
-> 
-> Actually, that was my original thought: it needn't be.  If fscrypt can
-> usefully add runtime security, then we could have the encrypted layer
-> be simply an fscrypt image ... I presume without the key we can create
-> a tar image of an fscrypt that is encrypted and would still be visible
-> on untar if we did have the key?  So the encrypted layer would be a tar
-> of the fscrypt filesystem without the key.
-> 
+$ /lib/x86_64-linux-gnu/ld-2.27.so /bin/cat /proc/self/maps
+...
+7ffff7bcc000-7ffff7bd4000 r-xp 00000000 fd:02 34603015
+  /bin/cat
+7ffff7bd4000-7ffff7dd3000 ---p 00008000 fd:02 34603015
+  /bin/cat
+7ffff7dd3000-7ffff7dd4000 r--p 00007000 fd:02 34603015
+  /bin/cat
+7ffff7dd4000-7ffff7dd5000 rw-p 00008000 fd:02 34603015
+  /bin/cat
+7ffff7dd5000-7ffff7dfc000 r-xp 00000000 fd:02 49287483
+  /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7fb2000-7ffff7fd6000 rw-p 00000000 00:00 0
+7ffff7ff7000-7ffff7ffa000 r--p 00000000 00:00 0                          [v=
+var]
+7ffff7ffa000-7ffff7ffc000 r-xp 00000000 00:00 0                          [v=
+dso]
+7ffff7ffc000-7ffff7ffd000 r--p 00027000 fd:02 49287483
+  /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffd000-7ffff7ffe000 rw-p 00028000 fd:02 49287483
+  /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffe000-7ffff8020000 rw-p 00000000 00:00 0                          [h=
+eap]
+7ffffffde000-7ffffffff000 rw-p 00000000 00:00 0                          [s=
+tack]
 
-fscrypt doesn't support backup and restore without the key, so no you can't do
-that.  But there wouldn't be much benefit for doing it that way anyway, since
-you'd still have to untar the container image each time the container is
-started, then re-tar it each time the container is stopped.
+So I think changing this globally isn't the right solution (normally
+brk is between text and mmap). Adjusting the mmap base padding means
+we lose even more memory space. Perhaps it would be better if brk
+allocation would be placed before the mmap region (i.e. use
+ELF_ET_DYN_BASE). This seems to work for me:
 
-The container image could be an ext4 filesystem image containing an encrypted
-directory, in which case the container could be run directly from the image.
-But in that case, dm-crypt would be a better choice.
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 7d09d125f148..cdaa33f4a3ef 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1131,6 +1131,15 @@ static int load_elf_binary(struct linux_binprm *bprm=
+)
+        current->mm->end_data =3D end_data;
+        current->mm->start_stack =3D bprm->p;
 
-> > > considering is could I be protected against either cloud provider
-> > > cockups that might leak the image (the misconfigured backup
-> > > scenario I suggested) or malicious actions of other tenants.
-> > 
-> > If the container image is encrypted with a key not on the system,
-> > then its confidentiality is protected from anything that may happen
-> > on that system.
-> > 
-> > But if the container image encryption key *is* on the system, your
-> > container image may be leaked either accidentally or maliciously.
-> 
-> Well, yes, but that's like saying if you don't want to pick up a virus
-> from your network unplug it.  We have to look at ways of deploying the
-> filesystem and the key such that it's hard to exfiltrate ... which
-> seems to be similar to your android fscrypt use case.
-> 
++       /*
++        * When executing a loader directly (ET_DYN without Interp), move
++        * the brk area out of the mmap region (since it grows up, and may
++        * collide early with the stack growing down), and into the unused
++        * ELF_ET_DYN_BASE region.
++        */
++       if (!elf_interpreter)
++               current->mm->brk =3D current->mm->start_brk =3D ELF_ET_DYN_=
+BASE;
++
+        if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
+                current->mm->brk =3D current->mm->start_brk =3D
+                        arch_randomize_brk(current->mm);
 
-I am just stating the facts.  Storage encryption only solves a specific set of
-problems, not every problem.  There has already been a huge amount of effort
-into developing OS-level access control mechanisms in Linux, so fscrypt does not
-duplicate that; it just does storage encryption.
+$ /lib/x86_64-linux-gnu/ld-2.27.so /bin/cat /proc/self/maps
+555556de3000-555556e04000 rw-p 00000000 00:00 0                          [h=
+eap]
+7f8467da9000-7f8467f90000 r-xp 00000000 fd:01 399295
+  /lib/x86_64-linux-gnu/libc-2.27.so
+...
+7f846819a000-7f84681a2000 r-xp 00000000 fd:01 263229
+  /bin/cat
+...
+7f84685cb000-7f84685cc000 rw-p 00028000 fd:01 399286
+  /lib/x86_64-linux-gnu/ld-2.27.so
+7f84685cc000-7f84685cd000 rw-p 00000000 00:00 0
+7ffce68f8000-7ffce6919000 rw-p 00000000 00:00 0                          [s=
+tack]
+7ffce69f0000-7ffce69f3000 r--p 00000000 00:00 0                          [v=
+var]
+7ffce69f3000-7ffce69f4000 r-xp 00000000 00:00 0                          [v=
+dso]
 
-- Eric
+Does anyone see problems with this? (Note that ET_EXEC base is
+0x400000, so no collision there...)
+
+--=20
+Kees Cook
