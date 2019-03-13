@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D1EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CF1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7890A2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108C32183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491574;
-	bh=aesa2td2i33ic3PWIKNHoo7a09FX6JTx98qR67cZXVo=;
+	s=default; t=1552491577;
+	bh=WKbnbSkcRZnok2/tlU1VjPd6Z+UtIl90Rly/M6VqxAs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=IkUdNKlUz2ON/mGGQ7Ydptmwa/LuVrFULvZsFC/Roi7t6qRWXgYzLx7d+uQx+tXfi
-	 Y8opvMRKEbTiKiaWLsViQV9v1qVw8bLOoglEZnzC00yDyVKEwq+dBXJEkO3FZeRLCA
-	 Tqx5O7grruoMVxL0FLt9xWEyrTTKfZuEmo17b7+U=
+	b=Fi89Kqjwsu285QhMYgaP+olrnLVKqaT3k37ppPn8McJ5+AD8S+ByS5wDGJUUDlETL
+	 etyiz6qPh9sf5o4h960v89qc6Xph4cwTw52+VLsifwS/Onlwn99GSGEmD0GUg79esA
+	 QlbsbVCyU/nWNlfTLxGNayrdpwUEY4CV4qbL15xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfCMPjc (ORCPT
+        id S1727156AbfCMPjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:39:32 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50466 "EHLO
+        Wed, 13 Mar 2019 11:39:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50658 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfCMPj1 (ORCPT
+        with ESMTP id S1727122AbfCMPjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:27 -0400
+        Wed, 13 Mar 2019 11:39:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=gGRMQ3oTxvvCxFTpoGwbrsjypj47Q89FmVmSAxQWFAs=; b=vf1ZXP2v3pcH
-        CB3L4/6WvS356oRF/ntQMiUO4iON+5e2HYACZ4EbODjQnHtb6F1zG0H5x5vI+Mu/OLwG5nDzcSrTr
-        NvxDwsqRk817ljqt9xDINU/FvRQx8Tf6kY3zkauZJN1fjFgczPICP0nh6buf9ELgjaI+rJX3JUTmP
-        EXXqA=;
+        List-Archive; bh=0aIDkrffwpCgA4DvpFjiJJ1agnNL6ftRZG+RqbjGnIg=; b=w1BAQUqJqR+O
+        28h++9u7bjNzyjX8Gf866SH9IXGGnZU2bHgOq8Cso0btEjn/nrYJXNnHTg5K6P75mYhU/eaeg4Kex
+        UBr+lq5B8N+5EnXeSnjXHKjMxWq4F4n+mlzwz2J+0rmUghuEg8xluCxaLZRHDNdvdfs9g8tTbu9W+
+        qO05M=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45yR-0003T1-Dd; Wed, 13 Mar 2019 15:39:19 +0000
+        id 1h45yc-0003TX-U9; Wed, 13 Mar 2019 15:39:30 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id E3CA41128B97; Wed, 13 Mar 2019 15:39:18 +0000 (GMT)
+        id 9CD4D1128B98; Wed, 13 Mar 2019 15:39:30 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Steve Twiss <stwiss.opensource@diasemi.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: pv88060: Fix notifier mutex lock warning" to the regulator tree
+Subject: Applied "regulator: pv88090: Fix notifier mutex lock warning" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153918.E3CA41128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:39:18 +0000 (GMT)
+Message-Id: <20190313153930.9CD4D1128B98@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:39:30 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: pv88060: Fix notifier mutex lock warning
+   regulator: pv88090: Fix notifier mutex lock warning
 
 has been applied to the regulator tree at
 
@@ -84,10 +84,10 @@ to this mail.
 Thanks,
 Mark
 
-From f58213637206e190453e3bd91f98f535566290a3 Mon Sep 17 00:00:00 2001
+From 275513b7695a61b75b2546406ecd0f8e3d9fc8be Mon Sep 17 00:00:00 2001
 From: Steve Twiss <stwiss.opensource@diasemi.com>
-Date: Tue, 26 Feb 2019 15:42:50 +0000
-Subject: [PATCH] regulator: pv88060: Fix notifier mutex lock warning
+Date: Tue, 26 Feb 2019 15:46:55 +0000
+Subject: [PATCH] regulator: pv88090: Fix notifier mutex lock warning
 
 The mutex for the regulator_dev must be controlled by the caller of
 the regulator_notifier_call_chain(), as described in the comment
@@ -98,39 +98,39 @@ in a kernel WARN_ON_ONCE() which will dump a backtrace for the
 regulator_notifier_call_chain() when that function call is first made.
 The mutex can be controlled using the regulator_lock/unlock() API.
 
-Fixes: f307a7e9b7af ("regulator: pv88060: new regulator driver")
+Fixes: c90456e36d9c ("regulator: pv88090: new regulator driver")
 Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/pv88060-regulator.c | 4 ++++
+ drivers/regulator/pv88090-regulator.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/drivers/regulator/pv88060-regulator.c b/drivers/regulator/pv88060-regulator.c
-index 1600f9821891..810816e9df5d 100644
---- a/drivers/regulator/pv88060-regulator.c
-+++ b/drivers/regulator/pv88060-regulator.c
-@@ -244,9 +244,11 @@ static irqreturn_t pv88060_irq_handler(int irq, void *data)
- 	if (reg_val & PV88060_E_VDD_FLT) {
- 		for (i = 0; i < PV88060_MAX_REGULATORS; i++) {
+diff --git a/drivers/regulator/pv88090-regulator.c b/drivers/regulator/pv88090-regulator.c
+index 6e97cc6df2ee..90f4f907fb3f 100644
+--- a/drivers/regulator/pv88090-regulator.c
++++ b/drivers/regulator/pv88090-regulator.c
+@@ -237,9 +237,11 @@ static irqreturn_t pv88090_irq_handler(int irq, void *data)
+ 	if (reg_val & PV88090_E_VDD_FLT) {
+ 		for (i = 0; i < PV88090_MAX_REGULATORS; i++) {
  			if (chip->rdev[i] != NULL) {
-+				regulator_lock(chip->rdev[i]);
++			        regulator_lock(chip->rdev[i]);
  				regulator_notifier_call_chain(chip->rdev[i],
  					REGULATOR_EVENT_UNDER_VOLTAGE,
  					NULL);
-+				regulator_unlock(chip->rdev[i]);
++			        regulator_unlock(chip->rdev[i]);
  			}
  		}
  
-@@ -261,9 +263,11 @@ static irqreturn_t pv88060_irq_handler(int irq, void *data)
- 	if (reg_val & PV88060_E_OVER_TEMP) {
- 		for (i = 0; i < PV88060_MAX_REGULATORS; i++) {
+@@ -254,9 +256,11 @@ static irqreturn_t pv88090_irq_handler(int irq, void *data)
+ 	if (reg_val & PV88090_E_OVER_TEMP) {
+ 		for (i = 0; i < PV88090_MAX_REGULATORS; i++) {
  			if (chip->rdev[i] != NULL) {
-+				regulator_lock(chip->rdev[i]);
++			        regulator_lock(chip->rdev[i]);
  				regulator_notifier_call_chain(chip->rdev[i],
  					REGULATOR_EVENT_OVER_TEMP,
  					NULL);
-+				regulator_unlock(chip->rdev[i]);
++			        regulator_unlock(chip->rdev[i]);
  			}
  		}
  
