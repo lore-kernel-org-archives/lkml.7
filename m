@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AD9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49C1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20BB821019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F5F21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="f0obFK/B"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mUWdnzHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfCMWYE (ORCPT
+        id S1727096AbfCMWXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:24:04 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:43794 "EHLO
+        Wed, 13 Mar 2019 18:23:16 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:43754 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbfCMWXR (ORCPT
+        with ESMTP id S1727022AbfCMWXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:23:17 -0400
+        Wed, 13 Mar 2019 18:23:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1552515794; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1552515793; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=e0pVon1Vv84j3/UlcnPihsBmorwnBYTfC1SgkmVc9X0=;
-        b=f0obFK/B7C0c5aa7BLVBPxLPkHe0VaorHqp4PRjunzK2TX4rL5ZGM7q1AW85Hn0vnX+pDM
-        xN+TjhI64wWIkyfwFq8H2vyY3ZEJAbg0VgxEPSJCYpGTCFswWMW8YLiWvSBoowVVtNYu1D
-        MY9++/ehO3Ndf93oZD9U92jdkkeo+Y8=
+        bh=fXIVlsu9/altBvPbxyC58fPKEHD6uV+x9UTkdgpvmcE=;
+        b=mUWdnzHY+tLJ6p2KOup6zCKveJ6jjIiIxiawByjPdmk46HYVywe6dshuqS8/UPSnpO1jyn
+        AbnF6+CVxbVXn3XYnIzGKsAPJevL+BAgpfO3woYBwgR3/GwCQm3414zdlI8ab3uqFvQyYc
+        Qm7nQzXLVYkqXfqyPf3lIBePklsr1aI=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
@@ -43,9 +43,9 @@ To:     David Woodhouse <dwmw2@infradead.org>,
 Cc:     od@zcrc.me, Mathieu Malaterre <malat@debian.org>,
         linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 05/12] mtd: rawnand: ingenic: Use SPDX license notifiers
-Date:   Wed, 13 Mar 2019 23:22:52 +0100
-Message-Id: <20190313222259.28704-5-paul@crapouillou.net>
+Subject: [PATCH v5 04/12] mtd: rawnand: Move drivers for Ingenic SoCs to subfolder
+Date:   Wed, 13 Mar 2019 23:22:51 +0100
+Message-Id: <20190313222259.28704-4-paul@crapouillou.net>
 In-Reply-To: <20190313222259.28704-1-paul@crapouillou.net>
 References: <20190313222259.28704-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,80 +53,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use SPDX license notifiers instead of GPLv2 license text in the headers.
+Before adding support for more SoCs and seeing the number of files for
+these drivers grow, we move them to their own subfolder to keep it tidy.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
 ---
 
 Notes:
-    v2: No changes
+    v2: New patch
     
-    v3: No changes
+    v3: No change
     
-    v4: No changes
+    v4: No change
     
-    v5: No changes
+    v5: No change
 
- drivers/mtd/nand/raw/ingenic/jz4780_bch.c  | 5 +----
- drivers/mtd/nand/raw/ingenic/jz4780_bch.h  | 5 +----
- drivers/mtd/nand/raw/ingenic/jz4780_nand.c | 5 +----
- 3 files changed, 3 insertions(+), 12 deletions(-)
+ drivers/mtd/nand/raw/Kconfig                     | 14 +-------------
+ drivers/mtd/nand/raw/Makefile                    |  3 +--
+ drivers/mtd/nand/raw/ingenic/Kconfig             | 13 +++++++++++++
+ drivers/mtd/nand/raw/ingenic/Makefile            |  2 ++
+ drivers/mtd/nand/raw/{ => ingenic}/jz4740_nand.c |  0
+ drivers/mtd/nand/raw/{ => ingenic}/jz4780_bch.c  |  0
+ drivers/mtd/nand/raw/{ => ingenic}/jz4780_bch.h  |  0
+ drivers/mtd/nand/raw/{ => ingenic}/jz4780_nand.c |  0
+ 8 files changed, 17 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/mtd/nand/raw/ingenic/Kconfig
+ create mode 100644 drivers/mtd/nand/raw/ingenic/Makefile
+ rename drivers/mtd/nand/raw/{ => ingenic}/jz4740_nand.c (100%)
+ rename drivers/mtd/nand/raw/{ => ingenic}/jz4780_bch.c (100%)
+ rename drivers/mtd/nand/raw/{ => ingenic}/jz4780_bch.h (100%)
+ rename drivers/mtd/nand/raw/{ => ingenic}/jz4780_nand.c (100%)
 
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
-index c5f74ed85862..fdf483a49f7b 100644
---- a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
-+++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * JZ4780 BCH controller
-  *
-  * Copyright (c) 2015 Imagination Technologies
-  * Author: Alex Smith <alex.smith@imgtec.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2 as published
-- * by the Free Software Foundation.
-  */
+diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+index e604625e2dfa..705863c6709a 100644
+--- a/drivers/mtd/nand/raw/Kconfig
++++ b/drivers/mtd/nand/raw/Kconfig
+@@ -470,19 +470,7 @@ config MTD_NAND_NUC900
+ 	  This enables the driver for the NAND Flash on evaluation board based
+ 	  on w90p910 / NUC9xx.
  
- #include <linux/bitops.h>
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch.h b/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
-index bf4718088a3a..451e0c770160 100644
---- a/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
-+++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
-@@ -1,12 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * JZ4780 BCH controller
-  *
-  * Copyright (c) 2015 Imagination Technologies
-  * Author: Alex Smith <alex.smith@imgtec.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2 as published
-- * by the Free Software Foundation.
-  */
+-config MTD_NAND_JZ4740
+-	tristate "Support for JZ4740 SoC NAND controller"
+-	depends on MACH_JZ4740 || COMPILE_TEST
+-	depends on HAS_IOMEM
+-	help
+-	  Enables support for NAND Flash on JZ4740 SoC based boards.
+-
+-config MTD_NAND_JZ4780
+-	tristate "Support for NAND on JZ4780 SoC"
+-	depends on JZ4780_NEMC
+-	help
+-	  Enables support for NAND Flash connected to the NEMC on JZ4780 SoC
+-	  based boards, using the BCH controller for hardware error correction.
++source "drivers/mtd/nand/raw/ingenic/Kconfig"
  
- #ifndef __DRIVERS_MTD_NAND_JZ4780_BCH_H__
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
-index 22e58975f0d5..7f55358b860f 100644
---- a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
-+++ b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * JZ4780 NAND driver
-  *
-  * Copyright (c) 2015 Imagination Technologies
-  * Author: Alex Smith <alex.smith@imgtec.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2 as published
-- * by the Free Software Foundation.
-  */
- 
- #include <linux/delay.h>
+ config MTD_NAND_FSMC
+ 	tristate "Support for NAND on ST Micros FSMC"
+diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
+index 5a5a72f0793e..5552c4a9f2cf 100644
+--- a/drivers/mtd/nand/raw/Makefile
++++ b/drivers/mtd/nand/raw/Makefile
+@@ -45,8 +45,7 @@ obj-$(CONFIG_MTD_NAND_NUC900)		+= nuc900_nand.o
+ obj-$(CONFIG_MTD_NAND_MPC5121_NFC)	+= mpc5121_nfc.o
+ obj-$(CONFIG_MTD_NAND_VF610_NFC)	+= vf610_nfc.o
+ obj-$(CONFIG_MTD_NAND_RICOH)		+= r852.o
+-obj-$(CONFIG_MTD_NAND_JZ4740)		+= jz4740_nand.o
+-obj-$(CONFIG_MTD_NAND_JZ4780)		+= jz4780_nand.o jz4780_bch.o
++obj-y					+= ingenic/
+ obj-$(CONFIG_MTD_NAND_GPMI_NAND)	+= gpmi-nand/
+ obj-$(CONFIG_MTD_NAND_XWAY)		+= xway_nand.o
+ obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH)	+= bcm47xxnflash/
+diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig b/drivers/mtd/nand/raw/ingenic/Kconfig
+new file mode 100644
+index 000000000000..67806c87b2c4
+--- /dev/null
++++ b/drivers/mtd/nand/raw/ingenic/Kconfig
+@@ -0,0 +1,13 @@
++config MTD_NAND_JZ4740
++	tristate "Support for JZ4740 SoC NAND controller"
++	depends on MACH_JZ4740 || COMPILE_TEST
++	depends on HAS_IOMEM
++	help
++	  Enables support for NAND Flash on JZ4740 SoC based boards.
++
++config MTD_NAND_JZ4780
++	tristate "Support for NAND on JZ4780 SoC"
++	depends on JZ4780_NEMC
++	help
++	  Enables support for NAND Flash connected to the NEMC on JZ4780 SoC
++	  based boards, using the BCH controller for hardware error correction.
+diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
+new file mode 100644
+index 000000000000..44c2ca053d24
+--- /dev/null
++++ b/drivers/mtd/nand/raw/ingenic/Makefile
+@@ -0,0 +1,2 @@
++obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
++obj-$(CONFIG_MTD_NAND_JZ4780) += jz4780_nand.o jz4780_bch.o
+diff --git a/drivers/mtd/nand/raw/jz4740_nand.c b/drivers/mtd/nand/raw/ingenic/jz4740_nand.c
+similarity index 100%
+rename from drivers/mtd/nand/raw/jz4740_nand.c
+rename to drivers/mtd/nand/raw/ingenic/jz4740_nand.c
+diff --git a/drivers/mtd/nand/raw/jz4780_bch.c b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
+similarity index 100%
+rename from drivers/mtd/nand/raw/jz4780_bch.c
+rename to drivers/mtd/nand/raw/ingenic/jz4780_bch.c
+diff --git a/drivers/mtd/nand/raw/jz4780_bch.h b/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
+similarity index 100%
+rename from drivers/mtd/nand/raw/jz4780_bch.h
+rename to drivers/mtd/nand/raw/ingenic/jz4780_bch.h
+diff --git a/drivers/mtd/nand/raw/jz4780_nand.c b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
+similarity index 100%
+rename from drivers/mtd/nand/raw/jz4780_nand.c
+rename to drivers/mtd/nand/raw/ingenic/jz4780_nand.c
 -- 
 2.11.0
 
