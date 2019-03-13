@@ -2,193 +2,105 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF66C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3261C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C568A2177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="KaX15mB5"
+	by mail.kernel.org (Postfix) with ESMTP id A24C72177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552508809;
+	bh=0TQgH3cxUiVRtQU934+Bggt0qzA/A1qBONBdXm2VbfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nxk+fI81rlJy8Ad0zGQjRc1rIujmitcCE3urgEEeIDtqGU/aypiZVt+06386mMtwS
+	 CdNLj7jRA8sErOO28q0br4xmK14u9/o/c7SjgMbrv/iSQ29OVcRFY3S2DENYXeALP+
+	 rmfyqJjgw0KLobpF4sMxoP733YspwV4mGiN1DYRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfCMU0k (ORCPT
+        id S1727410AbfCMU0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 16:26:40 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39440 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727315AbfCMU0Z (ORCPT
+        Wed, 13 Mar 2019 16:26:48 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:35418 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbfCMU0q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 16:26:25 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p27so2700028edc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 13:26:23 -0700 (PDT)
+        Wed, 13 Mar 2019 16:26:46 -0400
+Received: by mail-yw1-f66.google.com with SMTP id s204so2595636ywg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 13:26:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=391achGSbEwlOcz+XVWozH1Rc+0QP7rUHnU2cfCzNwc=;
-        b=KaX15mB5igIUUWZAPZiEgalxtbUj0wwluQRyzctZsOEbWsvMLuMNrKMDqHmSUkCcIC
-         EjxYEa9/hMcYWsYOZ0vT8RdDrtNYks7wU7AZikdqVfMf0hrd8+OAJWZiQVgg95D5zrif
-         FFrpNfNy1dOSIcOpm6ykf+iTdYa1wSYSDDNDI=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4BTA8RcxLtQgy5J9A7f9y+R91YceT8xcqWtAvh+651A=;
+        b=LRv5XA5Sz5wTH5ZuJ8BFn7or3p9bdLZ7DeAvndL+u/+HsGuu122J+KjFdKSBNAoVuh
+         lYN6uoLgBvK6jg2vQiCPsmeaZc8UTCsqRH3JudUBLj2hIgpjGNYXlxo5Cj7snk5FoHeB
+         ZYH8FB2+NckBNJDEGVWLb3v4Fc/Oz0Qow7JoW7LnereeBqALUlzgaE+a+dQzy88/BluK
+         34WTjZqez+t7JNd0X83Z18vdsl8ygyIn6T0I3nTDFKXGYO7erdI23eASAh8djUuK/Loo
+         W3/ZH9FreIA8I0rtZnPXf/CgOXfRUcIyIJ2+4x16z3ABoj8JojVjAtLaugzlXXwASEND
+         B3ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=391achGSbEwlOcz+XVWozH1Rc+0QP7rUHnU2cfCzNwc=;
-        b=Mi28q3QGt9ZmcrqZXupjnojcYng60Xs583wF3NYo8oyAmVLF1IqN9JZMTdBS3aAr9E
-         AWd7mTHh0bm8LOMubrbHWcoLmFjSskQzuT/115S0gNhDsSty+exJAGFlt/HFqKEMytqx
-         D/TeHzYj5XckfwTnZkEImQJBuX/Av91TmLvXgf9ZW1kKcOMqRfXN6xCY2iz2H1Pno0Uj
-         oU7PDrEg0cwMPgjGN745GrD5Ff7qHf1yp/5fPaPzoEKFwbJ7Cx2hFYEwR02GanSq8mK2
-         AHSujPTSQ2NO/hiHbDgvfU0+637qjgZ1HQwIVoz9gXofXjLu9y/6dXsXDTiVxU0B9/Lf
-         YnSA==
-X-Gm-Message-State: APjAAAVaynwGwk79DB9q76AYMe17dQaT4LDcCxtl2tvVwPu3roty1xDY
-        HkSpQLW2/6xJfIOAJ+KqGhJP+g==
-X-Google-Smtp-Source: APXvYqxo34nX/yvPeKfKsjxlXoLQsPsg6Z49sS7OtuM8hFIOIE2Jx6+qAVJ254lkSYlnNBjPP4xrGw==
-X-Received: by 2002:a50:b613:: with SMTP id b19mr8854964ede.214.1552508783213;
-        Wed, 13 Mar 2019 13:26:23 -0700 (PDT)
-Received: from prevas-ravi.prevas.se (ip-5-186-119-202.cgn.fibianet.dk. [5.186.119.202])
-        by smtp.gmail.com with ESMTPSA id m32sm940170edc.17.2019.03.13.13.26.22
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4BTA8RcxLtQgy5J9A7f9y+R91YceT8xcqWtAvh+651A=;
+        b=h55ktT+8ImC1go2YYFzEUhxPc2lJQ+uRz/q3xSeMOtlgHoFQkZWoZ/1LVnMwV63Kgp
+         P0e/Uj57oHCtCwNcjmJ9w+IchB/2pDM+lr6IxtYa9Djx2dhm9knpqlFek9tVX3qxA1Yy
+         uMbNJLmuje8RcCJ3vzNxbbjnWPshoz3eDRi58K/6aQZlgQWksnIGNy4VfjfZWoef81Mj
+         9hW3Ml5wiHQRm46oBMWINN4ZpEZUXipPoBsjsq0TQ7bjImnyr3oip1Y553N/gnf3z4E1
+         C5NnhN+zRJkVP326fvjXesaFYvISsBb9X9a9Zmit/AIiBNxmNoiGvu4bAZ5ZgyIgdItY
+         hPBA==
+X-Gm-Message-State: APjAAAW93+RgCRz9oyztMt6LPLky9/x81xCeR31k1o+DZa6opxz7/h6a
+        MqilK+J/hEZnLkyXA+sYujA=
+X-Google-Smtp-Source: APXvYqzZy23FAqs3jC0gdxDo0tAAc18vR7HuRKSiu8DWXVCH+tEAvu8BtOX9I4w4eeMqcxrasJfuFg==
+X-Received: by 2002:a81:c8a:: with SMTP id 132mr35927178ywm.269.1552508804792;
+        Wed, 13 Mar 2019 13:26:44 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::90f5])
+        by smtp.gmail.com with ESMTPSA id 145sm289569ywj.9.2019.03.13.13.26.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 13:26:22 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Pavel Machek <pavel@ucw.cz>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 4/4] leds: netdev trigger: allow setting initial values in device tree
-Date:   Wed, 13 Mar 2019 21:26:15 +0100
-Message-Id: <20190313202615.22883-5-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
-References: <20190311144227.GA4404@amd>
- <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+        Wed, 13 Mar 2019 13:26:43 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 13:26:40 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Barret Rhoden <brho@google.com>
+Cc:     Christopher Lameter <cl@linux.com>,
+        Dennis Zhou <dennis@kernel.org>,
+        Eial Czerwacki <eial@scalemp.com>,
+        linux-kernel@vger.kernel.org, Shai Fultheim <shai@scalemp.com>,
+        Oren Twaig <oren@scalemp.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH] percpu/module resevation: change resevation size iff
+ X86_VSMP is set
+Message-ID: <20190313202640.GJ50184@devbig004.ftw2.facebook.com>
+References: <1548071251-1849-1-git-send-email-eial@scalemp.com>
+ <a7eff2ed-0e80-edae-2a97-a3fdab2d05f5@google.com>
+ <20190301203455.GA97188@dennisz-mbp.dhcp.thefacebook.com>
+ <c72402f2-967e-cd56-99d8-9139c9e7f267@google.com>
+ <010001693b404440-248fa987-624c-4587-940b-56e2ed4226d9-000000@email.amazonses.com>
+ <85726648-82f3-6b6b-a749-03c4159e78f3@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85726648-82f3-6b6b-a749-03c4159e78f3@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It can be quite convenient to initialize a netdev-triggered LED with a
-device name and setting the rx,tx,link properties from device tree,
-instead of having to do that in an init script in userspace.
+Hello,
 
-My main motivation for this is to be able to switch away from the
-deprecated CONFIG_CAN_LEDS, so add an example based on that and add a
-pointer in the net/can/Kconfig file.
+On Wed, Mar 13, 2019 at 03:40:04PM -0400, Barret Rhoden wrote:
+> Are there any other alternatives?  Not using static SRCU in any code
+> that could be built as a module seems a little harsh.
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- .../devicetree/bindings/leds/common.txt       | 17 ++++++++++
- drivers/leds/trigger/ledtrig-netdev.c         | 31 +++++++++++++++++++
- drivers/net/can/Kconfig                       |  3 +-
- 3 files changed, 50 insertions(+), 1 deletion(-)
+Yes, allocate the srcu dynamically on module init and destroy on
+module exit.  That's how the other similar case got solved too.  We
+can't keep bumping up reserved size by the number of static SRCUs in
+modules.  It's mostly there to make trivial small things easier.  We
+don't lose anything meaningful by allocating srcu dynamically.
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 7cb88460a47c..4f3a97e73417 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -43,6 +43,23 @@ Optional properties for child nodes:
-                 Documentation/ABI/testing/sysfs-class-led-trigger-netdev)
-                 to reflect the state and activity of a net device.
- 
-+                The optional child node netdev can be used to
-+                configure initial values for the link, rx, tx and
-+                device_name properties. For example, setting
-+                linux,default-trigger = "netdev" and adding the child
-+                node
-+
-+                netdev {
-+                    rx;
-+                    tx;
-+                    link;
-+                    device-name = "can0";
-+                };
-+
-+                can be used to replace 'linux,default-trigger =
-+                "can0-rxtx"' that relies on the deprecated
-+                CONFIG_CAN_LEDS.
-+
- - led-pattern : Array of integers with default pattern for certain triggers.
-                 Each trigger may parse this property differently:
-                 - one-shot : two numbers specifying delay on and delay off (in ms),
-diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-index 55153a7e8433..1f7c86df1e91 100644
---- a/drivers/leds/trigger/ledtrig-netdev.c
-+++ b/drivers/leds/trigger/ledtrig-netdev.c
-@@ -20,6 +20,7 @@
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/netdevice.h>
-+#include <linux/of.h>
- #include <linux/spinlock.h>
- #include <linux/timer.h>
- #include "../leds.h"
-@@ -395,6 +396,35 @@ static void netdev_trig_work(struct work_struct *work)
- 			(atomic_read(&trigger_data->interval)*2));
- }
- 
-+static void netdev_trig_of_init(struct led_classdev *led_cdev,
-+				struct led_netdev_data *trigger_data)
-+{
-+	struct device_node *np = led_cdev->dev->of_node;
-+	const char *device_name;
-+
-+	if (!np)
-+		return;
-+	np = of_get_child_by_name(np, "netdev");
-+	if (!np)
-+		return;
-+
-+	if (of_property_read_bool(np, "link"))
-+		__set_bit(NETDEV_LED_LINK, &trigger_data->mode);
-+	if (of_property_read_bool(np, "tx"))
-+		__set_bit(NETDEV_LED_TX, &trigger_data->mode);
-+	if (of_property_read_bool(np, "rx"))
-+		__set_bit(NETDEV_LED_RX, &trigger_data->mode);
-+	if (!of_property_read_string(np, "device-name", &device_name)) {
-+		unsigned len = strlen(device_name);
-+
-+		if (len < IFNAMSIZ)
-+			set_device(trigger_data, device_name, len);
-+	}
-+	set_baseline_state(trigger_data);
-+
-+	of_node_put(np);
-+}
-+
- static int netdev_trig_activate(struct led_classdev *led_cdev)
- {
- 	struct led_netdev_data *trigger_data;
-@@ -418,6 +448,7 @@ static int netdev_trig_activate(struct led_classdev *led_cdev)
- 	trigger_data->mode = 0;
- 	atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
- 	trigger_data->last_activity = 0;
-+	netdev_trig_of_init(led_cdev, trigger_data);
- 
- 	led_set_trigger_data(led_cdev, trigger_data);
- 
-diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
-index e0f0ad7a550a..91703a96b636 100644
---- a/drivers/net/can/Kconfig
-+++ b/drivers/net/can/Kconfig
-@@ -77,7 +77,8 @@ config CAN_LEDS
- 	# everything that this driver is doing. This is marked as broken
- 	# because it uses stuff that is intended to be changed or removed.
- 	# Please consider switching to the netdev trigger and confirm it
--	# fulfills your needs instead of fixing this driver.
-+	# fulfills your needs instead of fixing this driver. See e.g.
-+	# Documentation/devicetree/bindings/leds/common.txt
- 	depends on BROKEN
- 	select LEDS_TRIGGERS
- 	---help---
+Thanks.
+
 -- 
-2.20.1
-
+tejun
