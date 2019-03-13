@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76086C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F004C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48069213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA8A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505083;
-	bh=SrhoXBI/as67V0hfTy5u9gtuNhZUxOfnzX4sySkGUhA=;
+	s=default; t=1552505091;
+	bh=fM4vbKr4eP11lpxlD0KVyXPkXRyP14OWzycVv6G14eY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jjZ6by6DLhxxOlW9Pi3Wq+3oLqn2FVB7Ja9THCedR0KHthdQJ/C+7U35jgsK+y6U3
-	 HnjyX6jMWEOXK6fjYoFRUiekwUxzzcIwlioE5TkyDl5G6kvi1ga+dO6HmtQuOyW3xY
-	 /cS18DuVUrccgzMNv/FinZVY2Q5Fs0vJto36xNtM=
+	b=LJ03eHZAK+NjKwGLbJ+NAhV5TyMsppoM47Ettpk7xVTy7dRku287nvfY3xPbbM5/J
+	 o1rNalOeVCUsN6fmiH79meLvA1oJXNDBT6AH8WVRlzba9RO8uq0KANH/7u6PCbPXzr
+	 LcfFyB3fLDK0D5KSSGbSQI2HuKXw8Mn2KltI5Z7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfCMTQB (ORCPT
+        id S1728591AbfCMTPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:16:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46166 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:15:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728603AbfCMTP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:15:58 -0400
+        id S1728541AbfCMTPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:15:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D24F2171F;
-        Wed, 13 Mar 2019 19:15:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78808217F5;
+        Wed, 13 Mar 2019 19:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504557;
-        bh=SrhoXBI/as67V0hfTy5u9gtuNhZUxOfnzX4sySkGUhA=;
+        s=default; t=1552504548;
+        bh=fM4vbKr4eP11lpxlD0KVyXPkXRyP14OWzycVv6G14eY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sNlQSr9m5X7BnXID3zOQ7nXG4yx5QVSLVIkXN+EEGw+mdi+G8/Qozil1qe/OlO273
-         v1PFX/OLdi0BjNziMAAaup44s/buPC6GZnamQxzxBO77Ib15WkNw8XbQNy6GMaQzPS
-         LEGIDyp9rmxnTIjfBznptQ2P2sMbyLhC8o2ThxCc=
+        b=S9Fer96Qg6Ui8Kl8aGeDAABDCeKr2ApsuIqRX5numllGyPf7/zPA6Lhb0WuTWY0+m
+         eZV3fOVLY1AiCjdug6Y70gyVx+TEy6VmooRvCYxt8dvDsC2gfyQF9wnogzj1ymKzHL
+         0S8Be5uPW0pmQwdE9HnkK+BFtnFwlI4fR7BL2WgA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 18/33] net: marvell: mvneta: fix DMA debug warning
-Date:   Wed, 13 Mar 2019 15:14:51 -0400
-Message-Id: <20190313191506.159677-18-sashal@kernel.org>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 14/33] mailbox: bcm-flexrm-mailbox: Fix FlexRM ring flush timeout issue
+Date:   Wed, 13 Mar 2019 15:14:47 -0400
+Message-Id: <20190313191506.159677-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191506.159677-1-sashal@kernel.org>
 References: <20190313191506.159677-1-sashal@kernel.org>
@@ -58,58 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit a8fef9ba58c9966ddb1fec916d8d8137c9d8bc89 ]
+[ Upstream commit d7bf31a0f85faaf63c63c39d55154825a1eaaea9 ]
 
-Booting 4.20 on SolidRun Clearfog issues this warning with DMA API
-debug enabled:
+RING_CONTROL reg was not written due to wrong address, hence all
+the subsequent ring flush was timing out.
 
-WARNING: CPU: 0 PID: 555 at kernel/dma/debug.c:1230 check_sync+0x514/0x5bc
-mvneta f1070000.ethernet: DMA-API: device driver tries to sync DMA memory it has not allocated [device address=0x000000002dd7dc00] [size=240 bytes]
-Modules linked in: ahci mv88e6xxx dsa_core xhci_plat_hcd xhci_hcd devlink armada_thermal marvell_cesa des_generic ehci_orion phy_armada38x_comphy mcp3021 spi_orion evbug sfp mdio_i2c ip_tables x_tables
-CPU: 0 PID: 555 Comm: bridge-network- Not tainted 4.20.0+ #291
-Hardware name: Marvell Armada 380/385 (Device Tree)
-[<c0019638>] (unwind_backtrace) from [<c0014888>] (show_stack+0x10/0x14)
-[<c0014888>] (show_stack) from [<c07f54e0>] (dump_stack+0x9c/0xd4)
-[<c07f54e0>] (dump_stack) from [<c00312bc>] (__warn+0xf8/0x124)
-[<c00312bc>] (__warn) from [<c00313b0>] (warn_slowpath_fmt+0x38/0x48)
-[<c00313b0>] (warn_slowpath_fmt) from [<c00b0370>] (check_sync+0x514/0x5bc)
-[<c00b0370>] (check_sync) from [<c00b04f8>] (debug_dma_sync_single_range_for_cpu+0x6c/0x74)
-[<c00b04f8>] (debug_dma_sync_single_range_for_cpu) from [<c051bd14>] (mvneta_poll+0x298/0xf58)
-[<c051bd14>] (mvneta_poll) from [<c0656194>] (net_rx_action+0x128/0x424)
-[<c0656194>] (net_rx_action) from [<c000a230>] (__do_softirq+0xf0/0x540)
-[<c000a230>] (__do_softirq) from [<c00386e0>] (irq_exit+0x124/0x144)
-[<c00386e0>] (irq_exit) from [<c009b5e0>] (__handle_domain_irq+0x58/0xb0)
-[<c009b5e0>] (__handle_domain_irq) from [<c03a63c4>] (gic_handle_irq+0x48/0x98)
-[<c03a63c4>] (gic_handle_irq) from [<c0009a10>] (__irq_svc+0x70/0x98)
-...
+Fixes: a371c10ea4b3 ("mailbox: bcm-flexrm-mailbox: Fix FlexRM ring flush sequence")
 
-This appears to be caused by mvneta_rx_hwbm() calling
-dma_sync_single_range_for_cpu() with the wrong struct device pointer,
-as the buffer manager device pointer is used to map and unmap the
-buffer.  Fix this.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mailbox/bcm-flexrm-mailbox.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index 074a5b79d691..f76cbefeb3c7 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -2102,7 +2102,7 @@ static int mvneta_rx_hwbm(struct mvneta_port *pp, int rx_todo,
- 			if (unlikely(!skb))
- 				goto err_drop_frame_ret_pool;
+diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
+index f052a3eb2098..7e3ed2714630 100644
+--- a/drivers/mailbox/bcm-flexrm-mailbox.c
++++ b/drivers/mailbox/bcm-flexrm-mailbox.c
+@@ -1381,9 +1381,9 @@ static void flexrm_shutdown(struct mbox_chan *chan)
  
--			dma_sync_single_range_for_cpu(dev->dev.parent,
-+			dma_sync_single_range_for_cpu(&pp->bm_priv->pdev->dev,
- 			                              rx_desc->buf_phys_addr,
- 			                              MVNETA_MH_SIZE + NET_SKB_PAD,
- 			                              rx_bytes,
+ 	/* Clear ring flush state */
+ 	timeout = 1000; /* timeout of 1s */
+-	writel_relaxed(0x0, ring + RING_CONTROL);
++	writel_relaxed(0x0, ring->regs + RING_CONTROL);
+ 	do {
+-		if (!(readl_relaxed(ring + RING_FLUSH_DONE) &
++		if (!(readl_relaxed(ring->regs + RING_FLUSH_DONE) &
+ 		      FLUSH_DONE_MASK))
+ 			break;
+ 		mdelay(1);
 -- 
 2.19.1
 
