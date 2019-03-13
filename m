@@ -2,90 +2,74 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EBBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A25C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3510F21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552500019;
-	bh=iyw5aTKEkQKgz7UBxN+cWeL+tRN+7WqJP1sI9zGtmF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vf1rWFBDylqrXb0KqLp86UQ5yYPDZL+ouhHlTlLu+gLE+p2p9GRPQTlRlthbtr085
-	 6DFjZPeyYkXI5PQW3hn9jX+hzDRXxbxSTaRGtxMrCH2kb3eosdxGWBP7nAuKQRFeqi
-	 yxhO//dade5jFAks3ExVVSxl0nuElXiq3blifvnc=
+	by mail.kernel.org (Postfix) with ESMTP id 9BA8A21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbfCMSAR (ORCPT
+        id S1726876AbfCMSBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 14:00:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfCMSAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 14:00:17 -0400
-Received: from localhost (unknown [12.27.65.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99F4320854;
-        Wed, 13 Mar 2019 18:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552500016;
-        bh=iyw5aTKEkQKgz7UBxN+cWeL+tRN+7WqJP1sI9zGtmF0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nx3KlfC/JlitpBl0/m8vla27u4MEo7wDvX6UdpF269uptJR1+13CZkPi57dp/EZVg
-         HB9CCAow4CQppjrjN48GiSPiTMP7HpV+lGG3NoyEALa0fTjliuR4R0v3nX9Dk1PBRU
-         Glipi0aj/DVIOx9pkCv2pHPYLIuXGW/32UNXiS0s=
-Date:   Wed, 13 Mar 2019 11:00:16 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Wed, 13 Mar 2019 14:01:09 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:53864 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725876AbfCMSBJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 14:01:09 -0400
+Received: (qmail 6912 invoked by uid 2102); 13 Mar 2019 14:01:08 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 13 Mar 2019 14:01:08 -0400
+Date:   Wed, 13 Mar 2019 14:01:08 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
 To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     devel@driverdev.osuosl.org, kjlu@umn.edu,
-        linux-kernel@vger.kernel.org,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: [PATCH] staging: rtl8188eu: Fix potential NULL pointer
- dereference
-Message-ID: <20190313180016.GB27267@kroah.com>
-References: <20190313171132.23052-1-pakki001@umn.edu>
+cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>,
+        <usb-storage@lists.one-eyed-alien.net>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] USB: storage: Fix potential NULL pointer derefernce
+In-Reply-To: <20190313174858.23859-1-pakki001@umn.edu>
+Message-ID: <Pine.LNX.4.44L0.1903131355570.1405-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313171132.23052-1-pakki001@umn.edu>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 12:11:30PM -0500, Aditya Pakki wrote:
-> hwxmits is allocated via kcalloc and not checked for failure before its
-> dereference. The patch fixes this problem similar to rtl8723bs.
+On Wed, 13 Mar 2019, Aditya Pakki wrote:
+
+> Allocating memory via kcalloc for pba_to_lba and lba_to_pba can
+> fail. The fix avoids a potential NULL pointer dereference.
 > 
 > Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 > ---
->  drivers/staging/rtl8188eu/core/rtw_xmit.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/usb/storage/alauda.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-> index 1723a47a96b4..a557ed37923a 100644
-> --- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
-> +++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-> @@ -1512,6 +1512,10 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
+> diff --git a/drivers/usb/storage/alauda.c b/drivers/usb/storage/alauda.c
+> index 6b8edf6178df..41d979e70784 100644
+> --- a/drivers/usb/storage/alauda.c
+> +++ b/drivers/usb/storage/alauda.c
+> @@ -438,6 +438,11 @@ static int alauda_init_media(struct us_data *us)
+>  	MEDIA_INFO(us).pba_to_lba = kcalloc(num_zones, sizeof(u16*), GFP_NOIO);
+>  	MEDIA_INFO(us).lba_to_pba = kcalloc(num_zones, sizeof(u16*), GFP_NOIO);
 >  
->  	pxmitpriv->hwxmits = kcalloc(pxmitpriv->hwxmit_entry,
->  				     sizeof(struct hw_xmit), GFP_KERNEL);
-> +	if (!pxmitpriv->hwxmits) {
-> +		DBG_88E("alloc hwxmits fail!...\n");
+> +	if (!MEDIA_INFO(us).pba_to_lba || !MEDIA_INFO(us).lba_to_pba) {
+> +		pr_warn("%s: Failed to allocate memory\n", __func__);
+> +		return USB_STOR_TRANSPORT_ERROR;
+> +	}
+> +
+>  	if (alauda_reset_media(us) != USB_STOR_XFER_GOOD)
+>  		return USB_STOR_TRANSPORT_ERROR;
 
-You never need to print a message for a memory allocation failure, that
-happens by the function that tried to allocate the memory.
+In fact this won't accomplish anything, because the return value from 
+alauda_init_media() isn't used.  The driver appears to need more than 
+a single change.
 
-> +		return;
+Alan Stern
 
-Shouldn't you return an error?
-
-thanks,
-
-greg k-h
