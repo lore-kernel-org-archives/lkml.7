@@ -2,59 +2,60 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57871C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB1DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCF72147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2A921850
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vGpnAGmH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vWswKAHX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfCMJAP (ORCPT
+        id S1727343AbfCMJAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:00:15 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34242 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfCMJAP (ORCPT
+        Wed, 13 Mar 2019 05:00:20 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44447 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727313AbfCMJAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:00:15 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y18so869144lfe.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 02:00:14 -0700 (PDT)
+        Wed, 13 Mar 2019 05:00:17 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q128so793995ljb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 02:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BDWo2E/IxyzUQjpn5J9mS8eOFQRMRegBPNLZgP9rh94=;
-        b=vGpnAGmHg1gzSr7JgjNs/r2n8diM7N9D4IsBkP2WfK4MqemtpQRKY3oT2aNhqIrpTJ
-         ep1V8dhjGdccoBo33QuN7mkN/r0yf8bthUzEc8eljxlqYxSzNCMfookuOyq35sxN2kDq
-         A1YVx/ZFHentnRc7We3uc1BVbxewHNiMm+rQYhh78Gj5IKkj/vlVarcOtDQQgwmUSie/
-         +H0QFWPXAgFHPROY9bYJ8Bxf2HQHQaSupYP9fZzbD3AyICZyf6MesdSrPAv+1676xtrr
-         hynyA5RzhfkHIJrymp+/m9qtYzvw29MnpdGjEDkjaWfjp9ZgpK0Gaw1NanUKG25CFhmh
-         4GUQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lHcJMM6FgDLebAlEnMgFQKA5Nq+Rlf4DODywjzeWXvs=;
+        b=vWswKAHXEEdZwuDu2xor1PGDVaWEP4TgY2ZFWfmaxFp8U9sbe7V5+ynpf2FEkxOffF
+         fzRH362M2E8yK3bvtYNY65ARdTaqH6/YGa3TGbJox/M5l0ij+LYweaJRhX+3yLQ1ke0V
+         bEV+u87ZwbD2DttsshVum+KH1khwKlMIVVDYvIApnvP18HwRqLAuU7eZU0YDGyN/UUyG
+         RjHy9PolSrw/sbY+B57Yc0hqZmXwGEO1j4I5a0YtIxZDEHQAaohrRFoB/LRnLD0IiV2Y
+         cH4ntM4wukNeLnPtyvmcZ7Rw8alTqdnCPmst8u9LTO2Z/+GEjK8vuYKeeczSG+wZ2Tw/
+         Cydw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BDWo2E/IxyzUQjpn5J9mS8eOFQRMRegBPNLZgP9rh94=;
-        b=Xb5DBhr5ijRfEtl4NwpeOlD2OulYcdjmM5+F6VBJF3NHq4X6T+XozvIk1ds6xq3RQ6
-         s9I0Q1RdFNMUUbYaOKfJk6ejopL8WVoq6J8VKUS7SqlN/YJMqugkjOvEtESpm1d2c2CT
-         lbk3F5eU7nJmu6xOM0mMgJ+r9nr5m+ucOVzmPop/UOblJT0jnW454GZ3Vf1Qrh3E9OUm
-         t24wGWGgBQQoj8pPcpZ8SSHGAvn6dZEbsxK5MtgtrIUaFGi7BKx1Ipc9L33IbUcosZXD
-         lLx2TskiyDl4wBzFW3E0LZ6XtNIIsW2oDiDESkrmkXhCLNFH4QU/keZHyg9IPhETMgXk
-         C6CQ==
-X-Gm-Message-State: APjAAAV4oNWD5Ic9/lRy36vovu+AIjImzVk2pd8x6BvwUJFSch36lMqL
-        xyd90lfLtEkZDA0nldWEpjluKQ==
-X-Google-Smtp-Source: APXvYqzcb3uaU4Xf3AoIxYVZLsc1qgPR+Ba2dh+wfv+KbtnO2j/3c+s/cDAC0U3NrR/7YXvg2oRT6A==
-X-Received: by 2002:a19:7914:: with SMTP id u20mr8050229lfc.41.1552467613357;
-        Wed, 13 Mar 2019 02:00:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lHcJMM6FgDLebAlEnMgFQKA5Nq+Rlf4DODywjzeWXvs=;
+        b=MZfujK9Jp7bb+NcjnL9pOLpFAZuLGKLPodzLm/P7i3ExdHIsGaOEKU3Yubk+U8R4FO
+         nMxRVT1t1cGjAxl3T6X4n3pCw4YHuc4lo6ZgNmzc/xnzgP/zR5QMNKaf6bs3PhbyOAgc
+         taNzI5p63djgjPn+d1meZIE5Y15QyopLW085/LsgMljREPq2k+0hRejgTKVkha+8JInv
+         iybO0bnf5Yab9+HV2bBUR2bouwPkWzXxpWIKyd28YHfcRQMGdBXGHU7DMhsqajOEBnpc
+         7mU4IsZlzuIFDjJz+FJe7S8hSX/BkdjtvrM2B6rcNSCt/QoB1GWHB7M5sbr5J96dCyGr
+         xwyQ==
+X-Gm-Message-State: APjAAAW/3QirTGcG8jcCoytKjx/LAM0X5TU8aZaGOu9PgXMPlCbVgGsf
+        tXuyheOdTPuVCxLrAEISawTFjA==
+X-Google-Smtp-Source: APXvYqwIVCUShTBhRuD7dAo4SFoLQqkhxG95gQNOa4aZODMLn5oya3Zoh6vETGzXkhXQMHXdPisr/g==
+X-Received: by 2002:a2e:8694:: with SMTP id l20mr22380772lji.152.1552467615852;
+        Wed, 13 Mar 2019 02:00:15 -0700 (PDT)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id u15sm1701986lja.73.2019.03.13.02.00.10
+        by smtp.googlemail.com with ESMTPSA id u15sm1701986lja.73.2019.03.13.02.00.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 13 Mar 2019 02:00:12 -0700 (PDT)
+        Wed, 13 Mar 2019 02:00:14 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
         robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
@@ -65,10 +66,12 @@ Cc:     jcrouse@codeaurora.org, vincent.guittot@linaro.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         georgi.djakov@linaro.org
-Subject: [PATCH 0/4] Introduce OPP bandwidth bindings
-Date:   Wed, 13 Mar 2019 11:00:06 +0200
-Message-Id: <20190313090010.20534-1-georgi.djakov@linaro.org>
+Subject: [PATCH 1/4] dt-bindings: opp: Introduce opp-bw-MBs bindings
+Date:   Wed, 13 Mar 2019 11:00:07 +0200
+Message-Id: <20190313090010.20534-2-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190313090010.20534-1-georgi.djakov@linaro.org>
+References: <20190313090010.20534-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,48 +79,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here is a proposal to extend the OPP bindings with bandwidth based on
-a previous discussion [1].
+In addition to frequency and voltage, some devices may have bandwidth
+requirements for their interconnect throughput - for example a CPU
+or GPU may also need to increase or decrease their bandwidth to DDR
+memory based on the current operating performance point.
 
-Every functional block on a SoC can contribute to the system power
-efficiency by expressing its own bandwidth needs (to memory or other SoC
-modules). This will allow the system to save power when high throughput
-is not required (and also provide maximum throughput when needed).
+Extend the OPP tables with additional property to describe the bandwidth
+needs of a device. The average and peak bandwidth values depend on the
+hardware and its properties.
 
-There are at least three ways for a device to determine its bandwidth
-needs:
-	1. The device can dynamically calculate the needed bandwidth
-based on some known variable. For example: UART (baud rate), I2C (fast
-mode, high-speed mode, etc), USB (specification version, data transfer
-type), SDHC (SD standard, clock rate, bus-width), Video Encoder/Decoder
-(video format, resolution, frame-rate)
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ Documentation/devicetree/bindings/opp/opp.txt | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-	2. There is a hardware specific value. For example: hardware
-specific constant value (e.g. for PRNG) or use-case specific value that
-is hard-coded.
-
-	3. Predefined SoC/board specific bandwidth values. For example:
-CPU or GPU bandwidth is related to the current core frequency and both
-bandwidth and frequency are scaled together.
-
-This patchset is trying to address point 3 above by extending the OPP
-bindings to support predefined SoC/board bandwidth values and adds
-support in cpufreq-dt to scale the interconnect between the CPU and the
-DDR together with frequency and voltage.
-
-[1] https://patchwork.kernel.org/patch/10577315/
-
-Georgi Djakov (4):
-  dt-bindings: opp: Introduce opp-bw-MBs bindings
-  OPP: Add support for parsing the interconnect bandwidth
-  OPP: Update the bandwidth on OPP frequency changes
-  cpufreq: dt: Add support for interconnect bandwidth scaling
-
- Documentation/devicetree/bindings/opp/opp.txt | 45 ++++++++++++
- drivers/cpufreq/cpufreq-dt.c                  | 27 ++++++-
- drivers/opp/core.c                            | 71 +++++++++++++++++++
- drivers/opp/of.c                              | 44 ++++++++++++
- drivers/opp/opp.h                             |  6 ++
- include/linux/pm_opp.h                        | 14 ++++
- 6 files changed, 206 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 76b6c79604a5..fa598264615f 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -129,6 +129,9 @@ Optional properties:
+ - opp-microamp-<name>: Named opp-microamp property. Similar to
+   opp-microvolt-<name> property, but for microamp instead.
+ 
++- opp-bw-MBs: The interconnect bandwidth is specified with an array containing
++  the two integer values for average and peak bandwidth in megabytes per second.
++
+ - opp-level: A value representing the performance level of the device,
+   expressed as a 32-bit integer.
+ 
+@@ -546,3 +549,45 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
+ 		};
+ 	};
+ };
++
++Example 7: opp-bw-MBs:
++(example: average and peak bandwidth values are defined for each OPP and the
++interconnect between CPU and DDR memory is scaled together with CPU frequency)
++
++/ {
++	cpus {
++		CPU0: cpu@0 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			...
++			operating-points-v2 = <&cpu_opp_table>;
++			/* path between the CPU and DDR memory */
++			interconnects = <&rpm_bimc MASTER_AMPSS_M0
++					&rpm_bimc SLAVE_EBI_CH0>;
++		};
++	};
++
++	cpu_opp_table: cpu_opp_table {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-200000000 {
++			opp-hz = /bits/ 64 <200000000>;
++			/* 457 MB/s average and 1525 MB/s peak bandwidth */
++			opp-bw-MBs = <457 1525>;
++		};
++		opp-400000000 {
++			opp-hz = /bits/ 64 <400000000>;
++			/* 915 MB/s average and 3051 MB/s peak bandwidth */
++			opp-bw-MBs = <915 3051>;
++		};
++		opp-800000000 {
++			opp-hz = /bits/ 64 <800000000>;
++			/* 1830 MB/s average and 6103 MB/s peak bandwidth */
++			opp-bw-MBs = <1830 6103>;
++		};
++		opp-998400000 {
++			opp-hz = /bits/ 64 <998400000>;
++			/* 2282 MB/s average and 7614 MB/s peak bandwidth */
++			opp-bw-MBs = <2284 7614>;
++		};
++	};
