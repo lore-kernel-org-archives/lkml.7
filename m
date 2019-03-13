@@ -2,93 +2,96 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC08C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8576BC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1766420651
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D7A2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:25:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WetTng58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfCMVYo (ORCPT
+        id S1727533AbfCMVZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 17:24:44 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:42145 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfCMVYo (ORCPT
+        Wed, 13 Mar 2019 17:25:23 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45753 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfCMVZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 17:24:44 -0400
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1McYP5-1gTl3Z2Q4z-00cynt; Wed, 13 Mar 2019 22:14:36 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jiri Kosina <jikos@kernel.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] floppy: fix harmless clang build warning
-Date:   Wed, 13 Mar 2019 22:11:02 +0100
-Message-Id: <20190313211433.4178148-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Gg1ro3XTPV2CCnela4QdedSa5uOGKvbolUTUSWpPuuuqS8tnu4F
- dXo0/b52lEpwhb2oj3fT2xacyiDcmUA5SVQbNCqwM/2Zb16vxs7/aWT6Vi6sr+m8PTfdMxx
- JxqFkDx6Zj+PxczCPZLx1yg7kINf9QBuvmFQ/rTup+LrnPJ4gsRhkP0Ef6elj0UFEkXnzoL
- N5PkT9TbA2TftsSx8lIYw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sFFuG74Vyyk=:7d62AIaI7pn379Sxg50mjW
- hVuM47pfFc4VyK5QvJHxlVN+wqIyDT4I/L6KZLDqEWWQ2LyHkzN7LWy+EI45S1PtWIYy9aec0
- nkSsELWZjdzlFIX0rI/eH0Gh4qshel149Zw9QhLxB0En7tQQOJ+b32WJko6wTPUGLb+cXIKXf
- Fwkb0s7SvvdRlk116e8s8Oij1Hv5fYRdUSatgJ5xNa++GuWjRIZUB3fYkyfVThgSY6yNWj3Cw
- 5sm0MnqX+aZw5xZaDD+pRbqNpWA5pundvikFui4ZXfZ9VgZiw5ypf0TRKFBeO48mXU5aJmzOU
- rhNMVS0GZY9VqOVSrY4K5/nbXHDSz/PbeUrt8jNUMHNdP7YBMguT9oGhub+6XLdy19MPa5mvj
- rqqTt1A89SAbbahVaeXZNQrly5Spk2uKc9EP60dpEUkY7nV6HbbA/rARF7ZtiEzDn7gAg9hkl
- 43dgwL1qO+R0kcWprtzZkJhqiFwp38ibRIiCLnZOHfztrHxBCeM8BHExLhwH4qnPeNJDkZ+iQ
- LRnuTWkUDBjP8BdX88aWbOJNhoz+Jvzl8ErHLhfQlz6LN/PkFTe3vFVXxOne97dpWK42ibb11
- osL7m7xrqcXA0zju4UFRcBldHzYvm5W73UGGV5xr7mlUJFlK4vlkKvifVhJwNyqHTIbjlJpAS
- CPQ4aYEdWPz3ab46wSsLeTekBKwyiaTqDFjkZgowO5hIWfR+xs4iOQ5MPbOOUpLY/4KKVIKj8
- JDPT4/v8a54Nv57eUGAmHXdH4hyPx3FYakr5cw==
+        Wed, 13 Mar 2019 17:25:23 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z76so2064251qkb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 14:25:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=OucWAD8gEwp6r0i7GUXnLfUiVl1FutMHKz9ApiJmhnw=;
+        b=WetTng58/5AC8vNv7/Q3M7nMkYg6b7Xsn5STk7j1JUnYBxffHHSCDVlDJOBWYGi8W2
+         Bs2Sx0XNuM/Tv+AQwEluhvZ+98gWrnkF3wphGlR0XIw0x9UawlMn/qiQ9CSIi5OBL7wR
+         gm6ACtvpjid/oYG0TWvRdwHijRAmeCupHl4HeAKaSVk+IF6IHNlkyZgkOJgx0DCAIq4s
+         gh4ypLihL9IpgaZKg8tzQM0ROrWEG9CJ2nK6T9OcGAY/tdUhAy02hMyxP43yLrVJtAh2
+         /jceOF1yKKAlvDE5PICIZtSfMGSkGTnr9NV0zn3366hFRlNFCpRQi1trDDh7ABZNT8lW
+         8CAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OucWAD8gEwp6r0i7GUXnLfUiVl1FutMHKz9ApiJmhnw=;
+        b=FO5LfKFMhOLje+H3tVIos6Ux7XBTTxhpUSZkL6lHifl3Jj68KswTh4/QGltsLsxsma
+         Qq9p6uzn5aAYYvVsgGQtZ1WRx6KIKHgNVWDoDM7HT9X+KXuQj2Is7bXiuXieZ5XFNbxy
+         9GBcJJQPY0PrGJqDrtqxjMk6O9mGohyXB4kr455MtcVIsFj+scrEiJZA6PA0C6pMvdq+
+         I23+/CSkFoJ0uTnizfFo5uIG7WTgyCgda9SnNWzk3rSd3NcuauRF0Z8/0m31Gmgx9+sn
+         C58siUyFHZti428Rr00aLgVGn5ZOQyihvtoEBqZO26IlN0hWWRhLXHOFpcM8JNKOICo+
+         t79g==
+X-Gm-Message-State: APjAAAVNGdn4JWtul5KalVc6qlS1RW8dYWf36DQMPJc/i2R209sf52co
+        tFMluxAH99SSGfBleUWFoT9E/g==
+X-Google-Smtp-Source: APXvYqxsLXlrKPQvRjHH3e/SsrDAGZnPjfdFb0me0wrVY9xzhbgomiMmLcdlIM9CjGnc3IwmpOBVdg==
+X-Received: by 2002:a05:620a:35e:: with SMTP id t30mr35097254qkm.15.1552512322586;
+        Wed, 13 Mar 2019 14:25:22 -0700 (PDT)
+Received: from ovpn-121-103.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id m128sm7470350qkf.53.2019.03.13.14.25.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 14:25:21 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, osalvador@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm: fix a wrong flag in set_migratetype_isolate()
+Date:   Wed, 13 Mar 2019 17:25:07 -0400
+Message-Id: <20190313212507.49852-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns about unusual code in floppy.c that looks like it
-was intended to be a bit mask operation, checking for a specific
-bit in the UDP->cmos variable (FLOPPY1_TYPE expands to '4' on
-ARM):
+Due to has_unmovable_pages() takes an incorrect irqsave flag instead of
+the isolation flag in set_migratetype_isolate(), it causes issues with
+HWPOSION and error reporting where dump_page() is not called when there
+is an unmoveable page.
 
-drivers/block/floppy.c:3902:17: error: use of logical '&&' with constant operand [-Werror,-Wconstant-logical-operand]
-        if (!UDP->cmos && FLOPPY1_TYPE)
-                       ^  ~~~~~~~~~~~~
-drivers/block/floppy.c:3902:17: note: use '&' for a bitwise operation
-        if (!UDP->cmos && FLOPPY1_TYPE)
-
-The check here is redundant anyway, if FLOPPY1_TYPE is zero, then
-assigning it to a zero UDP->cmos field does not change anything,
-so removing the extra check here has no effect other than shutting
-up the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: d381c54760dc ("mm: only report isolation failures when offlining memory")
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/block/floppy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/page_isolation.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 95f608d1a098..56815446ed85 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3899,7 +3899,7 @@ static void __init config_types(void)
- 	if (!UDP->cmos)
- 		UDP->cmos = FLOPPY0_TYPE;
- 	drive = 1;
--	if (!UDP->cmos && FLOPPY1_TYPE)
-+	if (!UDP->cmos)
- 		UDP->cmos = FLOPPY1_TYPE;
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index bf67b63227ca..0f5c92fdc7f1 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -59,7 +59,8 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+ 	 * FIXME: Now, memory hotplug doesn't call shrink_slab() by itself.
+ 	 * We just check MOVABLE pages.
+ 	 */
+-	if (!has_unmovable_pages(zone, page, arg.pages_found, migratetype, flags))
++	if (!has_unmovable_pages(zone, page, arg.pages_found, migratetype,
++				 isol_flags))
+ 		ret = 0;
  
- 	/* FIXME: additional physical CMOS drive detection should go here */
+ 	/*
 -- 
-2.20.0
+2.17.2 (Apple Git-113)
 
