@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEFBC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571B72075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5459C2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505098;
-	bh=b6hAqIau+HWRMbtHkdyASh04BqhE+A9aJ3J1ZBsSSSk=;
+	s=default; t=1552505102;
+	bh=z26y/te+YpcSnr78TbAigh0Ivx7a9lTE+DPUVlFfk20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fD6SdOz4GVSo0Y61BfFBvU4Xxl5Vf9p3dnZRmjxQ19OU4XRCDZGfLf6OPPZEVmFip
-	 fyGmE1op6+Qo/YbNv1RUjRFABBRCNiIZNToaPb9PuT1xiWetcfh7aFqDDnszMChCcB
-	 w8bZ2BBA6y+sDyuQ/9axZdoRsJdWIZM5kt0pAwm4=
+	b=vXAyD9ZWY3EESM7XweCH/+LXrhcFFqkg/D0bosKQocwTass0cIbHgrmnPPKuopvQx
+	 wJkWHohXZehIKobf6W2YuAhPIxjQjM0Eb814b96GY2GpwxyOeDj4F60tjercZdVSwF
+	 KfxeLoyC3TSXctcoTk3djTBrZdNJZPsMgsVX7OHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbfCMTPx (ORCPT
+        id S1728561AbfCMTPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:15:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728529AbfCMTPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:15:46 -0400
+        id S1728047AbfCMTPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:15:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95AFF2183F;
-        Wed, 13 Mar 2019 19:15:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B99217F5;
+        Wed, 13 Mar 2019 19:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504546;
-        bh=b6hAqIau+HWRMbtHkdyASh04BqhE+A9aJ3J1ZBsSSSk=;
+        s=default; t=1552504544;
+        bh=z26y/te+YpcSnr78TbAigh0Ivx7a9lTE+DPUVlFfk20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d35CuQAKRGXM81FCn2Kg8ba0ptB31FepZwUSunkCxkzc+JgDWDgy9uTIEcebT6sOn
-         k4tVSfkUiJAuuN4PK74UKAQy2rdAftZYbLFtsoyQvJRvkBw0LipCdnh8Yqo8oQ0v4+
-         M9St9YVJh5Wuyf3EwRWoFozNrO/zNRe/IBXLFwKA=
+        b=RYDIOEg5xSLzBL7uclzImADFHzshjGpZY86X3Eqt5QWFAIXEwKQXQkM+Dp6P0IGz4
+         dCPWcssoPKPBmrTo3VIo6am0bqBL/F40m2HQxToXwz4XytmNxV46bluNUeOhfBVnQb
+         rX2FBvsBhVo6xZjcF4WeZoHvMRp8ir7/uk1x0xks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Khoroshilov <khoroshilov@ispras.ru>,
+Cc:     Beniamino Galvani <bgalvani@redhat.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/33] net: mv643xx_eth: disable clk on error path in mv643xx_eth_shared_probe()
-Date:   Wed, 13 Mar 2019 15:14:46 -0400
-Message-Id: <20190313191506.159677-13-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 12/33] qmi_wwan: apply SET_DTR quirk to Sierra WP7607
+Date:   Wed, 13 Mar 2019 15:14:45 -0400
+Message-Id: <20190313191506.159677-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191506.159677-1-sashal@kernel.org>
 References: <20190313191506.159677-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,47 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Khoroshilov <khoroshilov@ispras.ru>
+From: Beniamino Galvani <bgalvani@redhat.com>
 
-[ Upstream commit e928b5d6b75e239feb9c6d5488974b6646a0ebc8 ]
+[ Upstream commit 97dc47a1308a3af46a09b1546cfb869f2e382a81 ]
 
-If mv643xx_eth_shared_of_probe() fails, mv643xx_eth_shared_probe()
-leaves clk enabled.
+The 1199:68C0 USB ID is reused by Sierra WP7607 which requires the DTR
+quirk to be detected. Apply QMI_QUIRK_SET_DTR unconditionally as
+already done for other IDs shared between different devices.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Beniamino Galvani <bgalvani@redhat.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mv643xx_eth.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mv643xx_eth.c b/drivers/net/ethernet/marvell/mv643xx_eth.c
-index 81c1fac00d33..2434409f84b2 100644
---- a/drivers/net/ethernet/marvell/mv643xx_eth.c
-+++ b/drivers/net/ethernet/marvell/mv643xx_eth.c
-@@ -2886,7 +2886,7 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
- 
- 	ret = mv643xx_eth_shared_of_probe(pdev);
- 	if (ret)
--		return ret;
-+		goto err_put_clk;
- 	pd = dev_get_platdata(&pdev->dev);
- 
- 	msp->tx_csum_limit = (pd != NULL && pd->tx_csum_limit) ?
-@@ -2894,6 +2894,11 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
- 	infer_hw_params(msp);
- 
- 	return 0;
-+
-+err_put_clk:
-+	if (!IS_ERR(msp->clk))
-+		clk_disable_unprepare(msp->clk);
-+	return ret;
- }
- 
- static int mv643xx_eth_shared_remove(struct platform_device *pdev)
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 25204d2c9e89..65e47cc52d14 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1193,8 +1193,8 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
+ 	{QMI_FIXED_INTF(0x1199, 0x68a2, 8)},	/* Sierra Wireless MC7710 in QMI mode */
+ 	{QMI_FIXED_INTF(0x1199, 0x68a2, 19)},	/* Sierra Wireless MC7710 in QMI mode */
+-	{QMI_FIXED_INTF(0x1199, 0x68c0, 8)},	/* Sierra Wireless MC7304/MC7354 */
+-	{QMI_FIXED_INTF(0x1199, 0x68c0, 10)},	/* Sierra Wireless MC7304/MC7354 */
++	{QMI_QUIRK_SET_DTR(0x1199, 0x68c0, 8)},	/* Sierra Wireless MC7304/MC7354, WP76xx */
++	{QMI_QUIRK_SET_DTR(0x1199, 0x68c0, 10)},/* Sierra Wireless MC7304/MC7354 */
+ 	{QMI_FIXED_INTF(0x1199, 0x901c, 8)},    /* Sierra Wireless EM7700 */
+ 	{QMI_FIXED_INTF(0x1199, 0x901f, 8)},    /* Sierra Wireless EM7355 */
+ 	{QMI_FIXED_INTF(0x1199, 0x9041, 8)},	/* Sierra Wireless MC7305/MC7355 */
 -- 
 2.19.1
 
