@@ -6,77 +6,84 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC28C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A151C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EC32087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBF02171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbfCMOhA (ORCPT
+        id S1726855AbfCMOhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:37:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:18586 "EHLO mx1.redhat.com"
+        Wed, 13 Mar 2019 10:37:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34578 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfCMOg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:36:59 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1725856AbfCMOhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 10:37:07 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5F961307D943;
-        Wed, 13 Mar 2019 14:36:59 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id C194F300371C;
+        Wed, 13 Mar 2019 14:37:06 +0000 (UTC)
 Received: from krava (unknown [10.43.17.124])
-        by smtp.corp.redhat.com (Postfix) with SMTP id AB3F5610FF;
-        Wed, 13 Mar 2019 14:36:57 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 15:36:56 +0100
+        by smtp.corp.redhat.com (Postfix) with SMTP id 17D9818258;
+        Wed, 13 Mar 2019 14:37:04 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 15:37:04 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Andi Kleen <ak@linux.intel.com>,
         linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 02/12] perf record: implement
- -f,--mmap-flush=<threshold> option
-Message-ID: <20190313143656.GB6676@krava>
-References: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
- <e582719a-ca01-22cd-bc73-6d693961bb18@linux.intel.com>
+Subject: Re: [PATCH v4 0/10] perf: enable compression of record mode trace to
+ save storage space
+Message-ID: <20190313143704.GC6676@krava>
+References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e582719a-ca01-22cd-bc73-6d693961bb18@linux.intel.com>
+In-Reply-To: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 13 Mar 2019 14:36:59 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 13 Mar 2019 14:37:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 08:12:23AM +0300, Alexey Budankov wrote:
+On Thu, Feb 28, 2019 at 11:35:24AM +0300, Alexey Budankov wrote:
+> 
+> The patch set implements runtime trace compression (-z option) in 
+> record mode and trace auto decompression in report and inject modes. 
+> Streaming Zstandard (Zstd) API (zstd) is used for compression and 
+> decompression of data that come from kernel mmaped data buffers.
+> 
+> Usage of implemented -z,--compression_level=n option provides ~3-5x 
+> avg. trace file size reduction on variety of tested workloads what 
+> saves storage space on larger server systems where trace file size 
+> can easily reach several tens or even hundreds of GiBs, especially 
+> when profiling with dwarf-based stacks and tracing of context switches.
+> Implemented -f,--mmap-flush option can be used to avoid compressing 
+> every single byte of data and increase compression ratio at the same 
+> time lowering tool runtime overhead. Default option value is 1 what 
+> is equal to the current perf record implementation. The option is 
+> independent from -z setting and doesn't vary with compression level:
+> 
+>   $ tools/perf/perf record -z 1 -e cycles -- matrix.gcc
+>   $ tools/perf/perf record --aio=1 -z 1 -e cycles -- matrix.gcc
+>   $ tools/perf/perf record -z 1 -f 1024 -e cycles -- matrix.gcc
+>   $ tools/perf/perf record --aio=1 -z 1 -f 1024 -e cycles -- matrix.gcc
 
-SNIP
+please make the 'z' option to choose some default value,
+so it's possible just to run:
 
->  	record__aio_mmap_read_sync(rec);
->  
->  	if (forks) {
-> @@ -1815,6 +1863,7 @@ static struct record record = {
->  			.uses_mmap   = true,
->  			.default_per_cpu = true,
->  		},
-> +		.mmap_flush          = MMAP_FLUSH_DEFAULT,
->  	},
->  	.tool = {
->  		.sample		= process_sample_event,
-> @@ -1881,6 +1930,9 @@ static struct option __record_options[] = {
->  	OPT_CALLBACK('m', "mmap-pages", &record.opts, "pages[,pages]",
->  		     "number of mmap data pages and AUX area tracing mmap pages",
->  		     record__parse_mmap_pages),
-> +	OPT_CALLBACK('f', "mmap-flush", &record.opts, "bytes",
-> +		     "Minimal number of bytes that is extracted from mmap data pages (default: 1)",
-> +		     record__mmap_flush_parse),
+  perf record -z ...
 
-let's not consume the 'f' for this option, just --map-flush
+to get comrpessed data.. not sure which strategy to use,
+probably the fastest '-z 1' as default
+
+with some warning about using that default value perhaps
 
 jirka
