@@ -2,198 +2,226 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A8FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66914C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED882087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A722087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:54:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zp2J1GBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfCMWvN (ORCPT
+        id S1726646AbfCMWyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:51:13 -0400
-Received: from mga07.intel.com ([134.134.136.100]:19993 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbfCMWvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:51:13 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 15:51:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,476,1544515200"; 
-   d="scan'208";a="327081402"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Mar 2019 15:51:09 -0700
-Date:   Wed, 13 Mar 2019 07:49:41 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] mm: introduce put_user_page*(), placeholder
- versions
-Message-ID: <20190313144941.GA23350@iweiny-DESK2.sc.intel.com>
-References: <20190306235455.26348-1-jhubbard@nvidia.com>
- <20190306235455.26348-2-jhubbard@nvidia.com>
- <20190312153033.GG1119@iweiny-DESK2.sc.intel.com>
- <c9c80511-0805-a877-af6f-b769c6dcb111@nvidia.com>
+        Wed, 13 Mar 2019 18:54:52 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41612 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfCMWyv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 18:54:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id v10so3261698iom.8;
+        Wed, 13 Mar 2019 15:54:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hI97cvpiFwbqINqVuOvg/SoIet+VipX1FL8Sh+mhPSo=;
+        b=Zp2J1GBY2PZdvuxBzucq8kmyE2K23CMXhXuNXjNf9fuzVrdXzVG3bdIjS1ZfdLV2S7
+         ioJqAkwmRJxRnM/6NxN4YNhXarvNRZycnK9PUyPORbUfbn83YO9mEq5WLleJcIa7kmV+
+         IDpKUAjRSz4X5FHid6/o8rK2E0vdQZUKvLElTmL+z9CzhK+UQ/zYUSexpZZqzB/06L2E
+         BVJXVUKx0cy8/DTWQ9EwnQqUO3OMjodIrRO7thGrgIEvG0k1ba3JRVZf+/4QBC/I8Img
+         U9yEI0gTt1KC+6SxErWgzD4UVhdAhkpWHrytgpWzyslbzkjpK1tvIACkSWxrOa9KxvdH
+         AhNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hI97cvpiFwbqINqVuOvg/SoIet+VipX1FL8Sh+mhPSo=;
+        b=Rt7oqUDxgdLD+FmC4G+s4L0P1hBuVryX1kK9COXOtrx8B3WjnGkHwmpihXxEyDDywG
+         TeKvhqa544PxKYXsBbkpQoUnH/Y5Lu67B13dGxiMVvpv7qSMK/am2f6gUKqg5RO8uePs
+         wpA9DtBtk9AnJjqsGd8TcrvwDm+lMFX/MIG6+yZhfcAOBFlaYPQIuJdLzJ8NnHxLhD6J
+         uWxO5G606MkZfGUA8IJxQsP6ekfp8a7sLRS4Ks1N3nlVD4ATRIk07f3HeD4vGG+3wruZ
+         RWiq4Xp11h5Rqjz9WM5GwixPUyjbb/1ATqTpSDFwDbuyGfpmOZkbWwIkso7dNeuhNgqZ
+         tNAA==
+X-Gm-Message-State: APjAAAWNNIM0a1mNirwS3mwnb/waSNgaGCAm0PpQj0z0GA2MdilJyo4Y
+        xuVy39XB9IfHAib24CoUH4QBfspnbl+/CiT5VbY=
+X-Google-Smtp-Source: APXvYqw3ZG1UU10TbGzDdlbWYuEyTWhm3KqyAdd3EFS4onxj0uEyYP28T3Sv5yA4eD2RAwENvmxZHjtCNcvD0qbmPYg=
+X-Received: by 2002:a6b:f70a:: with SMTP id k10mr15952688iog.68.1552517690436;
+ Wed, 13 Mar 2019 15:54:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9c80511-0805-a877-af6f-b769c6dcb111@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20190306155048.12868-1-nitesh@redhat.com> <2d9ae889-a9b9-7969-4455-ff36944f388b@redhat.com>
+ <22e4b1cd-38a5-6642-8cbe-d68e4fcbb0b7@redhat.com> <CAKgT0UcAqGX26pcQLzFUevHsLu-CtiyOYe15uG3bkhGZ5BJKAg@mail.gmail.com>
+ <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com> <CAKgT0Uc_z9Vi+JhQcJYX+J9c4J56RRSkzzegbb2=9xO-NY3dgw@mail.gmail.com>
+ <20190307212845-mutt-send-email-mst@kernel.org> <CAKgT0Ucu3EMsYBfdKtEiprrn-VBZy3Y+0HdEp5b4PO2SQgGsRw@mail.gmail.com>
+ <17d2afa6-556e-ec73-40dc-beac536b3f20@redhat.com> <CAKgT0UcdQZwHjmMBkSWmy_ZdShJCagjwomn13g+r7ZNJBRn1LQ@mail.gmail.com>
+ <8f692047-4750-6827-1ee0-d3d354788f09@redhat.com> <CAKgT0UddT9CKg1uZo6ZODs9ARti-6XGm9Zvo+8QRZKUPSwzWMQ@mail.gmail.com>
+ <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com> <CAKgT0Uftff+JVRW-sQ6u8DeVg4Fq9b-pgE6Ojr+XqQFn13JmGw@mail.gmail.com>
+ <1ae522f1-1e98-9eef-324c-29585fe574d6@redhat.com> <8826829a-973d-8117-3fe3-8e33170acfb8@redhat.com>
+ <CAKgT0UdGhFFR=SN8rdT5QMk-QF0LuWz0Xh2pp9abrfc3FgKmVQ@mail.gmail.com> <71d0bd98-ff97-7ed1-1f95-c0d134d0b2a1@redhat.com>
+In-Reply-To: <71d0bd98-ff97-7ed1-1f95-c0d134d0b2a1@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 13 Mar 2019 15:54:39 -0700
+Message-ID: <CAKgT0Uef=O3bSQLc6-JY8jLmmtOPFwVWSAsY+sHL=BocSGp8BQ@mail.gmail.com>
+Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free pages
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 05:38:55PM -0700, John Hubbard wrote:
-> On 3/12/19 8:30 AM, Ira Weiny wrote:
-> > On Wed, Mar 06, 2019 at 03:54:55PM -0800, john.hubbard@gmail.com wrote:
-> > > From: John Hubbard <jhubbard@nvidia.com>
-> > > 
-> > > Introduces put_user_page(), which simply calls put_page().
-> > > This provides a way to update all get_user_pages*() callers,
-> > > so that they call put_user_page(), instead of put_page().
-> > 
-> > So I've been running with these patches for a while but today while ramping up
-> > my testing I hit the following:
-> > 
-> > [ 1355.557819] ------------[ cut here ]------------
-> > [ 1355.563436] get_user_pages pin count overflowed
-> 
-> Hi Ira,
-> 
-> Thanks for reporting this. That overflow, at face value, means that we've
-> used more than the 22 bits worth of gup pin counts, so about 4 million pins
-> of the same page...
+On Wed, Mar 13, 2019 at 9:39 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 13.03.19 17:37, Alexander Duyck wrote:
+> > On Wed, Mar 13, 2019 at 5:18 AM David Hildenbrand <david@redhat.com> wrote:
+> >>
+> >> On 13.03.19 12:54, Nitesh Narayan Lal wrote:
+> >>>
+> >>> On 3/12/19 5:13 PM, Alexander Duyck wrote:
+> >>>> On Tue, Mar 12, 2019 at 12:46 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>>> On 3/8/19 4:39 PM, Alexander Duyck wrote:
+> >>>>>> On Fri, Mar 8, 2019 at 11:39 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>>>>> On 3/8/19 2:25 PM, Alexander Duyck wrote:
+> >>>>>>>> On Fri, Mar 8, 2019 at 11:10 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>>>>>>> On 3/8/19 1:06 PM, Alexander Duyck wrote:
+> >>>>>>>>>> On Thu, Mar 7, 2019 at 6:32 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >>>>>>>>>>> On Thu, Mar 07, 2019 at 02:35:53PM -0800, Alexander Duyck wrote:
+> >>>>>>>>>>>> The only other thing I still want to try and see if I can do is to add
+> >>>>>>>>>>>> a jiffies value to the page private data in the case of the buddy
+> >>>>>>>>>>>> pages.
+> >>>>>>>>>>> Actually there's one extra thing I think we should do, and that is make
+> >>>>>>>>>>> sure we do not leave less than X% off the free memory at a time.
+> >>>>>>>>>>> This way chances of triggering an OOM are lower.
+> >>>>>>>>>> If nothing else we could probably look at doing a watermark of some
+> >>>>>>>>>> sort so we have to have X amount of memory free but not hinted before
+> >>>>>>>>>> we will start providing the hints. It would just be a matter of
+> >>>>>>>>>> tracking how much memory we have hinted on versus the amount of memory
+> >>>>>>>>>> that has been pulled from that pool.
+> >>>>>>>>> This is to avoid false OOM in the guest?
+> >>>>>>>> Partially, though it would still be possible. Basically it would just
+> >>>>>>>> be a way of determining when we have hinted "enough". Basically it
+> >>>>>>>> doesn't do us much good to be hinting on free memory if the guest is
+> >>>>>>>> already constrained and just going to reallocate the memory shortly
+> >>>>>>>> after we hinted on it. The idea is with a watermark we can avoid
+> >>>>>>>> hinting until we start having pages that are actually going to stay
+> >>>>>>>> free for a while.
+> >>>>>>>>
+> >>>>>>>>>>  It is another reason why we
+> >>>>>>>>>> probably want a bit in the buddy pages somewhere to indicate if a page
+> >>>>>>>>>> has been hinted or not as we can then use that to determine if we have
+> >>>>>>>>>> to account for it in the statistics.
+> >>>>>>>>> The one benefit which I can see of having an explicit bit is that it
+> >>>>>>>>> will help us to have a single hook away from the hot path within buddy
+> >>>>>>>>> merging code (just like your arch_merge_page) and still avoid duplicate
+> >>>>>>>>> hints while releasing pages.
+> >>>>>>>>>
+> >>>>>>>>> I still have to check PG_idle and PG_young which you mentioned but I
+> >>>>>>>>> don't think we can reuse any existing bits.
+> >>>>>>>> Those are bits that are already there for 64b. I think those exist in
+> >>>>>>>> the page extension for 32b systems. If I am not mistaken they are only
+> >>>>>>>> used in VMA mapped memory. What I was getting at is that those are the
+> >>>>>>>> bits we could think about reusing.
+> >>>>>>>>
+> >>>>>>>>> If we really want to have something like a watermark, then can't we use
+> >>>>>>>>> zone->free_pages before isolating to see how many free pages are there
+> >>>>>>>>> and put a threshold on it? (__isolate_free_page() does a similar thing
+> >>>>>>>>> but it does that on per request basis).
+> >>>>>>>> Right. That is only part of it though since that tells you how many
+> >>>>>>>> free pages are there. But how many of those free pages are hinted?
+> >>>>>>>> That is the part we would need to track separately and then then
+> >>>>>>>> compare to free_pages to determine if we need to start hinting on more
+> >>>>>>>> memory or not.
+> >>>>>>> Only pages which are isolated will be hinted, and once a page is
+> >>>>>>> isolated it will not be counted in the zone free pages.
+> >>>>>>> Feel free to correct me if I am wrong.
+> >>>>>> You are correct up to here. When we isolate the page it isn't counted
+> >>>>>> against the free pages. However after we complete the hint we end up
+> >>>>>> taking it out of isolation and returning it to the "free" state, so it
+> >>>>>> will be counted against the free pages.
+> >>>>>>
+> >>>>>>> If I am understanding it correctly you only want to hint the idle pages,
+> >>>>>>> is that right?
+> >>>>>> Getting back to the ideas from our earlier discussion, we had 3 stages
+> >>>>>> for things. Free but not hinted, isolated due to hinting, and free and
+> >>>>>> hinted. So what we would need to do is identify the size of the first
+> >>>>>> pool that is free and not hinted by knowing the total number of free
+> >>>>>> pages, and then subtract the size of the pages that are hinted and
+> >>>>>> still free.
+> >>>>> To summarize, for now, I think it makes sense to stick with the current
+> >>>>> approach as this way we can avoid any locking in the allocation path and
+> >>>>> reduce the number of hypercalls for a bunch of MAX_ORDER - 1 page.
+> >>>> I'm not sure what you are talking about by "avoid any locking in the
+> >>>> allocation path". Are you talking about the spin on idle bit, if so
+> >>>> then yes.
+> >>> Yeap!
+> >>>> However I have been testing your patches and I was correct
+> >>>> in the assumption that you forgot to handle the zone lock when you
+> >>>> were freeing __free_one_page.
+> >>> Yes, these are the steps other than the comments you provided in the
+> >>> code. (One of them is to fix release_buddy_page())
+> >>>>  I just did a quick copy/paste from your
+> >>>> zone lock handling from the guest_free_page_hinting function into the
+> >>>> release_buddy_pages function and then I was able to enable multiple
+> >>>> CPUs without any issues.
+> >>>>
+> >>>>> For the next step other than the comments received in the code and what
+> >>>>> I mentioned in the cover email, I would like to do the following:
+> >>>>> 1. Explore the watermark idea suggested by Alex and bring down memhog
+> >>>>> execution time if possible.
+> >>>> So there are a few things that are hurting us on the memhog test:
+> >>>> 1. The current QEMU patch is only madvising 4K pages at a time, this
+> >>>> is disabling THP and hurts the test.
+> >>> Makes sense, thanks for pointing this out.
+> >>>>
+> >>>> 2. The fact that we madvise the pages away makes it so that we have to
+> >>>> fault the page back in in order to use it for the memhog test. In
+> >>>> order to avoid that penalty we may want to see if we can introduce
+> >>>> some sort of "timeout" on the pages so that we are only hinting away
+> >>>> old pages that have not been used for some period of time.
+> >>>
+> >>> Possibly using MADVISE_FREE should also help in this, I will try this as
+> >>> well.
+> >>
+> >> I was asking myself some time ago how MADVISE_FREE will be handled in
+> >> case of THP. Please let me know your findings :)
+> >
+> > The problem with MADVISE_FREE is that it will add additional
+> > complication to the QEMU portion of all this as it only applies to
+> > anonymous memory if I am not mistaken.
+>
+> Just as MADV_DONTNEED. So nothing new. Future work.
 
-This is my bug in the patches I'm playing with.  Somehow I'm causing more puts
-than gets...  I'm not sure how but this is for sure my problem.
+I'm pretty sure you can use MADV_DONTNEED to free up file backed
+memory, I don't believe this is the case for MADV_FREE, but maybe I am
+mistaken.
 
-Backing off to your patch set the numbers are good.
+On a side note I was just reviewing some stuff related to the reserved
+bit and on-lining hotplug memory, and it just occurred to me that most
+the PG_offline bit would be a good means to indicate that we hinted
+away a page out of the buddy allocator, especially since it is already
+used by the balloon drivers anyway.  We would just have to add a call
+to make sure we clear it when we call __ClearPageBuddy. It looks like
+that would currently be in del_page_from_free_area, at least for
+linux-next.
 
-Sorry for the noise.
+I just wanted to get your thoughts on that as it seems like it might
+be a good fit.
 
-With the testing I've done today I feel comfortable adding
+Thanks.
 
-Tested-by: Ira Weiny <ira.weiny@intel.com>
-
-For the main GUP and InfiniBand patches.
-
-Ira
-
-> 
-> > [ 1355.563446] WARNING: CPU: 1 PID: 1740 at mm/gup.c:73 get_gup_pin_page+0xa5/0xb0
-> > [ 1355.577391] Modules linked in: ib_isert iscsi_target_mod ib_srpt target_core_mod ib_srp scsi_transpo
-> > rt_srp ext4 mbcache jbd2 mlx4_ib opa_vnic rpcrdma sunrpc rdma_ucm ib_iser rdma_cm ib_umad iw_cm libiscs
-> > i ib_ipoib scsi_transport_iscsi ib_cm sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp kvm irqbyp
-> > ass snd_hda_codec_realtek ib_uverbs snd_hda_codec_generic crct10dif_pclmul ledtrig_audio snd_hda_intel
-> > crc32_pclmul snd_hda_codec snd_hda_core ghash_clmulni_intel snd_hwdep snd_pcm aesni_intel crypto_simd s
-> > nd_timer ib_core cryptd snd glue_helper dax_pmem soundcore nd_pmem ipmi_si device_dax nd_btt ioatdma nd
-> > _e820 ipmi_devintf ipmi_msghandler iTCO_wdt i2c_i801 iTCO_vendor_support libnvdimm pcspkr lpc_ich mei_m
-> > e mei mfd_core wmi pcc_cpufreq acpi_cpufreq sch_fq_codel xfs libcrc32c mlx4_en sr_mod cdrom sd_mod mgag
-> > 200 drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops mlx4_core ttm crc32c_intel igb isci ah
-> > ci dca libsas firewire_ohci drm i2c_algo_bit libahci scsi_transport_sas
-> > [ 1355.577429]  firewire_core crc_itu_t i2c_core libata dm_mod [last unloaded: rdmavt]
-> > [ 1355.686703] CPU: 1 PID: 1740 Comm: reg-mr Not tainted 5.0.0+ #10
-> > [ 1355.693851] Hardware name: Intel Corporation W2600CR/W2600CR, BIOS SE5C600.86B.02.04.0003.1023201411
-> > 38 10/23/2014
-> > [ 1355.705750] RIP: 0010:get_gup_pin_page+0xa5/0xb0
-> > [ 1355.711348] Code: e8 40 02 ff ff 80 3d ba a2 fb 00 00 b8 b5 ff ff ff 75 bb 48 c7 c7 48 0a e9 81 89 4
-> > 4 24 04 c6 05 a1 a2 fb 00 01 e8 35 63 e8 ff <0f> 0b 8b 44 24 04 eb 9c 0f 1f 00 66 66 66 66 90 41 57 49
-> > bf 00 00
-> > [ 1355.733244] RSP: 0018:ffffc90005a23b30 EFLAGS: 00010286
-> > [ 1355.739536] RAX: 0000000000000000 RBX: ffffea0014220000 RCX: 0000000000000000
-> > [ 1355.748005] RDX: 0000000000000003 RSI: ffffffff827d94a3 RDI: 0000000000000246
-> > [ 1355.756453] RBP: ffffea0014220000 R08: 0000000000000002 R09: 0000000000022400
-> > [ 1355.764907] R10: 0009ccf0ad0c4203 R11: 0000000000000001 R12: 0000000000010207
-> > [ 1355.773369] R13: ffff8884130b7040 R14: fff0000000000fff R15: 000fffffffe00000
-> > [ 1355.781836] FS:  00007f2680d0d740(0000) GS:ffff88842e840000(0000) knlGS:0000000000000000
-> > [ 1355.791384] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [ 1355.798319] CR2: 0000000000589000 CR3: 000000040b05e004 CR4: 00000000000606e0
-> > [ 1355.806809] Call Trace:
-> > [ 1355.810078]  follow_page_pte+0x4f3/0x5c0
-> > [ 1355.814987]  __get_user_pages+0x1eb/0x730
-> > [ 1355.820020]  get_user_pages+0x3e/0x50
-> > [ 1355.824657]  ib_umem_get+0x283/0x500 [ib_uverbs]
-> > [ 1355.830340]  ? _cond_resched+0x15/0x30
-> > [ 1355.835065]  mlx4_ib_reg_user_mr+0x75/0x1e0 [mlx4_ib]
-> > [ 1355.841235]  ib_uverbs_reg_mr+0x10c/0x220 [ib_uverbs]
-> > [ 1355.847400]  ib_uverbs_write+0x2f9/0x4d0 [ib_uverbs]
-> > [ 1355.853473]  __vfs_write+0x36/0x1b0
-> > [ 1355.857904]  ? selinux_file_permission+0xf0/0x130
-> > [ 1355.863702]  ? security_file_permission+0x2e/0xe0
-> > [ 1355.869503]  vfs_write+0xa5/0x1a0
-> > [ 1355.873751]  ksys_write+0x4f/0xb0
-> > [ 1355.878009]  do_syscall_64+0x5b/0x180
-> > [ 1355.882656]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > [ 1355.888862] RIP: 0033:0x7f2680ec3ed8
-> > [ 1355.893420] Code: 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 8d 05 45 78 0
-> > d 00 8b 00 85 c0 75 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 41 54 49
-> > 89 d4 55
-> > [ 1355.915573] RSP: 002b:00007ffe65d50bc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> > [ 1355.924621] RAX: ffffffffffffffda RBX: 00007ffe65d50c74 RCX: 00007f2680ec3ed8
-> > [ 1355.933195] RDX: 0000000000000030 RSI: 00007ffe65d50c80 RDI: 0000000000000003
-> > [ 1355.941760] RBP: 0000000000000030 R08: 0000000000000007 R09: 0000000000581260
-> > [ 1355.950326] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000581930
-> > [ 1355.958885] R13: 000000000000000c R14: 0000000000581260 R15: 0000000000000000
-> > [ 1355.967430] ---[ end trace bc771ac6189977a2 ]---
-> > 
-> > 
-> > I'm not sure what I did to do this and I'm going to work on a reproducer.  At
-> > the time of the Warning I only had 1 GUP user?!?!?!?!
-> 
-> If there is a get_user_pages() call that lacks a corresponding put_user_pages()
-> call, then the count could start working its way up, and up. Either that, or a
-> bug in my patches here, could cause this. The basic counting works correctly
-> in fio runs on an NVMe driver with Direct IO, when I dump out
-> `cat /proc/vmstat | grep gup`: the counts match up, but that is a simple test.
-> 
-> One way to force a faster repro is to increase the GUP_PIN_COUNTING_BIAS, so
-> that the gup pin count runs into the max much sooner.
-> 
-> I'd really love to create a test setup that would generate this failure, so
-> anything you discover on how to repro (including what hardware is required--I'm
-> sure I can scrounge up some IB gear in a pinch) is of great interest.
-> 
-> Also, I'm just now starting on the DEBUG_USER_PAGE_REFERENCES idea that Jerome,
-> Jan, and Dan floated some months ago. It's clearly a prerequisite to converting
-> the call sites properly--just our relatively small IB driver is showing that.
-> This feature will provide a different mapping of the struct pages, if get
-> them via get_user_pages(). That will allow easily asserting that put_user_page()
-> and put_page() are not swapped, in either direction.
-> 
-> 
-> > 
-> > I'm not using ODP, so I don't think the changes we have discussed there are a
-> > problem.
-> > 
-> > Ira
-> > 
-> 
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
+- Alex
