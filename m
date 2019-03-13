@@ -2,103 +2,86 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24728C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750C8C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13A72146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:08:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="b99hvL0t"
+	by mail.kernel.org (Postfix) with ESMTP id 3596A21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552515137;
+	bh=ydH/zf9ssBZtMkDR7HDT1bipp6FYU7iB7LX0U3m5AUY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XOHZ1EjwKDmAVZ0hKfvr5UDgmLFZ2DfhdyewybQxssiyGImv0aBQin/CWHnviiWkL
+	 2vUOV0IBP6wzZAPaS6l3rdBMMtWUw57EP6z8Ohk1IE5ngelMZDFCTeRHGikj2NjSKx
+	 0r7zzF8p2bIOsyuCPkJbYvpFh8j22cbpUuKHTYyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfCMWIK (ORCPT
+        id S1726741AbfCMWMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:08:10 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]:43284 "EHLO
-        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfCMWIK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:08:10 -0400
-Received: by mail-qk1-f171.google.com with SMTP id s26so2131622qkm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 15:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=/qDGw5+rgwnGlzkiXKqOACIK+wIaTMx7JRkJ7TcmLUw=;
-        b=b99hvL0tzD+2RlQ79OplublQQ/cMZaaXhiwaJrSjCMvzGrV0npbUMGtjVrbo5pCSgP
-         OmBfahqrdAvKNo8Th5waf3rszuqWtW3Oipd/0o1MwWPtatAKOyrD0mgVlCpNAfUlXzqD
-         azlqNDvLpBz0tehnobs7HED0+gMwNyRlzYiYtVdtEt1rJGU6DMQtOPKkO6Hxmcggz++4
-         COBiMaN73xbtLXWHM8x0do/G+lBHp+osRiJ+duwAWwUY3VzOFa81qK9JDCygYPIhsJ1y
-         umWBtPqUZ98axNe0wnKBXdyLDlyC5dmzcTAgd7Py6ZX9WUqbsCrmsuY1P5HmuV4QoDvO
-         x9MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=/qDGw5+rgwnGlzkiXKqOACIK+wIaTMx7JRkJ7TcmLUw=;
-        b=hBNg4ltl5/EXTwNcnuBzRBvInXb+MKmW+Q22iVS1VxX6aE37iTfAeZMiknGjo/HDub
-         q3CZwdJSSxbe7hGtPuZ0Z+W5iKRcA9PTsGPNbN2aRVjw38PQSuqhyRdrEI5vYl40c2SC
-         5Y3RcrCumBSSoXqwEMt5oxachNrRIfT26v7pnDcfY0eT+BIGnft9Fo8djPgXT+nzeacr
-         R28EtyCIdEA5hk4Z2yUFIcfLRz8s7m0tCFiXJalXXlgdulpGcsqX64bUf/cjAa6n63Lz
-         TjLOPJ7mA79YBmr2LZwwvIxBn9VxTsQoeZoIxBubrhOcxgD48rDpS9Ktp9DAdS7ln4P4
-         xKIg==
-X-Gm-Message-State: APjAAAV18ww5Dtv8IuneJ2jUATWCGLcyJCNez5YiFL6ejqB1VPu0L/bj
-        8kjdjcVTh9Tx0/A4//1ZzivYYQ==
-X-Google-Smtp-Source: APXvYqxihLjxDhrF9y4NHQO0Ldz2sxWpX6ruLQFUyXXhrexIVeftFHMj3ab+nVvvCMhDcGf3HdxQLg==
-X-Received: by 2002:a37:c6d0:: with SMTP id s77mr15011864qkl.116.1552514888756;
-        Wed, 13 Mar 2019 15:08:08 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id w29sm1920517qtk.72.2019.03.13.15.08.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Mar 2019 15:08:08 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 15:08:04 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        michal.lkml@markovi.net, davem@davemloft.net,
-        gregkh@linuxfoundation.org, jiri@mellanox.com,
-        kwankhede@nvidia.com, alex.williamson@redhat.com,
-        vuhuong@mellanox.com, yuvalav@mellanox.com, kvm@vger.kernel.org
-Subject: Re: [RFC net-next v1 0/3] Support mlx5 mediated devices in host
-Message-ID: <20190313150804.3702ae47@cakuba.netronome.com>
-In-Reply-To: <1552082876-60228-1-git-send-email-parav@mellanox.com>
-References: <1552082876-60228-1-git-send-email-parav@mellanox.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 13 Mar 2019 18:12:16 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52044 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbfCMWMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 18:12:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 15:12:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,475,1544515200"; 
+   d="scan'208";a="140547387"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Mar 2019 15:12:14 -0700
+Date:   Wed, 13 Mar 2019 16:12:58 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     "Elliott, Robert (Persistent Memory)" <elliott@hpe.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jiri Kosina <jikos@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.de>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] floppy: fix harmless clang build warning
+Message-ID: <20190313221257.GA15153@localhost.localdomain>
+References: <20190313211433.4178148-1-arnd@arndb.de>
+ <AT5PR8401MB116964D0C90783A164834C2CAB4A0@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AT5PR8401MB116964D0C90783A164834C2CAB4A0@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  8 Mar 2019 16:07:53 -0600, Parav Pandit wrote:
-> Use case:
-> ---------
-> A user wants to create/delete hardware linked sub devices without
-> using SR-IOV.
-> These devices for a pci device can be netdev (optional rdma device)
-> or other devices. Such sub devices share some of the PCI device
-> resources and also have their own dedicated resources.
-> A user wants to use this device in a host where PF PCI device exist.
-> (not in a guest VM.) A user may want to use such sub device in future
-> in guest VM.
+On Wed, Mar 13, 2019 at 10:01:43PM +0000, Elliott, Robert (Persistent Memory) wrote:
+> > @@ -3899,7 +3899,7 @@ static void __init config_types(void)
+> >  	if (!UDP->cmos)
+> >  		UDP->cmos = FLOPPY0_TYPE;
+> >  	drive = 1;
+> > -	if (!UDP->cmos && FLOPPY1_TYPE)
+> > +	if (!UDP->cmos)
+> >  		UDP->cmos = FLOPPY1_TYPE;
+> > 
+> >  	/* FIXME: additional physical CMOS drive detection should go here */
+> > --
+> > 2.20.0
 > 
-> Few examples are:
-> 1. netdev having its own txq(s), rq(s) and/or hw offload parameters.
-> 2. netdev with switchdev mode using netdev representor
+> On x86 it expands to a hardware read, so this would change the control flow.
+> 
+> #define FLOPPY1_TYPE                                    \
+> ({                                                      \
+>         unsigned long flags;                            \
+>         unsigned char val;                              \
+>         spin_lock_irqsave(&rtc_lock, flags);            \
+>         val = CMOS_READ(0x10) & 15;                     \
+>         spin_unlock_irqrestore(&rtc_lock, flags);       \
+>         val;                                            \
+> })
 
-Hi Parav!
-
-Sorry for going quiet, I'm hoping to clarify the use cases and
-the devlink part on the other thread with Jiri, and then come back 
-to implementation details.
-
-> 3. rdma device with IB link layer and IPoIB netdev
-> 4. rdma/RoCE device and a netdev
-> 5. rdma device with multiple ports
-
+The end result is still the same, though. It just doesn't read the
+hardware twice when FLOPPY1_TYPE is non-zero.
