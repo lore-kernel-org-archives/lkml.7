@@ -2,133 +2,127 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD542C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B06C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BAD2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8116F2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505042;
-	bh=3OEC7GBBfVkxfjijUC5AV5YJ9gW2LGQUp+p+BHnlndo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=URzWVbpp+CzwQkJlo4YE4OXcVTRwbgSnF7cIEQFDbyMxGGxqJgov+SQy2fA0zfaks
-	 m1AE1WJvCYWqZQGHjGDdM28ktzL0HT/oBMlYGlO5JI1m+LdsLiJolbFl36f7oT9Xvh
-	 bv3LQM2wKOOk2yhcYgUaDsHMmYp5aLw+gj7Xvngs=
+	s=default; t=1552505049;
+	bh=edO8ZivETo/D7oQY/026yF+ytHjuzPt1RKGB+G0H6pU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nKlT0a/UMTPrNQGJmn7asIGeDYvXePDzR9jzKDAGnzkZfFQRKyVU58QWf9x+kEpss
+	 wY166LFTPh7soDSYJqu14OY7HLkvochF94i4jc9wlw8Xj6bcj8W4duZmiP+C31Z2VV
+	 5n2G9dGwLgEJQeW23dhCVhsTrYTBDe3Qso5+lyqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfCMTYB (ORCPT
+        id S1728887AbfCMTYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:24:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46938 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728709AbfCMTQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:16:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1728709AbfCMTYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:24:06 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA6AF217F5;
-        Wed, 13 Mar 2019 19:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82BF52177E;
+        Wed, 13 Mar 2019 19:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504595;
-        bh=3OEC7GBBfVkxfjijUC5AV5YJ9gW2LGQUp+p+BHnlndo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C9LOJAYy9jkSk/3/mYoR8xLT9yfP/b9Heh7DdjmuUAM69EFMRh3eGL+UwQALh67kD
-         Jq8sgCiL6AV3WoLmAQ2uhZEJptuT3r50n6cK157dcAkWIiv/32BeWeaNJjRJSOlAqM
-         yPLPqYj5665u+ZwG0rWemswuRBqXs57PMSUNR8+U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vadim Lomovtsev <vlomovtsev@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 29/33] net: thunderx: make CFG_DONE message to run through generic send-ack sequence
-Date:   Wed, 13 Mar 2019 15:15:02 -0400
-Message-Id: <20190313191506.159677-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190313191506.159677-1-sashal@kernel.org>
-References: <20190313191506.159677-1-sashal@kernel.org>
+        s=default; t=1552505045;
+        bh=edO8ZivETo/D7oQY/026yF+ytHjuzPt1RKGB+G0H6pU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uSOCtybTK+xGJ98O9vpFDnBWCdkn5jraPTWKAYb8eXsgwE4iLgN75gayewHcYH4B/
+         kUq+PRw5lhbFSeb8zFo+1511xNnayUFDowLUcDH5KKZwB30Pbcb/0w/VzUMyF8U4to
+         go0mWkbB/zROn7x9c0eodngvMehVBlX99/WZ5Vn8=
+Received: by mail-qt1-f178.google.com with SMTP id k2so3329525qtm.1;
+        Wed, 13 Mar 2019 12:24:05 -0700 (PDT)
+X-Gm-Message-State: APjAAAUrJ9h2RSkBdUTzZR2oEBEZbChcAZTf0YmEg3zgg6lazMFuvOLc
+        TAd1FUOnfZtJAKkfKmT5AwlPHrPZC/D3Ayh9pw==
+X-Google-Smtp-Source: APXvYqwKJk8paiAkY26pa7ZXNoypsPDvTHhGQBHWA2yIT3uF//y6n19w1URWlWBvJFpkxo3SAnjcvuhQRtLKmbqjN58=
+X-Received: by 2002:a0c:ec11:: with SMTP id y17mr8220881qvo.77.1552505044754;
+ Wed, 13 Mar 2019 12:24:04 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
+ <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
+ <20190312160057.GA31306@bogus> <8b18501b-e120-97f2-f6b5-4771dc0f613f@linux.intel.com>
+In-Reply-To: <8b18501b-e120-97f2-f6b5-4771dc0f613f@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 13 Mar 2019 14:23:53 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKnwYXSsP5B_uAaRoCEEV7Cb7f8XFPSC2z_hfSj7Rgqyg@mail.gmail.com>
+Message-ID: <CAL_JsqKnwYXSsP5B_uAaRoCEEV7Cb7f8XFPSC2z_hfSj7Rgqyg@mail.gmail.com>
+Subject: Re: [PATCHv2 1/5] Documentation: dt: edac: Fix Stratix10 IRQ bindings
+To:     thor.thayer@linux.intel.com
+Cc:     Borislav Petkov <bp@alien8.de>, Dinh Nguyen <dinguyen@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        devicetree@vger.kernel.org, linux-edac@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Lomovtsev <vlomovtsev@marvell.com>
+On Tue, Mar 12, 2019 at 2:13 PM Thor Thayer <thor.thayer@linux.intel.com> wrote:
+>
+> Hi Rob,
+>
+> On 3/12/19 11:00 AM, Rob Herring wrote:
+> > On Wed, Feb 27, 2019 at 11:27:21AM -0600, thor.thayer@linux.intel.com wrote:
+> >> From: Thor Thayer <thor.thayer@linux.intel.com>
+> >>
+> >> Fix Stratix10 ECC bindings to specify only the single
+> >> bit error. On Stratix10 double bit errors are handled
+> >> as SErrors instead of interrupts.
+> >> Indicate the differences between the ARM64 and ARM32
+> >> EDAC architecture in the bindings.
+> >>
+> >> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> >> ---
+> >> v2 No change
+> >> ---
+> >>   .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 23 +++++++++++++++-------
+> >>   1 file changed, 16 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+> >> index 5626560a6cfd..a0ac50e15912 100644
+> >> --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+> >> +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+> >> @@ -236,33 +236,42 @@ Stratix10 SoCFPGA ECC Manager
+> >>   The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
+> >>   in a shared register similar to the Arria10. However, ECC requires
+> >>   access to registers that can only be read from Secure Monitor with
+> >> -SMC calls. Therefore the device tree is slightly different.
+> >> +SMC calls. Therefore the device tree is slightly different. Note that
+> >> +only 1 interrupt is sent because the double bit errors are treated as
+> >> +SErrors instead of IRQ.
+> >>
+> >>   Required Properties:
+> >>   - compatible : Should be "altr,socfpga-s10-ecc-manager"
+> >> -- interrupts : Should be single bit error interrupt, then double bit error
+> >> -    interrupt.
+> >> +- altr,sysgr-syscon : phandle to Stratix10 System Manager Block
+> >> +                  containing the ECC manager registers.
+> >
+> > Seems this was already in use, but why not just make this node a child
+> > of the System Manager Block and remove this phandle?
+> >
+> Yes, this was already in use but I'm trying to fix that oversight with
+> this patch.
+>
+> The System Manager is a collection of registers used by different
+> peripherals including EMAC and ECC.
 
-[ Upstream commit 0dd563b9a62c4cbabf5d4fd6596440c2491e72b1 ]
+The EMAC has its own registers too, right? But the ECC does not it seems.
 
-At the end of NIC VF initialization VF sends CFG_DONE message to PF without
-using nicvf_msg_send_to_pf routine. This potentially could re-write data in
-mailbox. This commit is to implement common way of sending CFG_DONE message
-by the same way with other configuration messages by using
-nicvf_send_msg_to_pf() routine.
+> I view ECC Manager as a separate entity as is the Ethernet MAC which is
+> why I have it separate. Using the phandle also follows the convention
+> established with the Arria10 ECC Manager.
 
-Signed-off-by: Vadim Lomovtsev <vlomovtsev@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/cavium/thunder/nic_main.c   |  2 +-
- drivers/net/ethernet/cavium/thunder/nicvf_main.c | 15 ++++++++++++---
- 2 files changed, 13 insertions(+), 4 deletions(-)
+I guess this ship has sailed, so:
 
-diff --git a/drivers/net/ethernet/cavium/thunder/nic_main.c b/drivers/net/ethernet/cavium/thunder/nic_main.c
-index d89ec4724efd..819f38a3225d 100644
---- a/drivers/net/ethernet/cavium/thunder/nic_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nic_main.c
-@@ -1030,7 +1030,7 @@ static void nic_handle_mbx_intr(struct nicpf *nic, int vf)
- 	case NIC_MBOX_MSG_CFG_DONE:
- 		/* Last message of VF config msg sequence */
- 		nic_enable_vf(nic, vf, true);
--		goto unlock;
-+		break;
- 	case NIC_MBOX_MSG_SHUTDOWN:
- 		/* First msg in VF teardown sequence */
- 		if (vf >= nic->num_vf_en)
-diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-index f13256af8031..59b62b49ad48 100644
---- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-@@ -166,6 +166,17 @@ static int nicvf_check_pf_ready(struct nicvf *nic)
- 	return 1;
- }
- 
-+static void nicvf_send_cfg_done(struct nicvf *nic)
-+{
-+	union nic_mbx mbx = {};
-+
-+	mbx.msg.msg = NIC_MBOX_MSG_CFG_DONE;
-+	if (nicvf_send_msg_to_pf(nic, &mbx)) {
-+		netdev_err(nic->netdev,
-+			   "PF didn't respond to CFG DONE msg\n");
-+	}
-+}
-+
- static void nicvf_read_bgx_stats(struct nicvf *nic, struct bgx_stats_msg *bgx)
- {
- 	if (bgx->rx)
-@@ -1329,7 +1340,6 @@ int nicvf_open(struct net_device *netdev)
- 	struct nicvf *nic = netdev_priv(netdev);
- 	struct queue_set *qs = nic->qs;
- 	struct nicvf_cq_poll *cq_poll = NULL;
--	union nic_mbx mbx = {};
- 
- 	netif_carrier_off(netdev);
- 
-@@ -1419,8 +1429,7 @@ int nicvf_open(struct net_device *netdev)
- 		nicvf_enable_intr(nic, NICVF_INTR_RBDR, qidx);
- 
- 	/* Send VF config done msg to PF */
--	mbx.msg.msg = NIC_MBOX_MSG_CFG_DONE;
--	nicvf_write_to_mbx(nic, &mbx);
-+	nicvf_send_cfg_done(nic);
- 
- 	return 0;
- cleanup:
--- 
-2.19.1
-
+Acked-by: Rob Herring <robh@kernel.org>
