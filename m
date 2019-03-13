@@ -2,144 +2,105 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A378CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15525C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BB42147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B162147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbfCMLiH (ORCPT
+        id S1726330AbfCMLkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 07:38:07 -0400
-Received: from foss.arm.com ([217.140.101.70]:56498 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfCMLiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 07:38:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 328CB80D;
-        Wed, 13 Mar 2019 04:38:06 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E7753F71D;
-        Wed, 13 Mar 2019 04:38:03 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 11:37:57 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190313113757.aeaksz5akv6y5uep@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190312152059.GA5922@hirez.programming.kicks-ass.net>
- <20190312155043.vj3fiutnsovjti2x@e110439-lin>
- <20190313081958.GA5996@hirez.programming.kicks-ass.net>
+        Wed, 13 Mar 2019 07:40:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35472 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfCMLkL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 07:40:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id CAEEF27FD1A
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>, kernel@collabora.com,
+        Hartmut Knaack <knaack.h@gmx.de>
+Subject: [PATCH v3] iio: cros_ec: Fix the maths for gyro scale calculation
+Date:   Wed, 13 Mar 2019 12:40:02 +0100
+Message-Id: <20190313114002.11236-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313081958.GA5996@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Mar 09:19, Peter Zijlstra wrote:
-> On Tue, Mar 12, 2019 at 03:50:43PM +0000, Patrick Bellasi wrote:
-> > On 12-Mar 16:20, Peter Zijlstra wrote:
-> > > On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
-> > > > +/* Integer ceil-rounded range for each bucket */
-> 
->           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> > > > +#define UCLAMP_BUCKET_DELTA ((SCHED_CAPACITY_SCALE / UCLAMP_BUCKETS) + 1)
-> 
->                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> simply do not match.
+From: Gwendal Grignou <gwendal@chromium.org>
 
-Right, that don't match when UCLAMP_BUCKETS is a divider of
-SCHED_CAPACITY_SCALE, i.e. when we use 8 or 16 buckets.
+Calculation did not use IIO_DEGREE_TO_RAD and implemented a variant to
+avoid precision loss as we aim a nano value. The offset added to avoid
+rounding error, though, doesn't give us a close result to the expected
+value. E.g.
 
-> > > Uhm, should that not me ((x+y-1)/y), aka. DIV_ROUND_UP(x,y) ?
-> > 
-> > Well, there is certainly some rounding to be done...
-> > 
-> > > The above would give 4 for 9/3, which is clearly buggered.
-> > 
-> > .. still the math above should work fine within the boundaries we
-> > define for UCLAMP_BUCKET_DELTA (5..20 groups) and considering that
-> > SCHED_CAPACITY_SCALE will never be smaller then 1024.
-> 
-> That's a very poor reason to write utter nonsense :-)
-> 
-> > The above is designed to shrink the topmost bucket wrt all the others
-> > but it will never be smaller than ~30%.
-> 
-> 30% sounds like a lot, esp. for this range.
+For 1000dps, the result should be:
 
-Well, that 30% is really just ~16 utiliation units on a scale of 1024
-when buckets have a size of 52.
+    (1000 * pi ) / 180 >> 15 ~= 0.000532632218
 
-Still, yes, we can argue that's big but that's also the same error
-generated by DIV_ROUND_UP() when UCLAMP_BUCKETS is not 8 or 16.
+But with current calculation we get
 
-> > Here are the start values computed for each bucket using the math
-> > above and the computed shrinking percentage for the topmost bucket:
-> 
-> If you use a regular rounding, the error is _much_ smaller:
-> 
-> $ for ((x=5;x<21;x++)) ; do let d=(1024+x/2)/x; let s=(x-1)*d; let e=1024-s; let p=100*(d-e)/d; echo $x $d $s $e $p%; done
-                                    ^^^^^^^^^^^^^
-> 5 205 820 204 0%
-> 6 171 855 169 1%
-> 7 146 876 148 -1%
-> 8 128 896 128 0%
-> 9 114 912 112 1%
-> 10 102 918 106 -3%
-> 11 93 930 94 -1%
-> 12 85 935 89 -4%
-> 13 79 948 76 3%
-> 14 73 949 75 -2%
-> 15 68 952 72 -5%
-> 16 64 960 64 0%
-> 17 60 960 64 -6%
-> 18 57 969 55 3%
-> 19 54 972 52 3%
-> 20 51 969 55 -7%
-> 
-> Funnily enough, we have a helper for that too: DIV_ROUND_CLOSEST().
-                                                 ^^^^^^^^^^^^^^^^^^^^
-This is different than DIV_ROUND_UP() and actually better across the
-full range.
+    $ cat scale
+    0.000547890
 
-> Now, if we go further, the error will obviously increase because we run
-> out of precision, but even there, regular rounding will be better than
-> either floor or ceil.
+Fix the calculation by just doing the maths involved for a nano value
 
-I don't think we will have to cover other values in the further but I
-agree that this "closest rounding" is definitively better.
+   val * pi * 10e12 / (180 * 2^15)
 
-Thanks for spotting it, will update in v8.
+so we get a closer result.
 
+    $ cat scale
+    0.000532632
+
+Fixes: c14dca07a31d ("iio: cros_ec_sensors: add ChromeOS EC Contiguous Sensors driver")
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+
+Changes in v3:
+- Fix 'warning: this decimal constant is unsigned only in ISO C90' spotted by kbuild test robot.
+
+Changes in v2:
+- Do the maths instead of play with dividers as pointed by Jonathan.
+
+ drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+index 89cb0066a6e0..8d76afb87d87 100644
+--- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
++++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+@@ -103,9 +103,10 @@ static int cros_ec_sensors_read(struct iio_dev *indio_dev,
+ 			 * Do not use IIO_DEGREE_TO_RAD to avoid precision
+ 			 * loss. Round to the nearest integer.
+ 			 */
+-			*val = div_s64(val64 * 314159 + 9000000ULL, 1000);
+-			*val2 = 18000 << (CROS_EC_SENSOR_BITS - 1);
+-			ret = IIO_VAL_FRACTIONAL;
++			*val = 0;
++			*val2 = div_s64(val64 * 3141592653ULL,
++					180 << (CROS_EC_SENSOR_BITS - 1));
++			ret = IIO_VAL_INT_PLUS_NANO;
+ 			break;
+ 		case MOTIONSENSE_TYPE_MAG:
+ 			/*
 -- 
-#include <best/regards.h>
+2.20.1
 
-Patrick Bellasi
