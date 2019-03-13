@@ -2,103 +2,137 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CC4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B3CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5D021850
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jMKInlTb"
+	by mail.kernel.org (Postfix) with ESMTP id 993B72147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfCMJAf (ORCPT
+        id S1727317AbfCMJD0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:00:35 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43667 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbfCMJAW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:00:22 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z20so796811ljj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 02:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9gFFJDf2YnnW41mbrUGLhQnv9x8YWw9okQzyBd4EYFU=;
-        b=jMKInlTbt1kLgeuLKDe1amgKHzJijr6f5OIpO20OyvgkfgsGFPnJBf+y9RYwcTwOWp
-         RSMMny0yclfzx9rhkKAM0DE4N2KIqEt+MeGSe+EybjdQ7/um9Aq+qwJ/5Dj5hLXZ9eVz
-         wCvKQ2Kdna0pdjPTg49jZt06SR5Img4H2vK36R85kcNZlz0Ea5dTHlt/d+cy9J8yWfpZ
-         ZVKB8PHcjom6Wbt/de+T18MQw4P9JQ1WyQ7HyppLQ7ScMyO4hwzhVb2GhNkU9hTw3+K3
-         Sm6weatOipRzmxgWAfm5eq/x9cvj2aG474sTl0mo5zi5Gcet+AA/b4KMktKMVL/m4wDm
-         8JBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9gFFJDf2YnnW41mbrUGLhQnv9x8YWw9okQzyBd4EYFU=;
-        b=fh2AdtOHxbgpsFv4i4g/qd2tyKGGJBQprq7b/ZpL5xUQdh8BjSpjsp9UiaE6ooXSKU
-         YQ7OHPfGC29d3N6KIKXZShPOSxVtFDtxERSv3Ef/2E1Un3OfiIpDRBd7AW7cPM3MbUoQ
-         Q0NEUe5K7wvpRPfyn88mqgg03fmubxH8WZs8HnaVByqbh01grOsJeUtShMbIHPD8Tixr
-         1VjsMbi0Gn0ukTI+ZuVE9Y06hauqRQHxa9gpPV69+pFyGKuzYP0dPll+MMuwdC5vVRfO
-         1LNEL0mKdICM94+2+Chr4DUkrYlfHtSILwORZeHRKqdutbsTygKc6gLcxqtDnvDRrYA5
-         H2aw==
-X-Gm-Message-State: APjAAAVKL7hrfcPa9DWO9Dv5ZJAFPr3PhgomAGPGntlEIb4CTSUFLsAc
-        6p+O7srw4W4QjzJT8mQGce1GPw==
-X-Google-Smtp-Source: APXvYqwIXkMGOo68z7kFcseQc3iUz+MeychrjygBb8vF2llh1M8u7cMuBjgZiH7jH8KbVIemdtrL0w==
-X-Received: by 2002:a2e:8986:: with SMTP id c6mr543791lji.146.1552467620690;
-        Wed, 13 Mar 2019 02:00:20 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id u15sm1701986lja.73.2019.03.13.02.00.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 13 Mar 2019 02:00:19 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
-Cc:     jcrouse@codeaurora.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
-        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
-        evgreen@chromium.org, sibis@codeaurora.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH 3/4] OPP: Update the bandwidth on OPP frequency changes
-Date:   Wed, 13 Mar 2019 11:00:09 +0200
-Message-Id: <20190313090010.20534-4-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190313090010.20534-1-georgi.djakov@linaro.org>
-References: <20190313090010.20534-1-georgi.djakov@linaro.org>
+        Wed, 13 Mar 2019 05:03:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47432 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfCMJDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 05:03:25 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 05E92757DB;
+        Wed, 13 Mar 2019 09:03:25 +0000 (UTC)
+Received: from localhost (unknown [10.40.205.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 174F827CB0;
+        Wed, 13 Mar 2019 09:03:17 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 10:03:17 +0100
+From:   Stanislaw Gruszka <sgruszka@redhat.com>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Rosen Penev <rosenp@gmail.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Samuel Sieb <samuel@sieb.net>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, jan.viktorin@gmail.com
+Subject: [PATCH v2] iommu/amd: fix sg->dma_address for sg->offset bigger than
+ PAGE_SIZE
+Message-ID: <20190313090316.GA2663@redhat.com>
+References: <20190228104223.GA2749@redhat.com>
+ <20190228121948.GD6072@redhat.com>
+ <20190228134029.GC1594@8bytes.org>
+ <20190304071037.GA2787@redhat.com>
+ <CAKxU2N-k-9DCYBv6W3CohL963dr3AeY3VHyt8FrUuo=BfacDsw@mail.gmail.com>
+ <20190311084319.GA3310@redhat.com>
+ <20190311090314.GB3310@redhat.com>
+ <e0630ae9d9bee73d8a1ce3499ea9f77900e9cdfa.camel@linux.intel.com>
+ <20190312070832.GA2483@redhat.com>
+ <67c062b183fbd5651a9aa990e677d31673ff7580.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <67c062b183fbd5651a9aa990e677d31673ff7580.camel@linux.intel.com>
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 13 Mar 2019 09:03:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the OPP bandwidth values are populated, we want to switch also the
-interconnect bandwidth in addition to frequency and voltage.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Take into account that sg->offset can be bigger than PAGE_SIZE when
+setting segment sg->dma_address. Otherwise sg->dma_address will point
+at diffrent page, what makes DMA not possible with erros like this:
+
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa70c0 flags=0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7040 flags=0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7080 flags=0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7100 flags=0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7000 flags=0x0020]
+
+Additinally with wrong sg->dma_address unmap_sg will free wrong pages,
+what what can cause crashes like this:
+
+Feb 28 19:27:45 kernel: BUG: Bad page state in process cinnamon  pfn:39e8b1
+Feb 28 19:27:45 kernel: Disabling lock debugging due to kernel taint
+Feb 28 19:27:45 kernel: flags: 0x2ffff0000000000()
+Feb 28 19:27:45 kernel: raw: 02ffff0000000000 0000000000000000 ffffffff00000301 0000000000000000
+Feb 28 19:27:45 kernel: raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+Feb 28 19:27:45 kernel: page dumped because: nonzero _refcount
+Feb 28 19:27:45 kernel: Modules linked in: ccm fuse arc4 nct6775 hwmon_vid amdgpu nls_iso8859_1 nls_cp437 edac_mce_amd vfat fat kvm_amd ccp rng_core kvm mt76x0u mt76x0_common mt76x02_usb irqbypass mt76_usb mt76x02_lib mt76 crct10dif_pclmul crc32_pclmul chash mac80211 amd_iommu_v2 ghash_clmulni_intel gpu_sched i2c_algo_bit ttm wmi_bmof snd_hda_codec_realtek snd_hda_codec_generic drm_kms_helper snd_hda_codec_hdmi snd_hda_intel drm snd_hda_codec aesni_intel snd_hda_core snd_hwdep aes_x86_64 crypto_simd snd_pcm cfg80211 cryptd mousedev snd_timer glue_helper pcspkr r8169 input_leds realtek agpgart libphy rfkill snd syscopyarea sysfillrect sysimgblt fb_sys_fops soundcore sp5100_tco k10temp i2c_piix4 wmi evdev gpio_amdpt pinctrl_amd mac_hid pcc_cpufreq acpi_cpufreq sg ip_tables x_tables ext4(E) crc32c_generic(E) crc16(E) mbcache(E) jbd2(E) fscrypto(E) sd_mod(E) hid_generic(E) usbhid(E) hid(E) dm_mod(E) serio_raw(E) atkbd(E) libps2(E) crc32c_intel(E) ahci(E) libahci(E) libata(E) xhci_pci(E) 
+ xhci_hcd(E)
+Feb 28 19:27:45 kernel:  scsi_mod(E) i8042(E) serio(E) bcache(E) crc64(E)
+Feb 28 19:27:45 kernel: CPU: 2 PID: 896 Comm: cinnamon Tainted: G    B   W   E     4.20.12-arch1-1-custom #1
+Feb 28 19:27:45 kernel: Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./B450M Pro4, BIOS P1.20 06/26/2018
+Feb 28 19:27:45 kernel: Call Trace:
+Feb 28 19:27:45 kernel:  dump_stack+0x5c/0x80
+Feb 28 19:27:45 kernel:  bad_page.cold.29+0x7f/0xb2
+Feb 28 19:27:45 kernel:  __free_pages_ok+0x2c0/0x2d0
+Feb 28 19:27:45 kernel:  skb_release_data+0x96/0x180
+Feb 28 19:27:45 kernel:  __kfree_skb+0xe/0x20
+Feb 28 19:27:45 kernel:  tcp_recvmsg+0x894/0xc60
+Feb 28 19:27:45 kernel:  ? reuse_swap_page+0x120/0x340
+Feb 28 19:27:45 kernel:  ? ptep_set_access_flags+0x23/0x30
+Feb 28 19:27:45 kernel:  inet_recvmsg+0x5b/0x100
+Feb 28 19:27:45 kernel:  __sys_recvfrom+0xc3/0x180
+Feb 28 19:27:45 kernel:  ? handle_mm_fault+0x10a/0x250
+Feb 28 19:27:45 kernel:  ? syscall_trace_enter+0x1d3/0x2d0
+Feb 28 19:27:45 kernel:  ? __audit_syscall_exit+0x22a/0x290
+Feb 28 19:27:45 kernel:  __x64_sys_recvfrom+0x24/0x30
+Feb 28 19:27:45 kernel:  do_syscall_64+0x5b/0x170
+Feb 28 19:27:45 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Cc: stable@vger.kernel.org
+Reported-and-tested-by: Jan Viktorin <jan.viktorin@gmail.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
 ---
- drivers/opp/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+v2: add comment 
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 4b019cecaa07..99e7c4cf6c34 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -781,6 +781,10 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 		ret = _generic_set_opp_clk_only(dev, clk, old_freq, freq);
+ drivers/iommu/amd_iommu.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 6b0760dafb3e..696c78225dd1 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2604,7 +2604,11 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+ 
+ 	/* Everything is mapped - write the right values into s->dma_address */
+ 	for_each_sg(sglist, s, nelems, i) {
+-		s->dma_address += address + s->offset;
++		/* Add in the remaining piece of the scatter-gather offset that
++		 * was masked out when we were determining the physical address
++		 * via (sg_phys(s) & PAGE_MASK) earlier.
++		 */
++		s->dma_address += address + (s->offset & ~PAGE_MASK);
+ 		s->dma_length   = s->length;
  	}
  
-+	if (!ret && !IS_ERR_OR_NULL(opp_table->path) && opp->bandwidth)
-+		icc_set_bw(opp_table->path, opp->bandwidth->avg,
-+			   opp->bandwidth->peak);
-+
- 	/* Scaling down? Configure required OPPs after frequency */
- 	if (!ret && freq < old_freq) {
- 		ret = _set_required_opps(dev, opp_table, opp);
+-- 
+2.7.5
+
