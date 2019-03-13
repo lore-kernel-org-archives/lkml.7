@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3BDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A897C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF4D20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A5A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505430;
-	bh=SALPzZm/TZcnXKplq4NQc7tLR9fCIbHzwonLaO/vXoI=;
+	s=default; t=1552505443;
+	bh=c2HUv8/0cgEKg+1TA/chHORLaO1npFiBLFmYD92ruCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iTtwQ1YDkiJuV9Epe97JTHEJe1W9Bj6H8mY/axF70d+3yqvhxv96ZTzfBye9XPAwo
-	 Tug3kZz/MucB+xhsjbanWrsjRn48+Gr0N8ehVayOzM3A+uaB6mn0ENtm6cHMBdU5b7
-	 7ZO/7wSBBB5utw0GNE5AeSOu1GAivBGU9ERADTgw=
+	b=vOL6qGMOoK3OfRTjguNxvNR6NBNCSBVXaLKRS/yuiSSeG0kckl0oRfpPRnxpRRfid
+	 F91Zc0TrslX+6OxGog8z6CNX4aYs6Z3sV22ZAlLLMdDRmHN1XKxK1bgVkV60dQbJjg
+	 4f8mWs33l+6NyesCfAySGJ7fQxtC2M1xAkCmsai4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbfCMTa2 (ORCPT
+        id S1728119AbfCMTal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43072 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:30:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbfCMTMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:12:30 -0400
+        id S1726639AbfCMTMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:12:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C64120693;
-        Wed, 13 Mar 2019 19:12:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC49213A2;
+        Wed, 13 Mar 2019 19:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504349;
-        bh=SALPzZm/TZcnXKplq4NQc7tLR9fCIbHzwonLaO/vXoI=;
+        s=default; t=1552504345;
+        bh=c2HUv8/0cgEKg+1TA/chHORLaO1npFiBLFmYD92ruCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1XcWOdQop1eiskcc0h1/MkAqJTk2v2caxmRcFLkwemIV2QpM4Cit4gvpqm3ngKhv6
-         DcoQs0GRJmnOzWD/EEQd4d/XpFYnX2fNX1cVg58CasvDRk/DlQPTMsaVJB0i3hdE+o
-         oVQoSUSjqfxbYCtWG/rLMCQ7YnmZJAKqTRX9qX9E=
+        b=1dKj9SAIACvr/HalmXN03y4sKcko7QTSuKH3jCIbysez1alC0uMgt3T95NIjinBW8
+         Ug+b6bxLTsn+Tawku6tZ61GjwxU54RFrObwDiqyRnM0zbCdmPAPQ2h+jLmpbCl2R+K
+         dZmT0uJyAyLTxrqm8RwwiM0U5v4TaiUTrXrKXt8s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vadim Lomovtsev <vlomovtsev@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 52/60] net: thunderx: make CFG_DONE message to run through generic send-ack sequence
-Date:   Wed, 13 Mar 2019 15:10:13 -0400
-Message-Id: <20190313191021.158171-52-sashal@kernel.org>
+Cc:     Li RongQing <lirongqing@baidu.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 50/60] mac80211_hwsim: propagate genlmsg_reply return code
+Date:   Wed, 13 Mar 2019 15:10:11 -0400
+Message-Id: <20190313191021.158171-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -58,77 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Lomovtsev <vlomovtsev@marvell.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 0dd563b9a62c4cbabf5d4fd6596440c2491e72b1 ]
+[ Upstream commit 17407715240456448e4989bee46ffc93991add83 ]
 
-At the end of NIC VF initialization VF sends CFG_DONE message to PF without
-using nicvf_msg_send_to_pf routine. This potentially could re-write data in
-mailbox. This commit is to implement common way of sending CFG_DONE message
-by the same way with other configuration messages by using
-nicvf_send_msg_to_pf() routine.
+genlmsg_reply can fail, so propagate its return code
 
-Signed-off-by: Vadim Lomovtsev <vlomovtsev@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/thunder/nic_main.c   |  2 +-
- drivers/net/ethernet/cavium/thunder/nicvf_main.c | 15 ++++++++++++---
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ drivers/net/wireless/mac80211_hwsim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cavium/thunder/nic_main.c b/drivers/net/ethernet/cavium/thunder/nic_main.c
-index 6c8dcb65ff03..90497a27df18 100644
---- a/drivers/net/ethernet/cavium/thunder/nic_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nic_main.c
-@@ -1039,7 +1039,7 @@ static void nic_handle_mbx_intr(struct nicpf *nic, int vf)
- 	case NIC_MBOX_MSG_CFG_DONE:
- 		/* Last message of VF config msg sequence */
- 		nic_enable_vf(nic, vf, true);
--		goto unlock;
-+		break;
- 	case NIC_MBOX_MSG_SHUTDOWN:
- 		/* First msg in VF teardown sequence */
- 		if (vf >= nic->num_vf_en)
-diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-index 88f8a8fa93cd..4eb24e10ba4d 100644
---- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-@@ -172,6 +172,17 @@ static int nicvf_check_pf_ready(struct nicvf *nic)
- 	return 1;
- }
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index d1464e3e1be2..47a4610e7a5b 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3449,7 +3449,7 @@ static int hwsim_get_radio_nl(struct sk_buff *msg, struct genl_info *info)
+ 			goto out_err;
+ 		}
  
-+static void nicvf_send_cfg_done(struct nicvf *nic)
-+{
-+	union nic_mbx mbx = {};
-+
-+	mbx.msg.msg = NIC_MBOX_MSG_CFG_DONE;
-+	if (nicvf_send_msg_to_pf(nic, &mbx)) {
-+		netdev_err(nic->netdev,
-+			   "PF didn't respond to CFG DONE msg\n");
-+	}
-+}
-+
- static void nicvf_read_bgx_stats(struct nicvf *nic, struct bgx_stats_msg *bgx)
- {
- 	if (bgx->rx)
-@@ -1416,7 +1427,6 @@ int nicvf_open(struct net_device *netdev)
- 	struct nicvf *nic = netdev_priv(netdev);
- 	struct queue_set *qs = nic->qs;
- 	struct nicvf_cq_poll *cq_poll = NULL;
--	union nic_mbx mbx = {};
+-		genlmsg_reply(skb, info);
++		res = genlmsg_reply(skb, info);
+ 		break;
+ 	}
  
- 	netif_carrier_off(netdev);
- 
-@@ -1512,8 +1522,7 @@ int nicvf_open(struct net_device *netdev)
- 		nicvf_enable_intr(nic, NICVF_INTR_RBDR, qidx);
- 
- 	/* Send VF config done msg to PF */
--	mbx.msg.msg = NIC_MBOX_MSG_CFG_DONE;
--	nicvf_write_to_mbx(nic, &mbx);
-+	nicvf_send_cfg_done(nic);
- 
- 	return 0;
- cleanup:
 -- 
 2.19.1
 
