@@ -2,113 +2,228 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C992FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFCFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93732214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:45:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QCgzr6Yy";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QCgzr6Yy"
+	by mail.kernel.org (Postfix) with ESMTP id 66A7C214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfCMJpJ (ORCPT
+        id S1727436AbfCMJqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:45:09 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47204 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfCMJpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:45:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E237B608FC; Wed, 13 Mar 2019 09:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552470307;
-        bh=nR2cEbDKqSpROTGnCoz8RsA5qEaUCe4k5P4cYsTiXSQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QCgzr6YyXiUCqO3NryLcvgueShXNvsmCKRUUjmb/bCfKyJqTEWCme+pMNwR+kYlJ2
-         SXCMSjTzr974u61r+0XUfO16yafUqmPIDQpho0vaMHBymUwSB8TR4duULIkK7RCV0O
-         ThlTQV05q54E4AURVLOD7AhlIQRFFWJm7FRVIiww=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 8287760312;
-        Wed, 13 Mar 2019 09:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552470307;
-        bh=nR2cEbDKqSpROTGnCoz8RsA5qEaUCe4k5P4cYsTiXSQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QCgzr6YyXiUCqO3NryLcvgueShXNvsmCKRUUjmb/bCfKyJqTEWCme+pMNwR+kYlJ2
-         SXCMSjTzr974u61r+0XUfO16yafUqmPIDQpho0vaMHBymUwSB8TR4duULIkK7RCV0O
-         ThlTQV05q54E4AURVLOD7AhlIQRFFWJm7FRVIiww=
+        Wed, 13 Mar 2019 05:46:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725856AbfCMJqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 05:46:48 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 246BF2185F36A60D5FED;
+        Wed, 13 Mar 2019 17:46:46 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.32) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Wed, 13 Mar 2019
+ 17:46:40 +0800
+Subject: Re: [RFC] Question about TLB flush while set Stage-2 huge pages
+To:     Marc Zyngier <marc.zyngier@arm.com>, <christoffer.dall@arm.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <suzuki.poulose@arm.com>, <james.morse@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        Wang Haibin <wanghaibin.wang@huawei.com>,
+        "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+        <lious.lilei@hisilicon.com>, <lishuo1@hisilicon.com>
+References: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
+ <e2a94937-c324-e2d6-7e61-3f998e6e6e22@arm.com>
+ <1c0e07b9-73f0-efa4-c1b7-ad81789b42c5@huawei.com>
+ <5188e3b9-5b5a-a6a7-7ef0-09b7b4f06af6@arm.com>
+From:   Zheng Xiang <zhengxiang9@huawei.com>
+Message-ID: <348d0b3b-c74b-7b39-ec30-85905c077c38@huawei.com>
+Date:   Wed, 13 Mar 2019 17:45:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 13 Mar 2019 17:45:07 +0800
-From:   rjliao@codeaurora.org
-To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, johan.hedberg@gmail.com,
-        marcel@holtmann.org, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Give enough time to ROME
- controller to bootup.
-In-Reply-To: <a22894cea091ee9945af9c22d6e42051@codeaurora.org>
-References: <20190306162113.8585-1-bgodavar@codeaurora.org>
- <155191158734.20095.15990837191526416248@swboyd.mtv.corp.google.com>
- <a22894cea091ee9945af9c22d6e42051@codeaurora.org>
-Message-ID: <82fdfbd3dc4dbc1b6258dd470afff589@codeaurora.org>
-X-Sender: rjliao@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+In-Reply-To: <5188e3b9-5b5a-a6a7-7ef0-09b7b4f06af6@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.32]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019-03-07 14:49，Balakrishna Godavarthi 写道：
-> Hi Stepen,
-> 
-> On 2019-03-07 04:03, Stephen Boyd wrote:
->> Quoting Balakrishna Godavarthi (2019-03-06 08:21:13)
->>> This patch enables enough time to ROME controller to bootup
->>> after we bring the enable ping out of reset.
->>> 
->>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->>> ---
->> 
->> Any Fixes tag? And maybe some more explanation or background on where
->> 150 ms sleep comes from would be useful. Was it determined
->> experimentally or did it come from a datasheet somewhere? Does the 
->> time
->> differ between boards?
->> 
-> [Bala]: this was observed in our stress testing and even the CHIP 
-> firmware team
->         confirmed that BT chip required at least 150 ms to boot up.
-> 
-> @Rocky to confirm my statement.
-> 
->>>  drivers/bluetooth/hci_qca.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>> 
->>> diff --git a/drivers/bluetooth/hci_qca.c 
->>> b/drivers/bluetooth/hci_qca.c
->>> index 237aea34b69f..1953b13511e7 100644
->>> --- a/drivers/bluetooth/hci_qca.c
->>> +++ b/drivers/bluetooth/hci_qca.c
->>> @@ -508,6 +508,8 @@ static int qca_open(struct hci_uart *hu)
->>>                 qcadev = serdev_device_get_drvdata(hu->serdev);
->>>                 if (qcadev->btsoc_type != QCA_WCN3990) {
->>>                         gpiod_set_value_cansleep(qcadev->bt_en, 1);
->>> +                       /* Controller needs time to bootup. */
->>> +                       msleep(150);
->>>                 } else {
->>>                         hu->init_speed = qcadev->init_speed;
->>>                         hu->oper_speed = qcadev->oper_speed;
 
-Hello,
 
-Any concern to merge this change? Without this change the Rome cannot up 
-while running the serdev way, we should mainline this change ASAP.
+On 2019/3/13 2:18, Marc Zyngier wrote:
+> Hi Zheng,
+> 
+> On 12/03/2019 15:30, Zheng Xiang wrote:
+>> Hi Marc,
+>>
+>> On 2019/3/12 19:32, Marc Zyngier wrote:
+>>> Hi Zheng,
+>>>
+>>> On 11/03/2019 16:31, Zheng Xiang wrote:
+>>>> Hi all,
+>>>>
+>>>> While a page is merged into a transparent huge page, KVM will invalidate Stage-2 for
+>>>> the base address of the huge page and the whole of Stage-1.
+>>>> However, this just only invalidates the first page within the huge page and the other
+>>>> pages are not invalidated, see bellow:
+>>>>
+>>>>     +---------------+--------------+
+>>>>     |abcde       2MB-Page          |
+>>>>     +---------------+--------------+
+>>>>
+>>>>     TLB before setting new pmd:
+>>>>     +---------------+--------------+
+>>>>     |      VA       |    PAGESIZE  |
+>>>>     +---------------+--------------+
+>>>>     |      a        |      4KB     |
+>>>>     +---------------+--------------+
+>>>>     |      b        |      4KB     |
+>>>>     +---------------+--------------+
+>>>>     |      c        |      4KB     |
+>>>>     +---------------+--------------+
+>>>>     |      d        |      4KB     |
+>>>>     +---------------+--------------+
+>>>>
+>>>>     TLB after setting new pmd:
+>>>>     +---------------+--------------+
+>>>>     |      VA       |    PAGESIZE  |
+>>>>     +---------------+--------------+
+>>>>     |      a        |      2MB     |
+>>>>     +---------------+--------------+
+>>>>     |      b        |      4KB     |
+>>>>     +---------------+--------------+
+>>>>     |      c        |      4KB     |
+>>>>     +---------------+--------------+
+>>>>     |      d        |      4KB     |
+>>>>     +---------------+--------------+
+>>>>
+>>>> When VM access *b* address, it will hit the TLB and result in TLB conflict aborts or other potential exceptions.
+>>>
+>>> That's really bad. I can only imagine two scenarios:
+>>>
+>>> 1) We fail to unmap a,b,c,d (and potentially another 508 PTEs), loosing
+>>> the PTE table in the process, and place the PMD instead. I can't see
+>>> this happening.
+>>>
+>>> 2) We fail to invalidate on unmap, and that slightly less bad (but still
+>>> quite bad).
+>>>
+>>> Which of the two cases are you seeing?
+>>>
+>>>> For example, we need to keep tracking of the VM memory dirty pages when VM is in live migration.
+>>>> KVM will set the memslot READONLY and split the huge pages.
+>>>> After live migration is canceled and abort, the pages will be merged into THP.
+>>>> The later access to these pages which are READONLY will cause level-3 Permission Fault until they are invalidated.
+>>>>
+>>>> So should we invalidate the tlb entries for all relative pages(e.g a,b,c,d), like __flush_tlb_range()?
+>>>> Or we can call __kvm_tlb_flush_vmid() to invalidate all tlb entries.
+>>>
+>>> We should perform an invalidate on each unmap. unmap_stage2_range seems
+>>> to do the right thing. __flush_tlb_range only caters for Stage1
+>>> mappings, and __kvm_tlb_flush_vmid() is too big a hammer, as it nukes
+>>> TLBs for the whole VM.
+>>>
+>>> I'd really like to understand what you're seeing, and how to reproduce
+>>> it. Do you have a minimal example I could run on my own HW?
+>>
+>> When I start the live migration for a VM, qemu then begins to log and count dirty pages.
+>> During the live migration, KVM set the pages READONLY so that we can count how many pages
+>> would be wrote afterwards.
+>>
+>> Anything is OK until I cancel the live migration and qemu stop logging. Later the VM gets hang.
+>> The trace log shows repeatedly level-3 permission fault caused by a write on a same IPA. After
+>> analyzing the source code, I find KVM always return from the bellow *if* statement in
+>> stage2_set_pmd_huge() even if we only have a single VCPU:
+>>
+>>         /*
+>>          * Multiple vcpus faulting on the same PMD entry, can
+>>          * lead to them sequentially updating the PMD with the
+>>          * same value. Following the break-before-make
+>>          * (pmd_clear() followed by tlb_flush()) process can
+>>          * hinder forward progress due to refaults generated
+>>          * on missing translations.
+>>          *
+>>          * Skip updating the page table if the entry is
+>>          * unchanged.
+>>          */
+>>         if (pmd_val(old_pmd) == pmd_val(*new_pmd))
+>>             return 0;
+>>
+>> The PMD has already set the PMD_S2_RDWR bit. I doubt kvm_tlb_flush_vmid_ipa() does not invalidate
+>> Stage-2 for the subpages of the PMD(except the first PTE of this PMD). Finally I add some debug
+>> code to flush tlb for all subpages of the PMD, as shown bellow:
+>>
+>>         /*
+>>          * Mapping in huge pages should only happen through a
+>>          * fault.  If a page is merged into a transparent huge
+>>          * page, the individual subpages of that huge page
+>>          * should be unmapped through MMU notifiers before we
+>>          * get here.
+>>          *
+>>          * Merging of CompoundPages is not supported; they
+>>          * should become splitting first, unmapped, merged,
+>>          * and mapped back in on-demand.
+>>          */
+>>         VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
+>>
+>>         pmd_clear(pmd);
+>>         for (cnt = 0; cnt < 512; cnt++)
+>>             kvm_tlb_flush_vmid_ipa(kvm, addr + cnt*PAGE_SIZE);
+>>
+>> Then the problem no longer reproduce.
+> 
+> This makes very little sense. We shouldn't be able to enter this path
+> for anything else but a permission update, otherwise the VM_BUG_ON
+> should fire.
+
+Hmm, I think I didn't describe it very clearly.
+Look at the following sequence:
+
+1) Set a PMD READONLY and logging_active.
+
+2) KVM handles permission fault caused by writing a subpage(assumpt *b*) within this huge PMD.
+
+3) KVM dissolves PMD and invalidates TLB for this PMD. Then set a writable PTE.
+
+4) Read another 511 PTEs and setup Stage-2 PTE table.
+
+5) Now remove logging_active and keep another 511 PTEs READONLY.
+
+6) VM continues to write a subpage(assumpt *c*) and cause permission fault.
+
+7) KVM handles this new fault and makes a new writable PMD after transparent_hugepage_adjust().
+
+8) KVM invalidates TLB for the first page(*a*) of the PMD.
+   Here another 511 RO PTEs entries still stay in TLB, especially *c* which will be wrote later.
+
+9) KVM then set this new writable PMD.
+   Step 8-9 is what stage2_set_pmd_huge() does.
+
+10) VM continues to write *c*, but this time it hits the RO PTE entry in TLB and causes permission fault again.
+   Sometimes it can also cause TLB conflict aborts.
+
+11) KVM repeats step 6 and goes to the following statement and return 0:
+
+         * Skip updating the page table if the entry is
+         * unchanged.
+         */
+        if (pmd_val(old_pmd) == pmd_val(*new_pmd))
+            return 0;
+
+12) Then it will repeat step 10-11 until the PTE entry is invalidated.
+
+I think there is something abnormal in step 8.
+Should I blame my hardware? Or is it a kernel bug?
+
+-- 
+
+Thanks,
+Xiang
+
+
