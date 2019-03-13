@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE869C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30136C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8F62075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED70F213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504863;
-	bh=dEuEg/uoTWMQOpv6C93wfer29W091DNAxhlfaxtwO3M=;
+	s=default; t=1552504878;
+	bh=bB3XKKGSCcaLkfF9pcDG7eHbSSJOmJpmYEIvXa3gOUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DNm2LvKDsAaDalOFa/ZxhgIYBYxhAnrOEmCh5cPVFYubdUi6IVWNR6GhPUHD9wO7J
-	 lcIznVABK6KkNRlkU0S7ZNYzjVKrKUW9MWWDene/a5YJH/aQPYDWHlcqiVzthzvPwF
-	 q8T9A0mDH0HFIYdSrWR97TtnIEoQtgR6McKZlFNI=
+	b=D+0pvW+kCKu3fuwqww79pMWyIKmVZnFxZ+oq5R0+7x/nfQ/Su0ci6igCewnqxumLb
+	 9ryobIuGtWBgRHn/9hPdbaRn6qseYU+eNUXcb1W5Z8RuaazPVVGP51YKlI0DbUXsN2
+	 kp9kWwGMvSKTArHV9qUfzUbTZI4keH86ueXZYbgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbfCMTVB (ORCPT
+        id S1728216AbfCMTVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49330 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:21:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbfCMTSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:18:40 -0400
+        id S1729053AbfCMTS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:18:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 634CC217F5;
-        Wed, 13 Mar 2019 19:18:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8B2F2171F;
+        Wed, 13 Mar 2019 19:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504720;
-        bh=dEuEg/uoTWMQOpv6C93wfer29W091DNAxhlfaxtwO3M=;
+        s=default; t=1552504707;
+        bh=bB3XKKGSCcaLkfF9pcDG7eHbSSJOmJpmYEIvXa3gOUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yEuWXoEtCesov5RpdOHjAfk1FSLva1M17xENXZaQyu9Gl9ZzcLOw/e1FmRvtYr3mK
-         bjCktRKMJWTK0e0NABNmr/Adn+RpxRpeYBluqCFIOCA9wG/+njsDI3KaOi5Co4Ghlp
-         UgaxdYMSteDmjFk4oz6+rCA96LGNfi81Ay/y6h8A=
+        b=Bx7juyn9//eUmc6AFt2w6htqDHgfqjKzof/Os17J9BJk8yFYpltwd8zNRG1pAiWa7
+         Z4GNrwna7Onh1mDFdvcOXMF+B6Y04M3L2hB7eXhUQ62+icDo7oSLdh7lngCFJczyHL
+         niY1IDYygWDzgMaecnfOcfTLL/9kWYKQABZ/IGtw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li RongQing <lirongqing@baidu.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 13/15] mac80211_hwsim: propagate genlmsg_reply return code
-Date:   Wed, 13 Mar 2019 15:17:59 -0400
-Message-Id: <20190313191806.160547-13-sashal@kernel.org>
+Cc:     Bard liao <yung-chuan.liao@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 08/15] ASoC: topology: free created components in tplg load error
+Date:   Wed, 13 Mar 2019 15:17:54 -0400
+Message-Id: <20190313191806.160547-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191806.160547-1-sashal@kernel.org>
 References: <20190313191806.160547-1-sashal@kernel.org>
@@ -59,31 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Bard liao <yung-chuan.liao@linux.intel.com>
 
-[ Upstream commit 17407715240456448e4989bee46ffc93991add83 ]
+[ Upstream commit 304017d31df36fb61eb2ed3ebf65fb6870b3c731 ]
 
-genlmsg_reply can fail, so propagate its return code
+Topology resources are no longer needed if any element failed to load.
 
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mac80211_hwsim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-topology.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-index 0d1abcfec003..0f582117b0e3 100644
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -3002,7 +3002,7 @@ static int hwsim_get_radio_nl(struct sk_buff *msg, struct genl_info *info)
- 			goto out_err;
- 		}
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index c1e76feb3529..824f4d7fc41f 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1770,6 +1770,7 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	struct snd_soc_tplg_ops *ops, const struct firmware *fw, u32 id)
+ {
+ 	struct soc_tplg tplg;
++	int ret;
  
--		genlmsg_reply(skb, info);
-+		res = genlmsg_reply(skb, info);
- 		break;
- 	}
+ 	/* setup parsing context */
+ 	memset(&tplg, 0, sizeof(tplg));
+@@ -1783,7 +1784,12 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	tplg.bytes_ext_ops = ops->bytes_ext_ops;
+ 	tplg.bytes_ext_ops_count = ops->bytes_ext_ops_count;
+ 
+-	return soc_tplg_load(&tplg);
++	ret = soc_tplg_load(&tplg);
++	/* free the created components if fail to load topology */
++	if (ret)
++		snd_soc_tplg_component_remove(comp, SND_SOC_TPLG_INDEX_ALL);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_tplg_component_load);
  
 -- 
 2.19.1
