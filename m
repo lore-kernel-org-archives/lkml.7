@@ -2,143 +2,150 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A6CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA21C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCC22171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:00:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvzgQjCi"
+	by mail.kernel.org (Postfix) with ESMTP id 5455F217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552442607;
+	bh=+1L31Od5RO4Orjjui2/XbSNLOubFzauT/OrDHbHZLNI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U5O6KbxOgvTyo/fOTNiCwrx4hqkZj6lpMVxeiM1im9wJU+t/a4lMBFzki47WCWuF3
+	 w5O9HItWNEEzuTq6XEBQL9oFyxNXoe8QDIBu7rHf63zmNQk/uVgDABGc15xiE1aLYa
+	 1pfH5jFzINPOCUWdAbiCVSrmmKs1zprB6SUfqUGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfCMCAI (ORCPT
+        id S1726770AbfCMCDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 22:00:08 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37284 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfCMCAH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 22:00:07 -0400
-Received: by mail-pf1-f195.google.com with SMTP id s22so238183pfh.4;
-        Tue, 12 Mar 2019 19:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IlXv3iixsOJ/nKCBaS/zZcmA/BlLhM+WSNyl/yMmR8k=;
-        b=LvzgQjCiLx8kleBpw01TloukXBMdXgt1RB87xKX7L/nYu1Tq0PTkKg3sdrghedrdBf
-         ijb5JPfYoYsdawIhXDVKHXSLmn6IBuMZdwUgEeX1LLyszhKxkGRLiNnEMZ6VOd73gzYa
-         rQ+jaw1WV76k1OYPNxAoAUIrHguvik22Xi9DHHuCRFs+Bzl9Cy40vslPDHjjPYDwvJsS
-         2oqhCY1/N6BfKGC/IqeHFQwpUCnQK5B3Jp5eeh8HbMMlE59ygR15OtGO5r6dGCQmdH5x
-         wDkQWrxeyQuDBGV+TdC//TynuFCDd897Oq8WjON/Dle5g2+zMuML1l8A7HLbOXwzG4sH
-         mMSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IlXv3iixsOJ/nKCBaS/zZcmA/BlLhM+WSNyl/yMmR8k=;
-        b=eaBFcGauKlj69ZRI2PJb14cZQbiuwoRQN5KwNYmu1tc7KKhFYVVIhB3lNGcGiMAEKj
-         gygoeGraig8vZ+cn2KoZa2xFsuQ53G5l0UoRmhIFJRUM6Ty6l+EH++8RmU+Za19yWCtt
-         Vj2QfXJY67EyTphrQnaqKgPMKupCFukObGbaDML19fSjhVufdQR50CWs7Lpi0bbiRa5k
-         QC0rED9XpWxJt1TogI4axqsb/a8LbsdM6vgNb/Tpxv/7CfTADjNDQ0foqpob6DWyguuN
-         0rZC/jWDKHX33UbV3stvM6mS4AdB87E9S0zbHzFWiwkMY5lSaC3mFYhfIFzVmYJjY6uO
-         Ndmw==
-X-Gm-Message-State: APjAAAVWFZBFlien5TnFKCdKE6B68rvm+w7hIajOy54GRJ7SY1ARK1RL
-        6ik11KFZXRt6PeZZPFPCa4y8EA1Q
-X-Google-Smtp-Source: APXvYqyfoj1i9hgxEn1IpI58W+Ibq4Z/PKRjup6LC4WvjVMjnTyC7UtFXWAZeZw/isM3OGVgRj9UVA==
-X-Received: by 2002:a17:902:8b83:: with SMTP id ay3mr4121500plb.1.1552442406482;
-        Tue, 12 Mar 2019 19:00:06 -0700 (PDT)
-Received: from localhost ([110.70.15.13])
-        by smtp.gmail.com with ESMTPSA id c2sm13121601pfd.159.2019.03.12.19.00.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 19:00:05 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 11:00:02 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        linux-serial@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-Message-ID: <20190313020002.GA783@jagdpanzerIV>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20190213025520.GA5803@jagdpanzerIV>
- <874l9721hf.fsf@linutronix.de>
- <20190304052335.GA6648@jagdpanzerIV>
- <87lg1rggcz.fsf@linutronix.de>
- <20190311105411.GA368@jagdpanzerIV>
- <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
+        Tue, 12 Mar 2019 22:03:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726384AbfCMCDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 22:03:24 -0400
+Received: from localhost (unknown [104.132.1.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A3652171F;
+        Wed, 13 Mar 2019 02:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552442603;
+        bh=+1L31Od5RO4Orjjui2/XbSNLOubFzauT/OrDHbHZLNI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bt3nuuhHs9Gl2wkHXGlpV1PT6+rxc5gw4aYJvV4vmEpPd9+2QTdFPDSZKmPRx/HlV
+         MmZYm35ejTbyEHmlaaXIkeEcwgGOeLIwfFzvYYPyRUwAmHQyeBPrXbQVcuZ20kcZtz
+         pSWFlBMaXBv3qyY3CsaIErsq28rv7jXLHxXzkejg=
+Date:   Tue, 12 Mar 2019 19:03:22 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] f2fs: fix to check inline_xattr_size boundary
+ correctly
+Message-ID: <20190313020322.GA83715@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190214160825.4973-1-chao@kernel.org>
+ <82ef0ff8-452c-1894-6776-41c70ad7654b@huawei.com>
+ <20190312185057.GB45421@jaegeuk-macbookpro.roam.corp.google.com>
+ <7b028daf-538e-a10e-6b79-f686021ee899@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <7b028daf-538e-a10e-6b79-f686021ee899@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (03/12/19 13:38), Petr Mladek wrote:
-> > Hmm. OK. So one of the things with printk is that it's fully sequential.
-> > We call console drivers one by one. Slow consoles can affect what appears
-> > on the fast consoles; fast console have no impact on slow ones.
+On 03/13, Chao Yu wrote:
+> On 2019/3/13 2:50, Jaegeuk Kim wrote:
+> > On 03/04, Chao Yu wrote:
+> >> Hi Jaegeuk,
+> >>
+> >> On 2019/2/15 0:08, Chao Yu wrote:
+> >>> ---
+> >>> v2:
+> >>> - fix lower bound check, inline xattr size should be larger than
+> >>> xattr_header's size at least.
+> >>
+> >> ...
+> >>
+> >>> +		if (F2FS_OPTION(sbi).inline_xattr_size <
+> >>> +			sizeof(struct f2fs_xattr_header) / sizeof(__le32)
+> >>
+> >> No sure we should set this low bound as above... now I guess original
+> >> non-zero check is enough.
+> >>
+> >> How do you think of setting inline_xattr_size range as
+> >> (0, MAX_INLINE_XATTR_SIZE]?
 > > 
-> > 	call_console_drivers()
-> > 		for_each_console(c)
-> > 			c->write(c, text, text_len);
-> > 
-> > So a list of (slow_serial serial netcon) console drivers is a camel train;
-> > fast netcon is not fast anymore, and slow consoles sometimes are the reason
-> > we have dropped messages. And if we drop messages we drop them for all
-> > consoles, including fast netcon. Turning that sequential pipline into a
-> > bunch of per-console kthreads/irq and letting fast consoles to be fast is
-> > not a completely bad thing. Let's think more about this, I'd like to read
-> > more opinions.
+> > How about this?
 > 
-> Per-console kthread sounds interesting but there is the problem with
-> reliability. I mean that kthread need not get scheduled.
+> If you think it's necessary to check low bound with size of xattr header,
+> I'm also okay with that.
+> 
+> And below diff looks good to me, could you please merge this into original one?
+> 
+> Thanks,
 
-Correct, it has to get scheduled. From that point of view IRQ offloading
-looks better - either to irq_work (like John suggested) or to serial
-drivers' irq handler (poll uart xmit + logbuf).
+I had to add this on top of branch.
 
-kthread offloading is not super reliable. That's why I played tricks
-with CPU affinity - scheduler sometimes schedule printk_kthread on the
-same CPU which spins in console_unlock() loop printing the messages, so
-printk_kthread offloading never happens. It was first discovered by Jan
-Kara (back in the days of async-printk patch set). I think at some point
-Jan's async-printk patch set had two printk kthreads.
+From 70db5b04cbe19e5ae7e85ada2d3e82bcfdf90352 Mon Sep 17 00:00:00 2001
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+Date: Tue, 12 Mar 2019 11:49:53 -0700
+Subject: [PATCH] f2fs: give some messages for inline_xattr_size
 
-We also had some concerns regarding offloading on UP systems.
+This patch adds some kernel messages when user sets wrong inline_xattr_size.
 
-> Some of these problems might get solved by the per-console loglevel
-> patchset.
+Fixes: 500e0b28ecd3 ("f2fs: fix to check inline_xattr_size boundary correctly")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/super.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-Yes, some.
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 42eb5c86330a..324938ec95f3 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -821,6 +821,8 @@ static int parse_options(struct super_block *sb, char *options)
+ 	}
+ 
+ 	if (test_opt(sbi, INLINE_XATTR_SIZE)) {
++		int min_size, max_size;
++
+ 		if (!f2fs_sb_has_extra_attr(sbi) ||
+ 			!f2fs_sb_has_flexible_inline_xattr(sbi)) {
+ 			f2fs_msg(sb, KERN_ERR,
+@@ -834,15 +836,18 @@ static int parse_options(struct super_block *sb, char *options)
+ 					"set with inline_xattr option");
+ 			return -EINVAL;
+ 		}
+-		if (F2FS_OPTION(sbi).inline_xattr_size <
+-			sizeof(struct f2fs_xattr_header) / sizeof(__le32) ||
+-			F2FS_OPTION(sbi).inline_xattr_size >
+-			DEF_ADDRS_PER_INODE -
++
++		min_size = sizeof(struct f2fs_xattr_header) / sizeof(__le32);
++		max_size = DEF_ADDRS_PER_INODE -
+ 			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -
+ 			DEF_INLINE_RESERVED_SIZE -
+-			MIN_INLINE_DENTRY_SIZE / sizeof(__le32)) {
++			MIN_INLINE_DENTRY_SIZE / sizeof(__le32);
++
++		if (F2FS_OPTION(sbi).inline_xattr_size < min_size ||
++				F2FS_OPTION(sbi).inline_xattr_size > max_size) {
+ 			f2fs_msg(sb, KERN_ERR,
+-					"inline xattr size is out of range");
++				"inline xattr size is out of range: %d ~ %d",
++				min_size, max_size);
+ 			return -EINVAL;
+ 		}
+ 	}
+-- 
+2.19.0.605.g01d371f741-goog
 
-> Sigh, any feature might be useful in some situation. But we always
-> have to consider the cost and the gain. I wonder how common is
-> to actively use two consoles at the same time and what would
-> be the motivation.
-
-Facebook fleet for example. The motivation is - to have a fancy fast
-console that does things which simple serial consoles cannot do and
-a slow serial console, which is sometimes more reliable, as last resort.
-Fancy stuff usually means dependencies - net, mm, etc. So when fancy
-console stop working, slow serial console still does.
-
-	-ss
