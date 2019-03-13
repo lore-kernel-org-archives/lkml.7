@@ -2,144 +2,143 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5203DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A6CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183792177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCC22171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:00:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="e7XyM4kB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvzgQjCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfCMBme (ORCPT
+        id S1726699AbfCMCAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 21:42:34 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38650 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfCMBmd (ORCPT
+        Tue, 12 Mar 2019 22:00:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37284 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfCMCAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 21:42:33 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z3so167903qkf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 18:42:32 -0700 (PDT)
+        Tue, 12 Mar 2019 22:00:07 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s22so238183pfh.4;
+        Tue, 12 Mar 2019 19:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=NQfucrhbD0VzPNhfRkKgVrADDarqnaY6kdS2R65H4Ys=;
-        b=e7XyM4kBeSQFwVYWCx0/Yxi0Qx9ADcd3TwYCdYNRuNf4al9WnSxZAeYjZmNPaWxyIs
-         VklR/LEo84lmUJia9s7w5DrGdLEj87JIckavIKkKWVWYSt9UNH808J3ffoqwtRkv7Oz+
-         RZFUe1YXjz+HvfvVk7+ztrqd1/2HkC03kOUJw9t5KpLZyCqBysEdOV/8Hs6k+e53j0ah
-         ajHGF4iWjvHYXnnv3jAqn+LTemgh8BV34HyFwH23ao/qh8oHehgXhJro34Gc/uY8kWhZ
-         Qfog2rea4i0y8vTER1HoCgAB7WhHgnO43D8lhVoOi+0DgNU0Chk4IVgKZk947gvy3rRz
-         tR+w==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IlXv3iixsOJ/nKCBaS/zZcmA/BlLhM+WSNyl/yMmR8k=;
+        b=LvzgQjCiLx8kleBpw01TloukXBMdXgt1RB87xKX7L/nYu1Tq0PTkKg3sdrghedrdBf
+         ijb5JPfYoYsdawIhXDVKHXSLmn6IBuMZdwUgEeX1LLyszhKxkGRLiNnEMZ6VOd73gzYa
+         rQ+jaw1WV76k1OYPNxAoAUIrHguvik22Xi9DHHuCRFs+Bzl9Cy40vslPDHjjPYDwvJsS
+         2oqhCY1/N6BfKGC/IqeHFQwpUCnQK5B3Jp5eeh8HbMMlE59ygR15OtGO5r6dGCQmdH5x
+         wDkQWrxeyQuDBGV+TdC//TynuFCDd897Oq8WjON/Dle5g2+zMuML1l8A7HLbOXwzG4sH
+         mMSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NQfucrhbD0VzPNhfRkKgVrADDarqnaY6kdS2R65H4Ys=;
-        b=ame3cm63n9srbNzT/eMe9mSzT60A/FaRs7/Zznyny6u3WEVm8GeADePoCd0DX1Kxlt
-         w5y1TSDg7GRuoAqvx8IhC7OLx/fc38dixfZrUYK+9pRAccBByYFxGui9AI1HLyYfdqh+
-         RpKEsXmfT00EyZQb2C5dLwfoQvoPJ3CpzZUNgBELZlUj80cDyG0iHDDFhQKybSDuAXNA
-         3BEHNwOGF06uOIZnvZdHue8Wy6pw/IxV+NVycvESok5eq81pBxfDV4pnOv+qAT8GacRy
-         uZDOhRZ0JN9XEw67mpwKxbafsE5KKaIEenZ7a4do0cwf5s34+adjBxt49/m3R6D+BxC2
-         EUzg==
-X-Gm-Message-State: APjAAAXC2nEXXSsUhrM4Tg4HkOIYbMSqgVsiGSnuKWvXkvoL21rePRp8
-        R+BJg50EIQfnbSOWllfVHOpC1A==
-X-Google-Smtp-Source: APXvYqxYSU6Hctdcn1af2We1tjwMEFTeS7kbgBVB6LLHwgPjs07KCSeVn3dtDT4JtYQzYlmbGQD9zQ==
-X-Received: by 2002:a37:c9d9:: with SMTP id m86mr11303831qkl.174.1552441352093;
-        Tue, 12 Mar 2019 18:42:32 -0700 (PDT)
-Received: from ovpn-121-103.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id s187sm4894678qkh.76.2019.03.12.18.42.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 18:42:31 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     osalvador@suse.de, mhocko@kernel.org, vbabka@suse.cz,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/hotplug: fix offline undo_isolate_page_range()
-Date:   Tue, 12 Mar 2019 21:42:16 -0400
-Message-Id: <20190313014216.36782-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IlXv3iixsOJ/nKCBaS/zZcmA/BlLhM+WSNyl/yMmR8k=;
+        b=eaBFcGauKlj69ZRI2PJb14cZQbiuwoRQN5KwNYmu1tc7KKhFYVVIhB3lNGcGiMAEKj
+         gygoeGraig8vZ+cn2KoZa2xFsuQ53G5l0UoRmhIFJRUM6Ty6l+EH++8RmU+Za19yWCtt
+         Vj2QfXJY67EyTphrQnaqKgPMKupCFukObGbaDML19fSjhVufdQR50CWs7Lpi0bbiRa5k
+         QC0rED9XpWxJt1TogI4axqsb/a8LbsdM6vgNb/Tpxv/7CfTADjNDQ0foqpob6DWyguuN
+         0rZC/jWDKHX33UbV3stvM6mS4AdB87E9S0zbHzFWiwkMY5lSaC3mFYhfIFzVmYJjY6uO
+         Ndmw==
+X-Gm-Message-State: APjAAAVWFZBFlien5TnFKCdKE6B68rvm+w7hIajOy54GRJ7SY1ARK1RL
+        6ik11KFZXRt6PeZZPFPCa4y8EA1Q
+X-Google-Smtp-Source: APXvYqyfoj1i9hgxEn1IpI58W+Ibq4Z/PKRjup6LC4WvjVMjnTyC7UtFXWAZeZw/isM3OGVgRj9UVA==
+X-Received: by 2002:a17:902:8b83:: with SMTP id ay3mr4121500plb.1.1552442406482;
+        Tue, 12 Mar 2019 19:00:06 -0700 (PDT)
+Received: from localhost ([110.70.15.13])
+        by smtp.gmail.com with ESMTPSA id c2sm13121601pfd.159.2019.03.12.19.00.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 19:00:05 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 11:00:02 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+Message-ID: <20190313020002.GA783@jagdpanzerIV>
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+ <20190213025520.GA5803@jagdpanzerIV>
+ <874l9721hf.fsf@linutronix.de>
+ <20190304052335.GA6648@jagdpanzerIV>
+ <87lg1rggcz.fsf@linutronix.de>
+ <20190311105411.GA368@jagdpanzerIV>
+ <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
-memory to zones until online") introduced move_pfn_range_to_zone() which
-calls memmap_init_zone() during onlining a memory block.
-memmap_init_zone() will reset pagetype flags and makes migrate type to
-be MOVABLE.
+On (03/12/19 13:38), Petr Mladek wrote:
+> > Hmm. OK. So one of the things with printk is that it's fully sequential.
+> > We call console drivers one by one. Slow consoles can affect what appears
+> > on the fast consoles; fast console have no impact on slow ones.
+> > 
+> > 	call_console_drivers()
+> > 		for_each_console(c)
+> > 			c->write(c, text, text_len);
+> > 
+> > So a list of (slow_serial serial netcon) console drivers is a camel train;
+> > fast netcon is not fast anymore, and slow consoles sometimes are the reason
+> > we have dropped messages. And if we drop messages we drop them for all
+> > consoles, including fast netcon. Turning that sequential pipline into a
+> > bunch of per-console kthreads/irq and letting fast consoles to be fast is
+> > not a completely bad thing. Let's think more about this, I'd like to read
+> > more opinions.
+> 
+> Per-console kthread sounds interesting but there is the problem with
+> reliability. I mean that kthread need not get scheduled.
 
-However, in __offline_pages(), it also call undo_isolate_page_range()
-after offline_isolated_pages() to do the same thing. Due to
-the commit 2ce13640b3f4 ("mm: __first_valid_page skip over offline
-pages") changed __first_valid_page() to skip offline pages,
-undo_isolate_page_range() here just waste CPU cycles looping around the
-offlining PFN range while doing nothing, because __first_valid_page()
-will return NULL as offline_isolated_pages() has already marked all
-memory sections within the pfn range as offline via
-offline_mem_sections().
+Correct, it has to get scheduled. From that point of view IRQ offloading
+looks better - either to irq_work (like John suggested) or to serial
+drivers' irq handler (poll uart xmit + logbuf).
 
-Also, after calling the "useless" undo_isolate_page_range() here, it
-reaches the point of no returning by notifying MEM_OFFLINE. Those pages
-will be marked as MIGRATE_MOVABLE again once onlining. The only thing
-left to do is to decrease the number of isolated pageblocks zone
-counter which would make some paths of the page allocation slower that
-the above commit introduced. Fix an incorrect comment along the way.
+kthread offloading is not super reliable. That's why I played tricks
+with CPU affinity - scheduler sometimes schedule printk_kthread on the
+same CPU which spins in console_unlock() loop printing the messages, so
+printk_kthread offloading never happens. It was first discovered by Jan
+Kara (back in the days of async-printk patch set). I think at some point
+Jan's async-printk patch set had two printk kthreads.
 
-Fixes: 2ce13640b3f4 ("mm: __first_valid_page skip over offline pages")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/memory_hotplug.c | 18 ++++++++++++++++--
- mm/sparse.c         |  2 +-
- 2 files changed, 17 insertions(+), 3 deletions(-)
+We also had some concerns regarding offloading on UP systems.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index cd23c081924d..260a8e943483 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1661,8 +1661,22 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 	/* Ok, all of our target is isolated.
- 	   We cannot do rollback at this point. */
- 	offline_isolated_pages(start_pfn, end_pfn);
--	/* reset pagetype flags and makes migrate type to be MOVABLE */
--	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
-+
-+	/*
-+	 * Onlining will reset pagetype flags and makes migrate type
-+	 * MOVABLE, so just need to decrease the number of isolated
-+	 * pageblocks zone counter here.
-+	 */
-+	for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages) {
-+		int i;
-+
-+		for (i = 0; i < pageblock_nr_pages; i++)
-+			if (pfn_valid_within(pfn + i)) {
-+				zone->nr_isolate_pageblock--;
-+				break;
-+			}
-+	}
-+
- 	/* removal success */
- 	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
- 	zone->present_pages -= offlined_pages;
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 69904aa6165b..56e057c432f9 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -567,7 +567,7 @@ void online_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
- }
- 
- #ifdef CONFIG_MEMORY_HOTREMOVE
--/* Mark all memory sections within the pfn range as online */
-+/* Mark all memory sections within the pfn range as offline */
- void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
- {
- 	unsigned long pfn;
--- 
-2.17.2 (Apple Git-113)
+> Some of these problems might get solved by the per-console loglevel
+> patchset.
 
+Yes, some.
+
+> Sigh, any feature might be useful in some situation. But we always
+> have to consider the cost and the gain. I wonder how common is
+> to actively use two consoles at the same time and what would
+> be the motivation.
+
+Facebook fleet for example. The motivation is - to have a fancy fast
+console that does things which simple serial consoles cannot do and
+a slow serial console, which is sometimes more reliable, as last resort.
+Fancy stuff usually means dependencies - net, mm, etc. So when fancy
+console stop working, slow serial console still does.
+
+	-ss
