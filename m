@@ -2,131 +2,149 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04A6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C677C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CA02147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D410E214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfCMACT (ORCPT
+        id S1727088AbfCMAKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 20:02:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:23529 "EHLO mga14.intel.com"
+        Tue, 12 Mar 2019 20:10:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56339 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbfCMACS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 20:02:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 17:02:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,472,1544515200"; 
-   d="scan'208";a="124953603"
-Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
-  by orsmga008.jf.intel.com with ESMTP; 12 Mar 2019 17:02:17 -0700
-Subject: Re: [PATCH] b/arch/x86/mm/pti.c - make local symbols static
-To:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-References: <27680.1552376873@turing-police>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- mQINBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABtEVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT6JAjgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lcuQINBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABiQIfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-Message-ID: <36d37d88-4460-e2bb-4f09-07693ddb5831@intel.com>
-Date:   Tue, 12 Mar 2019 17:02:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726280AbfCMAKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 20:10:23 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 74AB4883B8;
+        Wed, 13 Mar 2019 00:10:22 +0000 (UTC)
+Received: from redhat.com (ovpn-116-53.phx2.redhat.com [10.3.116.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 94B3C60CA0;
+        Wed, 13 Mar 2019 00:10:21 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 20:10:19 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem
+Message-ID: <20190313001018.GA3312@redhat.com>
+References: <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
+ <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
+ <20190307094654.35391e0066396b204d133927@linux-foundation.org>
+ <20190307185623.GD3835@redhat.com>
+ <CAPcyv4gkxmmkB0nofVOvkmV7HcuBDb+1VLR9CSsp+m-QLX_mxA@mail.gmail.com>
+ <20190312152551.GA3233@redhat.com>
+ <CAPcyv4iYzTVpP+4iezH1BekawwPwJYiMvk2GZDzfzFLUnO+RgA@mail.gmail.com>
+ <20190312190606.GA15675@redhat.com>
+ <CAPcyv4g-z8nkM1B65oR-3PT_RFQbmQMsM-J-P0-nzyvvJ8gVog@mail.gmail.com>
+ <20190312145214.9c8f0381cf2ff2fc2904e2d8@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <27680.1552376873@turing-police>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190312145214.9c8f0381cf2ff2fc2904e2d8@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 13 Mar 2019 00:10:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Make both variables static.
-
-"pti_set_kernel_image_nonglobal(void)" is an awfully funny looking
-variable. ;)
-
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+On Tue, Mar 12, 2019 at 02:52:14PM -0700, Andrew Morton wrote:
+> On Tue, 12 Mar 2019 12:30:52 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
 > 
-> ---
-> diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-> index 4fee5c3003ed..139b28a01ce4 100644
-> --- a/arch/x86/mm/pti.c
-> +++ b/arch/x86/mm/pti.c
-> @@ -77,7 +77,7 @@ static void __init pti_print_if_secure(const char *reason)
->  		pr_info("%s\n", reason);
->  }
->  
-> -enum pti_mode {
-> +static enum pti_mode {
+> > On Tue, Mar 12, 2019 at 12:06 PM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > On Tue, Mar 12, 2019 at 09:06:12AM -0700, Dan Williams wrote:
+> > > > On Tue, Mar 12, 2019 at 8:26 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > [..]
+> > > > > Spirit of the rule is better than blind application of rule.
+> > > >
+> > > > Again, I fail to see why HMM is suddenly unable to make forward
+> > > > progress when the infrastructure that came before it was merged with
+> > > > consumers in the same development cycle.
+> > > >
+> > > > A gate to upstream merge is about the only lever a reviewer has to
+> > > > push for change, and these requests to uncouple the consumer only
+> > > > serve to weaken that review tool in my mind.
+> > >
+> > > Well let just agree to disagree and leave it at that and stop
+> > > wasting each other time
+> > 
+> > I'm fine to continue this discussion if you are. Please be specific
+> > about where we disagree and what aspect of the proposed rules about
+> > merge staging are either acceptable, painful-but-doable, or
+> > show-stoppers. Do you agree that HMM is doing something novel with
+> > merge staging, am I off base there?
+> 
+> You're correct.  We chose to go this way because the HMM code is so
+> large and all-over-the-place that developing it in a standalone tree
+> seemed impractical - better to feed it into mainline piecewise.
+> 
+> This decision very much assumed that HMM users would definitely be
+> merged, and that it would happen soon.  I was skeptical for a long time
+> and was eventually persuaded by quite a few conversations with various
+> architecture and driver maintainers indicating that these HMM users
+> would be forthcoming.
+> 
+> In retrospect, the arrival of HMM clients took quite a lot longer than
+> was anticipated and I'm not sure that all of the anticipated usage
+> sites will actually be using it.  I wish I'd kept records of
+> who-said-what, but I didn't and the info is now all rather dissipated.
+> 
+> So the plan didn't really work out as hoped.  Lesson learned, I would
+> now very much prefer that new HMM feature work's changelogs include
+> links to the driver patchsets which will be using those features and
+> acks and review input from the developers of those driver patchsets.
 
-I'm struggling to figure out why we would want to do this.  If there's a
-really good reason, I think we probably need to do it en masse:
+This is what i am doing now and this patchset falls into that. I did
+post the ODP and nouveau bits to use the 2 new functions (dma map and
+unmap). I expect to merge both ODP and nouveau bits for that during
+the next merge window.
 
-$ grep -r '^enum.{' arch/x86/ | wc -l
-48
+Also with 5.1 everything that is upstream is use by nouveau at least.
+They are posted patches to use HMM for AMD, Intel, Radeon, ODP, PPC.
+Some are going through several revisions so i do not know exactly when
+each will make it upstream but i keep working on all this.
 
->  	PTI_AUTO = 0,
->  	PTI_FORCE_OFF,
->  	PTI_FORCE_ON
-> @@ -602,7 +602,7 @@ static void pti_clone_kernel_text(void)
->  	set_memory_global(start, (end_global - start) >> PAGE_SHIFT);
->  }
->  
-> -void pti_set_kernel_image_nonglobal(void)
-> +static void pti_set_kernel_image_nonglobal(void)
+So the guideline we agree on:
+    - no new infrastructure without user
+    - device driver maintainer for which new infrastructure is done
+      must either sign off or review of explicitly say that they want
+      the feature I do not expect all driver maintainer will have
+      the bandwidth to do proper review of the mm part of the infra-
+      structure and it would not be fair to ask that from them. They
+      can still provide feedback on the API expose to the device
+      driver.
+    - driver bits must be posted at the same time as the new infra-
+      structure even if they target the next release cycle to avoid
+      inter-tree dependency
+    - driver bits must be merge as soon as possible
 
-Yes, this function should be static.
+Thing we do not agree on:
+    - If driver bits miss for any reason the +1 target directly
+      revert the new infra-structure. I think it should not be black
+      and white and the reasons why the driver bit missed the merge
+      window should be taken into account. If the feature is still
+      wanted and the driver bits missed the window for simple reasons
+      then it means that we push everything by 2 release ie the
+      revert is done in +1 then we reupload the infra-structure in
+      +2 and finaly repush the driver bit in +3 so we loose 1 cycle.
+      Hence why i would rather that the revert would only happen if
+      it is clear that the infrastructure is not ready or can not
+      be use in timely (over couple kernel release) fashion by any
+      drivers.
+
+Cheers,
+Jérôme
