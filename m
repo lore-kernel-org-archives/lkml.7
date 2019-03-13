@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECBDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F4CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964862075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD1920657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505362;
-	bh=Jy3XGxMvDqCtBEDBrzVHxJWYfu+Z9IGyAMQLqjs8jw0=;
+	s=default; t=1552505390;
+	bh=sTTE+BVeq+nnyGrb3DQa9hLV8gpn8zpZLTTA4f9U0Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tDi4/t0NhQeiOWYAbFok7IyPkTQG2POuhOWuUR/ntxf3Z48MnzQf5C9+D2jFBKp7b
-	 MPYK7gkkYmTJOUeNq/b/7mdO5Gx12TnF++zqYe7OO052leM2O2B4dq3ca4nSrPle5x
-	 XZpMK4LpT74LwcQmYEkc3UW1r1VamsBztQO7CEeQ=
+	b=oeo9icUEof+UMu+DJKy0mp+tBFXsOHni9BpRzB1T/1p0X+yqUyh88IqIQQb4Yh8AO
+	 bMx39HSS1FZs+LkRA5yY4SEGRXjCAuXvPiUIzHvHg3c7VmPsnuiFXXwijcwsPfzJEr
+	 tjmPw59ig7scajm+3nT27Rfbtq1zK7mxpWGuruws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfCMTNB (ORCPT
+        id S1727768AbfCMT3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:13:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43564 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727873AbfCMTM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:12:58 -0400
+        id S1727249AbfCMTMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:12:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5011213A2;
-        Wed, 13 Mar 2019 19:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF522075C;
+        Wed, 13 Mar 2019 19:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504377;
-        bh=Jy3XGxMvDqCtBEDBrzVHxJWYfu+Z9IGyAMQLqjs8jw0=;
+        s=default; t=1552504359;
+        bh=sTTE+BVeq+nnyGrb3DQa9hLV8gpn8zpZLTTA4f9U0Lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aWT2hFf1dk8vu1IcakTxSOOazioU7A8/XDrr9u+Yym7VrJxTILZssT+qcaICHKkV9
-         BbMl50Z02J9UTMd1m8tD4l5Q4EYPqXkzBL31yqBGJLqZfH/TVrjh3Og/Tr97rtY9eJ
-         oYNeW5VLTPScYmCqNM+8EI+5Kut2Udv4ZFFVkSpg=
+        b=WJRAjFsc7q7MSR44r8KWDJlQ2HrJZsp8WaXw7Hv9kZnF7+es7Y+8+9IexHciI9f6w
+         p8aEIlv4A6KgTK7BuAF18ct+FO3bl1veiH0YjPETOk24RGcIjDQD/t/UuuYpoW5u9P
+         kksg88Lz56ZkhgVHfVGBf9tHSRZuJ6ZAozu38tB0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugene Loh <eugene.loh@oracle.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 02/48] kallsyms: Handle too long symbols in kallsyms.c
-Date:   Wed, 13 Mar 2019 15:12:04 -0400
-Message-Id: <20190313191250.158955-2-sashal@kernel.org>
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 56/60] bnxt_en: Fix typo in firmware message timeout logic.
+Date:   Wed, 13 Mar 2019 15:10:17 -0400
+Message-Id: <20190313191021.158171-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
-References: <20190313191250.158955-1-sashal@kernel.org>
+In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
+References: <20190313191021.158171-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,37 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugene Loh <eugene.loh@oracle.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 6db2983cd8064808141ccefd75218f5b4345ffae ]
+[ Upstream commit 67681d02aaa1db9044a16df4ca9c77cde1221a3e ]
 
-When checking for symbols with excessively long names,
-account for null terminating character.
+The logic that polls for the firmware message response uses a shorter
+sleep interval for the first few passes.  But there was a typo so it
+was using the wrong counter (larger counter) for these short sleep
+passes.  The result is a slightly shorter timeout period for these
+firmware messages than intended.  Fix it by using the proper counter.
 
-Fixes: f3462aa952cf ("Kbuild: Handle longer symbols in kallsyms.c")
-Signed-off-by: Eugene Loh <eugene.loh@oracle.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: 9751e8e71487 ("bnxt_en: reduce timeout on initial HWRM calls")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kallsyms.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index a9186a98a37d..0c9c54b57515 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -120,8 +120,8 @@ static int read_symbol(FILE *in, struct sym_entry *s)
- 			fprintf(stderr, "Read error or end of file.\n");
- 		return -1;
- 	}
--	if (strlen(sym) > KSYM_NAME_LEN) {
--		fprintf(stderr, "Symbol %s too long for kallsyms (%zu vs %d).\n"
-+	if (strlen(sym) >= KSYM_NAME_LEN) {
-+		fprintf(stderr, "Symbol %s too long for kallsyms (%zu >= %d).\n"
- 				"Please increase KSYM_NAME_LEN both in kernel and kallsyms.c\n",
- 			sym, strlen(sym), KSYM_NAME_LEN);
- 		return -1;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 29b068b81e2a..938ea8ada0da 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -3844,7 +3844,7 @@ static int bnxt_hwrm_do_send_msg(struct bnxt *bp, void *msg, u32 msg_len,
+ 			if (len)
+ 				break;
+ 			/* on first few passes, just barely sleep */
+-			if (i < DFLT_HWRM_CMD_TIMEOUT)
++			if (i < HWRM_SHORT_TIMEOUT_COUNTER)
+ 				usleep_range(HWRM_SHORT_MIN_TIMEOUT,
+ 					     HWRM_SHORT_MAX_TIMEOUT);
+ 			else
 -- 
 2.19.1
 
