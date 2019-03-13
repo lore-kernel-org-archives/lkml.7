@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5D2C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2DFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD1EE20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFAD621019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505238;
-	bh=s3C2mx7yXbv4mU8348fOv48dtoqr2c405gNRPsTyfQs=;
+	s=default; t=1552505252;
+	bh=Tc3kDq2lAPDXt+ynXqMQPMgjQUWNiuK48hTE3Gn3ubs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n1djuCwNEcfvBR+YhBCJghiHAOc4O1rzM5iQbQI7NhH8dJ/cmn8CJKJDZ4I885smg
-	 wW3kUrlF6gi52Kaukx8MRhKBD2BzsFnTrIJ0POJcZ4luiFDbA6dNXdqN0v6BpDjAcJ
-	 OXTfDmuO5SEBRTRqYdpVf6baG5bI1hefAPy5O+hc=
+	b=zqMuz8iOZSDPDEDY3/3qCoI4W7+LboGV23Qu/C6GUIBpohQN7Zv4h0kyJQVZtQAnN
+	 B78zSzyRlhMrD+eX711CAkDCktL0hMwVCSaTvCQjhG+Hd5gLUkT8gOe/FXBO3jW5Ck
+	 0g7GsJ5FBx+/uw76zo6nXS8HcS9NWu/DSsBtb5Yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbfCMTOS (ORCPT
+        id S1727889AbfCMT1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44666 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727430AbfCMTOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:14:15 -0400
+        id S1727572AbfCMTOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:14:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E657B2173C;
-        Wed, 13 Mar 2019 19:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CA752075C;
+        Wed, 13 Mar 2019 19:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504454;
-        bh=s3C2mx7yXbv4mU8348fOv48dtoqr2c405gNRPsTyfQs=;
+        s=default; t=1552504445;
+        bh=Tc3kDq2lAPDXt+ynXqMQPMgjQUWNiuK48hTE3Gn3ubs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mGjXz3hKOZC0SzipCQnZbi2LkBymaOXOm9xpsOlNIWu5EdXZmK/7hvqr+p8u5XAyt
-         cGZjHflG1tMMnKL41xl4Y2qULenk8B6mDBuJnxXDf9CaSMOAXBRzVIgtXH8VnBaai3
-         5C/mF6iN42JGsCamoLPHrvm/zgegi70NA+g48dKE=
+        b=UstsVZM3seDfvlM07SuJ+0FHRP2KJWBfTaUcLxYqmpdZadueZDF22n+87wXEMLz2L
+         9ozR6B71Hu1Z7Bpm3oVO/eFPRuBSBDdQ9YkepfWanhIDVo7FLOC/z/Wam0Zu4t/8O8
+         GdaVjLxJMBE38kYsvv0X3/WzFhswrUYIsv4LrY4c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+Cc:     Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 31/48] kasan, slab: make freelist stored without tags
-Date:   Wed, 13 Mar 2019 15:12:33 -0400
-Message-Id: <20190313191250.158955-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 28/48] mm: handle lru_add_drain_all for UP properly
+Date:   Wed, 13 Mar 2019 15:12:30 -0400
+Message-Id: <20190313191250.158955-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -66,67 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Michal Hocko <mhocko@suse.com>
 
-[ Upstream commit 51dedad06b5f6c3eea7ec1069631b1ef7796912a ]
+[ Upstream commit 6ea183d60c469560e7b08a83c9804299e84ec9eb ]
 
-Similarly to "kasan, slub: move kasan_poison_slab hook before
-page_address", move kasan_poison_slab() before alloc_slabmgmt(), which
-calls page_address(), to make page_address() return value to be
-non-tagged.  This, combined with calling kasan_reset_tag() for off-slab
-slab management object, leads to freelist being stored non-tagged.
+Since for_each_cpu(cpu, mask) added by commit 2d3854a37e8b767a
+("cpumask: introduce new API, without changing anything") did not
+evaluate the mask argument if NR_CPUS == 1 due to CONFIG_SMP=n,
+lru_add_drain_all() is hitting WARN_ON() at __flush_work() added by
+commit 4d43d395fed12463 ("workqueue: Try to catch flush_work() without
+INIT_WORK().") by unconditionally calling flush_work() [1].
 
-Link: http://lkml.kernel.org/r/dfb53b44a4d00de3879a05a9f04c1f55e584f7a1.1550602886.git.andreyknvl@google.com
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Tested-by: Qian Cai <cai@lca.pw>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Evgeniy Stepanov <eugenis@google.com>
-Cc: Kostya Serebryany <kcc@google.com>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Workaround this issue by using CONFIG_SMP=n specific lru_add_drain_all
+implementation.  There is no real need to defer the implementation to
+the workqueue as the draining is going to happen on the local cpu.  So
+alias lru_add_drain_all to lru_add_drain which does all the necessary
+work.
+
+[akpm@linux-foundation.org: fix various build warnings]
+[1] https://lkml.kernel.org/r/18a30387-6aa5-6123-e67c-57579ecc3f38@roeck-us.net
+Link: http://lkml.kernel.org/r/20190213124334.GH4525@dhcp22.suse.cz
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Debugged-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Tejun Heo <tj@kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ mm/swap.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 813bd89c263b..52c0420e4f93 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -2381,6 +2381,7 @@ static void *alloc_slabmgmt(struct kmem_cache *cachep,
- 		/* Slab management obj is off-slab. */
- 		freelist = kmem_cache_alloc_node(cachep->freelist_cache,
- 					      local_flags, nodeid);
-+		freelist = kasan_reset_tag(freelist);
- 		if (!freelist)
- 			return NULL;
- 	} else {
-@@ -2694,6 +2695,13 @@ static struct page *cache_grow_begin(struct kmem_cache *cachep,
+diff --git a/mm/swap.c b/mm/swap.c
+index 26fc9b5f1b6c..a3fc028e338e 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -321,11 +321,6 @@ static inline void activate_page_drain(int cpu)
+ {
+ }
  
- 	offset *= cachep->colour_off;
+-static bool need_activate_page_drain(int cpu)
+-{
+-	return false;
+-}
+-
+ void activate_page(struct page *page)
+ {
+ 	struct zone *zone = page_zone(page);
+@@ -654,13 +649,15 @@ void lru_add_drain(void)
+ 	put_cpu();
+ }
  
-+	/*
-+	 * Call kasan_poison_slab() before calling alloc_slabmgmt(), so
-+	 * page_address() in the latter returns a non-tagged pointer,
-+	 * as it should be for slab pages.
-+	 */
-+	kasan_poison_slab(page);
++#ifdef CONFIG_SMP
 +
- 	/* Get slab management. */
- 	freelist = alloc_slabmgmt(cachep, page, offset,
- 			local_flags & ~GFP_CONSTRAINT_MASK, page_node);
-@@ -2702,7 +2710,6 @@ static struct page *cache_grow_begin(struct kmem_cache *cachep,
++static DEFINE_PER_CPU(struct work_struct, lru_add_drain_work);
++
+ static void lru_add_drain_per_cpu(struct work_struct *dummy)
+ {
+ 	lru_add_drain();
+ }
  
- 	slab_map_pages(cachep, page, freelist);
+-static DEFINE_PER_CPU(struct work_struct, lru_add_drain_work);
+-
+ /*
+  * Doesn't need any cpu hotplug locking because we do rely on per-cpu
+  * kworkers being shut down before our page_alloc_cpu_dead callback is
+@@ -703,6 +700,12 @@ void lru_add_drain_all(void)
  
--	kasan_poison_slab(page);
- 	cache_init_objs(cachep, page);
+ 	mutex_unlock(&lock);
+ }
++#else
++void lru_add_drain_all(void)
++{
++	lru_add_drain();
++}
++#endif
  
- 	if (gfpflags_allow_blocking(local_flags))
+ /**
+  * release_pages - batched put_page()
 -- 
 2.19.1
 
