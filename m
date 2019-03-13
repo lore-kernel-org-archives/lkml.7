@@ -2,225 +2,79 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1032BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F84C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2512077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153AF2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552497017;
+	bh=HUgHyqNdUhzMNw0TEXtYyCShY6Jzop0xT7ClpTG4yKg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=RMVexDQrn+MHsM2cH9cdDsLZ6QAnO7FGMetPCcC5qYw3+Thv1MZL4y8a57jijm28V
+	 fgU4+tf2sdCxzwLGC4cHqFpwPkMu9YJJDkjmNJ1JeBQyotevRnMePDRK8YXawvunTB
+	 sx6beOUfVaJOyXsTboYf1xK82vvDanE0Z3ioWud0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfCMRJq (ORCPT
+        id S1726855AbfCMRKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:09:46 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60752 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfCMRJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:09:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3BDA80D;
-        Wed, 13 Mar 2019 10:09:45 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF6C33F71D;
-        Wed, 13 Mar 2019 10:09:42 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 17:09:40 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 03/15] sched/core: uclamp: Add system default clamps
-Message-ID: <20190313170940.ngiafkmiijryhl2k@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-4-patrick.bellasi@arm.com>
- <20190313143240.GH5922@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313143240.GH5922@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+        Wed, 13 Mar 2019 13:10:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfCMRKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 13:10:15 -0400
+Subject: Re: [GIT] Crypto Fixes for 5.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552497015;
+        bh=HUgHyqNdUhzMNw0TEXtYyCShY6Jzop0xT7ClpTG4yKg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=OmyX0xF6NbHGPmr9uKepdcpcCFROKUyKI5ZB8G1LdqCkiStLGugKpc9C8ZKy0NF8O
+         YQqemOtIzwL3HrV+OD62aUj6y4trnHLRmkXc9MlGLokFuydzR5OLJl8MwhbMyP974k
+         5KT8eqcEgIY2oQrFYxMk5oRIOjFehY5z062dvw3o=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
+References: <20180105073808.GA14405@gondor.apana.org.au>
+ <20180212031702.GA26153@gondor.apana.org.au>
+ <20180428080517.haxgpvqrwgotakyo@gondor.apana.org.au>
+ <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
+ <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
+ <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
+ <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
+ <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
+ <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
+ <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
+ <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: 00e87449430dc130b43d84bdee71ef94524d9c39
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: dac0bde43b0b3685390b68c9058bee36d4d5c747
+Message-Id: <155249701509.28396.9047584997134797302.pr-tracker-bot@kernel.org>
+Date:   Wed, 13 Mar 2019 17:10:15 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Mar 15:32, Peter Zijlstra wrote:
-> On Fri, Feb 08, 2019 at 10:05:42AM +0000, Patrick Bellasi wrote:
-> 
-> > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > index 45460e7a3eee..447261cd23ba 100644
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
-> > @@ -584,14 +584,32 @@ struct sched_dl_entity {
-> >   * Utilization clamp for a scheduling entity
-> >   * @value:		clamp value "requested" by a se
-> >   * @bucket_id:		clamp bucket corresponding to the "requested" value
-> > + * @effective:		clamp value and bucket actually "assigned" to the se
-> > + * @active:		the se is currently refcounted in a rq's bucket
-> >   *
-> > + * Both bucket_id and effective::bucket_id are the index of the clamp bucket
-> > + * matching the corresponding clamp value which are pre-computed and stored to
-> > + * avoid expensive integer divisions from the fast path.
-> > + *
-> > + * The active bit is set whenever a task has got an effective::value assigned,
-> > + * which can be different from the user requested clamp value. This allows to
-> > + * know a task is actually refcounting the rq's effective::bucket_id bucket.
-> >   */
-> >  struct uclamp_se {
-> > +	/* Clamp value "requested" by a scheduling entity */
-> >  	unsigned int value		: bits_per(SCHED_CAPACITY_SCALE);
-> >  	unsigned int bucket_id		: bits_per(UCLAMP_BUCKETS);
-> > +	unsigned int active		: 1;
-> > +	/*
-> > +	 * Clamp value "obtained" by a scheduling entity.
-> > +	 *
-> > +	 * This cache the actual clamp value, possibly enforced by system
-> > +	 * default clamps, a task is subject to while enqueued in a rq.
-> > +	 */
-> > +	struct {
-> > +		unsigned int value	: bits_per(SCHED_CAPACITY_SCALE);
-> > +		unsigned int bucket_id	: bits_per(UCLAMP_BUCKETS);
-> > +	} effective;
-> 
-> I still think that this effective thing is backwards.
-> 
-> The existing code already used @value and @bucket_id as 'effective' and
-> you're now changing all that again. This really doesn't make sense to
-> me.
+The pull request you sent on Tue, 12 Mar 2019 12:58:18 +0800:
 
-With respect to the previous v6, I've now moved this concept to the
-patch where we actually use it for the first time.
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
-In this patch we add system default values, thus a task is now subject
-to two possible constraints: the task specific (TS) one or the system
-default (SD) one.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/dac0bde43b0b3685390b68c9058bee36d4d5c747
 
-The most restrictive of the two must be enforced but we also want to
-keep track of the task specific value, while system defaults are
-enforce, to restore it when the system defaults are relaxed.
-
-For example:
-
-  TS:   |.............. 20 .................|
-  SD:   |... 0 ....|..... 40 .....|... 0 ...|
-  Time: |..........|..............|.........|
-        t0         t1             t2        t3
-
-Despite the task asking always only for a 20% boost:
- - in [t1,t2] we want to boost it to 40% but, right after...
- - in [t2,t3] we want to go back to the 20% boost.
-
-The "effective" values allows to efficiently enforce the most
-restrictive clamp value for a task at enqueue time by:
- - not loosing track of the original request
- - don't caring about updating non runnable tasks
-
-> Also; if you don't add it inside struct uclamp_se, but add a second
-> instance,
-> 
-> >  };
-> >  #endif /* CONFIG_UCLAMP_TASK */
-> >  
-> 
-> 
-> > @@ -803,6 +811,70 @@ static inline void uclamp_rq_update(struct rq *rq, unsigned int clamp_id,
-> >  	WRITE_ONCE(rq->uclamp[clamp_id].value, max_value);
-> >  }
-> >  
-> > +/*
-> > + * The effective clamp bucket index of a task depends on, by increasing
-> > + * priority:
-> > + * - the task specific clamp value, when explicitly requested from userspace
-> > + * - the system default clamp value, defined by the sysadmin
-> > + *
-> > + * As a side effect, update the task's effective value:
-> > + *    task_struct::uclamp::effective::value
-> > + * to represent the clamp value of the task effective bucket index.
-> > + */
-> > +static inline void
-> > +uclamp_effective_get(struct task_struct *p, unsigned int clamp_id,
-> > +		     unsigned int *clamp_value, unsigned int *bucket_id)
-> > +{
-> > +	/* Task specific clamp value */
-> > +	*bucket_id = p->uclamp[clamp_id].bucket_id;
-> > +	*clamp_value = p->uclamp[clamp_id].value;
-> > +
-> > +	/* Always apply system default restrictions */
-> > +	if (unlikely(*clamp_value > uclamp_default[clamp_id].value)) {
-> > +		*clamp_value = uclamp_default[clamp_id].value;
-> > +		*bucket_id = uclamp_default[clamp_id].bucket_id;
-> > +	}
-> > +}
-> 
-> you can avoid horrors like this and simply return a struct uclamp_se by
-> value.
-
-Yes, that should be possible... will look into splitting this out in
-v8 to have something like:
-
----8<---
-struct uclamp_req {
-	/* Clamp value "requested" by a scheduling entity */
-	unsigned int value		: bits_per(SCHED_CAPACITY_SCALE);
-	unsigned int bucket_id		: bits_per(UCLAMP_BUCKETS);
-	unsigned int active		: 1;
-	unsigned int user_defined	: 1;
-}
-
-struct uclamp_eff {
-	unsigned int value	        : bits_per(SCHED_CAPACITY_SCALE);
-	unsigned int bucket_id	        : bits_per(UCLAMP_BUCKETS);
-}
-
-struct task_struct {
-        // ...
-        #ifdef CONFIG_UCLAMP_TASK
-                struct uclamp_req uclamp_req[UCLAMP_CNT];
-                struct uclamp_eff uclamp_eff[UCLAMP_CNT];
-        #endif
-        // ...
-}
-
-static inline struct uclamp_eff
-uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
-{
-        struct uclamp_eff uc_eff = p->uclamp_eff[clamp_id];
-
-	uc_eff.bucket_id = p->uclamp_req[clamp_id].bucket_id;
-	uc_eff.clamp_value = p->uclamp_req[clamp_id].value;
-
-	if (unlikely(uc_eff.clamp_value > uclamp_default[clamp_id].value)) {
-		uc_eff.clamp_value = uclamp_default[clamp_id].value;
-		uc_eff.bucket_id = uclamp_default[clamp_id].bucket_id;
-	}
-
-        return uc_eff;
-}
-
-static inline void
-uclamp_eff_set(struct task_struct *p, unsigned int clamp_id)
-{
-        p->uclamp_eff[clamp_id] = uclamp_eff_get(p, clamp_id);
-}
----8<---
-
-Is that what you mean ?
+Thank you!
 
 -- 
-#include <best/regards.h>
-
-Patrick Bellasi
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
