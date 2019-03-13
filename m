@@ -2,141 +2,196 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D800C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9C5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB3C214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA092171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3UpBKuM"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="BeWe1eD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfCMNiU (ORCPT
+        id S1726774AbfCMNip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 09:38:20 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39608 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfCMNiU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 09:38:20 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i20so1405952pfo.6;
-        Wed, 13 Mar 2019 06:38:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=oTIYVxgRadP7tA9ienDvPyYP3wV7wH2D7UNk9dL+6l4=;
-        b=T3UpBKuM32YqMVnI4PXfAbufaD0KCMDYhLzJYip3+jx3Ln0gavvUsNHtJAMC9epZ1J
-         1cpAe91xgwnzFkGda7IrkEwzYaM7iR8IivYVSEAobDlAkceaub4x7gke4azDb0IO//IX
-         YDAO/f5jn0GZB1KQKkErZQTSMWJrxMOcmr4oaLrts/sr7l53X1aOGcAWJGuOh/4RMBf8
-         pRa5guGfZKpV3uzLSU3HS6PQT4iQ2OrwpvGEauLAvCQsGSN+PHdJZjTb5jre0ltVTEBo
-         dK8buobT6JMF1qx675akCiNsSz/0x68DoxQhavqSWwcANGfBPhQwGfUJWlbjU2hu4a40
-         Nu9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oTIYVxgRadP7tA9ienDvPyYP3wV7wH2D7UNk9dL+6l4=;
-        b=cqdgrcEIlQMsLqV6+Lp0bTGENIMC3Nk4DT3e4tRJq1heDXkh4cakcxlECaJnkPhd1r
-         h/6hBf4WvRhSfZ1aoFpovLstRIo4/2nRJ10NQQrl5SE1WBEf5SrpxW8EjGaNqyR/cP+X
-         r4bX7vP5qfBLszVNEsyTvtiCHxwYi6WjO3EjvwkSr/5Jps1MhQapFrHBVgMiealjvg3K
-         APsHDbk4ReCQUI5l8MAlfHfp+I7vIBqnkQbLpDcgDrwz3RNyAmzL3gCiaQq2AXuaDeqX
-         ZGdxRdSej/NP4PMavzWN65sl93QQDm5mMMlPJf2R/6YfKihki/h5bdebfiMdBDF78KOF
-         nKeQ==
-X-Gm-Message-State: APjAAAWfVrdve/e8XpILARDQW1v91HpNN59Vf5JCFdtpH+V3RWAYYD8t
-        hDfC1ziZCOgSWdX3dsmkyog=
-X-Google-Smtp-Source: APXvYqxgB7kX6OQwJCjXczNQPHAOD9LxeLWq5p7asudigEV1knXf/B7jdkFTrOdZRA6IMzCQGtPP1w==
-X-Received: by 2002:a17:902:968b:: with SMTP id n11mr45672522plp.316.1552484299557;
-        Wed, 13 Mar 2019 06:38:19 -0700 (PDT)
-Received: from upstream_server.localdomain ([123.116.203.188])
-        by smtp.googlemail.com with ESMTPSA id i13sm20122103pfo.106.2019.03.13.06.38.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 06:38:18 -0700 (PDT)
-From:   Liang Chen <liangchen.linux@gmail.com>
-To:     colyli@suse.de
-Cc:     kent.overstreet@gmail.com, linux-kernel@vger.kernel.org,
-        linux-bcache@vger.kernel.org,
-        Liang Chen <liangchen.linux@gmail.com>
-Subject: [PATCH v1] bcache: fix a race between cache register and cacheset unregister
-Date:   Wed, 13 Mar 2019 09:37:24 -0400
-Message-Id: <1552484244-3510-1-git-send-email-liangchen.linux@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 13 Mar 2019 09:38:45 -0400
+Received: from mail-eopbgr710121.outbound.protection.outlook.com ([40.107.71.121]:63061
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726719AbfCMNip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 09:38:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NQCuTV970LwVL+1CgSBi9/HdZb/goljVsXvScT+92sY=;
+ b=BeWe1eD7PMMFLfM49yQlrPQZuxjzHeJzFNpHkdR9jcf7ltHwoZAbvMUMUUWAOmfxRmxp7Hkzqmj8FWPN0aZ/5DCogTci0960qK51UpgzDobJ4TJMOX8sz/LwAZPnzwm0lnFGjVbfTQ5idDk7fUYXEYcxVv/YLoi/elc8Sj5eBHk=
+Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
+ DM5PR2101MB1062.namprd21.prod.outlook.com (52.132.128.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.1; Wed, 13 Mar 2019 13:38:41 +0000
+Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
+ ([fe80::c92a:a5e0:ee92:5f6]) by DM5PR2101MB0918.namprd21.prod.outlook.com
+ ([fe80::c92a:a5e0:ee92:5f6%5]) with mapi id 15.20.1730.000; Wed, 13 Mar 2019
+ 13:38:41 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>
+CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: [PATCH 1/2] Drivers: hv: Move Hyper-V clockevents code to new
+ clocksource driver
+Thread-Topic: [PATCH 1/2] Drivers: hv: Move Hyper-V clockevents code to new
+ clocksource driver
+Thread-Index: AQHU2Rx2S98qkJLCu0aTdca3djLhy6YJOzGAgABQGlA=
+Date:   Wed, 13 Mar 2019 13:38:40 +0000
+Message-ID: <DM5PR2101MB091897108980449F12FDDB3DD74A0@DM5PR2101MB0918.namprd21.prod.outlook.com>
+References: <1552426813-9568-1-git-send-email-mikelley@microsoft.com>
+ <1552426813-9568-2-git-send-email-mikelley@microsoft.com>
+ <874l87tbz2.fsf@vitty.brq.redhat.com>
+In-Reply-To: <874l87tbz2.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-13T13:38:38.7572502Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b36b2f8c-7d03-4b05-be7c-f306ba152f88;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cb3a67f5-72a9-4000-ec9c-08d6a7b9347d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB1062;
+x-ms-traffictypediagnostic: DM5PR2101MB1062:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR2101MB10629F49625D7826D697FAC2D74A0@DM5PR2101MB1062.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 09752BC779
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(39860400002)(376002)(366004)(346002)(189003)(199004)(14444005)(74316002)(52536013)(71190400001)(2906002)(106356001)(86612001)(54906003)(256004)(53936002)(9686003)(4326008)(86362001)(6916009)(7416002)(105586002)(55016002)(22452003)(305945005)(316002)(7736002)(186003)(8936002)(97736004)(5660300002)(486006)(6436002)(71200400001)(478600001)(81156014)(10290500003)(14454004)(3846002)(8676002)(7696005)(229853002)(66066001)(10090500001)(11346002)(6246003)(33656002)(26005)(68736007)(107886003)(6506007)(8990500004)(446003)(102836004)(476003)(6116002)(99286004)(81166006)(6346003)(25786009)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1062;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nkNN6oNF4GYhD8IRRqvKW61dI7E2jxp6QvBR1d8b5lwFzGuEJAZuKCT1zUah6sLhfDogA4FLfImWJwzh5uUGToXa1w2QVcz55xiMbjCwZZNlzlGIzeEeOoD0Y1idwjyMoiy+d6EfiVTKGA36cb2wxpurcs7yttXCYKNE62UAa/SsfibJsWRhZloRMv1FpZZrPZOo/VUb5EsVI4gSK4lurOiWvpacGcld9PQlQXJyvr62cuCPWm2kwmsPef0/3qM09lzL/uympXpNFswPoCTqIVnT7T3pc/wpLdz1LtpwmLQSsp3dWCOiD3Dbl629PD3ZwJ0yNgITlvL1yr2uJXFfw6N7xo+bRHZupDnm5QADDspKr7ZrAGNhW5BGHhQRnBEM5nHfMaX2J6ESIWtuGvUZdhZKaRAM5kXBtnoM6Wi1p08=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb3a67f5-72a9-4000-ec9c-08d6a7b9347d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2019 13:38:40.8971
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race between cache device register and cache set unregister.
-For an already registered cache device, register_bcache will call
-bch_is_open to iterate through all cachesets and check every cache
-there. The race occurs if cache_set_free executes at the same time and
-clears the caches right before ca is dereferenced in bch_is_open_cache.
-To close the race, let's make sure the clean up work is protected by
-the bch_register_lock as well.
+From: Vitaly Kuznetsov <vkuznets@redhat.com>  Sent: Wednesday, March 13, 20=
+19 1:28 AM
+>=20
+> > Clockevents code for Hyper-V synthetic timers is currently mixed
+> > in with other Hyper-V code. Move the code to a Hyper-V specific
+> > driver in the "clocksource" directory. Update the VMbus driver
+> > to call initialization and cleanup routines since the Hyper-V
+> > synthetic timers are not independently enumerated in ACPI.
+> >
+>=20
+> I like the idea! Would it also make sense to consider moving Hyper-V
+> clocksource from arch/x86/hyperv/hv_init.c? The thing is that we use it
+> from arch-independent code (e.g. seee 'hyperv_cs' usage in
+> drivers/hv/hv_util.c).
 
-This issue can be reproduced as follows,
-while true; do echo /dev/XXX> /sys/fs/bcache/register ; done&
-while true; do echo 1> /sys/block/XXX/bcache/set/unregister ; done &
+That's what the second patch in the series does. :-)  But let me
+know if there's something you think I've missed.
 
-and results in the following oops,
+>=20
+> Nitpicking:
+>=20
+> This has nothing to do with your patch but we have a mix of 'stimer',
+> 'timer', 'syntimer' names when we refer to Hyper-V Synthetic timers, it
+> may make sense to try to converge on something (stimer would probably be
+> my personal preference but I don't really care as long as we use the
+> same abbreviation). Examples:
+>=20
+> hv_init_timer_config(...)
+> HV_MSR_SYNTIMER_AVAILABLE
+> HYPERV_STIMER0_VECTOR
+> hv_syntimer_init(...)
+> ...
 
-[  +0.000053] BUG: unable to handle kernel NULL pointer dereference at 0000000000000998
-[  +0.000457] #PF error: [normal kernel read fault]
-[  +0.000464] PGD 800000003ca9d067 P4D 800000003ca9d067 PUD 3ca9c067 PMD 0
-[  +0.000388] Oops: 0000 [#1] SMP PTI
-[  +0.000269] CPU: 1 PID: 3266 Comm: bash Not tainted 5.0.0+ #6
-[  +0.000346] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.fc28 04/01/2014
-[  +0.000472] RIP: 0010:register_bcache+0x1829/0x1990 [bcache]
-[  +0.000344] Code: b0 48 83 e8 50 48 81 fa e0 e1 10 c0 0f 84 a9 00 00 00 48 89 c6 48 89 ca 0f b7 ba 54 04 00 00 4c 8b 82 60 0c 00 00 85 ff 74 2f <49> 3b a8 98 09 00 00 74 4e 44 8d 47 ff 31 ff 49 c1 e0 03 eb 0d
-[  +0.000839] RSP: 0018:ffff92ee804cbd88 EFLAGS: 00010202
-[  +0.000328] RAX: ffffffffc010e190 RBX: ffff918b5c6b5000 RCX: ffff918b7d8e0000
-[  +0.000399] RDX: ffff918b7d8e0000 RSI: ffffffffc010e190 RDI: 0000000000000001
-[  +0.000398] RBP: ffff918b7d318340 R08: 0000000000000000 R09: ffffffffb9bd2d7a
-[  +0.000385] R10: ffff918b7eb253c0 R11: ffffb95980f51200 R12: ffffffffc010e1a0
-[  +0.000411] R13: fffffffffffffff2 R14: 000000000000000b R15: ffff918b7e232620
-[  +0.000384] FS:  00007f955bec2740(0000) GS:ffff918b7eb00000(0000) knlGS:0000000000000000
-[  +0.000420] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0.000801] CR2: 0000000000000998 CR3: 000000003cad6000 CR4: 00000000001406e0
-[  +0.000837] Call Trace:
-[  +0.000682]  ? _cond_resched+0x10/0x20
-[  +0.000691]  ? __kmalloc+0x131/0x1b0
-[  +0.000710]  kernfs_fop_write+0xfa/0x170
-[  +0.000733]  __vfs_write+0x2e/0x190
-[  +0.000688]  ? inode_security+0x10/0x30
-[  +0.000698]  ? selinux_file_permission+0xd2/0x120
-[  +0.000752]  ? security_file_permission+0x2b/0x100
-[  +0.000753]  vfs_write+0xa8/0x1a0
-[  +0.000676]  ksys_write+0x4d/0xb0
-[  +0.000699]  do_syscall_64+0x3a/0xf0
-[  +0.000692]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Yes, you are right about the mish-mash of names.  I also like converging
+on "stimer".  I'll certainly change things like hv_syntimer_init() to
+hv_stimer_init() as part of the patch and avoid making the problem
+worse.
 
-Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
----
- drivers/md/bcache/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+What about the name of the new .c and .h files?  They include code
+both the stimer-based clockevents, as well as the Hyper-V
+reference time source based clocksource.  Stay with "syntimer" or
+shorten to "stimer", even though the code is slightly broader than
+just the stimers?  (which highlights the generic Linux naming issue that
+"clocksource drivers" include code for both clockevents and clocksources)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 4dee119..ee36e6b 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1516,6 +1516,7 @@ static void cache_set_free(struct closure *cl)
- 	bch_btree_cache_free(c);
- 	bch_journal_free(c);
- 
-+	mutex_lock(&bch_register_lock);
- 	for_each_cache(ca, c, i)
- 		if (ca) {
- 			ca->set = NULL;
-@@ -1534,7 +1535,6 @@ static void cache_set_free(struct closure *cl)
- 	mempool_exit(&c->search);
- 	kfree(c->devices);
- 
--	mutex_lock(&bch_register_lock);
- 	list_del(&c->list);
- 	mutex_unlock(&bch_register_lock);
- 
--- 
-1.8.3.1
+>=20
+> > diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefil=
+e
+> > index be6e0fb..a887955 100644
+> > --- a/drivers/clocksource/Makefile
+> > +++ b/drivers/clocksource/Makefile
+> > @@ -83,3 +83,4 @@ obj-$(CONFIG_ATCPIT100_TIMER)		+=3D timer-atcpit100.o
+> >  obj-$(CONFIG_RISCV_TIMER)		+=3D timer-riscv.o
+> >  obj-$(CONFIG_CSKY_MP_TIMER)		+=3D timer-mp-csky.o
+> >  obj-$(CONFIG_GX6605S_TIMER)		+=3D timer-gx6605s.o
+> > +obj-$(CONFIG_HYPERV)			+=3D hyperv_syntimer.o
+>=20
+> (just a couple of spare thoughs)
+>=20
+> CONFIG_HYPERV can also be a module, are we OK with that? (we'll have to
+> support module loading/unloading then and honestly I see no reason for
+> that. I would prefer everything but VMBus devices to be in
+> kernel.) If we don't want it to be a module we can create a hidden
+> CONFIG_HYPERV_STIMER or something like that - just like we already do
+> for CONFIG_HYPERV_TSCPAGE.
+>=20
+> There is, however, one additional dependency here: when running in
+> non-direct mode, Hyper-V clockevent devices require functional Hyper-V
+> messaging - which currently lives in VMBus code so that may explain why
+> you may want to keep stimer code in the same entity. Or, alternatively,
+> we can move Hyper-V messaging out of VMBus code (is it actually
+> architecture-agnostic?)
+>=20
 
+I thought about introducing CONFIG_HYPERV_STIMER, but in my
+judgment it was just unnecessary complexity.  The Hyper-V clocksource
+driver can't exist independent of Hyper-V, and vice versa.  When both the
+clocksource and clockevents code is considered, the VMbus driver and
+Hyper-V initialization code has to call directly into the driver since the
+Hyper-V synthetic timers and reference time counter aren't independently
+enumerated.  Even if we could get the Hyper-V messaging out of VMbus
+code, we would still need the clocksource initialization call directly from
+hyperv_init(), which is not in a module (see the 2nd patch of the series).
+
+Michael
