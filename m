@@ -2,147 +2,266 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106B2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCB8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D522183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552482235;
-	bh=6pBFmBhRit/lXvLI6vi8fHZSx5zQ44s0Fq4INl6nWZA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RzimQAkBKnxN8eqsYhs3dCiHCdT/s+OP6IorJ/T2OLvcJhCY4jg8JjcFjFetelOxd
-	 dO8IKlazp7oNud3kAfpIgBGpjwO8Xq6wMzNIk05Uea01kSD8eJqrQuu28fdsAn7uU4
-	 0bhe2jlQ1a6/aOu0vkDrWD6PN/Q77RSEz5+Nd3IE=
+	by mail.kernel.org (Postfix) with ESMTP id A0E98214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:05:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=scalemp.com header.i=@scalemp.com header.b="C56NC71A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfCMNDy (ORCPT
+        id S1726465AbfCMNFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 09:03:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58532 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 09:05:10 -0400
+Received: from www.scalemp.com ([169.44.78.149]:54499 "EHLO scalemp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfCMNDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 09:03:54 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 323072177E;
-        Wed, 13 Mar 2019 13:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552482233;
-        bh=6pBFmBhRit/lXvLI6vi8fHZSx5zQ44s0Fq4INl6nWZA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mxZb5skCI62g94dwxg8F6BmNTSczq8mINcNicl/p73EpO2e3xLx+StIN4ah6B19FM
-         dstMZ5ckd+m2uie13hyiwCiHdFF1s8vxlUCx5A3huvlbEdmjWiGbSNnLPbP/3rYi70
-         WFt+YICBXNTeAhxZjWc7WKDHnVHFCLp2XZ0nFdqg=
-Date:   Wed, 13 Mar 2019 22:03:48 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, tglx@linutronix.de, namhyung@kernel.org,
-        bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [RFC PATCH v3 0/5] tracing: common error_log for ftrace
-Message-Id: <20190313220348.d0481a0a5ad7de91e90dbadc@kernel.org>
-In-Reply-To: <1552409351.4293.22.camel@kernel.org>
-References: <cover.1551741458.git.tom.zanussi@linux.intel.com>
-        <20190305230646.e7f99c46f86c0e099ac0cd30@kernel.org>
-        <20190312152605.00150aae7b781137005e9ebf@kernel.org>
-        <1552409351.4293.22.camel@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725832AbfCMNFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 09:05:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=scalemp.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3QzugJyo0DbBXxWiB5s2q16zO/wHd1razpwaj/rgL4c=; b=C56NC71Avh20PBJpAy53OHdeCc
+        viGwAw8a1qYu3c5HgpIiQ38ndqNZHGfo7yOwz57oIHe5t19LwtHVUJygxIcb2MMNehyBbejCBz2uL
+        iEvkcLYy6jm0Ixqw1dRt+xvNh3j6r3Hz4WlzJGeEBGnPz1pSNizBJGlbVvqURJv3htaI=;
+Received: from bzq-80-45-146.static.bezeqint.net ([82.80.45.146]:33032 helo=[10.100.0.166])
+        by hosting.virtualsmp.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <oren@scalemp.com>)
+        id 1h43ZD-000gnU-9h; Wed, 13 Mar 2019 09:05:07 -0400
+Subject: Re: [PATCH] svm: Fix AVIC incomplete IPI emulation
+From:   Oren Twaig <oren@scalemp.com>
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Shai (Shai@ScaleMP.com)" <Shai@scalemp.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com
+References: <d53d2240-d1f1-da04-9126-9eb3518d0047@scalemp.com>
+ <ab2b29ac-adcf-12ab-7c53-cc427995e94c@amd.com>
+ <752f5b0a-381c-d559-ec8a-dc41b1e36010@scalemp.com>
+Message-ID: <58fabfcd-7f32-a9fe-1244-6d9af2b94582@scalemp.com>
+Date:   Wed, 13 Mar 2019 15:05:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <752f5b0a-381c-d559-ec8a-dc41b1e36010@scalemp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hosting.virtualsmp.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - scalemp.com
+X-Get-Message-Sender-Via: hosting.virtualsmp.com: authenticated_id: oren@scalemp.com
+X-Authenticated-Sender: hosting.virtualsmp.com: oren@scalemp.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Mar 2019 11:49:11 -0500
-Tom Zanussi <zanussi@kernel.org> wrote:
+Hi Suravee,
 
-> Hi Masami,
-> 
-> On Tue, 2019-03-12 at 15:26 +0900, Masami Hiramatsu wrote:
-> > Hi Tom,
-> > 
-> > On Tue, 5 Mar 2019 23:06:46 +0900
-> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > 
-> > > On Mon,  4 Mar 2019 17:36:43 -0600
-> > > > Changes from v2:
-> > > > 
-> > > >   - Added [n] numbering as suggested by Masami
-> > 
-> > Hmm, this seems a bit different what I suggested.
-> > 
-> > I'm trying to port probe event's error report on
-> > your error log, and I found that the number is
-> > just shifted as below.
-> > 
-> > When I filled the log with errors.
-> > =============
-> > /sys/kernel/debug/tracing # cat error_log 
-> > [1] trace_kprobe: error: Invalid unsigned integer string
-> >   Command: r10aa00:foo/bar vfs
-> >             ^
-> > ...
-> > 
-> > [7] trace_kprobe: error: Group name must follow C naming convention
-> >   Command: p:a-b/bar vfs_read
-> >              ^
-> > [8] trace_kprobe: error: Event name is too long
-> >   Command:
-> > p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-> > rrrrrrrrrrr vfs_read
-> > =============
-> > 
-> > And do one more error, 
-> > 
-> > =============
-> > /sys/kernel/debug/tracing # cat error_log 
-> > [1] trace_kprobe: error: Maxactive is too big
-> >   Command: r0xaa00:foo/bar vfs
-> > 
-> > ....
-> > 
-> > [7] trace_kprobe: error: Event name is too long
-> >   Command:
-> > p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-> > rrrrrrrrrrr vfs_read
-> >                ^
-> > [8] trace_kprobe: error: Event name must follow C naming convention
-> >   Command: p:a/bar.c vfs_read
-> >                ^
-> > =============
-> > 
-> > The number of logs are changed :(  This can confuse users.
-> > I think it is better to keep the number as a unique number for
-> > each entry as below.
-> > 
-> 
-> Hmm, that makes sense, but I wonder if that will also confuse users,
-> when the log wraps around and no longer starts at [1] and there's no
-> way to retrieve the previous errors.
+Turns out, the _same_ bug was already discussed in the past by
+yourself, Paolo and Radim (both now 'cc'-ed)
 
-It is OK, that is same as dmesg. If user needs to keep watching it,
-it should be dumped to disk by a daemon.
-
-> 
-> I took your suggestion as a way mainly to clearly delineate each error,
-> since without the [number] or something similar, they all kind of run
-> together.
-> 
-> Not sure what advantage numbering itself provides - would some other
-> non-numbered separator work?
-
-What about timestamp, similar to dmesg?
-
-Thank you,
+Please read it here:
+https://patchwork.kernel.org/patch/8292231/
 
 
+After reading that thread, I have couple of questions:
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+First,
+
+You wrote : "I have tried NOT setting the IRR, and only
+kick_vcpu(). And things seem to work fine. Therefore, I think your
+analysis is likely to be correct."
+
+AFAIU, it means that the below patch is wrong just as Paolo
+suggested in his original answer and you did fixed it back than, but the
+code is now back ?
+
+
+Second,
+
+Did you made sure (with your HW desginer) that what the
+specifications refer as "atomically" means that the IRR is
+set (i.e the cacheline is taken exclusively) _before_ the
+isRunning bit is _read_ ?
+
+Because, if it doesn't, just like Paolo suggested,
+it means there is no way to use the feature as a
+"sending" vcpu can send IPI without any exit and
+the receiving cpu will never see the IRR bit as the
+sending cpu didn't made sure the IRR is set _before_
+reading the isRunning.
+
+Thanks,
+Oren
+
+On 03/13/2019 09:30 AM, Oren Twaig wrote:
+> Hi Suravee,
+>
+> Please see below..
+>
+> On 03/11/2019 01:38 PM, Suthikulpanit, Suravee wrote:
+>> Hi Oren,
+>>
+>> Sorry for delay response.
+>>
+>> On 3/5/19 1:15 AM, Oren Twaig wrote:
+>>> Hello Suravee,
+>>>
+>>> According to AMD's SDM, the target-not-running incomplete
+>>> ipi exit is only received if any of the destination cpus had the
+>>> not-running bit set in the avic backing page.
+>> I believe you are referring to the "isRunning" (IR) bit is in the
+>> AVIC physical APIC ID table entry.
+> I meant cause ID=1 in IPI Delivery Failure Cause (SDM rev 3.30, sep 
+> 2018, Table 15-28):
+>
+> "
+> 1: IPI Target Not Running:
+>
+> IsRunning bit of the target for a
+> Singlecast/Broadcast/Multicast IPI is not set in
+> the physical APIC ID table.
+>
+> "
+>
+>>
+>>> However, not before the CPU _already_ set the relevant IRR bit
+>>> in all these cpus.
+>> Not sure what you meant here.
+>
+> Here is the full snippet from the specifications:
+> "
+> 5.For every valid destination:
+> - Atomically set the appropriate IRR bit in each of the destinations’
+>   vAPIC backing page.
+> - Check the IsRunning status of each destination.
+> - If the destination IsRunning bit is set, send a doorbell message
+>   using the host physical core number from the Physical APIC ID table.
+>
+> 6. If any destinations are identified as not currently scheduled on
+>  a physical core (i.e., the IsRunning
+>  bit for that virtual processor is not set), cause a #VMEXIT.
+> "
+>
+> According to the specification above, the HW should first
+> set the appropriate bit in the IRR (Interrupt Request Register)
+> _before_ causing VMEXIT of IPI-delivery-not-completed
+> with  ID=1 (Target not running).
+>
+>>
+>>> In this change, the patch forces KVM to send another interrupt
+>>> to the vcpu whether SVM already did that or not. Which means
+>>> the vcpu/s, under some conditions, can get an EXTRA interrupt
+>>> it never intended to get >> Example:
+>>>     1. vcpu B: Is in "not-running" state.
+>>>     2. vcpu A: Writes to the ICR to send vector 80 to vcpu B
+>>>     3. vcpu A: SVM updates vcpu B IRR with bit 80
+>>>     4. vcpu A: SVM exits on incomplete IPI target-not-running exit.
+>>>     5. vcpu A: Now stops executing any code @ hypervisor level.
+>>>     6. vcpu B: Due to another interrupt (like lapic timer)
+>>>        resumes running the guest. While handling interrupts,
+>>>        it also handles interrupt vector 80 (as it's in his IRR)
+>>>     7. vcpu A: resumes executing the below code and sends
+>>>        an _additional_interrupt to vcpu B.
+>>>
+>>> Overall, vcpu B got two interrupts. The second is unwanted and
+>>> not documented in the system architecture.
+>>>
+>>> Can you please elaborate more to why the implementation
+>>> below conflict with the specifications (which was the code
+>>> before this commit) ?
+>> This patch was introduced to fix an issue where the SVM driver tries to
+>> handle the step 5 above by scheduling vcpu B into _running_ state to 
+>> handle
+>> the IPI from vcpu A. However, prior to this patch, vcpu B was never get
+>> scheduled to run unless there are other interrupts (e.g. timer).
+> Exactly. Only what needed here is *only* to wakeup the vcpu B. Why ? 
+> because
+> the apic of vcpu B _already_ contains the interrupt in the pending
+> IRR. Than, once vcpu B will run it will process the IRR which contains
+> the vector placed by the HW and will deliver it.
+>> This should not be the case as Vcpu B should have been running 
+>> regardless
+>> of other interrupts. So, I don't think step 6 and 7 above are correct.
+> The example of vcpu A that stops executing is just to highlight that
+> the code can't depend on that the kvm code of vcpu A will finish the
+> ICR "fake" call before vcpu B runs (beacuse of any interrupt) and process
+> that IRR request placed by the HW.
+>>
+>> The issue was caused by the apic->irr_pending not set to true when 
+>> trying to
+>> get vcpu B scheduled. This flag is checked in apic_find_highest_irr() 
+>> before
+>> searching for the highest bit.
+>>
+>> To fix the issue, I decided to leverage the existing emulation code for
+>> ICR and ICR2, which in turn calls apic_send_ipi() to deliver 
+>> interrupt to vpu B.
+>>
+>> However, looking a bit more closely, I notice the logic in 
+>> svm_deliver_avic_intr()
+>> should also have been changed from kvm_vcpu_wake_up() to kvm_vcpu_kick()
+>> since the latter will result in clearing the IRR bit for the IPI vector
+>> when trying to send IPI as part of the following call path.
+>>
+>>     vcpu_enter_guest()
+>>       |-- inject_pending_event()
+>>         |-- kvm_cpu_get_interrupt()
+>>           |--  kvm_get_apic_interrupt()
+>>             |-- apic_clear_irr()
+>>             |-- apic_set_isr()
+>>             |-- apic_update_ppr() ....
+>>
+>> Please see the patch below.
+>>
+>> Not sure if this would address the problem you are seeing.
+> I still think there a bug here where vcpu B will get two interrupts
+> instead of one.
+>
+> Thanks,
+> Oren
+>>
+>> Thanks,
+>> Suravee
+>>
+>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+>> index 24dfa6a93711..d2841c3dbc04 100644
+>> --- a/arch/x86/kvm/svm.c
+>> +++ b/arch/x86/kvm/svm.c
+>> @@ -5219,11 +5256,13 @@ static void svm_deliver_avic_intr(struct 
+>> kvm_vcpu *vcpu, int vec)
+>>           kvm_lapic_set_irr(vec, vcpu->arch.apic);
+>>           smp_mb__after_atomic();
+>>
+>> -       if (avic_vcpu_is_running(vcpu))
+>> +       if (avic_vcpu_is_running(vcpu)) {
+>>                   wrmsrl(SVM_AVIC_DOORBELL,
+>>                          kvm_cpu_get_apicid(vcpu->cpu));
+>> -       else
+>> -               kvm_vcpu_wake_up(vcpu);
+>> +       } else {
+>> +               kvm_make_request(KVM_REQ_EVENT, vcpu);
+>> +               kvm_vcpu_kick(vcpu);
+>> +       }
+>>    }
+>>
+>>    static void svm_ir_list_del(struct vcpu_svm *svm, struct 
+>> amd_iommu_pi_data *pi)
+>
+>
+
