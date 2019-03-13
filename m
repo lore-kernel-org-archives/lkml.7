@@ -2,83 +2,207 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AA0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C323DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7CF2171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0252147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gI0V78kS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfCMQhR (ORCPT
+        id S1726187AbfCMQh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:37:17 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:50870 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725856AbfCMQhP (ORCPT
+        Wed, 13 Mar 2019 12:37:27 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:50684 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfCMQhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:37:15 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-99.corp.google.com [104.133.0.99] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x2DGb2Hs003373
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Mar 2019 12:37:02 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id DECDC42080E; Wed, 13 Mar 2019 12:37:01 -0400 (EDT)
-Date:   Wed, 13 Mar 2019 12:37:01 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: INFO: rcu detected stall in sys_sendfile64 (2)
-Message-ID: <20190313163701.GE672@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <00000000000010b2fc057fcdfaba@google.com>
- <0000000000008c75b50583ddb5f8@google.com>
- <20190312040829.GQ2217@ZenIV.linux.org.uk>
- <491ff1c3-91d6-eaa7-f551-46a4f8b90f5a@i-love.sakura.ne.jp>
- <CACT4Y+ahcZpJ1Q-TKkCJkyhzGc07XFusuwBcKjg_rfAeos8RWA@mail.gmail.com>
- <92a4e5e5-33ca-7b39-16c0-82c7fb742d18@i-love.sakura.ne.jp>
- <CACT4Y+ZQD=raWY4Tp8nrUcpAAbwRt0D3sH65KrTP+JURtQ3n-Q@mail.gmail.com>
+        Wed, 13 Mar 2019 12:37:25 -0400
+Received: by mail-it1-f193.google.com with SMTP id m137so4008684ita.0;
+        Wed, 13 Mar 2019 09:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+l/+tlArTYVIAgdmiEc6xCw65Apc5s/BXyiZi9QW9Ds=;
+        b=gI0V78kSUW2pr+1vY3HihXY2OlcwcimsXS1wx8dSg94GqtDTw9pSTdKuSZ+mty7VZx
+         Z1vpP8gMeZ9iJsOXgaLMFU0Gm606IeZj8bwPiT1Ct19YoADYcRQTj48868YtJyCuMyvW
+         eNMzqzgXrnZ9GCqs5+L3kmg8PB9maUzl7SsNvtlcfOfGVHmSZlZyS8rLOhTcNz4pEiVJ
+         6DojFrXhEAaNHryfjEqEOt4d1xCxvZIWS1bsW6IS6QBCIcsR2iBHqZ9wr+9GOb7zDa3x
+         6aiu81OByPf06kJFnoCIX3avLj3hnUkVqvUj/3B98vb5ytmEXkAeo4O4a0D3jVgWBXsN
+         VtgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+l/+tlArTYVIAgdmiEc6xCw65Apc5s/BXyiZi9QW9Ds=;
+        b=n2R+Ex3QO/4nKplH9KX2uuDy1Kzfzdajfx19bE6vzoSwL/HLS8Lv9KUN2qq+ZZVCvk
+         Q4Tymffuv1xuox2Ic9f9946CjQPW/IuLogkRfFLlwwldsFIOItESdJfkz1CAVGbGjpNb
+         foW5J9nFeLKtdNflGYnZACEEGmEKlR9jg+hGoOhnb2pcpsFa9yDChPVjeXda29OAU85y
+         32zC9+9tDF3Owfg7KfdmhczaAjgLcOZsU8IwVfrHOe/9/05lohF5suCnOWi+vEjZK9Qj
+         pDVFmSdWv/46Krv1Lko+FZho0P3aIQ//4coedYqS69mMAx4wjj5Tz/ie161MrOT8Upqn
+         b1fA==
+X-Gm-Message-State: APjAAAXr/0UPN803hosFtHPHgCtvY7t1HnlDrzdzFxOr7YnyZy5Q1+b/
+        7+dn/Es9ZPGjzCfcNXlHJ6TsVvfhzwSblG3XjGE=
+X-Google-Smtp-Source: APXvYqzkO9ePaB9LM3a/1JO5eXQs89JkCut/x47OEfJ294d7MYsm5Y2Fg96Zp9CtCUgKOS9kexdVfLbBoqqwzF+4GuE=
+X-Received: by 2002:a24:45e3:: with SMTP id c96mr2208694itd.89.1552495043927;
+ Wed, 13 Mar 2019 09:37:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZQD=raWY4Tp8nrUcpAAbwRt0D3sH65KrTP+JURtQ3n-Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190306155048.12868-1-nitesh@redhat.com> <20190306155048.12868-3-nitesh@redhat.com>
+ <CAKgT0UdDohCXZY3q9qhQsHw-2vKp_CAgvf2dd2e6U6KLsAkVng@mail.gmail.com>
+ <2d9ae889-a9b9-7969-4455-ff36944f388b@redhat.com> <22e4b1cd-38a5-6642-8cbe-d68e4fcbb0b7@redhat.com>
+ <CAKgT0UcAqGX26pcQLzFUevHsLu-CtiyOYe15uG3bkhGZ5BJKAg@mail.gmail.com>
+ <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com> <CAKgT0Uc_z9Vi+JhQcJYX+J9c4J56RRSkzzegbb2=9xO-NY3dgw@mail.gmail.com>
+ <20190307212845-mutt-send-email-mst@kernel.org> <CAKgT0Ucu3EMsYBfdKtEiprrn-VBZy3Y+0HdEp5b4PO2SQgGsRw@mail.gmail.com>
+ <17d2afa6-556e-ec73-40dc-beac536b3f20@redhat.com> <CAKgT0UcdQZwHjmMBkSWmy_ZdShJCagjwomn13g+r7ZNJBRn1LQ@mail.gmail.com>
+ <8f692047-4750-6827-1ee0-d3d354788f09@redhat.com> <CAKgT0UddT9CKg1uZo6ZODs9ARti-6XGm9Zvo+8QRZKUPSwzWMQ@mail.gmail.com>
+ <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com> <CAKgT0Uftff+JVRW-sQ6u8DeVg4Fq9b-pgE6Ojr+XqQFn13JmGw@mail.gmail.com>
+ <1ae522f1-1e98-9eef-324c-29585fe574d6@redhat.com> <8826829a-973d-8117-3fe3-8e33170acfb8@redhat.com>
+In-Reply-To: <8826829a-973d-8117-3fe3-8e33170acfb8@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 13 Mar 2019 09:37:12 -0700
+Message-ID: <CAKgT0UdGhFFR=SN8rdT5QMk-QF0LuWz0Xh2pp9abrfc3FgKmVQ@mail.gmail.com>
+Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free pages
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 07:43:38AM +0100, Dmitry Vyukov wrote:
-> It would be more useful to accept patches that make syzkaller create
-> better reproducers from these people. Manual work is not scalable. We
-> would need 10 reproducers per day for a dozen of OSes (incl some
-> private kernels/branches). Anybody is free to run syzkaller manually
-> and do full manual (perfect) reporting. But for us it become clear
-> very early that it won't work. Then see above, while that human is
-> sleeping/on weekend/vacation, syzbot will already bisect own
-> reproducer. Adding manual reproducer later won't help in any way.
-> syzkaller already does lots of smart work for reproducers. Let's not
-> give up on the last mile and switch back to all manual work.
+On Wed, Mar 13, 2019 at 5:18 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 13.03.19 12:54, Nitesh Narayan Lal wrote:
+> >
+> > On 3/12/19 5:13 PM, Alexander Duyck wrote:
+> >> On Tue, Mar 12, 2019 at 12:46 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>> On 3/8/19 4:39 PM, Alexander Duyck wrote:
+> >>>> On Fri, Mar 8, 2019 at 11:39 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>>> On 3/8/19 2:25 PM, Alexander Duyck wrote:
+> >>>>>> On Fri, Mar 8, 2019 at 11:10 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>>>>> On 3/8/19 1:06 PM, Alexander Duyck wrote:
+> >>>>>>>> On Thu, Mar 7, 2019 at 6:32 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >>>>>>>>> On Thu, Mar 07, 2019 at 02:35:53PM -0800, Alexander Duyck wrote:
+> >>>>>>>>>> The only other thing I still want to try and see if I can do is to add
+> >>>>>>>>>> a jiffies value to the page private data in the case of the buddy
+> >>>>>>>>>> pages.
+> >>>>>>>>> Actually there's one extra thing I think we should do, and that is make
+> >>>>>>>>> sure we do not leave less than X% off the free memory at a time.
+> >>>>>>>>> This way chances of triggering an OOM are lower.
+> >>>>>>>> If nothing else we could probably look at doing a watermark of some
+> >>>>>>>> sort so we have to have X amount of memory free but not hinted before
+> >>>>>>>> we will start providing the hints. It would just be a matter of
+> >>>>>>>> tracking how much memory we have hinted on versus the amount of memory
+> >>>>>>>> that has been pulled from that pool.
+> >>>>>>> This is to avoid false OOM in the guest?
+> >>>>>> Partially, though it would still be possible. Basically it would just
+> >>>>>> be a way of determining when we have hinted "enough". Basically it
+> >>>>>> doesn't do us much good to be hinting on free memory if the guest is
+> >>>>>> already constrained and just going to reallocate the memory shortly
+> >>>>>> after we hinted on it. The idea is with a watermark we can avoid
+> >>>>>> hinting until we start having pages that are actually going to stay
+> >>>>>> free for a while.
+> >>>>>>
+> >>>>>>>>  It is another reason why we
+> >>>>>>>> probably want a bit in the buddy pages somewhere to indicate if a page
+> >>>>>>>> has been hinted or not as we can then use that to determine if we have
+> >>>>>>>> to account for it in the statistics.
+> >>>>>>> The one benefit which I can see of having an explicit bit is that it
+> >>>>>>> will help us to have a single hook away from the hot path within buddy
+> >>>>>>> merging code (just like your arch_merge_page) and still avoid duplicate
+> >>>>>>> hints while releasing pages.
+> >>>>>>>
+> >>>>>>> I still have to check PG_idle and PG_young which you mentioned but I
+> >>>>>>> don't think we can reuse any existing bits.
+> >>>>>> Those are bits that are already there for 64b. I think those exist in
+> >>>>>> the page extension for 32b systems. If I am not mistaken they are only
+> >>>>>> used in VMA mapped memory. What I was getting at is that those are the
+> >>>>>> bits we could think about reusing.
+> >>>>>>
+> >>>>>>> If we really want to have something like a watermark, then can't we use
+> >>>>>>> zone->free_pages before isolating to see how many free pages are there
+> >>>>>>> and put a threshold on it? (__isolate_free_page() does a similar thing
+> >>>>>>> but it does that on per request basis).
+> >>>>>> Right. That is only part of it though since that tells you how many
+> >>>>>> free pages are there. But how many of those free pages are hinted?
+> >>>>>> That is the part we would need to track separately and then then
+> >>>>>> compare to free_pages to determine if we need to start hinting on more
+> >>>>>> memory or not.
+> >>>>> Only pages which are isolated will be hinted, and once a page is
+> >>>>> isolated it will not be counted in the zone free pages.
+> >>>>> Feel free to correct me if I am wrong.
+> >>>> You are correct up to here. When we isolate the page it isn't counted
+> >>>> against the free pages. However after we complete the hint we end up
+> >>>> taking it out of isolation and returning it to the "free" state, so it
+> >>>> will be counted against the free pages.
+> >>>>
+> >>>>> If I am understanding it correctly you only want to hint the idle pages,
+> >>>>> is that right?
+> >>>> Getting back to the ideas from our earlier discussion, we had 3 stages
+> >>>> for things. Free but not hinted, isolated due to hinting, and free and
+> >>>> hinted. So what we would need to do is identify the size of the first
+> >>>> pool that is free and not hinted by knowing the total number of free
+> >>>> pages, and then subtract the size of the pages that are hinted and
+> >>>> still free.
+> >>> To summarize, for now, I think it makes sense to stick with the current
+> >>> approach as this way we can avoid any locking in the allocation path and
+> >>> reduce the number of hypercalls for a bunch of MAX_ORDER - 1 page.
+> >> I'm not sure what you are talking about by "avoid any locking in the
+> >> allocation path". Are you talking about the spin on idle bit, if so
+> >> then yes.
+> > Yeap!
+> >> However I have been testing your patches and I was correct
+> >> in the assumption that you forgot to handle the zone lock when you
+> >> were freeing __free_one_page.
+> > Yes, these are the steps other than the comments you provided in the
+> > code. (One of them is to fix release_buddy_page())
+> >>  I just did a quick copy/paste from your
+> >> zone lock handling from the guest_free_page_hinting function into the
+> >> release_buddy_pages function and then I was able to enable multiple
+> >> CPUs without any issues.
+> >>
+> >>> For the next step other than the comments received in the code and what
+> >>> I mentioned in the cover email, I would like to do the following:
+> >>> 1. Explore the watermark idea suggested by Alex and bring down memhog
+> >>> execution time if possible.
+> >> So there are a few things that are hurting us on the memhog test:
+> >> 1. The current QEMU patch is only madvising 4K pages at a time, this
+> >> is disabling THP and hurts the test.
+> > Makes sense, thanks for pointing this out.
+> >>
+> >> 2. The fact that we madvise the pages away makes it so that we have to
+> >> fault the page back in in order to use it for the memhog test. In
+> >> order to avoid that penalty we may want to see if we can introduce
+> >> some sort of "timeout" on the pages so that we are only hinting away
+> >> old pages that have not been used for some period of time.
+> >
+> > Possibly using MADVISE_FREE should also help in this, I will try this as
+> > well.
+>
+> I was asking myself some time ago how MADVISE_FREE will be handled in
+> case of THP. Please let me know your findings :)
 
-I suspect a scalable solution that would significantly improve things
-is one where Syzbot tries N times for a "good" result to make sure
-it's not a flaky pass.  N could either be hard-coded to some value
-like 8 or 10, or Syzbot could experimentally try to figure out how
-reliable the reproducer happens to be, and figure out what an ideal
-"N" value should be for a particular reproducer.
+The problem with MADVISE_FREE is that it will add additional
+complication to the QEMU portion of all this as it only applies to
+anonymous memory if I am not mistaken.
 
-					- Ted
+That also reminds me that one thing this patch set still doesn't
+address is what do we do about a direct assigned device or some other
+form of shared memory where we want to keep the virtual mapping
+beneath the guest pinned to a given set of physical memory.
