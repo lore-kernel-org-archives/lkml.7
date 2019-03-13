@@ -2,94 +2,125 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EB0C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1D3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90344213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A640D2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:18:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JsVV35ij";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LMU6c3qq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfCMVSt (ORCPT
+        id S1727496AbfCMVS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 17:18:49 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:58273 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfCMVSt (ORCPT
+        Wed, 13 Mar 2019 17:18:58 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45974 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfCMVS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 17:18:49 -0400
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MkYsS-1gdLUj2G22-00m5UP; Wed, 13 Mar 2019 22:18:27 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: seco-cec: fix building with RC_CORE=m
-Date:   Wed, 13 Mar 2019 22:18:07 +0100
-Message-Id: <20190313211825.571994-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 13 Mar 2019 17:18:57 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D01F960A60; Wed, 13 Mar 2019 21:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552511936;
+        bh=ibrHUwNVtP11xB8FBGv+h9hQxv8MY5GSEsRv7rfU4ZU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JsVV35ijIyO82CKdyWcexRQ5HfSCxbYs1AN7UtORXTjLByuGRjo5uK2T+G3mU82Oe
+         xwTk08g9DmRaF/sipXAquyqncxwjMgZ5ADpeKX6pdtPC1a3mq6lSQCqvqC75qN6sFA
+         GUhbAspNdHS1v2y3hLMT8E4+CdPmEJSNypMtyvpQ=
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B905460A05;
+        Wed, 13 Mar 2019 21:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552511934;
+        bh=ibrHUwNVtP11xB8FBGv+h9hQxv8MY5GSEsRv7rfU4ZU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LMU6c3qqXSfKGA3ksQgrTb+OKGfEfXPL1V1reNEmXD0A8oifPNa18K3z6Dn9EIpZu
+         d1MWOiJsoSTkjn+4s9p50L0J6v655kjMWk6OMCDySaSoXmv+Wz79HVrzx4Dn1iNOYp
+         ui4aOqVH+j0G/LPuywMW/hOk9+YXFOEOEglPvhqw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B905460A05
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com
+Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
+        bjorn.andersson@linaro.org, dianders@chromium.org,
+        linus.walleij@linaro.org, Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v4 00/10] support wakeup capable GPIOs
+Date:   Wed, 13 Mar 2019 15:18:34 -0600
+Message-Id: <20190313211844.29416-1-ilina@codeaurora.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/y0Ua3LOKhN9lVs5dO16orTPEUdx2ZZowrhF4dLm1TLSbqDY943
- NL9Jg8WeK8jA2N6z+jsl/T7awggk16IMBjPIY/39wfL7hgFt23dEmVCz0SWzdyHKZ/1VWqM
- VtZf5jaXwjLKbdT7p1InqQ4tX905RxPtakWXAXYgRyI0gRpmp2x6GLOlXI/7y0CSc4LPAjY
- LBUP6UZNy40DBEmWTV0kQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AyvQ7t2Xz0g=:24UnJUcG+X2Ez//KBUEmlX
- VddFq9Ai4kOMx3b17cbNRjQtrPfItrXwvZTjv2S6hChI5DmK4ISybsVm09Ri6tBXTmn5hyPE7
- RS36Miy1t/1IUEYYA3PsbslIuOHRFTsJvMzVi3/U5wllWE0zIp+YALfkggDbPXL6GeKkRlwNE
- U1Ig65ODhMXkJRjNisrJK5fRPTilNnxBndK/3E6hYQjW/vAXudde6hI46dtLrjDKwcAlZ6Xep
- eNwmAF8xfKRJValsjal4+CnvL+DJ3b9MYdLjnaHDOlTzQlYyPN9e1GAodgp9QvlJZVbi7/Jmu
- ZZEB4olPB9ACU2pfUt87ZVOoDVe9xZuGDGpMybP/GYWCSZ+h9fpWDzsdcqhkWvjET/ApSpFVe
- e39vF1HeXauSg1JuJ0fGhH9WXCOMh/0tZCOjlOM+bOUmdFeAyCZfxIu1dO44K4f+hHkBEDavH
- qfBnn92Fm+uVb0UWfFeXoqcLulM1baQ6F9H91l7ZKdH3IyVfbaszOjz5jtcTCRfNp+LQCfarl
- feWs8+FHRsVuuGQcnxCXeUSBR1X8A6mkGKIXcgW6PzBDN3k8WTkgciSwIgKDJgMyB1rcpq5NB
- iUYLpiRn2Nj83yB0C3MFfm0D1ORRcmbaspkm/7+IBjJxuEB/JFOjcGTpx7friPN2bLD47l12N
- qNpun4OEdPk4Zjcxyk+tbc/59zoz0eJwkXL5nteP3JSvmRuUd4OftlwzyS74xTRB+zuOdS29Z
- VzmlwRWCekVw0MI0bZpl7/D9NzVUgxyLIScRHQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I previously added an RC_CORE dependency here, but missed the corner
-case of CONFIG_VIDEO_SECO_CEC=y with CONFIG_RC_CORE=m, which still
-causes a link error:
+Hi all,
 
-drivers/media/platform/seco-cec/seco-cec.o: In function `secocec_probe':
-seco-cec.c:(.text+0x1b8): undefined reference to `devm_rc_allocate_device'
-seco-cec.c:(.text+0x2e8): undefined reference to `devm_rc_register_device'
-drivers/media/platform/seco-cec/seco-cec.o: In function `secocec_irq_handler':
-seco-cec.c:(.text+0xa2c): undefined reference to `rc_keydown'
+This series adds support for wakeup capable GPIOs. It is based on Thierry's
+hiearchical GPIO domains. This approach is based on Stephen's idea [1]. The SoC
+that is used for this development is a QCOM SDM845. The current patchset is
+rebased on top of 5.0 and adds documentation for the wakeup-parent and
+irqdomain-map DT properties along with the the optional irqdomain-map-mask and
+irqdomain-map-pass-thru properties. Also incorporating comments from Marc on
+the earlier submission [2]. I cleaned up some of the change history in these
+patches to match the version number with that of the submission.
 
-Refine the dependency to disallow building the RC subdriver in this case.
-This is the same logic we apply in other drivers like it.
+The dtsi patches are based on Bjorn's changes for increased address and cell
+size [3] and [4].
 
-Fixes: f27dd0ad6885 ("media: seco-cec: fix RC_CORE dependency")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/media/platform/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Kindly review the series.
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 4acbed189644..67e48ff10532 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -649,7 +649,7 @@ config VIDEO_SECO_CEC
- config VIDEO_SECO_RC
- 	bool "SECO Boards IR RC5 support"
- 	depends on VIDEO_SECO_CEC
--	depends on RC_CORE
-+	depends on RC_CORE=y || RC_CORE = VIDEO_SECO_CEC
- 	help
- 	  If you say yes here you will get support for the
- 	  SECO Boards Consumer-IR in seco-cec driver.
--- 
-2.20.0
+Thanks,
+Lina
+
+[1]. https://lkml.org/lkml/2018/12/19/813
+[2]. https://lkml.org/lkml/2019/2/22/716
+[3]. https://patchwork.kernel.org/patch/10767511/
+[4]. https://lkml.kernel.org/r/20190117042940.25487-2-bjorn.andersson@linaro.org
+
+Lina Iyer (8):
+  irqdomain: add bus token DOMAIN_BUS_WAKEUP
+  of/irq: document properties for wakeup interrupt parent
+  drivers: irqchip: add PDC irqdomain for wakeup capable GPIOs
+  dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
+  drivers: pinctrl: msm: setup GPIO irqchip hierarchy
+  arm64: dts: qcom: add PDC interrupt controller for SDM845
+  arm64: dts: qcom: setup PDC as wakeup parent for GPIOs for SDM845
+  arm64: defconfig: enable PDC interrupt controller for Qualcomm SDM845
+
+Stephen Boyd (1):
+  of: irq: add helper to remap interrupts to another irqdomain
+
+Thierry Reding (1):
+  gpio: Add support for hierarchical IRQ domains
+
+ .../interrupt-controller/interrupts.txt       |  39 +++++
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  |   7 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  87 ++++++++++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/gpio/gpiolib.c                        |  15 +-
+ drivers/irqchip/qcom-pdc.c                    |  72 ++++++++-
+ drivers/of/irq.c                              | 125 +++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-msm.c            | 151 +++++++++++++++---
+ include/linux/gpio/driver.h                   |   6 +
+ include/linux/irqdomain.h                     |   1 +
+ include/linux/of_irq.h                        |   1 +
+ include/linux/soc/qcom/irq.h                  |  23 +++
+ 12 files changed, 497 insertions(+), 31 deletions(-)
+ create mode 100644 include/linux/soc/qcom/irq.h
+
+--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
