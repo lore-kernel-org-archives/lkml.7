@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2DFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7ACC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFAD621019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCC82075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505252;
-	bh=Tc3kDq2lAPDXt+ynXqMQPMgjQUWNiuK48hTE3Gn3ubs=;
+	s=default; t=1552505260;
+	bh=+d5wV/dzkCkKnlOpCqzfymsXjRe4Ys5z6NdB7ciVElQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqMuz8iOZSDPDEDY3/3qCoI4W7+LboGV23Qu/C6GUIBpohQN7Zv4h0kyJQVZtQAnN
-	 B78zSzyRlhMrD+eX711CAkDCktL0hMwVCSaTvCQjhG+Hd5gLUkT8gOe/FXBO3jW5Ck
-	 0g7GsJ5FBx+/uw76zo6nXS8HcS9NWu/DSsBtb5Yc=
+	b=NlTJp1mJ22EzDqnNrswJEstrEtgWcnmbUpNNpGv/SxASb54hyplCW7BaYhSiQrIIH
+	 WHUCWf5UdeQk3llAU6XHfbdsVZo4onNXF9L+Tn2Hg0YGqivJMZ9iiHxy0qAhlnCDNT
+	 u887CeS23NA9rXvCcXFrqCyYmTTGxE6tv/T/l7Bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfCMT1a (ORCPT
+        id S1728266AbfCMT1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:27:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44492 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727572AbfCMTOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:14:06 -0400
+        id S1728132AbfCMTN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:13:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CA752075C;
-        Wed, 13 Mar 2019 19:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEE102173C;
+        Wed, 13 Mar 2019 19:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504445;
-        bh=Tc3kDq2lAPDXt+ynXqMQPMgjQUWNiuK48hTE3Gn3ubs=;
+        s=default; t=1552504437;
+        bh=+d5wV/dzkCkKnlOpCqzfymsXjRe4Ys5z6NdB7ciVElQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UstsVZM3seDfvlM07SuJ+0FHRP2KJWBfTaUcLxYqmpdZadueZDF22n+87wXEMLz2L
-         9ozR6B71Hu1Z7Bpm3oVO/eFPRuBSBDdQ9YkepfWanhIDVo7FLOC/z/Wam0Zu4t/8O8
-         GdaVjLxJMBE38kYsvv0X3/WzFhswrUYIsv4LrY4c=
+        b=Oum8tcyLhKzWRbdYvJ4lxwN3vkxZBLw63CHRBFKKoR78fUkEwXSygNp8Sety1HqnT
+         dqJkz0+fmfQSRNKBzDEs6mphBWVWQd3B22jiSxXmvqTmg4dseNNTyR0yGFfV7Uvzml
+         V9HUl3IRB48fs8DMhGBu81CkPWK+c2hJ6RRwlIsc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 28/48] mm: handle lru_add_drain_all for UP properly
-Date:   Wed, 13 Mar 2019 15:12:30 -0400
-Message-Id: <20190313191250.158955-28-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 26/48] net: marvell: mvneta: fix DMA debug warning
+Date:   Wed, 13 Mar 2019 15:12:28 -0400
+Message-Id: <20190313191250.158955-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -59,84 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 6ea183d60c469560e7b08a83c9804299e84ec9eb ]
+[ Upstream commit a8fef9ba58c9966ddb1fec916d8d8137c9d8bc89 ]
 
-Since for_each_cpu(cpu, mask) added by commit 2d3854a37e8b767a
-("cpumask: introduce new API, without changing anything") did not
-evaluate the mask argument if NR_CPUS == 1 due to CONFIG_SMP=n,
-lru_add_drain_all() is hitting WARN_ON() at __flush_work() added by
-commit 4d43d395fed12463 ("workqueue: Try to catch flush_work() without
-INIT_WORK().") by unconditionally calling flush_work() [1].
+Booting 4.20 on SolidRun Clearfog issues this warning with DMA API
+debug enabled:
 
-Workaround this issue by using CONFIG_SMP=n specific lru_add_drain_all
-implementation.  There is no real need to defer the implementation to
-the workqueue as the draining is going to happen on the local cpu.  So
-alias lru_add_drain_all to lru_add_drain which does all the necessary
-work.
+WARNING: CPU: 0 PID: 555 at kernel/dma/debug.c:1230 check_sync+0x514/0x5bc
+mvneta f1070000.ethernet: DMA-API: device driver tries to sync DMA memory it has not allocated [device address=0x000000002dd7dc00] [size=240 bytes]
+Modules linked in: ahci mv88e6xxx dsa_core xhci_plat_hcd xhci_hcd devlink armada_thermal marvell_cesa des_generic ehci_orion phy_armada38x_comphy mcp3021 spi_orion evbug sfp mdio_i2c ip_tables x_tables
+CPU: 0 PID: 555 Comm: bridge-network- Not tainted 4.20.0+ #291
+Hardware name: Marvell Armada 380/385 (Device Tree)
+[<c0019638>] (unwind_backtrace) from [<c0014888>] (show_stack+0x10/0x14)
+[<c0014888>] (show_stack) from [<c07f54e0>] (dump_stack+0x9c/0xd4)
+[<c07f54e0>] (dump_stack) from [<c00312bc>] (__warn+0xf8/0x124)
+[<c00312bc>] (__warn) from [<c00313b0>] (warn_slowpath_fmt+0x38/0x48)
+[<c00313b0>] (warn_slowpath_fmt) from [<c00b0370>] (check_sync+0x514/0x5bc)
+[<c00b0370>] (check_sync) from [<c00b04f8>] (debug_dma_sync_single_range_for_cpu+0x6c/0x74)
+[<c00b04f8>] (debug_dma_sync_single_range_for_cpu) from [<c051bd14>] (mvneta_poll+0x298/0xf58)
+[<c051bd14>] (mvneta_poll) from [<c0656194>] (net_rx_action+0x128/0x424)
+[<c0656194>] (net_rx_action) from [<c000a230>] (__do_softirq+0xf0/0x540)
+[<c000a230>] (__do_softirq) from [<c00386e0>] (irq_exit+0x124/0x144)
+[<c00386e0>] (irq_exit) from [<c009b5e0>] (__handle_domain_irq+0x58/0xb0)
+[<c009b5e0>] (__handle_domain_irq) from [<c03a63c4>] (gic_handle_irq+0x48/0x98)
+[<c03a63c4>] (gic_handle_irq) from [<c0009a10>] (__irq_svc+0x70/0x98)
+...
 
-[akpm@linux-foundation.org: fix various build warnings]
-[1] https://lkml.kernel.org/r/18a30387-6aa5-6123-e67c-57579ecc3f38@roeck-us.net
-Link: http://lkml.kernel.org/r/20190213124334.GH4525@dhcp22.suse.cz
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Debugged-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Tejun Heo <tj@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This appears to be caused by mvneta_rx_hwbm() calling
+dma_sync_single_range_for_cpu() with the wrong struct device pointer,
+as the buffer manager device pointer is used to map and unmap the
+buffer.  Fix this.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swap.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/marvell/mvneta.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 26fc9b5f1b6c..a3fc028e338e 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -321,11 +321,6 @@ static inline void activate_page_drain(int cpu)
- {
- }
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index a78a39244b79..2ba0d89aaf3c 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -2147,7 +2147,7 @@ static int mvneta_rx_hwbm(struct napi_struct *napi,
+ 			if (unlikely(!skb))
+ 				goto err_drop_frame_ret_pool;
  
--static bool need_activate_page_drain(int cpu)
--{
--	return false;
--}
--
- void activate_page(struct page *page)
- {
- 	struct zone *zone = page_zone(page);
-@@ -654,13 +649,15 @@ void lru_add_drain(void)
- 	put_cpu();
- }
- 
-+#ifdef CONFIG_SMP
-+
-+static DEFINE_PER_CPU(struct work_struct, lru_add_drain_work);
-+
- static void lru_add_drain_per_cpu(struct work_struct *dummy)
- {
- 	lru_add_drain();
- }
- 
--static DEFINE_PER_CPU(struct work_struct, lru_add_drain_work);
--
- /*
-  * Doesn't need any cpu hotplug locking because we do rely on per-cpu
-  * kworkers being shut down before our page_alloc_cpu_dead callback is
-@@ -703,6 +700,12 @@ void lru_add_drain_all(void)
- 
- 	mutex_unlock(&lock);
- }
-+#else
-+void lru_add_drain_all(void)
-+{
-+	lru_add_drain();
-+}
-+#endif
- 
- /**
-  * release_pages - batched put_page()
+-			dma_sync_single_range_for_cpu(dev->dev.parent,
++			dma_sync_single_range_for_cpu(&pp->bm_priv->pdev->dev,
+ 			                              rx_desc->buf_phys_addr,
+ 			                              MVNETA_MH_SIZE + NET_SKB_PAD,
+ 			                              rx_bytes,
 -- 
 2.19.1
 
