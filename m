@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1859EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E40C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF24E2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329A32171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfCMNwq (ORCPT
+        id S1727417AbfCMNxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 09:52:46 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:42264 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726777AbfCMNuZ (ORCPT
+        Wed, 13 Mar 2019 09:53:02 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:64008 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725889AbfCMNuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 09:50:25 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMdUTZn_1552485019;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMdUTZn_1552485019)
+        Wed, 13 Mar 2019 09:50:23 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMdXUtI_1552485021;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMdXUtI_1552485021)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 13 Mar 2019 21:50:20 +0800
+          Wed, 13 Mar 2019 21:50:21 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Li Yang <leoyang.li@nxp.com>, Li Zefan <lizefan@huawei.com>,
+        TripleX Chung <xxx.phy@gmail.com>,
+        Li Zefan <lizefan@huawei.com>,
         Shawn Guo <shawn.guo@linaro.org>,
         Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
-Subject: [PATCH v5 06/31] docs/zh_CN: howto format changes
-Date:   Wed, 13 Mar 2019 21:49:36 +0800
-Message-Id: <20190313135001.260905-7-alex.shi@linux.alibaba.com>
+Subject: [PATCH v5 08/31] docs/zh_CN: format the submitting-patches doc to rst
+Date:   Wed, 13 Mar 2019 21:49:38 +0800
+Message-Id: <20190313135001.260905-9-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190313135001.260905-1-alex.shi@linux.alibaba.com>
 References: <20190313135001.260905-1-alex.shi@linux.alibaba.com>
@@ -45,28 +46,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-also with few contents changes
+And remove Enghlish explainations in the docs, which it isn't
+necessary in Chinese doc.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Li Yang <leoyang.li@nxp.com>
+Cc: TripleX Chung <xxx.phy@gmail.com>
 Cc: Li Zefan <lizefan@huawei.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: Coly Li <colyli@suse.de>
 Signed-off-by: Weiwei Jia <harryxiyou@gmail.com>
 ---
- .../translations/zh_CN/process/howto.rst      | 37 ++++++++-----------
- 1 file changed, 15 insertions(+), 22 deletions(-)
+ .../zh_CN/process/submitting-patches.rst      | 36 +++++++------------
+ 1 file changed, 13 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/process/howto.rst b/Documentation/translations/zh_CN/process/howto.rst
-index 7a00a8a4eb15..f25a74fb90da 100644
---- a/Documentation/translations/zh_CN/process/howto.rst
-+++ b/Documentation/translations/zh_CN/process/howto.rst
-@@ -1,32 +1,23 @@
--﻿Chinese translated version of Documentation/process/howto.rst
-+﻿.. _cn_process_howto:
+diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
+index e9098da8f1a4..2a2989733c8d 100644
+--- a/Documentation/translations/zh_CN/process/submitting-patches.rst
++++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
+@@ -1,31 +1,21 @@
+-Chinese translated version of Documentation/process/submitting-patches.rst
++.. _cn_process_submittingpatches:
  
 -If you have any comment or update to the content, please contact the
 -original document maintainer directly.  However, if you have a problem
@@ -75,58 +77,53 @@ index 7a00a8a4eb15..f25a74fb90da 100644
 -or if there is a problem with the translation.
 +.. include:: ../disclaimer-zh_CN.rst
  
--Maintainer: Greg Kroah-Hartman <greg@kroah.com>
--Chinese maintainer: Li Yang <leoli@freescale.com>
+-Chinese maintainer: TripleX Chung <triplex@zh-kernel.org>
 ----------------------------------------------------------------------
--Documentation/process/howto.rst 的中文翻译
-+:Original: :ref:`Documentation/process/howto.rst <process_howto>`
+-Documentation/process/submitting-patches.rst 的中文翻译
++:Original: :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
  
  如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
  交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
 -译存在问题，请联系中文版维护者。
 +译存在问题，请联系中文版维护者::
  
--英文版维护者： Greg Kroah-Hartman <greg@kroah.com>
--中文版维护者： 李阳  Li Yang <leoli@freescale.com>
--中文版翻译者： 李阳  Li Yang <leoli@freescale.com>
--中文版校译者： 钟宇  TripleX Chung <xxx.phy@gmail.com>
--               陈琦  Maggie Chen <chenqi@beyondsoft.com>
--               王聪  Wang Cong <xiyou.wangcong@gmail.com>
--
+-中文版维护者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
+-中文版翻译者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
+-中文版校译者： 李阳 Li Yang <leo@zh-kernel.org>
+-               王聪 Wang Cong <xiyou.wangcong@gmail.com>
++        中文版维护者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
++        中文版翻译者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
++        中文版校译者： 李阳 Li Yang <leo@zh-kernel.org>
++                       王聪 Wang Cong <xiyou.wangcong@gmail.com>
+ 
 -以下为正文
 ----------------------------------------------------------------------
-+    英文版维护者： Greg Kroah-Hartman <greg@kroah.com>
-+    中文版维护者： 李阳  Li Yang <leoli@freescale.com>
-+    中文版翻译者： 李阳  Li Yang <leoli@freescale.com>
-+    中文版校译者:
-+                   钟宇  TripleX Chung <xxx.phy@gmail.com>
-+                   陈琦  Maggie Chen <chenqi@beyondsoft.com>
-+                   王聪  Wang Cong <xiyou.wangcong@gmail.com>
  
- 如何参与Linux内核开发
-----------------------
-+=====================
+-   如何让你的改动进入内核
+-     或者
+-  获得亲爱的 Linus Torvalds 的关注和处理
+-----------------------------------
++如何让你的改动进入内核
++======================
  
- 这是一篇将如何参与Linux内核开发的相关问题一网打尽的终极秘笈。它将指导你
- 成为一名Linux内核开发者，并且学会如何同Linux内核开发社区合作。它尽可能不
-@@ -114,6 +105,7 @@ Linux内核代码中包含有大量的文档。这些文档对于学习如何与
-     "The Perfect Patch"
-         http://www.ozlabs.org/~akpm/stuff/tpp.txt
-     "Linux kernel patch submission format"
-+
-         http://linux.yyz.us/patch-format.html
- 
-   Documentation/process/stable-api-nonsense.rst
-@@ -510,7 +502,8 @@ Linux内核社区并不喜欢一下接收大段的代码。修改需要被恰当
- 很多人已经做到了，而他们都曾经和现在的你站在同样的起点上。
+ 对于想要将改动提交到 Linux 内核的个人或者公司来说，如果不熟悉“规矩”，
+ 提交的流程会让人畏惧。本文档收集了一系列建议，这些建议可以大大的提高你
+@@ -35,12 +25,12 @@ Documentation/process/submitting-patches.rst 的中文翻译
+ Documentation/process/submitting-drivers.rst 。
  
  
-----------------
-+感谢
-+----
- 感谢Paolo Ciarrocchi允许“开发流程”部分基于他所写的文章
- (http://www.kerneltravel.net/newbie/2.6-development_process)，感谢Randy
- Dunlap和Gerrit Huizenga完善了应该说和不该说的列表。感谢Pat Mochel, Hanna
+---------------------------
++---------------------------
+ 第一节 - 创建并发送你的改动
+---------------------------
++---------------------------
+ 
+ 1) "diff -up"
+------------
++-------------
+ 
+ 使用 "diff -up" 或者 "diff -uprN" 来创建补丁。
+ 
 -- 
 2.19.1.856.g8858448bb
 
