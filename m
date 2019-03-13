@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14857C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE77C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA24B20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E3E20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505524;
-	bh=L0Enbu1fZ7K+UDS99HWcRdeF+WzSsW51aiihSnv1XEk=;
+	s=default; t=1552505529;
+	bh=NBulQS9k1r3B2mJEeIVlwvy8lKHBF8pERRAsHNeXc8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1U6DYefwvdlqqoG0l5L/3gBuBnSVsEQ5bj06cYgGj64abyfAP3v5W274Ka7Z+jSB0
-	 nf2GLFQ8sFrkoWaL+KtwDQ5sJGIBXqSXSZk0FLZp94vBOtNZ54AqdvlNMNvcmvL+vk
-	 7WxyWwVtul/V0+wxP89FFNAwuvJjZifV9fUtw/sQ=
+	b=foK1YiaX6zl+Z+ZxQcrXWUxCWpQNuBPzDCuxVHHr/1Nms3oGDL6iWa71kP54ypCA0
+	 pbFuceLFbXlHPuSevy7e47tCZIlZ/8PLs6OvM8sKdicvjEY9yGk6oCOe4E0gx04BgE
+	 +8EDeDkklmleau9kVsxgPLN7KV39symsCndi9rKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfCMTLY (ORCPT
+        id S1727446AbfCMTLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:11:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbfCMTLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:11:19 -0400
+        id S1727402AbfCMTLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E742173C;
-        Wed, 13 Mar 2019 19:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08D4B213A2;
+        Wed, 13 Mar 2019 19:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504277;
-        bh=L0Enbu1fZ7K+UDS99HWcRdeF+WzSsW51aiihSnv1XEk=;
+        s=default; t=1552504279;
+        bh=NBulQS9k1r3B2mJEeIVlwvy8lKHBF8pERRAsHNeXc8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ox2svcknfZTWWUoPOqt+uusSgBOLT+FxL7q4KaQWHmcsgifeP+WeSX+Y4cxPhQ7sh
-         AE9iuHWD0XCviK4qrgE1e7LDMYlk0S+R4ngFGOpxP90dGHjfEsl+P9gIWpNdQ2sdDM
-         kGcK4rwMsrOz04Q72l6yceGqlnZ3DV6yE+X3uv7Q=
+        b=dFZUKDGDBcBw5p71ZIuFdS10bbgFT76dC+YwcFBx0Jw0Y5i1CiorZ2ps4d1QELCba
+         EHW8O6AfO9Ro54kUy3Ti+8wmv5LR+P43CSYWA/l6XM9DW1g/M3wq/DOG8eWvW7t6ut
+         8dB6aqKpC47gZcyVA8oeItX7dBy8Ghsx2XC39/ME=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 27/60] ARM: dts: armada-xp: fix Armada XP boards NAND description
-Date:   Wed, 13 Mar 2019 15:09:48 -0400
-Message-Id: <20190313191021.158171-27-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 28/60] ARM: dts: am335x-evmsk: Fix PHY mode for ethernet
+Date:   Wed, 13 Mar 2019 15:09:49 -0400
+Message-Id: <20190313191021.158171-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -58,214 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 6fc979179c98d2591784937d5618edc3e5cd31c1 ]
+[ Upstream commit 759c962d3c9bb1a60e3b4b780daa66ee6d4be13a ]
 
-Commit 3b79919946cd2cf4dac47842afc9a893acec4ed7 ("ARM: dts:
-armada-370-xp: update NAND node with new bindings") updated some
-Marvell Armada DT description to use the new NAND controller bindings,
-but did it incorrectly for a number of boards: armada-xp-gp,
-armada-xp-db and armada-xp-lenovo-ix4-300d. Due to this, the NAND is
-no longer detected on those platforms.
+The PHY must add both tx and rx delay and not only on the tx clock.
+The board uses AR8031_AL1A PHY where the rx delay is enabled by default,
+the tx dealy is disabled.
 
-This commit fixes that by properly using the new NAND DT binding. This
-commit was runtime-tested on Armada XP GP, the two other platforms are
-only compile-tested.
+The reason why rgmii-txid worked because the rx delay was not disabled by
+the driver so essentially we ended up with rgmii-id PHY mode.
 
-Fixes: 3b79919946cd2 ("ARM: dts: armada-370-xp: update NAND node with new bindings")
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/armada-xp-db.dts            | 46 +++++-----
- arch/arm/boot/dts/armada-xp-gp.dts            | 13 +--
- .../boot/dts/armada-xp-lenovo-ix4-300d.dts    | 85 ++++++++++---------
- 3 files changed, 76 insertions(+), 68 deletions(-)
+ arch/arm/boot/dts/am335x-evmsk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-index f3ac7483afed..5d04dc68cf57 100644
---- a/arch/arm/boot/dts/armada-xp-db.dts
-+++ b/arch/arm/boot/dts/armada-xp-db.dts
-@@ -144,30 +144,32 @@
- 				status = "okay";
- 			};
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index 245868f58fe3..583f83b1742d 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -651,13 +651,13 @@
  
--			nand@d0000 {
-+			nand-controller@d0000 {
- 				status = "okay";
--				label = "pxa3xx_nand-0";
--				num-cs = <1>;
--				marvell,nand-keep-config;
--				nand-on-flash-bbt;
--
--				partitions {
--					compatible = "fixed-partitions";
--					#address-cells = <1>;
--					#size-cells = <1>;
--
--					partition@0 {
--						label = "U-Boot";
--						reg = <0 0x800000>;
--					};
--					partition@800000 {
--						label = "Linux";
--						reg = <0x800000 0x800000>;
--					};
--					partition@1000000 {
--						label = "Filesystem";
--						reg = <0x1000000 0x3f000000>;
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+-	phy-mode = "rgmii-txid";
++	phy-mode = "rgmii-id";
+ 	dual_emac_res_vlan = <1>;
+ };
  
-+				nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						partition@0 {
-+							label = "U-Boot";
-+							reg = <0 0x800000>;
-+						};
-+						partition@800000 {
-+							label = "Linux";
-+							reg = <0x800000 0x800000>;
-+						};
-+						partition@1000000 {
-+							label = "Filesystem";
-+							reg = <0x1000000 0x3f000000>;
-+						};
- 					};
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 1139e9469a83..b4cca507cf13 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -160,12 +160,15 @@
- 				status = "okay";
- 			};
+ &cpsw_emac1 {
+ 	phy-handle = <&ethphy1>;
+-	phy-mode = "rgmii-txid";
++	phy-mode = "rgmii-id";
+ 	dual_emac_res_vlan = <2>;
+ };
  
--			nand@d0000 {
-+			nand-controller@d0000 {
- 				status = "okay";
--				label = "pxa3xx_nand-0";
--				num-cs = <1>;
--				marvell,nand-keep-config;
--				nand-on-flash-bbt;
-+
-+				nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-index bbbb38888bb8..87dcb502f72d 100644
---- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-+++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -81,49 +81,52 @@
- 
- 			};
- 
--			nand@d0000 {
-+			nand-controller@d0000 {
- 				status = "okay";
--				label = "pxa3xx_nand-0";
--				num-cs = <1>;
--				marvell,nand-keep-config;
--				nand-on-flash-bbt;
--
--				partitions {
--					compatible = "fixed-partitions";
--					#address-cells = <1>;
--					#size-cells = <1>;
--
--					partition@0 {
--						label = "u-boot";
--						reg = <0x00000000 0x000e0000>;
--						read-only;
--					};
--
--					partition@e0000 {
--						label = "u-boot-env";
--						reg = <0x000e0000 0x00020000>;
--						read-only;
--					};
--
--					partition@100000 {
--						label = "u-boot-env2";
--						reg = <0x00100000 0x00020000>;
--						read-only;
--					};
--
--					partition@120000 {
--						label = "zImage";
--						reg = <0x00120000 0x00400000>;
--					};
--
--					partition@520000 {
--						label = "initrd";
--						reg = <0x00520000 0x00400000>;
--					};
- 
--					partition@e00000 {
--						label = "boot";
--						reg = <0x00e00000 0x3f200000>;
-+				nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						partition@0 {
-+							label = "u-boot";
-+							reg = <0x00000000 0x000e0000>;
-+							read-only;
-+						};
-+
-+						partition@e0000 {
-+							label = "u-boot-env";
-+							reg = <0x000e0000 0x00020000>;
-+							read-only;
-+						};
-+
-+						partition@100000 {
-+							label = "u-boot-env2";
-+							reg = <0x00100000 0x00020000>;
-+							read-only;
-+						};
-+
-+						partition@120000 {
-+							label = "zImage";
-+							reg = <0x00120000 0x00400000>;
-+						};
-+
-+						partition@520000 {
-+							label = "initrd";
-+							reg = <0x00520000 0x00400000>;
-+						};
-+
-+						partition@e00000 {
-+							label = "boot";
-+							reg = <0x00e00000 0x3f200000>;
-+						};
- 					};
- 				};
- 			};
 -- 
 2.19.1
 
