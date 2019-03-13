@@ -2,166 +2,108 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E08BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63144C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF312171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552486179;
-	bh=3+2I98o1I9ZiI96NR/5ZyEUSMXPnk3CzMGlkkeqLB30=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=Jfdz4gbqHZYSqz2XXE504fXIAqbRjB3EWV+8QARCkgLnYYg7r8Q8SgCQIMaK0H5zJ
-	 hoOzns9BC4KZCgR/Nu0z88odasyTB/VE0/IVoW1C34Zw7MQb25FMag7/xfpUEwxpxH
-	 Fy5H12CIW1u9a7+RnVa60vczWQJEaWBA8jpe7r8w=
+	by mail.kernel.org (Postfix) with ESMTP id 313802171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R78+p2QK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfCMOJi (ORCPT
+        id S1727050AbfCMOJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:09:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbfCMOJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:09:36 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F3402147C;
-        Wed, 13 Mar 2019 14:09:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552486175;
-        bh=3+2I98o1I9ZiI96NR/5ZyEUSMXPnk3CzMGlkkeqLB30=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=qJW10C3wPFIZceA3hWQLpZ01njnBt5nl8W+MQ1DtRaCj8qGHL2tAgOW2opuKCdGfZ
-         I4xlIJs0xsI7gzc4L8RS7yoBZ7M80DJhNmxp0Q+kAiDT+8xVLfzm3vpMCvBTFwV4s4
-         JQQtm8lKPKR/UO1o0w9kBtzT9sk21JEBZjAMS8XI=
-Message-ID: <1552486173.4293.27.camel@kernel.org>
-Subject: Re: [RFC PATCH v3 0/5] tracing: common error_log for ftrace
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     rostedt@goodmis.org, tglx@linutronix.de, namhyung@kernel.org,
-        bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Date:   Wed, 13 Mar 2019 09:09:33 -0500
-In-Reply-To: <20190313220348.d0481a0a5ad7de91e90dbadc@kernel.org>
-References: <cover.1551741458.git.tom.zanussi@linux.intel.com>
-         <20190305230646.e7f99c46f86c0e099ac0cd30@kernel.org>
-         <20190312152605.00150aae7b781137005e9ebf@kernel.org>
-         <1552409351.4293.22.camel@kernel.org>
-         <20190313220348.d0481a0a5ad7de91e90dbadc@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 13 Mar 2019 10:09:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58678 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726624AbfCMOJd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 10:09:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1O9otNqbUSZ4NBzoCNgVtlgqndPz2p5r0zu5jHpoZWY=; b=R78+p2QKmRTcdakB6zwwnzC2z
+        jvh+Z+YNuYmDkU77XSNvqEDlM/DDWIz+C+leyv1FYHdZGLUO+Nlm3upSHtrJRJNT79RjgXzFZCwvo
+        HT3MRUyVEt7VpyYRhkBFyrC8uvhojGqjTd+6jgIk5Dx5Vhes/efFNJu2SAz5zyi/0n87W2zD49axz
+        1OjZgAGP3xeb+Ku69ZQj4Jtk7M9SRhnMXo87T/9K+cmgjPwTC/W4VSAPB1Oa1v4oVIay94E9aeBI8
+        nWxRfTaTTV6GpqVYc2AwAse3AUWpNdyudjNYEJH3nZJTdzoclZThP6hReb3AmixPwNzbF9XHNnKME
+        HGSc/MYMw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h44ZT-0003Xj-FI; Wed, 13 Mar 2019 14:09:27 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B898B2028B0E8; Wed, 13 Mar 2019 15:09:25 +0100 (CET)
+Date:   Wed, 13 Mar 2019 15:09:25 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
+ refcounting
+Message-ID: <20190313140925.GE5922@hirez.programming.kicks-ass.net>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-2-patrick.bellasi@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190208100554.32196-2-patrick.bellasi@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
+On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
+> +static inline unsigned int uclamp_none(int clamp_id)
+> +{
+> +	if (clamp_id == UCLAMP_MIN)
+> +		return 0;
+> +	return SCHED_CAPACITY_SCALE;
+> +}
+> +
+> +static inline void uclamp_rq_update(struct rq *rq, unsigned int clamp_id)
+> +{
+> +	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+> +	unsigned int max_value = uclamp_none(clamp_id);
 
-On Wed, 2019-03-13 at 22:03 +0900, Masami Hiramatsu wrote:
-> On Tue, 12 Mar 2019 11:49:11 -0500
-> Tom Zanussi <zanussi@kernel.org> wrote:
-> 
-> > Hi Masami,
-> > 
-> > On Tue, 2019-03-12 at 15:26 +0900, Masami Hiramatsu wrote:
-> > > Hi Tom,
-> > > 
-> > > On Tue, 5 Mar 2019 23:06:46 +0900
-> > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > > 
-> > > > On Mon,  4 Mar 2019 17:36:43 -0600
-> > > > > Changes from v2:
-> > > > > 
-> > > > >   - Added [n] numbering as suggested by Masami
-> > > 
-> > > Hmm, this seems a bit different what I suggested.
-> > > 
-> > > I'm trying to port probe event's error report on
-> > > your error log, and I found that the number is
-> > > just shifted as below.
-> > > 
-> > > When I filled the log with errors.
-> > > =============
-> > > /sys/kernel/debug/tracing # cat error_log 
-> > > [1] trace_kprobe: error: Invalid unsigned integer string
-> > >   Command: r10aa00:foo/bar vfs
-> > >             ^
-> > > ...
-> > > 
-> > > [7] trace_kprobe: error: Group name must follow C naming
-> > > convention
-> > >   Command: p:a-b/bar vfs_read
-> > >              ^
-> > > [8] trace_kprobe: error: Event name is too long
-> > >   Command:
-> > > p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-> > > rrrr
-> > > rrrrrrrrrrr vfs_read
-> > > =============
-> > > 
-> > > And do one more error, 
-> > > 
-> > > =============
-> > > /sys/kernel/debug/tracing # cat error_log 
-> > > [1] trace_kprobe: error: Maxactive is too big
-> > >   Command: r0xaa00:foo/bar vfs
-> > > 
-> > > ....
-> > > 
-> > > [7] trace_kprobe: error: Event name is too long
-> > >   Command:
-> > > p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-> > > rrrr
-> > > rrrrrrrrrrr vfs_read
-> > >                ^
-> > > [8] trace_kprobe: error: Event name must follow C naming
-> > > convention
-> > >   Command: p:a/bar.c vfs_read
-> > >                ^
-> > > =============
-> > > 
-> > > The number of logs are changed :(  This can confuse users.
-> > > I think it is better to keep the number as a unique number for
-> > > each entry as below.
-> > > 
-> > 
-> > Hmm, that makes sense, but I wonder if that will also confuse
-> > users,
-> > when the log wraps around and no longer starts at [1] and there's
-> > no
-> > way to retrieve the previous errors.
-> 
-> It is OK, that is same as dmesg. If user needs to keep watching it,
-> it should be dumped to disk by a daemon.
-> 
-> > 
-> > I took your suggestion as a way mainly to clearly delineate each
-> > error,
-> > since without the [number] or something similar, they all kind of
-> > run
-> > together.
-> > 
-> > Not sure what advantage numbering itself provides - would some
-> > other
-> > non-numbered separator work?
-> 
-> What about timestamp, similar to dmesg?
-> 
+That's 1024 for uclamp_max
 
-Yeah, I think that makes more sense - unlike the counter, there's no
-sense that you may be missing some prior messages.
+> +	unsigned int bucket_id;
+> +
+> +	/*
+> +	 * Both min and max clamps are MAX aggregated, thus the topmost
+> +	 * bucket with some tasks defines the rq's clamp value.
+> +	 */
+> +	bucket_id = UCLAMP_BUCKETS;
+> +	do {
+> +		--bucket_id;
+> +		if (!rq->uclamp[clamp_id].bucket[bucket_id].tasks)
+> +			continue;
+> +		max_value = bucket[bucket_id].value;
 
-Thanks,
+but this will then _lower_ it. That's not a MAX aggregate.
 
-Tom 
-
-> Thank you,
-> 
-> 
-> 
+> +		break;
+> +	} while (bucket_id);
+> +
+> +	WRITE_ONCE(rq->uclamp[clamp_id].value, max_value);
+> +}
