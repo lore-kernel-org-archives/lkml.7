@@ -2,110 +2,79 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010F9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23B6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3752087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978C2213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552490447;
+	bh=/N+IX9dwx/kA3Nb4bIR76a/5+0Z5dNCjCexuI9RK6d0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KXraedBwImCdQNHuRfrAyGLB945I4snw4KnJHyFOkms+C9CPa7IywufOg3nUbpmgV
+	 30f3015DvP9Mr3atB3t6a90tA36kThiNQ8/al9PwqfJ2SV2lBnbned3z9JiWHJSFg6
+	 sU5DMR6ZvrckitJUVjRyK0hVd/kbn0e4sI+hT0fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfCMPQt (ORCPT
+        id S1726264AbfCMPUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:16:49 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:60513 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725868AbfCMPQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:16:48 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-99.corp.google.com [104.133.0.99] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x2DFGYIp003657
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Mar 2019 11:16:34 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id BE27B42080E; Wed, 13 Mar 2019 11:16:33 -0400 (EDT)
-Date:   Wed, 13 Mar 2019 11:16:33 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Lawrence <paullawrence@google.com>
-Subject: Re: overlayfs vs. fscrypt
-Message-ID: <20190313151633.GA672@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Lawrence <paullawrence@google.com>
-References: <4603533.ZIfxmiEf7K@blindfold>
- <1854703.ve7plDhYWt@blindfold>
- <CAJfpegtgfuAkgv26QH6Ht25OeMiev-QvEf7ror4KAbud7FADgg@mail.gmail.com>
- <4066872.KGdO14EQMx@blindfold>
- <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
+        Wed, 13 Mar 2019 11:20:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfCMPUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 11:20:45 -0400
+Received: from localhost (unknown [12.27.65.221])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A6D120643;
+        Wed, 13 Mar 2019 15:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552490445;
+        bh=/N+IX9dwx/kA3Nb4bIR76a/5+0Z5dNCjCexuI9RK6d0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mv3AwOikEKngpFiAGLDCemgBcF1if4kkKmgyD79/gUC+VQgwQbH/m8MQcOoilHeMe
+         59HVBCkUetIySb4QhvWCzO5mipraJ6FZEOE6Tj8a8vBUlNvhtBoE+cMqc864buA4us
+         iUOwqFq2J6XJinSQsSpwuqiNJrzEAK5FN1bJKA9I=
+Date:   Wed, 13 Mar 2019 08:20:44 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Robert Shearman <robertshearman@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Robert Shearman <robert.shearman@att.com>
+Subject: Re: [PATCH v4 3/3] i2c: mux: pca954x: allow management of device
+ idle state via sysfs
+Message-ID: <20190313152044.GD10250@kroah.com>
+References: <20190228114343.36443-1-robertshearman@gmail.com>
+ <20190228114343.36443-4-robertshearman@gmail.com>
+ <e07248e6-4987-b7a1-327a-7d30a3e5cdf5@axentia.se>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e07248e6-4987-b7a1-327a-7d30a3e5cdf5@axentia.se>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 04:26:54PM +0200, Amir Goldstein wrote:
-> AFAIK, this feature was born to tailor Android's file based encryption.
-> https://source.android.com/security/encryption#file-based
-> It is meant to protect data at rest and what happens when user enters
-> the screen lock password IIRC, is that some service will get restarted.
-> IOW, there should NOT be any processes in Android accessing the
-> encrypted user data folders with and without the key simultaneously.
-> Also, like OpenWRT, in Android the key does not get removed
-> (until boot) AFAIK(?).
+On Wed, Mar 13, 2019 at 07:04:06AM +0000, Peter Rosin wrote:
+> Hi Greg,
+> 
+> I was wondering if you think the below ABI addition looks sane to you?
 
-Actually, the original use was for ChromeOS, but the primary
-assumption is that keying is per user (or profile), and that users are
-mutually distrustful.  So when Alice logs out of the system, her keys
-will be invalidated and removed from the kernel.  We can (and do) try
-to flush cache entries via "echo 3 > /proc/sys/vm/drop_caches" on
-logout.  However, this does not guarantee that all dcache entries will
-be removed --- a dcache entry can be pinned due to an open file, a
-process's current working directory, a bind mount, etc.
+I am not the i2c maintainer :)
 
-The other issue is negative dentries; if you try open a file in an
-encrypted file, the file system won't even *know* whether or not a
-file exists, since the directory entries are encrypted; hence, there
-may be some negative dentries that need to be invalidated.
+> Or, should I ask someone else for a tag?
 
-So a fundamental assumption with fscrypt is that keys will be added
-and removed, and that when this happens, dentries will need to be
-invalidated.  This is going to surprise overlayfs, so if overlayfs is
-going to support fscrypt it *has* to be aware of the fact that this
-can happen.  It's not even clear what the proper security semantics
-should be; *especially* if the upper and lower directories aren't
-similarly protected using the same fscrypt encryption key.  Suppose
-the lower directory is encrypted, and the upper is not.  Now on a copy
-up operation, the previously encrypted file, which might contain
-credit card numbers, medical records, or other things that would cause
-a GDPR regulator to have a freak out attack, would *poof* become
-decrypted.
+It's the middle of the merge window.  None of us can do much other than
+focus on that until 5.1-rc1 is out.
 
-So before we talk about how to make things work from a technical
-perspective, we should consider what the use case happens to be, and
-what are the security requirements.  *Why* are we trying to use the
-combination of overlayfs and fscrypt, and what are the security
-properties we are trying to provide to someone who is relying on this
-combination?
+thanks,
 
-						- Ted
+greg k-h
