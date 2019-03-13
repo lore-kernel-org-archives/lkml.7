@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8DEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5804AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FA62184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D90213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504731;
-	bh=9fNXKmNxw6w/Uh9CJUJLypExU9uksnL9OI78uX7mN0w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EwfR/lo4QIQPdnADwQovbU5gRjRLnrTFNQHVMeo4fKS8kHX6KujPOlZPNKOc4mGzV
-	 KA42N7/4IP78q6gpe65svDzUIPwEPVUA6RPOYWE6YvmWyzZnC6fod/2sz2yaEwLusj
-	 XPGYctq1FXA3+KD9x07LeEZp1NYMRNgeCbCt3AqM=
+	s=default; t=1552504737;
+	bh=XJGc3W5WgIo9OYDLHjACv4k2rDo9omJyRRB1L+VIZm8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=fSZEDkQ1H1uSSW4fYYUQ9f2Ul5oQjLVS35mrp+3XwjnACHH5QHod1jh1aY8Q+hruq
+	 x/pVuJc2EW8/mBV7bU1bR/CFqBuZGjPcpJppjhOhYCyxMVefGhdJq5X++RyP+ANsr6
+	 VLAbQ7Liu+B+w/w12HnAB4anHKqj9ykXyDtSZHfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfCMTSt (ORCPT
+        id S1729142AbfCMTSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49380 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:18:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728739AbfCMTSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:18:43 -0400
+        id S1728441AbfCMTSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:18:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 858802075C;
-        Wed, 13 Mar 2019 19:18:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AF6C2183F;
+        Wed, 13 Mar 2019 19:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504721;
-        bh=9fNXKmNxw6w/Uh9CJUJLypExU9uksnL9OI78uX7mN0w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6lFHnBBm31/iK/96HTH+TbKDCrj9MceA+F524hLgaAbmut8rOWxl1dzIbbx8Ym2Z
-         9NFVpfg4QBpx0Ss9IX243wnF8TT1eInt1LfN3Luu6s6rdOQuo7+kbIoIkz3Z/s622q
-         JR8cfumzsNUQ02H3hZ/F20riphh5pdendb0w0h0k=
+        s=default; t=1552504730;
+        bh=XJGc3W5WgIo9OYDLHjACv4k2rDo9omJyRRB1L+VIZm8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CMaabPD8zJoECSlbawVSBJ2GZ3dDnK+KdIGg6hnLVY+ql2Zk+0y0dlcfub/2jx/h3
+         Q6fTvL3RwcaWeg9NEW/Vopuf1LOpn/Wfjy714m2wFz/UX17cpAI+uN9wbIy9IQzuQV
+         2v3nhSFLq5z81cMv5o0qeeyYFG0Mp35wOq7MSBxI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 14/15] mdio_bus: Fix use-after-free on device_register fails
-Date:   Wed, 13 Mar 2019 15:18:00 -0400
-Message-Id: <20190313191806.160547-14-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <james.morris@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 3.18 01/10] assoc_array: Fix shortcut creation
+Date:   Wed, 13 Mar 2019 15:18:37 -0400
+Message-Id: <20190313191847.160801-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190313191806.160547-1-sashal@kernel.org>
-References: <20190313191806.160547-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,128 +55,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 6ff7b060535e87c2ae14dd8548512abfdda528fb ]
+[ Upstream commit bb2ba2d75a2d673e76ddaf13a9bd30d6a8b1bb08 ]
 
-KASAN has found use-after-free in fixed_mdio_bus_init,
-commit 0c692d07842a ("drivers/net/phy/mdio_bus.c: call
-put_device on device_register() failure") call put_device()
-while device_register() fails,give up the last reference
-to the device and allow mdiobus_release to be executed
-,kfreeing the bus. However in most drives, mdiobus_free
-be called to free the bus while mdiobus_register fails.
-use-after-free occurs when access bus again, this patch
-revert it to let mdiobus_free free the bus.
+Fix the creation of shortcuts for which the length of the index key value
+is an exact multiple of the machine word size.  The problem is that the
+code that blanks off the unused bits of the shortcut value malfunctions if
+the number of bits in the last word equals machine word size.  This is due
+to the "<<" operator being given a shift of zero in this case, and so the
+mask that should be all zeros is all ones instead.  This causes the
+subsequent masking operation to clear everything rather than clearing
+nothing.
 
-KASAN report details as below:
+Ordinarily, the presence of the hash at the beginning of the tree index key
+makes the issue very hard to test for, but in this case, it was encountered
+due to a development mistake that caused the hash output to be either 0
+(keyring) or 1 (non-keyring) only.  This made it susceptible to the
+keyctl/unlink/valid test in the keyutils package.
 
-BUG: KASAN: use-after-free in mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
-Read of size 4 at addr ffff8881dc824d78 by task syz-executor.0/3524
+The fix is simply to skip the blanking if the shift would be 0.  For
+example, an index key that is 64 bits long would produce a 0 shift and thus
+a 'blank' of all 1s.  This would then be inverted and AND'd onto the
+index_key, incorrectly clearing the entire last word.
 
-CPU: 1 PID: 3524 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
- fixed_mdio_bus_init+0x283/0x1000 [fixed_phy]
- ? 0xffffffffc0e40000
- ? 0xffffffffc0e40000
- ? 0xffffffffc0e40000
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f6215c19c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
-RBP: 00007f6215c19c70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6215c1a6bc
-R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
-
-Allocated by task 3524:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- mdiobus_alloc_size+0x54/0x1b0 drivers/net/phy/mdio_bus.c:143
- fixed_mdio_bus_init+0x163/0x1000 [fixed_phy]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 3524:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
- slab_free_hook mm/slub.c:1409 [inline]
- slab_free_freelist_hook mm/slub.c:1436 [inline]
- slab_free mm/slub.c:2986 [inline]
- kfree+0xe1/0x270 mm/slub.c:3938
- device_release+0x78/0x200 drivers/base/core.c:919
- kobject_cleanup lib/kobject.c:662 [inline]
- kobject_release lib/kobject.c:691 [inline]
- kref_put include/linux/kref.h:67 [inline]
- kobject_put+0x146/0x240 lib/kobject.c:708
- put_device+0x1c/0x30 drivers/base/core.c:2060
- __mdiobus_register+0x483/0x560 drivers/net/phy/mdio_bus.c:382
- fixed_mdio_bus_init+0x26b/0x1000 [fixed_phy]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881dc824c80
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 248 bytes inside of
- 2048-byte region [ffff8881dc824c80, ffff8881dc825480)
-The buggy address belongs to the page:
-page:ffffea0007720800 count:1 mapcount:0 mapping:ffff8881f6c02800 index:0x0 compound_mapcount: 0
-flags: 0x2fffc0000010200(slab|head)
-raw: 02fffc0000010200 0000000000000000 0000000500000001 ffff8881f6c02800
-raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881dc824c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8881dc824c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881dc824d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                                ^
- ffff8881dc824d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881dc824e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: 0c692d07842a ("drivers/net/phy/mdio_bus.c: call put_device on device_register() failure")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 3cb989501c26 ("Add a generic associative array implementation.")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio_bus.c | 1 -
- 1 file changed, 1 deletion(-)
+ lib/assoc_array.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 88cb4592b6fb..ccefba7af960 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -267,7 +267,6 @@ int __mdiobus_register(struct mii_bus *bus, struct module *owner)
- 	err = device_register(&bus->dev);
- 	if (err) {
- 		pr_err("mii_bus %s failed to register\n", bus->id);
--		put_device(&bus->dev);
- 		return -EINVAL;
- 	}
+diff --git a/lib/assoc_array.c b/lib/assoc_array.c
+index 0d122543bd63..1db287fffb67 100644
+--- a/lib/assoc_array.c
++++ b/lib/assoc_array.c
+@@ -780,9 +780,11 @@ static bool assoc_array_insert_into_terminal_node(struct assoc_array_edit *edit,
+ 		new_s0->index_key[i] =
+ 			ops->get_key_chunk(index_key, i * ASSOC_ARRAY_KEY_CHUNK_SIZE);
  
+-	blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
+-	pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
+-	new_s0->index_key[keylen - 1] &= ~blank;
++	if (level & ASSOC_ARRAY_KEY_CHUNK_MASK) {
++		blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
++		pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
++		new_s0->index_key[keylen - 1] &= ~blank;
++	}
+ 
+ 	/* This now reduces to a node splitting exercise for which we'll need
+ 	 * to regenerate the disparity table.
 -- 
 2.19.1
 
