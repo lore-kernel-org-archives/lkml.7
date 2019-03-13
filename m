@@ -2,105 +2,116 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422A8C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388C3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A5721019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fi3Ge+JO"
+	by mail.kernel.org (Postfix) with ESMTP id 0DE9B21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfCMWOe (ORCPT
+        id S1727001AbfCMWO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:14:34 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35169 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfCMWOd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:14:33 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h39so3898479qte.2;
-        Wed, 13 Mar 2019 15:14:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pSeST17t3RS04gASTvmKouC23Uer3g+QIxo7NXIdLL4=;
-        b=fi3Ge+JOEd2F3d/WCT0EiRoSeZYUByR8Fs/+BJkaCeMW5Mz/qve4JY0MrlCXno4ByQ
-         P09jrMF8uT6NhoOwC7qMbHd7vQD9kQsF/0NOf0Q7Q4vp0ZP+FdgbGSCtEqwJX1+uUrMp
-         06deZRTsGtQTuI0B+VRwSgnwYswTPmdM/Noev5fFL8Y5nHMYxCqpCjguSrtoHTFr8VxO
-         Mb7cvdhzk0p7YbnEruy7r//KjVjr4MIAFiMws/B0g8+klFoE5zPI5d8MJvlw06OfxtRl
-         1pSSLBbPQBLiNhRuq+Dd2kFEZkUPSIiHm80grF/LyK55pgC76t3BS9qxhiZukO1/SvJI
-         IPDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pSeST17t3RS04gASTvmKouC23Uer3g+QIxo7NXIdLL4=;
-        b=m/baMePMM+x7Th4lFrbRBDiudSbo9jn/ulIkQUAd5fOQ00PMcZcgpesiEgntgCVqbR
-         TJVv2rxwRd1WJkBScHavTjbSdBsILkNBF5R4oxxDKtNTg2mIYCDjsYLYKUkgZ6nVbTNI
-         qpe3NeAZcQn7iy3bTH6lAt/8uYrbS8l/k6ZAssHxtusllUw2yqU3QglcyPCQHtG5nxus
-         Usf33UFI8E1nVzYO6DH2xdPbMSDl/Qr9TiqHzB/D54ZiR7sVr87ChF8sW/DI0wE9M3WW
-         kERG21xpHxce4CzvD1Wl7ovHXRjvOJDZMA70c2KZgIMVbl0J08kJbuaTgN+dt7pW+lQJ
-         LXQg==
-X-Gm-Message-State: APjAAAUavA7813EsbDwRDaShn9egw02pHP652ld2Cq/Ko9TEUr/ihGYX
-        BPmqs3XNvc8HHEb4jRJVqh6hPD6UZobzDj6GE7CY/A==
-X-Google-Smtp-Source: APXvYqwaC1I3oqg2djOxajVrmIT8HH8hEmLhvc9wslX4sglFbwc2pd7hwx6JJs2cjIPXeFeTLJANEIpsWJAk3Sm8ZsU=
-X-Received: by 2002:ac8:3957:: with SMTP id t23mr13499678qtb.331.1552515272616;
- Wed, 13 Mar 2019 15:14:32 -0700 (PDT)
+        Wed, 13 Mar 2019 18:14:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39888 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726420AbfCMWO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 18:14:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8FB35ABE1;
+        Wed, 13 Mar 2019 22:14:55 +0000 (UTC)
+From:   NeilBrown <neil@brown.name>
+To:     John Crispin <john@phrozen.org>, Stefan Roese <sr@denx.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chuanhong Guo <gch981213@gmail.com>
+Date:   Thu, 14 Mar 2019 09:14:42 +1100
+Cc:     Armando Miraglia <arma2ff0@gmail.com>,
+        Armando Miraglia <armax@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sankalpnegi2310@gmail.com, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: mediatek: Attempt to address style issues in spi-mt7621.c
+In-Reply-To: <4172ce05-8dfc-c956-6af0-47c8367c215e@denx.de>
+References: <20190313122403.248873-1-armax@google.com> <eb85ea17-babd-fe3a-f0ff-9c7f13498bd1@gmail.com> <CAJsYDVKF-3jZo4E3EMiYOqeWXVLu0hBra6Qp0sFoCz8y=BAjSw@mail.gmail.com> <4789d739-d2b5-357b-b9d8-bfaf587d33fc@gmail.com> <4172ce05-8dfc-c956-6af0-47c8367c215e@denx.de>
+Message-ID: <87y35ipgkt.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <CAH2r5muaceyqkrbXB7Bt-qv_vtVqZEmpafJa6B2+8kyRsK7ftQ@mail.gmail.com>
-In-Reply-To: <CAH2r5muaceyqkrbXB7Bt-qv_vtVqZEmpafJa6B2+8kyRsK7ftQ@mail.gmail.com>
-From:   ronnie sahlberg <ronniesahlberg@gmail.com>
-Date:   Thu, 14 Mar 2019 08:14:21 +1000
-Message-ID: <CAN05THR2MpsVC9LwDfFDPA4nD9VWjKeF25Nsi2vJ=gC6=mNqVQ@mail.gmail.com>
-Subject: Re: [PATCH] [CIFS] Remove unneeded statements pointed out by Coverity
-To:     Steve French <smfrench@gmail.com>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-reviewed by me
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 14, 2019 at 7:53 AM Steve French <smfrench@gmail.com> wrote:
+On Wed, Mar 13 2019, Stefan Roese wrote:
+
+> On 13.03.19 17:46, Matthias Brugger wrote:
+>>=20
+>>=20
+>> On 13/03/2019 17:34, Chuanhong Guo wrote:
+>>> Hi!
+>>> On Wed, Mar 13, 2019 at 8:28 PM Matthias Brugger <matthias.bgg@gmail.co=
+m> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 13/03/2019 13:24, Armando Miraglia wrote:
+>>>> [...]
+>>>> Apart from fixing styling issues it would be usefull to see if we can =
+add
+>>>> support for mt7621 to drivers/spi/spi-mt65xx.c
+>>> It's impossible. They are completely different IPs.
+>>=20
+>> Thanks for the info. Do you know the status of the rest of the drivers i=
+n staging?
 >
-> cifs: remove unused value pointed out by Coverity
->
-> Detected by CoverityScan CID#1438719 ("Unused Value")
->
-> buf is reset again before being used so these two lines of code
-> are useless.
->
-> Signed-off-by: Steve French <stfrench@microsoft.com>
-> ---
->  fs/cifs/connect.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-> index b95db2b593cb..a8e9738db691 100644
-> --- a/fs/cifs/connect.c
-> +++ b/fs/cifs/connect.c
-> @@ -1191,10 +1191,6 @@ cifs_demultiplex_thread(void *p)
->              continue;
->          }
->
-> -        if (server->large_buf)
-> -            buf = server->bigbuf;
-> -
-> -
->          server->lstrp = jiffies;
->
->          for (i = 0; i < num_mids; i++) {
->
-> --
-> Thanks,
->
-> Steve
+> Just to inform you. We are using this SPI driver from staging
+> in one of our customer projects and I will try to move this
+> driver out of staging into drivers/spi very shortly.
+
+This is good news! I think the driver is ready to move out of staging
+and would be very happy to see you do it.
+
+My only small concern is that this driver was backported to openwrt
+(4.14 based) and then reverted
+
+https://github.com/openwrt/openwrt/commit/749a29f76ca780d8df70a5163d43bbdc6=
+f13ba3f
+
+ "This breaks some mt7621 devices."
+
+Possibly it was backported badly, or possibly there is a problem.
+
+John: do you have any more details of the problem other than what is in
+the commit message?
+
+Thanks,
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlyJgNMACgkQOeye3VZi
+gbneUw//Tc6ykAvtBr/kDbHEAweMN/VWb4/GIvWCJcUyy9gxUuli/J5EMbUQNy6v
+CbLOczHgPmC6iW3mCeznUExi3WM2si1pHM7n/2YJs223rHkGjv+ZKOTVi622fUg9
+IrBWcio0bmCq8cePRWlHlysLJnxUM/DnRiVjWH7MR4LSONRCWCbFkVjs/cYxtjzw
+zgPJBRZOaqmSFmMUU2F/HHB/FCej3JbfWEwXi1JHQrf4bRi1470hj0OueDMcugOc
+HQoT/HkiOGNJ9YVoKHtwD7CnSx4URn9oRej+5AH69jdmJ+rSlOp4M7ALpw6M1U1E
+N9CL1tFFgrPIDiBFULTMV8IOYqkG5uql8337Iv/bKh7OD3C0d+vx+6pv78hxmORx
+MqsbpqfKPg4CGeZl6nY/eaeK3XIWjMBhqG+A3uzGP4kyKeyam4ckYgd/g9Yd+wkb
+d46Vo2OiVraC4G4YvIn1R6W1leMQqfhaclFO6Vig2/BQTkZOqHJoPC+gp3LERgxQ
+bnOTvXTMvCZ0uSe4ynOXRy3X8KpIfMDC5giK9DoFksUD3vVgOvdTceakNK2p4jc1
+rpDfkWydTkMqjAGGDQMnuiKEAh14W/GanvpJJ3hrw0QVENjkpVtC/3Rp4tdkoVd/
+TseQ3rlDHDC0FcTq/sAYQpqVqYn+F2I4+s8ky0XzcDO+wwGbHb8=
+=8aM6
+-----END PGP SIGNATURE-----
+--=-=-=--
