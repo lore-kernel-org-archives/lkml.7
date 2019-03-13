@@ -2,124 +2,127 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D67C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2816C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4162C2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:34:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="2Di2N5GA"
+	by mail.kernel.org (Postfix) with ESMTP id B921D2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfCMJd7 (ORCPT
+        id S1727393AbfCMJfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:33:59 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33666 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbfCMJd6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:33:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i19so991053pfd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 02:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yvz7KyEi8AZK4nIaVu7uWxj0DgdXUPU76VjA2dNvNC0=;
-        b=2Di2N5GAvlb1ajm9+eY9QblKS6gu9WLOHKHHtNqQziniW7LPjW5pTIK3GU7movMImr
-         xZ8EpxnC8S4lOoKBQKEBsf1sPbg58JBIPV0L04PIXFcftXlwIr51Kipz6iRXmdN2y8OL
-         GDvrOtQx3IQDN0RKO9QLBcil1jIeb8th20XEjHfj2/mAD48WMX/nk3Kd/cL+9gEbTQ/i
-         bAzycfrrUy4Stcd0lhCBdkYkdi/KpA6Np+Ca05JD/38mD2EomphPWYWEiyQG/LCrQ2r8
-         oQVw7aKVnK0wbosp8AueF60rWQFKZtMCcNlDZzQBKUk8UAJzjDS5HRr3n86H1EU9CqHy
-         n7oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yvz7KyEi8AZK4nIaVu7uWxj0DgdXUPU76VjA2dNvNC0=;
-        b=O6iMdL3oo98a5pzIY/s/00dOBQq8kFpDCNDHpgQIGsKgQEZuW2mThQCkbTmlCWU9jH
-         svRevaiCzXVnxr3ds5unesabPbwuxZm/6wEzxjbiPyYPyXi8yU1+awMWHM7cAROYf46Y
-         n9+zchfxss/qh6t+WE1EvO3qlIcsx6yncXakFgAKHaDZpiT55cj8HZmKRBQ5XcAnapOX
-         zflueLVkn7r01dwfIfwWoIoDXj39J7d2z9tv/6rmkloqAPef+rUw1LltwNOYDcobcfuK
-         raXm4EruSp10IROPaNKLN+pSxgJy3zE7d27174jX9IUvTPhbxY5VsmDRYvOn3xXNKtFl
-         9d2A==
-X-Gm-Message-State: APjAAAWcw2MZoF35H66RLuIBG8xbGjCkdD/6u1did2SZLIBZ8C95LkN4
-        ejonUof9G5vTAa/iLTUgTLUNIw==
-X-Google-Smtp-Source: APXvYqwgBlV+xZAdAAtLOGo0SkwGZQY74pshQaZcqGKMfwinxfPaC4YnPMZ8YlsexyDR/C9oHPtQfQ==
-X-Received: by 2002:aa7:8749:: with SMTP id g9mr7551615pfo.36.1552469637300;
-        Wed, 13 Mar 2019 02:33:57 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id g67sm25095238pfg.13.2019.03.13.02.33.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 02:33:56 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Takashi Iwai <tiwai@suse.com>
-Cc:     Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer TravelMate X514-51T with ALC255
-Date:   Wed, 13 Mar 2019 17:33:24 +0800
-Message-Id: <20190313093324.4034-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 13 Mar 2019 05:35:41 -0400
+Received: from mga17.intel.com ([192.55.52.151]:60795 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726510AbfCMJfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 05:35:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 02:35:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,474,1544515200"; 
+   d="scan'208";a="133669908"
+Received: from irsmsx107.ger.corp.intel.com ([163.33.3.99])
+  by orsmga003.jf.intel.com with ESMTP; 13 Mar 2019 02:35:38 -0700
+Received: from irsmsx106.ger.corp.intel.com ([169.254.8.205]) by
+ IRSMSX107.ger.corp.intel.com ([169.254.10.15]) with mapi id 14.03.0415.000;
+ Wed, 13 Mar 2019 09:35:37 +0000
+From:   "Hunter, Adrian" <adrian.hunter@intel.com>
+To:     "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "kishon@ti.com" <kishon@ti.com>
+Subject: RE: [PATCH v2 2/2] mmc: sdhci-omap: Don't finish_mrq() on a command
+ error during tuning
+Thread-Topic: [PATCH v2 2/2] mmc: sdhci-omap: Don't finish_mrq() on a
+ command error during tuning
+Thread-Index: AQHU0AnIPVR7LbB8hkOaAwjEX7p/iaX+irGAgAnJAYCAAQpoYA==
+Date:   Wed, 13 Mar 2019 09:35:36 +0000
+Message-ID: <363DA0ED52042842948283D2FC38E4649C48E550@IRSMSX106.ger.corp.intel.com>
+References: <20190301083824.23918-1-faiz_abbas@ti.com>
+ <20190301083824.23918-3-faiz_abbas@ti.com>
+ <0283e92e-9e01-227d-0987-7801dd88cf78@intel.com>
+ <eb76397b-aa02-f1b8-ef0d-df7569275144@ti.com>
+In-Reply-To: <eb76397b-aa02-f1b8-ef0d-df7569275144@ti.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODIxMmUxYjktMWQ5YS00Njc3LTk1YTYtMmQwNDU2OWZlNjAxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiR2x5aHJlUURpZDBvbkdOUnBFcmZQcnQrcG95MlwvemdWcVdTdDJYRXJoT2dnTkVaTHdkblNmenB1eEJWSlFIb3UifQ==
+x-originating-ip: [163.33.239.181]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Acer TravelMate X514-51T with ALC255 cannot detect the headset MIC
-until ALC255_FIXUP_ACER_HEADSET_MIC quirk applied.  Although, the
-internal DMIC uses another module - snd_soc_skl as the driver.  We still
-need the NID 0x1a in the quirk to enable the headset MIC.
-
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Kailang Yang <kailang@realtek.com>
----
- sound/pci/hda/patch_realtek.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index c8413d44973c..8debd661e6f2 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5673,6 +5673,7 @@ enum {
- 	ALC225_FIXUP_HEADSET_JACK,
- 	ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE,
- 	ALC285_FIXUP_LENOVO_PC_BEEP_IN_NOISE,
-+	ALC255_FIXUP_ACER_HEADSET_MIC,
- };
- 
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6639,6 +6640,16 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC285_FIXUP_LENOVO_HEADPHONE_NOISE
- 	},
-+	[ALC255_FIXUP_ACER_HEADSET_MIC] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x19, 0x03a11130 },
-+			{ 0x1a, 0x90a60140 }, /* use as internal mic */
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC255_FIXUP_HEADSET_MODE_NO_HP_MIC
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -6658,6 +6669,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
- 	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
- 	SND_PCI_QUIRK(0x1028, 0x05bd, "Dell Latitude E6440", ALC292_FIXUP_DELL_E7X),
--- 
-2.20.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaXp2aSwgTW9oYW1tYWQgRmFp
+eiBBYmJhcyBbbWFpbHRvOmZhaXpfYWJiYXNAdGkuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBNYXJj
+aCAxMiwgMjAxOSA3OjM1IFBNDQo+IFRvOiBIdW50ZXIsIEFkcmlhbiA8YWRyaWFuLmh1bnRlckBp
+bnRlbC5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtbW1jQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtDQo+IG9tYXBAdmdlci5rZXJuZWwub3JnDQo+IENjOiB1bGYu
+aGFuc3NvbkBsaW5hcm8ub3JnOyBraXNob25AdGkuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djIgMi8yXSBtbWM6IHNkaGNpLW9tYXA6IERvbid0IGZpbmlzaF9tcnEoKSBvbiBhDQo+IGNvbW1h
+bmQgZXJyb3IgZHVyaW5nIHR1bmluZw0KPiANCj4gSGkgQWRyaWFuLA0KPiANCj4gT24gMy82LzIw
+MTkgNTozOSBQTSwgQWRyaWFuIEh1bnRlciB3cm90ZToNCj4gPiBPbiAxLzAzLzE5IDEwOjM4IEFN
+LCBGYWl6IEFiYmFzIHdyb3RlOg0KPiA+PiBjb21taXQgNWIwZDYyMTA4YjQ2ICgibW1jOiBzZGhj
+aS1vbWFwOiBBZGQgcGxhdGZvcm0gc3BlY2lmaWMgcmVzZXQNCj4gPj4gY2FsbGJhY2siKSBza2lw
+cyBkYXRhIHJlc2V0cyBkdXJpbmcgdHVuaW5nIG9wZXJhdGlvbi4gQmVjYXVzZSBvZg0KPiA+PiB0
+aGlzLCBhIGRhdGEgZXJyb3Igb3IgZGF0YSBmaW5pc2ggaW50ZXJydXB0IG1pZ2h0IHN0aWxsIGFy
+cml2ZSBhZnRlcg0KPiA+PiBhIGNvbW1hbmQgZXJyb3IgaGFzIGJlZW4gaGFuZGxlZCBhbmQgdGhl
+IG1ycSBlbmRlZC4gVGhpcyBlbmRzIHVwIHdpdGgNCj4gPj4gYSAibW1jMDogR290IGRhdGEgaW50
+ZXJydXB0IDB4MDAwMDAwMDIgZXZlbiB0aG91Z2ggbm8gZGF0YSBvcGVyYXRpb24NCj4gd2FzIGlu
+IHByb2dyZXNzIg0KPiA+PiBlcnJvciBtZXNzYWdlLg0KPiA+Pg0KPiA+PiBGaXggdGhpcyBieSBh
+ZGRpbmcgYSBwbGF0Zm9ybSBzcGVjaWZpYyBjYWxsYmFjayBmb3IgY29tbWFuZCBlcnJvcnMuDQo+
+ID4+IE1hcmsgdGhlIG1ycSBhcyBhIGZhaWx1cmUgYnV0IHdhaXQgZm9yIGEgZGF0YSBpbnRlcnJ1
+cHQgaW5zdGVhZCBvZg0KPiA+PiBjYWxsaW5nIGZpbmlzaF9tcnEoKS4NCj4gPj4NCj4gPj4gRml4
+ZXM6IDViMGQ2MjEwOGI0NiAoIm1tYzogc2RoY2ktb21hcDogQWRkIHBsYXRmb3JtIHNwZWNpZmlj
+IHJlc2V0DQo+ID4+IGNhbGxiYWNrIikNCj4gPj4gU2lnbmVkLW9mZi1ieTogRmFpeiBBYmJhcyA8
+ZmFpel9hYmJhc0B0aS5jb20+DQo+ID4+IC0tLQ0KPiA+PiAgZHJpdmVycy9tbWMvaG9zdC9zZGhj
+aS1vbWFwLmMgfCAyNCArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPj4gIDEgZmlsZSBjaGFu
+Z2VkLCAyNCBpbnNlcnRpb25zKCspDQo+ID4+DQo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21t
+Yy9ob3N0L3NkaGNpLW9tYXAuYw0KPiA+PiBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktb21hcC5j
+IGluZGV4IGIxYTY2Y2EzODIxYS4uNjdiMzYxYTQwM2JjDQo+ID4+IDEwMDY0NA0KPiA+PiAtLS0g
+YS9kcml2ZXJzL21tYy9ob3N0L3NkaGNpLW9tYXAuYw0KPiA+PiArKysgYi9kcml2ZXJzL21tYy9o
+b3N0L3NkaGNpLW9tYXAuYw0KPiA+PiBAQCAtNzk3LDYgKzc5NywyOSBAQCB2b2lkIHNkaGNpX29t
+YXBfcmVzZXQoc3RydWN0IHNkaGNpX2hvc3QgKmhvc3QsDQo+IHU4IG1hc2spDQo+ID4+ICAJc2Ro
+Y2lfcmVzZXQoaG9zdCwgbWFzayk7DQo+ID4+ICB9DQo+ID4+DQo+ID4+ICt2b2lkIHNkaGNpX29t
+YXBfY21kX2VycihzdHJ1Y3Qgc2RoY2lfaG9zdCAqaG9zdCwgdTMyIGludG1hc2ssIHUzMg0KPiA+
+PiArKmludG1hc2tfcCkgew0KPiA+PiArCXN0cnVjdCBzZGhjaV9wbHRmbV9ob3N0ICpwbHRmbV9o
+b3N0ID0gc2RoY2lfcHJpdihob3N0KTsNCj4gPj4gKwlzdHJ1Y3Qgc2RoY2lfb21hcF9ob3N0ICpv
+bWFwX2hvc3QgPQ0KPiBzZGhjaV9wbHRmbV9wcml2KHBsdGZtX2hvc3QpOw0KPiA+PiArDQo+ID4+
+ICsJaWYgKG9tYXBfaG9zdC0+aXNfdHVuaW5nKSB7DQo+ID4+ICsJCS8qDQo+ID4+ICsJCSAqIFNp
+bmNlIHdlIGFyZSBub3QgcmVzZXR0aW5nIGRhdGEgbGluZXMgZHVyaW5nIHR1bmluZw0KPiA+PiAr
+CQkgKiBvcGVyYXRpb24sIGRhdGEgZXJyb3Igb3IgZGF0YSBjb21wbGV0ZSBpbnRlcnJ1cHRzDQo+
+ID4+ICsJCSAqIG1pZ2h0IHN0aWxsIGFycml2ZS4gTWFyayB0aGlzIHJlcXVlc3QgYXMgYSBmYWls
+dXJlDQo+ID4+ICsJCSAqIGJ1dCBzdGlsbCB3YWl0IGZvciB0aGUgZGF0YSBpbnRlcnJ1cHQNCj4g
+Pj4gKwkJICovDQo+ID4+ICsJCWlmIChpbnRtYXNrICYgU0RIQ0lfSU5UX1RJTUVPVVQpDQo+ID4+
+ICsJCQlob3N0LT5jbWQtPmVycm9yID0gLUVUSU1FRE9VVDsNCj4gPj4gKwkJZWxzZQ0KPiA+PiAr
+CQkJaG9zdC0+Y21kLT5lcnJvciA9IC1FSUxTRVE7DQo+ID4+ICsNCj4gPj4gKwkJc2RoY2lfZmlu
+aXNoX2NvbW1hbmQoaG9zdCk7DQo+ID4+ICsJfSBlbHNlIHsNCj4gPj4gKwkJc2RoY2lfY21kX2Vy
+cihob3N0LCBpbnRtYXNrLCBpbnRtYXNrX3ApOw0KPiA+PiArCX0NCj4gPj4gK30NCj4gPg0KPiA+
+IENvdWxkIHRoaXMgYmUgZG9uZSBieSB0aGUgZXhpc3RpbmcgLT5pcnEoKSBjYWxsYmFjaz8gaS5l
+LiBtYXNrIHRoZQ0KPiA+IGVycm9yIGJpdHMgaW4gaW50bWFzayAoaGF2ZSB0byB3cml0ZSB0aGVt
+IGJhY2sgdG8gU0RIQ0lfSU5UX1NUQVRVUw0KPiA+IGFsc28pIGJ1dCBzZXQNCj4gPiBjbWQtPmVy
+cm9yLg0KPiA+DQo+IA0KPiBJdCBpcyBwb3NzaWJsZSBidXQgSSByZWFsbHkgZG9uJ3Qgd2FudCB0
+aGUgY2FsbGJhY2sgdG8gYmUgdW5uZWNlc3NhcmlseSBjYWxsZWQgZm9yDQo+IGV2ZXJ5IHNpbmds
+ZSBpbnRlcnJ1cHQgdGhhdCBoYXBwZW5zLiBJIHRoaW5rIHdlIHNob3VsZCBvbmx5IHVzZSB0aGUg
+Y2FsbGJhY2sgaW4NCj4gdGhlIGNhc2Ugb2YgYW4gYWN0dWFsIGVycm9yIGludGVycnVwdCA6LSkN
+Cg0KWW91IG1lYW4gZm9yIHBlcmZvcm1hbmNlIHJlYXNvbnM/ICBJIHdvdWxkIGhhdmUgdGhvdWdo
+dCBpdCB3b3VsZCBiZQ0Kb25seSBhIGhhbmRmdWwgb2YgY3ljbGVzIHRvIGNhbGwgaW50byBhIGZ1
+bmN0aW9uLCBmaW5kIG5vdGhpbmcgdG8gZG8sIGFuZCByZXR1cm4uDQpUaGF0IHNob3VsZCBiZSBu
+ZWdsaWdpYmxlIGNvbXBhcmVkIHRvIHRoZSByZXN0IG9mIHRoZSBpbnRlcnJ1cHQgaGFuZGxlci4N
+CklmIHRoYXQgaXMgdGhlIGNvbmNlcm4sIHRoZW4gaXQgbWlnaHQgYmUgd29ydGggbWVhc3VyaW5n
+IGl0Lg0KDQo=
