@@ -2,121 +2,89 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E97C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90191C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87862075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MMAUL5b1"
+	by mail.kernel.org (Postfix) with ESMTP id 594012075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552504939;
+	bh=zFMFDk7OKe90hZ5/EY71cK99Hut9zkZc9/BP7gtyeeI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f9LrxU+2o2MdSy6vkcT6jwLpG3q9ex59sDbP3VMfGZiB04YuX6T8xesloUwVul6Km
+	 /M+/DPqrabP+pZGAcfMiVgVD4ImarscePbu7tCwbJ8UNZ8taFs+GuWVlg+oYLbZB1m
+	 nA+sbR1oxxc1XyZPq0RiUOm5B7A9lKdQxW+m/8kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbfCMTWD (ORCPT
+        id S1729130AbfCMTWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:22:03 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:40092 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728274AbfCMTRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:17:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 384F38EE20E;
-        Wed, 13 Mar 2019 12:17:54 -0700 (PDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aZt-0s5b79oz; Wed, 13 Mar 2019 12:17:53 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 Mar 2019 15:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728950AbfCMTRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:17:46 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 7EAF38EE0D2;
-        Wed, 13 Mar 2019 12:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1552504673;
-        bh=Fu0rh0TRSo8BaUrCb49LTC7bQJGPtb3oRoEl3FHPnWQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MMAUL5b13FHBelUi0weo/FqU+w76a/8A7uGTeOgVAIufwe4TjYgw6TCJ8YcNFS3mT
-         MhPGWvI1phUSuCGudujMFwOUbXacW7dPUkwV4il9jQtbv5seYWCjq7gf88xj78kvHc
-         d2vZLA0GzhrsqDC9W4YNuTO5JjmwF8OSimLcHA3k=
-Message-ID: <1552504672.3022.59.camel@HansenPartnership.com>
-Subject: Re: overlayfs vs. fscrypt
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Lawrence <paullawrence@google.com>
-Date:   Wed, 13 Mar 2019 12:17:52 -0700
-In-Reply-To: <20190313185826.GA4685@mit.edu>
-References: <4603533.ZIfxmiEf7K@blindfold> <1854703.ve7plDhYWt@blindfold>
-         <CAJfpegtgfuAkgv26QH6Ht25OeMiev-QvEf7ror4KAbud7FADgg@mail.gmail.com>
-         <4066872.KGdO14EQMx@blindfold>
-         <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
-         <20190313151633.GA672@mit.edu>
-         <1552491394.3022.8.camel@HansenPartnership.com>
-         <20190313164439.GF672@mit.edu>
-         <1552499104.3022.44.camel@HansenPartnership.com>
-         <20190313185826.GA4685@mit.edu>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id E22D32184E;
+        Wed, 13 Mar 2019 19:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552504665;
+        bh=zFMFDk7OKe90hZ5/EY71cK99Hut9zkZc9/BP7gtyeeI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VKII9eEC1H83GlQtA/m9uUefie0RMOmGQWQkS3XjyA5E3Q/kyH/gEadE/Dfojeaj/
+         vTC9DvMl1cXuH1plDVUWzd/SNSZtZZNjpugTlV4izq5stzztAz3X55yzFA8sTOMMfA
+         jGzrtR9tBYTutiR8L8mROECg0tb69YGbNq+7m+68=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Li RongQing <lirongqing@baidu.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 19/24] mac80211_hwsim: propagate genlmsg_reply return code
+Date:   Wed, 13 Mar 2019 15:16:42 -0400
+Message-Id: <20190313191647.160171-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
+References: <20190313191647.160171-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-13 at 14:58 -0400, Theodore Ts'o wrote:
-> On Wed, Mar 13, 2019 at 10:45:04AM -0700, James Bottomley wrote:
-> > >   If they can't break root, then the OS's user-id based access
-> > > control checks (or SELinux checks if you are using SELinux) will
-> > > still protect you.
-> > 
-> > Well, that's what one would think about the recent runc exploit as
-> > well.  The thing I was looking to do was reduce the chances that
-> > unencrypted data would be lying around to be discovered.  I suppose
-> > the potentially biggest problem is leaking the image after it's
-> > decrypted by admin means like a badly configured backup, but
-> > unencryped data is potentially discoverable by breakouts as well.
-> 
-> But while the container is running, the key is available and
-> instantiated in the kernel, and the kernel is free to decrypt any
-> encrypted file/block.
+From: Li RongQing <lirongqing@baidu.com>
 
-In the current encrypted tar file implementation, while the container
-is running the decrypted tar file is extracted into the container root
-and available for all to see.
+[ Upstream commit 17407715240456448e4989bee46ffc93991add83 ]
 
-The main security benefit of this implementation, as I said, is
-security of at rest images and the runtime security is guaranteed by
-other systems.
+genlmsg_reply can fail, so propagate its return code
 
->   The reason why the kernel won't do this is because of its access
-> control checks.
-> 
-> And we're talking about this within the context of the overlayfs.
-> When in the container world will we have persistent data that lasts
-> beyond the lifetime of the running container that will be using
-> overlayfs?  I didn't think that existed; if you are using, say, a
-> Docker storage volume, does overlayfs ever get into the act?  And if
-> so, how, and what are the desired security properties?
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/mac80211_hwsim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Are you asking about persistent volumes?  I can answer, but that's not
-the current use case.  The current use case is encrypted images, which
-are overlays.  If you mean the misconfigured backup comment then I was
-thinking a backup that wrongly sweeps container root while the
-container is running.
-
-Lets go back to basics: can fscrypt provide equivalent or better
-protection than the current encrypted tarfile approach?  If the answer
-is no because it's too tightly tied to the android use case then
-perhaps there's not much point discussing it further.
-
-James
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 780acf23fd19..e9ec1da9935d 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3167,7 +3167,7 @@ static int hwsim_get_radio_nl(struct sk_buff *msg, struct genl_info *info)
+ 			goto out_err;
+ 		}
+ 
+-		genlmsg_reply(skb, info);
++		res = genlmsg_reply(skb, info);
+ 		break;
+ 	}
+ 
+-- 
+2.19.1
 
