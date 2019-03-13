@@ -2,127 +2,238 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B06C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8235DC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8116F2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572552075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505049;
-	bh=edO8ZivETo/D7oQY/026yF+ytHjuzPt1RKGB+G0H6pU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nKlT0a/UMTPrNQGJmn7asIGeDYvXePDzR9jzKDAGnzkZfFQRKyVU58QWf9x+kEpss
-	 wY166LFTPh7soDSYJqu14OY7HLkvochF94i4jc9wlw8Xj6bcj8W4duZmiP+C31Z2VV
-	 5n2G9dGwLgEJQeW23dhCVhsTrYTBDe3Qso5+lyqk=
+	s=default; t=1552505054;
+	bh=Bq6F9tt2o6us38xY/YIAhG3s4ovIBMWYDP4SFSXPKe4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VSRtJ8TGg77x/23nuRsEFkCw8tIgl7K2WSWPvZEClm6LoTQUE/CeX/hzh/So876Ij
+	 KYWkNJQem8uiqOPp2xNfGclLuIYCP+ijtJ8zH03aUxjyk6k8XaX/hur55MxNYKc9PH
+	 s7bG8eAgbEQ6dcnUE3B9s2wZdG10fTxC0voHqkew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfCMTYI (ORCPT
+        id S1728702AbfCMTQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:24:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53336 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:16:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728709AbfCMTYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:24:06 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        id S1728680AbfCMTQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:16:31 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82BF52177E;
-        Wed, 13 Mar 2019 19:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35FA3213A2;
+        Wed, 13 Mar 2019 19:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552505045;
-        bh=edO8ZivETo/D7oQY/026yF+ytHjuzPt1RKGB+G0H6pU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uSOCtybTK+xGJ98O9vpFDnBWCdkn5jraPTWKAYb8eXsgwE4iLgN75gayewHcYH4B/
-         kUq+PRw5lhbFSeb8zFo+1511xNnayUFDowLUcDH5KKZwB30Pbcb/0w/VzUMyF8U4to
-         go0mWkbB/zROn7x9c0eodngvMehVBlX99/WZ5Vn8=
-Received: by mail-qt1-f178.google.com with SMTP id k2so3329525qtm.1;
-        Wed, 13 Mar 2019 12:24:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAUrJ9h2RSkBdUTzZR2oEBEZbChcAZTf0YmEg3zgg6lazMFuvOLc
-        TAd1FUOnfZtJAKkfKmT5AwlPHrPZC/D3Ayh9pw==
-X-Google-Smtp-Source: APXvYqwKJk8paiAkY26pa7ZXNoypsPDvTHhGQBHWA2yIT3uF//y6n19w1URWlWBvJFpkxo3SAnjcvuhQRtLKmbqjN58=
-X-Received: by 2002:a0c:ec11:: with SMTP id y17mr8220881qvo.77.1552505044754;
- Wed, 13 Mar 2019 12:24:04 -0700 (PDT)
+        s=default; t=1552504590;
+        bh=Bq6F9tt2o6us38xY/YIAhG3s4ovIBMWYDP4SFSXPKe4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=K6JyJ9Jp36zECRaY0QU7gm2WG6/k45TW2LLvOtkbJGKpAyk3Ha93WzURnADZwTuWe
+         KihAPp0vYj/sZVaUdEPNERStYXPkteoaUkhN/ZZU94kGkWiojxYnfrayDSiROqx9kW
+         hBN6yknNxDhzI0Uc7G447uIqwPG7p6sEpdUSgjOo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 27/33] phonet: fix building with clang
+Date:   Wed, 13 Mar 2019 15:15:00 -0400
+Message-Id: <20190313191506.159677-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190313191506.159677-1-sashal@kernel.org>
+References: <20190313191506.159677-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
- <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
- <20190312160057.GA31306@bogus> <8b18501b-e120-97f2-f6b5-4771dc0f613f@linux.intel.com>
-In-Reply-To: <8b18501b-e120-97f2-f6b5-4771dc0f613f@linux.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 13 Mar 2019 14:23:53 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKnwYXSsP5B_uAaRoCEEV7Cb7f8XFPSC2z_hfSj7Rgqyg@mail.gmail.com>
-Message-ID: <CAL_JsqKnwYXSsP5B_uAaRoCEEV7Cb7f8XFPSC2z_hfSj7Rgqyg@mail.gmail.com>
-Subject: Re: [PATCHv2 1/5] Documentation: dt: edac: Fix Stratix10 IRQ bindings
-To:     thor.thayer@linux.intel.com
-Cc:     Borislav Petkov <bp@alien8.de>, Dinh Nguyen <dinguyen@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        devicetree@vger.kernel.org, linux-edac@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 2:13 PM Thor Thayer <thor.thayer@linux.intel.com> wrote:
->
-> Hi Rob,
->
-> On 3/12/19 11:00 AM, Rob Herring wrote:
-> > On Wed, Feb 27, 2019 at 11:27:21AM -0600, thor.thayer@linux.intel.com wrote:
-> >> From: Thor Thayer <thor.thayer@linux.intel.com>
-> >>
-> >> Fix Stratix10 ECC bindings to specify only the single
-> >> bit error. On Stratix10 double bit errors are handled
-> >> as SErrors instead of interrupts.
-> >> Indicate the differences between the ARM64 and ARM32
-> >> EDAC architecture in the bindings.
-> >>
-> >> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> >> ---
-> >> v2 No change
-> >> ---
-> >>   .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 23 +++++++++++++++-------
-> >>   1 file changed, 16 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> >> index 5626560a6cfd..a0ac50e15912 100644
-> >> --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> >> +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> >> @@ -236,33 +236,42 @@ Stratix10 SoCFPGA ECC Manager
-> >>   The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
-> >>   in a shared register similar to the Arria10. However, ECC requires
-> >>   access to registers that can only be read from Secure Monitor with
-> >> -SMC calls. Therefore the device tree is slightly different.
-> >> +SMC calls. Therefore the device tree is slightly different. Note that
-> >> +only 1 interrupt is sent because the double bit errors are treated as
-> >> +SErrors instead of IRQ.
-> >>
-> >>   Required Properties:
-> >>   - compatible : Should be "altr,socfpga-s10-ecc-manager"
-> >> -- interrupts : Should be single bit error interrupt, then double bit error
-> >> -    interrupt.
-> >> +- altr,sysgr-syscon : phandle to Stratix10 System Manager Block
-> >> +                  containing the ECC manager registers.
-> >
-> > Seems this was already in use, but why not just make this node a child
-> > of the System Manager Block and remove this phandle?
-> >
-> Yes, this was already in use but I'm trying to fix that oversight with
-> this patch.
->
-> The System Manager is a collection of registers used by different
-> peripherals including EMAC and ECC.
+From: Arnd Bergmann <arnd@arndb.de>
 
-The EMAC has its own registers too, right? But the ECC does not it seems.
+[ Upstream commit 6321aa197547da397753757bd84c6ce64b3e3d89 ]
 
-> I view ECC Manager as a separate entity as is the Ethernet MAC which is
-> why I have it separate. Using the phandle also follows the convention
-> established with the Arria10 ECC Manager.
+clang warns about overflowing the data[] member in the struct pnpipehdr:
 
-I guess this ship has sailed, so:
+net/phonet/pep.c:295:8: warning: array index 4 is past the end of the array (which contains 1 element) [-Warray-bounds]
+                        if (hdr->data[4] == PEP_IND_READY)
+                            ^         ~
+include/net/phonet/pep.h:66:3: note: array 'data' declared here
+                u8              data[1];
 
-Acked-by: Rob Herring <robh@kernel.org>
+Using a flexible array member at the end of the struct avoids the
+warning, but since we cannot have a flexible array member inside
+of the union, each index now has to be moved back by one, which
+makes it a little uglier.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Rémi Denis-Courmont <remi@remlab.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/net/phonet/pep.h |  5 +++--
+ net/phonet/pep.c         | 32 ++++++++++++++++----------------
+ 2 files changed, 19 insertions(+), 18 deletions(-)
+
+diff --git a/include/net/phonet/pep.h b/include/net/phonet/pep.h
+index b669fe6dbc3b..98f31c7ea23d 100644
+--- a/include/net/phonet/pep.h
++++ b/include/net/phonet/pep.h
+@@ -63,10 +63,11 @@ struct pnpipehdr {
+ 		u8		state_after_reset;	/* reset request */
+ 		u8		error_code;		/* any response */
+ 		u8		pep_type;		/* status indication */
+-		u8		data[1];
++		u8		data0;			/* anything else */
+ 	};
++	u8			data[];
+ };
+-#define other_pep_type		data[1]
++#define other_pep_type		data[0]
+ 
+ static inline struct pnpipehdr *pnp_hdr(struct sk_buff *skb)
+ {
+diff --git a/net/phonet/pep.c b/net/phonet/pep.c
+index e81537991ddf..bffcef58ebf5 100644
+--- a/net/phonet/pep.c
++++ b/net/phonet/pep.c
+@@ -132,7 +132,7 @@ static int pep_indicate(struct sock *sk, u8 id, u8 code,
+ 	ph->utid = 0;
+ 	ph->message_id = id;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = code;
++	ph->error_code = code;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -153,7 +153,7 @@ static int pipe_handler_request(struct sock *sk, u8 id, u8 code,
+ 	ph->utid = id; /* whatever */
+ 	ph->message_id = id;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = code;
++	ph->error_code = code;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -208,7 +208,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
+ 	struct pnpipehdr *ph;
+ 	struct sockaddr_pn dst;
+ 	u8 data[4] = {
+-		oph->data[0], /* PEP type */
++		oph->pep_type, /* PEP type */
+ 		code, /* error code, at an unusual offset */
+ 		PAD, PAD,
+ 	};
+@@ -221,7 +221,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
+ 	ph->utid = oph->utid;
+ 	ph->message_id = PNS_PEP_CTRL_RESP;
+ 	ph->pipe_handle = oph->pipe_handle;
+-	ph->data[0] = oph->data[1]; /* CTRL id */
++	ph->data0 = oph->data[0]; /* CTRL id */
+ 
+ 	pn_skb_get_src_sockaddr(oskb, &dst);
+ 	return pn_skb_send(sk, skb, &dst);
+@@ -272,17 +272,17 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 		return -EINVAL;
+ 
+ 	hdr = pnp_hdr(skb);
+-	if (hdr->data[0] != PN_PEP_TYPE_COMMON) {
++	if (hdr->pep_type != PN_PEP_TYPE_COMMON) {
+ 		net_dbg_ratelimited("Phonet unknown PEP type: %u\n",
+-				    (unsigned int)hdr->data[0]);
++				    (unsigned int)hdr->pep_type);
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	switch (hdr->data[1]) {
++	switch (hdr->data[0]) {
+ 	case PN_PEP_IND_FLOW_CONTROL:
+ 		switch (pn->tx_fc) {
+ 		case PN_LEGACY_FLOW_CONTROL:
+-			switch (hdr->data[4]) {
++			switch (hdr->data[3]) {
+ 			case PEP_IND_BUSY:
+ 				atomic_set(&pn->tx_credits, 0);
+ 				break;
+@@ -292,7 +292,7 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 			}
+ 			break;
+ 		case PN_ONE_CREDIT_FLOW_CONTROL:
+-			if (hdr->data[4] == PEP_IND_READY)
++			if (hdr->data[3] == PEP_IND_READY)
+ 				atomic_set(&pn->tx_credits, wake = 1);
+ 			break;
+ 		}
+@@ -301,12 +301,12 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 	case PN_PEP_IND_ID_MCFC_GRANT_CREDITS:
+ 		if (pn->tx_fc != PN_MULTI_CREDIT_FLOW_CONTROL)
+ 			break;
+-		atomic_add(wake = hdr->data[4], &pn->tx_credits);
++		atomic_add(wake = hdr->data[3], &pn->tx_credits);
+ 		break;
+ 
+ 	default:
+ 		net_dbg_ratelimited("Phonet unknown PEP indication: %u\n",
+-				    (unsigned int)hdr->data[1]);
++				    (unsigned int)hdr->data[0]);
+ 		return -EOPNOTSUPP;
+ 	}
+ 	if (wake)
+@@ -318,7 +318,7 @@ static int pipe_rcv_created(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct pep_sock *pn = pep_sk(sk);
+ 	struct pnpipehdr *hdr = pnp_hdr(skb);
+-	u8 n_sb = hdr->data[0];
++	u8 n_sb = hdr->data0;
+ 
+ 	pn->rx_fc = pn->tx_fc = PN_LEGACY_FLOW_CONTROL;
+ 	__skb_pull(skb, sizeof(*hdr));
+@@ -506,7 +506,7 @@ static int pep_connresp_rcv(struct sock *sk, struct sk_buff *skb)
+ 		return -ECONNREFUSED;
+ 
+ 	/* Parse sub-blocks */
+-	n_sb = hdr->data[4];
++	n_sb = hdr->data[3];
+ 	while (n_sb > 0) {
+ 		u8 type, buf[6], len = sizeof(buf);
+ 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
+@@ -739,7 +739,7 @@ static int pipe_do_remove(struct sock *sk)
+ 	ph->utid = 0;
+ 	ph->message_id = PNS_PIPE_REMOVE_REQ;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = PAD;
++	ph->data0 = PAD;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -817,7 +817,7 @@ static struct sock *pep_sock_accept(struct sock *sk, int flags, int *errp,
+ 	peer_type = hdr->other_pep_type << 8;
+ 
+ 	/* Parse sub-blocks (options) */
+-	n_sb = hdr->data[4];
++	n_sb = hdr->data[3];
+ 	while (n_sb > 0) {
+ 		u8 type, buf[1], len = sizeof(buf);
+ 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
+@@ -1109,7 +1109,7 @@ static int pipe_skb_send(struct sock *sk, struct sk_buff *skb)
+ 	ph->utid = 0;
+ 	if (pn->aligned) {
+ 		ph->message_id = PNS_PIPE_ALIGNED_DATA;
+-		ph->data[0] = 0; /* padding */
++		ph->data0 = 0; /* padding */
+ 	} else
+ 		ph->message_id = PNS_PIPE_DATA;
+ 	ph->pipe_handle = pn->pipe_handle;
+-- 
+2.19.1
+
