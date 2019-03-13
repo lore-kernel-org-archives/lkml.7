@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFB7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7587AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B8321850
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF91217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504605;
-	bh=c/BupGm6z/wTtgO3rfikMihgyu8nWgeuQylsc/9hAkM=;
+	s=default; t=1552504610;
+	bh=IGXFvzdYIcv82FClVuLEGRUDYZu56hrrBOY1xdl5UrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tLhGW3zDwgOELOMDJ15WuVt85pDA3k/8wx3GYnATcOD9g2C22zWY/+uPMOo3A4S6W
-	 W+ffjzkRgjoqxkRIii6n41LJL3ObAge+q/Tzc6x2qLG89ENAKjYJgtQh+cph2c3FDG
-	 X2thwOMg5x37gCdBjn1Q98gRiFIO2IFeSzYnU+qw=
+	b=WRAj+BYZSJKwx1F0ld4AEewSQpNglzT79mP+t/RtWAunUJK0k6zS4/uWKe0SpBBnD
+	 ux1++mPtR4P/nqTEFMngwBbcgXEb/j40iCLXarw5FfJIMbLEnX++IjeZt2LU2ilAmn
+	 3WgRtMnDwbsnxGsjRKQkUMj36TkFtN7cnGrUakQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbfCMTQo (ORCPT
+        id S1728771AbfCMTQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:16:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47020 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:16:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728718AbfCMTQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:16:41 -0400
+        id S1728731AbfCMTQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:16:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B70AC2171F;
-        Wed, 13 Mar 2019 19:16:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2608C217F5;
+        Wed, 13 Mar 2019 19:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504600;
-        bh=c/BupGm6z/wTtgO3rfikMihgyu8nWgeuQylsc/9hAkM=;
+        s=default; t=1552504602;
+        bh=IGXFvzdYIcv82FClVuLEGRUDYZu56hrrBOY1xdl5UrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Igq9QuS6v16oUewWzhW75UHWwxe8RmEUGfs8jIfaA2ZflySN91jWv9cE+UN9L2uss
-         jkWq2WgbKusWmfzw70jYg39gHuqJH+c5Zlr2pQFkBiOpsd8SwdHvi9KBLTdyonnCEC
-         HVX/IAlcwIB7OZloZYpS7q4O1MytkFOcNUNxgWzo=
+        b=x7pZHN1+d9XiFMW3hFYf8R4hrIgQ696ApiHdfj2ycD8PfHvlpasVdRL8CflcJqzWv
+         eWXcfj5bhd4jU+rGMaAozB7Uk0P5lM7qNfB0+OSoOP/sl3vFgQdZ4uaItl6jidQqFP
+         brOydFBLFZ8SGJlfWmG+esHg+w1k1fox/KQjN37E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiong Wang <jiong.wang@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, oss-drivers@netronome.com
-Subject: [PATCH AUTOSEL 4.14 31/33] nfp: bpf: fix ALU32 high bits clearance bug
-Date:   Wed, 13 Mar 2019 15:15:04 -0400
-Message-Id: <20190313191506.159677-31-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 32/33] mdio_bus: Fix use-after-free on device_register fails
+Date:   Wed, 13 Mar 2019 15:15:05 -0400
+Message-Id: <20190313191506.159677-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191506.159677-1-sashal@kernel.org>
 References: <20190313191506.159677-1-sashal@kernel.org>
@@ -59,96 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiong Wang <jiong.wang@netronome.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit f036ebd9bfbe1e91a3d855e85e05fc5ff156b641 ]
+[ Upstream commit 6ff7b060535e87c2ae14dd8548512abfdda528fb ]
 
-NFP BPF JIT compiler is doing a couple of small optimizations when jitting
-ALU imm instructions, some of these optimizations could save code-gen, for
-example:
+KASAN has found use-after-free in fixed_mdio_bus_init,
+commit 0c692d07842a ("drivers/net/phy/mdio_bus.c: call
+put_device on device_register() failure") call put_device()
+while device_register() fails,give up the last reference
+to the device and allow mdiobus_release to be executed
+,kfreeing the bus. However in most drives, mdiobus_free
+be called to free the bus while mdiobus_register fails.
+use-after-free occurs when access bus again, this patch
+revert it to let mdiobus_free free the bus.
 
-  A & -1 =  A
-  A |  0 =  A
-  A ^  0 =  A
+KASAN report details as below:
 
-However, for ALU32, high 32-bit of the 64-bit register should still be
-cleared according to ISA semantics.
+BUG: KASAN: use-after-free in mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
+Read of size 4 at addr ffff8881dc824d78 by task syz-executor.0/3524
 
-Fixes: cd7df56ed3e6 ("nfp: add BPF to NFP code translator")
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+CPU: 1 PID: 3524 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
+ fixed_mdio_bus_init+0x283/0x1000 [fixed_phy]
+ ? 0xffffffffc0e40000
+ ? 0xffffffffc0e40000
+ ? 0xffffffffc0e40000
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6215c19c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
+RBP: 00007f6215c19c70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6215c1a6bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
+
+Allocated by task 3524:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ mdiobus_alloc_size+0x54/0x1b0 drivers/net/phy/mdio_bus.c:143
+ fixed_mdio_bus_init+0x163/0x1000 [fixed_phy]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 3524:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
+ slab_free_hook mm/slub.c:1409 [inline]
+ slab_free_freelist_hook mm/slub.c:1436 [inline]
+ slab_free mm/slub.c:2986 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3938
+ device_release+0x78/0x200 drivers/base/core.c:919
+ kobject_cleanup lib/kobject.c:662 [inline]
+ kobject_release lib/kobject.c:691 [inline]
+ kref_put include/linux/kref.h:67 [inline]
+ kobject_put+0x146/0x240 lib/kobject.c:708
+ put_device+0x1c/0x30 drivers/base/core.c:2060
+ __mdiobus_register+0x483/0x560 drivers/net/phy/mdio_bus.c:382
+ fixed_mdio_bus_init+0x26b/0x1000 [fixed_phy]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881dc824c80
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 248 bytes inside of
+ 2048-byte region [ffff8881dc824c80, ffff8881dc825480)
+The buggy address belongs to the page:
+page:ffffea0007720800 count:1 mapcount:0 mapping:ffff8881f6c02800 index:0x0 compound_mapcount: 0
+flags: 0x2fffc0000010200(slab|head)
+raw: 02fffc0000010200 0000000000000000 0000000500000001 ffff8881f6c02800
+raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881dc824c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881dc824c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881dc824d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                                ^
+ ffff8881dc824d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881dc824e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Fixes: 0c692d07842a ("drivers/net/phy/mdio_bus.c: call put_device on device_register() failure")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/bpf/jit.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ drivers/net/phy/mdio_bus.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/bpf/jit.c b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
-index 3105ee5bbf8e..c1ffec85817a 100644
---- a/drivers/net/ethernet/netronome/nfp/bpf/jit.c
-+++ b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
-@@ -756,15 +756,10 @@ wrp_alu64_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta,
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 1ece41277993..c545fb1f82bd 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -347,7 +347,6 @@ int __mdiobus_register(struct mii_bus *bus, struct module *owner)
+ 	err = device_register(&bus->dev);
+ 	if (err) {
+ 		pr_err("mii_bus %s failed to register\n", bus->id);
+-		put_device(&bus->dev);
+ 		return -EINVAL;
+ 	}
  
- static int
- wrp_alu32_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta,
--	      enum alu_op alu_op, bool skip)
-+	      enum alu_op alu_op)
- {
- 	const struct bpf_insn *insn = &meta->insn;
- 
--	if (skip) {
--		meta->skip = true;
--		return 0;
--	}
--
- 	wrp_alu_imm(nfp_prog, insn->dst_reg * 2, alu_op, insn->imm);
- 	wrp_immed(nfp_prog, reg_both(insn->dst_reg * 2 + 1), 0);
- 
-@@ -1017,7 +1012,7 @@ static int xor_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- 
- static int xor_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- {
--	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_XOR, !meta->insn.imm);
-+	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_XOR);
- }
- 
- static int and_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
-@@ -1027,7 +1022,7 @@ static int and_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- 
- static int and_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- {
--	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_AND, !~meta->insn.imm);
-+	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_AND);
- }
- 
- static int or_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
-@@ -1037,7 +1032,7 @@ static int or_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- 
- static int or_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- {
--	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_OR, !meta->insn.imm);
-+	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_OR);
- }
- 
- static int add_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
-@@ -1047,7 +1042,7 @@ static int add_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- 
- static int add_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- {
--	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_ADD, !meta->insn.imm);
-+	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_ADD);
- }
- 
- static int sub_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
-@@ -1057,7 +1052,7 @@ static int sub_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- 
- static int sub_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
- {
--	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_SUB, !meta->insn.imm);
-+	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_SUB);
- }
- 
- static int shl_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
 -- 
 2.19.1
 
