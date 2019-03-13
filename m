@@ -2,112 +2,243 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41872C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA50C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7EE2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WBmrDOFd"
+	by mail.kernel.org (Postfix) with ESMTP id 6F59020643
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfCMQFd (ORCPT
+        id S1726974AbfCMQFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:05:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54622 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726904AbfCMQFb (ORCPT
+        Wed, 13 Mar 2019 12:05:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60272 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726805AbfCMQFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:05:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Baj+lWDXGPt27lshCwJLP8POnzrLswu3QVB5Jfd4sTc=; b=WBmrDOFdeqXIspuqZdFAcMVYT
-        YzewMY/wBRq50wT4qf5pW+61boYgJjwEtUWHYvuvAA+t/hQpnyd7+NFHdTQMl1UnvjZgUfrXVpzNS
-        VrSoqYQZLfdfSVN/E1wKu4mZy/4WJkG47nre5T0lR2Bm5nsnv6H0D/R1O7247uk1zW/zRIEv9ysUv
-        TlxDpIA1dtVJYOVQ9eR2vQmUEA0xhxpFLYhzYZYd1mlG/jrPspUZFkFWxtON496QO+uRSS//+lYbz
-        gu5x6yBnZsyJnKKOOAuDSYTZmPmkd93XFQAjDD/yUixFfT7S6wWLCpD8KlcWUgBNqemS+Hubgfnzg
-        lYhikX1Sw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h46Nl-0005jS-AC; Wed, 13 Mar 2019 16:05:29 +0000
-Date:   Wed, 13 Mar 2019 09:05:29 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        David Miller <davem@davemloft.net>, hch@infradead.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterx@redhat.com, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
-Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
- vmap()
-Message-ID: <20190313160529.GB15134@infradead.org>
-References: <56374231-7ba7-0227-8d6d-4d968d71b4d6@redhat.com>
- <20190311095405-mutt-send-email-mst@kernel.org>
- <20190311.111413.1140896328197448401.davem@davemloft.net>
- <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
- <20190311235140-mutt-send-email-mst@kernel.org>
- <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
- <20190312075033-mutt-send-email-mst@kernel.org>
- <1552405610.3083.17.camel@HansenPartnership.com>
- <20190312200450.GA25147@redhat.com>
- <1552424017.14432.11.camel@HansenPartnership.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552424017.14432.11.camel@HansenPartnership.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 13 Mar 2019 12:05:23 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DG4ISn008100
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:05:21 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r73htn9sr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:05:20 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Wed, 13 Mar 2019 16:05:18 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Mar 2019 16:05:15 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2DG5Ddd19857654
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 13 Mar 2019 16:05:13 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF826A4053;
+        Wed, 13 Mar 2019 16:05:13 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5B84EA4051;
+        Wed, 13 Mar 2019 16:05:13 +0000 (GMT)
+Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.152.224.140])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Mar 2019 16:05:13 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: [PATCH v5 6/7] s390: ap: Cleanup on removing the AP device
+Date:   Wed, 13 Mar 2019 17:05:03 +0100
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19031316-0012-0000-0000-000003022B96
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031316-0013-0000-0000-000021395279
+Message-Id: <1552493104-30510-7-git-send-email-pmorel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903130114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 01:53:37PM -0700, James Bottomley wrote:
-> I've got to say: optimize what?  What code do we ever have in the
-> kernel that kmap's a page and then doesn't do anything with it? You can
-> guarantee that on kunmap the page is either referenced (needs
-> invalidating) or updated (needs flushing). The in-kernel use of kmap is
-> always
-> 
-> kmap
-> do something with the mapped page
-> kunmap
-> 
-> In a very short interval.  It seems just a simplification to make
-> kunmap do the flush if needed rather than try to have the users
-> remember.  The thing which makes this really simple is that on most
-> architectures flush and invalidate is the same operation.  If you
-> really want to optimize you can use the referenced and dirty bits on
-> the kmapped pte to tell you what operation to do, but if your flush is
-> your invalidate, you simply assume the data needs flushing on kunmap
-> without checking anything.
+When a AP device is remove, clear the queue's APID bit in the guest CRYCB.
+to be sure that the guest will not access the AP queue anymore.
 
-I agree that this would be a good way to simplify the API.   Now
-we'd just need volunteers to implement this for all architectures
-that need cache flushing and then remove the explicit flushing in
-the callers..
+Then we clear the interruptions and reset the AP device properly.
 
-> > Which means after we fix vhost to add the flush_dcache_page after
-> > kunmap, Parisc will get a double hit (but it also means Parisc was
-> > the only one of those archs needed explicit cache flushes, where
-> > vhost worked correctly so far.. so it kinds of proofs your point of
-> > giving up being the safe choice).
-> 
-> What double hit?  If there's no cache to flush then cache flush is a
-> no-op.  It's also a highly piplineable no-op because the CPU has the L1
-> cache within easy reach.  The only event when flush takes a large
-> amount time is if we actually have dirty data to write back to main
-> memory.
+Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_drv.c     | 36 +++++++++++++++++++++++++++++++++++
+ drivers/s390/crypto/vfio_ap_ops.c     | 16 +++++++++++++---
+ drivers/s390/crypto/vfio_ap_private.h |  3 +++
+ 3 files changed, 52 insertions(+), 3 deletions(-)
 
-I've heard people complaining that on some microarchitectures even
-no-op cache flushes are relatively expensive.  Don't ask me why,
-but if we can easily avoid double flushes we should do that.
+diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+index 796e73d4..850ba6e 100644
+--- a/drivers/s390/crypto/vfio_ap_drv.c
++++ b/drivers/s390/crypto/vfio_ap_drv.c
+@@ -5,6 +5,7 @@
+  * Copyright IBM Corp. 2018
+  *
+  * Author(s): Tony Krowiak <akrowiak@linux.ibm.com>
++ *	      Pierre Morel <pmorel@linux.ibm.com>
+  */
+ 
+ #include <linux/module.h>
+@@ -12,6 +13,8 @@
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <asm/facility.h>
++#include <linux/bitops.h>
++#include <linux/kvm_host.h>
+ #include "vfio_ap_private.h"
+ 
+ #define VFIO_AP_ROOT_NAME "vfio_ap"
+@@ -65,6 +68,33 @@ static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+ }
+ 
+ /**
++ * vfio_ap_update_crycb
++ * @q: A pointer to the queue being removed
++ *
++ * We clear the APID of the queue, making this queue unusable for the guest.
++ * After this function we can reset the queue without to fear a race with
++ * the guest to access the queue again.
++ * We do not fear race with the host as we still get the device.
++ */
++static void vfio_ap_update_crycb(struct vfio_ap_queue *q)
++{
++	struct ap_matrix_mdev *matrix_mdev = q->matrix_mdev;
++
++	if (!matrix_mdev)
++		return;
++
++	clear_bit_inv(AP_QID_CARD(q->apqn), matrix_mdev->matrix.apm);
++
++	if (!matrix_mdev->kvm)
++		return;
++
++	kvm_arch_crypto_set_masks(matrix_mdev->kvm,
++				  matrix_mdev->matrix.apm,
++				  matrix_mdev->matrix.aqm,
++				  matrix_mdev->matrix.adm);
++}
++
++/**
+  * vfio_ap_queue_dev_remove:
+  *
+  * Free the associated vfio_ap_queue structure
+@@ -74,7 +104,13 @@ static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+ 	struct vfio_ap_queue *q;
+ 
+ 	q = dev_get_drvdata(&apdev->device);
++	if (!q)
++		return;
++
+ 	mutex_lock(&matrix_dev->lock);
++	vfio_ap_update_crycb(q);
++	vfio_ap_mdev_reset_queue(q);
++	vfio_ap_free_irq(q);
+ 	list_del(&q->list);
+ 	mutex_unlock(&matrix_dev->lock);
+ 	kfree(q);
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index dc3454f..dc3caa7 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -43,15 +43,22 @@ struct vfio_ap_queue *vfio_ap_get_queue(int apqn, struct list_head *l)
+ 	return NULL;
+ }
+ 
+-static int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
++int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
+ {
+ 	struct ap_queue_status status;
+-	int retry = 1;
++	int retry = 20;
+ 
+ 	do {
+ 		status = ap_zapq(q->apqn);
+ 		switch (status.response_code) {
+ 		case AP_RESPONSE_NORMAL:
++			while (!status.queue_empty && retry--) {
++				msleep(20);
++				status = ap_tapq(q->apqn, NULL);
++			}
++			if (retry <= 0)
++				pr_warn("%s: queue 0x%04x not empty\n",
++					__func__, q->apqn);
+ 			return 0;
+ 		case AP_RESPONSE_RESET_IN_PROGRESS:
+ 		case AP_RESPONSE_BUSY:
+@@ -74,7 +81,7 @@ static int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
+  * Unregister the ISC from the GIB alert
+  * Clear the vfio_ap_queue intern fields
+  */
+-static void vfio_ap_free_irq(struct vfio_ap_queue *q)
++void vfio_ap_free_irq(struct vfio_ap_queue *q)
+ {
+ 	if (!q)
+ 		return;
+@@ -300,6 +307,7 @@ static int vfio_ap_mdev_remove(struct mdev_device *mdev)
+ 	list_for_each_entry_safe(q, qtmp, &matrix_mdev->qlist, list) {
+ 		q->matrix_mdev = NULL;
+ 		vfio_ap_mdev_reset_queue(q);
++		vfio_ap_free_irq(q);
+ 		list_move(&q->list, &matrix_dev->free_list);
+ 	}
+ 	list_del(&matrix_mdev->node);
+@@ -362,6 +370,7 @@ static void vfio_ap_free_queue(int apqn, struct ap_matrix_mdev *matrix_mdev)
+ 		return;
+ 	q->matrix_mdev = NULL;
+ 	vfio_ap_mdev_reset_queue(q);
++	vfio_ap_free_irq(q);
+ 	list_move(&q->list, &matrix_dev->free_list);
+ }
+ 
+@@ -1041,6 +1050,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+ 
+ 	list_for_each_entry(q, &matrix_mdev->qlist, list) {
+ 		ret = vfio_ap_mdev_reset_queue(q);
++		vfio_ap_free_irq(q);
+ 		/*
+ 		 * Regardless whether a queue turns out to be busy, or
+ 		 * is not operational, we need to continue resetting
+diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+index 968d8aa..9fe580b 100644
+--- a/drivers/s390/crypto/vfio_ap_private.h
++++ b/drivers/s390/crypto/vfio_ap_private.h
+@@ -4,6 +4,7 @@
+  *
+  * Author(s): Tony Krowiak <akrowiak@linux.ibm.com>
+  *	      Halil Pasic <pasic@linux.ibm.com>
++ *	      Pierre Morel <pmorel@linux.ibm.com>
+  *
+  * Copyright IBM Corp. 2018
+  */
+@@ -103,4 +104,6 @@ struct vfio_ap_queue {
+ 	unsigned char a_isc;
+ 	unsigned char p_isc;
+ };
++void vfio_ap_free_irq(struct vfio_ap_queue *q);
++int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q);
+ #endif /* _VFIO_AP_PRIVATE_H_ */
+-- 
+2.7.4
+
