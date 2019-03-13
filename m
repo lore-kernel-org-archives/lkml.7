@@ -2,204 +2,173 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35D2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0756EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F6C20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C627620854
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:29:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gLVeUTEp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="RQN7wUH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfCMW3p (ORCPT
+        id S1727101AbfCMW3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:29:45 -0400
-Received: from mail-ed1-f44.google.com ([209.85.208.44]:46681 "EHLO
-        mail-ed1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfCMW3o (ORCPT
+        Wed, 13 Mar 2019 18:29:49 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:43780 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725883AbfCMW3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:29:44 -0400
-Received: by mail-ed1-f44.google.com with SMTP id n17so2918822edt.13
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 15:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GooeRtkEcBASn20ecj7vkhUgshUAUPCUJgQbIy2WuQE=;
-        b=gLVeUTEpKLqULgDkY9DZ4mObm3hO83MraIn3nEv9gZMCV0a104E4nm3vcQ8B4kOJxo
-         nS5Np76pUCl1hUSAbZnBTc2vuxHwnmOfVHXn/X/Y+Qij5zovbYJjIK0KiL2tBl1LTlgo
-         qPGE4CLM39PisQTZ22BjlR6jg7fNuSTx2STCo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GooeRtkEcBASn20ecj7vkhUgshUAUPCUJgQbIy2WuQE=;
-        b=tXMCOYu3hAbwhhZNwZRaBOyS/7a9+blFsk1Y0l7si1jysXf+99p2Y4p90PjkVs7N9/
-         Mc2zUl1wao66Wciob7E6hmJq4xROXmetJGlD/y8gTMMK7k1ga+0eWuSox2mLC/DACOS8
-         H6rGq9PEGUVfrifooV+aQoR3bW4DEIKyB/1o6lNaS23OsTWDd8UXNCxFObA0Kw0728FT
-         hcHt2Chk1zMgarokpv9x75F6II3tWp65J4lk4jFoj/LJ2ggmDr4VieVH+e6T2ZDh32pm
-         it7J/MIvFG/DbftS24ZYQXXVuDGG5oQUY/2HX5bBryR90p8Pr2h/qEp3enG4OqdXzxC1
-         e2pg==
-X-Gm-Message-State: APjAAAViHCQnRHnl6LJX/HuEFJKldgpZM5HCHkQ5n11b0BPyk5JOeXlS
-        gljItN3RkdizpGWMsKebDDK77Q==
-X-Google-Smtp-Source: APXvYqwiYO9eGVyaSMDf7KW9mF7T6mPGa0QET+A5dHqk8QJCp+062F4A/U65hiFoX+mM4BIwKi9OFA==
-X-Received: by 2002:a17:906:c7ce:: with SMTP id dc14mr1226238ejb.165.1552516182308;
-        Wed, 13 Mar 2019 15:29:42 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-119-202.cgn.fibianet.dk. [5.186.119.202])
-        by smtp.gmail.com with ESMTPSA id f41sm658985eda.77.2019.03.13.15.29.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 15:29:41 -0700 (PDT)
-Subject: Re: [PATCH 2/5] lib/sort: Use more efficient bottom-up heapsort
- variant
-To:     George Spelvin <lkml@sdf.org>, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Abramov <st5pub@yandex.ru>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Don Mullis <don.mullis@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <cover.1552097842.git.lkml@sdf.org>
- <dbac34c6052fc973fb55df4966981bae24c7cce9.1552097842.git.lkml@sdf.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <472510ad-77f9-49e8-4122-52f447cb1c15@rasmusvillemoes.dk>
-Date:   Wed, 13 Mar 2019 23:29:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <dbac34c6052fc973fb55df4966981bae24c7cce9.1552097842.git.lkml@sdf.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 13 Mar 2019 18:29:45 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B025C8EE20E;
+        Wed, 13 Mar 2019 15:29:44 -0700 (PDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 48Q_u705JBQe; Wed, 13 Mar 2019 15:29:44 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 051F18EE0D2;
+        Wed, 13 Mar 2019 15:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1552516184;
+        bh=r0qSgSWg4HhILQOi2XjlmRp+jCcS7oMGYg6ben2L3Is=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=RQN7wUH8BcDHZNLfCFGRK4rCaJyJpSZlBTRdaCZzVul2OydBAOzVxN6BGg41deR/j
+         5FZbUkGTM2ZlBcuH1Tn3GErbtjSx4gCW/4FIFdM5/YyrR5L0q+IwF4x4LgO3LmmXLK
+         rw61OMYN1NjoWpqzA16jOmfEKREaTKzJeptO588g=
+Message-ID: <1552516183.2808.14.camel@HansenPartnership.com>
+Subject: Re: overlayfs vs. fscrypt
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Amir Goldstein <amir73il@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Lawrence <paullawrence@google.com>
+Date:   Wed, 13 Mar 2019 15:29:43 -0700
+In-Reply-To: <20190313221325.GE10169@gmail.com>
+References: <20190313151633.GA672@mit.edu>
+         <1552491394.3022.8.camel@HansenPartnership.com>
+         <20190313164439.GF672@mit.edu>
+         <1552499104.3022.44.camel@HansenPartnership.com>
+         <20190313185826.GA4685@mit.edu>
+         <1552504672.3022.59.camel@HansenPartnership.com>
+         <20190313195713.GC10169@gmail.com>
+         <1552507566.3022.65.camel@HansenPartnership.com>
+         <20190313202519.GD10169@gmail.com>
+         <1552511069.3022.77.camel@HansenPartnership.com>
+         <20190313221325.GE10169@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/02/2019 09.21, George Spelvin wrote:
->  
-> +/**
-> + * parent - given the offset of the child, find the offset of the parent.
-> + * @i: the offset of the heap element whose parent is sought.  Non-zero.
-> + * @lsbit: a precomputed 1-bit mask, equal to "size & -size"
-> + * @size: size of each element
-> + *
-> + * In terms of array indexes, the parent of element j = i/size is simply
-> + * (j-1)/2.  But when working in byte offsets, we can't use implicit
-> + * truncation of integer divides.
-> + *
-> + * Fortunately, we only need one bit of the quotient, not the full divide.
-> + * size has a least significant bit.  That bit will be clear if i is
-> + * an even multiple of size, and set if it's an odd multiple.
-> + *
-> + * Logically, we're doing "if (i & lsbit) i -= size;", but since the
-> + * branch is unpredictable, it's done with a bit of clever branch-free
-> + * code instead.
-> + */
-> +__attribute_const__ __always_inline
-> +static size_t parent(size_t i, unsigned int lsbit, size_t size)
-> +{
-> +	i -= size;
-> +	i -= size & -(i & lsbit);
-> +	return i / 2;
-> +}
-> +
-
-Really nice :) I had to work through this by hand, but it's solid.
-
->  /**
->   * sort - sort an array of elements
->   * @base: pointer to data to sort
-> @@ -125,21 +151,26 @@ static void generic_swap(void *a, void *b, int size)
->   * @cmp_func: pointer to comparison function
->   * @swap_func: pointer to swap function or NULL
->   *
-> - * This function does a heapsort on the given array. You may provide a
-> - * swap_func function optimized to your element type.
-> + * This function does a heapsort on the given array.  You may provide a
-> + * swap_func function if you need to do something more than a memory copy
-> + * (e.g. fix up pointers or auxiliary data), but the built-in swap isn't
-> + * usually a bottleneck.
->   *
->   * Sorting time is O(n log n) both on average and worst-case. While
->   * qsort is about 20% faster on average, it suffers from exploitable
->   * O(n*n) worst-case behavior and extra memory requirements that make
->   * it less suitable for kernel use.
->   */
-> -
->  void sort(void *base, size_t num, size_t size,
->  	  int (*cmp_func)(const void *, const void *),
->  	  void (*swap_func)(void *, void *, int size))
->  {
->  	/* pre-scale counters for performance */
-> -	int i = (num/2 - 1) * size, n = num * size, c, r;
-> +	size_t n = num * size, a = (num/2) * size;
-> +	unsigned const lsbit = size & -size;	/* Used to find parent */
-> +
-
-Nit: qualifier before type, "const unsigned". And this sets ZF, so a
-paranoid check for zero size (cf. the other mail) by doing "if (!lsbit)
-return;" is practically free. Though it's probably a bit obscure doing
-it that way...
-
-> +	if (!n)
-> +		return;
-
-I'd make that n <= 1. Shouldn't be much more costly.
-
-> -		}
-> -	}
-> +	/*
-> +	 * Loop invariants:
-> +	 * 1. elements [a,n) satisfy the heap property (compare greater than
-> +	 *    all of their children),
-> +	 * 2. elements [n,num*size) are sorted, and
-> +	 * 3. a <= b <= c <= d <= n (whenever they are valid).
-> +	 */
-> +	for (;;) {
-> +		size_t b, c, d;
->  
-
-> +		if (a)			/* Building heap: sift down --a */
-> +			a -= size;
-> +		else if (n -= size)	/* Sorting: Extract root to --n */
-> +			swap_func(base, base + n, size);
-> +		else			/* Sort complete */
-> +			break;
-> +
-> +		/*
-> +		 * Sift element at "a" down into heap.  This is the
-> +		 * "bottom-up" variant, which significantly reduces
-> +		 * calls to cmp_func(): we find the sift-down path all
-> +		 * the way to the leaves (one compare per level), then
-> +		 * backtrack to find where to insert the target element.
-> +		 *
-> +		 * Because elements tend to sift down close to the leaves,
-> +		 * this uses fewer compares than doing two per level
-> +		 * on the way down.  (A bit more than half as many on
-> +		 * average, 3/4 worst-case.)
-> +		 */
-> +		for (b = a; c = 2*b + size, (d = c + size) < n;)
-> +			b = cmp_func(base + c, base + d) >= 0 ? c : d;
-> +		if (d == n)	/* Special case last leaf with no sibling */
-> +			b = c;
-> +
-> +		/* Now backtrack from "b" to the correct location for "a" */
-> +		while (b != a && cmp_func(base + a, base + b) >= 0)
-> +			b = parent(b, lsbit, size);
-> +		c = b;			/* Where "a" belongs */
-> +		while (b != a) {	/* Shift it into place */
-> +			b = parent(b, lsbit, size);
-> +			swap_func(base + b, base + c, size);
->  		}
->  	}
->  }
+On Wed, 2019-03-13 at 15:13 -0700, Eric Biggers wrote:
+> On Wed, Mar 13, 2019 at 02:04:29PM -0700, James Bottomley wrote:
+> > On Wed, 2019-03-13 at 13:25 -0700, Eric Biggers wrote:
+> > > On Wed, Mar 13, 2019 at 01:06:06PM -0700, James Bottomley wrote:
+> > > > On Wed, 2019-03-13 at 12:57 -0700, Eric Biggers wrote:
+> > 
+> > [...]
+> > > > > fscrypt would allow the data to be stored encrypted on the
+> > > > > local disk, so it's protected against offline compromise of
+> > > > > the disk.
+> > > > 
+> > > > Container images are essentially tars of the overlays.  They
+> > > > only become actual filesystems when instantiated at
+> > > > runtime.  The current encrypted container image is an overlay
+> > > > or set of overlays which is tarred then encrypted.  So to
+> > > > instantiate it is decrypted then untarred.
+> > > > 
+> > > > The thing I was wondering about was whether instead of a tar
+> > > > encrypt we could instead produce an encrypted image from a
+> > > > fscrypt filesystem.
+> > > > 
+> > > 
+> > > Why do you care whether the container image is encrypted on the
+> > > local disk, when you're extracting it in plaintext onto the local
+> > > disk anyway each time it runs? Even after the runtime files are
+> > > "deleted", they may still be recoverable from the disk.  Are you
+> > > using shred and BLKSECDISCARD, and a non-COW filesystem?
+> > > 
+> > > Now, if you wanted to avoid writing the plaintext to disk
+> > > entirely (and thereby use encryption to actually achieve a useful
+> > > security property that can't be achieved through file
+> > > permissions), fscrypt is a good solution for that.
+> > 
+> > OK let's start with a cloud and container 101: A container is an
+> > exactly transportable IaaS environment containing an
+> > application.  The format for the exact transport is the "container
+> > image" I've been describing (layered tar file set deployed with
+> > overlays).  These images are usually stored in cloud based
+> > registries which may or may not have useful access controls.  I
+> > take it the reason for image encryption to protect confidentiality
+> > within the registry is obvious.
+> > 
+> > Because of the exact transport, the deployment may be on my laptop,
+> > on my test system or in some type of public or private cloud.  In
+> > all cases bar the laptop, I won't actually own the physical system
+> > which ends up deploying the container.  So in exchange for security
+> > guarantees from the physical system owner, I agree to turn over my
+> > decryption key and possibly a cash payment.  One of these
+> > guarantees is usually that they shred the key after use and that
+> > they deploy a useful key escrow system like vault or keyprotect to
+> > guard it even while the decryption is being done.
 > 
+> 
+> > Another is that all traces of the container be shredded after the
+> > execution is finished.
+> 
+> Well, sounds like that's not the case currently even with an
+> encrypted container image, because the actual runtime files are not
+> encrypted on disk.
 
-Nice!
+Shredding means destroying all trace including in the on-disk image. 
+However, one problem with the current implementation is there's a
+window between container run and container stop where the unencrypted
+files are in memory and on local disk.  Access or cockup in that window
+can leak confidential data.
 
-Rasmus
+>   Encrypting the runtime files using fscrypt with an ephemeral key
+> would be useful here.  IOW, randomly generate an encryption key when
+> the container starts, never store it anywhere, and wipe it when the
+> container stops.
+> 
+> Note that this is separate from the container *image* encryption.
+
+Actually, that was my original thought: it needn't be.  If fscrypt can
+usefully add runtime security, then we could have the encrypted layer
+be simply an fscrypt image ... I presume without the key we can create
+a tar image of an fscrypt that is encrypted and would still be visible
+on untar if we did have the key?  So the encrypted layer would be a tar
+of the fscrypt filesystem without the key.
+
+> > considering is could I be protected against either cloud provider
+> > cockups that might leak the image (the misconfigured backup
+> > scenario I suggested) or malicious actions of other tenants.
+> 
+> If the container image is encrypted with a key not on the system,
+> then its confidentiality is protected from anything that may happen
+> on that system.
+> 
+> But if the container image encryption key *is* on the system, your
+> container image may be leaked either accidentally or maliciously.
+
+Well, yes, but that's like saying if you don't want to pick up a virus
+from your network unplug it.  We have to look at ways of deploying the
+filesystem and the key such that it's hard to exfiltrate ... which
+seems to be similar to your android fscrypt use case.
+
+James
+
