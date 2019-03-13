@@ -2,84 +2,195 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E65C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E30C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F388A2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552464070;
-	bh=2TDmEoCcgHMKSbjT/SIgwVVG4CmX4DKwmv6SgL5W9vs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KJkuvJ0/wmOuMuhonJz1qlI90JJJgtIax7AMOpAc58KVChAjRZDEe1hddHvOoFLT6
-	 h3E3sSI9pEudA7T9n0gWZ0mfgRaSwhjDgcKUKO1eehiNHiypjUECYVQ91BfUk9Noln
-	 nr9CNbwd4kFEBA5HFxptl0pVNoH5PyP6SbNZdxVQ=
+	by mail.kernel.org (Postfix) with ESMTP id C039F2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfCMIBH (ORCPT
+        id S1727138AbfCMICD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 04:01:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56254 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726539AbfCMIBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 04:01:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EE063AE84;
-        Wed, 13 Mar 2019 08:01:05 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 09:01:05 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, vbabka@suse.cz,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/hotplug: fix offline undo_isolate_page_range()
-Message-ID: <20190313080105.GG5721@dhcp22.suse.cz>
-References: <20190313014216.36782-1-cai@lca.pw>
- <20190313075212.wc3pbwixx3ppwxua@d104.suse.de>
+        Wed, 13 Mar 2019 04:02:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34417 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbfCMICC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 04:02:02 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3D5A6C06A7F0;
+        Wed, 13 Mar 2019 08:02:02 +0000 (UTC)
+Received: from [10.36.116.28] (ovpn-116-28.ams2.redhat.com [10.36.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9064E4149;
+        Wed, 13 Mar 2019 08:01:59 +0000 (UTC)
+Subject: Re: [PATCH v2] powerpc/mm: move warning from resize_hpt_for_hotplug()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        David Gibson <david@gibson.dropbear.id.au>
+References: <20190308105413.4302-1-lvivier@redhat.com>
+ <3db6b64d-02d3-8aa7-80ca-3e469ea743ff@c-s.fr>
+From:   Laurent Vivier <lvivier@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=lvivier@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFYFJhkBEAC2me7w2+RizYOKZM+vZCx69GTewOwqzHrrHSG07MUAxJ6AY29/+HYf6EY2
+ WoeuLWDmXE7A3oJoIsRecD6BXHTb0OYS20lS608anr3B0xn5g0BX7es9Mw+hV/pL+63EOCVm
+ SUVTEQwbGQN62guOKnJJJfphbbv82glIC/Ei4Ky8BwZkUuXd7d5NFJKC9/GDrbWdj75cDNQx
+ UZ9XXbXEKY9MHX83Uy7JFoiFDMOVHn55HnncflUncO0zDzY7CxFeQFwYRbsCXOUL9yBtqLer
+ Ky8/yjBskIlNrp0uQSt9LMoMsdSjYLYhvk1StsNPg74+s4u0Q6z45+l8RAsgLw5OLtTa+ePM
+ JyS7OIGNYxAX6eZk1+91a6tnqfyPcMbduxyBaYXn94HUG162BeuyBkbNoIDkB7pCByed1A7q
+ q9/FbuTDwgVGVLYthYSfTtN0Y60OgNkWCMtFwKxRaXt1WFA5ceqinN/XkgA+vf2Ch72zBkJL
+ RBIhfOPFv5f2Hkkj0MvsUXpOWaOjatiu0fpPo6Hw14UEpywke1zN4NKubApQOlNKZZC4hu6/
+ 8pv2t4HRi7s0K88jQYBRPObjrN5+owtI51xMaYzvPitHQ2053LmgsOdN9EKOqZeHAYG2SmRW
+ LOxYWKX14YkZI5j/TXfKlTpwSMvXho+efN4kgFvFmP6WT+tPnwARAQABtCNMYXVyZW50IFZp
+ dmllciA8bHZpdmllckByZWRoYXQuY29tPokCOAQTAQIAIgUCVgVQgAIbAwYLCQgHAwIGFQgC
+ CQoLBBYCAwECHgECF4AACgkQ8ww4vT8vvjwpgg//fSGy0Rs/t8cPFuzoY1cex4limJQfReLr
+ SJXCANg9NOWy/bFK5wunj+h/RCFxIFhZcyXveurkBwYikDPUrBoBRoOJY/BHK0iZo7/WQkur
+ 6H5losVZtrotmKOGnP/lJYZ3H6OWvXzdz8LL5hb3TvGOP68K8Bn8UsIaZJoeiKhaNR0sOJyI
+ YYbgFQPWMHfVwHD/U+/gqRhD7apVysxv5by/pKDln1I5v0cRRH6hd8M8oXgKhF2+rAOL7gvh
+ jEHSSWKUlMjC7YwwjSZmUkL+TQyE18e2XBk85X8Da3FznrLiHZFHQ/NzETYxRjnOzD7/kOVy
+ gKD/o7asyWQVU65mh/ECrtjfhtCBSYmIIVkopoLaVJ/kEbVJQegT2P6NgERC/31kmTF69vn8
+ uQyW11Hk8tyubicByL3/XVBrq4jZdJW3cePNJbTNaT0d/bjMg5zCWHbMErUib2Nellnbg6bc
+ 2HLDe0NLVPuRZhHUHM9hO/JNnHfvgiRQDh6loNOUnm9Iw2YiVgZNnT4soUehMZ7au8PwSl4I
+ KYE4ulJ8RRiydN7fES3IZWmOPlyskp1QMQBD/w16o+lEtY6HSFEzsK3o0vuBRBVp2WKnssVH
+ qeeV01ZHw0bvWKjxVNOksP98eJfWLfV9l9e7s6TaAeySKRRubtJ+21PRuYAxKsaueBfUE7ZT
+ 7ze5Ag0EVgUmGQEQALxSQRbl/QOnmssVDxWhHM5TGxl7oLNJms2zmBpcmlrIsn8nNz0rRyxT
+ 460k2niaTwowSRK8KWVDeAW6ZAaWiYjLlTunoKwvF8vP3JyWpBz0diTxL5o+xpvy/Q6YU3BN
+ efdq8Vy3rFsxgW7mMSrI/CxJ667y8ot5DVugeS2NyHfmZlPGE0Nsy7hlebS4liisXOrN3jFz
+ asKyUws3VXek4V65lHwB23BVzsnFMn/bw/rPliqXGcwl8CoJu8dSyrCcd1Ibs0/Inq9S9+t0
+ VmWiQWfQkz4rvEeTQkp/VfgZ6z98JRW7S6l6eophoWs0/ZyRfOm+QVSqRfFZdxdP2PlGeIFM
+ C3fXJgygXJkFPyWkVElr76JTbtSHsGWbt6xUlYHKXWo+xf9WgtLeby3cfSkEchACrxDrQpj+
+ Jt/JFP+q997dybkyZ5IoHWuPkn7uZGBrKIHmBunTco1+cKSuRiSCYpBIXZMHCzPgVDjk4viP
+ brV9NwRkmaOxVvye0vctJeWvJ6KA7NoAURplIGCqkCRwg0MmLrfoZnK/gRqVJ/f6adhU1oo6
+ z4p2/z3PemA0C0ANatgHgBb90cd16AUxpdEQmOCmdNnNJF/3Zt3inzF+NFzHoM5Vwq6rc1JP
+ jfC3oqRLJzqAEHBDjQFlqNR3IFCIAo4SYQRBdAHBCzkM4rWyRhuVABEBAAGJAh8EGAECAAkF
+ AlYFJhkCGwwACgkQ8ww4vT8vvjwg9w//VQrcnVg3TsjEybxDEUBm8dBmnKqcnTBFmxN5FFtI
+ WlEuY8+YMiWRykd8Ln9RJ/98/ghABHz9TN8TRo2b6WimV64FmlVn17Ri6FgFU3xNt9TTEChq
+ AcNg88eYryKsYpFwegGpwUlaUaaGh1m9OrTzcQy+klVfZWaVJ9Nw0keoGRGb8j4XjVpL8+2x
+ OhXKrM1fzzb8JtAuSbuzZSQPDwQEI5CKKxp7zf76J21YeRrEW4WDznPyVcDTa+tz++q2S/Bp
+ P4W98bXCBIuQgs2m+OflERv5c3Ojldp04/S4NEjXEYRWdiCxN7ca5iPml5gLtuvhJMSy36gl
+ U6IW9kn30IWuSoBpTkgV7rLUEhh9Ms82VWW/h2TxL8enfx40PrfbDtWwqRID3WY8jLrjKfTd
+ R3LW8BnUDNkG+c4FzvvGUs8AvuqxxyHbXAfDx9o/jXfPHVRmJVhSmd+hC3mcQ+4iX5bBPBPM
+ oDqSoLt5w9GoQQ6gDVP2ZjTWqwSRMLzNr37rJjZ1pt0DCMMTbiYIUcrhX8eveCJtY7NGWNyx
+ FCRkhxRuGcpwPmRVDwOl39MB3iTsRighiMnijkbLXiKoJ5CDVvX5yicNqYJPKh5MFXN1bvsB
+ kmYiStMRbrD0HoY1kx5/VozBtc70OU0EB8Wrv9hZD+Ofp0T3KOr1RUHvCZoLURfFhSQ=
+Message-ID: <1dfe1a2e-f6f9-2d5d-a38e-ba4517794bad@redhat.com>
+Date:   Wed, 13 Mar 2019 09:01:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313075212.wc3pbwixx3ppwxua@d104.suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3db6b64d-02d3-8aa7-80ca-3e469ea743ff@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 13 Mar 2019 08:02:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 13-03-19 08:52:16, Oscar Salvador wrote:
-> On Tue, Mar 12, 2019 at 09:42:16PM -0400, Qian Cai wrote:
-> > +
-> > +	/*
-> > +	 * Onlining will reset pagetype flags and makes migrate type
-> > +	 * MOVABLE, so just need to decrease the number of isolated
-> > +	 * pageblocks zone counter here.
-> > +	 */
-> > +	for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages) {
-> > +		int i;
-> > +
-> > +		for (i = 0; i < pageblock_nr_pages; i++)
-> > +			if (pfn_valid_within(pfn + i)) {
-> > +				zone->nr_isolate_pageblock--;
-> > +				break;
-> > +			}
-> > +	}
-> > +
+On 13/03/2019 07:03, Christophe Leroy wrote:
 > 
-> I do not really like this.
 > 
-> I first thought about saving the value before entering start_isolate_page_range,
-> but that could race with alloc_contig_range for instance.
+> Le 08/03/2019 à 11:54, Laurent Vivier a écrit :
+>> resize_hpt_for_hotplug() reports a warning when it cannot
+>> resize the hash page table ("Unable to resize hash page
+>> table to target order") but in some cases it's not a problem
+>> and can make user thinks something has not worked properly.
+>>
+>> This patch moves the warning to arch_remove_memory() to
+>> only report the problem when it is needed.
+>>
+>> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+>> ---
+>>   arch/powerpc/include/asm/sparsemem.h  |  4 ++--
+>>   arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
+>>   arch/powerpc/mm/mem.c                 |  3 ++-
+>>   arch/powerpc/platforms/pseries/lpar.c |  3 ++-
+>>   4 files changed, 12 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/sparsemem.h
+>> b/arch/powerpc/include/asm/sparsemem.h
+>> index 68da49320592..3192d454a733 100644
+>> --- a/arch/powerpc/include/asm/sparsemem.h
+>> +++ b/arch/powerpc/include/asm/sparsemem.h
+>> @@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long
+>> start, unsigned long end, int ni
+>>   extern int remove_section_mapping(unsigned long start, unsigned long
+>> end);
+>>     #ifdef CONFIG_PPC_BOOK3S_64
+>> -extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
+>> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
+>>   #else
+>> -static inline void resize_hpt_for_hotplug(unsigned long new_mem_size)
+>> { }
+>> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size)
+>> { return 0; }
+>>   #endif
+>>     #ifdef CONFIG_NUMA
+>> diff --git a/arch/powerpc/mm/hash_utils_64.c
+>> b/arch/powerpc/mm/hash_utils_64.c
+>> index 0cc7fbc3bd1c..40bb2a8326bb 100644
+>> --- a/arch/powerpc/mm/hash_utils_64.c
+>> +++ b/arch/powerpc/mm/hash_utils_64.c
+>> @@ -755,12 +755,12 @@ static unsigned long __init
+>> htab_get_table_size(void)
+>>   }
+>>     #ifdef CONFIG_MEMORY_HOTPLUG
+>> -void resize_hpt_for_hotplug(unsigned long new_mem_size)
+>> +int resize_hpt_for_hotplug(unsigned long new_mem_size)
+>>   {
+>>       unsigned target_hpt_shift;
+>>         if (!mmu_hash_ops.resize_hpt)
+>> -        return;
+>> +        return 0;
+>>         target_hpt_shift = htab_shift_for_mem_size(new_mem_size);
+>>   @@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long
+>> new_mem_size)
+>>        * current shift
+>>        */
+>>       if ((target_hpt_shift > ppc64_pft_size)
+>> -        || (target_hpt_shift < (ppc64_pft_size - 1))) {
+>> -        int rc;
+>> -
+>> -        rc = mmu_hash_ops.resize_hpt(target_hpt_shift);
+>> -        if (rc && (rc != -ENODEV))
+>> -            printk(KERN_WARNING
+>> -                   "Unable to resize hash page table to target order
+>> %d: %d\n",
+>> -                   target_hpt_shift, rc);
+>> -    }
+>> +        || (target_hpt_shift < (ppc64_pft_size - 1)))
+> 
+> The || should go on the line above and the two (target_hpt... should be
+> aligned, and the () after the < are superflous.
+> 
+> And indeed, we should (in another patch) rename 'target_hpt_shift' with
+> a shorter name, this would avoid multiple lines.
+> 
+> Ref
+> https://www.kernel.org/doc/html/latest/process/coding-style.html#naming :
+> 
+> LOCAL variable names should be short, and to the point. If you have some
+> random integer loop counter, it should probably be called i. Calling it
+> loop_counter is non-productive, if there is no chance of it being
+> mis-understood. Similarly, tmp can be just about any type of variable
+> that is used to hold a temporary value.
+> 
+> If you are afraid to mix up your local variable names, you have another
+> problem, which is called the function-growth-hormone-imbalance syndrome.
+> See chapter 6 (Functions).
+> 
 
-Yup. We need to take the zone lock.
+I'm only removing a warning. Do we really need to rewrite all the code
+around for that?
 
-> So, why not make start_isolate_page_range to return the actual number of isolated
-> pageblocks?
+Thanks,
+Laurent
 
-That makes more sense indeed.
-
--- 
-Michal Hocko
-SUSE Labs
