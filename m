@@ -2,147 +2,118 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86219C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9241CC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3829921019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E701213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q9n+TJNz"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kVz4Ty34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfCMSCs (ORCPT
+        id S1726711AbfCMSGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 14:02:48 -0400
-Received: from mail-it1-f202.google.com ([209.85.166.202]:43322 "EHLO
-        mail-it1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfCMSCr (ORCPT
+        Wed, 13 Mar 2019 14:06:46 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42399 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfCMSGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 14:02:47 -0400
-Received: by mail-it1-f202.google.com with SMTP id w200so2262463itc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 11:02:46 -0700 (PDT)
+        Wed, 13 Mar 2019 14:06:45 -0400
+Received: by mail-qk1-f195.google.com with SMTP id b74so1666080qkg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 11:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=ir6qodWEKUGzfEu3dnv9XwT0+RGg2i7HMOiUS/XMmXo=;
-        b=Q9n+TJNzKkNb/rSOdojaBaog4VNI8l71TA/uaacPn4jlsMLyCYMlDAgV/+yho0MDHn
-         2ClBTQqe40n+MYnxeJzaztxYzozoYghadvvVaQuNLP99ohDEVEuH3qshBSNmRgNX3VAV
-         ukI70OK5p7RJoOrx4nhpbFuae2HRYll0OlP8vivK6+INJHeknbxAjf+T2Ck97LQjD++i
-         L0UraldynMQxniAEa3PuOYAQoIO+pbQ8d4MQjSQh68sDYtFlIdn9eHXUy5R75mZB2hSx
-         PNYlyOdefReuUtYha/hVGKaxg8my/9yer9DwZjM7GD4FR/VCJOtl8Cht0K302qHesLcG
-         cecw==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=WKEbSNObSyJ0eVcku+AA9Y4x0Cyfh20haiejK86KEDE=;
+        b=kVz4Ty34FFrT8TEAFM7VD0XKFSo0HuQnisSzWEtLt6G1bfUA28YUHcbOmpskNEvQ1x
+         wblA5PRMy0lj1OslEop4e64zR9EUCQ1O8LJRVXrIQu0B5PqHp9+9JLtKYsr4I39DLlrv
+         Ol3p3u/tuoTOWptnXiZ76MOGouXR8RCiG5WX29vmZriPndVfFxt5Scledi/EnMVhpkxS
+         awpxGE97HXR+B7Bb5vEyMWiqhY1f6xaFvoaPh29mT8qyy5sKwRpCbtFJ6F8ta7DW2W7q
+         t1LrDdyLL/uFDC198a/R1X2F7sGGbjc4pWbH3R13vE31IElIeONwtwISI2lQE0nQtHNy
+         A9MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=ir6qodWEKUGzfEu3dnv9XwT0+RGg2i7HMOiUS/XMmXo=;
-        b=E0YdXWxznr1a4FtTg40lXUjbIOrNn2fNc4rtFemIwvDNtHON4ds9Jk8FrEJZ3a3WGG
-         ymDqlb9qaGGjs0aNxb80GqUHgR3+eURheO53Ob+ypgnNW1t1TTZR8XobZBkhQyKjHay1
-         ip8F3gbd1KNSkO8uH3jV7w/ssE1rNajj1ui2/12kR6qRo/4QbIlAGvslQk03d85HVO9M
-         vHGy7brGIgShblXM4A5vVAak8xlX52qm4UnmnXfwnXx6EnTGPxaeW3hWFKpv4TE8Ly2N
-         Z9i76jhYM9Bz1VoB/gSPHNQuiLKv+khIZPJfHlRtagxJGnAzf7m0lKpt1HnE+YikqwP/
-         XX3w==
-X-Gm-Message-State: APjAAAXdPtUSULP+faGAIu/ZuYNqiI7idD2aKDgxtwsBy+dGZhYmSFav
-        D1b0wM+UbAI/VapgTC9C9/mV3FAcXX2y6NcNYw4=
-X-Google-Smtp-Source: APXvYqzzxI2FB9oRNRJk4tGUx4ZVBAWC2Zh7YbubeYCUtq/jyNsNDL60ZiEOuL65YZF7uSwAZg38xdfP3iY0SMu2CB0=
-X-Received: by 2002:a24:c546:: with SMTP id f67mr2627294itg.28.1552500165874;
- Wed, 13 Mar 2019 11:02:45 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 11:02:38 -0700
-In-Reply-To: <CAKwvOd=8rAZi3ZT8qEupmS6xY2U10cKT7kPtB=gYfWsJEJ0GSQ@mail.gmail.com>
-Message-Id: <20190313180239.261938-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <CAKwvOd=8rAZi3ZT8qEupmS6xY2U10cKT7kPtB=gYfWsJEJ0GSQ@mail.gmail.com>
-X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
-Subject: [PATCH] lib/string.c: implement a basic bcmp
-From:   Nick Desaulniers <ndesaulniers@google.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WKEbSNObSyJ0eVcku+AA9Y4x0Cyfh20haiejK86KEDE=;
+        b=bsrSXFm07rQatBWcm2utS5uN1CfPMDIqA5Rtakr6gon/p/lqPqF6WOQWwG4arzMfY6
+         pnEKPQRosleDrtLX/d6TwAa6wvjwMxOO5H7CeN7hCqQzfwdDzlNCyZYeQ3GQorTkaFO1
+         bjFFkh14RENf5QREPBrpnlITv7USoH1FyO+Jc12Ub+6Cc8Bd007U+Yffx/LY2b2l32Vy
+         PUcjfqrDLXJplsOnr+BWBWCzqMZbHtAxUPJbtq2vF1jNTsefzezvoIcsrDIs0OuDBa20
+         f9ZLT126xS0dt3/AIoXqR46bihjM2WlJvu2L3nhuBP6X0YtkRMNbq6rPxWd7+0JlKXEP
+         ZfCQ==
+X-Gm-Message-State: APjAAAXWo3tY1sfXcQbHoRaeOCfZeKQ1X7EIMoJp0C2i2DyqxnZI334w
+        355ApVhBRquH4vg1QzT7X7CAMg==
+X-Google-Smtp-Source: APXvYqxsM9B99gVY4PtfaQMbrsc3613hCE9cUFX3iItJClNNTE+Fr5Uh52mLFQgE3jR0K6wmJkjztQ==
+X-Received: by 2002:a05:620a:16c5:: with SMTP id a5mr9943313qkn.200.1552500404794;
+        Wed, 13 Mar 2019 11:06:44 -0700 (PDT)
+Received: from ovpn-121-103.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id y2sm10665535qty.63.2019.03.13.11.06.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 11:06:44 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
 To:     akpm@linux-foundation.org
-Cc:     clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     mgorman@techsingularity.net, vbabka@suse.cz, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [RESEND PATCH] mm/compaction: fix an undefined behaviour
+Date:   Wed, 13 Mar 2019 14:06:16 -0400
+Message-Id: <20190313180616.47908-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent optimization in Clang (r355672) lowers comparisons of the
-return value of memcmp against zero to comparisons of the return value
-of bcmp against zero.  This helps some platforms that implement bcmp
-more efficiently than memcmp. glibc simply aliases bcmp to memcmp, but
-an optimized implementation is in the works.
+In a low-memory situation, cc->fast_search_fail can keep increasing as
+it is unable to find an available page to isolate in
+fast_isolate_freepages(). As the result, it could trigger an error
+below, so just compare with the maximum bits can be shifted first.
 
-This results in linkage failures for all targets with Clang due to the
-undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
-to unbreak the build.  This routine can be further optimized in the
-future.
+UBSAN: Undefined behaviour in mm/compaction.c:1160:30
+shift exponent 64 is too large for 64-bit type 'unsigned long'
+CPU: 131 PID: 1308 Comm: kcompactd1 Kdump: loaded Tainted: G
+W    L    5.0.0+ #17
+Call trace:
+ dump_backtrace+0x0/0x450
+ show_stack+0x20/0x2c
+ dump_stack+0xc8/0x14c
+ __ubsan_handle_shift_out_of_bounds+0x7e8/0x8c4
+ compaction_alloc+0x2344/0x2484
+ unmap_and_move+0xdc/0x1dbc
+ migrate_pages+0x274/0x1310
+ compact_zone+0x26ec/0x43bc
+ kcompactd+0x15b8/0x1a24
+ kthread+0x374/0x390
+ ret_from_fork+0x10/0x18
 
-Other ideas discussed:
-* A weak alias was discussed, but breaks for architectures that define
-their own implementations of memcmp since aliases to declarations are
-not permitted (only definitions).  Arch-specific memcmp implementations
-typically declare memcmp in C headers, but implement them in assembly.
-* -ffreestanding also is used sporadically throughout the kernel.
-* -fno-builtin-bcmp doesn't work when doing LTO.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=41035
-Link: https://code.woboq.org/userspace/glibc/string/memcmp.c.html#bcmp
-Link: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
-Link: https://github.com/ClangBuiltLinux/linux/issues/416
-Cc: stable@vger.kernel.org
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: James Y Knight <jyknight@google.com>
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Fixes: 70b44595eafe ("mm, compaction: use free lists to quickly locate a migration source")
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- lib/string.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
 
-diff --git a/lib/string.c b/lib/string.c
-index 38e4ca08e757..5b2377d7143f 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -866,6 +866,21 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
- EXPORT_SYMBOL(memcmp);
- #endif
+Resend because Andrew's email was bounced back at some point.
+
+ mm/compaction.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index f171a83707ce..6aebf1eb8d98 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1157,7 +1157,9 @@ static bool suitable_migration_target(struct compact_control *cc,
+ static inline unsigned int
+ freelist_scan_limit(struct compact_control *cc)
+ {
+-	return (COMPACT_CLUSTER_MAX >> cc->fast_search_fail) + 1;
++	return (COMPACT_CLUSTER_MAX >>
++		min((unsigned short)(BITS_PER_LONG - 1), cc->fast_search_fail))
++		+ 1;
+ }
  
-+#ifndef __HAVE_ARCH_BCMP
-+/**
-+ * bcmp - Like memcmp but the return code simply indicates a non-match.
-+ * @cs: One area of memory.
-+ * @ct: Another area of memory.
-+ * @count: The size of the areas.
-+ */
-+#undef bcmp
-+int bcmp(const void *cs, const void *ct, size_t count)
-+{
-+	return memcmp(cs, ct, count);
-+}
-+EXPORT_SYMBOL(bcmp);
-+#endif
-+
- #ifndef __HAVE_ARCH_MEMSCAN
- /**
-  * memscan - Find a character in an area of memory.
+ /*
 -- 
-2.21.0.360.g471c308f928-goog
+2.17.2 (Apple Git-113)
 
