@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5392BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79E8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23AE92147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9142420693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491632;
-	bh=PncR2uC5rwylKgdBzFv7PQArEYAhdShLI6BL1EZ1RsU=;
+	s=default; t=1552491640;
+	bh=FzcosVBjhnbSKqIEcWLnXMxpWUQxNKe647sm5OwKHpU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=jBFacvwoE3S+RiIB5UKztNUo39PCg+7KV7lVv11Q4j/CO0r8q3+bRFrcNOEuIU4Wd
-	 wK+PkMg1OwGUItNwsQG74asoLqcMxkiqtE8l48E7vTiGWOt1jMUqKsv78y9tHDqyh9
-	 df5LBb1v+pmwNcdKIjzItFcxh53ApAGgqGWtHwQc=
+	b=sndrM+rmLNr06sv8o5cK549ZmQtnGnQNM10ilBW1ke2NR8mzqv6ZNPbXtd29Jf5rU
+	 RedoW+LrcnSkEo9viGtK9rnXUAix6c4CmMaeOIAEXMLfhyTd2mMDTBBsbParpFMpXp
+	 tbpv3AqihDAaMKUNelBWRWBhRt4XMnXicQpWjo5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfCMPka (ORCPT
+        id S1726809AbfCMPkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:40:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50880 "EHLO
+        Wed, 13 Mar 2019 11:40:39 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50660 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfCMPjk (ORCPT
+        with ESMTP id S1727123AbfCMPjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:40 -0400
+        Wed, 13 Mar 2019 11:39:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=aHpRfMr7WQXjq7PUaew04ukI0mD+0YkzrNCtHE+vJiA=; b=JO7EPpdMexLW
-        na0GPTe8BhVJ1sQq8opycs9jmagEz6Ydja6Rd3eDRt/wlbdr7lUAjecGopTUpbs+0ovNK/KAP7a3f
-        cLT1UAM6/SpOGbh5nEAKNkR6GVotgR+A2zYHClE8Awp8QWKQUuUjUimqoQZg5B4sFYS+hhM376g05
-        JS7rc=;
+        List-Archive; bh=3+0dQHJxtEFZjGNKgNnJRWKMNqsNBYVeEZ/liGzBjRU=; b=PkNNC+c/WUT4
+        ZyuDJ/g4qp0FI9uM6m9agHiudTU/JHreM643pFQNgWCdp9nxgqydlw06hQbbmPyImLlTIdnsoSg9s
+        6u4TW46YJi3mjDWpKkUqF9vKmf8BGdYO2SQV+oC7eeh4HLo/v+6ksNP0/FXtkwwcpNn/BBWvl/gUn
+        wdJ94=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45yk-0003U9-4g; Wed, 13 Mar 2019 15:39:38 +0000
+        id 1h45yd-0003TQ-7u; Wed, 13 Mar 2019 15:39:31 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 600BF1128B97; Wed, 13 Mar 2019 15:39:37 +0000 (GMT)
+        id A01461128B97; Wed, 13 Mar 2019 15:39:25 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
+To:     Steve Twiss <stwiss.opensource@diasemi.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: gpio: Constify regulator_ops" to the regulator tree
+Subject: Applied "regulator: da9211: Fix notifier mutex lock warning" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153937.600BF1128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:39:37 +0000 (GMT)
+Message-Id: <20190313153925.A01461128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:39:25 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: gpio: Constify regulator_ops
+   regulator: da9211: Fix notifier mutex lock warning
 
 has been applied to the regulator tree at
 
@@ -84,42 +84,54 @@ to this mail.
 Thanks,
 Mark
 
-From 705e2a905a0407c3fffb248b43c8d7d1de6b4e51 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 8 Mar 2019 14:15:29 +0800
-Subject: [PATCH] regulator: gpio: Constify regulator_ops
+From 65378de3359d30ebce44762d8b8027f372b5b1c4 Mon Sep 17 00:00:00 2001
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Date: Tue, 26 Feb 2019 15:27:57 +0000
+Subject: [PATCH] regulator: da9211: Fix notifier mutex lock warning
 
-gpio_regulator_voltage_ops and gpio_regulator_current_ops should never
-change, make them const.
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
+
+Fixes: 1028a37daa14 ("regulator: da9211: new regulator driver")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/gpio-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/da9211-regulator.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
-index 967338bf1dc1..f50d86a66138 100644
---- a/drivers/regulator/gpio-regulator.c
-+++ b/drivers/regulator/gpio-regulator.c
-@@ -124,7 +124,7 @@ static int gpio_regulator_set_current_limit(struct regulator_dev *dev,
- 	return 0;
- }
+diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
+index 109ee12d4362..4d7fe4819c1c 100644
+--- a/drivers/regulator/da9211-regulator.c
++++ b/drivers/regulator/da9211-regulator.c
+@@ -322,8 +322,10 @@ static irqreturn_t da9211_irq_handler(int irq, void *data)
+ 		goto error_i2c;
  
--static struct regulator_ops gpio_regulator_voltage_ops = {
-+static const struct regulator_ops gpio_regulator_voltage_ops = {
- 	.get_voltage = gpio_regulator_get_value,
- 	.set_voltage = gpio_regulator_set_voltage,
- 	.list_voltage = gpio_regulator_list_voltage,
-@@ -220,7 +220,7 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
- 	return config;
- }
+ 	if (reg_val & DA9211_E_OV_CURR_A) {
++	        regulator_lock(chip->rdev[0]);
+ 		regulator_notifier_call_chain(chip->rdev[0],
+ 			REGULATOR_EVENT_OVER_CURRENT, NULL);
++	        regulator_unlock(chip->rdev[0]);
  
--static struct regulator_ops gpio_regulator_current_ops = {
-+static const struct regulator_ops gpio_regulator_current_ops = {
- 	.get_current_limit = gpio_regulator_get_value,
- 	.set_current_limit = gpio_regulator_set_current_limit,
- };
+ 		err = regmap_write(chip->regmap, DA9211_REG_EVENT_B,
+ 			DA9211_E_OV_CURR_A);
+@@ -334,8 +336,10 @@ static irqreturn_t da9211_irq_handler(int irq, void *data)
+ 	}
+ 
+ 	if (reg_val & DA9211_E_OV_CURR_B) {
++	        regulator_lock(chip->rdev[1]);
+ 		regulator_notifier_call_chain(chip->rdev[1],
+ 			REGULATOR_EVENT_OVER_CURRENT, NULL);
++	        regulator_unlock(chip->rdev[1]);
+ 
+ 		err = regmap_write(chip->regmap, DA9211_REG_EVENT_B,
+ 			DA9211_E_OV_CURR_B);
 -- 
 2.20.1
 
