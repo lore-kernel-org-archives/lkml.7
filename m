@@ -4,61 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1081CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D5CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D225620693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906D820693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491687;
-	bh=eoiJ8Y7WJpVfiM+Ls9DjOU5lrfujq1mV76rlmLsUG3w=;
+	s=default; t=1552491691;
+	bh=nHCSrXACDGwcD9+IsRcx+pOwkYJiTFTk5ljnQi0ksxY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=hveS+fJ4f6yM7wvGNH3qlDFhkOJm8hQIHF1dwAFQz6pnR2L8sR4wV2Ayx+ANXz+jb
-	 Z2UDTZdbLUfyTuvOF3qi1vpfVKpFBHJ7auesphWlU/zY7HbULrjhPZaez4NKQOzNvN
-	 VBW+viaHkcFOiGyhRRaIMOn+qdJB7+drU0nI3/N8=
+	b=oDm8Q/EDeGQ6MTZqSduGqbj0HwLyxt2Ro+zligm5jk5OE8RZkuyYqUtVT55fLeISX
+	 pTvTets535nY4jute1HwrSYUH8lkN3QnHQ7TRs3t1SSr67NsZZOxeTHcVqGYrWVFgP
+	 drdgQML4/+ZilV7RVgOeyKMTI4aw9eYkjt3fOEzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfCMPjP (ORCPT
+        id S1727184AbfCMPla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:39:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49946 "EHLO
+        Wed, 13 Mar 2019 11:41:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50046 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbfCMPjL (ORCPT
+        with ESMTP id S1726872AbfCMPjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:11 -0400
+        Wed, 13 Mar 2019 11:39:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=X5sGB91oFBFVYIHkyXSiAn+ENZMIm0hBqBhWrcKAEqM=; b=bw2qxkLR1+TF
-        r7QGBmPkYzcuugzIXvojcmdACC1EY8ym8Bxel5nprJ8mAtCMfVNv/ukNoZzREzFLvc5KeihQmechx
-        wQdpBJIneS34hny3UufsqRL9xJm2aKW41TWu7e72hA/mYtTdVpcdC/J8zNKjBmfNXVDOkyVaUANwm
-        JF9YY=;
+        List-Archive; bh=dWfjekqwx4bW3nj1RrAgRmAyhSw562UmxjYiViKnTVc=; b=kXdn8mDlCIb/
+        3R1CCDBH34C1Yu2vbpBi+V6ZZFy8JJ28M8dQDXc0SyGAPpBV51oHwMIY2ub3+dHOx3q6gVyWPubq/
+        hvqWpT5wjsnmIh13H3rmHM92WY9pEgXmo8VPHR19qsvJ3imKMQ0QKgWhcMhO+/4vCUQNmOg74nLpO
+        0tsTg=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45xz-0003R0-8J; Wed, 13 Mar 2019 15:38:51 +0000
+        id 1h45yH-0003SH-QA; Wed, 13 Mar 2019 15:39:09 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id AE33D1128B97; Wed, 13 Mar 2019 15:38:50 +0000 (GMT)
+        id CE1601128B97; Wed, 13 Mar 2019 15:39:08 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
-        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
-        alsa-devel@alsa-project.org
-Subject: Applied "ASoC: stm32: i2s: change trigger traces" to the asoc tree
-In-Reply-To:  <1552317990-24219-2-git-send-email-olivier.moysan@st.com>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: wm8350: Select maximum current in specific range" to the regulator tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153850.AE33D1128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:38:50 +0000 (GMT)
+Message-Id: <20190313153908.CE1601128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:39:08 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +60,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: i2s: change trigger traces
+   regulator: wm8350: Select maximum current in specific range
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,52 +85,33 @@ to this mail.
 Thanks,
 Mark
 
-From 52e7306ca2db565edc1503a74477f3547bc9e408 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 11 Mar 2019 16:26:28 +0100
-Subject: [PATCH] ASoC: stm32: i2s: change trigger traces
+From 5816df2f75f52f74b6fe48b1b20579acd4dfe8fb Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 13 Mar 2019 00:33:55 +0800
+Subject: [PATCH] regulator: wm8350: Select maximum current in specific range
 
-Update traces to log capture/playback stream start/stop.
+.set_current_limit callback should select the current closest to max_uA.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_i2s.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/regulator/wm8350-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
-index 47c334de6b09..783b33497435 100644
---- a/sound/soc/stm/stm32_i2s.c
-+++ b/sound/soc/stm/stm32_i2s.c
-@@ -593,7 +593,8 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
- 		/* Enable i2s */
--		dev_dbg(cpu_dai->dev, "start I2S\n");
-+		dev_dbg(cpu_dai->dev, "start I2S %s\n",
-+			playback_flg ? "playback" : "capture");
+diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
+index a1c7dfee5c37..d1758a2bc769 100644
+--- a/drivers/regulator/wm8350-regulator.c
++++ b/drivers/regulator/wm8350-regulator.c
+@@ -99,7 +99,7 @@ static int get_isink_val(int min_uA, int max_uA, u16 *setting)
+ {
+ 	int i;
  
- 		cfg1_mask = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
- 		regmap_update_bits(i2s->regmap, STM32_I2S_CFG1_REG,
-@@ -638,6 +639,9 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		dev_dbg(cpu_dai->dev, "stop I2S %s\n",
-+			playback_flg ? "playback" : "capture");
-+
- 		if (playback_flg)
- 			regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG,
- 					   I2S_IER_UDRIE,
-@@ -654,8 +658,6 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- 			break;
- 		}
- 
--		dev_dbg(cpu_dai->dev, "stop I2S\n");
--
- 		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
- 					 I2S_CR1_SPE, 0);
- 		if (ret < 0) {
+-	for (i = 0; i < ARRAY_SIZE(isink_cur); i++) {
++	for (i = ARRAY_SIZE(isink_cur) - 1; i >= 0; i--) {
+ 		if (min_uA <= isink_cur[i] && max_uA >= isink_cur[i]) {
+ 			*setting = i;
+ 			return 0;
 -- 
 2.20.1
 
