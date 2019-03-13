@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F3FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F17C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27672184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B562177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504612;
-	bh=ozPw54kJrBhWiMWtpuFvvyYkUS7hW7vP00mAr0j9Cg8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LiwzlfnPyX/3qDtGClUUFwigtgAYnX2lw6yGtAqzsUJ+MNtEEZdNlOHCgFJzoS3xZ
-	 COq7LJ0xXULiaCTzw4+IrKngJDsJVeRj4ClcGbyQ/kbuHC41ZumXACK7+aoOdlSYmw
-	 9mZCKuf42ZLRQmJZefDlDaaalTWLIFHoxFUmnkQ0=
+	s=default; t=1552504616;
+	bh=HY7aH7MPgf3lQ97DqJigxboLI6eglJWGgmS5kD+pETM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Y1kiU9rbZ47jDPGmRkr0uXiqz3erQy6a0vwmKuA1JhQDTQ1a72jla4p3jyMi3GhEg
+	 gMkhNsqE/1RYMdGMf8r29G6efuZ6IgJnaRwrLa0miaolg5NB83hK8SBE8dVv2fSKIz
+	 faKCCOnq5Hn7I8uzktU98kTV5DFIeTfIF/w15SeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfCMTQv (ORCPT
+        id S1728797AbfCMTQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47132 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:16:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727545AbfCMTQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:16:46 -0400
+        id S1728780AbfCMTQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:16:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD11D2184E;
-        Wed, 13 Mar 2019 19:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24D4E2075C;
+        Wed, 13 Mar 2019 19:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504606;
-        bh=ozPw54kJrBhWiMWtpuFvvyYkUS7hW7vP00mAr0j9Cg8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fRthLv93XaRA1jNE3MF0J5H1pgAYdWQGEdzOAfTWeIcFmWdj9Y4+Zj8iPdPNXEJ5x
-         lYu0boI/Qb2FIteql33RvVHYjEjmbIC/I5H7NOWGA2HTjpkm51bDy/kdT4+74SvA13
-         IUpLKEOYkDS9TWPU2GHHONz72xS1QLpb5EuvpDxA=
+        s=default; t=1552504610;
+        bh=HY7aH7MPgf3lQ97DqJigxboLI6eglJWGgmS5kD+pETM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1JslxoP1Ac/NrHzj2bCaJMXDX8JnlCFuSPE1KHpK1sL52u95KJuXUSa0+fHZlibv3
+         G116MSSFcsOwDQGNE+cCHStkpPO7hDOX22I7PQdC2RPNP3Mhh6ddvj25vCH4yaO11N
+         gmeujOebvC6ki3nSFQLOYXtHBXPe5ih/ejISaDQo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 33/33] net: set static variable an initial value in atl2_probe()
-Date:   Wed, 13 Mar 2019 15:15:06 -0400
-Message-Id: <20190313191506.159677-33-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/24] clk: sunxi: A31: Fix wrong AHB gate number
+Date:   Wed, 13 Mar 2019 15:16:24 -0400
+Message-Id: <20190313191647.160171-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190313191506.159677-1-sashal@kernel.org>
-References: <20190313191506.159677-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,40 +55,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 4593403fa516a5a4cffe6883c5062d60932cbfbe ]
+[ Upstream commit ee0b27a3a4da0b0ed2318aa092f8856896e9450b ]
 
-cards_found is a static variable, but when it enters atl2_probe(),
-cards_found is set to zero, the value is not consistent with last probe,
-so next behavior is not our expect.
+According to the manual the gate clock for MMC3 is at bit 11, and NAND1
+is controlled by bit 12.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix the gate bit definitions in the clock driver.
+
+Fixes: c6e6c96d8fa6 ("clk: sunxi-ng: Add A31/A31s clocks")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/atheros/atlx/atl2.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun6i-a31.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/atheros/atlx/atl2.c b/drivers/net/ethernet/atheros/atlx/atl2.c
-index 77a1c03255de..225b4d452e0e 100644
---- a/drivers/net/ethernet/atheros/atlx/atl2.c
-+++ b/drivers/net/ethernet/atheros/atlx/atl2.c
-@@ -1334,13 +1334,11 @@ static int atl2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	struct net_device *netdev;
- 	struct atl2_adapter *adapter;
--	static int cards_found;
-+	static int cards_found = 0;
- 	unsigned long mmio_start;
- 	int mmio_len;
- 	int err;
- 
--	cards_found = 0;
--
- 	err = pci_enable_device(pdev);
- 	if (err)
- 		return err;
+diff --git a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+index 6ea5401e6881..7f1281298651 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
++++ b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+@@ -252,9 +252,9 @@ static SUNXI_CCU_GATE(ahb1_mmc1_clk,	"ahb1-mmc1",	"ahb1",
+ static SUNXI_CCU_GATE(ahb1_mmc2_clk,	"ahb1-mmc2",	"ahb1",
+ 		      0x060, BIT(10), 0);
+ static SUNXI_CCU_GATE(ahb1_mmc3_clk,	"ahb1-mmc3",	"ahb1",
+-		      0x060, BIT(12), 0);
++		      0x060, BIT(11), 0);
+ static SUNXI_CCU_GATE(ahb1_nand1_clk,	"ahb1-nand1",	"ahb1",
+-		      0x060, BIT(13), 0);
++		      0x060, BIT(12), 0);
+ static SUNXI_CCU_GATE(ahb1_nand0_clk,	"ahb1-nand0",	"ahb1",
+ 		      0x060, BIT(13), 0);
+ static SUNXI_CCU_GATE(ahb1_sdram_clk,	"ahb1-sdram",	"ahb1",
 -- 
 2.19.1
 
