@@ -2,79 +2,141 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C050C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FF3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C75120854
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1D22077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:52:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3VV16VNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfCMRva (ORCPT
+        id S1727062AbfCMRwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:51:30 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60933 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfCMRva (ORCPT
+        Wed, 13 Mar 2019 13:52:44 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41516 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfCMRwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:51:30 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1h482H-0001Eq-FW; Wed, 13 Mar 2019 18:51:25 +0100
-Message-ID: <1552499485.2453.53.camel@pengutronix.de>
-Subject: Re: [PATCH] regulator: Use of_node_name_eq for node name comparisons
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Wed, 13 Mar 2019 18:51:25 +0100
-In-Reply-To: <CAOMZO5CwxZv=kAiqZ7YE2eRV1tTA13xbz1czUXOiScBoBfk75A@mail.gmail.com>
-References: <20181205195050.4759-21-robh@kernel.org>
-         <1552497686.2453.49.camel@pengutronix.de>
-         <CAOMZO5CwxZv=kAiqZ7YE2eRV1tTA13xbz1czUXOiScBoBfk75A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
+        Wed, 13 Mar 2019 13:52:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2DHn4VU152429;
+        Wed, 13 Mar 2019 17:51:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=RMimn9X+ayHxW3yKR0QTtUya8qLch5jMuq89RAFqKac=;
+ b=3VV16VNBm3L6MCzCWFd5y/4Llk+2zXObtCnzb6fGGKIin14cI/q9IXBuiumwdTZz7jiU
+ eb7ZY4/HA8PWO99pJvixJIPEJe9agBfE8Sq0TQSw22MQq+Z9cXyecoiSVzImmQIKUPJu
+ 8gT+K6q5ODU5XiRN3SZPNOfFehXfX7N9HzaKAZ1jw7zu5Kxvg0yBD25s4l712ecFnpyo
+ eTl/yz7NJjeDtgSGGKz/KnjdHbJ2uddGa+gK6Oak1RibCvA5XCdCc7dXz6Lu8fQP7+Wo
+ bJCJRjAAucimZsupSdgA7g6alPYCkLwttR6gaGpbvRaXXsSvLfbQlktHkb/AtzVC2tld BA== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2130.oracle.com with ESMTP id 2r44wucm0j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Mar 2019 17:51:00 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2DHox5d012995
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Mar 2019 17:50:59 GMT
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2DHopDf008087;
+        Wed, 13 Mar 2019 17:50:51 GMT
+Received: from [192.168.1.222] (/50.38.38.67)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 13 Mar 2019 10:50:51 -0700
+Subject: Re: [PATCH 0/3] userfaultfd: allow to forbid unprivileged users
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        kvm@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-fsdevel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190311093701.15734-1-peterx@redhat.com>
+ <58e63635-fc1b-cb53-a4d1-237e6b8b7236@oracle.com>
+ <20190313060023.GD2433@xz-x1>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <dd56566e-7b7f-51f6-bf01-ffda530a8073@oracle.com>
+Date:   Wed, 13 Mar 2019 10:50:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190313060023.GD2433@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9194 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903130124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
-
-Am Mittwoch, den 13.03.2019, 14:36 -0300 schrieb Fabio Estevam:
-> Hi Lucas,
+On 3/12/19 11:00 PM, Peter Xu wrote:
+> On Tue, Mar 12, 2019 at 12:59:34PM -0700, Mike Kravetz wrote:
+>> On 3/11/19 2:36 AM, Peter Xu wrote:
+>>>
+>>> The "kvm" entry is a bit special here only to make sure that existing
+>>> users like QEMU/KVM won't break by this newly introduced flag.  What
+>>> we need to do is simply set the "unprivileged_userfaultfd" flag to
+>>> "kvm" here to automatically grant userfaultfd permission for processes
+>>> like QEMU/KVM without extra code to tweak these flags in the admin
+>>> code.
+>>
+>> Another user is Oracle DB, specifically with hugetlbfs.  For them, we would
+>> like to add a special case like kvm described above.  The admin controls
+>> who can have access to hugetlbfs, so I think adding code to the open
+>> routine as in patch 2 of this series would seem to work.
 > 
-> > On Wed, Mar 13, 2019 at 2:22 PM Lucas Stach <l.stach@pengutronix.de> wrote:
-> 
-> > Unfortunately this change causes a regression on systems with MC13xxx
-> > regulators. The desc.name field is filled with an uppercase name of the
-> > regulator, while the existing DTs (as far as I know) all use lowercase
-> > node names, so the matching in the function above doesn't work anymore.
-> > 
-> > Any opinions about how to proceed here?
-> 
-> Does this patch fix the problem?
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20190306&id=ec520911ecc7eaf01a
+> Yes I think if there's an explicit and safe place we can hook for
+> hugetlbfs then we can do the similar trick as KVM case.  Though I
+> noticed that we can not only create hugetlbfs files under the
+> mountpoint (which the admin can control), but also using some other
+> ways.  The question (of me... sorry if it's a silly one!) is whether
+> all other ways to use hugetlbfs is still under control of the admin.
+> One I know of is memfd_create() which seems to be doable even as
+> unprivileged users.  If so, should we only limit the uffd privilege to
+> those hugetlbfs users who use the mountpoint directly?
 
-I wasn't aware of this patch. I haven't tested it yet, but this looks
-like it should fix the problem. I just wasn't sure if that's the route
-we want to go, as I don't know if there are any out of tree DTs that
-use uppercase node names.
+Wow!  I did not realize that apps which specify mmap(MAP_HUGETLB) do not
+need any special privilege to use huge pages.  Honestly, I am not sure if
+that was by design or a bug.  The memfd_create code is based on the MAP_HUGETLB
+code and also does not need any special privilege.  Not to sidetrack this
+discussion, but people on Cc may know if this is a bug or by design.  My
+opinion is that huge pages are a limited resource and should be under control.
+One needs to be a member of a special group (or root) to access via System V
+interfaces.
 
-But as there seems to be agreement to just change the regulator names
-to lowercase, I consider this issue fixed.
+The DB use case only does mmap of files in an explicitly mounted filesystem.
+So, limiting it in that manner would work for them.
 
-Regards,
-Lucas
+> Another question is about fork() of privileged processes - for KVM we
+> only grant privilege for the exact process that opened the /dev/kvm
+> node, and the privilege will be lost for any forked childrens.  Is
+> that the same thing for OracleDB/Hugetlbfs?
+
+I need to confirm with the DB people, but it is my understanding that the
+exact process which does the open/mmap will be the one using userfaultfd.
+-- 
+Mike Kravetz
