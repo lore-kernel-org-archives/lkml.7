@@ -2,168 +2,156 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF5EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F9FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D7A2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5492087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfCMKPU (ORCPT
+        id S1726573AbfCMKP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 06:15:20 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:36507 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725836AbfCMKPT (ORCPT
+        Wed, 13 Mar 2019 06:15:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47258 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbfCMKPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 06:15:19 -0400
-X-UUID: 9110ccc94a3a4f03a84b618665ed23dd-20190313
-X-UUID: 9110ccc94a3a4f03a84b618665ed23dd-20190313
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1615897056; Wed, 13 Mar 2019 18:15:11 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 13 Mar
- 2019 18:15:09 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 13 Mar 2019 18:15:09 +0800
-Message-ID: <1552472109.10179.103.camel@mhfsdcap03>
-Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
- Type-B
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        "Badhri Jagan Sridharan" <badhri@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 13 Mar 2019 18:15:09 +0800
-In-Reply-To: <464f1021-4c5e-9137-489d-65fd578575d3@redhat.com>
-References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
-         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
-         <1552282383.10179.21.camel@mhfsdcap03>
-         <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
-         <1552360688.10179.55.camel@mhfsdcap03>
-         <464f1021-4c5e-9137-489d-65fd578575d3@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 13 Mar 2019 06:15:55 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DAFh8h113027
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 06:15:55 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6x26wr04-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 06:15:53 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Wed, 13 Mar 2019 10:15:26 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Mar 2019 10:15:23 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2DAFL1d32047184
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Mar 2019 10:15:22 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 913AD52073;
+        Wed, 13 Mar 2019 10:15:21 +0000 (GMT)
+Received: from [9.152.224.140] (unknown [9.152.224.140])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1FDA452071;
+        Wed, 13 Mar 2019 10:15:21 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v4 6/7] s390: ap: Cleanup on removing the AP device
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
+ <1550849400-27152-7-git-send-email-pmorel@linux.ibm.com>
+ <3956ad4c-55c9-e42c-4ab2-00ddae05b317@linux.ibm.com>
+ <94904df0-42b6-51f8-6440-68722ef5419d@linux.ibm.com>
+ <cf148acb-1a07-ffa3-f728-0f6b02aa914d@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Wed, 13 Mar 2019 11:15:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <cf148acb-1a07-ffa3-f728-0f6b02aa914d@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031310-0016-0000-0000-0000026151EB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031310-0017-0000-0000-000032BBFDCB
+Message-Id: <85f772b4-0b62-701d-c3e5-e55e88c3fb4e@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903130075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Tue, 2019-03-12 at 13:45 +0100, Hans de Goede wrote:
-> Hi,
-> On 12-03-19 04:18, Chunfeng Yun wrote:
-> > Hi,
-> > On Mon, 2019-03-11 at 09:06 +0100, Hans de Goede wrote:
-> >> Hi,
-> >>
-> >> On 11-03-19 06:33, Chunfeng Yun wrote:
-> >>> Hi,
-> >>>
-> >>> On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
-> >>>> Hi,
-> >>>>
-> >>>> On 08-03-19 07:13, Chunfeng Yun wrote:
-> >>>>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-> >>>>> usb-b-connector
-> >>>>>
-> >>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> >>>>> ---
-> >>>>>     .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
-> >>>>>     1 file changed, 10 insertions(+)
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> >>>>> index a9a2f2fc44f2..7a07b0f4f973 100644
-> >>>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-> >>>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> >>>>> @@ -17,6 +17,16 @@ Optional properties:
-> >>>>>     - self-powered: Set this property if the usb device that has its own power
-> >>>>>       source.
-> >>>>>     
-> >>>>> +Optional properties for usb-b-connector:
-> >>>>> +- id-gpios: gpio for USB ID pin.
-> >>>>
-> >>>> What about boards where the ID pin is *not* connected to a GPIO,
-> >>>> but e.g. to a special pin on the PMIC which can also detect
-> >>>> an ACA adapter ? Currently this case is handled by extcon
-> >>>> drivers, but we have no way to set e.g. vbus-supply for the
-> >>>> connector. Maybe in this case the usb-connector node should
-> >>>> be a child of the PMIC node ?
-> >>> Yes, it would be, PMIC is in charger of detecting the status of ID pin
-> >>
-> >> Ok, then I think this should be documented too.
-> >>
-> >>>> And in many cases there also is a mux to switch the datalines
-> >>>> between the host and device(gadget) controllers, how should
-> >>>> that be described in this model?  See the new usb-role-switch
-> >>>> code under drivers/usb/roles
-> >>>>
-> >>>> In some cases the mux is controlled through a gpio, so we
-> >>>> may want to add a "mux-gpios" here in which case we also
-> >>>> need to define what 0/1 means.
-> >>> I'm not sure, the mux seems not belong to this connector,
-> >>> and may need another driver to register usb-role-switch,
-> >>> similar to:
-> >>>
-> >>> [v2,2/2] usb: typec: add typec switch via GPIO control
-> >>> https://patchwork.kernel.org/patch/10834327/
-> >>
-> >> Right the mux/role-switch will need a driver, but the "owner"
-> >> of the usb_connector, e.g. the PMIC or the owner of the
-> >> id GPIO pin needs to know which device is the role-switch so
-> >> that it can set the role correctly based on the id-pin.
-> >>
-> >> Your binding already contains Vbus info, allowing the owner
-> >> of the usb_connector to enable/disable Vbus based on the id-pin,
-> >> but the owner will also be responsible for setting the role-switch.
-> > In this patch series, I make usb_connector driver enable/disable Vbus,
-> > but not the parent(USB controller) of usb_connector which registers a
-> > usb-role-switch, which way do you think it is better?
-> 
-> IMHO there should not be a driver for the usb_connector child-node,
-> only for the parent-device of that child-node.
-If so, each USB controller driver should process this special case by
-itself when use a gpio to detect the status of ID pin, it's not a
-friendly way. And it's easy by using extcon-usb-gpio driver before, so
-we also want to provide a simple way when support usb_connector, no
-matter what method we choose.
+On 12/03/2019 22:53, Tony Krowiak wrote:
+> On 3/11/19 4:31 AM, Pierre Morel wrote:
+>> On 08/03/2019 23:43, Tony Krowiak wrote:
+>>> On 2/22/19 10:29 AM, Pierre Morel wrote:
+>>>> When the device is remove, we must make sure to
+>>>> clear the interruption and reset the AP device.
+>>>>
+>>>> We also need to clear the CRYCB of the guest.
+>>>>
+>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>>> ---
+>>>>   drivers/s390/crypto/vfio_ap_drv.c     | 35 
+>>>> +++++++++++++++++++++++++++++++++++
+>>>>   drivers/s390/crypto/vfio_ap_ops.c     |  3 ++-
+>>>>   drivers/s390/crypto/vfio_ap_private.h |  3 +++
+>>>>   3 files changed, 40 insertions(+), 1 deletion(-)
+>>>>
 
-Ideally, the only one thing that USB controller driver need to do, just
-register a usb-role-switch, and leave decision when switch the role to
-other drivers, such as type-C, PMIC/charger, also include gpio
+...snip...
+
+>>>> + * vfio_ap_update_crycb
+>>>> + * @q: A pointer to the queue being removed
+>>>> + *
+>>>> + * We clear the APID of the queue, making this queue unusable for 
+>>>> the guest.
+>>>> + * After this function we can reset the queue without to fear a 
+>>>> race with
+>>>> + * the guest to access the queue again.
+>>>> + * We do not fear race with the host as we still get the devic
+>>>> + */
+>>>> +static void vfio_ap_update_crycb(struct vfio_ap_queue *q)
+>>>> +{
+>>>> +    struct ap_matrix_mdev *matrix_mdev = q->matrix_mdev;
+>>>> +
+>>>> +    if (!matrix_mdev)
+>>>> +        return;
+>>>> +
+> 
+> You should probably check whether the APID has been cleared before
+> proceeding. Take the case where an AP with multiple queues is removed
+> from the configuration via the SE or SCLP. The AP bus is going to invoke
+> the vfio_ap_queue_dev_remove() function for each of the queues. The APID
+> will get cleared on the first remove, so it is not only unnecessary to
+> clear it on subsequent removes, it is kind of nasty to keep resetting
+> the masks in the guest's CRYCB (below) each time the remove callback is
+> invoked.
+
+This can not happen.
+The only way to clear the APM is when the matrix is not associated with KVM.
+
+This case is tested and the masks are not changed.
 
 > 
-> There are going to be too many specific setups surrounding PMICs to
-> be able to do a single generic driver for the connector.
-> 
-Fortunately, these patches only focus on the simplest gpio driven role
-switch :)
+>>>> +    clear_bit_inv(AP_QID_CARD(q->apqn), matrix_mdev->matrix.apm);
+>>>> +
+>>>> +    if (!matrix_mdev->kvm)
+>>>> +        return;
+>>>> +
+>>>> +    kvm_arch_crypto_set_masks(matrix_mdev->kvm,
+>>>> +                  matrix_mdev->matrix.apm,
+>>>> +                  matrix_mdev->matrix.aqm,
+>>>> +                  matrix_mdev->matrix.adm);
+>>>> +}
 
-Thanks
 
-> Regards,
-> 
-> Hans
-> 
 
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
