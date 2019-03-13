@@ -2,162 +2,150 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2484C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4900C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE03213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:52:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vlXhpm74"
+	by mail.kernel.org (Postfix) with ESMTP id AF1C3213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:54:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552506891;
+	bh=wi6y8mM77vpmoNRFF7mr5+588IsMZDv9uEZHQGTKgvg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zs5oT1ElMPXbVdY4eQIw1g/HG552VuxQY8w4/eGI+VYUDR+CCmciBYMdLxY3Jbqb9
+	 9nNwOKIjYt9HRfeOC14wbtxY/szdX9F7WS5KVETm1yYhz8rZpKZuqm1JirMLgR5+j/
+	 mG8i3v2R2VlqnPs0JCmIcWSaS+hqG8olOfVdD100=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfCMTww (ORCPT
+        id S1727062AbfCMTyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:52:52 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:42817 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfCMTww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:52:52 -0400
-Received: by mail-vs1-f66.google.com with SMTP id c189so1785369vsd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cjdeQoiG1CNqxDr3JRQdESRZNgyXUbmkKypj0mAhhmU=;
-        b=vlXhpm74SJXur6SrLE48nJ6+mfVl9SDyFvy0gYifys0dVKBh1a6vAYTa0HH3LNCT9T
-         ogOf9/IClNoYF+1sAShrEgsksL6UpQBj6U+Wd0XZh8+hBT9v1nrCQTiN4Adme141ZDfQ
-         1L7h2ugFFyDqvhYj+Gfiu8KzJewb9VpYRGN7b+oIm9Qxa5tBhXNcfQr4SOsvP3c0LdR1
-         9HraVKYsazq1QpAvqCms8Pk5ybzgs0qDKmdnJiadl/SH/nlfubtR/ru8ORph0lIKZIGQ
-         ikXygKns8wJUPCSqenfcxlK9rBVjIJPqP249sg0A/72DYiXaGxOcIx2XMAGrv8Q7TDnh
-         +nlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cjdeQoiG1CNqxDr3JRQdESRZNgyXUbmkKypj0mAhhmU=;
-        b=iMEqSc1K2jCh1ERd3hHKSqAcIaoix0rxcp5I9BrHU0e4n+kbyaSG8+W0iEbhO2UpNf
-         MVPNkrJCPQ+wLG1VqM3j0gqhn9pfoIUKMb+on4xFl4SLW7QCIIHmv2BQNs3Cb16cQqkj
-         7Wo3/OIgN+1h4lT6NO+kcFM3VZLPV84+rbckHlzrE9cjkFmo1ufUtAiHd/jCZUadF94h
-         xmhCVIsDSueIPu6LcehpY6hZ8ZnyzejJh7P7BdQGE4dIPQgPFo3FXDe6sDxRz8TupFdz
-         +1DqVl24nnnQ1N3SJsG91XALWthBBawufcFxFRcTJdDJDnJKxDODLGRmpa88vL0CjUwW
-         CNeQ==
-X-Gm-Message-State: APjAAAWTiE9y6IncV8/r770mXKzqpK8v9Z+FPT3OOHhVFlhcclkGqv4P
-        Joed+vgTn8rjXLEE9uhjiWfnEZngzpeDKmCAHAmyNw==
-X-Google-Smtp-Source: APXvYqyy6VfIy5GhgM6JCvhHivvrjUdIsOIGIpnjpbo1kO4TEY492dPrJ8asN+wprEt5Ev8O4VE6A3e0GjF2r2dnxQY=
-X-Received: by 2002:a67:fe51:: with SMTP id m17mr6089630vsr.35.1552506770869;
- Wed, 13 Mar 2019 12:52:50 -0700 (PDT)
+        Wed, 13 Mar 2019 15:54:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726588AbfCMTyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:54:50 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2CDA2146E;
+        Wed, 13 Mar 2019 19:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552506889;
+        bh=wi6y8mM77vpmoNRFF7mr5+588IsMZDv9uEZHQGTKgvg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XvRnWuGp15p+sqSeqafipoBeSOKrWRvLVJv14+LLpUPhqA0z4v49x4BS82OXcqHGA
+         nXk+R6KQC6uixPTnIAvFOQs5Tvpvpj3Lx6QJf/mSNWx1GErX46tu4273ABIKzrv3Wj
+         3ZKQWiS70NZwq9O8kXI9m9wMOmeJrFwjhSiIV08E=
+Received: by mail-qk1-f170.google.com with SMTP id n6so1905530qkf.1;
+        Wed, 13 Mar 2019 12:54:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAX49ble4w0EvihrqCsDU6PF3phNQTVat1kOtuapdCdK2jFzkZo9
+        zRfJGNLUOaF6sjwiaTKOsR3cwtyAXwxbsOZJWg==
+X-Google-Smtp-Source: APXvYqxKPkCTGBdeJO9assOeqojAuVhOhfs3pS2lZ7Jw1v5RWLx06ZE6lEEebvbOj7Fdk2HZdsc+X8AUTp6zkjaXtlM=
+X-Received: by 2002:a37:5947:: with SMTP id n68mr167128qkb.326.1552506888146;
+ Wed, 13 Mar 2019 12:54:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190312065128.24994-1-jiada_wang@mentor.com> <CAMuHMdUEnzgwAqBC=vTYWnrzC5HrqC5f5gDLWJFSJRYAu+DD1g@mail.gmail.com>
-In-Reply-To: <CAMuHMdUEnzgwAqBC=vTYWnrzC5HrqC5f5gDLWJFSJRYAu+DD1g@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 13 Mar 2019 20:52:14 +0100
-Message-ID: <CAPDyKFpCOfAURN0=ZfS5yXH-ZrCfpfH+iNUwh=fZZ-wViKYQqQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] PM / Domains: Avoid a potential deadlock
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jiada Wang <jiada_wang@mentor.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20190312163051.155405-1-venture@google.com>
+In-Reply-To: <20190312163051.155405-1-venture@google.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 13 Mar 2019 14:54:36 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLRO8m+voL_6mSpcrGmAT-SPwXhXDSOMEgQW6wmmTxZfQ@mail.gmail.com>
+Message-ID: <CAL_JsqLRO8m+voL_6mSpcrGmAT-SPwXhXDSOMEgQW6wmmTxZfQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+To:     Patrick Venture <venture@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 at 15:45, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Tue, Mar 12, 2019 at 11:30 AM Patrick Venture <venture@google.com> wrote:
 >
-> Hi Jiada,
+> Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 >
-> CC Marek, Jon, Mike, Stephen, linux-clk, linux-renesas-soc
+> Signed-off-by: Patrick Venture <venture@google.com>
+> ---
+> Changes for v7:
+> - Moved node under the syscon node it requires
+> Changes for v6:
+> - None
+> Changes for v5:
+> - None
+> Changes for v4:
+> - None
+> Changes for v3:
+> - None
+> Changes for v2:
+> - Added comment about syscon required parameter.
+> ---
+>  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 >
-> On Tue, Mar 12, 2019 at 7:51 AM Jiada Wang <jiada_wang@mentor.com> wrote:
-> > Lockdep warns that prepare_lock and genpd->mlock can cause a deadlock
-> > the deadlock scenario is like following:
-> > First thread is probing cs2000
-> > cs2000_probe()
-> >   clk_register()
-> >     __clk_core_init()
-> >       clk_prepare_lock()                            ----> acquires prepare_lock
-> >         cs2000_recalc_rate()
-> >           i2c_smbus_read_byte_data()
-> >             rcar_i2c_master_xfer()
-> >               dma_request_chan()
-> >                 rcar_dmac_of_xlate()
-> >                   rcar_dmac_alloc_chan_resources()
-> >                     pm_runtime_get_sync()
-> >                       __pm_runtime_resume()
-> >                         rpm_resume()
-> >                           rpm_callback()
-> >                             genpd_runtime_resume()   ----> acquires genpd->mlock
-> >
-> > Second thread is attaching any device to the same PM domain
-> > genpd_add_device()
-> >   genpd_lock()                                       ----> acquires genpd->mlock
-> >     cpg_mssr_attach_dev()
-> >       of_clk_get_from_provider()
-> >         __of_clk_get_from_provider()
-> >           __clk_create_clk()
-> >             clk_prepare_lock()                       ----> acquires prepare_lock
-> >
-> > Since currently no PM provider access genpd's critical section
-> > in .attach_dev, and .detach_dev callbacks, so there is no need to protect
-> > these two callbacks with genpd->mlock.
-> > This patch avoids a potential deadlock by moving out .attach_dev and .detach_dev
-> > from genpd->mlock, so that genpd->mlock won't be held when prepare_lock is acquired
-> > in .attach_dev and .detach_dev
-> >
-> > Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->
-> Thanks a lot for your perseverance!
-> I had tried putting each PM Domain in its own lockdep class, but that
-> didn't help.
->
-> Your patch fixes the lockdep warnings on my Salvator-X(S) boards.
->
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Your solution makes sense, as the .{at,de}tach_dev() callbacks are
-> owned by the individual PM Domain drivers, and not by the genpd core.
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> One thing I'm still wondering about: genpd_add_device() is always called
-> with gpd_list_lock held.
-> However, the same cannot be said about genpd_remove_device():
->   - pm_genpd_remove_device() does not take gpd_list_lock, unlike
->     pm_genpd_add_device(),
->   - genpd_dev_pm_detach() does not take gpd_list_lock, while
->     __genpd_dev_pm_attach() does take the lock for adding,
->     but not for removing (in the error patch)?
+> diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> new file mode 100644
+> index 000000000000..088cc4e3dc54
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> @@ -0,0 +1,48 @@
+> +======================================================================
+> +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
+> +======================================================================
+> +
+> +The bridge is available on platforms with the VGA enabled on the Aspeed device.
+> +In this case, the host has access to a 64KiB window into all of the BMC's
+> +memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
+> +has read access to all the regions of memory, however the host only has read
+> +and write access depending on a register controlled by the BMC.
+> +
+> +Required properties:
+> +===================
+> +
+> + - compatible: must be one of:
+> +       - "aspeed,ast2400-p2a-ctrl"
+> +       - "aspeed,ast2500-p2a-ctrl"
+> +
+> + - syscon: handle to syscon device node controlling PCI.
+> +
+> +Optional properties:
+> +===================
+> +
+> +- memory-region: A phandle to a reserved_memory region to be used for the PCI
+> +               to AHB mapping
+> +
+> +The p2a-control node should be the child of a syscon node with the required
+> +property:
+> +
+> +- compatible : Should be one of the following:
+> +               "aspeed,ast2400-scu", "syscon", "simple-mfd"
+> +               "aspeed,g4-scu", "syscon", "simple-mfd"
+> +               "aspeed,ast2500-scu", "syscon", "simple-mfd"
+> +               "aspeed,g5-scu", "syscon", "simple-mfd"
+> +
+> +Example:
+> +
+> +g4 Example
+> +----------
+> +
+> +syscon: scu@1e6e2000 {
+> +       compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+> +       reg = <0x1e6e2000 0x1a8>;
+> +
+> +       p2a: p2a-control {
+> +               compatible = "aspeed,ast2400-p2a-ctrl";
 
-That's correctly observed and it's something that needs to be fixed in
-the long run. Although I am not sure that we should use the
-gpd_list_lock...
+If there's a defined register range, then you could add a reg property
+(even though Linux doesn't use it).
 
-There are race conditions while removing a device at the same time as
-the genpd is removed. As a matter of fact, even the debugfs isn't
-correctly dropped, when a genpd is removed. However, because almost
-none it ever removing a genpd, this isn't a problem in practice.
+Either way,
 
-Anyway, I have a TODO list for genpd (starting to be quite longe) and
-this one is already on it, whatever that means. :-)
-
-[...]
-
-Kind regards
-Uffe
+Reviewed-by: Rob Herring <robh@kernel.org>
