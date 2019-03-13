@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E7BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E656C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206E02177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295CC2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="HmvWyzgA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="bKslLHWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfCMWX1 (ORCPT
+        id S1727443AbfCMWX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:23:27 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:43794 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbfCMWX0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 Mar 2019 18:23:26 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:44494 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbfCMWXZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 18:23:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1552515803; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1552515801; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=76EknLUZ+7FGWOANqOUA0bSKviWbf+NieHKSGfjvYM0=;
-        b=HmvWyzgAPR/Jz4UKRhFsgremoxB9drlmYcG+RTwmdT+3xz/FltmLLShs/S0clALlQQylLC
-        m/ADg0B8hSIOs8Gn8q8b3sRSeyVuw151wevL3pmJj6REqYQfQ3piKIMQ577xhcvGD84Njq
-        rkq7WDQAYAMoCnkGzo4aLgi31ssfmVs=
+        bh=bak44mu2Yqh6IuNHiVmFLTZ83Nx6nD6VTmWHP8/Yp70=;
+        b=bKslLHWyksLK9B8tqWkF3N2ZDe8X0zFK4p0kwlH2xEMWGi4p2htm4L9pti48aHpvoDxBps
+        8EWakH8+6ftHrpRW5VU7SHPrAr4JTNelficT/+mq0af+mhCB71/2jDRa4hwHdD6/T5GW3s
+        H0g7Y13BscFOgrUZRRPdsVWN9lh5X6E=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
@@ -43,9 +43,9 @@ To:     David Woodhouse <dwmw2@infradead.org>,
 Cc:     od@zcrc.me, Mathieu Malaterre <malat@debian.org>,
         linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 11/12] mtd: rawnand: ingenic: Add support for the JZ4725B
-Date:   Wed, 13 Mar 2019 23:22:58 +0100
-Message-Id: <20190313222259.28704-11-paul@crapouillou.net>
+Subject: [PATCH v5 10/12] mtd: rawnand: ingenic: Add support for the JZ4740
+Date:   Wed, 13 Mar 2019 23:22:57 +0100
+Message-Id: <20190313222259.28704-10-paul@crapouillou.net>
 In-Reply-To: <20190313222259.28704-1-paul@crapouillou.net>
 References: <20190313222259.28704-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,455 +53,377 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The boot ROM of the JZ4725B SoC expects a specific OOB layout on the
-NAND, so we use it unconditionally in the ingenic-nand driver.
-
-Also add the jz4725b-bch driver to support the JZ4725B-specific BCH
-hardware.
+Add support for probing the ingenic-nand driver on the JZ4740 SoC from
+Ingenic, and the jz4740-ecc driver to support the JZ4740-specific
+ECC hardware.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
 Notes:
-    v2: Instead of forcing the OOB layout, leave it to the board code or
-        devicetree to decide if the jz4725b-specific layout should be used
-        or not.
+    v2: New patch
     
-    v3: - Revert the change in v2, as the previous behaviour was correct.
-        - Also add support for the hardware BCH of the JZ4725B in this
-          patch.
+    v3: Also add support for the hardware ECC of the JZ4740 in this patch
     
-    v4: - Add MODULE_* macros
-        - Add tweaks suggested by upstream feedback
+    v4: - Fix formatting issues
+        - Add MODULE_* macros
     
     v5: - Rename jz4740_ecc_init to jz4740_ecc_reset
+        - Fix comments blocks not following the kernel style
 
- drivers/mtd/nand/raw/ingenic/Kconfig        |  10 +
+ drivers/mtd/nand/raw/ingenic/Kconfig        |  10 ++
  drivers/mtd/nand/raw/ingenic/Makefile       |   1 +
- drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  48 ++++-
- drivers/mtd/nand/raw/ingenic/jz4725b_bch.c  | 293 ++++++++++++++++++++++++++++
- 4 files changed, 351 insertions(+), 1 deletion(-)
- create mode 100644 drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
+ drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  48 +++++--
+ drivers/mtd/nand/raw/ingenic/jz4740_ecc.c   | 197 ++++++++++++++++++++++++++++
+ 4 files changed, 245 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
 
 diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig b/drivers/mtd/nand/raw/ingenic/Kconfig
-index cc663cc15119..497b46b144f2 100644
+index 4bf7d7af3b0a..cc663cc15119 100644
 --- a/drivers/mtd/nand/raw/ingenic/Kconfig
 +++ b/drivers/mtd/nand/raw/ingenic/Kconfig
-@@ -27,6 +27,16 @@ config MTD_NAND_JZ4740_ECC
- 	  This driver can also be built as a module. If so, the module
- 	  will be called jz4740-ecc.
+@@ -17,6 +17,16 @@ if MTD_NAND_JZ4780
+ config MTD_NAND_INGENIC_ECC
+ 	tristate
  
-+config MTD_NAND_JZ4725B_BCH
-+	tristate "Hardware BCH support for JZ4725B SoC"
++config MTD_NAND_JZ4740_ECC
++	tristate "Hardware BCH support for JZ4740 SoC"
 +	select MTD_NAND_INGENIC_ECC
 +	help
-+	  Enable this driver to support the BCH error-correction hardware
-+	  present on the JZ4725B SoC from Ingenic.
++	  Enable this driver to support the Reed-Solomon error-correction
++	  hardware present on the JZ4740 SoC from Ingenic.
 +
 +	  This driver can also be built as a module. If so, the module
-+	  will be called jz4725b-bch.
++	  will be called jz4740-ecc.
 +
  config MTD_NAND_JZ4780_BCH
  	tristate "Hardware BCH support for JZ4780 SoC"
  	select MTD_NAND_INGENIC_ECC
 diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
-index 563b7effcf59..ab2c5f47e5b7 100644
+index f3c3c0f230b0..563b7effcf59 100644
 --- a/drivers/mtd/nand/raw/ingenic/Makefile
 +++ b/drivers/mtd/nand/raw/ingenic/Makefile
-@@ -3,4 +3,5 @@ obj-$(CONFIG_MTD_NAND_JZ4780) += ingenic_nand.o
+@@ -2,4 +2,5 @@ obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
+ obj-$(CONFIG_MTD_NAND_JZ4780) += ingenic_nand.o
  
  obj-$(CONFIG_MTD_NAND_INGENIC_ECC) += ingenic_ecc.o
- obj-$(CONFIG_MTD_NAND_JZ4740_ECC) += jz4740_ecc.o
-+obj-$(CONFIG_MTD_NAND_JZ4725B_BCH) += jz4725b_bch.o
++obj-$(CONFIG_MTD_NAND_JZ4740_ECC) += jz4740_ecc.o
  obj-$(CONFIG_MTD_NAND_JZ4780_BCH) += jz4780_bch.o
 diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-index 1bd1f18d4532..a2450e10932a 100644
+index a5f2f21c5198..1bd1f18d4532 100644
 --- a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
 +++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-@@ -34,6 +34,7 @@ struct jz_soc_info {
- 	unsigned long data_offset;
- 	unsigned long addr_offset;
- 	unsigned long cmd_offset;
-+	const struct mtd_ooblayout_ops *oob_layout;
- };
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+@@ -26,13 +27,15 @@
  
- struct ingenic_nand_cs {
-@@ -71,6 +72,41 @@ static inline struct ingenic_nfc *to_ingenic_nfc(struct nand_controller *ctrl)
- 	return container_of(ctrl, struct ingenic_nfc, controller);
- }
+ #define DRV_NAME	"ingenic-nand"
  
-+static int jz4725b_ooblayout_ecc(struct mtd_info *mtd, int section,
-+				 struct mtd_oob_region *oobregion)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct nand_ecc_ctrl *ecc = &chip->ecc;
-+
-+	if (section || !ecc->total)
-+		return -ERANGE;
-+
-+	oobregion->length = ecc->total;
-+	oobregion->offset = 3;
-+
-+	return 0;
-+}
-+
-+static int jz4725b_ooblayout_free(struct mtd_info *mtd, int section,
-+				  struct mtd_oob_region *oobregion)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct nand_ecc_ctrl *ecc = &chip->ecc;
-+
-+	if (section)
-+		return -ERANGE;
-+
-+	oobregion->length = mtd->oobsize - ecc->total - 3;
-+	oobregion->offset = 3 + ecc->total;
-+
-+	return 0;
-+}
-+
-+const struct mtd_ooblayout_ops jz4725b_ooblayout_ops = {
-+	.ecc = jz4725b_ooblayout_ecc,
-+	.free = jz4725b_ooblayout_free,
+-#define OFFSET_DATA	0x00000000
+-#define OFFSET_CMD	0x00400000
+-#define OFFSET_ADDR	0x00800000
+-
+ /* Command delay when there is no R/B pin. */
+ #define RB_DELAY_US	100
+ 
++struct jz_soc_info {
++	unsigned long data_offset;
++	unsigned long addr_offset;
++	unsigned long cmd_offset;
 +};
 +
- static void ingenic_nand_select_chip(struct nand_chip *chip, int chipnr)
- {
- 	struct ingenic_nand *nand = to_ingenic_nand(nand_to_mtd(chip));
-@@ -211,7 +247,7 @@ static int ingenic_nand_attach_chip(struct nand_chip *chip)
- 		return -EINVAL;
- 	}
+ struct ingenic_nand_cs {
+ 	unsigned int bank;
+ 	void __iomem *base;
+@@ -41,6 +44,7 @@ struct ingenic_nand_cs {
+ struct ingenic_nfc {
+ 	struct device *dev;
+ 	struct ingenic_ecc *ecc;
++	const struct jz_soc_info *soc_info;
+ 	struct nand_controller controller;
+ 	unsigned int num_banks;
+ 	struct list_head chips;
+@@ -100,9 +104,9 @@ static void ingenic_nand_cmd_ctrl(struct nand_chip *chip, int cmd,
+ 		return;
  
--	mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
-+	mtd_set_ooblayout(mtd, nfc->soc_info->oob_layout);
+ 	if (ctrl & NAND_ALE)
+-		writeb(cmd, cs->base + OFFSET_ADDR);
++		writeb(cmd, cs->base + nfc->soc_info->addr_offset);
+ 	else if (ctrl & NAND_CLE)
+-		writeb(cmd, cs->base + OFFSET_CMD);
++		writeb(cmd, cs->base + nfc->soc_info->cmd_offset);
+ }
  
+ static int ingenic_nand_dev_ready(struct nand_chip *chip)
+@@ -160,8 +164,13 @@ static int ingenic_nand_attach_chip(struct nand_chip *chip)
+ 	struct ingenic_nfc *nfc = to_ingenic_nfc(chip->controller);
+ 	int eccbytes;
+ 
+-	chip->ecc.bytes = fls((1 + 8) * chip->ecc.size)	*
+-				(chip->ecc.strength / 8);
++	if (chip->ecc.strength == 4) {
++		/* JZ4740 uses 9 bytes of ECC to correct maximum 4 errors */
++		chip->ecc.bytes = 9;
++	} else {
++		chip->ecc.bytes = fls((1 + 8) * chip->ecc.size)	*
++				  (chip->ecc.strength / 8);
++	}
+ 
+ 	switch (chip->ecc.mode) {
+ 	case NAND_ECC_HW:
+@@ -270,8 +279,8 @@ static int ingenic_nand_init_chip(struct platform_device *pdev,
+ 		return -ENOMEM;
+ 	mtd->dev.parent = dev;
+ 
+-	chip->legacy.IO_ADDR_R = cs->base + OFFSET_DATA;
+-	chip->legacy.IO_ADDR_W = cs->base + OFFSET_DATA;
++	chip->legacy.IO_ADDR_R = cs->base + nfc->soc_info->data_offset;
++	chip->legacy.IO_ADDR_W = cs->base + nfc->soc_info->data_offset;
+ 	chip->legacy.chip_delay = RB_DELAY_US;
+ 	chip->options = NAND_NO_SUBPAGE_WRITE;
+ 	chip->legacy.select_chip = ingenic_nand_select_chip;
+@@ -353,6 +362,10 @@ static int ingenic_nand_probe(struct platform_device *pdev)
+ 	if (!nfc)
+ 		return -ENOMEM;
+ 
++	nfc->soc_info = device_get_match_data(dev);
++	if (!nfc->soc_info)
++		return -EINVAL;
++
+ 	/*
+ 	 * Check for ECC HW before we call nand_scan_ident, to prevent us from
+ 	 * having to call it again if the ECC driver returns -EPROBE_DEFER.
+@@ -390,8 +403,21 @@ static int ingenic_nand_remove(struct platform_device *pdev)
  	return 0;
  }
-@@ -407,16 +443,26 @@ static const struct jz_soc_info jz4740_soc_info = {
- 	.data_offset = 0x00000000,
- 	.cmd_offset = 0x00008000,
- 	.addr_offset = 0x00010000,
-+	.oob_layout = &nand_ooblayout_lp_ops,
-+};
-+
-+static const struct jz_soc_info jz4725b_soc_info = {
+ 
++static const struct jz_soc_info jz4740_soc_info = {
 +	.data_offset = 0x00000000,
 +	.cmd_offset = 0x00008000,
 +	.addr_offset = 0x00010000,
-+	.oob_layout = &jz4725b_ooblayout_ops,
- };
- 
- static const struct jz_soc_info jz4780_soc_info = {
- 	.data_offset = 0x00000000,
- 	.cmd_offset = 0x00400000,
- 	.addr_offset = 0x00800000,
-+	.oob_layout = &nand_ooblayout_lp_ops,
- };
- 
++};
++
++static const struct jz_soc_info jz4780_soc_info = {
++	.data_offset = 0x00000000,
++	.cmd_offset = 0x00400000,
++	.addr_offset = 0x00800000,
++};
++
  static const struct of_device_id ingenic_nand_dt_match[] = {
- 	{ .compatible = "ingenic,jz4740-nand", .data = &jz4740_soc_info },
-+	{ .compatible = "ingenic,jz4725b-nand", .data = &jz4725b_soc_info },
- 	{ .compatible = "ingenic,jz4780-nand", .data = &jz4780_soc_info },
+-	{ .compatible = "ingenic,jz4780-nand" },
++	{ .compatible = "ingenic,jz4740-nand", .data = &jz4740_soc_info },
++	{ .compatible = "ingenic,jz4780-nand", .data = &jz4780_soc_info },
  	{},
  };
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c b/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
+ MODULE_DEVICE_TABLE(of, ingenic_nand_dt_match);
+diff --git a/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c b/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
 new file mode 100644
-index 000000000000..355fee4d3e1c
+index 000000000000..13fea645c7f0
 --- /dev/null
-+++ b/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
-@@ -0,0 +1,293 @@
++++ b/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
+@@ -0,0 +1,197 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * JZ4725B BCH controller driver
++ * JZ4740 ECC controller driver
 + *
-+ * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
++ * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net>
 + *
-+ * Based on jz4780_bch.c
++ * based on jz4740-nand.c
 + */
 +
 +#include <linux/bitops.h>
 +#include <linux/device.h>
 +#include <linux/io.h>
-+#include <linux/iopoll.h>
 +#include <linux/module.h>
-+#include <linux/mutex.h>
 +#include <linux/of_platform.h>
 +#include <linux/platform_device.h>
 +
 +#include "ingenic_ecc.h"
 +
-+#define BCH_BHCR			0x0
-+#define BCH_BHCSR			0x4
-+#define BCH_BHCCR			0x8
-+#define BCH_BHCNT			0xc
-+#define BCH_BHDR			0x10
-+#define BCH_BHPAR0			0x14
-+#define BCH_BHERR0			0x28
-+#define BCH_BHINT			0x24
-+#define BCH_BHINTES			0x3c
-+#define BCH_BHINTEC			0x40
-+#define BCH_BHINTE			0x38
++#define JZ_REG_NAND_ECC_CTRL	0x00
++#define JZ_REG_NAND_DATA	0x04
++#define JZ_REG_NAND_PAR0	0x08
++#define JZ_REG_NAND_PAR1	0x0C
++#define JZ_REG_NAND_PAR2	0x10
++#define JZ_REG_NAND_IRQ_STAT	0x14
++#define JZ_REG_NAND_IRQ_CTRL	0x18
++#define JZ_REG_NAND_ERR(x)	(0x1C + ((x) << 2))
 +
-+#define BCH_BHCR_ENCE			BIT(3)
-+#define BCH_BHCR_BSEL			BIT(2)
-+#define BCH_BHCR_INIT			BIT(1)
-+#define BCH_BHCR_BCHE			BIT(0)
++#define JZ_NAND_ECC_CTRL_PAR_READY	BIT(4)
++#define JZ_NAND_ECC_CTRL_ENCODING	BIT(3)
++#define JZ_NAND_ECC_CTRL_RS		BIT(2)
++#define JZ_NAND_ECC_CTRL_RESET		BIT(1)
++#define JZ_NAND_ECC_CTRL_ENABLE		BIT(0)
 +
-+#define BCH_BHCNT_DEC_COUNT_SHIFT	16
-+#define BCH_BHCNT_DEC_COUNT_MASK	(0x3ff << BCH_BHCNT_DEC_COUNT_SHIFT)
-+#define BCH_BHCNT_ENC_COUNT_SHIFT	0
-+#define BCH_BHCNT_ENC_COUNT_MASK	(0x3ff << BCH_BHCNT_ENC_COUNT_SHIFT)
++#define JZ_NAND_STATUS_ERR_COUNT	(BIT(31) | BIT(30) | BIT(29))
++#define JZ_NAND_STATUS_PAD_FINISH	BIT(4)
++#define JZ_NAND_STATUS_DEC_FINISH	BIT(3)
++#define JZ_NAND_STATUS_ENC_FINISH	BIT(2)
++#define JZ_NAND_STATUS_UNCOR_ERROR	BIT(1)
++#define JZ_NAND_STATUS_ERROR		BIT(0)
 +
-+#define BCH_BHERR_INDEX0_SHIFT		0
-+#define BCH_BHERR_INDEX0_MASK		(0x1fff << BCH_BHERR_INDEX0_SHIFT)
-+#define BCH_BHERR_INDEX1_SHIFT		16
-+#define BCH_BHERR_INDEX1_MASK		(0x1fff << BCH_BHERR_INDEX1_SHIFT)
++static const uint8_t empty_block_ecc[] = {
++	0xcd, 0x9d, 0x90, 0x58, 0xf4, 0x8b, 0xff, 0xb7, 0x6f
++};
 +
-+#define BCH_BHINT_ERRC_SHIFT		28
-+#define BCH_BHINT_ERRC_MASK		(0xf << BCH_BHINT_ERRC_SHIFT)
-+#define BCH_BHINT_TERRC_SHIFT		16
-+#define BCH_BHINT_TERRC_MASK		(0x7f << BCH_BHINT_TERRC_SHIFT)
-+#define BCH_BHINT_ALL_0			BIT(5)
-+#define BCH_BHINT_ALL_F			BIT(4)
-+#define BCH_BHINT_DECF			BIT(3)
-+#define BCH_BHINT_ENCF			BIT(2)
-+#define BCH_BHINT_UNCOR			BIT(1)
-+#define BCH_BHINT_ERR			BIT(0)
-+
-+/* Timeout for BCH calculation/correction. */
-+#define BCH_TIMEOUT_US			100000
-+
-+static inline void jz4725b_bch_config_set(struct ingenic_ecc *bch, u32 cfg)
++static void jz4740_ecc_reset(struct ingenic_ecc *ecc, bool calc_ecc)
 +{
-+	writel(cfg, bch->base + BCH_BHCSR);
-+}
++	uint32_t reg;
 +
-+static inline void jz4725b_bch_config_clear(struct ingenic_ecc *bch, u32 cfg)
-+{
-+	writel(cfg, bch->base + BCH_BHCCR);
-+}
++	/* Clear interrupt status */
++	writel(0, ecc->base + JZ_REG_NAND_IRQ_STAT);
 +
-+static int jz4725b_bch_reset(struct ingenic_ecc *bch,
-+			     struct ingenic_ecc_params *params, bool calc_ecc)
-+{
-+	u32 reg, max_value;
-+
-+	/* Clear interrupt status. */
-+	writel(readl(bch->base + BCH_BHINT), bch->base + BCH_BHINT);
-+
-+	/* Initialise and enable BCH. */
-+	jz4725b_bch_config_clear(bch, 0x1f);
-+	jz4725b_bch_config_set(bch, BCH_BHCR_BCHE);
-+
-+	if (params->strength == 8)
-+		jz4725b_bch_config_set(bch, BCH_BHCR_BSEL);
-+	else
-+		jz4725b_bch_config_clear(bch, BCH_BHCR_BSEL);
-+
++	/* Initialize and enable ECC hardware */
++	reg = readl(ecc->base + JZ_REG_NAND_ECC_CTRL);
++	reg |= JZ_NAND_ECC_CTRL_RESET;
++	reg |= JZ_NAND_ECC_CTRL_ENABLE;
++	reg |= JZ_NAND_ECC_CTRL_RS;
 +	if (calc_ecc) /* calculate ECC from data */
-+		jz4725b_bch_config_set(bch, BCH_BHCR_ENCE);
++		reg |= JZ_NAND_ECC_CTRL_ENCODING;
 +	else /* correct data from ECC */
-+		jz4725b_bch_config_clear(bch, BCH_BHCR_ENCE);
++		reg &= ~JZ_NAND_ECC_CTRL_ENCODING;
 +
-+	jz4725b_bch_config_set(bch, BCH_BHCR_INIT);
-+
-+	max_value = BCH_BHCNT_ENC_COUNT_MASK >> BCH_BHCNT_ENC_COUNT_SHIFT;
-+	if (params->size > max_value)
-+		return -EINVAL;
-+
-+	max_value = BCH_BHCNT_DEC_COUNT_MASK >> BCH_BHCNT_DEC_COUNT_SHIFT;
-+	if (params->size + params->bytes > max_value)
-+		return -EINVAL;
-+
-+	/* Set up BCH count register. */
-+	reg = params->size << BCH_BHCNT_ENC_COUNT_SHIFT;
-+	reg |= (params->size + params->bytes) << BCH_BHCNT_DEC_COUNT_SHIFT;
-+	writel(reg, bch->base + BCH_BHCNT);
-+
-+	return 0;
++	writel(reg, ecc->base + JZ_REG_NAND_ECC_CTRL);
 +}
 +
-+static void jz4725b_bch_disable(struct ingenic_ecc *bch)
++static int jz4740_ecc_calculate(struct ingenic_ecc *ecc,
++				struct ingenic_ecc_params *params,
++				const u8 *buf, u8 *ecc_code)
 +{
-+	/* Clear interrupts */
-+	writel(readl(bch->base + BCH_BHINT), bch->base + BCH_BHINT);
++	uint32_t reg, status;
++	unsigned int timeout = 1000;
++	int i;
 +
-+	/* Disable the hardware */
-+	jz4725b_bch_config_clear(bch, BCH_BHCR_BCHE);
-+}
++	jz4740_ecc_reset(ecc, true);
 +
-+static void jz4725b_bch_write_data(struct ingenic_ecc *bch, const u8 *buf,
-+				   size_t size)
-+{
-+	while (size--)
-+		writeb(*buf++, bch->base + BCH_BHDR);
-+}
++	do {
++		status = readl(ecc->base + JZ_REG_NAND_IRQ_STAT);
++	} while (!(status & JZ_NAND_STATUS_ENC_FINISH) && --timeout);
 +
-+static void jz4725b_bch_read_parity(struct ingenic_ecc *bch, u8 *buf,
-+				    size_t size)
-+{
-+	size_t size32 = size / sizeof(u32);
-+	size_t size8 = size % sizeof(u32);
-+	u32 *dest32;
-+	u8 *dest8;
-+	u32 val, offset = 0;
++	if (timeout == 0)
++		return -ETIMEDOUT;
 +
-+	dest32 = (u32 *)buf;
-+	while (size32--) {
-+		*dest32++ = readl_relaxed(bch->base + BCH_BHPAR0 + offset);
-+		offset += sizeof(u32);
-+	}
++	reg = readl(ecc->base + JZ_REG_NAND_ECC_CTRL);
++	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
++	writel(reg, ecc->base + JZ_REG_NAND_ECC_CTRL);
 +
-+	dest8 = (u8 *)dest32;
-+	val = readl_relaxed(bch->base + BCH_BHPAR0 + offset);
-+	switch (size8) {
-+	case 3:
-+		dest8[2] = (val >> 16) & 0xff;
-+	case 2: /* fall-through */
-+		dest8[1] = (val >> 8) & 0xff;
-+	case 1: /* fall-through */
-+		dest8[0] = val & 0xff;
-+		break;
-+	}
-+}
-+
-+static int jz4725b_bch_wait_complete(struct ingenic_ecc *bch, unsigned int irq,
-+				     u32 *status)
-+{
-+	u32 reg;
-+	int ret;
++	for (i = 0; i < params->bytes; ++i)
++		ecc_code[i] = readb(ecc->base + JZ_REG_NAND_PAR0 + i);
 +
 +	/*
-+	 * While we could use interrupts here and sleep until the operation
-+	 * completes, the controller works fairly quickly (usually a few
-+	 * microseconds) and so the overhead of sleeping until we get an
-+	 * interrupt quite noticeably decreases performance.
++	 * If the written data is completely 0xff, we also want to write 0xff as
++	 * ECC, otherwise we will get in trouble when doing subpage writes.
 +	 */
-+	ret = readl_relaxed_poll_timeout(bch->base + BCH_BHINT, reg,
-+					 reg & irq, 0, BCH_TIMEOUT_US);
-+	if (ret)
-+		return ret;
-+
-+	if (status)
-+		*status = reg;
-+
-+	writel(reg, bch->base + BCH_BHINT);
++	if (memcmp(ecc_code, empty_block_ecc, ARRAY_SIZE(empty_block_ecc)) == 0)
++		memset(ecc_code, 0xff, ARRAY_SIZE(empty_block_ecc));
 +
 +	return 0;
 +}
 +
-+static int jz4725b_calculate(struct ingenic_ecc *bch,
-+			     struct ingenic_ecc_params *params,
-+			     const u8 *buf, u8 *ecc_code)
++static void jz_nand_correct_data(uint8_t *buf, int index, int mask)
 +{
-+	int ret;
++	int offset = index & 0x7;
++	uint16_t data;
 +
-+	mutex_lock(&bch->lock);
++	index += (index >> 3);
 +
-+	ret = jz4725b_bch_reset(bch, params, true);
-+	if (ret) {
-+		dev_err(bch->dev, "Unable to init BCH with given parameters\n");
-+		goto out_disable;
-+	}
++	data = buf[index];
++	data |= buf[index + 1] << 8;
 +
-+	jz4725b_bch_write_data(bch, buf, params->size);
++	mask ^= (data >> offset) & 0x1ff;
++	data &= ~(0x1ff << offset);
++	data |= (mask << offset);
 +
-+	ret = jz4725b_bch_wait_complete(bch, BCH_BHINT_ENCF, NULL);
-+	if (ret) {
-+		dev_err(bch->dev, "timed out while calculating ECC\n");
-+		goto out_disable;
-+	}
-+
-+	jz4725b_bch_read_parity(bch, ecc_code, params->bytes);
-+
-+out_disable:
-+	jz4725b_bch_disable(bch);
-+	mutex_unlock(&bch->lock);
-+
-+	return ret;
++	buf[index] = data & 0xff;
++	buf[index + 1] = (data >> 8) & 0xff;
 +}
 +
-+static int jz4725b_correct(struct ingenic_ecc *bch,
-+			   struct ingenic_ecc_params *params,
-+			   u8 *buf, u8 *ecc_code)
++static int jz4740_ecc_correct(struct ingenic_ecc *ecc,
++			      struct ingenic_ecc_params *params,
++			      u8 *buf, u8 *ecc_code)
 +{
-+	u32 reg, errors, bit;
-+	unsigned int i;
-+	int ret;
++	int i, error_count, index;
++	uint32_t reg, status, error;
++	unsigned int timeout = 1000;
 +
-+	mutex_lock(&bch->lock);
++	jz4740_ecc_reset(ecc, false);
 +
-+	ret = jz4725b_bch_reset(bch, params, false);
-+	if (ret) {
-+		dev_err(bch->dev, "Unable to init BCH with given parameters\n");
-+		goto out;
-+	}
++	for (i = 0; i < params->bytes; ++i)
++		writeb(ecc_code[i], ecc->base + JZ_REG_NAND_PAR0 + i);
 +
-+	jz4725b_bch_write_data(bch, buf, params->size);
-+	jz4725b_bch_write_data(bch, ecc_code, params->bytes);
++	reg = readl(ecc->base + JZ_REG_NAND_ECC_CTRL);
++	reg |= JZ_NAND_ECC_CTRL_PAR_READY;
++	writel(reg, ecc->base + JZ_REG_NAND_ECC_CTRL);
 +
-+	ret = jz4725b_bch_wait_complete(bch, BCH_BHINT_DECF, &reg);
-+	if (ret) {
-+		dev_err(bch->dev, "timed out while correcting data\n");
-+		goto out;
-+	}
++	do {
++		status = readl(ecc->base + JZ_REG_NAND_IRQ_STAT);
++	} while (!(status & JZ_NAND_STATUS_DEC_FINISH) && --timeout);
 +
-+	if (reg & (BCH_BHINT_ALL_F | BCH_BHINT_ALL_0)) {
-+		/* Data and ECC is all 0xff or 0x00 - nothing to correct */
-+		ret = 0;
-+		goto out;
-+	}
++	if (timeout == 0)
++		return -ETIMEDOUT;
 +
-+	if (reg & BCH_BHINT_UNCOR) {
-+		/* Uncorrectable ECC error */
-+		ret = -EBADMSG;
-+		goto out;
-+	}
++	reg = readl(ecc->base + JZ_REG_NAND_ECC_CTRL);
++	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
++	writel(reg, ecc->base + JZ_REG_NAND_ECC_CTRL);
 +
-+	errors = (reg & BCH_BHINT_ERRC_MASK) >> BCH_BHINT_ERRC_SHIFT;
++	if (status & JZ_NAND_STATUS_ERROR) {
++		if (status & JZ_NAND_STATUS_UNCOR_ERROR)
++			return -EBADMSG;
 +
-+	/* Correct any detected errors. */
-+	for (i = 0; i < errors; i++) {
-+		if (i & 1) {
-+			bit = (reg & BCH_BHERR_INDEX1_MASK) >> BCH_BHERR_INDEX1_SHIFT;
-+		} else {
-+			reg = readl(bch->base + BCH_BHERR0 + (i * 4));
-+			bit = (reg & BCH_BHERR_INDEX0_MASK) >> BCH_BHERR_INDEX0_SHIFT;
++		error_count = (status & JZ_NAND_STATUS_ERR_COUNT) >> 29;
++
++		for (i = 0; i < error_count; ++i) {
++			error = readl(ecc->base + JZ_REG_NAND_ERR(i));
++			index = ((error >> 16) & 0x1ff) - 1;
++			if (index >= 0 && index < params->size)
++				jz_nand_correct_data(buf, index, error & 0x1ff);
 +		}
 +
-+		buf[(bit >> 3)] ^= BIT(bit & 0x7);
++		return error_count;
 +	}
 +
-+out:
-+	jz4725b_bch_disable(bch);
-+	mutex_unlock(&bch->lock);
-+
-+	return ret;
++	return 0;
 +}
 +
-+static const struct ingenic_ecc_ops jz4725b_bch_ops = {
-+	.disable = jz4725b_bch_disable,
-+	.calculate = jz4725b_calculate,
-+	.correct = jz4725b_correct,
++static void jz4740_ecc_disable(struct ingenic_ecc *ecc)
++{
++	u32 reg;
++
++	writel(0, ecc->base + JZ_REG_NAND_IRQ_STAT);
++	reg = readl(ecc->base + JZ_REG_NAND_ECC_CTRL);
++	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
++	writel(reg, ecc->base + JZ_REG_NAND_ECC_CTRL);
++}
++
++static const struct ingenic_ecc_ops jz4740_ecc_ops = {
++	.disable = jz4740_ecc_disable,
++	.calculate = jz4740_ecc_calculate,
++	.correct = jz4740_ecc_correct,
 +};
 +
-+static const struct of_device_id jz4725b_bch_dt_match[] = {
-+	{ .compatible = "ingenic,jz4725b-bch", .data = &jz4725b_bch_ops },
++static const struct of_device_id jz4740_ecc_dt_match[] = {
++	{ .compatible = "ingenic,jz4740-ecc", .data = &jz4740_ecc_ops },
 +	{},
 +};
-+MODULE_DEVICE_TABLE(of, jz4725b_bch_dt_match);
++MODULE_DEVICE_TABLE(of, jz4740_ecc_dt_match);
 +
-+static struct platform_driver jz4725b_bch_driver = {
++static struct platform_driver jz4740_ecc_driver = {
 +	.probe		= ingenic_ecc_probe,
 +	.driver	= {
-+		.name	= "jz4725b-bch",
-+		.of_match_table = jz4725b_bch_dt_match,
++		.name	= "jz4740-ecc",
++		.of_match_table = jz4740_ecc_dt_match,
 +	},
 +};
-+module_platform_driver(jz4725b_bch_driver);
++module_platform_driver(jz4740_ecc_driver);
 +
 +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-+MODULE_DESCRIPTION("Ingenic JZ4725B BCH controller driver");
++MODULE_DESCRIPTION("Ingenic JZ4740 ECC controller driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.11.0
