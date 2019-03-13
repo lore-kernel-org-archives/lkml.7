@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B5DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D40C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C46213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5986F2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504650;
-	bh=wf3xIAe25qKkx8EIDfp83rKDrHUu+PLpfWEME/kB2JY=;
+	s=default; t=1552504655;
+	bh=BHyHEAQYo2uAIwc7iAAUR12+1C4KpmFOrfT3VpjlfRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xbrtrkbRtFmxwfue4HGP/ZMHltEtaiWdR/VjB4fr/IGEm+GZqqe5BAcxz3XcVy3Kk
-	 sz480YKKpewHzehn/dwjW1gLUH0XiRfL0zi+hLZwlvub9VFMwPrt3pZoVgCWvBWCAS
-	 wuk1xIQeLhPoh9u7/CYP4UdXsf+FDcoLMvKxLTJM=
+	b=AmW40A4Tg+NH4qHkhlIz1NcdO1/T6JDgvqX6fS4NpRKEfmGIVJewALPSl22rESARp
+	 bHYWhdRHjK27qS3/8uYTaFxNinIHQNlAUXSsm8wwWP+N9WjZl247MXd6yMDsVqz67o
+	 4upZ1P9yw1iysc2uZHWGoqY0LsETdsBXzfUtmhTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfCMTR3 (ORCPT
+        id S1727219AbfCMTRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:17:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47730 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:17:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728867AbfCMTRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:17:21 -0400
+        id S1727818AbfCMTRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:17:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2689F2184D;
-        Wed, 13 Mar 2019 19:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 557872184E;
+        Wed, 13 Mar 2019 19:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504640;
-        bh=wf3xIAe25qKkx8EIDfp83rKDrHUu+PLpfWEME/kB2JY=;
+        s=default; t=1552504651;
+        bh=BHyHEAQYo2uAIwc7iAAUR12+1C4KpmFOrfT3VpjlfRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2F04AXHkmGiUNAw7f+bf3TFfnh9RP/hNXYUDpNWUlJ1TSxpPCgvx37wXEzpXSZoJM
-         Sj3KV48P4LG+0ULCkmHUzqZAe6/X/98TYjT4TbyWHBLwaunojZ5HmVcdGhofjYYHLr
-         S8vVVXXyiGSoCD7uZUm9zH+KbAy9+sQzLaMloaZs=
+        b=WK8At2EbHe7zIefBcpVB4hGB/+9Cif1ZBUcIDwnpnG0ofssXlKsxKF6QcofDzUW1u
+         yQ1rop2l0EvojywnCNFMbigwpbUYe64Vy2EjmXC0LWG5lHZOmDnuC0x8tqARFuD5d0
+         EwWGp4pyCLW6xKcQFAs5BSSakUImgoORfq5RgRwo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/24] net: marvell: mvneta: fix DMA debug warning
-Date:   Wed, 13 Mar 2019 15:16:34 -0400
-Message-Id: <20190313191647.160171-11-sashal@kernel.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.9 14/24] kasan, slab: fix conflicts with CONFIG_HARDENED_USERCOPY
+Date:   Wed, 13 Mar 2019 15:16:37 -0400
+Message-Id: <20190313191647.160171-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
 References: <20190313191647.160171-1-sashal@kernel.org>
@@ -58,58 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-[ Upstream commit a8fef9ba58c9966ddb1fec916d8d8137c9d8bc89 ]
+[ Upstream commit 219667c23c68eb3dbc0d5662b9246f28477fe529 ]
 
-Booting 4.20 on SolidRun Clearfog issues this warning with DMA API
-debug enabled:
+Similarly to commit 96fedce27e13 ("kasan: make tag based mode work with
+CONFIG_HARDENED_USERCOPY"), we need to reset pointer tags in
+__check_heap_object() in mm/slab.c before doing any pointer math.
 
-WARNING: CPU: 0 PID: 555 at kernel/dma/debug.c:1230 check_sync+0x514/0x5bc
-mvneta f1070000.ethernet: DMA-API: device driver tries to sync DMA memory it has not allocated [device address=0x000000002dd7dc00] [size=240 bytes]
-Modules linked in: ahci mv88e6xxx dsa_core xhci_plat_hcd xhci_hcd devlink armada_thermal marvell_cesa des_generic ehci_orion phy_armada38x_comphy mcp3021 spi_orion evbug sfp mdio_i2c ip_tables x_tables
-CPU: 0 PID: 555 Comm: bridge-network- Not tainted 4.20.0+ #291
-Hardware name: Marvell Armada 380/385 (Device Tree)
-[<c0019638>] (unwind_backtrace) from [<c0014888>] (show_stack+0x10/0x14)
-[<c0014888>] (show_stack) from [<c07f54e0>] (dump_stack+0x9c/0xd4)
-[<c07f54e0>] (dump_stack) from [<c00312bc>] (__warn+0xf8/0x124)
-[<c00312bc>] (__warn) from [<c00313b0>] (warn_slowpath_fmt+0x38/0x48)
-[<c00313b0>] (warn_slowpath_fmt) from [<c00b0370>] (check_sync+0x514/0x5bc)
-[<c00b0370>] (check_sync) from [<c00b04f8>] (debug_dma_sync_single_range_for_cpu+0x6c/0x74)
-[<c00b04f8>] (debug_dma_sync_single_range_for_cpu) from [<c051bd14>] (mvneta_poll+0x298/0xf58)
-[<c051bd14>] (mvneta_poll) from [<c0656194>] (net_rx_action+0x128/0x424)
-[<c0656194>] (net_rx_action) from [<c000a230>] (__do_softirq+0xf0/0x540)
-[<c000a230>] (__do_softirq) from [<c00386e0>] (irq_exit+0x124/0x144)
-[<c00386e0>] (irq_exit) from [<c009b5e0>] (__handle_domain_irq+0x58/0xb0)
-[<c009b5e0>] (__handle_domain_irq) from [<c03a63c4>] (gic_handle_irq+0x48/0x98)
-[<c03a63c4>] (gic_handle_irq) from [<c0009a10>] (__irq_svc+0x70/0x98)
-...
-
-This appears to be caused by mvneta_rx_hwbm() calling
-dma_sync_single_range_for_cpu() with the wrong struct device pointer,
-as the buffer manager device pointer is used to map and unmap the
-buffer.  Fix this.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/9a5c0f958db10e69df5ff9f2b997866b56b7effc.1550602886.git.andreyknvl@google.com
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Tested-by: Qian Cai <cai@lca.pw>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Evgeniy Stepanov <eugenis@google.com>
+Cc: Kostya Serebryany <kcc@google.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/slab.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index c92ffdf91065..d98b874a7238 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -2050,7 +2050,7 @@ static int mvneta_rx_hwbm(struct mvneta_port *pp, int rx_todo,
- 			if (unlikely(!skb))
- 				goto err_drop_frame_ret_pool;
+diff --git a/mm/slab.c b/mm/slab.c
+index 354a09deecff..b30b58de793b 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -4461,6 +4461,8 @@ const char *__check_heap_object(const void *ptr, unsigned long n,
+ 	unsigned int objnr;
+ 	unsigned long offset;
  
--			dma_sync_single_range_for_cpu(dev->dev.parent,
-+			dma_sync_single_range_for_cpu(&pp->bm_priv->pdev->dev,
- 			                              rx_desc->buf_phys_addr,
- 			                              MVNETA_MH_SIZE + NET_SKB_PAD,
- 			                              rx_bytes,
++	ptr = kasan_reset_tag(ptr);
++
+ 	/* Find and validate object. */
+ 	cachep = page->slab_cache;
+ 	objnr = obj_to_index(cachep, page, (void *)ptr);
 -- 
 2.19.1
 
