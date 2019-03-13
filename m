@@ -7,58 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA9BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40C3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6698C2183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E3F2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504449;
-	bh=XHGEPbGuaK4DL9Q7qpktUVxi1JR42d6V4AQz9eyM60k=;
+	s=default; t=1552504452;
+	bh=PGAJHHfMO/uQra3LQRAE0sC8/48hmjneCCbrtR81tCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cwGudK+7rTBL3JIWOXQ4/EX7Ur/+GJwDVc60WBSwPH+E2QH+i2WyuAYt/14Upkzt0
-	 E5mcJvlD2VSl6ftxr44XN98GrRp9caDRestdEwYEbgVOWWoIq9+EmHqqFmx0lW3WzO
-	 3xNEQrx/wWUg+qEs+TR/ASS0ubC5rR+OzwKsz0pU=
+	b=gNprJve8Dl3qV9rizuQwOIU//Q5kSbaasfqqNlD67G+FshAiFqpAcuecA8rvttir2
+	 EzWrG34EvRHW3K51fXu4l1z6R2ScuQS9vV/BQZu1DMXQUKvscCCcmCD7/TmSHEzaYp
+	 YklePdlF6IW36j3rcDeSe/ZU0UuEmCotxgoRqC8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbfCMTOI (ORCPT
+        id S1728171AbfCMTOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44416 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:14:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728147AbfCMTOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:14:02 -0400
+        id S1728160AbfCMTOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:14:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FFC20693;
-        Wed, 13 Mar 2019 19:13:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C2BB20693;
+        Wed, 13 Mar 2019 19:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504441;
-        bh=XHGEPbGuaK4DL9Q7qpktUVxi1JR42d6V4AQz9eyM60k=;
+        s=default; t=1552504448;
+        bh=PGAJHHfMO/uQra3LQRAE0sC8/48hmjneCCbrtR81tCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ftXOAe4IcT4USdQ9SXlqEU6H72A5aNLg9cb5/AJwhf949eYMmqK/tWHvutys/9AbW
-         xuzxAt4Uahu60/txNlrD9GCGyTdpM3+/nPbJ4/ZDWFCryaVxlfz68xEq6X9UJo6TGG
-         qisO51Ps9eOPvIGWRahlRyoXC7Zlm4GxuK6Ej1xw=
+        b=aMg2S837/KhVrDBnl4D1PGPQhMAvqrm+IqOTcdGMgm5dXVTugQO0G7rpIRAv8P1re
+         /saMyJZmbdt8Th2i4EkrV9UdG/lCCRlp4rLZjpROyvdwsV4ufn9OaAvmrQzuKngYAM
+         Co558MxwcXlG+POK6ptjrtHcJzBw9kgZifAlaN8k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Pekka Enberg <penberg@kernel.org>, Qian Cai <cai@lca.pw>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 27/48] kasan, slub: move kasan_poison_slab hook before page_address
-Date:   Wed, 13 Mar 2019 15:12:29 -0400
-Message-Id: <20190313191250.158955-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 29/48] tmpfs: fix link accounting when a tmpfile is linked in
+Date:   Wed, 13 Mar 2019 15:12:31 -0400
+Message-Id: <20190313191250.158955-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -70,86 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit a71012242837fe5e67d8c999cfc357174ed5dba0 ]
+[ Upstream commit 1062af920c07f5b54cf5060fde3339da6df0cf6b ]
 
-With tag based KASAN page_address() looks at the page flags to see whether
-the resulting pointer needs to have a tag set.  Since we don't want to set
-a tag when page_address() is called on SLAB pages, we call
-page_kasan_tag_reset() in kasan_poison_slab().  However in allocate_slab()
-page_address() is called before kasan_poison_slab().  Fix it by changing
-the order.
+tmpfs has a peculiarity of accounting hard links as if they were
+separate inodes: so that when the number of inodes is limited, as it is
+by default, a user cannot soak up an unlimited amount of unreclaimable
+dcache memory just by repeatedly linking a file.
 
-[andreyknvl@google.com: fix compilation error when CONFIG_SLUB_DEBUG=n]
-  Link: http://lkml.kernel.org/r/ac27cc0bbaeb414ed77bcd6671a877cf3546d56e.1550066133.git.andreyknvl@google.com
-Link: http://lkml.kernel.org/r/cd895d627465a3f1c712647072d17f10883be2a1.1549921721.git.andreyknvl@google.com
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Evgeniy Stepanov <eugenis@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Kostya Serebryany <kcc@google.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+But when v3.11 added O_TMPFILE, and the ability to use linkat() on the
+fd, we missed accommodating this new case in tmpfs: "df -i" shows that
+an extra "inode" remains accounted after the file is unlinked and the fd
+closed and the actual inode evicted.  If a user repeatedly links
+tmpfiles into a tmpfs, the limit will be hit (ENOSPC) even after they
+are deleted.
+
+Just skip the extra reservation from shmem_link() in this case: there's
+a sense in which this first link of a tmpfile is then cheaper than a
+hard link of another file, but the accounting works out, and there's
+still good limiting, so no need to do anything more complicated.
+
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.1902182134370.7035@eggly.anvils
+Fixes: f4e0c30c191 ("allow the temp files created by open() to be linked to")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Reported-by: Matej Kupljen <matej.kupljen@gmail.com>
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ mm/shmem.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 8da34a8af53d..7666cff34bfb 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1075,6 +1075,16 @@ static void setup_object_debug(struct kmem_cache *s, struct page *page,
- 	init_tracking(s, object);
- }
+diff --git a/mm/shmem.c b/mm/shmem.c
+index b6cf0e8e685b..bf13966b009c 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2901,10 +2901,14 @@ static int shmem_link(struct dentry *old_dentry, struct inode *dir, struct dentr
+ 	 * No ordinary (disk based) filesystem counts links as inodes;
+ 	 * but each new link needs a new dentry, pinning lowmem, and
+ 	 * tmpfs dentries cannot be pruned until they are unlinked.
++	 * But if an O_TMPFILE file is linked into the tmpfs, the
++	 * first link must skip that, to get the accounting right.
+ 	 */
+-	ret = shmem_reserve_inode(inode->i_sb);
+-	if (ret)
+-		goto out;
++	if (inode->i_nlink) {
++		ret = shmem_reserve_inode(inode->i_sb);
++		if (ret)
++			goto out;
++	}
  
-+static void setup_page_debug(struct kmem_cache *s, void *addr, int order)
-+{
-+	if (!(s->flags & SLAB_POISON))
-+		return;
-+
-+	metadata_access_enable();
-+	memset(addr, POISON_INUSE, PAGE_SIZE << order);
-+	metadata_access_disable();
-+}
-+
- static inline int alloc_consistency_checks(struct kmem_cache *s,
- 					struct page *page,
- 					void *object, unsigned long addr)
-@@ -1292,6 +1302,8 @@ slab_flags_t kmem_cache_flags(unsigned int object_size,
- #else /* !CONFIG_SLUB_DEBUG */
- static inline void setup_object_debug(struct kmem_cache *s,
- 			struct page *page, void *object) {}
-+static inline void setup_page_debug(struct kmem_cache *s,
-+			void *addr, int order) {}
- 
- static inline int alloc_debug_processing(struct kmem_cache *s,
- 	struct page *page, void *object, unsigned long addr) { return 0; }
-@@ -1602,12 +1614,11 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
- 	if (page_is_pfmemalloc(page))
- 		SetPageSlabPfmemalloc(page);
- 
--	start = page_address(page);
-+	kasan_poison_slab(page);
- 
--	if (unlikely(s->flags & SLAB_POISON))
--		memset(start, POISON_INUSE, PAGE_SIZE << order);
-+	start = page_address(page);
- 
--	kasan_poison_slab(page);
-+	setup_page_debug(s, start, order);
- 
- 	shuffle = shuffle_freelist(s, page);
- 
+ 	dir->i_size += BOGO_DIRENT_SIZE;
+ 	inode->i_ctime = dir->i_ctime = dir->i_mtime = current_time(inode);
 -- 
 2.19.1
 
