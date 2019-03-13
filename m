@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDC6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D2EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294CB213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064D22146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Qebbgh0D";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A1cKHuMY"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cWyqNSzA";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lZ/UfM1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfCMVTD (ORCPT
+        id S1727553AbfCMVTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 17:19:03 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46204 "EHLO
+        Wed, 13 Mar 2019 17:19:08 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46344 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbfCMVTB (ORCPT
+        with ESMTP id S1727534AbfCMVTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 17:19:01 -0400
+        Wed, 13 Mar 2019 17:19:04 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2BD2960F3E; Wed, 13 Mar 2019 21:18:58 +0000 (UTC)
+        id B2F2F60DB3; Wed, 13 Mar 2019 21:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552511940;
-        bh=NdyWw51FdCiasrhn8aoVze0c7SrIXnQvQ7iSa1pp9Ss=;
+        s=default; t=1552511943;
+        bh=yrbany7xJkGKfdWOmTNDhj5ACcMHtm/FzzIKSzyMgJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qebbgh0DDj2+NrRl9AKvvUZ3pZz8ktwQ+N0DE9gNzxPaPNvrxQVH9j9iNeu0NSDFa
-         3Hsv96w306DPP/g1pl5v2QQaEq+/QN7fQZcY5wp4up8iZKmIyJq6/eRwFFjql6n+f9
-         1tM3m+tV+Q5B/x2H1t8SjbYLmm9qF/MyI6caB3xM=
+        b=cWyqNSzAyTkjIRAsaXXLDgw5tkL1E8/ioOCgVWtYvfXk+qgUNcanpYnWDi/VxWADJ
+         2wz6XovDKv27Oqt0bkAeOery0aHb/qFCYDLTMzpCHPgA882zWIXPFjlPedJ5NiI7pF
+         N9R4kU0nBk9LAZwPuR205/ZTmDf+pTYpzU8QlNIc=
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A15760A05;
-        Wed, 13 Mar 2019 21:18:55 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB87460312;
+        Wed, 13 Mar 2019 21:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552511937;
-        bh=NdyWw51FdCiasrhn8aoVze0c7SrIXnQvQ7iSa1pp9Ss=;
+        s=default; t=1552511939;
+        bh=yrbany7xJkGKfdWOmTNDhj5ACcMHtm/FzzIKSzyMgJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A1cKHuMYShHBz/WLyE+7NuzV6iFFKD9b7HjlYZ5MK8QGhxBj0ScCWCNHwDDH3dCkd
-         3NOXpCzQ2njtC8wxpnl5nCX6dfF8lcFBGsCrTqqdsv9vQKjKcieGEpXYk3likNb3RX
-         FBxaomoi9Cu8nQn8RHOAILSjHc/IpOXLqWTtt5L8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0A15760A05
+        b=lZ/UfM1vZQmr199NB739mdT+q7lUUEsOiZA+r7OvnCLEXPfqAmbLX1kawM8rrP5YT
+         alKWUSbs5mwpKnoSFB50JyaWj75QeUAVPtf+2VHbGadFZsNcZa0YpyFHB92zUxllZ4
+         NIg+Mr68cyP5VKndv3tAAHtHWpPYP3yQXiUqB988=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BB87460312
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -54,9 +54,9 @@ Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
         linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
         bjorn.andersson@linaro.org, dianders@chromium.org,
         linus.walleij@linaro.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v4 02/10] irqdomain: add bus token DOMAIN_BUS_WAKEUP
-Date:   Wed, 13 Mar 2019 15:18:36 -0600
-Message-Id: <20190313211844.29416-3-ilina@codeaurora.org>
+Subject: [PATCH v4 03/10] of/irq: document properties for wakeup interrupt parent
+Date:   Wed, 13 Mar 2019 15:18:37 -0600
+Message-Id: <20190313211844.29416-4-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190313211844.29416-1-ilina@codeaurora.org>
 References: <20190313211844.29416-1-ilina@codeaurora.org>
@@ -67,36 +67,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A single controller can handle normal interrupts and wake-up interrupts
-independently, with a different numbering space. It is thus crucial to
-allow the driver for such a controller discriminate between the two.
+Some interrupt controllers in a SoC, are always powered on and have a
+select interrupts routed to them, so that they can wakeup the SoC from
+suspend. Add wakeup-parent DT property to refer to these interrupt
+controllers.
 
-A simple way to do so is to tag the wake-up irqdomain with a "bus token"
-that indicates the wake-up domain. This slightly abuses the notion of
-bus, but also radically simplifies the design of such a driver. Between
-two evils, we choose the least damaging.
+If the interrupts routed to the wakeup parent are not sequential, than a
+map needs to exist to associate the same interrupt line on multiple
+interrupt controllers. Providing this map in every driver is cumbersome.
+Let's add this in the device tree and document the properties to map the
+interrupt specifiers
 
-Suggested-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
 Changes in v4:
-	- Update commit text
+	- Added this documentation
 ---
- include/linux/irqdomain.h | 1 +
- 1 file changed, 1 insertion(+)
+ .../interrupt-controller/interrupts.txt       | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 35965f41d7be..05055bc992ab 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -82,6 +82,7 @@ enum irq_domain_bus_token {
- 	DOMAIN_BUS_NEXUS,
- 	DOMAIN_BUS_IPI,
- 	DOMAIN_BUS_FSL_MC_MSI,
-+	DOMAIN_BUS_WAKEUP,
- };
- 
- /**
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+index 8a3c40829899..917b598317f5 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+@@ -108,3 +108,42 @@ commonly used:
+ 			sensitivity = <7>;
+ 		};
+ 	};
++
++3) Interrupt wakeup parent
++--------------------------
++
++Some interrupt controllers in a SoC, are always powered on and have a select
++interrupts routed to them, so that they can wakeup the SoC from suspend. These
++interrupt controllers do not fall into the category of a parent interrupt
++controller and can be specified by the "wakeup-parent" property and contain a
++single phandle referring to the wakeup capable interrupt controller.
++
++   Example:
++	wakeup-parent = <&pdc_intc>;
++
++
++4) Interrupt mapping
++--------------------
++
++Sometimes interrupts may be detected by more than one interrupt controller
++(depending on which controller is active). The interrupt controllers may not
++be in hierarchy and therefore the interrupt controller driver is required to
++establish the relationship between the same interrupt at different interrupt
++controllers. If these interrupts are not sequential then a map needs to be
++specified to help identify these interrupts.
++
++Mapping the interrupt specifiers in the device tree can be done using the
++"irqdomain-map" property. The property contains interrupt specifier at the
++current interrupt controller followed by the interrupt specifier at the mapped
++interrupt controller.
++
++   irqdomain-map = <incoming-interrupt-specifier mapped-interrupt-specifier>
++
++The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-thru" may
++be provided to help interpret the valid bits of the incoming and mapped
++interrupt specifiers respectively.
++
++   Example:
++	irqdomain-map = <22 0 &intc 36 0>, <24 0 &intc 37 0>;
++	irqdomain-map-mask = <0xff 0>;
++	irqdomain-map-pass-thru = <0 0xff>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
