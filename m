@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA92FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEEFC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A882173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCC12184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504294;
-	bh=kheTHIygLSt5QDraeXk6hJ+3u9RmmtJxD/+jReERaOQ=;
+	s=default; t=1552504298;
+	bh=zj0IyhfXSFQ4GA6SIDlaRCo1ldpq3ns5AjhM8nul7mU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GP4wlP7HmzAhJTPIhX4Fqqm27jT7auqRcl3dky2m/aDZizUkc2iAEe7dTDyMSzMFN
-	 qqkDYe0rfjwuB6mgvHcIhnGxfu7pZCeWJArjOOa4lUfDj9PvsZHdnoVQ5YyayJa6qy
-	 lKUjokMVjmfcmjKKHyWR/scz6Hz6di5Aaxh18fp4=
+	b=Gv2BvLAM81D+hEOhYxml4xMCVmnOAvLLwUcX1ok0EOvTE2UaqOREAVhSo43/9k8SV
+	 rf2XHPOsZ4R7wU+RKhqvMDIG5whnt7wbtgUa85R1P+TQ5irFPxvkDgLhZyIWlX4ZLn
+	 osZqiHfmOQKeDT06qFjKB+EZcf+NF1jKv6eCi9Ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfCMTLd (ORCPT
+        id S1727522AbfCMTLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:11:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42050 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:11:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727453AbfCMTL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:11:29 -0400
+        id S1726845AbfCMTLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD8B5213A2;
-        Wed, 13 Mar 2019 19:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7E3721855;
+        Wed, 13 Mar 2019 19:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504289;
-        bh=kheTHIygLSt5QDraeXk6hJ+3u9RmmtJxD/+jReERaOQ=;
+        s=default; t=1552504291;
+        bh=zj0IyhfXSFQ4GA6SIDlaRCo1ldpq3ns5AjhM8nul7mU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rPe3Raxc6+s2GI6yPMJaWazT6lqfQCGoudYh+V+VCcs8JoYlLoxzunEmbDyQ5qvAF
-         SBrxA/cr/cbzusrvIbTHGt+AGMT/nKGW/qgU61Bdl+fFH7EWxFNpC42duOZXTb639h
-         n6K4ZHi7EggQSAPy3mnpls5nNcAP9b+/niwiTGVk=
+        b=witSWkmG8CibGexarurRlg4NpdbWt4Gp8ocu5xASm6wdSTrIWA6O2KYj/G5gtD88E
+         X6YYtV4ltIE8aEVDDE3DqbZWcuSWm3rQpiVxAL7yKYU21IOZNotaG4+ZxBdGtxwpEK
+         UF2IcJ8k12cvXKR2Il8YrOPZfEK9A7GISkLWcIq0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.20 32/60] drm/amd/display: Fix negative cursor pos programming
-Date:   Wed, 13 Mar 2019 15:09:53 -0400
-Message-Id: <20190313191021.158171-32-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 33/60] net: marvell: mvneta: fix DMA debug warning
+Date:   Wed, 13 Mar 2019 15:09:54 -0400
+Message-Id: <20190313191021.158171-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -59,58 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 0921c41e19028314830b33daa681e46b46477c5e ]
+[ Upstream commit a8fef9ba58c9966ddb1fec916d8d8137c9d8bc89 ]
 
-[Why]
-If the cursor pos passed from DM is less than the plane_state->dst_rect
-top left corner then the unsigned cursor pos wraps around to a large
-positive number since cursor pos is a u32.
+Booting 4.20 on SolidRun Clearfog issues this warning with DMA API
+debug enabled:
 
-There was an attempt to guard against this in hubp1_cursor_set_position
-by checking the src_x_offset and src_y_offset and offseting the
-cursor hotspot within hubp1_cursor_set_position.
+WARNING: CPU: 0 PID: 555 at kernel/dma/debug.c:1230 check_sync+0x514/0x5bc
+mvneta f1070000.ethernet: DMA-API: device driver tries to sync DMA memory it has not allocated [device address=0x000000002dd7dc00] [size=240 bytes]
+Modules linked in: ahci mv88e6xxx dsa_core xhci_plat_hcd xhci_hcd devlink armada_thermal marvell_cesa des_generic ehci_orion phy_armada38x_comphy mcp3021 spi_orion evbug sfp mdio_i2c ip_tables x_tables
+CPU: 0 PID: 555 Comm: bridge-network- Not tainted 4.20.0+ #291
+Hardware name: Marvell Armada 380/385 (Device Tree)
+[<c0019638>] (unwind_backtrace) from [<c0014888>] (show_stack+0x10/0x14)
+[<c0014888>] (show_stack) from [<c07f54e0>] (dump_stack+0x9c/0xd4)
+[<c07f54e0>] (dump_stack) from [<c00312bc>] (__warn+0xf8/0x124)
+[<c00312bc>] (__warn) from [<c00313b0>] (warn_slowpath_fmt+0x38/0x48)
+[<c00313b0>] (warn_slowpath_fmt) from [<c00b0370>] (check_sync+0x514/0x5bc)
+[<c00b0370>] (check_sync) from [<c00b04f8>] (debug_dma_sync_single_range_for_cpu+0x6c/0x74)
+[<c00b04f8>] (debug_dma_sync_single_range_for_cpu) from [<c051bd14>] (mvneta_poll+0x298/0xf58)
+[<c051bd14>] (mvneta_poll) from [<c0656194>] (net_rx_action+0x128/0x424)
+[<c0656194>] (net_rx_action) from [<c000a230>] (__do_softirq+0xf0/0x540)
+[<c000a230>] (__do_softirq) from [<c00386e0>] (irq_exit+0x124/0x144)
+[<c00386e0>] (irq_exit) from [<c009b5e0>] (__handle_domain_irq+0x58/0xb0)
+[<c009b5e0>] (__handle_domain_irq) from [<c03a63c4>] (gic_handle_irq+0x48/0x98)
+[<c03a63c4>] (gic_handle_irq) from [<c0009a10>] (__irq_svc+0x70/0x98)
+...
 
-However, the cursor position itself is still being programmed
-incorrectly as a large value.
+This appears to be caused by mvneta_rx_hwbm() calling
+dma_sync_single_range_for_cpu() with the wrong struct device pointer,
+as the buffer manager device pointer is used to map and unmap the
+buffer.  Fix this.
 
-This manifests itself visually as the cursor disappearing or containing
-strange artifacts near the middle of the screen on raven.
-
-[How]
-Don't subtract the destination rect top left corner from the pos but
-add it to the hotspot instead. This happens before the pos gets
-passed into hubp1_cursor_set_position.
-
-This achieves the same result but avoids the subtraction wrap around.
-With this fix the original cursor programming logic can be used again.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Charlene Liu <Charlene.Liu@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Acked-by: Murton Liu <Murton.Liu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/marvell/mvneta.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index 220ba828748d..5bc214ce5227 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -2654,8 +2654,8 @@ static void dcn10_set_cursor_position(struct pipe_ctx *pipe_ctx)
- 		.mirror = pipe_ctx->plane_state->horizontal_mirror
- 	};
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index 61b23497f836..b7218dd7b4b6 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -2146,7 +2146,7 @@ err_drop_frame:
+ 			if (unlikely(!skb))
+ 				goto err_drop_frame_ret_pool;
  
--	pos_cpy.x -= pipe_ctx->plane_state->dst_rect.x;
--	pos_cpy.y -= pipe_ctx->plane_state->dst_rect.y;
-+	pos_cpy.x_hotspot += pipe_ctx->plane_state->dst_rect.x;
-+	pos_cpy.y_hotspot += pipe_ctx->plane_state->dst_rect.y;
- 
- 	if (pipe_ctx->plane_state->address.type
- 			== PLN_ADDR_TYPE_VIDEO_PROGRESSIVE)
+-			dma_sync_single_range_for_cpu(dev->dev.parent,
++			dma_sync_single_range_for_cpu(&pp->bm_priv->pdev->dev,
+ 			                              rx_desc->buf_phys_addr,
+ 			                              MVNETA_MH_SIZE + NET_SKB_PAD,
+ 			                              rx_bytes,
 -- 
 2.19.1
 
