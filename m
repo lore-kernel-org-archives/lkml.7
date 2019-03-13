@@ -2,221 +2,97 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0ACC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22309C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7738920643
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16C0206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="dGdqiWPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfCMQAB (ORCPT
+        id S1726635AbfCMQAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:00:01 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59768 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfCMQAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:00:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39EA180D;
-        Wed, 13 Mar 2019 09:00:00 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 455C33F71D;
-        Wed, 13 Mar 2019 08:59:57 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 15:59:54 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190313155954.jse2tyn5iqxm6wle@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190313135238.GC5922@hirez.programming.kicks-ass.net>
+        Wed, 13 Mar 2019 12:00:20 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:33449 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfCMQAT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 12:00:19 -0400
+Received: by mail-yw1-f68.google.com with SMTP id a199so1889694ywa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 09:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Kfs3heF+8ue5fPhJOE/1L32aZGxH5YHBEa9Vc48MxT0=;
+        b=dGdqiWPo1BOx1Hrm9Yb+fmpMIctPhEyDjRuPEMfrsn/Kt3uPznTjItkUMy2bpQMkQq
+         XOYyDXCPqUUbQyfrVo9hxOy8cYORZfSPejYoVDe4rwugqGjQrmP7bE6g+d4055mdv94g
+         f8F56Qk5Irl6ERWKfsSoNNUIZ90EecAB46rjEJFZ6Zs/jfURwKv0AmY+pVvS8fwmIcRK
+         I5RYS3nVJO4MTfBMA2OoQpzpmlWz3gRLoT0hp6pdkH6T0vjyZJRkCaaq+o5Kk3mLCC+X
+         jHtDw6/k3XpwqdP0ueQ4wM2KfvFTVxbuxDX4IWvI6ywSfu9pTCyuImllQMhznFZh41Jj
+         iecQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kfs3heF+8ue5fPhJOE/1L32aZGxH5YHBEa9Vc48MxT0=;
+        b=D55Ows4TpcPjxFvEgSpnK8Uq3F46R/wxfTBjREvWRKc3xw2bS16YCZPuVWIJLkp5hv
+         pq4Y+f+bI8ZC0eKv7yPs2DzniA6K5f/FSYBF9XNoclUp8EsVjCaEdtQF2AUGb83m693w
+         GdnL/KfoS7qVcsTg7QcT4M66ewol/3P/2tQIRlSj4t5vRM04BdiJ1o0WJPIxmH3w+7Jn
+         KuE6iRxaLjEewVmttj4UdVUay/WKcK5Bks8+cJvikLKeZbcRIWrlMslAIy6U8pYzu/KF
+         Ix/FR1rvbE+HFiUYuLGBhQMBncxnFIa7N4CDsnfL1lAXIJDm5c/v5O0ts7eTg1MNjjeZ
+         KCYA==
+X-Gm-Message-State: APjAAAUSRrqwuwGsHzji3ffA5AOfQqK5xXjmy2L3w9CJz7Pi0yFizFqJ
+        WTOKa1q9Kl/zHdhVXgjxQzDyJk18fqA=
+X-Google-Smtp-Source: APXvYqxxouOQGLIOlx87tzAbVKhhhLdCSYZWRYS4+anzMp8teZfEjVRDQ/PJhjsFB5CB1/xBLaz/JQ==
+X-Received: by 2002:a81:9ad1:: with SMTP id r200mr12040290ywg.287.1552492819181;
+        Wed, 13 Mar 2019 09:00:19 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::2:9a85])
+        by smtp.gmail.com with ESMTPSA id q1sm5606033ywe.14.2019.03.13.09.00.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Mar 2019 09:00:18 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 12:00:17 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guroan@gmail.com>
+Cc:     linux-mm@kvack.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH v2 5/6] mm: flush memcg percpu stats and events before
+ releasing
+Message-ID: <20190313160017.GA31891@cmpxchg.org>
+References: <20190312223404.28665-1-guro@fb.com>
+ <20190312223404.28665-6-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190313135238.GC5922@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190312223404.28665-6-guro@fb.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Mar 14:52, Peter Zijlstra wrote:
-> On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
-> > +/*
-> > + * When a task is enqueued on a rq, the clamp bucket currently defined by the
-> > + * task's uclamp::bucket_id is reference counted on that rq. This also
-> > + * immediately updates the rq's clamp value if required.
-> > + *
-> > + * Since tasks know their specific value requested from user-space, we track
-> > + * within each bucket the maximum value for tasks refcounted in that bucket.
-> > + * This provide a further aggregation (local clamping) which allows to track
-> > + * within each bucket the exact "requested" clamp value whenever all tasks
-> > + * RUNNABLE in that bucket require the same clamp.
-> > + */
-> > +static inline void uclamp_rq_inc_id(struct task_struct *p, struct rq *rq,
-> > +				    unsigned int clamp_id)
-> > +{
-> > +	unsigned int bucket_id = p->uclamp[clamp_id].bucket_id;
-> > +	unsigned int rq_clamp, bkt_clamp, tsk_clamp;
-> > +
-> > +	rq->uclamp[clamp_id].bucket[bucket_id].tasks++;
-> > +
-> > +	/*
-> > +	 * Local clamping: rq's buckets always track the max "requested"
-> > +	 * clamp value from all RUNNABLE tasks in that bucket.
-> > +	 */
-> > +	tsk_clamp = p->uclamp[clamp_id].value;
-> > +	bkt_clamp = rq->uclamp[clamp_id].bucket[bucket_id].value;
-> > +	rq->uclamp[clamp_id].bucket[bucket_id].value = max(bkt_clamp, tsk_clamp);
+On Tue, Mar 12, 2019 at 03:34:02PM -0700, Roman Gushchin wrote:
+> Flush percpu stats and events data to corresponding before releasing
+> percpu memory.
 > 
-> So, if I read this correct:
+> Although per-cpu stats are never exactly precise, dropping them on
+> floor regularly may lead to an accumulation of an error. So, it's
+> safer to flush them before releasing.
 > 
->  - here we track a max value in a bucket,
+> To minimize the number of atomic updates, let's sum all stats/events
+> on all cpus locally, and then make a single update per entry.
 > 
-> > +	rq_clamp = READ_ONCE(rq->uclamp[clamp_id].value);
-> > +	WRITE_ONCE(rq->uclamp[clamp_id].value, max(rq_clamp, tsk_clamp));
-> > +}
-> > +
-> > +/*
-> > + * When a task is dequeued from a rq, the clamp bucket reference counted by
-> > + * the task is released. If this is the last task reference counting the rq's
-> > + * max active clamp value, then the rq's clamp value is updated.
-> > + * Both the tasks reference counter and the rq's cached clamp values are
-> > + * expected to be always valid, if we detect they are not we skip the updates,
-> > + * enforce a consistent state and warn.
-> > + */
-> > +static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
-> > +				    unsigned int clamp_id)
-> > +{
-> > +	unsigned int bucket_id = p->uclamp[clamp_id].bucket_id;
-> > +	unsigned int rq_clamp, bkt_clamp;
-> > +
-> > +	SCHED_WARN_ON(!rq->uclamp[clamp_id].bucket[bucket_id].tasks);
-> > +	if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
-> > +		rq->uclamp[clamp_id].bucket[bucket_id].tasks--;
-> > +
-> > +	/*
-> > +	 * Keep "local clamping" simple and accept to (possibly) overboost
-> > +	 * still RUNNABLE tasks in the same bucket.
-> > +	 */
-> > +	if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
-> > +		return;
-> 
-> (Oh man, I hope that generates semi sane code; long live CSE passes I
-> suppose)
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-What do you mean ?
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-> But we never decrement that bkt_clamp value on dequeue.
-
-We decrement the bkt_clamp value only when the bucket becomes empty
-and thus we pass the condition above. That's what the comment above is
-there to call out.
-
-
-> > +	bkt_clamp = rq->uclamp[clamp_id].bucket[bucket_id].value;
-> > +
-> > +	/* The rq's clamp value is expected to always track the max */
-> > +	rq_clamp = READ_ONCE(rq->uclamp[clamp_id].value);
-> > +	SCHED_WARN_ON(bkt_clamp > rq_clamp);
-> > +	if (bkt_clamp >= rq_clamp) {
-> 
-> head hurts, this reads ==, how can this ever not be so?
-
-Never, given the current code, that's just defensive programming.
-
-If in the future the accounting should be accidentally broken by some
-refactoring we warn and fix the corrupted data structures at first
-chance.
-
-Is that so bad?
-
-> > +		/*
-> > +		 * Reset rq's clamp bucket value to its nominal value whenever
-> > +		 * there are anymore RUNNABLE tasks refcounting it.
-> 
-> -ENOPARSE
-
-That's related to the comment above, when you say we don't decrement
-the bkt_clamp.
-
-Because of backetization, we potentially end up tracking tasks with
-different requested clamp values in the same bucket.
-
-For example, with 20% bucket size, we can have:
-  Task1: util_min=25%
-  Task2: util_min=35%
-accounted in the same bucket.
-
-This ensure that while they are both running we boost 35%. If Task1
-should run longer than Task2, Task1 will be "overboosted" until its
-end. The bucket value will be reset to 20% (nominal value) when both
-tasks are idle.
-
-
-> > +		 */
-> > +		rq->uclamp[clamp_id].bucket[bucket_id].value =
-> > +			uclamp_bucket_value(rq_clamp);
-> 
-> But basically you decrement the bucket value to the nominal value.
-
-Yes, at this point we know there are no more tasks in this bucket and
-we reset its value.
-
-> 
-> > +		uclamp_rq_update(rq, clamp_id);
-> > +	}
-> > +}
-> 
-> Given all that, what is to stop the bucket value to climbing to
-> uclamp_bucket_value(+1)-1 and staying there (provided there's someone
-> runnable)?
-
-Nothing... but that's an expected consequence of bucketization.
-
-> Why are we doing this... ?
-
-You can either decide to:
-
- a) always boost tasks to just the bucket nominal value
-    thus always penalizing both Task1 and Task2 of the example above
-
- b) always boost tasks to the bucket "max" value
-    thus always overboosting both Task1 and Task2 of the example above
-
-The solution above instead has a very good property: in systems
-where you have only few and well defined clamp values we always
-provide the exact boost.
-
-For example, if your system requires only 23% and 47% boost values
-(totally random numbers), then you can always get the exact boost
-required using just 3 bucksts or ~33% size each.
-
-In systems where you don't know which boost values you will have, you
-can still defined the maximum overboost granularity you accept for
-each task by just tuning the number of clamp groups. For example, with
-20 groups you can have a 5% max overboost.
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+Do you mind merging 6/6 into this one? That would make it easier to
+verify that the code added in this patch and the code removed in 6/6
+are indeed functionally equivalent.
