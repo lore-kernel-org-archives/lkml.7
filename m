@@ -2,178 +2,114 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0CDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2AAC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228D8214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF6F214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:36:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mXUWvgFp"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="IwmGp9KX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfCMMfZ (ORCPT
+        id S1726579AbfCMMgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 08:35:25 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59320 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfCMMfZ (ORCPT
+        Wed, 13 Mar 2019 08:36:14 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:35423 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfCMMgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 08:35:25 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2DCT6YO043920;
-        Wed, 13 Mar 2019 12:35:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=yqXXhLKBXv+VD6/efvt5pYadwc3/H5MeWffrineRJTw=;
- b=mXUWvgFpIj8ZLWL53j7GpZzd+UcaZHYGSMRQBojwZoLP/xXT21I9+8vzOBKWV36nDR56
- Noho5QwB0+jq29LjxTOkj8JxBTbMUIBbv/4qO3kF3zz96FSHY7NFbMEGsGhM78gTyL9v
- hDyidco7YmUN0jrXcGkwZH8LuOEsSfeBX2vrKMTn0l0rSJorcFp6jT78lndyxwb6QTZQ
- /in6Dr24DPVv/IBA0LX3x2/nGvvDR1zTuOchG3M210nzoPfEyZ4ZiiGy15Puwbuu9Mok
- Fz8wlO7zSaGVuAuIn/JWXebNjkfOrkp6JLHZvT/+SX7YWs7OvJjePBqDovjqk1T1Us3W bA== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2130.oracle.com with ESMTP id 2r44wuakc6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Mar 2019 12:35:10 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2DCZA0W011277
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Mar 2019 12:35:10 GMT
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2DCZ9oK009741;
-        Wed, 13 Mar 2019 12:35:09 GMT
-Received: from kadam (/197.157.0.23)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 13 Mar 2019 05:35:08 -0700
-Date:   Wed, 13 Mar 2019 15:34:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Armando Miraglia <arma2ff0@gmail.com>
-Cc:     neil@brown.name, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Armando Miraglia <armax@google.com>,
-        linux-mediatek@lists.infradead.org, sankalpnegi2310@gmail.com,
-        matthias.bgg@gmail.com, sr@denx.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] spi: mediatek: Attempt to address style issues in
- spi-mt7621.c
-Message-ID: <20190313123454.GB2202@kadam>
-References: <20190313122403.248873-1-armax@google.com>
+        Wed, 13 Mar 2019 08:36:14 -0400
+Received: by mail-it1-f196.google.com with SMTP id 188so2586141itb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 05:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8M7jpcAWxt1MRSZjQz5VUxSxh/NDSR9u4xI/RScLgBo=;
+        b=IwmGp9KXuoK4baC8xTq7eUnQK5GFL6kN5Yig6lfmLORi8CzJLIb/yz9EEFkZqY4bw5
+         9D/0SS9bTiPtlcf6BBdH0PZutAzdRoC1hTzvuIRqdFizHG0AKGbfpRhu/84fUtHW0fRu
+         vmgjbRaNwT95jVfmE1c2IhQoW2w4H6Eu1ryAg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8M7jpcAWxt1MRSZjQz5VUxSxh/NDSR9u4xI/RScLgBo=;
+        b=WHzTDtXp2BllDl6LdZgaB3usIbNeasdNOyHLzK72RAJWrOcz3usT6qU3KmkLhq+8mj
+         kJKPCItcyGwu7x++zRA/XsEWrIV3csW7ON7U/gP22PqhQ3qhWwy/oan+Jp0UaXZzVIyA
+         yAOiLKUHm3LPu1lJhXwcngm16lrNDMf3ixKGDQGitfQNx1gwF1wW8BCjms8a3quVomeP
+         phDn25Fs6+okgkm3Imxvzx5jI/lN/0fqmESraJCo+Pi8ICvhfxrCiw2sYhAwAUpZJzwF
+         Yo0ViAXhre7/jwGYED7WqHEOiqbGbKaGprxMPO9xUTY00VXpxd/gkx6+zC3f5YwK4SKm
+         dY4A==
+X-Gm-Message-State: APjAAAUfhdcpaKmzWc/XAGNIutdOYjkpZXZOwpczPsN9xP/aKKMn3UfB
+        0xK0ktQbse7Hj6745EhNwiXrVWOpmunbT3WizHU20g==
+X-Google-Smtp-Source: APXvYqy6HeF1gaVvt80UsoOefmNeUlO9TNupTdH1L7e6NcD8TTnM0KcZ6lh3JntKf6eHMY7MTht3otAZa36ky7M8bGQ=
+X-Received: by 2002:a24:4161:: with SMTP id x94mr1490157ita.69.1552480572920;
+ Wed, 13 Mar 2019 05:36:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313122403.248873-1-armax@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9193 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903130091
+References: <4603533.ZIfxmiEf7K@blindfold>
+In-Reply-To: <4603533.ZIfxmiEf7K@blindfold>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 13 Mar 2019 13:36:02 +0100
+Message-ID: <CAJfpegsy31D+=VJ+By2a9TLCvZJwvAUpb+_bJ5JVTsmsbZJTKQ@mail.gmail.com>
+Subject: Re: overlayfs vs. fscrypt
+To:     Richard Weinberger <richard@nod.at>
+Cc:     linux-fsdevel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 01:24:04PM +0100, Armando Miraglia wrote:
-> Running Lindent on the mt7621-spi.c file in drivers/staging I noticed that the
-> file contained style issues. This change attempts to address such style
-> problems.
-> 
+On Wed, Mar 13, 2019 at 1:31 PM Richard Weinberger <richard@nod.at> wrote:
+>
+> Hi!
+>
+> overlayfs and fscrypt are not friends.
+> Currently it is not possible to use a fscrypt encrypted directory as upper
+> directory with overlayfs.
+> The reason for that is, fscrypt implements ->d_revalidate().
+>
+> From fscrypt's point of view having ->d_revalidate() makes sense because it
+> wants to hide/show encrypted filenames if someone loads or unlinks a key.
+>
+> On the other hand, overlayfs makes sure that the upper directory cannot
+> change beneath it. Therefore it checks whether the upper directory is a remote
+> filesystem by checking for ->d_revalidate() and refuses to mount if so.
+>
+> In my little embedded Linux world it is common to use both UBIFS and
+> overlayfs. Now with UBIFS being encrypted using fscrypt, overlayfs is a
+> problem.
+> My current hack is not using fscrypt_d_ops in UBIFS. This works because on a
+> typical embedded target you setup your crypto keys exactly once, right before
+> you mount overlayfs in an initramfs.
+>
+> But I'm sure this problem will hit sooner or later users of ext4 and f2fs too.
+> Therefore I'd like to discuss possible solutions.
+>
+> So far I see two options:
+>
+> 1. Get rid of ->d_revalidate() in fscrypt.
+> Maybe we find a way to return a dentry via ->lookup() which is not cached at
+> all and therefore no ->d_revalidate() is needed. If unreadable and encrypted
+> filename lookups are slow, so what?
+> AFAIU this approach is impossible in the current dcache design since it is not
+> allowed to have more than one dentry to the same file.
 
-Don't run lindent.  I think checkpatch.pl has a --fix option that might
-be better, but once the code is merged then our standard become much
-higher for follow up patches.
+I don't get it.  Does fscrypt try to check permissions via
+->d_revalidate?  Why is it not doing that via ->permission()?
 
-> Signed-off-by: Armando Miraglia <armax@google.com>
-> ---
-> NOTE: resend this patch to include all mainteners listed by get_mantainers.pl.
->  drivers/staging/mt7621-spi/spi-mt7621.c | 27 +++++++++++++------------
->  1 file changed, 14 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/staging/mt7621-spi/spi-mt7621.c b/drivers/staging/mt7621-spi/spi-mt7621.c
-> index b509f9fe3346..03d53845f8c5 100644
-> --- a/drivers/staging/mt7621-spi/spi-mt7621.c
-> +++ b/drivers/staging/mt7621-spi/spi-mt7621.c
-> @@ -52,14 +52,14 @@
->  #define MT7621_LSB_FIRST	BIT(3)
->  
->  struct mt7621_spi {
-> -	struct spi_master	*master;
-> -	void __iomem		*base;
-> -	unsigned int		sys_freq;
-> -	unsigned int		speed;
-> -	struct clk		*clk;
-> -	int			pending_write;
-> -
-> -	struct mt7621_spi_ops	*ops;
-> +	struct spi_master *master;
-> +	void __iomem *base;
-> +	unsigned int sys_freq;
-> +	unsigned int speed;
-> +	struct clk *clk;
-> +	int pending_write;
-> +
-> +	struct mt7621_spi_ops *ops;
+>
+> 2. Teach overlayfs to deal with a upper that has ->d_revalidate().
+> Given the complexity of overlayfs I'm not sure how feasible this is.
+> But I'm no overlayfs expert, maybe I miss something.
 
-The original is fine.  I don't encourage people to do fancy indenting
-with their local variable declarations inside functions but for a struct
-the declarations aren't going to change a lot so people can get fancy
-if they want.
+I don't think it would be too complex.  But first I'd like to
+understand exactly why fscrypt is (ab) using d_revalidate().
 
-The problem with a local is if you need to add a new variable then you
-have to re-indent a bunch of unrelated lines or have one out of
-alignment line.  Most people know this intuitively so they don't get
-fancy.
-
->  };
->  
->  static inline struct mt7621_spi *spidev_to_mt7621_spi(struct spi_device *spi)
-> @@ -303,7 +303,7 @@ static int mt7621_spi_setup(struct spi_device *spi)
->  	struct mt7621_spi *rs = spidev_to_mt7621_spi(spi);
->  
->  	if ((spi->max_speed_hz == 0) ||
-> -		(spi->max_speed_hz > (rs->sys_freq / 2)))
-> +	    (spi->max_speed_hz > (rs->sys_freq / 2)))
-
-Yeah.  Lindent is correct here.
-
->  		spi->max_speed_hz = (rs->sys_freq / 2);
->  
->  	if (spi->max_speed_hz < (rs->sys_freq / 4097)) {
-> @@ -316,9 +316,10 @@ static int mt7621_spi_setup(struct spi_device *spi)
->  }
->  
->  static const struct of_device_id mt7621_spi_match[] = {
-> -	{ .compatible = "ralink,mt7621-spi" },
-> +	{.compatible = "ralink,mt7621-spi"},
-
-The original was better.
-
->  	{},
->  };
-> +
->  MODULE_DEVICE_TABLE(of, mt7621_spi_match);
-
-No need for a blank.  These are closely related.
-
->  
->  static int mt7621_spi_probe(struct platform_device *pdev)
-> @@ -408,9 +409,9 @@ MODULE_ALIAS("platform:" DRIVER_NAME);
->  
->  static struct platform_driver mt7621_spi_driver = {
->  	.driver = {
-> -		.name = DRIVER_NAME,
-> -		.of_match_table = mt7621_spi_match,
-> -	},
-> +		   .name = DRIVER_NAME,
-> +		   .of_match_table = mt7621_spi_match,
-> +		   },
-
-The new indenting is very wrong.
-
-regards,
-dan carpenter
+Thanks,
+Miklos
