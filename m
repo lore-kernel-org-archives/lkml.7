@@ -2,125 +2,111 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364C8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735E9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A912063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A3721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:08:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="SCe7d/FG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GeLLX/EN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfCNLH2 (ORCPT
+        id S1727471AbfCNLIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:07:28 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35904 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbfCNLH1 (ORCPT
+        Thu, 14 Mar 2019 07:08:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52492 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbfCNLIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:07:27 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d18so3913204lfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FEbkt1SNF3ru+IYVGJ38lijFQry78UHQKpKjHvW6nH0=;
-        b=SCe7d/FGSOCnW71v9V1hW+2z+1uqMYF65vMTUwJrBnJHesbi9A27BuPSp/6JLgUXFB
-         rY64Mhsodv+Q/mQ8PcatDeWLpKFg5PI/86rwgH/u3nMYYuPiQQqqTOyPfHcrgXUq3mRj
-         yAOHDse9iu7iLl4s7JMF/9q8ParKhSxjXBLdA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FEbkt1SNF3ru+IYVGJ38lijFQry78UHQKpKjHvW6nH0=;
-        b=ubnhQhcQoKZ6p4ki+69ocU2oyea/tnqqBLKBa9HYsltEY7wu73XONI8pK3f5r6R1DD
-         HX/NObW2FFLWfmHNwtK5cC4ya4jCaGy1y9dXJvn/2729ii/LIGD14VqT8wjTvIu1HSLo
-         D2aurPAz91HHZRCvisuyo+lLyWNM0BArzZv+waCeJvEFqFmmhtP7KYTgrHLZytCaibdF
-         qi1K+qOr3RvfZVGX9srF8TLn4nS/XdTMQjPNObrtjDP8czUgOPI4lfPkDeF+8EVIGAA1
-         56tdkvYFXjTLJA13yIAb7kZHMrXcVn+NCCbaq/yn91mlzNCT/39KUMe4XPJrl9q19AsO
-         E7AA==
-X-Gm-Message-State: APjAAAUxkgpQ7TcRZczQPXAmk2rD2IoyitZml/JQr75eXdd21qm37gWX
-        /QPCIpb7XBYVMBlXhHLcaQELIs39uN1mxHrTZEs=
-X-Google-Smtp-Source: APXvYqywWNSWvJPPec/wwIRMd4owWVSgiRsK8TcCSKz9ZC3EbMR1gCemkFuxhobCN0EXBHXO9CKEig==
-X-Received: by 2002:ac2:41cb:: with SMTP id d11mr27144758lfi.3.1552561644554;
-        Thu, 14 Mar 2019 04:07:24 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id g20sm785870lfg.97.2019.03.14.04.07.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 04:07:24 -0700 (PDT)
-Subject: Re: [PATCH v4] lib/string.c: implement a basic bcmp
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Nick Desaulniers' <ndesaulniers@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc:     "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <7549EE7E-4172-467D-815A-63664A33D410@goodmis.org>
- <20190313211335.165605-1-ndesaulniers@google.com>
- <953400721b6c4b869b9278c44e0aa796@AcuMS.aculab.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <2899ec10-2ab6-d3a3-37f5-d52395c03a8e@rasmusvillemoes.dk>
-Date:   Thu, 14 Mar 2019 12:07:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 14 Mar 2019 07:08:17 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2EAxCer156664;
+        Thu, 14 Mar 2019 11:08:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=LWzoZMZ/UHlJ+7SdQumtog3WWZUs0VLq8IX/rc7IR0o=;
+ b=GeLLX/EN0qyPkLy0f64NCWORTZ7FymHsD2wlk4D93aZ9Tk2V3UqYxaTtNQKmrilWhp6E
+ dW3lriWaYKUq1qMbepgI/FEQDYPZjopYsACWiAOB3cW1XozYXEltkN024K+gOCAf15Cj
+ HAAxH5GkjG7nciZFlj4vzfNYEEFVjDdte4GhKwB+rrokw9+hGC/dU0YTWYY1bArs0Rnf
+ L4HHzqQPvojz0vq5Tt4lGjtqSsXs1a6i6DSdSn2lmgJyA8Jg+8PlCO7397HX7DQ5YrB0
+ MNMJ4+r1tzj94VVkcZeS2RqSi9W+SB2Y3f0450oiqmikU1gvTWqDdua41d0VeCZVv8dM MA== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2130.oracle.com with ESMTP id 2r44wuga28-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Mar 2019 11:08:05 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2EB84sv004768
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Mar 2019 11:08:04 GMT
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2EB84vZ011707;
+        Thu, 14 Mar 2019 11:08:04 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 14 Mar 2019 11:07:01 +0000
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     YueHaibing <yuehaibing@huawei.com>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH -next] scsi: libfc: Fix potential NULL pointer dereference
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190130101141.20132-1-yuehaibing@huawei.com>
+        <09c3242f-9a41-65f4-7dc6-f1c8aa6425f1@huawei.com>
+        <c2ae320a-e7ab-94e6-7562-a82e2aad0966@suse.de>
+Date:   Thu, 14 Mar 2019 07:06:59 -0400
+In-Reply-To: <c2ae320a-e7ab-94e6-7562-a82e2aad0966@suse.de> (Hannes Reinecke's
+        message of "Thu, 7 Mar 2019 13:11:06 +0100")
+Message-ID: <yq1y35hn298.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <953400721b6c4b869b9278c44e0aa796@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9194 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903140078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 10.57, David Laight wrote:
-> From: Nick Desaulniers
->> Sent: 13 March 2019 21:14
-> ...
->> diff --git a/include/linux/string.h b/include/linux/string.h
->> index 7927b875f80c..6ab0a6fa512e 100644
->> --- a/include/linux/string.h
->> +++ b/include/linux/string.h
->> @@ -150,6 +150,9 @@ extern void * memscan(void *,int,__kernel_size_t);
->>  #ifndef __HAVE_ARCH_MEMCMP
->>  extern int memcmp(const void *,const void *,__kernel_size_t);
->>  #endif
->> +#ifndef __HAVE_ARCH_BCMP
->> +extern int bcmp(const void *,const void *,__kernel_size_t);
->> +#endif
-> 
-> Shouldn't that prototype always be present?
 
-Yes and no. The problem is that asm/string.h may decide to implement
-bcmp (or memcpy, memset, strcpy, ...) as a macro, which would break
-rather badly when used to declare the function. And we can't undef the
-macro temporarily. So I think the convention is that asm/string.h
-provides the prototype before it #defines the macro, see e.g.
-arch/x86/include/asm/string_32.h which has a #define of memcpy.
+Hi Hannes,
 
-There is a fix for the "may be defined as a function-like macro", which is
+>>> There is a potential NULL pointer dereference in case
+>>> fc_rport_create() fails and returns NULL.
 
-extern int (bcmp)(const void *,const void *,__kernel_size_t);
+>>> diff --git a/drivers/scsi/libfc/fc_lport.c b/drivers/scsi/libfc/fc_lport.c
+>>> index ff943f4..e2a3551 100644
+>>> --- a/drivers/scsi/libfc/fc_lport.c
+>>> +++ b/drivers/scsi/libfc/fc_lport.c
+>>> @@ -250,6 +250,10 @@ static void fc_lport_ptp_setup(struct fc_lport *lport,
+>>>   	}
+>>>   	mutex_lock(&lport->disc.disc_mutex);
+>>>   	lport->ptp_rdata = fc_rport_create(lport, remote_fid);
+>>> +	if (!lport->ptp_rdata) {
+>>> +		mutex_unlock(&lport->disc.disc_mutex);
+>>> +		return;
+>>> +	}
+>>>   	kref_get(&lport->ptp_rdata->kref);
+>>>   	lport->ptp_rdata->ids.port_name = remote_wwpn;
+>>>   	lport->ptp_rdata->ids.node_name = remote_wwnn;
+>>>
 
-I'd like to see that used rather than the ad hoc convention, but it is
-of course somewhat unconventional C.
+> Reviewed-by: Hannes Reinecke <hare@suse.com>
 
-Rasmus
+A bit confused. You had originally replied that the patch was not
+correct so I closed it in patchwork. And now there's a Reviewed-by:
+without any explanation as to why you have changed your mind.
+
+Please clarify, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
