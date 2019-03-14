@@ -2,114 +2,150 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC9DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744B8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 085F92184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:38:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rTku9ekx"
+	by mail.kernel.org (Postfix) with ESMTP id 3DA8120643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfCNIiH (ORCPT
+        id S1727283AbfCNIj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 04:38:07 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39369 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfCNIiF (ORCPT
+        Thu, 14 Mar 2019 04:39:59 -0400
+Received: from www62.your-server.de ([213.133.104.62]:48112 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfCNIj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 04:38:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h8so3495871pgp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:38:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=30vebO2M7s86h+bgRozKToa38rLhn+5TImed8PXHvkA=;
-        b=rTku9ekxRqeOqpFkpVZDslv9tFwbpQhuc71cG7VkVF4/FTWDXBGYLy20CpYUk61o25
-         qYLUePdfe0AwTST86gRzsAgLGul6u8ZadKZO3JNxpudPg9A+i89qIdcC+6/zSlnglMKQ
-         jsI2JjLC7rJ12jgG43AUDSXPjtYsNMDQDCr8pR3ZpxrN0WsKOiKdH2o3YklQgtZeT41E
-         600DnOFkg2H7zDfbd9rEWP5eYxvABGpODAqBoT4oQqZ3nUdeTF/8B52flh+8pGJ4ytwZ
-         54jx4gWcOuY9Wqmw+7eGu0gW9of6L6mXj7rRqz2mjGB5EjdAowgzErehONEV7UAr//2Z
-         StQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=30vebO2M7s86h+bgRozKToa38rLhn+5TImed8PXHvkA=;
-        b=HU8VWd8GUJEf0iNj9R5WKH6IIRCen12RKBvw0wVmhaJyWDzz38hAijBcA9GbTUMJ1b
-         LdrjVw46KuqCafCtlwyXFKrnNC4MKxZBwfb73x/5Fe4tI9mpPaMTzb4ioR5yhOZ0TMnR
-         a14KB5HdM/uK+oeZ7fOTFMR9K0RvXnuaYUWaqhr+1bwIMGB20+LrNGZ6EvUS3kRYkTTw
-         7MR0+/y6iMy8wFcG2P4VgnF1uA9rcH7nAQWSgMv06/m11nam3HO2RmZk0xiUj2iqmSvd
-         yOM7R1tvhQOjZDYoR2SsAhUrfp/LXyHO6Ms071O6k0MVDw3nVljwLAd5BNlw0HnrF7un
-         6AfA==
-X-Gm-Message-State: APjAAAWfQ4rJPP9qdAnuqxcg0Ik515S8qX2TRF+bzn1lvFnBsDiazzbM
-        qoeKc9xomsUhU4il6jiOKvM=
-X-Google-Smtp-Source: APXvYqz6L6mEkSM9vos0uXnnWgupOgEVWWz8y1Pyy7Od8UEIi7Vka7RAYKD0H0rSFh+Hp/+M9XMCnA==
-X-Received: by 2002:a63:4650:: with SMTP id v16mr16281311pgk.329.1552552684200;
-        Thu, 14 Mar 2019 01:38:04 -0700 (PDT)
-Received: from localhost.localdomain ([175.223.23.218])
-        by smtp.gmail.com with ESMTPSA id g3sm20830999pfo.125.2019.03.14.01.38.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 01:38:03 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     David Woodhouse <dwmw2@infradead.org>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [PATCH] jffs2: do not use __constant_cpu_to_xx
-Date:   Thu, 14 Mar 2019 17:37:57 +0900
-Message-Id: <20190314083757.25039-1-sergey.senozhatsky@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 14 Mar 2019 04:39:58 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h4Lto-0005Ex-QQ; Thu, 14 Mar 2019 09:39:36 +0100
+Received: from [178.197.248.24] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h4Lto-0000VZ-HL; Thu, 14 Mar 2019 09:39:36 +0100
+Subject: Re: [LKP] [x86, retpolines] ce02ef06fc: will-it-scale.per_thread_ops
+ 3.1% improvement
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@01.org, greg@kroah.com
+References: <20190313052715.GB8429@shao2-debian>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <aa1de169-1c61-f8bc-10db-437f4e6ce6b3@iogearbox.net>
+Date:   Thu, 14 Mar 2019 09:39:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190313052715.GB8429@shao2-debian>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.2/25387/Wed Mar 13 12:24:46 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A trivial patch.
+On 03/13/2019 06:27 AM, kernel test robot wrote:
+> Greeting,
+> 
+> FYI, we noticed a 3.1% improvement of will-it-scale.per_thread_ops due to commit:
+> 
+> 
+> commit: ce02ef06fcf7a399a6276adb83f37373d10cbbe1 ("x86, retpolines: Raise limit for generating indirect calls from switch-case")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> in testcase: will-it-scale
+> on test machine: 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 64G memory
+> with following parameters:
+> 
+> 	nr_task: 100%
+> 	mode: thread
+> 	test: futex3
+> 	cpufreq_governor: performance
+> 	ucode: 0xb00002e
+> 
+> test-description: Will It Scale takes a testcase and runs it from 1 through to n parallel copies to see if the testcase will scale. It builds both a process and threads based test in order to see any differences between the two.
+> test-url: https://github.com/antonblanchard/will-it-scale
+> 
+> In addition to that, the commit also has significant impact on the following tests:
 
-cpu_to_XX() functions are smart enough to detect and
-handle __builtin_constant_p() at compile time.
+Any thoughts on whether the above one-liner gcc work-around should be backported
+to stable as well given these gains?
 
-So we can use cpu_to_XX() instead of __constant_cpu_to_XX().
+Thanks,
+Daniel
 
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
----
- fs/jffs2/nodelist.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/fs/jffs2/nodelist.h b/fs/jffs2/nodelist.h
-index 0637271f3770..b1de897b3408 100644
---- a/fs/jffs2/nodelist.h
-+++ b/fs/jffs2/nodelist.h
-@@ -48,8 +48,8 @@
- #define cpu_to_je32(x) ((jint32_t){cpu_to_be32(x)})
- #define cpu_to_jemode(x) ((jmode_t){cpu_to_be32(os_to_jffs2_mode(x))})
- 
--#define constant_cpu_to_je16(x) ((jint16_t){__constant_cpu_to_be16(x)})
--#define constant_cpu_to_je32(x) ((jint32_t){__constant_cpu_to_be32(x)})
-+#define constant_cpu_to_je16(x) ((jint16_t){cpu_to_be16(x)})
-+#define constant_cpu_to_je32(x) ((jint32_t){cpu_to_be32(x)})
- 
- #define je16_to_cpu(x) (be16_to_cpu(x.v16))
- #define je32_to_cpu(x) (be32_to_cpu(x.v32))
-@@ -59,8 +59,8 @@
- #define cpu_to_je32(x) ((jint32_t){cpu_to_le32(x)})
- #define cpu_to_jemode(x) ((jmode_t){cpu_to_le32(os_to_jffs2_mode(x))})
- 
--#define constant_cpu_to_je16(x) ((jint16_t){__constant_cpu_to_le16(x)})
--#define constant_cpu_to_je32(x) ((jint32_t){__constant_cpu_to_le32(x)})
-+#define constant_cpu_to_je16(x) ((jint16_t){cpu_to_le16(x)})
-+#define constant_cpu_to_je32(x) ((jint32_t){cpu_to_le32(x)})
- 
- #define je16_to_cpu(x) (le16_to_cpu(x.v16))
- #define je32_to_cpu(x) (le32_to_cpu(x.v32))
--- 
-2.21.0
-
+> +------------------+---------------------------------------------------------------------------+
+> | testcase: change | will-it-scale: will-it-scale.per_process_ops 4.3% improvement             |
+> | test machine     | 112 threads Intel(R) Xeon(R) Platinum 8170 CPU @ 2.10GHz with 128G memory |
+> | test parameters  | cpufreq_governor=performance                                              |
+> |                  | mode=process                                                              |
+> |                  | nr_task=50%                                                               |
+> |                  | test=futex3                                                               |
+> +------------------+---------------------------------------------------------------------------+
+> | testcase: change | will-it-scale: will-it-scale.per_process_ops 2.5% improvement             |
+> | test machine     | 112 threads Intel(R) Xeon(R) Platinum 8170 CPU @ 2.10GHz with 128G memory |
+> | test parameters  | cpufreq_governor=performance                                              |
+> |                  | mode=process                                                              |
+> |                  | nr_task=50%                                                               |
+> |                  | test=futex1                                                               |
+> +------------------+---------------------------------------------------------------------------+
+> | testcase: change | will-it-scale: will-it-scale.per_process_ops 5.8% improvement             |
+> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 64G memory      |
+> | test parameters  | cpufreq_governor=performance                                              |
+> |                  | mode=process                                                              |
+> |                  | nr_task=50%                                                               |
+> |                  | test=futex3                                                               |
+> +------------------+---------------------------------------------------------------------------+
+> | testcase: change | will-it-scale: will-it-scale.per_process_ops 2.6% improvement             |
+> | test machine     | 160 threads Intel(R) Xeon(R) CPU E7-8890 v4 @ 2.20GHz with 256G memory    |
+> | test parameters  | cpufreq_governor=performance                                              |
+> |                  | test=futex1                                                               |
+> |                  | ucode=0xb00002e                                                           |
+> +------------------+---------------------------------------------------------------------------+
+> | testcase: change | will-it-scale: will-it-scale.per_process_ops 2.5% improvement             |
+> | test machine     | 112 threads Intel(R) Xeon(R) Platinum 8170 CPU @ 2.10GHz with 128G memory |
+> | test parameters  | cpufreq_governor=performance                                              |
+> |                  | mode=process                                                              |
+> |                  | nr_task=50%                                                               |
+> |                  | test=futex2                                                               |
+> +------------------+---------------------------------------------------------------------------+
+> | testcase: change | will-it-scale: will-it-scale.per_thread_ops 3.1% improvement              |
+> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 64G memory      |
+> | test parameters  | cpufreq_governor=performance                                              |
+> |                  | mode=thread                                                               |
+> |                  | nr_task=50%                                                               |
+> |                  | test=futex4                                                               |
+> +------------------+---------------------------------------------------------------------------+
+> | testcase: change | will-it-scale: will-it-scale.per_thread_ops 5.4% improvement              |
+> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 64G memory      |
+> | test parameters  | cpufreq_governor=performance                                              |
+> |                  | mode=thread                                                               |
+> |                  | nr_task=16                                                                |
+> |                  | test=futex3                                                               |
+> +------------------+---------------------------------------------------------------------------+
+> | testcase: change | will-it-scale: will-it-scale.per_thread_ops 3.0% improvement              |
+> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 64G memory      |
+> | test parameters  | cpufreq_governor=performance                                              |
+> |                  | mode=thread                                                               |
+> |                  | nr_task=16                                                                |
+> |                  | test=futex4                                                               |
+> +------------------+---------------------------------------------------------------------------+
