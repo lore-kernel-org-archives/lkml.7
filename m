@@ -2,75 +2,102 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93775C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F91C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F76A20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8275121019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfCNJZi (ORCPT
+        id S1726880AbfCNJ1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:25:38 -0400
-Received: from relay.sw.ru ([185.231.240.75]:47630 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbfCNJZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:25:38 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1h4McI-00021J-PM; Thu, 14 Mar 2019 12:25:34 +0300
-Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
-To:     Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "minchan@kernel.org" <minchan@kernel.org>
-References: <SG2PR02MB3098A05E09B0D3F3CB1C3B9BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <SG2PR02MB309806967AE91179CAFEC34BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <SG2PR02MB3098B751EC6B8E32806A42FBE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <20190314084120.GF7473@dhcp22.suse.cz>
- <SG2PR02MB309894F6D7DF9148846088F3E84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <226a92b9-94c5-b859-c54b-3aacad3089cc@virtuozzo.com>
-Date:   Thu, 14 Mar 2019 12:25:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 14 Mar 2019 05:27:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59420 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726689AbfCNJ13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 05:27:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7DA27AF61;
+        Thu, 14 Mar 2019 09:27:28 +0000 (UTC)
+Date:   Thu, 14 Mar 2019 10:27:27 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Sebastian Siewior <bigeasy@linutronix.de>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+Message-ID: <20190314092727.m37frq3jszz6mh4g@pathway.suse.cz>
+References: <874l9721hf.fsf@linutronix.de>
+ <20190304052335.GA6648@jagdpanzerIV>
+ <87lg1rggcz.fsf@linutronix.de>
+ <20190311105411.GA368@jagdpanzerIV>
+ <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
+ <874l8815uc.fsf@linutronix.de>
+ <20190313021534.GB783@jagdpanzerIV>
+ <87d0mv9off.fsf@linutronix.de>
+ <20190313084028.f2m4qhxd5sjzzawr@linutronix.de>
+ <20190313092759.GA10060@jagdpanzerIV>
 MIME-Version: 1.0
-In-Reply-To: <SG2PR02MB309894F6D7DF9148846088F3E84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313092759.GA10060@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.03.2019 11:52, Pankaj Suryawanshi wrote:
-> 
-> I am using kernel version 4.14.65 (on Android pie [ARM]).
-> 
-> No additional patches applied on top of vanilla.(Core MM).
-> 
-> If  I change in the vmscan.c as below patch, it will work. 
+On Wed 2019-03-13 18:27:59, Sergey Senozhatsky wrote:
+> On (03/13/19 09:40), Sebastian Siewior wrote:
+> > On 2019-03-13 09:19:32 [+0100], John Ogness wrote:
+> > > recursive situation. As you are pointing out, the notification/wake
+> > > component of printk_safe will still be needed. I will leave that (small)
+> > > part in printk_safe.c.
+> > 
+> > Does this mean we keep irq_work part or we bury it and solve it by other
+> > means?
+>
+> *May be* we can take a closer look and find cases when ->atomic
+> consoles don't really depend on console_sem. And *may be* we can
+> split the console drivers list and somehow forbid removal and
+> modification (ioctl) of ->atomic consoles under us. Assuming that
+> this is doable we then can start iterating ->atomic consoles list
+> with unlocked console_sem.
 
-Sorry, but 4.14.65 does not have braces around trylock_page(),
-like in your patch below.
+I believe that this is actually the plan. Atomic consoles depending
+on console_sem would not be a real step forward.
 
-See https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/mm/vmscan.c?h=v4.14.65
 
-[...]
+> Non->atomic consoles or consoles which depend on console_sem (VT,
+> fbcon and so on) will stay in another list, and we will take
+> console_sem before we iterate that list and invoke those drivers.
 
->> diff --git a/mm/vmscan.c b/mm/vmscan.c
->> index be56e2e..2e51edc 100644
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -990,15 +990,17 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>                  page = lru_to_page(page_list);
->>                  list_del(&page->lru);
->>
->>                 if (!trylock_page(page)) {
->>                          goto keep;
->>                 }
+This might be also needed for "less" important messages
+that people would not want to get to the console atomically
+because it would serialize CPUs and slow down the entire
+system.
+
+I think that we would still need irq_work for this mode.
+But it should be necessary only for messages from NMI context
+and printk() recursion. It means that it should be a rare
+situation and the amount of messages should get limited.
+It should not be much worse than handling few printk()
+calls from any irq handler.
+
+Best Regards,
+Petr
