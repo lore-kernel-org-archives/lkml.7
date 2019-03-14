@@ -2,136 +2,175 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488F3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD229C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1069C2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AC42064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PUrqM3zu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MET8aMZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfCNKQM (ORCPT
+        id S1727115AbfCNKR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:16:12 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34159 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbfCNKQL (ORCPT
+        Thu, 14 Mar 2019 06:17:58 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42409 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfCNKR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:16:11 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v64so3515921pfb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 03:16:10 -0700 (PDT)
+        Thu, 14 Mar 2019 06:17:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so1084326wrr.9;
+        Thu, 14 Mar 2019 03:17:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IE7gKqALKVovcAplaEYWF9pUytsOieRBeWbz7YoQE2s=;
-        b=PUrqM3zu/J1MF38v7jIiGt7yTa1aGnHvhM2bDea8AgrKw1A4FzJ2zQb4oE4CWHLAqK
-         iBb8P1f3njZjB1SDbjgUg/xv4ZmvRsMcsj7CpXv2s7M+RcPB5FSLmjoPagbrwAQnrVb2
-         0XegU2qPubvblb6fMd4WWtBVV25I44yh1F6AjK5tbVrd0eiNiapmh6zSbfMtc/RS55Xt
-         MYQq46L1oylJZ5k/LlUe4/PFZX5SUNz3SXaCIQTIU1/Nuzwg3EmZCftLVqwLASPg09O1
-         zkE3NHrUU9rZhB0O3Gw+INa39JOekIadsPTde6KXDAkpkW3HNXyPDygQRlo6i8xNWErl
-         aHCQ==
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=ycODFwQlLZjbetO+LWi5L4TBJGCo56tWZhs5w6WEz4Y=;
+        b=MET8aMZea4G4KF2uOFJ9x8FJYvSksZmghJtHGzdzOuh/LycLfll/li6m23kQD/jzup
+         onTV+KwbSfK9GUAUCdrUXJifHMW4/Dl7H4D8msEvBb9uee4xckU6fgMx7vKDY7xVrQXT
+         Ihw7MG9jCUzd5aHIg2vy3LjKqss+MpkFGx09fjsaAb8Qqme+NQAQbRlD1ir5vfHG42df
+         oq6HvsMlU4ize+/b6jC8JlixPqw+gMiPv/DF2cMVZOfUNMXvKTJtC7TElOCvK6JnWAYB
+         Aa8CrUGV3g0DV/mxNOfhMiUuJnnEuCrYevGjN/aucuZMIkJnrwGkLjBXLmHGhkvasJB6
+         wGkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IE7gKqALKVovcAplaEYWF9pUytsOieRBeWbz7YoQE2s=;
-        b=JwR5JnTQxnqOvUG7bxygYy9XXBqBdsZT+GUCbF3RveeINtbEwgJ87CxnbX1C0N1Qu/
-         ZkZgWwzVhT4b+UtuJcwbc4Tgb1+rJoj5fe1P8OIlhjx8yVM5boWt3BUElxZh3KqoxM2t
-         C6a81HnoUIFxrx0hPk+AJK/xAS+ARWCAMJ2/0OZBfhEan8tgn+mSa5N/170CFuCM+l46
-         8CpheTpDijB39P1Zw8oeRZfq7Ks40DN1sxRu1UrsaSDU4asqBj6FbLsXg6dTBkHZy5i+
-         4VUGXJHlyeZfhnrgLBaMVCS0+9yCdUUN4ehRdxp9cWcaEauHWnNHC7Bo7kK/a1U54rwD
-         z7CQ==
-X-Gm-Message-State: APjAAAVpPksusZDwLOn1vhg3fRq1r2OA9pEubB2Z/8FeUIl5yuwxYJst
-        KlC5YbZM9yZEZMuvdvk8KidF+w==
-X-Google-Smtp-Source: APXvYqxWtg3T3Cjj0T4wcj/2FfDeE2Ns56oyDRJiJluwCh8bigL8zPPFajehlErm7tFN+ZfJXHDaXg==
-X-Received: by 2002:a63:f113:: with SMTP id f19mr13604771pgi.141.1552558570132;
-        Thu, 14 Mar 2019 03:16:10 -0700 (PDT)
-Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id a1sm20493224pfn.26.2019.03.14.03.16.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 03:16:08 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 15:46:06 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        kvm@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH 0/7] cpufreq: Call transition notifier only once for each
- policy
-Message-ID: <20190314101606.2aodwz5mzvstau6c@vireshk-i7>
-References: <cover.1552545525.git.viresh.kumar@linaro.org>
- <CAJZ5v0gER+aJaQmk89VSVBtHgQ+WPDdAxUW6eJ4JCB=emC85dg@mail.gmail.com>
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=ycODFwQlLZjbetO+LWi5L4TBJGCo56tWZhs5w6WEz4Y=;
+        b=SEly61b60R8/OgOUSQan76nQO6OWQ9uje0d8/YhYLfgSehBRElrOnH4Ybs+X3/X2mj
+         2hSVI8X0gIXC+tEdzvRXP+BQzNhK8+CJ0t+33UWrfFhaEje0Buj1AtD/daTWc0fSXrtm
+         UBffVIgTwZN4fczK0UmSgjvGs9HHYDnTTFfr8KJokrb1e0FP/Rr/Wvxslifo75H2ivIf
+         ftp6vNlr2jiDRmByMkdp56/PJZoM6T3sLIE6ZknwARJbt6WLWAnCz6LYLpi4mwkYgj/W
+         i5aRt4+4NwQNs2xwMbY0Jj6kti5gqavnwdQxVlGmNNaY86oeAsKH2ZP6FN5PSAoHeryb
+         To8Q==
+X-Gm-Message-State: APjAAAWCzLswNKNWkFgNJzWOxQf+kPeCZP1Td4ooqDkLCK31/QNpn0+Y
+        Ek6t+QldKPDG5euXs8SFpOmQQCeTskkdHw==
+X-Google-Smtp-Source: APXvYqz9dfnzXpD6DCVrnlCwrgbpOMjTjFSJFVbBI5R/NbTxXcDyFBJP2oGd/cvo4SrPRtkHfFsBGA==
+X-Received: by 2002:adf:ebc3:: with SMTP id v3mr3740150wrn.35.1552558675377;
+        Thu, 14 Mar 2019 03:17:55 -0700 (PDT)
+Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id 6sm1821873wmf.6.2019.03.14.03.17.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 03:17:54 -0700 (PDT)
+References: <20190313211748.534491-1-arnd@arndb.de>
+User-agent: mu4e 1.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: media: imx7-mipi-csis: fix debugfs compilation
+In-reply-to: <20190313211748.534491-1-arnd@arndb.de>
+Date:   Thu, 14 Mar 2019 10:17:51 +0000
+Message-ID: <m3r2b9ep4g.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gER+aJaQmk89VSVBtHgQ+WPDdAxUW6eJ4JCB=emC85dg@mail.gmail.com>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-03-19, 10:28, Rafael J. Wysocki wrote:
-> On Thu, Mar 14, 2019 at 7:43 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > Currently we call the cpufreq transition notifiers once for each CPU of
-> > the policy->cpus cpumask, which isn't that efficient.
-> 
-> Why isn't it efficient?
-> 
-> Transitions are per-policy anyway, so if something needs to be done
-> for each CPU in the policy, it doesn't matter too much which part of
-> the code carries out the iteration.
+Hi Arnd,
+Thanks for the patch.
+On Wed 13 Mar 2019 at 21:17, Arnd Bergmann wrote:
+> When CONFIG_DEBUGFS is enabled, we get a warning about an
+> incorrect section annotation that can lead to undefined
+> behavior:
+>
+> WARNING: vmlinux.o(.text+0xd3c7c4): Section mismatch in 
+> reference from the function mipi_csis_probe() to the function 
+> .init.text:mipi_csis_debugfs_init()
+> The function mipi_csis_probe() references
+> the function __init mipi_csis_debugfs_init().
+> This is often because mipi_csis_probe lacks a __init
+> annotation or the annotation of mipi_csis_debugfs_init is wrong.
+>
+> The same function for an unknown reason has a different
+> version for !CONFIG_DEBUGFS, which does not have this problem,
+> but behaves the same way otherwise (it does nothing when debugfs
+> is disabled).
+> Consolidate the two versions, using the correct section from
+> one version, and the implementation from the other.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
 
-Even if per-cpu iteration has to be done at some place, we are
-avoiding function calls here and the code/locking in the notifier
-layer as well. Will get more such info into changelog.
+---
+Cheers,
+	Rui
 
-> I guess some notifiers need to know what other CPUs there are in the
-> policy?  If so, then why?
+> ---
+>  drivers/staging/media/imx/imx7-mipi-csis.c | 16 
+>  ++--------------
+>  1 file changed, 2 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c 
+> b/drivers/staging/media/imx/imx7-mipi-csis.c
+> index 2ddcc42ab8ff..001ce369ec45 100644
+> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
+> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+> @@ -9,6 +9,7 @@
+>   */
+>  
+>  #include <linux/clk.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/errno.h>
+>  #include <linux/interrupt.h>
+> @@ -889,8 +890,6 @@ static int mipi_csis_subdev_init(struct 
+> v4l2_subdev *mipi_sd,
+>  	return ret;
+>  }
+>  
+> -#ifdef CONFIG_DEBUG_FS
+> -#include <linux/debugfs.h>
+>  
+>  static int mipi_csis_dump_regs_show(struct seq_file *m, void 
+>  *private)
+>  {
+> @@ -900,7 +899,7 @@ static int mipi_csis_dump_regs_show(struct 
+> seq_file *m, void *private)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(mipi_csis_dump_regs);
+>  
+> -static int __init_or_module mipi_csis_debugfs_init(struct 
+> csi_state *state)
+> +static int mipi_csis_debugfs_init(struct csi_state *state)
+>  {
+>  	struct dentry *d;
+>  
+> @@ -934,17 +933,6 @@ static void mipi_csis_debugfs_exit(struct 
+> csi_state *state)
+>  	debugfs_remove_recursive(state->debugfs_root);
+>  }
+>  
+> -#else
+> -static int mipi_csis_debugfs_init(struct csi_state *state 
+> __maybe_unused)
+> -{
+> -	return 0;
+> -}
+> -
+> -static void mipi_csis_debugfs_exit(struct csi_state *state 
+> __maybe_unused)
+> -{
+> -}
+> -#endif
+> -
+>  static int mipi_csis_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
 
-You mean about the offline CPUs? I mentioned the rationale in 1/7. It
-is to avoid bugs where we may end up using a stale value if the CPUs
-are offlined/onlined regularly.
-
-> > This patchset tries to simplify that by adding another field in struct cpufreq_freqs,
-> > cpus, so the callback has all the information available with a single
-> > call for each policy.
-> 
-> Well, you can argue that the core is simplified by it somewhat, but
-> the notifiers aren't.  They actually get more complex, conceptually
-> too, because they now need to worry about offline vs online CPUs etc.
-
-24 different parts of the kernel register for transition notifiers and
-only 5 required update here, the other 19 don't need to do per-cpu
-stuff and they also get benefited by this work. Those routines will
-get called only once now, instead of once per every CPU of the policy.
-
-> Also I wonder why you decided to pass a cpumask in freqs instead of
-> just passing a policy pointer.  If you change things from per-CPU to
-> per-policy, passing the whole policy seems more natural.
-
-I did that because they don't need to use the other fields of the
-policy today and that doesn't look likely in near future as well.
-
-I can do that if you want, but not sure why more information should be
-provided than required.
-
--- 
-viresh
