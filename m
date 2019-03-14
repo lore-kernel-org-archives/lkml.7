@@ -2,103 +2,111 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C2CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA361C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B6E2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20D821019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:17:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JtjkYYrF"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="bLwhLJfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfCNVKS (ORCPT
+        id S1727935AbfCNVRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 17:10:18 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39340 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbfCNVKR (ORCPT
+        Thu, 14 Mar 2019 17:17:40 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:39328 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727246AbfCNVRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 17:10:17 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h8so4830523pgp.6;
-        Thu, 14 Mar 2019 14:10:17 -0700 (PDT)
+        Thu, 14 Mar 2019 17:17:39 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 6BEA6CD4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 21:17:38 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id dgVZeYoCjRtX for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 16:17:38 -0500 (CDT)
+Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 3BE55CDE
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 16:17:38 -0500 (CDT)
+Received: by mail-it1-f200.google.com with SMTP id z131so5755186itb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 14:17:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=lCEel2xqxxP+/B/4iR5BE+LjeT6mwhkh3NosGaFxHNQ=;
-        b=JtjkYYrFOmJw+YpPybCywD5PfdYjcqRl64k/bVXElM3YJ8IbzNV8Z1CXTJO453dbw4
-         PbSReFxWOesFhlwAy2TOsJoE+M6BjfJJhZuL5UOJYeFTubyS8GAzjeJSkoKpEUsGJ7MG
-         j7Dm18H+CQxuuUNWFN2EEMuEIV19yVCGDFcQqljJLRli51Pz+FduBAmon7XMOVLQmIQe
-         35eewiNdxWejCU3uPBD78oyv/KWcMJQrXsXaXTe4B7THTODgFwMwAnIZMFtMGmmeM8za
-         2siFfr40UqT6a4cT1z9S8HJcPO923fGQBbU1HFCIwdjTk62NagrzIXYhsKlfJT4pxTSH
-         c4+w==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1BU9kEzPXs7XL0lomFvApW+7xo8xyvn5BVlkJddm4mk=;
+        b=bLwhLJfXuiH0mSJm2vMvcUGDD1iAxaxWrde2gHZ36HOC35A56OI12yp0QOjB+q4jQe
+         Axo+jVLsV9kPRYSxApfVmEh9Kr8JHMPLZ15t6ihsGt7s0bv8Iejlaf4Je5YHVYxY5vlb
+         Y0MCZN9Zglhrl8Zc6NnPcaNYd5O9Z4m0BKBhefmbE5aVKKATt1+SO3+SwzfiU1eOM9wV
+         UDo+AuBYl0OSyFn2H/HFhQmCVtjE4KSilPe/0INV+vOQz0Qn8mxAGNe3/6KsRyomHblq
+         pDt5ZvlebI1z1tXHSO1oqvdY51lv/yKLKAnasY+JhFFvHshkhJGLen8O/+JQ8R0loJNx
+         ENBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:content-transfer-encoding
-         :user-agent;
-        bh=lCEel2xqxxP+/B/4iR5BE+LjeT6mwhkh3NosGaFxHNQ=;
-        b=mI+P+QgYG447CFX5pklOX/MmU2N4V4KZepMCov4AX+AoaGKSyWqGAS73yBZLnLaSk/
-         ln7ZbNY7PUUY8TgFfloxSmo6YHB3DfmmWRiePLahEdEVdrAj/Ek5J3L7a15fpjR5Wvww
-         l4diFo/18Dxq6GmNyRGhwfeCeL+r0oprrNkty6IH4IVs1kspHj7HtBq0PwkmT6pMK9Cx
-         uYNyBliq3UOAMYDdRbNpkMyurDLwKXBIsEYvZ067o0sDe71jrqQ6ZbOqQ1mrEVskJ9XC
-         REciW5+qjFGNI9tzwLfxLGDGMtOVwq/ocuckzP09xVJOOIEZSHKcWdjOo50r/15ksqQT
-         IT0g==
-X-Gm-Message-State: APjAAAXn452AsmCjwTACGESXf7UyC7jTMk4qdQ/T9Ev+7NeVglgNjDrC
-        Ady04n/REml9HP12OLbB8z8=
-X-Google-Smtp-Source: APXvYqxBNJvSw8ZbjPXRa7GmgTqTs9lNIHbHTZ+eprUCPJKERsS64GO/puiSRdCmCjQ4GfLi11CoXw==
-X-Received: by 2002:a17:902:622:: with SMTP id 31mr383414plg.31.1552597816522;
-        Thu, 14 Mar 2019 14:10:16 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p2sm16728pfi.95.2019.03.14.14.10.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1BU9kEzPXs7XL0lomFvApW+7xo8xyvn5BVlkJddm4mk=;
+        b=uQzd+2obs2h0rzGhXQBlN2qFLLbv6ss70apLO9wjyoJaKwFCMSjwn4vt8FPtjdZLQZ
+         OYlIjThFtNVfklA+Wve51cLJ6YJKu3snYDQgY1S88BXrHdD3kqznKqWI1NWXFI4GR58l
+         VG543jTCBAzRkeTM9rVrdVYY28Fc8jbhNdt5bWuFqTwKA02Oz1C3ejSsZzBDPrHbHxTK
+         3hw5aWJMEpardZjNPQpp/Hx89wPGt7uUn7+G1KiokiyV7wKce3Iz5qNQyAXs2j/kBjaK
+         hbmX0TQ3uIFLpbUtbuWT3bZG9XwDdOMkSNZsVJ/QfYlPttG/tk4Bm6xSKOax8gHIQ+8I
+         ooGA==
+X-Gm-Message-State: APjAAAVTH1wHehB+iW/8Hz6Tc8rVlXyizZrbugJkYsQzB8LExTIdx4ZY
+        FOvDy7duDjzOO9YdrS79EoKqvvutkgjBrpFoglApoj8irkrUa+CxROfEVvmV0RWyd3K4Vsk5HYP
+        +0J+7m8bHj0guC3LvN2N9osawySd4
+X-Received: by 2002:a24:6707:: with SMTP id u7mr395711itc.105.1552598257696;
+        Thu, 14 Mar 2019 14:17:37 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqznB2G9P75bY+b8EMpBa61RxKYreIn9fCsS/mC3L08yO6VpWUpye+fJ5DVccQHuy5RHmADmmA==
+X-Received: by 2002:a24:6707:: with SMTP id u7mr395654itc.105.1552598256628;
+        Thu, 14 Mar 2019 14:17:36 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id g4sm104571ioc.1.2019.03.14.14.17.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 14:10:15 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 14:10:14 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] perf/x86/intel: Make cpuc allocations consistent
-Message-ID: <20190314211014.GA25646@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 14 Mar 2019 14:17:36 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        ceph-devel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] libceph: Avoid a NULL pointer dereference
+Date:   Thu, 14 Mar 2019 16:17:24 -0500
+Message-Id: <20190314211724.21306-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+kmalloc allocates memory for dest->name and attempts to call
+memcpy without a check for failure. This patch avoids such a scenario.
 
-On Tue, Mar 05, 2019 at 10:23:15PM +0100, Peter Zijlstra (Intel) wrote:
-> The cpuc data structure allocation is different between fake and real
-> cpuc's; use the same code to init/free both.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ net/ceph/osdmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-With allmodconfig-CONFIG_CPU_SUP_INTEL, this patch results in:
+diff --git a/net/ceph/osdmap.c b/net/ceph/osdmap.c
+index 48a31dc9161c..c76a7c7e6a77 100644
+--- a/net/ceph/osdmap.c
++++ b/net/ceph/osdmap.c
+@@ -1901,6 +1901,8 @@ void ceph_oid_copy(struct ceph_object_id *dest,
+ 	} else {
+ 		dest->name = dest->inline_name;
+ 	}
++	if (!dest->name)
++		return;
+ 	memcpy(dest->name, src->name, src->name_len + 1);
+ 	dest->name_len = src->name_len;
+ }
+-- 
+2.17.1
 
-In file included from arch/x86/events/amd/core.c:8:0:
-arch/x86/events/amd/../perf_event.h:1036:45: warning: ‘struct cpu_hw_event’ declared inside parameter list will not be visible outside of this definition or declaration
- static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
-                                             ^~~~~~~~~~~~
-arch/x86/events/amd/../perf_event.h:1041:45: warning: ‘struct cpu_hw_event’ declared inside parameter list will not be visible outside of this definition or declaration
- static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
-                                             ^~~~~~~~~~~~
-
-With -Werror, this is fatal, and I think it may be buggy (should it be
-cpu_hw_events) ?
-
-The patch has been applied to stable releases. Any idea, anyone, why
-this is the case ? It doesn't look like a bug fix to me, and reverting
-it from v4.14.106 didn't seem to have a negative impact.
-
-Guenter
