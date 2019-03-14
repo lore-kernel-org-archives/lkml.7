@@ -2,85 +2,171 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC61C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD12C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD1A21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0956C20693
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:27:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ovTdBRiM"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kQh7eu4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfCNM0s (ORCPT
+        id S1727362AbfCNM1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:26:48 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:56962 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfCNM0c (ORCPT
+        Thu, 14 Mar 2019 08:27:52 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43370 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfCNM1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 08:26:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1552566390; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=TLovYB6wGuEGY77qr+RW5G1cQLAndd9Pv0xvbzYyEio=;
-        b=ovTdBRiM5XOkgV1smV8Yr9c9sX2Zs6zVt79dBqv8gy/6r++1sqbl/fCbzFQp0Q+oH1Kln5
-        QuCDOeGz/4Sppki5UDjtdVI9yVfZiG3wx6O6NsXuJk5kGOM5+8r0Lh+1aIIEhDUiaj667M
-        SsFBjPW6RvNBqKa8Mh7ZT6xfhrBue68=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/5] media: uapi: Add RGB bus formats for the GiantPlus GPM940B0 panel
-Date:   Thu, 14 Mar 2019 13:26:20 +0100
-Message-Id: <20190314122622.7597-3-paul@crapouillou.net>
-In-Reply-To: <20190314122622.7597-1-paul@crapouillou.net>
-References: <20190314122622.7597-1-paul@crapouillou.net>
+        Thu, 14 Mar 2019 08:27:52 -0400
+Received: by mail-qt1-f196.google.com with SMTP id v32so5715982qtc.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 05:27:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6flR/SZ3bVyvGpeBMlCe2ZUtI2LHYS6gvOXI4e6BfpI=;
+        b=kQh7eu4cXQZsGXIDCyZUWIYrnP4SyHjyEFvqeDX9qwPtnZcuVZwGG+PjPGwiNcoOW4
+         K6ThH9dTXFVHXQ8v4C8+VL2bakspMZATm2KkwyVhMgEQB5zCyrrNAkrL1M2cYBGHrKzN
+         f+mj5cuB3C4v+kP1Bu40/h0NQwqAOdgzZb3J4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6flR/SZ3bVyvGpeBMlCe2ZUtI2LHYS6gvOXI4e6BfpI=;
+        b=tfYCRypXRKN4VqRfNPJQB43b83Qftl+zX4JIHgxlR4CSkJxBgIUTjDw/wJaeH2JvEv
+         /DP7Bscwd52YB7CqxE/KWcFYUlIwnwWGpxu6RYE6yLevbRnRHTu7ws3XsrO5xMUV+SCl
+         k589qq3WV3nocfq6Kt1aDRLfi0VBSvuv8k4QsQBuWk0g/Hk4A4rsmTTBiTxW0YKQBMq5
+         qZrc8ZjJr2fIpVvzGHz+q+Ge45GPQ4zUJIY7Ypgv9vZcXCCFGy9TRmzlgS3R7mVodcmI
+         awa1L6FVIFv5njX3bDAo9tlXxFLzxNYtL93ANaI1MyBJDqn6MHF9ausrUhVNixPGdoYG
+         SERA==
+X-Gm-Message-State: APjAAAUnar6QuVQ/cNgMAmZyprGbgkdAmAPDLhJQOSYQWZQPZ/HCW12L
+        Tguur2hnuStMQQ31vUVvYavGUA==
+X-Google-Smtp-Source: APXvYqy2IZqfZEb8pYZbKHCl44Uhexadk5h0/fwVSteoQa1v1VP2dysxz0REKQPzCiHRqC15nDXZfg==
+X-Received: by 2002:ac8:2bc1:: with SMTP id n1mr37856804qtn.176.1552566470361;
+        Thu, 14 Mar 2019 05:27:50 -0700 (PDT)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id k33sm8837364qte.8.2019.03.14.05.27.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 05:27:48 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 08:27:48 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Colascione <dancol@google.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190314122748.GA101545@google.com>
+References: <20190309121141.GA30173@kroah.com>
+ <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
+ <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
+ <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
+ <20190311193612.4f09bf11@oasis.local.home>
+ <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
+ <20190312003912.GA170478@google.com>
+ <20190311212823.60684182@oasis.local.home>
+ <CAJWu+oqsD_wHGWfzj6POFowiY2qcu04auVzkA6Lu9R+LR4gkrQ@mail.gmail.com>
+ <20190313101843.800dd8d6a9babb635580ebdc@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313101843.800dd8d6a9babb635580ebdc@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
-are transferred sequentially on a 8-bit bus.
+Hi Masami,
+Sorry for late reply as I was traveling.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+On Wed, Mar 13, 2019 at 10:18:43AM +0900, Masami Hiramatsu wrote:
+> On Mon, 11 Mar 2019 18:38:49 -0700
+> Joel Fernandes <joelaf@google.com> wrote:
+> 
+> > On Mon, Mar 11, 2019 at 6:28 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > >
+> > > On Mon, 11 Mar 2019 20:39:12 -0400
+> > > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >
+> > > > I think even though the kernel-headers can't have information about all data
+> > > > structures, they do already contain a lot of data structure definitions we
+> > > > need already. And anything needed can/should arguably be moved to include/ if
+> > > > they are really needed for kernel extension by something "external" to the
+> > > > kernel such as kernel modules or eBPF, right?
+> > >
+> > > That's not my worry. I would like to be able to easily walk data
+> > > structures from within the kernel, without having to do a lot of work
+> > > in userspace to get that information. The kprobe_events could then be
+> > > passed type casts or such to access data fields of arguments to
+> > > functions and such.
+> > 
+> > Ok.
+> > 
+> > > > In any case, such a solution such as what Steve suggested, still cannot do
+> > > > what we can with headers - such as build kernel modules on the fly using the
+> > > > C-compiler without any auto-generation of C code from any debug artifiacts.
+> > > > Think systemtap working with the module-backend without any need for
+> > > > linux-headers package on the file system. So such a solution would still be a
+> > > > bit orthogonal in scope to what this proposed solution can solve IMO.
+> > > >
+> > >
+> > > With the information I would like to have, it would be trivial to read
+> > > the data to create the header files needed for modules.
+> > 
+> > But there are macros and other #define things too. We lose all of them
+> > and can't recreate them from just DWARF (AFAIK). Including
+> > include/generated/autoconf.h which #defines the CONFIG options. For
+> > that we either need headers, or full kernel's sources with build
+> > artifacts.
+> 
+> What kind of macros would you concern?
+> 
+> > I do see a use case for the debug info you are talking about as you
+> > mentioned for the kprobe_events argument list types, and I already
+> > thought about it. But it does not seem to work for all the use cases I
+> > am referring to here.
+> 
+> But the eBPF is based on kprobe-events. What kind of usage would you
+> expected? (with macros??)
 
-Notes:
-    v2: New patch
+eBPF C programs are compiled with kernel headers. They can execute inline
+functions or refer to macros in the kernel headers. They are similar to
+kernel modules where you build a C program that then later is executed in
+kernel context. It goes through the whole compiler pipeline. This is slightly
+different usage from pure kprobe-events.  Also eBPF kprobe programs need
+LINUX_VERSION_CODE (or similarly named) macro which it provides to the bpf(2)
+syscall when loading kprobe programs. This is because eBPF implementation in
+the kernel checks if the eBPF programs that use kprobes are being loaded
+against the right kernel.
 
- include/uapi/linux/media-bus-format.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+thanks,
 
-diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/media-bus-format.h
-index d6a5a3bfe6c4..f31724d6cd40 100644
---- a/include/uapi/linux/media-bus-format.h
-+++ b/include/uapi/linux/media-bus-format.h
-@@ -34,7 +34,7 @@
- 
- #define MEDIA_BUS_FMT_FIXED			0x0001
- 
--/* RGB - next is	0x101b */
-+/* RGB - next is	0x101d */
- #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
- #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
- #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
-@@ -54,6 +54,8 @@
- #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
- #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
- #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
-+#define MEDIA_BUS_FMT_RGB888_3X8_BE		0x101b
-+#define MEDIA_BUS_FMT_RGB888_3X8_LE		0x101c
- #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
- #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
- #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
--- 
-2.11.0
+- Joel
 
