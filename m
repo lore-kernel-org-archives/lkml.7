@@ -2,109 +2,162 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FA4C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240E1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C55D20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71C320854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rtxKJXtD"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="nsl3P9XZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfCNV1i (ORCPT
+        id S1727970AbfCNVjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 17:27:38 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46247 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfCNV1i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 17:27:38 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z25so7838862qti.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 14:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GywYO3Sx7pjw4OVRZOdEhfaoJTRL6Z5Vllt+5Wi6JAM=;
-        b=rtxKJXtDeencaCdnl1LfEVoUp+lNG2z6E/ycc5A7T0noPMGFNoGpmimr8HR85gz1OU
-         zuQhtO0DxJ9PThr+8dyWAFnw80Kr0eVnzIxBJnX5daM2KlKOdlqmQBLqs/Pr9eflsDH7
-         uxxrSCLrmTx3I/TW7XXt3Tl0ABLffhrJV3104=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GywYO3Sx7pjw4OVRZOdEhfaoJTRL6Z5Vllt+5Wi6JAM=;
-        b=Ot4xMmE/vEuFVc3bwGFpEeM4pFi5oU3oOUCUHLuLzJYcKpwP+DLwDf0f2WBqx4SqBP
-         4XV+i0HwK0tQR8MIc1B4ybsll2wV5+LiQBMb6X2tDXh60TZUaR+/0h5gUT6Ow4D0kq+x
-         x4KxgaYta4aTynVCLr21JB7zNhypbmo/FhFyg4PLwXZv9KkDjD92RJkINN16yaWgeWl5
-         Nqey3xCnD/M5BsDANxVHi1fcgEDXhPCeZK1h3p8z0RpV8uH5/v4o2es5HlntS89EUQa7
-         +gQEFA3Ze2NHmGvjfhncj+eKx+Pw2WswuNhbwdFnVsO8Fj78du3vvvgwv6dj5jZ5nba0
-         vSAA==
-X-Gm-Message-State: APjAAAXzqKDT+tu83dRxgYZFTi4cyA/FbBnRe66HSvATmR9dsB1vQkeQ
-        M7pwbJUt1Caa+eSd770U7fA4Lg==
-X-Google-Smtp-Source: APXvYqxSmI5j2pho9SeyC5yaPdAUCmWuVDhcUBxuJN7g7lJkkwP2+ObbEjQTFoQJogk2X6+eJMMPrw==
-X-Received: by 2002:ac8:28e4:: with SMTP id j33mr155326qtj.349.1552598856543;
-        Thu, 14 Mar 2019 14:27:36 -0700 (PDT)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id g123sm217467qkg.0.2019.03.14.14.27.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Mar 2019 14:27:35 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 17:27:34 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        luto@kernel.org, byungchul.park@lge.com
-Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
- half-interrupts
-Message-ID: <20190314212734.GB104720@google.com>
-References: <20190312150514.GB249405@google.com>
- <20190312152034.GZ13351@linux.ibm.com>
- <20190313150948.GA84821@google.com>
- <20190313112726.01d974fc@gandalf.local.home>
- <20190313155155.GN13351@linux.ibm.com>
- <20190313125125.1a1fb2f3@gandalf.local.home>
- <20190313180730.GU13351@linux.ibm.com>
- <20190314123159.GB101545@google.com>
- <20190314093657.2c1a3485@gandalf.local.home>
- <20190314093746.028e57f1@gandalf.local.home>
+        Thu, 14 Mar 2019 17:39:11 -0400
+Received: from mail-eopbgr130047.outbound.protection.outlook.com ([40.107.13.47]:30086
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726731AbfCNVjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 17:39:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z80iAsc7UcR6LpoNEq/jtLvi/7m0aLrqNj99RH8Fg+U=;
+ b=nsl3P9XZ/0rD/9Yfpn82WHQVYn87mQaXd+yT0epy4lG2lefcNohD5CfLTm5Yt4OOTKzfYqAeAOBAIJYwE3hoO39Er935OTYqXnCcVl+/3TOnNuNeeBqThXioONuyycDqZ6u9TFPQv514vO+cLwGJmt8KWnL1MQG8E/ca3sYVthM=
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.135.8) by
+ VI1PR0501MB2399.eurprd05.prod.outlook.com (10.168.135.143) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.20; Thu, 14 Mar 2019 21:38:53 +0000
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0b8:7ed8:d657:2f59]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0b8:7ed8:d657:2f59%6]) with mapi id 15.20.1709.011; Thu, 14 Mar 2019
+ 21:38:53 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Vu Pham <vuhuong@mellanox.com>,
+        Yuval Avnery <yuvalav@mellanox.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [RFC net-next v1 0/3] Support mlx5 mediated devices in host
+Thread-Topic: [RFC net-next v1 0/3] Support mlx5 mediated devices in host
+Thread-Index: AQHU1ftxoq/20NoyU02DSUADWZ4DWKYKJn4AgAGFZKA=
+Date:   Thu, 14 Mar 2019 21:38:53 +0000
+Message-ID: <VI1PR0501MB2271E31103727546484AB834D14B0@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+References: <1552082876-60228-1-git-send-email-parav@mellanox.com>
+ <20190313150804.3702ae47@cakuba.netronome.com>
+In-Reply-To: <20190313150804.3702ae47@cakuba.netronome.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [208.176.44.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d832070e-6651-4dde-0cf8-08d6a8c57496
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0501MB2399;
+x-ms-traffictypediagnostic: VI1PR0501MB2399:
+x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;VI1PR0501MB2399;23:Oa/LHYomlRiYZRiYiwZHRMfQaCWzJO8b1VisT14?=
+ =?us-ascii?Q?4w+SkvewRu8GHkKZQalctSteUxOhf/+VWwA7I9uXl4y8B4ppziAtlofHckeA?=
+ =?us-ascii?Q?HSbJqp5aLOoTASS4fSrQhNyou0J6R65a5Soz/NrN9aP00nfX8mhoGXH93I3Q?=
+ =?us-ascii?Q?9WqIHgIfjSJYvdPFc67Hjnm2ukQ6fH9c3QJL1F5eLPCNyNMXBx+mVytzIntj?=
+ =?us-ascii?Q?RWQQe39DKzG6cbYedoKe+H/4f5T1ED+4zBOehC70alArxdzEajQIixQCDw4N?=
+ =?us-ascii?Q?bZ8LYGQO2uodN8bJDuBhAuVrndFVjXr70dhd+rvKIbADfXy+pgPpjaTUUva5?=
+ =?us-ascii?Q?9MUUt0YyH2C3QPt7pC3VNb2Cxq20uhiJrZc/kmR23V8KpYF8YT76fIEW9m92?=
+ =?us-ascii?Q?2KGjL1xNzxGXQVE6lmRh8nyDyaluDXs8/F60zDUKUAKzk5IPn5MNViKiR5Vk?=
+ =?us-ascii?Q?rHcT6shBUUSi5sD8plTcG+Vm51oV4b2IqmDckznikjKfUSAhF4+hjJnwi17v?=
+ =?us-ascii?Q?D9fAcf7E58CDmE9egXr1LB5SM3/3mnkjXI8TOJAvoGQowbTx2VoH3kaSLYam?=
+ =?us-ascii?Q?Y1XWrqy27xw4TTw1eoU75wj4Dq9GIoXEzsn7pXsx6Tzf2KLOQixbeC+ww2+f?=
+ =?us-ascii?Q?mD8YYg9UGKnogN5JWI+Tz4FuFCQrHs7TGk0aq3jUmYTdVBFEkW7g8ctoXdOt?=
+ =?us-ascii?Q?/9FoctnrwcjsOXSrDusLFTdpp3o0vXeoPIg6NpcwxMkseBoVdJhMGKnGtme0?=
+ =?us-ascii?Q?TBfYJJivm0/wh33o+/aEGvx0Vo2Z4GwIqxGj4IVkT/8HUI+bje0OfVWV37Uu?=
+ =?us-ascii?Q?esMFePkQcVTj6V0sfa8g4QL6vcl33EpQ0SoKDs8lz1ELPBNKS/ep1RvTHXB/?=
+ =?us-ascii?Q?9/xPI51MmrZZD2Zbv44ogpDJIAPq5NFmZlzmfMAhSJCjftXUQHmEQPOgDSKE?=
+ =?us-ascii?Q?b2oP0GU6TrQWtaxCaRqtejdGkwNJG9if9lobEngu7jDq2RZRkl/OfSrdKyBj?=
+ =?us-ascii?Q?ywoTypfflFyYmuIB1oXMwoxj0gxbjUmYDe/ibh+hyzKphhRFjXBoaFFzTha+?=
+ =?us-ascii?Q?GzSA5wzOnERbVgxPgVLEPeNqOVQGNCorj82zukpcuyHrZUkyKCLkUbzRqNIQ?=
+ =?us-ascii?Q?gYD4ZVWHruj2BY2IncNK8wmhkQpuW5OUs0tGz8dlgUqGL3A/dpjPglY6aJiN?=
+ =?us-ascii?Q?TjDiVLj6UkLB+i60uRw5N8UztP4UmqgcLRCB/X2DRq8r8jURG19YWZLwL8MS?=
+ =?us-ascii?Q?nKamstMAqEHhW4jzj8UfOT5Nyh0qzk943/LmIucdiRkUi9zFzd/1d+hXlP0L?=
+ =?us-ascii?Q?oyg=3D=3D?=
+x-microsoft-antispam-prvs: <VI1PR0501MB23998AAD90A20D76CFBDC139D14B0@VI1PR0501MB2399.eurprd05.prod.outlook.com>
+x-forefront-prvs: 09760A0505
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(366004)(376002)(396003)(13464003)(199004)(189003)(476003)(102836004)(6116002)(26005)(5660300002)(186003)(11346002)(3846002)(256004)(486006)(6506007)(53546011)(7696005)(99286004)(14444005)(76176011)(71200400001)(71190400001)(52536014)(316002)(54906003)(5024004)(33656002)(105586002)(8936002)(81166006)(106356001)(81156014)(8676002)(4326008)(74316002)(6916009)(305945005)(68736007)(446003)(66066001)(97736004)(7736002)(25786009)(6246003)(478600001)(2906002)(6436002)(53936002)(55016002)(229853002)(14454004)(9686003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2399;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /gK+uSpSV1ZPhHUXuUlgNnGR1QjicuHDSFbtZXsZZmi9Zy87z4u5X3kioeGpZlWGhm5o8eOrM345qyEd0CeIoabrDQzz7MkgmRH1P+UFc9KqeNnbJ9Bubw6gRIq1/jZkahPZ/yUhXyaKPOy+Ik0rVZcBtQlZEQvJHGcodkEaE13HIQ7c6DUFHPcIfzlyFLhd7j0EZsr/qBPXE+e/+DzYaBHqakZHhpVrU9LbtT4SClCvESvREITABt13HRNb9MlcZ48yWVL8nXn9pwIMIEvM9VbTUuRtKey1pZN7t4rTXlg9shlfoZderc7LVFU5rheGsxXa/hdFxMgphhhoIIx0lP/umSkZn0W7VhsSB1INYLjCJWIYEblymaa7fRNZiADmr7BcpAYXa7gxSeo30gPzrNzKXOBKpUg01sXUmlzHP+o=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314093746.028e57f1@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d832070e-6651-4dde-0cf8-08d6a8c57496
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2019 21:38:53.1072
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2399
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 09:37:46AM -0400, Steven Rostedt wrote:
-> On Thu, 14 Mar 2019 09:36:57 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Thu, 14 Mar 2019 08:31:59 -0400
-> > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > 
-> > > Oh thanks for pointing that out. Yes it does work for me. I agree with the
-> > > lockdep API addition and others could benefit from it too. I will incorporate
-> > > the lockdep API addition into the RCU patch, but let me know if I should
-> > > rather split it.  
-> > 
-> > I'd recommend splitting it (adding the lockdep_assert in a patch by
-> > itself), but make sure that patch Cc's the lockdep maintainers and
-> > explains the reason for adding it. Might as well Cc the lockdep
-> > maintainers on the entire series too.
+Hi Jakub,
+
+> -----Original Message-----
+> From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Sent: Wednesday, March 13, 2019 5:08 PM
+> To: Parav Pandit <parav@mellanox.com>
+> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+> michal.lkml@markovi.net; davem@davemloft.net;
+> gregkh@linuxfoundation.org; Jiri Pirko <jiri@mellanox.com>;
+> kwankhede@nvidia.com; alex.williamson@redhat.com; Vu Pham
+> <vuhuong@mellanox.com>; Yuval Avnery <yuvalav@mellanox.com>;
+> kvm@vger.kernel.org
+> Subject: Re: [RFC net-next v1 0/3] Support mlx5 mediated devices in host
+>=20
+> On Fri,  8 Mar 2019 16:07:53 -0600, Parav Pandit wrote:
+> > Use case:
+> > ---------
+> > A user wants to create/delete hardware linked sub devices without
+> > using SR-IOV.
+> > These devices for a pci device can be netdev (optional rdma device) or
+> > other devices. Such sub devices share some of the PCI device resources
+> > and also have their own dedicated resources.
+> > A user wants to use this device in a host where PF PCI device exist.
+> > (not in a guest VM.) A user may want to use such sub device in future
+> > in guest VM.
 > >
-> 
-> Feel free to add "Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>"
-> on that patch too.
+> > Few examples are:
+> > 1. netdev having its own txq(s), rq(s) and/or hw offload parameters.
+> > 2. netdev with switchdev mode using netdev representor
+>=20
+> Hi Parav!
+>=20
+> Sorry for going quiet, I'm hoping to clarify the use cases and the devlin=
+k part
+> on the other thread with Jiri, and then come back to implementation detai=
+ls.
+>=20
+That's fine. Now we have detached two things so we don't need to create med=
+iated devices etc through devlink anymore.
+It is not just implementation details here in RFC.
+RFC describes the single and multiport use cases and attachment with devlin=
+k too.
+It uses existing well defined devlink objects.
+So I am not envisioning a big change.
 
-Will definitely split it and add your tag. Thanks!
-
- - Joel
-
+> > 3. rdma device with IB link layer and IPoIB netdev 4. rdma/RoCE device
+> > and a netdev 5. rdma device with multiple ports
