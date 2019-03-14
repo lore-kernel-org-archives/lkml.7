@@ -2,267 +2,274 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62246C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ED1C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1871A21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:47:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iylZzi+8"
+	by mail.kernel.org (Postfix) with ESMTP id 3D7FD21874
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552585759;
+	bh=/NIPo9XCtB4XF2DnPmV03vCZZuL9qDnDUy2ol5LzEyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FaX0UuShBszIQmh2Dwaoi2kGNuYQDVCaI5C++itZaX/BwRK4/b8tSVZ8LyaDcI1wA
+	 O0SraaZ7SbrXbAHri9n9WwaD+gG2sar2t8L+yqM5wCWUYRGfjAOsFdEhf1hBYHKLbK
+	 j2wLADdN0zcXwjAiFjzD0aGTBycYY/I0SHI13uXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfCNRrk (ORCPT
+        id S1727524AbfCNRtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 13:47:40 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35113 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbfCNRrj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 13:47:39 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h6so4891257lfc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 10:47:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gQYMLIgVmxQldUr4kxOlYx1VLacMHWwXJZip9LpPVrk=;
-        b=iylZzi+8eAfMi1yoAx76QVqhI6nJFaPp2w8RW26JEUv0mYEAZA8Q/n8R9390ofLy8J
-         680tRWJk5W0QGtfi2Or/5ZT9PNwA1ZdJNVb/fMXRuuPSknaxs/GKH5YwedvdmQXma0Ah
-         JcMsr3W1yBeVgwz6nYubzDMN9n7gebqxzJdEQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gQYMLIgVmxQldUr4kxOlYx1VLacMHWwXJZip9LpPVrk=;
-        b=sQyKDxx1UxVL8p9yO0+zePTLpXNJea4ANNv0uG6bdX7N3MHYK63Vc9W9g0U4OaHHG4
-         jxSwZYAX0y5WGEYC6dlkLsN00Cy0QywSFsH9/VPk0qWcLgTE+Ih3SRF+ZhaQTrbIraff
-         /rTbOUq+p9C+WC98ZaFlPn6M4MTcWPkOjB3HrCGosC8WU5k//33STsbBSmPohwgvkgUY
-         elIyyJLaKBUT+bHOIethL9EXtogmjZpX/DJ0eu85/ur1PjgDGxFtOUKz0ijfrBkCCt6D
-         o9zujcbV15ip7+dPGI+XU8HYmjVzpR/hqCbskZQ6HsRG8sYf19PuXn7vOG2wBUL+oQ/r
-         cy4w==
-X-Gm-Message-State: APjAAAVGOsRFZx3REHOG+JE0lvp7rAUS49Pf8bpN3tVp4QmD03csQER6
-        Rp56CT2Yog3qvOok47Tk+IJ3yqwfgcKMwJffUJMTEw==
-X-Google-Smtp-Source: APXvYqzj3H5LXBJMFL3NSv0Ut/9sVgD2+BPFP2JSpI5TDzO8vVnOdbvXIP0EDmouupRx9rtS7LeMK8zJ040fzJKp0L0=
-X-Received: by 2002:a19:8c1e:: with SMTP id o30mr17748637lfd.137.1552585656532;
- Thu, 14 Mar 2019 10:47:36 -0700 (PDT)
+        Thu, 14 Mar 2019 13:49:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726753AbfCNRtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 13:49:17 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CABA820811;
+        Thu, 14 Mar 2019 17:49:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552585756;
+        bh=/NIPo9XCtB4XF2DnPmV03vCZZuL9qDnDUy2ol5LzEyI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AQCEhINGwMnK5/+1z6GuDd1iGkJixjliBxfA9LxjyCXmJUFl/zj3+0NbIsfOx8VuW
+         uSug/iDhdIjV/eQSV0OLRBnavUi0Kr1mQgUPu0VLKkyuCzr0Il+WhleC8sfMy4A9YO
+         uF/IBH/CLR1bguCeaaecnGfcfCiyJ4r64Urfps04=
+Date:   Thu, 14 Mar 2019 10:49:14 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     linux-mtd@lists.infradead.org, linux-fscrypt@vger.kernel.org,
+        jaegeuk@kernel.org, tytso@mit.edu, linux-unionfs@vger.kernel.org,
+        miklos@szeredi.hu, amir73il@gmail.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paullawrence@google.com
+Subject: Re: [PATCH 4/4] ubifs: Implement new mount option,
+ fscrypt_key_required
+Message-ID: <20190314174913.GA30026@gmail.com>
+References: <CAJfpegvX4ANfso-Jn1zaB+m4Q_0eK9i-+MCJ+sTH5QzD3PZFMQ@mail.gmail.com>
+ <20190314171559.27584-1-richard@nod.at>
+ <20190314171559.27584-5-richard@nod.at>
 MIME-Version: 1.0
-References: <20190310203403.27915-1-sultan@kerneltoast.com>
- <20190311174320.GC5721@dhcp22.suse.cz> <20190311175800.GA5522@sultan-box.localdomain>
- <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
- <20190311204626.GA3119@sultan-box.localdomain> <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
- <20190312080532.GE5721@dhcp22.suse.cz> <20190312163741.GA2762@sultan-box.localdomain>
- <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
-In-Reply-To: <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 14 Mar 2019 10:47:17 -0700
-Message-ID: <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-To:     Tim Murray <timmurray@google.com>
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314171559.27584-5-richard@nod.at>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
-Thanks for the detailed and excellent write-up. It will serve as a
-good future reference for low memory killer requirements. I made some
-comments below on the "how to kill" part.
+Hi Richard,
 
-On Tue, Mar 12, 2019 at 10:17 AM Tim Murray <timmurray@google.com> wrote:
->
-> On Tue, Mar 12, 2019 at 9:37 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> >
-> > On Tue, Mar 12, 2019 at 09:05:32AM +0100, Michal Hocko wrote:
-> > > The only way to control the OOM behavior pro-actively is to throttle
-> > > allocation speed. We have memcg high limit for that purpose. Along with
-> > > PSI, I can imagine a reasonably working user space early oom
-> > > notifications and reasonable acting upon that.
-> >
-> > The issue with pro-active memory management that prompted me to create this was
-> > poor memory utilization. All of the alternative means of reclaiming pages in the
-> > page allocator's slow path turn out to be very useful for maximizing memory
-> > utilization, which is something that we would have to forgo by relying on a
-> > purely pro-active solution. I have not had a chance to look at PSI yet, but
-> > unless a PSI-enabled solution allows allocations to reach the same point as when
-> > the OOM killer is invoked (which is contradictory to what it sets out to do),
-> > then it cannot take advantage of all of the alternative memory-reclaim means
-> > employed in the slowpath, and will result in killing a process before it is
-> > _really_ necessary.
->
-> There are two essential parts of a lowmemorykiller implementation:
-> when to kill and how to kill.
->
-> There are a million possible approaches to decide when to kill an
-> unimportant process. They usually trade off between the same two
-> failure modes depending on the workload.
->
-> If you kill too aggressively, a transient spike that could be
-> imperceptibly absorbed by evicting some file pages or moving some
-> pages to ZRAM will result in killing processes, which then get started
-> up later and have a performance/battery cost.
->
-> If you don't kill aggressively enough, you will encounter a workload
-> that thrashes the page cache, constantly evicting and reloading file
-> pages and moving things in and out of ZRAM, which makes the system
-> unusable when a process should have been killed instead.
->
-> As far as I've seen, any methodology that uses single points in time
-> to decide when to kill without completely biasing toward one or the
-> other is susceptible to both. The minfree approach used by
-> lowmemorykiller/lmkd certainly is; it is both too aggressive for some
-> workloads and not aggressive enough for other workloads. My guess is
-> that simple LMK won't kill on transient spikes but will be extremely
-> susceptible to page cache thrashing. This is not an improvement; page
-> cache thrashing manifests as the entire system running very slowly.
->
-> What you actually want from lowmemorykiller/lmkd on Android is to only
-> kill once it becomes clear that the system will continue to try to
-> reclaim memory to the extent that it could impact what the user
-> actually cares about. That means tracking how much time is spent in
-> reclaim/paging operations and the like, and that's exactly what PSI
-> does. lmkd has had support for using PSI as a replacement for
-> vmpressure for use as a wakeup trigger (to check current memory levels
-> against the minfree thresholds) since early February. It works fine;
-> unsurprisingly it's better than vmpressure at avoiding false wakeups.
->
-> Longer term, there's a lot of work to be done in lmkd to turn PSI into
-> a kill trigger and remove minfree entirely. It's tricky (mainly
-> because of the "when to kill another process" problem discussed
-> later), but I believe it's feasible.
->
-> How to kill is similarly messy. The latency of reclaiming memory post
-> SIGKILL can be severe (usually tens of milliseconds, occasionally
-> >100ms). The latency we see on Android usually isn't because those
-> threads are blocked in uninterruptible sleep, it's because times of
-> memory pressure are also usually times of significant CPU contention
-> and these are overwhelmingly CFS threads, some of which may be
-> assigned a very low priority. lmkd now sets priorities and resets
-> cpusets upon killing a process, and we have seen improved reclaim
-> latency because of this. oom reaper might be a good approach to avoid
-> this latency (I think some in-kernel lowmemorykiller implementations
-> rely on it), but we can't use it from userspace. Something for future
-> consideration.
->
+On Thu, Mar 14, 2019 at 06:15:59PM +0100, Richard Weinberger wrote:
+> Usually fscrypt allows limited access to encrypted files even
+> if no key is available.
+> Encrypted filenames are shown and based on this names users
+> can unlink and move files.
 
-This makes sense. If the process receiving the SIGKILL does not get CPU
-time, then the kernel may not be able to execute the unconditional
-signal handling paths in the context of the victim process to free the memory.
+Actually, fscrypt doesn't allow moving files without the key.  It would only be
+possible for cross-renames, i.e. renames with the RENAME_EXCHANGE flag.  So for
+consistency with regular renames, fscrypt also forbids cross-renames if the key
+for either the source or destination directory is missing.
 
-I don't see how proc-fds approach will solve this though. Say you have
-process L (which is LMKd) which sends a SIGKILL to process V(which is
-a victim). Now L sends SIGKILL to V. Unless V executes the
-signal-handling code in kernel context and is scheduled at high enough
-priority to get CPU time, I don't think the SIGKILL will be processed.
+So the main use case for the ciphertext view is *deleting* files.  For example,
+deleting a user's home directory after that user has been removed from the
+system.  Or the system freeing up space by deleting cache files from a user who
+isn't currently logged in.
 
-The exact path that the process being killed executes to free its
-memory is: do_signal-> get_signal-> do_group_exit-> do_exit-> mmput.
-And this needs to execute in the context of V which needs to get
-CPU-time to do such execution.
+> 
+> This is not always what people expect. The fscrypt_key_required mount
+> option disables this feature.
+> If no key is present all access is denied with the -ENOKEY error code.
 
-So my point is to be notified of process death, you still need SIGKILL
-to be processed. So you may still need to make sure the task is at a
-high enough priority and scheduler puts it on the CPU. Only *after
-that* can he proc-fds notification mechanism (or whichever)
-notification mechanism can kick in.
+The problem with this mount option is that it allows users to create undeletable
+files.  So I'm not really convinced yet this is a good change.  And though the
+fscrypt_key_required semantics are easier to implement, we'd still have to
+support the existing semantics too, thus increasing the maintenance cost.
 
-Speaking of which I wonder if the scheduler should special case
-SIGKILLed threads as higher priority automatically so that they get
-CPU time, but don't know if this can cause denial of service kind of
-attacks. I don't know if it does something like this already. Peter
-should know this right off the bat and he is on CC so he can comment
-more.
+> 
+> The side benefit of this is that we don't need ->d_revalidate().
+> Not having ->d_revalidate() makes an encrypted ubifs usable
+> as overlayfs upper directory.
+> 
 
-About the 100ms latency, I wonder whether it is that high because of
-the way Android's lmkd is observing that a process has died. There is
-a gap between when a process memory is freed and when it disappears
-from the process-table.  Once a process is SIGKILLed, it becomes a
-zombie. Its memory is freed instantly during the SIGKILL delivery (I
-traced this so that's how I know), but until it is reaped by its
-parent thread, it will still exist in /proc/<pid> . So if testing the
-existence of /proc/<pid> is how Android is observing that the process
-died, then there can be a large latency where it takes a very long
-time for the parent to actually reap the child way after its memory
-was long freed. A quicker way to know if a process's memory is freed
-before it is reaped could be to read back /proc/<pid>/maps in
-userspace of the victim <pid>, and that file will be empty for zombie
-processes. So then one does not need wait for the parent to reap it. I
-wonder how much of that 100ms you mentioned is actually the "Waiting
-while Parent is reaping the child", than "memory freeing time". So
-yeah for this second problem, the procfds work will help.
+It would be preferable if we could get overlayfs to work without providing a
+special mount option.
 
-By the way another approach that can provide a quick and asynchronous
-notification of when the process memory is freed, is to monitor
-sched_process_exit trace event using eBPF. You can tell eBPF the PID
-that you want to monitor before the SIGKILL. As soon as the process
-dies and its memory is freed, the eBPF program can send a notification
-to user space (using the perf_events polling infra). The
-sched_process_exit fires just after the mmput() happens so it is quite
-close to when the memory is reclaimed. This also doesn't need any
-kernel changes. I could come up with a prototype for this and
-benchmark it on Android, if you want. Just let me know.
+> Signed-off-by: Richard Weinberger <richard@nod.at>
+> ---
+>  fs/ubifs/crypto.c |  2 +-
+>  fs/ubifs/dir.c    | 29 ++++++++++++++++++++++++++---
+>  fs/ubifs/super.c  | 15 +++++++++++++++
+>  fs/ubifs/ubifs.h  |  1 +
+>  4 files changed, 43 insertions(+), 4 deletions(-)
+> 
 
-thanks,
+Shouldn't readlink() honor the mount option too?
 
- - Joel
+> diff --git a/fs/ubifs/crypto.c b/fs/ubifs/crypto.c
+> index 4aaedf2d7f44..a6a48c5dc058 100644
+> --- a/fs/ubifs/crypto.c
+> +++ b/fs/ubifs/crypto.c
+> @@ -76,7 +76,7 @@ int ubifs_decrypt(const struct inode *inode, struct ubifs_data_node *dn,
+>  }
+>  
+>  const struct fscrypt_operations ubifs_crypt_operations = {
+> -	.flags			= FS_CFLG_OWN_PAGES,
+> +	.flags			= FS_CFLG_OWN_PAGES | FS_CFLG_OWN_D_OPS,
+>  	.key_prefix		= "ubifs:",
+>  	.get_context		= ubifs_crypt_get_context,
+>  	.set_context		= ubifs_crypt_set_context,
+> diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
+> index b0cb913697c5..4d029f08b80d 100644
+> --- a/fs/ubifs/dir.c
+> +++ b/fs/ubifs/dir.c
+> @@ -208,6 +208,16 @@ static int dbg_check_name(const struct ubifs_info *c,
+>  	return 0;
+>  }
+>  
+> +static void ubifs_set_dentry_ops(struct inode *dir, struct dentry *dentry)
+> +{
+> +#ifdef CONFIG_FS_ENCRYPTION
+> +	struct ubifs_info *c = dir->i_sb->s_fs_info;
+> +
+> +	if (IS_ENCRYPTED(dir) && !c->fscrypt_key_required)
+> +		d_set_d_op(dentry, &fscrypt_d_ops);
+> +#endif
+> +}
+> +
+>  static struct dentry *ubifs_lookup(struct inode *dir, struct dentry *dentry,
+>  				   unsigned int flags)
+>  {
+> @@ -224,7 +234,10 @@ static struct dentry *ubifs_lookup(struct inode *dir, struct dentry *dentry,
+>  	if (err)
+>  		return ERR_PTR(err);
+>  
+> -	err = fscrypt_setup_filename(dir, &dentry->d_name, 1, &nm);
+> +	ubifs_set_dentry_ops(dir, dentry);
+> +
+> +	err = fscrypt_setup_filename(dir, &dentry->d_name,
+> +				     !c->fscrypt_key_required, &nm);
+>  	if (err)
+>  		return ERR_PTR(err);
+>  
+> @@ -240,6 +253,11 @@ static struct dentry *ubifs_lookup(struct inode *dir, struct dentry *dentry,
+>  	}
+>  
+>  	if (nm.hash) {
+> +		if (c->fscrypt_key_required) {
+> +			inode = ERR_PTR(-ENOKEY);
+> +			goto done;
+> +		}
+> +
+>  		ubifs_assert(c, fname_len(&nm) == 0);
+>  		ubifs_assert(c, fname_name(&nm) == NULL);
+>  		dent_key_init_hash(c, &key, dir->i_ino, nm.hash);
+> @@ -529,6 +547,9 @@ static int ubifs_readdir(struct file *file, struct dir_context *ctx)
+>  		if (err)
+>  			return err;
+>  
+> +		if (c->fscrypt_key_required && !dir->i_crypt_info)
+> +			return -ENOKEY;
+> +
 
+How about returning -ENOKEY when trying to open the directory in the first
+place, rather than allowing getting to readdir()?  That would match the behavior
+of regular files.
 
-
-
-
-
-
-
-
-
-> A non-obvious consequence of both of these concerns is that when to
-> kill a second process is a distinct and more difficult problem than
-> when to kill the first. A second process should be killed if reclaim
-> from the first process has finished and there has been insufficient
-> memory reclaimed to avoid perceptible impact. Identifying whether
-> memory pressure continues at the same level can probably be handled
-> through multiple PSI monitors with different thresholds and window
-> lengths, but this is an area of future work.
->
-> Knowing whether a SIGKILL'd process has finished reclaiming is as far
-> as I know not possible without something like procfds. That's where
-> the 100ms timeout in lmkd comes in. lowmemorykiller and lmkd both
-> attempt to wait up to 100ms for reclaim to finish by checking for the
-> continued existence of the thread that received the SIGKILL, but this
-> really means that they wait up to 100ms for the _thread_ to finish,
-> which doesn't tell you anything about the memory used by that process.
-> If those threads terminate early and lowmemorykiller/lmkd get a signal
-> to kill again, then there may be two processes competing for CPU time
-> to reclaim memory. That doesn't reclaim any faster and may be an
-> unnecessary kill.
->
-> So, in summary, the impactful LMK improvements seem like
->
-> - get lmkd and PSI to the point that lmkd can use PSI signals as a
-> kill trigger and remove all static memory thresholds from lmkd
-> completely. I think this is mostly on the lmkd side, but there may be
-> some PSI or PSI monitor changes that would help
-> - give userspace some path to start reclaiming memory without waiting
-> for every thread in a process to be scheduled--could be oom reaper,
-> could be something else
-> - offer a way to wait for process termination so lmkd can tell when
-> reclaim has finished and know when killing another process is
-> appropriate
+>  		err = fscrypt_fname_alloc_buffer(dir, UBIFS_MAX_NLEN, &fstr);
+>  		if (err)
+>  			return err;
+> @@ -798,7 +819,8 @@ static int ubifs_unlink(struct inode *dir, struct dentry *dentry)
+>  			return err;
+>  	}
+>  
+> -	err = fscrypt_setup_filename(dir, &dentry->d_name, 1, &nm);
+> +	err = fscrypt_setup_filename(dir, &dentry->d_name, !c->fscrypt_key_required,
+> +				     &nm);
+>  	if (err)
+>  		return err;
+>  
+> @@ -908,7 +930,8 @@ static int ubifs_rmdir(struct inode *dir, struct dentry *dentry)
+>  			return err;
+>  	}
+>  
+> -	err = fscrypt_setup_filename(dir, &dentry->d_name, 1, &nm);
+> +	err = fscrypt_setup_filename(dir, &dentry->d_name,
+> +				     !c->fscrypt_key_required, &nm);
+>  	if (err)
+>  		return err;
+>  
+> diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
+> index 8dc2818fdd84..e081b00236b6 100644
+> --- a/fs/ubifs/super.c
+> +++ b/fs/ubifs/super.c
+> @@ -445,6 +445,9 @@ static int ubifs_show_options(struct seq_file *s, struct dentry *root)
+>  			   ubifs_compr_name(c, c->mount_opts.compr_type));
+>  	}
+>  
+> +	if (c->fscrypt_key_required)
+> +		seq_puts(s, ",fscrypt_key_required");
+> +
+>  	seq_printf(s, ",assert=%s", ubifs_assert_action_name(c));
+>  	seq_printf(s, ",ubi=%d,vol=%d", c->vi.ubi_num, c->vi.vol_id);
+>  
+> @@ -952,6 +955,7 @@ enum {
+>  	Opt_assert,
+>  	Opt_auth_key,
+>  	Opt_auth_hash_name,
+> +	Opt_fscrypt_key_required,
+>  	Opt_ignore,
+>  	Opt_err,
+>  };
+> @@ -969,6 +973,7 @@ static const match_table_t tokens = {
+>  	{Opt_ignore, "ubi=%s"},
+>  	{Opt_ignore, "vol=%s"},
+>  	{Opt_assert, "assert=%s"},
+> +	{Opt_fscrypt_key_required, "fscrypt_key_required"},
+>  	{Opt_err, NULL},
+>  };
+>  
+> @@ -1008,6 +1013,7 @@ static int ubifs_parse_options(struct ubifs_info *c, char *options,
+>  {
+>  	char *p;
+>  	substring_t args[MAX_OPT_ARGS];
+> +	unsigned int old_fscrypt_key_required = c->fscrypt_key_required;
+>  
+>  	if (!options)
+>  		return 0;
+> @@ -1099,6 +1105,15 @@ static int ubifs_parse_options(struct ubifs_info *c, char *options,
+>  			if (!c->auth_hash_name)
+>  				return -ENOMEM;
+>  			break;
+> +		case Opt_fscrypt_key_required:
+> +			c->fscrypt_key_required = 1;
+> +
+> +			if (is_remount && (old_fscrypt_key_required != c->fscrypt_key_required)) {
+> +				ubifs_err(c, "fscrypt_key_required cannot changed by remount");
+> +				return -EINVAL;
+> +			}
+> +
+> +			break;
+>  		case Opt_ignore:
+>  			break;
+>  		default:
+> diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
+> index 1ae12900e01d..71b03a6798ae 100644
+> --- a/fs/ubifs/ubifs.h
+> +++ b/fs/ubifs/ubifs.h
+> @@ -1304,6 +1304,7 @@ struct ubifs_info {
+>  	unsigned int rw_incompat:1;
+>  	unsigned int assert_action:2;
+>  	unsigned int authenticated:1;
+> +	unsigned int fscrypt_key_required:1;
+>  
+>  	struct mutex tnc_mutex;
+>  	struct ubifs_zbranch zroot;
+> -- 
+> 2.21.0
+> 
