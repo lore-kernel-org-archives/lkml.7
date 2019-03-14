@@ -2,144 +2,126 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA788C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C46C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B2E2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C273921852
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:03:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgEO9Va9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfCNID2 (ORCPT
+        id S1727287AbfCNIDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 04:03:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47138 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726776AbfCNIDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 04:03:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2E918AD14;
-        Thu, 14 Mar 2019 08:03:23 +0000 (UTC)
-Subject: Re: [PATCH] btrfs: fix a NULL pointer dereference
-To:     Qu Wenruo <quwenruo.btrfs@gmx.com>, Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190314075041.28966-1-kjlu@umn.edu>
- <b0b494f4-8686-8e50-faca-625d6f89bbe3@suse.com>
- <50fa02f1-18c0-b039-ec2f-e16b715f53ff@gmx.com>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <fcdf722f-d128-03c0-99fb-a220f680193c@suse.com>
-Date:   Thu, 14 Mar 2019 10:03:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 14 Mar 2019 04:03:34 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40199 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfCNIDc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 04:03:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u9so3439160pgo.7;
+        Thu, 14 Mar 2019 01:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D08xpENjvwwapHL2xkx7NbHxXgA5o6HYh4aCvs0ptjc=;
+        b=VgEO9Va9g75+SKCnkC2oDfheOYuy86ZwpAFofVH90SiN8FYu9u/m587pRA4R2mT4cX
+         9nA3hw6/3pjAOcRN1jzIx1tmPCxnfV5z4Xvd8lD3NSyIpSlEEqPt8xu8TFm7cLvls245
+         akOnLrPbzvYNmJj5peO0mCG73YgJBdeFSUhd2ld60sBwdxoCc/gflqmfNcTsourFs3+Q
+         uiYlJ6jfsUnIVLBdTmy+66AnDip0ASsaUd3pp4L50mFlE380YzzsbTG/sRcKoVLlb553
+         UBx+H9jtP0+WMOYFPvNw7AleaUW3ZT0gQ5PTSGGYm5IgvoG4D/PoqDUs5NjfpHAqDOuv
+         ccDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D08xpENjvwwapHL2xkx7NbHxXgA5o6HYh4aCvs0ptjc=;
+        b=Xi5L5Z670pZz1f1mMbhUDU0/wz0TYh2xVNIbxp3tsEUhJE4OHMFwKuXCKTVn+eccgN
+         tAtlfanN+UnBM42lhBOJ7D4IoUdAb6Q/wmcYHEMF3XSHPLLZ0sTOmNRWLBi+vjyQIyIJ
+         IJH0ainJegTZ9OcntoMZtyyfwHS1oc13Rb4wrPFqdbgUKRvbR37y/qIrCm0iVlNJ7B2b
+         WESG/+cuhSsEcCcCgVQCCiS0hMSlLNqFZWPVftudUOavGPlcspzM13ODfaGF1IFPfY2H
+         uoOl/ZiYOL1ogv4B6TxfCY1DKvf0CTu1Q+TCFpaYS3WFvDJomOLsvkuTbQWgllx6VZTy
+         6yFw==
+X-Gm-Message-State: APjAAAWHpQfvp+7xfzneL9YT/jolLv+8LG2jGTBvUPCB9KJ+CkhO9Kfa
+        GzlxPIQOdMhOqVa88dmqG3fIufPQ1bOqGKV8OCM=
+X-Google-Smtp-Source: APXvYqx+3eNuyj38X0tvmcOBieGtbfAm515zdYmDVqlTPkEPhLoASXiX8eLC1nOBVTLGTtSWO3IZTc4ny11cpPtxVok=
+X-Received: by 2002:a17:902:1744:: with SMTP id i62mr49519524pli.24.1552550611032;
+ Thu, 14 Mar 2019 01:03:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <50fa02f1-18c0-b039-ec2f-e16b715f53ff@gmx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190314061716.19892-1-sergey.senozhatsky@gmail.com>
+ <CAH2r5msYG4H19GK1Fmnqb1dNCcp2qahULc_t4v9qdJ=OOZmGXg@mail.gmail.com>
+ <CAH2r5msCs5ks3FUi_GhV2REsUR8t2h1=ybgLS6FyBEyka7Qb9g@mail.gmail.com>
+ <20190314071245.GA2001@jagdpanzerIV> <CAH2r5ms3sdFx864M4se0V1eCAj_x8_3xyyRxoxqS52_UQNNjaA@mail.gmail.com>
+ <20190314073954.GA5272@jagdpanzerIV>
+In-Reply-To: <20190314073954.GA5272@jagdpanzerIV>
+From:   Steve French <smfrench@gmail.com>
+Date:   Thu, 14 Mar 2019 03:03:18 -0500
+Message-ID: <CAH2r5msU25CMDfTON2fSTpg5tmt7O_2sguFDL96b=vys5u+ViQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] cifs: remove unused status severity defines
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I am fine with taking a patch to get rid of __constant_cpu_to_XXX
+(and converting to the same cpu_to_XXX with the "__constant")  in
+fs/cifs  (assuming that that is still recommended).
+
+On Thu, Mar 14, 2019 at 2:39 AM Sergey Senozhatsky
+<sergey.senozhatsky.work@gmail.com> wrote:
+>
+> On (03/14/19 02:19), Steve French wrote:
+> > All of those uses of __constant_cpu_to_le32 apparently (at least
+> > according to checkpatch) should be changed (someday) to cpu_to_le32
+> > but I didn't research why the change from __constant_cpu_to_le32
+> > --->   cpu_to_le32
+>
+> Probably historic reasons.
+>
+> Looking at linux 2.4.21
+>
+> /*
+>  * Allow constant folding
+>  */
+> #if defined(__GNUC__) && (__GNUC__ >= 2) && defined(__OPTIMIZE__)
+> #  define __swahw32(x) \
+> (__builtin_constant_p((__u32)(x)) ? \
+>  ___swahw32((x)) : \
+>  __fswahw32((x)))
+>
+>
+> My assumption would be that __GNUC__ < 2 did no support
+> __builtin_constant_p?
+>
+>
+> > If it has benefit - and checkpatch is right (it warned about
+> > __constant_cpu_to_le32 being no longer preferred) ... perhaps would be
+> > worth a followup patch to clean the rest of them up?   If you have any
+> > context on why kernel code has moved away from using the older format
+> > of __constant_cpu_to_.... would be useful to know if any benefit to
+> > the change
+>
+> Right, that's what I'm going to do - send out patches and update the rest
+> of __constant_cpu_to_XX users; so, eventually, __constant_cpu_to_XX
+> can be removed.
+>
+>         -ss
 
 
-On 14.03.19 г. 10:02 ч., Qu Wenruo wrote:
-> 
-> 
-> On 2019/3/14 下午3:54, Nikolay Borisov wrote:
->>
->>
->> On 14.03.19 г. 9:50 ч., Kangjie Lu wrote:
->>> btrfs_lookup_block_group may fail and return NULL. The fix goes
->>> to out when it fails to avoid NULL pointer dereference.
->>
->> Actually no, in this case btrfs_lookup_block_group must never fail
->> because if we have an allocated eb then it must have been allocated from
->> a bg.
-> 
-> Yep, that's the normal case.
-> 
-> However I'm wondering if it's possible to get a bad eb which is cached.
-> 
-> Then we could hit such situation.
-> 
-> So I still believe being safe here still makes sense, especially who
-> knows future fuzzed image will be.
 
-Then I'd rather have ASSERT(cache)
+-- 
+Thanks,
 
-> 
-> Thanks,
-> Qu
-> 
->>
->>>
->>> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
->>> ---
->>>  fs/btrfs/extent-tree.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
->>> index 994f0cc41799..b1e7985bcb9d 100644
->>> --- a/fs/btrfs/extent-tree.c
->>> +++ b/fs/btrfs/extent-tree.c
->>> @@ -7303,6 +7303,8 @@ void btrfs_free_tree_block(struct btrfs_trans_handle *trans,
->>>  
->>>  		pin = 0;
->>>  		cache = btrfs_lookup_block_group(fs_info, buf->start);
->>> +		if (!cache)
->>> +			goto out;
->>>  
->>>  		if (btrfs_header_flag(buf, BTRFS_HEADER_FLAG_WRITTEN)) {
->>>  			pin_down_extent(fs_info, cache, buf->start,
->>>
-> 
+Steve
