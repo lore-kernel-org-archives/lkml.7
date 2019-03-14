@@ -6,50 +6,42 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E70C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4294AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5166720854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD9020854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbfCNLeH (ORCPT
+        id S1727306AbfCNLey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:34:07 -0400
-Received: from mga11.intel.com ([192.55.52.93]:9680 "EHLO mga11.intel.com"
+        Thu, 14 Mar 2019 07:34:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:4630 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbfCNLeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:34:06 -0400
+        id S1726501AbfCNLey (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:34:54 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:34:05 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:34:53 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
-   d="scan'208";a="328572072"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Mar 2019 04:34:05 -0700
-Received: from [10.125.252.108] (abudanko-mobl.ccr.corp.intel.com [10.125.252.108])
-        by linux.intel.com (Postfix) with ESMTP id 0E1BC58046D;
-        Thu, 14 Mar 2019 04:34:02 -0700 (PDT)
-Subject: [PATCH v8 07/12] perf record: implement compression for serial trace
- streaming
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <af9ba0b8-789c-35bc-ea9d-d1cb11e44bb9@linux.intel.com>
-Date:   Thu, 14 Mar 2019 14:34:01 +0300
+   d="scan'208";a="282584155"
+Received: from qzeng3-mobl5.ccr.corp.intel.com (HELO [10.254.211.155]) ([10.254.211.155])
+  by orsmga004.jf.intel.com with ESMTP; 14 Mar 2019 04:34:51 -0700
+Subject: Re: [PATCH] perf annotate: Remove hist__account_cycles from callback
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1552422174-27622-1-git-send-email-yao.jin@linux.intel.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <d01e89f2-3cf8-14ea-5a08-3c5ab43358d1@linux.intel.com>
+Date:   Thu, 14 Mar 2019 19:34:51 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1552422174-27622-1-git-send-email-yao.jin@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,141 +49,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Any comments for this patch or any issue is found? In testing, I just 
+feel it accelerates the perf annotate data processing.
 
-Compression is implemented using the functions from zstd.c. As the memory
-to operate on the compression uses mmap->data buffer. If Zstd streaming
-compression API fails for some reason the data to be compressed are just
-copied into the memory buffers using plain memcpy().
+Thanks
+Jin Yao
 
-Compressed trace frame consists of an array of PERF_RECORD_COMPRESSED
-records. Each element of the array is not longer that PERF_SAMPLE_MAX_SIZE
-and consists of perf_event_header followed by the compressed chunk
-that is decompressed on the loading stage.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-record.c | 52 +++++++++++++++++++++++++++++++++++--
- tools/perf/util/session.h   |  2 ++
- 2 files changed, 52 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e2d9347c08b3..c90824172beb 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -130,6 +130,9 @@ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unuse
- 	return 0;
- }
- 
-+static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
-+			    void *src, size_t src_size);
-+
- #ifdef HAVE_AIO_SUPPORT
- static int record__aio_write(struct aiocb *cblock, int trace_fd,
- 		void *buf, size_t size, off_t off)
-@@ -389,6 +392,12 @@ static int record__pushfn(struct perf_mmap *map, void *to, void *bf, size_t size
- {
- 	struct record *rec = to;
- 
-+	if (record__comp_enabled(rec)) {
-+		size = zstd_compress(rec->session, map->data,
-+				     perf_mmap__mmap_len(map), bf, size);
-+		bf = map->data;
-+	}
-+
- 	rec->samples++;
- 	return record__write(rec, map, bf, size);
- }
-@@ -775,6 +784,37 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
- 	}
- }
- 
-+static size_t process_comp_header(void *record, size_t increment)
-+{
-+	struct compressed_event *event = record;
-+	size_t size = sizeof(struct compressed_event);
-+
-+	if (increment) {
-+		event->header.size += increment;
-+		return increment;
-+	} else {
-+		event->header.type = PERF_RECORD_COMPRESSED;
-+		event->header.size = size;
-+		return size;
-+	}
-+}
-+
-+static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
-+			    void *src, size_t src_size)
-+{
-+	size_t compressed;
-+	size_t max_record_size = PERF_SAMPLE_MAX_SIZE - sizeof(struct compressed_event);
-+
-+	compressed = zstd_compress_stream_to_records(&(session->zstd_data),
-+				dst, dst_size, src, src_size, max_record_size,
-+				process_comp_header);
-+
-+	session->bytes_transferred += src_size;
-+	session->bytes_compressed  += compressed;
-+
-+	return compressed;
-+}
-+
- static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
- 				    bool overwrite, bool sync)
- {
-@@ -1204,6 +1244,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	fd = perf_data__fd(data);
- 	rec->session = session;
- 
-+	if (zstd_init(&(session->zstd_data), rec->opts.comp_level) < 0) {
-+		pr_err("Compression initialization failed.\n");
-+		return -1;
-+	}
-+
-+	session->header.env.comp_type  = PERF_COMP_ZSTD;
-+	session->header.env.comp_level = rec->opts.comp_level;
-+
- 	record__init_features(rec);
- 
- 	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
-@@ -1537,6 +1585,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	}
- 
- out_delete_session:
-+	zstd_fini(&(session->zstd_data));
- 	perf_session__delete(session);
- 	return status;
- }
-@@ -2254,8 +2303,7 @@ int cmd_record(int argc, const char **argv)
- 
- 	if (rec->opts.nr_cblocks > nr_cblocks_max)
- 		rec->opts.nr_cblocks = nr_cblocks_max;
--	if (verbose > 0)
--		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
-+	pr_debug("nr_cblocks: %d\n", rec->opts.nr_cblocks);
- 
- 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
- 	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 0e14884f28b2..6c984c895924 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -8,6 +8,7 @@
- #include "machine.h"
- #include "data.h"
- #include "ordered-events.h"
-+#include "util/compress.h"
- #include <linux/kernel.h>
- #include <linux/rbtree.h>
- #include <linux/perf_event.h>
-@@ -37,6 +38,7 @@ struct perf_session {
- 	struct perf_tool	*tool;
- 	u64			bytes_transferred;
- 	u64			bytes_compressed;
-+	struct zstd_data	zstd_data;
- };
- 
- struct perf_tool;
--- 
-2.20.1
-
+On 3/13/2019 4:22 AM, Jin Yao wrote:
+> The hist__account_cycles is executed when the hist_iter__branch_callback
+> is called. But it looks it's not necessary. In hist__account_cycles, it
+> already walks on all branch entries.
+> 
+> This patch moves the hist__account_cycles out of callback, now the data
+> processing is much faster than before.
+> 
+> For example,
+> perf record -b ...
+> perf annotate
+> 
+> The before/after output should be no change.
+> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> ---
+>   tools/perf/builtin-annotate.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 67f9d9f..77deb3a 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -159,8 +159,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
+>   	struct perf_evsel *evsel = iter->evsel;
+>   	int err;
+>   
+> -	hist__account_cycles(sample->branch_stack, al, sample, false);
+> -
+>   	bi = he->branch_info;
+>   	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
+>   
+> @@ -199,6 +197,8 @@ static int process_branch_callback(struct perf_evsel *evsel,
+>   	if (a.map != NULL)
+>   		a.map->dso->hit = 1;
+>   
+> +	hist__account_cycles(sample->branch_stack, al, sample, false);
+> +
+>   	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
+>   	return ret;
+>   }
+> 
