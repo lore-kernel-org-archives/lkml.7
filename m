@@ -2,220 +2,129 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D02C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABA1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DED217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B9A217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LQq4I0rw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAS7zAEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfCNPgq (ORCPT
+        id S1726915AbfCNPgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:36:46 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45762 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfCNPgq (ORCPT
+        Thu, 14 Mar 2019 11:36:52 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34810 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfCNPgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:36:46 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2EFTFJQ006723;
-        Thu, 14 Mar 2019 15:36:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : cc : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=UeGG6/KpWg91Pxckic2qsKLJ050YIWHkVv6xWgHCKEs=;
- b=LQq4I0rwM3XlyNiMnK+eRq95eW/gDN6/PHYhao/FmaYWapT03+gTlWNBmPSTCE5uL5Nm
- 0EBkzGXoRr9PXI9KDsiR9YkOufmpkkt3olQtm7s5PRe6iZmAkvOI+eVy0f5sDAduxCPh
- pn3fNc3XASqSPDkVlFr3kixykKVOUPuX3SkzDvnMP9VfMxrpem4NUreTbEORt3BxpTNe
- K8xRy1dk5qNCZaXvfu6cIFkeNlHLJ0aoLBd9V22jxsY918O9DTSulMgU3IoOh4DdRMVa
- iAJskydvUfwAHcrsT16QGJ3VBFxdJRmbaHW7Of3c20KDmy9MasZ1iYDZIWieGaIxZUEZ Ng== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by userp2130.oracle.com with ESMTP id 2r44wuhtsq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Mar 2019 15:36:40 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2EFae3f011313
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Mar 2019 15:36:40 GMT
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2EFadlh026121;
-        Thu, 14 Mar 2019 15:36:40 GMT
-Received: from [10.191.11.116] (/10.191.11.116)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 14 Mar 2019 15:36:39 +0000
-Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
- <20190314082926-mutt-send-email-mst@kernel.org>
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, axboe@kernel.dk, jasowang@redhat.com,
-        linux-kernel@vger.kernel.org
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-Message-ID: <7a1e3b7a-1df5-2f4a-3f41-a6342102b882@oracle.com>
-Date:   Thu, 14 Mar 2019 23:36:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Thu, 14 Mar 2019 11:36:50 -0400
+Received: by mail-lj1-f194.google.com with SMTP id l5so5236155lje.1;
+        Thu, 14 Mar 2019 08:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+msHXxIWxqfM8NrVRhSqGs9rb3Wy7R5ryQITgHgBVA0=;
+        b=DAS7zAEf2V1/7Myttni1rl8R9AIoImuzINXKGLbX9ojVQbEFQkKSCY74/Po3eIb+gh
+         2D+0Ib1LvyhuZsqNZRsRWwec6lTt693bc+xGTwStKbse6IUsZv+a4OGd2PVfmejO92aO
+         pmAMzyykEiSDpx8bhS9LrdvQ+OvNZnnIt85mM46L4tSi3YSGuXV+A7u04tHHZ13RW3Po
+         AH5CxNkPYRZPLwEcW9bBLQl939qMWyJMQTguJDP8tq2kXUCsXdozbzWaPzwYC+7OGsul
+         eMLnwHIfhpgd9tT7uT8HqDuRdYVSPk58r6disOVPC/omI+qMy4pldtR2oaLnZkeQ8Z68
+         9IEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+msHXxIWxqfM8NrVRhSqGs9rb3Wy7R5ryQITgHgBVA0=;
+        b=hjitY/UHv89Ybi+fPwJ8JEk150ExsKRs65yHDhoSZQrqRLp9hPcmwDDvCZ9BVu2Vyu
+         6Gupf5w4xNnuC+RO5i7nQQAWfSKkgUNNvtfadNUlFIoqRwhRpIj5gF8MMXtiBEpQvhyM
+         mP0cqIYCMuVpRVkgCLyldjFJi5TO8zji4r235NQoYnYMTBSIH+afR6vnq/EwEBEiyseu
+         wHLUBu+ZWbyemk3RBAB2IgMubCBVj04RswIrnwzRFOcssa5xpdJpgKcZzIf3dNh/M81I
+         9nbIF7tl8f4X9133+L4hsr2Lv8jH8r4qNM4b1XTPW1fsDCfU2XaJwAIj6Hj/awpqmyom
+         TN1w==
+X-Gm-Message-State: APjAAAVe3PnjJNpkT2fY8wJQr1JaPCJD7AS00Bn11qVUyinXwzh9VoT7
+        uZLdpG6ZXplmbip5rpJrvNMkDnpR
+X-Google-Smtp-Source: APXvYqy9eJNH3TU+K07AMKj7vPbasOpC6eDPZPbS6F7p9PRuzpN+NihjBicKauOg1IO26z/zncyR+A==
+X-Received: by 2002:a2e:9052:: with SMTP id n18mr4203051ljg.158.1552577807880;
+        Thu, 14 Mar 2019 08:36:47 -0700 (PDT)
+Received: from [192.168.1.18] (bfw164.neoplus.adsl.tpnet.pl. [83.28.60.164])
+        by smtp.gmail.com with ESMTPSA id t81sm2122188lff.21.2019.03.14.08.36.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 08:36:46 -0700 (PDT)
+Subject: Re: [PATCH v2 6/6] leds: netdev trigger: allow setting initial values
+ in device tree
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-7-linux@rasmusvillemoes.dk>
+ <742bd6b2-0a11-858e-d727-204b0313265e@gmail.com>
+ <10d65087-2ae5-8ddf-e9be-02c9341b452b@rasmusvillemoes.dk>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <ddc53d4c-3da8-3f00-12dc-51df4a149bcf@gmail.com>
+Date:   Thu, 14 Mar 2019 16:36:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190314082926-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9194 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903140110
+In-Reply-To: <10d65087-2ae5-8ddf-e9be-02c9341b452b@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 03/14/2019 08:32 PM, Michael S. Tsirkin wrote:
-> On Tue, Mar 12, 2019 at 10:22:46AM -0700, Dongli Zhang wrote:
->> I observed that there is one msix vector for config and one shared vector
->> for all queues in below qemu cmdline, when the num-queues for virtio-blk
->> is more than the number of possible cpus:
+On 3/14/19 4:05 PM, Rasmus Villemoes wrote:
+> On 14/03/2019 15.24, Jacek Anaszewski wrote:
+>> Rasmus,
 >>
->> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=6"
+>> Thank you for the update.
+>> Still, there is one thing to improve.
+>>
 > 
-> So why do this?
-
-I observed this when I was testing virtio-blk and block layer.
-
-I just assign a very large 'num-queues' to virtio-blk and keep changing the
-number of vcpu in order to study blk-mq.
-
-The num-queues for nvme (qemu) is by default 64, while it is 1 for virtio-blk.
-
+>>>    static int netdev_trig_activate(struct led_classdev *led_cdev)
+>>>    {
+>>>        struct led_netdev_data *trigger_data;
+>>> @@ -423,6 +451,8 @@ static int netdev_trig_activate(struct
+>>> led_classdev *led_cdev)
+>>>        trigger_data->mode = 0;
+>>>        atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
+>>>        trigger_data->last_activity = 0;
+>>> +    if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER)
+>>> +        netdev_trig_of_init(led_cdev, trigger_data);
+>>
+>> We don't necessarily want OF settings to be used for initialization on
+>> each LED trigger activation for the LED class device, but only on the
+>> first one. That's why the triggers using this flags clean it here:
+>>
+>> led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
 > 
->> # cat /proc/interrupts 
->>            CPU0       CPU1       CPU2       CPU3
->> ... ...
->>  24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
->>  25:          0          0          0         59   PCI-MSI 65537-edge      virtio0-virtqueues
->> ... ...
->>
->>
->> However, when num-queues is the same as number of possible cpus:
->>
->> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=4"
->>
->> # cat /proc/interrupts 
->>            CPU0       CPU1       CPU2       CPU3
->> ... ... 
->>  24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
->>  25:          2          0          0          0   PCI-MSI 65537-edge      virtio0-req.0
->>  26:          0         35          0          0   PCI-MSI 65538-edge      virtio0-req.1
->>  27:          0          0         32          0   PCI-MSI 65539-edge      virtio0-req.2
->>  28:          0          0          0          0   PCI-MSI 65540-edge      virtio0-req.3
->> ... ...
->>
->> In above case, there is one msix vector per queue.
->>
->>
->> This is because the max number of queues is not limited by the number of
->> possible cpus.
->>
->> By default, nvme (regardless about write_queues and poll_queues) and
->> xen-blkfront limit the number of queues with num_possible_cpus().
->>
->>
->> Is this by design on purpose, or can we fix with below?
->>
->>
->> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
->> index 4bc083b..df95ce3 100644
->> --- a/drivers/block/virtio_blk.c
->> +++ b/drivers/block/virtio_blk.c
->> @@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
->>  	if (err)
->>  		num_vqs = 1;
->>  
->> +	num_vqs = min(num_possible_cpus(), num_vqs);
->> +
->>  	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
->>  	if (!vblk->vqs)
->>  		return -ENOMEM;
->> --
->>
->>
->> PS: The same issue is applicable to virtio-scsi as well.
->>
->> Thank you very much!
->>
->> Dongli Zhang
+> Right, I noticed that pattern, but wondered about it. If this is
+> supposed to be a general thing, why isn't it just done by the trigger
+> core after the call of led_trigger_set() in the two places the bit gets
+> set? I.e.
 > 
-> I don't think this will address the issue if there's vcpu hotplug though.
-> Because it's not about num_possible_cpus it's about the # of active VCPUs,
-> right? Does block hangle CPU hotplug generally?
-> We could maybe address that by switching vq to msi vector mapping in
-> a cpu hotplug notifier...
+> 		led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
+> 		led_trigger_set(led_cdev, trig);
+> +		led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
 > 
+> I can certainly add clearing the flag to my code, just wondering.
 
-It looks it is about num_possible_cpus/nr_cpu_ids for cpu hotplug.
+Good point. It would have to be applied in both
+led_trigger_set_default() and led_trigger_register(). So you either
+need to add generic support for clearing the flag (and update the three
+users) or update your patch alone.
 
-
-For instance, below is when only 2 out of 6 cpus are initialized while
-virtio-blk has 6 queues.
-
-"-smp 2,maxcpus=6" and "-device
-virtio-blk-pci,drive=drive0,id=disk0,num-queues=6,iothread=io1"
-
-# cat /sys/devices/system/cpu/present
-0-1
-# cat /sys/devices/system/cpu/possible
-0-5
-# cat /proc/interrupts  | grep virtio
- 24:          0          0   PCI-MSI 65536-edge      virtio0-config
- 25:       1864          0   PCI-MSI 65537-edge      virtio0-req.0
- 26:          0       1069   PCI-MSI 65538-edge      virtio0-req.1
- 27:          0          0   PCI-MSI 65539-edge      virtio0-req.2
- 28:          0          0   PCI-MSI 65540-edge      virtio0-req.3
- 29:          0          0   PCI-MSI 65541-edge      virtio0-req.4
- 30:          0          0   PCI-MSI 65542-edge      virtio0-req.5
-
-6 + 1 irqs are assigned even 4 out of 6 cpus are still offline.
-
-
-Below is about the nvme emulated by qemu. While 2 out of 6 cpus are initial
-assigned, nvme has 64 queues by default.
-
-"-smp 2,maxcpus=6" and "-device nvme,drive=drive1,serial=deadbeaf1"
-
-# cat /sys/devices/system/cpu/present
-0-1
-# cat /sys/devices/system/cpu/possible
-0-5
-# cat /proc/interrupts | grep nvme
- 31:          0         16   PCI-MSI 81920-edge      nvme0q0
- 32:         35          0   PCI-MSI 81921-edge      nvme0q1
- 33:          0         42   PCI-MSI 81922-edge      nvme0q2
- 34:          0          0   PCI-MSI 81923-edge      nvme0q3
- 35:          0          0   PCI-MSI 81924-edge      nvme0q4
- 36:          0          0   PCI-MSI 81925-edge      nvme0q5
- 37:          0          0   PCI-MSI 81926-edge      nvme0q6
-
-6 io queues are assigned with irq, although only 2 cpus are online.
-
-
-When only 2 out of 48 cpus are online, there are 48 hctx created by block layer.
-
-"-smp 2,maxcpus=48" and "-device
-virtio-blk-pci,drive=drive0,id=disk0,num-queues=48,iothread=io1"
-
-# ls /sys/kernel/debug/block/vda/ | grep hctx | wc -l
-48
-
-
-The above indicates the number of hw queues/irq is related to
-num_possible_cpus/nr_cpu_ids.
-
-Dongli Zhang
+-- 
+Best regards,
+Jacek Anaszewski
