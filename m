@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2568C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548F6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BA72184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22025218A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbfCNWiI (ORCPT
+        id S1728434AbfCNWiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:38:08 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:47471 "EHLO
+        Thu, 14 Mar 2019 18:38:21 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:32875 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbfCNWfG (ORCPT
+        with ESMTP id S1728108AbfCNWfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:35:06 -0400
+        Thu, 14 Mar 2019 18:35:04 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MK3mS-1hKRez1baA-00LRrW; Thu, 14 Mar 2019 23:34:47 +0100
+ 1N5n3t-1gxVOA2LVr-017DKh; Thu, 14 Mar 2019 23:34:45 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,28 +37,28 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 16/45] drivers: tty: serial: uartlite: use devm_* functions
-Date:   Thu, 14 Mar 2019 23:33:46 +0100
-Message-Id: <1552602855-26086-17-git-send-email-info@metux.net>
+Subject: [PATCH v2 14/45] drivers: tty: serial: vr41xx_siu: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:33:44 +0100
+Message-Id: <1552602855-26086-15-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:SlzeGhHlOuxFduqp5QuUml5rOBQzKNh69j7CDj7Ua0DFA/PwUiw
- 1lhjZUG18/PBNkuKf+0Ltm8rhlvh77rYT5Hwow7OUXX/JTdcUgQZh/oKi5/EsA2RFNKzX47
- UrPJmeeH1jZk48JBFb1CyoHx7Cu4A3gTsWPn/T7TGVztCN2KHvV4sDeNv+Iiyeh4eQltg7e
- p9J66Ais57XCJGu26Su2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:S3GpsMXKkd8=:18iZLGQUyS/zWRDlmeJy1l
- t+CUbbf7JicHBp9EJh5e/ge6UxEsJBFnHeFriW9pXaNeQk9y7UMIvZlK/WxDYPLxs7Z8T+vlp
- UJmdkA8z2wEl7aOWq+zC52paCNg9uiRwydirnMv4QxQusIR48nyZfe2UKcWpXn99jtVQzhnrL
- L1K5XO4WxYMCOqaOKL1EfQd69BCunSgT3DsGqP08X0lClf2fhdB1hGT5V49TBvrEAoQ+DhiA+
- zfBDR3I3PDq0b0W4oi11+SZDLA8mgnD9Q4jR3XV+Im04Qd7Px7N5jjW8FcrAxEtRlcsCkOSvw
- 5Yjsl0RJVzmdLdA/y6beeeN8xoyff16M6UNDEp290o4TJ3bnAVT1FEO1HL2B994SNxfrQMPy1
- k7+6S0B78z+VQPRThV0hABwx0X0k+L/nuzYoHdhhgeKiSSC7FHfEeYM/bKd73mhuRoihT2tY/
- AWwRGa/UejhwRpXUqHqYN3paVYS2uwbHam7aqscs2rwfd+bygDQTQQQSGTjTCp0RaLcicv+TT
- rAxojJeLPEk8x4NoPz9BdjumexSv27cwtiqNWmDl/YkisO7gavxnakRMt45QBmlrNrUOsn2LF
- nfFQ9k+mabqGs9eC9OVGzFsu5mC7PLm+GpPCUvHAfcC2rNEcmZiKOaXP7aZPbnqkAo5t5zJmM
- ZcUXg0utXbXRUpOHU9d3axMc2LXLTx1zFWdmMkEsbSBQCeKSjKvIyttaet8ejhl1Hour8g5EC
- vKnDtaCzqmclKRrrQNiTCIpzP6RM2skLaFdHqQ==
+X-Provags-ID: V03:K1:dNA35lHBD6TS3o/t+wft9eaQSmB463i8UvNUaBDiNuLH2i66kgs
+ 4gCaYE7EyTA9YiatBNZkQ6kWIa1+RYBD83/FCTzoO4b8PSi3JcCyqdRw67M9BUNaDNItZiu
+ wh3vVqwvC3ROZwQud1FgjkMm9saadhojIjDQHhzqLLXQu1hTmQtvoDnjJvb1aQRPIHuWZRc
+ RDhlsC/yf4El07DyDmqRA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:b3Z4UF+GiOs=:jnsNoKlxQ5rKQx9c5HGwK+
+ ZE10wODdx7vmZdz9/W/CtQh0Hn/RdFdKdTU0VVy+Wj5V0+JERASj41YD0YevaiLUrdui8pLJk
+ L2NNbQOkRB1PQ/Wpvr2oYwl5RZYrb5JPav152ml1cR0T7fIwcGAE33bqDuH02Sp/y0dya798x
+ KqaR4VhXyd+tKMyRgNxG8s1oC6JVwxiNTYkd+QA+VErcoPdVcWAbDixeAk69Z6jAccTe+I7aU
+ rwJlPAjaBYWKWWR9R7ppFbNmQRZCUk8+ZtIBtkPB5Jjdcw34JTz8Q3ykCMd9VYotY6jTtcStG
+ QSuVtk15CZcFK3EtQ+CuS0taog3Zguoe4YzwQKGhHc3ZAa+EK696pFF89jk4M9kaWcytStJMl
+ f9KEEFk1/eXss4o79s5BVRchQsFsIlK8Fzjkxyf/YpJ2XKsw3ziMwnsHLgbhbG/VeSrCM3LBB
+ x4qtpaQz1CxFTIQLapD6ZapiJIylkfFo4VeT+o4w8v4ayrPmquWSCyNF4fL6CNlbajNSxMtvy
+ IaYva2RlkwjUOOadPkLtj5RKK1ng9PPeA18kz32U9OkF1J9WfN/02I9+u2aKmgSnTdCqHUloI
+ gtcV3pVY5sBy/5yG+ZvAhNsH+8qUa0t2F5dNhaKFVAybZfJ5NEpJMUBjrx8/u8tbmH7D5lVZQ
+ DCUYqRatVclda/LSjmPIzLMvxrN9rsOga05TOXEfWptyOchs2ZHPnEpzVbOahjiITZ4XqRKXz
+ d0pudl4tUySrp6FowgcFeGmY/p0HAV0Z0DOlfQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,48 +68,46 @@ Use the safer devm versions of memory mapping functions.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/uartlite.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/tty/serial/vr41xx_siu.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index aa461b8..f068d00 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -342,8 +342,8 @@ static const char *ulite_type(struct uart_port *port)
+diff --git a/drivers/tty/serial/vr41xx_siu.c b/drivers/tty/serial/vr41xx_siu.c
+index 6d106e3..3f69603 100644
+--- a/drivers/tty/serial/vr41xx_siu.c
++++ b/drivers/tty/serial/vr41xx_siu.c
+@@ -617,12 +617,12 @@ static void siu_release_port(struct uart_port *port)
+ 	unsigned long size;
  
- static void ulite_release_port(struct uart_port *port)
- {
--	release_mem_region(port->mapbase, ULITE_REGION);
--	iounmap(port->membase);
-+	devm_release_mem_region(port->dev, port->mapbase, ULITE_REGION);
-+	devm_iounmap(port->dev, port->membase);
- 	port->membase = NULL;
+ 	if (port->flags	& UPF_IOREMAP) {
+-		iounmap(port->membase);
++		devm_iounmap(port->dev, port->membase);
+ 		port->membase = NULL;
+ 	}
+ 
+ 	size = siu_port_size(port);
+-	release_mem_region(port->mapbase, size);
++	devm_release_mem_region(port->dev, port->mapbase, size);
  }
  
-@@ -355,15 +355,20 @@ static int ulite_request_port(struct uart_port *port)
- 	dev_dbg(port->dev, "ulite console: port=%p; port->mapbase=%llx\n",
- 		 port, (unsigned long long) port->mapbase);
+ static int siu_request_port(struct uart_port *port)
+@@ -631,12 +631,15 @@ static int siu_request_port(struct uart_port *port)
+ 	struct resource *res;
  
--	if (!request_mem_region(port->mapbase, ULITE_REGION, "uartlite")) {
-+	if (!devm_request_mem_region(port->dev,
-+				     port->mapbase,
-+				     ULITE_REGION,
-+				     "uartlite")) {
- 		dev_err(port->dev, "Memory region busy\n");
+ 	size = siu_port_size(port);
+-	res = request_mem_region(port->mapbase, size, siu_type_name(port));
++	res = devm_request_mem_region(port->dev,
++				      port->mapbase,
++				      size,
++				      siu_type_name(port));
+ 	if (res == NULL)
  		return -EBUSY;
- 	}
  
--	port->membase = ioremap(port->mapbase, ULITE_REGION);
-+	port->membase = devm_ioremap(port->dev, port->mapbase, ULITE_REGION);
- 	if (!port->membase) {
- 		dev_err(port->dev, "Unable to map registers\n");
--		release_mem_region(port->mapbase, ULITE_REGION);
-+		devm_release_mem_region(port->dev,
-+					port->mapbase,
-+					ULITE_REGION);
- 		return -EBUSY;
- 	}
- 
+ 	if (port->flags & UPF_IOREMAP) {
+-		port->membase = ioremap(port->mapbase, size);
++		port->membase = devm_ioremap(port->dev, port->mapbase, size);
+ 		if (port->membase == NULL) {
+ 			release_resource(res);
+ 			return -ENOMEM;
 -- 
 1.9.1
 
