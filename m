@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1334C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FB0C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07132184E
+	by mail.kernel.org (Postfix) with ESMTP id ED87A21852
 	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552541546;
-	bh=gUFJdsg6eQ+mMvsfm/Xzl1XNRpj/qNubIqZCpXclZlM=;
+	s=default; t=1552541547;
+	bh=WuLqCNbTY00/g4vJq/IRR2mxZj0k067TGZ97MnQZUO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1c7vw6o8/AUDe7vXsM7k0uMCRxXBBF6DXbS6Ht/L1kPzaWCAM+6jxFx57xzaAG23
-	 MYn2WlmTjk2epJScaoOPaz9TfQ0Qeda82xEk7HA1FI6onxmXO3qXfG6bjr/sKn092p
-	 /O+di4TTRcYvWea8fnqxb62YdQ2lnb75ReLEg3H0=
+	b=Mszx8Aog4qv+KClEaWUJcSKcAWpzH324qREsZ9ix2gSrYdMFCAB/9XR5ufe7in7Pg
+	 eIo6C5vermKTPMmHnX/Rb5ytVkHXGrulAkek4ZKmFnku77VQVIFhVtCUsTsioyjetv
+	 OvlLWIlI4Ma4yfNHzjOzWr3gYj+SeYrD8mMzR/lM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfCNFcU (ORCPT
+        id S1727168AbfCNFcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 01:32:20 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:42949 "EHLO
+        Thu, 14 Mar 2019 01:32:25 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:42583 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727030AbfCNFcR (ORCPT
+        by vger.kernel.org with ESMTP id S1727030AbfCNFcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 01:32:17 -0400
+        Thu, 14 Mar 2019 01:32:23 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id B4D962073F;
-        Thu, 14 Mar 2019 01:32:16 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 33514211D3;
+        Thu, 14 Mar 2019 01:32:22 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 14 Mar 2019 01:32:16 -0400
+  by compute3.internal (MEProxy); Thu, 14 Mar 2019 01:32:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=2eN7lydm96kcUslXdltVZiRHDPn/FxigSb7w12z8+Ik=; b=FTUT+ROK
-        r7cdMFF2w62zmsE8vApTYJq9L8QrVsuNfDtT9fhKrKpLxkN2CX61Mddximwx9i1W
-        VAISGqfybF8Ug6tna24R7iuAQx/Vc+79zTb8wKhHAy5wuL7O+IsHs6dOXD0Aejy2
-        352XtRpl7RUevrbaK1t2IcqyTeBaP3N0Y06mf60HfN9SJ7NpEx6Y+1z+WUEZgPn1
-        p910s13PA3qc2/26aw4YACDhrbpkHIOdkMZJZxidWQ/w/sudwK4sPmnhrGoUea3i
-        70/Tw9nxOXh21VGK2PLrFpYbogNU4zvCCl0xDSsouLB+urfyJZ2XW4JvPKwZllVf
-        y+WLfpABG0V1OA==
-X-ME-Sender: <xms:YOeJXFXs9ogZ3iWR1b8kNUXTxZIMe-qdn-I-nPlFlDgRRFr5fk4LDA>
+        fm2; bh=nG4agUcLr3gug1FP86NJDoqRG2ICgfrBSTTX0F15CjU=; b=m9UUtS1G
+        40FHBT/D9O6JXELA1BCp6O4Sluhh7mUEhII+Ba5sMV5CBy+n9/REazHlR5r1hcTl
+        fQuwdgisFb6XgDVU4O7WaugvbfvdGUBlIPlw7utDbAmqcDe/ZpiImtHci4EqqV0E
+        vParUzUOU4cnnep2FaTm0LAQ+tje32yLG9CIa44pUI/zwyXErnPsogmqRg4nAoFu
+        as37G4O3gF8YkGOQ0wMJLYk9M29oSBUVMMvLie6Pxxpc4SOuUAboTMo7XxYwLhVA
+        kgW+f/GN1meV20+I1YgD+KGxEYhiVyLwFFs8NhtyfNyFxNSzZbmcum9h1WzjcGBY
+        M9aPyGrppSPzqw==
+X-ME-Sender: <xms:ZueJXJIMLsNCiBGM5xsLniOfD3pfeyL1jjH0oKjgbE6daitqYK2Pwg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrhedugdekgecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvgedrudeiledrvdefrddukeegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedv
-X-ME-Proxy: <xmx:YOeJXMhNH-KQMkjuMxmetz-GsilhhQZa7pehEkX9kUnr0BI8SgVcQg>
-    <xmx:YOeJXGjqXE1WkIH06M5CFegSr1p2h5xxJfVA-MMm2s1bvtVytJM5xw>
-    <xmx:YOeJXMvMIWilkq_XeqtB89ropeqjP1JVFvyelGgzO-My1KRpTAzh4Q>
-    <xmx:YOeJXIUkJVC4FIz5lRC4yxrrIIy3vjCsn_ffeRORijt-klO8lXc2nw>
+    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeef
+X-ME-Proxy: <xmx:ZueJXFkcHfIPkUM_SC8RDcUaBXQav2ruNclyJOVpPE0F5kCOShvdtQ>
+    <xmx:ZueJXIlKu2i8gWmXoPCb7Od3rLZvfyBoaw-tguOID9vmrzqgrhOkhg>
+    <xmx:ZueJXApCFbg3NGsuO9sL4QgXgl0GUP0--a_xobU7310DxI_NzHCpjg>
+    <xmx:ZueJXEXZwlnUXg2E7ewRuELprjmfMU4k5TdMdgmfGDIVBcaOxTdpXw>
 Received: from eros.localdomain (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 28FD1E415C;
-        Thu, 14 Mar 2019 01:32:12 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id D4004E408B;
+        Thu, 14 Mar 2019 01:32:17 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/7] slob: Use slab_list instead of lru
-Date:   Thu, 14 Mar 2019 16:31:31 +1100
-Message-Id: <20190314053135.1541-4-tobin@kernel.org>
+Subject: [PATCH v3 4/7] slub: Add comments to endif pre-processor macros
+Date:   Thu, 14 Mar 2019 16:31:32 +1100
+Message-Id: <20190314053135.1541-5-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190314053135.1541-1-tobin@kernel.org>
 References: <20190314053135.1541-1-tobin@kernel.org>
@@ -80,101 +80,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we use the page->lru list for maintaining lists of slabs.  We
-have a list_head in the page structure (slab_list) that can be used for
-this purpose.  Doing so makes the code cleaner since we are not
-overloading the lru list.
+SLUB allocator makes heavy use of ifdef/endif pre-processor macros.
+The pairing of these statements is at times hard to follow e.g. if the
+pair are further than a screen apart or if there are nested pairs.  We
+can reduce cognitive load by adding a comment to the endif statement of
+form
 
-The slab_list is part of a union within the page struct (included here
-stripped down):
+       #ifdef CONFIG_FOO
+       ...
+       #endif /* CONFIG_FOO */
 
-	union {
-		struct {	/* Page cache and anonymous pages */
-			struct list_head lru;
-			...
-		};
-		struct {
-			dma_addr_t dma_addr;
-		};
-		struct {	/* slab, slob and slub */
-			union {
-				struct list_head slab_list;
-				struct {	/* Partial pages */
-					struct page *next;
-					int pages;	/* Nr of pages left */
-					int pobjects;	/* Approximate count */
-				};
-			};
-		...
-
-Here we see that slab_list and lru are the same bits.  We can verify
-that this change is safe to do by examining the object file produced from
-slob.c before and after this patch is applied.
-
-Steps taken to verify:
-
- 1. checkout current tip of Linus' tree
-
-    commit a667cb7a94d4 ("Merge branch 'akpm' (patches from Andrew)")
-
- 2. configure and build (select SLOB allocator)
-
-    CONFIG_SLOB=y
-    CONFIG_SLAB_MERGE_DEFAULT=y
-
- 3. dissasemble object file `objdump -dr mm/slub.o > before.s
- 4. apply patch
- 5. build
- 6. dissasemble object file `objdump -dr mm/slub.o > after.s
- 7. diff before.s after.s
-
-Use slab_list list_head instead of the lru list_head for maintaining
-lists of slabs.
+Add comments to endif pre-processor macros if ifdef/endif pair is not
+immediately apparent.
 
 Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Christoph Lameter <cl@linux.com>
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- mm/slob.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ mm/slub.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/mm/slob.c b/mm/slob.c
-index 39ad9217ffea..94486c32e0ff 100644
---- a/mm/slob.c
-+++ b/mm/slob.c
-@@ -112,13 +112,13 @@ static inline int slob_page_free(struct page *sp)
- 
- static void set_slob_page_free(struct page *sp, struct list_head *list)
- {
--	list_add(&sp->lru, list);
-+	list_add(&sp->slab_list, list);
- 	__SetPageSlobFree(sp);
+diff --git a/mm/slub.c b/mm/slub.c
+index 1b08fbcb7e61..b282e22885cd 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1951,7 +1951,7 @@ static void *get_any_partial(struct kmem_cache *s, gfp_t flags,
+ 			}
+ 		}
+ 	} while (read_mems_allowed_retry(cpuset_mems_cookie));
+-#endif
++#endif	/* CONFIG_NUMA */
+ 	return NULL;
  }
  
- static inline void clear_slob_page_free(struct page *sp)
- {
--	list_del(&sp->lru);
-+	list_del(&sp->slab_list);
- 	__ClearPageSlobFree(sp);
+@@ -2249,7 +2249,7 @@ static void unfreeze_partials(struct kmem_cache *s,
+ 		discard_slab(s, page);
+ 		stat(s, FREE_SLAB);
+ 	}
+-#endif
++#endif	/* CONFIG_SLUB_CPU_PARTIAL */
  }
  
-@@ -282,7 +282,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ /*
+@@ -2308,7 +2308,7 @@ static void put_cpu_partial(struct kmem_cache *s, struct page *page, int drain)
+ 		local_irq_restore(flags);
+ 	}
+ 	preempt_enable();
+-#endif
++#endif	/* CONFIG_SLUB_CPU_PARTIAL */
+ }
  
- 	spin_lock_irqsave(&slob_lock, flags);
- 	/* Iterate through each partially free page, try to find room */
--	list_for_each_entry(sp, slob_list, lru) {
-+	list_for_each_entry(sp, slob_list, slab_list) {
- #ifdef CONFIG_NUMA
- 		/*
- 		 * If there's a node specification, search for a partial
-@@ -331,7 +331,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
- 		spin_lock_irqsave(&slob_lock, flags);
- 		sp->units = SLOB_UNITS(PAGE_SIZE);
- 		sp->freelist = b;
--		INIT_LIST_HEAD(&sp->lru);
-+		INIT_LIST_HEAD(&sp->slab_list);
- 		set_slob(b, SLOB_UNITS(PAGE_SIZE), b + SLOB_UNITS(PAGE_SIZE));
- 		set_slob_page_free(sp, slob_list);
- 		b = slob_page_alloc(sp, size, align);
+ static inline void flush_slab(struct kmem_cache *s, struct kmem_cache_cpu *c)
+@@ -2813,7 +2813,7 @@ void *kmem_cache_alloc_node_trace(struct kmem_cache *s,
+ }
+ EXPORT_SYMBOL(kmem_cache_alloc_node_trace);
+ #endif
+-#endif
++#endif	/* CONFIG_NUMA */
+ 
+ /*
+  * Slow path handling. This may still be called frequently since objects
+@@ -3845,7 +3845,7 @@ void *__kmalloc_node(size_t size, gfp_t flags, int node)
+ 	return ret;
+ }
+ EXPORT_SYMBOL(__kmalloc_node);
+-#endif
++#endif	/* CONFIG_NUMA */
+ 
+ #ifdef CONFIG_HARDENED_USERCOPY
+ /*
+@@ -4063,7 +4063,7 @@ void __kmemcg_cache_deactivate(struct kmem_cache *s)
+ 	 */
+ 	slab_deactivate_memcg_cache_rcu_sched(s, kmemcg_cache_deact_after_rcu);
+ }
+-#endif
++#endif	/* CONFIG_MEMCG */
+ 
+ static int slab_mem_going_offline_callback(void *arg)
+ {
+@@ -4696,7 +4696,7 @@ static int list_locations(struct kmem_cache *s, char *buf,
+ 		len += sprintf(buf, "No data\n");
+ 	return len;
+ }
+-#endif
++#endif	/* CONFIG_SLUB_DEBUG */
+ 
+ #ifdef SLUB_RESILIENCY_TEST
+ static void __init resiliency_test(void)
+@@ -4756,7 +4756,7 @@ static void __init resiliency_test(void)
+ #ifdef CONFIG_SYSFS
+ static void resiliency_test(void) {};
+ #endif
+-#endif
++#endif	/* SLUB_RESILIENCY_TEST */
+ 
+ #ifdef CONFIG_SYSFS
+ enum slab_stat_type {
+@@ -5413,7 +5413,7 @@ STAT_ATTR(CPU_PARTIAL_ALLOC, cpu_partial_alloc);
+ STAT_ATTR(CPU_PARTIAL_FREE, cpu_partial_free);
+ STAT_ATTR(CPU_PARTIAL_NODE, cpu_partial_node);
+ STAT_ATTR(CPU_PARTIAL_DRAIN, cpu_partial_drain);
+-#endif
++#endif	/* CONFIG_SLUB_STATS */
+ 
+ static struct attribute *slab_attrs[] = {
+ 	&slab_size_attr.attr,
+@@ -5614,7 +5614,7 @@ static void memcg_propagate_slab_attrs(struct kmem_cache *s)
+ 
+ 	if (buffer)
+ 		free_page((unsigned long)buffer);
+-#endif
++#endif	/* CONFIG_MEMCG */
+ }
+ 
+ static void kmem_cache_release(struct kobject *k)
 -- 
 2.21.0
 
