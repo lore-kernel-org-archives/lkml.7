@@ -2,119 +2,168 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 175C0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473EDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41E32087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mu9FlgAe"
+	by mail.kernel.org (Postfix) with ESMTP id 140882087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552541530;
+	bh=8nK8Mf+KXYhOOk9gaSVH/ZCbDArcU4gtXJS7TCy9i7s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xKHDlNpfs9wqXsehcxksgf8FbxxiN8CfP42v3oIcSp8/x9lmn2PMWVtkd79L3d4Qb
+	 QzSBpsCmziRaRBR8RnJuVDMvpkZs4V3josrs78dXt7DNuQhc8xn7nAZSdrBVCownMb
+	 1wtmdpBRyYr8ZDtPWC6ib2oiYLY6LQ7QmqgD00ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfCNFaR (ORCPT
+        id S1726787AbfCNFcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 01:30:17 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35255 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfCNFaQ (ORCPT
+        Thu, 14 Mar 2019 01:32:08 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:41313 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726130AbfCNFcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 01:30:16 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h6so3240318lfc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 22:30:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l2VRXzebQq3qBUiOtsrnX5b+iukGPh2SG17hH96CLTc=;
-        b=Mu9FlgAeN3q+ft0Xgg3bwn1z0JBH2GvpvRGZ/xRrUoDAMpacHj4QYf07rM7/gf4Zfz
-         oBUTvlwR19yBpDlv9/QP8roBKqdJd+FXo7iYPkt8FqaRuZKg3DI/xFRbmbVd0R67jDLW
-         jLyp9KnAFWwPMTtNxw112Q8hgJHLQISrMQLWn4XLGbuPSsjMDZbQ8tRrGZ35cr8iS4+M
-         z/fQMDQ37stobiGV6qSDsHga3F8ChcC02A1tTV9e0v3GFLpDqlKO+ZQ6K+nJzeWDPpN/
-         B4IZZ5LdtyW2kEPDEeimoYY9VcUdhw/Erf+KIRfryrL9WdpUlpNe+NFunkkgnB9rtsmc
-         U4aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l2VRXzebQq3qBUiOtsrnX5b+iukGPh2SG17hH96CLTc=;
-        b=lcIjAYcwtjEICnZU6KVz2DNJOV7IBlGIwndUIRp07XXHrUPQsJnp7UMPrhfavJ7zLe
-         anTxta7dlq3swqI/mSVIHdV0/5gk7nnx7jjmVFI8IxMrhsJ5AHA3QONUuJE5wxU7D3b8
-         J1ykTg1Cn0o3sedkXCtCnQKgx0Leu1hDEf2J0HQHF+0S7YXe+jvPf4Sh/JzHp8ycd3we
-         fpBhDjDe9DpFVidBZMRpb4knmCVfkAcHhvY1sAqMci0ZdHdpaqwkCIWilGOZ6Wt1ZZjg
-         RA4/r4l+VzD7vOxC+YQWphrBpLuQnlxu5/s1w2JWB93ydTyr4tCsAn0bBDxcZBD+U5zG
-         u3OQ==
-X-Gm-Message-State: APjAAAVq4DLrw8t/QyVB4Me0rs2KVJqoqmcDPlzIRUYjA7lSaXZucuvv
-        MeyxS8G8jpfI9pX1YFMKLX/EuD2Wm9dkwf3Xl70=
-X-Google-Smtp-Source: APXvYqwZ5u87x7Cknvgxnj4SBGiRf+zKR91qLSxF5DhT7jcC3F9MzHj2QoRx0JrniBnJohctye6O+IsMZ1pEUkgrQyQ=
-X-Received: by 2002:a19:520e:: with SMTP id m14mr25761697lfb.64.1552541414511;
- Wed, 13 Mar 2019 22:30:14 -0700 (PDT)
+        Thu, 14 Mar 2019 01:32:08 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id A6DAC213BD;
+        Thu, 14 Mar 2019 01:32:07 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 14 Mar 2019 01:32:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0As+3Iv3Sxmfep8uK
+        sH5/xjkJPw9kSFzNL2pVLlfV7o=; b=nXFyTnSvQ0TXZ5esZxcjU2Z6vcxxfwqmZ
+        e4QC8rQzhDCWT/uGYUgxLo6y3GTtFjjfIX6REQiGEwetHoG7K6qpJy1yQZhimGet
+        mZO2iZOBRIS+PPIJRbT3m6YK8hFi+CJpaeUcylBhAwk/6rnso8WU1BItuOQ1e6O+
+        9u+TU1WG8GYWePLEVSkHO0yaPn+ZThhTTymCL4XaNdJPXo2c+aJbV4oga2ob1U2q
+        SfDI7JCRjkWv5mITQHY1+6r4543vxEfIpu9ezTDGcqISFFP3sAHfTjkNsSNqFwZG
+        Yx3+KWjweqOMK4G+cfiRZnG+1+xrV0/SG013bqPbQuMtUVk0sRYrQ==
+X-ME-Sender: <xms:VOeJXHEmVIIZEg4WNbm1bwpqsXP7F_zvMVSMBPANGfqoBUhfCZ6C0Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrhedugdekgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
+    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucffohhmrg
+    hinhepghhithhhuhgsrdgtohhmnecukfhppeduvdegrdduieelrddvfedrudekgeenucfr
+    rghrrghmpehmrghilhhfrhhomhepthhosghinheskhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:VOeJXN7bV-NvEfa9PkjGrsxsR6vy6e2L8bCLt8lp-0_uOs1oQnYvhQ>
+    <xmx:VOeJXEn0Js7yIQgnKaP9ROa3OkngZgF7A6j-8irY3qWjKcVGHw4asw>
+    <xmx:VOeJXDzavEaLvm7GKBafZ9D1vpwCUH1yhpFVCR2OPo0DVHAU6wUCtA>
+    <xmx:V-eJXGbXgXRLTn8NSz_s3BVNmYx-JZLhuYN3xvjddjiZfER7ZEhEXg>
+Received: from eros.localdomain (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 811BCE415C;
+        Thu, 14 Mar 2019 01:32:00 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] mm: Use slab_list list_head instead of lru
+Date:   Thu, 14 Mar 2019 16:31:28 +1100
+Message-Id: <20190314053135.1541-1-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190218165620.383905466@infradead.org> <CAHk-=wh32Zgp+bN7G1KH7SuCiY1YSJ41Y-_eWpfWubGjqq2_dw@mail.gmail.com>
- <20190222124544.GY9565@techsingularity.net> <14a9adf7-9b50-1dfa-0c35-d04e976081c2@oracle.com>
- <CAERHkru9DzvszvdGHWp8PhEAqeUc-wVR1Gey-KtQ6aMRLx68bQ@mail.gmail.com>
- <19d5d492-a4c1-b3c8-cae4-da2fdfcb872b@oracle.com> <ac10b8fd-da1a-2cc2-afee-4e2b9b4278ee@oracle.com>
- <CAERHkrvjOfVz9xGWZOTGvcUcMETyBdQ2NPj-0USQNU1QTDXR3Q@mail.gmail.com>
- <CAERHkrvgMNf2rmQ_pF5S7Wq64fnkW4HzP_VYPL4vQWyKgHPgxA@mail.gmail.com> <8098aac2-60f7-6fe9-2a3a-2fe2e1b49bde@linux.intel.com>
-In-Reply-To: <8098aac2-60f7-6fe9-2a3a-2fe2e1b49bde@linux.intel.com>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Thu, 14 Mar 2019 13:30:03 +0800
-Message-ID: <CAERHkrvFe-s=_SD2WO0yuYiQ3JxY22=pSrM4UE-BWpbPD8iiCA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 00/16] sched: Core scheduling
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Fr?d?ric Weisbecker" <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 8:35 AM Tim Chen <tim.c.chen@linux.intel.com> wrote:
-> >>
-> >> One more NULL pointer dereference:
-> >>
-> >> Mar 12 02:24:46 aubrey-ivb kernel: [  201.916741] core sched enabled
-> >> [  201.950203] BUG: unable to handle kernel NULL pointer dereference
-> >> at 0000000000000008
-> >> [  201.950254] ------------[ cut here ]------------
-> >> [  201.959045] #PF error: [normal kernel read fault]
-> >> [  201.964272] !se->on_rq
-> >> [  201.964287] WARNING: CPU: 22 PID: 2965 at kernel/sched/fair.c:6849
-> >> set_next_buddy+0x52/0x70
-> >
-> Shouldn't the for_each_sched_entity(se) skip the code block for !se case
-> have avoided null pointer access of se?
->
-> Since
-> #define for_each_sched_entity(se) \
->                 for (; se; se = se->parent)
->
-> Scratching my head a bit here on how your changes would have made
-> a difference.
+Currently the slab allocators (ab)use the struct page 'lru' list_head.
+We have a list head for slab allocators to use, 'slab_list'.
 
-This NULL pointer dereference is not replicable, which makes me thought the
-change works...
+During v2 it was noted by Christoph that the SLOB allocator was reaching
+into a list_head, this version adds 2 patches to the front of the set to
+fix that.
 
->
-> In your original log, I wonder if the !se->on_rq warning on CPU 22 is mixed with the actual OOPs?
-> Saw also in your original log rb_insert_color.  Wonder if that
-> was actually the source of the Oops?
+Clean up all three allocators by using the 'slab_list' list_head instead
+of overloading the 'lru' list_head.
 
-No chance to figure this out, I only saw this once, lockup occurs more
-frequently.
+Patch 1 - Adds a function to rotate a list to a specified entry.
 
-Thanks,
--Aubrey
+Patch 2 - Removes the code that reaches into list_head and instead uses
+	  the list_head API including the newly defined function.
+
+Patches 3-7 are unchanged from v3
+
+Patch 3 (v2: patch 4) - Changes the SLOB allocator to use slab_list
+      	     	      	instead of lru.
+
+Patch 4 (v2: patch 1) - Makes no code changes, adds comments to #endif
+      	     	      	statements.
+
+Patch 5 (v2: patch 2) - Use slab_list instead of lru for SLUB allocator.
+
+Patch 6 (v2: patch 3) - Use slab_list instead of lru for SLAB allocator.
+
+Patch 7 (v2: patch 5) - Removes the now stale comment in the page struct
+      	     	      	definition.
+
+During v2 development patches were checked to see if the object file
+before and after was identical.  Clearly this will no longer be possible
+for mm/slob.o, however this work is still of use to validate the
+change from lru -> slab_list.
+
+Patch 1 was tested with a module (creates and populates a list then
+calls list_rotate_to_front() and verifies new order):
+
+      https://github.com/tcharding/ktest/tree/master/list_head
+
+Patch 2 was tested with another module that does some basic slab
+allocation and freeing to a newly created slab cache:
+
+	https://github.com/tcharding/ktest/tree/master/slab
+
+Tested on a kernel with this in the config:
+
+	CONFIG_SLOB=y
+	CONFIG_SLAB_MERGE_DEFAULT=y
+
+
+Changes since v2:
+
+ - Add list_rotate_to_front().
+ - Fix slob to use list_head API.
+ - Re-order patches to put the list.h changes up front.
+ - Add acks from Christoph.
+
+Changes since v1:
+
+ - Verify object files are the same before and after the patch set is
+   applied (suggested by Matthew).
+ - Add extra explanation to the commit logs explaining why these changes
+   are safe to make (suggested by Roman).
+ - Remove stale comment (thanks Willy).
+
+thanks,
+Tobin.
+
+
+Tobin C. Harding (7):
+  list: Add function list_rotate_to_front()
+  slob: Respect list_head abstraction layer
+  slob: Use slab_list instead of lru
+  slub: Add comments to endif pre-processor macros
+  slub: Use slab_list instead of lru
+  slab: Use slab_list instead of lru
+  mm: Remove stale comment from page struct
+
+ include/linux/list.h     | 18 ++++++++++++
+ include/linux/mm_types.h |  2 +-
+ mm/slab.c                | 49 ++++++++++++++++----------------
+ mm/slob.c                | 32 +++++++++++++--------
+ mm/slub.c                | 60 ++++++++++++++++++++--------------------
+ 5 files changed, 94 insertions(+), 67 deletions(-)
+
+-- 
+2.21.0
+
