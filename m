@@ -2,275 +2,194 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67619C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F92AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0FE2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552573401;
-	bh=SxIvRXIdlcbxfzMwr2TApJkAptyVpPH2a7yV9R6GKlg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wswhkcCZFQ4CS1CpxflxRHEwzOMxWi4Vusvm7aqIN4KbWZlqXVpaUiCpoJVZvaUlB
-	 OmHpUtXS3kxN2wG+2VWXcnjAv/e3vqJ/FfD/93LM3uH5mZPkbZLiC9cmJu39AnwpvD
-	 +pK/wYqAYL6Md4cg4wLQW1TMVG8M8TThv5OXXISg=
+	by mail.kernel.org (Postfix) with ESMTP id 643F021019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:25:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgVrSegf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfCNOXT (ORCPT
+        id S1727673AbfCNOZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:23:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42972 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727633AbfCNOXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:23:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7AE4EAFF9;
-        Thu, 14 Mar 2019 14:23:17 +0000 (UTC)
-Date:   Thu, 14 Mar 2019 15:23:17 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, osalvador@suse.de, vbabka@suse.cz,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm/hotplug: fix offline undo_isolate_page_range()
-Message-ID: <20190314142317.GN7473@dhcp22.suse.cz>
-References: <20190314140654.58883-1-cai@lca.pw>
+        Thu, 14 Mar 2019 10:25:02 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:47025 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfCNOZC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 10:25:02 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z26so4772807lja.13;
+        Thu, 14 Mar 2019 07:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GL7ivHolIpbLrQMvm5OFCgQLnvg/inketaGwVxG8Spc=;
+        b=TgVrSegfdNOg0sWh7zA1qzms2lCrcJM5+dTFvgPXghzRDlPEYi8MVo3Xiw2024Y6tT
+         LGRLaH3Y2NF3I2UFjA6sAnysqdW8LoEcCxK0EL2Xx7qcGRgrxLG1vnTT9/Hg8427ONa1
+         hVSf3QZIKvMl+QM3xLmik2UEV8+Us7pR+TpaHb7j8RFmxuN2DaeNZm0C1ykwkapgHY3l
+         EuoiMoDB/CMszIbrs5rYUdVSlZ38iYq4ytiy9Ss+ZxCQ8GXKfp71xpP8W26yF4Q4hyWV
+         8NfZ0wVM8OxThNCJsKxfc3eQeIQleyKxarBrHYOtJRnMfD27LVYzjZkrcDU/k202c9Lm
+         w8ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GL7ivHolIpbLrQMvm5OFCgQLnvg/inketaGwVxG8Spc=;
+        b=ett0xjCAt54Ll8VIJ0WjXHxX0MA+lfO7xDKihD5GeFaX0ZrABdURDmz55fkSAzPDLA
+         ElyNpvzRYU7ViqH3zoFLPjHVEJXZWcFu7KGrW5jkd9bX2UOdXWonphJf7jdD/W5CvSdi
+         csUdNrfDReJUq1pp1pKsb/B5T5Kab3oKi5aTc5huke7CrfYYbN+kCiNAvOMCa0vH+FJL
+         x9SR/ENEoKFhCIi/MRaK8TInorMduYG6fy25hVOXYgEaHwsP1/yheMvmyUqrxKHYVnRM
+         HD500Lzv1lW0IWzSF8YujjI5YH9TjUG9fMDbIOw0dT8mzb3jI31cIQK6guG0HT9kJTlZ
+         F6sw==
+X-Gm-Message-State: APjAAAWLGN15IPXdvN28ID7UB0IznWjbWyVIXSmFDg88NeFpBMKvqUbC
+        O94vfmqwX9UJh5mOuqj72CiO2Evs
+X-Google-Smtp-Source: APXvYqxpuWmclw6HvZ62o0IR3JVfBOSRkxYWVSIGNLolYKSCQ7qK11cHzV1ThkYEQEs+elH8YG5YkA==
+X-Received: by 2002:a2e:8701:: with SMTP id m1mr1037174lji.132.1552573498982;
+        Thu, 14 Mar 2019 07:24:58 -0700 (PDT)
+Received: from [192.168.1.18] (bfw164.neoplus.adsl.tpnet.pl. [83.28.60.164])
+        by smtp.gmail.com with ESMTPSA id s26sm896476ljj.77.2019.03.14.07.24.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 07:24:58 -0700 (PDT)
+Subject: Re: [PATCH v2 6/6] leds: netdev trigger: allow setting initial values
+ in device tree
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-7-linux@rasmusvillemoes.dk>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <742bd6b2-0a11-858e-d727-204b0313265e@gmail.com>
+Date:   Thu, 14 Mar 2019 15:24:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314140654.58883-1-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190314140619.3309-7-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14-03-19 10:06:54, Qian Cai wrote:
-> The commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
-> memory to zones until online") introduced move_pfn_range_to_zone() which
-> calls memmap_init_zone() during onlining a memory block.
-> memmap_init_zone() will reset pagetype flags and makes migrate type to
-> be MOVABLE.
-> 
-> However, in __offline_pages(), it also call undo_isolate_page_range()
-> after offline_isolated_pages() to do the same thing. Due to
-> the commit 2ce13640b3f4 ("mm: __first_valid_page skip over offline
-> pages") changed __first_valid_page() to skip offline pages,
-> undo_isolate_page_range() here just waste CPU cycles looping around the
-> offlining PFN range while doing nothing, because __first_valid_page()
-> will return NULL as offline_isolated_pages() has already marked all
-> memory sections within the pfn range as offline via
-> offline_mem_sections().
-> 
-> Also, after calling the "useless" undo_isolate_page_range() here, it
-> reaches the point of no returning by notifying MEM_OFFLINE. Those pages
-> will be marked as MIGRATE_MOVABLE again once onlining. The only thing
-> left to do is to decrease the number of isolated pageblocks zone
-> counter which would make some paths of the page allocation slower that
-> the above commit introduced.
-> 
-> Even if alloc_contig_range() can be used to isolate 16GB-hugetlb pages
-> on ppc64, an "int" should still be enough to represent the number of
-> pageblocks there. Fix an incorrect comment along the way.
-> 
-> Fixes: 2ce13640b3f4 ("mm: __first_valid_page skip over offline pages")
-> Signed-off-by: Qian Cai <cai@lca.pw>
+Rasmus,
 
-Thanks for updating the doc. Looks good to me. I just guess you wanted
-to make the doc a full kerneldoc and start it as /**
+Thank you for the update.
+Still, there is one thing to improve.
 
-Other than that
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-Just wondering, is there any specific reason to not consider the patch
-for stable trees? While not critical, pushing some hotpaths into slower
-mode is quite annoying. I cannot say this would be visible but it is
-certainly an unintended behavior and the patch is reasonably safe to
-backport so I would include it.
-
+On 3/14/19 3:06 PM, Rasmus Villemoes wrote:
+> It can be quite convenient to initialize a netdev-triggered LED with a
+> device name and setting the rx,tx,link properties from device tree,
+> instead of having to do that in an init script (or udev rule) in
+> userspace.
+> 
+> My main motivation for this is to be able to switch away from the
+> deprecated CONFIG_CAN_LEDS. The example added to common.txt
+> corresponds to switching linux,default-trigger = "can0-rxtx" to
+> "netdev" and adding the indicated netdev subnode.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 > ---
+>   .../devicetree/bindings/leds/common.txt       | 11 +++++++
+>   drivers/leds/trigger/ledtrig-netdev.c         | 30 +++++++++++++++++++
+>   2 files changed, 41 insertions(+)
 > 
-> v3: Reconstruct the kernel-doc comments.
->     Use a more meaningful variable name per Oscar.
->     Update the commit log a bit.
-> v2: Return the nubmer of isolated pageblocks in start_isolate_page_range() per
->     Oscar; take the zone lock when undoing zone->nr_isolate_pageblock per
->     Michal.
-> 
->  include/linux/page-isolation.h |  4 ----
->  mm/memory_hotplug.c            | 17 +++++++++++++----
->  mm/page_alloc.c                |  2 +-
->  mm/page_isolation.c            | 35 +++++++++++++++++++++-------------
->  mm/sparse.c                    |  2 +-
->  5 files changed, 37 insertions(+), 23 deletions(-)
-> 
-> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
-> index 4eb26d278046..5b24d56b2296 100644
-> --- a/include/linux/page-isolation.h
-> +++ b/include/linux/page-isolation.h
-> @@ -47,10 +47,6 @@ int move_freepages_block(struct zone *zone, struct page *page,
->   * For isolating all pages in the range finally, the caller have to
->   * free all pages in the range. test_page_isolated() can be used for
->   * test it.
-> - *
-> - * The following flags are allowed (they can be combined in a bit mask)
-> - * SKIP_HWPOISON - ignore hwpoison pages
-> - * REPORT_FAILURE - report details about the failure to isolate the range
->   */
->  int
->  start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index d63c5a2959cf..cd1a8c4c6183 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1580,7 +1580,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
->  {
->  	unsigned long pfn, nr_pages;
->  	long offlined_pages;
-> -	int ret, node;
-> +	int ret, node, nr_isolate_pageblock;
->  	unsigned long flags;
->  	unsigned long valid_start, valid_end;
->  	struct zone *zone;
-> @@ -1606,10 +1606,11 @@ static int __ref __offline_pages(unsigned long start_pfn,
->  	ret = start_isolate_page_range(start_pfn, end_pfn,
->  				       MIGRATE_MOVABLE,
->  				       SKIP_HWPOISON | REPORT_FAILURE);
-> -	if (ret) {
-> +	if (ret < 0) {
->  		reason = "failure to isolate range";
->  		goto failed_removal;
->  	}
-> +	nr_isolate_pageblock = ret;
->  
->  	arg.start_pfn = start_pfn;
->  	arg.nr_pages = nr_pages;
-> @@ -1661,8 +1662,16 @@ static int __ref __offline_pages(unsigned long start_pfn,
->  	/* Ok, all of our target is isolated.
->  	   We cannot do rollback at this point. */
->  	offline_isolated_pages(start_pfn, end_pfn);
-> -	/* reset pagetype flags and makes migrate type to be MOVABLE */
-> -	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 7cb88460a47c..f8078c4cf6f8 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -43,6 +43,17 @@ Optional properties for child nodes:
+>                   Documentation/ABI/testing/sysfs-class-led-trigger-netdev)
+>                   to reflect the state and activity of a net device.
+>   
+> +                The optional child node netdev can be used to
+> +                configure initial values for the link, rx, tx and
+> +                device_name properties. For example,
 > +
-> +	/*
-> +	 * Onlining will reset pagetype flags and makes migrate type
-> +	 * MOVABLE, so just need to decrease the number of isolated
-> +	 * pageblocks zone counter here.
-> +	 */
-> +	spin_lock_irqsave(&zone->lock, flags);
-> +	zone->nr_isolate_pageblock -= nr_isolate_pageblock;
-> +	spin_unlock_irqrestore(&zone->lock, flags);
+> +                netdev {
+> +                    rx;
+> +                    tx;
+> +                    link;
+> +                    device-name = "can0";
+> +                };
 > +
->  	/* removal success */
->  	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
->  	zone->present_pages -= offlined_pages;
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 03fcf73d47da..d96ca5bc555b 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -8233,7 +8233,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
->  
->  	ret = start_isolate_page_range(pfn_max_align_down(start),
->  				       pfn_max_align_up(end), migratetype, 0);
-> -	if (ret)
-> +	if (ret < 0)
->  		return ret;
->  
->  	/*
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index e8baab91b1d1..dd7c002cd5ae 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -162,19 +162,22 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
->  }
->  
->  /*
-> - * start_isolate_page_range() -- make page-allocation-type of range of pages
-> - * to be MIGRATE_ISOLATE.
-> - * @start_pfn: The lower PFN of the range to be isolated.
-> - * @end_pfn: The upper PFN of the range to be isolated.
-> - * @migratetype: migrate type to set in error recovery.
-> + * start_isolate_page_range() - make page-allocation-type of range of pages to
-> + * be MIGRATE_ISOLATE.
-> + * @start_pfn:		The lower PFN of the range to be isolated.
-> + * @end_pfn:		The upper PFN of the range to be isolated.
-> + *			start_pfn/end_pfn must be aligned to pageblock_order.
-> + * @migratetype:	migrate type to set in error recovery.
-> + * @flags:		The following flags are allowed (they can be combined in
-> + *			a bit mask)
-> + *			SKIP_HWPOISON - ignore hwpoison pages
-> + *			REPORT_FAILURE - report details about the failure to
-> + *			isolate the range
->   *
->   * Making page-allocation-type to be MIGRATE_ISOLATE means free pages in
->   * the range will never be allocated. Any free pages and pages freed in the
->   * future will not be allocated again.
->   *
-> - * start_pfn/end_pfn must be aligned to pageblock_order.
-> - * Return 0 on success and -EBUSY if any part of range cannot be isolated.
-> - *
->   * There is no high level synchronization mechanism that prevents two threads
->   * from trying to isolate overlapping ranges.  If this happens, one thread
->   * will notice pageblocks in the overlapping range already set to isolate.
-> @@ -182,6 +185,9 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
->   * returns an error.  We then clean up by restoring the migration type on
->   * pageblocks we may have modified and return -EBUSY to caller.  This
->   * prevents two threads from simultaneously working on overlapping ranges.
-> + *
-> + * Return: the number of isolated pageblocks on success and -EBUSY if any part
-> + * of range cannot be isolated.
->   */
->  int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
->  			     unsigned migratetype, int flags)
-> @@ -189,6 +195,7 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
->  	unsigned long pfn;
->  	unsigned long undo_pfn;
->  	struct page *page;
-> +	int nr_isolate_pageblock = 0;
->  
->  	BUG_ON(!IS_ALIGNED(start_pfn, pageblock_nr_pages));
->  	BUG_ON(!IS_ALIGNED(end_pfn, pageblock_nr_pages));
-> @@ -197,13 +204,15 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
->  	     pfn < end_pfn;
->  	     pfn += pageblock_nr_pages) {
->  		page = __first_valid_page(pfn, pageblock_nr_pages);
-> -		if (page &&
-> -		    set_migratetype_isolate(page, migratetype, flags)) {
-> -			undo_pfn = pfn;
-> -			goto undo;
-> +		if (page) {
-> +			if (set_migratetype_isolate(page, migratetype, flags)) {
-> +				undo_pfn = pfn;
-> +				goto undo;
-> +			}
-> +			nr_isolate_pageblock++;
->  		}
->  	}
-> -	return 0;
-> +	return nr_isolate_pageblock;
->  undo:
->  	for (pfn = start_pfn;
->  	     pfn < undo_pfn;
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 69904aa6165b..56e057c432f9 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -567,7 +567,7 @@ void online_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
->  }
->  
->  #ifdef CONFIG_MEMORY_HOTREMOVE
-> -/* Mark all memory sections within the pfn range as online */
-> +/* Mark all memory sections within the pfn range as offline */
->  void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
->  {
->  	unsigned long pfn;
-> -- 
-> 2.17.2 (Apple Git-113)
+>   - led-pattern : Array of integers with default pattern for certain triggers.
+>                   Each trigger may parse this property differently:
+>                   - one-shot : two numbers specifying delay on and delay off (in ms),
+> diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+> index e4a76ce4e4c7..387932cfea55 100644
+> --- a/drivers/leds/trigger/ledtrig-netdev.c
+> +++ b/drivers/leds/trigger/ledtrig-netdev.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/list.h>
+>   #include <linux/module.h>
+>   #include <linux/netdevice.h>
+> +#include <linux/of.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/timer.h>
+>   #include "../leds.h"
+> @@ -400,6 +401,33 @@ static void netdev_trig_work(struct work_struct *work)
+>   			(atomic_read(&trigger_data->interval)*2));
+>   }
+>   
+> +static void netdev_trig_of_init(struct led_classdev *led_cdev,
+> +				struct led_netdev_data *trigger_data)
+> +{
+> +	struct device_node *np = led_cdev->dev->of_node;
+> +	const char *device_name;
+> +
+> +	if (!np)
+> +		return;
+> +	np = of_get_child_by_name(np, "netdev");
+> +	if (!np)
+> +		return;
+> +
+> +	if (of_property_read_bool(np, "link"))
+> +		__set_bit(NETDEV_LED_LINK, &trigger_data->mode);
+> +	if (of_property_read_bool(np, "tx"))
+> +		__set_bit(NETDEV_LED_TX, &trigger_data->mode);
+> +	if (of_property_read_bool(np, "rx"))
+> +		__set_bit(NETDEV_LED_RX, &trigger_data->mode);
+> +	if (!of_property_read_string(np, "device-name", &device_name))
+> +		netdev_trig_set_device(trigger_data, device_name,
+> +				       strlen(device_name));
+> +
+> +	set_baseline_state(trigger_data);
+> +
+> +	of_node_put(np);
+> +}
+> +
+>   static int netdev_trig_activate(struct led_classdev *led_cdev)
+>   {
+>   	struct led_netdev_data *trigger_data;
+> @@ -423,6 +451,8 @@ static int netdev_trig_activate(struct led_classdev *led_cdev)
+>   	trigger_data->mode = 0;
+>   	atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
+>   	trigger_data->last_activity = 0;
+> +	if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER)
+> +		netdev_trig_of_init(led_cdev, trigger_data);
+
+We don't necessarily want OF settings to be used for initialization on
+each LED trigger activation for the LED class device, but only on the
+first one. That's why the triggers using this flags clean it here:
+
+led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
+
+>   
+>   	led_set_trigger_data(led_cdev, trigger_data);
+>   
+> 
 
 -- 
-Michal Hocko
-SUSE Labs
+Best regards,
+Jacek Anaszewski
