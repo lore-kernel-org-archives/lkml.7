@@ -2,152 +2,219 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E672DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D60C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B317D2075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:52:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSOguwzw"
+	by mail.kernel.org (Postfix) with ESMTP id 33BEC2075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbfCNOwc (ORCPT
+        id S1727092AbfCNOws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:52:32 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33297 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfCNOwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:52:31 -0400
-Received: by mail-lj1-f193.google.com with SMTP id z7so5107562lji.0;
-        Thu, 14 Mar 2019 07:52:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=30l/yLVqcv3PdQ2omNlC84KOCY1EsOA8XbXrjw+dVbM=;
-        b=aSOguwzwteBhNslSigmWnIdkblpckeD2VoozvmSFNDEth5eemT0RzSAGgBVey+uzql
-         sTzAHujX3+rirXxUzPurbc7YbjRnnw+pFGIcUmu9gh37nXrwOpzUcsbYtowHDsOK5Cih
-         3gQ1QNWCBDM8ffz1iYbO6k8kltIPWOtUDVeyWoU8doMAyp5X1ULNAimrd1LaOU9ugVIX
-         BslRLZIyhfPsqOWckFaDZ78hNnD9e9iE/+r1fKwrkfWp73PFjIRh9CCc+Rhepr52f+rZ
-         Q+gllIN681fBgAudrHa3KYixvpSfvCZ4uTj+eLa0hNv6rnCdUZst6JVCecJ1iNX2JIT3
-         ayAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=30l/yLVqcv3PdQ2omNlC84KOCY1EsOA8XbXrjw+dVbM=;
-        b=e36v7ZHcp2IH4GF2Rz2AKcljPXR2A2iPoT4diIb95vA+Iw/XG9Xv0D7LPgtiH1UElO
-         n3fzNlD3swkzQvr55X54AWZex1JuxB5ukaBZSy2a9cY7esp6ug7Ll+iO8iEt1O95ntNt
-         6nyzd2QVOTghgdVzsjSn+i887ztlJsvYZPYsXRydmiY3B6P2I2UY+mMM3TTUJUP7o6HQ
-         EkoBp2RFajHkVor9tW963ZCrZvJ1iXTJX9r2FFrUnjCmV1KvVVL64co3oLEtLlJdKAXL
-         tpnFyWLHdWNOZM5BASUku7RHT/VbKvDH5jMSp+SipBs7N3+RpmEZ9ZBucghWG/dlC9CA
-         ueGA==
-X-Gm-Message-State: APjAAAUzdrygwZqlLDieW2O4YMjoKLrvRWzOWCNbuRU/xykGSj9pfn2T
-        Q7UqKPG+Nv/If2tJa7WAwJM=
-X-Google-Smtp-Source: APXvYqyAorVubrLp2btNF/rn02J8pA0YpBNfmT8ZAl5D7768tZ2AMAKcejZNEAqNEmRWPYvLphxJdw==
-X-Received: by 2002:a2e:9f0b:: with SMTP id u11mr28451717ljk.64.1552575147858;
-        Thu, 14 Mar 2019 07:52:27 -0700 (PDT)
-Received: from [10.17.182.20] (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
-        by smtp.gmail.com with ESMTPSA id s73sm776388lfs.62.2019.03.14.07.52.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 07:52:27 -0700 (PDT)
-Subject: Re: [Xen-devel][PATCH] xen/netfront: Remove unneeded .resume callback
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        netdev@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, jgross@suse.com,
-        sstabellini@kernel.org, davem@davemloft.net
-Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-References: <20190314131749.25706-1-andr2000@gmail.com>
- <c87d2bfb-b029-6c18-e3ad-cb798055f761@oracle.com>
-From:   Oleksandr Andrushchenko <andr2000@gmail.com>
-Message-ID: <6205819a-af39-8cd8-db87-f3fe047ff064@gmail.com>
-Date:   Thu, 14 Mar 2019 16:52:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 14 Mar 2019 10:52:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16604 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbfCNOwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 10:52:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 07:52:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
+   d="scan'208";a="125454391"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 14 Mar 2019 07:52:45 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1h4Riu-000BVv-Lf; Thu, 14 Mar 2019 22:52:44 +0800
+Date:   Thu, 14 Mar 2019 22:51:57 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     kbuild-all@01.org, kjlu@umn.edu, pakki001@umn.edu,
+        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: affs: fix a NULL pointer dereference
+Message-ID: <201903142217.lKA0aVxd%lkp@intel.com>
+References: <20190314074607.28041-1-kjlu@umn.edu>
 MIME-Version: 1.0
-In-Reply-To: <c87d2bfb-b029-6c18-e3ad-cb798055f761@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314074607.28041-1-kjlu@umn.edu>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/14/19 4:47 PM, Boris Ostrovsky wrote:
-> On 3/14/19 9:17 AM, Oleksandr Andrushchenko wrote:
->> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
->>
->> Currently on driver resume we remove all the network queues and
->> destroy shared Tx/Rx rings leaving the driver in its current state
->> and never signaling the backend of this frontend's state change.
->> This leads to the number of consequences:
->> - when frontend withdraws granted references to the rings etc. it cannot
->>    be cleanly done as the backend still holds those (it was not told to
->>    free the resources)
->> - it is not possible to resume driver operation as all the communication
->>    means with the backned were destroyed by the frontend, thus
->>    making the frontend appear to the guest OS as functional, but
->>    not really.
->
-> What do you mean? Are you saying that after resume you lose connectivity?
-Exactly, if you take a look at the .resume callback as it is now
-what it does it destroys the rings etc. and never notifies the backend
-of that, e.g. it stays in, say, connected state with communication
-channels destroyed. It never goes into any other Xen bus state, so there is
-no way its state machine can help recovering.
->
-> -boris
->
->
->> Fix this by not destroying communication channels/rings on driver
->> resume.
->>
->> Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
->> ---
->>   drivers/net/xen-netfront.c | 17 -----------------
->>   1 file changed, 17 deletions(-)
->>
->> diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
->> index c914c24f880b..2ca162048da4 100644
->> --- a/drivers/net/xen-netfront.c
->> +++ b/drivers/net/xen-netfront.c
->> @@ -1422,22 +1422,6 @@ static void xennet_disconnect_backend(struct netfront_info *info)
->>   	}
->>   }
->>   
->> -/**
->> - * We are reconnecting to the backend, due to a suspend/resume, or a backend
->> - * driver restart.  We tear down our netif structure and recreate it, but
->> - * leave the device-layer structures intact so that this is transparent to the
->> - * rest of the kernel.
->> - */
->> -static int netfront_resume(struct xenbus_device *dev)
->> -{
->> -	struct netfront_info *info = dev_get_drvdata(&dev->dev);
->> -
->> -	dev_dbg(&dev->dev, "%s\n", dev->nodename);
->> -
->> -	xennet_disconnect_backend(info);
->> -	return 0;
->> -}
->> -
->>   static int xen_net_read_mac(struct xenbus_device *dev, u8 mac[])
->>   {
->>   	char *s, *e, *macstr;
->> @@ -2185,7 +2169,6 @@ static struct xenbus_driver netfront_driver = {
->>   	.ids = netfront_ids,
->>   	.probe = netfront_probe,
->>   	.remove = xennet_remove,
->> -	.resume = netfront_resume,
->>   	.otherend_changed = netback_changed,
->>   };
->>   
+Hi Kangjie,
 
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.0 next-20190306]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Kangjie-Lu/fs-affs-fix-a-NULL-pointer-dereference/20190314-170334
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   fs/affs/file.c:525:23: sparse: expression using sizeof(void)
+   fs/affs/file.c:525:23: sparse: expression using sizeof(void)
+   fs/affs/file.c:558:23: sparse: expression using sizeof(void)
+   fs/affs/file.c:558:23: sparse: expression using sizeof(void)
+   fs/affs/file.c:577:23: sparse: expression using sizeof(void)
+   fs/affs/file.c:577:23: sparse: expression using sizeof(void)
+   fs/affs/file.c:706:23: sparse: expression using sizeof(void)
+   fs/affs/file.c:706:23: sparse: expression using sizeof(void)
+   fs/affs/file.c:759:23: sparse: expression using sizeof(void)
+   fs/affs/file.c:759:23: sparse: expression using sizeof(void)
+>> fs/affs/file.c:946:40: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [unsigned] [usertype] ext_bk @@    got igned] [usertype] ext_bk @@
+   fs/affs/file.c:946:40:    expected unsigned int [unsigned] [usertype] ext_bk
+   fs/affs/file.c:946:40:    got restricted __be32 <noident>
+>> fs/affs/file.c:947:53: sparse: cast to restricted __be32
+>> fs/affs/file.c:947:53: sparse: cast to restricted __be32
+>> fs/affs/file.c:947:53: sparse: cast to restricted __be32
+>> fs/affs/file.c:947:53: sparse: cast to restricted __be32
+>> fs/affs/file.c:947:53: sparse: cast to restricted __be32
+>> fs/affs/file.c:947:53: sparse: cast to restricted __be32
+
+vim +946 fs/affs/file.c
+
+   833	
+   834	void
+   835	affs_truncate(struct inode *inode)
+   836	{
+   837		struct super_block *sb = inode->i_sb;
+   838		u32 ext, ext_key, ext_bk;
+   839		u32 last_blk, blkcnt, blk;
+   840		u32 size;
+   841		struct buffer_head *ext_bh;
+   842		int i;
+   843	
+   844		pr_debug("truncate(inode=%lu, oldsize=%llu, newsize=%llu)\n",
+   845			 inode->i_ino, AFFS_I(inode)->mmu_private, inode->i_size);
+   846	
+   847		last_blk = 0;
+   848		ext = 0;
+   849		if (inode->i_size) {
+   850			last_blk = ((u32)inode->i_size - 1) / AFFS_SB(sb)->s_data_blksize;
+   851			ext = last_blk / AFFS_SB(sb)->s_hashsize;
+   852		}
+   853	
+   854		if (inode->i_size > AFFS_I(inode)->mmu_private) {
+   855			struct address_space *mapping = inode->i_mapping;
+   856			struct page *page;
+   857			void *fsdata;
+   858			loff_t isize = inode->i_size;
+   859			int res;
+   860	
+   861			res = mapping->a_ops->write_begin(NULL, mapping, isize, 0, 0, &page, &fsdata);
+   862			if (!res)
+   863				res = mapping->a_ops->write_end(NULL, mapping, isize, 0, 0, page, fsdata);
+   864			else
+   865				inode->i_size = AFFS_I(inode)->mmu_private;
+   866			mark_inode_dirty(inode);
+   867			return;
+   868		} else if (inode->i_size == AFFS_I(inode)->mmu_private)
+   869			return;
+   870	
+   871		// lock cache
+   872		ext_bh = affs_get_extblock(inode, ext);
+   873		if (IS_ERR(ext_bh)) {
+   874			affs_warning(sb, "truncate",
+   875				     "unexpected read error for ext block %u (%ld)",
+   876				     ext, PTR_ERR(ext_bh));
+   877			return;
+   878		}
+   879		if (AFFS_I(inode)->i_lc) {
+   880			/* clear linear cache */
+   881			i = (ext + 1) >> AFFS_I(inode)->i_lc_shift;
+   882			if (AFFS_I(inode)->i_lc_size > i) {
+   883				AFFS_I(inode)->i_lc_size = i;
+   884				for (; i < AFFS_LC_SIZE; i++)
+   885					AFFS_I(inode)->i_lc[i] = 0;
+   886			}
+   887			/* clear associative cache */
+   888			for (i = 0; i < AFFS_AC_SIZE; i++)
+   889				if (AFFS_I(inode)->i_ac[i].ext >= ext)
+   890					AFFS_I(inode)->i_ac[i].ext = 0;
+   891		}
+   892		ext_key = be32_to_cpu(AFFS_TAIL(sb, ext_bh)->extension);
+   893	
+   894		blkcnt = AFFS_I(inode)->i_blkcnt;
+   895		i = 0;
+   896		blk = last_blk;
+   897		if (inode->i_size) {
+   898			i = last_blk % AFFS_SB(sb)->s_hashsize + 1;
+   899			blk++;
+   900		} else
+   901			AFFS_HEAD(ext_bh)->first_data = 0;
+   902		AFFS_HEAD(ext_bh)->block_count = cpu_to_be32(i);
+   903		size = AFFS_SB(sb)->s_hashsize;
+   904		if (size > blkcnt - blk + i)
+   905			size = blkcnt - blk + i;
+   906		for (; i < size; i++, blk++) {
+   907			affs_free_block(sb, be32_to_cpu(AFFS_BLOCK(sb, ext_bh, i)));
+   908			AFFS_BLOCK(sb, ext_bh, i) = 0;
+   909		}
+   910		AFFS_TAIL(sb, ext_bh)->extension = 0;
+   911		affs_fix_checksum(sb, ext_bh);
+   912		mark_buffer_dirty_inode(ext_bh, inode);
+   913		affs_brelse(ext_bh);
+   914	
+   915		if (inode->i_size) {
+   916			AFFS_I(inode)->i_blkcnt = last_blk + 1;
+   917			AFFS_I(inode)->i_extcnt = ext + 1;
+   918			if (affs_test_opt(AFFS_SB(sb)->s_flags, SF_OFS)) {
+   919				struct buffer_head *bh = affs_bread_ino(inode, last_blk, 0);
+   920				u32 tmp;
+   921				if (IS_ERR(bh)) {
+   922					affs_warning(sb, "truncate",
+   923						     "unexpected read error for last block %u (%ld)",
+   924						     ext, PTR_ERR(bh));
+   925					return;
+   926				}
+   927				tmp = be32_to_cpu(AFFS_DATA_HEAD(bh)->next);
+   928				AFFS_DATA_HEAD(bh)->next = 0;
+   929				affs_adjust_checksum(bh, -tmp);
+   930				affs_brelse(bh);
+   931			}
+   932		} else {
+   933			AFFS_I(inode)->i_blkcnt = 0;
+   934			AFFS_I(inode)->i_extcnt = 1;
+   935		}
+   936		AFFS_I(inode)->mmu_private = inode->i_size;
+   937		// unlock cache
+   938	
+   939		while (ext_key) {
+   940			ext_bh = affs_bread(sb, ext_key);
+   941			size = AFFS_SB(sb)->s_hashsize;
+   942			if (size > blkcnt - blk)
+   943				size = blkcnt - blk;
+   944			if (ext_bh) {
+   945				for (i = 0; i < size; i++, blk++) {
+ > 946					ext_bk = AFFS_BLOCK(sb, ext_bh, i);
+ > 947					affs_free_block(sb, be32_to_cpu(ext_bk));
+   948				}
+   949			}
+   950			affs_free_block(sb, ext_key);
+   951			ext_key = be32_to_cpu(AFFS_TAIL(sb, ext_bh)->extension);
+   952			affs_brelse(ext_bh);
+   953		}
+   954		affs_free_prealloc(inode);
+   955	}
+   956	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
