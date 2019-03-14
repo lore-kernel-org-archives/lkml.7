@@ -2,163 +2,122 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167C6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70578C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17A820854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB1E217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552563387;
+	bh=RhBDmULxg0FqS6EKgwcA30H3qMldyfYd0dwGjMkVVms=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=YKsY1txrfnmPNYVc1WR2oB3sVIQRztdhY/1iBN7Mi/gX7nuE4UOgQ4JQQlN4pYfNc
+	 DvBHslbR2t1ReMYftfgkgfDOQSSWcek+RTS7m1JZzrlKS7AIqX0OWg7XxoEIgR/Al5
+	 KLfzuaRS6V4zIji8LFEaC9ndqRWw/93Wq6pmmeUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfCNLgX (ORCPT
+        id S1727500AbfCNLg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:36:23 -0400
-Received: from mga07.intel.com ([134.134.136.100]:44694 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbfCNLgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:36:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:36:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
-   d="scan'208";a="282584449"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 14 Mar 2019 04:36:22 -0700
-Received: from [10.125.252.108] (abudanko-mobl.ccr.corp.intel.com [10.125.252.108])
-        by linux.intel.com (Postfix) with ESMTP id 8D4335803FA;
-        Thu, 14 Mar 2019 04:36:20 -0700 (PDT)
-Subject: [PATCH v8 09/12] perf record: implement -z,--compression_level=n
- option
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <0ce4d030-a37b-4a81-97e1-5e59ca3b0913@linux.intel.com>
-Date:   Thu, 14 Mar 2019 14:36:19 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 14 Mar 2019 07:36:26 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45288 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfCNLgZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:36:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i12so4747925otp.12;
+        Thu, 14 Mar 2019 04:36:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=fgCGmqFZdANvDCQ7uBSCD0Xuo2RL0pStbPTNkwYqJ6A=;
+        b=Hj+bl6HHXaiGqH3p/vH7N3KQezSe+ilZOTWTYLCBBJDOKp47uuq23q0C9sl5Lr+2Hl
+         rXFspMECp9dIqByesMRx0vHf/mfeKbdRVKpAI7InlIo0n8gkUY9bxXzBMCwD/2padDW0
+         Y81y+6XQOB2IBsEge07Egbim/J8aJv6CQ5Zg7sYrKjNXomugSuji1ycERN0TT3fXBuT6
+         8rAzP/qr3o+oRTxRM0fMw4xtvuDUTz4JAGdXw6Up73CAMY75UdZerS498NkM+kHqzLn/
+         OHrE68zLy0hATkbR231sLFF6xVZIyMS3FZsq+uDThojJDhGJJ/BrAYz4+a/TN2+HJ5j8
+         TmQg==
+X-Gm-Message-State: APjAAAVKMNyUzE2Og1QwwmNrTwEyvNCCRvIqYDZSLIArIimqgkcLq/Xp
+        tsvcZ6pAFlKf2oUDDo7dKuPJKFuie41xUbWIq0wwNVew
+X-Google-Smtp-Source: APXvYqweZYP2OWIjfwWGVTlWSITRNtsTMT5ju6wJ554Qxh0MWYW7WJSSk1lTzVEgTpv7bFvwhg8n4fEzRj+4beC9ifk=
+X-Received: by 2002:a9d:4e08:: with SMTP id p8mr29171544otf.124.1552563384123;
+ Thu, 14 Mar 2019 04:36:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 14 Mar 2019 12:36:13 +0100
+Message-ID: <CAJZ5v0iLKAVM0Ftv8LhS0cS=XPHXRx7sCMMtRJ9PLymGhgh4uQ@mail.gmail.com>
+Subject: [GIT PULL] More ACPI updates for v5.1-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
-Implemented -z,--compression_level=n option that enables compression
-of mmaped kernel data buffers content in runtime during perf record
-mode collection. Default option value is 1 (fastest compression).
+Please pull from the tag
 
-Compression overhead has been measured for serial and AIO streaming
-when profiling matrix multiplication workload:
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.1-rc1-2
 
-    -------------------------------------------------------------
-    | SERIAL			  | AIO-1                       |
-----------------------------------------------------------------|
-|-z | OVH(x) | ratio(x) size(MiB) | OVH(x) | ratio(x) size(MiB) |
-|---------------------------------------------------------------|
-| 0 | 1,00   | 1,000    179,424   | 1,00   | 1,000    187,527   |
-| 1 | 1,04   | 8,427    181,148   | 1,01   | 8,474    188,562   |
-| 2 | 1,07   | 8,055    186,953   | 1,03   | 7,912    191,773   |
-| 3 | 1,04   | 8,283    181,908   | 1,03   | 8,220    191,078   |
-| 5 | 1,09   | 8,101    187,705   | 1,05   | 7,780    190,065   |
-| 8 | 1,05   | 9,217    179,191   | 1,12   | 6,111    193,024   |
------------------------------------------------------------------
+with top-most commit b6e88119f1edcdc1fa3fd3a168310ac2d433a873
 
-OVH = (Execution time with -z N) / (Execution time with -z 0)
+ Merge branches 'acpi-tables', 'acpi-debug', 'acpi-doc' and 'acpi-misc'
 
-ratio - compression ratio
-size  - number of bytes that was compressed
+on top of commit d276709ce6c90b9eceecdbd01a0c083ab04d3a52
 
-	size ~= trace size x ratio
+ Merge tag 'acpi-5.1-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/Documentation/perf-record.txt |  5 +++++
- tools/perf/builtin-record.c              | 27 +++++++++++++++++++++++-
- 2 files changed, 31 insertions(+), 1 deletion(-)
+to receive additional ACPI updates for 5.1-rc1.
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 8eb3f5b57202..f5c886fde243 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -471,6 +471,11 @@ Also at some cases executing less trace write syscalls with bigger data size can
- shorter than executing more trace write syscalls with smaller data size thus lowering
- runtime profiling overhead.
- 
-+-z::
-+--compression-level=n::
-+Produce compressed trace using specified level n (default: 1 - fastest compression,
-+22 - smallest trace)
-+
- --all-kernel::
- Configure all used events to run in kernel space.
- 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index d23be2a82cf3..e0da9100e52f 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -346,7 +346,7 @@ static void record__aio_mmap_read_sync(struct record *rec)
- 	struct perf_evlist *evlist = rec->evlist;
- 	struct perf_mmap *maps = evlist->mmap;
- 
--	if (!rec->opts.nr_cblocks)
-+	if (!record__aio_enabled(rec))
- 		return;
- 
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
-@@ -440,6 +440,26 @@ static int record__mmap_flush_parse(const struct option *opt,
- 	return 0;
- }
- 
-+#ifdef HAVE_ZSTD_SUPPORT
-+static unsigned int comp_level_default = 1;
-+static int record__parse_comp_level(const struct option *opt,
-+				    const char *str,
-+				    int unset)
-+{
-+	struct record_opts *opts = (struct record_opts *)opt->value;
-+
-+	if (unset) {
-+		opts->comp_level = 0;
-+	} else {
-+		if (str)
-+			opts->comp_level = strtol(str, NULL, 0);
-+		if (!opts->comp_level)
-+			opts->comp_level = comp_level_default;
-+	}
-+
-+	return 0;
-+}
-+#endif
- static unsigned int comp_level_max = 22;
- 
- static int record__comp_enabled(struct record *rec)
-@@ -2168,6 +2188,11 @@ static struct option __record_options[] = {
- 	OPT_CALLBACK(0, "affinity", &record.opts, "node|cpu",
- 		     "Set affinity mask of trace reading thread to NUMA node cpu mask or cpu of processed mmap buffer",
- 		     record__parse_affinity),
-+#ifdef HAVE_ZSTD_SUPPORT
-+	OPT_CALLBACK_OPTARG('z', "compression-level", &record.opts,
-+		     &comp_level_default, "n", "Produce compressed trace using specified level (default: 1 - fastest, 22 - smallest trace)",
-+		     record__parse_comp_level),
-+#endif
- 	OPT_END()
- };
- 
--- 
-2.20.1
+These fix a couple of issues and do some cleanups on top of the
+previous ACPI changes for 5.1-rc1.
 
+Specifics:
+
+ - Fix a crash caused by unloading an SSDT overlay (Andy Shevchenko).
+
+ - Prevent user space from getting confusing error values on failing
+   ACPI sysfs accesses (Rafael Wysocki).
+
+ - Simplify leaf node detection in the PPTT parsing code by using a
+   new flag defined in ACPI 6.3 (Jeremy Linton).
+
+ - Add missing "static" in some places in the ACPI configfs code
+   (Andy Shevchenko).
+
+ - Fix acpidbg tool path in the ACPI documentation (Flavio Suligoi).
+
+Thanks!
+
+
+---------------
+
+Andy Shevchenko (3):
+      ACPI / configfs: Mark local functions static
+      ACPI / configfs: Mark local data structures static
+      ACPI / device_sysfs: Avoid OF modalias creation for removed device
+
+Flavio Suligoi (1):
+      ACPI: Documentation: Fix path for acpidbg tool
+
+Jeremy Linton (1):
+      ACPI: tables: Simplify PPTT leaf node detection
+
+Rafael J. Wysocki (1):
+      ACPI: sysfs: Prevent get_status() from returning acpi_status
+
+---------------
+
+ Documentation/acpi/aml-debugger.txt |  4 ++--
+ drivers/acpi/acpi_configfs.c        | 25 +++++++++++++------------
+ drivers/acpi/device_sysfs.c         |  6 +++++-
+ drivers/acpi/pptt.c                 |  3 +++
+ drivers/acpi/sysfs.c                | 21 ++++++++++++---------
+ 5 files changed, 35 insertions(+), 24 deletions(-)
