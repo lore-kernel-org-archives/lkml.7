@@ -2,51 +2,40 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD32C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5F2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1356E217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E34217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfCNFsN (ORCPT
+        id S1727269AbfCNFsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 01:48:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60062 "EHLO huawei.com"
+        Thu, 14 Mar 2019 01:48:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48930 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726303AbfCNFsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 01:48:12 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DAEF74EB78609768649F;
-        Thu, 14 Mar 2019 13:48:06 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Thu, 14 Mar 2019
- 13:48:03 +0800
-Subject: Re: [PATCH] proc/sysctl: Fix NULL pointer dereference in put_links
-To:     Luis Chamberlain <mcgrof@kernel.org>
-References: <20190304135438.29792-1-yuehaibing@huawei.com>
- <03aafd33-f9d5-4a48-b123-7a6b2e7f16e7@huawei.com>
- <CAB=NE6UF=2pWzOFY2PqpXyuDV3qSa7R8bpMAw-6qF9Z7Ly=PEw@mail.gmail.com>
- <43f6b8c5-a9eb-c77d-0c52-dbc3c45b4dc7@huawei.com>
- <e5d45b4e-b821-f993-7e88-6b0c35159d5e@huawei.com>
- <20190313223543.GA993@42.do-not-panic.com>
-CC:     Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>, <ast@kernel.org>,
-        <daniel@iogearbox.net>, Al Viro <viro@zeniv.linux.org.uk>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <bpf@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <c066250c-505b-6b18-965f-b7321c237bea@huawei.com>
-Date:   Thu, 14 Mar 2019 13:48:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        id S1726303AbfCNFsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 01:48:30 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 28900EB1611D2922C173;
+        Thu, 14 Mar 2019 13:48:28 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Thu, 14 Mar 2019
+ 13:48:19 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <joe@perches.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] appletalk: Fix potential NULL pointer dereference in unregister_snap_client
+Date:   Thu, 14 Mar 2019 13:47:59 +0800
+Message-ID: <20190314054759.17848-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20190313223543.GA993@42.do-not-panic.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 X-Originating-IP: [10.177.31.96]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,159 +43,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDIwMTkvMy8xNCA2OjM1LCBMdWlzIENoYW1iZXJsYWluIHdyb3RlOg0KPiBPbiBU
-dWUsIE1hciAxMiwgMjAxOSBhdCAxMDoxMDo1M0FNICswODAwLCBZdWVIYWliaW5nIHdyb3Rl
-Og0KPj4gT24gMjAxOS8zLzkgMjA6MjcsIFl1ZUhhaWJpbmcgd3JvdGU6DQo+Pj4gT24gMjAx
-OS8zLzkgMTE6NTgsIEx1aXMgQ2hhbWJlcmxhaW4gd3JvdGU6DQo+Pj4+IEkgc28gZXhjaXRl
-ZCBhYm91dCB0aGUgcmVwb3J0LCB0aGFua3MgdGhpcyBpcyBhd2Vzb21lIHdvcmshISBIb3dl
-dmVyIGl0IHNlZW1lZCBwb3NzaWJseSBsaWtlIGEgcGFwZXItb3ZlciBhIGRpZmZlcmVudCBp
-c3N1ZS4gSSdtIG5vdCBjb252aW5jZWQgeWV0Lg0KPj4+Pg0KPj4+PiBJZiBwcmVmZXIgYSBi
-aXQgbW9yZSBpbnZlc3RpZ2F0aW9uIHVudGlsIHdlIGNhbiBiZSAxMDAlIHN1cmUuIEF0DQo+
-Pj4+IHRoaXMgcG9pbnQgbXkgcG9zaXRpb24gd291bGQgYmUgdGhpcyBpcyBtb3JlIG9mIGEg
-cmlzayBmb3IgbW9yZQ0KPj4+PiByZWdyZXNzaW9ucyBhbmQgdGhhdCdzIGFuIG9mZiBmZWVs
-aW5nIGZvciBhIGZpeC4NCj4+Pj4NCj4+Pj4gICBMdWlzDQo+Pj4NCj4+PiBUaGlzIGlzc3Vl
-IG9jY3VycyBsaWtlIHRoaXM6DQo+Pj4NCj4+PiBfX3JlZ2lzdGVyX3N5c2N0bF90YWJsZQ0K
-Pj4+ICAgICAgLS0+Z2V0X3N1YmRpcg0KPj4+ICAgICAgCS0tPm5ld19kaXIgIC8vY3JlYXRl
-ICduZXcnIGRpcg0KPj4+ICAgICAgICAgICAgIC0tPmluaXRfaGVhZGVyICAvLyAmbmV3LT5o
-ZWFkZXItPnBhcmVudCA9IE5VTEwNCj4+PiAgICAgICAgIC0tPmluc2VydF9oZWFkZXINCj4+
-PiAgICAgICAgICAgICAtLT4gaW5zZXJ0X2xpbmtzDQo+Pj4gCQktLT5uZXdfbGlua3MNCj4+
-PiAJCQktLT5remFsbG9jICAvL2ZhaWxlZA0KPj4+IAkJLS0+Jm5ldy0+aGVhZGVyLT5wYXJl
-bnQgPSBOVUxMDQo+Pj4gCS0tPmRyb3Bfc3lzY3RsX3RhYmxlKCZuZXctPmhlYWRlcikgLy9J
-biBlcnIgcGF0aCBvZiBnZXRfc3ViZGlyDQo+IA0KPiBOb3BlLCB3ZSBkcm9wICB0aGF0IGVh
-cmxpZXIgYWN0dWFsbHksIG5vdGUgdGhhdCB1cG9uIGZhaWx1cmUgb24NCj4gaW5zZXJ0X2xp
-bmtzKCkgd2UgYWxzbyBjYWxsIGRyb3Bfc3lzY3RsX3RhYmxlKCkuIEFuZCBldmVuIGluDQo+
-IHRoZSBzdWNjZXNzZnVsIGNhc2Ugb24gX19yZWdpc3Rlcl9zeXNjdGxfdGFibGUoKSB3ZSBz
-dGlsbCBhbHdheXMNCj4gY2FsbCBkcm9wX3N5c2N0bF90YWJsZSgpLg0KPiANCj4gU28gaXQg
-c2VlbXMgdGhhdCB0aGUgcmVhbCBpc3N1ZSBpcyB3ZSBoYXZlIG11bHRpcGxlIGVycm9yIHBh
-dGhzIHdoaWNoDQo+IGNhbGwgZHJvcF9zeXNjdGxfdGFibGUoKS4gIFRoYXQgaXMgdGhlIGp1
-c3RpZmljYXRpb24gZm9yIHdoaWNoIHdlIGRvDQo+IG5lZWQgeW91ciBwYXRjaC4gQ2FuIHlv
-dSBhZGp1c3QgeW91ciBjb21taXQgbG9nIHRvIGFjY291bnQgZm9yIHRoaXM/DQoNClN1cmUs
-IHdpbGwgcmVzZW5kIGl0IHdpdGggdGhpcy4NCg0KPiANCj4gICBMdWlzDQo+IA0KPj4+IAkJ
-LS0+cHV0X2xpbmtzIC8vY2FsbCB4bGF0ZV9kaXIgd2hvc2UgMm5kIHBhcmFtIGlzICcmbmV3
-LT5oZWFkZXItPnBhcmVudCcNCj4+PiAJCQktLT4geGxhdGVfZGlyICAvL2FjY2VzcyBkaXIt
-PmhlYWRlcixob3dldmVyICdkaXInIGlzIE5VTEwgd2hpY2ggY29tZXMgZnJvbSAnJm5ldy0+
-aGVhZGVyLT5wYXJlbnQnDQo+Pj4NCj4+PiBQbGVhc2UgY29ycmVjdCBtZSBpZiB0aGlzIGlz
-IGluY29ycmVjdC4NCj4+DQo+PiBIZWxsbywNCj4+DQo+PiBBbnkgY29tbWVudCB3aWxsIGJl
-IGFwcHJlY2lhdGVkLg0KPj4NCj4+PiAJDQo+Pj4+DQo+Pj4+IE9uIEZyaSwgTWFyIDgsIDIw
-MTksIDg6MDQgUE0gWXVlSGFpYmluZyA8eXVlaGFpYmluZ0BodWF3ZWkuY29tIDxtYWlsdG86
-eXVlaGFpYmluZ0BodWF3ZWkuY29tPj4gd3JvdGU6DQo+Pj4+DQo+Pj4+ICAgICArY2MgQWwg
-Vmlybw0KPj4+Pg0KPj4+PiAgICAgT24gMjAxOS8zLzQgMjE6NTQsIFl1ZSBIYWliaW5nIHdy
-b3RlOg0KPj4+PiAgICAgPiBGcm9tOiBZdWVIYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5j
-b20gPG1haWx0bzp5dWVoYWliaW5nQGh1YXdlaS5jb20+Pg0KPj4+PiAgICAgPg0KPj4+PiAg
-ICAgPiBTeXprYWxsZXIgcmVwb3J0IHRoaXM6DQo+Pj4+ICAgICA+DQo+Pj4+ICAgICA+IGth
-c2FuOiBHUEYgY291bGQgYmUgY2F1c2VkIGJ5IE5VTEwtcHRyIGRlcmVmIG9yIHVzZXIgbWVt
-b3J5IGFjY2Vzcw0KPj4+PiAgICAgPiBnZW5lcmFsIHByb3RlY3Rpb24gZmF1bHQ6IDAwMDAg
-WyMxXSBTTVAgS0FTQU4gUFRJDQo+Pj4+ICAgICA+IENQVTogMSBQSUQ6IDUzNzMgQ29tbTog
-c3l6LWV4ZWN1dG9yLjAgTm90IHRhaW50ZWQgNS4wLjAtcmM4KyAjMw0KPj4+PiAgICAgPiBI
-YXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChpNDQwRlggKyBQSUlYLCAxOTk2KSwg
-QklPUyAxLjEwLjItMXVidW50dTEgMDQvMDEvMjAxNA0KPj4+PiAgICAgPiBSSVA6IDAwMTA6
-cHV0X2xpbmtzKzB4MTAxLzB4NDQwIGZzL3Byb2MvcHJvY19zeXNjdGwuYzoxNTk5DQo+Pj4+
-ICAgICA+IENvZGU6IDAwIDBmIDg1IDNhIDAzIDAwIDAwIDQ4IDhiIDQzIDM4IDQ4IDg5IDQ0
-IDI0IDIwIDQ4IDgzIGMwIDM4IDQ4IDg5IGMyIDQ4IDg5IDQ0IDI0IDI4IDQ4IGI4IDAwIDAw
-IDAwIDAwIDAwIGZjIGZmIGRmIDQ4IGMxIGVhIDAzIDw4MD4gM2MgMDIgMDAgMGYgODUgZmUg
-MDIgMDAgMDAgNDggOGIgNzQgMjQgMjAgNDggYzcgYzcgNjAgMmEgOWQgOTENCj4+Pj4gICAg
-ID4gUlNQOiAwMDE4OmZmZmY4ODgxZDgyOGYyMzggRUZMQUdTOiAwMDAxMDIwMg0KPj4+PiAg
-ICAgPiBSQVg6IGRmZmZmYzAwMDAwMDAwMDAgUkJYOiBmZmZmODg4MWUwMWIxMTQwIFJDWDog
-ZmZmZmZmZmY4ZWU5ODI2Nw0KPj4+PiAgICAgPiBSRFg6IDAwMDAwMDAwMDAwMDAwMDcgUlNJ
-OiBmZmZmYzkwMDAxNDc5MDAwIFJESTogZmZmZjg4ODFlMDFiMTE3OA0KPj4+PiAgICAgPiBS
-QlA6IGRmZmZmYzAwMDAwMDAwMDAgUjA4OiBmZmZmZWQxMDNlZTI3MjU5IFIwOTogZmZmZmVk
-MTAzZWUyNzI1OQ0KPj4+PiAgICAgPiBSMTA6IDAwMDAwMDAwMDAwMDAwMDEgUjExOiBmZmZm
-ZWQxMDNlZTI3MjU4IFIxMjogZmZmZmZmZmZmZmZmZmZmNA0KPj4+PiAgICAgPiBSMTM6IDAw
-MDAwMDAwMDAwMDAwMDYgUjE0OiBmZmZmODg4MWY1OTgzOGMwIFIxNTogZGZmZmZjMDAwMDAw
-MDAwMA0KPj4+PiAgICAgPiBGUzogIDAwMDA3ZjA3MjI1NGY3MDAoMDAwMCkgR1M6ZmZmZjg4
-ODFmNzEwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQo+Pj4+ICAgICA+IENT
-OiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCj4+Pj4g
-ICAgID4gQ1IyOiAwMDAwN2ZmZjhiMjg2NjY4IENSMzogMDAwMDAwMDFmMDU0MjAwMiBDUjQ6
-IDAwMDAwMDAwMDA3NjA2ZTANCj4+Pj4gICAgID4gRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERS
-MTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6IDAwMDAwMDAwMDAwMDAwMDANCj4+Pj4gICAgID4g
-RFIzOiAwMDAwMDAwMDAwMDAwMDAwIERSNjogMDAwMDAwMDBmZmZlMGZmMCBEUjc6IDAwMDAw
-MDAwMDAwMDA0MDANCj4+Pj4gICAgID4gUEtSVTogNTU1NTU1NTQNCj4+Pj4gICAgID4gQ2Fs
-bCBUcmFjZToNCj4+Pj4gICAgID4gIGRyb3Bfc3lzY3RsX3RhYmxlKzB4MTUyLzB4OWYwIGZz
-L3Byb2MvcHJvY19zeXNjdGwuYzoxNjI5DQo+Pj4+ICAgICA+ICBnZXRfc3ViZGlyIGZzL3By
-b2MvcHJvY19zeXNjdGwuYzoxMDIyIFtpbmxpbmVdDQo+Pj4+ICAgICA+ICBfX3JlZ2lzdGVy
-X3N5c2N0bF90YWJsZSsweGQ2NS8weDEwOTAgZnMvcHJvYy9wcm9jX3N5c2N0bC5jOjEzMzUN
-Cj4+Pj4gICAgID4gID8gMHhmZmZmZmZmZmMxYTE4MDAwDQo+Pj4+ICAgICA+ICBicl9uZXRm
-aWx0ZXJfaW5pdCsweGJjLzB4MTAwMCBbYnJfbmV0ZmlsdGVyXQ0KPj4+PiAgICAgPiAgPyAw
-eGZmZmZmZmZmYzFhMTgwMDANCj4+Pj4gICAgID4gID8gMHhmZmZmZmZmZmMxYTE4MDAwDQo+
-Pj4+ICAgICA+ICBkb19vbmVfaW5pdGNhbGwrMHhmYS8weDVjYSBpbml0L21haW4uYzo4ODcN
-Cj4+Pj4gICAgID4gIGRvX2luaXRfbW9kdWxlKzB4MjA0LzB4NWY2IGtlcm5lbC9tb2R1bGUu
-YzozNDYwDQo+Pj4+ICAgICA+ICBsb2FkX21vZHVsZSsweDY2YjIvMHg4NTcwIGtlcm5lbC9t
-b2R1bGUuYzozODA4DQo+Pj4+ICAgICA+ICBfX2RvX3N5c19maW5pdF9tb2R1bGUrMHgyMzgv
-MHgyYTAga2VybmVsL21vZHVsZS5jOjM5MDINCj4+Pj4gICAgID4gIGRvX3N5c2NhbGxfNjQr
-MHgxNDcvMHg2MDAgYXJjaC94ODYvZW50cnkvY29tbW9uLmM6MjkwDQo+Pj4+ICAgICA+ICBl
-bnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0OS8weGJlDQo+Pj4+ICAgICA+IFJJ
-UDogMDAzMzoweDQ2MmU5OQ0KPj4+PiAgICAgPiBDb2RlOiBmNyBkOCA2NCA4OSAwMiBiOCBm
-ZiBmZiBmZiBmZiBjMyA2NiAwZiAxZiA0NCAwMCAwMCA0OCA4OSBmOCA0OCA4OSBmNyA0OCA4
-OSBkNiA0OCA4OSBjYSA0ZCA4OSBjMiA0ZCA4OSBjOCA0YyA4YiA0YyAyNCAwOCAwZiAwNSA8
-NDg+IDNkIDAxIGYwIGZmIGZmIDczIDAxIGMzIDQ4IGM3IGMxIGJjIGZmIGZmIGZmIGY3IGQ4
-IDY0IDg5IDAxIDQ4DQo+Pj4+ICAgICA+IFJTUDogMDAyYjowMDAwN2YwNzIyNTRlYzU4IEVG
-TEFHUzogMDAwMDAyNDYgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAxMzkNCj4+Pj4gICAgID4g
-UkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDogMDAwMDAwMDAwMDczYmYwMCBSQ1g6IDAwMDAw
-MDAwMDA0NjJlOTkNCj4+Pj4gICAgID4gUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogMDAw
-MDAwMDAyMDAwMDI4MCBSREk6IDAwMDAwMDAwMDAwMDAwMDMNCj4+Pj4gICAgID4gUkJQOiAw
-MDAwN2YwNzIyNTRlYzcwIFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6IDAwMDAwMDAwMDAw
-MDAwMDANCj4+Pj4gICAgID4gUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAw
-MDAwMDI0NiBSMTI6IDAwMDA3ZjA3MjI1NGY2YmMNCj4+Pj4gICAgID4gUjEzOiAwMDAwMDAw
-MDAwNGJjZWZhIFIxNDogMDAwMDAwMDAwMDZmNmZiMCBSMTU6IDAwMDAwMDAwMDAwMDAwMDQN
-Cj4+Pj4gICAgID4gTW9kdWxlcyBsaW5rZWQgaW46IGJyX25ldGZpbHRlcigrKSBkdmJfdXNi
-X2RpYnVzYl9tY19jb21tb24gZGliMzAwMG1jIGRpYngwMDBfY29tbW9uIGR2Yl91c2JfZGli
-dXNiX2NvbW1vbiBkdmJfdXNiX2R3MjEwMiBkdmJfdXNiIGNsYXNzbWF0ZV9sYXB0b3AgcGFs
-bWFzX3JlZ3VsYXRvciBjbiB2aWRlb2J1ZjJfdjRsMiB2NGwyX2NvbW1vbiBzbmRfc29jX2Jk
-Mjg2MjMgbXB0YmFzZSBzbmRfdXNiX3VzeDJ5IHNuZF91c2JtaWRpX2xpYiBzbmRfcmF3bWlk
-aSB3bWkgbGlibnZkaW1tIGxvY2tkIHN1bnJwYyBncmFjZSByY19rd29ybGRfcGMxNTB1IHJj
-X2NvcmUgcnRjX2RhOTA2MyBzaGExX3Nzc2UzIGkyY19jcm9zX2VjX3R1bm5lbCBhZHhsMzR4
-X3NwaSBhZHhsMzR4IG5mbmV0bGluayBsaWI4MDIxMSBpNTUwMF90ZW1wIGR2Yl9hczEwMiBk
-dmJfY29yZSB2aWRlb2J1ZjJfY29tbW9uIHZpZGVvZGV2IG1lZGlhIHZpZGVvYnVmMl92bWFs
-bG9jIHZpZGVvYnVmMl9tZW1vcHMgdWRjX2NvcmUgbG5icDIyIGxlZHNfbHAzOTUyIGhpZF9y
-b2NjYXRfcnlvcyBzMWQxM3h4eGZiIG10ZCB2cG9ydF9nZW5ldmUgb3BlbnZzd2l0Y2ggbmZf
-Y29ubmNvdW50IG5mX25hdF9pcHY2IG5zaCBnZW5ldmUgdWRwX3R1bm5lbCBpcDZfdWRwX3R1
-bm5lbCBzbmRfc29jX210NjM1MSBzaXNfYWdwIHBoeWxpbmsgc25kX3NvY19hZGF1MTc2MV9z
-cGkgc25kX3NvY19hZGF1MTc2MSBzbmRfc29jX2FkYXUxN3gxIHNuZF9zb2NfY29yZSBzbmRf
-cGNtX2RtYWVuZ2luZSBhYzk3X2J1cyBzbmRfY29tcHJlc3Mgc25kX3NvY19hZGF1X3V0aWxz
-IHNuZF9zb2Nfc2lnbWFkc3BfcmVnbWFwIHNuZF9zb2Nfc2lnbWFkc3AgcmFpZF9jbGFzcyBo
-aWRfcm9jY2F0X2tvbmVwdXJlIGhpZF9yb2NjYXRfY29tbW9uIGhpZF9yb2NjYXQgYzJwb3J0
-X2R1cmFtYXIyMTUwIGNvcmUgbWRpb19iY21fdW5pbWFjIGlwdGFibGVfc2VjdXJpdHkgaXB0
-YWJsZV9yYXcgaXB0YWJsZV9tYW5nbGUNCj4+Pj4gICAgID4gIGlwdGFibGVfbmF0IG5mX25h
-dF9pcHY0IG5mX25hdCBuZl9jb25udHJhY2sgbmZfZGVmcmFnX2lwdjYgbmZfZGVmcmFnX2lw
-djQgaXB0YWJsZV9maWx0ZXIgYnBmaWx0ZXIgaXA2X3Z0aSBpcF92dGkgaXBfZ3JlIGlwaXAg
-c2l0IHR1bm5lbDQgaXBfdHVubmVsIGhzciB2ZXRoIG5ldGRldnNpbSBkZXZsaW5rIHZ4Y2Fu
-IGJhdG1hbl9hZHYgY2ZnODAyMTEgcmZraWxsIGNobmxfbmV0IGNhaWYgbmxtb24gZHVtbXkg
-dGVhbSBib25kaW5nIHZjYW4gYnJpZGdlIHN0cCBsbGMgaXA2X2dyZSBncmUgaXA2X3R1bm5l
-bCB0dW5uZWw2IHR1biBjcmN0MTBkaWZfcGNsbXVsIGNyYzMyX3BjbG11bCBjcmMzMmNfaW50
-ZWwgZ2hhc2hfY2xtdWxuaV9pbnRlbCBqb3lkZXYgbW91c2VkZXYgaWRlX3BjaV9nZW5lcmlj
-IHBpaXggYWVzbmlfaW50ZWwgYWVzX3g4Nl82NCBpZGVfY29yZSBjcnlwdG9fc2ltZCBhdGti
-ZCBjcnlwdGQgZ2x1ZV9oZWxwZXIgc2VyaW9fcmF3IGF0YV9nZW5lcmljIHBhdGFfYWNwaSBp
-MmNfcGlpeDQgZmxvcHB5IHNjaF9mcV9jb2RlbCBpcF90YWJsZXMgeF90YWJsZXMgaXB2NiBb
-bGFzdCB1bmxvYWRlZDogbG03M10NCj4+Pj4gICAgID4gRHVtcGluZyBmdHJhY2UgYnVmZmVy
-Og0KPj4+PiAgICAgPiAgICAoZnRyYWNlIGJ1ZmZlciBlbXB0eSkNCj4+Pj4gICAgID4gLS0t
-WyBlbmQgdHJhY2UgNzcwMDIwZGUzODk2MWZkMCBdLS0tDQo+Pj4+ICAgICA+DQo+Pj4+ICAg
-ICA+IEEgbmV3IGRpciBlbnRyeSBjYW4gYmUgY3JlYXRlZCBpbiBnZXRfc3ViZGlyIGFuZCBp
-dHMgaGVhZGVyLT5wYXJlbnQgaXMgc2V0DQo+Pj4+ICAgICA+IHRvIE5VTEwuIE9ubHkgYWZ0
-ZXIgaW5zZXJ0X2hlYWRlciBzdWNjZXNzLCBpdCB3aWxsIGJlIHNldCB0byAnZGlyJy4NCj4+
-Pj4gICAgID4gSG93ZXZlciBpbiBlcnIgaGFuZGxpbmcgcGF0aCBvZiBnZXRfc3ViZGlyLCBk
-cm9wX3N5c2N0bF90YWJsZSBtYXliZSBjYWxsZWQNCj4+Pj4gICAgID4gb24gJ25ldy0+aGVh
-ZGVyJyByZWdhcmRsZXNzIHZhbHVlIG9mIGhlYWRlci0+cGFyZW50LiBUaGVuIHB1dF9saW5r
-cw0KPj4+PiAgICAgPiBiZSBjYWxsZWQsIHdoaWNoIHRyaWdnZXJzIE5VTEwtcHRyIGRlcmVm
-IHdoZW4gYWNjZXNzIHRoZSBtZW1iZXIgb2YNCj4+Pj4gICAgID4gaGVhZGVyLT5wYXJlbnQg
-aW4geGxhdGVfZGlyLg0KPj4+PiAgICAgPg0KPj4+PiAgICAgPiBSZXBvcnRlZC1ieTogSHVs
-ayBSb2JvdCA8aHVsa2NpQGh1YXdlaS5jb20gPG1haWx0bzpodWxrY2lAaHVhd2VpLmNvbT4+
-DQo+Pj4+ICAgICA+IEZpeGVzOiAwZTQ3Yzk5ZDdmZTI1ICgic3lzY3RsOiBSZXBsYWNlIHJv
-b3RfbGlzdCB3aXRoIGxpbmtzIGJldHdlZW4gc3lzY3RsX3RhYmxlX3NldHMiKQ0KPj4+PiAg
-ICAgPiBTaWduZWQtb2ZmLWJ5OiBZdWVIYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5jb20g
-PG1haWx0bzp5dWVoYWliaW5nQGh1YXdlaS5jb20+Pg0KPj4+PiAgICAgPiAtLS0NCj4+Pj4g
-ICAgID4gIGZzL3Byb2MvcHJvY19zeXNjdGwuYyB8IDMgKystDQo+Pj4+ICAgICA+ICAxIGZp
-bGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+Pj4+ICAgICA+
-DQo+Pj4+ICAgICA+IGRpZmYgLS1naXQgYS9mcy9wcm9jL3Byb2Nfc3lzY3RsLmMgYi9mcy9w
-cm9jL3Byb2Nfc3lzY3RsLmMNCj4+Pj4gICAgID4gaW5kZXggNGQ1OThhMy4uNGMyYTA1YSAx
-MDA2NDQNCj4+Pj4gICAgID4gLS0tIGEvZnMvcHJvYy9wcm9jX3N5c2N0bC5jDQo+Pj4+ICAg
-ICA+ICsrKyBiL2ZzL3Byb2MvcHJvY19zeXNjdGwuYw0KPj4+PiAgICAgPiBAQCAtMTYyNiw3
-ICsxNjI2LDggQEAgc3RhdGljIHZvaWQgZHJvcF9zeXNjdGxfdGFibGUoc3RydWN0IGN0bF90
-YWJsZV9oZWFkZXIgKmhlYWRlcikNCj4+Pj4gICAgID4gICAgICAgaWYgKC0taGVhZGVyLT5u
-cmVnKQ0KPj4+PiAgICAgPiAgICAgICAgICAgICAgIHJldHVybjsNCj4+Pj4gICAgID4gDQo+
-Pj4+ICAgICA+IC0gICAgIHB1dF9saW5rcyhoZWFkZXIpOw0KPj4+PiAgICAgPiArICAgICBp
-ZiAocGFyZW50KQ0KPj4+PiAgICAgPiArICAgICAgICAgICAgIHB1dF9saW5rcyhoZWFkZXIp
-Ow0KPj4+PiAgICAgPiAgICAgICBzdGFydF91bnJlZ2lzdGVyaW5nKGhlYWRlcik7DQo+Pj4+
-ICAgICA+ICAgICAgIGlmICghLS1oZWFkZXItPmNvdW50KQ0KPj4+PiAgICAgPiAgICAgICAg
-ICAgICAgIGtmcmVlX3JjdShoZWFkZXIsIHJjdSk7DQo+Pj4+ICAgICA+DQo+Pj4+DQo+IA0K
-PiAuDQo+IA0K
+From: YueHaibing <yuehaibing@huawei.com>
+
+register_snap_client may return NULL, all the callers
+check it, but only print a warning. This will result in
+NULL pointer dereference in unregister_snap_client and other
+places.
+
+It has always been used like this since v2.6
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: del timer in aarp_proto_init error patch
+---
+ include/linux/atalk.h |  2 +-
+ net/appletalk/aarp.c  | 15 ++++++++++++---
+ net/appletalk/ddp.c   | 20 ++++++++++++--------
+ 3 files changed, 25 insertions(+), 12 deletions(-)
+
+diff --git a/include/linux/atalk.h b/include/linux/atalk.h
+index d5cfc0b..f6034ba 100644
+--- a/include/linux/atalk.h
++++ b/include/linux/atalk.h
+@@ -108,7 +108,7 @@ static __inline__ struct elapaarp *aarp_hdr(struct sk_buff *skb)
+ #define AARP_RESOLVE_TIME	(10 * HZ)
+ 
+ extern struct datalink_proto *ddp_dl, *aarp_dl;
+-extern void aarp_proto_init(void);
++extern int aarp_proto_init(void);
+ 
+ /* Inter module exports */
+ 
+diff --git a/net/appletalk/aarp.c b/net/appletalk/aarp.c
+index 49a16ce..420a98b 100644
+--- a/net/appletalk/aarp.c
++++ b/net/appletalk/aarp.c
+@@ -879,15 +879,24 @@ static struct notifier_block aarp_notifier = {
+ 
+ static unsigned char aarp_snap_id[] = { 0x00, 0x00, 0x00, 0x80, 0xF3 };
+ 
+-void __init aarp_proto_init(void)
++int __init aarp_proto_init(void)
+ {
++	int rc;
++
+ 	aarp_dl = register_snap_client(aarp_snap_id, aarp_rcv);
+-	if (!aarp_dl)
++	if (!aarp_dl) {
+ 		printk(KERN_CRIT "Unable to register AARP with SNAP.\n");
++		return -ENOMEM;
++	}
+ 	timer_setup(&aarp_timer, aarp_expire_timeout, 0);
+ 	aarp_timer.expires  = jiffies + sysctl_aarp_expiry_time;
+ 	add_timer(&aarp_timer);
+-	register_netdevice_notifier(&aarp_notifier);
++	rc = register_netdevice_notifier(&aarp_notifier);
++	if (rc) {
++		del_timer_sync(&aarp_timer);
++		unregister_snap_client(aarp_dl);
++	}
++	return rc;
+ }
+ 
+ /* Remove the AARP entries associated with a device. */
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index 795fbc6..709d254 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1904,9 +1904,6 @@ static unsigned char ddp_snap_id[] = { 0x08, 0x00, 0x07, 0x80, 0x9B };
+ EXPORT_SYMBOL(atrtr_get_dev);
+ EXPORT_SYMBOL(atalk_find_dev_addr);
+ 
+-static const char atalk_err_snap[] __initconst =
+-	KERN_CRIT "Unable to register DDP with SNAP.\n";
+-
+ /* Called by proto.c on kernel start up */
+ static int __init atalk_init(void)
+ {
+@@ -1921,17 +1918,22 @@ static int __init atalk_init(void)
+ 		goto out_proto;
+ 
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+-	if (!ddp_dl)
+-		printk(atalk_err_snap);
++	if (!ddp_dl) {
++		pr_crit("Unable to register DDP with SNAP.\n");
++		goto out_sock;
++	}
+ 
+ 	dev_add_pack(&ltalk_packet_type);
+ 	dev_add_pack(&ppptalk_packet_type);
+ 
+ 	rc = register_netdevice_notifier(&ddp_notifier);
+ 	if (rc)
+-		goto out_sock;
++		goto out_snap;
++
++	rc = aarp_proto_init();
++	if (rc)
++		goto out_dev;
+ 
+-	aarp_proto_init();
+ 	rc = atalk_proc_init();
+ 	if (rc)
+ 		goto out_aarp;
+@@ -1945,11 +1947,13 @@ static int __init atalk_init(void)
+ 	atalk_proc_exit();
+ out_aarp:
+ 	aarp_cleanup_module();
++out_dev:
+ 	unregister_netdevice_notifier(&ddp_notifier);
+-out_sock:
++out_snap:
+ 	dev_remove_pack(&ppptalk_packet_type);
+ 	dev_remove_pack(&ltalk_packet_type);
+ 	unregister_snap_client(ddp_dl);
++out_sock:
+ 	sock_unregister(PF_APPLETALK);
+ out_proto:
+ 	proto_unregister(&ddp_proto);
+-- 
+2.7.0
+
 
