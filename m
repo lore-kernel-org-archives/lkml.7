@@ -2,105 +2,86 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F7FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D206FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10AB217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6DD5217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfCNLiz (ORCPT
+        id S1727509AbfCNLkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:38:55 -0400
-Received: from mga18.intel.com ([134.134.136.126]:5554 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbfCNLiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:38:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:38:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
-   d="scan'208";a="307163453"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 14 Mar 2019 04:38:54 -0700
-Received: from [10.125.252.108] (abudanko-mobl.ccr.corp.intel.com [10.125.252.108])
-        by linux.intel.com (Postfix) with ESMTP id D89315803FA;
-        Thu, 14 Mar 2019 04:38:52 -0700 (PDT)
-Subject: [PATCH v8 12/12] perf tests: implement Zstd comp/decomp integration
- test
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <71fcb3bb-1bab-f9ad-54b1-cc8de7dca7e3@linux.intel.com>
-Date:   Thu, 14 Mar 2019 14:38:51 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 14 Mar 2019 07:40:40 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37650 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbfCNLkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:40:37 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z17so5590776qtn.4;
+        Thu, 14 Mar 2019 04:40:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K+jEBW2uvuhAa3Xd+ttZQ0IBL0HAqnScDEf+oC+cSfs=;
+        b=V/172+DVq8VLkiXDzz3DygIe8EvW97wlVqGjK20qeh6bkqe0IYPDCarkxyZX5a2qvy
+         0D8CXEH1J9+KVGRBQ3Zw5DZtPGCx3jZ0PvN5tlE3KGm7tk4nh41dS36zIaZlNhLfbLcq
+         ojjaMFj2zIxTXCQSyf3Q0lWJ5MUWK6hYPso6CHHJGQ9bFlD6iYwnk2CafYPzmhp+Pdz0
+         TQ4U/x5xfTVaXT/QL5UFFzwU5zJKSJqMCXPCSnvbDXQvPJoY29t3EMJXC6/aridaEnF8
+         bic9XLTdnXz3g5D66f25txxk+PgItPJWIQ9AhXv8RZn02BiU/1pRzi0KX9r2VSgV+z7s
+         hezg==
+X-Gm-Message-State: APjAAAX0mzb37/9j07DZTYW6PaM3ejq+7l4qKfD45QEh+tzESMGcTbD6
+        mh6Lkg9LsjjXWHPdE+rf0q21V2nMhnuBMSzp9Ho=
+X-Google-Smtp-Source: APXvYqwZx4Q7UibG6rp3NN3J2hHTx8pHFuDlxL9Gv/BO6P93VzjIX7qWktcsG1draOR9BiBUfCnETOjIjl0KCydmc5c=
+X-Received: by 2002:ac8:237b:: with SMTP id b56mr38222815qtb.343.1552563636215;
+ Thu, 14 Mar 2019 04:40:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190215192033.24203-1-faiz_abbas@ti.com> <20190215192033.24203-2-faiz_abbas@ti.com>
+ <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com> <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
+ <63b6631d-86e7-b8ef-ffaf-40e7d4e96cfb@intel.com> <842caafd-1547-1ea6-faf0-27a85a912622@ti.com>
+In-Reply-To: <842caafd-1547-1ea6-faf0-27a85a912622@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 14 Mar 2019 12:40:19 +0100
+Message-ID: <CAK8P3a1KJpWtyUOyyyab03tFYwkeROQXXV1+jM7EJ2d8So2bbA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
+To:     "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, Kishon <kishon@ti.com>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 12, 2019 at 6:32 PM Rizvi, Mohammad Faiz Abbas
+<faiz_abbas@ti.com> wrote:
+> On 3/8/2019 7:06 PM, Adrian Hunter wrote:
+> > On 6/03/19 12:00 PM, Faiz Abbas wrote:
+> > It is a performance drop that can be avoided, so it might as well be.
+> > Splitting the success path from the failure path is common for I/O drivers
+> > for similar reasons as here: the success path can be optimized whereas the
+> > failure path potentially needs to sleep.
+>
+> Understood. You wanna keep the success path as fast as possible.
 
-Implemented basic integration test for Zstd based trace
-compression/decompression in record and report modes.
+I looked at the sdhci_request_done() function and found that almost all
+of it is executed inside of a 'spin_lock_irqsave()', including the potentially
+expensive dma_sync_single_for_cpu() calls.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- .../tests/shell/record+zstd_comp_decomp.sh    | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp.sh
+This means there is very little benefit in using the tasklet in the first place,
+it could just as well run in the hwirq context that triggered it.
 
-diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-new file mode 100755
-index 000000000000..bc195874fc27
---- /dev/null
-+++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-@@ -0,0 +1,28 @@
-+#!/bin/sh
-+# record trace Zstd compression/decompression
-+
-+trace_file=$(mktemp /tmp/perf.data.XXX)
-+perf_tool=perf
-+output=/dev/null
-+
-+skip_if_no_z_record() {
-+	$perf_tool record -h 2>&1 | grep '\-z, \-\-compression\-level'
-+}
-+
-+collect_z_record() {
-+	echo "Collecting compressed record trace file:"
-+	$perf_tool record -o $trace_file -a -z -F 25000 -e cycles -- \
-+		dd count=2000 if=/dev/random of=/dev/null > $output 2>&1
-+}
-+
-+check_compressed_stats() {
-+	echo "Checking compressed events stats:"
-+	$perf_tool report -i $trace_file --header --stats | \
-+		grep -E "(# compressed : Zstd,)|(COMPRESSED events:)" > $output 2>&1
-+}
-+
-+skip_if_no_z_record || exit 2
-+collect_z_record && check_compressed_stats
-+err=$?
-+rm -f $trace_file
-+exit $err
--- 
-2.20.1
+The part that is actually run with interrupts enabled in the tasklet
+is mmc_blk_cqe_req_done(), but other drivers also call this from
+IRQ context.
 
+       Arnd
