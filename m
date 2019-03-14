@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49885C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6E1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF012184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E847921873
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfCNWhl (ORCPT
+        id S1728311AbfCNWhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:37:41 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:54799 "EHLO
+        Thu, 14 Mar 2019 18:37:47 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:53023 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbfCNWfH (ORCPT
+        with ESMTP id S1728129AbfCNWfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Mar 2019 18:35:07 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MsZeX-1gkHxf0is7-00txnj; Thu, 14 Mar 2019 23:34:52 +0100
+ 1MaIGB-1hag9r3nNt-00WEgT; Thu, 14 Mar 2019 23:34:55 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,28 +37,28 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 21/45] drivers: tty: serial: altera_jtaguart: use devm_* functions
-Date:   Thu, 14 Mar 2019 23:33:51 +0100
-Message-Id: <1552602855-26086-22-git-send-email-info@metux.net>
+Subject: [PATCH v2 24/45] drivers: tty: serial: mxs-auart: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:33:54 +0100
+Message-Id: <1552602855-26086-25-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:/7N3Y15yubt1Hp/mjw3zs7TBCGDbpCWoamybrySXM7TWT1iiZ5r
- 2R8qGWtT++LJJEcxQpELQ8gkj3HbqZ0eXBmEHjMtZDtMbIQlKSH4mB2MapOJmflPOvkQlJH
- NKjJApxMquO+xfL6lXyipXMxU89N9c6JrlVMWKHy2OyBKhNKp3c99Rkevx9rKdNWXzDu9gW
- fZGjlLuF87u52WfoatMxA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZOxp4iW/df8=:suctqOpq3a/nVrfdf/e1hw
- MNoCU4SRZ7HWSprUjLQV7I3v2UgGm+YHZbGfV/V7DGZPk4exNA7H4Ei+tLgG6ZposG0O2RWam
- cYOsNjUoZI3yuwm8shOQjmuBJAZmNqA4/Yeor7sMVJvA1OnfZqurxmfHlcc814DxLrqN6XCi9
- x0pO3bw30vLUDh0jCjvRFCMr3IOf2/x8wpcn7P4kwPAMTMa2XJj7/azpzikkrVPMqYZlquyBu
- +deD1Lii4JlDPATXMSHb+TP0GWBbKHF3IvnOrIyqXG2M/59fPgJcoaraM8OqEz4ZB93WC1v4d
- zmO+g103p+K848F4RiqTbKYbKJfd3YHoyYd7YC9KI6wjAh4U64kPjDSIz77cL/RpqXH7G3UGo
- leuLZFF4Z7PaAhQu2VipOsGfxdPVQi4z90j1cUPzHiahjRZ15Wwtq359R2uNyzLWZo/sPQYgN
- SaPjsot9Z1lK6NZF5nLV39mmBOeDmPsuyRmFd0IpH0bgWDfoRQy6Z1BDpOa1qLJ3USOuRqH41
- 1QlXnWFrMfaCa1pjU6MX9Ov+DuE1Ez4o530TumHkNxa/0IAwj2tKf6HrS+D9XsDDsFwRlrnSa
- Yni/M4O+NGtSg4gQ/2aj+mVJWUI6z3Vfdk/lRrk+/gRVAHjw77VQMjjJxpTefXqB4KVqBvyx+
- ajrOBFamJ9xRSN0qEICe4myxxQs1wbP6O0XgjPHHpiRE5urnj2GS6wj+1pAJVioPA5MO1kS1Q
- LKfM83cdawIT1kmG8V4p3VA4GYckcO8YKaTCUA==
+X-Provags-ID: V03:K1:sNp1Qce0XntNsbBnqDM4gJRqPj6uIlFIDbUZe1jLkf+/kM8/21f
+ WzEnXGc8JoJbgSe8sWpjp8NDZjTPuxNG6vn/VG5EizDswJf2ENXZq7umA5royMfFypO/UvJ
+ 1qLY1MejYnvoIPv3kCm0mIe4jtsjdXGYK9/Nuiuxb6tUSGYv6wF6rWvWkyq3z4GzHhyXVNe
+ sKkMcScanxWbW/e+TSaIg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3qFuW7PZaCo=:MwO6I7oran78L4v9NEYa07
+ xx0gtecVZBNTZiVRmZxCrhS9mqJH+lz3PHEKeRCdEjSgjCpNK8PcsbySheMZgTQh9/7PZbTC9
+ ybjQO7piJLBELJ8kebJYlyYRTItdVnFwhTYUupzATRrDTXUxAgJexlsv8VOQ3RH238m1vrAA3
+ RmogEUHPSFx8HupqeRqVGS474bFcZw7Nho+LncfXE2lctK4Ax8L+YaU/OOgKyFv0FTfXe0k2n
+ hls45xdtv5o5d5k2sAHMDIb4LPBBuU/bsR4wt/23Z1uznLnybHHsAJGHW4RzAPKXtStwkbeCo
+ fHDFxoIWjxZ4KHG+jQ9c6VCx06kEw6FLqCbKPv13gOCd5QdlqwdIpvq4XywJzvRRBeOvMzC8Q
+ 3hN7rMOzt7vNOLL0c8Bwp16MJ5jHt4RdZJBsKLdOD7gpvYAbKcdwmom7pEZctmpa1vjUEqToc
+ ltSV51cSd5peYPLt55srprhygf0zhOMG9evTKdu030drW146CM/xa2M8+8kJqLmM/rcM3ckyJ
+ G0WZLYY7iJgSnYRNa3Lr2U/EjUOB56Qu2JmDl8RC2rR2YQDRPTWB3SBY0BRnyPbAyxRI0nSQP
+ aqzbPLh4/2Jko7BX8uU/CRgR3iX0TQCxgiZJBQ4M2D28hraT/XxVNMbIvfWQepl9JUPbFaZcG
+ /Lk64JGqAz7aCXEHDt52uFZKEfHT5NDlFl0KhVoEw8Y+11lVPS042yy/NLEmFb0Qv89N+PFY8
+ RaPUBIujzSjcWJ/0z7XzuCb86jEqKxewFfQ3LQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,33 +68,22 @@ Use the safer devm versions of memory mapping functions.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/altera_jtaguart.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/tty/serial/mxs-auart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/altera_jtaguart.c b/drivers/tty/serial/altera_jtaguart.c
-index c90e503..13cab5d 100644
---- a/drivers/tty/serial/altera_jtaguart.c
-+++ b/drivers/tty/serial/altera_jtaguart.c
-@@ -448,7 +448,9 @@ static int altera_jtaguart_probe(struct platform_device *pdev)
- 	else
- 		return -ENODEV;
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index 27235a5..0a43c69 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -1685,7 +1685,7 @@ static int mxs_auart_probe(struct platform_device *pdev)
+ 	}
  
--	port->membase = ioremap(port->mapbase, ALTERA_JTAGUART_SIZE);
-+	port->membase = devm_ioremap(port->dev,
-+				     port->mapbase,
-+				     ALTERA_JTAGUART_SIZE);
- 	if (!port->membase)
- 		return -ENOMEM;
- 
-@@ -474,7 +476,7 @@ static int altera_jtaguart_remove(struct platform_device *pdev)
- 
- 	port = &altera_jtaguart_ports[i].port;
- 	uart_remove_one_port(&altera_jtaguart_driver, port);
--	iounmap(port->membase);
-+	devm_iounmap(port->dev, port->membase);
- 
- 	return 0;
- }
+ 	s->port.mapbase = r->start;
+-	s->port.membase = ioremap(r->start, resource_size(r));
++	s->port.membase = devm_ioremap_resource(s->port.dev, r);
+ 	s->port.ops = &mxs_auart_ops;
+ 	s->port.iotype = UPIO_MEM;
+ 	s->port.fifosize = MXS_AUART_FIFO_SIZE;
 -- 
 1.9.1
 
