@@ -6,142 +6,186 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F67DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE97C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FBD2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590A92184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfCNQJR convert rfc822-to-8bit (ORCPT
+        id S1727479AbfCNQJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:09:17 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:55242 "EHLO unicorn.mansr.com"
+        Thu, 14 Mar 2019 12:09:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57614 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfCNQJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:09:16 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 0A69814CEA; Thu, 14 Mar 2019 16:09:13 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/sun4i: hdmi: add support for ddc-i2c-bus property
-References: <20190311134713.25876-1-mans@mansr.com>
-        <20190311154702.eslw5ccol44vxcmy@flea> <yw1xef7d4cit.fsf@mansr.com>
-        <20190314154105.o6r7hzeuiyajxh7v@flea>
-Date:   Thu, 14 Mar 2019 16:09:13 +0000
-In-Reply-To: <20190314154105.o6r7hzeuiyajxh7v@flea> (Maxime Ripard's message
-        of "Thu, 14 Mar 2019 16:41:05 +0100")
-Message-ID: <yw1xk1h130ba.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1726157AbfCNQJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 12:09:20 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AF873C050E1A;
+        Thu, 14 Mar 2019 16:09:19 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0B6B5D9C5;
+        Thu, 14 Mar 2019 16:09:18 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 02/38] vfs: Provide a mount_pseudo-replacement for fs_context
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, dhowells@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 14 Mar 2019 16:09:17 +0000
+Message-ID: <155257975796.13720.9965979295958004676.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
+References: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 14 Mar 2019 16:09:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxime Ripard <maxime.ripard@bootlin.com> writes:
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-fsdevel@vger.kernel.org
+---
 
-> On Mon, Mar 11, 2019 at 04:11:06PM +0000, Måns Rullgård wrote:
->> Maxime Ripard <maxime.ripard@bootlin.com> writes:
->> 
->> > Hi!
->> >
->> > On Mon, Mar 11, 2019 at 01:47:13PM +0000, Mans Rullgard wrote:
->> >> Sometimes it is desirabled to use a separate i2c controller for ddc
->> >> access.  This adds support for the ddc-i2c-bus property of the
->> >> hdmi-connector node, using the specified controller if provided.
->> >> 
->> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> >> ---
->> >>  drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  1 +
->> >>  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 37 +++++++++++++++++++++++---
->> >>  2 files changed, 35 insertions(+), 3 deletions(-)
->> >> 
->> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> >> index b685ee11623d..b08c4453d47c 100644
->> >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> >> @@ -269,6 +269,7 @@ struct sun4i_hdmi {
->> >>  	struct clk		*tmds_clk;
->> >>  
->> >>  	struct i2c_adapter	*i2c;
->> >> +	struct i2c_adapter	*ddc_i2c;
->> >>  
->> >>  	/* Regmap fields for I2C adapter */
->> >>  	struct regmap_field	*field_ddc_en;
->> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> >> index 061d2e0d9011..5b2fac79f5d6 100644
->> >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> >> @@ -212,7 +212,7 @@ static int sun4i_hdmi_get_modes(struct drm_connector *connector)
->> >>  	struct edid *edid;
->> >>  	int ret;
->> >>  
->> >> -	edid = drm_get_edid(connector, hdmi->i2c);
->> >> +	edid = drm_get_edid(connector, hdmi->ddc_i2c ?: hdmi->i2c);
->> >
->> > You can't test whether ddc_i2c is NULL or not...
->> >
->> >>  	if (!edid)
->> >>  		return 0;
->> >>  
->> >> @@ -228,6 +228,28 @@ static int sun4i_hdmi_get_modes(struct drm_connector *connector)
->> >>  	return ret;
->> >>  }
->> >>  
->> >> +static struct i2c_adapter *sun4i_hdmi_get_ddc(struct device *dev)
->> >> +{
->> >> +	struct device_node *phandle, *remote;
->> >> +	struct i2c_adapter *ddc;
->> >> +
->> >> +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
->> >> +	if (!remote)
->> >> +		return ERR_PTR(-EINVAL);
->> >> +
->> >> +	phandle = of_parse_phandle(remote, "ddc-i2c-bus", 0);
->> >> +	of_node_put(remote);
->> >> +	if (!phandle)
->> >> +		return NULL;
->> >> +
->> >> +	ddc = of_get_i2c_adapter_by_node(phandle);
->> >> +	of_node_put(phandle);
->> >> +	if (!ddc)
->> >> +		return ERR_PTR(-EPROBE_DEFER);
->> >> +
->> >> +	return ddc;
->> >
->> > ... Since even in (most) error cases you're returning a !NULL pointer.
->> >
->> >> +}
->> >> +
->> >>  static const struct drm_connector_helper_funcs sun4i_hdmi_connector_helper_funcs = {
->> >>  	.get_modes	= sun4i_hdmi_get_modes,
->> >>  };
->> >> @@ -575,6 +597,12 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
->> >>  		goto err_disable_mod_clk;
->> >>  	}
->> >>  
->> >> +	hdmi->ddc_i2c = sun4i_hdmi_get_ddc(dev);
->> >> +	if (IS_ERR(hdmi->ddc_i2c)) {
->> 
->> ... which is checked here.
->> 
->> The property is optional, so the idea was to return null in that case
->> and use the built-in controller.  If the property exists but some error
->> occurs, we want to abort rather than proceed with the fallback which
->> almost certainly won't work.
->> 
->> Maybe I got something wrong in that logic.
->
-> Indeed, I just got confused. I guess returning ENODEV in such a case,
-> and testing for that, would make things more obvious.
+ fs/libfs.c                 |   93 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/fs_context.h |    7 +++
+ 2 files changed, 100 insertions(+)
 
-There's also a case I hadn't thought of: property exists but isn't a
-valid phandle.  What do you think is the correct action in that case?
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 0fb590d79f30..ceaf69c885c2 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -16,6 +16,7 @@
+ #include <linux/exportfs.h>
+ #include <linux/writeback.h>
+ #include <linux/buffer_head.h> /* sync_mapping_buffers */
++#include <linux/fs_context.h>
+ 
+ #include <linux/uaccess.h>
+ 
+@@ -233,6 +234,98 @@ static const struct super_operations simple_super_operations = {
+ 	.statfs		= simple_statfs,
+ };
+ 
++struct pseudo_fs_context {
++	struct qstr d_name;
++	const struct super_operations *ops;
++	const struct xattr_handler **xattr;
++	const struct dentry_operations *dops;
++	unsigned long magic;
++};
++
++static int pseudo_fs_get_tree(struct fs_context *fc)
++{
++	struct pseudo_fs_context *ctx = fc->fs_private;
++	struct super_block *s;
++	struct dentry *dentry;
++	struct inode *root;
++
++	s = sget_userns(fc->fs_type, NULL, set_anon_super, SB_KERNMOUNT|SB_NOUSER,
++			&init_user_ns, NULL);
++	if (IS_ERR(s))
++		return PTR_ERR(s);
++
++	s->s_maxbytes = MAX_LFS_FILESIZE;
++	s->s_blocksize = PAGE_SIZE;
++	s->s_blocksize_bits = PAGE_SHIFT;
++	s->s_magic = ctx->magic;
++	s->s_op = ctx->ops ?: &simple_super_operations;
++	s->s_xattr = ctx->xattr;
++	s->s_time_gran = 1;
++	root = new_inode(s);
++	if (!root)
++		goto Enomem;
++	/*
++	 * since this is the first inode, make it number 1. New inodes created
++	 * after this must take care not to collide with it (by passing
++	 * max_reserved of 1 to iunique).
++	 */
++	root->i_ino = 1;
++	root->i_mode = S_IFDIR | S_IRUSR | S_IWUSR;
++	root->i_atime = root->i_mtime = root->i_ctime = current_time(root);
++	dentry = __d_alloc(s, &ctx->d_name);
++	if (!dentry) {
++		iput(root);
++		goto Enomem;
++	}
++	d_instantiate(dentry, root);
++	s->s_root = dentry;
++	s->s_d_op = ctx->dops;
++	s->s_flags |= SB_ACTIVE;
++	fc->root = dget(s->s_root);
++	return 0;
++
++Enomem:
++	deactivate_locked_super(s);
++	return -ENOMEM;
++}
++
++static void pseudo_fs_free(struct fs_context *fc)
++{
++	kfree(fc->fs_private);
++}
++
++static const struct fs_context_operations pseudo_fs_context_ops = {
++	.free		= pseudo_fs_free,
++	.get_tree	= pseudo_fs_get_tree,
++};
++
++/*
++ * Common helper for pseudo-filesystems (sockfs, pipefs, bdev - stuff that
++ * will never be mountable)
++ */
++int vfs_init_pseudo_fs_context(struct fs_context *fc,
++			       const char *name,
++			       const struct super_operations *ops,
++			       const struct xattr_handler **xattr,
++			       const struct dentry_operations *dops,
++			       unsigned long magic)
++{
++	struct pseudo_fs_context *ctx;
++
++	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++	ctx->d_name = (struct qstr)QSTR_INIT(name, strlen(name));
++	ctx->ops = ops;
++	ctx->xattr = xattr;
++	ctx->dops = dops;
++	ctx->magic = magic;
++	fc->fs_private = ctx;
++	fc->ops = &pseudo_fs_context_ops;
++	return 0;
++}
++EXPORT_SYMBOL(vfs_init_pseudo_fs_context);
++
+ /*
+  * Common helper for pseudo-filesystems (sockfs, pipefs, bdev - stuff that
+  * will never be mountable)
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index 98b44ad89378..a779022d06f5 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -121,6 +121,13 @@ extern int generic_parse_monolithic(struct fs_context *fc, void *data);
+ extern int vfs_get_tree(struct fs_context *fc);
+ extern void put_fs_context(struct fs_context *fc);
+ 
++extern int vfs_init_pseudo_fs_context(struct fs_context *fc,
++				      const char *name,
++				      const struct super_operations *ops,
++				      const struct xattr_handler **xattr,
++				      const struct dentry_operations *dops,
++				      unsigned long magic);
++
+ /*
+  * sget() wrapper to be called from the ->get_tree() op.
+  */
 
--- 
-Måns Rullgård
