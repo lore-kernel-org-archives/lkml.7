@@ -2,112 +2,117 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8105C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947AEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32A021852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3C12063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izA55sgu"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="nP+Bu3nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfCNHUG (ORCPT
+        id S1726748AbfCNHWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:20:06 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40227 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfCNHUF (ORCPT
+        Thu, 14 Mar 2019 03:22:00 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:54114 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfCNHV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:20:05 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y124so3228501pfy.7;
-        Thu, 14 Mar 2019 00:20:05 -0700 (PDT)
+        Thu, 14 Mar 2019 03:21:59 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 6045AC25
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:21:58 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YCPUVPd1aQ7D for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 02:21:58 -0500 (CDT)
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 2EB99B6E
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:21:58 -0500 (CDT)
+Received: by mail-io1-f71.google.com with SMTP id z22so3619923iog.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ugOOPlTFRgUc0dPFg2PyX5U2PNiJO93N55npz7c+UJo=;
-        b=izA55sgua6WVfa/6GcVkOVHcrkvzZVFeZ8/7TY5Q3EhVgaTXilRTdDcYZ9piYPF0RR
-         fm6d9Mc5Q4mc6b6wxWwDLFbcb2Wd9PDeYBqlYtS/Ga/BIKtCWsPeqLIaMOg9afcrMAfd
-         A+Bg9Rm3JqRljn+OTM53plVWUaAJrFBrmFkxN79SgbCbNK9fPBWBdRWEZvPc33S4Gmym
-         5gy/1ZUNv2Kw/ns+a1/7MMOFPfu9kb87j7pp7MFbsLQ8BV0XWZ0vr3i7cLqsuJ3gXRGm
-         xs4IXGLXmGAE0R6I31QcTs/SWcbZQFCDyIu8OAoBvPd+hlGttQDjqTjr8EFiqxMBcc4Q
-         kObw==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=YBr0usQK7wMacqcLascgypxxxEWqIaYE9RG4sZwZRvo=;
+        b=nP+Bu3nu4kmGbwCECjTbt7fk9KdIXa7OcUxdZFFZVepyZqG0CecG8wWnU2+D5V5RSs
+         uJMzQc5w0FZ0/rCn3hJiQsveWsbQBGlC2aZwxnfnkqlRi4dwKBE5ozU/CyegU56+GzPs
+         PrgBGgyy4wslYXwMySDlKptx5iuNKMrUSvXPl8OjW+bAuvWsNv4lgXCsyxr7lIF4qVT1
+         R1ON1MOEh+a8lFcyT93DcAdADFrDAIRXidiGlF6JYho7SV0y5jKGViduW2KaS9luHka+
+         6mywVQWzhfttfQAGl9C8BhShN2lDKxZuT8xFFq9PHgeWa+V9S8gCsyRut7GcqGO+ltMf
+         hytA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ugOOPlTFRgUc0dPFg2PyX5U2PNiJO93N55npz7c+UJo=;
-        b=rC7cew6kNCtMXQP6n49fXn2htGTlbrdFGk1PJ/Y+omA9UdwOUEaxLrnFNt9Mr4oLwb
-         ckVOhJD+X8HpMiKE2Mz8pCUOOZHRJKzjD7y9FbJvrgqDk4/D634swU82BtuS/Yznq53K
-         1E6cBnq4ZEv/OUyMJ+yWWsz04k0KK6IjB8E4JE7iz/4hEY/2Xr3oBwaXam7VvB4p+Hov
-         xeCWmlVi/+xim+qykHOzeTh1hcT07NmPOGhFpmQIncPZIU2HCLKv4rIlp8MWRScC7WKE
-         FSLceXgORpf9dN9GtN0eQkBBpe9Wr8LnhF8BtyN+56kV4r1oydbv+JFBJjnCjzuG7IDF
-         fpgA==
-X-Gm-Message-State: APjAAAVrFAIMrWmSFNB/1l/bhdXR9zYNyq+O4DmcUdGinpxQoF7OaZyN
-        H+qcc9Bfe3ckhLjR5tDe8fWRfI1G0LdmOcywVm0PAA==
-X-Google-Smtp-Source: APXvYqxA2lh828czlvuZPQdxIx7kNWsEpY+ypB2dh7X6EOhNjKtEfH9QPpZoHBGJBDpSBiIPG/aROKCkNDrVlt1zVZY=
-X-Received: by 2002:a62:b2d9:: with SMTP id z86mr48161518pfl.255.1552548004863;
- Thu, 14 Mar 2019 00:20:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190314061716.19892-1-sergey.senozhatsky@gmail.com>
- <CAH2r5msYG4H19GK1Fmnqb1dNCcp2qahULc_t4v9qdJ=OOZmGXg@mail.gmail.com>
- <CAH2r5msCs5ks3FUi_GhV2REsUR8t2h1=ybgLS6FyBEyka7Qb9g@mail.gmail.com> <20190314071245.GA2001@jagdpanzerIV>
-In-Reply-To: <20190314071245.GA2001@jagdpanzerIV>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 14 Mar 2019 02:19:53 -0500
-Message-ID: <CAH2r5ms3sdFx864M4se0V1eCAj_x8_3xyyRxoxqS52_UQNNjaA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cifs: remove unused status severity defines
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YBr0usQK7wMacqcLascgypxxxEWqIaYE9RG4sZwZRvo=;
+        b=W+BJmvSbCKz0da72lJxVV17Lvt3j6DijieF4DMqcIJlrZuH8fBJ3J8b2Ftxxkmg5SL
+         JJF1rKjiqWznNQ9bGfzuJN8eVpJl6HjWEO7MyCHjcPwWhbjNb5xYszKghtjSHWBFEc/E
+         dhblalVcFR0Fy1TxCWzyJyndeP7twJ2zD73vWB3GBhQ1af/zNhdHlLjbYKEGlh+WBM3D
+         xbSgaMf+qn7CYKnH7iAS4MAix9i2vM+O2JiAoJOwA7N+/5bpskG5z6gI8ABG6FsPC5gC
+         I91rSZe56990LDJ21B16PVg6MLW1KFh+Hf5eENKy1lzwptwm728sGrGs5W6mFv734w8j
+         9Mrg==
+X-Gm-Message-State: APjAAAVmdznCsuDELpKDJIPvPGD9ZTySKDG97v3SgWpue8lyx36ZpTfW
+        UTE9TYcJqjt/qGKvoNC5R2I5UBwIXzIAkYdtKUpwLxHnOSbAozxdYfJIEeAGt2I8fX92ePLjE4f
+        WoU9WhuQQdsS+R/TJ2W9pCHdrJlrj
+X-Received: by 2002:a24:bdcc:: with SMTP id x195mr1192018ite.149.1552548117830;
+        Thu, 14 Mar 2019 00:21:57 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxEer2dfTZGDGqdpHwtx5soL+tR30KuNDdECpOXfZelxhWf/LoJEQwfJ0PerUi/pJLz/RjiGw==
+X-Received: by 2002:a24:bdcc:: with SMTP id x195mr1192009ite.149.1552548117639;
+        Thu, 14 Mar 2019 00:21:57 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id t73sm849490itt.15.2019.03.14.00.21.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 00:21:56 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: mxs-auart: fix a NULL pointer dereference
+Date:   Thu, 14 Mar 2019 02:21:51 -0500
+Message-Id: <20190314072151.19753-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All of those uses of __constant_cpu_to_le32 apparently (at least
-according to checkpatch) should be changed (someday) to cpu_to_le32
-but I didn't research why the change from __constant_cpu_to_le32
---->   cpu_to_le32
+In case ioremap fails, the fix returns -ENOMEM to avoid NULL
+pointer dereferences.
+Multiple places use port.membase.
 
-If it has benefit - and checkpatch is right (it warned about
-__constant_cpu_to_le32 being no longer preferred) ... perhaps would be
-worth a followup patch to clean the rest of them up?   If you have any
-context on why kernel code has moved away from using the older format
-of __constant_cpu_to_.... would be useful to know if any benefit to
-the change
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/tty/serial/mxs-auart.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Thu, Mar 14, 2019 at 2:12 AM Sergey Senozhatsky
-<sergey.senozhatsky.work@gmail.com> wrote:
->
-> On (03/14/19 02:04), Steve French wrote:
-> [..]
-> >  #define STATUS_SEVERITY_SUCCESS __constant_cpu_to_le32(0x0000)
->
-> Does STATUS_SEVERITY_SUCCESS still use __constant_cpu_to_le32?
->
-> > -#define STATUS_SEVERITY_INFORMATIONAL __constanst_cpu_to_le32(0x0001)
-> > -#define STATUS_SEVERITY_WARNING __constanst_cpu_to_le32(0x0002)
-> > -#define STATUS_SEVERITY_ERROR __constanst_cpu_to_le32(0x0003)
-> > +#define STATUS_SEVERITY_INFORMATIONAL cpu_to_le32(0x0001)
-> > +#define STATUS_SEVERITY_WARNING cpu_to_le32(0x0002)
-> > +#define STATUS_SEVERITY_ERROR cpu_to_le32(0x0003)
->
-> Otherwise looks good.
->
->         -ss
-
-
-
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index 27235a526cce..4c188f4079b3 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -1686,6 +1686,10 @@ static int mxs_auart_probe(struct platform_device *pdev)
+ 
+ 	s->port.mapbase = r->start;
+ 	s->port.membase = ioremap(r->start, resource_size(r));
++	if (!s->port.membase) {
++		ret = -ENOMEM;
++		goto out_disable_clks;
++	}
+ 	s->port.ops = &mxs_auart_ops;
+ 	s->port.iotype = UPIO_MEM;
+ 	s->port.fifosize = MXS_AUART_FIFO_SIZE;
 -- 
-Thanks,
+2.17.1
 
-Steve
