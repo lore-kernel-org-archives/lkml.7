@@ -2,111 +2,248 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA361C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B3EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20D821019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:17:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="bLwhLJfX"
+	by mail.kernel.org (Postfix) with ESMTP id 9666521019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfCNVRk (ORCPT
+        id S1727976AbfCNVRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 17:17:40 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:39328 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727246AbfCNVRj (ORCPT
+        Thu, 14 Mar 2019 17:17:55 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:51461 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfCNVRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 17:17:39 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 6BEA6CD4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 21:17:38 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dgVZeYoCjRtX for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 16:17:38 -0500 (CDT)
-Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 3BE55CDE
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 16:17:38 -0500 (CDT)
-Received: by mail-it1-f200.google.com with SMTP id z131so5755186itb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 14:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=1BU9kEzPXs7XL0lomFvApW+7xo8xyvn5BVlkJddm4mk=;
-        b=bLwhLJfXuiH0mSJm2vMvcUGDD1iAxaxWrde2gHZ36HOC35A56OI12yp0QOjB+q4jQe
-         Axo+jVLsV9kPRYSxApfVmEh9Kr8JHMPLZ15t6ihsGt7s0bv8Iejlaf4Je5YHVYxY5vlb
-         Y0MCZN9Zglhrl8Zc6NnPcaNYd5O9Z4m0BKBhefmbE5aVKKATt1+SO3+SwzfiU1eOM9wV
-         UDo+AuBYl0OSyFn2H/HFhQmCVtjE4KSilPe/0INV+vOQz0Qn8mxAGNe3/6KsRyomHblq
-         pDt5ZvlebI1z1tXHSO1oqvdY51lv/yKLKAnasY+JhFFvHshkhJGLen8O/+JQ8R0loJNx
-         ENBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1BU9kEzPXs7XL0lomFvApW+7xo8xyvn5BVlkJddm4mk=;
-        b=uQzd+2obs2h0rzGhXQBlN2qFLLbv6ss70apLO9wjyoJaKwFCMSjwn4vt8FPtjdZLQZ
-         OYlIjThFtNVfklA+Wve51cLJ6YJKu3snYDQgY1S88BXrHdD3kqznKqWI1NWXFI4GR58l
-         VG543jTCBAzRkeTM9rVrdVYY28Fc8jbhNdt5bWuFqTwKA02Oz1C3ejSsZzBDPrHbHxTK
-         3hw5aWJMEpardZjNPQpp/Hx89wPGt7uUn7+G1KiokiyV7wKce3Iz5qNQyAXs2j/kBjaK
-         hbmX0TQ3uIFLpbUtbuWT3bZG9XwDdOMkSNZsVJ/QfYlPttG/tk4Bm6xSKOax8gHIQ+8I
-         ooGA==
-X-Gm-Message-State: APjAAAVTH1wHehB+iW/8Hz6Tc8rVlXyizZrbugJkYsQzB8LExTIdx4ZY
-        FOvDy7duDjzOO9YdrS79EoKqvvutkgjBrpFoglApoj8irkrUa+CxROfEVvmV0RWyd3K4Vsk5HYP
-        +0J+7m8bHj0guC3LvN2N9osawySd4
-X-Received: by 2002:a24:6707:: with SMTP id u7mr395711itc.105.1552598257696;
-        Thu, 14 Mar 2019 14:17:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqznB2G9P75bY+b8EMpBa61RxKYreIn9fCsS/mC3L08yO6VpWUpye+fJ5DVccQHuy5RHmADmmA==
-X-Received: by 2002:a24:6707:: with SMTP id u7mr395654itc.105.1552598256628;
-        Thu, 14 Mar 2019 14:17:36 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id g4sm104571ioc.1.2019.03.14.14.17.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 14:17:36 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        ceph-devel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] libceph: Avoid a NULL pointer dereference
-Date:   Thu, 14 Mar 2019 16:17:24 -0500
-Message-Id: <20190314211724.21306-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 Mar 2019 17:17:55 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6EEB9200005;
+        Thu, 14 Mar 2019 21:17:51 +0000 (UTC)
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v3 0/5] media: Allwinner A10 CSI support
+Date:   Thu, 14 Mar 2019 22:17:44 +0100
+Message-Id: <cover.f6227e6c3d38ac887e358a1f54c5581c254da1bd.1552598161.git-series.maxime.ripard@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmalloc allocates memory for dest->name and attempts to call
-memcpy without a check for failure. This patch avoids such a scenario.
+Hi,
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- net/ceph/osdmap.c | 2 ++
- 1 file changed, 2 insertions(+)
+Here is a series introducing the support for the A10 (and SoCs of the same
+generation) CMOS Sensor Interface (called CSI, not to be confused with
+MIPI-CSI, which isn't support by that IP).
 
-diff --git a/net/ceph/osdmap.c b/net/ceph/osdmap.c
-index 48a31dc9161c..c76a7c7e6a77 100644
---- a/net/ceph/osdmap.c
-+++ b/net/ceph/osdmap.c
-@@ -1901,6 +1901,8 @@ void ceph_oid_copy(struct ceph_object_id *dest,
- 	} else {
- 		dest->name = dest->inline_name;
- 	}
-+	if (!dest->name)
-+		return;
- 	memcpy(dest->name, src->name, src->name_len + 1);
- 	dest->name_len = src->name_len;
- }
+That interface is pretty straightforward, but the driver has a few issues
+that I wanted to bring up:
+
+  * The only board I've been testing this with has an ov5640 sensor
+    attached, which doesn't work with the upstream driver. Copying the
+    Allwinner init sequence works though, and this is how it has been
+    tested. Testing with a second sensor would allow to see if it's an
+    issue on the CSI side or the sensor side.
+  * We don't have support for the ISP at the moment, but this can be added
+    eventually.
+
+Here is the v4l2-compliance output (commit f61132e81d79 of v4l-utils)
+v4l2-compliance SHA: not available, 32 bits
+
+Compliance test for device /dev/video1:
+
+Driver Info:
+	Driver name      : sun4i_csi
+	Card type        : sun4i-csi
+	Bus info         : platform:1c09000.csi
+	Driver version   : 5.0.0
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : sun4i-csi
+	Model            : Allwinner Video Capture Device
+	Serial           :
+	Bus info         :
+	Media version    : 5.0.0
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 5.0.0
+Interface Info:
+	ID               : 0x03000007
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000005 (5)
+	Name             : sun4i_csi
+	Function         : V4L2 I/O
+	Pad 0x01000006   : 0: Sink, Must Connect
+	  Link 0x02000009: from remote pad 0x1000002 of entity 'ov5640 1-0021': Data, Enabled, Immutable
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video1 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK (Not Supported)
+	test blocking wait: OK
+	test MMAP: OK
+	test USERPTR: OK (Not Supported)
+	test DMABUF: OK (Not Supported)
+
+Stream using all formats:
+	test MMAP for Format YM12, Frame Size 2x2:
+		Stride 2, Field None: OK
+	test MMAP for Format YM12, Frame Size 2x2:
+		Stride 2, Field None: OK
+	test MMAP for Format YM12, Frame Size 640x480:
+		Stride 640, Field None: OK
+Total: 52, Succeeded: 52, Failed: 0, Warnings: 0
+
+Let me know what you think,
+Maxime
+
+Changes from v2:
+  - Address a few minors comments on the error path, the return type of
+    some functions, the type of some variables
+  - Disable the device if the subdev call fails in start_streaming
+  - Use __maybe_unused and SET_RUNTIME_PM_OPS for the runtime PM hooks
+  - Call media_device_cleanup in the remove function
+  - Add a dependency on the subdev API and the common clock framework
+  - Fix the MAINTAINERS entry to point to the yaml file
+  - Add the of graph bindings to the YAML schemas
+  - Rebase on next
+
+Changes from v1:
+  - Make sure it's compliant with a much newer v4l2-compliance
+  - Conversion of the DT bindings to a JSON schema
+  - Drop the vendor properties and use a separate compatible instead
+  - Fix an issue on the last frame where we would not have any buffer
+    queued and would report an error by using a scratch buffer
+  - Fix the warnings reported by v4l2-compliance
+  - Rebase on top of 5.0-rc1
+  - Added a MAINTAINERS entry
+  - Switched to strscpy
+  - Fixed SPDX header
+
+Maxime Ripard (5):
+  dt-bindings: media: Add Allwinner A10 CSI binding
+  media: sunxi: Refactor the Makefile and Kconfig
+  media: sunxi: Add A10 CSI driver
+  ARM: dts: sun7i: Add CSI0 controller
+  DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+
+ Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 115 +++++++++++++++++++-
+ MAINTAINERS                                                          |   8 +-
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts                             |  91 +++++++++++++++-
+ arch/arm/boot/dts/sun7i-a20.dtsi                                     |  11 ++-
+ drivers/media/platform/Kconfig                                       |   2 +-
+ drivers/media/platform/Makefile                                      |   2 +-
+ drivers/media/platform/sunxi/Kconfig                                 |   2 +-
+ drivers/media/platform/sunxi/Makefile                                |   2 +-
+ drivers/media/platform/sunxi/sun4i-csi/Kconfig                       |  11 ++-
+ drivers/media/platform/sunxi/sun4i-csi/Makefile                      |   5 +-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c                   | 274 +++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h                   | 142 +++++++++++++++++++++++-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c                   | 438 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c                  | 300 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 14 files changed, 1401 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+ create mode 100644 drivers/media/platform/sunxi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c
+
+base-commit: 6c6be3d41ae2ef58cfcd22835d66c33f3c89f57f
 -- 
-2.17.1
-
+git-series 0.9.1
