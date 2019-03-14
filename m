@@ -4,148 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF893C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F05C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0AC2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C5A2085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VcL7RStD"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="WW8oYVIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfCNGng (ORCPT
+        id S1727378AbfCNGnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:43:36 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36394 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727277AbfCNGnd (ORCPT
+        Thu, 14 Mar 2019 02:43:53 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:47764 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727356AbfCNGnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:43:33 -0400
-Received: by mail-pf1-f194.google.com with SMTP id n22so3192217pfa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:43:32 -0700 (PDT)
+        Thu, 14 Mar 2019 02:43:50 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id A3C14C6D
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 06:37:56 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ooZkE993mkRV for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 01:37:56 -0500 (CDT)
+Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 7048EC65
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:37:56 -0500 (CDT)
+Received: by mail-it1-f197.google.com with SMTP id w200so3789402itc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3Efw/h9eTUmSrpQZIt5XLwN4VOh2Yp4TaPqLXIdGnJE=;
-        b=VcL7RStD7ZUOTVl184RkW56AOC5OcqHevP735305y843u+17laziRgHfgqbGKiwE3q
-         +aFw0iSojIYAqnB9AMwRoWtlmWGH5F3SkUBMLj1yO3rhcyomSDvrEnZkUyckXDAcIZ9i
-         0oqiWh25f7QEAYxUmF7FllPqrj06OP72PB2vqNEH2HirpWxjftj3Q/kiDbxUpu81X88u
-         2gf1ssoQwtl5f6YBbkHk4LKoU0MCWPPVt5ahTurryAHhL+C7qfqHj/8MPfH9UrdFV0g4
-         /TIi3GxmG3J4QV/DggNwDIAMjNe32yGBXN5TRLQX9DppzLWl47iiFN4qSlEAHcPWBRhp
-         COAA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=UaqXkDyxPeS1Bl07tP9L2bvvIcJ1LhWTA5MLjIao2h0=;
+        b=WW8oYVIF1wqGwnPWBs6OmKB9BqhkBd/fI4GWNK6+D1eFse+nXF0Ez0HcmePE2pogMH
+         iKdv/nptXc3w4GeJAKMdm2Sjld8SCzB3VsJg1u0Gf39HXSakvDlStXX5KZQNUbydVtyg
+         jWnBrMhpl3x0IwgbM39Fhb1Yini6TgLkUD7WgANlg8bYjI1inomxnlwVnsDD8dqsTqWu
+         BNYnGDPN1bkd+dHepPbNI8TnjCTQbW/DpniO25YJX2tOMHhN+o5D1M/WaeQS4OwNtFh/
+         tU/rUCoBYujTSqTA6RmueXLLxS/xPCy7igcnz5sN4aeF7Ko5ej7RAoNgcRdJPFG9eGSK
+         knSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3Efw/h9eTUmSrpQZIt5XLwN4VOh2Yp4TaPqLXIdGnJE=;
-        b=tIpMjPNecQ6Y16cm8MckBnyKfS0g/mJe+NNUeJmfNY1CnEYPYxEPgKdICeFlwrM8fC
-         Jsjnfy98IDSXisSQzTp/kcFmpUmXkxjyNON86UJeC77D7z6QYHa4WmO/rxJSWAxmckl0
-         HemtGnP2cxO37UfxzKMfWSNtnyFoESFdQkB/hTpvhORhGXgjJIllipud/wBvrrhh9Bjs
-         pMx5B4CnJ6cyLBc/3EID6zHwj3GshTJGDG4mDyXwzvSTM8GSlIS4pC9x9UkZOhxq8lno
-         y5vjQ+I2qMRtKlGhGjaLbpVDQYQnmSAR/G9agoA6XXg9Bx3AAhmQJzR2I9A7us3hmfeY
-         Ullw==
-X-Gm-Message-State: APjAAAUQph8O8di2AEO2iDG6d2TN59ub/Ev7q6YSdBh/wT83yad9mERN
-        woU8062qTNpFEXcPy30a7uxxMA==
-X-Google-Smtp-Source: APXvYqyaWFgdo3j0beXfgSjsZGeDZmkZ5WkqeQqgheNRssaXLqV1E5AceiX+pg5N/MznmLrqahh96g==
-X-Received: by 2002:a63:6a88:: with SMTP id f130mr43285394pgc.114.1552545812067;
-        Wed, 13 Mar 2019 23:43:32 -0700 (PDT)
-Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id q18sm21517128pgv.9.2019.03.13.23.43.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UaqXkDyxPeS1Bl07tP9L2bvvIcJ1LhWTA5MLjIao2h0=;
+        b=afGUyTGQO/i+DUctebF0E82lkZC+rCdmxznpYi6BoQ4wHmEKv9f3o6MDrqgmpNTQaL
+         rIwpPPMjMwSR4kfwaf+GBiTB9OYWKESQ0tNnrUaOqDhRYf/ipz/fKxOCT4GKxHFScEp+
+         06vGg4KxXx6uMfQpJC2cFcgABoeHXVLHJmYwEGfZL3xD8KHnAC4DbR3xJG1LcIuEH0U+
+         DsVj/IeuJS2cbgjouN8S4TIRm7m1okoDxj3MOCB1M2B3pOnefQdY6pQilFW1+P8NT1T1
+         qnXb1v6idH0AXcZa97Rg761Bv+fJ7DlINLIxGhXhJQ45WCn8hKWriK7fDYIT4wpAxcii
+         qrAQ==
+X-Gm-Message-State: APjAAAX6Kq0SxztZlF+Wwec5j3RXaxxVSl3CeC8o4T1xkZBL1tKuAqtE
+        5NJayDgs3rtrx1gNQUdI7EFOiye0h0X+94Udk9lFU/prnerPUUwILzjmWviftwHggQcPXkYgOsS
+        pwPYIEokcbq150aQLWZ1jAu01EfOH
+X-Received: by 2002:a24:f709:: with SMTP id x9mr1038285ith.149.1552545476052;
+        Wed, 13 Mar 2019 23:37:56 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwfnnpc+uX4loqYu+VDrvxDMKD4OwchqvyXfecv20Gemc+4AmidRo/Fwlqzvp2VBMQoogR6BQ==
+X-Received: by 2002:a24:f709:: with SMTP id x9mr1038276ith.149.1552545475800;
+        Wed, 13 Mar 2019 23:37:55 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id y18sm5836101ioa.56.2019.03.13.23.37.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 23:43:31 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/7] x86/tsc: Update cpufreq transition notifier to handle multiple CPUs
-Date:   Thu, 14 Mar 2019 12:12:51 +0530
-Message-Id: <8a27342332bc467242f6ccdb4d4bd4d10f8aa552.1552545525.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
-In-Reply-To: <cover.1552545525.git.viresh.kumar@linaro.org>
-References: <cover.1552545525.git.viresh.kumar@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 13 Mar 2019 23:37:54 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Vinayak Holikatti <vinholikatti@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: ufs: fix a missing check of devm_reset_control_get
+Date:   Thu, 14 Mar 2019 01:37:49 -0500
+Message-Id: <20190314063749.13907-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpufreq core currently calls the cpufreq transition notifier
-callback once for each affected CPU. This is going to change soon and
-the cpufreq core will call the callback only once for each cpufreq
-policy. The callback must look at the newly added field in struct
-cpufreq_freqs, "cpus", which contains policy->related_cpus (both
-online/offline CPUs) and perform per-cpu actions for them if any.
+devm_reset_control_get could fail, so the fix checks its
+return value and pass the error code upstream in case it fails.
 
-This patch updates time_cpufreq_notifier() to use the new "cpus" field,
-update per-cpu data for all the related CPUs and call set_cyc2ns_scale()
-for all online related_cpus.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- arch/x86/kernel/tsc.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ drivers/scsi/ufs/ufs-hisi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 3fae23834069..587a6aa72f38 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -956,28 +956,37 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
- 				void *data)
- {
- 	struct cpufreq_freqs *freq = data;
--	unsigned long *lpj;
--
--	lpj = &boot_cpu_data.loops_per_jiffy;
--#ifdef CONFIG_SMP
--	if (!(freq->flags & CPUFREQ_CONST_LOOPS))
--		lpj = &cpu_data(freq->cpu).loops_per_jiffy;
--#endif
-+	bool boot_cpu = !IS_ENABLED(CONFIG_SMP) || freq->flags & CPUFREQ_CONST_LOOPS;
-+	unsigned long lpj;
-+	int cpu;
+diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
+index 452e19f8fb47..ce9d7c40909f 100644
+--- a/drivers/scsi/ufs/ufs-hisi.c
++++ b/drivers/scsi/ufs/ufs-hisi.c
+@@ -544,6 +544,11 @@ static int ufs_hisi_init_common(struct ufs_hba *hba)
+ 	ufshcd_set_variant(hba, host);
  
- 	if (!ref_freq) {
- 		ref_freq = freq->old;
--		loops_per_jiffy_ref = *lpj;
- 		tsc_khz_ref = tsc_khz;
-+
-+		if (boot_cpu)
-+			loops_per_jiffy_ref = boot_cpu_data.loops_per_jiffy;
-+		else
-+			loops_per_jiffy_ref = cpu_data(cpumask_first(freq->cpus)).loops_per_jiffy;
- 	}
-+
- 	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
- 			(val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
--		*lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
--
-+		lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
- 		tsc_khz = cpufreq_scale(tsc_khz_ref, ref_freq, freq->new);
-+
- 		if (!(freq->flags & CPUFREQ_CONST_LOOPS))
- 			mark_tsc_unstable("cpufreq changes");
+ 	host->rst  = devm_reset_control_get(dev, "rst");
++	if (IS_ERR(host->rst)) {
++		dev_err(dev, "%s: failed to get reset control\n",
++			__func__);
++		return PTR_ERR(host->rst);
++	}
  
--		set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
-+		if (boot_cpu) {
-+			boot_cpu_data.loops_per_jiffy = lpj;
-+		} else {
-+			for_each_cpu(cpu, freq->cpus)
-+				cpu_data(cpu).loops_per_jiffy = lpj;
-+		}
-+
-+		for_each_cpu_and(cpu, freq->cpus, cpu_online_mask)
-+			set_cyc2ns_scale(tsc_khz, cpu, rdtsc());
- 	}
+ 	ufs_hisi_set_pm_lvl(hba);
  
- 	return 0;
 -- 
-2.21.0.rc0.269.g1a574e7a288b
+2.17.1
 
