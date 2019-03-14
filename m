@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FD2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2637EC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B1D2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81DD2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Av3AOM0k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6GVxPvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfCNGP2 (ORCPT
+        id S1727154AbfCNGR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:15:28 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36278 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfCNGP2 (ORCPT
+        Thu, 14 Mar 2019 02:17:27 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42264 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfCNGR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:15:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id n22so3150457pfa.3;
-        Wed, 13 Mar 2019 23:15:27 -0700 (PDT)
+        Thu, 14 Mar 2019 02:17:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b2so3268991pgl.9;
+        Wed, 13 Mar 2019 23:17:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=q87LftWO5iBuJXaxM2/XOAFMoWPTRqR3XSEk65pBRv8=;
-        b=Av3AOM0kM7z41gbJ1u4uzSLlAN+B7ZVV+3SYwaAuw6F1PKTN5wr86Vi7FGYn1CfoTF
-         KWAqiUTJysfSCBvn82caF3OCssa+zgMpY+kMxCgO0lfdMv1v56XS71rT67n/A5wlOH+S
-         6Pj6Y7rTONQTtCrT0jUSSYpU7uKI1FfkZ1jFFEoQQkQAgikxMPGcIZti4dCQ4eSfUa8F
-         U1BYVJ9yW5iILc3mojeRx2wN/RY/VycJN4LOpv3wELmGDGPSqED56uTmDcdjoNkPDqUh
-         BZS52mjtw1V0MQdKLdkkx8FfNsZNEUSA01uEWQX8NdO11VtJZoFyhD8lEVMraToODXHN
-         a1Aw==
+        bh=uQ5tnxfdXg1r8T/NAFOm0Y6O6vHbO4Hx3V9MG42DhDg=;
+        b=R6GVxPvgxaw2yFfky03ukySwHz4beQrZ6POmxkBnuQ9YwH3+4VoARDsOdbg9BRxrKK
+         CqMwPSdaWipQZFFeu1G4/CX+V+sFB1tofFka9aGbUfHluUoxd78NpJyPczhGmbgpxVQM
+         Y7X9+5Ljl+0wquvT16rUPHL7HCGLrY4VaYF3MXKUWAto1x9iDER67IMChTNw2Nn0mcyT
+         qi4V4ihZT1/kyVQHCB1W9qk++ROdu4TE8CAdrjTA76NEG8O36oExhANBdXzSW+khUMdq
+         vpo2FCjW/ScEogVP2UNyvSqp7dgONA5LBv4U59EJr37ClCCahurusUKUdenUSmLJz1lT
+         KOtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=q87LftWO5iBuJXaxM2/XOAFMoWPTRqR3XSEk65pBRv8=;
-        b=WefUEs2MYCGHgdEFDPvGjMJoIBjSaOwD6PP/SiI9yhZdonJ79ZwQh7ssGPs7YPfg4h
-         wN+ns/V9n33OkXMIfAYbsuE1Vwlq6Hep5ARqhr6ljrqu2rxfgepDp48BClJfYoiPkG9D
-         qFr4x+TNHQKr4QNA1DopUzpYqRUzUVhyO21jkQWkIplmBMgkGh9QZ2n6UQ5ycPMUNzTq
-         6HruagLHi07e6JrhZawTf9esAAS/G7YyvdHF2/s8aLsdbjK198jQ5z7uh66whxsgqTye
-         HViDi3IroOlROWSRM6OvXwu4YN/xYtfDUX1uRJo2iAqgWcOfbeu//X/i4+um0NuLxdu0
-         UW3Q==
-X-Gm-Message-State: APjAAAWDupERO8ltHhzj7K2gz80v1t4r1dxJzU0B+YmoJgcwyb4tWuEj
-        Z+bRnfuq4dyFPuWQHWAsa8A=
-X-Google-Smtp-Source: APXvYqzYdmO99PUgIZyzN0u4qUloWDNk/L0Vlh+AIGfkoPKZIR52OmjZmZbBB9onHODabr9RE1ovEA==
-X-Received: by 2002:a17:902:e85:: with SMTP id 5mr49965272plx.13.1552544126975;
-        Wed, 13 Mar 2019 23:15:26 -0700 (PDT)
+        bh=uQ5tnxfdXg1r8T/NAFOm0Y6O6vHbO4Hx3V9MG42DhDg=;
+        b=kviPfB0APbbwqFUegMY1U+iSrdF0jX4++7yUlGPamfdi16ucmP+VcBg7YiweraqAS4
+         wvoVk755zv4z/2/XUDhy54Bc0p9/O4UpURz9U5n5vQDi1HJpHf1NY/ojmJ+1NZjPTj+d
+         AGLvIvumsY/opj/rn1Lqa8DZqv9iEtcJQgGSEm8L9ZRc7uz8hGFXyAcvhXKFiupCItIb
+         RkLLueZtmSE5omW+pHwYd8wyQW0ZzN9vEbAwNQTpgcnmU1DIfmh2Ffa7qtN3shpaI0Gs
+         6YpyUhH9lp2YBzoF3BnCuQAT191Z+hwFHEckE4P9dSps+5GzT3tJJ+3n4BbnBNAAQZyo
+         14uA==
+X-Gm-Message-State: APjAAAUGVMHNd9EZTAayLWRuyJHP/9UibBJWW3LlBscV8NuD57ZCeSrF
+        TXQx1lXh+98ynw2B4ZIGf2N/RYsE
+X-Google-Smtp-Source: APXvYqwADvqf1uJTeu0+pQsXQxNHYKu0+X6A2lgmrJ/Eujsf9YfZ4rRK26L4nZQAxlGukTf84fM7eQ==
+X-Received: by 2002:a17:902:bf05:: with SMTP id bi5mr22906286plb.252.1552544246955;
+        Wed, 13 Mar 2019 23:17:26 -0700 (PDT)
 Received: from localhost.localdomain ([175.223.23.218])
-        by smtp.gmail.com with ESMTPSA id k7sm17179498pgo.60.2019.03.13.23.15.23
+        by smtp.gmail.com with ESMTPSA id b6sm21895920pfo.27.2019.03.13.23.17.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 23:15:26 -0700 (PDT)
+        Wed, 13 Mar 2019 23:17:26 -0700 (PDT)
 From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
 X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Steve French <sfrench@samba.org>
+Cc:     linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-kernel@vger.kernel.org,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [PATCH] tcp: don't use __constant_cpu_to_be32
-Date:   Thu, 14 Mar 2019 15:15:14 +0900
-Message-Id: <20190314061514.19586-1-sergey.senozhatsky@gmail.com>
+Subject: [PATCH 1/2] cifs: remove unused status severity defines
+Date:   Thu, 14 Mar 2019 15:17:15 +0900
+Message-Id: <20190314061716.19892-1-sergey.senozhatsky@gmail.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,50 +73,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A trivial patch.
-
-cpu_to_be32() is capable enough to detect __builtin_constant_p()
-and to use an appropriate compile time ___constant_swahb32()
-function.
-
-So we can use cpu_to_be32() instead of __constant_cpu_to_be32().
+STATUS_SEVERITY_* do not appear to be used by anyone, so
+drop them. Besides, the name of __constant_cpu_to_le32()
+is misspelled there: __constanst_cpu_to_le32().
 
 Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 ---
- include/uapi/linux/tcp.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ fs/cifs/smb2status.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/include/uapi/linux/tcp.h b/include/uapi/linux/tcp.h
-index 8bb6cc5f3235..7d2330df9652 100644
---- a/include/uapi/linux/tcp.h
-+++ b/include/uapi/linux/tcp.h
-@@ -70,16 +70,16 @@ union tcp_word_hdr {
- #define tcp_flag_word(tp) ( ((union tcp_word_hdr *)(tp))->words [3]) 
+diff --git a/fs/cifs/smb2status.h b/fs/cifs/smb2status.h
+index 3d5f62150de4..e9da9c6da277 100644
+--- a/fs/cifs/smb2status.h
++++ b/fs/cifs/smb2status.h
+@@ -29,11 +29,6 @@
+  *  C is set if "customer defined" error, N bit is reserved and MBZ
+  */
  
- enum { 
--	TCP_FLAG_CWR = __constant_cpu_to_be32(0x00800000),
--	TCP_FLAG_ECE = __constant_cpu_to_be32(0x00400000),
--	TCP_FLAG_URG = __constant_cpu_to_be32(0x00200000),
--	TCP_FLAG_ACK = __constant_cpu_to_be32(0x00100000),
--	TCP_FLAG_PSH = __constant_cpu_to_be32(0x00080000),
--	TCP_FLAG_RST = __constant_cpu_to_be32(0x00040000),
--	TCP_FLAG_SYN = __constant_cpu_to_be32(0x00020000),
--	TCP_FLAG_FIN = __constant_cpu_to_be32(0x00010000),
--	TCP_RESERVED_BITS = __constant_cpu_to_be32(0x0F000000),
--	TCP_DATA_OFFSET = __constant_cpu_to_be32(0xF0000000)
-+	TCP_FLAG_CWR = cpu_to_be32(0x00800000),
-+	TCP_FLAG_ECE = cpu_to_be32(0x00400000),
-+	TCP_FLAG_URG = cpu_to_be32(0x00200000),
-+	TCP_FLAG_ACK = cpu_to_be32(0x00100000),
-+	TCP_FLAG_PSH = cpu_to_be32(0x00080000),
-+	TCP_FLAG_RST = cpu_to_be32(0x00040000),
-+	TCP_FLAG_SYN = cpu_to_be32(0x00020000),
-+	TCP_FLAG_FIN = cpu_to_be32(0x00010000),
-+	TCP_RESERVED_BITS = cpu_to_be32(0x0F000000),
-+	TCP_DATA_OFFSET = cpu_to_be32(0xF0000000)
- }; 
- 
- /*
+-#define STATUS_SEVERITY_SUCCESS __constant_cpu_to_le32(0x0000)
+-#define STATUS_SEVERITY_INFORMATIONAL __constanst_cpu_to_le32(0x0001)
+-#define STATUS_SEVERITY_WARNING __constanst_cpu_to_le32(0x0002)
+-#define STATUS_SEVERITY_ERROR __constanst_cpu_to_le32(0x0003)
+-
+ struct ntstatus {
+ 	/* Facility is the high 12 bits of the following field */
+ 	__le32 Facility; /* low 2 bits Severity, next is Customer, then rsrvd */
 -- 
 2.21.0
 
