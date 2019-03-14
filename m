@@ -2,127 +2,114 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1149C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F64AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09E720693
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207B42184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="WfYdosfM"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="eEgsPEQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbfCNLzd (ORCPT
+        id S1727485AbfCNL6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:55:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37835 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbfCNLzc (ORCPT
+        Thu, 14 Mar 2019 07:58:06 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:32804 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfCNL6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:55:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 8so245658pfr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:55:32 -0700 (PDT)
+        Thu, 14 Mar 2019 07:58:06 -0400
+Received: by mail-ed1-f67.google.com with SMTP id d12so4383554edp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:58:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=9wM1Yn3UiXh+JDJYuFE+iMNyZ5Ql1vKhmKfpYHLQycw=;
-        b=WfYdosfMVaKzV2pux6wbMHCwD0/ic7MV1cbR75LOub5sARQ/a5/8RQPmHrUQWCYwyA
-         vLX3wlE+FXj09ZD95+gco79kaZN6KsFCW2fDXXdktiEH+hq5OXm3tWunxltKqbnWg775
-         RlkyrL7I13vRX6k3IOGo9D5bsLgDtroMFPhK2IwXeUglCJZmJHD0Xc7qJEfh7oBzfMwE
-         6ppF1Bvjy5s+or2brkdN2dAjvxZ+PfDug0qMklDV5tESPHI87PsqodzAx48OoFv9YRVl
-         wjiDlFwaBAdxzeH7eUZGpp0Ie58fzVqZzcPik9UMTpuaRpwEFSifNW0RW2ffMvLv3qvI
-         bfbQ==
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=7a4WtKjBYJ8vP6Oi1dUaJoxtpCIMA+vqm6PwLZbZr3I=;
+        b=eEgsPEQyf5kiOWxA530A/iDUAi+Ic27pi3boXDduVXTtl/eX8oN58JNUKvoqkFe7Du
+         8ruapmQAs35DuMq4gwwzPBNpdcZlOV7N6T2CKotxU+KS7gqiUjd5P9XobyffowRZRarZ
+         iuPAj3+06fSHPtpdaEyboAYMzkIvO/ch9ttJdqf/C6tQuZnD05jM7F9M+fCZPln6WYbv
+         /hsoAye5vICoGFDWXbxtMFe+3gEvK1V9hcEhYo7zuAqhXQwewwR7C10XtsgCOyPlhO45
+         uMXU8Vjk4LHod+KDkrIefU4u3/bffnDn36xrZ7gMdPAUNm6KlKcc/NjpLflMAVyTn2Yo
+         SUtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=9wM1Yn3UiXh+JDJYuFE+iMNyZ5Ql1vKhmKfpYHLQycw=;
-        b=LM/fxAjLwRCDXKNl1BvGNj+OqiQN3cV7NKMp6XbzSHPqqoSXTDl4sTcphApYQYKOIb
-         2Zxniy2vVMdhnj4fT+tOkaw7N/x4R2PkzJLEea3I50q2G0DvgPv41gh4uE9Dxbyqt93Q
-         f1PytO8Qyw602TBQQTu6IyXNrLEOZLZJy+KelfZRuR5Ceou3Izx5KeuzFj5DZe3RTcpn
-         aqHZyuQI5SNzzvgYdoAAdVsp3mTV/wHz9sq1qdPs4wxPAt0pfwjAAWp6qvXQxNk1pAwA
-         2bWjRpYx6iJiS9bBdrFkoKgCcj/6etoGIM7KcYTq/kuQ1rYKy9ltB8Kk0g3ekW6RzRB/
-         J79Q==
-X-Gm-Message-State: APjAAAWqRbdf2Ymz9afUopybGPVNDyGxqKbNiYvv28V3xIfvjg4ZDgWZ
-        FgkXc8tyNQOsR/XKOntMRXQx2g==
-X-Google-Smtp-Source: APXvYqwV3NZcAaAvFtSrUmNn5tU3/B4gzLdBZMECSZo769sm7/LFr5XlLoSQuOCykyW7pcfXNpEHOw==
-X-Received: by 2002:a65:62d4:: with SMTP id m20mr45185524pgv.416.1552564531741;
-        Thu, 14 Mar 2019 04:55:31 -0700 (PDT)
-Received: from localhost.localdomain (36-239-209-125.dynamic-ip.hinet.net. [36.239.209.125])
-        by smtp.gmail.com with ESMTPSA id p63sm9841484pfb.4.2019.03.14.04.55.27
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=7a4WtKjBYJ8vP6Oi1dUaJoxtpCIMA+vqm6PwLZbZr3I=;
+        b=OnHgGyQp1He4xV3CQrmT4fcl/YV2sLMODOLGchP7xRtMWZC1YSbEotLn7zClz/cXmD
+         V5Ot0MNl1fDzQuL2bcaUU9chtcHNmzjXiBFjnDoDP6m+u/YRxRkG3c/2CympsJKM5CVS
+         XQV0dhqLzYOXclRV5h1DFk0hJILKY4z0Qt+dDQfKqqGIzXlYzxwUnMepHh8iohMsamD/
+         oaUeQGo9ZiMOxUtd5wCLvMGG+3qirhb/kIHzXsTWeeuUNa/wPPSvsDemVgQ8vFtDFsN1
+         amA6B2NQehAuZbyDp/CM2tR+Rt5IB08LlaZ9fV73J/didZuUHWWPBlKVAiSwTTfATTIA
+         fNwA==
+X-Gm-Message-State: APjAAAXkq7dFtuyC7SfHf2rlTzQm9PUxL58msocV9Eeeb4BM1uDg00IS
+        hH6GaU4DPetM8nqmFzuSPEbFPA==
+X-Google-Smtp-Source: APXvYqwJFmxdM/HQce3QMWK0IryrUfO3i7NZndTXndD7/B4BYqRCsNG7TSQhguDu6JcY2Dz46Cw1NA==
+X-Received: by 2002:a17:906:69c8:: with SMTP id g8mr32484171ejs.75.1552564684209;
+        Thu, 14 Mar 2019 04:58:04 -0700 (PDT)
+Received: from [10.83.32.113] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id w6sm1360862eds.0.2019.03.14.04.58.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 04:55:30 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Vaibhav Hiremath <vaibhav.hiremath@linaro.org>,
-        Yi Zhang <yizhang@marvell.com>,
-        Chao Xie <chao.xie@marvell.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: 88pm800: Get rid of struct pm800_regulators
-Date:   Thu, 14 Mar 2019 19:55:19 +0800
-Message-Id: <20190314115519.7689-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 Mar 2019 04:58:03 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: [PATCH v2 0/7] iommu/vt-d: Fix-up device-domain relationship by
+ refactoring to use iommu group default domain.
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+Date:   Thu, 14 Mar 2019 11:56:54 +0000
+Cc:     Tom Murphy <tmurphy@arista.com>, Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+To:     iommu@lists.linux-foundation.org
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The struct pm800_regulators only has 2 members: *chip and *map.
-The pm800_data->chip is not used. The pm800_data->map is not necessary.
-Thus remove the struct pm800_regulators.
+Patches 1 and 2 are the same as v1.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/88pm800.c | 18 +-----------------
- 1 file changed, 1 insertion(+), 17 deletions(-)
+v1-v2:
+  Refactored ISA direct mappings to be returned by iommu_get_resv_regions.
+  Integrated patch by Lu to defer turning on DMAR until iommu.c has mapped 
+reserved regions.
+  Integrated patches by Lu to remove more unused code in cleanup.
 
-diff --git a/drivers/regulator/88pm800.c b/drivers/regulator/88pm800.c
-index 89bbd6e8bad1..9fd379732d18 100644
---- a/drivers/regulator/88pm800.c
-+++ b/drivers/regulator/88pm800.c
-@@ -77,11 +77,6 @@ struct pm800_regulator_info {
- 	int max_ua;
- };
- 
--struct pm800_regulators {
--	struct pm80x_chip *chip;
--	struct regmap *map;
--};
--
- /*
-  * vreg - the buck regs string.
-  * ereg - the string for the enable register.
-@@ -235,7 +230,6 @@ static int pm800_regulator_probe(struct platform_device *pdev)
- {
- 	struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
- 	struct pm80x_platform_data *pdata = dev_get_platdata(pdev->dev.parent);
--	struct pm800_regulators *pm800_data;
- 	struct regulator_config config = { };
- 	struct regulator_init_data *init_data;
- 	int i, ret;
-@@ -252,18 +246,8 @@ static int pm800_regulator_probe(struct platform_device *pdev)
- 			return -EINVAL;
- 	}
- 
--	pm800_data = devm_kzalloc(&pdev->dev, sizeof(*pm800_data),
--					GFP_KERNEL);
--	if (!pm800_data)
--		return -ENOMEM;
--
--	pm800_data->map = chip->subchip->regmap_power;
--	pm800_data->chip = chip;
--
--	platform_set_drvdata(pdev, pm800_data);
--
- 	config.dev = chip->dev;
--	config.regmap = pm800_data->map;
-+	config.regmap = chip->subchip->regmap_power;
- 	for (i = 0; i < PM800_ID_RG_MAX; i++) {
- 		struct regulator_dev *regulator;
- 
+Lu: I didn't integrate your patch to set the default domain type as it 
+isn't directly related to the aim of this patchset. Instead patch 4 
+addresses the issue of a device requiring an identity domain by ignoring 
+the domain param in attach_device and printing a warning.
+
+I booted some of our devices with this patchset and haven't seen any 
+issues. It doesn't look like we have any devices with RMRR's though so 
+those codepaths aren't tested.
+
+James Sewart (7):
+  iommu: Move iommu_group_create_direct_mappings to after device_attach
+  iommu/vt-d: Implement apply_resv_region for reserving IOVA ranges
+  iommu/vt-d: Expose ISA direct mapping region via
+    iommu_get_resv_regions
+  iommu/vt-d: Ignore domain parameter in attach_device if device
+    requires identity map
+  iommu/vt-d: Allow IOMMU_DOMAIN_DMA to be allocated by iommu_ops
+  iommu/vt-d: Remove lazy allocation of domains
+
+Lu Baolu (1):
+  iommu/vt-d: Enable DMA remapping after rmrr mapped
+
+ drivers/iommu/intel-iommu.c | 444 +++++++++++-------------------------
+ drivers/iommu/iommu.c       |   4 +-
+ 2 files changed, 131 insertions(+), 317 deletions(-)
+
 -- 
 2.17.1
 
