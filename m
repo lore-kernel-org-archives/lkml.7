@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCE2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F737C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F8721855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604A32184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578876;
-	bh=PncR2uC5rwylKgdBzFv7PQArEYAhdShLI6BL1EZ1RsU=;
+	s=default; t=1552578879;
+	bh=qE46AxFgc/L1JsLm3s/DLmpoCA1qTDT8zeqiMLm0DnY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=g1JPai23RjQVcLltYxPGk5iovutublMVvjfQPIJOlGEuLI+MSTps2zHTO1Oc1Py1N
-	 0r3dhNSc/0R3mtnGfsOAmgjrYUj54ubGTQeM6vbQWolWfztHf4s74gfnwCt9SoU8+5
-	 YAKWDaQwuX8oE6d+wsXKIiShX8YHbza0RIr+zJGQ=
+	b=E+wGvPWzEJY2e7lIaxMKkpECKSv6pyiLocJ31HMnzyvf6WmWTrfJRVSmykCUQaga2
+	 fh9XFPGN2nw0e1We8QxtPTUNTykjTMb4OxmnhKAXIJaZcFYHOk7vhNvV1PVRUcHW3P
+	 KLO5+5RhKOi7kRplzjtdtyGanClVX6Ye3oSHABUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfCNPye (ORCPT
+        id S1727675AbfCNPyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:54:34 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36322 "EHLO
+        Thu, 14 Mar 2019 11:54:33 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36254 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbfCNPya (ORCPT
+        with ESMTP id S1727649AbfCNPy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:54:30 -0400
+        Thu, 14 Mar 2019 11:54:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=aHpRfMr7WQXjq7PUaew04ukI0mD+0YkzrNCtHE+vJiA=; b=VgoTJxhAfHOL
-        ooHdq2A8Lz2XUHTDRwovXKgOGMpcX/UwFUN+4d4aGQjcAmh7FDssIckO9iJT0UjUuj3cFj6bi4rfO
-        mX1HZmV8cbHcqwPoQ8sekjRWbBJS1cC+lZRVjzp+0NlRFGijDpklAmpfRC7JRQKR+5hCtFdckDE0h
-        z94GM=;
+        List-Archive; bh=vpqKQbtWAfkfjLyV/A9ZwEba1FnCfh+7G/9WCz/3iIg=; b=IuptS428hGpQ
+        JFuPt78gC3J+sBmLYUDWUPv7DO8R5dbjcCzcJXeoz6Wdn1plkHTA0Df12V7Bob/AuIxNGZQYXiaXc
+        vTYSeh1Mr/m5yATH1lCqMr+JE2ETmN5ZLp7No298F3OkBcozt34OQw0rl5F326F+1raIICEaDDuP3
+        d13Ao=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4Sgf-0002jb-77; Thu, 14 Mar 2019 15:54:29 +0000
+        id 1h4Sgb-0002jP-NE; Thu, 14 Mar 2019 15:54:25 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 99F1F1126E64; Thu, 14 Mar 2019 15:54:28 +0000 (GMT)
+        id 45CA71126E64; Thu, 14 Mar 2019 15:54:25 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
+To:     Steve Twiss <stwiss.opensource@diasemi.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: gpio: Constify regulator_ops" to the regulator tree
+Subject: Applied "regulator: da9062: Fix notifier mutex lock warning" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155428.99F1F1126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:54:28 +0000 (GMT)
+Message-Id: <20190314155425.45CA71126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:25 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: gpio: Constify regulator_ops
+   regulator: da9062: Fix notifier mutex lock warning
 
 has been applied to the regulator tree at
 
@@ -84,42 +84,43 @@ to this mail.
 Thanks,
 Mark
 
-From 705e2a905a0407c3fffb248b43c8d7d1de6b4e51 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 8 Mar 2019 14:15:29 +0800
-Subject: [PATCH] regulator: gpio: Constify regulator_ops
+From 978995def0f6030aa6b3b494682f673aca13881b Mon Sep 17 00:00:00 2001
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Date: Tue, 26 Feb 2019 15:19:34 +0000
+Subject: [PATCH] regulator: da9062: Fix notifier mutex lock warning
 
-gpio_regulator_voltage_ops and gpio_regulator_current_ops should never
-change, make them const.
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
+
+Fixes: 4068e5182ada ("regulator: da9062: DA9062 regulator driver")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/gpio-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/da9062-regulator.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
-index 967338bf1dc1..f50d86a66138 100644
---- a/drivers/regulator/gpio-regulator.c
-+++ b/drivers/regulator/gpio-regulator.c
-@@ -124,7 +124,7 @@ static int gpio_regulator_set_current_limit(struct regulator_dev *dev,
- 	return 0;
- }
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index b064d8a19d4c..bab88ddfc509 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -974,8 +974,10 @@ static irqreturn_t da9062_ldo_lim_event(int irq, void *data)
+ 			continue;
  
--static struct regulator_ops gpio_regulator_voltage_ops = {
-+static const struct regulator_ops gpio_regulator_voltage_ops = {
- 	.get_voltage = gpio_regulator_get_value,
- 	.set_voltage = gpio_regulator_set_voltage,
- 	.list_voltage = gpio_regulator_list_voltage,
-@@ -220,7 +220,7 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
- 	return config;
- }
- 
--static struct regulator_ops gpio_regulator_current_ops = {
-+static const struct regulator_ops gpio_regulator_current_ops = {
- 	.get_current_limit = gpio_regulator_get_value,
- 	.set_current_limit = gpio_regulator_set_current_limit,
- };
+ 		if (BIT(regl->info->oc_event.lsb) & bits) {
++			regulator_lock(regl->rdev);
+ 			regulator_notifier_call_chain(regl->rdev,
+ 					REGULATOR_EVENT_OVER_CURRENT, NULL);
++			regulator_unlock(regl->rdev);
+ 			handled = IRQ_HANDLED;
+ 		}
+ 	}
 -- 
 2.20.1
 
