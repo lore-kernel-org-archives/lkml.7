@@ -2,179 +2,131 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E12CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF42BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9FB21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FA521019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:47:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="P0y7S7AS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=openedev.com header.i=@openedev.com header.b="Fd/lEX26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfCNInp (ORCPT
+        id S1727337AbfCNIrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 04:43:45 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:36863 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfCNInp (ORCPT
+        Thu, 14 Mar 2019 04:47:15 -0400
+Received: from se15t.web-hosting.com ([162.255.118.154]:54375 "EHLO
+        se15t.web-hosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfCNIrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 04:43:45 -0400
-Received: by mail-vs1-f66.google.com with SMTP id j12so2735617vsd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=amc6bmVLFsqmbdzeqy2n806dmj76qtTSQMA24ZgCC6g=;
-        b=P0y7S7ASVRX9hnjcY4IyerNpFn3bt780Hwjl2HUZ62hTnkHAxx2FSW1lWykJuN/INf
-         VP2PJx3Wvd26OJpPKHQmAz5kJ1TosPENalY78zRwyLjDcX4bKSP1OoG71l6v27eBMPtQ
-         Iw2iWh7NpH3qPm2baAAoknMoAiJow08l9tYW1QmnQHV40Efsh0HGObbC+1QGU1QyxS5C
-         A+5gW6s1MyscUWDCBZYQeeGYyiPRM5YsdcnpcF/S4O7TIlcRnHLKoqJl11vOf74RvCkD
-         ei1fHc78bV32NK1RnHJOJcc0mKc2nmFIob/1GZF9tImp1pmUTFr00pOmgrU2sLHmvd0Z
-         cYrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=amc6bmVLFsqmbdzeqy2n806dmj76qtTSQMA24ZgCC6g=;
-        b=JPa4irtDvnoTy5QhH2GswIHxE9aAqO3YEOtX+rduCo7KRTKJcV5m/xeELmCx+ybAjO
-         g2ceZf974FU5+3tWXHgPXCZQx0yTJSN12/tQy/LH+0T5uymx1KocdzbmF+yYMfQ4f8RQ
-         N6Jm03xvhm0AGJfYuJSTXBaYvZrxDaiBbbnZlDpC2S0659BRgXNaV3Q/9REDuwxVoSL+
-         TGYsAv9LCyRWzTMSuLyQ8JeQ7J2/GM3VNWRmFblpEi4j9pIM7LKUtZFRkZTNPQqUTzII
-         6mfboQsqm9GHcXrTKyndETT5C/AuOc/pCXxB3vwd+rxSDDS4IfSph1muBfwQZBunNdWi
-         93ng==
-X-Gm-Message-State: APjAAAXZpkyAVOKoAQl7mWHRLVAbdS+nQmm1NAw+IFias2WivFJQ3/vC
-        FGFqtCY4IXr8d3tib/ZQmmjCyULIAHQU1YgCxRgsBA==
-X-Google-Smtp-Source: APXvYqwJkNfVWkzfjFwoj4GsDAKHS+V7Q8Drn3mNQQusqE2sOZL87Fn5ZRULv28imsGilcMrC4wPMcZklTuwS4zFgw8=
-X-Received: by 2002:a67:f148:: with SMTP id t8mr26458002vsm.209.1552553023437;
- Thu, 14 Mar 2019 01:43:43 -0700 (PDT)
+        Thu, 14 Mar 2019 04:47:15 -0400
+Received: from [68.65.123.203] (helo=server153.web-hosting.com)
+        by se15.registrar-servers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <akash@openedev.com>)
+        id 1h4Kfa-00066Y-Ds; Thu, 14 Mar 2019 00:20:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=openedev.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=L9KydG/K+NUtBi5oOaMFrE5iITC8v0A7DoMtgLN5Cq0=; b=Fd/lEX26dX9cB4cdbeyGuCkL5b
+        7r1xpfnGVmy+XhcSjdRiJDrZjJtLCJoNuVLybWPeJq7I0Aek9p3Z1XoKXcGfjGWnZix/HocbbSQvy
+        YE7TSUOHnc8oXxqpEMpWJ0m+6xV8RxJT7UzSvKjk+Be+yNprSev4YUwu+ERTJYKFyUH3DR1Eior5Y
+        ClC1ry6pSle/rZL9fR2fIQSg4uJ/qLWPZggglkTsONzNGMWH8+3tvVlY7APn+w67GvvNXeImM6Vtq
+        OCRwbibnyZOvF6Pk0ZGuEVZ4Q/XOkpljv2nP4wMbSr6BvpW5jONmEP3YDd6lDCDnkT6AtHK6zhy+l
+        SyIVsVqw==;
+Received: from nat-inn.mentorg.com ([192.94.34.34]:19766 helo=agajjar-vr.inn-wifi.mentorg.com)
+        by server153.web-hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <akash@openedev.com>)
+        id 1h4KfZ-002iQG-3Z; Thu, 14 Mar 2019 03:20:49 -0400
+From:   Akash Gajjar <akash@openedev.com>
+To:     heiko@sntech.de
+Cc:     Akash Gajjar <akash@openedev.com>,
+        =?UTF-8?q?Andrius=20=C5=A0tikonas?= <andrius@stikonas.eu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] arm64: dts: rockchip: add mali gpu support on rock960
+Date:   Thu, 14 Mar 2019 12:48:42 +0530
+Message-Id: <20190314071853.32176-3-akash@openedev.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190314071853.32176-1-akash@openedev.com>
+References: <20190314071853.32176-1-akash@openedev.com>
 MIME-Version: 1.0
-References: <20190314063858.18292-1-xiaoyao.li@linux.intel.com>
-In-Reply-To: <20190314063858.18292-1-xiaoyao.li@linux.intel.com>
-From:   Kyle Huey <me@kylehuey.com>
-Date:   Thu, 14 Mar 2019 21:43:28 +1300
-Message-ID: <CAP045Args8Pq-jGnSSnpCcZ2xqgSb1EHnn74-fBgPrgurKY0PQ@mail.gmail.com>
-Subject: Re: [PATCH] kvm/x86/vmx: switch MSR_MISC_FEATURES_ENABLES between
- host and guest
-To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     Kyle Huey <khuey@kylehuey.com>, Chao Gao <chao.gao@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-OutGoing-Spam-Status: No, score=-0.5
+X-Originating-IP: 68.65.123.203
+X-SpamExperts-Domain: nctest.net
+X-SpamExperts-Username: whmcalls3
+Authentication-Results: registrar-servers.com; auth=pass (login) smtp.auth=whmcalls3@nctest.net
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.03)
+X-Recommended-Action: accept
+X-Filter-ID: EX5BVjFpneJeBchSMxfU5lMPI87ZyI+asQ6xS4wMAPZ602E9L7XzfQH6nu9C/Fh9KJzpNe6xgvOx
+ q3u0UDjvO9Kz5dih1EthU2MWX/atyIZ0kTMsB94LwW8ZN2sS57gfLwzUX7TXOtaq5aORn2baFRjr
+ dLldmwqWZjEw2lWOqONg+6d+vVnClNcaHHg4+HBie3u1qNGW8JhNDRlyXw90mNUojfcw2mvVYgaF
+ 7R4Nq6M2uT75/bHUV0hzFQBt087qxR5lDokjkdmXOD+VbkEJYn4IVrxUJFnyj6nET61XOPekDg/8
+ KBBmTt77WjEO9dKSp7ak+Y4NgM/NmE0KCGd3riidpDsdQonTLMh6L/+x+4NpnbTqgaHcIC6UHxUV
+ Dh3xzJlM49QIjoztGSyx+/vOFDlnWvpT7I2S76vZY71hhmBhNswRz25079tw4G7Z2x4cGtJiw53d
+ qulPCDYQKbu7I7RdtvvPkw5oM1e+KNmpMey1fr3z7O1ewfolpqk29AXTnD32/mt3TbW1oIGms4Ec
+ P4C/tOVjI4dWyTvfTQXGjT+aEfC5mTBtCltny75g3MKuTOGkaNRv4coischCI8XZGLL4B+ErFY1U
+ RUy06HsjHLlqsTcMcmoZyVJsVk7iVlZvWBsS3EZt9a+xyS/dOq7TUuG+L3bB+j+CVTRhnzm1Nba8
+ 7gDjZ07+/reN5VC1Nt5sWmuNA8WTybi1JN85FSnfKTyNOwPWvr2eQIsh10IlvMnQ0IIgvIstpD15
+ BM6zO/FBOSMe/wvVcKjx/+UKUJ2dATB6AfvblXyj02a3Cw6CrTQhPfNf9nOHpykNhSXpzpjT/mvX
+ JYhzeNctU3+zxwd6ti1bnnIt8N6f/CuhLXUVc1pzxfB9KTlrrA+Lc9L7q8GGkhIiorUZ3JATRbIw
+ E4M7LfS/U6nQBaqEPay2NtTfamiM3hfzMBl8hnwKNP0YidMw83fxTKrc9DzINJyv7zrrYHcPhRP9
+ t1Bhkyq0nBWAZo9XwZ1ws+h8UjXrmz4WLyhA0LDG/G6H7G18yhxuoyf9CjDy69sBxxnhZaNlMhf0
+ yEspOMQJvQ/Ck3iiU+4DQAj3eBtzHxmMpdcJLP6h+BqkOPkzKvGCTzOXORlHyGDj+2MLC9DLbVGU
+ m3NG3JI5qPYoLHTHlLGaRLF7izLRPLwy3SiZG3Rfh0Hv26E0HHrAMbRGfF8i8PTFZFJqyqrE2dZ/
+ 2oQwXRNl8amP2PqQ/v0S3E6uhs/Q2KE1Lby4XA9T8BlT0ikNY7j4EN9CrMLZiCokZ6pCNzX0GDqF
+ Hnc7CiECq36EId3q8anqWudzZ5J+1ghaAVqVzcOADNlOgmKOxT4mUV8ShebT8U8Xw9HTDfreWRhD
+ A2j351jleQ9v0vahVXDX6VptvvxNnuUPvu20HBa4n21Xpgx2swKdR1qkDp+yckKlIgUotFOWz4Xb
+ 4rXSAHtmbXhBCEgmBHNO2CE+2S+HjgYJdm8xEO/i6lPy/R0iXhq13VtdPYPpQDJAG8jZaE50EhaY
+ Q2HQUJjdCwpDm1+TLJXu+jC6iUC5G6ADf/VHYTEvuGslKTrRIXcXpFg5ivY=
+X-Report-Abuse-To: spam@se16.registrar-servers.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 7:50 PM Xiaoyao Li <xiaoyao.li@linux.intel.com> wrote:
->
-> CPUID Faulting is a feature about CPUID instruction. When CPUID Faulting is
-> enabled, all execution of the CPUID instruction outside system-management
-> mode (SMM) cause a general-protection (#GP) if the CPL > 0.
->
-> About this feature, detailed information can be found at
-> https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
->
-> There is an issue that current kvm doesn't switch the value of
-> MSR_MISC_FEATURES_ENABLES between host and guest. If MSR_MISC_FEATURES_ENABLES
-> exists on the hardware cpu, and host enables CPUID faulting (setting the bit 0
-> of MSR_MISC_FEATURES_ENABLES), it will impact the guest's behavior because
-> cpuid faulting is enabled by host and passed to guest.
+add gpu node support on board and add the supplying regulator
 
-The host doesn't enable CPUID faulting and keep it enabled for
-everything though, it only enables it for specified user-space
-processes (via arch_prctl). How does CPUID faulting "leak" into the
-KVM guest?
+Signed-off-by: Akash Gajjar <akash@openedev.com>
+Signed-off-by: Andrius Štikonas <andrius@stikonas.eu>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-rock960.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-- Kyle
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+index 12285c51cceb..bc8c04190d1a 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+@@ -62,6 +62,11 @@
+ 
+ };
+ 
++&gpu {
++	mali-supply = <&vdd_gpu>;
++	status = "okay";
++};
++
+ &pcie0 {
+ 	ep-gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
+ };
+-- 
+2.17.1
 
-> From my tests, when host enables cpuid faulting, it causes guest boot failure
-> when guest uses *modprobe* to load modules. Below is the error log:
->
-> [    1.233556] traps: modprobe[71] general protection fault ip:7f0077f6495c sp:7ffda148d808 error:0 in ld-2.17.so[7f0077f4d000+22000]
-> [    1.237780] traps: modprobe[73] general protection fault ip:7fad5aba095c sp:7ffd36067378 error:0 in ld-2.17.so[7fad5ab89000+22000]
-> [    1.241930] traps: modprobe[75] general protection fault ip:7f3edb89495c sp:7fffa1a81308 error:0 in ld-2.17.so[7f3edb87d000+22000]
-> [    1.245998] traps: modprobe[77] general protection fault ip:7f91d670895c sp:7ffc25fa7f38 error:0 in ld-2.17.so[7f91d66f1000+22000]
-> [    1.250016] traps: modprobe[79] general protection fault ip:7f0ddbbdc95c sp:7ffe9c34f8d8 error:0 in ld-2.17.so[7f0ddbbc5000+22000]
->
-> *modprobe* calls CPUID instruction thus causing cpuid faulting in guest.
-> At the end, because guest cannot *modprobe* modules, it boots failure.
->
-> This patch switches MSR_MISC_FEATURES_ENABLES between host and guest when
-> hardware has this MSR.
->
-> This patch doesn't confict with the commit db2336a80489 ("KVM: x86: virtualize
-> cpuid faulting"), which provides a software emulation of cpuid faulting for
-> x86 arch. Below analysing how cpuid faulting will work after applying this patch:
->
-> 1. If host cpu is AMD. It doesn't have MSR_MISC_FEATURES_ENABLES, so we can just
-> use the software emulation of cpuid faulting.
->
-> 2. If host cpu is Intel and it doesn't have MSR_MISC_FEATURES_ENABLES. The same
-> as case 1, we can just use the software emulation of cpuid faulting.
->
-> 3. If host cpu is Intel and it has MSR_MISC_FEATURES_ENABLES. With this patch,
-> it will write guest's value into MSR_MISC_FEATURES_ENABLES when vm entry.
-> If guest enables cpuid faulting and when guest calls CPUID instruction with
-> CPL > 0, it will cause #GP exception in guest instead of VM exit because of
-> CPUID, thus it doesn't go to the kvm emualtion path but ues the hardware
-> feature. Also it's a benefit that we needn't use VM exit to inject #GP to
-> emulate cpuid faulting feature.
->
-> Intel SDM vol3.25.1.1 specifies the priority between cpuid faulting
-> and CPUID instruction.
->
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 30a6bcd735ec..90707fae688e 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6321,6 +6321,23 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
->                                         msrs[i].host, false);
->  }
->
-> +static void atomic_switch_msr_misc_features_enables(struct kvm_vcpu *vcpu)
-> +{
-> +       u64 host_msr;
-> +       struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +
-> +       /* if MSR MISC_FEATURES_ENABLES doesn't exist on the hardware, do nothing*/
-> +       if (rdmsrl_safe(MSR_MISC_FEATURES_ENABLES, &host_msr))
-> +               return;
-> +
-> +       if (host_msr == vcpu->arch.msr_misc_features_enables)
-> +               clear_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES);
-> +       else
-> +               add_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES,
-> +                                     vcpu->arch.msr_misc_features_enables,
-> +                                     host_msr, false);
-> +}
-> +
->  static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
->  {
->         vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-> @@ -6562,6 +6579,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->
->         atomic_switch_perf_msrs(vmx);
->
-> +       atomic_switch_msr_misc_features_enables(vcpu);
-> +
->         vmx_update_hv_timer(vcpu);
->
->         /*
-> --
-> 2.19.1
