@@ -2,114 +2,98 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E9FC43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAE7C10F03
 	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 01:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C0321019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 01:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 175B6217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 01:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbfCNBvB (ORCPT
+        id S1726797AbfCNBwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 21:51:01 -0400
-Received: from smtprelay0239.hostedemail.com ([216.40.44.239]:59787 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726518AbfCNBvB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 21:51:01 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id CD2C1837F27D;
-        Thu, 14 Mar 2019 01:50:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: ear54_25ae0be96ae19
-X-Filterd-Recvd-Size: 3445
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 14 Mar 2019 01:50:58 +0000 (UTC)
-Message-ID: <f7497e7ee0365364e8215d8ee3436812f75096c4.camel@perches.com>
-Subject: Re: [PATCH v3] lib/siphash.c: annotate implicit fall throughs
-From:   Joe Perches <joe@perches.com>
-To:     Mathieu Malaterre <malat@debian.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 13 Mar 2019 18:50:57 -0700
-In-Reply-To: <20190313211230.17527-1-malat@debian.org>
-References: <20190114201911.13725-1-malat@debian.org>
-         <20190313211230.17527-1-malat@debian.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 13 Mar 2019 21:52:55 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62605 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfCNBwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 21:52:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 18:52:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,476,1544515200"; 
+   d="scan'208";a="133894538"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.65])
+  by orsmga003.jf.intel.com with ESMTP; 13 Mar 2019 18:52:52 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     huang ying <huang.ying.caritas@gmail.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKP ML <lkp@01.org>
+Subject: Re: [LKP] [ext4] fde872682e: fsmark.files_per_sec -38.0% regression
+References: <20190102004002.GB17624@shao2-debian>
+        <CAC=cRTO8RC0kEz9B-vx5sO=6uXwsu2tE9rd_NKH1XjVRr9easA@mail.gmail.com>
+        <20190313153056.GB672@mit.edu>
+Date:   Thu, 14 Mar 2019 09:52:52 +0800
+In-Reply-To: <20190313153056.GB672@mit.edu> (Theodore Ts'o's message of "Wed,
+        13 Mar 2019 11:30:56 -0400")
+Message-ID: <87h8c66x3f.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-13 at 22:12 +0100, Mathieu Malaterre wrote:
-> There is a plan to build the kernel with -Wimplicit-fallthrough and
-> these places in the code produced warnings (W=1). Fix them up.
-> 
-> This commit remove the following warnings:
-> 
->   lib/siphash.c:71:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:72:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:73:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:75:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:108:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:109:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:110:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:112:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:434:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:462:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> 
-> Move the break statement onto the next line to match the fall-through
-> comment pattern. Also move the trailing statement onto the next line to
-> pass checkpatch verification.
-[]
-> diff --git a/lib/siphash.c b/lib/siphash.c
-[].
-> @@ -68,13 +68,26 @@ u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key)
->  						  bytemask_from_count(left)));
->  #else
->  	switch (left) {
-> -	case 7: b |= ((u64)end[6]) << 48;
-> -	case 6: b |= ((u64)end[5]) << 40;
-> -	case 5: b |= ((u64)end[4]) << 32;
+Theodore Ts'o <tytso@mit.edu> writes:
 
-It might also be worth not casting to u64 then shift
-as that can be
-moderately expensive on 32 bit systems
-and instead use ((char
-*)&b)[<appropriate_index>].
+ > On Wed, Mar 13, 2019 at 03:26:39PM +0800, huang ying wrote:
+>> >
+>> >
+>> > commit: fde872682e175743e0c3ef939c89e3c6008a1529 ("ext4: force inode writes when nfsd calls commit_metadata()")
+>> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>> 
+>> It appears that this is a performance regression caused by a
+>> functionality fixing.  So we should ignore this?
+>
+> Yes, this is a correctness issue that we discovered while tracking
+> down user data loss issue after a crash of the NFS server, so this is
+> a change we have to keep.  When the NFS folks added the
+> commit_metadata() hook, they didn't realize that the fallback path in
+> nfsd/vfs.c using sync_inode_metadata() doesn't work on all file
+> systems --- and in particular doesn't work for ext3 and ext4 because
+> of how we do journalling.
+>
+> It only applies to NFS serving, not local ext4 use cases, so most ext4
+> users won't be impacted on it; only those who export those file
+> systems using NFS.
+>
+> I do have some plans on how to claw back the performance hit.  The
+> good news is that it won't require an on-disk format change; the bad
+> news is that it's a non-trivial change to how journalling works, and
+> it's not something we can backport to the stable kernel series.  It's
+> something we're going to have to leave to a distribution who is
+> willing to do a lot of careful regression testing, once the change is
+> available, maybe in 3 months or so.
+>
+>      	 	      	  	      	  - Ted
+>
+> P.S.  I *believe* all other file systems should be OK, and I didn't
+> want to impose a performance tax on all other file systems (such as
+> btrfs), so I fixed it in an ext4-specific way.  The more
+> general/conservative change would be to fall back to using fsync in
+> nfs/vfs.c:commit_metadata() unless the file system specifically set a
+> superblock flag indicating that using sync_inode_metadata is safe.
+> OTOH we lived with this flaw in ext3/ext4 for *years* without anyone
+> noticing or complaining, so....
 
-> -	case 4: b |= le32_to_cpup(data); break;
-> -	case 3: b |= ((u64)end[2]) << 16;
+Got it!  Thanks for your detailed explanation!
 
-Perhaps an unnecessary cast before shift
-
-> -	case 2: b |= le16_to_cpup(data); break;
-> -	case 1: b |= end[0];
-
-[]
-
-> @@ -101,13 +114,26 @@ u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key)
->  						  bytemask_from_count(left)));
->  #else
->  	switch (left) {
-> -	case 7: b |= ((u64)end[6]) << 48;
-> -	case 6: b |= ((u64)end[5]) << 40;
-> -	case 5: b |= ((u64)end[4]) << 32;
-
-etc...
-
-> -	case 4: b |= get_unaligned_le32(end); break;
-> -	case 3: b |= ((u64)end[2]) << 16;
-> -	case 2: b |= get_unaligned_le16(end); break;
-> -	case 1: b |= end[0];
-
-
+Best Regards,
+Huang, Ying
