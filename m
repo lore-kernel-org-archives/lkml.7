@@ -7,63 +7,66 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B05C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF893C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C844D21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0AC2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e2f9gNBl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VcL7RStD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfCNGnl (ORCPT
+        id S1727315AbfCNGng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:43:41 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42051 "EHLO
+        Thu, 14 Mar 2019 02:43:36 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36394 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfCNGnj (ORCPT
+        with ESMTP id S1727277AbfCNGnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:43:39 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r15so419119pfn.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:43:39 -0700 (PDT)
+        Thu, 14 Mar 2019 02:43:33 -0400
+Received: by mail-pf1-f194.google.com with SMTP id n22so3192217pfa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:43:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0q7wZymeH6QqFsG9AA4K1Do0jtBWhLLOyNtabXc8k0o=;
-        b=e2f9gNBlYEWuXa2CwsbFYUetQv65ml4yHtL/OudyWC3eKfR6m9REPWpKSmidhyfLyP
-         xdfO0TAuS5/RMwRjsU+CKwOWhlz3uMd7cIgMnLKWk4BQFoKt/y54b2uW1cN/bYX1QeMc
-         f3ys68X94sUjqTXUtczJ/S42k5n9Xc3CvksVDUpe8PurFeeusCVtjfXrPj8BeDCvQ70G
-         KxzpSxLi2WPMpy16Xnp79kWyEjrj8y9HBnb8BpHW++Q220Qwal42TpNLLpuylCVxwf1+
-         gIcOvrYpXTui55qhSGNRH/4IRmjYHjikksVtC64/Y/0yP9Zyw4F6aiqSFgKXjANoEF87
-         z6kA==
+        bh=3Efw/h9eTUmSrpQZIt5XLwN4VOh2Yp4TaPqLXIdGnJE=;
+        b=VcL7RStD7ZUOTVl184RkW56AOC5OcqHevP735305y843u+17laziRgHfgqbGKiwE3q
+         +aFw0iSojIYAqnB9AMwRoWtlmWGH5F3SkUBMLj1yO3rhcyomSDvrEnZkUyckXDAcIZ9i
+         0oqiWh25f7QEAYxUmF7FllPqrj06OP72PB2vqNEH2HirpWxjftj3Q/kiDbxUpu81X88u
+         2gf1ssoQwtl5f6YBbkHk4LKoU0MCWPPVt5ahTurryAHhL+C7qfqHj/8MPfH9UrdFV0g4
+         /TIi3GxmG3J4QV/DggNwDIAMjNe32yGBXN5TRLQX9DppzLWl47iiFN4qSlEAHcPWBRhp
+         COAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0q7wZymeH6QqFsG9AA4K1Do0jtBWhLLOyNtabXc8k0o=;
-        b=G8EMYu7UcbSjD0bIIVV/oYzP5obOktnIqnNFnAxkOLPQvAGFQPXpSJ0ZN9m4I6flH0
-         qKtmQAPkNK+HeV7J/RzoBhWD1190KCbdN1Mpp+DGXhi7tlLyljvosfS/4QMXMFUCcn5J
-         lkTkS5tEADaNbXSIsXghlAc5EGbE52J76TiDVRoRquWd9CDmL0R8Deb6kzNPZYlThsyo
-         lTMIJFLUKqs16iWQ7Idj00QcptGWXilYLAZGuztFwbMztwj9QV0IvPgLchI2U8Ge2DXX
-         DOMA/K6Iz6iBSwBxuLLAzggWqLDG8R8ag5ItRcEwlevZJ6s2NuZ1DFV4ai1lwEHrNtOE
-         mIdQ==
-X-Gm-Message-State: APjAAAWo1kZepSzwCJOTztXksN2kh4v5HjQ6Y8m4qltx3qFHMz2zW222
-        0V02FbA7WklLFvq/z2W5G7kuNA==
-X-Google-Smtp-Source: APXvYqzdAtsOhCuAo7yAt25Up4IvAt/zRzaH/dcDugDWZ50C4E0HbvhfWGjwc/LMAAysnRzjcH2pCA==
-X-Received: by 2002:a65:4547:: with SMTP id x7mr35330583pgr.350.1552545818634;
-        Wed, 13 Mar 2019 23:43:38 -0700 (PDT)
+        bh=3Efw/h9eTUmSrpQZIt5XLwN4VOh2Yp4TaPqLXIdGnJE=;
+        b=tIpMjPNecQ6Y16cm8MckBnyKfS0g/mJe+NNUeJmfNY1CnEYPYxEPgKdICeFlwrM8fC
+         Jsjnfy98IDSXisSQzTp/kcFmpUmXkxjyNON86UJeC77D7z6QYHa4WmO/rxJSWAxmckl0
+         HemtGnP2cxO37UfxzKMfWSNtnyFoESFdQkB/hTpvhORhGXgjJIllipud/wBvrrhh9Bjs
+         pMx5B4CnJ6cyLBc/3EID6zHwj3GshTJGDG4mDyXwzvSTM8GSlIS4pC9x9UkZOhxq8lno
+         y5vjQ+I2qMRtKlGhGjaLbpVDQYQnmSAR/G9agoA6XXg9Bx3AAhmQJzR2I9A7us3hmfeY
+         Ullw==
+X-Gm-Message-State: APjAAAUQph8O8di2AEO2iDG6d2TN59ub/Ev7q6YSdBh/wT83yad9mERN
+        woU8062qTNpFEXcPy30a7uxxMA==
+X-Google-Smtp-Source: APXvYqyaWFgdo3j0beXfgSjsZGeDZmkZ5WkqeQqgheNRssaXLqV1E5AceiX+pg5N/MznmLrqahh96g==
+X-Received: by 2002:a63:6a88:: with SMTP id f130mr43285394pgc.114.1552545812067;
+        Wed, 13 Mar 2019 23:43:32 -0700 (PDT)
 Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id g3sm17815930pgg.41.2019.03.13.23.43.37
+        by smtp.gmail.com with ESMTPSA id q18sm21517128pgv.9.2019.03.13.23.43.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 23:43:37 -0700 (PDT)
+        Wed, 13 Mar 2019 23:43:31 -0700 (PDT)
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
         Vincent Guittot <vincent.guittot@linaro.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] cpufreq: Call transition notifiers only once for each policy
-Date:   Thu, 14 Mar 2019 12:12:53 +0530
-Message-Id: <f98b170e408ec425c8d23067514cf063c8025c6e.1552545525.git.viresh.kumar@linaro.org>
+Subject: [PATCH 5/7] x86/tsc: Update cpufreq transition notifier to handle multiple CPUs
+Date:   Thu, 14 Mar 2019 12:12:51 +0530
+Message-Id: <8a27342332bc467242f6ccdb4d4bd4d10f8aa552.1552545525.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 In-Reply-To: <cover.1552545525.git.viresh.kumar@linaro.org>
 References: <cover.1552545525.git.viresh.kumar@linaro.org>
@@ -74,72 +77,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all the transition notifier callbacks are updated to not rely
-on freqs->cpu and perform actions for all CPUs in the freqs->cpus field,
-it is time to get rid of freqs->cpu field and call the notifiers only
-once for each cpufreq policy.
+The cpufreq core currently calls the cpufreq transition notifier
+callback once for each affected CPU. This is going to change soon and
+the cpufreq core will call the callback only once for each cpufreq
+policy. The callback must look at the newly added field in struct
+cpufreq_freqs, "cpus", which contains policy->related_cpus (both
+online/offline CPUs) and perform per-cpu actions for them if any.
+
+This patch updates time_cpufreq_notifier() to use the new "cpus" field,
+update per-cpu data for all the related CPUs and call set_cyc2ns_scale()
+for all online related_cpus.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/cpufreq/cpufreq.c | 18 +++++++++---------
- include/linux/cpufreq.h   |  1 -
- 2 files changed, 9 insertions(+), 10 deletions(-)
+ arch/x86/kernel/tsc.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index b1b012169f00..ecea73598956 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -306,6 +306,8 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
- 				      struct cpufreq_freqs *freqs,
- 				      unsigned int state)
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 3fae23834069..587a6aa72f38 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -956,28 +956,37 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+ 				void *data)
  {
+ 	struct cpufreq_freqs *freq = data;
+-	unsigned long *lpj;
+-
+-	lpj = &boot_cpu_data.loops_per_jiffy;
+-#ifdef CONFIG_SMP
+-	if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+-		lpj = &cpu_data(freq->cpu).loops_per_jiffy;
+-#endif
++	bool boot_cpu = !IS_ENABLED(CONFIG_SMP) || freq->flags & CPUFREQ_CONST_LOOPS;
++	unsigned long lpj;
 +	int cpu;
+ 
+ 	if (!ref_freq) {
+ 		ref_freq = freq->old;
+-		loops_per_jiffy_ref = *lpj;
+ 		tsc_khz_ref = tsc_khz;
 +
- 	BUG_ON(irqs_disabled());
- 
- 	if (cpufreq_disabled())
-@@ -331,10 +333,8 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
- 			}
- 		}
- 
--		for_each_cpu(freqs->cpu, policy->cpus) {
--			srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
--						 CPUFREQ_PRECHANGE, freqs);
--		}
-+		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
-+					 CPUFREQ_PRECHANGE, freqs);
- 
- 		adjust_jiffies(CPUFREQ_PRECHANGE, freqs);
- 		break;
-@@ -344,11 +344,11 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
- 		pr_debug("FREQ: %u - CPUs: %*pbl\n", freqs->new,
- 			 cpumask_pr_args(policy->cpus));
- 
--		for_each_cpu(freqs->cpu, policy->cpus) {
--			trace_cpu_frequency(freqs->new, freqs->cpu);
--			srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
--						 CPUFREQ_POSTCHANGE, freqs);
--		}
-+		for_each_cpu(cpu, policy->cpus)
-+			trace_cpu_frequency(freqs->new, cpu);
++		if (boot_cpu)
++			loops_per_jiffy_ref = boot_cpu_data.loops_per_jiffy;
++		else
++			loops_per_jiffy_ref = cpu_data(cpumask_first(freq->cpus)).loops_per_jiffy;
+ 	}
 +
-+		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
-+					 CPUFREQ_POSTCHANGE, freqs);
+ 	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
+ 			(val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
+-		*lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+-
++		lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+ 		tsc_khz = cpufreq_scale(tsc_khz_ref, ref_freq, freq->new);
++
+ 		if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+ 			mark_tsc_unstable("cpufreq changes");
  
- 		cpufreq_stats_record_transition(policy, freqs->new);
- 		policy->cur = freqs->new;
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index dd318363dfc2..1af7ecad30c1 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -44,7 +44,6 @@ enum cpufreq_table_sorting {
+-		set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
++		if (boot_cpu) {
++			boot_cpu_data.loops_per_jiffy = lpj;
++		} else {
++			for_each_cpu(cpu, freq->cpus)
++				cpu_data(cpu).loops_per_jiffy = lpj;
++		}
++
++		for_each_cpu_and(cpu, freq->cpus, cpu_online_mask)
++			set_cyc2ns_scale(tsc_khz, cpu, rdtsc());
+ 	}
  
- struct cpufreq_freqs {
- 	struct cpumask *cpus;
--	unsigned int cpu;	/* cpu nr */
- 	unsigned int old;
- 	unsigned int new;
- 	u8 flags;		/* flags of cpufreq_driver, see below. */
+ 	return 0;
 -- 
 2.21.0.rc0.269.g1a574e7a288b
 
