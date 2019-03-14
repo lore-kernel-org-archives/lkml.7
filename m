@@ -2,192 +2,171 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98A0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DDCC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A3C2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="SKjcRgsr"
+	by mail.kernel.org (Postfix) with ESMTP id C10002184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552570485;
+	bh=6Iq9/NsKHiHTQEP15+yOPb7x5TBdbTTUwFAMmwa0W2I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tu/j6TKmVne4DUjgOcG/VUJs7jeoS4uPUGjaN3oo6kl4hb52I2z3rqyftpjE7J7bu
+	 KugBCQEmI8jBy5jYVo03m3NG5yM57i5bM32XTkx0zCzL3s5reS9klBadITzT0ZyFcZ
+	 7MMFBxrN2yXaQRwqp2eTjqYBaLXwKNp+66ZALXdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfCNNeC (ORCPT
+        id S1727493AbfCNNeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:34:02 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:36733 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfCNNeB (ORCPT
+        Thu, 14 Mar 2019 09:34:44 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:38723 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbfCNNen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 09:34:01 -0400
-Received: by mail-it1-f196.google.com with SMTP id h9so4885112itl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 06:34:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xUlh7z/lKkRCT3J0vduxrEEG6Tz3ROEvEex1IpqkdcQ=;
-        b=SKjcRgsrYs9xOcrmmdOEKgEctiY//fAALHPUmsYchTZRYoWgvcFDylJ+WRKHcoyEdR
-         WehmqM+MIN15r0W4yfN0LtZB4NIkr2COTJlHeKrfCJMwi1CB1a0xrTck7aXwyD42Rfo9
-         YxOmavr5lxcOxv5IJBHHbuxLFjpMYVuqMeWPNgNOZzoR9aIofFS2Z97itSeuW/Hj9UsX
-         RKL7U7rXdDXYmFZz+YHQczzjHEC4BowkGgP3X/eRi9YO2oLlCSRRTTMIpb466yu08rWA
-         Yg2zNtC9O5fcDecOUKkv0M2fBeVd+/bPNh3OPKjB8bV6XdSgmZV4LZgTJDxNYRuN0Met
-         0DWw==
+        Thu, 14 Mar 2019 09:34:43 -0400
+Received: by mail-yw1-f65.google.com with SMTP id m207so4393652ywd.5;
+        Thu, 14 Mar 2019 06:34:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xUlh7z/lKkRCT3J0vduxrEEG6Tz3ROEvEex1IpqkdcQ=;
-        b=BFkHEOLVlWdDi4h5ZEA1fzzhqv+7EBrfftKjtGFU+AxJ+3g1t7B0WmOr+dWPme+Im6
-         BBd7W9NzrTLKeiTR3oq3t/DjY1rPlfHTb2/5vgCrzNeV5Ji37qdzzQ1gXXKIw0B02Xy7
-         nhXqhZimFxXGPhmHaHJThCP371T3w/aT1kRVj0lPbFu9y9lurWzHxvT39FJ9EhQZNgGC
-         PIFgUgKt9Tudr8h9U34YWWQ0jMNztaHCvw90lFdCSXRzt0nUJPwRc4PWmfcpPP0awDrI
-         nBWIK3ZOX2fr85lg2iyU7NVjTJRTeXpa6bLTJe4qeAt8kJOn3s0dJDnYu3tSfO1JSN1U
-         OaJA==
-X-Gm-Message-State: APjAAAWLFiAkng2lHA8u43j+c8wyCT28xdSBnkQGbpJeoZaL3ievxiLl
-        tqGTSWdpFi2F6MTAWy/v43SYXrDPcyiPNZFq68igFA==
-X-Google-Smtp-Source: APXvYqz9wnJ/GoPtwVYpSSV0NHbh0k1Hk7JcWClnCk6P7RX/PngAxCo38WNkWnQwULJnSYL0tJ3EIFHOxMAys6UyiXw=
-X-Received: by 2002:a02:6012:: with SMTP id i18mr26999023jac.24.1552570440422;
- Thu, 14 Mar 2019 06:34:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4cLh3zsmf6ZXVF9owoqYs485OTH3qeZkPnkocOchsEs=;
+        b=l2ilwUiAGwwfuwn5TjKNJzFlHATpvK0UIVK9PO97zEeVewd9nzEezJ21cxyV4BtA1m
+         knXWEEOjwTtPG48h5UQGqQx03rVJGktZ+glM8v6g6aHXs98gzi6nKyhcsTdigXwlz5Kq
+         wurChUfHlMZit9FzEYoVW7psSiDtu0Oo54ldF/JJyNnzb5yfNN/tDAfrPKsx6XW0UTFs
+         d5k2Nq9CYaLLPWiaQoe+jLCymCFUWU3bqiiyOIrXXgD4kuecYyAefowQ3lLgeusOFbqT
+         Tpb7oluPLb/JC8mVJMpsLOd1V+r55hCvlQknQv3uLpxdAYb50tKCaR+guAJ9KcZSNgnz
+         wmUA==
+X-Gm-Message-State: APjAAAXpHIuBzZx3Knd5CsKRNC6Rtjnyn8e4ku1Twm/MEqwj2NiW8p3b
+        TOfOpdaoeENq1X/CLdl5Opg=
+X-Google-Smtp-Source: APXvYqzXPZr5OfoVPrX5Pu82Tc+SKG7b191NpfBHFJK3NNgPI0vOlExdm0Si4BG1oiCtHoj+hqvNKQ==
+X-Received: by 2002:a0d:eaca:: with SMTP id t193mr18731854ywe.29.1552570482480;
+        Thu, 14 Mar 2019 06:34:42 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id l184sm5751636ywl.45.2019.03.14.06.34.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 06:34:40 -0700 (PDT)
+Received: by 42.do-not-panic.com (sSMTP sendmail emulation); Thu, 14 Mar 2019 13:34:37 +0000
+Date:   Thu, 14 Mar 2019 13:34:37 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Yue Haibing <yuehaibing@huawei.com>, akpm@linux-foundation.org
+Cc:     keescook@chromium.org, adobriyan@gmail.com, ast@kernel.org,
+        daniel@iogearbox.net, viro@zeniv.linux.org.uk,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2] proc/sysctl: Fix NULL pointer dereference in put_links
+Message-ID: <20190314133437.GA1038@42.do-not-panic.com>
+References: <20190314085527.13244-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <20190312133047.16201-1-brgl@bgdev.pl> <56704758-ee74-0e9b-de1c-1dc94deda8d7@cambridgegreys.com>
-In-Reply-To: <56704758-ee74-0e9b-de1c-1dc94deda8d7@cambridgegreys.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 14 Mar 2019 14:33:49 +0100
-Message-ID: <CAMRc=MdBsovEpMxwyGmHB_AL=pLtPsE3g=+y1ghYeHhXvobYbw@mail.gmail.com>
-Subject: Re: [PATCH] um: remove uses of variable length arrays
-To:     Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-um@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314085527.13244-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 13 mar 2019 o 10:45 Anton Ivanov
-<anton.ivanov@cambridgegreys.com> napisa=C5=82(a):
->
-> On 12/03/2019 13:30, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > While the affected code is run in user-mode, the build still warns
-> > about it. Convert all uses of VLA to dynamic allocations.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >   arch/um/os-Linux/umid.c | 36 +++++++++++++++++++++++++++---------
-> >   1 file changed, 27 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/arch/um/os-Linux/umid.c b/arch/um/os-Linux/umid.c
-> > index 998fbb445458..e261656fe9d7 100644
-> > --- a/arch/um/os-Linux/umid.c
-> > +++ b/arch/um/os-Linux/umid.c
-> > @@ -135,12 +135,18 @@ static int remove_files_and_dir(char *dir)
-> >    */
-> >   static inline int is_umdir_used(char *dir)
-> >   {
-> > -     char file[strlen(uml_dir) + UMID_LEN + sizeof("/pid\0")];
-> > -     char pid[sizeof("nnnnn\0")], *end;
-> > +     char pid[sizeof("nnnnn\0")], *end, *file;
-> >       int dead, fd, p, n, err;
-> > +     size_t filelen;
-> >
-> > -     n =3D snprintf(file, sizeof(file), "%s/pid", dir);
-> > -     if (n >=3D sizeof(file)) {
-> > +     err =3D asprintf(&file, "%s/pid", dir);
-> > +     if (err < 0)
-> > +             return 0;
-> > +
-> > +     filelen =3D strlen(file);
-> > +
-> > +     n =3D snprintf(file, filelen, "%s/pid", dir);
-> > +     if (n >=3D filelen) {
-> >               printk(UM_KERN_ERR "is_umdir_used - pid filename too long=
-\n");
-> >               err =3D -E2BIG;
-> >               goto out;
-> > @@ -185,6 +191,7 @@ static inline int is_umdir_used(char *dir)
-> >   out_close:
-> >       close(fd);
-> >   out:
-> > +     free(file);
-> >       return 0;
-> >   }
-> >
-> > @@ -210,18 +217,21 @@ static int umdir_take_if_dead(char *dir)
-> >
-> >   static void __init create_pid_file(void)
-> >   {
-> > -     char file[strlen(uml_dir) + UMID_LEN + sizeof("/pid\0")];
-> > -     char pid[sizeof("nnnnn\0")];
-> > +     char pid[sizeof("nnnnn\0")], *file;
-> >       int fd, n;
-> >
-> > -     if (umid_file_name("pid", file, sizeof(file)))
-> > +     file =3D malloc(strlen(uml_dir) + UMID_LEN + sizeof("/pid\0"));
-> > +     if (!file)
-> >               return;
-> >
-> > +     if (umid_file_name("pid", file, sizeof(file)))
-> > +             goto out;
-> > +
-> >       fd =3D open(file, O_RDWR | O_CREAT | O_EXCL, 0644);
-> >       if (fd < 0) {
-> >               printk(UM_KERN_ERR "Open of machine pid file \"%s\" faile=
-d: "
-> >                      "%s\n", file, strerror(errno));
-> > -             return;
-> > +             goto out;
-> >       }
-> >
-> >       snprintf(pid, sizeof(pid), "%d\n", getpid());
-> > @@ -231,6 +241,8 @@ static void __init create_pid_file(void)
-> >                      errno);
-> >
-> >       close(fd);
-> > +out:
-> > +     free(file);
-> >   }
-> >
-> >   int __init set_umid(char *name)
-> > @@ -385,13 +397,19 @@ __uml_setup("uml_dir=3D", set_uml_dir,
-> >
-> >   static void remove_umid_dir(void)
-> >   {
-> > -     char dir[strlen(uml_dir) + UMID_LEN + 1], err;
-> > +     char *dir, err;
-> > +
-> > +     dir =3D malloc(strlen(uml_dir) + UMID_LEN + 1);
-> > +     if (!dir)
-> > +             return;
-> >
-> >       sprintf(dir, "%s%s", uml_dir, umid);
-> >       err =3D remove_files_and_dir(dir);
-> >       if (err)
-> >               os_warn("%s - remove_files_and_dir failed with err =3D %d=
-\n",
-> >                       __func__, err);
-> > +
-> > +     free(dir);
-> >   }
-> >
-> >   __uml_exitcall(remove_umid_dir);
-> >
->
-> Thanks for bringing it up. It helped me notice that this is actually brok=
-en.
->
-> PID can be more than 5 digits nowdays.
->
-> --
+On Thu, Mar 14, 2019 at 04:55:27PM +0800, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> Syzkaller report this:
+> 
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] SMP KASAN PTI
+> CPU: 1 PID: 5373 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+> RIP: 0010:put_links+0x101/0x440 fs/proc/proc_sysctl.c:1599
+> Code: 00 0f 85 3a 03 00 00 48 8b 43 38 48 89 44 24 20 48 83 c0 38 48 89 c2 48 89 44 24 28 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 fe 02 00 00 48 8b 74 24 20 48 c7 c7 60 2a 9d 91
+> RSP: 0018:ffff8881d828f238 EFLAGS: 00010202
+> RAX: dffffc0000000000 RBX: ffff8881e01b1140 RCX: ffffffff8ee98267
+> RDX: 0000000000000007 RSI: ffffc90001479000 RDI: ffff8881e01b1178
+> RBP: dffffc0000000000 R08: ffffed103ee27259 R09: ffffed103ee27259
+> R10: 0000000000000001 R11: ffffed103ee27258 R12: fffffffffffffff4
+> R13: 0000000000000006 R14: ffff8881f59838c0 R15: dffffc0000000000
+> FS:  00007f072254f700(0000) GS:ffff8881f7100000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fff8b286668 CR3: 00000001f0542002 CR4: 00000000007606e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> PKRU: 55555554
+> Call Trace:
+>  drop_sysctl_table+0x152/0x9f0 fs/proc/proc_sysctl.c:1629
+>  get_subdir fs/proc/proc_sysctl.c:1022 [inline]
+>  __register_sysctl_table+0xd65/0x1090 fs/proc/proc_sysctl.c:1335
+>  ? 0xffffffffc1a18000
+>  br_netfilter_init+0xbc/0x1000 [br_netfilter]
+>  ? 0xffffffffc1a18000
+>  ? 0xffffffffc1a18000
+>  do_one_initcall+0xfa/0x5ca init/main.c:887
+>  do_init_module+0x204/0x5f6 kernel/module.c:3460
+>  load_module+0x66b2/0x8570 kernel/module.c:3808
+>  __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+>  do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x462e99
+> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007f072254ec58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+> RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
+> RBP: 00007f072254ec70 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f072254f6bc
+> R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+> Modules linked in: br_netfilter(+) dvb_usb_dibusb_mc_common dib3000mc dibx000_common dvb_usb_dibusb_common dvb_usb_dw2102 dvb_usb classmate_laptop palmas_regulator cn videobuf2_v4l2 v4l2_common snd_soc_bd28623 mptbase snd_usb_usx2y snd_usbmidi_lib snd_rawmidi wmi libnvdimm lockd sunrpc grace rc_kworld_pc150u rc_core rtc_da9063 sha1_ssse3 i2c_cros_ec_tunnel adxl34x_spi adxl34x nfnetlink lib80211 i5500_temp dvb_as102 dvb_core videobuf2_common videodev media videobuf2_vmalloc videobuf2_memops udc_core lnbp22 leds_lp3952 hid_roccat_ryos s1d13xxxfb mtd vport_geneve openvswitch nf_conncount nf_nat_ipv6 nsh geneve udp_tunnel ip6_udp_tunnel snd_soc_mt6351 sis_agp phylink snd_soc_adau1761_spi snd_soc_adau1761 snd_soc_adau17x1 snd_soc_core snd_pcm_dmaengine ac97_bus snd_compress snd_soc_adau_utils snd_soc_sigmadsp_regmap snd_soc_sigmadsp raid_class hid_roccat_konepure hid_roccat_common hid_roccat c2port_duramar2150 core mdio_bcm_unimac iptable_security iptable_raw iptable_mangle
+>  iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim devlink vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel joydev mousedev ide_pci_generic piix aesni_intel aes_x86_64 ide_core crypto_simd atkbd cryptd glue_helper serio_raw ata_generic pata_acpi i2c_piix4 floppy sch_fq_codel ip_tables x_tables ipv6 [last unloaded: lm73]
+> Dumping ftrace buffer:
+>    (ftrace buffer empty)
+> ---[ end trace 770020de38961fd0 ]---
+> 
+> A new dir entry can be created in get_subdir and its 'header->parent' is set
+> to NULL. Only after insert_header success, it will be set to 'dir', otherwise
+> 'header->parent' is set to NULL and drop_sysctl_table is called. However in err
+> handling path of get_subdir, drop_sysctl_table also be called on 'new->header'
+> regardless its value of parent pointer. Then put_links is called, which triggers
+> NULL-ptr deref when access member of header->parent.
+> 
+> In fact we have multiple error paths which call drop_sysctl_table() there,
+> upon failure on insert_links() we also call drop_sysctl_table().And even in
+> the successful case on __register_sysctl_table() we still always
+> call drop_sysctl_table().This patch fix it.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 0e47c99d7fe25 ("sysctl: Replace root_list with links between sysctl_table_sets")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Do you want to take this patch anyway and then apply the fix for the
-array on top of that or do you prefer it be fixed before that?
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Bart
+This should also have:
+
+ Cc: <stable@vger.kernel.org>    [>= 3.4]
+
+   Luis
+
+> ---
+> v2: fix commit log
+> ---
+>  fs/proc/proc_sysctl.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> index 4d598a3..4c2a05a 100644
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -1626,7 +1626,8 @@ static void drop_sysctl_table(struct ctl_table_header *header)
+>  	if (--header->nreg)
+>  		return;
+>  
+> -	put_links(header);
+> +	if (parent)
+> +		put_links(header);
+>  	start_unregistering(header);
+>  	if (!--header->count)
+>  		kfree_rcu(header, rcu);
+> -- 
+> 2.7.0
+> 
+> 
