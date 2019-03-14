@@ -2,134 +2,197 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFA1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327E5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8F52184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:15:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gUpLKq65";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="amsJndYh"
+	by mail.kernel.org (Postfix) with ESMTP id ED2E720643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfCNJPM (ORCPT
+        id S1726922AbfCNJP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:15:12 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:10660 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfCNJPM (ORCPT
+        Thu, 14 Mar 2019 05:15:56 -0400
+Received: from mail.netline.ch ([148.251.143.178]:46378 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfCNJP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:15:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1552554912; x=1584090912;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=hMe8FKVPjVi0fBfAiHF940hFJcMPNsl2HAI6hOaoVt8=;
-  b=gUpLKq651SwZTEjlJD3xwEyq1noAERuDqFWR+EC3KFN5Rfonw4Ty/Saw
-   ckebozNDcpnzyUqkZhEKZHAVO1v8lzf3lbNeJjFJU1J+n1PZSXnjzPlXy
-   k/GWkn5pdKeLufOUxFNz47zx43+tvOlvMGdW98j1P6Sa9cqCbzW2FM6XD
-   LVjsdc+RsU2WVaA/0O1x0KimA519EnEhnsk2GPsWXzfZSI6BxDzCK6GuE
-   QImAWFnLAZVdI19p30jNE7qX4lUal2FuNvuQv4bmgz3vzCcmCx76zvksj
-   g++hXBts0ujj9ddHh8cTUbW4kUf4W1z4GgYgCHwvIsd3RHjE6V3AGLFDY
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.58,477,1544457600"; 
-   d="scan'208";a="105143333"
-Received: from mail-sn1nam02lp2051.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.51])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Mar 2019 17:15:11 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TQsq+gsMDnlWFDT6BagtHvmNeN/25Yyu5Ax1zFYiMkY=;
- b=amsJndYhlKcNASOfb6ke1vqqHmy98R+h8CPe7Cfljdyp+burY4tgDk/KWxCo2D5X+MPNdb0kxV09jCNngVaYt9bK9F6c0PdlnZfTzm8KkdVh1DaVcpUOLUGglUCv6kwxzo9UMjgbQJeIbgkGOJE6Ju9h8WbRHIv4Xqoyh9GGop4=
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
- SN6PR04MB4719.namprd04.prod.outlook.com (52.135.122.97) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Thu, 14 Mar 2019 09:15:10 +0000
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::f4d4:a300:2010:195a]) by SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::f4d4:a300:2010:195a%3]) with mapi id 15.20.1709.011; Thu, 14 Mar 2019
- 09:15:10 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Kangjie Lu <kjlu@umn.edu>
-CC:     "pakki001@umn.edu" <pakki001@umn.edu>,
-        Vinayak Holikatti <vinholikatti@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] scsi: ufs: fix a missing check of devm_reset_control_get
-Thread-Topic: [PATCH] scsi: ufs: fix a missing check of devm_reset_control_get
-Thread-Index: AQHU2jE5oITZH0L/+0mOkIU9/P2A26YK2DXQ
-Date:   Thu, 14 Mar 2019 09:15:10 +0000
-Message-ID: <SN6PR04MB4925DB2652FAED5F3AED27CCFC4B0@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <20190314063749.13907-1-kjlu@umn.edu>
-In-Reply-To: <20190314063749.13907-1-kjlu@umn.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4994bfa5-fac6-46a1-f47e-08d6a85d8eee
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR04MB4719;
-x-ms-traffictypediagnostic: SN6PR04MB4719:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB47190752D253C3BAEEE5E00AFC4B0@SN6PR04MB4719.namprd04.prod.outlook.com>
-x-forefront-prvs: 09760A0505
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(396003)(346002)(366004)(376002)(189003)(199004)(2171002)(86362001)(6436002)(229853002)(2906002)(52536014)(6246003)(72206003)(76176011)(186003)(4326008)(478600001)(6506007)(102836004)(26005)(81156014)(9686003)(71200400001)(74316002)(81166006)(4744005)(71190400001)(14454004)(55016002)(99286004)(7736002)(305945005)(8676002)(7696005)(53936002)(6916009)(25786009)(8936002)(97736004)(33656002)(68736007)(105586002)(106356001)(6116002)(3846002)(11346002)(476003)(54906003)(66066001)(446003)(5660300002)(256004)(316002)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4719;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: E51RDOQQSnzKVjssq0o0D29IfH+O9b8mEBJvp5y6/VSU4s9GIX/wGZbLGivnDhcFk62qUPuQgF/LD3ctKSGDdmUx9CaM7fnk49w7wqiuMMwmmW/JwMYXWPEz2rL6atdh59iKeyVK48VcYVqmQyMgmSz9NQKvv5T0s4mRJKMtjJjwuxFMuyBbTquql0p/TXmkR87FyYMatfWmYpyZ1349ng5VJRktdAQL0d4VwshW/45BZ715ID2Nby2Wl9c+d1aYwJmk77tepMQ7b9qyJnoPThtwqwLnK4tbI8baFCfScqNKq/HQ1Pf1W3nK1XB/R50RO666Te705TIGm8gM/8djvY8gqQFnDpq9PmuqyRRElUdyxRYihNqoS1dpN0xfw6wAAyjv8Nr4O4shXCoPDxE+fGYMQdA7KgCJnujqjcThAjM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 14 Mar 2019 05:15:56 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id 8DCCD2A6054;
+        Thu, 14 Mar 2019 10:15:52 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id X5KaHgrS7fSs; Thu, 14 Mar 2019 10:15:52 +0100 (CET)
+Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id AC0112A6053;
+        Thu, 14 Mar 2019 10:15:51 +0100 (CET)
+Received: from [::1]
+        by thor with esmtp (Exim 4.92)
+        (envelope-from <michel@daenzer.net>)
+        id 1h4MSr-0007IH-KB; Thu, 14 Mar 2019 10:15:49 +0100
+Subject: Re: [PATCH v2 1/5] drm/rockchip: fix fb references in async update
+To:     Helen Koike <helen.koike@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     =?UTF-8?Q?St=c3=a9phane_Marchesin?= <marcheu@google.com>,
+        Sean Paul <seanpaul@google.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        kernel@collabora.com, nicholas.kazlauskas@amd.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190312022204.2775-1-helen.koike@collabora.com>
+ <20190312022204.2775-2-helen.koike@collabora.com>
+ <20190312073438.05ad8173@collabora.com>
+ <f888a2d0-c6b1-8995-7254-ba2923dd22f9@collabora.com>
+ <20190312165243.5b771e4a@collabora.com>
+ <CAAFQd5CCEDaxLbw0E9NJJ-tEcHd8-Lidvcvt8qfPAnKu7uuj8w@mail.gmail.com>
+ <05750143-708b-b84e-af67-82ec6815bd89@daenzer.net>
+ <ed44e1f4-07da-b1cb-b5cb-d34d29758502@collabora.com>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
+ mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
+ LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
+ 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
+ /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
+ WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
+ Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
+ V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
+ AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
+ ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
+ AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
+ jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
+ qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
+ bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
+ CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
+ GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
+ YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
+ Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
+Message-ID: <d91d5582-3ccf-2249-21ee-9ccf115096b2@daenzer.net>
+Date:   Thu, 14 Mar 2019 10:15:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4994bfa5-fac6-46a1-f47e-08d6a85d8eee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2019 09:15:10.2143
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4719
+In-Reply-To: <ed44e1f4-07da-b1cb-b5cb-d34d29758502@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
->=20
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Avri Altman <avri.altman@wdc.com>
+On 2019-03-13 7:08 p.m., Helen Koike wrote:
+> On 3/13/19 6:58 AM, Michel Dänzer wrote:
+>> On 2019-03-13 4:42 a.m., Tomasz Figa wrote:
+>>> On Wed, Mar 13, 2019 at 12:52 AM Boris Brezillon
+>>> <boris.brezillon@collabora.com> wrote:
+>>>> On Tue, 12 Mar 2019 12:34:45 -0300
+>>>> Helen Koike <helen.koike@collabora.com> wrote:
+>>>>> On 3/12/19 3:34 AM, Boris Brezillon wrote:
+>>>>>> On Mon, 11 Mar 2019 23:21:59 -0300
+>>>>>> Helen Koike <helen.koike@collabora.com> wrote:
+>>>>>>
+>>>>>>> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+>>>>>>> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+>>>>>>> @@ -912,30 +912,31 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
+>>>>>>>                                      struct drm_plane_state *new_state)
+>>>>>>>  {
+>>>>>>>    struct vop *vop = to_vop(plane->state->crtc);
+>>>>>>> -  struct drm_plane_state *plane_state;
+>>>>>>> +  struct drm_framebuffer *old_fb = plane->state->fb;
+>>>>>>>
+>>>>>>> -  plane_state = plane->funcs->atomic_duplicate_state(plane);
+>>>>>>> -  plane_state->crtc_x = new_state->crtc_x;
+>>>>>>> -  plane_state->crtc_y = new_state->crtc_y;
+>>>>>>> -  plane_state->crtc_h = new_state->crtc_h;
+>>>>>>> -  plane_state->crtc_w = new_state->crtc_w;
+>>>>>>> -  plane_state->src_x = new_state->src_x;
+>>>>>>> -  plane_state->src_y = new_state->src_y;
+>>>>>>> -  plane_state->src_h = new_state->src_h;
+>>>>>>> -  plane_state->src_w = new_state->src_w;
+>>>>>>> -
+>>>>>>> -  if (plane_state->fb != new_state->fb)
+>>>>>>> -          drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
+>>>>>>> -
+>>>>>>> -  swap(plane_state, plane->state);
+>>>>>>> -
+>>>>>>> -  if (plane->state->fb && plane->state->fb != new_state->fb) {
+>>>>>>> +  /*
+>>>>>>> +   * A scanout can still be occurring, so we can't drop the reference to
+>>>>>>> +   * the old framebuffer. To solve this we get a reference to old_fb and
+>>>>>>> +   * set a worker to release it later.
+>>>>>>
+>>>>>> Hm, doesn't look like an async update to me if we have to wait for the
+>>>>>> next VBLANK to happen to get the new content on the screen. Maybe we
+>>>>>> should reject async updates when old_fb != new_fb in the rk
+>>>>>> ->async_check() hook.
+>>>>>
+>>>>> Unless I am misunderstanding this, we don't wait here, we just grab a
+>>>>> reference to the fb in case it is being still used by the hw, so it
+>>>>> doesn't get released prematurely.
+>>>>
+>>>> I was just reacting to the comment that says the new FB should stay
+>>>> around until the next VBLANK event happens. If the FB must stay around
+>>>> that probably means the HW is still using, which made me wonder if this
+>>>> HW actually supports async update (where async means "update now and
+>>>> don't care about about tearing"). Or maybe it takes some time to switch
+>>>> to the new FB and waiting for the next VBLANK to release the old FB was
+>>>> an easy solution to not wait for the flip to actually happen in
+>>>> ->async_update() (which is kind of a combination of async+non-blocking).
+>>>
+>>> The hardware switches framebuffers on vblank, so whatever framebuffer
+>>> is currently being scanned out from needs to stay there until the
+>>> hardware switches to the new one in shadow registers. If that doesn't
+>>> happen, you get IOMMU faults and the display controller stops working
+>>> since we don't have any fault handling currently, just printing a
+>>> message.
+>>
+>> Sounds like your hardware doesn't actually support async flips. It's
+>> probably better for the driver not to pretend otherwise.
+> 
+> I think wee need to clarify the meaning of the async_update callback
+> (and we should clarify it in the docs).
+> 
+> The way I understand what the async_update callback should do is: don't
+> block (i.e. don't wait for the next vblank),
 
-> ---
->  drivers/scsi/ufs/ufs-hisi.c | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
-> index 452e19f8fb47..ce9d7c40909f 100644
-> --- a/drivers/scsi/ufs/ufs-hisi.c
-> +++ b/drivers/scsi/ufs/ufs-hisi.c
-> @@ -544,6 +544,11 @@ static int ufs_hisi_init_common(struct ufs_hba *hba)
->  	ufshcd_set_variant(hba, host);
->=20
->  	host->rst  =3D devm_reset_control_get(dev, "rst");
-> +	if (IS_ERR(host->rst)) {
-> +		dev_err(dev, "%s: failed to get reset control\n",
-> +			__func__);
-Use full line please
+Note that those are two separate things. "Async flips" are about "don't
+wait for vblank", not about "don't block".
 
-> +		return PTR_ERR(host->rst);
-> +	}
->=20
->  	ufs_hisi_set_pm_lvl(hba);
->=20
-> --
-> 2.17.1
 
+> and update the hw state at some point with the latest state from the
+> last call to async_update.
+> 
+> Which means that: any driver can implement the async_update callback,
+> independently if it supports changing its state right away or not.
+> If hw supports, async_update can change the hw state right away, if not,
+> then changes will be applied in the next vblank (it can even amend the
+> pending commit if there is one).
+> With this, we can remove all the legacy cursor code to use the
+> async_update callback, since async_update can be called 100 times before
+> the next vblank, and the latest state will be set to the hw without
+> waiting 100 vblanks.
+> 
+> Please, let me know if this is your understanding as well. If not, then
+> we need to remodel things.
+
+While this may make sense for cursor updates, I don't think it does for
+async flips. If the flip only actually takes effect during the next
+vblank, it doesn't really fit the definition and userspace expectation
+of an async flip. It's better to clearly communicate to userspace that
+the hardware cannot do async flips, than to pretend it can and fake
+them. Userspace has to deal with this anyway, since async flips weren't
+always supported in general.
+
+
+-- 
+Earthling Michel Dänzer               |              https://www.amd.com
+Libre software enthusiast             |             Mesa and X developer
