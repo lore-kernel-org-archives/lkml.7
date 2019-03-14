@@ -2,139 +2,134 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EECAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFA1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1DA820643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8F52184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:15:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gUpLKq65";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="amsJndYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfCNJOi (ORCPT
+        id S1726856AbfCNJPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:14:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56348 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726421AbfCNJOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:14:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 67A85AD25;
-        Thu, 14 Mar 2019 09:14:35 +0000 (UTC)
-Date:   Thu, 14 Mar 2019 10:14:34 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        linux-serial@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sebastian Siewior <bigeasy@linutronix.de>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-Message-ID: <20190314091434.ci26htgagjx6mk4k@pathway.suse.cz>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20190213025520.GA5803@jagdpanzerIV>
- <874l9721hf.fsf@linutronix.de>
- <20190304052335.GA6648@jagdpanzerIV>
- <87lg1rggcz.fsf@linutronix.de>
- <20190311105411.GA368@jagdpanzerIV>
- <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
- <874l8815uc.fsf@linutronix.de>
+        Thu, 14 Mar 2019 05:15:12 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:10660 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfCNJPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 05:15:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1552554912; x=1584090912;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=hMe8FKVPjVi0fBfAiHF940hFJcMPNsl2HAI6hOaoVt8=;
+  b=gUpLKq651SwZTEjlJD3xwEyq1noAERuDqFWR+EC3KFN5Rfonw4Ty/Saw
+   ckebozNDcpnzyUqkZhEKZHAVO1v8lzf3lbNeJjFJU1J+n1PZSXnjzPlXy
+   k/GWkn5pdKeLufOUxFNz47zx43+tvOlvMGdW98j1P6Sa9cqCbzW2FM6XD
+   LVjsdc+RsU2WVaA/0O1x0KimA519EnEhnsk2GPsWXzfZSI6BxDzCK6GuE
+   QImAWFnLAZVdI19p30jNE7qX4lUal2FuNvuQv4bmgz3vzCcmCx76zvksj
+   g++hXBts0ujj9ddHh8cTUbW4kUf4W1z4GgYgCHwvIsd3RHjE6V3AGLFDY
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.58,477,1544457600"; 
+   d="scan'208";a="105143333"
+Received: from mail-sn1nam02lp2051.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.51])
+  by ob1.hgst.iphmx.com with ESMTP; 14 Mar 2019 17:15:11 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TQsq+gsMDnlWFDT6BagtHvmNeN/25Yyu5Ax1zFYiMkY=;
+ b=amsJndYhlKcNASOfb6ke1vqqHmy98R+h8CPe7Cfljdyp+burY4tgDk/KWxCo2D5X+MPNdb0kxV09jCNngVaYt9bK9F6c0PdlnZfTzm8KkdVh1DaVcpUOLUGglUCv6kwxzo9UMjgbQJeIbgkGOJE6Ju9h8WbRHIv4Xqoyh9GGop4=
+Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
+ SN6PR04MB4719.namprd04.prod.outlook.com (52.135.122.97) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Thu, 14 Mar 2019 09:15:10 +0000
+Received: from SN6PR04MB4925.namprd04.prod.outlook.com
+ ([fe80::f4d4:a300:2010:195a]) by SN6PR04MB4925.namprd04.prod.outlook.com
+ ([fe80::f4d4:a300:2010:195a%3]) with mapi id 15.20.1709.011; Thu, 14 Mar 2019
+ 09:15:10 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Kangjie Lu <kjlu@umn.edu>
+CC:     "pakki001@umn.edu" <pakki001@umn.edu>,
+        Vinayak Holikatti <vinholikatti@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] scsi: ufs: fix a missing check of devm_reset_control_get
+Thread-Topic: [PATCH] scsi: ufs: fix a missing check of devm_reset_control_get
+Thread-Index: AQHU2jE5oITZH0L/+0mOkIU9/P2A26YK2DXQ
+Date:   Thu, 14 Mar 2019 09:15:10 +0000
+Message-ID: <SN6PR04MB4925DB2652FAED5F3AED27CCFC4B0@SN6PR04MB4925.namprd04.prod.outlook.com>
+References: <20190314063749.13907-1-kjlu@umn.edu>
+In-Reply-To: <20190314063749.13907-1-kjlu@umn.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4994bfa5-fac6-46a1-f47e-08d6a85d8eee
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR04MB4719;
+x-ms-traffictypediagnostic: SN6PR04MB4719:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB47190752D253C3BAEEE5E00AFC4B0@SN6PR04MB4719.namprd04.prod.outlook.com>
+x-forefront-prvs: 09760A0505
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(396003)(346002)(366004)(376002)(189003)(199004)(2171002)(86362001)(6436002)(229853002)(2906002)(52536014)(6246003)(72206003)(76176011)(186003)(4326008)(478600001)(6506007)(102836004)(26005)(81156014)(9686003)(71200400001)(74316002)(81166006)(4744005)(71190400001)(14454004)(55016002)(99286004)(7736002)(305945005)(8676002)(7696005)(53936002)(6916009)(25786009)(8936002)(97736004)(33656002)(68736007)(105586002)(106356001)(6116002)(3846002)(11346002)(476003)(54906003)(66066001)(446003)(5660300002)(256004)(316002)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4719;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: E51RDOQQSnzKVjssq0o0D29IfH+O9b8mEBJvp5y6/VSU4s9GIX/wGZbLGivnDhcFk62qUPuQgF/LD3ctKSGDdmUx9CaM7fnk49w7wqiuMMwmmW/JwMYXWPEz2rL6atdh59iKeyVK48VcYVqmQyMgmSz9NQKvv5T0s4mRJKMtjJjwuxFMuyBbTquql0p/TXmkR87FyYMatfWmYpyZ1349ng5VJRktdAQL0d4VwshW/45BZ715ID2Nby2Wl9c+d1aYwJmk77tepMQ7b9qyJnoPThtwqwLnK4tbI8baFCfScqNKq/HQ1Pf1W3nK1XB/R50RO666Te705TIGm8gM/8djvY8gqQFnDpq9PmuqyRRElUdyxRYihNqoS1dpN0xfw6wAAyjv8Nr4O4shXCoPDxE+fGYMQdA7KgCJnujqjcThAjM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874l8815uc.fsf@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4994bfa5-fac6-46a1-f47e-08d6a85d8eee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2019 09:15:10.2143
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4719
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-03-12 16:15:55, John Ogness wrote:
-> On 2019-03-12, Petr Mladek <pmladek@suse.com> wrote:
-> > On Tue 2019-03-12 09:17:49, John Ogness wrote:
-> >> The current printk implementation is handling all console printing as
-> >> best effort. Trying hard enough to dramatically affect the system, but
-> >> not trying hard enough to guarantee success.
-> >
-> > I agree that direct output is more reliable. It might be very useful
-> > for debugging some types of problems. The question is if it is worth
-> > the cost (code complexity, serializing CPUs == slowing down the
-> > entire system).
-> >
-> > But it is is possible that a reasonable offloading (in the direction
-> > of last Sergey's approach) might be a better deal.
-> >
-> >
-> > I suggest the following way forward (separate patchsets):
-> >
-> >     1. Replace log buffer (least controversial thing)
-> 
-> Yes. I will post a series that only implements the ringbuffer using your
-> simplified API. That will be enough to remove printk_safe and actually
-> does most of the work of updating devkmsg, kmsg_dump, and syslog.
+Hi,
+>=20
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Avri Altman <avri.altman@wdc.com>
 
-Great. I just wonder if it is going to be fully lockless or
-still using the prb_lock. I could understand the a fully lockless
-solution will be much more complicated. But I think that it would
-make a lot of things easier in the long run. Especially it might
-help to avoid the big-kernel-lock-like approach.
+> ---
+>  drivers/scsi/ufs/ufs-hisi.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
+> index 452e19f8fb47..ce9d7c40909f 100644
+> --- a/drivers/scsi/ufs/ufs-hisi.c
+> +++ b/drivers/scsi/ufs/ufs-hisi.c
+> @@ -544,6 +544,11 @@ static int ufs_hisi_init_common(struct ufs_hba *hba)
+>  	ufshcd_set_variant(hba, host);
+>=20
+>  	host->rst  =3D devm_reset_control_get(dev, "rst");
+> +	if (IS_ERR(host->rst)) {
+> +		dev_err(dev, "%s: failed to get reset control\n",
+> +			__func__);
+Use full line please
 
+> +		return PTR_ERR(host->rst);
+> +	}
+>=20
+>  	ufs_hisi_set_pm_lvl(hba);
+>=20
+> --
+> 2.17.1
 
-> >     2. Reliable offload to kthread (would be useful anyway)
-> 
-> Yes. I would like to implement per-console kthreads for this series. I
-> think the advantages are obvious. For PREEMPT_RT the offloading will
-> need to be always active. (PREEMPT_RT cannot call the console->write()
-> from atomic contexts.) But I think this would be acceptable at first. It
-> would certainly be better than what PREEMPT_RT is doing now.
-
-I would personally start with one kthread. I am afraid that
-the discussion about it will be complicated enough. We could
-always make it more complicated later.
-
-I understand the immediate offloading might be necessary for
-PREEMPT_RT. But a more conservative approach is needed for
-non-rt kernels.
-
-Well, if there won't be a big difference in the complexity
-between one and more threads then we could mix it. But
-I personally see this a two steps that are better be done
-separately.
-
-
-> >     3. Atomic consoles (a lot of tricky code, might not be
-> > 		worth the effort)
-> 
-> I think this will be necessary. PREEMPT_RT cannot support reliable
-> emergency console messages without it. And for kernel developers this is
-> also very helpful. People like PeterZ are using their own patches
-> because the mainline kernel is not providing this functionality.
-> 
-> The decision about _when_ to use it is still in the air. But I guess
-> we'll worry about that when we get that far. There's enough to do until
-> then.
-
-I am sure that there are situations where the direct output
-to atomic consoles would help with debugging. PeteZ and Steven
-are using their own patches for a reason.
-
-Let's see how the code is complicated and how many consoles
-might get supported a reasonable way.
-
-
-Anyway, it will be a long run. I am personally curious where
-this will end :-)
-
-Best Regards,
-Petr
