@@ -2,116 +2,170 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68931C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042D8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34FBE21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:59:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=openedev.com header.i=@openedev.com header.b="R6ZrXvTj"
+	by mail.kernel.org (Postfix) with ESMTP id CAC6921019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfCNH7G (ORCPT
+        id S1727233AbfCNIAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:59:06 -0400
-Received: from se14t.web-hosting.com ([162.255.118.155]:35339 "EHLO
-        se14t.web-hosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfCNH7F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:59:05 -0400
-X-Greylist: delayed 2313 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Mar 2019 03:59:05 EDT
-Received: from [68.65.123.203] (helo=server153.web-hosting.com)
-        by se14.registrar-servers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <akash@openedev.com>)
-        id 1h4Kf0-00019f-1z; Thu, 14 Mar 2019 00:20:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=openedev.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=J+3nukUHldE+Mk0hZpPnpS+i785FbEu4bQBR4zvx+ps=; b=R6ZrXvTj3MEVFxR+ayywWLv1IO
-        WIAIbNrlASOkwp4Z6DZbgqcsAObQO75YAQ8xaZXENrnk37Vvb2ngWwNpar3/w2OShx2GCrUVn1cVN
-        QhZTakDfjNvP20sVbEzDe2AKWhEHmZmpEbKO1Vx5KPCJvvcpTGU0OeBL33bX5d2srSz7semr3SRgl
-        6CS26/RVlxjSonIxPyBb26hdT520YtBKcaMwCj35p0ZF8bhlT12blVS0GoJRjvkBxYXgxg3omb0ns
-        BRNrCbFqvB7uLzfrWyzou5qccM7fpLKeOr7jR2ha/9gKC78PsuFZH7Zeks3nVVckDIlvGvkjVLXB2
-        IdkWdtQw==;
-Received: from nat-inn.mentorg.com ([192.94.34.34]:19766 helo=agajjar-vr.inn-wifi.mentorg.com)
-        by server153.web-hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <akash@openedev.com>)
-        id 1h4Ket-002iQG-3m; Thu, 14 Mar 2019 03:20:08 -0400
-From:   Akash Gajjar <akash@openedev.com>
-To:     heiko@sntech.de
-Cc:     Akash Gajjar <akash@openedev.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?q?Andrius=20=C5=A0tikonas?= <andrius@stikonas.eu>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] add gpu node support on rock960 and rockpi4
-Date:   Thu, 14 Mar 2019 12:48:40 +0530
-Message-Id: <20190314071853.32176-1-akash@openedev.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 Mar 2019 04:00:03 -0400
+Received: from mout.gmx.net ([212.227.17.22]:48723 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbfCNIAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 04:00:02 -0400
+Received: from [0.0.0.0] ([54.250.245.166]) by mail.gmx.com (mrgmx101
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 0MVZuV-1hXskC1Esx-00Yvl2; Thu, 14
+ Mar 2019 08:59:44 +0100
+Subject: Re: [PATCH] btrfs: fix a NULL pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190314075041.28966-1-kjlu@umn.edu>
+From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAVQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWCnQUJCWYC
+ bgAKCRDCPZHzoSX+qAR8B/94VAsSNygx1C6dhb1u1Wp1Jr/lfO7QIOK/nf1PF0VpYjTQ2au8
+ ihf/RApTna31sVjBx3jzlmpy+lDoPdXwbI3Czx1PwDbdhAAjdRbvBmwM6cUWyqD+zjVm4RTG
+ rFTPi3E7828YJ71Vpda2qghOYdnC45xCcjmHh8FwReLzsV2A6FtXsvd87bq6Iw2axOHVUax2
+ FGSbardMsHrya1dC2jF2R6n0uxaIc1bWGweYsq0LXvLcvjWH+zDgzYCUB0cfb+6Ib/ipSCYp
+ 3i8BevMsTs62MOBmKz7til6Zdz0kkqDdSNOq8LgWGLOwUTqBh71+lqN2XBpTDu1eLZaNbxSI
+ ilaVuQENBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAGJATwEGAEIACYWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWBrwIbDAUJA8JnAAAK
+ CRDCPZHzoSX+qA3xB/4zS8zYh3Cbm3FllKz7+RKBw/ETBibFSKedQkbJzRlZhBc+XRwF61mi
+ f0SXSdqKMbM1a98fEg8H5kV6GTo62BzvynVrf/FyT+zWbIVEuuZttMk2gWLIvbmWNyrQnzPl
+ mnjK4AEvZGIt1pk+3+N/CMEfAZH5Aqnp0PaoytRZ/1vtMXNgMxlfNnb96giC3KMR6U0E+siA
+ 4V7biIoyNoaN33t8m5FwEwd2FQDG9dAXWhG13zcm9gnk63BN3wyCQR+X5+jsfBaS4dvNzvQv
+ h8Uq/YGjCoV1ofKYh3WKMY8avjq25nlrhzD/Nto9jHp8niwr21K//pXVA81R2qaXqGbql+zo
+Message-ID: <6c65c23a-71f7-d31d-63b1-91919b933def@gmx.com>
+Date:   Thu, 14 Mar 2019 15:59:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-OutGoing-Spam-Status: No, score=-0.5
-X-Originating-IP: 68.65.123.203
-X-SpamExperts-Domain: nctest.net
-X-SpamExperts-Username: whmcalls3
-Authentication-Results: registrar-servers.com; auth=pass (login) smtp.auth=whmcalls3@nctest.net
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.09)
-X-Recommended-Action: accept
-X-Filter-ID: EX5BVjFpneJeBchSMxfU5qvZCgtLBf1wBe7g3QkF0Ix602E9L7XzfQH6nu9C/Fh9KJzpNe6xgvOx
- q3u0UDjvO9Kz5dih1EthU2MWX/atyIaZdK0HkmzEk8rbnHWK2CAwKQpkZZXbqBHHS7K4iXvv6D9w
- t2xWqJRpuLe8wpAsBWCPrIKyLEzqJhCS72BIl4JOpBy80lCTHMqwkVavo/hGPVpMJt2hvioWDQLR
- +F8Qzq07Jl0cTbMjtJzGDA/hgJi5KsyTeHKuBkcJ13PXNCvSiriFGgMRx6d6FbBzxs0Z8EswRpnA
- IuFluGKjDRq2iBJyWunPl/ohRNIiwFqCBEOsmBguLxWDsPJb+k4qKIjw6Kjs5m+7wJmzKH/9Awyx
- ktoGjXMGAfCVtfbjcya7FiZ10+qSYmDhmfCGznB+LvwZMnbQQFzDBjhPYYLyyVl/DO04GZWT6Tsv
- DXKv683dSPZhX8v6RglqCRiWLLlJfXqOwsSEQ1zg63VRC9n5o9IubHRCajhI/osHQYQOY9tKQuYh
- V0/2daO84E+CJIUWxPZgHA4oVG4R1QSBae5eMu8El8wp8YJwPcY3BZj5hjW3jSN7kDZQ6OtBjX2d
- hf8r1xeX6dGaEFvYj4y8eeqFFdtAEhWvd4DaCK6Pjpd0ktFAUcyBO/hTzdUB76FJbC2aoijjK5vZ
- VLoBIQ/0Yot61dtATH/YSE8bhW7Do3k5xAFc45r9HH9q0aZI3qbhXsaDdLgW9bq7ONs0Jo7siUxp
- CnbQuxznTS5wWhJczORue9s9vxMyvT3ZEg7qDAZihU7TNifj61aWKjPv6Se6da4XjLm88/LDLnDH
- LQNX6Z9k7LHvI3S8k8yoD25LMd/8Q6GyVYHQHyyqls2q2f6GiuILRCoVzcAUesmMQdfOVPytGy0v
- aP8A+OIp7Ll3zg39paKeqrIPi/nXs2KsRjKrCowEavDwQuKonn43CVihpNXqOZnA1kmofBq13Vtd
- PYPpQDJAG8jZaE6kPx28ZCmzF6xraiN8yTq5LrsYgOOLVP0PfMA01LCiikBDOYLztKvzrLSd1VxM
- Ru4N5NrpfsZsRnl/I/FTR139Shj4g7fEqX8BGOvWI8yqhtlg1q14MI9rG0MenXlswhbk2P5lYvz2
- ervtNnQfK6kuRnPRYcAeHV8hxEmZPAz5djibSz1TZEeHqHdttKvBUzCN4NAlGxY6r4hMSxGQ+U5v
- Nu4rMPKlzWU9qMOiGXHBuQl7kvd3Y9+UVnnGTsDuvLq0N5hlE2LuZbV6X+y312KNlGoBrkyiaxWd
- ombtIRbrbHLYM3A6BXfvel8OEFDbU50ueTym1wgy3QoDz1w5VXFhebjHJPwXPZ6YHMJ8vHED6QY4
- ei+01UVhKsXWCf/f12Vc+wcBvq1ZAdP9Br8WkgqueLGXOud3vgQ6Lwxr8Zs7itcxKJJ78am5WUrT
- xjBCYAo5Ix7/C9VwqPH/5QpQnZ0BqABLpxpkKfYdpWqgBL2Mh16HX+6x4KcU/f2CYrvOMnz/q172
- TuUUAfA6uqFnxU12
-X-Report-Abuse-To: spam@se16.registrar-servers.com
+In-Reply-To: <20190314075041.28966-1-kjlu@umn.edu>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="mC0apToDGpZarcL1RQjPGdoj9rin4f9dz"
+X-Provags-ID: V03:K1:aNwG+hVOWzeldTzhy9WIyM6rfhfYvCKcKIlHZZoLzwKC7sj/5yR
+ 32OyrthcYZFKDG+sYTAaIGh9NCIlE7+EoV1+DuaJVM3ly0rTuj1qABJM6nJ9y39CU8Sfo2H
+ g3WUeU6Qxl67WT1ZqK/ejWl+mvtztIr0pwsoNKlHkXMufhX5820y140P9DidCMvE69rjl7g
+ D+hOhKntSwvJsoPDj/koA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gZ2kgHBJfA4=:Pkr9RettYYRsdQkJwTw0JK
+ VUjS8CovZordD4ApMkkdEVXeq4IRffi42iGU1esINRYh+ddIEpHULFeK35qIlgtsG+8CF4345
+ LeDCsUiXb4nVgWGjHgwT7hG1Li4YMihge2p8yj+jwz66Ux/iwucr5sfFqaZpyuJNSJFl0rWb/
+ /i9EcyT2fPli00i/EM56QsGisjFTdfFoQAG5En07CdOJdVs+SjKtZBFJiEprvq0IB2ohZJohv
+ gjAVLOUMa2Aa0cvud+VvuVf4oenA8Q3pYKBKPzN7tSv6KaiHrjbAiJwTW0lODHgSPtm+qVBoi
+ 9lTg04YK9cjh/DC+dM+GiTd1uH/HX+PibprIjo5VDgIGaPULVUNias3f5sg5hz3jaO9DfeHwm
+ KNNwfhQxCQFEk2e5yCVtc2uWBH7mGz/nV4/bzQy2YUOZPYrXujDTAStd0TNdLM34gC1omFWx3
+ fM6+P7fSTQecyrVjRiUGNRWmPcYXTch+7P6rjU8DcVQpBsAGQyj5ZW96JGMcRu9r6DkBnJlgJ
+ WiJnYF9+GzEP7fZxuhVivpTgweSvPHMIZbZAcVKiQsWeUA2KFMAX5XzhDM8luH9OvbDuGmTnK
+ TSzv4VpW8Vtr7zZ+cHqLYpO/jnSANCEW4CPyjnffj9+Ft87ulggCbJuv4nZw1Wu+ZuINP5JXY
+ dtFN9Bo+QFeYYyXaMj5tjMYFKsNMVrxeEnjUAuL+1E8qwVPuWgxOEz4LxwGvUz1uP1iEcrxAJ
+ spUg7EZ10RksNqD3vLwcf4TECpSds9lM3I3SnDYvGdOFjcFxPIlrsO0ZjrLY7qw4+hpxN1nM+
+ NSu9SkRd93q0bY05cgCQvbSwMUzVbxtR4mG/rhe8wwnJVyQfRd0VZVa2v0n3jfM8WQqHaLkuX
+ QbmAUkZ+p57FsHs26vVuVkeFg6Y/DVO2m6V95JXKeUghM+tJ8aIq5Zd1j6d5pI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add gpu node support on both rockchip-rk3399 board.
-performance tested with freedesktop.org panfrost mali driver.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--mC0apToDGpZarcL1RQjPGdoj9rin4f9dz
+Content-Type: multipart/mixed; boundary="Z4BVcKsIXLHGNn2aJ33lNEzVAC2MM8l07";
+ protected-headers="v1"
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+To: Kangjie Lu <kjlu@umn.edu>
+Cc: pakki001@umn.edu, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <6c65c23a-71f7-d31d-63b1-91919b933def@gmx.com>
+Subject: Re: [PATCH] btrfs: fix a NULL pointer dereference
+References: <20190314075041.28966-1-kjlu@umn.edu>
+In-Reply-To: <20190314075041.28966-1-kjlu@umn.edu>
 
-Akash Gajjar (2):
-  arm64: dts: rockchip: add mali gpu support on rockpi4
-  arm64: dts: rockchip: add mali gpu support on rock960
+--Z4BVcKsIXLHGNn2aJ33lNEzVAC2MM8l07
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
- arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts | 5 +++++
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dts   | 5 +++++
- 2 files changed, 10 insertions(+)
 
--- 
-2.17.1
 
+On 2019/3/14 =E4=B8=8B=E5=8D=883:50, Kangjie Lu wrote:
+> btrfs_lookup_block_group may fail and return NULL. The fix goes
+> to out when it fails to avoid NULL pointer dereference.
+>=20
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  fs/btrfs/extent-tree.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+> index 994f0cc41799..b1e7985bcb9d 100644
+> --- a/fs/btrfs/extent-tree.c
+> +++ b/fs/btrfs/extent-tree.c
+> @@ -7303,6 +7303,8 @@ void btrfs_free_tree_block(struct btrfs_trans_han=
+dle *trans,
+> =20
+>  		pin =3D 0;
+>  		cache =3D btrfs_lookup_block_group(fs_info, buf->start);
+> +		if (!cache)
+> +			goto out;
+
+The check itself is OK.
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+
+The problem is, here we're freeing a tree block, if there is no block
+group for it, we shouldn't be able to read the extent buffer out.
+
+So it's near impossible to hit. (Unless there is some other things wrong)=
+
+
+Thanks,
+Qu
+
+> =20
+>  		if (btrfs_header_flag(buf, BTRFS_HEADER_FLAG_WRITTEN)) {
+>  			pin_down_extent(fs_info, cache, buf->start,
+>=20
+
+
+--Z4BVcKsIXLHGNn2aJ33lNEzVAC2MM8l07--
+
+--mC0apToDGpZarcL1RQjPGdoj9rin4f9dz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAlyKCecACgkQwj2R86El
+/qj0WAgAgMpYZ8WtQ25v/asQL9+R63WGUU14Iy7S6VgTVBnvJl/I7UOSi592trdt
+TZU6XK01zX/gKm780STYS1ZBgw+HiyfG5O1CVotIAJLUzFkCRr6MPGP05p1Tult9
+T9VWrXKpBV4c4PR2jDSpI42eCaO2onZIhJp2lUI5/LO0d/Eb2tBINmTuK94jKiZE
+jxhgJ82vsRcSVaSi0oapueet5OmLXBvwt9UJrAQ4L5CZiSHO7dubXZIa+wmfXLSR
+7Bwoayg44CHChOf4XVkIo1gphoxlx45jeyr0t1qmv9Xl8hm8Bd8up1fzVAaMhSez
+GCbsFA9Zn9rIs2NJvr49iHIv6DTXFg==
+=5FVU
+-----END PGP SIGNATURE-----
+
+--mC0apToDGpZarcL1RQjPGdoj9rin4f9dz--
