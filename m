@@ -2,116 +2,98 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC93C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 142B9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7547E217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF012184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="kULQ0Wtz"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="PbQzOVrv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfCNHd2 (ORCPT
+        id S1727184AbfCNHeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:33:28 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:57442 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfCNHd1 (ORCPT
+        Thu, 14 Mar 2019 03:34:46 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:40652 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfCNHep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:33:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 2E8A8B7A
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:33:26 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id cY7qR5K8Rvrl for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 02:33:26 -0500 (CDT)
-Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id EA19EC4C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:33:25 -0500 (CDT)
-Received: by mail-it1-f198.google.com with SMTP id v12so3895570itv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:33:25 -0700 (PDT)
+        Thu, 14 Mar 2019 03:34:45 -0400
+Received: by mail-it1-f195.google.com with SMTP id l139so3132964ita.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=2KdFAd7hIIoInlHZ9K0V/3XCy5cD+1K+fdIT5yyXtd8=;
-        b=kULQ0WtzP73Vvqdf9QfDwv9Y+au4RDVoy9vcVFKYCbVju58YxY8XNzrHEee1sjYFqt
-         atl2MVPEtK/MUetfOcE7LOOScNsZzVwVpJyTvzPLaC1BmjV6zEiJs/ZU4wROvsnWiWOl
-         gL5NIsSP11xu+6j6eJy6RlnPm2ulANUD9wQpIdL435NmA8bqiOzqUwtkzkRmF8Hi2/YD
-         xQN22QY5CZ+27czwr+FC1WqgFgCsv8W1dcIxORdLg9ebhVvRSOiuB5utWs3LEVka4wF9
-         nADZKgxE8UsMwjhQz928OACPkMfiM5no1H9GAOZu0lEQ3sPYfDjqsQH0zxA+heD4fu5l
-         RYBA==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5j7xlTpPCfN62y7RLvULhwbqVmECMd1pBios9Gk8yCo=;
+        b=PbQzOVrvNnnL6aGps6qRwBVqplB+yUbNaSKxPEvW9gz2kiMJEZ1k9+A9c3ZFkGNOqq
+         CXzYb6s47WoUkXCoTGy42LFP4KS8bRlHk2F1MvR/WuX9mXdxnF3SvTqqxMOHxGrpdFj5
+         H4FaJfHcjQIdh5DyFxThUt/qvMR73JWYtEh3s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2KdFAd7hIIoInlHZ9K0V/3XCy5cD+1K+fdIT5yyXtd8=;
-        b=QOgae+Wvms5lwTzQ5CO0R7MRZOLWdwDVOfk+x0+Ia8PC+OJuaG++I0mOSL7zozvyM5
-         8BmUeVsJmKZ4XF1ruGIQhCX6NZ3GvWOobvGUp90F/m7fLZAU6HKC2Yij0hOsmMMIS4lc
-         HBmip8ISnoJGjCiesobBDXBKeMpcLf91YOePiZfARzAjSKirImeGaL7re6+4XA78Jf1S
-         1rvxqABzXFv0T1LzdF6aGrdCGADnjo1b7r4xxfJB4LuErwrdqMdmqiUnfGFLGJfk74/6
-         v9YR2kKHI5h2L3FIaEin/yajdCSkWV+ONKLxkNl3fJsedlcTX4iA2lizBqZ9tzPOd5Y6
-         yNiQ==
-X-Gm-Message-State: APjAAAXfZ+dgIeLQAA3XUTYaYZAUhwPv5Rerm8MVn/Uy9sJVlzkRAVlx
-        o37J2XJcVd6cL1SqG8ftmaidTz6S7K1ijuFYBfcC06knNjTKYY2Vjkpq00yKIvQN6wkkOsmi8wn
-        QgI/ncsUwQ8x2B2ghSeRto5jIBmN0
-X-Received: by 2002:a05:660c:fcd:: with SMTP id m13mr1358831itn.77.1552548805526;
-        Thu, 14 Mar 2019 00:33:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqypa2fyX0AVw20mZGED1IerN1dmBKtxViLlhgnyyUBZASgB39ubfjPHAiN9ExxhX1NgCpDHKQ==
-X-Received: by 2002:a05:660c:fcd:: with SMTP id m13mr1358823itn.77.1552548805320;
-        Thu, 14 Mar 2019 00:33:25 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id n6sm907151itc.0.2019.03.14.00.33.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 00:33:24 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] video: fbdev: fix potential NULL pointer dereferences
-Date:   Thu, 14 Mar 2019 02:33:17 -0500
-Message-Id: <20190314073319.23209-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5j7xlTpPCfN62y7RLvULhwbqVmECMd1pBios9Gk8yCo=;
+        b=FYMDXxryCldR64NCFfXa/6FK2Mdzes8pV+FTMQy5xLDkPU1i3nHoYz+HuC+dtuylCT
+         KoHcq5N00I3W6bsm7kvjOt+Kppx26oDGuK2uplnk+4pON5xckIpO0tPywq4lXTrYoZS6
+         hXbz56qBf2/oR0uvh4VAlFL+w/bTNylfOFCTIrtALNiRKhVbKc+8OJ57rxzZ/9hvuT7I
+         1cbDZwnJkxg6lZ7t7Gz5BNjQrjsBFpiEkj0sB5yO/0V0o+aopOORgvzptmzSNLM7aox1
+         x4egFUIugiWV/c9O/ZQgmYQJRp6vZXLDpl9TvU74UZAF+vNK75XJ3OWKu1XF1B56ljDl
+         JlKQ==
+X-Gm-Message-State: APjAAAWAN1MU4WYPv5AjRn6pvi7PMgNxmhK/edJK2JifvE5/xhLkyhZ7
+        FWew0HvBqOLNRY5goKvQtCx4JxMA0zlsEC2WyZgslg==
+X-Google-Smtp-Source: APXvYqzCiQVr5TF9z2qS6mwXDvX9wPnScA+1X9nrCp6IYmHfaNqlkVTqi/NaQPW9b7SemkgvbN5wFagoE5oJ8WPPrzo=
+X-Received: by 2002:a24:1947:: with SMTP id b68mr1054204itb.121.1552548884924;
+ Thu, 14 Mar 2019 00:34:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <4603533.ZIfxmiEf7K@blindfold> <15244624.W7e5yEypHC@blindfold>
+ <20190313222610.GF10169@gmail.com> <4098793.CtYQtWW4dM@blindfold>
+In-Reply-To: <4098793.CtYQtWW4dM@blindfold>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 14 Mar 2019 08:34:33 +0100
+Message-ID: <CAJfpegvX4ANfso-Jn1zaB+m4Q_0eK9i-+MCJ+sTH5QzD3PZFMQ@mail.gmail.com>
+Subject: Re: overlayfs vs. fscrypt
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Lawrence <paullawrence@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case ioremap fails, the fix releases resources and returns
--ENOMEM to avoid NULL pointer dereferences.
+On Wed, Mar 13, 2019 at 11:42 PM Richard Weinberger <richard@nod.at> wrote:
+>
+> Am Mittwoch, 13. M=C3=A4rz 2019, 23:26:11 CET schrieb Eric Biggers:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/video/fbdev/imsttfb.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> > What specifically is wrong with supporting the ciphertext "view" of enc=
+rypted
+> > directories, and why do you want to opt UBIFS out of it specifically bu=
+t not
+> > ext4 and f2fs?  (The fscrypt_operations are per-filesystem type, not
+> > per-filesystem instance, so I assume that's what you had in mind.)  Not=
+e that we
+> > can't unconditionally remove it because people need it to delete files =
+without
+> > the key.  We could add a mount option to disable it, but why exactly?
+>
+> You are right, fscrypt_operations is the wrong structure.
+> My plan was having it per filesystem instance. So a mount-option seems li=
+ke
+> a good option. Of course for all filesystems that support fscrypt, not ju=
+st UBIFS.
 
-diff --git a/drivers/video/fbdev/imsttfb.c b/drivers/video/fbdev/imsttfb.c
-index 5d9670daf60e..2e321d73b3a5 100644
---- a/drivers/video/fbdev/imsttfb.c
-+++ b/drivers/video/fbdev/imsttfb.c
-@@ -1515,6 +1515,11 @@ static int imsttfb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	info->fix.smem_start = addr;
- 	info->screen_base = (__u8 *)ioremap(addr, par->ramdac == IBM ?
- 					    0x400000 : 0x800000);
-+	if (!info->screen_base) {
-+		release_mem_region(addr, size);
-+		framebuffer_release(info);
-+		return -ENOMEM;
-+	}
- 	info->fix.mmio_start = addr + 0x800000;
- 	par->dc_regs = ioremap(addr + 0x800000, 0x1000);
- 	par->cmap_regs_phys = addr + 0x840000;
--- 
-2.17.1
+Yes, please.   Changing filesystem contents based on a mount option is
+orders of magnitude more sane than doing so on key insertion/removal.
 
+Thanks,
+Miklos
