@@ -2,128 +2,120 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0600BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0048CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B52206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A1A2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sS0MVDMD"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WI0Ab/Ds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfCNMbr (ORCPT
+        id S1727590AbfCNMcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:31:47 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34198 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbfCNMbr (ORCPT
+        Thu, 14 Mar 2019 08:32:03 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37055 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfCNMcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 08:31:47 -0400
-Received: by mail-pg1-f193.google.com with SMTP id v12so3899507pgq.1;
-        Thu, 14 Mar 2019 05:31:46 -0700 (PDT)
+        Thu, 14 Mar 2019 08:32:03 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z17so5767223qtn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 05:32:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UifkzEkFRqXu3yixaaw6yvTChu7M21y6ZQxvlg1zFMs=;
-        b=sS0MVDMDyFcESOfK3Nol8/Q9B+4Nq7OBizGym/jfhkZlhXLU9qaRP6cu4TLyqsxpdP
-         T+67ww1K+a5bDz9/uvJhZpx6XAt7LqHkiY/4jGQ2K/Uv9ycyFEHqD6MpWTX5D+/C8LZz
-         nWCrs2WKQJv3X+k+icsJNiOYtS5hdrVOS1OUExDpeDyHGC+b/pxVo7yVviZDGh9EnES9
-         U5QXzA5y4Yp9wgoTr9uinS/Bdy73Ls7b0q2iQ+LuKofZKwy/AnpKnF8xTIZfs0IL98hf
-         fds9yWMwj/yd22EWN6ACH+4PQv9V7c8xm2pQ4BQ1E1sUQ3f+ezVaXEXRZpiw0m6bEMhN
-         vquw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O66kdQXOarCKUq+1dTsJapp3SRZV9kBKqR1827U6s04=;
+        b=WI0Ab/DsGrEhdwbVVwi0LnEbCEhAoOtBS3VOhkq741c/7SSDRV1FAlGiMpb0HDNzGe
+         8kns1g5wLVWmszHIfIIy7Hn4GCTz81I1NDfxjnDroXIj9xzWRTHyaHlSm0CmtUjztynZ
+         J64v7JmeQrFkDvsmLbZLKtHi0WMdXNELq81Ow=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UifkzEkFRqXu3yixaaw6yvTChu7M21y6ZQxvlg1zFMs=;
-        b=KnrPquOF77g/ofOxnBUcNPuQj6u6a8Cth7bV6AyLXJfUlMEmKJbWM9T7DnrqoJUgjn
-         QdaC9qVCqRbrbSyqw+yhwnEHCy/fSyBTyDjgv//7w44p/FQtJnBn+ApjM/sXMj1huHob
-         nar4VV1E+qwIe+6oRgj0ouwe9yYfSmwJ65jCZuJ82u4loqQ+qk1n2/1WRdg58JWF8siX
-         xRiN85V8JymfOqonEd/Lz5MBaq2hPfknY9S9EoJaYAKTpPapSkVvRyUmOjIKVhppOnWc
-         ajRc1cgGioU3R9nVVzKsVIEounzIAbCnObcFRb+D1IFuTl6wPSdHi8ykwl35KF4LMVNh
-         PaCA==
-X-Gm-Message-State: APjAAAX5uHII1nTJb0j4laKLUc65ro+COXDkrQ5zLVfWZMDQrxeACodF
-        JKVDjrDjQxDq330G8OP88UQ=
-X-Google-Smtp-Source: APXvYqxRMyrpEmHYR/ILhPTW1Bg/IeYMXzo2jTUTJ/0icyFY2AGGTdVBvD1DUJFo/IuPL0FXmtdrZQ==
-X-Received: by 2002:a65:4547:: with SMTP id x7mr36531973pgr.350.1552566706556;
-        Thu, 14 Mar 2019 05:31:46 -0700 (PDT)
-Received: from localhost.localdomain ([2001:268:c0a4:3974:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id l184sm23077547pfc.41.2019.03.14.05.31.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 05:31:46 -0700 (PDT)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
-        yamada.masahiro@socionext.com, bgolaszewski@baylibre.com,
-        linux-arm-kernel@lists.infradead.org,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v10 09/10] gpio: uniphier: Utilize for_each_set_clump8 macro
-Date:   Thu, 14 Mar 2019 21:32:37 +0900
-Message-Id: <9487b6bd8f9c2242448729f5f8fc9534f724b221.1552566114.git.vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1552566113.git.vilhelm.gray@gmail.com>
-References: <cover.1552566113.git.vilhelm.gray@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O66kdQXOarCKUq+1dTsJapp3SRZV9kBKqR1827U6s04=;
+        b=VxxpuUawZmlfMv9dbNrek8zDBQzSm9q/o9vpJBtGYll/pM5M/1H6UcmLxvaUjujjHz
+         DkWbYV3N3i71hk8eZYOb8J4MH+JstaLVtfLFAMHIR0IwNP12Y797T4a0+857mvb5k+MD
+         /nmxF6VCH/sKaxd/iX7p+FZ47XLVlyZqwVwM/wC/odBBzbgG1ivbIvogI+OKc16BCysm
+         QQ5UMZSXLCj9V+cgA5Ynu6MDpbNIbuH+US4mzaFwjWp6KhuOV+rK9AbkSK27iyPSbxmL
+         zjRzVM+DLIlsJIvQNdnb9J6tLJep+yJUXNfqzkvd9HACjZrT3oQkjRMuIzWkfjcTcljV
+         1UMg==
+X-Gm-Message-State: APjAAAUoZhCF4pyCkQBEs1/9fBwkivThENDZ7lrNwL3iVjpRQ9ol7mx3
+        lTN1C5ISmKNg76NW7p2w/4u9oA==
+X-Google-Smtp-Source: APXvYqwL9lUL+sTLRKEWufOOXJfW6YUstHLVnX1fX6aoBXUgJcvUI8dZ83WCuv99Sspr7G16nx85ZA==
+X-Received: by 2002:aed:3c75:: with SMTP id u50mr16356617qte.128.1552566721707;
+        Thu, 14 Mar 2019 05:32:01 -0700 (PDT)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id y11sm11872148qky.2.2019.03.14.05.32.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 05:32:00 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 08:31:59 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        rcu@vger.kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        luto@kernel.org, byungchul.park@lge.com
+Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
+ half-interrupts
+Message-ID: <20190314123159.GB101545@google.com>
+References: <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
+ <20190311133939.GA29747@google.com>
+ <20190311222903.GR13351@linux.ibm.com>
+ <20190312150514.GB249405@google.com>
+ <20190312152034.GZ13351@linux.ibm.com>
+ <20190313150948.GA84821@google.com>
+ <20190313112726.01d974fc@gandalf.local.home>
+ <20190313155155.GN13351@linux.ibm.com>
+ <20190313125125.1a1fb2f3@gandalf.local.home>
+ <20190313180730.GU13351@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313180730.GU13351@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace verbose implementation in set_multiple callback with
-for_each_set_clump8 macro to simplify code and improve clarity. An
-improvement in this case is that banks that are not masked will now be
-skipped.
+On Wed, Mar 13, 2019 at 11:07:30AM -0700, Paul E. McKenney wrote:
+> On Wed, Mar 13, 2019 at 12:51:25PM -0400, Steven Rostedt wrote:
+> > On Wed, 13 Mar 2019 08:51:55 -0700
+> > "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
+> > 
+> > > Does this mean that there is a better approach that Joel's suggestion?
+> > > I believe he would end up with something like this:
+> > > 
+> > > 	WARN_ON_ONCE(IS_ENABLED(CONFIG_PROVE_RCU) && !in_irq());
+> > > 
+> > > It would be nice if there is something like this:
+> > > 
+> > > 	lockdep_assert_in_irq_handler();
+> > > 
+> > > But I haven't seen this.  (Not that I have looked particularly hard for
+> > > such a thing, mind you!)
+> > 
+> > That would be trivial to implement:
+> > 
+> > #define lockdep_assert_in_irq() do {
+> > 		WARN_ON(debug_locks && !current->hardirq_context);
+> > 	} while (0)
+> 
+> Looks good to me!
+> 
+> Joel, does this work for you?  I could be wrong, but I suspect that Steve
+> is suggesting that you incorporate the above into your eventual patch.  ;-)
 
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- drivers/gpio/gpio-uniphier.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+Oh thanks for pointing that out. Yes it does work for me. I agree with the
+lockdep API addition and others could benefit from it too. I will incorporate
+the lockdep API addition into the RCU patch, but let me know if I should
+rather split it.
 
-diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
-index 0f662b297a95..df640cb29b9c 100644
---- a/drivers/gpio/gpio-uniphier.c
-+++ b/drivers/gpio/gpio-uniphier.c
-@@ -15,9 +15,6 @@
- #include <linux/spinlock.h>
- #include <dt-bindings/gpio/uniphier-gpio.h>
- 
--#define UNIPHIER_GPIO_BANK_MASK		\
--				GENMASK((UNIPHIER_GPIO_LINES_PER_BANK) - 1, 0)
--
- #define UNIPHIER_GPIO_IRQ_MAX_NUM	24
- 
- #define UNIPHIER_GPIO_PORT_DATA		0x0	/* data */
-@@ -147,15 +144,14 @@ static void uniphier_gpio_set(struct gpio_chip *chip,
- static void uniphier_gpio_set_multiple(struct gpio_chip *chip,
- 				       unsigned long *mask, unsigned long *bits)
- {
--	unsigned int bank, shift, bank_mask, bank_bits;
--	int i;
-+	unsigned int i;
-+	unsigned long bank_mask;
-+	unsigned int bank;
-+	unsigned int bank_bits;
- 
--	for (i = 0; i < chip->ngpio; i += UNIPHIER_GPIO_LINES_PER_BANK) {
-+	for_each_set_clump8(i, bank_mask, mask, chip->ngpio) {
- 		bank = i / UNIPHIER_GPIO_LINES_PER_BANK;
--		shift = i % BITS_PER_LONG;
--		bank_mask = (mask[BIT_WORD(i)] >> shift) &
--						UNIPHIER_GPIO_BANK_MASK;
--		bank_bits = bits[BIT_WORD(i)] >> shift;
-+		bank_bits = bitmap_get_value8(bits, chip->ngpio, i);
- 
- 		uniphier_gpio_bank_write(chip, bank, UNIPHIER_GPIO_PORT_DATA,
- 					 bank_mask, bank_bits);
--- 
-2.21.0
+thanks!
+
+ - Joel
 
