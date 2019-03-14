@@ -2,97 +2,193 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D5FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DF2C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D87218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6A4218A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZH4g4fY"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="KLueMx+1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CYSoMbcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfCNUrL (ORCPT
+        id S1727980AbfCNUrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 16:47:11 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37643 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfCNUrL (ORCPT
+        Thu, 14 Mar 2019 16:47:23 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:56901 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726829AbfCNUrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 16:47:11 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x10so4042345wmg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 13:47:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=FAE+gefVvzzjbgtQgDTkJ8IwCdhFztZoHPrcP5qMEsQ=;
-        b=BZH4g4fYE4gGxzV6H0i/+AaCUIGknGXBjx+qC6ZFNNiyxEN2QQs1hR8LZxxMz3DsKa
-         B/LOMY0Fa0hJlyVjE2uyie312qtvb2B6SC5jPKFVAeZKz6C7O5/h9lpAFBqip+xiDcH2
-         PKjlEBXMYr7gxRcDvFKyfbf0cyP/ySjAxqVfhIrB+tIswAYoS/1YOjK3+/TjYu+s0oCS
-         y0QoU/5cKpjlkJvT1GDwfqpfMzfFEjxvT310pSQDSjb/0k30IQj35tkNj5oXe7fW4W39
-         6XzEaiR+fJt4epalqkkS7WLmQ80YUa+QjwdTuSDbt9vwhXXY1Sw18tlbvVFiIfqK7wtK
-         pIZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=FAE+gefVvzzjbgtQgDTkJ8IwCdhFztZoHPrcP5qMEsQ=;
-        b=kuPifQQbfD2UPzhuPEq0xs0zEU5nWAzlOYraVz5YFdTeQvaQfxcfnU1lTyCTl4dHIg
-         7g30O4UhK1hKhBK00s9mp/IfbsoopmtsNFWLof07YDurTaDJn7ntUDkD7HsvMvIASVEi
-         nMb+MaIwV/6TLKLKwbr8uMUbucw6tsjbtKuX0d+T2AM6QmnJnTJbswdDQO/W56LEm8WF
-         YO4CepLjzO9SDSowHnoiaRZM8RkyqbpiWEHMYMrVi5WCQxAFnaNOgn+Av2dXea8cSWnS
-         4HKzXe3pnyKbfiFXFqdRTBWLdkyoIgk8zdKZzsSS/5fVwe0MAotuX8KDPtk+8E2xD1jK
-         wD7w==
-X-Gm-Message-State: APjAAAVLZVk3+K3MsKypJOHjz3H0MkSTJBnm/UUl3FAI+zgsp/023FX6
-        Cb6xCvcLCY5mgXUFuerc8g==
-X-Google-Smtp-Source: APXvYqwZ+RmikgdtLgMhVL9B09yW45Rurp1G+MQfyJsQiwUzaw45IisyNHDWj8/ApJCUTCHUO4cigQ==
-X-Received: by 2002:a1c:cb86:: with SMTP id b128mr260680wmg.46.1552596429592;
-        Thu, 14 Mar 2019 13:47:09 -0700 (PDT)
-Received: from avx2 ([46.53.246.8])
-        by smtp.gmail.com with ESMTPSA id s12sm11785996wro.67.2019.03.14.13.47.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 13:47:09 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 23:47:07 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] elf: make scope of "pos" variable smaller
-Message-ID: <20190314204707.GC18143@avx2>
+        Thu, 14 Mar 2019 16:47:22 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id B91D521D35;
+        Thu, 14 Mar 2019 16:47:21 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Thu, 14 Mar 2019 16:47:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=yLDcuHp0DhRpR1BcCx+aKpC2sxa
+        Xs3xGUSd0iNo1cIA=; b=KLueMx+1d35u7zYB1YugeyNJvkHB9+RQ2+4Eu43no2U
+        lTg9F9j4s+Vzl65H7V6YTohqtBGV6HWcm9/5+rX9DYCgCRqbjXKcETXe3xj+acr8
+        WNDOZYCl0xrG4C6yq6kr1iSVrtWHxGlEI48r+Mb3wOwmFM8TMRGzcOKARZKdlpSk
+        iLSWPF2sMq2IdkFdbEAyTUVvo3M9f/hQMxPKRpAynB8a23J29OvZGYiWE3woqV5W
+        fDaPHLr+3GaDyu566qe3vQP32B/2iAFOVFnfe30E9bvIyBrQmhzzJzwMlNQkvSQ+
+        SeErVmc8/o4lVzcN/F9Bk6rkNZ+RA1sRXqldn41w4Fg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=yLDcuH
+        p0DhRpR1BcCx+aKpC2sxaXs3xGUSd0iNo1cIA=; b=CYSoMbcWmJisv+NFYF4Tc1
+        xLDK+MjQ1+1CGnzo95WdVdYekFNjO8F680UHJ7f5c01fkJrj7FtMcvXPhvRgN7Cp
+        LOgkVk/ySl7FTp+1mkDHrTtZ234rlBuTzdM7sal+qFM9K6GNNROfK02v3qTDo6xO
+        U+6GlqRxHP4RXTEZi/3lUIpHTwPM+0AoWHpIn1Q+6o8txM9TKt8aX6ijUrB+FScX
+        j3hxuDOdQ+bAfdEm9GR5BSW6w7lcUwDee9V4hChWvIy2nmyZk2xQ1vbmMAd3B8NG
+        ++XzlD72M82KxdCJvL5ZhFGpNkFs+7dM9rxI6r8b/m7/y+KlYu1gqbZmqpcFbroQ
+        ==
+X-ME-Sender: <xms:2L2KXGCO8ycsFPbw7xcG60r8O4HwsS8NoF4cZ5Jqgf8ssJRxPfjhGg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrheefgdehtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculddutddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfkphepuddvgedrudeiledrvdefrddukeegnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:2L2KXHeZ8lbdtzHyVZ76DT-lFu6xXcKuKq3jqcqwOBSkK5-2GH4f4Q>
+    <xmx:2L2KXCh3U3Ewh67sGKSCY-jTPLFEoo0PaYGahg9UA9vjqgeAzswjrA>
+    <xmx:2L2KXMmjRSOhP_UVG5xAug07zv3nhKmKdGIsdPJPmc_Pk_99m_7eGQ>
+    <xmx:2b2KXN1Aw24UaYyCqed31pZzPf-KqgXTPIdYxWlxxwce3mWa7fPJ2w>
+Received: from localhost (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6813F100E5;
+        Thu, 14 Mar 2019 16:47:19 -0400 (EDT)
+Date:   Fri, 15 Mar 2019 07:47:00 +1100
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/7] slob: Use slab_list instead of lru
+Message-ID: <20190314204700.GA10222@eros.localdomain>
+References: <20190314053135.1541-1-tobin@kernel.org>
+ <20190314053135.1541-4-tobin@kernel.org>
+ <20190314185219.GA6441@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190314185219.GA6441@tower.DHCP.thefacebook.com>
+X-Mailer: Mutt 1.11.3 (2019-02-01)
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+On Thu, Mar 14, 2019 at 06:52:25PM +0000, Roman Gushchin wrote:
+> On Thu, Mar 14, 2019 at 04:31:31PM +1100, Tobin C. Harding wrote:
+> > Currently we use the page->lru list for maintaining lists of slabs.  We
+> > have a list_head in the page structure (slab_list) that can be used for
+> > this purpose.  Doing so makes the code cleaner since we are not
+> > overloading the lru list.
+> > 
+> > The slab_list is part of a union within the page struct (included here
+> > stripped down):
+> > 
+> > 	union {
+> > 		struct {	/* Page cache and anonymous pages */
+> > 			struct list_head lru;
+> > 			...
+> > 		};
+> > 		struct {
+> > 			dma_addr_t dma_addr;
+> > 		};
+> > 		struct {	/* slab, slob and slub */
+> > 			union {
+> > 				struct list_head slab_list;
+> > 				struct {	/* Partial pages */
+> > 					struct page *next;
+> > 					int pages;	/* Nr of pages left */
+> > 					int pobjects;	/* Approximate count */
+> > 				};
+> > 			};
+> > 		...
+> > 
+> > Here we see that slab_list and lru are the same bits.  We can verify
+> > that this change is safe to do by examining the object file produced from
+> > slob.c before and after this patch is applied.
+> > 
+> > Steps taken to verify:
+> > 
+> >  1. checkout current tip of Linus' tree
+> > 
+> >     commit a667cb7a94d4 ("Merge branch 'akpm' (patches from Andrew)")
+> > 
+> >  2. configure and build (select SLOB allocator)
+> > 
+> >     CONFIG_SLOB=y
+> >     CONFIG_SLAB_MERGE_DEFAULT=y
+> > 
+> >  3. dissasemble object file `objdump -dr mm/slub.o > before.s
+> >  4. apply patch
+> >  5. build
+> >  6. dissasemble object file `objdump -dr mm/slub.o > after.s
+> >  7. diff before.s after.s
+> > 
+> > Use slab_list list_head instead of the lru list_head for maintaining
+> > lists of slabs.
+> > 
+> > Reviewed-by: Roman Gushchin <guro@fb.com>
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > ---
+> >  mm/slob.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/mm/slob.c b/mm/slob.c
+> > index 39ad9217ffea..94486c32e0ff 100644
+> > --- a/mm/slob.c
+> > +++ b/mm/slob.c
+> > @@ -112,13 +112,13 @@ static inline int slob_page_free(struct page *sp)
+> >  
+> >  static void set_slob_page_free(struct page *sp, struct list_head *list)
+> >  {
+> > -	list_add(&sp->lru, list);
+> > +	list_add(&sp->slab_list, list);
+> >  	__SetPageSlobFree(sp);
+> >  }
+> >  
+> >  static inline void clear_slob_page_free(struct page *sp)
+> >  {
+> > -	list_del(&sp->lru);
+> > +	list_del(&sp->slab_list);
+> >  	__ClearPageSlobFree(sp);
+> >  }
+> >  
+> > @@ -282,7 +282,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+> >  
+> >  	spin_lock_irqsave(&slob_lock, flags);
+> >  	/* Iterate through each partially free page, try to find room */
+> > -	list_for_each_entry(sp, slob_list, lru) {
+> > +	list_for_each_entry(sp, slob_list, slab_list) {
+> >  #ifdef CONFIG_NUMA
+> >  		/*
+> >  		 * If there's a node specification, search for a partial
+> 
+> 
+> Hi Tobin!
+> 
+> How about list_rotate_to_front(&next->lru, slob_list) from the previous patch?
+> Shouldn't it use slab_list instead of lru too?
 
- fs/binfmt_elf.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I'll let this sit for a day or two in case we get any more comments on
+the list.h stuff then do another version ready for US Monday morning.
 
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -703,7 +703,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		struct elfhdr interp_elf_ex;
- 	} *loc;
- 	struct arch_elf_state arch_state = INIT_ARCH_ELF_STATE;
--	loff_t pos;
- 
- 	loc = kmalloc(sizeof(*loc), GFP_KERNEL);
- 	if (!loc) {
-@@ -743,6 +742,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 
- 	for (i = 0; i < loc->elf_ex.e_phnum; i++) {
- 		if (elf_ppnt->p_type == PT_INTERP) {
-+			loff_t pos;
-+
- 			/* This is the program interpreter used for
- 			 * shared libraries - for now assume that this
- 			 * is an a.out format binary
+Thanks again,
+Tobin.
