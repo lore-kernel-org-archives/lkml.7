@@ -2,106 +2,134 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B32BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BCCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7CB20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6192087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QOj6bEhQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="roF3VzBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfCNLKY (ORCPT
+        id S1727323AbfCNLMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:10:24 -0400
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:43835 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfCNLKX (ORCPT
+        Thu, 14 Mar 2019 07:12:20 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35173 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfCNLMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:10:23 -0400
-Received: by mail-wr1-f49.google.com with SMTP id d17so5352328wre.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:10:22 -0700 (PDT)
+        Thu, 14 Mar 2019 07:12:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e17so3751385pgd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:12:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/JDj8TyDj39QEhF6L2k0Ejw4vMVzg6xp1kxfqEmJmRU=;
-        b=QOj6bEhQ0uWHIGjwGl/CDLhOGfJkuTn1GmeGmqGin19w0OJbhWRuXQwmvY49uvJ/tu
-         Af/4fpXRBW0U84JCOQjlyK1glEbDjdIEWhiQ941osgEgnzrlQ/6bmjgpng3HHCj/H0/c
-         9QECQ6k3pC3tpPJjz/LP47mArfbyDQbUr7HSq5f53aarQJqb2iK/zxsIaocg064b9j1D
-         QD4c7Lt6oLaRXzDS8G2/jHdh0+8RRHJnhReIEpK2a3meIbBEvQrOTf86Vx/B0DGeKgDy
-         GZUjORqh7+MiENo7fou9VSsemabK6B3T0nt2v8LaBSk71Ck0FZOBrbcUeKZINwruNQik
-         g5Gg==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=n4HxxiwAlFlhYdr+5LtCpPNTbZpyj8J+lBCYFMhyfbY=;
+        b=roF3VzBjrTyogMB4us1/EsA/Dq4OBYl+TaF+eOCuBLQVH8XeGPaXxaAD1Td7hqPfoK
+         LBDL2hte6Ck6pioefoqCurbnoloOrxvPVRA5SFL0tIs+aCiCNuGE1FM74gozRGQZMRul
+         53AvQ8XLfcuPCr60Vo+C2OCmxRmbUEIRk/F9cUVM6efhLHPhawZ2GQ5rU+mYOX3QTVI0
+         xDKA6swaB6/uIDaVzvOup2HuROIX0TnUs/0n1ZKNpwwDsVzhI2mo6LjLaeeGcTzTZ+Zk
+         8+AonY4iohLVAzLN3EvugsBccsD6tN3LwmggZQTuqkqqSf8K/z46Xufj9g6/Ee2pPmvp
+         9oxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/JDj8TyDj39QEhF6L2k0Ejw4vMVzg6xp1kxfqEmJmRU=;
-        b=gnKsCktslbR2WSHGrFBcfgTPhe/i2UiMYSFcOgMCWRJXaV38WGgzV9+R7ekQQvSjc8
-         zmUtrOILOoG3RaaM1OFXrfTCCXqu9Jnnh9Cz9EfyVBn6ROyFIuPZQGxQtvp/WUFni/o8
-         cStCQog8uLGr7WM2y/+jcKdlieO25uK6EZ/fQa4LGvQ7FQ1xcGnRaCPhp6uD6+K636bK
-         ZAiH2YN5z2dZz5k0YsZHZAlU2TNPrstJqgDfyv42ws03nh5vXeIbnEkxBWS4l4H83HiI
-         lpyGvrGnr0o0/0gxhy+Ft1EgE5XEo/CbQgm8SPJxWbeh694f9U4tTdXl2RioMw8adQDu
-         jzzQ==
-X-Gm-Message-State: APjAAAWSBjWL9lpEp7HMVDjeIrFeoEjkclbi09WnwRiufoYPUkD3CyT0
-        9BYQzAF+JCTtEE8KXQr+9BwMcA==
-X-Google-Smtp-Source: APXvYqyCW2aPuN2kBaWHCjx7eGFufkJ44XHzzz5KX3cZv0V0uP9+z83pG16rGQkqn/eAx2cmegTE+A==
-X-Received: by 2002:a05:6000:8b:: with SMTP id m11mr30123450wrx.243.1552561821743;
-        Thu, 14 Mar 2019 04:10:21 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id g2sm15622832wrh.7.2019.03.14.04.10.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 04:10:20 -0700 (PDT)
-Subject: Re: [PATCH v2] PCI: qcom: Use default config space read function
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
- <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
- <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
- <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
- <7d3d788a-d6a3-a70b-adab-6c65771cacc4@free.fr>
- <3c76613e-e60d-94b8-dd6f-b8f4e1928263@linaro.org>
- <2f901228-52db-7661-8257-ca8fd2ff2a46@free.fr>
- <29664b43-535c-c4b1-a93d-18f49687f929@linaro.org>
- <b0e0dc68-4be9-1b0f-7528-fb7d143fea2b@free.fr>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <9c5a7620-e9ed-82d6-0708-34fe33e39030@linaro.org>
-Date:   Thu, 14 Mar 2019 11:10:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <b0e0dc68-4be9-1b0f-7528-fb7d143fea2b@free.fr>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=n4HxxiwAlFlhYdr+5LtCpPNTbZpyj8J+lBCYFMhyfbY=;
+        b=V4WkntqCWYD2ySLdJE0Pa05kcViJnqQGRwEVED3ffo4K4zh/Yez8Yi8k7HRth3yTsN
+         cT9QB41h9/jpjBvMWHOS0G7J+60w3JkiZwg4U+biSBaKEWCInWeaTADA1o/wQv8dlXbG
+         1OT0U7EXTWpyN8JNxcjdPRxvl0CeUfhWA60ppUI7+628Lr/9u+r/tWNuRxbhOjYqGEcd
+         clSWtTPZOTtAqMsbJLfQkcgz85VUOk9qr4Om4GVJD43rPNg+wwGBThnJHP1jox/Jq+tx
+         NHrKRU6uKWMAJ5Qex4F3LN7JyR9vMMZ5m/LUP0SXcnbQsKAOMZNDRbiqnrO+A4UqCNd+
+         22lA==
+X-Gm-Message-State: APjAAAUv5i0+bUPXXkk7ao25x3Op1R/Km/ePfhlYTjht9ao7ZAU2Ug5T
+        HTX+I/EWCo0MubpzKsrXQv0=
+X-Google-Smtp-Source: APXvYqxgGoNRfjnUZsQWx4drOGx00xoiXr7fHElYupWHFek9O3YWWuv8jqhL/GfJUxtX1Kd84mQCrw==
+X-Received: by 2002:a65:63c8:: with SMTP id n8mr44137753pgv.158.1552561938862;
+        Thu, 14 Mar 2019 04:12:18 -0700 (PDT)
+Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id 20sm34946592pfs.182.2019.03.14.04.12.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 14 Mar 2019 04:12:18 -0700 (PDT)
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+To:     devel@driverdev.osuosl.org (open list:ANDROID ION DRIVER),
+        dri-devel@lists.freedesktop.org (open list:ANDROID ION DRIVER),
+        linaro-mm-sig@lists.linaro.org (moderated list:ANDROID ION DRIVER),
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] driver : staging : ion: optimization for decreasing memory fragmentaion
+Date:   Thu, 14 Mar 2019 19:12:12 +0800
+Message-Id: <1552561932-23776-1-git-send-email-huangzhaoyang@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
+Two action for this patch:
+1. set a batch size for system heap's shrinker, which can have it buffer
+reasonable page blocks in pool for future allocation.
+2. reverse the order sequence when free page blocks, the purpose is also
+to have system heap keep as more big blocks as it can.
 
-On 13/03/2019 22:26, Marc Gonzalez wrote:
-> I needed to see the numeric values, hence the -n flag;-)
-> 
-> 	lspci -vvv -n
-> 
+By testing on an android system with 2G RAM, the changes with setting
+batch = 48MB can help reduce the fragmentation obviously and improve
+big block allocation speed for 15%.
 
-Here is the output: https://paste.ubuntu.com/p/kFWZ4kXCxT/
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+---
+ drivers/staging/android/ion/ion_heap.c        | 12 +++++++++++-
+ drivers/staging/android/ion/ion_system_heap.c |  2 +-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-Thanks,
-srini
+diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
+index 31db510..68aa970 100644
+--- a/drivers/staging/android/ion/ion_heap.c
++++ b/drivers/staging/android/ion/ion_heap.c
+@@ -16,6 +16,8 @@
+ #include <linux/vmalloc.h>
+ #include "ion.h"
+ 
++unsigned long ion_heap_batch;
++
+ void *ion_heap_map_kernel(struct ion_heap *heap,
+ 			  struct ion_buffer *buffer)
+ {
+@@ -303,7 +305,15 @@ int ion_heap_init_shrinker(struct ion_heap *heap)
+ 	heap->shrinker.count_objects = ion_heap_shrink_count;
+ 	heap->shrinker.scan_objects = ion_heap_shrink_scan;
+ 	heap->shrinker.seeks = DEFAULT_SEEKS;
+-	heap->shrinker.batch = 0;
++	heap->shrinker.batch = ion_heap_batch;
+ 
+ 	return register_shrinker(&heap->shrinker);
+ }
++
++static int __init ion_system_heap_batch_init(char *arg)
++{
++	 ion_heap_batch = memparse(arg, NULL);
++
++	return 0;
++}
++early_param("ion_batch", ion_system_heap_batch_init);
+diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
+index 701eb9f..d249f8d 100644
+--- a/drivers/staging/android/ion/ion_system_heap.c
++++ b/drivers/staging/android/ion/ion_system_heap.c
+@@ -182,7 +182,7 @@ static int ion_system_heap_shrink(struct ion_heap *heap, gfp_t gfp_mask,
+ 	if (!nr_to_scan)
+ 		only_scan = 1;
+ 
+-	for (i = 0; i < NUM_ORDERS; i++) {
++	for (i = NUM_ORDERS - 1; i >= 0; i--) {
+ 		pool = sys_heap->pools[i];
+ 
+ 		if (only_scan) {
+-- 
+1.9.1
 
-> Regards.
