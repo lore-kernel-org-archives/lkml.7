@@ -3,35 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7217C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F7FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE3F221852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10AB217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfCNLiI (ORCPT
+        id S1727539AbfCNLiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:38:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:39461 "EHLO mga05.intel.com"
+        Thu, 14 Mar 2019 07:38:55 -0400
+Received: from mga18.intel.com ([134.134.136.126]:5554 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbfCNLiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:38:08 -0400
+        id S1726501AbfCNLiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:38:55 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:38:07 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:38:54 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
-   d="scan'208";a="327248448"
+   d="scan'208";a="307163453"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Mar 2019 04:38:07 -0700
+  by orsmga005.jf.intel.com with ESMTP; 14 Mar 2019 04:38:54 -0700
 Received: from [10.125.252.108] (abudanko-mobl.ccr.corp.intel.com [10.125.252.108])
-        by linux.intel.com (Postfix) with ESMTP id 4F9F158046D;
-        Thu, 14 Mar 2019 04:38:05 -0700 (PDT)
-Subject: [PATCH v8 11/12] perf inject: enable COMPRESSED records decompression
+        by linux.intel.com (Postfix) with ESMTP id D89315803FA;
+        Thu, 14 Mar 2019 04:38:52 -0700 (PDT)
+Subject: [PATCH v8 12/12] perf tests: implement Zstd comp/decomp integration
+ test
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -42,8 +43,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <2df6970e-cd72-019f-710c-43159fae043a@linux.intel.com>
-Date:   Thu, 14 Mar 2019 14:38:04 +0300
+Message-ID: <71fcb3bb-1bab-f9ad-54b1-cc8de7dca7e3@linux.intel.com>
+Date:   Thu, 14 Mar 2019 14:38:51 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
@@ -57,36 +58,49 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Initialized decompression part of Zstd based API so COMPRESSED records
-would be decompressed into the resulting output data file.
+Implemented basic integration test for Zstd based trace
+compression/decompression in record and report modes.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/builtin-inject.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../tests/shell/record+zstd_comp_decomp.sh    | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp.sh
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 24086b7f1b14..8e0e06d3edfc 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -837,6 +837,9 @@ int cmd_inject(int argc, const char **argv)
- 	if (inject.session == NULL)
- 		return -1;
- 
-+	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
-+		pr_warning("Decompression initialization failed.\n");
+diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+new file mode 100755
+index 000000000000..bc195874fc27
+--- /dev/null
++++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+@@ -0,0 +1,28 @@
++#!/bin/sh
++# record trace Zstd compression/decompression
 +
- 	if (inject.build_ids) {
- 		/*
- 		 * to make sure the mmap records are ordered correctly
-@@ -867,6 +870,7 @@ int cmd_inject(int argc, const char **argv)
- 	ret = __cmd_inject(&inject);
- 
- out_delete:
-+	zstd_fini(&(inject.session->zstd_data));
- 	perf_session__delete(inject.session);
- 	return ret;
- }
++trace_file=$(mktemp /tmp/perf.data.XXX)
++perf_tool=perf
++output=/dev/null
++
++skip_if_no_z_record() {
++	$perf_tool record -h 2>&1 | grep '\-z, \-\-compression\-level'
++}
++
++collect_z_record() {
++	echo "Collecting compressed record trace file:"
++	$perf_tool record -o $trace_file -a -z -F 25000 -e cycles -- \
++		dd count=2000 if=/dev/random of=/dev/null > $output 2>&1
++}
++
++check_compressed_stats() {
++	echo "Checking compressed events stats:"
++	$perf_tool report -i $trace_file --header --stats | \
++		grep -E "(# compressed : Zstd,)|(COMPRESSED events:)" > $output 2>&1
++}
++
++skip_if_no_z_record || exit 2
++collect_z_record && check_compressed_stats
++err=$?
++rm -f $trace_file
++exit $err
 -- 
 2.20.1
 
