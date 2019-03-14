@@ -2,131 +2,175 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45C2C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A94C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A992077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:57:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mbuki-mvuki-org.20150623.gappssmtp.com header.i=@mbuki-mvuki-org.20150623.gappssmtp.com header.b="YjrKN8ZC"
+	by mail.kernel.org (Postfix) with ESMTP id 12CD12087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbfCNU5V (ORCPT
+        id S1727947AbfCNVCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 16:57:21 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43143 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727246AbfCNU5V (ORCPT
+        Thu, 14 Mar 2019 17:02:07 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:34548 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbfCNVCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 16:57:21 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d17so7346626wre.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 13:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mbuki-mvuki-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0n+Yubwo3+VmfuEyCVcIzcBbnEVd7iC+Fb5ALd0vzzg=;
-        b=YjrKN8ZC41ArPSrj0jEaqlU4YzOOpZoWqbYM/ehGIDZKXKseeyLuCWiEWRB/90obzT
-         Iqdf02pwGiJTvBTjeB0V2RTpojLOPRyNeYT3PHdfG/2O6TbBmp3A46XSinGJwZrf4JSG
-         He7i12HS/Gkv0Pg/gA22aQYD+VNGqsC9ECUlwc43t7NBOlpuoHkE5Hx7PdM53YxzQ6FG
-         BVum16oZFCTwWPfRzVYgXe1O5fWazUbGYoGBkh53uDT6qjCTJnL2TCOA+4VPqLLMpFXw
-         RMnCVeJCsGaaDZaQgMvvotdbkDxDJr6SINUpwzJ2q1efNPcv8fYeZ3jyYSSRGCqh2JH0
-         SJ2Q==
+        Thu, 14 Mar 2019 17:02:06 -0400
+Received: by mail-io1-f70.google.com with SMTP id y13so5292499iol.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 14:02:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0n+Yubwo3+VmfuEyCVcIzcBbnEVd7iC+Fb5ALd0vzzg=;
-        b=L/KoSS2UW6OyBC8y1jI2rfmhpnaMzb3b6lvqk64AZJmQ5RDeW2/HnceRdiT7sCwYh+
-         d5wRieR/lxh9ZwTTKF/fQiSstX0KWd00kDOmB5m8MRnsVWbiSq2L2FjzGF+DkpWEVDq7
-         Vc2wIGdbc3jkPtrLlVKc4azqorzakvAufqeTXTuCO3iirxyx4972LgmYrtthrqyOFN/2
-         j1KVtcbvmM9buWZSsvVZxmtJnQpmn1esDc/OlCfQjASI8ufsVsHbtmvtfthrcazVoSlg
-         AKC8Nih0L6ywryFhylKmDQsSJj11/zCVVR2kKEIfKtsqz9dIghqSJk0zi4+jNRBWfAZv
-         HZUA==
-X-Gm-Message-State: APjAAAVxG5LZVHohyUTeK8nM8MYv0nUzYvPnLBpIbOB+RZLgv4WFBNib
-        RSE+QECcdUCxVzhLpzQVQ6Hk3HMHv0TAUw7n8TUPsQ==
-X-Google-Smtp-Source: APXvYqw0lPXN5Zx+E9zkLIeQwjb6vF8nfptwMRMufVE6lctcBMaNIw0IVzBD+zS7E5O86tPrDgwB0rLfvRGHrp7bq/E=
-X-Received: by 2002:adf:9065:: with SMTP id h92mr393712wrh.150.1552597039322;
- Thu, 14 Mar 2019 13:57:19 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=hyL1rVMGAXIEr27g9C6WRNZGp99ZpkrW2p5E2v9UM0c=;
+        b=dCxXIalFL6tv69qOLtb7RhT7bNhT5yUAr9Z+6DvpPtQKMdeGGeFU+kd8iAoZsiDe4D
+         TNB13iPxbZmEpRUlYrg63v7TNeLpzgxek+OxjwXNsceDGPgZicTfkOBXbZXYrvMVtfo2
+         9mBsMc5TNUNHc7QwxA0+CQOoYq4umEzmvlyYxaG9tAJl5/S0SQ5QUjbDZLDzWYVPtAEl
+         B2LXUhIdDhXmos+Vfab/Qi+V6gOsJVaY+nRsaYocK9qhUFomPnzNDoEu1cmtkD9GczvH
+         CvWIvskJpcyCdp14y5xnGRQPuwqfu2GTXVkOr4dnuKlU8Jg7lJd8WwJMMRS/W5fy/ECX
+         2IHw==
+X-Gm-Message-State: APjAAAXkSJTP1QRI7py7rCk0wF/ynv0V99E/HFOg0Tm2CWAUJEIhdR7N
+        obhIChi6fjWcF5DPxqmqCw1qAzcNf4mn8Rdam33kbup0rsPP
+X-Google-Smtp-Source: APXvYqywk9mgcgaRdpjysZE3oZph+bjobwGgtyuStF06/x/5CKp4Csbnup97ZqgLoUAjNSx7vejsL5ypZVpqXWInkXCJKlrua/Ex
 MIME-Version: 1.0
-References: <CANSNSoWiKd98Dt1N2sSjP9Af8zk1NPV-=3P4VLtFs_cSQG4RUg@mail.gmail.com>
- <20190313232112.GC210027@google.com>
-In-Reply-To: <20190313232112.GC210027@google.com>
-From:   Jesse Hathaway <jesse@mbuki-mvuki.org>
-Date:   Thu, 14 Mar 2019 15:57:07 -0500
-Message-ID: <CANSNSoXPFDu9RQAUA6dUCUrSCAj68q-Nj2W7ECz3fKpFtSNU+Q@mail.gmail.com>
-Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a24:5e94:: with SMTP id h142mr311105itb.35.1552597325346;
+ Thu, 14 Mar 2019 14:02:05 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 14:02:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000e839b0584143c8c@google.com>
+Subject: general protection fault in sctp_sched_dequeue_common (2)
+From:   syzbot <syzbot+3d357cc384ddccdc2fff@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, lucien.xin@gmail.com,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > 1302fcf0d03e (refs/bisect/bad) PCI: Configure *all* devices, not just
-> > hot-added ones
-> > 1c3c5eab1715 sched/core: Enable might_sleep() and smp_processor_id()
-> > checks early
->
-> How did you narrow it down to *two* commits, and do you have to revert
-> both of them to avoid the hang?  Usually a bisection identifies a
-> single commit, and the two you mention aren't related.
+Hello,
 
-Sorry I should have been more verbose in what the bisection process was, I
-found the problem after attempting to upgrade from linux v3.16 to v4.9. When
-v4.9 hung I tried the latest kernel, v5.0, which also hanged. I began a git
-bisect, but found there was more than one bad commit. Here is my current
-understanding:
+syzbot found the following crash on:
 
-- [x] v3.18 vanilla, 1302fcf0d03e committed, hangs
-- [x] v3.18 with revert of 1302fcf0d03e, works
-.
-.
-.
-- [x] v4.12 vanilla, hangs
-- [x] v4.12 with revert of 1302fcf0d03e, works
+HEAD commit:    d9862cfb Merge tag 'mips_5.1' of git://git.kernel.org/pub/..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=132308f7200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=73d88a42238825ad
+dashboard link: https://syzkaller.appspot.com/bug?extid=3d357cc384ddccdc2fff
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: amd64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f95493200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=133be2cf200000
 
-- [x] v4.13 vanilla, 1c3c5eab1715 committed, hangs
-- [x] v4.13 with revert of 1302fcf0d03e, hangs
-- [x] v4.13 with revert of 1c3c5eab1715, hangs
-- [x] v4.13 with revert of 1302fcf0d03e & 1c3c5eab1715, works
+The crash was bisected to:
 
-- [x] v5.0 vanilla, hangs
-- [x] v5.0 with revert of 1302fcf0d03e & 1c3c5eab1715, works
+commit 7efba10d6bd22030fb5931e50bf97496f932f00e
+Author: Xin Long <lucien.xin@gmail.com>
+Date:   Mon Jan 28 07:08:46 2019 +0000
 
-> Can you collect a complete dmesg log (with a working kernel) and
-> output of "sudo lspci -vvxxx"?  You can open a bug report at
-> https://bugzilla.kernel.org, attach the logs there, and respond here
-> with the URL.
+     sctp: add SCTP_FUTURE_ASOC and SCTP_CURRENT_ASSOC for  
+SCTP_STREAM_SCHEDULER sockopt
 
-Bug submitted along with the requested logs,
-https://bugzilla.kernel.org/show_bug.cgi?id=202927
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467361b200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667361b200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1267361b200000
 
-> Where does the hang happen?  Is it when we configure the Comtrol card?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3d357cc384ddccdc2fff@syzkaller.appspotmail.com
+Fixes: 7efba10d ("sctp: add SCTP_FUTURE_ASOC and SCTP_CURRENT_ASSOC for  
+SCTP_STREAM_SCHEDULER sockopt")
 
-Hang occurs after PCI is initialized, snippet below, I have included the full
-output in the bug report:
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 7793 Comm: syz-executor452 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__list_del_entry_valid+0x85/0xf5 lib/list_debug.c:51
+Code: 0f 84 e1 00 00 00 48 b8 00 02 00 00 00 00 ad de 49 39 c4 0f 84 e2 00  
+00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 <80> 3c 02 00 75  
+53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d
+RSP: 0018:ffff88809e8c6fd8 EFLAGS: 00010247
+RAX: dffffc0000000000 RBX: ffff88808fdd6d10 RCX: ffffffff86799d9f
+RDX: 0000000000000000 RSI: ffffffff86815d20 RDI: ffff88808fdd6d18
+RBP: ffff88809e8c6ff0 R08: ffff888091bc0080 R09: 0000000000000002
+R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: 0000000000000006
+R13: 0000000100000000 R14: ffff88808fdd6d10 R15: ffff88809e8c7198
+FS:  0000000000fad880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000080 CR3: 00000000a1385000 CR4: 00000000001406e0
+Call Trace:
+  __list_del_entry include/linux/list.h:117 [inline]
+  list_del_init include/linux/list.h:159 [inline]
+  sctp_sched_dequeue_common+0x28/0x340 net/sctp/stream_sched.c:267
+  sctp_sched_prio_dequeue+0xec/0x1a0 net/sctp/stream_sched_prio.c:283
+  sctp_outq_dequeue_data net/sctp/outqueue.c:90 [inline]
+  sctp_outq_flush_data net/sctp/outqueue.c:1079 [inline]
+  sctp_outq_flush+0xba2/0x2790 net/sctp/outqueue.c:1205
+  sctp_outq_uncork+0x6c/0x80 net/sctp/outqueue.c:772
+  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1820 [inline]
+  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+  sctp_do_sm+0x513/0x5390 net/sctp/sm_sideeffect.c:1191
+  sctp_assoc_bh_rcv+0x343/0x660 net/sctp/associola.c:1074
+  sctp_inq_push+0x1ea/0x290 net/sctp/inqueue.c:95
+  sctp_backlog_rcv+0x189/0xbc0 net/sctp/input.c:354
+  sk_backlog_rcv include/net/sock.h:937 [inline]
+  __release_sock+0x12e/0x3a0 net/core/sock.c:2413
+  release_sock+0x59/0x1c0 net/core/sock.c:2929
+  sctp_wait_for_connect+0x316/0x540 net/sctp/socket.c:8999
+  sctp_sendmsg_to_asoc+0x13e2/0x17d0 net/sctp/socket.c:1968
+  sctp_sendmsg+0x10a9/0x17e0 net/sctp/socket.c:2114
+  inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
+  sock_sendmsg_nosec net/socket.c:622 [inline]
+  sock_sendmsg+0xdd/0x130 net/socket.c:632
+  ___sys_sendmsg+0x806/0x930 net/socket.c:2137
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2175
+  __do_sys_sendmsg net/socket.c:2184 [inline]
+  __se_sys_sendmsg net/socket.c:2182 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2182
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4402a9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff60414978 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402a9
+RDX: 0000000000000000 RSI: 000000002001afc8 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000002 R09: 00000000004002c8
+R10: 0000000000000008 R11: 0000000000000246 R12: 0000000000401b30
+R13: 0000000000401bc0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 8121cdb67bdbbfc9 ]---
+RIP: 0010:__list_del_entry_valid+0x85/0xf5 lib/list_debug.c:51
+Code: 0f 84 e1 00 00 00 48 b8 00 02 00 00 00 00 ad de 49 39 c4 0f 84 e2 00  
+00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 <80> 3c 02 00 75  
+53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d
+RSP: 0018:ffff88809e8c6fd8 EFLAGS: 00010247
+RAX: dffffc0000000000 RBX: ffff88808fdd6d10 RCX: ffffffff86799d9f
+RDX: 0000000000000000 RSI: ffffffff86815d20 RDI: ffff88808fdd6d18
+RBP: ffff88809e8c6ff0 R08: ffff888091bc0080 R09: 0000000000000002
+R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: 0000000000000006
+R13: 0000000100000000 R14: ffff88808fdd6d10 R15: ffff88809e8c7198
+FS:  0000000000fad880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000080 CR3: 00000000a1385000 CR4: 00000000001406e0
 
-[   10.561971] pci 0000:81:00.0:   bridge window [mem 0xc8000000-0xc80fffff]
-[   10.569661] pci 0000:80:01.0: PCI bridge to [bus 81-82]
-[   10.575594] pci 0000:80:01.0:   bridge window [mem 0xc8000000-0xc80fffff]
-[   10.583278] pci 0000:80:03.0: PCI bridge to [bus 83]
-[   10.589008] NET: Registered protocol family 2
-[   10.594254] tcp_listen_portaddr_hash hash table entries: 65536
-(order: 8, 1048576 bytes)
-[   10.603671] TCP established hash table entries: 524288 (order: 10,
-4194304 bytes)
-[   10.612729] TCP bind hash table entries: 65536 (order: 8, 1048576 bytes)
-[   10.620446] TCP: Hash tables configured (established 524288 bind 65536)
-[   10.628124] UDP hash table entries: 65536 (order: 9, 2097152 bytes)
-[   10.635541] UDP-Lite hash table entries: 65536 (order: 9, 2097152 bytes)
-[   10.643669] NET: Registered protocol family 1
 
-Please let me know if there is anything else I can provide, I am also happy to
-test any patches, Jesse Hathaway
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
+syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
