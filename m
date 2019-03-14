@@ -2,192 +2,183 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1558CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 03:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FC1C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 03:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C826C20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 03:15:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+H3yalP"
+	by mail.kernel.org (Postfix) with ESMTP id A3F5920854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 03:15:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfCNDPh (ORCPT
+        id S1726969AbfCNDP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 23:15:37 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39763 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfCNDPg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 23:15:36 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p27so3331248edc.6;
-        Wed, 13 Mar 2019 20:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w6tTH8LHrpkeFIvESsQeWU08KFpl98E7IcxYbXr9Pzs=;
-        b=I+H3yalPQvE1XM5roeTlEz235MZ3rHeexoAorISDeN6dTLGINpb3r4Hdmi7r3BdKLw
-         kWHthXDXZgNBqjt7VU4+ie+DdWcdw82rCbG2UtdtOQlMzq4ChuY/ZuYTZ4zpMS6Hec/6
-         z2KVuFPpDPrenocZxjDf+frHUz3prWXeocSzXWoDG8HVvG8AX6CK7evxVx8DPmbhFD6m
-         dXzFWGIlroHUugwy4rWXArV4EW1aCtKEKhzf1JpTDRgLM05iZPGK4e7Osf7UVjCQV1o6
-         o19r50zzePtV8o8t5AWhYorJa64vcnXzZS+jEfhfgIxkgZhCGCA3lirCBn+1nXEQLPLv
-         r6YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w6tTH8LHrpkeFIvESsQeWU08KFpl98E7IcxYbXr9Pzs=;
-        b=ZJbbTwk/xWzallFSg9LoDuucG+HKHw9I/qET712Oe99JSW9mc6W59PNSr4VC80q5Q1
-         MUKUB60jNfWiEbX2kgrIPa48LbdA5Hpv9k9VVXhZpkgQJOlDz6Nj5hE2xF8YvpIT1rcv
-         x+rzdE/i3vxBh+JBPn9hyRf1NaWXMJWMCO7MfV6KiwIsgY/oUe1uB//PNA5jfK7r10pm
-         3c/ZDtDJmbmrNn9GaLyPNsCiYCvEwu3DMZ+21UH80oR7MYKNS6k0PN1HE566REsCAPs7
-         XsCbbrRc44eHgm9bZNWwj0iaE0WWJ1KegIAGjAY29o0OkSMJhCeRwmAst7KQxmqnxNPJ
-         HdzA==
-X-Gm-Message-State: APjAAAWCRNYekOrAi2j5lTvECX0Ntoxxkg+dxD9a99XHfF3ZCxKNklLt
-        ASV5aM4YcP41m+z1I2wpFrs=
-X-Google-Smtp-Source: APXvYqwz5szNib+ok+DvL6/VQ+HRwf4y2kR0kamI3yar6UIcVR5BOSrrnk1r5UHnD0ICz45QEhZcQg==
-X-Received: by 2002:aa7:cfc7:: with SMTP id r7mr9484252edy.46.1552533333582;
-        Wed, 13 Mar 2019 20:15:33 -0700 (PDT)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id 41sm1099284edu.85.2019.03.13.20.15.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 13 Mar 2019 20:15:32 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 20:15:30 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     akpm@linux-foundation.org, clang-built-linux@googlegroups.com,
-        linux-kbuild@vger.kernel.org, stable@vger.kernel.org,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] lib/string.c: implement a basic bcmp
-Message-ID: <20190314031530.GA9264@archlinux-ryzen>
-References: <7549EE7E-4172-467D-815A-63664A33D410@goodmis.org>
- <20190313211335.165605-1-ndesaulniers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313211335.165605-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Wed, 13 Mar 2019 23:15:58 -0400
+Received: from smtpbg327.qq.com ([14.17.43.158]:60174 "EHLO smtpbg327.qq.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfCNDP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 23:15:58 -0400
+X-Greylist: delayed 452 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Mar 2019 23:15:54 EDT
+X-QQ-GoodBg: 0
+X-QQ-SSF: 00100000000000F0
+X-QQ-FEAT: hcmviN0nPXIVXbr1fJP6C7lu8mKQ4rVMRZl68D8QX1B3kHSpxqzN0sLwJhziu
+        Ha3kylHl3xqqp2Kg60Xx8qR5s5kPVZ0gsQW9A9E2AGwvuO4M84BO3zwRAkZEESbCflTX+Yo
+        HXMKYkyS7sfL+aCT0fp4J0iREWc7+KY5mP6XM54PLTlo4hevkxJd+Z4yPb2nthRqc+Ud3gq
+        FjAgkrZMY0PTvpk42rl4d1ni2Cb67WqMeousy1bxFdRO8cnsp40P/LF45hwv7hFpgDshsRi
+        FgPI+hXVaTthXe8CqXA5+B8a9Rq8HaUVb/rPlGdDpe0M1u
+X-QQ-BUSINESS-ORIGIN: 2
+X-Originating-IP: 222.92.124.153
+X-QQ-STYLE: 
+X-QQ-mid: bizmailfree7t1552532895t31345
+From:   "=?utf-8?B?6ZmI5Y2O5omN?=" <chenhc@lemote.com>
+To:     "=?utf-8?B?Z3JlZ2to?=" <gregkh@linuxfoundation.org>
+Cc:     "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>,
+        "=?utf-8?B?c3RhYmxl?=" <stable@vger.kernel.org>,
+        "=?utf-8?B?aHVhbmdwZWk=?=" <huangpei@loongson.cn>,
+        "=?utf-8?B?UGF1bCBCdXJ0b24=?=" <paul.burton@mips.com>,
+        "=?utf-8?B?UmFsZiBCYWVjaGxl?=" <ralf@linux-mips.org>,
+        "=?utf-8?B?YW1icm9zZWh1YQ==?=" <ambrosehua@gmail.com>,
+        "=?utf-8?B?U3RldmVuIEogLiBIaWxs?=" <Steven.Hill@cavium.com>,
+        "=?utf-8?B?bGludXgtbWlwcw==?=" <linux-mips@linux-mips.org>,
+        "=?utf-8?B?RnV4aW4gWmhhbmc=?=" <zhangfx@lemote.com>,
+        "=?utf-8?B?d3V6aGFuZ2ppbg==?=" <wuzhangjin@gmail.com>,
+        "=?utf-8?B?TGkgWHVlZmVuZw==?=" <lixuefeng@loongson.cn>,
+        "=?utf-8?B?WHUgQ2hlbmdodWE=?=" <xuchenghua@loongson.cn>,
+        "=?utf-8?B?U2FzaGEgTGV2aW4=?=" <sashal@kernel.org>
+Subject: =?utf-8?B?UmU6UmXvvJpSZTogIFJl77yaW1BBVENIIDQuOSA4?=
+ =?utf-8?B?MS85Nl0gTUlQUzpMb29uZ3NvbjogSW50cm9kdWNl?=
+ =?utf-8?B?IGFuZCB1c2UgbG9vbmdzb25fbGxzY19tYigp?=
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: base64
+Date:   Thu, 14 Mar 2019 11:08:15 +0800
+X-Priority: 3
+Message-ID: <tencent_28B5187E366B32A30F0F587E@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <tencent_427856736BC2687858153A56@qq.com>
+In-Reply-To: <tencent_427856736BC2687858153A56@qq.com>
+X-QQ-ReplyHash: 659801930
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+        by smtp.qq.com (ESMTP) with SMTP
+        id ; Thu, 14 Mar 2019 11:08:17 +0800 (CST)
+Feedback-ID: bizmailfree:lemote.com:qybgweb:qybgweb18
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 02:13:31PM -0700, Nick Desaulniers wrote:
-> A recent optimization in Clang (r355672) lowers comparisons of the
-> return value of memcmp against zero to comparisons of the return value
-> of bcmp against zero.  This helps some platforms that implement bcmp
-> more efficiently than memcmp. glibc simply aliases bcmp to memcmp, but
-> an optimized implementation is in the works.
-> 
-> This results in linkage failures for all targets with Clang due to the
-> undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
-> to unbreak the build.  This routine can be further optimized in the
-> future.
-> 
-> Other ideas discussed:
-> * A weak alias was discussed, but breaks for architectures that define
-> their own implementations of memcmp since aliases to declarations are
-> not permitted (only definitions).  Arch-specific memcmp implementations
-> typically declare memcmp in C headers, but implement them in assembly.
-> * -ffreestanding also is used sporadically throughout the kernel.
-> * -fno-builtin-bcmp doesn't work when doing LTO.
-> 
-> Link: https://bugs.llvm.org/show_bug.cgi?id=41035
-> Link: https://code.woboq.org/userspace/glibc/string/memcmp.c.html#bcmp
-> Link: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
-> Link: https://github.com/ClangBuiltLinux/linux/issues/416
-> Cc: stable@vger.kernel.org
-> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-> Reported-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Suggested-by: James Y Knight <jyknight@google.com>
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+SGksIEdyZWcsDQoNClBhdGNoIGZvciA0LjkgKGFuZCBiZWxvdyA0LjkpIGlzIGhlcmU6DQpo
+dHRwczovL3BhdGNod29yay5saW51eC1taXBzLm9yZy9wYXRjaC8yMTM3NS8NCg0KSHVhY2Fp
+DQogDQotLS0tLS0tLS0tLS0tLS0tLS0gT3JpZ2luYWwgLS0tLS0tLS0tLS0tLS0tLS0tDQpG
+cm9tOiAgIumZiOWNjuaJjSI8Y2hlbmhjQGxlbW90ZS5jb20+Ow0KRGF0ZTogIFRodSwgTWFy
+IDE0LCAyMDE5IDA2OjU1IEFNDQpUbzogICJncmVna2giPGdyZWdraEBsaW51eGZvdW5kYXRp
+b24ub3JnPjsNCkNjOiAgImxpbnV4LWtlcm5lbCI8bGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZz47ICJzdGFibGUiPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+OyAiaHVhbmdwZWkiPGh1
+YW5ncGVpQGxvb25nc29uLmNuPjsgIlBhdWwgQnVydG9uIjxwYXVsLmJ1cnRvbkBtaXBzLmNv
+bT47ICJSYWxmIEJhZWNobGUiPHJhbGZAbGludXgtbWlwcy5vcmc+OyAiYW1icm9zZWh1YSI8
+YW1icm9zZWh1YUBnbWFpbC5jb20+OyAiU3RldmVuIEogLiBIaWxsIjxTdGV2ZW4uSGlsbEBj
+YXZpdW0uY29tPjsgImxpbnV4LW1pcHMiPGxpbnV4LW1pcHNAbGludXgtbWlwcy5vcmc+OyAi
+RnV4aW4gWmhhbmciPHpoYW5nZnhAbGVtb3RlLmNvbT47ICJ3dXpoYW5namluIjx3dXpoYW5n
+amluQGdtYWlsLmNvbT47ICJMaSBYdWVmZW5nIjxsaXh1ZWZlbmdAbG9vbmdzb24uY24+OyAi
+WHUgQ2hlbmdodWEiPHh1Y2hlbmdodWFAbG9vbmdzb24uY24+OyAiU2FzaGEgTGV2aW4iPHNh
+c2hhbEBrZXJuZWwub3JnPjsNClN1YmplY3Q6ICBSZe+8mlJlOiBSZe+8mltQQVRDSCA0Ljkg
+ODEvOTZdIE1JUFM6TG9vbmdzb246IEludHJvZHVjZSBhbmQgdXNlIGxvb25nc29uX2xsc2Nf
+bWIoKQ0KIA0KSGksIEdyZWcsDQoNCkp1c3QgNC45KGFuZCBiZWxvdykgbmVlZCB0byBtb2Rp
+Znkgc3BpbmxvY2suaCwgICA0LjE0LCA0LjE5IGRvZXMgbm90IG5lZWQgdG8gZG8gdGhpcyBi
+ZWNhdXNlIHRoZXkgaGF2ZSBjb252ZXJ0ZWQgdG8gcXNwaW5sb2NrLiBBbmQsIHNvcnJ5IGZv
+ciBteSBwb29yIHJlcGx5IGJlY2F1c2UgSSBjYW4gb25seSB1c2UgbW9iaWxlIHBob25lIG5v
+dy4NCi0tLeWOn+Wni+mCruS7ti0tLQ0K5Y+R5Lu25Lq6OiJHcmVnIEtyb2FoLUhhcnRtYW4i
+PGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPg0K5Y+R6YCB5pe26Ze0OjIwMTnlubQz5pyI
+MTTml6Uo5pif5pyf5ZubKSDlh4zmmag0OjU4DQrmlLbku7bkuro6IumZiOWNjuaJjSI8Y2hl
+bmhjQGxlbW90ZS5jb20+Ow0K5Li76aKYOlJl77yaW1BBVENIIDQuOSA4MS85Nl0gTUlQUzpM
+b29uZ3NvbjogSW50cm9kdWNlIGFuZCB1c2UgbG9vbmdzb25fbGxzY19tYigpDQpPbiBXZWQs
+IE1hciAxMywgMjAxOSBhdCAwOToxNzoxNVBNICswODAwLCDpmYjljY7miY0gd3JvdGU6DQo+
+IEhpLCBHUkVHLA0KPiANCj4gNC45IG5lZWQgdG8gbW9kaWZ5IHNwaW5sb2NrLmgsIHBsZWFz
+ZSB3YWl0IG15IHBhdGNoLg0KPiANCj4gDQo+IA0KPiAtLS3ljp/lp4vpgq7ku7YtLS0NCj4g
+5Y+R5Lu25Lq6OiJHcmVnIEtyb2FoLUhhcnRtYW4iPGdyZWdraEBsaW51eGZvdW5kYXRpb24u
+b3JnPg0KPiDlj5HpgIHml7bpl7Q6MjAxOeW5tDPmnIgxM+aXpSjmmJ/mnJ/kuIkpIOWHjOaZ
+qDE6MTANCj4g5pS25Lu25Lq6OiJsaW51eC1rZXJuZWwiPGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmc+Ow0KPiDkuLvpopg6W1BBVENIIDQuOSA4MS85Nl0gTUlQUzogTG9vbmdzb246
+IEludHJvZHVjZSBhbmQgdXNlIGxvb25nc29uX2xsc2NfbWIoKQ0KPiA0Ljktc3RhYmxlIHJl
+dmlldyBwYXRjaC4gIElmIGFueW9uZSBoYXMgYW55IG9iamVjdGlvbnMsIHBsZWFzZSBsZXQg
+bWUga25vdy4NCj4gDQo+IC0tLS0tLS0tLS0tLS0tLS0tLQ0KPiANCj4gWyBVcHN0cmVhbSBj
+b21taXQgZTAyZTA3ZTMxMjdkOGFlYzFmNGJjZGZiMmZjNTJhMmQ5OWI0ODU5ZSBdDQo+IA0K
+PiBPbiB0aGUgTG9vbmdzb24tMkcvMkgvM0EvM0IgdGhlcmUgaXMgYSBoYXJkd2FyZSBmbGF3
+IHRoYXQgbGwvc2MgYW5kDQo+IGxsZC9zY2QgaXMgdmVyeSB3ZWFrIG9yZGVyaW5nLiBXZSBz
+aG91bGQgYWRkIHN5bmMgaW5zdHJ1Y3Rpb25zICJiZWZvcmUNCj4gZWFjaCBsbC9sbGQiIGFu
+ZCAiYXQgdGhlIGJyYW5jaC10YXJnZXQgYmV0d2VlbiBsbC9zYyIgdG8gd29ya2Fyb3VuZC4N
+Cj4gT3RoZXJ3aXNlLCB0aGlzIGZsYXcgd2lsbCBjYXVzZSBkZWFkbG9jayBvY2Nhc2lvbmFs
+bHkgKGUuZy4gd2hlbiBkb2luZw0KPiBoZWF2eSBsb2FkIHRlc3Qgd2l0aCBMVFApLg0KPiAN
+Cj4gQmVsb3cgaXMgdGhlIGV4cGxhaW5hdGlvbiBvZiBDUFUgZGVzaWduZXI6DQo+IA0KPiAi
+Rm9yIExvb25nc29uIDMgZmFtaWx5LCB3aGVuIGEgbWVtb3J5IGFjY2VzcyBpbnN0cnVjdGlv
+biAobG9hZCwgc3RvcmUsDQo+IG9yIHByZWZldGNoKSdlY3V0aW5nIG9jY3VycyBiZXR3ZWVu
+IHRoZSBleGVjdXRpb24gb2YgTEwgYW5kIFNDLCB0aGUNCj4gc3VjY2VzcyBvciBmYWlsdXJl
+IG9mIFNDIGlzIG5vdCBwcmVkaWN0YWJsZS4gQWx0aG91Z2ggcHJvZ3JhbW1lciB3b3VsZA0K
+PiBub3QgaW5zZXJ0IG1lbW9yeSBhY2Nlc3MgaW5zdHJ1Y3Rpb25zIGJldHdlZW4gTEwgYW5k
+IFNDLCB0aGUgbWVtb3J5DQo+IGluc3RydWN0aW9ucyBiZWZvcmUgTEwgaW4gcHJvZ3JhbS1v
+cmRlciwgbWF5IGR5bmFtaWNhbGx5IGV4ZWN1dGVkDQo+IGJldHdlZW4gdGhlIGV4ZWN1dGlv
+biBvZiBMTC9TQywgc28gYSBtZW1vcnkgZmVuY2UgKFNZTkMpIGlzIG5lZWRlZA0KPiBiZWZv
+cmUgTEwvTExEIHRvIGF2b2lkIHRoaXMgc2l0dWF0aW9uLg0KPiANCj4gU2luY2UgTG9vbmdz
+b24tM0EgUjIgKDNBMjAwMCksIHdlIGhhdmUgaW1wcm92ZWQgb3VyIGhhcmR3YXJlIGRlc2ln
+biB0bw0KPiBoYW5kbGUgdGhpcyBjYXNlLiBCdXQgd2UgbGF0ZXIgZGVkdWNlIGEgcmFyZWx5
+IGNpcmN1bXN0YW5jZSB0aGF0IHNvbWUNCj4gc3BlY3VsYXRpdmVseSBleGVjdXRlZCBtZW1v
+cnkgaW5zdHJ1Y3Rpb25zIGR1ZSB0byBicmFuY2ggbWlzcHJlZGljdGlvbg0KPiBiZXR3ZWVu
+IExML1NDIHN0aWxsIGZhbGwgaW50byB0aGUgYWJvdmUgY2FzZSwgc28gYSBtZW1vcnkgZmVu
+Y2UgKFNZTkMpDQo+IGF0IGJyYW5jaC10YXJnZXQgKGlmIGl0cyB0YXJnZXQgaXMgbm90IGJl
+dHdlZW4gTEwvU0MpIGlzIG5lZWRlZCBmb3INCj4gTG9vbmdzb24gM0ExMDAwLCAzQjE1MDAs
+IDNBMjAwMCBhbmQgM0EzMDAwLg0KPiANCj4gT3VyIHByb2Nlc3NvciBpcyBjb250aW51YWxs
+eSBldm9sdmluZyBhbmQgd2UgYWltIHRvIHRvIHJlbW92ZSBhbGwgdGhlc2UNCj4gd29ya2Fy
+b3VuZC1TWU5DcyBhcm91bmQgTEwvU0MgZm9yIG5ldy1jb21lIHByb2Nlc3Nvci4iDQo+IA0K
+PiBIZXJlIGlzIGFuIGV4YW1wbGU6DQo+IA0KPiBCb3RoIGNwdTEgYW5kIGNwdTIgc2ltdXRh
+bmVvdXNseSBydW4gYXRvbWljX2FkZCBieSAxIG9uIHNhbWUgYXRvbWljIHZhciwNCj4gdGhp
+cyBidWcgY2F1c2UgYm90aCAnJyBieSB0d28gY3B1cyAoaW4gYXRvbWljX2FkZCkgc3VjY2Vl
+ZCBhdCBzYW1lDQo+IHRpbWUoJyd1cm4gMSksIGFuZCB0aGUgdmFyaWFibGUgaXMgb25seSAq
+YWRkZWQgYnkgMSosIHNvbWV0aW1lcywNCj4gd2hpY2ggaXMgd3JvbmcgYW5kIHVuYWNjZXB0
+YWJsZShpdCBzaG91bGQgYmUgYWRkZWQgYnkgMikuDQo+IA0KPiBXaHkgZGlzYWJsZSBmaXgt
+bG9vbmdzb24zLWxsc2MgaW4gY29tcGlsZXI/DQo+IEJlY2F1c2UgY29tcGlsZXIgZml4IHdp
+bGwgY2F1c2UgcHJvYmxlbXMgaW4ga2VybmVsJ2V4X3RhYmxlIHNlY3Rpb24uDQo+IA0KPiBU
+aGlzIHBhdGNoIGZpeCBhbGwgdGhlIGNhc2VzIGluIGtlcm5lbCwgYnV0Og0KPiANCj4gKy4g
+dGhlIGZpeCBhdCB0aGUgZW5kIG9mIGZ1dGV4X2F0b21pY19jbXB4Y2hnX2luYXRvbWljIGlz
+IGZvciBicmFuY2gtdGFyZ2V0DQo+IG9mICcnZXJlIG90aGVyIGNhc2VzIHdoaWNoIHNtcF9t
+Yl9fYmVmb3JlX2xsc2MoKSBhbmQgc21wX2xsc2NfbWIoKSBmaXgNCj4gdGhlIGxsIGFuZCBi
+cmFuY2gtdGFyZ2V0IGNvaW5jaWRlbnRseSBzdWNoIGFzIGF0b21pY19zdWJfaWZfcG9zaXRp
+dmUvDQo+IGNtcHhjaGcveGNoZywganVzdCBsaWtlIHRoaXMgb25lLg0KPiANCj4gKy4gTG9v
+bmdzb24gMyBkb2VzIHN1cHBvcnQgQ09ORklHX0VEQUNfQVRPTUlDX1NDUlVCLCBzbyBubyBu
+ZWVkIHRvIHRvdWNoDQo+IGVkYWMuaA0KPiANCj4gKy4gbG9jYWxfb3BzIGFuZCBjbXB4Y2hn
+X2xvY2FsIHNob3VsZCBub3QgYmUgYWZmZWN0ZWQgYnkgdGhpcyBidWcgc2luY2UNCj4gb25s
+eSB0aGUgb3duZXIgY2FuIHdyaXRlLg0KPiANCj4gKy4gbWlwc19hdG9taWNfc2V0IGZvciBz
+eXNjYWxsLmMgaXMgZGVwcmVjYXRlZCBhbmQgcmFyZWx5IHVzZWQsIGp1c3QgbGV0DQo+IGl0
+IGdvDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBIdWFjYWkgQ2hlbiA8Y2hlbmhjQGxlbW90ZS5j
+b20+DQo+IFNpZ25lZC1vZmYtYnk6IEh1YW5nIFBlaSA8aHVhbmdwZWlAbG9vbmdzb24uY24+
+DQo+IFtwYXVsLmJ1cnRvbkBtaXBzLmNvbToNCj4gIC0gU2ltcGxpZnkgdGhlIGFkZGl0aW9u
+IG9mIC1tbm8tZml4LWxvb25nc29uMy1sbHNjIHRvIGNmbGFncywgYW5kIGFkZA0KPiAgYSBj
+b21tZW50IGRlc2NyaWJpbmcgd2h5IGl0J2VyZS4NCj4gIC0gTWFrZSBsb29uZ3Nvbl9sbHNj
+X21iKCkgYSBuby1vcCB3aGVuDQo+ICBDT05GSUdfQ1BVX0xPT05HU09OM19XT1JLQVJPVU5E
+Uz1uLCByYXRoZXIgdGhhbiBhIGNvbXBpbGVyIG1lbW9yeQ0KPiAgYmFycmllci4NCj4gIC0g
+QWRkIGEgY29tbWVudCBkZXNjcmliaW5nIHRoZSBidWcgJiBob3cgbG9vbmdzb25fbGxzY19t
+YigpIGhlbHBzDQo+ICBpbiBhc20vYmFycmllci5oLl0NCj4gU2lnbmVkLW9mZi1ieTogUGF1
+bCBCdXJ0b24gPHBhdWwuYnVydG9uQG1pcHMuY29tPg0KPiBDYzogUmFsZiBCYWVjaGxlIDxy
+YWxmQGxpbnV4LW1pcHMub3JnPg0KPiBDYzogYW1icm9zZWh1YUBnbWFpbC5jb20NCj4gQ2M6
+IFN0ZXZlbiBKIC4gSGlsbCA8U3RldmVuLkhpbGxAY2F2aXVtLmNvbT4NCj4gQ2M6IGxpbnV4
+LW1pcHNAbGludXgtbWlwcy5vcmcNCj4gQ2M6IEZ1eGluIFpoYW5nIDx6aGFuZ2Z4QGxlbW90
+ZS5jb20+DQo+IENjOiBaaGFuZ2ppbiBXdSA8d3V6aGFuZ2ppbkBnbWFpbC5jb20+DQo+IENj
+OiBMaSBYdWVmZW5nIDxsaXh1ZWZlbmdAbG9vbmdzb24uY24+DQo+IENjOiBYdSBDaGVuZ2h1
+YSA8eHVjaGVuZ2h1YUBsb29uZ3Nvbi5jbj4NCj4gU2lnbmVkLW9mZi1ieTogU2FzaGEgTGV2
+aW4gPHNhc2hhbEBrZXJuZWwub3JnPg0KPiAtLS0NCj4gYXJjaC9taXBzL0tjb25maWcgICAg
+ICAgICAgICAgICB8IDE1ICsrKysrKysrKysrKysrDQo+IGFyY2gvbWlwcy9pbmNsdWRlL2Fz
+bS9hdG9taWMuaCAgfCAgNiArKysrKysNCj4gYXJjaC9taXBzL2luY2x1ZGUvYXNtL2JhcnJp
+ZXIuaCB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiBhcmNoL21p
+cHMvaW5jbHVkZS9hc20vYml0b3BzLmggIHwgIDUgKysrKysNCj4gYXJjaC9taXBzL2luY2x1
+ZGUvYXNtL2Z1dGV4LmggICB8ICAzICsrKw0KPiBhcmNoL21pcHMvaW5jbHVkZS9hc20vcGd0
+YWJsZS5oIHwgIDIgKysNCj4gYXJjaC9taXBzL2xvb25nc29uNjQvUGxhdGZvcm0gICB8IDIz
+ICsrKysrKysrKysrKysrKysrKysrKw0KPiBhcmNoL21pcHMvbW0vdGxiZXguYyAgICAgICAg
+ICAgIHwgMTAgKysrKysrKysrDQo+IDggZmlsZXMgY2hhbmdlZCwgMTAwIGluc2VydGlvbnMo
+KykNCg0KT2ssIEkgd2lsbCBnbyBkcm9wIHRoaXMgZnJvbSBhbGwgc3RhYmxlIHF1ZXVlcyBu
+b3csIHRoYW5rcyENCg0KZ3JlZyBrLWg=
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-
-Thanks for fixing this better than I did (or tried to)!
-
-> ---
-> Changes V3 -> V4:
-> * Include the entirety of Rasmus' sugguestion, as per Steven.
-> * Change formal parameter identifiers to match the comment.
-> Changes V2 -> V3:
-> * Adjust comment as per Steven to Rasmus' sugguestion.
-> * Pick up Steven's Ack.
-> Changes V1 -> V2:
-> * Add declaration to include/linux/string.h.
-> * Reword comment above bcmp.
-> 
->  include/linux/string.h |  3 +++
->  lib/string.c           | 20 ++++++++++++++++++++
->  2 files changed, 23 insertions(+)
-> 
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index 7927b875f80c..6ab0a6fa512e 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -150,6 +150,9 @@ extern void * memscan(void *,int,__kernel_size_t);
->  #ifndef __HAVE_ARCH_MEMCMP
->  extern int memcmp(const void *,const void *,__kernel_size_t);
->  #endif
-> +#ifndef __HAVE_ARCH_BCMP
-> +extern int bcmp(const void *,const void *,__kernel_size_t);
-> +#endif
->  #ifndef __HAVE_ARCH_MEMCHR
->  extern void * memchr(const void *,int,__kernel_size_t);
->  #endif
-> diff --git a/lib/string.c b/lib/string.c
-> index 38e4ca08e757..3ab861c1a857 100644
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -866,6 +866,26 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
->  EXPORT_SYMBOL(memcmp);
->  #endif
->  
-> +#ifndef __HAVE_ARCH_BCMP
-> +/**
-> + * bcmp - returns 0 if and only if the buffers have identical contents.
-> + * @a: pointer to first buffer.
-> + * @b: pointer to second buffer.
-> + * @len: size of buffers.
-> + *
-> + * The sign or magnitude of a non-zero return value has no particular
-> + * meaning, and architectures may implement their own more efficient bcmp(). So
-> + * while this particular implementation is a simple (tail) call to memcmp, do
-> + * not rely on anything but whether the return value is zero or non-zero.
-> + */
-> +#undef bcmp
-> +int bcmp(const void *a, const void *b, size_t len)
-> +{
-> +	return memcmp(a, b, len);
-> +}
-> +EXPORT_SYMBOL(bcmp);
-> +#endif
-> +
->  #ifndef __HAVE_ARCH_MEMSCAN
->  /**
->   * memscan - Find a character in an area of memory.
-> -- 
-> 2.21.0.360.g471c308f928-goog
-> 
