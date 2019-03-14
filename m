@@ -2,79 +2,75 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4EAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5867C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74C321855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01532184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfCNNht (ORCPT
+        id S1727433AbfCNNmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:37:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37516 "EHLO mail.kernel.org"
+        Thu, 14 Mar 2019 09:42:25 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55543 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfCNNht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 09:37:49 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B30822085A;
-        Thu, 14 Mar 2019 13:37:47 +0000 (UTC)
-Date:   Thu, 14 Mar 2019 09:37:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        luto@kernel.org, byungchul.park@lge.com
-Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
- half-interrupts
-Message-ID: <20190314093746.028e57f1@gandalf.local.home>
-In-Reply-To: <20190314093657.2c1a3485@gandalf.local.home>
-References: <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
-        <20190311133939.GA29747@google.com>
-        <20190311222903.GR13351@linux.ibm.com>
-        <20190312150514.GB249405@google.com>
-        <20190312152034.GZ13351@linux.ibm.com>
-        <20190313150948.GA84821@google.com>
-        <20190313112726.01d974fc@gandalf.local.home>
-        <20190313155155.GN13351@linux.ibm.com>
-        <20190313125125.1a1fb2f3@gandalf.local.home>
-        <20190313180730.GU13351@linux.ibm.com>
-        <20190314123159.GB101545@google.com>
-        <20190314093657.2c1a3485@gandalf.local.home>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726419AbfCNNmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 09:42:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 06:42:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
+   d="scan'208";a="152314632"
+Received: from mdziegie-mobl.ger.corp.intel.com (HELO localhost.igk.intel.com) ([10.237.143.15])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Mar 2019 06:42:21 -0700
+From:   Marcin Dziegielewski <marcin.dziegielewski@intel.com>
+Cc:     mb@lightnvm.io, igor.j.konopko@intel.com,
+        Marcin Dziegielewski <marcin.dziegielewski@intel.com>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nvme: lightnvm: expose OC devices as zero size to OS
+Date:   Thu, 14 Mar 2019 14:41:49 +0100
+Message-Id: <1552570910-11706-1-git-send-email-marcin.dziegielewski@intel.com>
+X-Mailer: git-send-email 1.8.3.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019 09:36:57 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Open channel devices are not able to handle traditional
+IO requests addressed by LBA, so following current
+approach to exposing special nvme devices as zero size
+(e.g. with namespace formatted to use metadata) also
+open channel devices should be exposed as zero size
+to OS.
 
-> On Thu, 14 Mar 2019 08:31:59 -0400
-> Joel Fernandes <joel@joelfernandes.org> wrote:
-> 
-> > Oh thanks for pointing that out. Yes it does work for me. I agree with the
-> > lockdep API addition and others could benefit from it too. I will incorporate
-> > the lockdep API addition into the RCU patch, but let me know if I should
-> > rather split it.  
-> 
-> I'd recommend splitting it (adding the lockdep_assert in a patch by
-> itself), but make sure that patch Cc's the lockdep maintainers and
-> explains the reason for adding it. Might as well Cc the lockdep
-> maintainers on the entire series too.
->
+Signed-off-by: Marcin Dziegielewski <marcin.dziegielewski@intel.com>
+---
+ drivers/nvme/host/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Feel free to add "Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>"
-on that patch too.
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 07bf2bf..52cd5c8 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1606,7 +1606,8 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	if (ns->ms && !ns->ext &&
+ 	    (ns->ctrl->ops->flags & NVME_F_METADATA_SUPPORTED))
+ 		nvme_init_integrity(disk, ns->ms, ns->pi_type);
+-	if (ns->ms && !nvme_ns_has_pi(ns) && !blk_get_integrity(disk))
++	if ((ns->ms && !nvme_ns_has_pi(ns) && !blk_get_integrity(disk)) ||
++	    ns->ndev)
+ 		capacity = 0;
+ 
+ 	set_capacity(disk, capacity);
+-- 
+1.8.3.1
 
--- Steve
