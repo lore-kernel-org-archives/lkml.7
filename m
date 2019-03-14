@@ -2,182 +2,258 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666E0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90193C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D5B2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:37:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="mP37e+Xw"
+	by mail.kernel.org (Postfix) with ESMTP id 5162F2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfCNFhx (ORCPT
+        id S1727089AbfCNFmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 01:37:53 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:35860 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfCNFhx (ORCPT
+        Thu, 14 Mar 2019 01:42:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51594 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726898AbfCNFmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 01:37:53 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 8691FC99
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 05:37:51 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RrJxtf9QTtTD for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 00:37:51 -0500 (CDT)
-Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 3FA0CC8F
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:37:51 -0500 (CDT)
-Received: by mail-it1-f197.google.com with SMTP id y6so1102549itj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 22:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4BgKTwjSHraz7yEVSQOk8vICxaXzsZbztKpzAHEoZts=;
-        b=mP37e+XwAkRjRcKD4syXajWtCechYM0nBZI/1JUzm8IeBNHWi9qVLQlPhAoDWKhZmD
-         sVDD9E+F1uBckftF77VOF1FFZq0cdQDYuhVfMzTsDeiFtT5Swf7YCEuzMEmCvoS9oLhj
-         0uRXLiwZXDCMufo3q7/mGM6eqQiuaVL42E2k1AmzYs4ItyLzHyV5LtnAR2jq9Q7TP2M9
-         fBceMfNMtQdQ7eRM7HO1eu5xz3gK8k4FgrYjZcqItWQ1gmmcoYWcS15NkX4Kmxbf0/fI
-         uvhofjLjbKYfH+Lih2d4LCnF0qKtpidolLWPiVGs34el8w3li5SvoLJXLCQEEI0rTk+Y
-         uDYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=4BgKTwjSHraz7yEVSQOk8vICxaXzsZbztKpzAHEoZts=;
-        b=ZCDPgMfgiW6sl7WiNrujk0oHpoQA4cmqLIMNJ5cVUVV25Tn/BYDotKpXzKalIp8lJr
-         dyrtOdHTBjXGD3lqX+f34elB7DCBw7Li/rJtWWDjamaKcJHdOHsfP4nfn9/Ua6rergSF
-         WXaWVic3POh4Rpltww51O6V01B8QpDSewMFakx2/jZglhpx3U815YHnciD2BlTL49N+6
-         bZhUeainkpSFuD2Vs3kf9/PwSFsshSD3FexyklxELIRqM4fl5CXuSK0KUS930j82jsav
-         iiPCMcEpUq4ZRTv0nFwzfdOG/9CVR0GC18pTYSkJQwhSdKeeHxRWvtMDgevyrEnD9elg
-         CcGQ==
-X-Gm-Message-State: APjAAAVxAhctL3A4EqiXTMJmWE8ljirQdHveBHQX/x5hv5gMAh2HIypE
-        88Qeba2I5eyoYmHNSBtDxNtkOjTivM3WV61PRv6Qzxz/Eqz/o6AD8VMCwgVNwp2gT8gwxhjwkM4
-        WpFODuDtwePVMp0B1H5zguU/c4J7K
-X-Received: by 2002:a24:64b:: with SMTP id 72mr1035158itv.53.1552541870653;
-        Wed, 13 Mar 2019 22:37:50 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzKfQroquDhj2cJKrNFXry/58qO7Zi4WoIsVSp3mZnQpg4WuuhxgZwj0ozthzs7LLrqA/Mc8Q==
-X-Received: by 2002:a24:64b:: with SMTP id 72mr1035146itv.53.1552541870396;
-        Wed, 13 Mar 2019 22:37:50 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id g2sm6364240iom.7.2019.03.13.22.37.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 22:37:49 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Faisal Latif <faisal.latif@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] infiniband: i40iw: fix potential NULL pointer dereferences
-Date:   Thu, 14 Mar 2019 00:37:34 -0500
-Message-Id: <20190314053735.31863-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <9DD61F30A802C4429A01CA4200E302A7A5A6B1A0@fmsmsx124.amr.corp.intel.com>
-References: <9DD61F30A802C4429A01CA4200E302A7A5A6B1A0@fmsmsx124.amr.corp.intel.com>
+        Thu, 14 Mar 2019 01:42:13 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2E5d2Hp038636
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:42:12 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r7gns8u2u-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:42:12 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Thu, 14 Mar 2019 05:42:09 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Mar 2019 05:42:03 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2E5g2cT35389534
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 Mar 2019 05:42:02 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8E5E11C050;
+        Thu, 14 Mar 2019 05:42:01 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2449111C04C;
+        Thu, 14 Mar 2019 05:41:57 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.124.31.88])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Mar 2019 05:41:56 +0000 (GMT)
+X-Mailer: emacs 26.1 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Alexandre Ghiti <alex@ghiti.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH v6 3/4] mm: Simplify MEMORY_ISOLATION && COMPACTION || CMA into CONTIG_ALLOC
+In-Reply-To: <20190307132015.26970-4-alex@ghiti.fr>
+References: <20190307132015.26970-1-alex@ghiti.fr> <20190307132015.26970-4-alex@ghiti.fr>
+Date:   Thu, 14 Mar 2019 11:11:55 +0530
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19031405-0008-0000-0000-000002CD1746
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031405-0009-0000-0000-0000223917FF
+Message-Id: <87y35iovvg.fsf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-14_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903140036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-alloc_ordered_workqueue may fail and return NULL.
-The fix captures the failure and handles it properly to avoid
-potential NULL pointer dereferences.
+Alexandre Ghiti <alex@ghiti.fr> writes:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
-V2: add return value to capture the error code
+> This condition allows to define alloc_contig_range, so simplify
+> it into a more accurate naming.
 
- drivers/infiniband/hw/i40iw/i40iw.h      |  2 +-
- drivers/infiniband/hw/i40iw/i40iw_cm.c   | 19 ++++++++++++++++---
- drivers/infiniband/hw/i40iw/i40iw_main.c |  5 ++++-
- 3 files changed, 21 insertions(+), 5 deletions(-)
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw.h b/drivers/infiniband/hw/i40iw/i40iw.h
-index 2f2b4426ded7..8feec35f95a7 100644
---- a/drivers/infiniband/hw/i40iw/i40iw.h
-+++ b/drivers/infiniband/hw/i40iw/i40iw.h
-@@ -552,7 +552,7 @@ enum i40iw_status_code i40iw_obj_aligned_mem(struct i40iw_device *iwdev,
- 
- void i40iw_request_reset(struct i40iw_device *iwdev);
- void i40iw_destroy_rdma_device(struct i40iw_ib_device *iwibdev);
--void i40iw_setup_cm_core(struct i40iw_device *iwdev);
-+int i40iw_setup_cm_core(struct i40iw_device *iwdev);
- void i40iw_cleanup_cm_core(struct i40iw_cm_core *cm_core);
- void i40iw_process_ceq(struct i40iw_device *, struct i40iw_ceq *iwceq);
- void i40iw_process_aeq(struct i40iw_device *);
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-index 206cfb0016f8..dda24f44239b 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-@@ -3237,7 +3237,7 @@ void i40iw_receive_ilq(struct i40iw_sc_vsi *vsi, struct i40iw_puda_buf *rbuf)
-  * core
-  * @iwdev: iwarp device structure
-  */
--void i40iw_setup_cm_core(struct i40iw_device *iwdev)
-+int i40iw_setup_cm_core(struct i40iw_device *iwdev)
- {
- 	struct i40iw_cm_core *cm_core = &iwdev->cm_core;
- 
-@@ -3256,9 +3256,20 @@ void i40iw_setup_cm_core(struct i40iw_device *iwdev)
- 
- 	cm_core->event_wq = alloc_ordered_workqueue("iwewq",
- 						    WQ_MEM_RECLAIM);
-+	if (!cm_core->event_wq)
-+		goto error;
- 
- 	cm_core->disconn_wq = alloc_ordered_workqueue("iwdwq",
- 						      WQ_MEM_RECLAIM);
-+	if (!cm_core->disconn_wq)
-+		goto error;
-+
-+	return 0;
-+error:
-+	i40iw_cleanup_cm_core(&iwdev->cm_core);
-+	i40iw_pr_err("fail to setup CM core");
-+
-+	return return -ENOMEM;
- }
- 
- /**
-@@ -3278,8 +3289,10 @@ void i40iw_cleanup_cm_core(struct i40iw_cm_core *cm_core)
- 		del_timer_sync(&cm_core->tcp_timer);
- 	spin_unlock_irqrestore(&cm_core->ht_lock, flags);
- 
--	destroy_workqueue(cm_core->event_wq);
--	destroy_workqueue(cm_core->disconn_wq);
-+	if (cm_core->event_wq)
-+		destroy_workqueue(cm_core->event_wq);
-+	if (cm_core->disconn_wq)
-+		destroy_workqueue(cm_core->disconn_wq);
- }
- 
- /**
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c b/drivers/infiniband/hw/i40iw/i40iw_main.c
-index 68095f00d08f..10932baee279 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_main.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
-@@ -1641,7 +1641,10 @@ static int i40iw_open(struct i40e_info *ldev, struct i40e_client *client)
- 	iwdev = &hdl->device;
- 	iwdev->hdl = hdl;
- 	dev = &iwdev->sc_dev;
--	i40iw_setup_cm_core(iwdev);
-+	if (i40iw_setup_cm_core(iwdev)) {
-+		kfree(iwdev->hdl);
-+		return -ENOMEM;
-+	}
- 
- 	dev->back_dev = (void *)iwdev;
- 	iwdev->ldev = &hdl->ldev;
--- 
-2.17.1
+>
+> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  arch/arm64/Kconfig                     | 2 +-
+>  arch/powerpc/platforms/Kconfig.cputype | 2 +-
+>  arch/s390/Kconfig                      | 2 +-
+>  arch/sh/Kconfig                        | 2 +-
+>  arch/sparc/Kconfig                     | 2 +-
+>  arch/x86/Kconfig                       | 2 +-
+>  arch/x86/mm/hugetlbpage.c              | 2 +-
+>  include/linux/gfp.h                    | 2 +-
+>  mm/Kconfig                             | 3 +++
+>  mm/page_alloc.c                        | 3 +--
+>  10 files changed, 12 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index a4168d366127..091a513b93e9 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -18,7 +18,7 @@ config ARM64
+>  	select ARCH_HAS_FAST_MULTIPLIER
+>  	select ARCH_HAS_FORTIFY_SOURCE
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+> -	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
+> +	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+>  	select ARCH_HAS_KCOV
+>  	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+>  	select ARCH_HAS_PTE_SPECIAL
+> diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+> index 8c7464c3f27f..f677c8974212 100644
+> --- a/arch/powerpc/platforms/Kconfig.cputype
+> +++ b/arch/powerpc/platforms/Kconfig.cputype
+> @@ -319,7 +319,7 @@ config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+>  config PPC_RADIX_MMU
+>  	bool "Radix MMU Support"
+>  	depends on PPC_BOOK3S_64
+> -	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
+> +	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+>  	default y
+>  	help
+>  	  Enable support for the Power ISA 3.0 Radix style MMU. Currently this
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index ed554b09eb3f..1c57b83c76f5 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -69,7 +69,7 @@ config S390
+>  	select ARCH_HAS_ELF_RANDOMIZE
+>  	select ARCH_HAS_FORTIFY_SOURCE
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+> -	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
+> +	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+>  	select ARCH_HAS_KCOV
+>  	select ARCH_HAS_PTE_SPECIAL
+>  	select ARCH_HAS_SET_MEMORY
+> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+> index 299a17bed67c..c7266302691c 100644
+> --- a/arch/sh/Kconfig
+> +++ b/arch/sh/Kconfig
+> @@ -53,7 +53,7 @@ config SUPERH
+>  	select HAVE_FUTEX_CMPXCHG if FUTEX
+>  	select HAVE_NMI
+>  	select NEED_SG_DMA_LENGTH
+> -	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
+> +	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+>  
+>  	help
+>  	  The SuperH is a RISC processor targeted for use in embedded systems
+> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+> index 0b7f0e0fefa5..ca33c80870e2 100644
+> --- a/arch/sparc/Kconfig
+> +++ b/arch/sparc/Kconfig
+> @@ -90,7 +90,7 @@ config SPARC64
+>  	select ARCH_CLOCKSOURCE_DATA
+>  	select ARCH_HAS_PTE_SPECIAL
+>  	select PCI_DOMAINS if PCI
+> -	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
+> +	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+>  
+>  config ARCH_DEFCONFIG
+>  	string
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 68261430fe6e..8ba90f3e0038 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -23,7 +23,7 @@ config X86_64
+>  	def_bool y
+>  	depends on 64BIT
+>  	# Options that are inherently 64-bit kernel only:
+> -	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
+> +	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+>  	select ARCH_SUPPORTS_INT128
+>  	select ARCH_USE_CMPXCHG_LOCKREF
+>  	select HAVE_ARCH_SOFT_DIRTY
+> diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
+> index 92e4c4b85bba..fab095362c50 100644
+> --- a/arch/x86/mm/hugetlbpage.c
+> +++ b/arch/x86/mm/hugetlbpage.c
+> @@ -203,7 +203,7 @@ static __init int setup_hugepagesz(char *opt)
+>  }
+>  __setup("hugepagesz=", setup_hugepagesz);
+>  
+> -#if (defined(CONFIG_MEMORY_ISOLATION) && defined(CONFIG_COMPACTION)) || defined(CONFIG_CMA)
+> +#ifdef CONFIG_CONTIG_ALLOC
+>  static __init int gigantic_pages_init(void)
+>  {
+>  	/* With compaction or CMA we can allocate gigantic pages at runtime */
+> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+> index 5f5e25fd6149..1f1ad9aeebb9 100644
+> --- a/include/linux/gfp.h
+> +++ b/include/linux/gfp.h
+> @@ -585,7 +585,7 @@ static inline bool pm_suspended_storage(void)
+>  }
+>  #endif /* CONFIG_PM_SLEEP */
+>  
+> -#if (defined(CONFIG_MEMORY_ISOLATION) && defined(CONFIG_COMPACTION)) || defined(CONFIG_CMA)
+> +#ifdef CONFIG_CONTIG_ALLOC
+>  /* The below functions must be run on a range from a single zone. */
+>  extern int alloc_contig_range(unsigned long start, unsigned long end,
+>  			      unsigned migratetype, gfp_t gfp_mask);
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 25c71eb8a7db..137eadc18732 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -258,6 +258,9 @@ config ARCH_ENABLE_HUGEPAGE_MIGRATION
+>  config ARCH_ENABLE_THP_MIGRATION
+>  	bool
+>  
+> +config CONTIG_ALLOC
+> +       def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
+> +
+>  config PHYS_ADDR_T_64BIT
+>  	def_bool 64BIT
+>  
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 35fdde041f5c..ac9c45ffb344 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8024,8 +8024,7 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+>  	return true;
+>  }
+>  
+> -#if (defined(CONFIG_MEMORY_ISOLATION) && defined(CONFIG_COMPACTION)) || defined(CONFIG_CMA)
+> -
+> +#ifdef CONFIG_CONTIG_ALLOC
+>  static unsigned long pfn_max_align_down(unsigned long pfn)
+>  {
+>  	return pfn & ~(max_t(unsigned long, MAX_ORDER_NR_PAGES,
+> -- 
+> 2.20.1
 
