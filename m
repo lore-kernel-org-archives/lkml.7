@@ -2,134 +2,116 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23879C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68931C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5D921019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FBE21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:59:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Yp8lYPOn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=openedev.com header.i=@openedev.com header.b="R6ZrXvTj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfCNH61 (ORCPT
+        id S1727161AbfCNH7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:58:27 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:59874 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfCNH61 (ORCPT
+        Thu, 14 Mar 2019 03:59:06 -0400
+Received: from se14t.web-hosting.com ([162.255.118.155]:35339 "EHLO
+        se14t.web-hosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfCNH7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:58:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id D8261A2F
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:58:25 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id U0CdIwF1iXwG for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 02:58:25 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id A1F2D7D1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:58:25 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id l10so3644333iob.22
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=BbqmGjLcyKyOuWw9asJAe7bSmTd5l7ynZnmbov0Wmhg=;
-        b=Yp8lYPOnNd28KD6jqchkkdgKvUfWU1AsHXHZWrmuomjTC+9E/0sYw4d5ddtQ7HNd9c
-         NpqkwjYyYwgoJ/EEBMwuK7rm6CapaeP0xAzgfhrVXLa1LvhDNhTsfn8CeRYYqXB0aeTI
-         OxWIJJlPaPuTg/mOo3qgART5mTnFtD3vNeksk205Rh0yAn9RLKGactmulY63p5YnDmfo
-         502Dsqz54cn3l3ntKDASv25YL9NeOad+GSWYd89iqGTbXWuFEn5fuc4XuUrMZsq5LWH0
-         Nj0K9yclks3jM8dMoD0v5tTLyjYJ/V8nkH8up6CsA4plN6amimKgiKlJEnPZfPjL1lGb
-         uXWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BbqmGjLcyKyOuWw9asJAe7bSmTd5l7ynZnmbov0Wmhg=;
-        b=d8kI4Low84jC3aXwrngPZ5dlyotHgdA6W7YhDU92pCe728Skb03+rSsj4javwQO9z0
-         GPvq6WorBDSpAhpwCSld6IYqQVys7NU0M6NTZAu3XInyl77Ns2R22CvVNq99YBKU5J5A
-         +KA5r4JfRSlrQGm+lCp1Eb8Nl6DceNRGzSaAM7uKx1+eQQYSFhQJNdQochbxOQGL1AIH
-         G4kL6cOdLi6lW/UVeyAI/dM1bMnIf0L5EVTAdtd7JeLCXYVOo9BpKAd+ylM8EohmvCYK
-         prS2ESwFHvbsj50uIuKTKNRY3ewKIlx7VeOJxyW2frBOpyopam2qOD4oGdON/JBntWwq
-         kGcw==
-X-Gm-Message-State: APjAAAXj5t20XZQTDD9r8rKwtu/AX5QRFY7e4Yt3KwsJIcB8bxJHhvIw
-        VkWgR3uFWM1jznflBrMXGYMUFh6vGgMQil/PggPsDYmIvLpgRbtpUqHywJcEV+VU1+XledJholW
-        yTZb59BbNf2bYbpT2nRBFKzWj+JCx
-X-Received: by 2002:a02:5cdd:: with SMTP id w90mr27367124jad.90.1552550305275;
-        Thu, 14 Mar 2019 00:58:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxtfMDaKG4fvcj2S91FxJFVr0D4tev6/8EWOXYaVlu4u3dHgBC2i3k7uiHsHfXicWqAjDYorw==
-X-Received: by 2002:a02:5cdd:: with SMTP id w90mr27367117jad.90.1552550305022;
-        Thu, 14 Mar 2019 00:58:25 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id i14sm892269itc.34.2019.03.14.00.58.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 00:58:24 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ipv6: ip6t_srh: fix NULL pointer dereferences
-Date:   Thu, 14 Mar 2019 02:58:18 -0500
-Message-Id: <20190314075818.29951-1-kjlu@umn.edu>
+        Thu, 14 Mar 2019 03:59:05 -0400
+X-Greylist: delayed 2313 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Mar 2019 03:59:05 EDT
+Received: from [68.65.123.203] (helo=server153.web-hosting.com)
+        by se14.registrar-servers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <akash@openedev.com>)
+        id 1h4Kf0-00019f-1z; Thu, 14 Mar 2019 00:20:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=openedev.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=J+3nukUHldE+Mk0hZpPnpS+i785FbEu4bQBR4zvx+ps=; b=R6ZrXvTj3MEVFxR+ayywWLv1IO
+        WIAIbNrlASOkwp4Z6DZbgqcsAObQO75YAQ8xaZXENrnk37Vvb2ngWwNpar3/w2OShx2GCrUVn1cVN
+        QhZTakDfjNvP20sVbEzDe2AKWhEHmZmpEbKO1Vx5KPCJvvcpTGU0OeBL33bX5d2srSz7semr3SRgl
+        6CS26/RVlxjSonIxPyBb26hdT520YtBKcaMwCj35p0ZF8bhlT12blVS0GoJRjvkBxYXgxg3omb0ns
+        BRNrCbFqvB7uLzfrWyzou5qccM7fpLKeOr7jR2ha/9gKC78PsuFZH7Zeks3nVVckDIlvGvkjVLXB2
+        IdkWdtQw==;
+Received: from nat-inn.mentorg.com ([192.94.34.34]:19766 helo=agajjar-vr.inn-wifi.mentorg.com)
+        by server153.web-hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <akash@openedev.com>)
+        id 1h4Ket-002iQG-3m; Thu, 14 Mar 2019 03:20:08 -0400
+From:   Akash Gajjar <akash@openedev.com>
+To:     heiko@sntech.de
+Cc:     Akash Gajjar <akash@openedev.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?q?Andrius=20=C5=A0tikonas?= <andrius@stikonas.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] add gpu node support on rock960 and rockpi4
+Date:   Thu, 14 Mar 2019 12:48:40 +0530
+Message-Id: <20190314071853.32176-1-akash@openedev.com>
 X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-OutGoing-Spam-Status: No, score=-0.5
+X-Originating-IP: 68.65.123.203
+X-SpamExperts-Domain: nctest.net
+X-SpamExperts-Username: whmcalls3
+Authentication-Results: registrar-servers.com; auth=pass (login) smtp.auth=whmcalls3@nctest.net
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.09)
+X-Recommended-Action: accept
+X-Filter-ID: EX5BVjFpneJeBchSMxfU5qvZCgtLBf1wBe7g3QkF0Ix602E9L7XzfQH6nu9C/Fh9KJzpNe6xgvOx
+ q3u0UDjvO9Kz5dih1EthU2MWX/atyIaZdK0HkmzEk8rbnHWK2CAwKQpkZZXbqBHHS7K4iXvv6D9w
+ t2xWqJRpuLe8wpAsBWCPrIKyLEzqJhCS72BIl4JOpBy80lCTHMqwkVavo/hGPVpMJt2hvioWDQLR
+ +F8Qzq07Jl0cTbMjtJzGDA/hgJi5KsyTeHKuBkcJ13PXNCvSiriFGgMRx6d6FbBzxs0Z8EswRpnA
+ IuFluGKjDRq2iBJyWunPl/ohRNIiwFqCBEOsmBguLxWDsPJb+k4qKIjw6Kjs5m+7wJmzKH/9Awyx
+ ktoGjXMGAfCVtfbjcya7FiZ10+qSYmDhmfCGznB+LvwZMnbQQFzDBjhPYYLyyVl/DO04GZWT6Tsv
+ DXKv683dSPZhX8v6RglqCRiWLLlJfXqOwsSEQ1zg63VRC9n5o9IubHRCajhI/osHQYQOY9tKQuYh
+ V0/2daO84E+CJIUWxPZgHA4oVG4R1QSBae5eMu8El8wp8YJwPcY3BZj5hjW3jSN7kDZQ6OtBjX2d
+ hf8r1xeX6dGaEFvYj4y8eeqFFdtAEhWvd4DaCK6Pjpd0ktFAUcyBO/hTzdUB76FJbC2aoijjK5vZ
+ VLoBIQ/0Yot61dtATH/YSE8bhW7Do3k5xAFc45r9HH9q0aZI3qbhXsaDdLgW9bq7ONs0Jo7siUxp
+ CnbQuxznTS5wWhJczORue9s9vxMyvT3ZEg7qDAZihU7TNifj61aWKjPv6Se6da4XjLm88/LDLnDH
+ LQNX6Z9k7LHvI3S8k8yoD25LMd/8Q6GyVYHQHyyqls2q2f6GiuILRCoVzcAUesmMQdfOVPytGy0v
+ aP8A+OIp7Ll3zg39paKeqrIPi/nXs2KsRjKrCowEavDwQuKonn43CVihpNXqOZnA1kmofBq13Vtd
+ PYPpQDJAG8jZaE6kPx28ZCmzF6xraiN8yTq5LrsYgOOLVP0PfMA01LCiikBDOYLztKvzrLSd1VxM
+ Ru4N5NrpfsZsRnl/I/FTR139Shj4g7fEqX8BGOvWI8yqhtlg1q14MI9rG0MenXlswhbk2P5lYvz2
+ ervtNnQfK6kuRnPRYcAeHV8hxEmZPAz5djibSz1TZEeHqHdttKvBUzCN4NAlGxY6r4hMSxGQ+U5v
+ Nu4rMPKlzWU9qMOiGXHBuQl7kvd3Y9+UVnnGTsDuvLq0N5hlE2LuZbV6X+y312KNlGoBrkyiaxWd
+ ombtIRbrbHLYM3A6BXfvel8OEFDbU50ueTym1wgy3QoDz1w5VXFhebjHJPwXPZ6YHMJ8vHED6QY4
+ ei+01UVhKsXWCf/f12Vc+wcBvq1ZAdP9Br8WkgqueLGXOud3vgQ6Lwxr8Zs7itcxKJJ78am5WUrT
+ xjBCYAo5Ix7/C9VwqPH/5QpQnZ0BqABLpxpkKfYdpWqgBL2Mh16HX+6x4KcU/f2CYrvOMnz/q172
+ TuUUAfA6uqFnxU12
+X-Report-Abuse-To: spam@se16.registrar-servers.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-skb_header_pointer may return NULL. The current code dereference
-its return values without a NULL check.
+add gpu node support on both rockchip-rk3399 board.
+performance tested with freedesktop.org panfrost mali driver.
 
-The fix inserts the checks to avoid NULL pointer dereferences.
+Akash Gajjar (2):
+  arm64: dts: rockchip: add mali gpu support on rockpi4
+  arm64: dts: rockchip: add mali gpu support on rock960
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- net/ipv6/netfilter/ip6t_srh.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts | 5 +++++
+ arch/arm64/boot/dts/rockchip/rk3399-rock960.dts   | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/net/ipv6/netfilter/ip6t_srh.c b/net/ipv6/netfilter/ip6t_srh.c
-index 1059894a6f4c..4cb83fb69844 100644
---- a/net/ipv6/netfilter/ip6t_srh.c
-+++ b/net/ipv6/netfilter/ip6t_srh.c
-@@ -210,6 +210,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		psidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
- 			  ((srh->segments_left + 1) * sizeof(struct in6_addr));
- 		psid = skb_header_pointer(skb, psidoff, sizeof(_psid), &_psid);
-+		if (!psid)
-+			return false;
- 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_PSID,
- 				ipv6_masked_addr_cmp(psid, &srhinfo->psid_msk,
- 						     &srhinfo->psid_addr)))
-@@ -223,6 +225,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		nsidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
- 			  ((srh->segments_left - 1) * sizeof(struct in6_addr));
- 		nsid = skb_header_pointer(skb, nsidoff, sizeof(_nsid), &_nsid);
-+		if (!nsid)
-+			return false;
- 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_NSID,
- 				ipv6_masked_addr_cmp(nsid, &srhinfo->nsid_msk,
- 						     &srhinfo->nsid_addr)))
-@@ -233,6 +237,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 	if (srhinfo->mt_flags & IP6T_SRH_LSID) {
- 		lsidoff = srhoff + sizeof(struct ipv6_sr_hdr);
- 		lsid = skb_header_pointer(skb, lsidoff, sizeof(_lsid), &_lsid);
-+		if (!lsid)
-+			return false;
- 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_LSID,
- 				ipv6_masked_addr_cmp(lsid, &srhinfo->lsid_msk,
- 						     &srhinfo->lsid_addr)))
 -- 
 2.17.1
 
