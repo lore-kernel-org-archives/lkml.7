@@ -2,153 +2,202 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2C1C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7302CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790C02085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB3D2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:15:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S2H61cWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfCNOPf (ORCPT
+        id S1727692AbfCNOPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:15:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41400 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727433AbfCNOPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:15:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B1255AF68;
-        Thu, 14 Mar 2019 14:15:32 +0000 (UTC)
-Subject: Re: [Xen-devel] xen: Can't insert balloon page into VM userspace (WAS
- Re: [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
-To:     Julien Grall <julien.grall@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     k.khlebnikov@samsung.com,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        osstest service owner <osstest-admin@xenproject.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Julien Freche <jfreche@vmware.com>,
-        Nadav Amit <namit@vmware.com>, xen-devel@lists.xenproject.org
-References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
- <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
- <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
- <20190312171421.GJ19508@bombadil.infradead.org>
- <e0b64793-260d-5e70-0544-e7290509b605@redhat.com>
- <45323ea0-2a50-8891-830e-e1f8a8ed23ea@citrix.com>
- <f4b40d91-9c41-60ed-6b4e-df47af8e5292@oracle.com>
- <9a40e1ff-7605-e822-a1d2-502a12d0fba7@redhat.com>
- <6f8aca6c-355b-7862-75aa-68fe566f76fb@redhat.com>
- <ec71c03e-987d-2b73-9fe6-2604a3c32017@suse.com>
- <cb525882-b52f-c142-8a6a-e5cb491e05d0@arm.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d3e87824-b3a2-ed8a-d2ca-1a9fd439a204@suse.com>
-Date:   Thu, 14 Mar 2019 15:15:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 14 Mar 2019 10:15:36 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55781 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727634AbfCNOPg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 10:15:36 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 4so3146968wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:15:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=h3eflKZ/U+x1paFTsOvszBUjr9EhFpJqq4bYYQGoa+s=;
+        b=S2H61cWmmfRm4ITfBMNSrHCrGf/GTJgaOwZ4g/FegA2gYJCkz4zn7pytQvsbNB0IOa
+         bLnr7CrxTbu8WqswdvALQ4B7AfEpI2Lz9bqiHTR+6rFxbcplUCZ2VxJHSE9tl1GqxXRn
+         aWzVrwpHSuXC+HzCyGglLNGrVCis3g3oxzPQXi1xlrIKIGpt2ml7CTNWdgJS2V2c7BYi
+         nTpYDa0ns4NVkhDB9XMU45GH0Zl96MM9ONub0LEDEtadWtd5XFFql1+ylJ3V/xUH9GJe
+         0ZYSoLVnfYr5NP1ANn+SNqjhcBxCpW4uGwxsXW2RvFQp02HCNlgXEQ2ufyJ9Riulb3K7
+         3dEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=h3eflKZ/U+x1paFTsOvszBUjr9EhFpJqq4bYYQGoa+s=;
+        b=nm0ijkzIlgdLjU4C84ZSAs7E/X1VezEHEJ+TFwB4rybCHg086D5uVG7v/7Q1sUepJP
+         3zjCRYnqyZu5PZFy7uso6Dob/xlp+r+3XtiSErNcBIAFOAmVapYtAWucaTv+tGmw8CBF
+         +XHLd4rEcoQHeL8ZCMLJcCGnCNESMSTMNz72wSifeauY5CDJNgocnoFPpoYr8cJlQ1Hs
+         TESBfqG1Bl4UUezWATP7VXy54PZ5+UstvvKsH4f8RQnXeVdZkX/NQDwGHgIEjVFd5Aj8
+         krtf8eyXvllatVfZOJdggxFxIoDTFDyuUoHPJKS+j39BleQdRPDhvNfC9yQasMODPrkX
+         H1lA==
+X-Gm-Message-State: APjAAAUwFkQHxsQzS8r3YjocJVacdI7ltK07r5CtbnpL7oOoGxWt5lUJ
+        VlRq2DSvXk/BAodssIirvhCARQ==
+X-Google-Smtp-Source: APXvYqyK0Q6clg15VvUmDjviOAXe+jXX97QGLM+FHc8soM2FhJI3TH7F+eHhxxDxOx0AQSXvjOOMqA==
+X-Received: by 2002:a1c:64c1:: with SMTP id y184mr2752559wmb.0.1552572933333;
+        Thu, 14 Mar 2019 07:15:33 -0700 (PDT)
+Received: from apalos (ppp-94-64-206-130.home.otenet.gr. [94.64.206.130])
+        by smtp.gmail.com with ESMTPSA id e12sm17266135wrs.91.2019.03.14.07.15.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 07:15:32 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 16:15:29 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Christian Neubert <christian.neubert.86@gmail.com>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
+ cpu clocks
+Message-ID: <20190314141529.GA5576@apalos>
+References: <20190313163558.6705-1-gregory.clement@bootlin.com>
+ <20190314121541.GB19385@apalos>
+ <CAC5LXJcCs4nr-qFOWzUJpUBAJ9ngG-cgeTCVCFBKFc1SPzHMuQ@mail.gmail.com>
+ <20190314134428.GA24768@apalos>
+ <CAC5LXJf=f2bZLroSXFkGiF2W=1XzAgb_wwtpvZY7O9xv28wbVA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <cb525882-b52f-c142-8a6a-e5cb491e05d0@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAC5LXJf=f2bZLroSXFkGiF2W=1XzAgb_wwtpvZY7O9xv28wbVA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 15:12, Julien Grall wrote:
+Hi,
 > Hi,
 > 
-> On 3/14/19 8:37 AM, Juergen Gross wrote:
->> On 12/03/2019 20:46, David Hildenbrand wrote:
->>> On 12.03.19 19:23, David Hildenbrand wrote:
->>>
->>> I guess something like this could do the trick if I understood it
->>> correctly:
->>>
->>> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
->>> index 39b229f9e256..d37dd5bb7a8f 100644
->>> --- a/drivers/xen/balloon.c
->>> +++ b/drivers/xen/balloon.c
->>> @@ -604,6 +604,7 @@ int alloc_xenballooned_pages(int nr_pages, struct
->>> page **pages)
->>>          while (pgno < nr_pages) {
->>>                  page = balloon_retrieve(true);
->>>                  if (page) {
->>> +                       __ClearPageOffline(page);
->>>                          pages[pgno++] = page;
->>>   #ifdef CONFIG_XEN_HAVE_PVMMU
->>>                          /*
->>> @@ -645,8 +646,10 @@ void free_xenballooned_pages(int nr_pages, struct
->>> page **pages)
->>>          mutex_lock(&balloon_mutex);
->>>
->>>          for (i = 0; i < nr_pages; i++) {
->>> -               if (pages[i])
->>> +               if (pages[i]) {
->>> +                       __SetPageOffline(pages[i]);
->>>                          balloon_append(pages[i]);
->>> +               }
->>>          }
->>>
->>>          balloon_stats.target_unpopulated -= nr_pages;
->>>
->>>
->>> At least this way, the pages allocated (and thus eventually mapped to
->>> user space) would not be marked, but the other ones would remain marked
->>> and could be excluded by makedumptool.
->>>
->>
->> I think this patch should do the trick. Julien, could you give it a
->> try? On x86 I can't reproduce your problem easily as dom0 is PV with
->> plenty of unpopulated pages for grant memory not suffering from
->> missing "offline" bit.
+> the cpu frequency scaling never worked right (only on the 4.4 kernel from
+> marvell). If you use the 1000 MHz firmware you are running with just 800
+> MHz (this is the case on my board with a current firmware).
+>
+> Just have a look what the kernel thinks it is running at (frequency).
+Ok, probably my bad here. By 'worked fine' i mean that this didn't lead to any 
+freezes or panics. I know the actual frequency wasn't set properly
+
+Regards
+/Ilias
 > 
-> Sure. I managed to get the console working with the patch suggested by
-> David. Feel free to add my tested-by if when you resend it as is.
-
-David, could you please send a proper patch with your Sob?
-
-
-Juergen
+> Regards,
+> Christian
+> 
+> Ilias Apalodimas <ilias.apalodimas@linaro.org> schrieb am Do., 14. M�rz
+> 2019, 14:44:
+> 
+> > Hello Christian,
+> > > Hi,
+> > >
+> > > I assume you use the 1000 MHz firmware. This does also not work on my
+> > Rev 7
+> > > board. But I'm pretty sure this is not a problem of the patches, because
+> > if
+> > > I take a newer kernel (4.19.20/27) without the patches it also does not
+> > > work. A kernel 4.19.17 does work for me. My opinion on that is that this
+> > is
+> > > another problem which does just occure now because now the cpu frequency
+> > > scaling is working with the right frequencies.
+> > I am not sure which firmware i am running, i did all my tests on 5.0.0 and
+> > changing between governors worked fine without the patches
+> >
+> > Regards
+> > /Ilias
+> > >
+> > > Ilias Apalodimas <ilias.apalodimas@linaro.org> schrieb am Do., 14. M�rz
+> > > 2019, 13:15:
+> > >
+> > > > Hi Gregory,
+> > > > > The clock parenting was not setup properly when DVFS was enabled. It
+> > was
+> > > > > expected that the same clock source was used with and without DVFS
+> > which
+> > > > > was not the case.
+> > > > >
+> > > > > This patch fixes this issue, allowing to make the cpufreq support
+> > work
+> > > > > when the CPU clocks source are not the default ones.
+> > > > >
+> > > > > Fixes: 92ce45fb875d ("cpufreq: Add DVFS support for Armada 37xx")
+> > > > > Cc: <stable@vger.kernel.org>
+> > > > > Reported-by: Christian Neubert <christian.neubert.86@gmail.com>
+> > > > > Reported-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> > > > > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> > > > > ---
+> > > > >  drivers/clk/mvebu/armada-37xx-periph.c | 11 +++++++++++
+> > > > >  1 file changed, 11 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/clk/mvebu/armada-37xx-periph.c
+> > > > b/drivers/clk/mvebu/armada-37xx-periph.c
+> > > > > index 1f1cff428d78..26ed3c18a239 100644
+> > > > > --- a/drivers/clk/mvebu/armada-37xx-periph.c
+> > > > > +++ b/drivers/clk/mvebu/armada-37xx-periph.c
+> > > > > @@ -671,6 +671,17 @@ static int armada_3700_add_composite_clk(const
+> > > > struct clk_periph_data *data,
+> > > > >               map = syscon_regmap_lookup_by_compatible(
+> > > > >                               "marvell,armada-3700-nb-pm");
+> > > > >               pmcpu_clk->nb_pm_base = map;
+> > > > > +
+> > > > > +             /*
+> > > > > +              * Use the same parent when DVFS is enabled that the
+> > > > > +              * default parent received at boot time. When this
+> > > > > +              * function is called, DVFS is not enabled yet, so we
+> > > > > +              * get the default parent and we can set the parent
+> > > > > +              * for DVFS.
+> > > > > +              */
+> > > > > +             if (clk_pm_cpu_set_parent(muxrate_hw,
+> > > > > +
+> > > >  clk_pm_cpu_get_parent(muxrate_hw)))
+> > > > > +                     dev_warn(dev, "Failed to setup default parent
+> > > > clock for DVFS\n");
+> > > > >       }
+> > > > >
+> > > > >       *hw = clk_hw_register_composite(dev, data->name,
+> > > > data->parent_names,
+> > > > > --
+> > > > > 2.20.1
+> > > > >
+> > > > Applied this and selected only
+> > > >
+> > > > CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE=y
+> > > > CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
+> > > > CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+> > > >
+> > > > After changing the governor from 'powersave' to 'performance' the board
+> > > > completely froze (i even lost access to the serial port)
+> > > >
+> > > > Cheers
+> > > > /Ilias
+> > > >
+> >
