@@ -2,76 +2,69 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34502C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85EBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AFC21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB7B21874
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbfCNXH2 (ORCPT
+        id S1728082AbfCNXIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 19:07:28 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:44811 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727489AbfCNXH1 (ORCPT
+        Thu, 14 Mar 2019 19:08:50 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53939 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727489AbfCNXIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 19:07:27 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-99.corp.google.com [104.133.0.99] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x2EN72P5022266
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Mar 2019 19:07:03 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 27E6A420AA8; Thu, 14 Mar 2019 19:07:02 -0400 (EDT)
-Date:   Thu, 14 Mar 2019 19:07:02 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-mtd@lists.infradead.org,
-        linux-fscrypt@vger.kernel.org, jaegeuk@kernel.org,
-        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
-        amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, paullawrence@google.com
-Subject: Re: [PATCH 4/4] ubifs: Implement new mount option,
- fscrypt_key_required
-Message-ID: <20190314230702.GE6482@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Eric Biggers <ebiggers@kernel.org>, linux-mtd@lists.infradead.org,
-        linux-fscrypt@vger.kernel.org, jaegeuk@kernel.org,
-        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
-        amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, paullawrence@google.com
-References: <CAJfpegvX4ANfso-Jn1zaB+m4Q_0eK9i-+MCJ+sTH5QzD3PZFMQ@mail.gmail.com>
- <20190314171559.27584-5-richard@nod.at>
- <20190314174913.GA30026@gmail.com>
- <1957441.Hty6t2mpXG@blindfold>
+        Thu, 14 Mar 2019 19:08:50 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1h4ZSo-0004Q0-VW; Thu, 14 Mar 2019 23:08:39 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/lib: fix indentation issue, remove extra tab
+Date:   Thu, 14 Mar 2019 23:08:38 +0000
+Message-Id: <20190314230838.18256-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1957441.Hty6t2mpXG@blindfold>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Richard --- stepping back for a moment, in your use case, are you
-assuming that the encryption key is always going to be present while
-the system is running?
+From: Colin Ian King <colin.king@canonical.com>
 
-Ubifs can't use dm-crypt, since it doesn't have a block device, but if
-you could, is much more like dm-crypt, in that you have the key
-*before* the file system is mounted, and you don't really expect the
-key to ever be expunged from the system while it is mounted?
+The increment of buff is indented one level too deeply, clean
+this up by removing a tab.
 
-If that's true, maybe the real mismatch is in using fscrypt in the
-first place --- and in fact, something where you encrypt everything,
-including the file system metadata (ala dm-crypt), would actually give
-you much better security properties.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ arch/x86/lib/csum-partial_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-       	       		     	 	- Ted
+diff --git a/arch/x86/lib/csum-partial_64.c b/arch/x86/lib/csum-partial_64.c
+index 9baca3e054be..e7925d668b68 100644
+--- a/arch/x86/lib/csum-partial_64.c
++++ b/arch/x86/lib/csum-partial_64.c
+@@ -94,7 +94,7 @@ static unsigned do_csum(const unsigned char *buff, unsigned len)
+ 				    : "m" (*(unsigned long *)buff), 
+ 				    "r" (zero),  "0" (result));
+ 				--count; 
+-					buff += 8;
++				buff += 8;
+ 			}
+ 			result = add32_with_carry(result>>32,
+ 						  result&0xffffffff); 
+-- 
+2.20.1
+
