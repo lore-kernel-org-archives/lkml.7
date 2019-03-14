@@ -2,185 +2,188 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91520C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F39C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFB52075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F80D2075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:48:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tRUPdH9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfCNOqH (ORCPT
+        id S1727087AbfCNOsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:46:07 -0400
-Received: from foss.arm.com ([217.140.101.70]:45836 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbfCNOqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:46:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C56EA78;
-        Thu, 14 Mar 2019 07:46:06 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 575AB3F59C;
-        Thu, 14 Mar 2019 07:46:03 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 14:46:00 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190314144600.2ulpeipad7jbxyiy@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <CAJuCfpGAZ6XxJj=e-wVzGx3zmRRLPs=wXm8K0BcjWOm5hM0FcQ@mail.gmail.com>
+        Thu, 14 Mar 2019 10:48:01 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49192 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfCNOsA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 10:48:00 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2EEg84Z161724;
+        Thu, 14 Mar 2019 14:47:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=vKbzd2JwlL4mctBftvHRv0vUSYvdp6k3t/zT7ayzgT4=;
+ b=tRUPdH9z75jOe/eeo4tgvgIgaesnexof4zqbdBBqm+57It1BU0Ikgp5vvZzBdOtOMY0x
+ +q0bm/aqwRX6a6v7wGwBdCs9Mjkjmrs4yB2ps430/CUhONznmH2xNj1ej9yqHoSK2nYZ
+ r+JPAyoffIizC4cyou+4i78k4Ar7cucqzPuov7U5MN2tyDxbjepY5jDE9ou0r6LPhWwo
+ qqef6WnnQbA/iDerpCbJfi600SswpZwW649my0LIgC1OvBqDRP7ulfID9VXYnWBqCbFQ
+ HAeLz5d6SV73Xdu1Fikvn5sJkxiFhwqLdL8ZOhKuJ5zgSWSeN08nglRqBz4lc+AkKjBM vw== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2r464rse4u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Mar 2019 14:47:46 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2EEljt0024070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Mar 2019 14:47:45 GMT
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2EEliT6011525;
+        Thu, 14 Mar 2019 14:47:44 GMT
+Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 14 Mar 2019 14:47:43 +0000
+Subject: Re: [Xen-devel][PATCH] xen/netfront: Remove unneeded .resume callback
+To:     Oleksandr Andrushchenko <andr2000@gmail.com>,
+        netdev@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, jgross@suse.com,
+        sstabellini@kernel.org, davem@davemloft.net
+Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+References: <20190314131749.25706-1-andr2000@gmail.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ mQINBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
+ PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
+ MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
+ C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
+ d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
+ woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
+ FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
+ SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
+ Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
+ 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABtDNCb3JpcyBPc3Ry
+ b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT6JAjgEEwECACIFAlH8
+ CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
+ 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
+ JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
+ VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
+ jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
+ qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
+ tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
+ kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
+ m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
+ nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
+ hWwveNeRTkxh+2x1Qb3GT46uuQINBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
+ Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
+ yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
+ kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
+ KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
+ BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
+ gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
+ XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
+ 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
+ kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
+ SQARAQABiQIfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
+ jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
+ 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
+ PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
+ u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
+ qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
+ t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
+ ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
+ Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
+ 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
+ Jg6OxFYd01z+a+oL
+Message-ID: <c87d2bfb-b029-6c18-e3ad-cb798055f761@oracle.com>
+Date:   Thu, 14 Mar 2019 10:47:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpGAZ6XxJj=e-wVzGx3zmRRLPs=wXm8K0BcjWOm5hM0FcQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190314131749.25706-1-andr2000@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9194 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903140104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Mar 14:32, Suren Baghdasaryan wrote:
-> On Fri, Feb 8, 2019 at 2:06 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> >
-> > Utilization clamping allows to clamp the CPU's utilization within a
-> > [util_min, util_max] range, depending on the set of RUNNABLE tasks on
-> > that CPU. Each task references two "clamp buckets" defining its minimum
-> > and maximum (util_{min,max}) utilization "clamp values". A CPU's clamp
-> > bucket is active if there is at least one RUNNABLE tasks enqueued on
-> > that CPU and refcounting that bucket.
-> >
-> > When a task is {en,de}queued {on,from} a rq, the set of active clamp
-> > buckets on that CPU can change. Since each clamp bucket enforces a
-> > different utilization clamp value, when the set of active clamp buckets
-> > changes, a new "aggregated" clamp value is computed for that CPU.
-> >
-> > Clamp values are always MAX aggregated for both util_min and util_max.
-> > This ensures that no tasks can affect the performance of other
-> > co-scheduled tasks which are more boosted (i.e. with higher util_min
-> > clamp) or less capped (i.e. with higher util_max clamp).
-> >
-> > Each task has a:
-> >    task_struct::uclamp[clamp_id]::bucket_id
-> > to track the "bucket index" of the CPU's clamp bucket it refcounts while
-> > enqueued, for each clamp index (clamp_id).
-> >
-> > Each CPU's rq has a:
-> >    rq::uclamp[clamp_id]::bucket[bucket_id].tasks
-> > to track how many tasks, currently RUNNABLE on that CPU, refcount each
-> > clamp bucket (bucket_id) of a clamp index (clamp_id).
-> >
-> > Each CPU's rq has also a:
-> >    rq::uclamp[clamp_id]::bucket[bucket_id].value
-> > to track the clamp value of each clamp bucket (bucket_id) of a clamp
-> > index (clamp_id).
-> >
-> > The rq::uclamp::bucket[clamp_id][] array is scanned every time we need
-> > to find a new MAX aggregated clamp value for a clamp_id. This operation
-> > is required only when we dequeue the last task of a clamp bucket
-> > tracking the current MAX aggregated clamp value. In these cases, the CPU
-> > is either entering IDLE or going to schedule a less boosted or more
-> > clamped task.
-> > The expected number of different clamp values, configured at build time,
-> > is small enough to fit the full unordered array into a single cache
-> > line.
-> 
-> I assume you are talking about "struct uclamp_rq uclamp[UCLAMP_CNT]"
-> here.
-
-No, I'm talking about the rq::uclamp::bucket[clamp_id][], which is an
-array of:
-
-   struct uclamp_bucket {
-	unsigned long value : bits_per(SCHED_CAPACITY_SCALE);
-	unsigned long tasks : BITS_PER_LONG - bits_per(SCHED_CAPACITY_SCALE);
-   };
-
-defined as part of:
-
-   struct uclamp_rq {
-	unsigned int value;
-	struct uclamp_bucket bucket[UCLAMP_BUCKETS];
-   };
+On 3/14/19 9:17 AM, Oleksandr Andrushchenko wrote:
+> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+>
+> Currently on driver resume we remove all the network queues and
+> destroy shared Tx/Rx rings leaving the driver in its current state
+> and never signaling the backend of this frontend's state change.
+> This leads to the number of consequences:
+> - when frontend withdraws granted references to the rings etc. it cannot
+>   be cleanly done as the backend still holds those (it was not told to
+>   free the resources)
+> - it is not possible to resume driver operation as all the communication
+>   means with the backned were destroyed by the frontend, thus
+>   making the frontend appear to the guest OS as functional, but
+>   not really.
 
 
-So, it's an array of UCLAMP_BUCKETS (value, tasks) pairs.
+What do you mean? Are you saying that after resume you lose connectivity?
 
-> uclamp_rq size depends on UCLAMP_BUCKETS configurable to be up
-> to 20. sizeof(long)*20 is already more than 64 bytes. What am I
-> missing?
-
-Right, the comment above refers to the default configuration, which is
-5 buckets. With that configuration we have:
+-boris
 
 
-$> pahole kernel/sched/core.o
+>
+> Fix this by not destroying communication channels/rings on driver
+> resume.
+>
+> Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+> ---
+>  drivers/net/xen-netfront.c | 17 -----------------
+>  1 file changed, 17 deletions(-)
+>
+> diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
+> index c914c24f880b..2ca162048da4 100644
+> --- a/drivers/net/xen-netfront.c
+> +++ b/drivers/net/xen-netfront.c
+> @@ -1422,22 +1422,6 @@ static void xennet_disconnect_backend(struct netfront_info *info)
+>  	}
+>  }
+>  
+> -/**
+> - * We are reconnecting to the backend, due to a suspend/resume, or a backend
+> - * driver restart.  We tear down our netif structure and recreate it, but
+> - * leave the device-layer structures intact so that this is transparent to the
+> - * rest of the kernel.
+> - */
+> -static int netfront_resume(struct xenbus_device *dev)
+> -{
+> -	struct netfront_info *info = dev_get_drvdata(&dev->dev);
+> -
+> -	dev_dbg(&dev->dev, "%s\n", dev->nodename);
+> -
+> -	xennet_disconnect_backend(info);
+> -	return 0;
+> -}
+> -
+>  static int xen_net_read_mac(struct xenbus_device *dev, u8 mac[])
+>  {
+>  	char *s, *e, *macstr;
+> @@ -2185,7 +2169,6 @@ static struct xenbus_driver netfront_driver = {
+>  	.ids = netfront_ids,
+>  	.probe = netfront_probe,
+>  	.remove = xennet_remove,
+> -	.resume = netfront_resume,
+>  	.otherend_changed = netback_changed,
+>  };
+>  
 
----8<---
-   struct uclamp_bucket {
-           long unsigned int          value:11;             /*     0:53  8 */
-           long unsigned int          tasks:53;             /*     0: 0  8 */
-
-           /* size: 8, cachelines: 1, members: 2 */
-           /* last cacheline: 8 bytes */
-   };
-
-   struct uclamp_rq {
-           unsigned int               value;                /*     0     4 */
-
-           /* XXX 4 bytes hole, try to pack */
-
-           struct uclamp_bucket       bucket[5];            /*     8    40 */
-
-           /* size: 48, cachelines: 1, members: 2 */
-           /* sum members: 44, holes: 1, sum holes: 4 */
-           /* last cacheline: 48 bytes */
-   };
-
-   struct rq {
-           // ...
-           /* --- cacheline 2 boundary (128 bytes) --- */
-           struct uclamp_rq           uclamp[2];            /*   128    96 */
-           /* --- cacheline 3 boundary (192 bytes) was 32 bytes ago --- */
-           // ...
-   };
----8<---
-
-Where you see the array fits into a single cache line.
-
-Actually I notice now that, since when we removed the bucket dedicated
-to the default values, we now have some spare space and we can
-probably increase the default (and minimum) value of UCLAMP_BUCKETS to
-be 7.
-
-This will uses two full cache lines in struct rq, one for each clamp
-index...  Although 7 it's a bit of a odd number and gives by default
-buckets of ~14% size instead of the ~20%.
-
-Thoughts ?
-
-[...]
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
