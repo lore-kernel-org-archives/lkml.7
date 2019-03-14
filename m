@@ -2,258 +2,182 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ADFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666E0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC922184D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552541569;
-	bh=vrbA7aXj4QQAW/fXy5Qdn5jm6Wfryz0D02Fwo0UW6KI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LNCNeyJAMReOnDplxCcip7AJFRNbhechrZ4JuqRazKsrdvX5/ytT4qKMtOMQLPb96
-	 GrXd0aKE6WE3NubdKUE5aC3iVk66PSe6T7CdOop/z6o9w3xvAgHscV47oxx6duJ6BX
-	 50XKXlhMpHS0gwd/Izgww914hfC1E74es7q3doGg=
+	by mail.kernel.org (Postfix) with ESMTP id 29D5B2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="mP37e+Xw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfCNFcb (ORCPT
+        id S1726856AbfCNFhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 01:32:31 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:45377 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727030AbfCNFc0 (ORCPT
+        Thu, 14 Mar 2019 01:37:53 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:35860 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfCNFhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 01:32:26 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 08CC2214E0;
-        Thu, 14 Mar 2019 01:32:26 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 14 Mar 2019 01:32:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=CDYia77DvmbgSMo0ig5s08PvnjuxIbLDQT/0qMx7ZFE=; b=QB7lwDAt
-        qaYokPpKcM/8jy+xe5qQ75mWZyiWH1ykAoex1QxLI+ynOh3z9vwrRxFcLZXdxFc1
-        JOsNgRKpidOoAoPm8Zpf9xDBpIAZNnuZdhwoc3Kpm3NpOVs9H259Oe9RDX5g8wGD
-        /3N06MO17idYXC/sgIn8rADeyEFppnF93UPUbchhaZe52loh8kI+dJucH0i6tLVr
-        70G4QqPrixhWRpBZwgapwUPUtE+F3fFNJYN7j3trb70y1oq54g7N4yEUFm5FdJw1
-        E3SyT0tBzEk2t5rYTSdDq4xhkNcygrqSPKOV1/XqHm5uDvE085UTYlkAseVi1PvM
-        NDWjoFCpqchYvQ==
-X-ME-Sender: <xms:aeeJXET4CmGUOZzRurzr2gKL5HzIT3b3Pi53QCNRhyYAVhf6hsfcmQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrhedugdekgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvgedrudeiledrvdefrddukeegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeef
-X-ME-Proxy: <xmx:aeeJXKvBGukFQPbX1c219GowTD2JnQ8TcNkWIwlpGKjBMb0QRoYw-Q>
-    <xmx:aeeJXKk9hIS-1yA5HdBRTimdiYUiIe6FUPNSHGTZVhCP0AAwfuQzKg>
-    <xmx:aeeJXLIxCswZ8ajxU3th4VnbA72U3xeiGGpnpK_YN3W0pZOAOectbA>
-    <xmx:aueJXH6BbapL2513L7uUa-9Pv8K04b73F_H_Q8QPaGVBt9i0SMkQuQ>
-Received: from eros.localdomain (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6CB94E4482;
-        Thu, 14 Mar 2019 01:32:22 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Roman Gushchin <guro@fb.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        Thu, 14 Mar 2019 01:37:53 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 8691FC99
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 05:37:51 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RrJxtf9QTtTD for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 00:37:51 -0500 (CDT)
+Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 3FA0CC8F
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:37:51 -0500 (CDT)
+Received: by mail-it1-f197.google.com with SMTP id y6so1102549itj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 22:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=4BgKTwjSHraz7yEVSQOk8vICxaXzsZbztKpzAHEoZts=;
+        b=mP37e+XwAkRjRcKD4syXajWtCechYM0nBZI/1JUzm8IeBNHWi9qVLQlPhAoDWKhZmD
+         sVDD9E+F1uBckftF77VOF1FFZq0cdQDYuhVfMzTsDeiFtT5Swf7YCEuzMEmCvoS9oLhj
+         0uRXLiwZXDCMufo3q7/mGM6eqQiuaVL42E2k1AmzYs4ItyLzHyV5LtnAR2jq9Q7TP2M9
+         fBceMfNMtQdQ7eRM7HO1eu5xz3gK8k4FgrYjZcqItWQ1gmmcoYWcS15NkX4Kmxbf0/fI
+         uvhofjLjbKYfH+Lih2d4LCnF0qKtpidolLWPiVGs34el8w3li5SvoLJXLCQEEI0rTk+Y
+         uDYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=4BgKTwjSHraz7yEVSQOk8vICxaXzsZbztKpzAHEoZts=;
+        b=ZCDPgMfgiW6sl7WiNrujk0oHpoQA4cmqLIMNJ5cVUVV25Tn/BYDotKpXzKalIp8lJr
+         dyrtOdHTBjXGD3lqX+f34elB7DCBw7Li/rJtWWDjamaKcJHdOHsfP4nfn9/Ua6rergSF
+         WXaWVic3POh4Rpltww51O6V01B8QpDSewMFakx2/jZglhpx3U815YHnciD2BlTL49N+6
+         bZhUeainkpSFuD2Vs3kf9/PwSFsshSD3FexyklxELIRqM4fl5CXuSK0KUS930j82jsav
+         iiPCMcEpUq4ZRTv0nFwzfdOG/9CVR0GC18pTYSkJQwhSdKeeHxRWvtMDgevyrEnD9elg
+         CcGQ==
+X-Gm-Message-State: APjAAAVxAhctL3A4EqiXTMJmWE8ljirQdHveBHQX/x5hv5gMAh2HIypE
+        88Qeba2I5eyoYmHNSBtDxNtkOjTivM3WV61PRv6Qzxz/Eqz/o6AD8VMCwgVNwp2gT8gwxhjwkM4
+        WpFODuDtwePVMp0B1H5zguU/c4J7K
+X-Received: by 2002:a24:64b:: with SMTP id 72mr1035158itv.53.1552541870653;
+        Wed, 13 Mar 2019 22:37:50 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzKfQroquDhj2cJKrNFXry/58qO7Zi4WoIsVSp3mZnQpg4WuuhxgZwj0ozthzs7LLrqA/Mc8Q==
+X-Received: by 2002:a24:64b:: with SMTP id 72mr1035146itv.53.1552541870396;
+        Wed, 13 Mar 2019 22:37:50 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id g2sm6364240iom.7.2019.03.13.22.37.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 22:37:49 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/7] slub: Use slab_list instead of lru
-Date:   Thu, 14 Mar 2019 16:31:33 +1100
-Message-Id: <20190314053135.1541-6-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190314053135.1541-1-tobin@kernel.org>
-References: <20190314053135.1541-1-tobin@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH] infiniband: i40iw: fix potential NULL pointer dereferences
+Date:   Thu, 14 Mar 2019 00:37:34 -0500
+Message-Id: <20190314053735.31863-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <9DD61F30A802C4429A01CA4200E302A7A5A6B1A0@fmsmsx124.amr.corp.intel.com>
+References: <9DD61F30A802C4429A01CA4200E302A7A5A6B1A0@fmsmsx124.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we use the page->lru list for maintaining lists of slabs.  We
-have a list in the page structure (slab_list) that can be used for this
-purpose.  Doing so makes the code cleaner since we are not overloading
-the lru list.
+alloc_ordered_workqueue may fail and return NULL.
+The fix captures the failure and handles it properly to avoid
+potential NULL pointer dereferences.
 
-Use the slab_list instead of the lru list for maintaining lists of
-slabs.
-
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Christoph Lameter <cl@linux.com>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- mm/slub.c | 40 ++++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+V2: add return value to capture the error code
 
-diff --git a/mm/slub.c b/mm/slub.c
-index b282e22885cd..d692b5e0163d 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1023,7 +1023,7 @@ static void add_full(struct kmem_cache *s,
- 		return;
+ drivers/infiniband/hw/i40iw/i40iw.h      |  2 +-
+ drivers/infiniband/hw/i40iw/i40iw_cm.c   | 19 ++++++++++++++++---
+ drivers/infiniband/hw/i40iw/i40iw_main.c |  5 ++++-
+ 3 files changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/infiniband/hw/i40iw/i40iw.h b/drivers/infiniband/hw/i40iw/i40iw.h
+index 2f2b4426ded7..8feec35f95a7 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw.h
++++ b/drivers/infiniband/hw/i40iw/i40iw.h
+@@ -552,7 +552,7 @@ enum i40iw_status_code i40iw_obj_aligned_mem(struct i40iw_device *iwdev,
  
- 	lockdep_assert_held(&n->list_lock);
--	list_add(&page->lru, &n->full);
-+	list_add(&page->slab_list, &n->full);
- }
- 
- static void remove_full(struct kmem_cache *s, struct kmem_cache_node *n, struct page *page)
-@@ -1032,7 +1032,7 @@ static void remove_full(struct kmem_cache *s, struct kmem_cache_node *n, struct
- 		return;
- 
- 	lockdep_assert_held(&n->list_lock);
--	list_del(&page->lru);
-+	list_del(&page->slab_list);
- }
- 
- /* Tracking of the number of slabs for debugging purposes */
-@@ -1773,9 +1773,9 @@ __add_partial(struct kmem_cache_node *n, struct page *page, int tail)
+ void i40iw_request_reset(struct i40iw_device *iwdev);
+ void i40iw_destroy_rdma_device(struct i40iw_ib_device *iwibdev);
+-void i40iw_setup_cm_core(struct i40iw_device *iwdev);
++int i40iw_setup_cm_core(struct i40iw_device *iwdev);
+ void i40iw_cleanup_cm_core(struct i40iw_cm_core *cm_core);
+ void i40iw_process_ceq(struct i40iw_device *, struct i40iw_ceq *iwceq);
+ void i40iw_process_aeq(struct i40iw_device *);
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+index 206cfb0016f8..dda24f44239b 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+@@ -3237,7 +3237,7 @@ void i40iw_receive_ilq(struct i40iw_sc_vsi *vsi, struct i40iw_puda_buf *rbuf)
+  * core
+  * @iwdev: iwarp device structure
+  */
+-void i40iw_setup_cm_core(struct i40iw_device *iwdev)
++int i40iw_setup_cm_core(struct i40iw_device *iwdev)
  {
- 	n->nr_partial++;
- 	if (tail == DEACTIVATE_TO_TAIL)
--		list_add_tail(&page->lru, &n->partial);
-+		list_add_tail(&page->slab_list, &n->partial);
- 	else
--		list_add(&page->lru, &n->partial);
-+		list_add(&page->slab_list, &n->partial);
+ 	struct i40iw_cm_core *cm_core = &iwdev->cm_core;
+ 
+@@ -3256,9 +3256,20 @@ void i40iw_setup_cm_core(struct i40iw_device *iwdev)
+ 
+ 	cm_core->event_wq = alloc_ordered_workqueue("iwewq",
+ 						    WQ_MEM_RECLAIM);
++	if (!cm_core->event_wq)
++		goto error;
+ 
+ 	cm_core->disconn_wq = alloc_ordered_workqueue("iwdwq",
+ 						      WQ_MEM_RECLAIM);
++	if (!cm_core->disconn_wq)
++		goto error;
++
++	return 0;
++error:
++	i40iw_cleanup_cm_core(&iwdev->cm_core);
++	i40iw_pr_err("fail to setup CM core");
++
++	return return -ENOMEM;
  }
  
- static inline void add_partial(struct kmem_cache_node *n,
-@@ -1789,7 +1789,7 @@ static inline void remove_partial(struct kmem_cache_node *n,
- 					struct page *page)
- {
- 	lockdep_assert_held(&n->list_lock);
--	list_del(&page->lru);
-+	list_del(&page->slab_list);
- 	n->nr_partial--;
+ /**
+@@ -3278,8 +3289,10 @@ void i40iw_cleanup_cm_core(struct i40iw_cm_core *cm_core)
+ 		del_timer_sync(&cm_core->tcp_timer);
+ 	spin_unlock_irqrestore(&cm_core->ht_lock, flags);
+ 
+-	destroy_workqueue(cm_core->event_wq);
+-	destroy_workqueue(cm_core->disconn_wq);
++	if (cm_core->event_wq)
++		destroy_workqueue(cm_core->event_wq);
++	if (cm_core->disconn_wq)
++		destroy_workqueue(cm_core->disconn_wq);
  }
  
-@@ -1863,7 +1863,7 @@ static void *get_partial_node(struct kmem_cache *s, struct kmem_cache_node *n,
- 		return NULL;
+ /**
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c b/drivers/infiniband/hw/i40iw/i40iw_main.c
+index 68095f00d08f..10932baee279 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_main.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
+@@ -1641,7 +1641,10 @@ static int i40iw_open(struct i40e_info *ldev, struct i40e_client *client)
+ 	iwdev = &hdl->device;
+ 	iwdev->hdl = hdl;
+ 	dev = &iwdev->sc_dev;
+-	i40iw_setup_cm_core(iwdev);
++	if (i40iw_setup_cm_core(iwdev)) {
++		kfree(iwdev->hdl);
++		return -ENOMEM;
++	}
  
- 	spin_lock(&n->list_lock);
--	list_for_each_entry_safe(page, page2, &n->partial, lru) {
-+	list_for_each_entry_safe(page, page2, &n->partial, slab_list) {
- 		void *t;
- 
- 		if (!pfmemalloc_match(page, flags))
-@@ -2407,7 +2407,7 @@ static unsigned long count_partial(struct kmem_cache_node *n,
- 	struct page *page;
- 
- 	spin_lock_irqsave(&n->list_lock, flags);
--	list_for_each_entry(page, &n->partial, lru)
-+	list_for_each_entry(page, &n->partial, slab_list)
- 		x += get_count(page);
- 	spin_unlock_irqrestore(&n->list_lock, flags);
- 	return x;
-@@ -3702,10 +3702,10 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
- 
- 	BUG_ON(irqs_disabled());
- 	spin_lock_irq(&n->list_lock);
--	list_for_each_entry_safe(page, h, &n->partial, lru) {
-+	list_for_each_entry_safe(page, h, &n->partial, slab_list) {
- 		if (!page->inuse) {
- 			remove_partial(n, page);
--			list_add(&page->lru, &discard);
-+			list_add(&page->slab_list, &discard);
- 		} else {
- 			list_slab_objects(s, page,
- 			"Objects remaining in %s on __kmem_cache_shutdown()");
-@@ -3713,7 +3713,7 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
- 	}
- 	spin_unlock_irq(&n->list_lock);
- 
--	list_for_each_entry_safe(page, h, &discard, lru)
-+	list_for_each_entry_safe(page, h, &discard, slab_list)
- 		discard_slab(s, page);
- }
- 
-@@ -3993,7 +3993,7 @@ int __kmem_cache_shrink(struct kmem_cache *s)
- 		 * Note that concurrent frees may occur while we hold the
- 		 * list_lock. page->inuse here is the upper limit.
- 		 */
--		list_for_each_entry_safe(page, t, &n->partial, lru) {
-+		list_for_each_entry_safe(page, t, &n->partial, slab_list) {
- 			int free = page->objects - page->inuse;
- 
- 			/* Do not reread page->inuse */
-@@ -4003,10 +4003,10 @@ int __kmem_cache_shrink(struct kmem_cache *s)
- 			BUG_ON(free <= 0);
- 
- 			if (free == page->objects) {
--				list_move(&page->lru, &discard);
-+				list_move(&page->slab_list, &discard);
- 				n->nr_partial--;
- 			} else if (free <= SHRINK_PROMOTE_MAX)
--				list_move(&page->lru, promote + free - 1);
-+				list_move(&page->slab_list, promote + free - 1);
- 		}
- 
- 		/*
-@@ -4019,7 +4019,7 @@ int __kmem_cache_shrink(struct kmem_cache *s)
- 		spin_unlock_irqrestore(&n->list_lock, flags);
- 
- 		/* Release empty slabs */
--		list_for_each_entry_safe(page, t, &discard, lru)
-+		list_for_each_entry_safe(page, t, &discard, slab_list)
- 			discard_slab(s, page);
- 
- 		if (slabs_node(s, node))
-@@ -4211,11 +4211,11 @@ static struct kmem_cache * __init bootstrap(struct kmem_cache *static_cache)
- 	for_each_kmem_cache_node(s, node, n) {
- 		struct page *p;
- 
--		list_for_each_entry(p, &n->partial, lru)
-+		list_for_each_entry(p, &n->partial, slab_list)
- 			p->slab_cache = s;
- 
- #ifdef CONFIG_SLUB_DEBUG
--		list_for_each_entry(p, &n->full, lru)
-+		list_for_each_entry(p, &n->full, slab_list)
- 			p->slab_cache = s;
- #endif
- 	}
-@@ -4432,7 +4432,7 @@ static int validate_slab_node(struct kmem_cache *s,
- 
- 	spin_lock_irqsave(&n->list_lock, flags);
- 
--	list_for_each_entry(page, &n->partial, lru) {
-+	list_for_each_entry(page, &n->partial, slab_list) {
- 		validate_slab_slab(s, page, map);
- 		count++;
- 	}
-@@ -4443,7 +4443,7 @@ static int validate_slab_node(struct kmem_cache *s,
- 	if (!(s->flags & SLAB_STORE_USER))
- 		goto out;
- 
--	list_for_each_entry(page, &n->full, lru) {
-+	list_for_each_entry(page, &n->full, slab_list) {
- 		validate_slab_slab(s, page, map);
- 		count++;
- 	}
-@@ -4639,9 +4639,9 @@ static int list_locations(struct kmem_cache *s, char *buf,
- 			continue;
- 
- 		spin_lock_irqsave(&n->list_lock, flags);
--		list_for_each_entry(page, &n->partial, lru)
-+		list_for_each_entry(page, &n->partial, slab_list)
- 			process_slab(&t, s, page, alloc, map);
--		list_for_each_entry(page, &n->full, lru)
-+		list_for_each_entry(page, &n->full, slab_list)
- 			process_slab(&t, s, page, alloc, map);
- 		spin_unlock_irqrestore(&n->list_lock, flags);
- 	}
+ 	dev->back_dev = (void *)iwdev;
+ 	iwdev->ldev = &hdl->ldev;
 -- 
-2.21.0
+2.17.1
 
