@@ -2,109 +2,98 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B31C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A941CC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99EDB21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aygQDYI9"
+	by mail.kernel.org (Postfix) with ESMTP id 804692077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfCNSii (ORCPT
+        id S1727840AbfCNSi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 14:38:38 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44536 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfCNSig (ORCPT
+        Thu, 14 Mar 2019 14:38:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51774 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727814AbfCNSi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 14:38:36 -0400
-Received: by mail-lj1-f195.google.com with SMTP id n18so3794160ljg.11;
-        Thu, 14 Mar 2019 11:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H+gQBiVflYsd+bovfxrF0mnBQAXyra2Y1EbBe8xHSvA=;
-        b=aygQDYI9FcLewv5oySMNO+nToTCVV+AcmaAzqNPUxFj6DVt7q9uggshhh9q6jCVNSs
-         SObnxDrEgV5HGmsTV9/U41JzR9xVQTT9OsgL8GDA5EnqVkszIFVDltraOHjPzcK8GYv/
-         qM1JwL24ce3eLgf4Oi6R2+ii5BG8kFjNUKX0z53gEAw5Y6GiZ8bHwoE25qncydGV9Uh6
-         3yGEZpu5u+6eTHRIHRFKpRlw0bPEDkZI+ZbYlWkOMlrRmFbyttsR0KiwKaUycGvipbaI
-         4eSblrO0Xe+Hrmcl3EWTM3bpKYpNjZYFT6rSD+RLyfeHqH/cPBTeZxlhehwFRdrmOHJk
-         47xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H+gQBiVflYsd+bovfxrF0mnBQAXyra2Y1EbBe8xHSvA=;
-        b=e/tZ1Om3d4wlGrA0TKxGQs+ZZO/Mo6amVIX+Ddzs8Yq+nNKgUEDRNYjWRQ+3EMZemi
-         jSYuihYTaZ73S+uEqTTrgjaPGbRcDO/WEA5Wrlc/MiJE6ot4YKWt2OqHXjjIN5AFHxBA
-         PICPy8oAWnjzBG4GQhSEvNBwR4yurieF9uCbyxQy2WDdO2dSIL//zt5SAlCLN/0tK00X
-         pBS2yuAakphRFN+KnI0KU7gipQIlcbZ0iIFPDKAZkCEUe3kKYCcjrswB1hkjU1+g0lt/
-         JUa3jTXaJKOozaHMLE6pVzP1QMeibHSCxKUoI0cTUFkYFs/X16XY8CX5TsZunqhPk+nM
-         V9ig==
-X-Gm-Message-State: APjAAAXS9JfCN8JKv9uMAWmtlIQmxF6Lcg1jj7ZsU3JIJKlxCyEg4JWc
-        yOS0Dl3veSxAa3dgIkcqh2MzCBWBAUfCvKcGJ4Y=
-X-Google-Smtp-Source: APXvYqwoIA9+oFdNRl5vGcdsCEzjcw26PKAmV+VPivP8mn6sjaVwVmuqwu5+x4YtD9tL+MP2yDUtjNB0IBwc8o3APfQ=
-X-Received: by 2002:a2e:21d1:: with SMTP id h78mr24267925lji.49.1552588714628;
- Thu, 14 Mar 2019 11:38:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
- <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
- <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
- <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
- <20190305173134.GE8256@zn.tnic> <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
- <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
- <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
- <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
- <yw1xa7i14btw.fsf@mansr.com> <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
- <yw1x5zsp473a.fsf@mansr.com> <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
- <yw1x1s3d42ia.fsf@mansr.com> <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
- <CAHk-=wj3v41CWH+3ry3+vrkjAEcyGojtevpsZDbiXVvpv1nTkA@mail.gmail.com> <CAMuHMdU76V=p8GLqVdChx+Sa_aPZ9BMCnnzmzWonqEq4Xe+LEQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdU76V=p8GLqVdChx+Sa_aPZ9BMCnnzmzWonqEq4Xe+LEQ@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 14 Mar 2019 19:38:23 +0100
-Message-ID: <CANiq72=Hvvw7QCKMquWmefKz1OLUrYoDZUHRT2XKUEwTfsLv4Q@mail.gmail.com>
-Subject: Re: [PATCH] x86: Deprecate a.out support
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
+        Thu, 14 Mar 2019 14:38:56 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2EITUEK065938
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 14:38:55 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r7u1fc4d2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 14:38:54 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 14 Mar 2019 18:38:52 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Mar 2019 18:38:50 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2EIcnOb34406578
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Mar 2019 18:38:49 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 508555204E;
+        Thu, 14 Mar 2019 18:38:49 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.108.186])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A3BB552052;
+        Thu, 14 Mar 2019 18:38:48 +0000 (GMT)
+Subject: Re: [PATCH v3 5/7] selftests/ima: kexec_file_load syscall test
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Petr Vorel <pvorel@suse.cz>, Dave Young <dyoung@redhat.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 14 Mar 2019 14:38:37 -0400
+In-Reply-To: <20190313101436.GB25643@dell5510>
+References: <1552304473-3966-1-git-send-email-zohar@linux.ibm.com>
+         <1552304473-3966-6-git-send-email-zohar@linux.ibm.com>
+         <20190312121001.GA18510@dhcp-128-65.nay.redhat.com>
+         <1552409474.24794.63.camel@linux.ibm.com> <20190313101436.GB25643@dell5510>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031418-4275-0000-0000-0000031B1041
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031418-4276-0000-0000-0000382983CB
+Message-Id: <1552588717.8658.5.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-14_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=684 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903140129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 9:46 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Yeah, the alphas on the server side, powering AltaVista, are also long
-> gone...
+On Wed, 2019-03-13 at 11:14 +0100, Petr Vorel wrote:
 
-As usual with these things, people can still use older Linux releases
-for a very long time. If they really need it (e.g. commercially), they
-have the reference code and can bring it up to speed again relatively
-easily. It is not as if they have no way to submit it back again.
+> > > So if split kexec tests to another folder is not doable please just
+> > > ignore the comment.
+> 
+> > Left in the selftests/ima is a similar test for kernel modules, which
+> > uses the "common" functions.  So either we wait to move the kexec
+> > tests or allow them to reach into the ima directory and use the
+> > ima_common_lib functions.
+> I guess just load ima_common_lib.sh for now would be good enough.
 
-Cheers,
-Miguel
+After thinking about it some more, I've decided to remove the kernel
+module test from this patch set and to simply move everything from the
+selftests/ima to selftests/kexec.
+
+The kernel module test will access scripts/kexec/kexec_common_lib.sh
+until there is a generic set of functions.
+
+Mimi
+
