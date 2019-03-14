@@ -7,59 +7,61 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCADC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBB4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0DB20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1A121852
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578822;
-	bh=mWA7rUN9T2nlDpUtwH6+6IGF6uxA4by4cJwcRvvT8i0=;
+	s=default; t=1552578826;
+	bh=iKPbDtV2ehekjU9FuKSCg2EQ6eqNnVdLo/DiPYX5xOU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=gLoggTEibmpjLQzZe9ZHQIFulE1k07GG2Tks60Yeevrbk/mnNvY0GNwm4wS2HQf8R
-	 8NzzO4tER0Pl+TbMHK+tADWHqRUkxQW2D5Nc3CifoHsTWYHHjP7M0HKapuh704FtUT
-	 hLnVNqUCURHTCQRpOVRBc8OB+TjAU1Xh6GAfz/PI=
+	b=pFn0JZOmIuDzRVP2otohQ80ClgmvAWJgFwu48Mwg7MUHvldaxlOx5fC9hogibb53h
+	 ax1fqir00O78oSJi7ms60Hn7SnF0CZ8GU0pGvGdINeMhVR09uKz8FWVony16LtlEDr
+	 YOzSFKwiOEbRmUCotvVYlEuUh3WYLTXQfVdyjb7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfCNPxk (ORCPT
+        id S1727170AbfCNPxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:53:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34584 "EHLO
+        Thu, 14 Mar 2019 11:53:45 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34714 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfCNPxk (ORCPT
+        with ESMTP id S1726431AbfCNPxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:53:40 -0400
+        Thu, 14 Mar 2019 11:53:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=xxoBDDb+U0bogJTA9ja4zKPg2TPimc+rGT8YeYDcVlw=; b=AJ7ja+6y135p
-        FHC6IRWT9ilsD4Ft9Eya8NOAIFqUZ6X7j34JRWcWX5JPhvWE8N3RW7EugQwgIKarLE03uAr9eOWc5
-        MyOSpt4gY4ZhmhhK7kAGVmhx4O1QC2iMx70lq2Dik+CR3cjr8EqwkiHtEPs69uShZOpjR7cJXQL3v
-        +eKMs=;
+        List-Archive; bh=Lnj13rR0ecnnQ8FeiqxHVUJkOqCrxg3GN407eFSZnH4=; b=pnwi0gUjLger
+        Tlq2UVI5agdDOqtTwFgi9Igd6+ArB8QEVa/HS6WNqmOi1KLkPMSahfDXhdoOPDZoBQX92rPSMahEs
+        O0ZVgsS3/J/YtACMG9XViDvCfFsgrp0VMf0lAzrS/f8jt86RVZfETom+PdI7JlKqGxnyHvizk8FPe
+        zqAyU=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4Sfk-0002fk-Ne; Thu, 14 Mar 2019 15:53:32 +0000
+        id 1h4Sfp-0002g1-3F; Thu, 14 Mar 2019 15:53:37 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 3913B1126E64; Thu, 14 Mar 2019 15:53:32 +0000 (GMT)
+        id 8C6091126E64; Thu, 14 Mar 2019 15:53:36 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Mark Brown <broonie@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
         Tony Lindgren <tony@atomide.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-omap@vger.kernel.org,
         Jarkko Nikula <jarkko.nikula@bitmer.com>,
         alsa-devel@alsa-project.org
-Subject: Applied "ASoC: ti: fix davinci_mcasp_probe dependencies" to the asoc tree
-In-Reply-To:  <20190304203114.1894822-1-arnd@arndb.de>
+Subject: Applied "ASoC: ti: remove compat dma probing" to the asoc tree
+In-Reply-To:  <20190307151646.1016966-1-arnd@arndb.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155332.3913B1126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:53:32 +0000 (GMT)
+Message-Id: <20190314155336.8C6091126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:53:36 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,7 +69,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: ti: fix davinci_mcasp_probe dependencies
+   ASoC: ti: remove compat dma probing
 
 has been applied to the asoc tree at
 
@@ -92,54 +94,101 @@ to this mail.
 Thanks,
 Mark
 
-From 7d7b25d05ef1c5a1a9320190e1eeb55534847558 Mon Sep 17 00:00:00 2001
+From 642aafea8889b712fe8e57aaa706d6c05d295059 Mon Sep 17 00:00:00 2001
 From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 4 Mar 2019 21:30:50 +0100
-Subject: [PATCH] ASoC: ti: fix davinci_mcasp_probe dependencies
+Date: Thu, 7 Mar 2019 16:16:08 +0100
+Subject: [PATCH] ASoC: ti: remove compat dma probing
 
-The SND_SOC_DAVINCI_MCASP driver can use either edma or sdma as
-a back-end, and it takes the presence of the respective dma engine
-drivers in the configuration as an indication to which ones should be
-built. However, this is flawed in multiple ways:
+After running into a link error:
 
-- With CONFIG_TI_EDMA=m and CONFIG_SND_SOC_DAVINCI_MCASP=y,
-  is enabled as =m, and we get a link error:
-  sound/soc/ti/davinci-mcasp.o: In function `davinci_mcasp_probe':
-  davinci-mcasp.c:(.text+0x930): undefined reference to `edma_pcm_platform_register'
+sound/soc/ti/edma-pcm.o:(.rodata+0x18): undefined reference to `edma_filter_fn'
 
-- When CONFIG_SND_SOC_DAVINCI_MCASP=m has already been selected by
-  another driver, the same link error appears even if CONFIG_TI_EDMA
-  is disabled
+I checked all users of this, and they have new-style 'dma_slave_map' tables,
+so none of them should still need it. Removing the associated lines
+simplifies the code and avoids the build-time dependency on the
+respective dmaengine drivers.
 
-There are possibly other issues here, but it seems that the only reasonable
-solution is to always build both SND_SOC_TI_EDMA_PCM and
-SND_SOC_TI_SDMA_PCM as a dependency here. Both are fairly small and
-do not have any other compile-time dependencies, so the cost is
-very small, and makes the configuration stage much more consistent.
-
-Fixes: f2055e145f29 ("ASoC: ti: Merge davinci and omap directories")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/ti/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/ti/edma-pcm.c | 5 +----
+ sound/soc/ti/sdma-pcm.c | 9 +++------
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/ti/Kconfig b/sound/soc/ti/Kconfig
-index 4bf3c15d4e51..ee7c202c69b7 100644
---- a/sound/soc/ti/Kconfig
-+++ b/sound/soc/ti/Kconfig
-@@ -21,8 +21,8 @@ config SND_SOC_DAVINCI_ASP
+diff --git a/sound/soc/ti/edma-pcm.c b/sound/soc/ti/edma-pcm.c
+index 59e588abe54b..fdffb801b185 100644
+--- a/sound/soc/ti/edma-pcm.c
++++ b/sound/soc/ti/edma-pcm.c
+@@ -23,7 +23,6 @@
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include <sound/dmaengine_pcm.h>
+-#include <linux/edma.h>
  
- config SND_SOC_DAVINCI_MCASP
- 	tristate "Multichannel Audio Serial Port (McASP) support"
--	select SND_SOC_TI_EDMA_PCM if TI_EDMA
--	select SND_SOC_TI_SDMA_PCM if DMA_OMAP
-+	select SND_SOC_TI_EDMA_PCM
-+	select SND_SOC_TI_SDMA_PCM
- 	help
- 	  Say Y or M here if you want to have support for McASP IP found in
- 	  various Texas Instruments SoCs like:
+ #include "edma-pcm.h"
+ 
+@@ -43,14 +42,12 @@ static const struct snd_pcm_hardware edma_pcm_hardware = {
+ static const struct snd_dmaengine_pcm_config edma_dmaengine_pcm_config = {
+ 	.pcm_hardware = &edma_pcm_hardware,
+ 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
+-	.compat_filter_fn = edma_filter_fn,
+ 	.prealloc_buffer_size = 128 * 1024,
+ };
+ 
+ int edma_pcm_platform_register(struct device *dev)
+ {
+-	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config,
+-					SND_DMAENGINE_PCM_FLAG_COMPAT);
++	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config, 0);
+ }
+ EXPORT_SYMBOL_GPL(edma_pcm_platform_register);
+ 
+diff --git a/sound/soc/ti/sdma-pcm.c b/sound/soc/ti/sdma-pcm.c
+index 21a9c2499d48..a236350beb10 100644
+--- a/sound/soc/ti/sdma-pcm.c
++++ b/sound/soc/ti/sdma-pcm.c
+@@ -11,7 +11,6 @@
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include <sound/dmaengine_pcm.h>
+-#include <linux/omap-dmaengine.h>
+ 
+ #include "sdma-pcm.h"
+ 
+@@ -31,7 +30,6 @@ static const struct snd_pcm_hardware sdma_pcm_hardware = {
+ static const struct snd_dmaengine_pcm_config sdma_dmaengine_pcm_config = {
+ 	.pcm_hardware = &sdma_pcm_hardware,
+ 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
+-	.compat_filter_fn = omap_dma_filter_fn,
+ 	.prealloc_buffer_size = 128 * 1024,
+ };
+ 
+@@ -39,13 +37,12 @@ int sdma_pcm_platform_register(struct device *dev,
+ 			       char *txdmachan, char *rxdmachan)
+ {
+ 	struct snd_dmaengine_pcm_config *config;
+-	unsigned int flags = SND_DMAENGINE_PCM_FLAG_COMPAT;
++	unsigned int flags = 0;
+ 
+ 	/* Standard names for the directions: 'tx' and 'rx' */
+ 	if (!txdmachan && !rxdmachan)
+ 		return devm_snd_dmaengine_pcm_register(dev,
+-						&sdma_dmaengine_pcm_config,
+-						flags);
++						&sdma_dmaengine_pcm_config, 0);
+ 
+ 	config = devm_kzalloc(dev, sizeof(*config), GFP_KERNEL);
+ 	if (!config)
+@@ -65,7 +62,7 @@ int sdma_pcm_platform_register(struct device *dev,
+ 	config->chan_names[0] = txdmachan;
+ 	config->chan_names[1] = rxdmachan;
+ 
+-	return devm_snd_dmaengine_pcm_register(dev, config, flags);
++	return devm_snd_dmaengine_pcm_register(dev, config, 0);
+ }
+ EXPORT_SYMBOL_GPL(sdma_pcm_platform_register);
+ 
 -- 
 2.20.1
 
