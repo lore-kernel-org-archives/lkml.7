@@ -2,84 +2,105 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2760C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3A5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE75205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CDC205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mmwXQ3k4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfCNJHw convert rfc822-to-8bit (ORCPT
+        id S1727347AbfCNJIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:07:52 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:35312 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfCNJHw (ORCPT
+        Thu, 14 Mar 2019 05:08:43 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39637 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfCNJIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:07:52 -0400
-Received: by mail-vs1-f66.google.com with SMTP id e1so1778367vsp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:07:51 -0700 (PDT)
+        Thu, 14 Mar 2019 05:08:43 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h8so3543440pgp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uZCZbVWvjMcSe3Gq3aWQrxKbzamdcnkBDPRD2xJtoGY=;
+        b=mmwXQ3k4rCuFovOKIyClyz3NR/FFnocQLNt5WWTiRUTKiu14KegmlAh0tYZi5aASx+
+         MA9Li8rOuctuo9dQOSkGtwRaJIw9ee0XiW05PNqyg5qVlhUbNbbbQgT3Mkb2tAjvqbvo
+         rtfZrTq9J/KrtkRlWeWYMl2FIzqIK70Is5CykeXfIYVXCHkKC4nXND1GwtbO5AgCTK5s
+         z3OYrslha+pTpd/mOJRgUfxI4lMUIjnXzqYxOqUrTlE1rKB6prak4aLTQWP930RcRVzS
+         wR70R0KZ2iV5gKMWbMh8zHhwWgpkkxUPzfva6AbjdsKHcEE0sojQ0TmgcB7nFVm60SK8
+         YyPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+wA7WEdatafTwrBsI9kco+k6FbaaexDv9oaeFWOEIsw=;
-        b=fCqhN8Uk71jgcWqf6MqVqJ+ZnE6DB3R7x3Vxqlo4XsGbnPzor46XVBNN4gRAzrqZee
-         I8Kga2LAYo9030hpsI0d+IkdS94cpLhCK4bq8XUSoYSQdIybxneJecqr5EtdOyY9eco7
-         pwNR8HgcDpf1BjE/y3dRkD5ezb5eJNeHPvRtkqfZTXcJAuPD7GKpptyIYnp0HtPgS4pa
-         AaSFwlhfUcauhsYVW0VRLVtdOf7PjTOCISQsVNMFSHAkiHIpESln1JXnu9SIpWzFhIj1
-         5JVu22YU9DZl0qJ9SDpS4vIvV1c5jYthuA2bmyqzGNlAKODrITXqydBsbpgn6RLm4TL2
-         c1vA==
-X-Gm-Message-State: APjAAAXAp4iiLJ6j8+AYV2IY2pvHGsqk+yUsSowqEJQFWXLkA/28US9z
-        c5nPLKYC8yIvzuZOk31vTg/WMkGjc6W5DTQHUww=
-X-Google-Smtp-Source: APXvYqx9gI/sDuzROvcWnaXWvnAsHFEVFSc03qckgL6Nlo1f+RJ7fkzJ4CPIBEQiW6N+EYl7pncIQjjjeTA8ANtvS5Q=
-X-Received: by 2002:a67:ebcd:: with SMTP id y13mr3680960vso.152.1552554471045;
- Thu, 14 Mar 2019 02:07:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uZCZbVWvjMcSe3Gq3aWQrxKbzamdcnkBDPRD2xJtoGY=;
+        b=LASKR/HckhWbF94RnE2f4WodMeZibuPFER6Mst1/kegwdiL3ze3n54lRNTjQcLf3It
+         p4aZHsKonCeiIGsTwrZSu/LhAAT9z33qHZqndElm74N902D6piVeyC0CC1EbL6ObL2kL
+         NIHl0Fd5SG6s0vsD7FrOK0B7akpSuLyWi8db/9/5d+90nP6G2zxswMSroEBlvpw1d3sF
+         +6Afhyi8rqwrWo1+KwYeXR8F3Jg4ovNbmrUVOCRG1t88OwoD+ptKo6AX8fzHvewRqEan
+         BK2fgBI9vohAo+x+XRqhyeMTNh9sGLrSQ1YpOCqs/xM4e3+2lm0bLjdV1MHQqFjkvkt9
+         sKkw==
+X-Gm-Message-State: APjAAAW+HnA+AJ0YyTk1/8RD32725P+j0uqvL0oiYGfYQTGpwyOhNpZw
+        JErLrPNM45LcvvSZ5Xzs8J0MtQ==
+X-Google-Smtp-Source: APXvYqw6JcM0OFAWNy2Hp9qFPVqo8KbWYvRM92mfbx8BL9KeeCQ5RMAoU0kWBcHg/nGjxb+1fy0DEw==
+X-Received: by 2002:a65:64c3:: with SMTP id t3mr31389008pgv.14.1552554522308;
+        Thu, 14 Mar 2019 02:08:42 -0700 (PDT)
+Received: from localhost ([122.166.134.37])
+        by smtp.gmail.com with ESMTPSA id a2sm18289335pff.58.2019.03.14.02.08.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 02:08:41 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 14:38:38 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     devel@driverdev.osuosl.org, Alex Elder <elder@kernel.org>,
+        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
+        pakki001@umn.edu, linux-kernel@vger.kernel.org
+Subject: Re: [greybus-dev] [PATCH] greybus: audio_manager: fix a missing
+ check of ida_simple_get
+Message-ID: <20190314090838.ort5tluai4t2zvcu@vireshk-i7>
+References: <20190314064525.15756-1-kjlu@umn.edu>
 MIME-Version: 1.0
-References: <19432668-ffd3-fbb2-af4f-1c8e48f6cc81@infradead.org>
-In-Reply-To: <19432668-ffd3-fbb2-af4f-1c8e48f6cc81@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Mar 2019 10:07:39 +0100
-Message-ID: <CAMuHMdUxPv+jjk894j8rLhn+Q7FWHz2LRCKLOyOXOvPd_LXoQg@mail.gmail.com>
-Subject: Re: [PATCH -mmotm/-next] fs: fs_parser: fix printk format warning
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314064525.15756-1-kjlu@umn.edu>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 9, 2019 at 4:21 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Fix printk format warning (seen on i386 builds) by using ptrdiff
-> format specifier (%t):
->
-> ../fs/fs_parser.c:413:6: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 3 has type ‘int’ [-Wformat=]
+On 14-03-19, 01:45, Kangjie Lu wrote:
+> ida_simple_get could fail. The fix inserts a check for its
+> return value.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/staging/greybus/audio_manager.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/staging/greybus/audio_manager.c b/drivers/staging/greybus/audio_manager.c
+> index d44b070d8862..c2a4af4c1d06 100644
+> --- a/drivers/staging/greybus/audio_manager.c
+> +++ b/drivers/staging/greybus/audio_manager.c
+> @@ -45,6 +45,9 @@ int gb_audio_manager_add(struct gb_audio_manager_module_descriptor *desc)
+>  	int err;
+>  
+>  	id = ida_simple_get(&module_id, 0, 0, GFP_KERNEL);
+> +	if (id < 0)
+> +		return id;
+> +
+>  	err = gb_audio_manager_module_create(&module, manager_kset,
+>  					     id, desc);
+>  	if (err) {
 
-Now seen in upstream on all 32-bit platforms, I guess.
-
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+viresh
