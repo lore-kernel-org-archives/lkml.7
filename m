@@ -2,177 +2,144 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37A1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8DAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6423C21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A76420854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:15:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GGJbpjxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfCNMOA (ORCPT
+        id S1727394AbfCNMPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:14:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:6706 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbfCNMN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 08:13:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 05:13:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
-   d="scan'208";a="151661325"
-Received: from lxy-dell.sh.intel.com ([10.239.159.145])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Mar 2019 05:13:57 -0700
-Message-ID: <117d2611b7cf1dbc8cde28a93c9fc31da5dd8986.camel@linux.intel.com>
-Subject: Re: [PATCH] kvm/x86/vmx: switch MSR_MISC_FEATURES_ENABLES between
- host and guest
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Kyle Huey <khuey@kylehuey.com>, Chao Gao <chao.gao@intel.com>,
-        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 14 Mar 2019 20:10:34 +0800
-In-Reply-To: <b9fcb873-8c8c-79d8-436e-058ba4f7966a@redhat.com>
-References: <20190314063858.18292-1-xiaoyao.li@linux.intel.com>
-         <b9fcb873-8c8c-79d8-436e-058ba4f7966a@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 14 Mar 2019 08:15:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37396 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfCNMPr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 08:15:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y15so5611594wro.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 05:15:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=P8Musrq+Zf+Vn7QYOvAJ2kgQ4P8kl8oepHXj9wkd3GA=;
+        b=GGJbpjxB7uPfBqHRz/ucVfC1craEJiLjv6ESissugbbKUE5jF75Cg5PDhH3kamtnS9
+         dFY4dGb9fxqD8D7aMhmyY1i0qVay1r2TK8fsssUWIsTLIlcfew+rCpBEFa8yvr1UhDkM
+         mJEzD/DJR60fl5oY5gOKB5m4+EZ1tb0i5qwrJPLDN7HtNDbZlHlEWiQjmAMmT20Prl4R
+         1KpR9nojkwpm+IOfCFk+ilW6u1O9KjACz+oxUHuZWBNtyL2hCe2pJiIY+nO06LXK2d3x
+         UDokWQtmR9ThGVefQauo2Q3rhlfS2JufOF+H4Y1bUnQO+5MlW5dfOnGbX91uTp/QTDtp
+         HAhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P8Musrq+Zf+Vn7QYOvAJ2kgQ4P8kl8oepHXj9wkd3GA=;
+        b=s3EnL2GfxWMJhAM2gP19WHGkAzvcTqQCn1Tofv2TMyJ5GMptYcMpEhDA0dcUbFWgpL
+         5mqD+ir0ecw1oPwWgh174N6kokiz3qaYDgGGDrP6pV6FJWPTYVn43m0Y2ud4I+CwWphK
+         0/c/LQIu9s/rHsch44MZ4IE+mnxVKp9BkEqSYyShiFDp5Jo7hgxraX5rw9p2oVQxsvq6
+         TKFk/xkR6fi67O1hi+tsdMOxJiZeMP7Tk8uwHZn+VTlomlZ5jE4h8ClHpSQkdtm+1uiq
+         k8RrCGS2LxhW/kcnjghVlDsaXS9QcC4fr86RgAUvgcnQgs1btU1r7GoyWl3Kc7Qfftgg
+         onIQ==
+X-Gm-Message-State: APjAAAU3J9T5oDMFuSHjX6hSB5iimd40imlOIIARaPMEPi+bXD8HEBnl
+        ku8fMmVXV6zp6ePt4bp9iDHzVQ==
+X-Google-Smtp-Source: APXvYqyIKACOcbNCjO/NnBPLjcHRAhMfJhnAqlC++nMC5MUv1Jm9vyeCd2PDhOjydD6d04wPCcdxBQ==
+X-Received: by 2002:a5d:464b:: with SMTP id j11mr24102376wrs.307.1552565745062;
+        Thu, 14 Mar 2019 05:15:45 -0700 (PDT)
+Received: from apalos (ppp-94-64-206-130.home.otenet.gr. [94.64.206.130])
+        by smtp.gmail.com with ESMTPSA id o127sm1856038wmo.20.2019.03.14.05.15.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 05:15:44 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 14:15:41 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Stephen Boyd <sboyd@codeaurora.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Christian Neubert <christian.neubert.86@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
+ cpu clocks
+Message-ID: <20190314121541.GB19385@apalos>
+References: <20190313163558.6705-1-gregory.clement@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313163558.6705-1-gregory.clement@bootlin.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-03-14 at 12:28 +0100, Paolo Bonzini wrote:
-> On 14/03/19 07:38, Xiaoyao Li wrote:
-> > CPUID Faulting is a feature about CPUID instruction. When CPUID Faulting is
-> > enabled, all execution of the CPUID instruction outside system-management
-> > mode (SMM) cause a general-protection (#GP) if the CPL > 0.
-> > 
-> > About this feature, detailed information can be found at
-> > 
-https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
-> > 
-> > There is an issue that current kvm doesn't switch the value of
-> > MSR_MISC_FEATURES_ENABLES between host and guest. If
-> > MSR_MISC_FEATURES_ENABLES
-> > exists on the hardware cpu, and host enables CPUID faulting (setting the bit
-> > 0
-> > of MSR_MISC_FEATURES_ENABLES), it will impact the guest's behavior because
-> > cpuid faulting is enabled by host and passed to guest.
-> > 
-> > From my tests, when host enables cpuid faulting, it causes guest boot
-> > failure
-> > when guest uses *modprobe* to load modules. Below is the error log:
-> > 
-> > [    1.233556] traps: modprobe[71] general protection fault ip:7f0077f6495c
-> > sp:7ffda148d808 error:0 in ld-2.17.so[7f0077f4d000+22000]
-> > [    1.237780] traps: modprobe[73] general protection fault ip:7fad5aba095c
-> > sp:7ffd36067378 error:0 in ld-2.17.so[7fad5ab89000+22000]
-> > [    1.241930] traps: modprobe[75] general protection fault ip:7f3edb89495c
-> > sp:7fffa1a81308 error:0 in ld-2.17.so[7f3edb87d000+22000]
-> > [    1.245998] traps: modprobe[77] general protection fault ip:7f91d670895c
-> > sp:7ffc25fa7f38 error:0 in ld-2.17.so[7f91d66f1000+22000]
-> > [    1.250016] traps: modprobe[79] general protection fault ip:7f0ddbbdc95c
-> > sp:7ffe9c34f8d8 error:0 in ld-2.17.so[7f0ddbbc5000+22000]
-> > 
-> > *modprobe* calls CPUID instruction thus causing cpuid faulting in guest.
-> > At the end, because guest cannot *modprobe* modules, it boots failure.
-> > 
-> > This patch switches MSR_MISC_FEATURES_ENABLES between host and guest when
-> > hardware has this MSR.
-> > 
-> > This patch doesn't confict with the commit db2336a80489 ("KVM: x86:
-> > virtualize
-> > cpuid faulting"), which provides a software emulation of cpuid faulting for
-> > x86 arch. Below analysing how cpuid faulting will work after applying this
-> > patch:
-> > 
-> > 1. If host cpu is AMD. It doesn't have MSR_MISC_FEATURES_ENABLES, so we can
-> > just
-> > use the software emulation of cpuid faulting.
-> > 
-> > 2. If host cpu is Intel and it doesn't have MSR_MISC_FEATURES_ENABLES. The
-> > same
-> > as case 1, we can just use the software emulation of cpuid faulting.
-> > 
-> > 3. If host cpu is Intel and it has MSR_MISC_FEATURES_ENABLES. With this
-> > patch,
-> > it will write guest's value into MSR_MISC_FEATURES_ENABLES when vm entry.
-> > If guest enables cpuid faulting and when guest calls CPUID instruction with
-> > CPL > 0, it will cause #GP exception in guest instead of VM exit because of
-> > CPUID, thus it doesn't go to the kvm emualtion path but ues the hardware
-> > feature. Also it's a benefit that we needn't use VM exit to inject #GP to
-> > emulate cpuid faulting feature.
-> > 
-> > Intel SDM vol3.25.1.1 specifies the priority between cpuid faulting
-> > and CPUID instruction.
-> > 
-> > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 30a6bcd735ec..90707fae688e 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -6321,6 +6321,23 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx
-> > *vmx)
-> >  					msrs[i].host, false);
-> >  }
-> >  
-> > +static void atomic_switch_msr_misc_features_enables(struct kvm_vcpu *vcpu)
-> > +{
-> > +	u64 host_msr;
-> > +	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > +
-> > +	/* if MSR MISC_FEATURES_ENABLES doesn't exist on the hardware, do
-> > nothing*/
-> > +	if (rdmsrl_safe(MSR_MISC_FEATURES_ENABLES, &host_msr))
-> > +		return;
-> > +
-> > +	if (host_msr == vcpu->arch.msr_misc_features_enables)
-> > +		clear_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES);
-> > +	else
-> > +		add_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES,
-> > +				      vcpu->arch.msr_misc_features_enables,
-> > +				      host_msr, false);
-> > +}
-> > +
-> >  static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
-> >  {
-> >  	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-> > @@ -6562,6 +6579,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >  
-> >  	atomic_switch_perf_msrs(vmx);
-> >  
-> > +	atomic_switch_msr_misc_features_enables(vcpu);
-> > +
-> >  	vmx_update_hv_timer(vcpu);
-> >  
-> >  	/*
-> > 
+Hi Gregory, 
+> The clock parenting was not setup properly when DVFS was enabled. It was
+> expected that the same clock source was used with and without DVFS which
+> was not the case.
 > 
-> Adding a RDMSR for this to each vmentry is too heavy.  Since we emulate
-> MSR_MISC_FEATURES_ENABLES, you can just clear the MSR on vcpu_load and
-> restore it on vcpu_put.
+> This patch fixes this issue, allowing to make the cpufreq support work
+> when the CPU clocks source are not the default ones.
+> 
+> Fixes: 92ce45fb875d ("cpufreq: Add DVFS support for Armada 37xx")
+> Cc: <stable@vger.kernel.org>
+> Reported-by: Christian Neubert <christian.neubert.86@gmail.com>
+> Reported-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  drivers/clk/mvebu/armada-37xx-periph.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/clk/mvebu/armada-37xx-periph.c b/drivers/clk/mvebu/armada-37xx-periph.c
+> index 1f1cff428d78..26ed3c18a239 100644
+> --- a/drivers/clk/mvebu/armada-37xx-periph.c
+> +++ b/drivers/clk/mvebu/armada-37xx-periph.c
+> @@ -671,6 +671,17 @@ static int armada_3700_add_composite_clk(const struct clk_periph_data *data,
+>  		map = syscon_regmap_lookup_by_compatible(
+>  				"marvell,armada-3700-nb-pm");
+>  		pmcpu_clk->nb_pm_base = map;
+> +
+> +		/*
+> +		 * Use the same parent when DVFS is enabled that the
+> +		 * default parent received at boot time. When this
+> +		 * function is called, DVFS is not enabled yet, so we
+> +		 * get the default parent and we can set the parent
+> +		 * for DVFS.
+> +		 */
+> +		if (clk_pm_cpu_set_parent(muxrate_hw,
+> +					  clk_pm_cpu_get_parent(muxrate_hw)))
+> +			dev_warn(dev, "Failed to setup default parent clock for DVFS\n");
+>  	}
+>  
+>  	*hw = clk_hw_register_composite(dev, data->name, data->parent_names,
+> -- 
+> 2.20.1
+> 
+Applied this and selected only
 
-It's much better and more efficient.
-I will do it this way in next version.
+CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE=y
+CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
+CONFIG_CPU_FREQ_GOV_POWERSAVE=y
 
-> Also, this needs a test in tools/testing/selftests/kvm.
+After changing the governor from 'powersave' to 'performance' the board
+completely froze (i even lost access to the serial port)
 
-Sure, I will add that.
-
-> Paolo
-
+Cheers
+/Ilias
