@@ -2,73 +2,75 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F64AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878E5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207B42184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A5021852
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:58:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="eEgsPEQy"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Tm3BZQvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfCNL6G (ORCPT
+        id S1727511AbfCNL6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:58:06 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:32804 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfCNL6G (ORCPT
+        Thu, 14 Mar 2019 07:58:46 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36457 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfCNL6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:58:06 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d12so4383554edp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:58:05 -0700 (PDT)
+        Thu, 14 Mar 2019 07:58:46 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e4so4382545edi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:58:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=7a4WtKjBYJ8vP6Oi1dUaJoxtpCIMA+vqm6PwLZbZr3I=;
-        b=eEgsPEQyf5kiOWxA530A/iDUAi+Ic27pi3boXDduVXTtl/eX8oN58JNUKvoqkFe7Du
-         8ruapmQAs35DuMq4gwwzPBNpdcZlOV7N6T2CKotxU+KS7gqiUjd5P9XobyffowRZRarZ
-         iuPAj3+06fSHPtpdaEyboAYMzkIvO/ch9ttJdqf/C6tQuZnD05jM7F9M+fCZPln6WYbv
-         /hsoAye5vICoGFDWXbxtMFe+3gEvK1V9hcEhYo7zuAqhXQwewwR7C10XtsgCOyPlhO45
-         uMXU8Vjk4LHod+KDkrIefU4u3/bffnDn36xrZ7gMdPAUNm6KlKcc/NjpLflMAVyTn2Yo
-         SUtA==
+        bh=ftb4UF2DFtp5DpCzuPVl1UGyRR8z7f9ihjw4aJH6NKM=;
+        b=Tm3BZQvlWU5ffy8ayz1uU2s+czblWbIqFg5bBQ1RSypRg4QV4rHqbLoRvzzMp0MOvi
+         mcipADBDU+JbA6SAIfhezY4TnxMPVcuo5cMxvz+rEV8LRTxuj+R4/IS1sTjILiVA3s2B
+         XCvaZ2PZ9GOjscyCUHN3sDM/RxhKB6MxfF1Qbi5NCueJUHtNNhpccbv1wdbhf5TxtPYj
+         ESoeU5sBzofzL/tYbb2ztgrlpiIYX2a3OFfxPHt/sBXq/p36XSLNbGj3Pr+y7Dy/GSyT
+         8Pg/N6GLq/bvvV+oF+UYSqrrix8bVBZN+XcaDZaa4ZTQntIVGv4Lm03blXplUHysqs/U
+         1gJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=7a4WtKjBYJ8vP6Oi1dUaJoxtpCIMA+vqm6PwLZbZr3I=;
-        b=OnHgGyQp1He4xV3CQrmT4fcl/YV2sLMODOLGchP7xRtMWZC1YSbEotLn7zClz/cXmD
-         V5Ot0MNl1fDzQuL2bcaUU9chtcHNmzjXiBFjnDoDP6m+u/YRxRkG3c/2CympsJKM5CVS
-         XQV0dhqLzYOXclRV5h1DFk0hJILKY4z0Qt+dDQfKqqGIzXlYzxwUnMepHh8iohMsamD/
-         oaUeQGo9ZiMOxUtd5wCLvMGG+3qirhb/kIHzXsTWeeuUNa/wPPSvsDemVgQ8vFtDFsN1
-         amA6B2NQehAuZbyDp/CM2tR+Rt5IB08LlaZ9fV73J/didZuUHWWPBlKVAiSwTTfATTIA
-         fNwA==
-X-Gm-Message-State: APjAAAXkq7dFtuyC7SfHf2rlTzQm9PUxL58msocV9Eeeb4BM1uDg00IS
-        hH6GaU4DPetM8nqmFzuSPEbFPA==
-X-Google-Smtp-Source: APXvYqwJFmxdM/HQce3QMWK0IryrUfO3i7NZndTXndD7/B4BYqRCsNG7TSQhguDu6JcY2Dz46Cw1NA==
-X-Received: by 2002:a17:906:69c8:: with SMTP id g8mr32484171ejs.75.1552564684209;
-        Thu, 14 Mar 2019 04:58:04 -0700 (PDT)
+        bh=ftb4UF2DFtp5DpCzuPVl1UGyRR8z7f9ihjw4aJH6NKM=;
+        b=Vwksib6QmUOXwkWyOdypKdZRrG1KYSmE0NoUTY2PB0b1HqdDPIWoomyTYH5FUMydb+
+         kf1yAQhxMLrGkoNYQ5sR1WhSVY0DAHDYnETM6bEMqCHzK24W4iTYSl8/c1BQIE5VpMwe
+         zg5bmgVPaKJKcP3ByH783evWIjkybrzXk5u1doWqvH+jdb67wOAEBMbMHyeX4Ner7Gwk
+         NKNhim83smgJ0pCNkaCN3ovdBs+1TsQZt9Im05y6Ocr2AjWNG0WPLrN04y9WV7hsfFDF
+         17gvvD+4bIJdbvZsz0AiSIXRnyaYNqlodjmmpS8BbqS5B9rHz5sBD8/X0lCY6E9tedo7
+         AFwA==
+X-Gm-Message-State: APjAAAUKLsAGni5rSxlnboBkRYxiyFeok4bKjs4nEvTsZbqAwytViuOn
+        yxaCjdqCEfFpNOBrFAhZTArYgg==
+X-Google-Smtp-Source: APXvYqx3ofxp15pHDj0Ee8AJTi1tpTQ2T3twKXlOa4TWTxt48Nrd3qXdlNW6qX3GhLiSSDS4Q+tKxA==
+X-Received: by 2002:a17:906:69c8:: with SMTP id g8mr32486028ejs.75.1552564724494;
+        Thu, 14 Mar 2019 04:58:44 -0700 (PDT)
 Received: from [10.83.32.113] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id w6sm1360862eds.0.2019.03.14.04.58.02
+        by smtp.gmail.com with ESMTPSA id w6sm1360862eds.0.2019.03.14.04.58.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 04:58:03 -0700 (PDT)
+        Thu, 14 Mar 2019 04:58:43 -0700 (PDT)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: [PATCH v2 0/7] iommu/vt-d: Fix-up device-domain relationship by
- refactoring to use iommu group default domain.
+Subject: [PATCH v2 1/7] iommu: Move iommu_group_create_direct_mappings to
+ after device_attach
 From:   James Sewart <jamessewart@arista.com>
-In-Reply-To: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
-Date:   Thu, 14 Mar 2019 11:56:54 +0000
+In-Reply-To: <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+Date:   Thu, 14 Mar 2019 11:57:36 +0000
 Cc:     Tom Murphy <tmurphy@arista.com>, Dmitry Safonov <dima@arista.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>,
         linux-kernel@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <864DF17D-7D9D-445B-B3FC-5AA308C0B179@arista.com>
 References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
 To:     iommu@lists.linux-foundation.org
 X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,40 +78,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patches 1 and 2 are the same as v1.
+If an IOMMU driver requires to know which IOMMU a domain is associated
+to initialise a domain then it will do so in device_attach, before which
+it is not safe to call iommu_ops.
 
-v1-v2:
-  Refactored ISA direct mappings to be returned by iommu_get_resv_regions.
-  Integrated patch by Lu to defer turning on DMAR until iommu.c has mapped 
-reserved regions.
-  Integrated patches by Lu to remove more unused code in cleanup.
+Signed-off-by: James Sewart <jamessewart@arista.com>
+---
+ drivers/iommu/iommu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Lu: I didn't integrate your patch to set the default domain type as it 
-isn't directly related to the aim of this patchset. Instead patch 4 
-addresses the issue of a device requiring an identity domain by ignoring 
-the domain param in attach_device and printing a warning.
-
-I booted some of our devices with this patchset and haven't seen any 
-issues. It doesn't look like we have any devices with RMRR's though so 
-those codepaths aren't tested.
-
-James Sewart (7):
-  iommu: Move iommu_group_create_direct_mappings to after device_attach
-  iommu/vt-d: Implement apply_resv_region for reserving IOVA ranges
-  iommu/vt-d: Expose ISA direct mapping region via
-    iommu_get_resv_regions
-  iommu/vt-d: Ignore domain parameter in attach_device if device
-    requires identity map
-  iommu/vt-d: Allow IOMMU_DOMAIN_DMA to be allocated by iommu_ops
-  iommu/vt-d: Remove lazy allocation of domains
-
-Lu Baolu (1):
-  iommu/vt-d: Enable DMA remapping after rmrr mapped
-
- drivers/iommu/intel-iommu.c | 444 +++++++++++-------------------------
- drivers/iommu/iommu.c       |   4 +-
- 2 files changed, 131 insertions(+), 317 deletions(-)
-
--- 
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 3ed4db334341..1c6ffbb2d20e 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -652,8 +652,6 @@ int iommu_group_add_device(struct iommu_group =
+*group, struct device *dev)
+=20
+ 	dev->iommu_group =3D group;
+=20
+-	iommu_group_create_direct_mappings(group, dev);
+-
+ 	mutex_lock(&group->mutex);
+ 	list_add_tail(&device->list, &group->devices);
+ 	if (group->domain)
+@@ -662,6 +660,8 @@ int iommu_group_add_device(struct iommu_group =
+*group, struct device *dev)
+ 	if (ret)
+ 		goto err_put_group;
+=20
++	iommu_group_create_direct_mappings(group, dev);
++
+ 	/* Notify any listeners about change to group. */
+ 	blocking_notifier_call_chain(&group->notifier,
+ 				     IOMMU_GROUP_NOTIFY_ADD_DEVICE, =
+dev);
+--=20
 2.17.1
 
