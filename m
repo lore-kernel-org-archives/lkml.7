@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0C1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3626C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4552184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48AE21873
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfCNWhy (ORCPT
+        id S1728385AbfCNWhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 14 Mar 2019 18:37:54 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:46077 "EHLO
+Received: from mout.kundenserver.de ([212.227.17.10]:47769 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbfCNWfG (ORCPT
+        with ESMTP id S1728123AbfCNWfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Mar 2019 18:35:06 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MCsDe-1hDOdm1UB6-008uwe; Thu, 14 Mar 2019 23:34:50 +0100
+ 1MEmpp-1hFJFm48Lb-00GLjL; Thu, 14 Mar 2019 23:34:54 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,28 +37,28 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 19/45] drivers: tty: serial: sh-sci: use devm_* functions
-Date:   Thu, 14 Mar 2019 23:33:49 +0100
-Message-Id: <1552602855-26086-20-git-send-email-info@metux.net>
+Subject: [PATCH v2 23/45] drivers: tty: serial: amba-pl010: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:33:53 +0100
+Message-Id: <1552602855-26086-24-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:HBGeKvv+qEQbXti20pnx8D1tVmbz/ITGLOz+ix4DhYOtbK33vmW
- CqRzKVbI/QB4yWVcPfKCrF3m9cdKXwAZy+T/T/iH6WLxOYsrHpUCge07Ig3YQ4jBQwQfR5A
- BayTuIA0srciiGBNxM0Z9PHtR+w9JC/KSEY+REGx/xEWlNr7AHzMPRlkNx5UbMmMywR9HVK
- 6Qei2aTMX/gvKEjJj66KA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+S3wpU6JtJ4=:GFMGEAn1Gx9dHsP0Vrwrx8
- ke5sI7qTIiiUC35E/EsF9BSIX0dE19OeZ0ealWnFbT8c3943BBlCM217Jtm7WLEJgjryfX4lT
- HVMJRwbNfiKXEcOanFjWhoAZyJ8yxb/C+7lMtfk5nKg+ekn/l45sXxfLO8hKOPHm2vMPbh8Hs
- B6Ak20q3etNlixlqmRGMbFZ+RMkwnGxSVaAlWmzwCI2fO9p2wwsynUEBpGTGETOKvPh0zFX/Z
- b2gyvV9Mn15F/a1rEh3CipnXS6fLp5n+TYG9q5D3/jKilJUpMvxVX0bxENbfGzP6YMInI2OrN
- FqtnjBbNuSetaZE9KUsFJ7eVjblPxqqChoD4CozNMt/gX+KWzyqs1WW8jxJtOK6J87t6dKXog
- bDvA18JwZtsxmXzfaUTQlemj0IqPGmBDpcMQN5jVV2W45Z4G92McfsFgJha2Ko7j9FpftABEK
- li2xCcp9WYF2a4AuJII903nUJiDrOJn3hTJQIdwhLYjfyJ7w44vWBAbaf+gK2zRbhkBWjjo3G
- dY/gEDIWdc2cfEbwXEIdt3XJyG5qLSEBDEa4/kTFHLlDOz5uMXOQ7WAqFcMwDFBf/18S5cUmo
- kHFmZH2efa0dUXGEMp+u0vj5Bbv1rDL0gyDPuAj4Ig8LX/g7eo9brg98BlZ4pg57K+COzHjhf
- n3W+9goDEMt6lEK4Cd509Kn6YaproKDo2qh50MiFWJUIWMjbZlCIKvFJtD1jOQU2aI7upPQh9
- LZxW5+2u4rnuD3Y4ZQ6+PLNTsI7jCrm+FP/c5Q==
+X-Provags-ID: V03:K1:VmkbMXgZ5mJ68rFO9MD0xatMizo8sSKA6igdCG69Xczwsw11M5a
+ jXG0nirTWbaUHmc0O7c5Bl5TtJOO4xYilcC1dkS/NoFePkR93NDXWPzVFcVdrpDxkvtuAhX
+ AGU1PZvaWHmV3IyD7FT0tKLtIP+Anruqf81mZmBILABKNjMNkpsuWg/JAnpsRN20tYNglDC
+ /tJSCgslw+xDWm7r9tTCg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6pK8po7/U2M=:VaGsEUje1ohlDVmVpJUbv2
+ UE3UYVn/xO+QEv9W/XxtM7miwCnXoQ9ri33k2zcCc4MRE+N81MRVaUckHvDy/CZnFWQj3Ahdk
+ RErxULdXHx3rqAti74rZBn5lpq4/HIzIjSHy6ji1mjDSbNPOgIvxulRnJHe9Qy4EpjIvr5Nen
+ tm1tFtfXj+N/X4GOaKHH+sEZCDbRsbrbGL7v0gS8YzrqgAX5VCU3vSlW6nropClkj4Q9+ymm5
+ WdHNoOnemXierEevUvKunyhewtvFoGC2wSrZzvmny/Lom4Ft9W9ETQP8HipeRkuP9mv9FmHUh
+ kOJA5kIqvNMNbI1hFgv4H8N/wkE/pRocEjpSgqoVY2ZkaGracX1UaGzvYLBjtTPla0Pq6gTX4
+ QPBnEnvCXNuCCP1xJwf0p0IB+pnsqzNe/dFNFFlSej9ytJvQZoVfhp+IPV3u0vdFt4LlvZJuR
+ m9PEl9ajaxDEgnFyfkGxoYCmwnG82v68EGGA95EHgV/SDQvFYvUqUPcJNwwbG7rojo3LTiFGE
+ h5Sdse4CTTLacofB3gj1T6GP8l5Yo5CJHT/luXhcHaGk/0h+sBsGtR5CJHbHdRz+1G0ROV+Se
+ iGCxaXf0xI39x1T6y/5XxL9fkBmARg8IRVPq9iZBsp9NvZR9EnFrmCLPhBoT4zfXomb2TO1Xn
+ 79g399gNsvZX1DrbLKT4Dv9BCDnqJ5aU9QYyh+0/nC28f3LRlhxgXvRGF/pHYf96eVOnzuiHu
+ sRyIOrd5E8Ob0+rwRUvVEJKd9xJD8gFLNkZ/YA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,51 +68,34 @@ Use the safer devm versions of memory mapping functions.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/sh-sci.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ drivers/tty/serial/amba-pl010.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 060fcd4..e40b0d0 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -2667,7 +2667,9 @@ static int sci_remap_port(struct uart_port *port)
- 		return 0;
- 
- 	if (port->dev->of_node || (port->flags & UPF_IOREMAP)) {
--		port->membase = ioremap_nocache(port->mapbase, sport->reg_size);
-+		port->membase = devm_ioremap_nocache(port->dev,
-+						     port->mapbase,
-+						     sport->reg_size);
- 		if (unlikely(!port->membase)) {
- 			dev_err(port->dev, "can't remap port#%d\n", port->line);
- 			return -ENXIO;
-@@ -2689,11 +2691,11 @@ static void sci_release_port(struct uart_port *port)
- 	struct sci_port *sport = to_sci_port(port);
- 
- 	if (port->dev->of_node || (port->flags & UPF_IOREMAP)) {
--		iounmap(port->membase);
-+		devm_iounmap(port->dev, port->membase);
- 		port->membase = NULL;
- 	}
- 
--	release_mem_region(port->mapbase, sport->reg_size);
-+	devm_release_mem_region(port->dev, port->mapbase, sport->reg_size);
+diff --git a/drivers/tty/serial/amba-pl010.c b/drivers/tty/serial/amba-pl010.c
+index 109b8df..7abd1f8 100644
+--- a/drivers/tty/serial/amba-pl010.c
++++ b/drivers/tty/serial/amba-pl010.c
+@@ -503,7 +503,7 @@ static const char *pl010_type(struct uart_port *port)
+  */
+ static void pl010_release_port(struct uart_port *port)
+ {
+-	release_mem_region(port->mapbase, UART_PORT_SIZE);
++	devm_release_mem_region(port->dev, port->mapbase, UART_PORT_SIZE);
  }
  
- static int sci_request_port(struct uart_port *port)
-@@ -2702,8 +2704,10 @@ static int sci_request_port(struct uart_port *port)
- 	struct sci_port *sport = to_sci_port(port);
- 	int ret;
+ /*
+@@ -511,7 +511,10 @@ static void pl010_release_port(struct uart_port *port)
+  */
+ static int pl010_request_port(struct uart_port *port)
+ {
+-	return request_mem_region(port->mapbase, UART_PORT_SIZE, "uart-pl010")
++	return devm_request_mem_region(port->dev,
++				       port->mapbase,
++				       UART_PORT_SIZE,
++				       "uart-pl010")
+ 			!= NULL ? 0 : -EBUSY;
+ }
  
--	res = request_mem_region(port->mapbase, sport->reg_size,
--				 dev_name(port->dev));
-+	res = devm_request_mem_region(port->dev,
-+				      port->mapbase,
-+				      sport->reg_size,
-+				      dev_name(port->dev));
- 	if (unlikely(res == NULL)) {
- 		dev_err(port->dev, "request_mem_region failed.");
- 		return -EBUSY;
 -- 
 1.9.1
 
