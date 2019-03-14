@@ -2,74 +2,86 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E079C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F18C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712F820854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3782C2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfCNNBH (ORCPT
+        id S1727407AbfCNNGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:01:07 -0400
-Received: from ozlabs.org ([203.11.71.1]:43027 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbfCNNBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 09:01:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Kpjp5fV9z9s55;
-        Fri, 15 Mar 2019 00:01:02 +1100 (AEDT)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linuxppc-dev@ozlabs.org, Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        John Stultz <john.stultz@linaro.org>, jaydee@email.cz,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: Re: [PATCH] powerpc/vdso64: Fix CLOCK_MONOTONIC inconsistencies across Y2038
-In-Reply-To: <CAK8P3a0A9dbneHo7_CrgiPS8ROaV1bWrYWJUh5Zo2FfEuABfhw@mail.gmail.com>
-References: <20190313131438.8212-1-mpe@ellerman.id.au> <CAK8P3a0A9dbneHo7_CrgiPS8ROaV1bWrYWJUh5Zo2FfEuABfhw@mail.gmail.com>
-Date:   Fri, 15 Mar 2019 00:00:59 +1100
-Message-ID: <871s398vas.fsf@concordia.ellerman.id.au>
+        Thu, 14 Mar 2019 09:06:02 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:39033 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfCNNGC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 09:06:02 -0400
+X-Originating-IP: 90.88.22.102
+Received: from localhost.localdomain (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B18D7C0002;
+        Thu, 14 Mar 2019 13:05:50 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jagan Teki <jagan@openedev.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH] phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode
+Date:   Thu, 14 Mar 2019 14:05:18 +0100
+Message-Id: <20190314130518.2892-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
-> On Wed, Mar 13, 2019 at 2:14 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
->> That causes CLOCK_MONOTONIC to jump ahead by ~4 billion seconds which
->> it is not meant to do. Worse, if the time is then set back before the
->> Y2038 boundary CLOCK_MONOTONIC will jump backward.
->>
->> We can fix it simply by storing the full 64-bit offset in the
->> vdso_data, and using that in the VDSO assembly code. We also shuffle
->> some of the fields in vdso_data to avoid creating a hole.
->
-> I see nothing wrong with your patch,
+On platforms where the MUSB and HCI controllers share PHY0, PHY passby
+is required when using the HCI controller with the PHY, but it must be
+disabled when the MUSB controller is used instead.
 
-Thanks.
+Without this, PHY0 passby is always enabled, which results in broken
+peripheral mode on such platforms (e.g. H3/H5).
 
-> but I would point out that there is a patch series [1] from Vincenzo
-> Frascino to unify the vdso implementation across architectures that I
-> hope can make it into linux-5.2, and that will resolve this issue, as
-> well as allow 32-bit architectures to provide a working interface with
-> 64-bit time_t.
+Fixes: ba4bdc9e1dc0 ("PHY: sunxi: Add driver for sunxi usb phy")
 
-Yeah I did see that series. I will try and keep an eye on it, though I'm
-not sure I'll have time to convert powerpc to use it for 5.2.
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+---
+ drivers/phy/allwinner/phy-sun4i-usb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I'm also not sure how easy it's going to be to convert to the C
-versions, because our syscall ABI is not a simple function call (result
-code is returned in CR0.SO).
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index 5163097b43df..7b23920e0068 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -551,6 +551,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	struct sun4i_usb_phy_data *data =
+ 		container_of(work, struct sun4i_usb_phy_data, detect.work);
+ 	struct phy *phy0 = data->phys[0].phy;
++	struct sun4i_usb_phy *phy = phy_get_drvdata(phy0);
+ 	bool force_session_end, id_notify = false, vbus_notify = false;
+ 	int id_det, vbus_det;
+ 
+@@ -607,6 +608,9 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 			mutex_unlock(&phy0->mutex);
+ 		}
+ 
++		/* Enable PHY0 passby for host mode only. */
++		sun4i_usb_phy_passby(phy, !id_det);
++
+ 		/* Re-route PHY0 if necessary */
+ 		if (data->cfg->phy0_dual_route)
+ 			sun4i_usb_phy0_reroute(data, id_det);
+-- 
+2.20.1
 
-cheers
