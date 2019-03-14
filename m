@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD65C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0853C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFFB2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F3B2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578883;
-	bh=Z7gSD1cfhfeWzy9eFF6aNew+iatyRPjZC7Lzg4yYYKk=;
+	s=default; t=1552578884;
+	bh=e5e7P5GHnOlqYNAT0tdxUQQzP57QGqgZpVyi71kOiAc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=mS7Up4WD5vrZkfRYdKuOJsHuyFVL5FlCGaU1SsepqXILaj+0HKThMoYlf7k5Q4dwq
-	 d2HC36bE2+DuEsrx6GgvE5ilsx/8mQ8lED3PsUI9j28oLtL9HpGF2aPftRbIaoRcSM
-	 0edHnAYS4GT9nl+sfpptQ3BUYPWqnQ4f1YemvYZg=
+	b=0JrbG9asTbotYi5UJn0Uh2A/ETNo5GRwEHBILkz2wGBARfNWfTbsTnr5+slPMbC8C
+	 S/x0tyDADnvaK++UU9Mqkss3H63LuDjIG+XM8MwgUOzfnbWAMdzPsGT2rI51dCX9Ns
+	 OBr+CtYnCEIVqiYeq0klKrkv6m88W3+r6k2jkYFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfCNPym (ORCPT
+        id S1727754AbfCNPyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:54:42 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36530 "EHLO
+        Thu, 14 Mar 2019 11:54:43 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36568 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbfCNPyi (ORCPT
+        with ESMTP id S1727702AbfCNPyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:54:38 -0400
+        Thu, 14 Mar 2019 11:54:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=vwg+fTsjOHRkwc6pYQ+QdK2eEly5aPzVudr4+tuAEPE=; b=mEmclE+e1gOu
-        MWCXQ264yWAxyGow0rMEzd1Zo+j5HXCQIMFf+tCxrHnDzyrxQdTClEb5hfklYvmjqXkt1AP17Ukqv
-        0+k59BFngTmFW1K/PiptRYyOUJi3YZ9Aujsbg3AfXoQXy1Gq4OdTnFDFDH6jmTwJ8GDso6oj1vOqw
-        clnm8=;
+        List-Archive; bh=2U/nHxQb957iXFtrKt9XwjLATwUymYThlj8yuHq4mmg=; b=kihMcn/PCLEk
+        smRsAwh1aoalzZPzl5MxmXFtTY+RawTF1b94pYXKTe1xz/U5loQZewhkagC7TWUwqOGuWiUblkcP/
+        i0wq9VvHIBRskSp+PchEO2mgMm7qdk07RzYE4Y+X8EyyA5Knxp91hVT0hKKfAvTgMe6cVgVaTqUhq
+        h/v6M=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4Sgl-0002jt-S6; Thu, 14 Mar 2019 15:54:35 +0000
+        id 1h4Sgn-0002jz-LB; Thu, 14 Mar 2019 15:54:37 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 6194E1126E64; Thu, 14 Mar 2019 15:54:35 +0000 (GMT)
+        id 1E5651126E64; Thu, 14 Mar 2019 15:54:37 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: ab3100: Remove ab3100_regulators_remove function" to the regulator tree
+Subject: Applied "regulator: palmas: Remove *rdev[PALMAS_NUM_REGS] from struct palmas_pmic" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155435.6194E1126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:54:35 +0000 (GMT)
+Message-Id: <20190314155437.1E5651126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:37 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: ab3100: Remove ab3100_regulators_remove function
+   regulator: palmas: Remove *rdev[PALMAS_NUM_REGS] from struct palmas_pmic
 
 has been applied to the regulator tree at
 
@@ -84,94 +84,78 @@ to this mail.
 Thanks,
 Mark
 
-From 5b60ee576a02cb6b2371dec085ef2623a7df77b9 Mon Sep 17 00:00:00 2001
+From 74b060d6845f09a5b2db6df653a3c0e90d4fa560 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 7 Mar 2019 21:53:56 +0800
-Subject: [PATCH] regulator: ab3100: Remove ab3100_regulators_remove function
+Date: Sun, 10 Mar 2019 23:06:09 +0800
+Subject: [PATCH] regulator: palmas: Remove *rdev[PALMAS_NUM_REGS] from struct
+ palmas_pmic
 
-Current code is using devm_regulator_register() so it is not necessary
-to save reg->rdev for clean up. Remove *rdev from struct ab3100_regulator,
-then ab3100_regulators_remove() can be removed as well.
+This driver is using devm_regulator_register() so it is not necessary
+to save *rdev for clean up. Actually the pmic->rdev[id] is not used now.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/ab3100.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+ drivers/regulator/palmas-regulator.c | 12 ------------
+ include/linux/mfd/palmas.h           |  1 -
+ 2 files changed, 13 deletions(-)
 
-diff --git a/drivers/regulator/ab3100.c b/drivers/regulator/ab3100.c
-index de2644490f0d..c92966a79a7e 100644
---- a/drivers/regulator/ab3100.c
-+++ b/drivers/regulator/ab3100.c
-@@ -48,7 +48,6 @@
-  * @regreg: regulator register number in the AB3100
-  */
- struct ab3100_regulator {
--	struct regulator_dev *rdev;
+diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
+index 7fb9e8dd834e..f13c7c8b1061 100644
+--- a/drivers/regulator/palmas-regulator.c
++++ b/drivers/regulator/palmas-regulator.c
+@@ -991,9 +991,6 @@ static int palmas_ldo_registration(struct palmas_pmic *pmic,
+ 			return PTR_ERR(rdev);
+ 		}
+ 
+-		/* Save regulator for cleanup */
+-		pmic->rdev[id] = rdev;
+-
+ 		/* Initialise sleep/init values from platform data */
+ 		if (pdata) {
+ 			reg_init = pdata->reg_init[id];
+@@ -1101,9 +1098,6 @@ static int tps65917_ldo_registration(struct palmas_pmic *pmic,
+ 			return PTR_ERR(rdev);
+ 		}
+ 
+-		/* Save regulator for cleanup */
+-		pmic->rdev[id] = rdev;
+-
+ 		/* Initialise sleep/init values from platform data */
+ 		if (pdata) {
+ 			reg_init = pdata->reg_init[id];
+@@ -1288,9 +1282,6 @@ static int palmas_smps_registration(struct palmas_pmic *pmic,
+ 				pdev_name);
+ 			return PTR_ERR(rdev);
+ 		}
+-
+-		/* Save regulator for cleanup */
+-		pmic->rdev[id] = rdev;
+ 	}
+ 
+ 	return 0;
+@@ -1395,9 +1386,6 @@ static int tps65917_smps_registration(struct palmas_pmic *pmic,
+ 				pdev_name);
+ 			return PTR_ERR(rdev);
+ 		}
+-
+-		/* Save regulator for cleanup */
+-		pmic->rdev[id] = rdev;
+ 	}
+ 
+ 	return 0;
+diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
+index 75e5c8ff85fc..c34d5f0d34d7 100644
+--- a/include/linux/mfd/palmas.h
++++ b/include/linux/mfd/palmas.h
+@@ -553,7 +553,6 @@ struct palmas_pmic {
+ 	struct palmas *palmas;
  	struct device *dev;
- 	struct ab3100_platform_data *plfdata;
- 	u8 regreg;
-@@ -545,8 +544,6 @@ static int ab3100_regulator_register(struct platform_device *pdev,
- 		return err;
- 	}
+ 	struct regulator_desc desc[PALMAS_NUM_REGS];
+-	struct regulator_dev *rdev[PALMAS_NUM_REGS];
+ 	struct mutex mutex;
  
--	/* Then set a pointer back to the registered regulator */
--	reg->rdev = rdev;
- 	return 0;
- }
- 
-@@ -609,18 +606,6 @@ static const u8 ab3100_reg_initvals[] = {
- 	LDO_D_SETTING,
- };
- 
--static int ab3100_regulators_remove(struct platform_device *pdev)
--{
--	int i;
--
--	for (i = 0; i < AB3100_NUM_REGULATORS; i++) {
--		struct ab3100_regulator *reg = &ab3100_regulators[i];
--
--		reg->rdev = NULL;
--	}
--	return 0;
--}
--
- static int
- ab3100_regulator_of_probe(struct platform_device *pdev, struct device_node *np)
- {
-@@ -647,10 +632,8 @@ ab3100_regulator_of_probe(struct platform_device *pdev, struct device_node *np)
- 			pdev, NULL, ab3100_regulator_matches[i].init_data,
- 			ab3100_regulator_matches[i].of_node,
- 			(unsigned long)ab3100_regulator_matches[i].driver_data);
--		if (err) {
--			ab3100_regulators_remove(pdev);
-+		if (err)
- 			return err;
--		}
- 	}
- 
- 	return 0;
-@@ -709,10 +692,8 @@ static int ab3100_regulators_probe(struct platform_device *pdev)
- 
- 		err = ab3100_regulator_register(pdev, plfdata, NULL, NULL,
- 						desc->id);
--		if (err) {
--			ab3100_regulators_remove(pdev);
-+		if (err)
- 			return err;
--		}
- 	}
- 
- 	return 0;
-@@ -723,7 +704,6 @@ static struct platform_driver ab3100_regulators_driver = {
- 		.name  = "ab3100-regulators",
- 	},
- 	.probe = ab3100_regulators_probe,
--	.remove = ab3100_regulators_remove,
- };
- 
- static __init int ab3100_regulators_init(void)
+ 	int smps123;
 -- 
 2.20.1
 
