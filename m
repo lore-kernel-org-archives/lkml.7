@@ -2,168 +2,95 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67CFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A169DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8774E20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675402184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552566290;
+	bh=PEySUhCGRI9SHjvbv4DCnTlr5EEmTX90UTGq+72yL8g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=b/5CxVrqZHg/6jf0Rzq/QWc3OWfdMYyC/c6gUx7uiB9Mgza/k8e5r48pOyEfVV4NZ
+	 trIBA8Z1roEoXY8dIo8AVIlcCtfQRJsIA893dzKn+U5ZpESIEnstQ/cWbqzrfO6yBq
+	 8yTW0TZ9UttLSxQdVAuVrT08pZPCcj8Py7X5zVbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfCNMXD (ORCPT
+        id S1727270AbfCNMYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:23:03 -0400
-Received: from foss.arm.com ([217.140.101.70]:43332 "EHLO foss.arm.com"
+        Thu, 14 Mar 2019 08:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbfCNMXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 08:23:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79E6880D;
-        Thu, 14 Mar 2019 05:23:01 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85A503F614;
-        Thu, 14 Mar 2019 05:22:58 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 12:22:56 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190314122256.7wb3ydswpkfmntvf@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190313140925.GE5922@hirez.programming.kicks-ass.net>
- <20190313152359.lkyzel7fakjoi5hu@e110439-lin>
- <20190313194619.GR2482@worktop.programming.kicks-ass.net>
- <CAJuCfpHy0+6f9mRd+cF-oQrrUWJ4m8mOQJ7XMzkDL4mhfYyj2g@mail.gmail.com>
+        id S1726752AbfCNMYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 08:24:48 -0400
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2ED82184C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 12:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552566287;
+        bh=PEySUhCGRI9SHjvbv4DCnTlr5EEmTX90UTGq+72yL8g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=w6V6yDCVAW8bRRSji7ftgDoJWycYYubz05CELC7QTTzwsgul5H/G5TjVl9T5gyN33
+         5HGbW8oV9IP/RQlAcIFVrjZlihUslowG0GEY7Mzz/D6aHOSYEuwVlbL5MlFAaZ//p0
+         F0CDd0V/tJnuh3WRr9tVE8r/5qLdUJgvgQ0K/BQk=
+Received: by mail-qt1-f180.google.com with SMTP id k2so5766871qtm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 05:24:47 -0700 (PDT)
+X-Gm-Message-State: APjAAAWpfLkSZHs2kV2Iq/wfdF63FbkLRc2M+qzkk30yRKNCS6kE6g2R
+        AgXoSdPYt85rg4s2XEwCAnGv7wmIV2WHZBF131I=
+X-Google-Smtp-Source: APXvYqxuxT+XAy16fC4NRGS20IxbVJ+buZlkBBcwTyUjqkd48DUT63tyelg71bznxDus1m2Z5jlOzrLmiM2gXJNlrss=
+X-Received: by 2002:a0c:9891:: with SMTP id f17mr38601118qvd.113.1552566287000;
+ Thu, 14 Mar 2019 05:24:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpHy0+6f9mRd+cF-oQrrUWJ4m8mOQJ7XMzkDL4mhfYyj2g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <MWHPR12MB13437FB2B95FE8F4B3456B3ACB4B0@MWHPR12MB1343.namprd12.prod.outlook.com>
+In-Reply-To: <MWHPR12MB13437FB2B95FE8F4B3456B3ACB4B0@MWHPR12MB1343.namprd12.prod.outlook.com>
+From:   Josh Boyer <jwboyer@kernel.org>
+Date:   Thu, 14 Mar 2019 08:24:36 -0400
+X-Gmail-Original-Message-ID: <CA+5PVA5_iaoe4Ovc0aZHEfwq=gCcFuQGYA+ZKwSXd-yiw72kbw@mail.gmail.com>
+Message-ID: <CA+5PVA5_iaoe4Ovc0aZHEfwq=gCcFuQGYA+ZKwSXd-yiw72kbw@mail.gmail.com>
+Subject: Re: pull request: linux-firmware: update cxgb4 firmware
+To:     Vishal Kulkarni <vishal@chelsio.com>
+Cc:     "linux-firmware@kernel.org" <linux-firmware@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nirranjan Kirubaharan <nirranjan@chelsio.com>,
+        dt <dt@chelsio.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Mar 14:08, Suren Baghdasaryan wrote:
-> On Wed, Mar 13, 2019 at 12:46 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Mar 13, 2019 at 03:23:59PM +0000, Patrick Bellasi wrote:
-> > > On 13-Mar 15:09, Peter Zijlstra wrote:
-> > > > On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
-> >
-> > > > > +static inline void uclamp_rq_update(struct rq *rq, unsigned int clamp_id)
-> > > > > +{
-> > > > > + struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-> > > > > + unsigned int max_value = uclamp_none(clamp_id);
-> > > >
-> > > > That's 1024 for uclamp_max
-> > > >
-> > > > > + unsigned int bucket_id;
-> > > > > +
-> > > > > + /*
-> > > > > +  * Both min and max clamps are MAX aggregated, thus the topmost
-> > > > > +  * bucket with some tasks defines the rq's clamp value.
-> > > > > +  */
-> > > > > + bucket_id = UCLAMP_BUCKETS;
-> > > > > + do {
-> > > > > +         --bucket_id;
-> > > > > +         if (!rq->uclamp[clamp_id].bucket[bucket_id].tasks)
-> > > > > +                 continue;
-> > > > > +         max_value = bucket[bucket_id].value;
-> > > >
-> > > > but this will then _lower_ it. That's not a MAX aggregate.
-> > >
-> > > For uclamp_max we want max_value=1024 when there are no active tasks,
-> > > which means: no max clamp enforced on CFS/RT "idle" cpus.
-> > >
-> > > If instead there are active RT/CFS tasks then we want the clamp value
-> > > of the max group, which means: MAX aggregate active clamps.
-> > >
-> > > That's what the code above does and the comment says.
-> >
-> > That's (obviously) not how I read it... maybe something like:
-> >
-> > static inline void uclamp_rq_update(struct rq *rq, unsigned int clamp_id)
-> > {
-> >         struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-> >         int i;
-> >
-> >         /*
-> >          * Since both min and max clamps are max aggregated, find the
-> >          * top most bucket with tasks in.
-> >          */
-> >         for (i = UCLMAP_BUCKETS-1; i>=0; i--) {
-> >                 if (!bucket[i].tasks)
-> >                         continue;
-> >                 return bucket[i].value;
-> >         }
-> >
-> >         /* No tasks -- default clamp values */
-> >         return uclamp_none(clamp_id);
-> > }
-> >
-> > would make it clearer?
-> 
-> This way it's also more readable/obvious when it's used inside
-> uclamp_rq_dec_id, assuming uclamp_rq_update is renamed into smth like
-> get_max_rq_uclamp.
+On Thu, Mar 14, 2019 at 6:13 AM Vishal Kulkarni <vishal@chelsio.com> wrote:
+>
+> Hi,
+>
+> Kindly pull the new firmware from the following URL:
+> git://git.chelsio.net/pub/git/linux-firmware.git for-upstream
+>
+> Thanks,
+> Vishal
+>
+> The following changes since commit efd2c1cc375cff1c17b4259d99a7fee240c3b510:
+>
+>   linux-firmware: Update firmware file for Intel Bluetooth 8265 (2019-03-13 08:55:45 -0400)
+>
+> are available in the git repository at:
+>
+>   git://git.chelsio.net/pub/git/linux-firmware.git for-upstream
+>
+> for you to fetch changes up to 283373fa112403c08e54a65f2b467a137c032b79:
+>
+>   cxgb4: update firmware to revision 1.23.3.0 (2019-03-14 03:02:52 -0700)
+>
+> ----------------------------------------------------------------
+> Vishal Kulkarni (1):
+>
+>       cxgb4: update firmware to revision 1.23.3.0
 
-Rightm, I have now something like that:
+Pulled and pushed out.  Thanks.
 
----8<---
-static inline unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id)
-{
-	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-	int bucket_id;
-
-	/*
-	 * Since both min and max clamps are max aggregated, find the
-	 * top most bucket with tasks in.
-	 */
-	for (bucket_id = UCLMAP_BUCKETS-1; bucket_id >= 0; bucket_id--) {
-		if (!bucket[bucket_id].tasks)
-			continue;
-		return bucket[bucket_id].value;
-	}
-
-	/* No tasks -- default clamp value */
-	return uclamp_none(clamp_id);
-}
-
-static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
-				    unsigned int clamp_id)
-{
-        //...
-	if (bucket->value >= rq_clamp) {
-		/*
-		 * Reset rq's clamp bucket value to its nominal value whenever
-		 * there are anymore RUNNABLE tasks refcounting it.
-		 */
-		bucket->value = uclamp_bucket_nominal_value(rq_clamp);
-		WRITE_ONCE(uc_rq->value, uclamp_rq_max_value(rq, clamp_id));
-	}
-}
----8<---
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+josh
