@@ -2,115 +2,94 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C96C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83212C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC7C2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8F5217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="KFKEmxYF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfCNQNc (ORCPT
+        id S1727532AbfCNQNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:13:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58284 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727562AbfCNQNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:13:30 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 800073132C30;
-        Thu, 14 Mar 2019 16:13:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C71760BE6;
-        Thu, 14 Mar 2019 16:13:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 34/38] vfs: Convert apparmorfs to fs_context
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     John Johansen <john.johansen@canonical.com>,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 14 Mar 2019 16:13:28 +0000
-Message-ID: <155258000843.13720.3891676167908086218.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
-References: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 14 Mar 2019 12:13:39 -0400
+Received: from kadath.azazel.net ([81.187.231.250]:46246 "EHLO
+        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbfCNQNh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 12:13:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
+         s=20190108; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=zHZvUmtgru+dgFTcc/bXxF0SH+hBPYRf31OcbKR5PIk=; b=KFKEmxYFeP8Ik2AhWQI21fTwtf
+        WjzcBGP8IARZ+28IReRwIV5kRhSFE9aJcQFI7XEybOH+PW0Q+ZnOXQffkFziY4HAPSlzrHqDmUqVs
+        qMAAO1pD+bdW03D2HyHwU0aVLopVPhxY0kLbsaMvYoHQzL2tWqujb5GGVT7gIEZZHnZ1WKvlCImM2
+        VBuR0BzRn/4UMESEOuagE7ERUJcM4XLSykI1qke5u/jhcw674E43DrSdV13DAnYe8w6s6GhhVDp8o
+        NRFt4Yyal4JvaIyW90yAEhhKWySAZoegUG4Wi5f2vga33zDF1N6pq7I8bDbz0YksFmrH/4b9mtsR+
+        3df/fjog==;
+Received: from ulthar.dreamlands ([192.168.96.2])
+        by kadath.azazel.net with esmtp (Exim 4.89)
+        (envelope-from <jeremy@azazel.net>)
+        id 1h4Sz7-0004Td-SG; Thu, 14 Mar 2019 16:13:33 +0000
+From:   Jeremy Sowden <jeremy@azazel.net>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] vti4: ipip tunnel deregistration fixes.
+Date:   Thu, 14 Mar 2019 16:13:33 +0000
+Message-Id: <20190314161333.6550-1-jeremy@azazel.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 14 Mar 2019 16:13:30 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 192.168.96.2
+X-SA-Exim-Mail-From: jeremy@azazel.net
+X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: John Johansen <john.johansen@canonical.com>
-cc: apparmor@lists.ubuntu.com
-cc: linux-security-module@vger.kernel.org
+If tunnel registration failed during module initialization, the module
+would fail to deregister the IPPROTO_COMP protocol and would attempt to
+deregister the tunnel.
+
+The tunnel was not deregistered during module-exit.
+
+Fixes: d9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
 ---
+ net/ipv4/ip_vti.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
- security/apparmor/apparmorfs.c |   20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index fefee040bf79..75f7da0e5ec1 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -23,6 +23,7 @@
- #include <linux/capability.h>
- #include <linux/rcupdate.h>
- #include <linux/fs.h>
-+#include <linux/fs_context.h>
- #include <linux/poll.h>
- #include <uapi/linux/major.h>
- #include <uapi/linux/magic.h>
-@@ -137,7 +138,7 @@ static const struct super_operations aafs_super_ops = {
- 	.show_path = aafs_show_path,
- };
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index 68a21bf75dd0..b6235ca09fa5 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -659,9 +659,9 @@ static int __init vti_init(void)
+ 	return err;
  
--static int fill_super(struct super_block *sb, void *data, int silent)
-+static int apparmorfs_fill_super(struct super_block *sb, struct fs_context *fc)
+ rtnl_link_failed:
+-	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+-xfrm_tunnel_failed:
+ 	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
++xfrm_tunnel_failed:
++	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ xfrm_proto_comp_failed:
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ xfrm_proto_ah_failed:
+@@ -676,6 +676,7 @@ static int __init vti_init(void)
+ static void __exit vti_fini(void)
  {
- 	static struct tree_descr files[] = { {""} };
- 	int error;
-@@ -150,16 +151,25 @@ static int fill_super(struct super_block *sb, void *data, int silent)
- 	return 0;
- }
- 
--static struct dentry *aafs_mount(struct file_system_type *fs_type,
--				 int flags, const char *dev_name, void *data)
-+static int apparmorfs_get_tree(struct fs_context *fc)
- {
--	return mount_single(fs_type, flags, data, fill_super);
-+	return vfs_get_super(fc, vfs_get_single_super, apparmorfs_fill_super);
-+}
-+
-+static const struct fs_context_operations apparmorfs_context_ops = {
-+	.get_tree	= apparmorfs_get_tree,
-+};
-+
-+static int apparmorfs_init_fs_context(struct fs_context *fc)
-+{
-+	fc->ops = &apparmorfs_context_ops;
-+	return 0;
- }
- 
- static struct file_system_type aafs_ops = {
- 	.owner = THIS_MODULE,
- 	.name = AAFS_NAME,
--	.mount = aafs_mount,
-+	.init_fs_context = apparmorfs_init_fs_context,
- 	.kill_sb = kill_anon_super,
- };
- 
+ 	rtnl_link_unregister(&vti_link_ops);
++	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
+ 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ 	xfrm4_protocol_deregister(&vti_esp4_protocol, IPPROTO_ESP);
+-- 
+2.20.1
 
