@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BB2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCEDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C266120854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7472220854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfCNL31 (ORCPT
+        id S1727407AbfCNLaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:29:27 -0400
-Received: from mga02.intel.com ([134.134.136.20]:41141 "EHLO mga02.intel.com"
+        Thu, 14 Mar 2019 07:30:10 -0400
+Received: from mga18.intel.com ([134.134.136.126]:5102 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726837AbfCNL30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:29:26 -0400
+        id S1726726AbfCNLaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:30:10 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:29:25 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:30:08 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
-   d="scan'208";a="151652296"
+   d="scan'208";a="134010413"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Mar 2019 04:29:22 -0700
+  by orsmga003.jf.intel.com with ESMTP; 14 Mar 2019 04:30:06 -0700
 Received: from [10.125.252.108] (abudanko-mobl.ccr.corp.intel.com [10.125.252.108])
-        by linux.intel.com (Postfix) with ESMTP id 3D56658046D;
-        Thu, 14 Mar 2019 04:29:20 -0700 (PDT)
-Subject: [PATCH v8 02/12] perf record: implement --mmap-flush=<threshold>
- option
+        by linux.intel.com (Postfix) with ESMTP id 231615803FA;
+        Thu, 14 Mar 2019 04:30:04 -0700 (PDT)
+Subject: [PATCH v8 03/12] perf session: define bytes_transferred and
+ bytes_compressed metrics
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -43,8 +43,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <36059225-9c42-8574-4910-aff153323682@linux.intel.com>
-Date:   Thu, 14 Mar 2019 14:29:19 +0300
+Message-ID: <3c28bc29-789b-f997-e473-361593cfb039@linux.intel.com>
+Date:   Thu, 14 Mar 2019 14:30:04 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
@@ -58,337 +58,81 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Implemented --mmap-flush option that specifies minimal size of data
-chunk that is extracted from mmaped kernel buffer to store into a trace.
-The default option value is 1 byte what means every time trace writing
-thread finds some new data in the mmaped buffer the data is extracted,
-possibly compressed and written to a trace.
+Define bytes_transferred and bytes_compressed metrics to calculate ratio
+in the end of the data collection:
 
-  $ tools/perf/perf record --mmap-flush 1024 -e cycles -- matrix.gcc
-  $ tools/perf/perf record --aio --mmap-flush 1K -e cycles -- matrix.gcc
+	compression ratio = bytes_transferred / bytes_compressed
 
-The option is independent from -z setting, doesn't vary with compression
-level and can serve two purposes.
-
-The first purpose is to increase the compression ratio of a trace data.
-Larger data chunks are compressed more effectively so the implemented
-option allows specifying data chunk size to compress. Also at some cases
-executing more write syscalls with smaller data size can take longer
-than executing less write syscalls with bigger data size due to syscall
-overhead so extracting bigger data chunks specified by the option value
-could additionally decrease runtime overhead.
-
-The second purpose is to avoid self monitoring live-lock issue in system
-wide (-a) profiling mode. Profiling in system wide mode with compression
-(-a -z) can additionally induce data into the kernel buffers along with
-the data from monitored processes. If performance data rate and volume
-from the monitored processes is high then trace streaming and compression
-activity in the tool is also high. High tool process activity can lead
-to subtle live-lock effect when compression of single new byte from some
-of mmaped kernel buffer leads to generation of the next single byte at
-some mmaped buffer. So perf tool process ends up in endless self monitoring.
-
-Implemented sync param is the mean to force data move independently from
-the specified flush threshold value. Despite the provided flush value the
-tool needs capability to unconditionally drain memory buffers, at least
-in the end of the collection.
+bytes_transferred accumulates the amount of bytes that was extracted from
+the mmaped kernel buffers for compression. bytes_compressed accumulates
+the amount of bytes that was received after applying compression.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/Documentation/perf-record.txt | 12 +++++
- tools/perf/builtin-record.c              | 65 +++++++++++++++++++++---
- tools/perf/perf.h                        |  1 +
- tools/perf/util/evlist.c                 |  6 +--
- tools/perf/util/evlist.h                 |  3 +-
- tools/perf/util/mmap.c                   |  4 +-
- tools/perf/util/mmap.h                   |  3 +-
- 7 files changed, 82 insertions(+), 12 deletions(-)
+ tools/perf/builtin-record.c | 14 +++++++++++++-
+ tools/perf/util/env.h       |  1 +
+ tools/perf/util/session.h   |  2 ++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 8f0c2be34848..8eb3f5b57202 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -459,6 +459,18 @@ Set affinity mask of trace reading thread according to the policy defined by 'mo
-   node - thread affinity mask is set to NUMA node cpu mask of the processed mmap buffer
-   cpu  - thread affinity mask is set to cpu of the processed mmap buffer
- 
-+--mmap-flush=n::
-+Specify minimal number of bytes that is extracted from mmap data pages and stored
-+into a trace. The number specification is possible using B/K/M/G suffixes. Maximal allowed
-+value is a quarter of the size of mmaped data pages. The default option value is 1 byte
-+what means that every time trace writing thread finds some new data in the mmaped buffer
-+the data is extracted, possibly compressed (-z) and written to a trace. Larger data chunks
-+are compressed more effectively in comparison to smaller chunks so extraction of larger
-+chunks from the mmap data pages is preferable from perspective of trace size reduction.
-+Also at some cases executing less trace write syscalls with bigger data size can take
-+shorter than executing more trace write syscalls with smaller data size thus lowering
-+runtime profiling overhead.
-+
- --all-kernel::
- Configure all used events to run in kernel space.
- 
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index a468d882e74f..414dd4cef680 100644
+index 414dd4cef680..8e6e0c7a89b9 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -334,6 +334,41 @@ static int record__aio_enabled(struct record *rec)
- 	return rec->opts.nr_cblocks > 0;
- }
+@@ -1502,6 +1502,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		char samples[128];
+ 		const char *postfix = rec->timestamp_filename ?
+ 					".<timestamp>" : "";
++		float ratio = 0;
  
-+#define MMAP_FLUSH_DEFAULT 1
-+static int record__mmap_flush_parse(const struct option *opt,
-+				    const char *str,
-+				    int unset)
-+{
-+	int flush_max;
-+	struct record_opts *opts = (struct record_opts *)opt->value;
-+	static struct parse_tag tags[] = {
-+			{ .tag  = 'B', .mult = 1       },
-+			{ .tag  = 'K', .mult = 1 << 10 },
-+			{ .tag  = 'M', .mult = 1 << 20 },
-+			{ .tag  = 'G', .mult = 1 << 30 },
-+			{ .tag  = 0 },
-+	};
+ 		if (rec->samples && !rec->opts.full_auxtrace)
+ 			scnprintf(samples, sizeof(samples),
+@@ -1509,9 +1510,20 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		else
+ 			samples[0] = '\0';
+ 
+-		fprintf(stderr,	"[ perf record: Captured and wrote %.3f MB %s%s%s ]\n",
++		if (rec->session->bytes_transferred && rec->session->bytes_compressed) {
++			ratio = (float)rec->session->bytes_transferred/(float)rec->session->bytes_compressed;
++			session->header.env.comp_ratio = ratio + 0.5;
++		}
 +
-+	if (unset)
-+		return 0;
-+
-+	if (str) {
-+		opts->mmap_flush = parse_tag_value(str, tags);
-+		if (opts->mmap_flush == (int)-1)
-+			opts->mmap_flush = strtol(str, NULL, 0);
-+	}
-+
-+	if (!opts->mmap_flush)
-+		opts->mmap_flush = MMAP_FLUSH_DEFAULT;
-+
-+	flush_max = perf_evlist__mmap_size(opts->mmap_pages);
-+	flush_max /= 4;
-+	if (opts->mmap_flush > flush_max)
-+		opts->mmap_flush = flush_max;
-+
-+	return 0;
-+}
-+
- static int process_synthesized_event(struct perf_tool *tool,
- 				     union perf_event *event,
- 				     struct perf_sample *sample __maybe_unused,
-@@ -543,7 +578,8 @@ static int record__mmap_evlist(struct record *rec,
- 	if (perf_evlist__mmap_ex(evlist, opts->mmap_pages,
- 				 opts->auxtrace_mmap_pages,
- 				 opts->auxtrace_snapshot_mode,
--				 opts->nr_cblocks, opts->affinity) < 0) {
-+				 opts->nr_cblocks, opts->affinity,
-+				 opts->mmap_flush) < 0) {
- 		if (errno == EPERM) {
- 			pr_err("Permission error mapping pages.\n"
- 			       "Consider increasing "
-@@ -733,7 +769,7 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
- }
++		fprintf(stderr,	"[ perf record: Captured and wrote %.3f MB %s%s%s",
+ 			perf_data__size(data) / 1024.0 / 1024.0,
+ 			data->path, postfix, samples);
++		if (ratio) {
++			fprintf(stderr,	", compressed (original %.3f MB, ratio is %.3f)",
++					rec->session->bytes_transferred / 1024.0 / 1024.0,
++					ratio);
++		}
++		fprintf(stderr, " ]\n");
+ 	}
  
- static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
--				    bool overwrite)
-+				    bool overwrite, bool sync)
- {
- 	u64 bytes_written = rec->bytes_written;
- 	int i;
-@@ -756,12 +792,19 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
- 		off = record__aio_get_pos(trace_fd);
- 
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
-+		u64 flush = 0;
- 		struct perf_mmap *map = &maps[i];
- 
- 		if (map->base) {
- 			record__adjust_affinity(rec, map);
-+			if (sync) {
-+				flush = map->flush;
-+				map->flush = 1;
-+			}
- 			if (!record__aio_enabled(rec)) {
- 				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
-+					if (sync)
-+						map->flush = flush;
- 					rc = -1;
- 					goto out;
- 				}
-@@ -774,10 +817,14 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
- 				idx = record__aio_sync(map, false);
- 				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
- 					record__aio_set_pos(trace_fd, off);
-+					if (sync)
-+						map->flush = flush;
- 					rc = -1;
- 					goto out;
- 				}
- 			}
-+			if (sync)
-+				map->flush = flush;
- 		}
- 
- 		if (map->auxtrace_mmap.base && !rec->opts.auxtrace_snapshot_mode &&
-@@ -803,15 +850,15 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
- 	return rc;
- }
- 
--static int record__mmap_read_all(struct record *rec)
-+static int record__mmap_read_all(struct record *rec, bool sync)
- {
- 	int err;
- 
--	err = record__mmap_read_evlist(rec, rec->evlist, false);
-+	err = record__mmap_read_evlist(rec, rec->evlist, false, sync);
- 	if (err)
- 		return err;
- 
--	return record__mmap_read_evlist(rec, rec->evlist, true);
-+	return record__mmap_read_evlist(rec, rec->evlist, true, sync);
- }
- 
- static void record__init_features(struct record *rec)
-@@ -1312,7 +1359,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		if (trigger_is_hit(&switch_output_trigger) || done || draining)
- 			perf_evlist__toggle_bkw_mmap(rec->evlist, BKW_MMAP_DATA_PENDING);
- 
--		if (record__mmap_read_all(rec) < 0) {
-+		if (record__mmap_read_all(rec, false) < 0) {
- 			trigger_error(&auxtrace_snapshot_trigger);
- 			trigger_error(&switch_output_trigger);
- 			err = -1;
-@@ -1413,6 +1460,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		record__synthesize_workload(rec, true);
- 
- out_child:
-+	record__mmap_read_all(rec, true);
- 	record__aio_mmap_read_sync(rec);
- 
- 	if (forks) {
-@@ -1815,6 +1863,7 @@ static struct record record = {
- 			.uses_mmap   = true,
- 			.default_per_cpu = true,
- 		},
-+		.mmap_flush          = MMAP_FLUSH_DEFAULT,
- 	},
- 	.tool = {
- 		.sample		= process_sample_event,
-@@ -1881,6 +1930,9 @@ static struct option __record_options[] = {
- 	OPT_CALLBACK('m', "mmap-pages", &record.opts, "pages[,pages]",
- 		     "number of mmap data pages and AUX area tracing mmap pages",
- 		     record__parse_mmap_pages),
-+	OPT_CALLBACK(0, "mmap-flush", &record.opts, "bytes",
-+		     "Minimal number of bytes that is extracted from mmap data pages (default: 1)",
-+		     record__mmap_flush_parse),
- 	OPT_BOOLEAN(0, "group", &record.opts.group,
- 		    "put the counters into a counter group"),
- 	OPT_CALLBACK_NOOPT('g', NULL, &callchain_param,
-@@ -2184,6 +2236,7 @@ int cmd_record(int argc, const char **argv)
- 		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
- 
- 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
-+	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
- 
- 	err = __cmd_record(&record, argc, argv);
- out:
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index b120e547ddc7..7886cc9771cf 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -85,6 +85,7 @@ struct record_opts {
- 	u64          clockid_res_ns;
- 	int	     nr_cblocks;
- 	int	     affinity;
-+	int	     mmap_flush;
+ out_delete_session:
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index d01b8355f4ca..fb39e9af128f 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -64,6 +64,7 @@ struct perf_env {
+ 	struct memory_node	*memory_nodes;
+ 	unsigned long long	 memory_bsize;
+ 	u64                     clockid_res_ns;
++	u32                     comp_ratio;
  };
  
- enum perf_affinity {
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index ed20f4379956..8858d829983b 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1037,7 +1037,7 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
-  */
- int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 			 unsigned int auxtrace_pages,
--			 bool auxtrace_overwrite, int nr_cblocks, int affinity)
-+			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush)
- {
- 	struct perf_evsel *evsel;
- 	const struct cpu_map *cpus = evlist->cpus;
-@@ -1047,7 +1047,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 	 * Its value is decided by evsel's write_backward.
- 	 * So &mp should not be passed through const pointer.
- 	 */
--	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity };
-+	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush };
- 
- 	if (!evlist->mmap)
- 		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
-@@ -1079,7 +1079,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 
- int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages)
- {
--	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS);
-+	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1);
- }
- 
- int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 744906dd4887..edf18811e39f 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -165,7 +165,8 @@ unsigned long perf_event_mlock_kb_in_pages(void);
- 
- int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 			 unsigned int auxtrace_pages,
--			 bool auxtrace_overwrite, int nr_cblocks, int affinity);
-+			 bool auxtrace_overwrite, int nr_cblocks,
-+			 int affinity, int flush);
- int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages);
- void perf_evlist__munmap(struct perf_evlist *evlist);
- 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index cdc7740fc181..ef3d79b2c90b 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -440,6 +440,8 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd, int c
- 
- 	perf_mmap__setup_affinity_mask(map, mp);
- 
-+	map->flush = mp->flush;
-+
- 	if (auxtrace_mmap__mmap(&map->auxtrace_mmap,
- 				&mp->auxtrace_mp, map->base, fd))
- 		return -1;
-@@ -492,7 +494,7 @@ static int __perf_mmap__read_init(struct perf_mmap *md)
- 	md->start = md->overwrite ? head : old;
- 	md->end = md->overwrite ? old : head;
- 
--	if (md->start == md->end)
-+	if ((md->end - md->start) < md->flush)
- 		return -EAGAIN;
- 
- 	size = md->end - md->start;
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index e566c19b242b..b82f8c2d55c4 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -39,6 +39,7 @@ struct perf_mmap {
- 	} aio;
- #endif
- 	cpu_set_t	affinity_mask;
-+	u64		flush;
+ extern struct perf_env perf_env;
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index d96eccd7d27f..0e14884f28b2 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -35,6 +35,8 @@ struct perf_session {
+ 	struct ordered_events	ordered_events;
+ 	struct perf_data	*data;
+ 	struct perf_tool	*tool;
++	u64			bytes_transferred;
++	u64			bytes_compressed;
  };
  
- /*
-@@ -70,7 +71,7 @@ enum bkw_mmap_state {
- };
- 
- struct mmap_params {
--	int			    prot, mask, nr_cblocks, affinity;
-+	int			    prot, mask, nr_cblocks, affinity, flush;
- 	struct auxtrace_mmap_params auxtrace_mp;
- };
- 
+ struct perf_tool;
 -- 
 2.20.1
 
