@@ -2,110 +2,253 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E5AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 19:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0560C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 19:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A6E2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 19:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TTobuiH0"
+	by mail.kernel.org (Postfix) with ESMTP id 92681217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 19:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfCNTTF (ORCPT
+        id S1727654AbfCNTdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 15:19:05 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34536 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfCNTTF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 15:19:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yg4XkJczdyzMyp3AAIIUh0GxflWFSpYWzliUDtsZG7c=; b=TTobuiH0M43zO1gX6/8pRh0Ie
-        mh+nPIL1AHhiUzeFVgBX8fro6BSmSpR2YD4G/AyngftLUScPKHP7DHyDKK20bXf9lHkOPZCyQ2iHq
-        Po75oS5oexRDXRtbU7JRt/p6L+yQLFn5kzD0dQ5L9Yf53tFEdyGZ7pZB5uYRSTsLSSQ9Rh7GA2G3x
-        hp5siAHJsbWIEofnhsjF5uIK/9vL6aCL4B0Y2vGam0Fp1ewYLjs+8cgGZWRnr9dSrZBnlex0SwYn1
-        3YaD7KKEtJFutSUb26w8cQy+jbKtrxkqe6ed4phkFY8urIrrl1BiMz3WpFXHPVBLqxNA/iJAh1PaJ
-        3U8+6ggXw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4VsR-000071-Mv; Thu, 14 Mar 2019 19:18:51 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0F001213D9FD3; Thu, 14 Mar 2019 20:18:50 +0100 (CET)
-Date:   Thu, 14 Mar 2019 20:18:49 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190314191849.GB6058@hirez.programming.kicks-ass.net>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190313134022.GB5922@hirez.programming.kicks-ass.net>
- <20190313161229.pkib2tmjass5chtb@e110439-lin>
- <20190313194838.GS2482@worktop.programming.kicks-ass.net>
- <20190314121315.juqpsqu5cwouuqpp@e110439-lin>
- <20190314133211.GJ5996@hirez.programming.kicks-ass.net>
- <20190314150753.lzu6uftirxnhdv4y@e110439-lin>
+        Thu, 14 Mar 2019 15:33:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52138 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726972AbfCNTdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 15:33:39 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B1FA3C049D63;
+        Thu, 14 Mar 2019 19:33:38 +0000 (UTC)
+Received: from sky.random (ovpn-121-1.rdu2.redhat.com [10.10.121.1])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9F0517CEB;
+        Thu, 14 Mar 2019 19:33:33 +0000 (UTC)
+Date:   Thu, 14 Mar 2019 15:33:33 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Miller <davem@davemloft.net>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-parisc@vger.kernel.org
+Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
+ vmap()
+Message-ID: <20190314193333.GA24542@redhat.com>
+References: <20190311235140-mutt-send-email-mst@kernel.org>
+ <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
+ <20190312075033-mutt-send-email-mst@kernel.org>
+ <1552405610.3083.17.camel@HansenPartnership.com>
+ <20190312200450.GA25147@redhat.com>
+ <1552424017.14432.11.camel@HansenPartnership.com>
+ <20190313160529.GB15134@infradead.org>
+ <1552495028.3022.37.camel@HansenPartnership.com>
+ <20190314064004-mutt-send-email-mst@kernel.org>
+ <74015196-2e18-4fe0-50ac-0c9d497315c7@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190314150753.lzu6uftirxnhdv4y@e110439-lin>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <74015196-2e18-4fe0-50ac-0c9d497315c7@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 14 Mar 2019 19:33:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 03:07:53PM +0000, Patrick Bellasi wrote:
-> On 14-Mar 14:32, Peter Zijlstra wrote:
-> > On Thu, Mar 14, 2019 at 12:13:15PM +0000, Patrick Bellasi wrote:
-> > > > I'd be most impressed if they pull this off. Check the generated code
-> > > > and see I suppose :-)
-> > > 
-> > > On x86 the code generated looks exactly the same:
-> > > 
-> > >    https://godbolt.org/z/PjmA7k
-> > 
-> > Argh, they do mult by inverse to avoid the division, and can do this
-> > because its a constant.
-> > 
-> > And then yes, your arm version looks worse.
-> 
-> your "arm version" is worst then x86, or "your version" is worse?
-> 
-> IOW, should I keep the code as the original? Do you prefer your
-> version? Or... we don't really care...
+Hello Jason,
 
-Yeah, keep the original, it didn't matter on x86 and arm regressed with
-my version.
+On Thu, Mar 14, 2019 at 09:49:03PM +0800, Jason Wang wrote:
+> Yes since we don't want to slow down 32bit.
 
-> > It does what I expected with -Os, but as Rutland said the other day,
-> > that stands for Optimize for Sadness.
-> 
-> Yes, I guess we cannot optimize for all flags... however, just let me
-> know what you prefer and I'll put that version in ;)
+If you've a lot of ram there's no justification to stick to a 32bit
+kernel, so I don't think there's need to maintain a separate model
+just for 32bit. I really wouldn't care about the performance of 32bit
+with >700MB of RAM if that would cause any maintenance burden. Let's
+focus on the best 64bit implementation that will work equally
+optimally on 32bit with <= 700M of RAM.
 
-Yeah, don't bother optimizing for -Os, it generally creates atrocious
-crap, hence Rutland calling it 'Optimize for Sadness'.
+Talking to Jerome about the set_page_dirty issue, he raised the point
+of what happens if two thread calls a mmu notifier invalidate
+simultaneously. The first mmu notifier could call set_page_dirty and
+then proceed in try_to_free_buffers or page_mkclean and then the
+concurrent mmu notifier that arrives second, then must not call
+set_page_dirty a second time.
+
+With KVM sptes mappings and vhost mappings you would call
+set_page_dirty (if you invoked gup with FOLL_WRITE) only when
+effectively tearing down any secondary mapping (you've got pointers in
+both cases for the mapping). So there's no way to risk a double
+set_page_dirty from concurrent mmu notifier invalidate because the
+invalidate takes a lock when it has to teardown the mapping and so
+set_page_dirty is only run in the first invalidate method and not in
+the second. In the spte case even better, as you wouldn't need to call
+it even at teardown time unless the spte is dirty (if shadow mask
+allows dirty sptes with EPT2 or NPT or shadow MMU).
+
+If you instead had to invalidate a secondary MMU mapping that isn't
+tracked by the driver (again: not vhost nor KVM case), you could have
+used the dirty bit of the kernel pagetable to call set_page_dirty and
+disambiguate but that's really messy, and it would prevent the use of
+gigapages in the direct mapping too and it'd require vmap for 4k
+tracking.
+
+To make sure set_page_dirty is run a single time no matter if the
+invalidate known when a mapping is tear down, I suggested the below
+model:
+
+  access = FOLL_WRITE
+
+repeat:
+  page = gup_fast(access)
+  put_page(page) /* need a way to drop FOLL_GET from gup_fast instead! */
+
+  spin_lock(mmu_notifier_lock);
+  if (race with invalidate) {
+    spin_unlock..
+    goto repeat;
+  }
+  if (access == FOLL_WRITE)
+    set_page_dirty(page)
+  establish writable mapping in secondary MMU on page
+  spin_unlock
+
+(replace spin_lock with mutex_lock for vhost of course if you stick to
+a mutex and _start/_end instead of non-sleepable ->invalidate_range)
+
+"race with invalidate" is the usual "mmu_notifier_retry" in kvm_host.h
+to be implemented for vhost.
+
+We could add a FOLL_DIRTY flag to add to FOLL_TOUCH to move the
+set_page_dirty inside GUP forced (currently it's not forced if the
+linux pte is already dirty). And we could remove FOLL_GET.
+
+Then if you have the ability to disambiguate which is the first
+invalidate that tears down a mapping to any given page (vhost can do
+that trivially, it's just a pointer to a page struct to kmap), in the
+mmu notifier invalidate just before dropping the spinlock you would
+do this check:
+
+def vhost_invalidate_range_start():
+   [..]
+   spin_lock(mmu_notifier_lock);
+   [..]
+   if (vhost->page_pointer) {
+      if (access == FOLL_WRITE)
+	VM_WARN_ON(!PageDirty(vhost->page_pointer));
+      vhost->page_pointer = NULL;
+      /* no put_page, already done at gup time */
+   }
+   spin_unlock(..
+
+Generally speaking set_page_dirty is safer done after the last
+modification to the data of the page. However the way stable page
+works, as long as the mmu notifier invalidate didn't run, the PG_dirty
+cannot go away.
+
+So this model solves the issue with guaranteeing a single
+set_page_dirty is run before page_mkclean or try_to_free_buffers can
+run, even for drivers that implement the invalidate as a generic "TLB
+flush" across the whole secondary MMU and that cannot disambiguate the
+first invalidate from a second invalidate if they're issued
+concurrently on the same address by two different CPUs.
+
+So for those drivers that can disambiguate trivially (like KVM and
+vhost) we'll just add a debug check in the invalidate to validate the
+common code for all mmu notifier users.
+
+This is the solution for RDMA hardware and everything that can support
+mmu notifiers too and they can take infinitely long secondary MMU
+mappins without interfering with stable pages at all (i.e. long term
+pins but without pinning) perfectly safe and transparent to the whole
+stable page code.
+
+I think O_DIRECT for stable pages shall be solved taking the page lock
+or writeback lock or a new rwsem in the inode that is taken for
+writing by page_mkclean and try_to_free_buffers and for reading by
+outstanding O_DIRECT in flight I/O, like I suggested probably ages ago
+but then we only made GUP take the page pin, which is fine for mmu
+notifier actually (except those didn't exist back then). To solve
+O_DIRECT we can leverage the 100% guarantee that the pin will be
+dropped ASAP and stop page_mkclean and stop or trylock in
+try_to_free_buffers in such case.
+
+mm_take_all_locks is major hurdle that prevents usage in O_DIRECT
+case, even if we "cache it" if you fork(); write; exit() in a loop
+it'll still cause heavy lock overhead. MMU notifier registration isn't
+intended to happen in fast and frequent paths like the write()
+syscall. Dropping mm_take_all_locks would bring other downsides: a
+regular quiescent point can happen in between _start/_end and _start
+must be always called first all the mmu notifier retry counters we
+rely on would break. One way would be to add srcu_read_lock _before_
+you can call mm_has_mm_has_notifiers(mm), then yes we could replace
+mm_take_all_locks with synchronize_srcu. It would save a lot of CPU
+and a ton of locked operations, but it'd potentially increase the
+latency of the registration so the first O_DIRECT write() in a process
+could still potentially stall (still better than mm_take_all_locks
+which would use a lot more CPU and hurt SMP scalability in threaded
+programs). The downside is all VM fast paths would get some overhead
+because of srcu_read_lock even when mmu notifier is not registered,
+which is what we carefully avoided by taking a larger hit in the
+registration with mm_take_all_locks. This is why I don't think mmu
+notifier is a good solution to solve O_DIRECT stable pages even in
+theory O_DIRECT could use the exact same model as vhost to solve
+stable pages.
+
+If we solve O_DIRECT with new per-page locking or a new rwsem inode
+lock leveraging the fact we're guaranteed the pin to go away ASAP,
+what's left is the case of PCI devices mapping userland memory for
+indefinite amount of time that cannot support MMU notifier because of
+hardware limitations.
+
+Mentioning virtualization as a case taking long term PIN is incorrect,
+that didn't happen since the introduction of MMU notifier.
+
+vfio for device assignment to KVM takes the long term pins, but that's
+because the iommus may not support the mmu notifier, mmu notifier
+could solve the vfio case too.
+
+PCI devices that pretend to keep a constant mapping on userland
+virtual memory and that cannot support MMU notifier because they lack
+a secondary MMU, cripple the Linux VM and there's no solution to
+that. Even if we solve the stable pages problem, they will still
+practically disable all advanced VM features.
+
+I think it would be ok to solve the stable pages in 3 different ways:
+
+1) mmu notifier as above when mmu_notifier_register doesn't need to
+   run often and the hardware can support it
+
+2) O_DIRECT with new locking stopping page_mkclean/try_to_free_buffers
+   until I/O completion, leveraging the fact the pin&lock are
+   guaranteed to be dropped&released ASAP
+
+3) something else for pci devices that cannot support MMU notifier
+   because of hardware limitations, bounce buffers would be fine as
+   well
+
+I'm not even sure if in 3) it is worth worrying about being able to
+routinely flush to disk the dirty data, but then bounce buffers could
+solve that. Altering the page mapped in the pte sounds like a complex
+solution when you could copy the physical page just before issuing the
+I/O in the writeback code. To find if a GUP pin exists it's enough to
+check what KSM does:
+
+		/*
+		 * Check that no O_DIRECT or similar I/O is in progress on the
+		 * page
+		 */
+		if (page_mapcount(page) + 1 + swapped != page_count(page)) {
+
+That can give false positives (even through random pins coming from
+speculative cache lookups), but not false negatives.
+
+Thanks,
+Andrea
