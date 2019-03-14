@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FBCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E890C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 391C72085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259D32085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u7Cwfo3H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RLOnMQXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfCNGn3 (ORCPT
+        id S1727281AbfCNGnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:43:29 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43556 "EHLO
+        Thu, 14 Mar 2019 02:43:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44581 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfCNGn0 (ORCPT
+        with ESMTP id S1727242AbfCNGna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:43:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l11so3308731pgq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:43:26 -0700 (PDT)
+        Thu, 14 Mar 2019 02:43:30 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h34so3304171pgh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qELTA4aujWEU9keNr9yQA2v0lmekRZinbYpRGs9xFkI=;
-        b=u7Cwfo3HTNXiwKrg1Xm7VMazORbN94o2bgbSQzTbrMMH/hv2AKW3bvhAABqWicB/v4
-         b9asgi0FzheRGcnrFHLPLb4TWJFo6FCTgETwkXrrarLL5+LNgizsrqJnUFDCoutWuuqR
-         0ys3qt/rgIrjMeEOQMF1tUJbUIKoqzngo0Pw5nfz0P5pZbzD2MgMLpzU7u8vYP1AX2SE
-         UTIQp1N9YYQv44EaDziD2yLPLUdGeRIlzbsiovemP4HQwk9YKbxdCVVb5Oquqs7roSz/
-         tAL1P3fwgMxIMURRzGJ2geREkGPTznTxUDRymTjz/gYQ1dthykaya/JICIL1lYNV/VBF
-         NhsA==
+        bh=gau8qlK9lYlCkFsnqnqItN7NoeHxD4E7ZSFErNPXgA4=;
+        b=RLOnMQXkHi2HZm4bmQA0sLNXWNQW0CH3U3TiMA50yPp92jnLFhTjR+yd+dyTIWwMuX
+         +0oeC9HkNf2ixELn3+rAYVsWVA71CR57dJ6RM1vqxcLMTFzJc/tLNTcLE7dgC2z6me8/
+         EBrpOdgzVVgR8sysX8SVNbf3us+Gc05qvHGJ8midp2dXjnav8aGf3zJlRaJKOZP55FRx
+         KgjqyV7f0vib6WBR6o5z38x8tsSi7g/r0S3OXN9aSXkavdejG+uRJM4N9LLD8AG7we1s
+         J5CtTKAcnTjLOhKxStNjuc5E0dGEu0u80Ws4jtuqScH6JUj7NVGdMfI9GmQlfxhsfyPg
+         UDeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qELTA4aujWEU9keNr9yQA2v0lmekRZinbYpRGs9xFkI=;
-        b=R2c6Q+xCgH3dabOTGLHht7YTLDQHSIcRan6BPaw0Qb7RkWXlQcPhv5cBN2xKll4YKq
-         25i5bAaYtsQlbvjl0/17HvwuoOo5AzHSZU1pgpIe4uLje245Y7g8v6O2LK2N8nungfDI
-         In+FfteHMC5mCblx0gcntJ4wCpwHIcxfb2U7P98NaXlE8NrxXSrMwVIz/c6KYvwviE1W
-         EMR2hsVlD4sEiu8aOujDwe9048AbzRaUL6iANSC/apIdtFAzgcFIYqsX7EpKI8R+iEFm
-         zDtZOWdHz1LHTBNUrsqm19ahHD40foadT3gM4k58X1wtxrKHeDtyGeX4yeAl3pWhnhue
-         3hng==
-X-Gm-Message-State: APjAAAU9Weuq/eHl6t5uEf+t4kVhXo6b6SfOwCUVBQBBfYpAjTUT8bBp
-        T1LvYxPY5doBc6dzBcer8GDM7b6QF7E=
-X-Google-Smtp-Source: APXvYqzEbwwxjCug9kdh/7bejtUsTgAC7OJlUejiEL+ajhn8s2NdVFN0pvHFBtOZYPx8uOLJs3Y6tQ==
-X-Received: by 2002:a65:5c0b:: with SMTP id u11mr34473391pgr.352.1552545805889;
-        Wed, 13 Mar 2019 23:43:25 -0700 (PDT)
+        bh=gau8qlK9lYlCkFsnqnqItN7NoeHxD4E7ZSFErNPXgA4=;
+        b=MUMtlg8YDLuNaD11utaqv1GpKlW3ba3N/A2uulD5s9FG/QbZIiVJJrN9T7gXse0kdH
+         8LWHQa5g7lr84QZzXxnAau1Eoc88wWAPrKFgM9VHDfd87YqEzri4A9DHjbM+4nFOH2WU
+         56e6lE+1R9cLi0+z3cMqLAOAa9lokRQMsX7J4G9C2/cQwoxDwPnoiJOPrfn5D5Q9+IYg
+         sD4mQwbMUrF5DMqIeFiCAd0kYHgmAUxpIvLNHhWNDcTIh4oaDctEl/DyBVrsl7ruxazr
+         vhpJhfHD+yQb1Z4rdlCCOyMMn/1pMN08za0CINZcQNZRckAOsGEbJIkPH+4g4vzceAvD
+         gZtA==
+X-Gm-Message-State: APjAAAW9B48CbrnBlJI/I3a2EJmFQrFUxUVuQmKe0BfXXTKQuTMYUGr/
+        sMJmVh2jivZ7NwIi/13tpxr9Yg==
+X-Google-Smtp-Source: APXvYqxbSJZzzKsaof7Eb4IMfSCrTvkAry2FOR9NZQQQWjLabmBf38M5lS34sLRpQAjaPQpsyzIRbA==
+X-Received: by 2002:a62:b61a:: with SMTP id j26mr47461072pff.151.1552545809013;
+        Wed, 13 Mar 2019 23:43:29 -0700 (PDT)
 Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id l7sm49201244pfj.162.2019.03.13.23.43.24
+        by smtp.gmail.com with ESMTPSA id o5sm13049375pgc.16.2019.03.13.23.43.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 23:43:25 -0700 (PDT)
+        Wed, 13 Mar 2019 23:43:28 -0700 (PDT)
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Russell King <linux@armlinux.org.uk>
+        "David S. Miller" <davem@davemloft.net>
 Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
         Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] ARM: twd: Update cpufreq transition notifier to handle multiple CPUs
-Date:   Thu, 14 Mar 2019 12:12:49 +0530
-Message-Id: <3c977305886032ba871bd266d555ede47b4576fc.1552545525.git.viresh.kumar@linaro.org>
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/7] sparc64: Update cpufreq transition notifier to handle multiple CPUs
+Date:   Thu, 14 Mar 2019 12:12:50 +0530
+Message-Id: <f4eb2ed1e473ca9bb4c0a9ace27d816f4840f531.1552545525.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 In-Reply-To: <cover.1552545525.git.viresh.kumar@linaro.org>
 References: <cover.1552545525.git.viresh.kumar@linaro.org>
@@ -82,41 +82,54 @@ policy. The callback must look at the newly added field in struct
 cpufreq_freqs, "cpus", which contains policy->related_cpus (both
 online/offline CPUs) and perform per-cpu actions for them if any.
 
-This patch updates twd_cpufreq_transition() to use the new "cpus" field
-and run twd_update_frequency() for each online CPU present in the
-freqs->cpus.
+This patch updates sparc64_cpufreq_notifier() to use the new "cpus" field
+and update per-cpu data for all the related CPUs.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm/kernel/smp_twd.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/sparc/kernel/time_64.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/kernel/smp_twd.c b/arch/arm/kernel/smp_twd.c
-index b30eafeef096..df7db45d931b 100644
---- a/arch/arm/kernel/smp_twd.c
-+++ b/arch/arm/kernel/smp_twd.c
-@@ -162,15 +162,18 @@ static int twd_cpufreq_transition(struct notifier_block *nb,
- 	unsigned long state, void *data)
+diff --git a/arch/sparc/kernel/time_64.c b/arch/sparc/kernel/time_64.c
+index 3eb77943ce12..23544646695f 100644
+--- a/arch/sparc/kernel/time_64.c
++++ b/arch/sparc/kernel/time_64.c
+@@ -653,19 +653,23 @@ static int sparc64_cpufreq_notifier(struct notifier_block *nb, unsigned long val
+ 				    void *data)
  {
- 	struct cpufreq_freqs *freqs = data;
-+	int cpu;
+ 	struct cpufreq_freqs *freq = data;
+-	unsigned int cpu = freq->cpu;
+-	struct freq_table *ft = &per_cpu(sparc64_freq_table, cpu);
++	unsigned int cpu;
++	struct freq_table *ft;
  
- 	/*
- 	 * The twd clock events must be reprogrammed to account for the new
- 	 * frequency.  The timer is local to a cpu, so cross-call to the
- 	 * changing cpu.
- 	 */
--	if (state == CPUFREQ_POSTCHANGE)
--		smp_call_function_single(freqs->cpu, twd_update_frequency,
--			NULL, 1);
-+	if (state != CPUFREQ_POSTCHANGE)
-+		return NOTIFY_OK;
+-	if (!ft->ref_freq) {
+-		ft->ref_freq = freq->old;
+-		ft->clock_tick_ref = cpu_data(cpu).clock_tick;
+-	}
+-	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
+-	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
+-		cpu_data(cpu).clock_tick =
+-			cpufreq_scale(ft->clock_tick_ref,
+-				      ft->ref_freq,
+-				      freq->new);
++	for_each_cpu(cpu, freq->cpus) {
++		ft = &per_cpu(sparc64_freq_table, cpu);
 +
-+	for_each_cpu_and(cpu, freqs->cpus, cpu_online_mask)
-+		smp_call_function_single(cpu, twd_update_frequency, NULL, 1);
++		if (!ft->ref_freq) {
++			ft->ref_freq = freq->old;
++			ft->clock_tick_ref = cpu_data(cpu).clock_tick;
++		}
++
++		if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
++		    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
++			cpu_data(cpu).clock_tick =
++				cpufreq_scale(ft->clock_tick_ref, ft->ref_freq,
++					      freq->new);
++		}
+ 	}
  
- 	return NOTIFY_OK;
- }
+ 	return 0;
 -- 
 2.21.0.rc0.269.g1a574e7a288b
 
