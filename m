@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FDFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1916C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA17B21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C4B2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbfCNWgL (ORCPT
+        id S1728454AbfCNWgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:36:11 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:50833 "EHLO
+        Thu, 14 Mar 2019 18:36:24 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:55051 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728337AbfCNWfc (ORCPT
+        with ESMTP id S1728299AbfCNWf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:35:32 -0400
+        Thu, 14 Mar 2019 18:35:28 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MkYsS-1gcPjP14hy-00m5Ry; Thu, 14 Mar 2019 23:35:09 +0100
+ 1N2VGj-1guDas0JF1-013tPv; Thu, 14 Mar 2019 23:34:53 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,71 +37,64 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 39/45] drivers: tty: serial: efm32-uart: use devm_* functions
-Date:   Thu, 14 Mar 2019 23:34:09 +0100
-Message-Id: <1552602855-26086-40-git-send-email-info@metux.net>
+Subject: [PATCH v2 22/45] drivers: tty: serial: altera_uart: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:33:52 +0100
+Message-Id: <1552602855-26086-23-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:GkEQ3PQL3k2QaLzZb8lNbjPatbvNHO/zBKPO1LUYlKxBlECFjkC
- 1vsTglZV0lWeahMAUf50F7oNoUUwsSFbBBV1FGMu0c3n8OSp4NmUTpqXtMLVfydUgsEz4wg
- GksBta3MGsrDnCqyVXtCndFYjYUMxJv9E2WGw9Yjj7w10fReNqQJDKoqluav3RfRBRZ70Kb
- 27SyFQKMFvypFdAa2zOFQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oxDZhgVN/eg=:V7iwclKtZi2EvSTNrjfdkp
- Iz1TSD/u5LIO+VaI2WBwrQrINL5ldfGENbADY7Lv0aAQMbQUC8YhqiiNul0WPUmnWVSQ9UCVt
- pHSAJLmKKg9hL7H6JyhUhd4slJyfbSaPzyy5rYhXa1UrP6i0IhrnY9ZW79UjRf1Vctwkyrpcp
- SjY2DNtjrxaHKZYimk9lowhFcaCiUMoPfwkBuhorhHHyzu++rfbgmR3n5kHqZKZX1vYmdf6KY
- d9IT4+VQY4oijIJLeKlBb4jXP4khbnRHYsHUBsVZb9H1Nmmab+fDgi9UNpjs+U1V3b4Bkop4T
- ok7/L0T4adgGAb9UKCN86KCd0QPqlFvWbMU3Kv2o+F87MyIw+WLO6BYzE4ymbZ54e5D1N+quC
- jP7u1beKoIIwd20W+hwF1xLhY99WTS+WajU/imZPGTPg2R+zEfNTs9O0ttJVyfSSU95qY4KIU
- 1bZq1Mh0FZOMSo0dA06OYIu8sNDcmNtSHsWXLX3iPQ+dlXeJboKiBFjzpAJBWhxQT9t4XK5A/
- A0hcLi7ZsefkOC18j+eh33raIYS1CPrIS/Cb+VQv6VA+uM9WfL+iYKYSyzduV/MiVnChGu2q1
- m0pkU58b6pRQ1po7uUT63zLwqInqK+7KQMvmM4WepnIb+zVNb48m+rQjNxcZ+8SwpGS/sUBZE
- 5dfHN2PwQuHkk17vNmIbOTL2BmEQJm3UDo+45E0xiHZdFHx66CwhYzme6rkufRt0WSukMcNh8
- 9pEy2klsfk+bkWBAzN+4ZBLI4vYlKTvJwPsqkA==
+X-Provags-ID: V03:K1:HRcMubCl3N0QCtdhqoBNq0bPoJCbZHNiTmEpSNwwLRZVYnt2ZMx
+ jUx1m4mQpcGoYURsig0O/V4XNZY3cW0ETmLEJO181v9/Phz7JS13acIuMZJXS2kVgeCDC0e
+ rCQDk9V0Sr8dqk4fgIWphZNEiZMC9v9PkGsJwYowXf2tukaPvdV5AsU5QoTedKYHXyR9w25
+ T3HqZcufo578vTzTzuIsA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lpRqgLeb8zc=:sNipjjzqP8wdzFQL6Kw4vZ
+ MSDB6yhuOSOfxVhWGKozjrCOY1WswqY7E+cMjEZ9JI+EZA2q6s6ZNUzB5Z0CQZnUMG1MimHmE
+ wF8us2SJRAsBrBCw3i8j0cFtULXuwTzhWQJqeibknIFxtUsnfYXKM6ARtSgnj1OaM16cuqtZM
+ klcjsNMSExmysWWLiGmqGmEt8CraYu25yutjQbLArR4cV3sIittiav51rKJ8XFkQRCwT9s5EI
+ wU2VP79xIRiqTc7NpPIer1L/k8hLq5wV5AgzsMpbOsGCmJ4dJgtAivXp/97tQcAo0BBR3qwq/
+ ln1m6hl3JYIpjMvE7s30grv/9HV3vcNE0OK8RTK+6ydQiHWS2vpscS+My9IItuhbzhvTpRmPb
+ GL9nwGUGXTbYRdZaKvjSM/qJR3grbl9f0lvO7aqPg0Fmh+I7Mq6ZliNNY2/1eC0XeCLApGdPL
+ HAIA7XNK5euFkmrnd7rdiGs1YCC8JPlv5CgghK6PI7xhW/ORoncvdxVjDQz2QW3QrMOF1gFiE
+ +sDWYBtjGemcUtTfaCSLaKSGqKd1rS40qqiqZobymHCQV32ywtXcDLSSW7TI56c3iSgUUTXEy
+ FLYD9mQYh6w3kHL/oG8SdVg93Xv95W4PJbj6Onub32os097Rd6fXeOA0odkkugrNZvZ5rdK7b
+ NTLbTTiuYYijV2/ZlLH/qq6gJnxoImCjA/+GU3qu6+vNuIj4RvV5ZSqNFBgk32e+rojN8xTQV
+ rBRXLv1d9wm7LwRS8b0kkH1tXHF8kb7tuoLQeg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Use the safer devm versions of memory mapping functions.
+The iounmap() call isn't necessary anymore, as devm will clean up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/efm32-uart.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/altera_uart.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/efm32-uart.c
-index d6b5e54..a79cadc 100644
---- a/drivers/tty/serial/efm32-uart.c
-+++ b/drivers/tty/serial/efm32-uart.c
-@@ -437,7 +437,7 @@ static void efm32_uart_release_port(struct uart_port *port)
- 
- 	clk_unprepare(efm_port->clk);
- 	clk_put(efm_port->clk);
--	iounmap(port->membase);
-+	devm_iounmap(port->dev, port->membase);
- }
- 
- static int efm32_uart_request_port(struct uart_port *port)
-@@ -445,7 +445,7 @@ static int efm32_uart_request_port(struct uart_port *port)
- 	struct efm32_uart_port *efm_port = to_efm_port(port);
- 	int ret;
- 
--	port->membase = ioremap(port->mapbase, 60);
-+	port->membase = devm_ioremap(port->dev, port->mapbase, 60);
- 	if (!efm_port->port.membase) {
- 		ret = -ENOMEM;
- 		efm_debug(efm_port, "failed to remap\n");
-@@ -464,7 +464,7 @@ static int efm32_uart_request_port(struct uart_port *port)
- 		clk_put(efm_port->clk);
- err_clk_get:
- 
--		iounmap(port->membase);
-+		devm_iounmap(port->dev, port->membase);
- err_ioremap:
- 		return ret;
+diff --git a/drivers/tty/serial/altera_uart.c b/drivers/tty/serial/altera_uart.c
+index 0e487ce..d4f7150 100644
+--- a/drivers/tty/serial/altera_uart.c
++++ b/drivers/tty/serial/altera_uart.c
+@@ -595,7 +595,9 @@ static int altera_uart_probe(struct platform_device *pdev)
+ 			return ret;
  	}
+ 
+-	port->membase = ioremap(port->mapbase, ALTERA_UART_SIZE);
++	port->membase = devm_ioremap(port->dev,
++				     port->mapbase,
++				     ALTERA_UART_SIZE);
+ 	if (!port->membase)
+ 		return -ENOMEM;
+ 
+@@ -625,7 +627,6 @@ static int altera_uart_remove(struct platform_device *pdev)
+ 	if (port) {
+ 		uart_remove_one_port(&altera_uart_driver, port);
+ 		port->mapbase = 0;
+-		iounmap(port->membase);
+ 	}
+ 
+ 	return 0;
 -- 
 1.9.1
 
