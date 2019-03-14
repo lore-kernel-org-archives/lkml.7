@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681EAC10F06
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F698C4360F
 	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33DE021874
+	by mail.kernel.org (Postfix) with ESMTP id 55A8F2184C
 	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfCNWfB (ORCPT
+        id S1728114AbfCNWfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:35:01 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:47591 "EHLO
+        Thu, 14 Mar 2019 18:35:04 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:60913 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728032AbfCNWe7 (ORCPT
+        with ESMTP id S1728076AbfCNWfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:34:59 -0400
+        Thu, 14 Mar 2019 18:35:02 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MGQzj-1hGxW80hpt-00Gth3; Thu, 14 Mar 2019 23:34:33 +0100
+ 1MxmJs-1gpUW13UAI-00zCSQ; Thu, 14 Mar 2019 23:34:40 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,73 +37,55 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 01/45] drivers: tty: serial: 8250_bcm2835aux: use devm_platform_ioremap_resource()
-Date:   Thu, 14 Mar 2019 23:33:31 +0100
-Message-Id: <1552602855-26086-2-git-send-email-info@metux.net>
+Subject: [PATCH v2 08/45] drivers: tty: serial: 8250_lpc18xx: use devm_ioremap_resource()
+Date:   Thu, 14 Mar 2019 23:33:38 +0100
+Message-Id: <1552602855-26086-9-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:DWomIpNJmnbGMJQk8l3rsTOlr4+4BvTNMZUwMVWlUlx4l1A2znd
- FZ06j4Nm/7i1n6knMrNlmcS8b2UGcpWLaGAOLu2exNCVqqaAR69sM6VL9oRfxiDIETnSEr6
- vG67ameVMqEVG4Ep54DONR4viwdf1xr2IZ9/zClZAWUmVEkKlOkns5kWFmUwhFU3tvBEsJT
- Nvp1SrUnsQFsF7xpM+LsA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UVdoO/YHweE=:DzgY/PEP0n/Au7FaBcOVtB
- 9mIFLSFBAwG1hm8RdL79Epk+/FrvTjBTMoJxmIDTeyE6qQrsoxsxWfDiQRaP8vz9Vs3R9Tn+Z
- BcEueiXdTQ8SBKCIXPN2ICcQC926VzgJIamKPNyCmuKnR2L4vNQlv7BBbOlCK6hyfofmg5KSh
- Brm78xihl3WwM17H71ymPyt8jL//pUoY/KJO5QK9Nb36Mx4SY8N0v2hlsMeLSM8cPecBPafFU
- YyCIbIqaZFWbMTrkmMyG3Iwm25infwQKu1r3iUALCnu9XRPpd2oUqCIk/PL0JjRKSxidTcnsZ
- erIrmcUKsc1eY9vain4zUXIQ8J2cEqOIvMYm62XgCGJSjAtLttfB9Q7AlD7OS/9EqlOrCESrl
- gvHG3t3Va4SPAQC6AMlTzgsgLYCJIPDklCpyvI0Vq1kvxtZAlTPLjwGGRp2GONqvxQpQb49wz
- /p1+ycVmQ2HW/qPHZ/rY0do4ijrYh9qlH0U2+g47Lhog6ZRvZ59zVkEyVbyhu4ByQGqblcSle
- C5gBLyo8x6vZPiUimpJ17hUpheR7y7BeNm64hOZ50G3kJeM0k19s/RmATJMeRzqBBhl5hXeMq
- EfLBQRTyeULuMtGJKGowLpAPnhZA+lM8zB7Jj/oAUOm4n6zc8H1xQVKO/vxVrVF1PfmTFZO+a
- D1LtFweyrVVyWNm32R2QeKj2a0VEVArvwsYAdk+04GFqLeVXQfrplse1vhrFm0UbK1r2olAYa
- w/WLMvG8vVGYMLqeUvtSScKx3QNkWUixPOWVrA==
+X-Provags-ID: V03:K1:VNFqRitCVhR/QvfRU71bdEi19RCYMosXsVa+dbZIUtqM0/So7w6
+ WsUpKH3AYerVvwkhIbGqqwssVBUZ1NZ3s5t68seo/luOTCBgG0i1KwSbptAvCwU09DcApt9
+ UU0yty9FBEPWwB0RsesG7Y8gtvj28G5/H2Yrmz3j2803BHISpfIOUVucZuoHsTtTy8PyrGS
+ GrPWUf/H3vNdjdzCusdHQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:f6ZtSgSp/XQ=:zIdbqjzF39xfFLvmTXRF8s
+ yjSFGGorDuE2/cXjPX0ouaFMG58I+9bXgOgfZaViJx2ESbif03k6pmbhBPuq/9dmyyve3lVsc
+ g4s86OOQrG53x7rnstWITKZz8BCeQJc8V8VqX7n9rWcCFunRNcjO1MR3eP2PQ/CiJrYacPt3Z
+ nRzG4p9vTERiptHq5DPvf21IAgTY6AjNSp7gx8i6Dyj5dKcXKt7PV4IjJUMjn9BlrOsxpwseb
+ uhN72nIIm8ybHFuYwD1k5biruZbiSQvA0kkMYGqTz+SAi0g4duTlbir1FCFtfQsjns+Y8+niT
+ JnKX18yjT/iCR3Uc6WiLJKteT76dtdTJN50s9q14EUuGXFtd8hNUldq6JYHmIGyUi9w7Q8pVA
+ uloO/zZ9M0RCuAQof6qR68oDtUv0iPciQm0cP8FMtGRrZpjCXI1LnMIJJAaae74iMvaq0zHzo
+ o0ElnWwPXHgvz29m9zpYB7DiogSwgd+34Cst/GulKyVAnCglIQnkJ73pPEhoA+ne4TdqXI3zd
+ S4IrCj5w2pWC38zaVrBKTwDqvL/Z9aSuRkcCZZK5FjZGkaUOq3yEe87sVOJUMVZvNgXFnQENt
+ NiFmg/7MKZ5irghuOJd3gUuupB2I+5N0xZLTgWDTtAPkveRlo8alxLTOQMhHbFM0XtiG0l1j7
+ Y+eNqCi1ymdupVmGE9U3nOHkkEjzRisPZfX7EmcuMds2qfCR8TlGrX+k8b1XcTEuGV3sEsre5
+ lZ85s0X74ibilZ07uyzHjsPV1Cych7n3Twrn0Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the common platform_get_resource()+devm_platform_ioremap() combination,
-there is a helper, so use it and make the code a bit more compact.
+Instead of fetching out data from a struct resource for passing
+it to devm_ioremap(), directly use devm_ioremap_resource()
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/8250/8250_bcm2835aux.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/tty/serial/8250/8250_lpc18xx.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
-index bd53661..0738d14 100644
---- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-+++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-@@ -25,7 +25,6 @@ struct bcm2835aux_data {
- static int bcm2835aux_serial_probe(struct platform_device *pdev)
- {
- 	struct bcm2835aux_data *data;
--	struct resource *res;
- 	int ret;
+diff --git a/drivers/tty/serial/8250/8250_lpc18xx.c b/drivers/tty/serial/8250/8250_lpc18xx.c
+index eddf119..f36902b 100644
+--- a/drivers/tty/serial/8250/8250_lpc18xx.c
++++ b/drivers/tty/serial/8250/8250_lpc18xx.c
+@@ -119,8 +119,7 @@ static int lpc18xx_serial_probe(struct platform_device *pdev)
  
- 	/* allocate the custom structure */
-@@ -63,15 +62,12 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
- 	data->uart.port.irq = ret;
+ 	memset(&uart, 0, sizeof(uart));
  
- 	/* map the main registers */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(&pdev->dev, "memory resource not found");
--		return -EINVAL;
--	}
--	data->uart.port.membase = devm_ioremap_resource(&pdev->dev, res);
-+	data->uart.port.membase = devm_platform_ioremap_resource(pdev, 0);
- 	ret = PTR_ERR_OR_ZERO(data->uart.port.membase);
--	if (ret)
-+	if (ret) {
-+		dev_err(&pdev->dev, "could not map memory resource");
- 		return ret;
-+	}
+-	uart.port.membase = devm_ioremap(&pdev->dev, res->start,
+-					 resource_size(res));
++	uart.port.membase = devm_ioremap_resource(&pdev->dev, res);
+ 	if (!uart.port.membase)
+ 		return -ENOMEM;
  
- 	/* Check for a fixed line number */
- 	ret = of_alias_get_id(pdev->dev.of_node, "serial");
 -- 
 1.9.1
 
