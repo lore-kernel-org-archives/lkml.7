@@ -6,200 +6,87 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA6DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 19:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F289AC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 19:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB802186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 19:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C8D2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 19:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A8tVvGpd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KiqH6+ge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfCNTyy (ORCPT
+        id S1727649AbfCNTzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 15:54:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49236 "EHLO
+        Thu, 14 Mar 2019 15:55:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49270 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbfCNTyy (ORCPT
+        with ESMTP id S1726890AbfCNTy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 15:54:54 -0400
+        Thu, 14 Mar 2019 15:54:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hOVUCp5SVXqYeCVElU5+KNwIZohVlf3Zu5f4b0Ps8p4=; b=A8tVvGpde8o3Yq8dzeRzjiya/
-        6d8j+QyDyLUzjRLq0m7jo4Ld90pNTFVjjyY3AxJmzN7fRNS4F4W4af4inV0CZcWLuT1ZCXKisqE5d
-        leUQ9G+rkRCS2LXqKMm1rQA5GpZop/W9KNKuSjxpAfAbtyAk4EKkkO4PesQr+Rn/nArwTadLuV4lj
-        M3hUyAi5SYmjTQmeDNHHXrfmyjQEQSX+RuZn2izaU2lgMvn307wZYa1KtXtmrmXXHg8BySzSdsHXX
-        b/iESJnKe27AzX1PiJ80fRLWUDX8+TeFt7lbfYW6eaSinRYZyqIG7KphsuDzVZGP4aT9wlpLCOx3Y
-        xJmQpWQTw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4WRI-0003kC-9H; Thu, 14 Mar 2019 19:54:52 +0000
-Date:   Thu, 14 Mar 2019 12:54:52 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Laurent Dufour <ldufour@linux.ibm.com>,
-        lsf-pc@lists.linux-foundation.org, Linux-MM <linux-mm@kvack.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM TOPIC] Using XArray to manage the VMA
-Message-ID: <20190314195452.GN19508@bombadil.infradead.org>
-References: <7da20892-f92a-68d8-4804-c72c1cb0d090@linux.ibm.com>
- <20190313210603.fguuxu3otj5epk3q@linux-r8p5>
- <20190314023910.GL19508@bombadil.infradead.org>
- <20190314164343.owsgnldxk7qr363q@linux-r8p5>
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lTpiTYD7ovPNPgeqoeGc4xtg3O2FyyikIavWESV5UzI=; b=KiqH6+geW4z7X5jxe5e+DbFcTt
+        r76jcG+Nh00ID1ZnYuhhAiLitYKgJ3vN1VPR+XY3ajLLY37SadsPg5Xd4xGmonmtXRdh7I9BLet9X
+        w6/zl0HgCrP77+p5tHMIrkPCRd4nXHZwYDG7y8vpPXDgCRNbGocT6ECHprhjH+jhG4lkw2OS1fQZI
+        yuqylyWRjcz3H/F4YWmzhD/XpOeq+87zaplRfbf08eHtTY2F8IrsEPLnZUEL5rTLzWEuONQl+CONB
+        xiCP14UIID+4kKnjp1nXOFJB5/Lf5WUVWlyCReIFAtKp3U8WWxPC2IOvaH4Fw+UQuba0agXcREoJm
+        SoPIKcTw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4WRK-0003kI-36; Thu, 14 Mar 2019 19:54:54 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0BD2C2011BC55; Thu, 14 Mar 2019 20:54:52 +0100 (CET)
+Date:   Thu, 14 Mar 2019 20:54:51 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Numan =?utf-8?B?RGVtaXJkw7bEn2Vu?= <if.gnu.linux@gmail.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, jason.low2@hpe.com,
+        Waiman.Long@hpe.com, paulmck@linux.vnet.ibm.com,
+        tglx@linutronix.de, dmitry.torokhov@gmail.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [regression, bisected] Keyboard not responding after resuming
+ from suspend/hibernate
+Message-ID: <20190314195451.GC6058@hirez.programming.kicks-ass.net>
+References: <20180831215121.1b1f66bf@korsan.localdomain>
+ <20181019102031.77015d44@korsan.localdomain>
+ <20181025074903.GA9323@amd>
+ <20181028220654.7e77e5d7@ubuntu>
+ <20181130154455.21578c4d@korsan.localdomain>
+ <20181202222809.GA29467@amd>
+ <20181218102302.2b029612@korsan.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190314164343.owsgnldxk7qr363q@linux-r8p5>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20181218102302.2b029612@korsan.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 09:43:43AM -0700, Davidlohr Bueso wrote:
-> On Wed, 13 Mar 2019, Matthew Wilcox wrote:
-> 
-> > It's probably worth listing the advantages of the Maple Tree over the
-> > rbtree.
-> 
-> I'm not familiar with maple trees, are they referred to by another name?
-> (is this some sort of B-tree?). Google just shows me real trees.
+On Tue, Dec 18, 2018 at 10:23:02AM +0300, Numan Demirdöğen wrote:
+> I found that passing the options i8042.reset=1 i8042.dumbkbd=1 i8042.direct=1
+> results in the keyboard functioning after resume. However, there is a
+> long delay before the keyboard or mouse will respond to input on the
+> lock screen.[1]
 
-It is a B-tree variant which supports ranges as a first-class citizen
-(single elements are ranges of length 1).  It optimises for ranges which
-are adjacent to each other, and does not support overlapping ranges.
-It supports RCU lookup and embeds a spinlock which must be held for
-modification.  There's a lot of detail I can go into, but let's leave
-it at that for an introduction.
+So the thing is, the mutex works, there's nothing wrong or broken about
+it (or we'd have known, the kernel would crash and burn). The hand-off
+stuff fixed at least one known starvation case as well.
 
-> > - Shallower tree.  A 1000-entry rbtree is 10 levels deep.  A 1000-entry
-> >   Maple Tree is 5 levels deep (I did a more detailed analysis in an
-> >   earlier email thread with Laurent and I can present it if needed).
-> 
-> I'd be interested in reading on that.
+What it does do, is change timing behaviour. But that is something that
+is not guaranteed anyway.
 
-(see the last two paragraphs of the mail for that analysis)
+This all smells like there's some timing dependent behaviour (aka. race
+condition) in the suspend/keyboard interaction _somewhere_.
 
-> > - O(1) prev/next
-> > - Lookups under the RCU lock
-> > 
-> > There're some second-order effects too; by using externally allocated
-> > nodes, we avoid disturbing other VMAs when inserting/deleting, and we
-> > avoid bouncing cachelines around (eg the VMA which happens to end up
-> > at the head of the tree is accessed by every lookup in the tree because
-> > it's on the way to every other node).
-> 
-> How would maple trees deal with the augmented vma tree (vma gaps) trick
-> we use to optimize get_unmapped_area?
+Now, I know absolutely nothing about either suspend or keyboard stuff,
+so I really can't help there. The best idea is to add trace_printk()
+throughout the keyboard suspend/resume code and see if there's a clue to
+be had there (using remote access to dump the trace buffer after resume,
+because of lack of keyboard).
 
-The fundamental unit of the Maple Tree is a 128-byte node.  A leaf node
-is laid out like this:
-
-struct maple_range_64 {
-        struct maple_node *parent;
-        void __rcu *slot[8];
-        u64 pivot[7];
-};
-
-The pivots are stored in ascending order; if the search index is less
-than pivot[i], then the value (ie the vma pointer) you are searching
-for is stored in slot[i].
-
-Non-leaf nodes (for trees which support range allocations) are laid out
-like this:
-
-struct maple_arange_64 {
-        struct maple_node *parent;
-	u64 gaps[5];
-        void __rcu *slot[5];
-        u64 pivot[4];
-};
-
-gaps[i] stores the largest run of NULL pointers in the subtree rooted at
-slot[i].  When searching for an empty range of at least N, you can skip
-any subtree which has gaps[i] < N.
-
-Here's a simple case:
-
-$ ldd `which cat`
-	linux-vdso.so.1 (0x00007ffc867fc000)
-	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f2c8cc6e000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007f2c8ce69000)
-
-'cat /proc/self/maps | wc' gives me 25 mappings.  They look like this:
-
-$ cat /proc/self/maps |cut -f 1 -d ' '
-55c414785000-55c414787000
-55c414787000-55c41478c000
-55c41478c000-55c41478e000
-55c41478f000-55c414790000
-55c414790000-55c414791000
-55c4159dd000-55c4159fe000
-7fa5f6527000-7fa5f680c000
-7fa5f680c000-7fa5f682e000
-7fa5f682e000-7fa5f6976000
-7fa5f6976000-7fa5f69c2000
-7fa5f69c2000-7fa5f69c3000
-7fa5f69c3000-7fa5f69c7000
-7fa5f69c7000-7fa5f69c9000
-7fa5f69c9000-7fa5f69cd000
-7fa5f69cd000-7fa5f69cf000
-7fa5f69d9000-7fa5f69fb000
-7fa5f69fb000-7fa5f69fc000
-7fa5f69fc000-7fa5f6a1a000
-7fa5f6a1a000-7fa5f6a22000
-7fa5f6a22000-7fa5f6a23000
-7fa5f6a23000-7fa5f6a24000
-7fa5f6a24000-7fa5f6a25000
-7ffe54a3c000-7ffe54a5d000
-7ffe54a7b000-7ffe54a7e000
-7ffe54a7e000-7ffe54a80000
-
-We'd represent this in the Maple Tree as:
-
-0-55c414785000 -> NULL
-55c414785000-55c414787000 -> vma
-55c414787000-55c41478c000 -> vma
-...
-55c414790000-55c414791000 -> vma
-55c414791000-7fa5f6527000 -> NULL
-7fa5f6527000-7fa5f680c000 -> vma
-...
-7fa5f69cd000-7fa5f69cf000 -> vma
-7fa5f69cf000-7fa5f69d9000 -> NULL
-7fa5f69d9000-7fa5f69fb000 -> vma
-...
-7fa5f6a24000-7fa5f6a25000 -> vma
-7fa5f6a25000-7ffe54a3c000 -> NULL
-7ffe54a3c000-7ffe54a5d000 -> vma
-7ffe54a5d000-7ffe54a7b000 -> NULL
-7ffe54a7b000-7ffe54a7e000 -> vma
-7ffe54a7e000-7ffe54a80000 -> vma
-7ffe54a80000-ffffffffffff -> NULL
-
-so the maple tree stores 6 ranges that point to NULL in addition to the
-25 that're stored by the rbtree.  Because they're allocated sequentially,
-there won't be any wastage in the maple tree caused by items shifting
-around.  That means we'll get 8 per leaf node, so just 4 leaf nodes
-needed to store 31 ranges, all stored in a single root node.  That means
-to get from root to an arbitrary VMA is just 3 pointer dereferences,
-versus 3.96 pointer dereferences for an optimally balanced rbtree.
-
-
-For a process with 1000 VMAs, we'll have approximately 167 leaf nodes
-(assuming approximately 6 of the 8 pointers are used per node) arranged
-into a tree of height 5, with about 44 non-leaf nodes needed to manage
-those 166 leaf-nodes.  That'll be 6 pointers to follow per walk of the
-tree (if it were optimally arranged, it'd be 125 leaf nodes plus 25 +
-5 + 1 non-leaf nodes and 5 pointers to follow, but it's unrealistic to
-assume it'll be optimally arranged, and this neglects the NULL ranges
-which will also need to be stored).
-
-The rbtree has a 1/1000 chance of 1 pointer dereference, a 2/1000 chance
-of 2 pointers, 4/1000 chance of 3 pointers, 8/1000 4 pointers, 16/1000 5
-pointers, 32/1000 6 pointers, 64/1000 7 pointers, 128/1000 8 pointers,
-256/1000 9 pointers, 489/1000 10 pointers.  Amortised, that's 8.987
-pointers to look up a random VMA (assuming the rbtree is fully balanced;
-I haven't checked how unbalanced the rbtree can actually become).
-
+Obviously that takes someone who knows how that should work ...
