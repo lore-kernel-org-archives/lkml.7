@@ -2,86 +2,124 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDD7C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B116C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2255A204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB41F2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 21:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SZ2CHrOQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q659j779"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfCNVEP (ORCPT
+        id S1727988AbfCNVFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 17:04:15 -0400
-Received: from mail-it1-f175.google.com ([209.85.166.175]:55111 "EHLO
-        mail-it1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727765AbfCNVEO (ORCPT
+        Thu, 14 Mar 2019 17:05:06 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39061 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbfCNVFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 17:04:14 -0400
-Received: by mail-it1-f175.google.com with SMTP id w18so7010718itj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 14:04:13 -0700 (PDT)
+        Thu, 14 Mar 2019 17:05:06 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i20so4682589pfo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 14:05:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8/584qEVZ34MgPe0XR5WKf2sRo/jZ4h83aaIDZjCgi4=;
-        b=SZ2CHrOQHtyEd/T6fUxaOgECELgJoBbA4SovNoY/rTObhOR3lIRO6IwCW8cvBRN1i4
-         cEFAJPY6C0QdnfVYOjYA04UmJyWmHt+6v7e4EQINhq+izbvLaNj5NFvw4srb5KX8wG5C
-         ZhMLIhor0GPTL6L3tpgCFrZhI3M7MBGYAHIbf9LlnKil6qUhWpaLu5Be7dxGaupn8pTS
-         fHF3ADChT8uciJEXaj6CcS/0H60gRdaGNlRe6dxdIYd1dyGy2bWh7WwUrRIgMu2FX9yk
-         Y0LgdFW72jj4UUfj7ssqe4fMiadCpzeKbsq7PlxuREbefWTMQnpdHCC2gCqM3jHVijZj
-         ASPA==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BP0btLgzdlLEmSaLrJGxpO88AlAWxf1QFIm0r4SJRoE=;
+        b=q659j779fcivHH03sd8DVq4CpdHYIrtwHk28PcW0pWTvd5b07Wt3NWPxuTJqUtJiei
+         SrMIYc9Jd1ATp7SD4Ojq2G/IXbx6sxV8kL+4W8acIdlfSl85SCPzq7vvgv9BcH+B9TBD
+         m8m9n3gLq56nTQBBbsiq4Ci56YkG4dKnntgW5+sy922jwT/YNOpmKRe236JOtibQj9RM
+         EjNg6jmrctnI3nrbm2oml5feUPMoGEJNDyS5PwTWP3xxDuxQ+bfmQcGneUFn58+Ujtgz
+         64QwJreeoFkTxGMmnZxkxH7k/tJ1OSdNG5csGXq88SmDxqdEajwEKtIuJ99/ODtV5lcN
+         bQxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8/584qEVZ34MgPe0XR5WKf2sRo/jZ4h83aaIDZjCgi4=;
-        b=rMOU0Q65x/9uQvclXqN73ozDFm+SlsWxUWy2fbqu/ISYexQ+X6P28sbJB1PQkQavRj
-         U9cWKjyUBfd4X6hFU3ALjlV9gmYdbvTvbLKdCwYto4k8Ys0Nte7p3ubdDJFdBQUIsv15
-         hmTtnQcYoVQyRvsiZPDFfiElpBAQEDGsuYZNhnupa7X0giqHOdRoX+tUoczZwi/jP2rV
-         02BXlVECfch7Gc0NOuzrLyS1bIruE4EfQ1VR7+Ft6mW9JhS9bj/p3TiQ3bd2efg3XLHj
-         lXzHuKZZq8q4lDbNriKKhyI0Hd3X0Uc8qYk97hxe5mMdMh/UTxZ0TnMQEwdji7HYhPj8
-         /YOQ==
-X-Gm-Message-State: APjAAAUheqydJGlbo0TVXjyBDQYUpmHE8gA08WHUvxjmIDJiPQGF2be1
-        At+XeavsTU1MVWr2C0HhtTC6oMd3WD0H5b88za/voQ==
-X-Google-Smtp-Source: APXvYqwi/gC2tRuVoVXL6D/BduZh85HZttJXo5L2Nt3CxGmOKZXf5+ALHeiAbdAISNsOFx7oNtG6oh9zGbJaS1tnA3o=
-X-Received: by 2002:a24:7908:: with SMTP id z8mr403403itc.16.1552597453231;
- Thu, 14 Mar 2019 14:04:13 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BP0btLgzdlLEmSaLrJGxpO88AlAWxf1QFIm0r4SJRoE=;
+        b=KmPdH7n9derlImo0PL9qPFD97//+IW16DyCq1IQmOdRKipQp7xMVfPAZ2WSPJT00eJ
+         l45KPKcMeIlWVw5/RBTlbm2lljHNcymexF5xiCvZr0UUIucuRG5Lzx3swmNZz2U8YazD
+         Xjji/z4gtXry4X//1Q9PWwMEZMt7oKRrbUi927h/2MW+c8bWaea8VcHs0X/tx0M2OLJw
+         WmjU3qyrcztZIRNeXFvHnJ3ztvxsu5izQXz2pTzID8D1poioDZFXtYX2DckJuE4QK2LN
+         qIGEe8juURM9ysIT3hSishK7h84QxCSd6IIhd8WwTsZVfhLEHYfxY0KlalTmz+jNMirH
+         EqXg==
+X-Gm-Message-State: APjAAAW9xj1wiabT5KZ0HlfBCIGltXw7FykTCbWvCntiAjk+wB41BwNl
+        X+F1aWx3j5bzgLcmQrUu+nwyY3nF
+X-Google-Smtp-Source: APXvYqxQ9GFeHtQisMGhqHAC1fzw92Z+lLkVS9b7J49dq1a7GHAvMv/w6pqewxeBYE7DN/VrNQZzkg==
+X-Received: by 2002:a63:145b:: with SMTP id 27mr46115164pgu.74.1552597505236;
+        Thu, 14 Mar 2019 14:05:05 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id h127sm12854pfg.65.2019.03.14.14.05.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 14:05:04 -0700 (PDT)
+Subject: Re: [PATCH] tracing: initialize variable in create_dyn_event()
+From:   Frank Rowand <frowand.list@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+References: <1548382670-30266-1-git-send-email-frowand.list@gmail.com>
+Message-ID: <2872713a-8b99-5117-27df-eeda824e55a0@gmail.com>
+Date:   Thu, 14 Mar 2019 14:05:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190227202658.197113-1-matthewgarrett@google.com> <20190314093515.GA11165@linux.intel.com>
-In-Reply-To: <20190314093515.GA11165@linux.intel.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Thu, 14 Mar 2019 14:04:02 -0700
-Message-ID: <CACdnJuuWMg6c1GJHR3EMobaZ1CwquNudjcgxwXNWczE=3DbQTg@mail.gmail.com>
-Subject: Re: Add support for TCG2 log format on UEFI systems
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1548382670-30266-1-git-send-email-frowand.list@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 2:35 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Wed, Feb 27, 2019 at 12:26:54PM -0800, Matthew Garrett wrote:
-> > Identical to V4, but based on tpmdd-next
->
-> This is not found /sys/kernel/security/tpm0/ascii_bios_measurements
+Hi Steve,
 
-That's expected - the existing kernel TCG2 log code doesn't expose
-ascii_bios_measurements, only binary_bios_measurements. This patchset
-doesn't change that.
+Ping.
+
+-Frank
+
+
+On 1/24/19 6:17 PM, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> Fix compile warning in create_dyn_event(): 'ret' may be used uninitialized
+> in this function [-Wuninitialized].
+> 
+> Fixes: 5448d44c3855 ("tracing: Add unified dynamic event framework")
+> 
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+> 
+> Compile and boot tested only.  Please verify the initialization value
+> of zero is correct.
+> 
+> There is also a sparse warning you might want to check into (when
+> ARCH=arm, so 32 bit):
+> 
+>    include/uapi/linux/perf_event.h:147:56: warning: cast truncates bits from constant value (8000000000000000 becomes 0)
+> 
+> 
+>  kernel/trace/trace_dynevent.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+> index dd1f43588d70..4f633476c307 100644
+> --- a/kernel/trace/trace_dynevent.c
+> +++ b/kernel/trace/trace_dynevent.c
+> @@ -74,7 +74,7 @@ int dyn_event_release(int argc, char **argv, struct dyn_event_operations *type)
+>  static int create_dyn_event(int argc, char **argv)
+>  {
+>  	struct dyn_event_operations *ops;
+> -	int ret;
+> +	int ret = 0;
+>  
+>  	if (argv[0][0] == '-' || argv[0][0] == '!')
+>  		return dyn_event_release(argc, argv, NULL);
+> 
+
