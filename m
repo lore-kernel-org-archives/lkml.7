@@ -2,98 +2,186 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4294AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C91C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD9020854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D11F20854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552563306;
+	bh=oHcMZeGSpwDrMZBLflS3wXoDeMsSXCBkNRbF26gdBf0=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=EdqglXuVURoaGokLzhsegbmHrqWKgCxI8TQsKgi0muveQUENS+2qtF3ONId6+L27b
+	 tuRrZjpdpjH/RKvXzm9FbGhSiDnRa1zXisI/PP7TtFZe8tgh9yGJQqF0jgi0H0M5jQ
+	 QDeNW6m9qC/YVVgF1axQ2+GeCMz5hunutJup9i+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfCNLey (ORCPT
+        id S1727433AbfCNLfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:34:54 -0400
-Received: from mga04.intel.com ([192.55.52.120]:4630 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbfCNLey (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:34:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:34:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
-   d="scan'208";a="282584155"
-Received: from qzeng3-mobl5.ccr.corp.intel.com (HELO [10.254.211.155]) ([10.254.211.155])
-  by orsmga004.jf.intel.com with ESMTP; 14 Mar 2019 04:34:51 -0700
-Subject: Re: [PATCH] perf annotate: Remove hist__account_cycles from callback
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1552422174-27622-1-git-send-email-yao.jin@linux.intel.com>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <d01e89f2-3cf8-14ea-5a08-3c5ab43358d1@linux.intel.com>
-Date:   Thu, 14 Mar 2019 19:34:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Thu, 14 Mar 2019 07:35:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40873 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfCNLfE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:35:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k11so4104552oic.7;
+        Thu, 14 Mar 2019 04:35:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=DJXUg6BK6j8iIkIGRzDed4NlhXOL7YeHFuGQu3DEcX8=;
+        b=domHe6BDU9wzNmTjJDn1E9KVx3SX3lCNPSeRUS0yDSF33Q8tf13euFgyi1YHuyMtH0
+         ZpfjmiYEr9p36anz+QY9OVmLH7u0gGSEYbYalvDX8XOfmBUHy0ahSPJ3qv1salo7n6pk
+         M3pELANVf5oAmT0+Rn/cZ0ch40LN2nBJ+wt4Cm5LVhTYy14GNXf5kLq++U6vTeIAEr6g
+         nEz6ch2ScYb9DL3gVu5nlN1l+H16YNhCm6Ue5ZxHQpdjFyJ2qAMAkRz57qhP50q6wJmi
+         Yvw4y/PHAJQzO+z7OyoYED3W5Frf+7bpwKzSPQCffR/Sk3PtdyQKE2JasUu2z29J7iWI
+         Sx3A==
+X-Gm-Message-State: APjAAAWpFXhaKfzmZcL+rCoZNtYM874J1Zwh3/IIgASvQT59wju9r+fL
+        nJkb/zO5Fypkh5cc6/pcel4mhMHJmhsDx/vH+EtHvaWR
+X-Google-Smtp-Source: APXvYqyMWBdF8XUdxPxCN/flJHAX2gXg2QXblJCEoFgtNsFcVb0L1BFSey37t/K6I3kdN99KkWljJazNxcAcBcfZmbk=
+X-Received: by 2002:aca:cdcb:: with SMTP id d194mr1065674oig.76.1552563303116;
+ Thu, 14 Mar 2019 04:35:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1552422174-27622-1-git-send-email-yao.jin@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 14 Mar 2019 12:34:51 +0100
+Message-ID: <CAJZ5v0h0y40_bVqOyD-+hkCQmVv1vruO0donzjE7FOZ8jteubQ@mail.gmail.com>
+Subject: [GIT PULL] More power management updates for v5.1-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any comments for this patch or any issue is found? In testing, I just 
-feel it accelerates the perf annotate data processing.
+Hi Linus,
 
-Thanks
-Jin Yao
+Please pull from the tag
 
-On 3/13/2019 4:22 AM, Jin Yao wrote:
-> The hist__account_cycles is executed when the hist_iter__branch_callback
-> is called. But it looks it's not necessary. In hist__account_cycles, it
-> already walks on all branch entries.
-> 
-> This patch moves the hist__account_cycles out of callback, now the data
-> processing is much faster than before.
-> 
-> For example,
-> perf record -b ...
-> perf annotate
-> 
-> The before/after output should be no change.
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> ---
->   tools/perf/builtin-annotate.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index 67f9d9f..77deb3a 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -159,8 +159,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
->   	struct perf_evsel *evsel = iter->evsel;
->   	int err;
->   
-> -	hist__account_cycles(sample->branch_stack, al, sample, false);
-> -
->   	bi = he->branch_info;
->   	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
->   
-> @@ -199,6 +197,8 @@ static int process_branch_callback(struct perf_evsel *evsel,
->   	if (a.map != NULL)
->   		a.map->dso->hit = 1;
->   
-> +	hist__account_cycles(sample->branch_stack, al, sample, false);
-> +
->   	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
->   	return ret;
->   }
-> 
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.1-rc1-2
+
+with top-most commit b444e1aa3e48e13aea22162918bd6140c85142de
+
+ Merge branches 'pm-opp' and 'pm-tools'
+
+on top of commit ef8006846a3a97d9d8bf49e63dba948d0d2dbbf0
+
+ Merge tag 'pm-5.1-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+to receive additional power management updates for 5.1-rc1.
+
+These are mostly fixes and cleanups on top of the previously merged
+power management material for 5.1-rc1 with one cpupower utility
+update that wasn't pushed earlier due to unfortunate timing.
+
+Specifics:
+
+ - Fix registration of new cpuidle governors partially broken during
+   the 5.0 development cycle by mistake (Rafael Wysocki).
+
+ - Avoid integer overflows in the menu cpuidle governor by making
+   it discard the overflowing data points upfront (Rafael Wysocki).
+
+ - Fix minor mistake in the recent update of the iowait boost
+   computation in the intel_pstate driver (Rafael Wysocki).
+
+ - Drop incorrect __init annotation from one function in the pxa2xx
+   cpufreq driver (Arnd Bergmann).
+
+ - Fix the operating performance points (OPP) framework
+   initialization for devices in multiple power domains if
+   only one of them is scalable (Rajendra Nayak).
+
+ - Fix mistake in dev_pm_opp_set_rate() which causes it to skip
+   updating the performance state if the new frequency is the same
+   as the old one (Viresh Kumar).
+
+ - Rework the cancellation of wakeup source timers to avoid
+   potential issues with it and do some cleanups unlocked by
+   that change (Viresh Kumar, Rafael Wysocki).
+
+ - Clean up the code computing the active/suspended time of devices
+   in the PM-runtime framework after recent changes (Ulf Hansson).
+
+ - Make the power management infrastructure code use pr_fmt()
+   consistently (Joe Perches).
+
+ - Clean up the generic power domains (genpd) framework somewhat
+   (Aisheng Dong).
+
+ - Improve kerneldoc comments for two functions in the cpufreq core
+   (Rafael Wysocki).
+
+ - Fix typo in a PM QoS file description comment (Aisheng Dong).
+
+ - Update the handling of CPU boost frequencies in the cpupower
+   utility (Abhishek Goel).
+
+Thanks!
+
+
+---------------
+
+Abhishek Goel (1):
+      tools/power/cpupower: Display boost frequency separately
+
+Aisheng Dong (4):
+      PM / QoS: Fix typo in file description
+      PM / Domains: Improve warn for multiple states but no governor
+      PM / Domains: Return early for all errors in _genpd_power_off()
+      PM / domains: Remove one unnecessary blank line
+
+Arnd Bergmann (1):
+      cpufreq: pxa2xx: remove incorrect __init annotation
+
+Joe Perches (1):
+      PM: Add and use pr_fmt()
+
+Rafael J. Wysocki (5):
+      cpuidle: menu: Avoid overflows when computing variance
+      cpufreq: Improve kerneldoc comments for cpufreq_cpu_get/put()
+      PM / wakeup: Drop wakeup_source_drop()
+      cpufreq: intel_pstate: Fix up iowait_boost computation
+      cpuidle: governor: Add new governors to cpuidle_governors again
+
+Rajendra Nayak (1):
+      OPP: Fix handling of multiple power domains
+
+Ulf Hansson (2):
+      PM-runtime: Consolidate code to get active/suspended time
+      PM-runtime: Call pm_runtime_active|suspended_time() from sysfs
+
+Viresh Kumar (2):
+      PM / wakeup: Rework wakeup source timer cancellation
+      PM / OPP: Update performance state when freq == old_freq
+
+---------------
+
+ drivers/base/power/domain.c               | 20 ++++++++-------
+ drivers/base/power/domain_governor.c      |  1 -
+ drivers/base/power/main.c                 | 21 ++++++++--------
+ drivers/base/power/power.h                |  1 +
+ drivers/base/power/qos.c                  |  2 +-
+ drivers/base/power/runtime.c              | 16 +++++++++---
+ drivers/base/power/sysfs.c                | 12 ++-------
+ drivers/base/power/trace.c                |  2 ++
+ drivers/base/power/wakeup.c               | 30 ++++++++--------------
+ drivers/cpufreq/cpufreq.c                 | 24 +++++++-----------
+ drivers/cpufreq/intel_pstate.c            |  2 +-
+ drivers/cpufreq/pxa2xx-cpufreq.c          |  4 +--
+ drivers/cpuidle/governor.c                |  1 +
+ drivers/cpuidle/governors/menu.c          |  2 +-
+ drivers/opp/core.c                        |  2 +-
+ drivers/opp/of.c                          | 16 ++++++++++--
+ include/linux/pm.h                        |  1 -
+ include/linux/pm_wakeup.h                 |  9 -------
+ tools/power/cpupower/lib/cpufreq.c        | 19 ++++++++------
+ tools/power/cpupower/lib/cpufreq.h        | 16 ++++++------
+ tools/power/cpupower/utils/cpufreq-info.c | 42 +++++++++++++++++++++++--------
+ 21 files changed, 131 insertions(+), 112 deletions(-)
