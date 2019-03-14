@@ -2,140 +2,146 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6CFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F71C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98DAC21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135752184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:18:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="M1yj+fuo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfCNHPQ (ORCPT
+        id S1726677AbfCNHSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:15:16 -0400
-Received: from mga06.intel.com ([134.134.136.31]:25942 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfCNHPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:15:16 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 00:15:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,477,1544515200"; 
-   d="scan'208";a="328509664"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Mar 2019 00:15:10 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1h4Ka6-0004FJ-1q; Thu, 14 Mar 2019 15:15:10 +0800
-Date:   Thu, 14 Mar 2019 15:14:38 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Tomasz Duszynski <tduszyns@gmail.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: drivers/iio/chemical/sps30.c:122:30: sparse: cast truncates bits
- from constant value (8004 becomes 4)
-Message-ID: <201903141535.AQGxopZN%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 14 Mar 2019 03:18:09 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:54030 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfCNHSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 03:18:09 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id A635DC91
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:18:07 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Nydv4Vjip4Ln for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 02:18:07 -0500 (CDT)
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 6CEE6C84
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:18:07 -0500 (CDT)
+Received: by mail-io1-f71.google.com with SMTP id k24so3579101ioa.18
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=oRmn4b9rhT3KDTlseWZhI2IzGPx/P3+INt92Eg01Y0c=;
+        b=M1yj+fuo0rJqX3b9OyOKqI5LU5WCUiUzwlNCH13DL5l5yOWqW08Z1y7XGxYOyPuSjX
+         FSHmf6KBzB3G0ki1tEhmNIwbeTOfFEuLTyS4YYwt9n4WthUJk7UmAvNUY8A0CBoNseFz
+         cfcybQXbmmwLZmDIv30JD9ZpGDPAxdkvtZXCgql4V15dF0oqVX4PJwwd78eVvepCB95n
+         3L+uMR+hzQQRPKLCbWvUpW+ZiBn/Jyl1J76WtmTA0JQRJI1hbQDTK7Kmtad2aD800y7U
+         f3hKgib6F3S+mC3O63ARoSkWfDg6VBOy3/+z3ESHG0pcyAYFQqcUa4BAasSGHtE2kwgC
+         z7Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oRmn4b9rhT3KDTlseWZhI2IzGPx/P3+INt92Eg01Y0c=;
+        b=qZAzSq6OKngWlORH1bs4CknU6UQUgBP4+6t9QjrjoVeWsFKD2syi1J02JSJQXBAmd1
+         CVNLSn8aLyD7OfPZTZtWdmBnpg7Izo4Qlg7iF3WJV+q3KWfgx802l55GNDDPzzX+GuKN
+         01H6MsOdMOdy2v9bLJUcb8uHWMkMLGoTQsPcjWTdR+FaKI/Yutb1aexdQB/iztfh1y7h
+         f6gnk4xIMYqKnGKTjVRoOyAZLBaD7XCMfcxQrPbZ/2E6PfZWD0xNh90B7LAoaRrUVgdi
+         N9IkrzUteHYTV/APaLIsZKXE/wE8g62FSYg4ODdYExqz8fgLBUt+JNWyPydBYWRKSbd2
+         Pk1w==
+X-Gm-Message-State: APjAAAUZzjqCEtifav9UXYbw9+JY5ZaKLQlV7TThZ0XRWKLBXL22Xz/N
+        hFWQUyc1lLrtbU0gRTjlQqv8h8MyZOJixRVHI2qWDll/h4uN8akwgufJeKn7utQESEG0Akd5Ev5
+        L7c7nIJrF2weC1a09M2jmNSpV9Htj
+X-Received: by 2002:a24:d51:: with SMTP id 78mr1001978itx.133.1552547886931;
+        Thu, 14 Mar 2019 00:18:06 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx3tadtwe+bSiINjlA7kUxPih+uN+gRSEnEL+OTIJYnGmVIF8fK5+kfFSuBsJnCuv9SMvTQtg==
+X-Received: by 2002:a24:d51:: with SMTP id 78mr1001966itx.133.1552547886663;
+        Thu, 14 Mar 2019 00:18:06 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id z10sm6112974iol.25.2019.03.14.00.18.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 00:18:05 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Richard Genoud <richard.genoud@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: atmel_serial: fix a NULL pointer dereference
+Date:   Thu, 14 Mar 2019 02:17:59 -0500
+Message-Id: <20190314071759.18845-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   fa3d493f7a573b4e4e2538486e912093a0161c1b
-commit: 62129a0849d27cc94ced832bcf9dcde283dcbe08 iio: chemical: sps30: allow changing self cleaning period
-date:   8 weeks ago
-reproduce:
-        # apt-get install sparse
-        git checkout 62129a0849d27cc94ced832bcf9dcde283dcbe08
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+In case dmaengine_prep_dma_cyclic fails, the fix return a proper
+error code to avoid NULL pointer dereference.
 
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/iio/chemical/sps30.c:122:30: sparse: cast truncates bits from constant value (8004 becomes 4)
-
-vim +122 drivers/iio/chemical/sps30.c
-
-    91	
-    92	static int sps30_do_cmd(struct sps30_state *state, u16 cmd, u8 *data, int size)
-    93	{
-    94		/*
-    95		 * Internally sensor stores measurements in a following manner:
-    96		 *
-    97		 * PM1: upper two bytes, crc8, lower two bytes, crc8
-    98		 * PM2P5: upper two bytes, crc8, lower two bytes, crc8
-    99		 * PM4: upper two bytes, crc8, lower two bytes, crc8
-   100		 * PM10: upper two bytes, crc8, lower two bytes, crc8
-   101		 *
-   102		 * What follows next are number concentration measurements and
-   103		 * typical particle size measurement which we omit.
-   104		 */
-   105		u8 buf[SPS30_MAX_READ_SIZE] = { cmd >> 8, cmd };
-   106		int i, ret = 0;
-   107	
-   108		switch (cmd) {
-   109		case SPS30_START_MEAS:
-   110			buf[2] = 0x03;
-   111			buf[3] = 0x00;
-   112			buf[4] = crc8(sps30_crc8_table, &buf[2], 2, CRC8_INIT_VALUE);
-   113			ret = sps30_write_then_read(state, buf, 5, NULL, 0);
-   114			break;
-   115		case SPS30_STOP_MEAS:
-   116		case SPS30_RESET:
-   117		case SPS30_START_FAN_CLEANING:
-   118			ret = sps30_write_then_read(state, buf, 2, NULL, 0);
-   119			break;
-   120		case SPS30_READ_AUTO_CLEANING_PERIOD:
-   121			buf[0] = SPS30_AUTO_CLEANING_PERIOD >> 8;
- > 122			buf[1] = (u8)SPS30_AUTO_CLEANING_PERIOD;
-   123		case SPS30_READ_DATA_READY_FLAG:
-   124		case SPS30_READ_DATA:
-   125		case SPS30_READ_SERIAL:
-   126			/* every two data bytes are checksummed */
-   127			size += size / 2;
-   128			ret = sps30_write_then_read(state, buf, 2, buf, size);
-   129			break;
-   130		case SPS30_AUTO_CLEANING_PERIOD:
-   131			buf[2] = data[0];
-   132			buf[3] = data[1];
-   133			buf[4] = crc8(sps30_crc8_table, &buf[2], 2, CRC8_INIT_VALUE);
-   134			buf[5] = data[2];
-   135			buf[6] = data[3];
-   136			buf[7] = crc8(sps30_crc8_table, &buf[5], 2, CRC8_INIT_VALUE);
-   137			ret = sps30_write_then_read(state, buf, 8, NULL, 0);
-   138			break;
-   139		}
-   140	
-   141		if (ret)
-   142			return ret;
-   143	
-   144		/* validate received data and strip off crc bytes */
-   145		for (i = 0; i < size; i += 3) {
-   146			u8 crc = crc8(sps30_crc8_table, &buf[i], 2, CRC8_INIT_VALUE);
-   147	
-   148			if (crc != buf[i + 2]) {
-   149				dev_err(&state->client->dev,
-   150					"data integrity check failed\n");
-   151				return -EIO;
-   152			}
-   153	
-   154			*data++ = buf[i];
-   155			*data++ = buf[i + 1];
-   156		}
-   157	
-   158		return 0;
-   159	}
-   160	
-
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ drivers/tty/serial/atmel_serial.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index 05147fe24343..cf560d05008c 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -1237,8 +1237,10 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+ 	dma_cap_set(DMA_CYCLIC, mask);
+ 
+ 	atmel_port->chan_rx = dma_request_slave_channel(mfd_dev, "rx");
+-	if (atmel_port->chan_rx == NULL)
++	if (atmel_port->chan_rx == NULL) {
++		ret = -EINVAL;
+ 		goto chan_err;
++	}
+ 	dev_info(port->dev, "using %s for rx DMA transfers\n",
+ 		dma_chan_name(atmel_port->chan_rx));
+ 
+@@ -1257,6 +1259,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+ 
+ 	if (!nent) {
+ 		dev_dbg(port->dev, "need to release resource of dma\n");
++		ret = -EINVAL;
+ 		goto chan_err;
+ 	} else {
+ 		dev_dbg(port->dev, "%s: mapped %d@%p to %pad\n", __func__,
+@@ -1288,6 +1291,11 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+ 					 sg_dma_len(&atmel_port->sg_rx)/2,
+ 					 DMA_DEV_TO_MEM,
+ 					 DMA_PREP_INTERRUPT);
++	if (!desc) {
++		dev_err(port->dev, "Preparing DMA cyclic failed\n");
++		ret = -ENOMEM;
++		goto chan_err;
++	}
+ 	desc->callback = atmel_complete_rx_dma;
+ 	desc->callback_param = port;
+ 	atmel_port->desc_rx = desc;
+@@ -1300,7 +1308,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+ 	atmel_port->use_dma_rx = 0;
+ 	if (atmel_port->chan_rx)
+ 		atmel_release_rx_dma(port);
+-	return -EINVAL;
++	return ret;
+ }
+ 
+ static void atmel_uart_timer_callback(struct timer_list *t)
+-- 
+2.17.1
+
