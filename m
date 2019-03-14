@@ -2,94 +2,117 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5336CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9326DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C172186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:04:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="n3HGNJYm"
+	by mail.kernel.org (Postfix) with ESMTP id 5B6AB20854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552601297;
+	bh=dAwEj6hkwJVav2HocTLKe+eCNkrMI6uCPIGIBc6CxtE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=chcbIEmHy7ZQKYvLrCNCumdORUMgDRvttntwJVenF+vj7gKAvZFeNJvJUK305zmID
+	 I8IJwEsZXxTo7gf/Oy1ACyCeGnQMNVHDkV1IP7sSSFBTyJEK61V0YBYYd1jytugF6L
+	 EYfDQT8NKyfU6ZTP1vqWz6m5oxnoUb7A1VJD7QR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfCNWEi (ORCPT
+        id S1727573AbfCNWIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:04:38 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58550 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfCNWE3 (ORCPT
+        Thu, 14 Mar 2019 18:08:16 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39382 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfCNWIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:04:29 -0400
-Received: from Q.home (cpc85428-aztw29-2-0-cust223.18-1.cable.virginm.net [82.38.144.224])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D5C219C1;
-        Thu, 14 Mar 2019 23:04:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1552601067;
-        bh=tFZzDQSiins0z+FbCXBBMZ3NrS/K7HgO0KGJYiv0tQg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n3HGNJYmi+TvIYrOtdPB2E8yXCE53GwuMSUdmm7QrTOqf4cpl+uPFYajnD0TpeoFr
-         3rX6Yul9U0D5oEjgL2EsiQmmrSUBdUs9xyGL+SV3o46RNjBPSSf6aW5L38I7Vwb+7j
-         BLBbf9MF0Trtf1EtvfwbbRr79WODtuJoVKH6FAPY=
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-To:     linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>
-Cc:     linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 2/3] drm: rcar-du: crtc: make local functions static
-Date:   Thu, 14 Mar 2019 22:04:19 +0000
-Message-Id: <20190314220420.32487-3-kieran.bingham+renesas@ideasonboard.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190314220420.32487-1-kieran.bingham+renesas@ideasonboard.com>
-References: <20190314220420.32487-1-kieran.bingham+renesas@ideasonboard.com>
+        Thu, 14 Mar 2019 18:08:15 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e15so6612529otk.6;
+        Thu, 14 Mar 2019 15:08:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GXCPmTlnAZhHllNvpnoywKNTmWdgGF6QJBXrvsJXaE8=;
+        b=h1ikMsNYTsDEoicI+4CKjJplgfrTZUm+y7ZneuLBrjFMf3KlecIgL18/72vYBWD9n5
+         Qib5mPNI1xYbkx4DPLbvgJkWScl2eQ9tNiLZxBqI/UqWZofJYnUXYfE2gAk5in2OEVLN
+         Vpzy6s7TNa3gfVSYa7AXnGuMKV2djwpL2wFdwHKNHygWQU/NKEFSkoZjUZ4raILPDrsV
+         +Ix8+1y1XaKNUMC5wyfCmmPd+Puu607tmnwD/+F9Cyg2m3uLzqoHF6avYLyBg810uB3G
+         ityCgJuKXuTIC8hHxUKG7sb5b+BBOugMc/9QANHudx3BFQPexF9EzuT20LmCy+GPkhz4
+         BFTQ==
+X-Gm-Message-State: APjAAAVD+75rl/0Z4pTdl1WBPCOmDEwaaGXdAJnigjepNRCEJfUZ6cA+
+        m5qZOg9diI0zoeY6FowO1afrFx450cp77uDI/NI=
+X-Google-Smtp-Source: APXvYqzu/zUvObsbRaHCJL+Q+PS45dNc10MPZf7UO4nob5//59dzQa2seZjuSmT+LLFBKYIm3A5ClqlxeEjnAtjQhqI=
+X-Received: by 2002:a9d:4e08:: with SMTP id p8mr193749otf.124.1552601294428;
+ Thu, 14 Mar 2019 15:08:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <6369897.qxlu8PgE1t@house>
+In-Reply-To: <6369897.qxlu8PgE1t@house>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 14 Mar 2019 23:08:03 +0100
+Message-ID: <CAJZ5v0h3zLrqqMXzt_cqGV1rBR0muosZwy1Zu3fV9O1kqGc6gw@mail.gmail.com>
+Subject: Re: [PATCH] [RESEND] Do not modify perf bias performance setting by
+ default at boot
+To:     Thomas Renninger <trenn@suse.de>
+Cc:     Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>,
+        Hannes Reinecke <hare@suse.de>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Simon Schricker <sschricker@suse.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Len Brown <len.brown@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rcar_du_crtc_mode_valid() and rcar_du_crtc_get_crc_sources()
-functions are accessed only through a function pointer table.
+On Thu, Mar 14, 2019 at 3:42 PM Thomas Renninger <trenn@suse.de> wrote:
+>
+> This is a revert of mainline git commits:
+> commit b51ef52df71cb28e9d90cd1d48b79bf19f0bab06
+> commit 17edf2d79f1ea6dfdb4c444801d928953b9f98d6
+> commit abe48b108247e9b90b4c6739662a2e5c765ed114
 
-Convert the function definitions to be static to the module.
+I'm not quite convinced that reverting these is the right thing to do here.
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
----
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+> It is about this kernel message showing up on quite a lot servers:
+> [    0.072652] ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
+> [    0.076003] ENERGY_PERF_BIAS: View and update with x86_energy_perf_policy(8)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-index 4cdea14d552f..57fd5c00494b 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-@@ -761,8 +761,9 @@ static void rcar_du_crtc_atomic_flush(struct drm_crtc *crtc,
- 		rcar_du_vsp_atomic_flush(rcrtc);
- }
- 
--enum drm_mode_status rcar_du_crtc_mode_valid(struct drm_crtc *crtc,
--				   const struct drm_display_mode *mode)
-+static enum drm_mode_status
-+rcar_du_crtc_mode_valid(struct drm_crtc *crtc,
-+			const struct drm_display_mode *mode)
- {
- 	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
- 	struct rcar_du_device *rcdu = rcrtc->group->dev;
-@@ -981,8 +982,8 @@ static int rcar_du_crtc_verify_crc_source(struct drm_crtc *crtc,
- 	return 0;
- }
- 
--const char *const *rcar_du_crtc_get_crc_sources(struct drm_crtc *crtc,
--						size_t *count)
-+static const char *const *
-+rcar_du_crtc_get_crc_sources(struct drm_crtc *crtc, size_t *count)
- {
- 	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
- 
--- 
-2.19.1
+What happens on boot is a matter of convention and the convention by
+which the EPB is set to "neutral" at that point has been used for
+quite a while.  Changing it now may confuse some users or even worse.
 
+It would be fine to change the log level of these messages in my view, though.
+
+> The background afaik were some BIOS which "forgot to set a default value".
+> Certainly some (one?) broken laptop BIOS was meant, because
+> the value zero (performance) is quite a reasonable default value on server systems
+> and this is how a lot CPUs typically come up there.
+
+That depends on the expected power/perf profile of the system and the
+kernel has no information regarding that.  Arguably, user space can
+set the EPB to whatever it wants at the init time according to the
+information it has.  It is not quite realistic to expect that either
+the BIOS or the kernel will do the right thing on all systems in that
+respect anyway.
+
+> Another sever bug with above patches:
+> If you really set performance BIAS MSR value to 'performance'
+> as mentioned in kernel boot log, it is reset on next CPU offline/online cycle
+> (see below).
+
+That is a bug.  There is no reason to change the EPB on CPU
+offline/online and I agree that this needs to be fixed.  The reverts
+would make this problem go away, but that's not the only possible way
+to fix it.
+
+Moreover, what is done during system-wide resume appears to be a bug
+too.  Whatever EPB value is there during suspend should be saved and
+it should be restored during resume. Reverting the commits above will
+not fix that particular issue.
+
+Thanks,
+Rafael
