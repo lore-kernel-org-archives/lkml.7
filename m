@@ -2,109 +2,162 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E303C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04553C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574BD20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87A32077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:33:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pG1CZJNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfCNQ2P (ORCPT
+        id S1727367AbfCNQdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:28:15 -0400
-Received: from anholt.net ([50.246.234.109]:58350 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727232AbfCNQ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:28:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id B478C10A2E6A;
-        Thu, 14 Mar 2019 09:28:12 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id zNOWwDIlNz-x; Thu, 14 Mar 2019 09:28:10 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id CEAF510A27AB;
-        Thu, 14 Mar 2019 09:28:10 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 06DA52FE4653; Thu, 14 Mar 2019 09:28:10 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        david.emett@broadcom.com, thomas.spurden@broadcom.com
-Subject: Re: [PATCH 1/4] drm: Add helpers for locking an array of BO reservations.
-In-Reply-To: <CAL_Jsq+rV+yR1xUrpXmGsXuPCwZ2w_D69p-u5L9E0e3mJi7zaQ@mail.gmail.com>
-References: <20190308161716.2466-1-eric@anholt.net> <20190308161716.2466-2-eric@anholt.net> <CAL_JsqL-16kyPiWSC=pEC+JLeeJaDBJahnXqOW3Wni5CJcACsQ@mail.gmail.com> <8736nsm1tm.fsf@anholt.net> <CAL_Jsq+rV+yR1xUrpXmGsXuPCwZ2w_D69p-u5L9E0e3mJi7zaQ@mail.gmail.com>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
-Date:   Thu, 14 Mar 2019 09:28:07 -0700
-Message-ID: <87imwlwhd4.fsf@anholt.net>
+        Thu, 14 Mar 2019 12:33:35 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35630 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbfCNQdf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 12:33:35 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t13so5410591lji.2;
+        Thu, 14 Mar 2019 09:33:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ztS3gPSOsk91WZ0TgMQi1fhBIKxzKIf95VZeUdLbKwA=;
+        b=pG1CZJNS2ek4wvtl1uuDNEJCBTsRIYWzZIj8uhb8kuDaq555ts86ZKL7Woa+x+SbdS
+         51q7sgCL3xLPAe9IQCYivG+zx/70eSxb3dEoBzXbYm7sBhEhIjeLTX//Xyozi330FCRz
+         1inPxN6e3Vmo8HbwxDDLJ46A0pAVkVWsftRVsDh+X5bDZBnBAIiBCx9EDnEtzy6kQaty
+         VInk/1/bD/zOg7NhD6wl7mQKNVBsnjhv+bLI8PFtjedVVZ6I+nNtS7ZmOSMfj3eNoPIq
+         lTZQCTMZANr4l85cZkMh3pMhoC8II8LOporap94YUu92Vd2DnRM0MaotCWDNpowazQPP
+         Iysw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ztS3gPSOsk91WZ0TgMQi1fhBIKxzKIf95VZeUdLbKwA=;
+        b=dz2tgAPLNmk86uVHSRYJmCZ2nae4ra3+fAi2F8Imd64j9olaz1Qpq1CYyoZXbLooEA
+         km/jUU40nyuwdtDuwlJoNwXb/DvBQEyvb6dCnyxkd6sxLY8jksB5W8/3YI5hdYIX805x
+         NklbvuZIH68ut7TbtEN0zZQF79JlzdN3oFPxZcGkxqXKbNwjrlNFuAYdr8oehIPaGuI1
+         5QXdA1RnHT1jgkbJJnQUmRjQwqPjY8dClYYcUTpqxxitZB4+b0NkmKWNbeJT8w6vuXBp
+         CYwS+/CyoPwKH6yOnm207Gs/wgMcA34DfGJn9fti8sSqlX/qUILKBvjBSypKMic5w/mV
+         3HXQ==
+X-Gm-Message-State: APjAAAXOrlzUzZuohYRoUReOJbGSa/6BWV518CF+OlPdMpo23OjpuemM
+        T1z8UObedrlzwLbKb9efise1Ikny
+X-Google-Smtp-Source: APXvYqzS1af4ExjZJjzNtTf4uh52pCOt/7ongY5m7/hCuhFaaCBJ3lfC8gZfXRpWmK3USi8MB3aDDw==
+X-Received: by 2002:a2e:811:: with SMTP id 17mr28617088lji.42.1552581212341;
+        Thu, 14 Mar 2019 09:33:32 -0700 (PDT)
+Received: from [192.168.0.20] (6-25-94-178.pool.ukrtel.net. [178.94.25.6])
+        by smtp.gmail.com with ESMTPSA id z20sm590317lfh.66.2019.03.14.09.33.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 09:33:31 -0700 (PDT)
+Subject: Re: [Xen-devel][PATCH] xen/netfront: Remove unneeded .resume callback
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        netdev@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, jgross@suse.com,
+        sstabellini@kernel.org, davem@davemloft.net
+Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+References: <20190314131749.25706-1-andr2000@gmail.com>
+ <c87d2bfb-b029-6c18-e3ad-cb798055f761@oracle.com>
+ <6205819a-af39-8cd8-db87-f3fe047ff064@gmail.com>
+ <ecc825e6-89d3-bbd5-5243-5cc66fa93045@oracle.com>
+ <b55d4f90-100c-7a2a-9651-c99c06953465@gmail.com>
+ <09afcdca-258f-e5ca-5c31-b7fd079eb213@oracle.com>
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+Message-ID: <46fe25f2-2db7-496a-cd2c-071cd211ea50@gmail.com>
+Date:   Thu, 14 Mar 2019 18:33:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+In-Reply-To: <09afcdca-258f-e5ca-5c31-b7fd079eb213@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-Rob Herring <robh@kernel.org> writes:
-
-> On Tue, Mar 12, 2019 at 12:37 PM Eric Anholt <eric@anholt.net> wrote:
->>
->> Rob Herring <robh@kernel.org> writes:
->>
->> > On Fri, Mar 8, 2019 at 10:17 AM Eric Anholt <eric@anholt.net> wrote:
->> >>
->> >> Now that we have the reservation object in the GEM object, it's easy
->> >> to provide a helper for this common case.  Noticed while reviewing
->> >> panfrost and lima drivers.  This particular version came out of v3d,
->> >> which in turn was a copy from vc4.
->> >>
->> >> Signed-off-by: Eric Anholt <eric@anholt.net>
->> >> ---
->> >>  drivers/gpu/drm/drm_gem.c | 76 +++++++++++++++++++++++++++++++++++++++
->> >>  include/drm/drm_gem.h     |  4 +++
->> >>  2 files changed, 80 insertions(+)
->> >
->> > Sweet! I was about to go write this same patch. You are changing the
->> > license from GPL to MIT copying the v3d version, but I guess you have
->> > rights to do that.
->> >
->> > FWIW,
->> >
->> > Acked-by: Rob Herring <robh@kernel.org>
->>
->> Was this just for this one patch, or the series?  I don't think I can
->> merge without a consumer.
+On 3/14/19 17:40, Boris Ostrovsky wrote:
+> On 3/14/19 11:10 AM, Oleksandr Andrushchenko wrote:
+>> On 3/14/19 5:02 PM, Boris Ostrovsky wrote:
+>>> On 3/14/19 10:52 AM, Oleksandr Andrushchenko wrote:
+>>>> On 3/14/19 4:47 PM, Boris Ostrovsky wrote:
+>>>>> On 3/14/19 9:17 AM, Oleksandr Andrushchenko wrote:
+>>>>>> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+>>>>>>
+>>>>>> Currently on driver resume we remove all the network queues and
+>>>>>> destroy shared Tx/Rx rings leaving the driver in its current state
+>>>>>> and never signaling the backend of this frontend's state change.
+>>>>>> This leads to the number of consequences:
+>>>>>> - when frontend withdraws granted references to the rings etc. it
+>>>>>> cannot
+>>>>>>      be cleanly done as the backend still holds those (it was not
+>>>>>> told to
+>>>>>>      free the resources)
+>>>>>> - it is not possible to resume driver operation as all the
+>>>>>> communication
+>>>>>>      means with the backned were destroyed by the frontend, thus
+>>>>>>      making the frontend appear to the guest OS as functional, but
+>>>>>>      not really.
+>>>>> What do you mean? Are you saying that after resume you lose
+>>>>> connectivity?
+>>>> Exactly, if you take a look at the .resume callback as it is now
+>>>> what it does it destroys the rings etc. and never notifies the backend
+>>>> of that, e.g. it stays in, say, connected state with communication
+>>>> channels destroyed. It never goes into any other Xen bus state, so
+>>>> there is
+>>>> no way its state machine can help recovering.
+>>> My tree is about a month old so perhaps there is some sort of regression
+>>> but this certainly works for me. After resume netfront gets
+>>> XenbusStateInitWait from backend which causes xennet_connect().
+>> Ah, the difference can be of the way we get the guest enter
+>> the suspend state. I am making my guest to suspend with:
+>> echo mem > /sys/power/state
+>> And then I use an interrupt to the guest (this is a test code)
+>> to wake it up.
+>> Could you please share your exact use-case when the guest enters suspend
+>> and what you do to resume it?
 >
-> Sure, it can be for patches 1-3. Patch 4 is dependent on me sending
-> out the shmem helpers again.
+> xl save / xl restore
+>
+>> I can see no way backend may want enter XenbusStateInitWait in my
+>> use-case
+>> as it simply doesn't know we want him to.
+>
+> Yours looks like ACPI path, I don't know how well it was tested TBH.
 
-Thanks.  Pushed the first 3 now.
+Hm, so it does work for your use-case, but doesn't for mine.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+What would be the best way forward?
 
------BEGIN PGP SIGNATURE-----
+1. Implement .resume properly as, for example, block front does [1]
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlyKgRcACgkQtdYpNtH8
-nuimzA//YxkF1fkf3RwaC3JqLJkTPskb4MQRgUiWP7zcDiYl9JMhcRfBrabvkJlQ
-+iNlJUGik9s2buiaTJQl+Js/14gTzuQrQZqQg7WZeMGQ4eQNZopVUq1QtXHxuH3U
-cnYbuUzCS0q7VX1rrad5qMM9d+NjNQCRozPAsu4vMMno7x/SKVv2tUOKMcffITeq
-80ZTl3NRNN79AEsMtUv62JuvjHKaVi0aMr4lakPg/J79LI6wjeNDWl0RSHLExM7W
-8v0T8nwZd7NcIM04ddHhfnVYiYvvB2mKeRx0G4B0rLKHMQPwTO5EfgJwN019E6eh
-jLrFGt8K2bwAs7lsFLX/m4N+a7g1VwE9SM/BmW9ZuwFH16lp2d89i3RNXDNfL7Ux
-7ZtwZCH48RRN89Afqy7DUO1A5ruwXpGckkbgiIQ8MxIYP5YQr26r5Bk8JemkAjvL
-R6O8BQlc8orX2c4j1jyXYWTEq6Zb2JDkWYu+yu9zRzG+RmEZ+656VOnj0T9EQ0MT
-ZBgTdMUKxJsPRrDNkPCG7xWe1utY4qhw+E82XE7ZzO/AOoGQmSv9TOuJlzJg3tLH
-akIOHoPop/dWG3/Zdx5WxYU2YSaGR431W4Ktw8tke7Krq2UwqWtAk9rkNayDcVHS
-j5SgrBFjgg8GexoeIVEcT5eHDn8LMqWcBOz06avQ1t2/uHIAw58=
-=NkRZ
------END PGP SIGNATURE-----
---=-=-=--
+2. Remove .resume completely: this does work as long as backend doesn't 
+change anything
+
+I am still a bit unsure if we really need to re-initialize rings, 
+re-read front's config from
+
+Xenstore etc - what changes on backend side are expected when we resume 
+the front driver?
+
+>
+>
+> -boris
+
+Thank you,
+
+Oleksandr
+
+
+[1] 
+https://elixir.bootlin.com/linux/v5.0.2/source/drivers/block/xen-blkfront.c#L2072 
+
