@@ -2,146 +2,214 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA86C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D571C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E355021019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FB721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:32:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjJCru1a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfCNKaU (ORCPT
+        id S1727323AbfCNKcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:30:20 -0400
-Received: from foss.arm.com ([217.140.101.70]:41852 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726629AbfCNKaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:30:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B06D80D;
-        Thu, 14 Mar 2019 03:30:19 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A337D3F71D;
-        Thu, 14 Mar 2019 03:30:17 -0700 (PDT)
-Subject: Re: [PATCH v3] media: rga: fix NULL pointer dereferences,
- use-after-free, memory leak
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Jacob chen <jacob2.chen@rock-chips.com>,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        pakki001@umn.edu, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-References: <ff11d704-489f-836e-6c9d-1b2fb5e963b6@arm.com>
- <20190314050344.29790-1-kjlu@umn.edu>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <3471f9df-ad8e-59c8-07d4-454dcc45e480@arm.com>
-Date:   Thu, 14 Mar 2019 10:30:15 +0000
+        Thu, 14 Mar 2019 06:32:24 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36612 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726629AbfCNKcY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 06:32:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v10so4327449lji.3;
+        Thu, 14 Mar 2019 03:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7O+dLdFq/mvb4A56YlPPGJkeVTKEdQbk9vN9uHyNE4Q=;
+        b=pjJCru1auQChh1wGkQiSQg6dT++kvXxYKecbIcOv8yOmzJOiB4PUix/ryRPkMCkucZ
+         4Uywde7C6tihMsreOivvr5tNs3/UHzEblH8RfRz4jdklVNp47ETHySNEXIFQV+LpZXzK
+         wd5H4KhfA57oo5Ei0xhzHqU5wv6GjWrn+vaLjyBv7BiJuWi//BoErZjtrfIA1I7rBLAV
+         ldCBdGINorrtLfl+uTFncVBlKXsRxInAd7i2UQR6Sz56caw5tgQEwrrNS8uxnObtsxCU
+         pLK07a4/FpZOaoTRCNtgdxE3p6lmQgC16/0g9UNeBp7ObvuTX+N2TV52HtTBsw47geL9
+         3zOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7O+dLdFq/mvb4A56YlPPGJkeVTKEdQbk9vN9uHyNE4Q=;
+        b=UywaLjs+hBhoL/MgwuC3Fwnt1jJ6Vc3iquS+Ocp3UhkyfIrwclH70SWdEZiHy8H0xF
+         QMhOkxNmIoHIpAbKWkcbTdst6AUMhHZN9Q2fdUqk3WM0WQngL6HRKpg2WDD75kb/I/lO
+         pS9YfkhdA0nTwkYYC/r0a1hL9moXzYgNKv7rOkxLUyH3klVJjv29hutT0c4mGybaRhe0
+         xsR6PZT+3wav9FZHRu0cHpp/bciFTaAfSf8X/QBq8QVuspRL9KA7r2d5g3vj97ok8uhw
+         mF3XPyVch5wpF4omwdfVZrurB0SCE7bLhqdJDskaQkv3IkEo3yGxwyfH9FsYPuZHjFr6
+         SK1g==
+X-Gm-Message-State: APjAAAXjjNgR0PUBa7YhXJiiScAruB3SwFOEDY+0paTiEv7NRIX6q6Ty
+        ZnfQIvq2BcKSk1LT6TTaHUFKmM90
+X-Google-Smtp-Source: APXvYqxlEJQrNmcYdbqVe3nX2SJr7b4eg/tXhjQinFM0gfFL4crSFhmoyJ2HUSmNpjsODe4nXSXIbw==
+X-Received: by 2002:a2e:7817:: with SMTP id t23mr698044ljc.174.1552559540735;
+        Thu, 14 Mar 2019 03:32:20 -0700 (PDT)
+Received: from [192.168.1.18] (ckl5.neoplus.adsl.tpnet.pl. [83.31.87.5])
+        by smtp.gmail.com with ESMTPSA id f1sm2342330ljf.40.2019.03.14.03.32.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 03:32:20 -0700 (PDT)
+Subject: Re: [PATCH 4/4] leds: netdev trigger: allow setting initial values in
+ device tree
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20190311144227.GA4404@amd>
+ <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190313202615.22883-5-linux@rasmusvillemoes.dk>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <98fda0ee-555d-86a5-a4f1-1774271e4b6d@gmail.com>
+Date:   Thu, 14 Mar 2019 11:32:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190314050344.29790-1-kjlu@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <20190313202615.22883-5-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 05:03, Kangjie Lu wrote:
-> 1. dma_alloc_attrs, __get_free_pages can fail and return NULL.
-> Further uses of their return values lead to NULL pointer
-> dereferences
-> 
-> 2. In the error-handling path, video_unregister_device uses
-> "rga->vfd" which has been freed by video_device_release
-> 
-> 3. The error handling for v4l2_m2m_init and video_register_device
-> has memory-leak issues
-> 
-> The patch fixes the above issues.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Hi Rasmus,
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+Thank you for the patch set.
 
-Yes, that looks like it solves the issues with the clean up - thanks for
-reworking it!
+I have one comment below.
 
+On 3/13/19 9:26 PM, Rasmus Villemoes wrote:
+> It can be quite convenient to initialize a netdev-triggered LED with a
+> device name and setting the rx,tx,link properties from device tree,
+> instead of having to do that in an init script in userspace.
+> 
+> My main motivation for this is to be able to switch away from the
+> deprecated CONFIG_CAN_LEDS, so add an example based on that and add a
+> pointer in the net/can/Kconfig file.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 > ---
->  drivers/media/platform/rockchip/rga/rga.c | 26 ++++++++++++++++++++---
->  1 file changed, 23 insertions(+), 3 deletions(-)
+>   .../devicetree/bindings/leds/common.txt       | 17 ++++++++++
+>   drivers/leds/trigger/ledtrig-netdev.c         | 31 +++++++++++++++++++
+>   drivers/net/can/Kconfig                       |  3 +-
+>   3 files changed, 50 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/platform/rockchip/rga/rga.c b/drivers/media/platform/rockchip/rga/rga.c
-> index 5c653287185f..468365ceb99d 100644
-> --- a/drivers/media/platform/rockchip/rga/rga.c
-> +++ b/drivers/media/platform/rockchip/rga/rga.c
-> @@ -889,11 +889,24 @@ static int rga_probe(struct platform_device *pdev)
->  	rga->cmdbuf_virt = dma_alloc_attrs(rga->dev, RGA_CMDBUF_SIZE,
->  					   &rga->cmdbuf_phy, GFP_KERNEL,
->  					   DMA_ATTR_WRITE_COMBINE);
-> +	if (!rga->cmdbuf_virt) {
-> +		ret = -ENOMEM;
-> +		goto unreg_video_dev;
-> +	}
->  
->  	rga->src_mmu_pages =
->  		(unsigned int *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, 3);
-> +	if (!rga->src_mmu_pages) {
-> +		ret = -ENOMEM;
-> +		goto free_dma_attrs;
-> +	}
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 7cb88460a47c..4f3a97e73417 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -43,6 +43,23 @@ Optional properties for child nodes:
+>                   Documentation/ABI/testing/sysfs-class-led-trigger-netdev)
+>                   to reflect the state and activity of a net device.
+>   
+> +                The optional child node netdev can be used to
+> +                configure initial values for the link, rx, tx and
+> +                device_name properties. For example, setting
+> +                linux,default-trigger = "netdev" and adding the child
+> +                node
 > +
->  	rga->dst_mmu_pages =
->  		(unsigned int *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, 3);
-> +	if (!rga->dst_mmu_pages) {
-> +		ret = -ENOMEM;
-> +		goto free_dst_pages;
+> +                netdev {
+> +                    rx;
+> +                    tx;
+> +                    link;
+> +                    device-name = "can0";
+> +                };
+> +
+> +                can be used to replace 'linux,default-trigger =
+> +                "can0-rxtx"' that relies on the deprecated
+> +                CONFIG_CAN_LEDS.
+> +
+>   - led-pattern : Array of integers with default pattern for certain triggers.
+>                   Each trigger may parse this property differently:
+>                   - one-shot : two numbers specifying delay on and delay off (in ms),
+> diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+> index 55153a7e8433..1f7c86df1e91 100644
+> --- a/drivers/leds/trigger/ledtrig-netdev.c
+> +++ b/drivers/leds/trigger/ledtrig-netdev.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/list.h>
+>   #include <linux/module.h>
+>   #include <linux/netdevice.h>
+> +#include <linux/of.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/timer.h>
+>   #include "../leds.h"
+> @@ -395,6 +396,35 @@ static void netdev_trig_work(struct work_struct *work)
+>   			(atomic_read(&trigger_data->interval)*2));
+>   }
+>   
+> +static void netdev_trig_of_init(struct led_classdev *led_cdev,
+> +				struct led_netdev_data *trigger_data)
+> +{
+> +	struct device_node *np = led_cdev->dev->of_node;
+> +	const char *device_name;
+> +
+> +	if (!np)
+> +		return;
+> +	np = of_get_child_by_name(np, "netdev");
+> +	if (!np)
+> +		return;
+> +
+> +	if (of_property_read_bool(np, "link"))
+> +		__set_bit(NETDEV_LED_LINK, &trigger_data->mode);
+> +	if (of_property_read_bool(np, "tx"))
+> +		__set_bit(NETDEV_LED_TX, &trigger_data->mode);
+> +	if (of_property_read_bool(np, "rx"))
+> +		__set_bit(NETDEV_LED_RX, &trigger_data->mode);
+> +	if (!of_property_read_string(np, "device-name", &device_name)) {
+> +		unsigned len = strlen(device_name);
+> +
+> +		if (len < IFNAMSIZ)
+> +			set_device(trigger_data, device_name, len);
 > +	}
->  
->  	def_frame.stride = (def_frame.width * def_frame.fmt->depth) >> 3;
->  	def_frame.size = def_frame.stride * def_frame.height;
-> @@ -901,7 +914,7 @@ static int rga_probe(struct platform_device *pdev)
->  	ret = video_register_device(vfd, VFL_TYPE_GRABBER, -1);
->  	if (ret) {
->  		v4l2_err(&rga->v4l2_dev, "Failed to register video device\n");
-> -		goto rel_vdev;
-> +		goto free_pages;
->  	}
->  
->  	v4l2_info(&rga->v4l2_dev, "Registered %s as /dev/%s\n",
-> @@ -909,10 +922,17 @@ static int rga_probe(struct platform_device *pdev)
->  
->  	return 0;
->  
-> -rel_vdev:
-> -	video_device_release(vfd);
-> +free_pages:
-> +	free_pages((unsigned long)rga->src_mmu_pages, 3);
-> +free_dst_pages:
-> +	free_pages((unsigned long)rga->dst_mmu_pages, 3);
+> +	set_baseline_state(trigger_data);
+> +
+> +	of_node_put(np);
+> +}
+> +
+>   static int netdev_trig_activate(struct led_classdev *led_cdev)
+>   {
+>   	struct led_netdev_data *trigger_data;
+> @@ -418,6 +448,7 @@ static int netdev_trig_activate(struct led_classdev *led_cdev)
+>   	trigger_data->mode = 0;
+>   	atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
+>   	trigger_data->last_activity = 0;
+> +	netdev_trig_of_init(led_cdev, trigger_data);
 
-Minor comment: free_pages accepts a NULL pointer (or more precisely 0,
-since it takes an unsigned long), it just returns having done nothing.
-So there isn't actually any harm in calling free_pages unconditionally
-in the error path (since rga is initialised to all zeros). You can save
-a couple of labels in the error path using that trick.
+You want to execute this only if recently introduced flag
+LED_INIT_DEFAULT_TRIGGER is set. Please compare how
+drivers/leds/trigger/ledtrig-pattern.c uses it.
 
-Thanks,
-
-Steve
-
-> +free_dma_attrs:
-> +	dma_free_attrs(rga->dev, RGA_CMDBUF_SIZE, rga->cmdbuf_virt,
-> +		       rga->cmdbuf_phy,
-> +		       DMA_ATTR_WRITE_COMBINE);
->  unreg_video_dev:
->  	video_unregister_device(rga->vfd);
-> +	video_device_release(vfd);
->  unreg_v4l2_dev:
->  	v4l2_device_unregister(&rga->v4l2_dev);
->  err_put_clk:
+>   
+>   	led_set_trigger_data(led_cdev, trigger_data);
+>   
+> diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
+> index e0f0ad7a550a..91703a96b636 100644
+> --- a/drivers/net/can/Kconfig
+> +++ b/drivers/net/can/Kconfig
+> @@ -77,7 +77,8 @@ config CAN_LEDS
+>   	# everything that this driver is doing. This is marked as broken
+>   	# because it uses stuff that is intended to be changed or removed.
+>   	# Please consider switching to the netdev trigger and confirm it
+> -	# fulfills your needs instead of fixing this driver.
+> +	# fulfills your needs instead of fixing this driver. See e.g.
+> +	# Documentation/devicetree/bindings/leds/common.txt
+>   	depends on BROKEN
+>   	select LEDS_TRIGGERS
+>   	---help---
 > 
 
+-- 
+Best regards,
+Jacek Anaszewski
