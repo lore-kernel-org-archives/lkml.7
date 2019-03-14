@@ -2,87 +2,187 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E12DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8740FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD23213A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=uaslpedu.onmicrosoft.com header.i=@uaslpedu.onmicrosoft.com header.b="B00r3P2n"
+	by mail.kernel.org (Postfix) with ESMTP id 4D66A213A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbfCNCCs (ORCPT
+        id S1726860AbfCNCFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 22:02:48 -0400
-Received: from mail-eopbgr680086.outbound.protection.outlook.com ([40.107.68.86]:35846
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726512AbfCNCCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 22:02:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=uaslpedu.onmicrosoft.com; s=selector1-uaslpedu-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PkcRc+2i3Tf6jYzJEPFo8RaDNnBBsDNwv5NbOmj7yxQ=;
- b=B00r3P2nev6HbpVKH6yJiqKWBIvJr30icpBRHtUG8drW0FgsKdYbPp/6kqus6hpN0OkOS7VkynozpJpcUGnefZUrFjXClNqyqo4PCJsoKNkPgVDfJan6bgEZOU1rMVXT9VnMht+2jWtWXrW0Mkd9K0JXswbbs99yn2eaR+jAQHk=
-Received: from BL0PR16MB2148.namprd16.prod.outlook.com (52.132.27.151) by
- BL0PR16MB2500.namprd16.prod.outlook.com (20.177.147.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Thu, 14 Mar 2019 02:02:46 +0000
-Received: from BL0PR16MB2148.namprd16.prod.outlook.com
- ([fe80::50d3:eacc:5120:a367]) by BL0PR16MB2148.namprd16.prod.outlook.com
- ([fe80::50d3:eacc:5120:a367%5]) with mapi id 15.20.1686.021; Thu, 14 Mar 2019
- 02:02:46 +0000
-From:   LUIS EDUARDO CEPEDA CABRERA <A228663@alumnos.uaslp.mx>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE,
-Thread-Topic: RE,
-Thread-Index: AQHU2fd10GFd282LGEGSrydo6znFHA==
-Date:   Wed, 13 Mar 2019 23:49:55 +0000
-Message-ID: <BL0PR16MB214802BFCC7E4FBF309CC6B3994A0@BL0PR16MB2148.namprd16.prod.outlook.com>
-Reply-To: "miz.sharifahahmadmustahfa@gmail.com" 
-          <miz.sharifahahmadmustahfa@gmail.com>
-Accept-Language: es-MX, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0205.eurprd07.prod.outlook.com
- (2603:10a6:802:3f::29) To BL0PR16MB2148.namprd16.prod.outlook.com
- (2603:10b6:207:3e::23)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [88.80.131.183]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 559b50ba-4700-4d04-3925-08d6a80e980b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BL0PR16MB2500;
-x-ms-traffictypediagnostic: BL0PR16MB2500:
-x-microsoft-antispam-prvs: <BL0PR16MB2500BBA6734D382F43E0B70A994B0@BL0PR16MB2500.namprd16.prod.outlook.com>
-x-forefront-prvs: 09760A0505
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(366004)(396003)(376002)(136003)(199004)(189003)(476003)(43066004)(25786009)(478600001)(72206003)(14454004)(53346004)(169323002)(6666004)(71200400001)(4270600006)(256004)(486006)(99286004)(2860700004)(71190400001)(5003540100003)(68736007)(3480700005)(66806009)(5660300002)(74482002)(97736004)(2501003)(53936002)(86362001)(8676002)(7736002)(8936002)(74316002)(81156014)(7116003)(8796002)(9686003)(81166006)(5640700003)(305945005)(55016002)(558084003)(221173001)(66066001)(105586002)(786003)(106356001)(33656002)(2906002)(26005)(6346003)(186003)(6506007)(386003)(6916009)(3846002)(6116002)(2351001)(6436002)(102836004)(22416003)(7696005)(316002)(52116002)(52536014)(171493001)(231573002);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR16MB2500;H:BL0PR16MB2148.namprd16.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: alumnos.uaslp.mx does not
- designate permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=A228663@alumnos.uaslp.mx; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bYtIaabc9nkwoTxwaZhtKP5B22H1k5B8O9EUh0ISQnWGWzLU1C8USR6iICqd4dcmyePkYR0yCD+L0nYdcV8qOaqeCG07QTVbtFdhc/LiEK1zum/aP2DdNPqjaQIYwiIbj+8po+eEdIrPvYhyRBojNhmeHeQbe1LsImG8kft5lpfXbUruI/dztb/5sbiwGNCYr9weN+AoDH4WiasOdk8HhbyCu17N0NE2hFA1vxGnZzJK6Hozbea76ZXOOXNUp8qaiun69gz82340qHaB57q7Zo6iiQFRKwy0DKk4Uuf35CBNWfDHhS8cDH1cfAbJkGV1IK6Qwfd3Zr5tpglJp7BbZLiRwnF9ZD7E2YG59OjzcWfKuRRskTh6o7UBFMMq2J1l52ZgA+O12/W1aRhYBz3skev9vfiDc2Ibvg00XbC5KmU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <524A3D1F432CD944957432C29EF76CD5@namprd16.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 Mar 2019 22:05:22 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:19450 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726487AbfCNCFW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 22:05:22 -0400
+X-UUID: f58ab9f435b946b18ad59d55f4068951-20190314
+X-UUID: f58ab9f435b946b18ad59d55f4068951-20190314
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1609118935; Thu, 14 Mar 2019 10:05:18 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 14 Mar
+ 2019 10:05:16 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 14 Mar 2019 10:05:14 +0800
+Message-ID: <1552529114.10179.113.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        "Badhri Jagan Sridharan" <badhri@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 14 Mar 2019 10:05:14 +0800
+In-Reply-To: <0c3ca095-9077-0b9d-839f-61ebc066e3f9@redhat.com>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+         <1552282383.10179.21.camel@mhfsdcap03>
+         <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+         <1552360688.10179.55.camel@mhfsdcap03>
+         <464f1021-4c5e-9137-489d-65fd578575d3@redhat.com>
+         <1552472109.10179.103.camel@mhfsdcap03>
+         <0c3ca095-9077-0b9d-839f-61ebc066e3f9@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-X-OriginatorOrg: alumnos.uaslp.mx
-X-MS-Exchange-CrossTenant-Network-Message-Id: 559b50ba-4700-4d04-3925-08d6a80e980b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2019 23:49:55.5226
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 60681658-0f2d-4a4e-aaf1-6fd5f2dba33f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR16MB2500
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
+On Wed, 2019-03-13 at 11:18 +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 3/13/19 11:15 AM, Chunfeng Yun wrote:
+> > Hi,
+> > On Tue, 2019-03-12 at 13:45 +0100, Hans de Goede wrote:
+> >> Hi,
+> >> On 12-03-19 04:18, Chunfeng Yun wrote:
+> >>> Hi,
+> >>> On Mon, 2019-03-11 at 09:06 +0100, Hans de Goede wrote:
+> >>>> Hi,
+> >>>>
+> >>>> On 11-03-19 06:33, Chunfeng Yun wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+> >>>>>> Hi,
+> >>>>>>
+> >>>>>> On 08-03-19 07:13, Chunfeng Yun wrote:
+> >>>>>>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+> >>>>>>> usb-b-connector
+> >>>>>>>
+> >>>>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> >>>>>>> ---
+> >>>>>>>      .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+> >>>>>>>      1 file changed, 10 insertions(+)
+> >>>>>>>
+> >>>>>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>>>>>> index a9a2f2fc44f2..7a07b0f4f973 100644
+> >>>>>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>>>>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>>>>>> @@ -17,6 +17,16 @@ Optional properties:
+> >>>>>>>      - self-powered: Set this property if the usb device that has its own power
+> >>>>>>>        source.
+> >>>>>>>      
+> >>>>>>> +Optional properties for usb-b-connector:
+> >>>>>>> +- id-gpios: gpio for USB ID pin.
+> >>>>>>
+> >>>>>> What about boards where the ID pin is *not* connected to a GPIO,
+> >>>>>> but e.g. to a special pin on the PMIC which can also detect
+> >>>>>> an ACA adapter ? Currently this case is handled by extcon
+> >>>>>> drivers, but we have no way to set e.g. vbus-supply for the
+> >>>>>> connector. Maybe in this case the usb-connector node should
+> >>>>>> be a child of the PMIC node ?
+> >>>>> Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> >>>>
+> >>>> Ok, then I think this should be documented too.
+> >>>>
+> >>>>>> And in many cases there also is a mux to switch the datalines
+> >>>>>> between the host and device(gadget) controllers, how should
+> >>>>>> that be described in this model?  See the new usb-role-switch
+> >>>>>> code under drivers/usb/roles
+> >>>>>>
+> >>>>>> In some cases the mux is controlled through a gpio, so we
+> >>>>>> may want to add a "mux-gpios" here in which case we also
+> >>>>>> need to define what 0/1 means.
+> >>>>> I'm not sure, the mux seems not belong to this connector,
+> >>>>> and may need another driver to register usb-role-switch,
+> >>>>> similar to:
+> >>>>>
+> >>>>> [v2,2/2] usb: typec: add typec switch via GPIO control
+> >>>>> https://patchwork.kernel.org/patch/10834327/
+> >>>>
+> >>>> Right the mux/role-switch will need a driver, but the "owner"
+> >>>> of the usb_connector, e.g. the PMIC or the owner of the
+> >>>> id GPIO pin needs to know which device is the role-switch so
+> >>>> that it can set the role correctly based on the id-pin.
+> >>>>
+> >>>> Your binding already contains Vbus info, allowing the owner
+> >>>> of the usb_connector to enable/disable Vbus based on the id-pin,
+> >>>> but the owner will also be responsible for setting the role-switch.
+> >>> In this patch series, I make usb_connector driver enable/disable Vbus,
+> >>> but not the parent(USB controller) of usb_connector which registers a
+> >>> usb-role-switch, which way do you think it is better?
+> >>
+> >> IMHO there should not be a driver for the usb_connector child-node,
+> >> only for the parent-device of that child-node.
+> > If so, each USB controller driver should process this special case by
+> > itself when use a gpio to detect the status of ID pin, it's not a
+> > friendly way. And it's easy by using extcon-usb-gpio driver before, so
+> > we also want to provide a simple way when support usb_connector, no
+> > matter what method we choose.
+> > 
+> > Ideally, the only one thing that USB controller driver need to do, just
+> > register a usb-role-switch, and leave decision when switch the role to
+> > other drivers, such as type-C, PMIC/charger, also include gpio
+> > 
+> >>
+> >> There are going to be too many specific setups surrounding PMICs to
+> >> be able to do a single generic driver for the connector.
+> >>
+> > Fortunately, these patches only focus on the simplest gpio driven role
+> > switch :)
+> 
+> In that case there should be an extra compatible added to the
+> usb_b_connector node to which the "simple gpio" driver binds,
+> so that not all devicetree-s declaring a usb_b_connector child-node
+> automatically get that driver bound, 
+Yes
+> and the gpio / vbus
+> properties should be mandatory properties for usb_b_connector
+> child nodes declaring the extra compatible, rather then being
+> optional for the generic compatible.
+At least one of id-gpios and vbus-gpios should exist, so both of them
+are optional, of course if only vbus-gpios exists, then only device mode
+is supported, in this case vbus is also optional.
 
- i have a deal for you, can we work together ?
+> 
+> Regards,
+> 
+> Hans
+> 
+
+
