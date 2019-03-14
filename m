@@ -2,83 +2,69 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E798C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF050C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A09320854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7815D20854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:04:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hL5caiKC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727760AbfCNWCe (ORCPT
+        id S1727911AbfCNWE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:02:34 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:18400 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfCNWCe (ORCPT
+        Thu, 14 Mar 2019 18:04:28 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58524 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfCNWE1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:02:34 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2EM2Ruo092182;
-        Fri, 15 Mar 2019 07:02:27 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
- Fri, 15 Mar 2019 07:02:27 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2EM2Msb092156
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 15 Mar 2019 07:02:27 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH 1/2] elf: simpler check for -EEXIST
-To:     Alexey Dobriyan <adobriyan@gmail.com>, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>
-References: <20190314204208.GA18143@avx2>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <52458645-823f-825e-660f-7b01d5dbb979@i-love.sakura.ne.jp>
-Date:   Fri, 15 Mar 2019 07:02:23 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Thu, 14 Mar 2019 18:04:27 -0400
+Received: from Q.home (cpc85428-aztw29-2-0-cust223.18-1.cable.virginm.net [82.38.144.224])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1FE3531C;
+        Thu, 14 Mar 2019 23:04:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1552601065;
+        bh=ntGQrEGiZvFjVkrEnllKcuJUJORdnkm5UhhS/7AHqLs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hL5caiKC4uRDjp9ihOKkIAvg96gfKxq9DlZIxnUghteoI5HDBl4FhXJzCT8I0iSop
+         jwQK9ydS84J1rCQeV5OCyW6ECJem8rSWR7cTKg9WRvsXHAPrjDdF4CI4x73b8GxJh5
+         J6vHpTI5nSblsBeHrfKawQrIyd6K1um94N3lSD7Q=
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>
+Cc:     linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH 0/3] drm: rcar-du: Cleanup minor CRTC issues
+Date:   Thu, 14 Mar 2019 22:04:17 +0000
+Message-Id: <20190314220420.32487-1-kieran.bingham+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20190314204208.GA18143@avx2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/03/15 5:42, Alexey Dobriyan wrote:
-> 	PTR_ERR((void *)map_addr) == -EEXIST
-> 
-> is a very complicated way of doing the obvious.
+Three fairly trivial cleanup patches from while I've been working on the CRTC
+code on rcar-du.
 
-Michal suggested me to explicitly use PTR_ERR() for documentation purpose in
-a reply mail to https://lkml.kernel.org/r/20180418115546.GZ17484@dhcp22.suse.cz .
+The first is a small spelling error in the drm_crtc_state documentation, and
+the following two are more directly cleaning up the rcar-du.
 
-> 
-> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-> ---
-> 
->  fs/binfmt_elf.c |    3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -375,8 +375,7 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
->  	} else
->  		map_addr = vm_mmap(filep, addr, size, prot, type, off);
->  
-> -	if ((type & MAP_FIXED_NOREPLACE) &&
-> -	    PTR_ERR((void *)map_addr) == -EEXIST)
-> +	if ((type & MAP_FIXED_NOREPLACE) && map_addr == -EEXIST)
->  		pr_info("%d (%s): Uhuuh, elf segment at %px requested but the memory is mapped already\n",
->  			task_pid_nr(current), current->comm, (void *)addr);
->  
-> 
+Kieran Bingham (3):
+  drm: fix subtle spelling error in drm_crtc_state
+  drm: rcar-du: crtc: make local functions static
+  drm: rcar-du: Remove unused prototypes
+
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 9 +++++----
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.h | 2 --
+ include/drm/drm_crtc.h                 | 2 +-
+ 3 files changed, 6 insertions(+), 7 deletions(-)
+
+-- 
+2.19.1
 
