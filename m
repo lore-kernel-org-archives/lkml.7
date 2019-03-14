@@ -2,169 +2,142 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3388EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E24C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE6D21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADCA221872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:41:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S4NoNGHE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d/ugr/WM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbfCOIk3 (ORCPT
+        id S1728583AbfCOIli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 04:40:29 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:44442 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbfCOIk3 (ORCPT
+        Fri, 15 Mar 2019 04:41:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35810 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbfCOIli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 04:40:29 -0400
-Received: by mail-qk1-f202.google.com with SMTP id o135so7091382qke.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 01:40:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=pR0KAN04rDrjuE3pJFEcF5PnQMmGJN54eEK3B2smnDE=;
-        b=S4NoNGHE2ixktwrfB/xyV6+IIJV5vX+BEDb52B5dXqKuPIJ3b57dS0+USlMf1qoQb9
-         1ZhXNpdnvzxvfCFxUpFOfuE9ZixjKbq7xY7SeUcPaxXMf15mBZQxXP1USCAi6SyiZH3Y
-         oNdxna9tLl4R7mLW2uO+cV32hEqCOLdUm8zkt993LTeAh08dtnhO+GP0R4mnN9MkCsXY
-         /+BYi35mBELuRwc7wqLQx+3CmXu4ir0Ybevp8+vL1NRwf65fSyqlq1THFU6Z3RqgF9q4
-         dx5+mgYtRz/hyvhPl9STdnch18Zt8zIXSmJ3UoKmKh7wxCaQvX6kvFe5Fw9IJ5ewdFQd
-         k+pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=pR0KAN04rDrjuE3pJFEcF5PnQMmGJN54eEK3B2smnDE=;
-        b=EA5qfsFv0aJHAXMeeObbTmMhVIEYIa28U4fCv4ZZoLkV3HBX88skWBuoINGKElb9mm
-         EL23Wc3TxRaHcxiuw3vMXzkA7MmiAPjoH+NUu68HGHzSowaBy20v92+uq0CNb3R7v6ud
-         GbdpDzRvD0H4GW6j/+qoibyTiwcJSXtfffzK8mwH/5OE1jUDjF8fWiaSOVDiQMDwNLkY
-         GrqlDnXhBx0ty0rl55L+c2tiBryOGZ85995Qfigdg7NafnChcsoZkTwX+cAU7kJlI+lM
-         XzpqP0OLFSrOnBlvBTKsQt/yagFooHqHTECgUVoRUX1bAjf6iv8rkgzPcWiLj6puyfJr
-         duyw==
-X-Gm-Message-State: APjAAAWFIDb610kunMr6e0OrSxWtjdHR0kLkGy5CWIDVbW+AMoXzszSM
-        J6H2utrfUfM+svZUusvF0gOac3nE+fjo
-X-Google-Smtp-Source: APXvYqzmTWpYkcda5eroDyGmyMTjXGPj3aN4zeVRpgKU0t+wIXcU3pxtggTG6+lmt8m7BjnvxF56Tb+bRrIB
-X-Received: by 2002:a0c:c387:: with SMTP id o7mr1100852qvi.20.1552639227824;
- Fri, 15 Mar 2019 01:40:27 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 16:40:21 +0800
-In-Reply-To: <20190128072948.45788-1-linfish@google.com>
-Message-Id: <20190315084021.3572-1-linfish@google.com>
-Mime-Version: 1.0
-References: <20190128072948.45788-1-linfish@google.com>
-X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
-Subject: [PATCH v4] Add following V4L2 QP parameters for H.264:  *
- V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP  * V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP
-  * V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP  * V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP
-From:   Fish Lin <linfish@google.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Keiichi Watanabe <keiichiw@chromium.org>,
-        Smitha T Murthy <smitha.t@samsung.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fish Lin <linfish@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Mar 2019 04:41:38 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2F8XnFv196341;
+        Fri, 15 Mar 2019 08:41:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=Dw9O8I0mbLzOg3P3StcznEayWoZXR2LVAOinKFeWrdw=;
+ b=d/ugr/WMbuwh9izeynCKt6XeHyaz+p+o7SqjSxTwQqSGQFMLn74vaToI0/RwY7oUBros
+ 4dtWZ6G2vSeTaRRH4Z0PiTVzUt2tDPVqTcpC/WzlrsmVfPFzR0cO1s0fwx5XUra+hojP
+ VQi7j3S7C2bDHwuwNeJ8aXneWhUyvbPjFKrPRhcAekJobkC9z400lAb/vVWw0WgEhH/6
+ hwZ+Pa2u8VoIxWaaQCRi/d0+qBI195nwqLCHU4L8Vaislf9rXal+htPuuLqTC9meAgoO
+ u0ddn0xurxxiC0bqqZkpW5g20jtotQdDejv92ExCQDpKTZ0fVZSjaxE9JzTEegNn5Vfm 3Q== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by userp2120.oracle.com with ESMTP id 2r464rwbf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Mar 2019 08:41:24 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2F8fNIM022859
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Mar 2019 08:41:24 GMT
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2F8fNmn001336;
+        Fri, 15 Mar 2019 08:41:23 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 15 Mar 2019 08:41:22 +0000
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>
+Subject: [PATCH 1/2] acpi_pm: Fix bootup softlockup due to PMTMR counter read contention
+Date:   Thu, 14 Mar 2019 16:42:11 +0800
+Message-Id: <1552552932-21821-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9195 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=1 spamscore=0 clxscore=1011
+ lowpriorityscore=1 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903150064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These controls will limit QP range for intra and inter frame,
-provide more manual control to improve video encode quality.
+During bootup stage of a large system with many CPUs, with nohpet, PMTMR
+is temporarily selected as the clock source which can lead to a softlockup
+because of the following reasons:
+ 1) There is a single PMTMR counter shared by all the CPUs.
+ 2) PMTMR counter reading is a very slow operation.
 
-Signed-off-by: Fish Lin <linfish@google.com>
+At bootup stage tick device is firstly initialized in periodic mode and
+then switch to one-shot mode when a high resolution clocksource is
+initialized. Between clocksoure initialization and switching to one-shot
+mode, there is small window where timer interrupt triggers.
+
+Due to PMTMR read contention, the 1ms(HZ=1000) interval isn't enough
+for all the CPUs to process timer interrupt in periodic mode.
+Then CPUs are busy processing interrupt one by one without a break,
+tick_clock_notify() have no chance to be called and we never switch
+to one-shot mode. Finally the system may crash because of a NMI
+watchdog soft lockup, logs:
+
+[   20.181521] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff,
+max_idle_ns: 2085701024 ns
+[   44.273786] BUG: soft lockup - CPU#48 stuck for 23s! [swapper/48:0]
+[   44.279992] BUG: soft lockup - CPU#49 stuck for 23s! [migration/49:307]
+[   44.285169] BUG: soft lockup - CPU#50 stuck for 23s! [migration/50:313]
+
+In one-shot mode, the contention is still there but next event is always
+set with a future value. We may missed some ticks, but the timer code is
+smart enough to pick up those missed ticks.
+
+By moving tick_clock_notify() into stop_machine, kernel changes to one-shot
+mode early before the contention accumulate and lockup system.
+
+This patch also address the same issue of commit f99fd22e4d4b ("x86/hpet:
+Reduce HPET counter read contention") in a simple way, so that commit could
+be reverted.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Tested-by: Kin Cho <kin.cho@oracle.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Srinivas Eeda <srinivas.eeda@oracle.com>
 ---
-Changelog since v3:
-- Put document in ext-ctrls-codec.rst instead of extended-controls.rst
-  (which was previous version).
+ kernel/time/timekeeping.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changelog since v2:
-- Add interaction with V4L2_CID_MPEG_VIDEO_H264_MIN/MAX_QP
-  description in the document.
-
-Changelog since v1:
-- Add description in document.
-
- .../media/uapi/v4l/ext-ctrls-codec.rst        | 24 +++++++++++++++++++
- drivers/media/v4l2-core/v4l2-ctrls.c          |  4 ++++
- include/uapi/linux/v4l2-controls.h            |  6 +++++
- 3 files changed, 34 insertions(+)
-
-diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-index c97fb7923be5..de60b2e788eb 100644
---- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-@@ -1048,6 +1048,30 @@ enum v4l2_mpeg_video_h264_entropy_mode -
-     Quantization parameter for an B frame for H264. Valid range: from 0
-     to 51.
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index f986e19..815c92d 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1378,6 +1378,7 @@ static int change_clocksource(void *data)
  
-+``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP (integer)``
-+    Minimum quantization parameter for H264 I frame, to limit I frame
-+    quality in a range. Valid range: from 0 to 51. If
-+    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization parameter
-+    should be chosen to meet both requirements.
-+
-+``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP (integer)``
-+    Maximum quantization parameter for H264 I frame, to limit I frame
-+    quality in a range. Valid range: from 0 to 51. If
-+    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization parameter
-+    should be chosen to meet both requirements.
-+
-+``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP (integer)``
-+    Minimum quantization parameter for H264 P frame, to limit P frame
-+    quality in a range. Valid range: from 0 to 51. If
-+    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization parameter
-+    should be chosen to meet both requirements.
-+
-+``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP (integer)``
-+    Maximum quantization parameter for H264 P frame, to limit P frame
-+    quality in a range. Valid range: from 0 to 51. If
-+    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization parameter
-+    should be chosen to meet both requirements.
-+
- ``V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP (integer)``
-     Quantization parameter for an I frame for MPEG4. Valid range: from 1
-     to 31.
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index b79d3bbd8350..115fb8debe23 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -828,6 +828,10 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION:
- 								return "H264 Constrained Intra Pred";
- 	case V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET:	return "H264 Chroma QP Index Offset";
-+	case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP:		return "H264 I-Frame Minimum QP Value";
-+	case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP:		return "H264 I-Frame Maximum QP Value";
-+	case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP:		return "H264 P-Frame Minimum QP Value";
-+	case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP:		return "H264 P-Frame Maximum QP Value";
- 	case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:		return "MPEG4 I-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP:		return "MPEG4 P-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP:		return "MPEG4 B-Frame QP Value";
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 06479f2fb3ae..4421baa84177 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -535,6 +535,12 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type {
- #define V4L2_CID_MPEG_VIDEO_H264_HIERARCHICAL_CODING_LAYER_QP	(V4L2_CID_MPEG_BASE+382)
- #define V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION	(V4L2_CID_MPEG_BASE+383)
- #define V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET		(V4L2_CID_MPEG_BASE+384)
-+
-+#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP	(V4L2_CID_MPEG_BASE+390)
-+#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP	(V4L2_CID_MPEG_BASE+391)
-+#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP	(V4L2_CID_MPEG_BASE+392)
-+#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP	(V4L2_CID_MPEG_BASE+393)
-+
- #define V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP	(V4L2_CID_MPEG_BASE+400)
- #define V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP	(V4L2_CID_MPEG_BASE+401)
- #define V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP	(V4L2_CID_MPEG_BASE+402)
+ 	write_seqcount_end(&tk_core.seq);
+ 	raw_spin_unlock_irqrestore(&timekeeper_lock, flags);
++	tick_clock_notify();
+ 
+ 	return 0;
+ }
+@@ -1396,7 +1397,6 @@ int timekeeping_notify(struct clocksource *clock)
+ 	if (tk->tkr_mono.clock == clock)
+ 		return 0;
+ 	stop_machine(change_clocksource, clock, NULL);
+-	tick_clock_notify();
+ 	return tk->tkr_mono.clock == clock ? 0 : -1;
+ }
+ 
 -- 
-2.21.0.360.g471c308f928-goog
+1.8.3.1
 
