@@ -2,144 +2,191 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0B7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7984C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B63A217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E783217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfCNGuR (ORCPT
+        id S1726799AbfCNGxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:50:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:41975 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbfCNGuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:50:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 23:50:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,477,1544515200"; 
-   d="scan'208";a="131528971"
-Received: from xy-skl-4s.sh.intel.com ([10.239.48.75])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Mar 2019 23:50:11 -0700
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
-        Kyle Huey <khuey@kylehuey.com>, Chao Gao <chao.gao@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] kvm/x86/vmx: switch MSR_MISC_FEATURES_ENABLES between host and guest
-Date:   Thu, 14 Mar 2019 14:38:58 +0800
-Message-Id: <20190314063858.18292-1-xiaoyao.li@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 14 Mar 2019 02:53:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54844 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726582AbfCNGxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 02:53:24 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2E6nIi8117151
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:53:23 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r7fmx5e97-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:53:23 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 14 Mar 2019 06:53:19 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Mar 2019 06:53:14 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2E6rEme22806776
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 Mar 2019 06:53:14 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC306A4040;
+        Thu, 14 Mar 2019 06:53:13 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39914A405D;
+        Thu, 14 Mar 2019 06:53:13 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.84])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 14 Mar 2019 06:53:13 +0000 (GMT)
+Date:   Thu, 14 Mar 2019 08:53:11 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] RISC-V: Allow booting kernel from any 4KB aligned
+ address
+References: <20190312220752.128141-1-anup.patel@wdc.com>
+ <20190312220752.128141-4-anup.patel@wdc.com>
+ <20190313183121.GB28630@rapoport-lnx>
+ <CAAhSdy1mrV2CakS0cfOY8F1B7uH_yXjO3W-CiMUcYonkRnVbeQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhSdy1mrV2CakS0cfOY8F1B7uH_yXjO3W-CiMUcYonkRnVbeQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19031406-0012-0000-0000-000003026CCF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031406-0013-0000-0000-0000213995A9
+Message-Id: <20190314065311.GC24380@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-14_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903140046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CPUID Faulting is a feature about CPUID instruction. When CPUID Faulting is
-enabled, all execution of the CPUID instruction outside system-management
-mode (SMM) cause a general-protection (#GP) if the CPL > 0.
+On Thu, Mar 14, 2019 at 02:36:01AM +0530, Anup Patel wrote:
+> On Thu, Mar 14, 2019 at 12:01 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >
+> > On Tue, Mar 12, 2019 at 10:08:22PM +0000, Anup Patel wrote:
+> > > Currently, we have to boot RISCV64 kernel from a 2MB aligned physical
+> > > address and RISCV32 kernel from a 4MB aligned physical address. This
+> > > constraint is because initial pagetable setup (i.e. setup_vm()) maps
+> > > entire RAM using hugepages (i.e. 2MB for 3-level pagetable and 4MB for
+> > > 2-level pagetable).
+> > >
+> > > Further, the above booting contraint also results in memory wastage
+> > > because if we boot kernel from some <xyz> address (which is not same as
+> > > RAM start address) then RISCV kernel will map PAGE_OFFSET virtual address
+> > > lineraly to <xyz> physical address and memory between RAM start and <xyz>
+> > > will be reserved/unusable.
+> > >
+> > > For example, RISCV64 kernel booted from 0x80200000 will waste 2MB of RAM
+> > > and RISCV32 kernel booted from 0x80400000 will waste 4MB of RAM.
+> > >
+> > > This patch re-writes the initial pagetable setup code to allow booting
+> > > RISV32 and RISCV64 kernel from any 4KB (i.e. PAGE_SIZE) aligned address.
+> > >
+> > > To achieve this:
+> > > 1. We map kernel, dtb and only some amount of RAM (few MBs) using 4KB
+> > >    mappings in setup_vm() (called from head.S)
+> > > 2. Once we reach paging_init() (called from setup_arch()) after
+> > >    memblock setup, we map all available memory banks using 4KB
+> > >    mappings and memblock APIs.
+> >
+> > I'm not really familiar with RISC-V, but my guess would be that you'd get
+> > worse TLB performance with 4KB mappings. Not mentioning the amount of
+> > memory required for the page table itself.
+> 
+> I agree we will see a hit in TLB performance due to 4KB mappings.
+> 
+> To address this we can create, 2MB (or 4MB on 32bit system) mappings
+> whenever load_pa is aligned to it otherwise we prefer 4KB mappings. In other
+> words, we create bigger mappings whenever possible and fallback to 4KB
+> mappings when not possible.
+> 
+> This way if kernel is booted from 2MB (or 4MB) aligned address then we will
+> see good TLB performance for kernel addresses. Also, users are still free to
+> boot Linux RISC-V kernel from any 4KB aligned address.
+> 
+> Of course, we will have to document this as part of Linux RISC-V booting
+> requirements under Documentation/ (which does not exist currently).
+> 
+> >
+> > If the only goal is to utilize the physical memory below the kernel, it
+> > simply should not be reserved at the first place, something like:
+> 
+> Well, our goal was two-fold:
+> 
+> 1. We wanted to unify boot-time alignment requirements for 32bit and
+> 64bit RISC-V systems
 
-About this feature, detailed information can be found at
-https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
+Can't they both start from 4MB aligned address provided the memory below
+the kernel can be freed?
 
-There is an issue that current kvm doesn't switch the value of
-MSR_MISC_FEATURES_ENABLES between host and guest. If MSR_MISC_FEATURES_ENABLES
-exists on the hardware cpu, and host enables CPUID faulting (setting the bit 0
-of MSR_MISC_FEATURES_ENABLES), it will impact the guest's behavior because
-cpuid faulting is enabled by host and passed to guest.
+> 2. Save memory by allowing users to place kernel just after the runtime
+> firmware at starting of RAM.
 
-From my tests, when host enables cpuid faulting, it causes guest boot failure
-when guest uses *modprobe* to load modules. Below is the error log:
+If the firmware should be alive after kernel boot, it's memory is the only
+part that should be reserved below the kernel. Otherwise, the entire region
+<physical memory start> - <kernel start> can be free.
 
-[    1.233556] traps: modprobe[71] general protection fault ip:7f0077f6495c sp:7ffda148d808 error:0 in ld-2.17.so[7f0077f4d000+22000]
-[    1.237780] traps: modprobe[73] general protection fault ip:7fad5aba095c sp:7ffd36067378 error:0 in ld-2.17.so[7fad5ab89000+22000]
-[    1.241930] traps: modprobe[75] general protection fault ip:7f3edb89495c sp:7fffa1a81308 error:0 in ld-2.17.so[7f3edb87d000+22000]
-[    1.245998] traps: modprobe[77] general protection fault ip:7f91d670895c sp:7ffc25fa7f38 error:0 in ld-2.17.so[7f91d66f1000+22000]
-[    1.250016] traps: modprobe[79] general protection fault ip:7f0ddbbdc95c sp:7ffe9c34f8d8 error:0 in ld-2.17.so[7f0ddbbc5000+22000]
-
-*modprobe* calls CPUID instruction thus causing cpuid faulting in guest.
-At the end, because guest cannot *modprobe* modules, it boots failure.
-
-This patch switches MSR_MISC_FEATURES_ENABLES between host and guest when
-hardware has this MSR.
-
-This patch doesn't confict with the commit db2336a80489 ("KVM: x86: virtualize
-cpuid faulting"), which provides a software emulation of cpuid faulting for
-x86 arch. Below analysing how cpuid faulting will work after applying this patch:
-
-1. If host cpu is AMD. It doesn't have MSR_MISC_FEATURES_ENABLES, so we can just
-use the software emulation of cpuid faulting.
-
-2. If host cpu is Intel and it doesn't have MSR_MISC_FEATURES_ENABLES. The same
-as case 1, we can just use the software emulation of cpuid faulting.
-
-3. If host cpu is Intel and it has MSR_MISC_FEATURES_ENABLES. With this patch,
-it will write guest's value into MSR_MISC_FEATURES_ENABLES when vm entry.
-If guest enables cpuid faulting and when guest calls CPUID instruction with
-CPL > 0, it will cause #GP exception in guest instead of VM exit because of
-CPUID, thus it doesn't go to the kvm emualtion path but ues the hardware
-feature. Also it's a benefit that we needn't use VM exit to inject #GP to
-emulate cpuid faulting feature.
-
-Intel SDM vol3.25.1.1 specifies the priority between cpuid faulting
-and CPUID instruction.
-
-Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
----
- arch/x86/kvm/vmx/vmx.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 30a6bcd735ec..90707fae688e 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6321,6 +6321,23 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
- 					msrs[i].host, false);
- }
+Using 4K pages for the swapper_pg_dir is quite a change and I'm not
+convinced its really justified.
  
-+static void atomic_switch_msr_misc_features_enables(struct kvm_vcpu *vcpu)
-+{
-+	u64 host_msr;
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+
-+	/* if MSR MISC_FEATURES_ENABLES doesn't exist on the hardware, do nothing*/
-+	if (rdmsrl_safe(MSR_MISC_FEATURES_ENABLES, &host_msr))
-+		return;
-+
-+	if (host_msr == vcpu->arch.msr_misc_features_enables)
-+		clear_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES);
-+	else
-+		add_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES,
-+				      vcpu->arch.msr_misc_features_enables,
-+				      host_msr, false);
-+}
-+
- static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
- {
- 	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-@@ -6562,6 +6579,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	atomic_switch_perf_msrs(vmx);
- 
-+	atomic_switch_msr_misc_features_enables(vcpu);
-+
- 	vmx_update_hv_timer(vcpu);
- 
- 	/*
+> >
+> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> > index b379a75..6301ced 100644
+> > --- a/arch/riscv/mm/init.c
+> > +++ b/arch/riscv/mm/init.c
+> > @@ -108,6 +108,7 @@ void __init setup_bootmem(void)
+> >         /* Find the memory region containing the kernel */
+> >         for_each_memblock(memory, reg) {
+> >                 phys_addr_t vmlinux_end = __pa(_end);
+> > +               phys_addr_t vmlinux_start = __pa(start);
+> >                 phys_addr_t end = reg->base + reg->size;
+> >
+> >                 if (reg->base <= vmlinux_end && vmlinux_end <= end) {
+> > @@ -115,7 +116,8 @@ void __init setup_bootmem(void)
+> >                          * Reserve from the start of the region to the end of
+> >                          * the kernel
+> >                          */
+> > -                       memblock_reserve(reg->base, vmlinux_end - reg->base);
+> > +                       memblock_reserve(vmlinux_start,
+> > +                                        vmlinux_end - vmlinux_start);
+> >                         mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
+> >                 }
+> >         }
+> 
+> Thanks for above changes. I will include them in my next revision.
+> 
+> Regards,
+> Anup
+> 
+
 -- 
-2.19.1
+Sincerely yours,
+Mike.
 
