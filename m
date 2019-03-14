@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2990C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4BFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D782184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D31220811
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578892;
-	bh=nmPxByjNTGl8Ev7nUDxHN5CryucOi/XNshe2e46H6zI=;
+	s=default; t=1552578896;
+	bh=e/GGHQ5mHwp0DNbD7E7CEtBDaVOrWkrapBRjqOEDHGE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Mj7Mc2PoztUV/sr+fuj0Lxf3r7h87zUEUgQU2JUChCg6ilmUwvvt/pejrFtYAXDaw
-	 mUT6hEiHxx9bkc7ijyloZMMzAB2PRaePLPKO6BeHLQZ7cZ89nlimEcjx2Kn6usr/1V
-	 p9bQvdmDN93kuZ7b8bzll6OflUbMq6orScNF6LPY=
+	b=ON9CFMKTT2UF4Q7GmVPo81NShm/ii9vqQnH0IvWdiv0uY7iOwR2YKMOIjPIJJ+1y7
+	 3AWqt8xAMLB1DJScNKalPggn7dbCtmMnxbgNX4EANW+Mk0LZB+rVV5E3AeKNprKepN
+	 ypaY6GW2N17lP2rp7CoNrhGLYhHQMwZKydYvdG6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfCNPyv (ORCPT
+        id S1727805AbfCNPyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:54:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36868 "EHLO
+        Thu, 14 Mar 2019 11:54:55 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36932 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727757AbfCNPyt (ORCPT
+        with ESMTP id S1727781AbfCNPyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:54:49 -0400
+        Thu, 14 Mar 2019 11:54:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=cKn5w9O1CdfOS3qnL9lTwXTSuqffmCm/wJafbl/5Z/o=; b=Xr5kYxMLnSWs
-        n+d1R7hRoMx1+MLzDvCBrHGOISrcWH3kDnEBJiEo3hvPw1tkp451G5pqJfpex3j9vzuu0irWm2n+k
-        OZo7ykUiEKBkbpgAv/eRjyp72ekH9Bdy4yuKYIzM2nUOIIcphPvjA+NwVA4hQiUS7LoeytgvK8gQv
-        sLRsQ=;
+        List-Archive; bh=CA1F94kA2URfqK2hxWf2nTYGSDQuAaGx2MuHdOUEU3A=; b=ajOAGEZe+RqU
+        PM0t4yK+Py/KnqLu2fGEzFP3EgsKz/RU5lSCk2Au3/jlDq/p0AxOuLcqeBFFj2aMpU+mc+8lXs2hS
+        nk5TIrfOEpDDKupSF+RDUgogli7AdcPVu1oNn4SnyH5NTz+/BhgxbDjc0ECr+YZn9771FcZ0XOaq7
+        7w6OM=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4Sgv-0002kB-Iv; Thu, 14 Mar 2019 15:54:45 +0000
+        id 1h4Sgx-0002kK-JB; Thu, 14 Mar 2019 15:54:47 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id EBE3A1126E64; Thu, 14 Mar 2019 15:54:44 +0000 (GMT)
+        id 235511126E64; Thu, 14 Mar 2019 15:54:47 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Applied "spi: fix SPI_BPW_RANGE_MASK() regression" to the spi tree
-In-Reply-To:  <20190313210118.3507256-1-arnd@arndb.de>
+To:     Volker Haspel <volker.haspel@linutronix.de>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Mark Brown <broonie@kernel.org>, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        han.xu@nxp.com, volker.haspel@linutronix.de,
+        john.ogness@linutronix.de, linux-spi@vger.kernel.org
+Subject: Applied "spi: spi-fsl-qspi: use devm_spi_register_controller" to the spi tree
+In-Reply-To:  <20190312101203.14207-2-volker.haspel@linutronix.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155444.EBE3A1126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:54:44 +0000 (GMT)
+Message-Id: <20190314155447.235511126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:47 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: fix SPI_BPW_RANGE_MASK() regression
+   spi: spi-fsl-qspi: use devm_spi_register_controller
 
 has been applied to the spi tree at
 
@@ -89,37 +88,38 @@ to this mail.
 Thanks,
 Mark
 
-From 6d85028134d3f4f946924e2f9f0aaff47d9de840 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Wed, 13 Mar 2019 22:00:34 +0100
-Subject: [PATCH] spi: fix SPI_BPW_RANGE_MASK() regression
+From 8fcb830a00f0980ffe38d223cdd9a4d2d24da476 Mon Sep 17 00:00:00 2001
+From: Volker Haspel <volker.haspel@linutronix.de>
+Date: Tue, 12 Mar 2019 11:12:03 +0100
+Subject: [PATCH] spi: spi-fsl-qspi: use devm_spi_register_controller
 
-Geert points out that I confused the min/max arguments that are
-reversed between SPI_BPW_RANGE_MASK() and GENMASK(). This time
-I have verified the result of the macro after fixing the arguments.
+The driver does not clearly unregister the spi controller.
+Therefore calling an unbind and bind again will end up in a
+Kernel crash.
 
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: eefffb42f665 ("spi: work around clang bug in SPI_BPW_RANGE_MASK()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The function devm_spi_register_controller will automatically
+be unregister the SPI device.
+
+Signed-off-by: Volker Haspel <volker.haspel@linutronix.de>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- include/linux/spi/spi.h | 2 +-
+ drivers/spi/spi-fsl-qspi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index b27386450089..a0975cf76cf6 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -444,7 +444,7 @@ struct spi_controller {
- 	/* bitmask of supported bits_per_word for transfers */
- 	u32			bits_per_word_mask;
- #define SPI_BPW_MASK(bits) BIT((bits) - 1)
--#define SPI_BPW_RANGE_MASK(min, max) GENMASK((min) - 1, (max) - 1)
-+#define SPI_BPW_RANGE_MASK(min, max) GENMASK((max) - 1, (min) - 1)
+diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
+index 6a713f78a62e..41a49b93ca60 100644
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -882,7 +882,7 @@ static int fsl_qspi_probe(struct platform_device *pdev)
  
- 	/* limits on transfer speed */
- 	u32			min_speed_hz;
+ 	ctlr->dev.of_node = np;
+ 
+-	ret = spi_register_controller(ctlr);
++	ret = devm_spi_register_controller(dev, ctlr);
+ 	if (ret)
+ 		goto err_destroy_mutex;
+ 
 -- 
 2.20.1
 
