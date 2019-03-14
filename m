@@ -7,108 +7,108 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F05C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82970C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C5A2085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C1EF21852
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="WW8oYVIF"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="g/7v0J10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfCNGnx (ORCPT
+        id S1726951AbfCNGpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:43:53 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:47764 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727356AbfCNGnu (ORCPT
+        Thu, 14 Mar 2019 02:45:34 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:49800 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfCNGpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:43:50 -0400
+        Thu, 14 Mar 2019 02:45:33 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id A3C14C6D
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 06:37:56 +0000 (UTC)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 2355DCFD
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 06:45:32 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ooZkE993mkRV for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 01:37:56 -0500 (CDT)
-Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id z1vAY8RVD26w for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 01:45:32 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 7048EC65
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:37:56 -0500 (CDT)
-Received: by mail-it1-f197.google.com with SMTP id w200so3789402itc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:37:56 -0700 (PDT)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id E47FECE4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:45:31 -0500 (CDT)
+Received: by mail-io1-f70.google.com with SMTP id e1so3512780iod.23
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:45:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=UaqXkDyxPeS1Bl07tP9L2bvvIcJ1LhWTA5MLjIao2h0=;
-        b=WW8oYVIF1wqGwnPWBs6OmKB9BqhkBd/fI4GWNK6+D1eFse+nXF0Ez0HcmePE2pogMH
-         iKdv/nptXc3w4GeJAKMdm2Sjld8SCzB3VsJg1u0Gf39HXSakvDlStXX5KZQNUbydVtyg
-         jWnBrMhpl3x0IwgbM39Fhb1Yini6TgLkUD7WgANlg8bYjI1inomxnlwVnsDD8dqsTqWu
-         BNYnGDPN1bkd+dHepPbNI8TnjCTQbW/DpniO25YJX2tOMHhN+o5D1M/WaeQS4OwNtFh/
-         tU/rUCoBYujTSqTA6RmueXLLxS/xPCy7igcnz5sN4aeF7Ko5ej7RAoNgcRdJPFG9eGSK
-         knSw==
+        bh=51dtazrixZ+eTQObCrC9HFKq7DKw4LZuxV/HZx2plG4=;
+        b=g/7v0J10GkkTJkla846VfVOOHPFPg1609qo7U3aMMp800yLn1JG9rQizOYcs4nERyx
+         SN/sC9cI/JUKcLNbw+CW72gut9UJ07T8VE/+71mt4e2VXDwkoJj8rX2B+FfYI8zyuTKA
+         NrkLt1lQ4C95J8kScuJBagr3pRqh69YK/KOYe//IhHBNUvi+WSBE8rtS8wP5YmTLnQ9a
+         GxYSfO3/dhTOF/sThWUa1A+6xaFxYZm5xmXuF/jOj9hMEx9V4Qf14jmsVTpxDNHuyKhg
+         iBqxc8X4com/MmnKMAyyNNMRs/l8JJDxoJMFVOgjE4hXPOSrNe61MUJzOiRHuzOMS5s9
+         Ak/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UaqXkDyxPeS1Bl07tP9L2bvvIcJ1LhWTA5MLjIao2h0=;
-        b=afGUyTGQO/i+DUctebF0E82lkZC+rCdmxznpYi6BoQ4wHmEKv9f3o6MDrqgmpNTQaL
-         rIwpPPMjMwSR4kfwaf+GBiTB9OYWKESQ0tNnrUaOqDhRYf/ipz/fKxOCT4GKxHFScEp+
-         06vGg4KxXx6uMfQpJC2cFcgABoeHXVLHJmYwEGfZL3xD8KHnAC4DbR3xJG1LcIuEH0U+
-         DsVj/IeuJS2cbgjouN8S4TIRm7m1okoDxj3MOCB1M2B3pOnefQdY6pQilFW1+P8NT1T1
-         qnXb1v6idH0AXcZa97Rg761Bv+fJ7DlINLIxGhXhJQ45WCn8hKWriK7fDYIT4wpAxcii
-         qrAQ==
-X-Gm-Message-State: APjAAAX6Kq0SxztZlF+Wwec5j3RXaxxVSl3CeC8o4T1xkZBL1tKuAqtE
-        5NJayDgs3rtrx1gNQUdI7EFOiye0h0X+94Udk9lFU/prnerPUUwILzjmWviftwHggQcPXkYgOsS
-        pwPYIEokcbq150aQLWZ1jAu01EfOH
-X-Received: by 2002:a24:f709:: with SMTP id x9mr1038285ith.149.1552545476052;
-        Wed, 13 Mar 2019 23:37:56 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwfnnpc+uX4loqYu+VDrvxDMKD4OwchqvyXfecv20Gemc+4AmidRo/Fwlqzvp2VBMQoogR6BQ==
-X-Received: by 2002:a24:f709:: with SMTP id x9mr1038276ith.149.1552545475800;
-        Wed, 13 Mar 2019 23:37:55 -0700 (PDT)
+        bh=51dtazrixZ+eTQObCrC9HFKq7DKw4LZuxV/HZx2plG4=;
+        b=ScKt1Dm/NnTKrcnRrXuANaPo/zqwL45tJkXnZR+Ofc4M5nqLgbMfhSKxseDIRPKyS5
+         BXnyx2/4jxjWw09BbFIZlaKFIR1cwyjx4/iHgFL4Lktf4CK2PIiBm+axMDMSWC1sjOwd
+         589uPxtpwOB2TUJ4HRcW6ToNYv0DdL9UGj7TWI/V2chZjpDcJBjAgos573n9L6Ce7q48
+         XRgaJ/a/jlZAtGh0kx614hhZYciYULacW0a0wzwRpBBPVAR2qBsxMjqsDPalHe2TDlrh
+         89dGrzrdHZVGwGFOK8h4Xi5Hpv05GL4M+N6z5fnNtkyGE7KvdeXFEeZWljb2sT9kGYvl
+         8wIg==
+X-Gm-Message-State: APjAAAX8hygSfAe4ECD9vzVgv8QM4f/aP4zK7SsCu3OGiv/HZBE0N4j9
+        d3bjKYDyHiT9T4SWMGR4S9HDAGfJSuGZY8ntVRPV1s0RlR9pdLxFAmPtxEq79bwyTISGkeZ/iXt
+        YD+3YFwmghItFItpYKJ/mKAaT8h4k
+X-Received: by 2002:a5e:c742:: with SMTP id g2mr10631270iop.56.1552545931410;
+        Wed, 13 Mar 2019 23:45:31 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxX/oyo4XDoCcMN8aT+8XEiJrgGTPAotXMZdKMe4V0JbbeTT5c8zq4YYc0B18MmYfJQuH4LmA==
+X-Received: by 2002:a5e:c742:: with SMTP id g2mr10631266iop.56.1552545931211;
+        Wed, 13 Mar 2019 23:45:31 -0700 (PDT)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id y18sm5836101ioa.56.2019.03.13.23.37.54
+        by smtp.gmail.com with ESMTPSA id c1sm703711itd.23.2019.03.13.23.45.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 23:37:54 -0700 (PDT)
+        Wed, 13 Mar 2019 23:45:30 -0700 (PDT)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Vinayak Holikatti <vinholikatti@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: ufs: fix a missing check of devm_reset_control_get
-Date:   Thu, 14 Mar 2019 01:37:49 -0500
-Message-Id: <20190314063749.13907-1-kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Vaibhav Agarwal <vaibhav.sr@gmail.com>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] greybus: audio_manager: fix a missing check of ida_simple_get
+Date:   Thu, 14 Mar 2019 01:45:24 -0500
+Message-Id: <20190314064525.15756-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_reset_control_get could fail, so the fix checks its
-return value and pass the error code upstream in case it fails.
+ida_simple_get could fail. The fix inserts a check for its
+return value.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/scsi/ufs/ufs-hisi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/staging/greybus/audio_manager.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
-index 452e19f8fb47..ce9d7c40909f 100644
---- a/drivers/scsi/ufs/ufs-hisi.c
-+++ b/drivers/scsi/ufs/ufs-hisi.c
-@@ -544,6 +544,11 @@ static int ufs_hisi_init_common(struct ufs_hba *hba)
- 	ufshcd_set_variant(hba, host);
+diff --git a/drivers/staging/greybus/audio_manager.c b/drivers/staging/greybus/audio_manager.c
+index d44b070d8862..c2a4af4c1d06 100644
+--- a/drivers/staging/greybus/audio_manager.c
++++ b/drivers/staging/greybus/audio_manager.c
+@@ -45,6 +45,9 @@ int gb_audio_manager_add(struct gb_audio_manager_module_descriptor *desc)
+ 	int err;
  
- 	host->rst  = devm_reset_control_get(dev, "rst");
-+	if (IS_ERR(host->rst)) {
-+		dev_err(dev, "%s: failed to get reset control\n",
-+			__func__);
-+		return PTR_ERR(host->rst);
-+	}
- 
- 	ufs_hisi_set_pm_lvl(hba);
- 
+ 	id = ida_simple_get(&module_id, 0, 0, GFP_KERNEL);
++	if (id < 0)
++		return id;
++
+ 	err = gb_audio_manager_module_create(&module, manager_kset,
+ 					     id, desc);
+ 	if (err) {
 -- 
 2.17.1
 
