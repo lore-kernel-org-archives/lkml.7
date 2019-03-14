@@ -2,120 +2,133 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C2FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF28FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B4A21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:29:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SCgjYU7i"
+	by mail.kernel.org (Postfix) with ESMTP id B1EDF2177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfCNA3a (ORCPT
+        id S1727116AbfCNAac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 20:29:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36611 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfCNA3a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 20:29:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g18so3962133wru.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 17:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bA6I4b+KNoyWDW/ol2Rzv/zK7atLFhqyLkmYsEnI5DE=;
-        b=SCgjYU7iw0BdvgnDh/XKa4WtbEgtobbLXGjxDTMxfx8eeFZO41XJVgc1ZE3//MKWrs
-         CrGOZKcf5uX1nRHBcBtp2/Dzdvp3Xs/Q5bn3ewEgny6YlgqX7aVZ5bKRBhAaSF9T5CJd
-         YJ2HH4kjLrhNfw5mkntbf95kT+UgXmVR1wobcoTcf8F0hbTjsEUl0liPdliFG234NYe6
-         hWzqCDEIHg13rd/F1NXcJSh5Mkw4wQ0q3uKHmTQfhFk95H1tpX3ohcCvD3bRaMYuA5vh
-         fE0yVftU1a/lljcaOPbJMxGDr+OA9AnzTmN1jVXsUqehHeNr8y6glS4Rgw2DprJjT1bB
-         /gEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bA6I4b+KNoyWDW/ol2Rzv/zK7atLFhqyLkmYsEnI5DE=;
-        b=uQ1wFY9gg73HaKqG8PO+IVey9mfxk5jJPjIczSD2ojXD+ZOM8FlhaCyzqgHuGx/K0z
-         /M2YJKfwViMlazLltYAbfrWeAIk4c78+KHFxAZg0IY7/V7wJieuA+5YZ1lWpc4A04Xht
-         VuHHP7j3eSavNYnyWzGIxbIdCSG3bno3TKEMjv2JYD39PaPPQUWG3lJxffMGCM1KofCi
-         UHzJn2AEkd/wUdIHmLNPB/s3BGW2PPJ5QrSpHHQ2YL1lNHOJIqvGLxm4kGV1qOsMbH/p
-         99Fi0aIrrOlEQJB9eUHgOdsgqAXqFJZYqgnKj4EmfrQ/XE8ivMDAFlkIOlqSDMwQcapn
-         7lbA==
-X-Gm-Message-State: APjAAAVuxQS9KvmMeel/FcM4T8JF9xDpxyK15sFODZPeBO8D4eZRqaZL
-        hcxkVD1DtdFYVdsVX3EDbBC5yrRfUoNH9ZOpeceG/VZd76Q=
-X-Google-Smtp-Source: APXvYqxWVWaViIQwckmG1+tZGzdfGGy4YoXIwfO7MEKWVHFkwvdQysiEo/ag+8IPFsBeykYDBEgpUaoz630zQAH2BSA=
-X-Received: by 2002:a5d:40c5:: with SMTP id b5mr30091307wrq.107.1552523367691;
- Wed, 13 Mar 2019 17:29:27 -0700 (PDT)
+        Wed, 13 Mar 2019 20:30:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42650 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbfCNAab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 20:30:31 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 90D0030922E8;
+        Thu, 14 Mar 2019 00:30:31 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D2FD217CED;
+        Thu, 14 Mar 2019 00:30:28 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 20:30:28 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Nikos Tsironis <ntsironis@arrikto.com>
+Cc:     hch@infradead.org, agk@redhat.com, dm-devel@redhat.com,
+        mpatocka@redhat.com, iliastsi@arrikto.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] list_bl: Add hlist_bl_add_before/behind helpers
+Message-ID: <20190314003027.GE4202@redhat.com>
+References: <20181220180651.4879-1-ntsironis@arrikto.com>
+ <20181220180651.4879-2-ntsironis@arrikto.com>
+ <20190228213201.GB23527@redhat.com>
+ <20190313234853.GA7797@linux.ibm.com>
 MIME-Version: 1.0
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-3-patrick.bellasi@arm.com> <20190313141253.GG5922@hirez.programming.kicks-ass.net>
- <20190313161646.fp2gswuqgzi7z7ow@e110439-lin>
-In-Reply-To: <20190313161646.fp2gswuqgzi7z7ow@e110439-lin>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Wed, 13 Mar 2019 17:29:02 -0700
-Message-ID: <CAJuCfpH2QPgB3D+qsbF7gzDhrD4Y6oo3Q-b8iwtUxZe-dDWR7Q@mail.gmail.com>
-Subject: Re: [PATCH v7 02/15] sched/core: uclamp: Enforce last task UCLAMP_MAX
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313234853.GA7797@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 14 Mar 2019 00:30:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 9:16 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
->
-> On 13-Mar 15:12, Peter Zijlstra wrote:
-> > On Fri, Feb 08, 2019 at 10:05:41AM +0000, Patrick Bellasi wrote:
-> > > +static inline void uclamp_idle_reset(struct rq *rq, unsigned int clamp_id,
-> > > +                                unsigned int clamp_value)
+On Wed, Mar 13 2019 at  7:48pm -0400,
+Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+
+> On Thu, Feb 28, 2019 at 04:32:02PM -0500, Mike Snitzer wrote:
+> > On Thu, Dec 20 2018 at  1:06pm -0500,
+> > Nikos Tsironis <ntsironis@arrikto.com> wrote:
+> > 
+> > > Add hlist_bl_add_before/behind helpers to add an element before/after an
+> > > existing element in a bl_list.
+> > > 
+> > > Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
+> > > Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
+> > > ---
+> > >  include/linux/list_bl.h | 27 +++++++++++++++++++++++++++
+> > >  1 file changed, 27 insertions(+)
+> > > 
+> > > diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
+> > > index 3fc2cc57ba1b..2fd918e5fd48 100644
+> > > --- a/include/linux/list_bl.h
+> > > +++ b/include/linux/list_bl.h
+> > > @@ -86,6 +86,33 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
+> > >  	hlist_bl_set_first(h, n);
+> > >  }
+> > >  
+> > > +static inline void hlist_bl_add_before(struct hlist_bl_node *n,
+> > > +				       struct hlist_bl_node *next)
 > > > +{
-> > > +   /* Reset max-clamp retention only on idle exit */
-> > > +   if (!(rq->uclamp_flags & UCLAMP_FLAG_IDLE))
-> > > +           return;
+> > > +	struct hlist_bl_node **pprev = next->pprev;
 > > > +
-> > > +   WRITE_ONCE(rq->uclamp[clamp_id].value, clamp_value);
+> > > +	n->pprev = pprev;
+> > > +	n->next = next;
+> > > +	next->pprev = &n->next;
 > > > +
-> > > +   /*
-> > > +    * This function is called for both UCLAMP_MIN (before) and UCLAMP_MAX
-> > > +    * (after). The idle flag is reset only the second time, when we know
-> > > +    * that UCLAMP_MIN has been already updated.
-> >
-> > Why do we care? That is, what is this comment trying to tell us.
->
-> Right, the code is clear enough, I'll remove this comment.
+> > > +	/* pprev may be `first`, so be careful not to lose the lock bit */
+> > > +	WRITE_ONCE(*pprev,
+> > > +		   (struct hlist_bl_node *)
+> > > +			((unsigned long)n |
+> > > +			 ((unsigned long)*pprev & LIST_BL_LOCKMASK)));
+> 
+> A nit, but use of uintptr_t shrinks things a bit:
+> 
+> +		   (struct hlist_bl_node *)
+> +			((uintptr_t)n | ((uintptr_t)*pprev & LIST_BL_LOCKMASK)));
+> 
+> I am not too concerned about this, though.
 
-It would be probably even clearer if rq->uclamp_flags &=
-~UCLAMP_FLAG_IDLE is done from inside uclamp_rq_inc after
-uclamp_rq_inc_id for both clamps is called.
+I'm fine with folding in your suggestion.
 
-> >
-> > > +    */
-> > > +   if (clamp_id == UCLAMP_MAX)
-> > > +           rq->uclamp_flags &= ~UCLAMP_FLAG_IDLE;
+> The WRITE_ONCE() is to handle races with hlist_bl_empty() (which does contain
+> the corresponding READ_ONCE()) correct?
+
+Correct.
+
 > > > +}
->
-> --
-> #include <best/regards.h>
->
-> Patrick Bellasi
+> > > +
+> > > +static inline void hlist_bl_add_behind(struct hlist_bl_node *n,
+> > > +				       struct hlist_bl_node *prev)
+> > > +{
+> > > +	n->next = prev->next;
+> > > +	n->pprev = &prev->next;
+> > > +	WRITE_ONCE(prev->next, n);
+> 
+> I don't see what this WRITE_ONCE() is interacting with.  The traversals
+> use plain C-language reads, and hlist_bl_empty() can't get here.  All
+> uses of hlist_bl_for_each_entry() invoke hlist_bl_lock() before starting
+> the traversal, and hlist_bl_for_each_entry_safe() looks to be unused.
+> (Perhaps it should be removed?  Or is there some anticipated use?)
+> 
+> I don't believe that the WRITE_ONCE() is needed.  What am I missing?
+> 
+> Other than that, looks good.
+> 
+> 							Thanx, Paul
+> 
+
+I'd imagine it was just born out of symmetry with hlist_bl_add_before()
+and/or caution.  But let's see what Nikos has to say.
+
+Thanks,
+Mike
