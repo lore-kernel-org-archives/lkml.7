@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8867EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740CAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E102077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9222077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552586122;
-	bh=lJypYVn+5ND6/v1CmR4jtdgPkzzYecR9cIRMbluNk1g=;
+	s=default; t=1552586124;
+	bh=s8/tGYp2THgX8Q/8HFH1uHsnZ2Yuz6jP+LhrCYphHas=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=fgHcyau4reriWL6m5yt7ayNHyXHhACVcc9j6xMb6cf+uzEvavB2pvO4yMnWW7Y89+
-	 Dr/bk2GDBimgcsl1P+vkHtevt+rshJ4H+UaPvq8ruy051LXm+87oDA9bEMAaY3tGkW
-	 tgMNckv5Kpsa3gpQf6WNenhuyhUDjTS3VKMu6SMU=
+	b=aPnvlOCkoUCHymwNoFE8U3Pw+CtKuKj6Z3P6YmwdHF8iJK0SvMyMohyJNX4giOHNS
+	 0M9hFZ/EZP62IMJczVfBTjuleZC7bNbEsaKhCKsCHSS7Gc+Cmf8KdFNIIqDhBhxWb4
+	 wOl+Y5chh3oX63GR/KIhRXMqHFENAZr9P8nEIxV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbfCNRzV (ORCPT
+        id S1728175AbfCNRzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 13:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60544 "EHLO mail.kernel.org"
+        Thu, 14 Mar 2019 13:55:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbfCNRzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 13:55:18 -0400
-Subject: Re: [PULL REQUEST] dmaengine updates for v5.1-rc1
+        id S1728140AbfCNRzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 13:55:19 -0400
+Subject: Re: [GIT] Networking
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552586117;
-        bh=lJypYVn+5ND6/v1CmR4jtdgPkzzYecR9cIRMbluNk1g=;
+        s=default; t=1552586118;
+        bh=s8/tGYp2THgX8Q/8HFH1uHsnZ2Yuz6jP+LhrCYphHas=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=bQrQx6GSU7asPndQ+YP8wG7uz/toRYHr+UqL7aDWCH1rswBgwH6jCgar5M/1mq15s
-         t19XuqANz7AAbDZcRo+RoqAWTT9S95XkIt2nTokg75oqTNQ0oHG1HBiikqQH0e4Aza
-         3QS2cZtWu23x5PJ91Mh3U8BUs4iwsPJ4PgbA/Cpo=
+        b=bvQEl5jsg55Nf0v0GYTXovVchTRrUhg1jxXz+H/1n7fhuloqb8guFzoJ63C9ZmBsS
+         aGj4UjMm/sqiHXVNPZth7Rp3r7tuYdmKGYcFwn49bxLySVesz1ozt375JPD3+P0PcZ
+         k5mOZcgBsGeS5UsBeh9N85Ude+74nFeYim2OpeC8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190313193437.GD18228@vkoul-mobl>
-References: <20190313193437.GD18228@vkoul-mobl>
+In-Reply-To: <20190313.180804.1057329630088536833.davem@davemloft.net>
+References: <20190313.180804.1057329630088536833.davem@davemloft.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190313193437.GD18228@vkoul-mobl>
-X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
- tags/dmaengine-5.1-rc1
-X-PR-Tracked-Commit-Id: feb59d77a46d5df93864471ca926b6701479091b
+X-PR-Tracked-Message-Id: <20190313.180804.1057329630088536833.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
+ refs/heads/master
+X-PR-Tracked-Commit-Id: 9417d81f4f8adfe20a12dd1fadf73a618cbd945d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 31ef489a026ef2c07383ef336dc9b6601c7b9b93
-Message-Id: <155258611741.11723.13118903847403662744.pr-tracker-bot@kernel.org>
-Date:   Thu, 14 Mar 2019 17:55:17 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dma <dmaengine@vger.kernel.org>
+X-PR-Merge-Commit-Id: f3ca4c55a6581c46e9f4a592dd698a7c67a713dd
+Message-Id: <155258611838.11723.18199274547895583337.pr-tracker-bot@kernel.org>
+Date:   Thu, 14 Mar 2019 17:55:18 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 14 Mar 2019 01:04:37 +0530:
+The pull request you sent on Wed, 13 Mar 2019 18:08:04 -0700 (PDT):
 
-> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.1-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/davem/net refs/heads/master
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/31ef489a026ef2c07383ef336dc9b6601c7b9b93
+https://git.kernel.org/torvalds/c/f3ca4c55a6581c46e9f4a592dd698a7c67a713dd
 
 Thank you!
 
