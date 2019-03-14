@@ -2,102 +2,99 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F91C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A640AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8275121019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF422085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552555743;
+	bh=OJrIe9UnNobVZw+ff5HQMkQyWui/ix/sYJxKaEV31qY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hBAB0AC+eks2Z4E/oOl3JrBWa71UG5rcNdjhQkLWIw/Vn6yFc3g2XIapCRucMDOTP
+	 d+ssJskxo+/W+IqPWX7GuDlf1mcTCSrMnxrpVC/hnhTBKqTu8cJFR1ROQz/2TLzqIC
+	 9WeB5pcDJ428jUBTPoQ4TnAyWdie1LEz1DbGH84s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfCNJ1a (ORCPT
+        id S1727004AbfCNJ3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:27:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59420 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726689AbfCNJ13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:27:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7DA27AF61;
-        Thu, 14 Mar 2019 09:27:28 +0000 (UTC)
-Date:   Thu, 14 Mar 2019 10:27:27 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Sebastian Siewior <bigeasy@linutronix.de>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        linux-serial@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-Message-ID: <20190314092727.m37frq3jszz6mh4g@pathway.suse.cz>
-References: <874l9721hf.fsf@linutronix.de>
- <20190304052335.GA6648@jagdpanzerIV>
- <87lg1rggcz.fsf@linutronix.de>
- <20190311105411.GA368@jagdpanzerIV>
- <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
- <874l8815uc.fsf@linutronix.de>
- <20190313021534.GB783@jagdpanzerIV>
- <87d0mv9off.fsf@linutronix.de>
- <20190313084028.f2m4qhxd5sjzzawr@linutronix.de>
- <20190313092759.GA10060@jagdpanzerIV>
+        Thu, 14 Mar 2019 05:29:02 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43945 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfCNJ3B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 05:29:01 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 67so3823589oif.10;
+        Thu, 14 Mar 2019 02:29:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ra89Rc2bhS4KvB6nPCTjBd0qnjvMDrq0xwg/HqeHC1Y=;
+        b=O9PsSZdK2RFEkQVxUNnGUjFM1kGj1ECROwJawMj3R68FiXPm3QIu1yUSCcv8kScsnP
+         iInBCZZ/QbSr59eHzAdKnQfKAgClrEh7AOsnbh/TrbdAhME6HBP4/m8tBDbLdrFxKgD/
+         dVLKzfZ1XnnwLG0cSMz/gGvQ/tnk5OijiOST8H0kxb7zm6HcTqmNPtriPikA/GdLRQ8m
+         vFvr8VDxBkiFpd2DtA9hbtSO/asTxcKUivS375Jjbss119JWjPm6cfz8tRc5OSAeMVLh
+         i0pFckGxI/1gTRVbJrP8a4EAmMFJXmkhVqjIeC2KAD1X4fflgVCHxjyQTcxi//sp25PY
+         1/9A==
+X-Gm-Message-State: APjAAAUguqGBHJuhWqPCpEIma6tVsFsV1PJuqy0H4SIyXJ/T10ydWsUS
+        8Pb8umRPgvb7ZSe3/50zYdmgBfMeZGjOoRy3Nbk=
+X-Google-Smtp-Source: APXvYqwzCHb12W7IeeZCYywpsCzILAmwGsNH7V6Ha1PajA7DAfRkJ2q7/VVQHBJ9CHAaYEjVOb1fFiiqAORLQVQ/AMA=
+X-Received: by 2002:aca:355:: with SMTP id 82mr1538080oid.30.1552555740709;
+ Thu, 14 Mar 2019 02:29:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313092759.GA10060@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <cover.1552545525.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1552545525.git.viresh.kumar@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 14 Mar 2019 10:28:49 +0100
+Message-ID: <CAJZ5v0gER+aJaQmk89VSVBtHgQ+WPDdAxUW6eJ4JCB=emC85dg@mail.gmail.com>
+Subject: Re: [PATCH 0/7] cpufreq: Call transition notifier only once for each policy
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        kvm@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-03-13 18:27:59, Sergey Senozhatsky wrote:
-> On (03/13/19 09:40), Sebastian Siewior wrote:
-> > On 2019-03-13 09:19:32 [+0100], John Ogness wrote:
-> > > recursive situation. As you are pointing out, the notification/wake
-> > > component of printk_safe will still be needed. I will leave that (small)
-> > > part in printk_safe.c.
-> > 
-> > Does this mean we keep irq_work part or we bury it and solve it by other
-> > means?
+On Thu, Mar 14, 2019 at 7:43 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> *May be* we can take a closer look and find cases when ->atomic
-> consoles don't really depend on console_sem. And *may be* we can
-> split the console drivers list and somehow forbid removal and
-> modification (ioctl) of ->atomic consoles under us. Assuming that
-> this is doable we then can start iterating ->atomic consoles list
-> with unlocked console_sem.
+> Currently we call the cpufreq transition notifiers once for each CPU of
+> the policy->cpus cpumask, which isn't that efficient.
 
-I believe that this is actually the plan. Atomic consoles depending
-on console_sem would not be a real step forward.
+Why isn't it efficient?
 
+Transitions are per-policy anyway, so if something needs to be done
+for each CPU in the policy, it doesn't matter too much which part of
+the code carries out the iteration.
 
-> Non->atomic consoles or consoles which depend on console_sem (VT,
-> fbcon and so on) will stay in another list, and we will take
-> console_sem before we iterate that list and invoke those drivers.
+I guess some notifiers need to know what other CPUs there are in the
+policy?  If so, then why?
 
-This might be also needed for "less" important messages
-that people would not want to get to the console atomically
-because it would serialize CPUs and slow down the entire
-system.
+> This patchset tries to simplify that by adding another field in struct cpufreq_freqs,
+> cpus, so the callback has all the information available with a single
+> call for each policy.
 
-I think that we would still need irq_work for this mode.
-But it should be necessary only for messages from NMI context
-and printk() recursion. It means that it should be a rare
-situation and the amount of messages should get limited.
-It should not be much worse than handling few printk()
-calls from any irq handler.
+Well, you can argue that the core is simplified by it somewhat, but
+the notifiers aren't.  They actually get more complex, conceptually
+too, because they now need to worry about offline vs online CPUs etc.
 
-Best Regards,
-Petr
+Also I wonder why you decided to pass a cpumask in freqs instead of
+just passing a policy pointer.  If you change things from per-CPU to
+per-policy, passing the whole policy seems more natural.
