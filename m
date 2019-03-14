@@ -2,106 +2,137 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6AEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847F6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658BD2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552551489;
-	bh=D/bHFF0DYtp6x5PmFeQEeN3PVrqh0VQg0bZnb9rl9xk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oUXXI7A6SuAF8iBhsRSY/aDxWHNtkgKpQgH8y8NyThnZvzitqIAahth6ko5J+HNL6
-	 kyTWv55l1czlum8YN6XZl/EDeQ13Y7rez+oCh6tVjEwlIhjY6j3vwc9DWYtJzZl3rb
-	 fdpHVGwiCvJFqdXFZL8AxRbVg9LCKCBRMMSBEiQY=
+	by mail.kernel.org (Postfix) with ESMTP id 52D0B217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfCNISH (ORCPT
+        id S1727296AbfCNIUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 04:18:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbfCNISH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 04:18:07 -0400
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F08D421852;
-        Thu, 14 Mar 2019 08:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552551486;
-        bh=D/bHFF0DYtp6x5PmFeQEeN3PVrqh0VQg0bZnb9rl9xk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LnBIVdmmN6jPzRVW3eRbtwLBM4PHVGNviCY/I+5zFTFCt5pZ7lenJfP6BjUG5Yezv
-         883HSGUn4NdwjrCmbsEeiAkSguGDwVc+PkoApLCRqHRFPzij3xGG3medHWtsaw2LEr
-         CFxZDzKUZsgZrDMiPSpgJnqJOQLdrQ5Dm0t6PBcU=
-Received: by mail-lf1-f43.google.com with SMTP id a132so2074061lfa.13;
-        Thu, 14 Mar 2019 01:18:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAUgGXqufBIB5mY6NIEJghWjiYNieha9QgAurkaKmdJ1HYA33vHJ
-        bS+AiLYugzR2QTLwuSlqMfzwK6UASJLF3T1P5SQ=
-X-Google-Smtp-Source: APXvYqyidmxMbVe6bkoEOIHnf07DmMx6kadRYL1b66fpokFR/W+6EPDscDXJ/hRKjLywF9uz8Ez6j1A5OvZXvLagarI=
-X-Received: by 2002:a19:4948:: with SMTP id l8mr16593560lfj.156.1552551484045;
- Thu, 14 Mar 2019 01:18:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190314064202.14864-1-kjlu@umn.edu>
-In-Reply-To: <20190314064202.14864-1-kjlu@umn.edu>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 14 Mar 2019 09:17:53 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPfg+T-1acZd-NmSF6uerK0inCPirEyhGJ213VNtM5u1YQ@mail.gmail.com>
-Message-ID: <CAJKOXPfg+T-1acZd-NmSF6uerK0inCPirEyhGJ213VNtM5u1YQ@mail.gmail.com>
-Subject: Re: [PATCH] spi: fix NULL pointer dereferences by checking dmaengine_prep_slave_sg
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Kukjin Kim <kgene@kernel.org>,
-        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-spi@vger.kernel.org,
+        Thu, 14 Mar 2019 04:20:17 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:40278 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726606AbfCNIUR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 04:20:17 -0400
+Received: from [192.168.2.10] ([212.251.195.8])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 4Lb0hpyCdLMwI4Lb3hHn1h; Thu, 14 Mar 2019 09:20:15 +0100
+Subject: Re: [PATCH 00/14] Add support for FM radio in hcill and kill TI_ST
+To:     Sebastian Reichel <sre@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>, linux-bluetooth@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-omap@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20181221011752.25627-1-sre@kernel.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <4f47f7f2-3abb-856c-4db5-675caf8057c7@xs4all.nl>
+Date:   Thu, 14 Mar 2019 09:20:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20181221011752.25627-1-sre@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMRW9aN+U9an55TXNhV/UcZ6i+hxGAHn8vFCRsf5MZfZkcgeuIBOZJ3jTrv3EG5ikv3BmIEOc0X6vkblYQAjWCZv6el2QyAFVuo0m2xXDYUQLAJsRyTY
+ JZ0cAAezjwWCQeO7iBYHRYU/lyWIo+hsmk/OncWzICuw6HYoauF9Iq3i69Zl09PetaUG7HBdCt8yoG/Y+C1KQNt4l64kQIMxfyGi1YO4gWnm7XfT/7LqO+84
+ tpBfgQqzICN/gvCKiMeV3kr4KH48m51RDNttBaOyCgxlQWbHS99/C1WmvciVh0Xd32uvhSwJczZ8grEP9GD/ASazHDry9+bQI2y/tXjUudwaqiYnzAR4b2ND
+ 1qeoohTiZVBjdHguaZNKYRCf6Ng3nDXaF/rZnJ644vUsF2kdsLHH3Ac1WVIhBFb+Nv1158kfKzh48k0zwVaHczgdfQh66p9T71PtH1L6GEHLUAha65Bue0LG
+ IK7hLdmwpyMFAeF/F2ae4dmUcf3Cc5G3iTHUJQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019 at 07:42, Kangjie Lu <kjlu@umn.edu> wrote:
->
-> In case dmaengine_prep_slave_sg fails, the fix returns to avoid
-> NULL pointer dereference.
->
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Hi Sebastian,
 
-Hi,
+On 12/21/18 2:17 AM, Sebastian Reichel wrote:
+> Hi,
+> 
+> This moves all remaining users of the legacy TI_ST driver to hcill (patches
+> 1-3). Then patches 4-7 convert wl128x-radio driver to a standard platform
+> device driver with support for multiple instances. Patch 7 will result in
+> (userless) TI_ST driver no longer supporting radio at runtime. Patch 8-11 do
+> some cleanups in the wl128x-radio driver. Finally patch 12 removes the TI_ST
+> specific parts from wl128x-radio and adds the required infrastructure to use it
+> with the serdev hcill driver instead. The remaining patches 13 and 14 remove
+> the old TI_ST code.
+> 
+> The new code has been tested on the Motorola Droid 4. For testing the audio
+> should be configured to route Ext to Speaker or Headphone. Then you need to
+> plug headphone, since its cable is used as antenna. For testing there is a
+> 'radio' utility packages in Debian. When you start the utility you need to
+> specify a frequency, since initial get_frequency returns an error:
 
-Thanks for the patch, but the fix is the same as here:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1402451.html
-and the answer is the same as there - I think you did not handle the
-error at all. Did you test the error path in this case? How does it
-behave? I think there is no point to replace one NULL pointer to
-another NULL pointer right after it. :)
+What is the status of this series?
 
-Best regards,
-Krzysztof
+Based on some of the replies (from Adam Ford in particular) it appears that
+this isn't ready to be merged, so is a v2 planned?
 
-> ---
->  drivers/spi/spi-s3c64xx.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> index 7b7151ec14c8..3a5f161ce558 100644
-> --- a/drivers/spi/spi-s3c64xx.c
-> +++ b/drivers/spi/spi-s3c64xx.c
-> @@ -293,6 +293,8 @@ static void prepare_dma(struct s3c64xx_spi_dma_data *dma,
->
->         desc = dmaengine_prep_slave_sg(dma->ch, sgt->sgl, sgt->nents,
->                                        dma->direction, DMA_PREP_INTERRUPT);
-> +       if (!desc)
-> +               return;
->
->         desc->callback = s3c64xx_spi_dmacb;
->         desc->callback_param = dma;
-> --
-> 2.17.1
->
+Regards,
+
+	Hans
+
+> 
+> $ radio -f 100.0
+> 
+> Merry Christmas!
+> 
+> -- Sebastian
+> 
+> Sebastian Reichel (14):
+>   ARM: dts: LogicPD Torpedo: Add WiLink UART node
+>   ARM: dts: IGEP: Add WiLink UART node
+>   ARM: OMAP2+: pdata-quirks: drop TI_ST/KIM support
+>   media: wl128x-radio: remove module version
+>   media: wl128x-radio: remove global radio_disconnected
+>   media: wl128x-radio: remove global radio_dev
+>   media: wl128x-radio: convert to platform device
+>   media: wl128x-radio: use device managed memory allocation
+>   media: wl128x-radio: load firmware from ti-connectivity/
+>   media: wl128x-radio: simplify fmc_prepare/fmc_release
+>   media: wl128x-radio: fix skb debug printing
+>   media: wl128x-radio: move from TI_ST to hci_ll driver
+>   Bluetooth: btwilink: drop superseded driver
+>   misc: ti-st: Drop superseded driver
+> 
+>  .../boot/dts/logicpd-torpedo-37xx-devkit.dts  |   8 +
+>  arch/arm/boot/dts/omap3-igep0020-rev-f.dts    |   8 +
+>  arch/arm/boot/dts/omap3-igep0030-rev-g.dts    |   8 +
+>  arch/arm/mach-omap2/pdata-quirks.c            |  52 -
+>  drivers/bluetooth/Kconfig                     |  11 -
+>  drivers/bluetooth/Makefile                    |   1 -
+>  drivers/bluetooth/btwilink.c                  | 350 -------
+>  drivers/bluetooth/hci_ll.c                    | 115 ++-
+>  drivers/media/radio/wl128x/Kconfig            |   2 +-
+>  drivers/media/radio/wl128x/fmdrv.h            |   5 +-
+>  drivers/media/radio/wl128x/fmdrv_common.c     | 211 ++--
+>  drivers/media/radio/wl128x/fmdrv_common.h     |   4 +-
+>  drivers/media/radio/wl128x/fmdrv_v4l2.c       |  55 +-
+>  drivers/media/radio/wl128x/fmdrv_v4l2.h       |   2 +-
+>  drivers/misc/Kconfig                          |   1 -
+>  drivers/misc/Makefile                         |   1 -
+>  drivers/misc/ti-st/Kconfig                    |  18 -
+>  drivers/misc/ti-st/Makefile                   |   6 -
+>  drivers/misc/ti-st/st_core.c                  | 922 ------------------
+>  drivers/misc/ti-st/st_kim.c                   | 868 -----------------
+>  drivers/misc/ti-st/st_ll.c                    | 169 ----
+>  include/linux/ti_wilink_st.h                  | 337 +------
+>  22 files changed, 213 insertions(+), 2941 deletions(-)
+>  delete mode 100644 drivers/bluetooth/btwilink.c
+>  delete mode 100644 drivers/misc/ti-st/Kconfig
+>  delete mode 100644 drivers/misc/ti-st/Makefile
+>  delete mode 100644 drivers/misc/ti-st/st_core.c
+>  delete mode 100644 drivers/misc/ti-st/st_kim.c
+>  delete mode 100644 drivers/misc/ti-st/st_ll.c
+> 
+
