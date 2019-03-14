@@ -2,99 +2,177 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790A1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110E8C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 461D92184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6AE22184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfCNNtQ (ORCPT
+        id S1727565AbfCNNth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:49:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44784 "EHLO mx1.redhat.com"
+        Thu, 14 Mar 2019 09:49:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12332 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfCNNtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 09:49:15 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6E057307B494;
-        Thu, 14 Mar 2019 13:49:15 +0000 (UTC)
-Received: from [10.72.12.71] (ovpn-12-71.pek2.redhat.com [10.72.12.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABC525D73D;
-        Thu, 14 Mar 2019 13:49:05 +0000 (UTC)
-Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
- vmap()
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Miller <davem@davemloft.net>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peterx@redhat.com,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-parisc@vger.kernel.org
-References: <20190311.111413.1140896328197448401.davem@davemloft.net>
- <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
- <20190311235140-mutt-send-email-mst@kernel.org>
- <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
- <20190312075033-mutt-send-email-mst@kernel.org>
- <1552405610.3083.17.camel@HansenPartnership.com>
- <20190312200450.GA25147@redhat.com>
- <1552424017.14432.11.camel@HansenPartnership.com>
- <20190313160529.GB15134@infradead.org>
- <1552495028.3022.37.camel@HansenPartnership.com>
- <20190314064004-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <74015196-2e18-4fe0-50ac-0c9d497315c7@redhat.com>
-Date:   Thu, 14 Mar 2019 21:49:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1727524AbfCNNth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 09:49:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 06:49:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
+   d="scan'208";a="126934188"
+Received: from ikonopko-mobl1.ger.corp.intel.com (HELO [10.237.142.164]) ([10.237.142.164])
+  by orsmga006.jf.intel.com with ESMTP; 14 Mar 2019 06:49:34 -0700
+Subject: Re: [PATCH RFC] lightnvm: pblk: fix crash in pblk_end_partial_read
+ due to multipage bvecs
+To:     hans@owltronix.com, Matias Bjorling <mb@lightnvm.io>,
+        javier@javigon.com
+Cc:     Klaus Jensen <klaus.jensen@cnexlabs.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>
+References: <20190314111637.20236-1-hans@owltronix.com>
+From:   Igor Konopko <igor.j.konopko@intel.com>
+Message-ID: <103c19f4-02a2-f54c-13f8-30bc5447426e@intel.com>
+Date:   Thu, 14 Mar 2019 14:49:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190314064004-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190314111637.20236-1-hans@owltronix.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 14 Mar 2019 13:49:15 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+While reading this patch, idea came to my mind - maybe it would be 
+simply better to get rid of partial read handling from pblk in current 
+form at all and use bio_split() & bio_chain() combination instead?
 
-On 2019/3/14 下午6:42, Michael S. Tsirkin wrote:
->>>>> Which means after we fix vhost to add the flush_dcache_page after
->>>>> kunmap, Parisc will get a double hit (but it also means Parisc
->>>>> was the only one of those archs needed explicit cache flushes,
->>>>> where vhost worked correctly so far.. so it kinds of proofs your
->>>>> point of giving up being the safe choice).
->>>> What double hit?  If there's no cache to flush then cache flush is
->>>> a no-op.  It's also a highly piplineable no-op because the CPU has
->>>> the L1 cache within easy reach.  The only event when flush takes a
->>>> large amount time is if we actually have dirty data to write back
->>>> to main memory.
->>> I've heard people complaining that on some microarchitectures even
->>> no-op cache flushes are relatively expensive.  Don't ask me why,
->>> but if we can easily avoid double flushes we should do that.
->> It's still not entirely free for us.  Our internal cache line is around
->> 32 bytes (some have 16 and some have 64) but that means we need 128
->> flushes for a page ... we definitely can't pipeline them all.  So I
->> agree duplicate flush elimination would be a small improvement.
->>
->> James
-> I suspect we'll keep the copyXuser path around for 32 bit anyway -
-> right Jason?
+This would definitely reduce a number of this 'kind of complicated' code 
+inside pblk and let block layer help us with that. Even that the 
+performance of such a requests could be a little worse (few smaller IOs 
+instead of single vector IO), I believe that partial read is more a 
+corner case, then a typical use case, so maybe this would be a path to go.
 
+Let me know what you think about such an approach - I can make a patch 
+with that if you want.
 
-Yes since we don't want to slow down 32bit.
+Igor
 
-Thanks
-
-
-> So we can also keep using that on parisc...
->
-> -- 
+On 14.03.2019 12:16, hans@owltronix.com wrote:
+> From: Hans Holmberg <hans.holmberg@cnexlabs.com>
+> 
+> Ever since '07173c3ec276 ("block: enable multipage bvecs")' we
+> need to handle bios with multipage bvecs in pblk.
+> 
+> Currently, a multipage bvec results in a crash[1].
+> Fix this by using bvec iterators in stead of direct bvec indexing.
+> 
+> Also add a dcache flush, for the same reasons as in:
+> '6e6e811d747b ("block: Add missing flush_dcache_page() call")'
+> 
+> [1] https://github.com/OpenChannelSSD/linux/issues/61
+> 
+> Reported-by: Klaus Jensen <klaus.jensen@cnexlabs.com>
+> Signed-off-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
+> 
+> ---
+> 
+> RFC to get more eyes on this - note that we're doing something
+> very similar to bio_copy_data_iter.
+> 
+> This works in my QEMU setup, and I'll start more regression testing now.
+> 
+>   drivers/lightnvm/pblk-read.c | 50 ++++++++++++++++++++----------------
+>   1 file changed, 28 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/lightnvm/pblk-read.c b/drivers/lightnvm/pblk-read.c
+> index 1f9b319c9737..b8eb6bdb983b 100644
+> --- a/drivers/lightnvm/pblk-read.c
+> +++ b/drivers/lightnvm/pblk-read.c
+> @@ -231,14 +231,14 @@ static void pblk_end_partial_read(struct nvm_rq *rqd)
+>   	struct pblk_sec_meta *meta;
+>   	struct bio *new_bio = rqd->bio;
+>   	struct bio *bio = pr_ctx->orig_bio;
+> -	struct bio_vec src_bv, dst_bv;
+>   	void *meta_list = rqd->meta_list;
+> -	int bio_init_idx = pr_ctx->bio_init_idx;
+>   	unsigned long *read_bitmap = pr_ctx->bitmap;
+> +	struct bvec_iter orig_iter = BVEC_ITER_ALL_INIT;
+> +	struct bvec_iter new_iter = BVEC_ITER_ALL_INIT;
+>   	int nr_secs = pr_ctx->orig_nr_secs;
+>   	int nr_holes = nr_secs - bitmap_weight(read_bitmap, nr_secs);
+>   	void *src_p, *dst_p;
+> -	int hole, i;
+> +	int bit, i;
+>   
+>   	if (unlikely(nr_holes == 1)) {
+>   		struct ppa_addr ppa;
+> @@ -257,33 +257,39 @@ static void pblk_end_partial_read(struct nvm_rq *rqd)
+>   
+>   	/* Fill the holes in the original bio */
+>   	i = 0;
+> -	hole = find_first_zero_bit(read_bitmap, nr_secs);
+> -	do {
+> -		struct pblk_line *line;
+> +	for (bit = 0; bit < nr_secs; bit++) {
+> +		if (!test_bit(bit, read_bitmap)) {
+> +			struct bio_vec dst_bv, src_bv;
+> +			struct pblk_line *line;
+>   
+> -		line = pblk_ppa_to_line(pblk, rqd->ppa_list[i]);
+> -		kref_put(&line->ref, pblk_line_put);
+> +			line = pblk_ppa_to_line(pblk, rqd->ppa_list[i]);
+> +			kref_put(&line->ref, pblk_line_put);
+>   
+> -		meta = pblk_get_meta(pblk, meta_list, hole);
+> -		meta->lba = cpu_to_le64(pr_ctx->lba_list_media[i]);
+> +			meta = pblk_get_meta(pblk, meta_list, bit);
+> +			meta->lba = cpu_to_le64(pr_ctx->lba_list_media[i]);
+>   
+> -		src_bv = new_bio->bi_io_vec[i++];
+> -		dst_bv = bio->bi_io_vec[bio_init_idx + hole];
+> +			dst_bv = bio_iter_iovec(bio, orig_iter);
+> +			src_bv = bio_iter_iovec(new_bio, new_iter);
+>   
+> -		src_p = kmap_atomic(src_bv.bv_page);
+> -		dst_p = kmap_atomic(dst_bv.bv_page);
+> +			src_p = kmap_atomic(src_bv.bv_page);
+> +			dst_p = kmap_atomic(dst_bv.bv_page);
+>   
+> -		memcpy(dst_p + dst_bv.bv_offset,
+> -			src_p + src_bv.bv_offset,
+> -			PBLK_EXPOSED_PAGE_SIZE);
+> +			memcpy(dst_p + dst_bv.bv_offset,
+> +				src_p + src_bv.bv_offset,
+> +				PBLK_EXPOSED_PAGE_SIZE);
+>   
+> -		kunmap_atomic(src_p);
+> -		kunmap_atomic(dst_p);
+> +			kunmap_atomic(src_p);
+> +			kunmap_atomic(dst_p);
+>   
+> -		mempool_free(src_bv.bv_page, &pblk->page_bio_pool);
+> +			flush_dcache_page(dst_bv.bv_page);
+> +			mempool_free(src_bv.bv_page, &pblk->page_bio_pool);
+>   
+> -		hole = find_next_zero_bit(read_bitmap, nr_secs, hole + 1);
+> -	} while (hole < nr_secs);
+> +			bio_advance_iter(new_bio, &new_iter,
+> +					PBLK_EXPOSED_PAGE_SIZE);
+> +			i++;
+> +		}
+> +		bio_advance_iter(bio, &orig_iter, PBLK_EXPOSED_PAGE_SIZE);
+> +	}
+>   
+>   	bio_put(new_bio);
+>   	kfree(pr_ctx);
+> 
