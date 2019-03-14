@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85EBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2C0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB7B21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1D32184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbfCNXIu (ORCPT
+        id S1728056AbfCNXPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 19:08:50 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53939 "EHLO
+        Thu, 14 Mar 2019 19:15:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54001 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727489AbfCNXIu (ORCPT
+        with ESMTP id S1727489AbfCNXPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 19:08:50 -0400
+        Thu, 14 Mar 2019 19:15:01 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1h4ZSo-0004Q0-VW; Thu, 14 Mar 2019 23:08:39 +0000
+        id 1h4ZYw-0004kt-5o; Thu, 14 Mar 2019 23:14:58 +0000
 From:   Colin King <colin.king@canonical.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/lib: fix indentation issue, remove extra tab
-Date:   Thu, 14 Mar 2019 23:08:38 +0000
-Message-Id: <20190314230838.18256-1-colin.king@canonical.com>
+Subject: [PATCH] pata_serverworks: clean up misaligned indentation
+Date:   Thu, 14 Mar 2019 23:14:57 +0000
+Message-Id: <20190314231457.20966-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -44,27 +43,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-The increment of buff is indented one level too deeply, clean
-this up by removing a tab.
+There are several lines that are indented by one space too
+many; clean these up.  Also re-work comment block to clean
+up cppcheck warnings
 
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- arch/x86/lib/csum-partial_64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/pata_serverworks.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/lib/csum-partial_64.c b/arch/x86/lib/csum-partial_64.c
-index 9baca3e054be..e7925d668b68 100644
---- a/arch/x86/lib/csum-partial_64.c
-+++ b/arch/x86/lib/csum-partial_64.c
-@@ -94,7 +94,7 @@ static unsigned do_csum(const unsigned char *buff, unsigned len)
- 				    : "m" (*(unsigned long *)buff), 
- 				    "r" (zero),  "0" (result));
- 				--count; 
--					buff += 8;
-+				buff += 8;
- 			}
- 			result = add32_with_carry(result>>32,
- 						  result&0xffffffff); 
+diff --git a/drivers/ata/pata_serverworks.c b/drivers/ata/pata_serverworks.c
+index 57de02123c4c..6083c7acfbca 100644
+--- a/drivers/ata/pata_serverworks.c
++++ b/drivers/ata/pata_serverworks.c
+@@ -432,10 +432,12 @@ static int serverworks_init_one(struct pci_dev *pdev, const struct pci_device_id
+ 		 (pdev->device == PCI_DEVICE_ID_SERVERWORKS_CSB6IDE) ||
+ 		 (pdev->device == PCI_DEVICE_ID_SERVERWORKS_CSB6IDE2)) {
+ 
+-		 /* If the returned btr is the newer revision then
+-		    select the right info block */
+-		 if (rc == 3)
+-		 	ppi[0] = &info[3];
++		/*
++		 * If the returned btr is the newer revision then
++		 * select the right info block
++		 */
++		if (rc == 3)
++			ppi[0] = &info[3];
+ 
+ 		/* Is this the 3rd channel CSB6 IDE ? */
+ 		if (pdev->device == PCI_DEVICE_ID_SERVERWORKS_CSB6IDE2)
 -- 
 2.20.1
 
