@@ -2,102 +2,159 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C66C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DE8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A852063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:03:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bYkokGkV"
+	by mail.kernel.org (Postfix) with ESMTP id CF1592063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfCNLDX (ORCPT
+        id S1727482AbfCNLDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:03:23 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33258 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbfCNLDW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:03:22 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i19so3596469pfd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:03:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WtAQ8UbQ0o7FE5sm4dVG/zV+8XO4rSbLaabGJwbfjAQ=;
-        b=bYkokGkVHQr6wqH/oT0LL5vDA/514B+Q9+wYbx8i4o8adrx86fFeze7c62GG2etmt5
-         AIm/yZlADgT4QX6LLLNVh3H8xtDANju9X8qGmlrNa+73RWtREBaMp4d9NbQvZRsV2oTg
-         R8LXRPkTl9wIuUy+0rRoqHxh1ewhqUq43bYsGBXOZNLbstBdeJPQksxcFvhuYD6SJqw0
-         eJHFdnDW7YDqsDnDkDNi6RXagVJmPzYwpH2ThWn8L3FRdz9V7oMJAZBzCj2C9VUpO48N
-         MW+uoneSP0n9wCazSgWAp9/tFcQFJlr8j21sZmw5D/N7c58Zb9p9EECCdGAh6jqXcEHA
-         C4SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WtAQ8UbQ0o7FE5sm4dVG/zV+8XO4rSbLaabGJwbfjAQ=;
-        b=JSN05XORtwQCDhJ80SuNFJZOHYgZJFZVXAaE4KtE6Rl+97hu7vyC9Va8mPlxnDnkGv
-         KdGdfWZBPHLyHOdVW+3C8e9X/luUlpR23w4360SQ8Sz3+3Vqhn14dAxM6xt03TttQd5t
-         lEATcC+lrpERh0/WyHlPiDU2+Kxd4eM7L8E5SOfQ0IpcIHM3rwvEguekL1YwA4HN2xOW
-         WtNRZFeJsKu36dxN2M7v36morCM5lBA5YpcsryV4ffkhkvONkJapWgAyTUE9rb/LlWYX
-         4HsNK7hShDJKK8bsbYvaoJU4Q2IgaXTjDVjBOj3K6exkDyzIFnEoYpM3E/niqRBXYP7D
-         5COA==
-X-Gm-Message-State: APjAAAXbXLEbrMs6G5hf72j09YL2hR7B0JZyLhPNKiwlPJLgRqGD1Mye
-        F27PsbmcoyVMQqLBicAKbWppFg==
-X-Google-Smtp-Source: APXvYqy5bLSSih0xBolWw6NAOR1aDN7OqFmwiEhtPcjfXIl+iJ/pSXuHoFJ+SVozO/Z5jINfsSCOGQ==
-X-Received: by 2002:a17:902:6b8c:: with SMTP id p12mr51460057plk.282.1552561401856;
-        Thu, 14 Mar 2019 04:03:21 -0700 (PDT)
-Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id 70sm36588296pfr.43.2019.03.14.04.03.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 04:03:20 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 16:33:18 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        Thu, 14 Mar 2019 07:03:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42338 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727421AbfCNLDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:03:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A16D2374;
+        Thu, 14 Mar 2019 04:03:35 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC96B3F71D;
+        Thu, 14 Mar 2019 04:03:32 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 11:03:30 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
-        kvm@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH 0/7] cpufreq: Call transition notifier only once for each
- policy
-Message-ID: <20190314110318.on5bfau32tjsxnuz@vireshk-i7>
-References: <cover.1552545525.git.viresh.kumar@linaro.org>
- <CAJZ5v0gER+aJaQmk89VSVBtHgQ+WPDdAxUW6eJ4JCB=emC85dg@mail.gmail.com>
- <20190314101606.2aodwz5mzvstau6c@vireshk-i7>
- <CAJZ5v0jiumt_nvhc3Bv_b94Xq22h5vTwDPeM1qo+6bzChn58FQ@mail.gmail.com>
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
+ refcounting
+Message-ID: <20190314110330.rshrdeoxgzt6pk5a@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-2-patrick.bellasi@arm.com>
+ <20190313135238.GC5922@hirez.programming.kicks-ass.net>
+ <20190313155954.jse2tyn5iqxm6wle@e110439-lin>
+ <20190313193056.GP2482@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jiumt_nvhc3Bv_b94Xq22h5vTwDPeM1qo+6bzChn58FQ@mail.gmail.com>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+In-Reply-To: <20190313193056.GP2482@worktop.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-03-19, 11:55, Rafael J. Wysocki wrote:
-> On Thu, Mar 14, 2019 at 11:16 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> But some of them need to combine the new cpumask with
-> cpu_online_mask() to get what would be policy->cpus effectively.  That
-> would be avoidable if you passed the policy pointer to them.
+On 13-Mar 20:30, Peter Zijlstra wrote:
+> On Wed, Mar 13, 2019 at 03:59:54PM +0000, Patrick Bellasi wrote:
+> > On 13-Mar 14:52, Peter Zijlstra wrote:
+> > > > +static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
+> > > > +				    unsigned int clamp_id)
+> > > > +{
+> > > > +	unsigned int bucket_id = p->uclamp[clamp_id].bucket_id;
+> > > > +	unsigned int rq_clamp, bkt_clamp;
+> > > > +
+> > > > +	SCHED_WARN_ON(!rq->uclamp[clamp_id].bucket[bucket_id].tasks);
+> > > > +	if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
+> > > > +		rq->uclamp[clamp_id].bucket[bucket_id].tasks--;
+> > > > +
+> > > > +	/*
+> > > > +	 * Keep "local clamping" simple and accept to (possibly) overboost
+> > > > +	 * still RUNNABLE tasks in the same bucket.
+> > > > +	 */
+> > > > +	if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
+> > > > +		return;
+> > > 
+> > > (Oh man, I hope that generates semi sane code; long live CSE passes I
+> > > suppose)
+> > 
+> > What do you mean ?
+> 
+> that does: 'rq->uclamp[clamp_id].bucket[bucket_id].tasks' three times in
+> a row. And yes the compiler _should_ dtrt, but....
 
-Right, that's what I also thought after your previous email. Will pass
-the policy pointer instead.
+Sorry, don't follow you here... but it's an interesting point. :)
+
+The code above becomes:
+
+   if (__builtin_expect(!!(rq->uclamp[clamp_id].bucket[bucket_id].tasks), 1))
+           return;
+
+Are you referring to the resolution of the memory references, i.e
+   1) rq->uclamp
+   2) rq->uclamp[clamp_id]
+   3) rq->uclamp[clamp_id].bucket[bucket_id]
+?
+
+By playing with:
+
+   https://godbolt.org/z/OPLpyR
+
+I can see that this simplified version:
+
+---8<---
+#define BUCKETS 5
+#define CLAMPS 2
+
+struct uclamp {
+    unsigned int value;
+    struct bucket {
+        unsigned int value;
+        unsigned int tasks;
+    } bucket[BUCKETS];
+};
+
+struct rq {
+    struct uclamp uclamp[CLAMPS];
+};
+
+void uclamp_rq_dec_id(struct rq *rq, int clamp_id, int bucket_id) {
+    if (__builtin_expect(!!(rq->uclamp[clamp_id].bucket[bucket_id].tasks), 1))
+        return;
+    rq->uclamp[clamp_id].bucket[bucket_id].tasks--;
+}
+---8<---
+
+generates something like:
+
+---8<---
+uclamp_rq_dec_id:
+        sxtw    x1, w1
+        add     x3, x1, x1, lsl 1
+        lsl     x3, x3, 2
+        sub     x3, x3, x1
+        lsl     x3, x3, 2
+        add     x2, x3, x2, sxtw 3
+        add     x0, x0, x2
+        ldr     w1, [x0, 8]
+        cbz     w1, .L4
+        ret
+.L4:
+        mov     w1, -1
+        str     w1, [x0, 8]
+        ret
+---8<---
+
+
+which looks "sane" and quite expected, isn't it?
 
 -- 
-viresh
+#include <best/regards.h>
+
+Patrick Bellasi
