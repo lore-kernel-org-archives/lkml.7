@@ -2,150 +2,178 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D506C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6657C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B27217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DE82184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:46:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xk2cGNjY";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JjC9H1dI"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pzUjqjfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfCNFp0 (ORCPT
+        id S1727142AbfCNFqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 01:45:26 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38882 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfCNFpZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 01:45:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7AD94609EF; Thu, 14 Mar 2019 05:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552541706;
-        bh=QIt4dwIxDZtjIOhPMYl9C3L6oJO2HtLuKJjUu/Y0adU=;
+        Thu, 14 Mar 2019 01:46:19 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:24816 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbfCNFqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 01:46:18 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44Kd476LHyz9tyvj;
+        Thu, 14 Mar 2019 06:46:15 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=pzUjqjfB; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id QVhScbPFhy31; Thu, 14 Mar 2019 06:46:15 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44Kd47599hz9tyvg;
+        Thu, 14 Mar 2019 06:46:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1552542375; bh=aDIk8/hnkdKEojmbeEOk2Wak98qNGcNYj/PbnsmyxC4=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Xk2cGNjYq1dkUzGEnQb/q2R3zQ2lSXOxNW0mZtLqIvLs+0Q3mpXHdb7nhy6mS6CzK
-         RgDQWhum0CwfUT9Z2Udr8IY72K7NjXOs/AQVNP0FCaGFYT3MolwId36/ODfFGwYoLE
-         aCUOHxt7avKR8JeSAJaC45N/FAF9klUgFGMekws8=
-Received: from [10.206.25.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: riteshh@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D597C602A7;
-        Thu, 14 Mar 2019 05:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552541705;
-        bh=QIt4dwIxDZtjIOhPMYl9C3L6oJO2HtLuKJjUu/Y0adU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JjC9H1dIoK/bfXvYzfkPOBOWUUc6+Tuu4ZOu0VBcMZg937oR9OTR4q31DXuqWtI+H
-         tyIdgieG54h53bdD3vPGkatqwjpmuUUDEGGOuK29yANX7Ke45PCwx3g5/TfXsxT+dn
-         COOtMgwhGT5mRe5LZskdrVwzfiY9w01TEjAaqJVI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D597C602A7
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=riteshh@codeaurora.org
-Subject: Re: [PATCH V3 07/10] mmc: tegra: add Tegra186 WAR for CQE
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
-References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
- <1552513552-23423-7-git-send-email-skomatineni@nvidia.com>
-From:   Ritesh Harjani <riteshh@codeaurora.org>
-Message-ID: <55701d04-1e55-e0a0-ecd7-d31eaec5240d@codeaurora.org>
-Date:   Thu, 14 Mar 2019 11:04:59 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        b=pzUjqjfBozoYw+FEosznude4NAYAVL4uGSjrBy1ypISwnp/Q0/fgLab0qBgctOWcZ
+         0Gn3EIO4lCRgtikcX8z6xz8Q0RDG9xiaH01oKyfk6p1fWXDmJcAWY/8vTR8ovzLHYa
+         j+RnD8FhUMvoreJgp8kK5XfBYM5zEKmqTGpnnnFk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7231E8B74F;
+        Thu, 14 Mar 2019 06:46:15 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 34z0MuP418fP; Thu, 14 Mar 2019 06:46:15 +0100 (CET)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6B7B58B781;
+        Thu, 14 Mar 2019 06:46:14 +0100 (CET)
+Subject: Re: [PATCH v2] arch/powerpc: Rework local_paca to avoid LTO warnings
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190313034208.13134-1-alastair@au1.ibm.com>
+ <20190314023125.10076-1-alastair@au1.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <38922e32-3048-e45b-203e-63704a78e7d0@c-s.fr>
+Date:   Thu, 14 Mar 2019 06:46:13 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <1552513552-23423-7-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20190314023125.10076-1-alastair@au1.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 3/14/2019 3:15 AM, Sowjanya Komatineni wrote:
-> Tegra186 CQHCI host has a known bug where CQHCI controller selects
-> DATA_PRESENT_SELECT bit to 1 for DCMDs with R1B response type and
-> since DCMD does not trigger any data transfer, DCMD task complete
-> happens leaving the DATA FSM of host controller in wait state for
-> the data.
->
-> This effects the data transfer tasks issued after the DCMDs with
-> R1b response type resulting in timeout.
->
-> SW WAR is to set CMD_TIMING to 1 in DCMD task descriptor. This bug
-> and SW WAR is applicable only for Tegra186 and not for Tegra194.
->
-> This patch implements this WAR thru NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING
-> for Tegra186 and also implements update_dcmd_desc of cqhci_host_ops
-> interface to set CMD_TIMING bit depending on the NVQUIRK.
->
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-Thanks,
+Le 14/03/2019 à 03:31, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> When building an LTO kernel, the existing code generates warnings:
+>      ./arch/powerpc/include/asm/paca.h:37:30: warning: register of
+>          ‘local_paca’ used for multiple global register variables
+>       register struct paca_struct *local_paca asm("r13");
+>                                    ^
+>      ./arch/powerpc/include/asm/paca.h:37:30: note: conflicts with
+>          ‘local_paca’
+> 
+> This patch reworks local_paca into an inline getter & setter function,
+> which addresses the warning.
+> 
+> Changelog:
+> V2
+>    - Address whitespace issues
+>    - keep new implementation close to where the old implementation was
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-Reviewed-by: Ritesh Harjani <riteshh@codeaurora.org>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
 > ---
->   drivers/mmc/host/sdhci-tegra.c | 17 ++++++++++++++++-
->   1 file changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index f1aa0591112a..2f08b6e480df 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -106,6 +106,7 @@
->   #define NVQUIRK_HAS_PADCALIB				BIT(6)
->   #define NVQUIRK_NEEDS_PAD_CONTROL			BIT(7)
->   #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
-> +#define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING		BIT(9)
+>   arch/powerpc/include/asm/paca.h | 37 +++++++++++++++++++++++++--------
+>   arch/powerpc/kernel/paca.c      |  2 +-
+>   2 files changed, 29 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/paca.h
+> index e843bc5d1a0f..2fa0b43357c9 100644
+> --- a/arch/powerpc/include/asm/paca.h
+> +++ b/arch/powerpc/include/asm/paca.h
+> @@ -34,19 +34,38 @@
+>   #include <asm/cpuidle.h>
+>   #include <asm/atomic.h>
 >   
->   /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
->   #define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
-> @@ -1123,6 +1124,18 @@ static void tegra_sdhci_voltage_switch(struct sdhci_host *host)
->   		tegra_host->pad_calib_required = true;
->   }
+> -register struct paca_struct *local_paca asm("r13");
+> -
+>   #if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
+>   extern unsigned int debug_smp_processor_id(void); /* from linux/smp.h */
+> -/*
+> - * Add standard checks that preemption cannot occur when using get_paca():
+> - * otherwise the paca_struct it points to may be the wrong one just after.
+> - */
+> -#define get_paca()	((void) debug_smp_processor_id(), local_paca)
+> -#else
+> -#define get_paca()	local_paca
+>   #endif
 >   
-> +static void sdhci_tegra_update_dcmd_desc(struct mmc_host *mmc,
-> +					 struct mmc_request *mrq, u64 *data)
+> +static inline struct paca_struct *get_paca_no_preempt_check(void)
 > +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(mmc_priv(mmc));
-> +	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-> +	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
+> +	register struct paca_struct *paca asm("r13");
 > +
-> +	if (soc_data->nvquirks & NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING &&
-> +	    mrq->cmd->flags & MMC_RSP_R1B)
-> +		*data |= CQHCI_CMD_TIMING(1);
+> +	return paca;
 > +}
 > +
->   static void sdhci_tegra_cqe_enable(struct mmc_host *mmc)
+> +static inline struct paca_struct *get_paca(void)
+> +{
+> +#if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
+> +	/*
+> +	 * Add standard checks that preemption cannot occur when using get_paca():
+> +	 * otherwise the paca_struct it points to may be the wrong one just after.
+> +	 */
+> +	debug_smp_processor_id();
+> +#endif
+> +	return get_paca_no_preempt_check();
+> +}
+> +
+> +#define local_paca	get_paca_no_preempt_check()
+> +
+> +static inline void set_paca(struct paca_struct *new)
+> +{
+> +	register struct paca_struct *paca asm("r13");
+> +
+> +	paca = new;
+> +}
+> +
+>   #ifdef CONFIG_PPC_PSERIES
+>   #define get_lppaca()	(get_paca()->lppaca_ptr)
+>   #endif
+> diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
+> index 913bfca09c4f..ae5c243f9d5a 100644
+> --- a/arch/powerpc/kernel/paca.c
+> +++ b/arch/powerpc/kernel/paca.c
+> @@ -172,7 +172,7 @@ void __init initialise_paca(struct paca_struct *new_paca, int cpu)
+>   void setup_paca(struct paca_struct *new_paca)
 >   {
->   	struct cqhci_host *cq_host = mmc->cqe_private;
-> @@ -1164,6 +1177,7 @@ static const struct cqhci_host_ops sdhci_tegra_cqhci_ops = {
->   	.enable	= sdhci_tegra_cqe_enable,
->   	.disable = sdhci_cqe_disable,
->   	.dumpregs = sdhci_tegra_dumpregs,
-> +	.update_dcmd_desc = sdhci_tegra_update_dcmd_desc,
->   };
+>   	/* Setup r13 */
+> -	local_paca = new_paca;
+> +	set_paca(new_paca);
 >   
->   static const struct sdhci_ops tegra_sdhci_ops = {
-> @@ -1345,7 +1359,8 @@ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
->   		    NVQUIRK_HAS_PADCALIB |
->   		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
->   		    NVQUIRK_ENABLE_SDR50 |
-> -		    NVQUIRK_ENABLE_SDR104,
-> +		    NVQUIRK_ENABLE_SDR104 |
-> +		    NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING,
->   	.min_tap_delay = 84,
->   	.max_tap_delay = 136,
->   };
+>   #ifdef CONFIG_PPC_BOOK3E
+>   	/* On Book3E, initialize the TLB miss exception frames */
+> 
