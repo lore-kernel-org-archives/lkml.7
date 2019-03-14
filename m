@@ -6,208 +6,389 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F502C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BB2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A8B20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C266120854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfCNL23 (ORCPT
+        id S1727399AbfCNL31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:28:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37512 "EHLO mx1.redhat.com"
+        Thu, 14 Mar 2019 07:29:27 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41141 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727286AbfCNL22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:28:28 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F111B3EDB6;
-        Thu, 14 Mar 2019 11:28:27 +0000 (UTC)
-Received: from [10.36.112.69] (ovpn-112-69.ams2.redhat.com [10.36.112.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AFA48282E3;
-        Thu, 14 Mar 2019 11:28:24 +0000 (UTC)
-Subject: Re: [PATCH] kvm/x86/vmx: switch MSR_MISC_FEATURES_ENABLES between
- host and guest
-To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     Kyle Huey <khuey@kylehuey.com>, Chao Gao <chao.gao@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190314063858.18292-1-xiaoyao.li@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <b9fcb873-8c8c-79d8-436e-058ba4f7966a@redhat.com>
-Date:   Thu, 14 Mar 2019 12:28:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1726837AbfCNL30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:29:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:29:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
+   d="scan'208";a="151652296"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Mar 2019 04:29:22 -0700
+Received: from [10.125.252.108] (abudanko-mobl.ccr.corp.intel.com [10.125.252.108])
+        by linux.intel.com (Postfix) with ESMTP id 3D56658046D;
+        Thu, 14 Mar 2019 04:29:20 -0700 (PDT)
+Subject: [PATCH v8 02/12] perf record: implement --mmap-flush=<threshold>
+ option
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <36059225-9c42-8574-4910-aff153323682@linux.intel.com>
+Date:   Thu, 14 Mar 2019 14:29:19 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190314063858.18292-1-xiaoyao.li@linux.intel.com>
+In-Reply-To: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 14 Mar 2019 11:28:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/19 07:38, Xiaoyao Li wrote:
-> CPUID Faulting is a feature about CPUID instruction. When CPUID Faulting is
-> enabled, all execution of the CPUID instruction outside system-management
-> mode (SMM) cause a general-protection (#GP) if the CPL > 0.
-> 
-> About this feature, detailed information can be found at
-> https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
-> 
-> There is an issue that current kvm doesn't switch the value of
-> MSR_MISC_FEATURES_ENABLES between host and guest. If MSR_MISC_FEATURES_ENABLES
-> exists on the hardware cpu, and host enables CPUID faulting (setting the bit 0
-> of MSR_MISC_FEATURES_ENABLES), it will impact the guest's behavior because
-> cpuid faulting is enabled by host and passed to guest.
-> 
-> From my tests, when host enables cpuid faulting, it causes guest boot failure
-> when guest uses *modprobe* to load modules. Below is the error log:
-> 
-> [    1.233556] traps: modprobe[71] general protection fault ip:7f0077f6495c sp:7ffda148d808 error:0 in ld-2.17.so[7f0077f4d000+22000]
-> [    1.237780] traps: modprobe[73] general protection fault ip:7fad5aba095c sp:7ffd36067378 error:0 in ld-2.17.so[7fad5ab89000+22000]
-> [    1.241930] traps: modprobe[75] general protection fault ip:7f3edb89495c sp:7fffa1a81308 error:0 in ld-2.17.so[7f3edb87d000+22000]
-> [    1.245998] traps: modprobe[77] general protection fault ip:7f91d670895c sp:7ffc25fa7f38 error:0 in ld-2.17.so[7f91d66f1000+22000]
-> [    1.250016] traps: modprobe[79] general protection fault ip:7f0ddbbdc95c sp:7ffe9c34f8d8 error:0 in ld-2.17.so[7f0ddbbc5000+22000]
-> 
-> *modprobe* calls CPUID instruction thus causing cpuid faulting in guest.
-> At the end, because guest cannot *modprobe* modules, it boots failure.
-> 
-> This patch switches MSR_MISC_FEATURES_ENABLES between host and guest when
-> hardware has this MSR.
-> 
-> This patch doesn't confict with the commit db2336a80489 ("KVM: x86: virtualize
-> cpuid faulting"), which provides a software emulation of cpuid faulting for
-> x86 arch. Below analysing how cpuid faulting will work after applying this patch:
-> 
-> 1. If host cpu is AMD. It doesn't have MSR_MISC_FEATURES_ENABLES, so we can just
-> use the software emulation of cpuid faulting.
-> 
-> 2. If host cpu is Intel and it doesn't have MSR_MISC_FEATURES_ENABLES. The same
-> as case 1, we can just use the software emulation of cpuid faulting.
-> 
-> 3. If host cpu is Intel and it has MSR_MISC_FEATURES_ENABLES. With this patch,
-> it will write guest's value into MSR_MISC_FEATURES_ENABLES when vm entry.
-> If guest enables cpuid faulting and when guest calls CPUID instruction with
-> CPL > 0, it will cause #GP exception in guest instead of VM exit because of
-> CPUID, thus it doesn't go to the kvm emualtion path but ues the hardware
-> feature. Also it's a benefit that we needn't use VM exit to inject #GP to
-> emulate cpuid faulting feature.
-> 
-> Intel SDM vol3.25.1.1 specifies the priority between cpuid faulting
-> and CPUID instruction.
-> 
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 30a6bcd735ec..90707fae688e 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6321,6 +6321,23 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
->  					msrs[i].host, false);
->  }
->  
-> +static void atomic_switch_msr_misc_features_enables(struct kvm_vcpu *vcpu)
-> +{
-> +	u64 host_msr;
-> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +
-> +	/* if MSR MISC_FEATURES_ENABLES doesn't exist on the hardware, do nothing*/
-> +	if (rdmsrl_safe(MSR_MISC_FEATURES_ENABLES, &host_msr))
-> +		return;
-> +
-> +	if (host_msr == vcpu->arch.msr_misc_features_enables)
-> +		clear_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES);
-> +	else
-> +		add_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES,
-> +				      vcpu->arch.msr_misc_features_enables,
-> +				      host_msr, false);
-> +}
-> +
->  static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
->  {
->  	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-> @@ -6562,6 +6579,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  
->  	atomic_switch_perf_msrs(vmx);
->  
-> +	atomic_switch_msr_misc_features_enables(vcpu);
-> +
->  	vmx_update_hv_timer(vcpu);
->  
->  	/*
-> 
 
-Adding a RDMSR for this to each vmentry is too heavy.  Since we emulate
-MSR_MISC_FEATURES_ENABLES, you can just clear the MSR on vcpu_load and
-restore it on vcpu_put.
+Implemented --mmap-flush option that specifies minimal size of data
+chunk that is extracted from mmaped kernel buffer to store into a trace.
+The default option value is 1 byte what means every time trace writing
+thread finds some new data in the mmaped buffer the data is extracted,
+possibly compressed and written to a trace.
 
-Also, this needs a test in tools/testing/selftests/kvm.
+  $ tools/perf/perf record --mmap-flush 1024 -e cycles -- matrix.gcc
+  $ tools/perf/perf record --aio --mmap-flush 1K -e cycles -- matrix.gcc
 
-Paolo
+The option is independent from -z setting, doesn't vary with compression
+level and can serve two purposes.
+
+The first purpose is to increase the compression ratio of a trace data.
+Larger data chunks are compressed more effectively so the implemented
+option allows specifying data chunk size to compress. Also at some cases
+executing more write syscalls with smaller data size can take longer
+than executing less write syscalls with bigger data size due to syscall
+overhead so extracting bigger data chunks specified by the option value
+could additionally decrease runtime overhead.
+
+The second purpose is to avoid self monitoring live-lock issue in system
+wide (-a) profiling mode. Profiling in system wide mode with compression
+(-a -z) can additionally induce data into the kernel buffers along with
+the data from monitored processes. If performance data rate and volume
+from the monitored processes is high then trace streaming and compression
+activity in the tool is also high. High tool process activity can lead
+to subtle live-lock effect when compression of single new byte from some
+of mmaped kernel buffer leads to generation of the next single byte at
+some mmaped buffer. So perf tool process ends up in endless self monitoring.
+
+Implemented sync param is the mean to force data move independently from
+the specified flush threshold value. Despite the provided flush value the
+tool needs capability to unconditionally drain memory buffers, at least
+in the end of the collection.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-record.txt | 12 +++++
+ tools/perf/builtin-record.c              | 65 +++++++++++++++++++++---
+ tools/perf/perf.h                        |  1 +
+ tools/perf/util/evlist.c                 |  6 +--
+ tools/perf/util/evlist.h                 |  3 +-
+ tools/perf/util/mmap.c                   |  4 +-
+ tools/perf/util/mmap.h                   |  3 +-
+ 7 files changed, 82 insertions(+), 12 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 8f0c2be34848..8eb3f5b57202 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -459,6 +459,18 @@ Set affinity mask of trace reading thread according to the policy defined by 'mo
+   node - thread affinity mask is set to NUMA node cpu mask of the processed mmap buffer
+   cpu  - thread affinity mask is set to cpu of the processed mmap buffer
+ 
++--mmap-flush=n::
++Specify minimal number of bytes that is extracted from mmap data pages and stored
++into a trace. The number specification is possible using B/K/M/G suffixes. Maximal allowed
++value is a quarter of the size of mmaped data pages. The default option value is 1 byte
++what means that every time trace writing thread finds some new data in the mmaped buffer
++the data is extracted, possibly compressed (-z) and written to a trace. Larger data chunks
++are compressed more effectively in comparison to smaller chunks so extraction of larger
++chunks from the mmap data pages is preferable from perspective of trace size reduction.
++Also at some cases executing less trace write syscalls with bigger data size can take
++shorter than executing more trace write syscalls with smaller data size thus lowering
++runtime profiling overhead.
++
+ --all-kernel::
+ Configure all used events to run in kernel space.
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index a468d882e74f..414dd4cef680 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -334,6 +334,41 @@ static int record__aio_enabled(struct record *rec)
+ 	return rec->opts.nr_cblocks > 0;
+ }
+ 
++#define MMAP_FLUSH_DEFAULT 1
++static int record__mmap_flush_parse(const struct option *opt,
++				    const char *str,
++				    int unset)
++{
++	int flush_max;
++	struct record_opts *opts = (struct record_opts *)opt->value;
++	static struct parse_tag tags[] = {
++			{ .tag  = 'B', .mult = 1       },
++			{ .tag  = 'K', .mult = 1 << 10 },
++			{ .tag  = 'M', .mult = 1 << 20 },
++			{ .tag  = 'G', .mult = 1 << 30 },
++			{ .tag  = 0 },
++	};
++
++	if (unset)
++		return 0;
++
++	if (str) {
++		opts->mmap_flush = parse_tag_value(str, tags);
++		if (opts->mmap_flush == (int)-1)
++			opts->mmap_flush = strtol(str, NULL, 0);
++	}
++
++	if (!opts->mmap_flush)
++		opts->mmap_flush = MMAP_FLUSH_DEFAULT;
++
++	flush_max = perf_evlist__mmap_size(opts->mmap_pages);
++	flush_max /= 4;
++	if (opts->mmap_flush > flush_max)
++		opts->mmap_flush = flush_max;
++
++	return 0;
++}
++
+ static int process_synthesized_event(struct perf_tool *tool,
+ 				     union perf_event *event,
+ 				     struct perf_sample *sample __maybe_unused,
+@@ -543,7 +578,8 @@ static int record__mmap_evlist(struct record *rec,
+ 	if (perf_evlist__mmap_ex(evlist, opts->mmap_pages,
+ 				 opts->auxtrace_mmap_pages,
+ 				 opts->auxtrace_snapshot_mode,
+-				 opts->nr_cblocks, opts->affinity) < 0) {
++				 opts->nr_cblocks, opts->affinity,
++				 opts->mmap_flush) < 0) {
+ 		if (errno == EPERM) {
+ 			pr_err("Permission error mapping pages.\n"
+ 			       "Consider increasing "
+@@ -733,7 +769,7 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
+ }
+ 
+ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+-				    bool overwrite)
++				    bool overwrite, bool sync)
+ {
+ 	u64 bytes_written = rec->bytes_written;
+ 	int i;
+@@ -756,12 +792,19 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 		off = record__aio_get_pos(trace_fd);
+ 
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
++		u64 flush = 0;
+ 		struct perf_mmap *map = &maps[i];
+ 
+ 		if (map->base) {
+ 			record__adjust_affinity(rec, map);
++			if (sync) {
++				flush = map->flush;
++				map->flush = 1;
++			}
+ 			if (!record__aio_enabled(rec)) {
+ 				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
++					if (sync)
++						map->flush = flush;
+ 					rc = -1;
+ 					goto out;
+ 				}
+@@ -774,10 +817,14 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				idx = record__aio_sync(map, false);
+ 				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
+ 					record__aio_set_pos(trace_fd, off);
++					if (sync)
++						map->flush = flush;
+ 					rc = -1;
+ 					goto out;
+ 				}
+ 			}
++			if (sync)
++				map->flush = flush;
+ 		}
+ 
+ 		if (map->auxtrace_mmap.base && !rec->opts.auxtrace_snapshot_mode &&
+@@ -803,15 +850,15 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	return rc;
+ }
+ 
+-static int record__mmap_read_all(struct record *rec)
++static int record__mmap_read_all(struct record *rec, bool sync)
+ {
+ 	int err;
+ 
+-	err = record__mmap_read_evlist(rec, rec->evlist, false);
++	err = record__mmap_read_evlist(rec, rec->evlist, false, sync);
+ 	if (err)
+ 		return err;
+ 
+-	return record__mmap_read_evlist(rec, rec->evlist, true);
++	return record__mmap_read_evlist(rec, rec->evlist, true, sync);
+ }
+ 
+ static void record__init_features(struct record *rec)
+@@ -1312,7 +1359,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		if (trigger_is_hit(&switch_output_trigger) || done || draining)
+ 			perf_evlist__toggle_bkw_mmap(rec->evlist, BKW_MMAP_DATA_PENDING);
+ 
+-		if (record__mmap_read_all(rec) < 0) {
++		if (record__mmap_read_all(rec, false) < 0) {
+ 			trigger_error(&auxtrace_snapshot_trigger);
+ 			trigger_error(&switch_output_trigger);
+ 			err = -1;
+@@ -1413,6 +1460,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		record__synthesize_workload(rec, true);
+ 
+ out_child:
++	record__mmap_read_all(rec, true);
+ 	record__aio_mmap_read_sync(rec);
+ 
+ 	if (forks) {
+@@ -1815,6 +1863,7 @@ static struct record record = {
+ 			.uses_mmap   = true,
+ 			.default_per_cpu = true,
+ 		},
++		.mmap_flush          = MMAP_FLUSH_DEFAULT,
+ 	},
+ 	.tool = {
+ 		.sample		= process_sample_event,
+@@ -1881,6 +1930,9 @@ static struct option __record_options[] = {
+ 	OPT_CALLBACK('m', "mmap-pages", &record.opts, "pages[,pages]",
+ 		     "number of mmap data pages and AUX area tracing mmap pages",
+ 		     record__parse_mmap_pages),
++	OPT_CALLBACK(0, "mmap-flush", &record.opts, "bytes",
++		     "Minimal number of bytes that is extracted from mmap data pages (default: 1)",
++		     record__mmap_flush_parse),
+ 	OPT_BOOLEAN(0, "group", &record.opts.group,
+ 		    "put the counters into a counter group"),
+ 	OPT_CALLBACK_NOOPT('g', NULL, &callchain_param,
+@@ -2184,6 +2236,7 @@ int cmd_record(int argc, const char **argv)
+ 		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
+ 
+ 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
++	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
+ 
+ 	err = __cmd_record(&record, argc, argv);
+ out:
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index b120e547ddc7..7886cc9771cf 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -85,6 +85,7 @@ struct record_opts {
+ 	u64          clockid_res_ns;
+ 	int	     nr_cblocks;
+ 	int	     affinity;
++	int	     mmap_flush;
+ };
+ 
+ enum perf_affinity {
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index ed20f4379956..8858d829983b 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1037,7 +1037,7 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
+  */
+ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+-			 bool auxtrace_overwrite, int nr_cblocks, int affinity)
++			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush)
+ {
+ 	struct perf_evsel *evsel;
+ 	const struct cpu_map *cpus = evlist->cpus;
+@@ -1047,7 +1047,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 	 * Its value is decided by evsel's write_backward.
+ 	 * So &mp should not be passed through const pointer.
+ 	 */
+-	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity };
++	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush };
+ 
+ 	if (!evlist->mmap)
+ 		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
+@@ -1079,7 +1079,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 
+ int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages)
+ {
+-	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS);
++	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1);
+ }
+ 
+ int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 744906dd4887..edf18811e39f 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -165,7 +165,8 @@ unsigned long perf_event_mlock_kb_in_pages(void);
+ 
+ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+-			 bool auxtrace_overwrite, int nr_cblocks, int affinity);
++			 bool auxtrace_overwrite, int nr_cblocks,
++			 int affinity, int flush);
+ int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages);
+ void perf_evlist__munmap(struct perf_evlist *evlist);
+ 
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index cdc7740fc181..ef3d79b2c90b 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -440,6 +440,8 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd, int c
+ 
+ 	perf_mmap__setup_affinity_mask(map, mp);
+ 
++	map->flush = mp->flush;
++
+ 	if (auxtrace_mmap__mmap(&map->auxtrace_mmap,
+ 				&mp->auxtrace_mp, map->base, fd))
+ 		return -1;
+@@ -492,7 +494,7 @@ static int __perf_mmap__read_init(struct perf_mmap *md)
+ 	md->start = md->overwrite ? head : old;
+ 	md->end = md->overwrite ? old : head;
+ 
+-	if (md->start == md->end)
++	if ((md->end - md->start) < md->flush)
+ 		return -EAGAIN;
+ 
+ 	size = md->end - md->start;
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index e566c19b242b..b82f8c2d55c4 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -39,6 +39,7 @@ struct perf_mmap {
+ 	} aio;
+ #endif
+ 	cpu_set_t	affinity_mask;
++	u64		flush;
+ };
+ 
+ /*
+@@ -70,7 +71,7 @@ enum bkw_mmap_state {
+ };
+ 
+ struct mmap_params {
+-	int			    prot, mask, nr_cblocks, affinity;
++	int			    prot, mask, nr_cblocks, affinity, flush;
+ 	struct auxtrace_mmap_params auxtrace_mp;
+ };
+ 
+-- 
+2.20.1
+
