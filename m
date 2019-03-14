@@ -2,186 +2,370 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C91C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920B4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D11F20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552563306;
-	bh=oHcMZeGSpwDrMZBLflS3wXoDeMsSXCBkNRbF26gdBf0=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=EdqglXuVURoaGokLzhsegbmHrqWKgCxI8TQsKgi0muveQUENS+2qtF3ONId6+L27b
-	 tuRrZjpdpjH/RKvXzm9FbGhSiDnRa1zXisI/PP7TtFZe8tgh9yGJQqF0jgi0H0M5jQ
-	 QDeNW6m9qC/YVVgF1axQ2+GeCMz5hunutJup9i+I=
+	by mail.kernel.org (Postfix) with ESMTP id 4C7EB21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfCNLfF (ORCPT
+        id S1727471AbfCNLfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:35:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40873 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfCNLfE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:35:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k11so4104552oic.7;
-        Thu, 14 Mar 2019 04:35:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=DJXUg6BK6j8iIkIGRzDed4NlhXOL7YeHFuGQu3DEcX8=;
-        b=domHe6BDU9wzNmTjJDn1E9KVx3SX3lCNPSeRUS0yDSF33Q8tf13euFgyi1YHuyMtH0
-         ZpfjmiYEr9p36anz+QY9OVmLH7u0gGSEYbYalvDX8XOfmBUHy0ahSPJ3qv1salo7n6pk
-         M3pELANVf5oAmT0+Rn/cZ0ch40LN2nBJ+wt4Cm5LVhTYy14GNXf5kLq++U6vTeIAEr6g
-         nEz6ch2ScYb9DL3gVu5nlN1l+H16YNhCm6Ue5ZxHQpdjFyJ2qAMAkRz57qhP50q6wJmi
-         Yvw4y/PHAJQzO+z7OyoYED3W5Frf+7bpwKzSPQCffR/Sk3PtdyQKE2JasUu2z29J7iWI
-         Sx3A==
-X-Gm-Message-State: APjAAAWpFXhaKfzmZcL+rCoZNtYM874J1Zwh3/IIgASvQT59wju9r+fL
-        nJkb/zO5Fypkh5cc6/pcel4mhMHJmhsDx/vH+EtHvaWR
-X-Google-Smtp-Source: APXvYqyMWBdF8XUdxPxCN/flJHAX2gXg2QXblJCEoFgtNsFcVb0L1BFSey37t/K6I3kdN99KkWljJazNxcAcBcfZmbk=
-X-Received: by 2002:aca:cdcb:: with SMTP id d194mr1065674oig.76.1552563303116;
- Thu, 14 Mar 2019 04:35:03 -0700 (PDT)
+        Thu, 14 Mar 2019 07:35:15 -0400
+Received: from mga14.intel.com ([192.55.52.115]:6323 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726501AbfCNLfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:35:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 04:35:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
+   d="scan'208";a="282584270"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 14 Mar 2019 04:35:14 -0700
+Received: from [10.125.252.108] (abudanko-mobl.ccr.corp.intel.com [10.125.252.108])
+        by linux.intel.com (Postfix) with ESMTP id 6C7EF58046D;
+        Thu, 14 Mar 2019 04:35:12 -0700 (PDT)
+Subject: [PATCH v8 08/12] perf record: implement compression for AIO trace
+ streaming
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <44afc48a-9f9c-ad4b-3cfc-0206b7e776a1@linux.intel.com>
+Date:   Thu, 14 Mar 2019 14:35:11 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 Mar 2019 12:34:51 +0100
-Message-ID: <CAJZ5v0h0y40_bVqOyD-+hkCQmVv1vruO0donzjE7FOZ8jteubQ@mail.gmail.com>
-Subject: [GIT PULL] More power management updates for v5.1-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-Please pull from the tag
+Compression is implemented using the functions from zstd.c. As the memory
+to operate on the compression uses mmap->aio.data[] buffers. If Zstd
+streaming compression API fails for some reason the data to be compressed
+are just copied into the memory buffers using plain memcpy().
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.1-rc1-2
+Compressed trace frame consists of an array of PERF_RECORD_COMPRESSED
+records. Each element of the array is not longer that PERF_SAMPLE_MAX_SIZE
+and consists of perf_event_header followed by the compressed chunk
+that is decompressed on the loading stage.
 
-with top-most commit b444e1aa3e48e13aea22162918bd6140c85142de
+perf_mmap__aio_push() is replaced by perf_mmap__push() which is now used
+in the both serial and AIO streaming cases. perf_mmap__push() is extended
+with positive return values to signify absence of data ready for processing.
 
- Merge branches 'pm-opp' and 'pm-tools'
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/builtin-record.c | 112 ++++++++++++++++++++++++++++--------
+ tools/perf/util/mmap.c      |  76 +-----------------------
+ tools/perf/util/mmap.h      |  12 ----
+ 3 files changed, 88 insertions(+), 112 deletions(-)
 
-on top of commit ef8006846a3a97d9d8bf49e63dba948d0d2dbbf0
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index c90824172beb..d23be2a82cf3 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -130,6 +130,8 @@ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unuse
+ 	return 0;
+ }
+ 
++static int record__aio_enabled(struct record *rec);
++static int record__comp_enabled(struct record *rec);
+ static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
+ 			    void *src, size_t src_size);
+ 
+@@ -183,9 +185,9 @@ static int record__aio_complete(struct perf_mmap *md, struct aiocb *cblock)
+ 	if (rem_size == 0) {
+ 		cblock->aio_fildes = -1;
+ 		/*
+-		 * md->refcount is incremented in perf_mmap__push() for
+-		 * every enqueued aio write request so decrement it because
+-		 * the request is now complete.
++		 * md->refcount is incremented in record__aio_pushfn() for
++		 * every aio write request started in record__aio_push() so
++		 * decrement it because the request is now complete.
+ 		 */
+ 		perf_mmap__put(md);
+ 		rc = 1;
+@@ -240,18 +242,89 @@ static int record__aio_sync(struct perf_mmap *md, bool sync_all)
+ 	} while (1);
+ }
+ 
+-static int record__aio_pushfn(void *to, struct aiocb *cblock, void *bf, size_t size, off_t off)
++struct record_aio {
++	struct record 	*rec;
++	void		*data;
++	size_t		size;
++};
++
++static int record__aio_pushfn(struct perf_mmap *map, void *to, void *buf, size_t size)
+ {
+-	struct record *rec = to;
+-	int ret, trace_fd = rec->session->data->file.fd;
++	struct record_aio *aio = to;
+ 
+-	rec->samples++;
++	/*
++	 * map->base data pointed by buf is copied into free map->aio.data[] buffer
++	 * to release space in the kernel buffer as fast as possible, calling
++	 * perf_mmap__consume() from perf_mmap__push() function.
++	 *
++	 * That lets the kernel to proceed with storing more profiling data into
++	 * the kernel buffer earlier than other per-cpu kernel buffers are handled.
++	 *
++	 * Coping can be done in two steps in case the chunk of profiling data
++	 * crosses the upper bound of the kernel buffer. In this case we first move
++	 * part of data from map->start till the upper bound and then the reminder
++	 * from the beginning of the kernel buffer till the end of the data chunk.
++	 */
++
++	if (record__comp_enabled(aio->rec)) {
++		size = zstd_compress(aio->rec->session, aio->data + aio->size,
++				     perf_mmap__mmap_len(map) - aio->size,
++				     buf, size);
++	} else {
++		memcpy(aio->data + aio->size, buf, size);
++	}
++
++	if (!aio->size) {
++		/*
++		 * Increment map->refcount to guard map->aio.data[] buffer
++		 * from premature deallocation because map object can be
++		 * released earlier than aio write request started on
++		 * map->aio.data[] buffer is complete.
++		 *
++		 * perf_mmap__put() is done at record__aio_complete()
++		 * after started aio request completion or at record__aio_push()
++		 * if the request failed to start.
++		 */
++		perf_mmap__get(map);
++	}
++
++	aio->size += size;
++
++	return size;
++}
++
++static int record__aio_push(struct record *rec, struct perf_mmap *map, off_t *off)
++{
++	int ret, idx;
++	int trace_fd = rec->session->data->file.fd;
++	struct record_aio aio = { .rec = rec, .size = 0 };
+ 
+-	ret = record__aio_write(cblock, trace_fd, bf, size, off);
++	/*
++	 * Call record__aio_sync() to wait till map->aio.data[] buffer
++	 * becomes available after previous aio write operation.
++	 */
++
++	idx = record__aio_sync(map, false);
++	aio.data = map->aio.data[idx];
++	ret = perf_mmap__push(map, &aio, record__aio_pushfn);
++	if (ret != 0) /* ret > 0 - no data, ret < 0 - error */
++		return ret;
++
++	rec->samples++;
++	ret = record__aio_write(&(map->aio.cblocks[idx]), trace_fd, aio.data, aio.size, *off);
+ 	if (!ret) {
+-		rec->bytes_written += size;
++		*off += aio.size;
++		rec->bytes_written += aio.size;
+ 		if (switch_output_size(rec))
+ 			trigger_hit(&switch_output_trigger);
++	} else {
++		/*
++		 * Decrement map->refcount incremented in record__aio_pushfn()
++		 * back if record__aio_write() operation failed to start, otherwise
++		 * map->refcount is decremented in record__aio_complete() after
++		 * aio write operation finishes successfully.
++		 */
++		perf_mmap__put(map);
+ 	}
+ 
+ 	return ret;
+@@ -307,13 +380,8 @@ static int record__aio_parse(const struct option *opt,
+ #else /* HAVE_AIO_SUPPORT */
+ static int nr_cblocks_max = 0;
+ 
+-static int record__aio_sync(struct perf_mmap *md __maybe_unused, bool sync_all __maybe_unused)
+-{
+-	return -1;
+-}
+-
+-static int record__aio_pushfn(void *to __maybe_unused, struct aiocb *cblock __maybe_unused,
+-		void *bf __maybe_unused, size_t size __maybe_unused, off_t off __maybe_unused)
++static int record__aio_push(struct record *rec __maybe_unused, struct perf_mmap *map __maybe_unused,
++			    off_t *off __maybe_unused)
+ {
+ 	return -1;
+ }
+@@ -823,7 +891,7 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	int rc = 0;
+ 	struct perf_mmap *maps;
+ 	int trace_fd = rec->data.file.fd;
+-	off_t off;
++	off_t off = 0;
+ 
+ 	if (!evlist)
+ 		return 0;
+@@ -849,20 +917,14 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				map->flush = 1;
+ 			}
+ 			if (!record__aio_enabled(rec)) {
+-				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
++				if (perf_mmap__push(map, rec, record__pushfn) < 0) {
+ 					if (sync)
+ 						map->flush = flush;
+ 					rc = -1;
+ 					goto out;
+ 				}
+ 			} else {
+-				int idx;
+-				/*
+-				 * Call record__aio_sync() to wait till map->data buffer
+-				 * becomes available after previous aio write request.
+-				 */
+-				idx = record__aio_sync(map, false);
+-				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
++				if (record__aio_push(rec, map, &off) < 0) {
+ 					record__aio_set_pos(trace_fd, off);
+ 					if (sync)
+ 						map->flush = flush;
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index d85e73fc82e2..868c0b0e909c 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -289,80 +289,6 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map)
+ 	zfree(&map->aio.cblocks);
+ 	zfree(&map->aio.aiocb);
+ }
+-
+-int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off)
+-{
+-	u64 head = perf_mmap__read_head(md);
+-	unsigned char *data = md->base + page_size;
+-	unsigned long size, size0 = 0;
+-	void *buf;
+-	int rc = 0;
+-
+-	rc = perf_mmap__read_init(md);
+-	if (rc < 0)
+-		return (rc == -EAGAIN) ? 0 : -1;
+-
+-	/*
+-	 * md->base data is copied into md->data[idx] buffer to
+-	 * release space in the kernel buffer as fast as possible,
+-	 * thru perf_mmap__consume() below.
+-	 *
+-	 * That lets the kernel to proceed with storing more
+-	 * profiling data into the kernel buffer earlier than other
+-	 * per-cpu kernel buffers are handled.
+-	 *
+-	 * Coping can be done in two steps in case the chunk of
+-	 * profiling data crosses the upper bound of the kernel buffer.
+-	 * In this case we first move part of data from md->start
+-	 * till the upper bound and then the reminder from the
+-	 * beginning of the kernel buffer till the end of
+-	 * the data chunk.
+-	 */
+-
+-	size = md->end - md->start;
+-
+-	if ((md->start & md->mask) + size != (md->end & md->mask)) {
+-		buf = &data[md->start & md->mask];
+-		size = md->mask + 1 - (md->start & md->mask);
+-		md->start += size;
+-		memcpy(md->aio.data[idx], buf, size);
+-		size0 = size;
+-	}
+-
+-	buf = &data[md->start & md->mask];
+-	size = md->end - md->start;
+-	md->start += size;
+-	memcpy(md->aio.data[idx] + size0, buf, size);
+-
+-	/*
+-	 * Increment md->refcount to guard md->data[idx] buffer
+-	 * from premature deallocation because md object can be
+-	 * released earlier than aio write request started
+-	 * on mmap->data[idx] is complete.
+-	 *
+-	 * perf_mmap__put() is done at record__aio_complete()
+-	 * after started request completion.
+-	 */
+-	perf_mmap__get(md);
+-
+-	md->prev = head;
+-	perf_mmap__consume(md);
+-
+-	rc = push(to, &md->aio.cblocks[idx], md->aio.data[idx], size0 + size, *off);
+-	if (!rc) {
+-		*off += size0 + size;
+-	} else {
+-		/*
+-		 * Decrement md->refcount back if aio write
+-		 * operation failed to start.
+-		 */
+-		perf_mmap__put(md);
+-	}
+-
+-	return rc;
+-}
+ #else /* !HAVE_AIO_SUPPORT */
+ static int perf_mmap__aio_enabled(struct perf_mmap *map __maybe_unused)
+ {
+@@ -566,7 +492,7 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 
+ 	rc = perf_mmap__read_init(md);
+ 	if (rc < 0)
+-		return (rc == -EAGAIN) ? 0 : -1;
++		return (rc == -EAGAIN) ? 1 : -1;
+ 
+ 	size = md->end - md->start;
+ 
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index a02427d609c0..e8a34e0bb10e 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -101,18 +101,6 @@ union perf_event *perf_mmap__read_event(struct perf_mmap *map);
+ 
+ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 		    int push(struct perf_mmap *map, void *to, void *buf, size_t size));
+-#ifdef HAVE_AIO_SUPPORT
+-int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off);
+-#else
+-static inline int perf_mmap__aio_push(struct perf_mmap *md __maybe_unused, void *to __maybe_unused, int idx __maybe_unused,
+-	int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off) __maybe_unused,
+-	off_t *off __maybe_unused)
+-{
+-	return 0;
+-}
+-#endif
+ 
+ size_t perf_mmap__mmap_len(struct perf_mmap *map);
+ 
+-- 
+2.20.1
 
- Merge tag 'pm-5.1-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-
-to receive additional power management updates for 5.1-rc1.
-
-These are mostly fixes and cleanups on top of the previously merged
-power management material for 5.1-rc1 with one cpupower utility
-update that wasn't pushed earlier due to unfortunate timing.
-
-Specifics:
-
- - Fix registration of new cpuidle governors partially broken during
-   the 5.0 development cycle by mistake (Rafael Wysocki).
-
- - Avoid integer overflows in the menu cpuidle governor by making
-   it discard the overflowing data points upfront (Rafael Wysocki).
-
- - Fix minor mistake in the recent update of the iowait boost
-   computation in the intel_pstate driver (Rafael Wysocki).
-
- - Drop incorrect __init annotation from one function in the pxa2xx
-   cpufreq driver (Arnd Bergmann).
-
- - Fix the operating performance points (OPP) framework
-   initialization for devices in multiple power domains if
-   only one of them is scalable (Rajendra Nayak).
-
- - Fix mistake in dev_pm_opp_set_rate() which causes it to skip
-   updating the performance state if the new frequency is the same
-   as the old one (Viresh Kumar).
-
- - Rework the cancellation of wakeup source timers to avoid
-   potential issues with it and do some cleanups unlocked by
-   that change (Viresh Kumar, Rafael Wysocki).
-
- - Clean up the code computing the active/suspended time of devices
-   in the PM-runtime framework after recent changes (Ulf Hansson).
-
- - Make the power management infrastructure code use pr_fmt()
-   consistently (Joe Perches).
-
- - Clean up the generic power domains (genpd) framework somewhat
-   (Aisheng Dong).
-
- - Improve kerneldoc comments for two functions in the cpufreq core
-   (Rafael Wysocki).
-
- - Fix typo in a PM QoS file description comment (Aisheng Dong).
-
- - Update the handling of CPU boost frequencies in the cpupower
-   utility (Abhishek Goel).
-
-Thanks!
-
-
----------------
-
-Abhishek Goel (1):
-      tools/power/cpupower: Display boost frequency separately
-
-Aisheng Dong (4):
-      PM / QoS: Fix typo in file description
-      PM / Domains: Improve warn for multiple states but no governor
-      PM / Domains: Return early for all errors in _genpd_power_off()
-      PM / domains: Remove one unnecessary blank line
-
-Arnd Bergmann (1):
-      cpufreq: pxa2xx: remove incorrect __init annotation
-
-Joe Perches (1):
-      PM: Add and use pr_fmt()
-
-Rafael J. Wysocki (5):
-      cpuidle: menu: Avoid overflows when computing variance
-      cpufreq: Improve kerneldoc comments for cpufreq_cpu_get/put()
-      PM / wakeup: Drop wakeup_source_drop()
-      cpufreq: intel_pstate: Fix up iowait_boost computation
-      cpuidle: governor: Add new governors to cpuidle_governors again
-
-Rajendra Nayak (1):
-      OPP: Fix handling of multiple power domains
-
-Ulf Hansson (2):
-      PM-runtime: Consolidate code to get active/suspended time
-      PM-runtime: Call pm_runtime_active|suspended_time() from sysfs
-
-Viresh Kumar (2):
-      PM / wakeup: Rework wakeup source timer cancellation
-      PM / OPP: Update performance state when freq == old_freq
-
----------------
-
- drivers/base/power/domain.c               | 20 ++++++++-------
- drivers/base/power/domain_governor.c      |  1 -
- drivers/base/power/main.c                 | 21 ++++++++--------
- drivers/base/power/power.h                |  1 +
- drivers/base/power/qos.c                  |  2 +-
- drivers/base/power/runtime.c              | 16 +++++++++---
- drivers/base/power/sysfs.c                | 12 ++-------
- drivers/base/power/trace.c                |  2 ++
- drivers/base/power/wakeup.c               | 30 ++++++++--------------
- drivers/cpufreq/cpufreq.c                 | 24 +++++++-----------
- drivers/cpufreq/intel_pstate.c            |  2 +-
- drivers/cpufreq/pxa2xx-cpufreq.c          |  4 +--
- drivers/cpuidle/governor.c                |  1 +
- drivers/cpuidle/governors/menu.c          |  2 +-
- drivers/opp/core.c                        |  2 +-
- drivers/opp/of.c                          | 16 ++++++++++--
- include/linux/pm.h                        |  1 -
- include/linux/pm_wakeup.h                 |  9 -------
- tools/power/cpupower/lib/cpufreq.c        | 19 ++++++++------
- tools/power/cpupower/lib/cpufreq.h        | 16 ++++++------
- tools/power/cpupower/utils/cpufreq-info.c | 42 +++++++++++++++++++++++--------
- 21 files changed, 131 insertions(+), 112 deletions(-)
