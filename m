@@ -2,90 +2,84 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18731C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C2FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8D621852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5113221873
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfCNKtZ (ORCPT
+        id S1727369AbfCNKv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:49:25 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:42721 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfCNKtZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:49:25 -0400
-Received: by mail-vk1-f194.google.com with SMTP id j195so1239804vkj.9;
-        Thu, 14 Mar 2019 03:49:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fKIy6b/fNCRNihuz6p5NEN8T4h5uuF0FEWiD3d25trM=;
-        b=S85v7KWnltIKr6ADoIjqEIVcQ8Ebt9/NL3I+IRoVAannUvNBU8JyHJvbfUuRreisTc
-         /TasL9cjMLVcvNMIxL4AfHEeQG+tpu34Q7EZsxCzZyXp3xmisfMKE6w33uE8NIwZu9x0
-         Nv7jKPdnx5TBCAlp1EV1C9fhsrWSMrTuZbJrb9eGRoFFW4PKorLe3smf04CZsmQYAg0c
-         QwKnL8zmdiiZBXSCyFhgafj67bwtaWM7CNa2+Lid64jk4K/epehx55s4w59fS9cCFU1b
-         JU2BsPlVsnjipecxPp3+h8IYNUCJQQxc6MBQaoah37MWTIcYHTv89zDDt2tje4linYdE
-         FWqA==
-X-Gm-Message-State: APjAAAVZCuv7NyubBpthekeiAICF+YzPhAfckp0KmpRz5le9DDTXXqPO
-        Mx7gSM1qLrYZCqOzyDm7T+lkMBERuSW0/ey45M8=
-X-Google-Smtp-Source: APXvYqwtcokC363S92X30DVpTwpfagjfF35hnbhkU5rvXgptBu+4psAL/vyiRbF4okgUVeSTZ6degWc/gy/AHitFrSA=
-X-Received: by 2002:a1f:ae07:: with SMTP id x7mr3397776vke.74.1552560564022;
- Thu, 14 Mar 2019 03:49:24 -0700 (PDT)
+        Thu, 14 Mar 2019 06:51:56 -0400
+Received: from foss.arm.com ([217.140.101.70]:42122 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726629AbfCNKvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 06:51:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4586780D;
+        Thu, 14 Mar 2019 03:51:53 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 514E83F71D;
+        Thu, 14 Mar 2019 03:51:50 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 10:51:44 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Haibo Xu (Arm Technology China)" <Haibo.Xu@arm.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        "jdike@addtoit.com" <jdike@addtoit.com>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Bin Lu (Arm Technology China)" <Bin.Lu@arm.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Message-ID: <20190314105143.GA15410@e107155-lin>
+References: <20190228183220.15626-1-sudeep.holla@arm.com>
+ <20190228183220.15626-4-sudeep.holla@arm.com>
+ <eb9ef619-4af8-71e1-5aee-0b6294ac488b@arm.com>
+ <20190304101205.GA1504@e107155-lin>
+ <96d59a68-e5e2-86d9-c707-a79aad438b76@arm.com>
+ <20190311183403.GA31062@e107155-lin>
+ <65b00ea1-f784-4fb4-2a98-49fa44d9fa8f@arm.com>
+ <CALCETrWiF5FKUTmt4jOZJxJr6B_66NFj9TaA3Tnv1uorfkwTMg@mail.gmail.com>
+ <20190312120944.GB13825@e107155-lin>
+ <5750cfac-14a7-8eed-09f4-0d53419bea6b@arm.com>
 MIME-Version: 1.0
-References: <153754740781.17872.7869536526927736855.stgit@warthog.procyon.org.uk>
- <153754746514.17872.4993763624097980573.stgit@warthog.procyon.org.uk>
- <CAMuHMdUo7QA+xtWWoyBtFHghwYYp4XUWeHYRM2Mt5QXq+ACTww@mail.gmail.com> <21986.1552559249@warthog.procyon.org.uk>
-In-Reply-To: <21986.1552559249@warthog.procyon.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Mar 2019 11:49:11 +0100
-Message-ID: <CAMuHMdVgGUrPZAS8hT3sKMSBi8rNYu6zZ8AKBV2wRyhe8PWHTw@mail.gmail.com>
-Subject: Re: [PATCH 07/34] vfs: Add configuration parser helpers [ver #12]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mszeredi@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5750cfac-14a7-8eed-09f4-0d53419bea6b@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Wed, Mar 13, 2019 at 01:03:18AM +0000, Haibo Xu (Arm Technology China) wrote:
+[...]
 
-On Thu, Mar 14, 2019 at 11:27 AM David Howells <dhowells@redhat.com> wrote:
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > When would I want to disable this?
-> >
-> > It seems this option was introduced in "ver #10" of your patch series,
-> > without being mentioned in the changelog for that version.
->
-> Sorry, yes - it's a debugging tool to check that the parser tables are vaguely
-> sane.  I set it to default to 'Y' for the moment to catch errors in upcoming
-> fs conversion development.  You probably want to disable it if you're not
-> doing fs conversion.
+> Since ptrace() system call do have so many request type, I'm not sure
+> whether the test cases have covered all of that. But here we'd better make
+> sure the PTRACE_SYSEMU and PTRACE_SYSEMU_SINGLESTEP requests are work
+> correctly. May be you can verify them with tests from Bin Lu(bin.lu@arm.com).
 
-OK thanks. Makes perfect sense, now I see the output of
+Sure happy to try them. Can you point me to them ?
+I did end up writing few more tests.
 
-        pr_notice("*** VALIDATE %s ***\n", name);
-
-in my boot test.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Regards,
+Sudeep
