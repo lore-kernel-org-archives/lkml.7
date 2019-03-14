@@ -2,124 +2,110 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE2DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 624D4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417FA2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F782087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U5KgQpFl"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="mc33nTd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfCNHrn (ORCPT
+        id S1726828AbfCNHuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:47:43 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:13470 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbfCNHrm (ORCPT
+        Thu, 14 Mar 2019 03:50:50 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:60036 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbfCNHut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:47:42 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190314074739epoutp038867c2299507851b95e43de26d841e87~Lw7ByzaiQ0953309533epoutp03r
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:47:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190314074739epoutp038867c2299507851b95e43de26d841e87~Lw7ByzaiQ0953309533epoutp03r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1552549659;
-        bh=xNnYwL6CfNzGQuXbhKlugEnLnTYr0q/qVj+CwffWNp4=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=U5KgQpFlK9V8Sz1ZUxdjFZNrS8rbej+tuX0rN7VYudNwTM9mhIPoZhZ0uxmo7M8ed
-         oTUZvEIjA5vifFIpM35A6Q9+nZim/gUeRzblYBzAHB+1+Ws0rY5KvJNd8SSCwI4zia
-         TCa8PFvQPMn3BQ1KSlzEKyc1sNIUvZ43EzmKWRqY=
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.152]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190314074735epcas1p4137a9e5523723e9f0918a435c781f21d~Lw6_xohwg2414324143epcas1p4A;
-        Thu, 14 Mar 2019 07:47:35 +0000 (GMT)
-X-AuditID: b6c32a37-f19ff7000000102f-15-5c8a07163aa0
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E6.4F.04143.6170A8C5; Thu, 14 Mar 2019 16:47:34 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE: [RESEND PATCH] PM / devfreq: Fix static checker warning in
- try_then_request_governor
-Reply-To: myungjoo.ham@samsung.com
-From:   MyungJoo Ham <myungjoo.ham@samsung.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "kernel@collabora.com" <kernel@collabora.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20190313122253.24355-1-enric.balletbo@collabora.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190314074734epcms1p8c7c23ea44032c17581fd1bf252bea5fa@epcms1p8>
-Date:   Thu, 14 Mar 2019 16:47:34 +0900
-X-CMS-MailID: 20190314074734epcms1p8c7c23ea44032c17581fd1bf252bea5fa
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG/Xa2naM1OS7LD7utQwkaczuu6TE1ujPIQqhQQloHPW3ibuxs
-        lUW17D5aKAkTW9kNBSc4ZupIabakiFK6oWgXpBolmTW0IEht29mo/348vO/zvs/7fRgiPiNM
-        x6oMFsZsoHWEMInf/TBTJl2C2svlI7+k1MjMZwH1dc7Jp9rfBADVOXRJQA3WTqLUq3suITXt
-        GAAbUZXv3R2gCgXH+KrLd9uAatq7ooS/r7pQy9CVjFnCGCqMlVUGTRGxY7d6i1qZKyelZD6V
-        R0gMtJ4pIrYWl0i3V+nCGxCSQ7TOGpZKaJYlZBsKzUarhZFojayliGBMlTpTvimbpfWs1aDJ
-        rjDq15NyeY4yXHigWjtwNYiYhtEjl6ffAhtwC+0gEYP4Ojg/PcazgyRMjPsAHH3Yi9oBhonw
-        FDjrWxSpWYRXQPfEC16ExTgBbaP3EU6XwQvj3SDCQlwKuzzv+BFOxY/CHx8no4zgEwCemirl
-        Zolg4/kgn+OlsKe1K9qbiG+GrvrfCKcvhqPub2icvz9qBhynwrPvB2M1KXD8dy+I+zQ2zMc8
-        j8Fh5200kgXiZwB0uBtiRTL47NqTaGARvhPaGxqjYfj4GtjvORsz3QpfjvfxuKVXwp5vLiRy
-        BwTPhB33ZJycDKd+XhLEs/iuf+JxnAEDvXdiOy+DT503Y5Yq2GKP3/YigK8bnyN1YGXTv/M2
-        /Tet6d+0GwBpA0sYE6vXMCxpUvz/ol4Q/YFZeT7gGSoOABwDxEKRDblYLhbQh9gafQBADCFS
-        RXuzw5Kokq45ypiNarNVx7ABoAyHrkfSF1cYw//ZYFGTyhyFQkGtI3OVJEmkiTo2bikX4xra
-        wlQzjIkxx/t4WGK6DdD99J5g8xTqkTpP3GwtOOdyHCxGvX9SglfEZRk+SaffmNY9vrx3+GTo
-        T0JIumZTx+rQ4we1M3a/fCRhgSJ50+mcvIPz0sKJL2vL2uePFwnTNJOncm+hLbxMb2efY/jD
-        7OF9oQFixq96NbtqrMCdnwT3a7v2KHaVzunrtmX5FQSf1dJkFmJm6b9d1l48lwMAAA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190313122310epcas5p1cc4a6a8570c90ce76743b90a7e5c96c1
-References: <20190313122253.24355-1-enric.balletbo@collabora.com>
-        <CGME20190313122310epcas5p1cc4a6a8570c90ce76743b90a7e5c96c1@epcms1p8>
+        Thu, 14 Mar 2019 03:50:49 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 34461C43
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:50:48 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jeB4Ymar3-cf for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 02:50:48 -0500 (CDT)
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 083A096D
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:50:48 -0500 (CDT)
+Received: by mail-io1-f71.google.com with SMTP id i1so3735509ioq.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=DLANtRSSRHAl4T+X5AQuykmiffSXk6BE1bjRT1gOrDw=;
+        b=mc33nTd7ZZ/PlEGWW5dq7jTiyDDeuhuqTkgvkT7UUjPuf9mlfb0OYOD2WSuMx7mMYL
+         k27rZu7mjFY8Hat9LMZMSNWz9ebkb88gdOs/lvkOduofrXPwfR5vW5Ppon58sXNYaFiU
+         M9mGXzggJEFRBsy+yTbckhYhrxRDeUfmJW5j67LuKN9yABTKQCOUV4GR4GGjw7xnpN1c
+         jdcTYMS072mAsXq8Tuu130+wKC4RsMBaNxQHHbJCUblLR/hdjPytSi09CixubKD9MY2Z
+         n33Y3Vrx0Y8pxAZj7zec+DRcVbFH9iS2ZeqBFK3z5Xy08gIhYk4oMOIyHMFWtOwlIDfv
+         C/KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DLANtRSSRHAl4T+X5AQuykmiffSXk6BE1bjRT1gOrDw=;
+        b=DwnLt1opEkOjEs6QllX1WhV5lFzc9gYHP7SqoRLriawh4JzwsvVIjWSuyDGmiBZL6P
+         UjfEwl6Z3+CvK2B9dHdWMnZ00vO8t4RUCRWAckMLBwD5TuK6QOwU6iXRnQrMO/1jxw4o
+         dojItA9rCQ+4tBwHn+FSqKZzTENT1sJV4l1exS1MLY9LUwgKGGAq+YbTxWeKLEdrMqZS
+         fFoYb//ZORKCiqvl6VHgGaCQF9WC6kOmkiCr7Z2jh8OZ5CNWOLj92Uq9dT0SwDKwtCWf
+         P4591TB1hsdYrRE7ydCWoXPIfHAjYkfZ1b8JI8BxqAMNvSg3rdzRGMaWgIogfX4FNRLX
+         UlQQ==
+X-Gm-Message-State: APjAAAUrSLy8izTDc9CqebxwK75GATcCSjNkuZELqcUZbnZhokj4wBWN
+        G99+8zTGXGAhmAJDkYFHTkp09Gr1vyJMI69HyLlQPpAfSGb1I68ZxufJE4TSChr+9aQAvvfnv04
+        8nsTdKPStAOL8QaGVHZ5XywORSUTa
+X-Received: by 2002:a24:29c8:: with SMTP id p191mr1116834itp.115.1552549847615;
+        Thu, 14 Mar 2019 00:50:47 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwkfCVvG2ptR02yE3dTQHdvKlnANoVN72gvCgb3pCVla2WLuPN1hMoGboIrjjpRk4TFMRVtmA==
+X-Received: by 2002:a24:29c8:: with SMTP id p191mr1116826itp.115.1552549847379;
+        Thu, 14 Mar 2019 00:50:47 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id k4sm820334itc.32.2019.03.14.00.50.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 00:50:46 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: fix a NULL pointer dereference
+Date:   Thu, 14 Mar 2019 02:50:40 -0500
+Message-Id: <20190314075041.28966-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->The patch 23c7b54ca1cd: "PM / devfreq: Fix devfreq_add_device() when
->drivers are built as modules." leads to the following static checker
->warning:
->
->    drivers/devfreq/devfreq.c:1043 governor_store()
->    warn: 'governor' can also be NULL
->
->The reason is that the try_then_request_governor() function returns both
->error pointers and NULL. It should just return error pointers, so fix
->this by returning a ERR_PTR to the error intead of returning NULL.
->
->Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.")
->Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->---
->Hi,
->
->This is a resend of [1] as seems that got lost at some point and I just
->noticed that was never merged.
->
->Thanks,
-> Enric
+btrfs_lookup_block_group may fail and return NULL. The fix goes
+to out when it fails to avoid NULL pointer dereference.
 
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ fs/btrfs/extent-tree.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks!
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index 994f0cc41799..b1e7985bcb9d 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -7303,6 +7303,8 @@ void btrfs_free_tree_block(struct btrfs_trans_handle *trans,
+ 
+ 		pin = 0;
+ 		cache = btrfs_lookup_block_group(fs_info, buf->start);
++		if (!cache)
++			goto out;
+ 
+ 		if (btrfs_header_flag(buf, BTRFS_HEADER_FLAG_WRITTEN)) {
+ 			pin_down_extent(fs_info, cache, buf->start,
+-- 
+2.17.1
 
-
-CHeers,
-MyungJoo
