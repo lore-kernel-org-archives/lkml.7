@@ -2,157 +2,177 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D0AC10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37A1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F26D20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6423C21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfCNMNr (ORCPT
+        id S1727349AbfCNMOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:13:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41308 "EHLO mx1.redhat.com"
+        Thu, 14 Mar 2019 08:14:00 -0400
+Received: from mga04.intel.com ([192.55.52.120]:6706 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbfCNMNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 08:13:47 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 78B0718DF7B;
-        Thu, 14 Mar 2019 12:13:46 +0000 (UTC)
-Received: from gondolin (ovpn-116-124.ams2.redhat.com [10.36.116.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E7EB60CD1;
-        Thu, 14 Mar 2019 12:13:42 +0000 (UTC)
-Date:   Thu, 14 Mar 2019 13:13:39 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, axboe@kernel.dk,
-        linux-kernel@vger.kernel.org
-Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
-Message-ID: <20190314131339.1b61fff6.cohuck@redhat.com>
-In-Reply-To: <a3f24cfa-5160-0ccc-decc-a48362c8de19@oracle.com>
-References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
-        <20190312183351.74764f4f.cohuck@redhat.com>
-        <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
-        <20190313103900.1ea7f996.cohuck@redhat.com>
-        <a3f24cfa-5160-0ccc-decc-a48362c8de19@oracle.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726891AbfCNMN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 08:13:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 05:13:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
+   d="scan'208";a="151661325"
+Received: from lxy-dell.sh.intel.com ([10.239.159.145])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Mar 2019 05:13:57 -0700
+Message-ID: <117d2611b7cf1dbc8cde28a93c9fc31da5dd8986.camel@linux.intel.com>
+Subject: Re: [PATCH] kvm/x86/vmx: switch MSR_MISC_FEATURES_ENABLES between
+ host and guest
+From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Kyle Huey <khuey@kylehuey.com>, Chao Gao <chao.gao@intel.com>,
+        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 14 Mar 2019 20:10:34 +0800
+In-Reply-To: <b9fcb873-8c8c-79d8-436e-058ba4f7966a@redhat.com>
+References: <20190314063858.18292-1-xiaoyao.li@linux.intel.com>
+         <b9fcb873-8c8c-79d8-436e-058ba4f7966a@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 14 Mar 2019 12:13:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019 14:12:32 +0800
-Dongli Zhang <dongli.zhang@oracle.com> wrote:
-
-> On 3/13/19 5:39 PM, Cornelia Huck wrote:
-> > On Wed, 13 Mar 2019 11:26:04 +0800
-> > Dongli Zhang <dongli.zhang@oracle.com> wrote:
-> >   
-> >> On 3/13/19 1:33 AM, Cornelia Huck wrote:  
-> >>> On Tue, 12 Mar 2019 10:22:46 -0700 (PDT)
-> >>> Dongli Zhang <dongli.zhang@oracle.com> wrote:
-
-> >>>> Is this by design on purpose, or can we fix with below?
-> >>>>
-> >>>>
-> >>>> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> >>>> index 4bc083b..df95ce3 100644
-> >>>> --- a/drivers/block/virtio_blk.c
-> >>>> +++ b/drivers/block/virtio_blk.c
-> >>>> @@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
-> >>>>  	if (err)
-> >>>>  		num_vqs = 1;
-> >>>>  
-> >>>> +	num_vqs = min(num_possible_cpus(), num_vqs);
-> >>>> +
-> >>>>  	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
-> >>>>  	if (!vblk->vqs)
-> >>>>  		return -ENOMEM;    
-> >>>
-> >>> virtio-blk, however, is not pci-specific.
-> >>>
-> >>> If we are using the ccw transport on s390, a completely different
-> >>> interrupt mechanism is in use ('floating' interrupts, which are not
-> >>> per-cpu). A check like that should therefore not go into the generic
-> >>> driver.
-> >>>     
-> >>
-> >> So far there seems two options.
-> >>
-> >> The 1st option is to ask the qemu user to always specify "-num-queues" with the
-> >> same number of vcpus when running x86 guest with pci for virtio-blk or
-> >> virtio-scsi, in order to assign a vector for each queue.  
+On Thu, 2019-03-14 at 12:28 +0100, Paolo Bonzini wrote:
+> On 14/03/19 07:38, Xiaoyao Li wrote:
+> > CPUID Faulting is a feature about CPUID instruction. When CPUID Faulting is
+> > enabled, all execution of the CPUID instruction outside system-management
+> > mode (SMM) cause a general-protection (#GP) if the CPL > 0.
 > > 
-> > That does seem like an extra burden for the user: IIUC, things work
-> > even if you have too many queues, it's just not optimal. It sounds like
-> > something that can be done by a management layer (e.g. libvirt), though.
-> >   
-> >> Or, is it fine for virtio folks to add a new hook to 'struct virtio_config_ops'
-> >> so that different platforms (e.g., pci or ccw) would use different ways to limit
-> >> the max number of queues in guest, with something like below?  
+> > About this feature, detailed information can be found at
 > > 
-> > That sounds better, as both transports and drivers can opt-in here.
+https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
 > > 
-> > However, maybe it would be even better to try to come up with a better
-> > strategy of allocating msix vectors in virtio-pci. More vectors in the
-> > num_queues > num_cpus case, even if they still need to be shared?
-> > Individual vectors for n-1 cpus and then a shared one for the remaining
-> > queues?
+> > There is an issue that current kvm doesn't switch the value of
+> > MSR_MISC_FEATURES_ENABLES between host and guest. If
+> > MSR_MISC_FEATURES_ENABLES
+> > exists on the hardware cpu, and host enables CPUID faulting (setting the bit
+> > 0
+> > of MSR_MISC_FEATURES_ENABLES), it will impact the guest's behavior because
+> > cpuid faulting is enabled by host and passed to guest.
 > > 
-> > It might even be device-specific: Have some low-traffic status queues
-> > share a vector, and provide an individual vector for high-traffic
-> > queues. Would need some device<->transport interface, obviously.
-> >   
+> > From my tests, when host enables cpuid faulting, it causes guest boot
+> > failure
+> > when guest uses *modprobe* to load modules. Below is the error log:
+> > 
+> > [    1.233556] traps: modprobe[71] general protection fault ip:7f0077f6495c
+> > sp:7ffda148d808 error:0 in ld-2.17.so[7f0077f4d000+22000]
+> > [    1.237780] traps: modprobe[73] general protection fault ip:7fad5aba095c
+> > sp:7ffd36067378 error:0 in ld-2.17.so[7fad5ab89000+22000]
+> > [    1.241930] traps: modprobe[75] general protection fault ip:7f3edb89495c
+> > sp:7fffa1a81308 error:0 in ld-2.17.so[7f3edb87d000+22000]
+> > [    1.245998] traps: modprobe[77] general protection fault ip:7f91d670895c
+> > sp:7ffc25fa7f38 error:0 in ld-2.17.so[7f91d66f1000+22000]
+> > [    1.250016] traps: modprobe[79] general protection fault ip:7f0ddbbdc95c
+> > sp:7ffe9c34f8d8 error:0 in ld-2.17.so[7f0ddbbc5000+22000]
+> > 
+> > *modprobe* calls CPUID instruction thus causing cpuid faulting in guest.
+> > At the end, because guest cannot *modprobe* modules, it boots failure.
+> > 
+> > This patch switches MSR_MISC_FEATURES_ENABLES between host and guest when
+> > hardware has this MSR.
+> > 
+> > This patch doesn't confict with the commit db2336a80489 ("KVM: x86:
+> > virtualize
+> > cpuid faulting"), which provides a software emulation of cpuid faulting for
+> > x86 arch. Below analysing how cpuid faulting will work after applying this
+> > patch:
+> > 
+> > 1. If host cpu is AMD. It doesn't have MSR_MISC_FEATURES_ENABLES, so we can
+> > just
+> > use the software emulation of cpuid faulting.
+> > 
+> > 2. If host cpu is Intel and it doesn't have MSR_MISC_FEATURES_ENABLES. The
+> > same
+> > as case 1, we can just use the software emulation of cpuid faulting.
+> > 
+> > 3. If host cpu is Intel and it has MSR_MISC_FEATURES_ENABLES. With this
+> > patch,
+> > it will write guest's value into MSR_MISC_FEATURES_ENABLES when vm entry.
+> > If guest enables cpuid faulting and when guest calls CPUID instruction with
+> > CPL > 0, it will cause #GP exception in guest instead of VM exit because of
+> > CPUID, thus it doesn't go to the kvm emualtion path but ues the hardware
+> > feature. Also it's a benefit that we needn't use VM exit to inject #GP to
+> > emulate cpuid faulting feature.
+> > 
+> > Intel SDM vol3.25.1.1 specifies the priority between cpuid faulting
+> > and CPUID instruction.
+> > 
+> > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 30a6bcd735ec..90707fae688e 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -6321,6 +6321,23 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx
+> > *vmx)
+> >  					msrs[i].host, false);
+> >  }
+> >  
+> > +static void atomic_switch_msr_misc_features_enables(struct kvm_vcpu *vcpu)
+> > +{
+> > +	u64 host_msr;
+> > +	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > +
+> > +	/* if MSR MISC_FEATURES_ENABLES doesn't exist on the hardware, do
+> > nothing*/
+> > +	if (rdmsrl_safe(MSR_MISC_FEATURES_ENABLES, &host_msr))
+> > +		return;
+> > +
+> > +	if (host_msr == vcpu->arch.msr_misc_features_enables)
+> > +		clear_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES);
+> > +	else
+> > +		add_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES,
+> > +				      vcpu->arch.msr_misc_features_enables,
+> > +				      host_msr, false);
+> > +}
+> > +
+> >  static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
+> >  {
+> >  	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
+> > @@ -6562,6 +6579,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >  
+> >  	atomic_switch_perf_msrs(vmx);
+> >  
+> > +	atomic_switch_msr_misc_features_enables(vcpu);
+> > +
+> >  	vmx_update_hv_timer(vcpu);
+> >  
+> >  	/*
+> > 
 > 
-> This sounds a little bit similar to multiple hctx maps?
-> 
-> So far, as virtio-blk only supports set->nr_maps = 1, no matter how many hw
-> queues are assigned for virtio-blk, blk_mq_alloc_tag_set() would use at most
-> nr_cpu_ids hw queues.
-> 
-> 2981 int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
-> ... ...
-> 3021         /*
-> 3022          * There is no use for more h/w queues than cpus if we just have
-> 3023          * a single map
-> 3024          */
-> 3025         if (set->nr_maps == 1 && set->nr_hw_queues > nr_cpu_ids)
-> 3026                 set->nr_hw_queues = nr_cpu_ids;
-> 
-> Even the block layer would limit the number of hw queues by nr_cpu_ids when
-> (set->nr_maps == 1).
+> Adding a RDMSR for this to each vmentry is too heavy.  Since we emulate
+> MSR_MISC_FEATURES_ENABLES, you can just clear the MSR on vcpu_load and
+> restore it on vcpu_put.
 
-Correct me if I'm wrong, but there seem to be two kinds of limitations
-involved here:
-- Allocation of msix vectors by the virtio-pci transport. We end up
-  with shared vectors if we have more virtqueues than vcpus. Other
-  transports may or may not have similar issues, but essentially, this
-  is something that applies to all kind of virtio devices attached via
-  the virtio-pci transport.
-- The block layer limits the number of hw queues to the number of
-  vcpus. This applies only to virtio devices that interact with the
-  block layer, but regardless of the virtio transport.
+It's much better and more efficient.
+I will do it this way in next version.
 
-> That's why I think virtio-blk should use the similar solution as nvme
-> (regardless about write_queues and poll_queues) and xen-blkfront.
+> Also, this needs a test in tools/testing/selftests/kvm.
 
-Ok, the hw queues limit from above would be an argument to limit to
-#vcpus in the virtio-blk driver, regardless of the transport used. (No
-idea if there are better ways to deal with this, I'm not familiar with
-the interface.)
+Sure, I will add that.
 
-For virtio devices that don't interact with the block layer and are
-attached via the virtio-pci transport, it might still make sense to
-revisit vector allocation.
+> Paolo
+
