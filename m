@@ -2,119 +2,123 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB3BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3439C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10BC2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 785D72184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfCNHyL (ORCPT
+        id S1727170AbfCNHyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:54:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46268 "EHLO mx1.suse.de"
+        Thu, 14 Mar 2019 03:54:18 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48244 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726083AbfCNHyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:54:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DD7EBAC44;
-        Thu, 14 Mar 2019 07:54:08 +0000 (UTC)
-Subject: Re: [PATCH] btrfs: fix a NULL pointer dereference
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190314075041.28966-1-kjlu@umn.edu>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b0b494f4-8686-8e50-faca-625d6f89bbe3@suse.com>
-Date:   Thu, 14 Mar 2019 09:54:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1726606AbfCNHyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 03:54:17 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0EBDC5ABE2909F18C4D8;
+        Thu, 14 Mar 2019 15:54:15 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Thu, 14 Mar 2019
+ 15:54:10 +0800
+Message-ID: <5C8A08A1.3090403@huawei.com>
+Date:   Thu, 14 Mar 2019 15:54:09 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-In-Reply-To: <20190314075041.28966-1-kjlu@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+CC:     Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [Qestion] Hit a WARN_ON_ONCE in try_to_unmap_one when runing
+ syzkaller
+References: <5C87D848.7030802@huawei.com> <20190314062757.GA27899@hori.linux.bs1.fc.nec.co.jp>
+In-Reply-To: <20190314062757.GA27899@hori.linux.bs1.fc.nec.co.jp>
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/3/14 14:27, Naoya Horiguchi wrote:
+> Hi,
+>
+> On Wed, Mar 13, 2019 at 12:03:20AM +0800, zhong jiang wrote:
+> ...
+>> Minchan has changed the conditon check from  BUG_ON  to WARN_ON_ONCE in try_to_unmap_one.
+>> However,  It is still an abnormal condition when PageSwapBacked is not equal to PageSwapCache.
+>>
+>> But Is there any case it will meet the conditon in the mainline.
+>>
+>> It is assumed that PageSwapBacked(page) is true in the anonymous page,   This is to say,  PageSwapcache
+>> is false. however,  That is impossible because we will update the pte for hwpoison entry.
+>>
+>> Because page is locked ,  Its page flags should not be changed except for PageSwapBacked
+> try_to_unmap_one() from hwpoison_user_mappings() could reach the
+> WARN_ON_ONCE() only if TTU_IGNORE_HWPOISON is set, because PageHWPoison()
+> is set at the beginning of memory_failure().
+>
+> Clearing TTU_IGNORE_HWPOISON might happen on the following two paths:
+>
+>   static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
+>                                     int flags, struct page **hpagep)
+>   {
+>       ...
+>   
+>       if (PageSwapCache(p)) {
+>               pr_err("Memory failure: %#lx: keeping poisoned page in swap cache\n",
+>                       pfn);
+>               ttu |= TTU_IGNORE_HWPOISON;
+>       }
+>       ...
+>
+>       mapping = page_mapping(hpage);                                                                           
+>       if (!(flags & MF_MUST_KILL) && !PageDirty(hpage) && mapping &&                                           
+>           mapping_cap_writeback_dirty(mapping)) {                                                              
+>               if (page_mkclean(hpage)) {                                                                       
+>                       SetPageDirty(hpage);                                                                     
+>               } else {                                                                                         
+>                       kill = 0;                                                                                
+>                       ttu |= TTU_IGNORE_HWPOISON;                                                              
+>                       pr_info("Memory failure: %#lx: corrupted page was clean: dropped without side effects\n",
+>                               pfn);                                                                            
+>               }                                                                                                
+>       }                                                                                                        
+>       ...
+>
+>       unmap_success = try_to_unmap(hpage, ttu);
+>       ...
+>
+> So either of the above "ttu |= TTU_IGNORE_HWPOISON" should be executed.
+> I'm not sure which one, but both paths show printk messages, so if you
+> could have kernel message log, that might help ...
+Thank you for your response.
+
+Unfortunately, I lost the printk log. I was looking for it before and support us for further analysis.
+
+It's very weird to get there. Assume that TTU_IGNORE_HWPOSISON is set. There is the two case.
+
+First, PageSwapCache is set and page has been locked. Theoretically WARN_ON_ONCE should not be triggered.
+Second, We should assume the page belongs to file page.:-(
+
+I will go on reproducing the issue and get the printk message log.
+
+Thanks
+zhong jiang
+> Thanks,
+> Naoya Horiguchi
+>
+> .
+>
 
 
-On 14.03.19 г. 9:50 ч., Kangjie Lu wrote:
-> btrfs_lookup_block_group may fail and return NULL. The fix goes
-> to out when it fails to avoid NULL pointer dereference.
-
-Actually no, in this case btrfs_lookup_block_group must never fail
-because if we have an allocated eb then it must have been allocated from
-a bg.
-
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->  fs/btrfs/extent-tree.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-> index 994f0cc41799..b1e7985bcb9d 100644
-> --- a/fs/btrfs/extent-tree.c
-> +++ b/fs/btrfs/extent-tree.c
-> @@ -7303,6 +7303,8 @@ void btrfs_free_tree_block(struct btrfs_trans_handle *trans,
->  
->  		pin = 0;
->  		cache = btrfs_lookup_block_group(fs_info, buf->start);
-> +		if (!cache)
-> +			goto out;
->  
->  		if (btrfs_header_flag(buf, BTRFS_HEADER_FLAG_WRITTEN)) {
->  			pin_down_extent(fs_info, cache, buf->start,
-> 
