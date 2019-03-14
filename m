@@ -2,131 +2,131 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D922BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45C2C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4E421872
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A992077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 20:57:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mbuki-mvuki-org.20150623.gappssmtp.com header.i=@mbuki-mvuki-org.20150623.gappssmtp.com header.b="YjrKN8ZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfCNUyS convert rfc822-to-8bit (ORCPT
+        id S1727874AbfCNU5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 16:54:18 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:44306 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfCNUyR (ORCPT
+        Thu, 14 Mar 2019 16:57:21 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43143 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727246AbfCNU5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 16:54:17 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id E0CC860D4833;
-        Thu, 14 Mar 2019 21:54:13 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id oEITekKMhT3l; Thu, 14 Mar 2019 21:54:13 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 7434060ED8B5;
-        Thu, 14 Mar 2019 21:54:13 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id uTYZWp7_Dz-m; Thu, 14 Mar 2019 21:54:13 +0100 (CET)
-Received: from blindfold.localnet (089144193070.atnat0002.highway.a1.net [89.144.193.70])
-        by lithops.sigma-star.at (Postfix) with ESMTPSA id A22E760D4833;
-        Thu, 14 Mar 2019 21:54:11 +0100 (CET)
-From:   Richard Weinberger <richard@nod.at>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-mtd@lists.infradead.org, linux-fscrypt@vger.kernel.org,
-        jaegeuk@kernel.org, tytso@mit.edu, linux-unionfs@vger.kernel.org,
-        miklos@szeredi.hu, amir73il@gmail.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        paullawrence@google.com
-Subject: Re: [PATCH 4/4] ubifs: Implement new mount option, fscrypt_key_required
-Date:   Thu, 14 Mar 2019 21:54:10 +0100
-Message-ID: <1957441.Hty6t2mpXG@blindfold>
-In-Reply-To: <20190314174913.GA30026@gmail.com>
-References: <CAJfpegvX4ANfso-Jn1zaB+m4Q_0eK9i-+MCJ+sTH5QzD3PZFMQ@mail.gmail.com> <20190314171559.27584-5-richard@nod.at> <20190314174913.GA30026@gmail.com>
+        Thu, 14 Mar 2019 16:57:21 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d17so7346626wre.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 13:57:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mbuki-mvuki-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0n+Yubwo3+VmfuEyCVcIzcBbnEVd7iC+Fb5ALd0vzzg=;
+        b=YjrKN8ZC41ArPSrj0jEaqlU4YzOOpZoWqbYM/ehGIDZKXKseeyLuCWiEWRB/90obzT
+         Iqdf02pwGiJTvBTjeB0V2RTpojLOPRyNeYT3PHdfG/2O6TbBmp3A46XSinGJwZrf4JSG
+         He7i12HS/Gkv0Pg/gA22aQYD+VNGqsC9ECUlwc43t7NBOlpuoHkE5Hx7PdM53YxzQ6FG
+         BVum16oZFCTwWPfRzVYgXe1O5fWazUbGYoGBkh53uDT6qjCTJnL2TCOA+4VPqLLMpFXw
+         RMnCVeJCsGaaDZaQgMvvotdbkDxDJr6SINUpwzJ2q1efNPcv8fYeZ3jyYSSRGCqh2JH0
+         SJ2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0n+Yubwo3+VmfuEyCVcIzcBbnEVd7iC+Fb5ALd0vzzg=;
+        b=L/KoSS2UW6OyBC8y1jI2rfmhpnaMzb3b6lvqk64AZJmQ5RDeW2/HnceRdiT7sCwYh+
+         d5wRieR/lxh9ZwTTKF/fQiSstX0KWd00kDOmB5m8MRnsVWbiSq2L2FjzGF+DkpWEVDq7
+         Vc2wIGdbc3jkPtrLlVKc4azqorzakvAufqeTXTuCO3iirxyx4972LgmYrtthrqyOFN/2
+         j1KVtcbvmM9buWZSsvVZxmtJnQpmn1esDc/OlCfQjASI8ufsVsHbtmvtfthrcazVoSlg
+         AKC8Nih0L6ywryFhylKmDQsSJj11/zCVVR2kKEIfKtsqz9dIghqSJk0zi4+jNRBWfAZv
+         HZUA==
+X-Gm-Message-State: APjAAAVxG5LZVHohyUTeK8nM8MYv0nUzYvPnLBpIbOB+RZLgv4WFBNib
+        RSE+QECcdUCxVzhLpzQVQ6Hk3HMHv0TAUw7n8TUPsQ==
+X-Google-Smtp-Source: APXvYqw0lPXN5Zx+E9zkLIeQwjb6vF8nfptwMRMufVE6lctcBMaNIw0IVzBD+zS7E5O86tPrDgwB0rLfvRGHrp7bq/E=
+X-Received: by 2002:adf:9065:: with SMTP id h92mr393712wrh.150.1552597039322;
+ Thu, 14 Mar 2019 13:57:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+References: <CANSNSoWiKd98Dt1N2sSjP9Af8zk1NPV-=3P4VLtFs_cSQG4RUg@mail.gmail.com>
+ <20190313232112.GC210027@google.com>
+In-Reply-To: <20190313232112.GC210027@google.com>
+From:   Jesse Hathaway <jesse@mbuki-mvuki.org>
+Date:   Thu, 14 Mar 2019 15:57:07 -0500
+Message-ID: <CANSNSoXPFDu9RQAUA6dUCUrSCAj68q-Nj2W7ECz3fKpFtSNU+Q@mail.gmail.com>
+Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric,
+> > 1302fcf0d03e (refs/bisect/bad) PCI: Configure *all* devices, not just
+> > hot-added ones
+> > 1c3c5eab1715 sched/core: Enable might_sleep() and smp_processor_id()
+> > checks early
+>
+> How did you narrow it down to *two* commits, and do you have to revert
+> both of them to avoid the hang?  Usually a bisection identifies a
+> single commit, and the two you mention aren't related.
 
-Am Donnerstag, 14. März 2019, 18:49:14 CET schrieb Eric Biggers:
-> Hi Richard,
-> 
-> On Thu, Mar 14, 2019 at 06:15:59PM +0100, Richard Weinberger wrote:
-> > Usually fscrypt allows limited access to encrypted files even
-> > if no key is available.
-> > Encrypted filenames are shown and based on this names users
-> > can unlink and move files.
-> 
-> Actually, fscrypt doesn't allow moving files without the key.  It would only be
-> possible for cross-renames, i.e. renames with the RENAME_EXCHANGE flag.  So for
-> consistency with regular renames, fscrypt also forbids cross-renames if the key
-> for either the source or destination directory is missing.
-> 
-> So the main use case for the ciphertext view is *deleting* files.  For example,
-> deleting a user's home directory after that user has been removed from the
-> system.  Or the system freeing up space by deleting cache files from a user who
-> isn't currently logged in.
+Sorry I should have been more verbose in what the bisection process was, I
+found the problem after attempting to upgrade from linux v3.16 to v4.9. When
+v4.9 hung I tried the latest kernel, v5.0, which also hanged. I began a git
+bisect, but found there was more than one bad commit. Here is my current
+understanding:
 
-Right, I somehow thought beside of deleting you can do more.
+- [x] v3.18 vanilla, 1302fcf0d03e committed, hangs
+- [x] v3.18 with revert of 1302fcf0d03e, works
+.
+.
+.
+- [x] v4.12 vanilla, hangs
+- [x] v4.12 with revert of 1302fcf0d03e, works
 
-> > 
-> > This is not always what people expect. The fscrypt_key_required mount
-> > option disables this feature.
-> > If no key is present all access is denied with the -ENOKEY error code.
-> 
-> The problem with this mount option is that it allows users to create undeletable
-> files.  So I'm not really convinced yet this is a good change.  And though the
-> fscrypt_key_required semantics are easier to implement, we'd still have to
-> support the existing semantics too, thus increasing the maintenance cost.
+- [x] v4.13 vanilla, 1c3c5eab1715 committed, hangs
+- [x] v4.13 with revert of 1302fcf0d03e, hangs
+- [x] v4.13 with revert of 1c3c5eab1715, hangs
+- [x] v4.13 with revert of 1302fcf0d03e & 1c3c5eab1715, works
 
-The undeletable-file argument is a good point. Thanks for bringing this up.
-To get rid of such files root needs to mount without the new mount parameter. ;-\
+- [x] v5.0 vanilla, hangs
+- [x] v5.0 with revert of 1302fcf0d03e & 1c3c5eab1715, works
 
-> > 
-> > The side benefit of this is that we don't need ->d_revalidate().
-> > Not having ->d_revalidate() makes an encrypted ubifs usable
-> > as overlayfs upper directory.
-> > 
-> 
-> It would be preferable if we could get overlayfs to work without providing a
-> special mount option.
+> Can you collect a complete dmesg log (with a working kernel) and
+> output of "sudo lspci -vvxxx"?  You can open a bug report at
+> https://bugzilla.kernel.org, attach the logs there, and respond here
+> with the URL.
 
-Yes, but let's see what Al finds in his review.
+Bug submitted along with the requested logs,
+https://bugzilla.kernel.org/show_bug.cgi?id=202927
 
-> > Signed-off-by: Richard Weinberger <richard@nod.at>
-> > ---
-> >  fs/ubifs/crypto.c |  2 +-
-> >  fs/ubifs/dir.c    | 29 ++++++++++++++++++++++++++---
-> >  fs/ubifs/super.c  | 15 +++++++++++++++
-> >  fs/ubifs/ubifs.h  |  1 +
-> >  4 files changed, 43 insertions(+), 4 deletions(-)
-> > 
-> 
-> Shouldn't readlink() honor the mount option too?
+> Where does the hang happen?  Is it when we configure the Comtrol card?
 
-Hmmm, yes. We need to honor it in ->get_link() too.
+Hang occurs after PCI is initialized, snippet below, I have included the full
+output in the bug report:
 
-> > +		if (c->fscrypt_key_required && !dir->i_crypt_info)
-> > +			return -ENOKEY;
-> > +
-> 
-> How about returning -ENOKEY when trying to open the directory in the first
-> place, rather than allowing getting to readdir()?  That would match the behavior
-> of regular files.
+[   10.561971] pci 0000:81:00.0:   bridge window [mem 0xc8000000-0xc80fffff]
+[   10.569661] pci 0000:80:01.0: PCI bridge to [bus 81-82]
+[   10.575594] pci 0000:80:01.0:   bridge window [mem 0xc8000000-0xc80fffff]
+[   10.583278] pci 0000:80:03.0: PCI bridge to [bus 83]
+[   10.589008] NET: Registered protocol family 2
+[   10.594254] tcp_listen_portaddr_hash hash table entries: 65536
+(order: 8, 1048576 bytes)
+[   10.603671] TCP established hash table entries: 524288 (order: 10,
+4194304 bytes)
+[   10.612729] TCP bind hash table entries: 65536 (order: 8, 1048576 bytes)
+[   10.620446] TCP: Hash tables configured (established 524288 bind 65536)
+[   10.628124] UDP hash table entries: 65536 (order: 9, 2097152 bytes)
+[   10.635541] UDP-Lite hash table entries: 65536 (order: 9, 2097152 bytes)
+[   10.643669] NET: Registered protocol family 1
 
-I'm not sure what the best approach is.
-We could also do it in ->permission().
-
-Thanks,
-//richard
-
-
+Please let me know if there is anything else I can provide, I am also happy to
+test any patches, Jesse Hathaway
