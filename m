@@ -2,173 +2,184 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27E1C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180B0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987642184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBDCF2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wPmOucFG"
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="lqyRx3hj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfCNNof (ORCPT
+        id S1727531AbfCNNou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:44:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39371 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfCNNoe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 09:44:34 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t124so2758280wma.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 06:44:33 -0700 (PDT)
+        Thu, 14 Mar 2019 09:44:50 -0400
+Received: from mail-eopbgr1300050.outbound.protection.outlook.com ([40.107.130.50]:35920
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726957AbfCNNou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 09:44:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=nAygQuAN2Ep1RjNQH8Rkl+EGXN+NRu9th/af/xku6Hw=;
-        b=wPmOucFGhini30TBE5fO8WK3lmlOXRHHp0QmRy7hOh7jvdj/9z5/CGRrwX3QKb1v7g
-         u8M1JKIDECHzWNmMu5h43r9onVsmOM7+7b7cLC9Ce1PfS/pbqe7VCXlVuo5a57el9HJF
-         SkvXr6aEtSGzPk6kb01bPFhZz0Z/g6pYu1wmYpUI4L0Ri7ydvkDui4KMrhSz+M3vVCMe
-         2LAtYNt9Ez5mJa0jW2XJV+usGoiOebW8fyuHPe7VL4GzyggPNhtAdlAuEikCAmlfKQR2
-         r/H+hjOBAXAixgkcIrEggVUY7TeEEqophqWE8otxmluxM/dZlqP7a5fQQHuexvVGet1A
-         KjzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=nAygQuAN2Ep1RjNQH8Rkl+EGXN+NRu9th/af/xku6Hw=;
-        b=gqUKGM8Du/z6omNHBJw3n9bnQvAsXcKiDpoJjXhZd0b+kBoaTNdvvqEnYWqrWrhuZV
-         lENKyR2eN0vi7Bs+/BIo9Y6WXw7+jk8sTb8tbggSTuEmFVktRBi1mlYceYbQ1Cb96GG9
-         eJdmXTYEGLrAZuWf+lE3+mQTf3TRvyzyPk4q9YalwZU03zZWLdcFU01CfX1YMR7pybu7
-         m5BzVUYuh7tN6auiJJgt2jZDcv74IxUDFhWT1C3rpIE4ywOCz8nyhDg1CA0pzI1eS6Vj
-         5nf3Qyskp5rviJSRsxoiRBAgZC6MVWdGs0JC0dz3gpDi6WLoVpyXKUZDkiGlhpPBnePv
-         +mVA==
-X-Gm-Message-State: APjAAAU0v39+MomP+VtfHC8J4Aed6PYNtjVfjYUbRNpvDhnZE/6p/+rI
-        DawuDIM7usHZtl0t+bRjrd71EA==
-X-Google-Smtp-Source: APXvYqzTyFinBnIUlxzhh36lZ4klfslF6Yc0OOGn0mwwwCmk43k3j278ceSgykV+h9S1kEgPikMzPw==
-X-Received: by 2002:a1c:7ec2:: with SMTP id z185mr2815639wmc.69.1552571072332;
-        Thu, 14 Mar 2019 06:44:32 -0700 (PDT)
-Received: from apalos (ppp-94-64-206-130.home.otenet.gr. [94.64.206.130])
-        by smtp.gmail.com with ESMTPSA id a82sm2427548wmf.11.2019.03.14.06.44.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 06:44:31 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 15:44:28 +0200
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Christian Neubert <christian.neubert.86@gmail.com>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
- cpu clocks
-Message-ID: <20190314134428.GA24768@apalos>
-References: <20190313163558.6705-1-gregory.clement@bootlin.com>
- <20190314121541.GB19385@apalos>
- <CAC5LXJcCs4nr-qFOWzUJpUBAJ9ngG-cgeTCVCFBKFc1SPzHMuQ@mail.gmail.com>
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yTs95jKqJTbGBOwBCX1Whgu4yenqTgtIIeyRLDWgwaU=;
+ b=lqyRx3hjs7PkGR43vRSBX/d9mWad3d/4vFG+IXloV8qDfghWGUvpL5uQpGXWgJGCtQWdh5CUuEPrrIgpLCooG3N84WJaUGa4mDKn3z48rTy3Z7zvYo67+EIHe9s9ogVhV69zhe/SLOsXyjBYrW3Em9fu62e+1rQP6xzHoX564uc=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB3575.apcprd02.prod.outlook.com (20.177.169.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Thu, 14 Mar 2019 13:44:40 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::3180:828f:84bc:ea3]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::3180:828f:84bc:ea3%4]) with mapi id 15.20.1686.021; Thu, 14 Mar 2019
+ 13:44:40 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "minchan@kernel.org" <minchan@kernel.org>
+Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
+Thread-Topic: Re: [External] Re: vmscan: Reclaim unevictable pages
+Thread-Index: AQHU2jnLyCfGly2dbEuVu40O8aA4saYKwYIOgAACnP2AAArTAIAAAt0egAAJfgCAABwNcoAAK5Eo
+Date:   Thu, 14 Mar 2019 13:44:40 +0000
+Message-ID: <SG2PR02MB30988333AD658F8124070ABEE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+References: <SG2PR02MB3098A05E09B0D3F3CB1C3B9BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <SG2PR02MB309806967AE91179CAFEC34BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <SG2PR02MB3098B751EC6B8E32806A42FBE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <20190314084120.GF7473@dhcp22.suse.cz>
+ <SG2PR02MB309894F6D7DF9148846088F3E84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>,<226a92b9-94c5-b859-c54b-3aacad3089cc@virtuozzo.com>,<SG2PR02MB3098299456FB6AE2FD822C4CE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+In-Reply-To: <SG2PR02MB3098299456FB6AE2FD822C4CE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d477eb82-a768-4666-17c9-08d6a883353d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB3575;
+x-ms-traffictypediagnostic: SG2PR02MB3575:|SG2PR02MB3575:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SG2PR02MB357533DC84C9692097115570E84B0@SG2PR02MB3575.apcprd02.prod.outlook.com>
+x-forefront-prvs: 09760A0505
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39850400004)(396003)(346002)(136003)(376002)(199004)(189003)(5660300002)(33656002)(14454004)(68736007)(71190400001)(71200400001)(6436002)(78486014)(7696005)(52536014)(229853002)(4326008)(93156006)(53936002)(66066001)(9686003)(6306002)(55016002)(106356001)(97736004)(966005)(6246003)(105586002)(44832011)(8676002)(93886005)(256004)(446003)(478600001)(476003)(81156014)(110136005)(86362001)(81166006)(66574012)(2906002)(25786009)(14444005)(5024004)(11346002)(2940100002)(486006)(305945005)(55236004)(26005)(7736002)(316002)(6506007)(102836004)(53546011)(3846002)(6116002)(54906003)(8936002)(74316002)(99286004)(186003)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB3575;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BFZWATd8IhC8e7tRKi7ED7dP9ec0sDfPYSO782amEJceGOAaOekr3NOKyQPJ/YzZ653G1rw8qFWQA1QkAO3ol1YLNU6XeXErLQQY/Q96nLTWg7QqKnCOyr0RqEnGWg6yg+FJs8aeBk4756xmsEiDJd+myJTWJp1caaAsOcfeW8j5ix5SdkAHHtnV/hVHOZfQRrDv1RJVMf2VeM8CtkusQKuQqRXxSyZh4zotgrb00OTzhvYbJSeQ0rP7pyi3VbmvqbMUcR5/UvNAp0U9x1Li1N2sAoSdvtjIwncjgukalvUtzTs+SDPG/0IbCUluiYOE2TkGpSkFsdlueZNmeCQPF7HVtaZiwo/b2VWlRAXCCxQj9Xpqp9FZohGqkelpcubMwAStoVN3KuIAdgp5pms6QUSbqoSkGswvNVQB033J0IQ=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAC5LXJcCs4nr-qFOWzUJpUBAJ9ngG-cgeTCVCFBKFc1SPzHMuQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d477eb82-a768-4666-17c9-08d6a883353d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2019 13:44:40.4480
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3575
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Christian,
-> Hi,
-> 
-> I assume you use the 1000 MHz firmware. This does also not work on my Rev 7
-> board. But I'm pretty sure this is not a problem of the patches, because if
-> I take a newer kernel (4.19.20/27) without the patches it also does not
-> work. A kernel 4.19.17 does work for me. My opinion on that is that this is
-> another problem which does just occure now because now the cpu frequency
-> scaling is working with the right frequencies.
-I am not sure which firmware i am running, i did all my tests on 5.0.0 and
-changing between governors worked fine without the patches
 
-Regards
-/Ilias
-> 
-> Ilias Apalodimas <ilias.apalodimas@linaro.org> schrieb am Do., 14. März
-> 2019, 13:15:
-> 
-> > Hi Gregory,
-> > > The clock parenting was not setup properly when DVFS was enabled. It was
-> > > expected that the same clock source was used with and without DVFS which
-> > > was not the case.
-> > >
-> > > This patch fixes this issue, allowing to make the cpufreq support work
-> > > when the CPU clocks source are not the default ones.
-> > >
-> > > Fixes: 92ce45fb875d ("cpufreq: Add DVFS support for Armada 37xx")
-> > > Cc: <stable@vger.kernel.org>
-> > > Reported-by: Christian Neubert <christian.neubert.86@gmail.com>
-> > > Reported-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> > > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> > > ---
-> > >  drivers/clk/mvebu/armada-37xx-periph.c | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > >
-> > > diff --git a/drivers/clk/mvebu/armada-37xx-periph.c
-> > b/drivers/clk/mvebu/armada-37xx-periph.c
-> > > index 1f1cff428d78..26ed3c18a239 100644
-> > > --- a/drivers/clk/mvebu/armada-37xx-periph.c
-> > > +++ b/drivers/clk/mvebu/armada-37xx-periph.c
-> > > @@ -671,6 +671,17 @@ static int armada_3700_add_composite_clk(const
-> > struct clk_periph_data *data,
-> > >               map = syscon_regmap_lookup_by_compatible(
-> > >                               "marvell,armada-3700-nb-pm");
-> > >               pmcpu_clk->nb_pm_base = map;
-> > > +
-> > > +             /*
-> > > +              * Use the same parent when DVFS is enabled that the
-> > > +              * default parent received at boot time. When this
-> > > +              * function is called, DVFS is not enabled yet, so we
-> > > +              * get the default parent and we can set the parent
-> > > +              * for DVFS.
-> > > +              */
-> > > +             if (clk_pm_cpu_set_parent(muxrate_hw,
-> > > +
-> >  clk_pm_cpu_get_parent(muxrate_hw)))
-> > > +                     dev_warn(dev, "Failed to setup default parent
-> > clock for DVFS\n");
-> > >       }
-> > >
-> > >       *hw = clk_hw_register_composite(dev, data->name,
-> > data->parent_names,
-> > > --
-> > > 2.20.1
-> > >
-> > Applied this and selected only
-> >
-> > CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE=y
-> > CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
-> > CONFIG_CPU_FREQ_GOV_POWERSAVE=y
-> >
-> > After changing the governor from 'powersave' to 'performance' the board
-> > completely froze (i even lost access to the serial port)
-> >
-> > Cheers
-> > /Ilias
-> >
+Hello ,
+
+Please ignore the curly braces, they are just for debugging.
+
+Below is the updated patch.
+
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index be56e2e..12ac353 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -998,7 +998,7 @@ static unsigned long shrink_page_list(struct list_head =
+*page_list,
+                sc->nr_scanned++;
+
+                if (unlikely(!page_evictable(page)))
+-                       goto activate_locked;
++                      goto cull_mlocked;
+
+                if (!sc->may_unmap && page_mapped(page))
+                        goto keep_locked;
+@@ -1331,7 +1331,12 @@ static unsigned long shrink_page_list(struct list_he=
+ad *page_list,
+                } else
+                        list_add(&page->lru, &free_pages);
+                continue;
+-
++cull_mlocked:
++                if (PageSwapCache(page))
++                        try_to_free_swap(page);
++                unlock_page(page);
++                list_add(&page->lru, &ret_pages);
++                continue;
+ activate_locked:
+                /* Not a candidate for swapping, so reclaim swap space. */
+                if (PageSwapCache(page) && (mem_cgroup_swap_full(page) ||
+
+
+
+Regards,
+Pankaj
+
+
+From: Kirill Tkhai <ktkhai@virtuozzo.com>
+Sent: 14 March 2019 14:55:34
+To: Pankaj Suryawanshi; Michal Hocko
+Cc: linux-kernel@vger.kernel.org; minchan@kernel.org
+Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
+
+
+On 14.03.2019 11:52, Pankaj Suryawanshi wrote:
+>
+> I am using kernel version 4.14.65 (on Android pie [ARM]).
+>
+> No additional patches applied on top of vanilla.(Core MM).
+>
+> If  I change in the vmscan.c as below patch, it will work.
+
+Sorry, but 4.14.65 does not have braces around trylock_page(),
+like in your patch below.
+
+See   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree=
+/mm/vmscan.c?h=3Dv4.14.65
+
+[...]
+
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index be56e2e..2e51edc 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -990,15 +990,17 @@ static unsigned long shrink_page_list(struct list_=
+head *page_list,
+>>                  page =3D lru_to_page(page_list);
+>>                  list_del(&page->lru);
+>>
+>>                 if (!trylock_page(page)) {
+>>                          goto keep;
+>>                 }
+
+***************************************************************************=
+***************************************************************************=
+******* eInfochips Business Disclaimer: This e-mail message and all attachm=
+ents transmitted with it are intended solely for the use of the addressee a=
+nd may contain legally privileged and confidential information. If the read=
+er of this message is not the intended recipient, or an employee or agent r=
+esponsible for delivering this message to the intended recipient, you are h=
+ereby notified that any dissemination, distribution, copying, or other use =
+of this message or its attachments is strictly prohibited. If you have rece=
+ived this message in error, please notify the sender immediately by replyin=
+g to this message and please delete it from your computer. Any views expres=
+sed in this message are those of the individual sender unless otherwise sta=
+ted. Company has taken enough precautions to prevent the spread of viruses.=
+ However the company accepts no liability for any damage caused by any viru=
+s transmitted by this email. **********************************************=
+***************************************************************************=
+************************************
