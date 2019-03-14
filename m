@@ -2,274 +2,135 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ED1C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1913CC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7FD21874
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552585759;
-	bh=/NIPo9XCtB4XF2DnPmV03vCZZuL9qDnDUy2ol5LzEyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FaX0UuShBszIQmh2Dwaoi2kGNuYQDVCaI5C++itZaX/BwRK4/b8tSVZ8LyaDcI1wA
-	 O0SraaZ7SbrXbAHri9n9WwaD+gG2sar2t8L+yqM5wCWUYRGfjAOsFdEhf1hBYHKLbK
-	 j2wLADdN0zcXwjAiFjzD0aGTBycYY/I0SHI13uXU=
+	by mail.kernel.org (Postfix) with ESMTP id DC6A2218A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:49:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z4Filnma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfCNRtS (ORCPT
+        id S1727657AbfCNRtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 13:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbfCNRtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 13:49:17 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CABA820811;
-        Thu, 14 Mar 2019 17:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552585756;
-        bh=/NIPo9XCtB4XF2DnPmV03vCZZuL9qDnDUy2ol5LzEyI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AQCEhINGwMnK5/+1z6GuDd1iGkJixjliBxfA9LxjyCXmJUFl/zj3+0NbIsfOx8VuW
-         uSug/iDhdIjV/eQSV0OLRBnavUi0Kr1mQgUPu0VLKkyuCzr0Il+WhleC8sfMy4A9YO
-         uF/IBH/CLR1bguCeaaecnGfcfCiyJ4r64Urfps04=
-Date:   Thu, 14 Mar 2019 10:49:14 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     linux-mtd@lists.infradead.org, linux-fscrypt@vger.kernel.org,
-        jaegeuk@kernel.org, tytso@mit.edu, linux-unionfs@vger.kernel.org,
-        miklos@szeredi.hu, amir73il@gmail.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        paullawrence@google.com
-Subject: Re: [PATCH 4/4] ubifs: Implement new mount option,
- fscrypt_key_required
-Message-ID: <20190314174913.GA30026@gmail.com>
-References: <CAJfpegvX4ANfso-Jn1zaB+m4Q_0eK9i-+MCJ+sTH5QzD3PZFMQ@mail.gmail.com>
- <20190314171559.27584-1-richard@nod.at>
- <20190314171559.27584-5-richard@nod.at>
+        Thu, 14 Mar 2019 13:49:23 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46858 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfCNRtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 13:49:19 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c18so5885675otl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 10:49:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7QeesPBLVC4Xvhqsvje2fdOGstxWInZX/y0Xrblk/lI=;
+        b=Z4FilnmaoC0PufNfruldxw5igd6C4XDa/FOoEve6mdpYGblElx6ydzZDxg4RqIR9Gf
+         2E7lZlZ3sVy8YawqgimGeS1LrBPV1NAuigwiAnhUpn8S14ctJc0/WT5lB+++wHch1J00
+         MIQHLFs94TTzY6LslQO+98zz7Q6O+KCYB3SViKgFYtPu/svYHFtSFcexXqPilMNx5xuj
+         DBa09dd0thbr897DRNt9LJKRljVK36DCcMjJVLYskNB+zszmlxqhmOWCW0bunF6RQ9mg
+         okrCyz2XDQznUBDlEgtSew2vATKJPm0y8axW59QvW5Jm7ElOh11/LyLA37lfE4F3oGB6
+         BWBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7QeesPBLVC4Xvhqsvje2fdOGstxWInZX/y0Xrblk/lI=;
+        b=J2D/lrI+yHAy7EO7iIw0lKHMfKKt2Jf2Ap3Z/bxqIEwz6CNR/Upp2/8MJt3yPRje0j
+         dVt3a8OdytpnRW0e18tApNhZLEpSfpKojpStagf7rG2Xi/XnfuxIKorzMsxfR02oEK5v
+         PIlmmHra79ak//2htnXnuCp6jZpK2lrxnC/i0WynLHcKyiUwKDKm/8R8cG3LnSf33Chj
+         ZRZAJQPX0y3HfZgxsmK3w+DKcDCOypcEadOHbTuoGlwsLNNr23EP+yCm8xs9onSwdMW+
+         +sb1NYif3iVFxSxWH1XMHVpyBMGmf+8wa9p33XOUcrC4q7tsJgQLRRmVAEfQFZLxuu9F
+         FkKg==
+X-Gm-Message-State: APjAAAV5OlNNmb8qhhacK9Jisi6yBvgeoNHZHY0ROpkXD74ZkpB2Xfzu
+        38zGhHgV+Ou5NtwqM0IoKLUH01FC57oF/fgNZ8HxXg==
+X-Google-Smtp-Source: APXvYqypN5gRTVXMBasPnYVXvqpdTgnEHZyxkOD4BvffdxS744MKMbHgfTQaH8osoGbqSyjY4jJrJiyuH3VG0QZeiZs=
+X-Received: by 2002:a05:6830:1493:: with SMTP id s19mr32952288otq.117.1552585757971;
+ Thu, 14 Mar 2019 10:49:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314171559.27584-5-richard@nod.at>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190227035448.117169-1-fengc@google.com>
+In-Reply-To: <20190227035448.117169-1-fengc@google.com>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Thu, 14 Mar 2019 23:19:06 +0530
+Message-ID: <CAO_48GG0sW3AJNVJnydjuWUQHcmWe5aQrB=X0Wo7uBtDnPtoYg@mail.gmail.com>
+Subject: Re: [RFC dma-buf 0/3] Improve the dma-buf tracking
+To:     Chenbo Feng <fengc@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        linux-media@vger.kernel.org, erickreyes@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+Hello Chenbo,Thank you for your RFC series.
 
-On Thu, Mar 14, 2019 at 06:15:59PM +0100, Richard Weinberger wrote:
-> Usually fscrypt allows limited access to encrypted files even
-> if no key is available.
-> Encrypted filenames are shown and based on this names users
-> can unlink and move files.
+On Wed, 27 Feb 2019 at 09:24, Chenbo Feng <fengc@google.com> wrote:
+>
+> Currently, all dma-bufs share the same anonymous inode. While we can coun=
+t
+> how many dma-buf fds or mappings a process has, we can't get the size of
+> the backing buffers or tell if two entries point to the same dma-buf. And
+> in debugfs, we can get a per-buffer breakdown of size and reference count=
+,
+> but can't tell which processes are actually holding the references to eac=
+h
+> buffer.
+>
+> To resolve the issue above and provide better method for userspace to tra=
+ck
+> the dma-buf usage across different processes, the following changes are
+> proposed in dma-buf kernel side. First of all, replace the singleton inod=
+e
+> inside the dma-buf subsystem with a mini-filesystem, and assign each
+> dma-buf a unique inode out of this filesystem.  With this change, calling
+> stat(2) on each entry gives the caller a unique ID (st_ino), the buffer's
+> size (st_size), and even the number of pages assigned to each dma-buffer.
+> Secoundly, add the inode information to /sys/kernel/debug/dma_buf/bufinfo
+> so in the case where a buffer is mmap()ed into a process=E2=80=99s addres=
+s space
+> but all remaining fds have been closed, we can still get the dma-buf
+> information and try to accociate it with the process by searching the
+> proc/pid/maps and looking for the corresponding inode number exposed in
+> dma-buf debug fs. Thirdly, created an ioctl to assign names to dma-bufs
+> which lets userspace assign short names (e.g., "CAMERA") to buffers. This
+> information can be extremely helpful for tracking and accounting shared
+> buffers based on their usage and original purpose. Last but not least, ad=
+d
+> dma-buf information to /proc/pid/fdinfo by adding a show_fdinfo() handler
+> to dma_buf_file_operations. The handler will print the file_count and nam=
+e
+> of each buffer.
 
-Actually, fscrypt doesn't allow moving files without the key.  It would only be
-possible for cross-renames, i.e. renames with the RENAME_EXCHANGE flag.  So for
-consistency with regular renames, fscrypt also forbids cross-renames if the key
-for either the source or destination directory is missing.
+In general, I think I like the idea as it contributes to a much more
+relevant usage analysis of dma-buf backed buffers.
+I will get to doing a more detailed review soon, but immediately, we
+might want to think a bit about the get/set_name IOCTLS - do we need
+to think of disallowing multiple renaming of buffers once they start
+getting used? It could otherwise make the whole metrics a lot
+confused?
 
-So the main use case for the ciphertext view is *deleting* files.  For example,
-deleting a user's home directory after that user has been removed from the
-system.  Or the system freeing up space by deleting cache files from a user who
-isn't currently logged in.
+>
+> Greg Hackmann (3):
+>   dma-buf: give each buffer a full-fledged inode
+>   dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
+>   dma-buf: add show_fdinfo handler
+>
+>  drivers/dma-buf/dma-buf.c    | 121 ++++++++++++++++++++++++++++++++---
+>  include/linux/dma-buf.h      |   5 +-
+>  include/uapi/linux/dma-buf.h |   4 ++
+>  include/uapi/linux/magic.h   |   1 +
+>  4 files changed, 122 insertions(+), 9 deletions(-)
+>
+> --
+> 2.21.0.rc2.261.ga7da99ff1b-goog
+>
 
-> 
-> This is not always what people expect. The fscrypt_key_required mount
-> option disables this feature.
-> If no key is present all access is denied with the -ENOKEY error code.
-
-The problem with this mount option is that it allows users to create undeletable
-files.  So I'm not really convinced yet this is a good change.  And though the
-fscrypt_key_required semantics are easier to implement, we'd still have to
-support the existing semantics too, thus increasing the maintenance cost.
-
-> 
-> The side benefit of this is that we don't need ->d_revalidate().
-> Not having ->d_revalidate() makes an encrypted ubifs usable
-> as overlayfs upper directory.
-> 
-
-It would be preferable if we could get overlayfs to work without providing a
-special mount option.
-
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-> ---
->  fs/ubifs/crypto.c |  2 +-
->  fs/ubifs/dir.c    | 29 ++++++++++++++++++++++++++---
->  fs/ubifs/super.c  | 15 +++++++++++++++
->  fs/ubifs/ubifs.h  |  1 +
->  4 files changed, 43 insertions(+), 4 deletions(-)
-> 
-
-Shouldn't readlink() honor the mount option too?
-
-> diff --git a/fs/ubifs/crypto.c b/fs/ubifs/crypto.c
-> index 4aaedf2d7f44..a6a48c5dc058 100644
-> --- a/fs/ubifs/crypto.c
-> +++ b/fs/ubifs/crypto.c
-> @@ -76,7 +76,7 @@ int ubifs_decrypt(const struct inode *inode, struct ubifs_data_node *dn,
->  }
->  
->  const struct fscrypt_operations ubifs_crypt_operations = {
-> -	.flags			= FS_CFLG_OWN_PAGES,
-> +	.flags			= FS_CFLG_OWN_PAGES | FS_CFLG_OWN_D_OPS,
->  	.key_prefix		= "ubifs:",
->  	.get_context		= ubifs_crypt_get_context,
->  	.set_context		= ubifs_crypt_set_context,
-> diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
-> index b0cb913697c5..4d029f08b80d 100644
-> --- a/fs/ubifs/dir.c
-> +++ b/fs/ubifs/dir.c
-> @@ -208,6 +208,16 @@ static int dbg_check_name(const struct ubifs_info *c,
->  	return 0;
->  }
->  
-> +static void ubifs_set_dentry_ops(struct inode *dir, struct dentry *dentry)
-> +{
-> +#ifdef CONFIG_FS_ENCRYPTION
-> +	struct ubifs_info *c = dir->i_sb->s_fs_info;
-> +
-> +	if (IS_ENCRYPTED(dir) && !c->fscrypt_key_required)
-> +		d_set_d_op(dentry, &fscrypt_d_ops);
-> +#endif
-> +}
-> +
->  static struct dentry *ubifs_lookup(struct inode *dir, struct dentry *dentry,
->  				   unsigned int flags)
->  {
-> @@ -224,7 +234,10 @@ static struct dentry *ubifs_lookup(struct inode *dir, struct dentry *dentry,
->  	if (err)
->  		return ERR_PTR(err);
->  
-> -	err = fscrypt_setup_filename(dir, &dentry->d_name, 1, &nm);
-> +	ubifs_set_dentry_ops(dir, dentry);
-> +
-> +	err = fscrypt_setup_filename(dir, &dentry->d_name,
-> +				     !c->fscrypt_key_required, &nm);
->  	if (err)
->  		return ERR_PTR(err);
->  
-> @@ -240,6 +253,11 @@ static struct dentry *ubifs_lookup(struct inode *dir, struct dentry *dentry,
->  	}
->  
->  	if (nm.hash) {
-> +		if (c->fscrypt_key_required) {
-> +			inode = ERR_PTR(-ENOKEY);
-> +			goto done;
-> +		}
-> +
->  		ubifs_assert(c, fname_len(&nm) == 0);
->  		ubifs_assert(c, fname_name(&nm) == NULL);
->  		dent_key_init_hash(c, &key, dir->i_ino, nm.hash);
-> @@ -529,6 +547,9 @@ static int ubifs_readdir(struct file *file, struct dir_context *ctx)
->  		if (err)
->  			return err;
->  
-> +		if (c->fscrypt_key_required && !dir->i_crypt_info)
-> +			return -ENOKEY;
-> +
-
-How about returning -ENOKEY when trying to open the directory in the first
-place, rather than allowing getting to readdir()?  That would match the behavior
-of regular files.
-
->  		err = fscrypt_fname_alloc_buffer(dir, UBIFS_MAX_NLEN, &fstr);
->  		if (err)
->  			return err;
-> @@ -798,7 +819,8 @@ static int ubifs_unlink(struct inode *dir, struct dentry *dentry)
->  			return err;
->  	}
->  
-> -	err = fscrypt_setup_filename(dir, &dentry->d_name, 1, &nm);
-> +	err = fscrypt_setup_filename(dir, &dentry->d_name, !c->fscrypt_key_required,
-> +				     &nm);
->  	if (err)
->  		return err;
->  
-> @@ -908,7 +930,8 @@ static int ubifs_rmdir(struct inode *dir, struct dentry *dentry)
->  			return err;
->  	}
->  
-> -	err = fscrypt_setup_filename(dir, &dentry->d_name, 1, &nm);
-> +	err = fscrypt_setup_filename(dir, &dentry->d_name,
-> +				     !c->fscrypt_key_required, &nm);
->  	if (err)
->  		return err;
->  
-> diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
-> index 8dc2818fdd84..e081b00236b6 100644
-> --- a/fs/ubifs/super.c
-> +++ b/fs/ubifs/super.c
-> @@ -445,6 +445,9 @@ static int ubifs_show_options(struct seq_file *s, struct dentry *root)
->  			   ubifs_compr_name(c, c->mount_opts.compr_type));
->  	}
->  
-> +	if (c->fscrypt_key_required)
-> +		seq_puts(s, ",fscrypt_key_required");
-> +
->  	seq_printf(s, ",assert=%s", ubifs_assert_action_name(c));
->  	seq_printf(s, ",ubi=%d,vol=%d", c->vi.ubi_num, c->vi.vol_id);
->  
-> @@ -952,6 +955,7 @@ enum {
->  	Opt_assert,
->  	Opt_auth_key,
->  	Opt_auth_hash_name,
-> +	Opt_fscrypt_key_required,
->  	Opt_ignore,
->  	Opt_err,
->  };
-> @@ -969,6 +973,7 @@ static const match_table_t tokens = {
->  	{Opt_ignore, "ubi=%s"},
->  	{Opt_ignore, "vol=%s"},
->  	{Opt_assert, "assert=%s"},
-> +	{Opt_fscrypt_key_required, "fscrypt_key_required"},
->  	{Opt_err, NULL},
->  };
->  
-> @@ -1008,6 +1013,7 @@ static int ubifs_parse_options(struct ubifs_info *c, char *options,
->  {
->  	char *p;
->  	substring_t args[MAX_OPT_ARGS];
-> +	unsigned int old_fscrypt_key_required = c->fscrypt_key_required;
->  
->  	if (!options)
->  		return 0;
-> @@ -1099,6 +1105,15 @@ static int ubifs_parse_options(struct ubifs_info *c, char *options,
->  			if (!c->auth_hash_name)
->  				return -ENOMEM;
->  			break;
-> +		case Opt_fscrypt_key_required:
-> +			c->fscrypt_key_required = 1;
-> +
-> +			if (is_remount && (old_fscrypt_key_required != c->fscrypt_key_required)) {
-> +				ubifs_err(c, "fscrypt_key_required cannot changed by remount");
-> +				return -EINVAL;
-> +			}
-> +
-> +			break;
->  		case Opt_ignore:
->  			break;
->  		default:
-> diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
-> index 1ae12900e01d..71b03a6798ae 100644
-> --- a/fs/ubifs/ubifs.h
-> +++ b/fs/ubifs/ubifs.h
-> @@ -1304,6 +1304,7 @@ struct ubifs_info {
->  	unsigned int rw_incompat:1;
->  	unsigned int assert_action:2;
->  	unsigned int authenticated:1;
-> +	unsigned int fscrypt_key_required:1;
->  
->  	struct mutex tnc_mutex;
->  	struct ubifs_zbranch zroot;
-> -- 
-> 2.21.0
-> 
+Best,
+Sumit.
