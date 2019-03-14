@@ -2,121 +2,136 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAF7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C60C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B48217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1374421855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfCNQNt (ORCPT
+        id S1728094AbfCNQNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:13:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:27772 "EHLO mx1.redhat.com"
+        Thu, 14 Mar 2019 12:13:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33134 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbfCNQNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:13:46 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1727806AbfCNQNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 12:13:54 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C753430058B6;
-        Thu, 14 Mar 2019 16:13:46 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2A14AC00735B;
+        Thu, 14 Mar 2019 16:13:54 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40F9C6BF64;
-        Thu, 14 Mar 2019 16:13:44 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CBBD1605C5;
+        Thu, 14 Mar 2019 16:13:52 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 36/38] vfs: Convert selinuxfs to fs_context
+Subject: [PATCH 37/38] vfs: Convert smackfs to fs_context
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
         linux-security-module@vger.kernel.org, dhowells@redhat.com,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 14 Mar 2019 16:13:43 +0000
-Message-ID: <155258002351.13720.5655928487536879857.stgit@warthog.procyon.org.uk>
+Date:   Thu, 14 Mar 2019 16:13:52 +0000
+Message-ID: <155258003203.13720.15456298602372924811.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
 References: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 14 Mar 2019 16:13:46 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 14 Mar 2019 16:13:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Paul Moore <paul@paul-moore.com>
-cc: Stephen Smalley <sds@tycho.nsa.gov>
-cc: Eric Paris <eparis@parisplace.org>
-cc: selinux@vger.kernel.org
+cc: Casey Schaufler <casey@schaufler-ca.com>
 cc: linux-security-module@vger.kernel.org
 ---
 
- security/selinux/selinuxfs.c |   20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ security/smack/smackfs.c |   34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
-index 145ee62f205a..ccfe86dfa784 100644
---- a/security/selinux/selinuxfs.c
-+++ b/security/selinux/selinuxfs.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/fs.h>
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index faf2ea3968b3..7e3a81d05136 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -27,6 +27,7 @@
+ #include <linux/ctype.h>
+ #include <linux/audit.h>
+ #include <linux/magic.h>
 +#include <linux/fs_context.h>
- #include <linux/mount.h>
- #include <linux/mutex.h>
- #include <linux/init.h>
-@@ -1893,7 +1894,7 @@ static struct dentry *sel_make_dir(struct dentry *dir, const char *name,
+ #include "smack.h"
  
- #define NULL_FILE_NAME "null"
- 
--static int sel_fill_super(struct super_block *sb, void *data, int silent)
-+static int sel_fill_super(struct super_block *sb, struct fs_context *fc)
+ #define BEBITS	(sizeof(__be32) * 8)
+@@ -2843,14 +2844,13 @@ static const struct file_operations smk_ptrace_ops = {
+ /**
+  * smk_fill_super - fill the smackfs superblock
+  * @sb: the empty superblock
+- * @data: unused
+- * @silent: unused
++ * @fc: unused
+  *
+  * Fill in the well known entries for the smack filesystem
+  *
+  * Returns 0 on success, an error code on failure
+  */
+-static int smk_fill_super(struct super_block *sb, void *data, int silent)
++static int smk_fill_super(struct super_block *sb, struct fs_context *fc)
  {
- 	struct selinux_fs_info *fsi;
- 	int ret;
-@@ -2009,10 +2010,19 @@ static int sel_fill_super(struct super_block *sb, void *data, int silent)
- 	return ret;
+ 	int rc;
+ 
+@@ -2920,25 +2920,35 @@ static int smk_fill_super(struct super_block *sb, void *data, int silent)
  }
  
--static struct dentry *sel_mount(struct file_system_type *fs_type,
+ /**
+- * smk_mount - get the smackfs superblock
+- * @fs_type: passed along without comment
+- * @flags: passed along without comment
+- * @dev_name: passed along without comment
+- * @data: passed along without comment
++ * smk_get_tree - get the smackfs superblock
++ * @fc: The mount context, including any options
+  *
+  * Just passes everything along.
+  *
+  * Returns what the lower level code does.
+  */
+-static struct dentry *smk_mount(struct file_system_type *fs_type,
 -		      int flags, const char *dev_name, void *data)
-+static int sel_get_tree(struct fs_context *fc)
++static int smk_get_tree(struct fs_context *fc)
  {
--	return mount_single(fs_type, flags, data, sel_fill_super);
-+	return vfs_get_super(fc, vfs_get_single_super, sel_fill_super);
+-	return mount_single(fs_type, flags, data, smk_fill_super);
++	return vfs_get_super(fc, vfs_get_single_super, smk_fill_super);
 +}
 +
-+static const struct fs_context_operations sel_context_ops = {
-+	.get_tree	= sel_get_tree,
++static const struct fs_context_operations smk_context_ops = {
++	.get_tree	= smk_get_tree,
 +};
 +
-+static int sel_init_fs_context(struct fs_context *fc)
++/**
++ * smk_init_fs_context - Initialise a filesystem context for smackfs
++ * @fc: The blank mount context
++ */
++static int smk_init_fs_context(struct fs_context *fc)
 +{
-+	fc->ops = &sel_context_ops;
++	fc->ops = &smk_context_ops;
 +	return 0;
  }
  
- static void sel_kill_sb(struct super_block *sb)
-@@ -2023,7 +2033,7 @@ static void sel_kill_sb(struct super_block *sb)
- 
- static struct file_system_type sel_fs_type = {
- 	.name		= "selinuxfs",
--	.mount		= sel_mount,
-+	.init_fs_context = sel_init_fs_context,
- 	.kill_sb	= sel_kill_sb,
+ static struct file_system_type smk_fs_type = {
+ 	.name		= "smackfs",
+-	.mount		= smk_mount,
++	.init_fs_context = smk_init_fs_context,
+ 	.kill_sb	= kill_litter_super,
  };
  
 
