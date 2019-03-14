@@ -2,98 +2,119 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142B9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41CAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF012184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926B0217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:40:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="PbQzOVrv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WeHZTp/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfCNHeq (ORCPT
+        id S1726962AbfCNHkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:34:46 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:40652 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfCNHep (ORCPT
+        Thu, 14 Mar 2019 03:40:00 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33631 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfCNHkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:34:45 -0400
-Received: by mail-it1-f195.google.com with SMTP id l139so3132964ita.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:34:45 -0700 (PDT)
+        Thu, 14 Mar 2019 03:40:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i19so3283768pfd.0;
+        Thu, 14 Mar 2019 00:39:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5j7xlTpPCfN62y7RLvULhwbqVmECMd1pBios9Gk8yCo=;
-        b=PbQzOVrvNnnL6aGps6qRwBVqplB+yUbNaSKxPEvW9gz2kiMJEZ1k9+A9c3ZFkGNOqq
-         CXzYb6s47WoUkXCoTGy42LFP4KS8bRlHk2F1MvR/WuX9mXdxnF3SvTqqxMOHxGrpdFj5
-         H4FaJfHcjQIdh5DyFxThUt/qvMR73JWYtEh3s=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rygP9PItvKmtF/0cF6oT0YH7PGrpypbEboRmiJeqVxw=;
+        b=WeHZTp/vdtRoOge8LeI65rpDNCPCH2vx38xLNG+KrxDHznmUvJCDBDo1f+o1dXkmgx
+         D7439UGz/r6XC7GFGXVJ/gcz+epduu7dpzxLG3RXFHqp2IvuVD0rkJPurXTSEDph+LPN
+         3gHhQOufL0RwRUA0h31h+KE8v0fJU5IjAvMWBIwA54onKbBxu3Xoh/QJRfW55YdXAqTF
+         KwlWBdPdslPRNjo0ORWN23WaLcaTTelxDm5PF8ZzSXv8hL+Wlr33uHGDu2DwgDsI84DS
+         CcMjj2cjjRmjyXUsQyBRmG8pBCYTY4qWeSDcfvLL8QqsLT/js+1qbkWkYq5E2QnHUHa4
+         TeWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5j7xlTpPCfN62y7RLvULhwbqVmECMd1pBios9Gk8yCo=;
-        b=FYMDXxryCldR64NCFfXa/6FK2Mdzes8pV+FTMQy5xLDkPU1i3nHoYz+HuC+dtuylCT
-         KoHcq5N00I3W6bsm7kvjOt+Kppx26oDGuK2uplnk+4pON5xckIpO0tPywq4lXTrYoZS6
-         hXbz56qBf2/oR0uvh4VAlFL+w/bTNylfOFCTIrtALNiRKhVbKc+8OJ57rxzZ/9hvuT7I
-         1cbDZwnJkxg6lZ7t7Gz5BNjQrjsBFpiEkj0sB5yO/0V0o+aopOORgvzptmzSNLM7aox1
-         x4egFUIugiWV/c9O/ZQgmYQJRp6vZXLDpl9TvU74UZAF+vNK75XJ3OWKu1XF1B56ljDl
-         JlKQ==
-X-Gm-Message-State: APjAAAWAN1MU4WYPv5AjRn6pvi7PMgNxmhK/edJK2JifvE5/xhLkyhZ7
-        FWew0HvBqOLNRY5goKvQtCx4JxMA0zlsEC2WyZgslg==
-X-Google-Smtp-Source: APXvYqzCiQVr5TF9z2qS6mwXDvX9wPnScA+1X9nrCp6IYmHfaNqlkVTqi/NaQPW9b7SemkgvbN5wFagoE5oJ8WPPrzo=
-X-Received: by 2002:a24:1947:: with SMTP id b68mr1054204itb.121.1552548884924;
- Thu, 14 Mar 2019 00:34:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rygP9PItvKmtF/0cF6oT0YH7PGrpypbEboRmiJeqVxw=;
+        b=TkQzwpqpr78JPDmPGKpQAD5X/oDatgMBxrbsF/bAjvn+tSMK9IHBiFr9cd7OOa7R3d
+         KnYUU2cZB/m9M4ZhOrkuhkjkL4Cz46OStxWd3OPtstnLMeTD0K1XO6+0eLRGgJ+ghQ0e
+         E40Fqv5B/ZzsACPlWy0hN7X3wkoqHUbO//vb49165x185htHjbTGCPxiHioWiuikyjPl
+         HlaScVrWG0zsnrgBeE/OGn0Z0W1x34bonvPQVfP2Fm02v56GjcLhid8lMdiNjNHsB8ut
+         bcrnaPwyfpe/gaPCgTZalyuA4T9BCv39Lpvn9xKDl3idXIry88yFoZTtrE060IsRwU+l
+         dA4w==
+X-Gm-Message-State: APjAAAVIh5QeWb9pioLZQbMqA0eCglNScxXTa+gz4omjCSTJowxIOXAp
+        GbIvB98nqw9pnpa7ZWS+HMk=
+X-Google-Smtp-Source: APXvYqzzjRtztkmL7H6HcdkWiksT2eVOHpSKkMtbW55RJt1abDvHTvXfgSimSV0B46GVtEe/CkMKFQ==
+X-Received: by 2002:a63:6fc4:: with SMTP id k187mr26742879pgc.312.1552549198983;
+        Thu, 14 Mar 2019 00:39:58 -0700 (PDT)
+Received: from localhost ([175.223.23.218])
+        by smtp.gmail.com with ESMTPSA id h63sm46930690pfd.148.2019.03.14.00.39.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 00:39:58 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 16:39:54 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Steve French <smfrench@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH 1/2] cifs: remove unused status severity defines
+Message-ID: <20190314073954.GA5272@jagdpanzerIV>
+References: <20190314061716.19892-1-sergey.senozhatsky@gmail.com>
+ <CAH2r5msYG4H19GK1Fmnqb1dNCcp2qahULc_t4v9qdJ=OOZmGXg@mail.gmail.com>
+ <CAH2r5msCs5ks3FUi_GhV2REsUR8t2h1=ybgLS6FyBEyka7Qb9g@mail.gmail.com>
+ <20190314071245.GA2001@jagdpanzerIV>
+ <CAH2r5ms3sdFx864M4se0V1eCAj_x8_3xyyRxoxqS52_UQNNjaA@mail.gmail.com>
 MIME-Version: 1.0
-References: <4603533.ZIfxmiEf7K@blindfold> <15244624.W7e5yEypHC@blindfold>
- <20190313222610.GF10169@gmail.com> <4098793.CtYQtWW4dM@blindfold>
-In-Reply-To: <4098793.CtYQtWW4dM@blindfold>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 14 Mar 2019 08:34:33 +0100
-Message-ID: <CAJfpegvX4ANfso-Jn1zaB+m4Q_0eK9i-+MCJ+sTH5QzD3PZFMQ@mail.gmail.com>
-Subject: Re: overlayfs vs. fscrypt
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Lawrence <paullawrence@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH2r5ms3sdFx864M4se0V1eCAj_x8_3xyyRxoxqS52_UQNNjaA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 11:42 PM Richard Weinberger <richard@nod.at> wrote:
->
-> Am Mittwoch, 13. M=C3=A4rz 2019, 23:26:11 CET schrieb Eric Biggers:
+On (03/14/19 02:19), Steve French wrote:
+> All of those uses of __constant_cpu_to_le32 apparently (at least
+> according to checkpatch) should be changed (someday) to cpu_to_le32
+> but I didn't research why the change from __constant_cpu_to_le32
+> --->   cpu_to_le32
 
-> > What specifically is wrong with supporting the ciphertext "view" of enc=
-rypted
-> > directories, and why do you want to opt UBIFS out of it specifically bu=
-t not
-> > ext4 and f2fs?  (The fscrypt_operations are per-filesystem type, not
-> > per-filesystem instance, so I assume that's what you had in mind.)  Not=
-e that we
-> > can't unconditionally remove it because people need it to delete files =
-without
-> > the key.  We could add a mount option to disable it, but why exactly?
->
-> You are right, fscrypt_operations is the wrong structure.
-> My plan was having it per filesystem instance. So a mount-option seems li=
-ke
-> a good option. Of course for all filesystems that support fscrypt, not ju=
-st UBIFS.
+Probably historic reasons.
 
-Yes, please.   Changing filesystem contents based on a mount option is
-orders of magnitude more sane than doing so on key insertion/removal.
+Looking at linux 2.4.21
 
-Thanks,
-Miklos
+/*
+ * Allow constant folding
+ */
+#if defined(__GNUC__) && (__GNUC__ >= 2) && defined(__OPTIMIZE__)
+#  define __swahw32(x) \
+(__builtin_constant_p((__u32)(x)) ? \
+ ___swahw32((x)) : \
+ __fswahw32((x)))
+
+
+My assumption would be that __GNUC__ < 2 did no support
+__builtin_constant_p?
+
+
+> If it has benefit - and checkpatch is right (it warned about
+> __constant_cpu_to_le32 being no longer preferred) ... perhaps would be
+> worth a followup patch to clean the rest of them up?   If you have any
+> context on why kernel code has moved away from using the older format
+> of __constant_cpu_to_.... would be useful to know if any benefit to
+> the change
+
+Right, that's what I'm going to do - send out patches and update the rest
+of __constant_cpu_to_XX users; so, eventually, __constant_cpu_to_XX
+can be removed.
+
+	-ss
