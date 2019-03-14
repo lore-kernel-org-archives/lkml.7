@@ -2,137 +2,75 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847F6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB39C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D0B217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C523E217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552551742;
+	bh=TCKQMlt8DkoQSn5JNBM0Y/n6ODVL6o6isOkm4XyyyFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gWo4wOqo97p/idweiogSp416MJAbAubXy81yWyhXRcB00+iW0Nw9iYBez2GnVnCoQ
+	 1Bg4W3KfSkQm5W6fTt9itjXN/tKw7qD7XYIi3g1yoLTewyJX4uGPClZUqAxn2GnF09
+	 Bcgj9z3uR//pse4WWohxrRgVXFCHf5vk+YzsZKNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfCNIUR (ORCPT
+        id S1727265AbfCNIWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 04:20:17 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:40278 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726606AbfCNIUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 04:20:17 -0400
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 4Lb0hpyCdLMwI4Lb3hHn1h; Thu, 14 Mar 2019 09:20:15 +0100
-Subject: Re: [PATCH 00/14] Add support for FM radio in hcill and kill TI_ST
-To:     Sebastian Reichel <sre@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Tony Lindgren <tony@atomide.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>, linux-bluetooth@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20181221011752.25627-1-sre@kernel.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <4f47f7f2-3abb-856c-4db5-675caf8057c7@xs4all.nl>
-Date:   Thu, 14 Mar 2019 09:20:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 14 Mar 2019 04:22:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48710 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726421AbfCNIWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 04:22:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3D8E2ACE3;
+        Thu, 14 Mar 2019 08:22:20 +0000 (UTC)
+Date:   Thu, 14 Mar 2019 09:22:19 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, vbabka@suse.cz,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/hotplug: fix offline undo_isolate_page_range()
+Message-ID: <20190314082219.GD7473@dhcp22.suse.cz>
+References: <20190313143133.46200-1-cai@lca.pw>
+ <20190314080922.dk5ljg7fbtarzrog@d104.suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20181221011752.25627-1-sre@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMRW9aN+U9an55TXNhV/UcZ6i+hxGAHn8vFCRsf5MZfZkcgeuIBOZJ3jTrv3EG5ikv3BmIEOc0X6vkblYQAjWCZv6el2QyAFVuo0m2xXDYUQLAJsRyTY
- JZ0cAAezjwWCQeO7iBYHRYU/lyWIo+hsmk/OncWzICuw6HYoauF9Iq3i69Zl09PetaUG7HBdCt8yoG/Y+C1KQNt4l64kQIMxfyGi1YO4gWnm7XfT/7LqO+84
- tpBfgQqzICN/gvCKiMeV3kr4KH48m51RDNttBaOyCgxlQWbHS99/C1WmvciVh0Xd32uvhSwJczZ8grEP9GD/ASazHDry9+bQI2y/tXjUudwaqiYnzAR4b2ND
- 1qeoohTiZVBjdHguaZNKYRCf6Ng3nDXaF/rZnJ644vUsF2kdsLHH3Ac1WVIhBFb+Nv1158kfKzh48k0zwVaHczgdfQh66p9T71PtH1L6GEHLUAha65Bue0LG
- IK7hLdmwpyMFAeF/F2ae4dmUcf3Cc5G3iTHUJQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314080922.dk5ljg7fbtarzrog@d104.suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+On Thu 14-03-19 09:09:22, Oscar Salvador wrote:
+> On Wed, Mar 13, 2019 at 10:31:33AM -0400, Qian Cai wrote:
+> > Also, after calling the "useless" undo_isolate_page_range() here, it
+> > reaches the point of no returning by notifying MEM_OFFLINE. Those pages
+> > will be marked as MIGRATE_MOVABLE again once onlining. The only thing
+> > left to do is to decrease the number of isolated pageblocks zone
+> > counter which would make some paths of the page allocation slower that
+> > the above commit introduced. A memory block is usually at most 1GiB in
+> > size, so an "int" should be enough to represent the number of pageblocks
+> > in a block. Fix an incorrect comment along the way.
+> 
+> Well, x86_64's memblocks can be up to 2GB depending on the memory we got.
+> Plus the fact that alloc_contig_range can be used to isolate 16GB-hugetlb
+> pages on powerpc, and that could be a lot of pageblocks.
+> 
+> While an "int" could still hold, I think we should use "long" just to be
+> more future-proof.
 
-On 12/21/18 2:17 AM, Sebastian Reichel wrote:
-> Hi,
-> 
-> This moves all remaining users of the legacy TI_ST driver to hcill (patches
-> 1-3). Then patches 4-7 convert wl128x-radio driver to a standard platform
-> device driver with support for multiple instances. Patch 7 will result in
-> (userless) TI_ST driver no longer supporting radio at runtime. Patch 8-11 do
-> some cleanups in the wl128x-radio driver. Finally patch 12 removes the TI_ST
-> specific parts from wl128x-radio and adds the required infrastructure to use it
-> with the serdev hcill driver instead. The remaining patches 13 and 14 remove
-> the old TI_ST code.
-> 
-> The new code has been tested on the Motorola Droid 4. For testing the audio
-> should be configured to route Ext to Speaker or Headphone. Then you need to
-> plug headphone, since its cable is used as antenna. For testing there is a
-> 'radio' utility packages in Debian. When you start the utility you need to
-> specify a frequency, since initial get_frequency returns an error:
+I would rather not touch that for now. If we really need to change the
+type then do it when it is really needed. I pressume more things would
+have to be changed anyway.
 
-What is the status of this series?
-
-Based on some of the replies (from Adam Ford in particular) it appears that
-this isn't ready to be merged, so is a v2 planned?
-
-Regards,
-
-	Hans
-
-> 
-> $ radio -f 100.0
-> 
-> Merry Christmas!
-> 
-> -- Sebastian
-> 
-> Sebastian Reichel (14):
->   ARM: dts: LogicPD Torpedo: Add WiLink UART node
->   ARM: dts: IGEP: Add WiLink UART node
->   ARM: OMAP2+: pdata-quirks: drop TI_ST/KIM support
->   media: wl128x-radio: remove module version
->   media: wl128x-radio: remove global radio_disconnected
->   media: wl128x-radio: remove global radio_dev
->   media: wl128x-radio: convert to platform device
->   media: wl128x-radio: use device managed memory allocation
->   media: wl128x-radio: load firmware from ti-connectivity/
->   media: wl128x-radio: simplify fmc_prepare/fmc_release
->   media: wl128x-radio: fix skb debug printing
->   media: wl128x-radio: move from TI_ST to hci_ll driver
->   Bluetooth: btwilink: drop superseded driver
->   misc: ti-st: Drop superseded driver
-> 
->  .../boot/dts/logicpd-torpedo-37xx-devkit.dts  |   8 +
->  arch/arm/boot/dts/omap3-igep0020-rev-f.dts    |   8 +
->  arch/arm/boot/dts/omap3-igep0030-rev-g.dts    |   8 +
->  arch/arm/mach-omap2/pdata-quirks.c            |  52 -
->  drivers/bluetooth/Kconfig                     |  11 -
->  drivers/bluetooth/Makefile                    |   1 -
->  drivers/bluetooth/btwilink.c                  | 350 -------
->  drivers/bluetooth/hci_ll.c                    | 115 ++-
->  drivers/media/radio/wl128x/Kconfig            |   2 +-
->  drivers/media/radio/wl128x/fmdrv.h            |   5 +-
->  drivers/media/radio/wl128x/fmdrv_common.c     | 211 ++--
->  drivers/media/radio/wl128x/fmdrv_common.h     |   4 +-
->  drivers/media/radio/wl128x/fmdrv_v4l2.c       |  55 +-
->  drivers/media/radio/wl128x/fmdrv_v4l2.h       |   2 +-
->  drivers/misc/Kconfig                          |   1 -
->  drivers/misc/Makefile                         |   1 -
->  drivers/misc/ti-st/Kconfig                    |  18 -
->  drivers/misc/ti-st/Makefile                   |   6 -
->  drivers/misc/ti-st/st_core.c                  | 922 ------------------
->  drivers/misc/ti-st/st_kim.c                   | 868 -----------------
->  drivers/misc/ti-st/st_ll.c                    | 169 ----
->  include/linux/ti_wilink_st.h                  | 337 +------
->  22 files changed, 213 insertions(+), 2941 deletions(-)
->  delete mode 100644 drivers/bluetooth/btwilink.c
->  delete mode 100644 drivers/misc/ti-st/Kconfig
->  delete mode 100644 drivers/misc/ti-st/Makefile
->  delete mode 100644 drivers/misc/ti-st/st_core.c
->  delete mode 100644 drivers/misc/ti-st/st_kim.c
->  delete mode 100644 drivers/misc/ti-st/st_ll.c
-> 
-
+-- 
+Michal Hocko
+SUSE Labs
