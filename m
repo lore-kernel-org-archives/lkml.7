@@ -2,36 +2,40 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7162C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0366C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A489D2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8842184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfCNMoq (ORCPT
+        id S1727618AbfCNMot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:44:46 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:58262 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727192AbfCNMop (ORCPT
+        Thu, 14 Mar 2019 08:44:49 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:1718 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727091AbfCNMoq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 08:44:45 -0400
-X-UUID: c89eafd662484c918567cccb7149df20-20190314
-X-UUID: c89eafd662484c918567cccb7149df20-20190314
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        Thu, 14 Mar 2019 08:44:46 -0400
+X-UUID: f012480385524136abc4ed22633d81b6-20190314
+X-UUID: f012480385524136abc4ed22633d81b6-20190314
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
         (envelope-from <yongqiang.niu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 48474667; Thu, 14 Mar 2019 20:44:38 +0800
+        with ESMTP id 1133223688; Thu, 14 Mar 2019 20:44:40 +0800
+Received: from MTKMBS01DR.mediatek.inc (172.21.101.111) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 14 Mar 2019 20:44:39 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 14 Mar 2019 20:44:36 +0800
+ mtkmbs01dr.mediatek.inc (172.21.101.111) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 14 Mar 2019 20:44:38 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 14 Mar 2019 20:44:36 +0800
+ Transport; Thu, 14 Mar 2019 20:44:37 +0800
 From:   <yongqiang.niu@mediatek.com>
 To:     <ck.hu@mediatek.com>, <p.zabel@pengutronix.de>,
         <robh+dt@kernel.org>, <matthias.bgg@gmail.com>
@@ -41,9 +45,9 @@ CC:     <airlied@linux.ie>, <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
         <yt.shen@mediatek.com>, Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [RESEND PATCH v1 03/18] drm/mediatek: redefine mtk_ddp_sout_sel
-Date:   Thu, 14 Mar 2019 20:05:05 +0800
-Message-ID: <1552565120-24329-4-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [RESEND PATCH v1 05/18] drm/mediatek: add ddp component CCORR
+Date:   Thu, 14 Mar 2019 20:05:07 +0800
+Message-ID: <1552565120-24329-6-git-send-email-yongqiang.niu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1552565120-24329-1-git-send-email-yongqiang.niu@mediatek.com>
 References: <1552565120-24329-1-git-send-email-yongqiang.niu@mediatek.com>
@@ -57,67 +61,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch redefine mtk_ddp_sout_sel
+This patch add ddp component CCORR
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 32 +++++++++++++++++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  2 ++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index adb37e4..592f852 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -405,21 +405,27 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
- 	return value;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+index 54ca794..310c0b9 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+@@ -41,6 +41,12 @@
+ #define DISP_AAL_EN				0x0000
+ #define DISP_AAL_SIZE				0x0030
+ 
++#define DISP_CCORR_EN				0x0000
++#define CCORR_EN				BIT(0)
++#define DISP_CCORR_CFG				0x0020
++#define CCORR_RELAY_MODE			BIT(0)
++#define DISP_CCORR_SIZE				0x0030
++
+ #define DISP_GAMMA_EN				0x0000
+ #define DISP_GAMMA_CFG				0x0020
+ #define DISP_GAMMA_SIZE				0x0030
+@@ -131,6 +137,24 @@ static void mtk_aal_stop(struct mtk_ddp_comp *comp)
+ 	writel_relaxed(0x0, comp->regs + DISP_AAL_EN);
  }
  
--static void mtk_ddp_sout_sel(void __iomem *config_regs,
--			     enum mtk_ddp_comp_id cur,
--			     enum mtk_ddp_comp_id next)
-+static unsigned int mtk_ddp_sout_sel(void __iomem *config_regs,
-+				     enum mtk_ddp_comp_id cur,
-+				     enum mtk_ddp_comp_id next,
-+				     unsigned int *addr)
- {
-+	unsigned int value;
++static void mtk_ccorr_config(struct mtk_ddp_comp *comp, unsigned int w,
++			     unsigned int h, unsigned int vrefresh,
++			     unsigned int bpc)
++{
++	writel(h << 16 | w, comp->regs + DISP_CCORR_SIZE);
++	writel(CCORR_RELAY_MODE, comp->regs + DISP_CCORR_CFG);
++}
 +
- 	if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
--		writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
--			       config_regs + DISP_REG_CONFIG_OUT_SEL);
-+		*addr = DISP_REG_CONFIG_OUT_SEL;
-+		value = BLS_TO_DSI_RDMA1_TO_DPI1;
- 	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
--		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
--			       config_regs + DISP_REG_CONFIG_OUT_SEL);
--		writel_relaxed(DSI_SEL_IN_RDMA,
--			       config_regs + DISP_REG_CONFIG_DSI_SEL);
--		writel_relaxed(DPI_SEL_IN_BLS,
--			       config_regs + DISP_REG_CONFIG_DPI_SEL);
-+		*addr = DISP_REG_CONFIG_OUT_SEL;
-+		value = BLS_TO_DPI_RDMA1_TO_DSI;
-+	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
-+		*addr = DISP_REG_CONFIG_DSI_SEL;
-+		value = DSI_SEL_IN_RDMA;
-+	} else {
-+		value = 0;
- 	}
++static void mtk_ccorr_start(struct mtk_ddp_comp *comp)
++{
++	writel(CCORR_EN, comp->regs + DISP_CCORR_EN);
++}
 +
-+	return value;
- }
++static void mtk_ccorr_stop(struct mtk_ddp_comp *comp)
++{
++	writel_relaxed(0x0, comp->regs + DISP_CCORR_EN);
++}
++
+ static void mtk_gamma_config(struct mtk_ddp_comp *comp, unsigned int w,
+ 			     unsigned int h, unsigned int vrefresh,
+ 			     unsigned int bpc)
+@@ -179,6 +203,12 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+ 	.stop = mtk_aal_stop,
+ };
  
- void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
-@@ -434,7 +440,9 @@ void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
- 		writel_relaxed(reg, config_regs + addr);
- 	}
- 
--	mtk_ddp_sout_sel(config_regs, cur, next);
-+	value = mtk_ddp_sout_sel(cur, next, &addr);
-+	if (value)
-+		writel_relaxed(value, config_regs + addr);
- 
- 	value = mtk_ddp_sel_in(cur, next, &addr);
- 	if (value) {
++static const struct mtk_ddp_comp_funcs ddp_ccorr = {
++	.config = mtk_ccorr_config,
++	.start = mtk_ccorr_start,
++	.stop = mtk_ccorr_stop,
++};
++
+ static const struct mtk_ddp_comp_funcs ddp_gamma = {
+ 	.gamma_set = mtk_gamma_set,
+ 	.config = mtk_gamma_config,
+@@ -200,6 +230,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+ 	[MTK_DISP_RDMA] = "rdma",
+ 	[MTK_DISP_WDMA] = "wdma",
+ 	[MTK_DISP_COLOR] = "color",
++	[MTK_DISP_CCORR] = "ccorr",
+ 	[MTK_DISP_AAL] = "aal",
+ 	[MTK_DISP_GAMMA] = "gamma",
+ 	[MTK_DISP_UFOE] = "ufoe",
+@@ -221,6 +252,7 @@ struct mtk_ddp_comp_match {
+ 	[DDP_COMPONENT_AAL0]	= { MTK_DISP_AAL,	0, &ddp_aal },
+ 	[DDP_COMPONENT_AAL1]	= { MTK_DISP_AAL,	1, &ddp_aal },
+ 	[DDP_COMPONENT_BLS]	= { MTK_DISP_BLS,	0, NULL },
++	[DDP_COMPONENT_CCORR]	= { MTK_DISP_CCORR,	0, &ddp_ccorr },
+ 	[DDP_COMPONENT_COLOR0]	= { MTK_DISP_COLOR,	0, NULL },
+ 	[DDP_COMPONENT_COLOR1]	= { MTK_DISP_COLOR,	1, NULL },
+ 	[DDP_COMPONENT_DPI0]	= { MTK_DPI,		0, NULL },
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+index 8399229..87ef290 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+@@ -28,6 +28,7 @@ enum mtk_ddp_comp_type {
+ 	MTK_DISP_RDMA,
+ 	MTK_DISP_WDMA,
+ 	MTK_DISP_COLOR,
++	MTK_DISP_CCORR,
+ 	MTK_DISP_AAL,
+ 	MTK_DISP_GAMMA,
+ 	MTK_DISP_UFOE,
+@@ -44,6 +45,7 @@ enum mtk_ddp_comp_id {
+ 	DDP_COMPONENT_AAL0,
+ 	DDP_COMPONENT_AAL1,
+ 	DDP_COMPONENT_BLS,
++	DDP_COMPONENT_CCORR,
+ 	DDP_COMPONENT_COLOR0,
+ 	DDP_COMPONENT_COLOR1,
+ 	DDP_COMPONENT_DPI0,
 -- 
 1.8.1.1.dirty
 
