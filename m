@@ -2,115 +2,120 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58694C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FD2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F0C2085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B1D2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:15:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="fQ50pq/m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Av3AOM0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfCNGK3 (ORCPT
+        id S1727057AbfCNGP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:10:29 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:41582 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfCNGK3 (ORCPT
+        Thu, 14 Mar 2019 02:15:28 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36278 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfCNGP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:10:29 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id D3326C3B
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 06:10:27 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6OpQg2sMzHPh for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 01:10:27 -0500 (CDT)
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id AAA52C01
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:10:27 -0500 (CDT)
-Received: by mail-io1-f71.google.com with SMTP id r21so3472578iod.12
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:10:27 -0700 (PDT)
+        Thu, 14 Mar 2019 02:15:28 -0400
+Received: by mail-pf1-f196.google.com with SMTP id n22so3150457pfa.3;
+        Wed, 13 Mar 2019 23:15:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=K6nd7rHuf5jkq4Vkom/yzCR+WfV8SUCoSAXMWbiPRCk=;
-        b=fQ50pq/mAoJhRZBxW1WT/+kkqv72QiPbRCKOHrcxfifAnqdC2eGsOMGWrj0AbfCGyp
-         O3fp/mwPY4GoJJ3tToSbRtWkqWkwqJrZD2AH/0hfUAEV2exJzMaSvlXO1rUDqPoB9P8Q
-         dAF0R+wnM5KY8I5LO/z4xUxm4ZeGVNytwiiM+aQhj8VAJ1JLgwcAtx98OFfDH1aRZls5
-         rlmnHUJRvpbln6nMB5ILfaQGZGD41PB9UJucFPUDlg9zOH9603Fs4Nxr/jiUE4x7y2R2
-         YHZIr+25Dqi1z6X1WcXViolxhbR+ed9bhwdJl0fxGRTENuZdZ1I2b60W9xXJMiqvxf3z
-         fSjw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q87LftWO5iBuJXaxM2/XOAFMoWPTRqR3XSEk65pBRv8=;
+        b=Av3AOM0kM7z41gbJ1u4uzSLlAN+B7ZVV+3SYwaAuw6F1PKTN5wr86Vi7FGYn1CfoTF
+         KWAqiUTJysfSCBvn82caF3OCssa+zgMpY+kMxCgO0lfdMv1v56XS71rT67n/A5wlOH+S
+         6Pj6Y7rTONQTtCrT0jUSSYpU7uKI1FfkZ1jFFEoQQkQAgikxMPGcIZti4dCQ4eSfUa8F
+         U1BYVJ9yW5iILc3mojeRx2wN/RY/VycJN4LOpv3wELmGDGPSqED56uTmDcdjoNkPDqUh
+         BZS52mjtw1V0MQdKLdkkx8FfNsZNEUSA01uEWQX8NdO11VtJZoFyhD8lEVMraToODXHN
+         a1Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K6nd7rHuf5jkq4Vkom/yzCR+WfV8SUCoSAXMWbiPRCk=;
-        b=GbjNVOW5LmpJRKbPeMX1Cui4J6yH0i6Fp0hdOf5G+XgRCxyT7vm9ShWyBlQ9x1kINe
-         Fy/o+7lxoeboaYZCcEuTetC0WCnkgRoRh9K9qvD7EUx1TxDTLNXC9hPbHN34cm0Ftuc0
-         vVjp9enJ/fRa2eOxr7toaXHU7rRv7AnTgxTZ9CbGgPmNbiKBEb0mwi66QMYDxpvCwWAc
-         mNCTLE8cMMzCeLFjc1HOYoN/R3MRmbdA82kTkm5MWWcqvhOrk3VMu6UpJ9fcT8+g1OII
-         CWHW38Kz2ngbh2awjo4Q4RhGmn093g6XToHUAd4CpFnRZJIZYV6bCnXiV1DN3icY75Dc
-         hjrQ==
-X-Gm-Message-State: APjAAAU7ZSUK12aepRjIC+SxdEZtc/5pPMTLE2zowSMFwZuOfTSlSJWM
-        ZMH5aTLLMO0bqVfSykIc/V57XjjMI0BQ5ENTvXybU19za5YIBOEufVmW6Od7O4wHs1Sj/Jtf3iw
-        GaIUGpTpXhToSAjuCWmIzJYHjbn+n
-X-Received: by 2002:a24:908:: with SMTP id 8mr1041866itm.155.1552543827053;
-        Wed, 13 Mar 2019 23:10:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy69bnGvdqC8kII8Eu9FrbqUDdrNdnO6u/517zVUySms8RfzLmCdjYJmD9+V71d8hbxKUYUzg==
-X-Received: by 2002:a24:908:: with SMTP id 8mr1041854itm.155.1552543826824;
-        Wed, 13 Mar 2019 23:10:26 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id l11sm6110763ion.52.2019.03.13.23.10.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q87LftWO5iBuJXaxM2/XOAFMoWPTRqR3XSEk65pBRv8=;
+        b=WefUEs2MYCGHgdEFDPvGjMJoIBjSaOwD6PP/SiI9yhZdonJ79ZwQh7ssGPs7YPfg4h
+         wN+ns/V9n33OkXMIfAYbsuE1Vwlq6Hep5ARqhr6ljrqu2rxfgepDp48BClJfYoiPkG9D
+         qFr4x+TNHQKr4QNA1DopUzpYqRUzUVhyO21jkQWkIplmBMgkGh9QZ2n6UQ5ycPMUNzTq
+         6HruagLHi07e6JrhZawTf9esAAS/G7YyvdHF2/s8aLsdbjK198jQ5z7uh66whxsgqTye
+         HViDi3IroOlROWSRM6OvXwu4YN/xYtfDUX1uRJo2iAqgWcOfbeu//X/i4+um0NuLxdu0
+         UW3Q==
+X-Gm-Message-State: APjAAAWDupERO8ltHhzj7K2gz80v1t4r1dxJzU0B+YmoJgcwyb4tWuEj
+        Z+bRnfuq4dyFPuWQHWAsa8A=
+X-Google-Smtp-Source: APXvYqzYdmO99PUgIZyzN0u4qUloWDNk/L0Vlh+AIGfkoPKZIR52OmjZmZbBB9onHODabr9RE1ovEA==
+X-Received: by 2002:a17:902:e85:: with SMTP id 5mr49965272plx.13.1552544126975;
+        Wed, 13 Mar 2019 23:15:26 -0700 (PDT)
+Received: from localhost.localdomain ([175.223.23.218])
+        by smtp.gmail.com with ESMTPSA id k7sm17179498pgo.60.2019.03.13.23.15.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 23:10:25 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] rapidio: fix a NULL pointer derefenrece when create_workqueue fails
-Date:   Thu, 14 Mar 2019 01:10:15 -0500
-Message-Id: <20190314061015.11291-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 Mar 2019 23:15:26 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCH] tcp: don't use __constant_cpu_to_be32
+Date:   Thu, 14 Mar 2019 15:15:14 +0900
+Message-Id: <20190314061514.19586-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case create_workqueue fails, the fix releases resources and
-returns -ENOMEM to avoid NULL pointer dereference.
+A trivial patch.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+cpu_to_be32() is capable enough to detect __builtin_constant_p()
+and to use an appropriate compile time ___constant_swahb32()
+function.
+
+So we can use cpu_to_be32() instead of __constant_cpu_to_be32().
+
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 ---
- drivers/rapidio/rio_cm.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ include/uapi/linux/tcp.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
-index cf45829585cb..b29fc258eeba 100644
---- a/drivers/rapidio/rio_cm.c
-+++ b/drivers/rapidio/rio_cm.c
-@@ -2147,6 +2147,14 @@ static int riocm_add_mport(struct device *dev,
- 	mutex_init(&cm->rx_lock);
- 	riocm_rx_fill(cm, RIOCM_RX_RING_SIZE);
- 	cm->rx_wq = create_workqueue(DRV_NAME "/rxq");
-+	if (!cm->rx_wq) {
-+		riocm_error("failed to allocate IBMBOX_%d on %s",
-+			    cmbox, mport->name);
-+		rio_release_outb_mbox(mport, cmbox);
-+		kfree(cm);
-+		return -ENOMEM;
-+	}
-+
- 	INIT_WORK(&cm->rx_work, rio_ibmsg_handler);
+diff --git a/include/uapi/linux/tcp.h b/include/uapi/linux/tcp.h
+index 8bb6cc5f3235..7d2330df9652 100644
+--- a/include/uapi/linux/tcp.h
++++ b/include/uapi/linux/tcp.h
+@@ -70,16 +70,16 @@ union tcp_word_hdr {
+ #define tcp_flag_word(tp) ( ((union tcp_word_hdr *)(tp))->words [3]) 
  
- 	cm->tx_slot = 0;
+ enum { 
+-	TCP_FLAG_CWR = __constant_cpu_to_be32(0x00800000),
+-	TCP_FLAG_ECE = __constant_cpu_to_be32(0x00400000),
+-	TCP_FLAG_URG = __constant_cpu_to_be32(0x00200000),
+-	TCP_FLAG_ACK = __constant_cpu_to_be32(0x00100000),
+-	TCP_FLAG_PSH = __constant_cpu_to_be32(0x00080000),
+-	TCP_FLAG_RST = __constant_cpu_to_be32(0x00040000),
+-	TCP_FLAG_SYN = __constant_cpu_to_be32(0x00020000),
+-	TCP_FLAG_FIN = __constant_cpu_to_be32(0x00010000),
+-	TCP_RESERVED_BITS = __constant_cpu_to_be32(0x0F000000),
+-	TCP_DATA_OFFSET = __constant_cpu_to_be32(0xF0000000)
++	TCP_FLAG_CWR = cpu_to_be32(0x00800000),
++	TCP_FLAG_ECE = cpu_to_be32(0x00400000),
++	TCP_FLAG_URG = cpu_to_be32(0x00200000),
++	TCP_FLAG_ACK = cpu_to_be32(0x00100000),
++	TCP_FLAG_PSH = cpu_to_be32(0x00080000),
++	TCP_FLAG_RST = cpu_to_be32(0x00040000),
++	TCP_FLAG_SYN = cpu_to_be32(0x00020000),
++	TCP_FLAG_FIN = cpu_to_be32(0x00010000),
++	TCP_RESERVED_BITS = cpu_to_be32(0x0F000000),
++	TCP_DATA_OFFSET = cpu_to_be32(0xF0000000)
+ }; 
+ 
+ /*
 -- 
-2.17.1
+2.21.0
 
