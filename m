@@ -2,129 +2,395 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D919C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EEDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612CA2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5026D2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0Kg8Gm0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BgW6fWkY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfCNQQs (ORCPT
+        id S1727473AbfCNQSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:16:48 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:38681 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfCNQQr (ORCPT
+        Thu, 14 Mar 2019 12:18:12 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:37078 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfCNQSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:16:47 -0400
-Received: by mail-yw1-f65.google.com with SMTP id m207so4869622ywd.5;
-        Thu, 14 Mar 2019 09:16:46 -0700 (PDT)
+        Thu, 14 Mar 2019 12:18:11 -0400
+Received: by mail-it1-f195.google.com with SMTP id z124so5872221itc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 09:18:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7ktaUV3fMFadix+0Z6ctybnKLcsuwszmrSG1OINS11g=;
-        b=P0Kg8Gm051GGZnKv3tgLZdVWxZUALC+FgLYCwj/MOLKxU4gCM34jsuPZD0B6Fm7Szk
-         jiTSz8EyCJgb7nI9YH37BouaBMOvePqXxdttxOwokuU/nFOgtucEaoyP3CbB4GlRGCY4
-         NrvliTk4k2Ap7N8NQAb5wIEQwK9CMM0Lg2B+lCj18/XKtA0nqn+vW8+cpeGQrohGk/cG
-         LcVGXjQsm7XoHASa9TSUcZS6eck/QzZ5xUyHTKLqb4NvMd1BMap4/+ns8iUzexvFRXxt
-         NY5quK8y3O8N4DpjB6MRwXLHC8P7Vwlquovv3PCy74XJh6IFR7woMEbdXxVb8NEzYZGK
-         Sljg==
+        bh=V3u4Bp6XqF+yKageFm329p3W5G4V4eJX27x3BKSFWW8=;
+        b=BgW6fWkYfjG83jipDY+8gqO2bdAOqJlLPUvWtEW1hpImrvRzKIaGhSt8ZlYr7XPcHX
+         aCmmMzSMhfeS63KnjqdSOJnqhHU2DiWCEao3oVlRqC0r16xKozb1PFuNIsbxtNYqW7Np
+         bwzJl5jmkOylFLyO1U5ejq3kGEThM8hBnt+8ZRFbd+egoD89AVLRvjTchmWQjYCLugEK
+         MUr/d8l88dk58qAYw2sJ2jickaScBp94JoHHqyAHjADt3iAG+itTKev2wT0lMGmANXsT
+         0NKi5E14vaQHOXKR5zo39HYcjPEamvgccp7nuwr2QoLye/nLBsyH+fXyywgGJsaTnWPU
+         KERg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7ktaUV3fMFadix+0Z6ctybnKLcsuwszmrSG1OINS11g=;
-        b=MXvi80gKmc0LmKuaM1BfQ2BoyJCrYpTEIWzalS/j7u+HfPPTeUXKa6B5tuBhC1Kk41
-         cAk99A7btn6iUN1QH17+HTEohHzjhfH1BtsQi7rqkUQypPqXzEIvW3XpvR0cq5yGvO3J
-         PUOSYdBkVl8V+9hobGA9EfJnR3kNkGHngpx+crTHyTr+UraTv7X/lYE8maCkXUt0haXv
-         5MVjWTJ2U9M2JiVb0IpdjX2q610l9yfM1GgMrvFrFgXZ1cv2kShwbEkbuZrKh0H7IHFy
-         MZ+UVoiHD5iN+UdddlRnjnK9Y9Fd+3lxSVFWmXW4h/YUcrUVZ6TOojJGMLu6VxnW5SjS
-         uKyQ==
-X-Gm-Message-State: APjAAAUT6uEMqAHLaOxzQggz8clE3IswsS30J7oeiH9ReLXO5BZIYElf
-        lU+pnkwL9JnbOxK+RMSI2GyLq2NOPzBUTFGYeZE=
-X-Google-Smtp-Source: APXvYqxF42jYjMBTZKD5Te8Y2GoxTpuu156u3a4IQ4LRlwwnn1Q5YzLcSWOxMprk34wQ4paWh4tyqwtnQyDJeQA+bqk=
-X-Received: by 2002:a5b:642:: with SMTP id o2mr40888379ybq.32.1552580206382;
- Thu, 14 Mar 2019 09:16:46 -0700 (PDT)
+        bh=V3u4Bp6XqF+yKageFm329p3W5G4V4eJX27x3BKSFWW8=;
+        b=HIs29E9/KARpohFsWTeKTl5cC3odLwVV3Zt4dOJ5SjxY9mKL048qnkD5/Unq5pCqAk
+         gs+WneTAq7+hCBR4f2l4ZTks94c92i5R36SWp9hYdEDCsZp7UXG8KbCoJ1ByPzAp6AzB
+         CxJnxYxWYpxh8kVlIT6gORP/6Zyq/dzI8bF5vfs3xq4Lql1Xv4TCTcQgxsmA4F3OOuM/
+         fl+YEroWabvlOu3lyzFUQ86pO2Q/H/t+C6jRwxousg3L9dbQQ+KbYXC2GLhLURSuGgbg
+         wvY8cfqIuhR2OQ5bGcIQqN73/dPJVprdzbmJolNSoC3fJXo1GsRcGxyV8nFnya5irYp6
+         OcQA==
+X-Gm-Message-State: APjAAAWjzWx6iRX/9izEuZAdRdEkshn+aCYhhpcoDrkazQiCDAkaP86S
+        8y36ycN6S8xhv2EflTzv948TcWXMIuLhEsU77L+4gg==
+X-Google-Smtp-Source: APXvYqxyzaQCqsG8Tn+5bs6iWUqk5vysGjHadEfIZexKcNCAAbTwH5ST3+vbBvtE/jsSO0/+TJTL0JQnobut6/e/LBk=
+X-Received: by 2002:a02:710e:: with SMTP id n14mr28163400jac.23.1552580289753;
+ Thu, 14 Mar 2019 09:18:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <201903140234.4FpTWdW3%lkp@intel.com> <20190314083758.GA16658@quack2.suse.cz>
- <CAOQ4uxhZH9=U63J1_bVrMbNO-Quy-8S300Qi6VmZxvKwYCogQQ@mail.gmail.com>
- <20190314123811.GH16658@quack2.suse.cz> <20190314143158.GC27249@linux-mips.org>
-In-Reply-To: <20190314143158.GC27249@linux-mips.org>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 14 Mar 2019 18:16:35 +0200
-Message-ID: <CAOQ4uxiEkczB7PNCXegFC-eYb9zAGaio_o=OgHAJHFd7eavBxA@mail.gmail.com>
-Subject: Re: fs/notify/fanotify/fanotify.c:198:2: note: in expansion of macro 'pr_warn_ratelimited'
-To:     Ralf Baechle <ralf@linux-mips.org>
-Cc:     Jan Kara <jack@suse.cz>, kbuild-all@01.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com> <20190208100554.32196-13-patrick.bellasi@arm.com>
+In-Reply-To: <20190208100554.32196-13-patrick.bellasi@arm.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Thu, 14 Mar 2019 09:17:57 -0700
+Message-ID: <CAJuCfpHTtokPFHu3KHYGj9arbPYn6ZZ=-qNpmVPrDwhPvnA9Ow@mail.gmail.com>
+Subject: Re: [PATCH v7 12/15] sched/core: uclamp: Propagate parent clamps
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 4:34 PM Ralf Baechle <ralf@linux-mips.org> wrote:
+On Fri, Feb 8, 2019 at 2:06 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
 >
-> On Thu, Mar 14, 2019 at 01:38:11PM +0100, Jan Kara wrote:
+> In order to properly support hierarchical resources control, the cgroup
+> delegation model requires that attribute writes from a child group never
+> fail but still are (potentially) constrained based on parent's assigned
+> resources. This requires to properly propagate and aggregate parent
+> attributes down to its descendants.
 >
-> > On Thu 14-03-19 14:01:18, Amir Goldstein wrote:
-> > > On Thu, Mar 14, 2019 at 10:37 AM Jan Kara <jack@suse.cz> wrote:
-> > > >
-> > > > AFAICS this is the known problem with weird mips definitions of
-> > > > __kernel_fsid_t which uses long whereas all other architectures use int,
-> > > > right? Seeing that mips can actually have 8-byte longs, I guess this
-> > > > bogosity is just wired in the kernel API and we cannot easily fix it in
-> > > > mips (mips guys, correct me if I'm wrong). So what if we just
-> > > > unconditionally typed printed values to unsigned int to silence the
-> > > > warning?
-> > >
-> > > I don't understand why. To me that sounds like papering over a bug.
-> > >
-> > > See this reply from mips developer Paul Burton:
-> > > https://marc.info/?l=linux-fsdevel&m=154783680019904&w=2
-> > > mips developers have not replied to the question why __kernel_fsid_t
-> > > should use long.
-> >
-> > Ah, right. I've missed that mips defines __kernel_fsid_t only if
-> > sizeof(long) == 4. OK, than fixing MIPS headers is definitely what we ought
-> > to do. Mips guys, any reason why the patch from Ralf didn't get merged yet?
->
-> Paul's patch :-)
->
-> As for the reason why the definition is as it is - 32-bit MIPS was
-> born using long, then in 2000 64-bit MIPS started off as arch/mips64
-> using int.  Eventually the two ports were combined using:
->
-> ypedef struct {
-> #if (_MIPS_SZLONG == 32)
->         long    val[2];
-> #endif
-> #if (_MIPS_SZLONG == 64)
->         int     val[2];
-> #endif
-> } __kernel_fsid_t;
->
-> A desparate attempt to use asm-generic where ever possible then resulted
-> in the confusing definition we'e having today.
->
-> Normally APIs are cast into stone not to be changed.  But fsid is used in
-> struct statfs and the man page states "Nobody knows what f_fsid is supposed
-> to contain (but see below)." and f_fsid is supposed to be opaque anyway so
-> I'm wondering if something could break at all.  Researching that.
->
+> Let's implement this mechanism by adding a new "effective" clamp value
+> for each task group. The effective clamp value is defined as the smaller
+> value between the clamp value of a group and the effective clamp value
+> of its parent. This is the actual clamp value enforced on tasks in a
+> task group.
 
-Its content is opaque, but its size must be equal to that of fsid_t
-from glibc/toolchain headers. Do the mips32 glibc headers also
-define fsid_t as long val[2], or do they define it as int val[2]?
+In patch 10 in this series you mentioned "b) do not enforce any
+constraints and/or dependencies between the parent and its child
+nodes"
 
-Thanks,
-Amir.
+This patch seems to change that behavior. If so, should it be documented?
+
+> Since it can be interesting for userspace, e.g. system management
+> software, to know exactly what the currently propagated/enforced
+> configuration is, the effective clamp values are exposed to user-space
+> by means of a new pair of read-only attributes
+> cpu.util.{min,max}.effective.
+>
+> Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Tejun Heo <tj@kernel.org>
+>
+> ---
+> Changes in v7:
+>  Others:
+>  - ensure clamp values are not tunable at root cgroup level
+> ---
+>  Documentation/admin-guide/cgroup-v2.rst |  19 ++++
+>  kernel/sched/core.c                     | 118 +++++++++++++++++++++++-
+>  2 files changed, 133 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index 47710a77f4fa..7aad2435e961 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -990,6 +990,16 @@ All time durations are in microseconds.
+>          values similar to the sched_setattr(2). This minimum utilization
+>          value is used to clamp the task specific minimum utilization clamp.
+>
+> +  cpu.util.min.effective
+> +        A read-only single value file which exists on non-root cgroups and
+> +        reports minimum utilization clamp value currently enforced on a task
+> +        group.
+> +
+> +        The actual minimum utilization in the range [0, 1024].
+> +
+> +        This value can be lower then cpu.util.min in case a parent cgroup
+> +        allows only smaller minimum utilization values.
+> +
+>    cpu.util.max
+>          A read-write single value file which exists on non-root cgroups.
+>          The default is "1024". i.e. no utilization capping
+> @@ -1000,6 +1010,15 @@ All time durations are in microseconds.
+>          values similar to the sched_setattr(2). This maximum utilization
+>          value is used to clamp the task specific maximum utilization clamp.
+>
+> +  cpu.util.max.effective
+> +        A read-only single value file which exists on non-root cgroups and
+> +        reports maximum utilization clamp value currently enforced on a task
+> +        group.
+> +
+> +        The actual maximum utilization in the range [0, 1024].
+> +
+> +        This value can be lower then cpu.util.max in case a parent cgroup
+> +        is enforcing a more restrictive clamping on max utilization.
+>
+>
+>  Memory
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 122ab069ade5..1e54517acd58 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -720,6 +720,18 @@ static void set_load_weight(struct task_struct *p, bool update_load)
+>  }
+>
+>  #ifdef CONFIG_UCLAMP_TASK
+> +/*
+> + * Serializes updates of utilization clamp values
+> + *
+> + * The (slow-path) user-space triggers utilization clamp value updates which
+> + * can require updates on (fast-path) scheduler's data structures used to
+> + * support enqueue/dequeue operations.
+> + * While the per-CPU rq lock protects fast-path update operations, user-space
+> + * requests are serialized using a mutex to reduce the risk of conflicting
+> + * updates or API abuses.
+> + */
+> +static DEFINE_MUTEX(uclamp_mutex);
+> +
+>  /* Max allowed minimum utilization */
+>  unsigned int sysctl_sched_uclamp_util_min = SCHED_CAPACITY_SCALE;
+>
+> @@ -1127,6 +1139,8 @@ static void __init init_uclamp(void)
+>         unsigned int value;
+>         int cpu;
+>
+> +       mutex_init(&uclamp_mutex);
+> +
+>         for_each_possible_cpu(cpu) {
+>                 memset(&cpu_rq(cpu)->uclamp, 0, sizeof(struct uclamp_rq));
+>                 cpu_rq(cpu)->uclamp_flags = 0;
+> @@ -6758,6 +6772,10 @@ static inline int alloc_uclamp_sched_group(struct task_group *tg,
+>                         parent->uclamp[clamp_id].value;
+>                 tg->uclamp[clamp_id].bucket_id =
+>                         parent->uclamp[clamp_id].bucket_id;
+> +               tg->uclamp[clamp_id].effective.value =
+> +                       parent->uclamp[clamp_id].effective.value;
+> +               tg->uclamp[clamp_id].effective.bucket_id =
+> +                       parent->uclamp[clamp_id].effective.bucket_id;
+>         }
+>  #endif
+>
+> @@ -7011,6 +7029,53 @@ static void cpu_cgroup_attach(struct cgroup_taskset *tset)
+>  }
+>
+>  #ifdef CONFIG_UCLAMP_TASK_GROUP
+> +static void cpu_util_update_hier(struct cgroup_subsys_state *css,
+
+s/cpu_util_update_hier/cpu_util_update_heir ?
+
+> +                                unsigned int clamp_id, unsigned int bucket_id,
+> +                                unsigned int value)
+> +{
+> +       struct cgroup_subsys_state *top_css = css;
+> +       struct uclamp_se *uc_se, *uc_parent;
+> +
+> +       css_for_each_descendant_pre(css, top_css) {
+> +               /*
+> +                * The first visited task group is top_css, which clamp value
+> +                * is the one passed as parameter. For descendent task
+> +                * groups we consider their current value.
+> +                */
+> +               uc_se = &css_tg(css)->uclamp[clamp_id];
+> +               if (css != top_css) {
+> +                       value = uc_se->value;
+> +                       bucket_id = uc_se->effective.bucket_id;
+> +               }
+> +               uc_parent = NULL;
+> +               if (css_tg(css)->parent)
+> +                       uc_parent = &css_tg(css)->parent->uclamp[clamp_id];
+> +
+> +               /*
+> +                * Skip the whole subtrees if the current effective clamp is
+> +                * already matching the TG's clamp value.
+> +                * In this case, all the subtrees already have top_value, or a
+> +                * more restrictive value, as effective clamp.
+> +                */
+> +               if (uc_se->effective.value == value &&
+> +                   uc_parent && uc_parent->effective.value >= value) {
+> +                       css = css_rightmost_descendant(css);
+> +                       continue;
+> +               }
+> +
+> +               /* Propagate the most restrictive effective value */
+> +               if (uc_parent && uc_parent->effective.value < value) {
+> +                       value = uc_parent->effective.value;
+> +                       bucket_id = uc_parent->effective.bucket_id;
+> +               }
+> +               if (uc_se->effective.value == value)
+> +                       continue;
+> +
+> +               uc_se->effective.value = value;
+> +               uc_se->effective.bucket_id = bucket_id;
+> +       }
+> +}
+> +
+>  static int cpu_util_min_write_u64(struct cgroup_subsys_state *css,
+>                                   struct cftype *cftype, u64 min_value)
+>  {
+> @@ -7020,6 +7085,7 @@ static int cpu_util_min_write_u64(struct cgroup_subsys_state *css,
+>         if (min_value > SCHED_CAPACITY_SCALE)
+>                 return -ERANGE;
+>
+> +       mutex_lock(&uclamp_mutex);
+>         rcu_read_lock();
+>
+>         tg = css_tg(css);
+> @@ -7038,8 +7104,13 @@ static int cpu_util_min_write_u64(struct cgroup_subsys_state *css,
+>         tg->uclamp[UCLAMP_MIN].value = min_value;
+>         tg->uclamp[UCLAMP_MIN].bucket_id = uclamp_bucket_id(min_value);
+>
+> +       /* Update effective clamps to track the most restrictive value */
+> +       cpu_util_update_hier(css, UCLAMP_MIN, tg->uclamp[UCLAMP_MIN].bucket_id,
+> +                            min_value);
+> +
+>  out:
+>         rcu_read_unlock();
+> +       mutex_unlock(&uclamp_mutex);
+>
+>         return ret;
+>  }
+> @@ -7053,6 +7124,7 @@ static int cpu_util_max_write_u64(struct cgroup_subsys_state *css,
+>         if (max_value > SCHED_CAPACITY_SCALE)
+>                 return -ERANGE;
+>
+> +       mutex_lock(&uclamp_mutex);
+>         rcu_read_lock();
+>
+>         tg = css_tg(css);
+> @@ -7071,21 +7143,29 @@ static int cpu_util_max_write_u64(struct cgroup_subsys_state *css,
+>         tg->uclamp[UCLAMP_MAX].value = max_value;
+>         tg->uclamp[UCLAMP_MAX].bucket_id = uclamp_bucket_id(max_value);
+>
+> +       /* Update effective clamps to track the most restrictive value */
+> +       cpu_util_update_hier(css, UCLAMP_MAX, tg->uclamp[UCLAMP_MAX].bucket_id,
+> +                            max_value);
+> +
+>  out:
+>         rcu_read_unlock();
+> +       mutex_unlock(&uclamp_mutex);
+>
+>         return ret;
+>  }
+>
+>  static inline u64 cpu_uclamp_read(struct cgroup_subsys_state *css,
+> -                                 enum uclamp_id clamp_id)
+> +                                 enum uclamp_id clamp_id,
+> +                                 bool effective)
+>  {
+>         struct task_group *tg;
+>         u64 util_clamp;
+>
+>         rcu_read_lock();
+>         tg = css_tg(css);
+> -       util_clamp = tg->uclamp[clamp_id].value;
+> +       util_clamp = effective
+> +               ? tg->uclamp[clamp_id].effective.value
+> +               : tg->uclamp[clamp_id].value;
+>         rcu_read_unlock();
+>
+>         return util_clamp;
+> @@ -7094,13 +7174,25 @@ static inline u64 cpu_uclamp_read(struct cgroup_subsys_state *css,
+>  static u64 cpu_util_min_read_u64(struct cgroup_subsys_state *css,
+>                                  struct cftype *cft)
+>  {
+> -       return cpu_uclamp_read(css, UCLAMP_MIN);
+> +       return cpu_uclamp_read(css, UCLAMP_MIN, false);
+>  }
+>
+>  static u64 cpu_util_max_read_u64(struct cgroup_subsys_state *css,
+>                                  struct cftype *cft)
+>  {
+> -       return cpu_uclamp_read(css, UCLAMP_MAX);
+> +       return cpu_uclamp_read(css, UCLAMP_MAX, false);
+> +}
+> +
+> +static u64 cpu_util_min_effective_read_u64(struct cgroup_subsys_state *css,
+> +                                          struct cftype *cft)
+> +{
+> +       return cpu_uclamp_read(css, UCLAMP_MIN, true);
+> +}
+> +
+> +static u64 cpu_util_max_effective_read_u64(struct cgroup_subsys_state *css,
+> +                                          struct cftype *cft)
+> +{
+> +       return cpu_uclamp_read(css, UCLAMP_MAX, true);
+>  }
+>  #endif /* CONFIG_UCLAMP_TASK_GROUP */
+>
+> @@ -7448,11 +7540,19 @@ static struct cftype cpu_legacy_files[] = {
+>                 .read_u64 = cpu_util_min_read_u64,
+>                 .write_u64 = cpu_util_min_write_u64,
+>         },
+> +       {
+> +               .name = "util.min.effective",
+> +               .read_u64 = cpu_util_min_effective_read_u64,
+> +       },
+>         {
+>                 .name = "util.max",
+>                 .read_u64 = cpu_util_max_read_u64,
+>                 .write_u64 = cpu_util_max_write_u64,
+>         },
+> +       {
+> +               .name = "util.max.effective",
+> +               .read_u64 = cpu_util_max_effective_read_u64,
+> +       },
+>  #endif
+>         { }     /* Terminate */
+>  };
+> @@ -7628,12 +7728,22 @@ static struct cftype cpu_files[] = {
+>                 .read_u64 = cpu_util_min_read_u64,
+>                 .write_u64 = cpu_util_min_write_u64,
+>         },
+> +       {
+> +               .name = "util.min.effective",
+> +               .flags = CFTYPE_NOT_ON_ROOT,
+> +               .read_u64 = cpu_util_min_effective_read_u64,
+> +       },
+>         {
+>                 .name = "util.max",
+>                 .flags = CFTYPE_NOT_ON_ROOT,
+>                 .read_u64 = cpu_util_max_read_u64,
+>                 .write_u64 = cpu_util_max_write_u64,
+>         },
+> +       {
+> +               .name = "util.max.effective",
+> +               .flags = CFTYPE_NOT_ON_ROOT,
+> +               .read_u64 = cpu_util_max_effective_read_u64,
+> +       },
+>  #endif
+>         { }     /* terminate */
+>  };
+> --
+> 2.20.1
+>
