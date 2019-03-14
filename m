@@ -3,29 +3,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A6BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBFDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 510FE213A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228F3213A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:21:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfCNAU6 (ORCPT
+        id S1727222AbfCNAVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 20:20:58 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38124 "EHLO
+        Wed, 13 Mar 2019 20:21:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38140 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfCNAU5 (ORCPT
+        with ESMTP id S1726640AbfCNAVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 20:20:57 -0400
+        Wed, 13 Mar 2019 20:21:02 -0400
 Received: from localhost.localdomain (unknown [IPv6:2804:431:9719:798c:867b:ebff:fe52:de60])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AE4F6260249;
-        Thu, 14 Mar 2019 00:20:50 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6AFB8281457;
+        Thu, 14 Mar 2019 00:20:55 +0000 (GMT)
 From:   Helen Koike <helen.koike@collabora.com>
 To:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com
 Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
@@ -35,145 +35,63 @@ Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
         harry.wentland@amd.com,
         =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@google.com>,
         Helen Koike <helen.koike@collabora.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org,
+        Leo Li <sunpeng.li@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v3 1/5] drm/rockchip: fix fb references in async update
-Date:   Wed, 13 Mar 2019 21:20:22 -0300
-Message-Id: <20190314002027.7833-2-helen.koike@collabora.com>
+Subject: [PATCH v3 2/5] drm/amd: fix fb references in async update
+Date:   Wed, 13 Mar 2019 21:20:23 -0300
+Message-Id: <20190314002027.7833-3-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190314002027.7833-1-helen.koike@collabora.com>
 References: <20190314002027.7833-1-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the case of async update, modifications are done in place, i.e. in the
-current plane state, so the new_state is prepared and the new_state is
-cleaned up (instead of the old_state, unlike what happens in a
-normal sync update).
-To cleanup the old_fb properly, it needs to be placed in the new_state
-in the end of async_update, so cleanup call will unreference the old_fb
-correctly.
+Async update callbacks are expected to set the old_fb in the new_state
+so prepare/cleanup framebuffers are balanced.
 
-Also, the previous code had a:
+Calling drm_atomic_set_fb_for_plane() (which gets a reference of the new
+fb and put the old fb) is not required, as it's taken care by
+drm_mode_cursor_universal() when calling drm_atomic_helper_update_plane().
 
-	plane_state = plane->funcs->atomic_duplicate_state(plane);
-	...
-	swap(plane_state, plane->state);
-
-	if (plane->state->fb && plane->state->fb != new_state->fb) {
-	...
-	}
-
-Which was wrong, as the fb were just assigned to be equal, so this if
-statement nevers evaluates to true.
-
-Another details is that the function drm_crtc_vblank_get() can only be
-called when vop->is_enabled is true, otherwise it has no effect and
-trows a WARN_ON().
-
-Calling drm_atomic_set_fb_for_plane() (which get a referent of the new
-fb and pus the old fb) is not required, as it is taken care by
-drm_mode_cursor_universal() when calling
-drm_atomic_helper_update_plane().
-
+Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
 ---
-Hello,
 
-I tested on the rockchip ficus v1.1 using igt plane_cursor_legacy and
-kms_cursor_legacy and I didn't see any regressions.
+Changes in v3: None
+Changes in v2:
+- added reviewed-by tag
 
-Changes in v3:
-- use swap() to swap old and new framebuffers in async_update
-- get the reference to old_fb and set the worker after vop_plane_atomic_update()
-- add a FIXME tag for when we have multiple fbs to be released when
-vblank happens.
-- update commit message
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Changes in v2: None
-
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 51 +++++++++++----------
- 1 file changed, 26 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index c7d4c6073ea5..08f5dcd738a7 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -912,29 +912,17 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
- 					  struct drm_plane_state *new_state)
- {
- 	struct vop *vop = to_vop(plane->state->crtc);
--	struct drm_plane_state *plane_state;
--
--	plane_state = plane->funcs->atomic_duplicate_state(plane);
--	plane_state->crtc_x = new_state->crtc_x;
--	plane_state->crtc_y = new_state->crtc_y;
--	plane_state->crtc_h = new_state->crtc_h;
--	plane_state->crtc_w = new_state->crtc_w;
--	plane_state->src_x = new_state->src_x;
--	plane_state->src_y = new_state->src_y;
--	plane_state->src_h = new_state->src_h;
--	plane_state->src_w = new_state->src_w;
--
--	if (plane_state->fb != new_state->fb)
--		drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
--
--	swap(plane_state, plane->state);
--
--	if (plane->state->fb && plane->state->fb != new_state->fb) {
--		drm_framebuffer_get(plane->state->fb);
--		WARN_ON(drm_crtc_vblank_get(plane->state->crtc) != 0);
--		drm_flip_work_queue(&vop->fb_unref_work, plane->state->fb);
--		set_bit(VOP_PENDING_FB_UNREF, &vop->pending);
--	}
-+	struct drm_framebuffer *old_fb = plane->state->fb;
-+
-+	plane->state->crtc_x = new_state->crtc_x;
-+	plane->state->crtc_y = new_state->crtc_y;
-+	plane->state->crtc_h = new_state->crtc_h;
-+	plane->state->crtc_w = new_state->crtc_w;
-+	plane->state->src_x = new_state->src_x;
-+	plane->state->src_y = new_state->src_y;
-+	plane->state->src_h = new_state->src_h;
-+	plane->state->src_w = new_state->src_w;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 2f26581b93ff..ce4ccd28ac5e 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -3760,8 +3760,7 @@ static void dm_plane_atomic_async_update(struct drm_plane *plane,
+ 	struct drm_plane_state *old_state =
+ 		drm_atomic_get_old_plane_state(new_state->state, plane);
+ 
+-	if (plane->state->fb != new_state->fb)
+-		drm_atomic_set_fb_for_plane(plane->state, new_state->fb);
 +	swap(plane->state->fb, new_state->fb);
  
- 	if (vop->is_enabled) {
- 		rockchip_drm_psr_inhibit_get_state(new_state->state);
-@@ -943,9 +931,22 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
- 		vop_cfg_done(vop);
- 		spin_unlock(&vop->reg_lock);
- 		rockchip_drm_psr_inhibit_put_state(new_state->state);
--	}
- 
--	plane->funcs->atomic_destroy_state(plane, plane_state);
-+		/*
-+		 * A scanout can still be occurring, so we can't drop the
-+		 * reference to the old framebuffer. To solve this we get a
-+		 * reference to old_fb and set a worker to release it later.
-+		 * FIXME: if we perform 500 async_update calls before the
-+		 * vblank, then we can have 500 different framebuffers waiting
-+		 * to be released.
-+		 */
-+		if (old_fb && plane->state->fb != old_fb) {
-+			drm_framebuffer_get(old_fb);
-+			WARN_ON(drm_crtc_vblank_get(plane->state->crtc) != 0);
-+			drm_flip_work_queue(&vop->fb_unref_work, old_fb);
-+			set_bit(VOP_PENDING_FB_UNREF, &vop->pending);
-+		}
-+	}
- }
- 
- static const struct drm_plane_helper_funcs plane_helper_funcs = {
+ 	plane->state->src_x = new_state->src_x;
+ 	plane->state->src_y = new_state->src_y;
 -- 
 2.20.1
 
