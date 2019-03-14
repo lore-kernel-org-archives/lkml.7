@@ -2,129 +2,199 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C450C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CCAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068CB2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SFRcdqiV"
+	by mail.kernel.org (Postfix) with ESMTP id 2D7002077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552558760;
+	bh=wT13TxYGvRYjG1lh0gnDBzbPeSjddt7G10I9XvVEyYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lltVj8m31gNgtPmavKAHOnGeOl3thd0MZVRMnguBk30Ncvz67QEMtPfDJNT8Y+d09
+	 Z0UC9QElB4vIlHxoCiaRsABQT0aVxzVmuZegpdfAmKNDDUbi+6t/DFLpkrumYIhv7t
+	 RP6KgIoSTEBHS3k30HyYCC2cPeyCOMPiTf53DpOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfCNKSt (ORCPT
+        id S1727302AbfCNKTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:18:49 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35946 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfCNKSs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:18:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r124so3667802pgr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 03:18:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ANLeUNhzxUv5KhstVY4TPE8Bh277AJYgjdhMVlSsOTM=;
-        b=SFRcdqiVcfiMo4tGHSFXxYv9YwLbxKowZBeld4N5keOsA21F8ue3dzbfpOKbQUe7NG
-         zxiqWJ3fgJMjIza62mGuq/Dtw8RD0LpVsVjIUwdzPcke5TPED0rPSXAzSjVvb7zQ9vg/
-         na58EX7/QmT7pR09tNBgZFAwOSlyfq6jDZEBbAC/UMqSdNtOBKlLvxQ2GzCZTA4mH+0q
-         JRTFOdwnxmYhB+M3YyT90N+Syt72aZdwG6TpVvrAx6HifJ2o3h/hA5wYBwAHaWmZEVnB
-         jrvVsm9c6tbx5suzWEfAm4J6rTTGpiuOoKmBDzzW4Z4ub5w7zUKiquuERY1uj/qR29vD
-         DLlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ANLeUNhzxUv5KhstVY4TPE8Bh277AJYgjdhMVlSsOTM=;
-        b=YOoDmFT4Bj42NJ3iUJbnzf5cozvvX2DF9R3jTnMutaKEf0YAppu/XGbfQiklHx/43D
-         POe3GOUbrCzcB6Io6PtkpCzKJF6uh9wpazbL45VaZI5/PhP7WrOsJ9CgEQWJVs9cepii
-         8jNK7vGCJER550nC+tGodHzWNS9ZuZHUuzxUuTqgvZjPdH4Mr640ZAQRFSB3WmhTyIss
-         ehQJnmg63KV3hbzZaT2gh8HaLooCgBRbXwza+Un3I3iAGuG9R675CYgQEsltYrgwSR1F
-         e2keLQGNV84JytYEVdlZ5vrgyXHc+MB+zg5e8PyyMGoMce5XMuxkIF4wGGquyt3kIsBS
-         fCxw==
-X-Gm-Message-State: APjAAAVVg+UyTlTh3NeB3tK9rXPFq7Vxzpf+N3RwyjTMwHiWK5YAlJrs
-        49DB5mB8I5zj6y8z46dlsBfH0A==
-X-Google-Smtp-Source: APXvYqwaKtU8EWWtkOXl9jmUjNuXMKff8g7OBcA7D8msqlFJLINjgPD1Uwq54W7Vcpi0eywzZViAxQ==
-X-Received: by 2002:a62:5543:: with SMTP id j64mr48575497pfb.105.1552558727675;
-        Thu, 14 Mar 2019 03:18:47 -0700 (PDT)
-Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id h126sm40427553pfc.135.2019.03.14.03.18.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 03:18:46 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 15:48:44 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        kvm@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH 0/7] cpufreq: Call transition notifier only once for each
- policy
-Message-ID: <20190314101844.2q7nlxukxjyrwvv5@vireshk-i7>
-References: <cover.1552545525.git.viresh.kumar@linaro.org>
- <CAJZ5v0gER+aJaQmk89VSVBtHgQ+WPDdAxUW6eJ4JCB=emC85dg@mail.gmail.com>
- <CAJZ5v0izRO4zmc-TovmZBjWa+Or0oN89Ny8rdxf=81ogMJM4oQ@mail.gmail.com>
+        Thu, 14 Mar 2019 06:19:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46162 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726629AbfCNKTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 06:19:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5A042AFFB;
+        Thu, 14 Mar 2019 10:19:16 +0000 (UTC)
+Date:   Thu, 14 Mar 2019 11:19:15 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     vbabka@suse.cz, jrdr.linux@gmail.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        shaoyafang@didiglobal.com
+Subject: Re: [PATCH] mm: vmscan: drop may_writepage and classzone_idx from
+ direct reclaim begin template
+Message-ID: <20190314101915.GI7473@dhcp22.suse.cz>
+References: <1551421452-5385-1-git-send-email-laoar.shao@gmail.com>
+ <1551421452-5385-2-git-send-email-laoar.shao@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0izRO4zmc-TovmZBjWa+Or0oN89Ny8rdxf=81ogMJM4oQ@mail.gmail.com>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+In-Reply-To: <1551421452-5385-2-git-send-email-laoar.shao@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-03-19, 10:40, Rafael J. Wysocki wrote:
-> On Thu, Mar 14, 2019 at 10:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Thu, Mar 14, 2019 at 7:43 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > Currently we call the cpufreq transition notifiers once for each CPU of
-> > > the policy->cpus cpumask, which isn't that efficient.
-> >
-> > Why isn't it efficient?
-> >
-> > Transitions are per-policy anyway, so if something needs to be done
-> > for each CPU in the policy, it doesn't matter too much which part of
-> > the code carries out the iteration.
-> >
-> > I guess some notifiers need to know what other CPUs there are in the
-> > policy?  If so, then why?
-> >
-> > > This patchset tries to simplify that by adding another field in struct cpufreq_freqs,
-> > > cpus, so the callback has all the information available with a single
-> > > call for each policy.
-> >
-> > Well, you can argue that the core is simplified by it somewhat, but
-> > the notifiers aren't.  They actually get more complex, conceptually
-> > too, because they now need to worry about offline vs online CPUs etc.
-> >
-> > Also I wonder why you decided to pass a cpumask in freqs instead of
-> > just passing a policy pointer.  If you change things from per-CPU to
-> > per-policy, passing the whole policy seems more natural.
+On Fri 01-03-19 14:24:12, Yafang Shao wrote:
+> There are three tracepoints using this template, which are
+> mm_vmscan_direct_reclaim_begin,
+> mm_vmscan_memcg_reclaim_begin,
+> mm_vmscan_memcg_softlimit_reclaim_begin.
 > 
-> It also looks to me like all that needs to be one patch, or you have
-> the ugly transition situation in which notifiers are still invoked for
-> each CPU, but they assume to be invoked once per policy.
+> Regarding mm_vmscan_direct_reclaim_begin,
+> sc.may_writepage is !laptop_mode, that's a static setting, and
+> reclaim_idx is derived from gfp_mask which is already show in this
+> tracepoint.
+> 
+> Regarding mm_vmscan_memcg_reclaim_begin,
+> may_writepage is !laptop_mode too, and reclaim_idx is (MAX_NR_ZONES-1),
+> which are both static value.
+> 
+> mm_vmscan_memcg_softlimit_reclaim_begin is the same with
+> mm_vmscan_memcg_reclaim_begin.
+> 
+> So we can drop them all.
 
-I assumed that calling something like set_cyc2ns_scale() in x86
-multiple times for each CPU shouldn't be that bad even if the
-frequency changes only once, but such things may actually have
-side-effects. I should merged them all.
+I agree. Although classzone_idx is PITA to calculate nothing really
+prevents us to have a tool to do that. may_writepage is not all that
+useful anymore.
+
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+
+From a quick glance this looks ok. I haven't really checked deeply or
+tried to compile it but the change makes sense.
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+> ---
+>  include/trace/events/vmscan.h | 26 ++++++++++----------------
+>  mm/vmscan.c                   | 14 +++-----------
+>  2 files changed, 13 insertions(+), 27 deletions(-)
+> 
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> index a1cb913..153d90c 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -105,51 +105,45 @@
+>  
+>  DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
+>  
+> -	TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
+> +	TP_PROTO(int order, gfp_t gfp_flags),
+>  
+> -	TP_ARGS(order, may_writepage, gfp_flags, classzone_idx),
+> +	TP_ARGS(order, gfp_flags),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(	int,	order		)
+> -		__field(	int,	may_writepage	)
+>  		__field(	gfp_t,	gfp_flags	)
+> -		__field(	int,	classzone_idx	)
+>  	),
+>  
+>  	TP_fast_assign(
+>  		__entry->order		= order;
+> -		__entry->may_writepage	= may_writepage;
+>  		__entry->gfp_flags	= gfp_flags;
+> -		__entry->classzone_idx	= classzone_idx;
+>  	),
+>  
+> -	TP_printk("order=%d may_writepage=%d gfp_flags=%s classzone_idx=%d",
+> +	TP_printk("order=%d gfp_flags=%s",
+>  		__entry->order,
+> -		__entry->may_writepage,
+> -		show_gfp_flags(__entry->gfp_flags),
+> -		__entry->classzone_idx)
+> +		show_gfp_flags(__entry->gfp_flags))
+>  );
+>  
+>  DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_direct_reclaim_begin,
+>  
+> -	TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
+> +	TP_PROTO(int order, gfp_t gfp_flags),
+>  
+> -	TP_ARGS(order, may_writepage, gfp_flags, classzone_idx)
+> +	TP_ARGS(order, gfp_flags)
+>  );
+>  
+>  #ifdef CONFIG_MEMCG
+>  DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_reclaim_begin,
+>  
+> -	TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
+> +	TP_PROTO(int order, gfp_t gfp_flags),
+>  
+> -	TP_ARGS(order, may_writepage, gfp_flags, classzone_idx)
+> +	TP_ARGS(order, gfp_flags)
+>  );
+>  
+>  DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_softlimit_reclaim_begin,
+>  
+> -	TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
+> +	TP_PROTO(int order, gfp_t gfp_flags),
+>  
+> -	TP_ARGS(order, may_writepage, gfp_flags, classzone_idx)
+> +	TP_ARGS(order, gfp_flags)
+>  );
+>  #endif /* CONFIG_MEMCG */
+>  
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index ac4806f..cdc0305 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -3304,10 +3304,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+>  	if (throttle_direct_reclaim(sc.gfp_mask, zonelist, nodemask))
+>  		return 1;
+>  
+> -	trace_mm_vmscan_direct_reclaim_begin(order,
+> -				sc.may_writepage,
+> -				sc.gfp_mask,
+> -				sc.reclaim_idx);
+> +	trace_mm_vmscan_direct_reclaim_begin(order, sc.gfp_mask);
+>  
+>  	nr_reclaimed = do_try_to_free_pages(zonelist, &sc);
+>  
+> @@ -3338,9 +3335,7 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
+>  			(GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
+>  
+>  	trace_mm_vmscan_memcg_softlimit_reclaim_begin(sc.order,
+> -						      sc.may_writepage,
+> -						      sc.gfp_mask,
+> -						      sc.reclaim_idx);
+> +						      sc.gfp_mask);
+>  
+>  	/*
+>  	 * NOTE: Although we can get the priority field, using it
+> @@ -3389,10 +3384,7 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+>  
+>  	zonelist = &NODE_DATA(nid)->node_zonelists[ZONELIST_FALLBACK];
+>  
+> -	trace_mm_vmscan_memcg_reclaim_begin(0,
+> -					    sc.may_writepage,
+> -					    sc.gfp_mask,
+> -					    sc.reclaim_idx);
+> +	trace_mm_vmscan_memcg_reclaim_begin(0, sc.gfp_mask);
+>  
+>  	psi_memstall_enter(&pflags);
+>  	noreclaim_flag = memalloc_noreclaim_save();
+> -- 
+> 1.8.3.1
+> 
 
 -- 
-viresh
+Michal Hocko
+SUSE Labs
