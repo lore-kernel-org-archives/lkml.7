@@ -2,89 +2,127 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDF3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E23C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208EB213A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:15:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UkdFbezT"
+	by mail.kernel.org (Postfix) with ESMTP id 15B5C213A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfCNAPR (ORCPT
+        id S1727101AbfCNAUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 20:15:17 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36071 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfCNAPR (ORCPT
+        Wed, 13 Mar 2019 20:20:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38110 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfCNAUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 20:15:17 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v10so3222330lji.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 17:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SGSAotKzOlS72l9zI4wpd01SsxLWhFkq81+JX8sRhjQ=;
-        b=UkdFbezTjt5d+q15var8a/HVAM07h8UCBBtSQWVMcgTaLBZqXMOZgUa0R+vkkpYpO+
-         LNJ9fGX/574mWB9XDRUucLiMnUo+XvWVa8oSaYdBw7GFaSy4yR5gg1OIxSPCld8EO2Fi
-         nxMVQtzQNvuU5YlaYPC2UkIq1tifUKDej3OBw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SGSAotKzOlS72l9zI4wpd01SsxLWhFkq81+JX8sRhjQ=;
-        b=KWW0H8AsmLncXK1s+Qrh+NkB+ApxQKe4MXLWT0uhrBozb4VkLxhF3u6ijbDnsFsiJC
-         qYEPXBJZZV1XhYtNTSCDSNXqFXTjJiLrhCHzjNcs6FqWZFbNSrgQkTU29Z0jzC33Wf6H
-         /CkMRJBscri2h2d+oJbD0NOP5PtnLnJfMRQLl81vzTBSR2Q5K6Y0QdH7SO9PxI+A6jdV
-         X34hHxwsccFMhZsBYRyl7d4B3A8Te4pjL/BjXGuiX4bhqAx2lAFvYOc1nBR2iQ4E8wAL
-         y6l58NF9kC9ufSIzA+iUpfqoqvYjzaQsM5DcrdLw/Mh/LNjMOigwM4aSF/MZrN4sg7Vm
-         qzpQ==
-X-Gm-Message-State: APjAAAVe1oxT1yvOEDz7MvfvUNl03JiLYfD+o4/U2DQ2P8mlAoM2GIKD
-        q/V8hCW0ZUsIx7g/QM8nZiVduA==
-X-Google-Smtp-Source: APXvYqzDuej4x+Q48/FZm0xXJ/j4BZgmji3hZgYEact9J+RhWeSRjw/tDGwlgmUsQ5OCj2PSxFqSyw==
-X-Received: by 2002:a2e:82c5:: with SMTP id n5mr7055601ljh.91.1552522514935;
-        Wed, 13 Mar 2019 17:15:14 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-119-202.cgn.fibianet.dk. [5.186.119.202])
-        by smtp.gmail.com with ESMTPSA id g18sm2097045ljk.26.2019.03.13.17.15.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 17:15:14 -0700 (PDT)
-Subject: Re: [PATCH 2/5] lib/sort: Use more efficient bottom-up heapsort
- variant
-To:     George Spelvin <lkml@sdf.org>, linux-kernel@vger.kernel.org
-Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        daniel.wagner@siemens.com, dchinner@redhat.com,
-        don.mullis@gmail.com, geert@linux-m68k.org, st5pub@yandex.ru
-References: <cover.1552097842.git.lkml@sdf.org>
- <dbac34c6052fc973fb55df4966981bae24c7cce9.1552097842.git.lkml@sdf.org>
- <472510ad-77f9-49e8-4122-52f447cb1c15@rasmusvillemoes.dk>
- <201903140003.x2E03VZO028625@sdf.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <0ef7f72a-8552-654f-db2c-5b4dfcff982e@rasmusvillemoes.dk>
-Date:   Thu, 14 Mar 2019 01:15:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 13 Mar 2019 20:20:52 -0400
+Received: from localhost.localdomain (unknown [IPv6:2804:431:9719:798c:867b:ebff:fe52:de60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2BF1B26016E;
+        Thu, 14 Mar 2019 00:20:41 +0000 (GMT)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com
+Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        boris.brezillon@collabora.com, David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@google.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>,
+        eric@anholt.net, Alex Deucher <alexander.deucher@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        amd-gfx@lists.freedesktop.org, linux-rockchip@lists.infradead.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Rob Clark <robdclark@gmail.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        Leo Li <sunpeng.li@amd.com>, linux-arm-msm@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Francis <David.Francis@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        freedreno@lists.freedesktop.org,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v3 0/5] drm: Fix fb changes for async updates
+Date:   Wed, 13 Mar 2019 21:20:21 -0300
+Message-Id: <20190314002027.7833-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <201903140003.x2E03VZO028625@sdf.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 01.03, George Spelvin wrote:
-> On Wed, 13 Mar 2019 at 23:29:40 +0100, Rasmus Villemoes wrote:
-> 
->> Nice!
-> 
-> Thank you.  May I translate that into Acked-by?
-> 
+Hello,
 
-Sort-of. I prefer first seeing the full rerolled series for context
-etc., even if (the important parts of) this patch would be unchanged.
+This series fixes the slow down in performance introduced by
+"[PATCH v2] drm: Block fb changes for async plane updates" where async update
+falls back to a sync update, causing igt failures of type:
+
+    "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+    expect to complete approximately 15360 updates, with the threshold set
+    at 7680"
+
+Please read the commit message of "drm: don't block fb changes for async
+plane updates" to understand how it works.
+
+I tested on the rockchip, on i915 and on vc4 with igt plane_cursor_legacy and
+kms_cursor_legacy and I didn't see any regressions.
+
+I couldn't test on MSM and AMD because I don't have the hardware
+I would appreciate if anyone could help me testing those.
+
+v1 link: https://patchwork.kernel.org/cover/10837847/
+
+Thanks!
+Helen
+
+Changes in v3:
+- use swap() to swap old and new framebuffers in async_update
+- get the reference to old_fb and set the worker after vop_plane_atomic_update()
+- add a FIXME tag for when we have multiple fbs to be released when
+vblank happens.
+- update commit message
+- Add Reviewed-by tags
+- Add TODO in drm_atomic_helper_async_commit()
+
+Changes in v2:
+- added reviewed-by tag
+- update CC stable and Fixes tag
+- Added reviewed-by tag
+- updated CC stable and Fixes tag
+- Change the order of the patch in the series, add this as the last one.
+- Add documentation
+- s/ballanced/balanced
+
+Helen Koike (5):
+  drm/rockchip: fix fb references in async update
+  drm/amd: fix fb references in async update
+  drm/msm: fix fb references in async update
+  drm/vc4: fix fb references in async update
+  drm: don't block fb changes for async plane updates
+
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  3 +-
+ drivers/gpu/drm/drm_atomic_helper.c           | 22 ++++----
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c    |  4 ++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 51 ++++++++++---------
+ drivers/gpu/drm/vc4/vc4_plane.c               |  2 +-
+ include/drm/drm_modeset_helper_vtables.h      |  5 ++
+ 6 files changed, 49 insertions(+), 38 deletions(-)
+
+-- 
+2.20.1
+
