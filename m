@@ -2,199 +2,101 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B19C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202ACC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7AA213A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2608217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mfwaJzkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfCNCqe (ORCPT
+        id S1726860AbfCNCxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 22:46:34 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:4787 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726629AbfCNCqe (ORCPT
+        Wed, 13 Mar 2019 22:53:24 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:40061 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfCNCxY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 22:46:34 -0400
-X-UUID: 7ea9410bb8704279b19a12cda38dce51-20190314
-X-UUID: 7ea9410bb8704279b19a12cda38dce51-20190314
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <ran.bi@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1858234063; Thu, 14 Mar 2019 10:46:24 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs01n2.mediatek.inc
- (172.21.101.79) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 14 Mar
- 2019 10:46:22 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 14 Mar 2019 10:46:21 +0800
-Message-ID: <1552531581.18390.8.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 8/9] rtc: mt6397: fix alarm register overwrite
-From:   mtk14576 <ran.bi@mediatek.com>
-To:     Sean Wang <sean.wang@kernel.org>
-CC:     <stable@vger.kernel.org>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 14 Mar 2019 10:46:21 +0800
-In-Reply-To: <CAGp9Lzq4D56PbivbHkQd41-TCoGACTiBqLz+Jyiqiog=YMvEbQ@mail.gmail.com>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <CAGp9Lzq4D56PbivbHkQd41-TCoGACTiBqLz+Jyiqiog=YMvEbQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 13 Mar 2019 22:53:24 -0400
+Received: by mail-vk1-f195.google.com with SMTP id l17so1020500vke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 19:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NU+/QzXH/p7mQCPsMWv39Ij6HJV4jm8oyx/Pl7R4Tg4=;
+        b=mfwaJzklZoV05HjVg5ywP1uITZCsuj6KEie/yRWLa6N0aXwaPH01sIMUL59KrThGG9
+         QqV2NdTqoVhOSIcdXzAtjA8+JUz+r7YmMtdzCgmPXmNvyVVbYHNcSkIjHc41ToLzyAPt
+         ruVgIQtRrkdf9BI6V6O02gfQPgON+nLGeNqR4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NU+/QzXH/p7mQCPsMWv39Ij6HJV4jm8oyx/Pl7R4Tg4=;
+        b=A6yTmJ6yPoSNeXybRnaPQOwhbZYtxwLOYfMkQZwtsG86wvqfZlB+s5tWmNua8AR4M0
+         I0h6rCGrx9txAXg7S7wpp9oakGw8W7cAQbu13iF//G9nGVoW16DL/wMsoTwEd5IgOaf9
+         kAwsjhk5MW0busOm1pWBr1naNJvV4Gp//bJQ4sBtxwLcDx1059KxoQIHPNzj9QMbR37L
+         U3Y5UqBncanwdC8mfr2IX6s6vxpMGXyfOGwq7WKLI1thV+jbpHr7d8UbhHfRl78rW5rV
+         u0eN7xo43zjl+JMFddpCU6LHdB7my/DgVJcaNagj7Jo3vMwVRkXz9HHk9C4MhKA/DHzd
+         8mZQ==
+X-Gm-Message-State: APjAAAWRp/FwcFCCb3uH/Kgb4OYl/t1yeksGuR3OqzisXZ4bpQBLH3Wh
+        lMi+By14xMaSOandd9WZp7y9Zt4PINU=
+X-Google-Smtp-Source: APXvYqy9CsXQzfKBzrrZ4q7uOlDIY95WPszcAcwd0cEkXI/bt0bvZLynD67aiLM4O/ee0wrgdV5MBw==
+X-Received: by 2002:a1f:c7c3:: with SMTP id x186mr5265297vkf.6.1552532002763;
+        Wed, 13 Mar 2019 19:53:22 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id t4sm2487383uaq.0.2019.03.13.19.53.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 19:53:21 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id z18so2352592vso.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 19:53:21 -0700 (PDT)
+X-Received: by 2002:a67:ed0c:: with SMTP id l12mr6665405vsp.66.1552532001342;
+ Wed, 13 Mar 2019 19:53:21 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BE8084FD0CFCDD336590D1C479EFF7B2D37843178BD9FCE3A754782EC6B2B1672000:8
-X-MTK:  N
+References: <9fa84db9-084b-cf7f-6c13-06131efb0cfa@infradead.org>
+In-Reply-To: <9fa84db9-084b-cf7f-6c13-06131efb0cfa@infradead.org>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 13 Mar 2019 19:53:09 -0700
+X-Gmail-Original-Message-ID: <CAGXu5j+yRt_yf2CwvaZDUiEUMwTRRiWab6aeStxqodx9i+BR4g@mail.gmail.com>
+Message-ID: <CAGXu5j+yRt_yf2CwvaZDUiEUMwTRRiWab6aeStxqodx9i+BR4g@mail.gmail.com>
+Subject: Re: lib/test_overflow.c causes WARNING and tainted kernel
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi!
 
-On Mon, 2019-03-11 at 13:50 -0700, Sean Wang wrote:
-> Hi,
-> 
-> On Sun, Mar 10, 2019 at 8:49 PM Hsin-Hsiung Wang
-> <hsin-hsiung.wang@mediatek.com> wrote:
-> >
-> > From: Ran Bi <ran.bi@mediatek.com>
-> >
-> > Alarm registers high byte was reserved for other functions.
-> > This add mask in alarm registers operation functions.
-> > This also fix error condition in interrupt handler.
-> >
-> > Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
-> >
-> 
-> add a  Cc: stable@vger.kernel.org  here to apply to all stable kernels
-> for the critical fixup patch.
-> 
-> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> > ---
-> >  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
-> >  1 file changed, 33 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> > index e9a25ec..f85f1fc 100644
-> > --- a/drivers/rtc/rtc-mt6397.c
-> > +++ b/drivers/rtc/rtc-mt6397.c
-> > @@ -55,6 +55,14 @@
-> >
-> >  #define RTC_AL_SEC             0x0018
-> >
-> > +#define RTC_AL_SEC_MASK                0x003f
-> > +#define RTC_AL_MIN_MASK                0x003f
-> > +#define RTC_AL_HOU_MASK                0x001f
-> > +#define RTC_AL_DOM_MASK                0x001f
-> > +#define RTC_AL_DOW_MASK                0x0007
-> > +#define RTC_AL_MTH_MASK                0x000f
-> > +#define RTC_AL_YEA_MASK                0x007f
-> > +
-> >  #define RTC_PDN2               0x002e
-> >  #define RTC_PDN2_PWRON_ALARM   BIT(4)
-> >
-> > @@ -111,7 +119,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
-> >                 irqen = irqsta & ~RTC_IRQ_EN_AL;
-> >                 mutex_lock(&rtc->lock);
-> >                 if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
-> > -                                irqen) < 0)
-> > +                                irqen) == 0)
-> >                         mtk_rtc_write_trigger(rtc);
-> >                 mutex_unlock(&rtc->lock);
-> >
-> > @@ -233,12 +241,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
-> >         alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
-> >         mutex_unlock(&rtc->lock);
-> >
-> > -       tm->tm_sec = data[RTC_OFFSET_SEC];
-> > -       tm->tm_min = data[RTC_OFFSET_MIN];
-> > -       tm->tm_hour = data[RTC_OFFSET_HOUR];
-> > -       tm->tm_mday = data[RTC_OFFSET_DOM];
-> > -       tm->tm_mon = data[RTC_OFFSET_MTH];
-> > -       tm->tm_year = data[RTC_OFFSET_YEAR];
-> > +       tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
-> > +       tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
-> > +       tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
-> > +       tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
-> > +       tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
-> > +       tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
-> >
-> >         tm->tm_year += RTC_MIN_YEAR_OFFSET;
-> >         tm->tm_mon--;
-> > @@ -259,14 +267,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
-> >         tm->tm_year -= RTC_MIN_YEAR_OFFSET;
-> >         tm->tm_mon++;
-> >
-> > -       data[RTC_OFFSET_SEC] = tm->tm_sec;
-> > -       data[RTC_OFFSET_MIN] = tm->tm_min;
-> > -       data[RTC_OFFSET_HOUR] = tm->tm_hour;
-> > -       data[RTC_OFFSET_DOM] = tm->tm_mday;
-> > -       data[RTC_OFFSET_MTH] = tm->tm_mon;
-> > -       data[RTC_OFFSET_YEAR] = tm->tm_year;
-> > -
-> >         mutex_lock(&rtc->lock);
-> > +       ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
-> > +                              data, RTC_OFFSET_COUNT);
-> > +       if (ret < 0)
-> > +               goto exit;
-> > +
-> 
-> Why did we need an additional regmap_bulk_read here? I would suppose
-> data[RTC_OFFSET_*] & ~(RTC_AL_*_MASK) is always equal to 0.
+On Wed, Mar 13, 2019 at 2:29 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> This is v5.0-11053-gebc551f2b8f9, MAR-12 around 4:00pm PT.
+>
+> In the first test_kmalloc() in test_overflow_allocation():
+>
+> [54375.073895] test_overflow: ok: (s64)(0 << 63) == 0
+> [54375.074228] WARNING: CPU: 2 PID: 5462 at ../mm/page_alloc.c:4584 __alloc_pages_nodemask+0x33f/0x540
+> [...]
+> [54375.079236] ---[ end trace 754acb68d8d1a1cb ]---
+> [54375.079313] test_overflow: kmalloc detected saturation
 
-In bootloader, RTC init part need to operate these RTC_AL_* registers
-high byte for RTC operating mode settings and data storage, while
-RTC_AL_* low byte was used as alarm register here. So we need an
-additional regmap_bulk_read here to keep the RTC settings correct.
+Yup! This is expected and operating as intended: it is exercising the
+allocator's detection of insane allocation sizes. :)
 
-> 
-> It might be another fixup since change is not being mentioned in the
-> git message.
-> 
-> > +       data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
-> > +                               (tm->tm_sec & RTC_AL_SEC_MASK));
-> > +       data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
-> > +                               (tm->tm_min & RTC_AL_MIN_MASK));
-> > +       data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
-> > +                               (tm->tm_hour & RTC_AL_HOU_MASK));
-> > +       data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
-> > +                               (tm->tm_mday & RTC_AL_DOM_MASK));
-> > +       data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
-> > +                               (tm->tm_mon & RTC_AL_MTH_MASK));
-> > +       data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
-> > +                               (tm->tm_year & RTC_AL_YEA_MASK));
-> > +
-> >         if (alm->enabled) {
-> >                 ret = regmap_bulk_write(rtc->regmap,
-> >                                         rtc->addr_base + RTC_AL_SEC,
-> > --
-> > 1.9.1
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+If we want to make it less noisy, perhaps we could add a global flag
+the allocators could check before doing their WARNs?
 
+-Kees
 
+-- 
+Kees Cook
