@@ -2,159 +2,101 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DE8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E29C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF1592063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35F62063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:04:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cCE0Y8Ek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbfCNLDg (ORCPT
+        id S1727493AbfCNLEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:03:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42338 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbfCNLDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:03:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A16D2374;
-        Thu, 14 Mar 2019 04:03:35 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC96B3F71D;
-        Thu, 14 Mar 2019 04:03:32 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 11:03:30 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190314110330.rshrdeoxgzt6pk5a@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190313135238.GC5922@hirez.programming.kicks-ass.net>
- <20190313155954.jse2tyn5iqxm6wle@e110439-lin>
- <20190313193056.GP2482@worktop.programming.kicks-ass.net>
+        Thu, 14 Mar 2019 07:04:13 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60838 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727394AbfCNLEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 07:04:13 -0400
+Received: from zn.tnic (p200300EC2F09800070FBD7F886F95E91.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:70fb:d7f8:86f9:5e91])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 391BE1EC0104;
+        Thu, 14 Mar 2019 12:04:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1552561451;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=NJQS2sFIjRwOjYwg80igZbvEwiXBxafGLNLtHjj4LXA=;
+        b=cCE0Y8Ek/T7CC9mwqcg1kOz0MRNulKLUR2j1cAXlHepelLpB5YDLcz46UjDVvfoXUztvZu
+        1Kk/gnAcnurVLjdk1cODyTRhY44qvpH6lHH/4YYKwzY8TUyFHOA2sPEr5iPmVlM6gT4U2p
+        Ga/IunvX8Pa8xx1WlNPaGwFRmNaXRwA=
+Date:   Thu, 14 Mar 2019 12:04:13 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Arnd Bergmann <arnd@arndb.de>, "Luck, Tony" <tony.luck@intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>, linux-edac@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
+Message-ID: <20190314110413.GA32277@zn.tnic>
+References: <20190305132147.3739133-1-arnd@arndb.de>
+ <20190305143453.GC8256@zn.tnic>
+ <CAK8P3a2kSrTkTespcBGr6oYi8nvriS9pwtM2nQ7gCxVB+TzLog@mail.gmail.com>
+ <20190306175808.GA30016@agluck-desk>
+ <CAK8P3a3MV=0BbOpjwM+2q+7Oehc=4B+u0hka1YdBnJmikfqCig@mail.gmail.com>
+ <20190313230137.GA12529@agluck-desk>
+ <CAK8P3a0aDdEt323i=z4BGuh71ntPqm-L33U4q+FiQOdMUin6wg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190313193056.GP2482@worktop.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAK8P3a0aDdEt323i=z4BGuh71ntPqm-L33U4q+FiQOdMUin6wg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Mar 20:30, Peter Zijlstra wrote:
-> On Wed, Mar 13, 2019 at 03:59:54PM +0000, Patrick Bellasi wrote:
-> > On 13-Mar 14:52, Peter Zijlstra wrote:
-> > > > +static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
-> > > > +				    unsigned int clamp_id)
-> > > > +{
-> > > > +	unsigned int bucket_id = p->uclamp[clamp_id].bucket_id;
-> > > > +	unsigned int rq_clamp, bkt_clamp;
-> > > > +
-> > > > +	SCHED_WARN_ON(!rq->uclamp[clamp_id].bucket[bucket_id].tasks);
-> > > > +	if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
-> > > > +		rq->uclamp[clamp_id].bucket[bucket_id].tasks--;
-> > > > +
-> > > > +	/*
-> > > > +	 * Keep "local clamping" simple and accept to (possibly) overboost
-> > > > +	 * still RUNNABLE tasks in the same bucket.
-> > > > +	 */
-> > > > +	if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
-> > > > +		return;
-> > > 
-> > > (Oh man, I hope that generates semi sane code; long live CSE passes I
-> > > suppose)
-> > 
-> > What do you mean ?
+On Thu, Mar 14, 2019 at 08:09:06AM +0100, Arnd Bergmann wrote:
+> > So where should we go. Proposed solutions are piling up:
+> >
+> > 1) Make skx_common a module
+> >         [downside: have to EXPORT everything in it]
+> > 2) Move module-ish bits out of skx_common
+> >         [downside: perhaps fragile]
+> > 3) #include skx_common.c into {skx,i10nm}_edac.c
+> >         [downside: no patch yet, bigger code size]
 > 
-> that does: 'rq->uclamp[clamp_id].bucket[bucket_id].tasks' three times in
-> a row. And yes the compiler _should_ dtrt, but....
+> Sorry to add on to the already long list, but one more idea after
+> looking at the two files:
+> 
+> 4) Have a single driver module, with the skx_common.c containing
+>     the top-level module_init/module_exit functions that call into the
+>     hardware specific versions.
+> 
+> This is the opposite of the usual recommendation (the driver
+> is already structured nicely otherwise), but it would be cheap
+> way out here.
 
-Sorry, don't follow you here... but it's an interesting point. :)
+This is what I think right now: if this is going to become such a pain,
+then we better keep those two drivers completely separate. Who cares if
+there's some code duplication?! Better that than some obscure randconfig
+build breakages and fixes introducing more ugliness. IOW, we should keep
+it simple.
 
-The code above becomes:
+Unless, Tony, you want to be able to make changes to the common code in
+one place and don't want to patch both. Then I'd librarize the common
+functionality, i.e., do something along the lines of 2).
 
-   if (__builtin_expect(!!(rq->uclamp[clamp_id].bucket[bucket_id].tasks), 1))
-           return;
-
-Are you referring to the resolution of the memory references, i.e
-   1) rq->uclamp
-   2) rq->uclamp[clamp_id]
-   3) rq->uclamp[clamp_id].bucket[bucket_id]
-?
-
-By playing with:
-
-   https://godbolt.org/z/OPLpyR
-
-I can see that this simplified version:
-
----8<---
-#define BUCKETS 5
-#define CLAMPS 2
-
-struct uclamp {
-    unsigned int value;
-    struct bucket {
-        unsigned int value;
-        unsigned int tasks;
-    } bucket[BUCKETS];
-};
-
-struct rq {
-    struct uclamp uclamp[CLAMPS];
-};
-
-void uclamp_rq_dec_id(struct rq *rq, int clamp_id, int bucket_id) {
-    if (__builtin_expect(!!(rq->uclamp[clamp_id].bucket[bucket_id].tasks), 1))
-        return;
-    rq->uclamp[clamp_id].bucket[bucket_id].tasks--;
-}
----8<---
-
-generates something like:
-
----8<---
-uclamp_rq_dec_id:
-        sxtw    x1, w1
-        add     x3, x1, x1, lsl 1
-        lsl     x3, x3, 2
-        sub     x3, x3, x1
-        lsl     x3, x3, 2
-        add     x2, x3, x2, sxtw 3
-        add     x0, x0, x2
-        ldr     w1, [x0, 8]
-        cbz     w1, .L4
-        ret
-.L4:
-        mov     w1, -1
-        str     w1, [x0, 8]
-        ret
----8<---
-
-
-which looks "sane" and quite expected, isn't it?
+But having two completely separate drivers is the most robust variant,
+IMO.
 
 -- 
-#include <best/regards.h>
+Regards/Gruss,
+    Boris.
 
-Patrick Bellasi
+Good mailing practices for 400: avoid top-posting and trim the reply.
