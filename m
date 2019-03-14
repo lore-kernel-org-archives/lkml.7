@@ -2,171 +2,164 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD12C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D372C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0956C20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24DD20693
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:28:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kQh7eu4c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucvx4teW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfCNM1w (ORCPT
+        id S1727377AbfCNM2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:27:52 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43370 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfCNM1w (ORCPT
+        Thu, 14 Mar 2019 08:28:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41815 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfCNM2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 08:27:52 -0400
-Received: by mail-qt1-f196.google.com with SMTP id v32so5715982qtc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 05:27:51 -0700 (PDT)
+        Thu, 14 Mar 2019 08:28:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d25so3716825pfn.8;
+        Thu, 14 Mar 2019 05:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6flR/SZ3bVyvGpeBMlCe2ZUtI2LHYS6gvOXI4e6BfpI=;
-        b=kQh7eu4cXQZsGXIDCyZUWIYrnP4SyHjyEFvqeDX9qwPtnZcuVZwGG+PjPGwiNcoOW4
-         K6ThH9dTXFVHXQ8v4C8+VL2bakspMZATm2KkwyVhMgEQB5zCyrrNAkrL1M2cYBGHrKzN
-         f+mj5cuB3C4v+kP1Bu40/h0NQwqAOdgzZb3J4=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rcs1W5Jh624cN3abC6U54hsK7ZVCAgD4qFr+RxJnwoI=;
+        b=ucvx4teWDRapdA2DUZ9Kz4dAnm0IXfdail/FxZyGhWkKFv/hVLISZlX+vY+nuWllhI
+         b9PaU+lNzTXRc6Qh20CwP/7KuDl5KM6tjMril4hSlt4oAbNuzmWHyRWrKz2oO95Sgw/z
+         RyytYaCLEqeWVfyl3opQ1ipR3jMLCHGVc9F8sgCqR5YiU4LNjs+eiMtw5mHy6+kTOxk+
+         nRXm+idIXMMy3+qgd0mbu7BkO7x4vgGgSrc3SKWmrlMC89MoO0pq2XXFRVvY9/oooOIq
+         7FHla0mHc5NkLEje6KRfobU129bgUmoSnloDvoZlaFraE/0SG8297uENCgWBovI0wTNS
+         2T+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6flR/SZ3bVyvGpeBMlCe2ZUtI2LHYS6gvOXI4e6BfpI=;
-        b=tfYCRypXRKN4VqRfNPJQB43b83Qftl+zX4JIHgxlR4CSkJxBgIUTjDw/wJaeH2JvEv
-         /DP7Bscwd52YB7CqxE/KWcFYUlIwnwWGpxu6RYE6yLevbRnRHTu7ws3XsrO5xMUV+SCl
-         k589qq3WV3nocfq6Kt1aDRLfi0VBSvuv8k4QsQBuWk0g/Hk4A4rsmTTBiTxW0YKQBMq5
-         qZrc8ZjJr2fIpVvzGHz+q+Ge45GPQ4zUJIY7Ypgv9vZcXCCFGy9TRmzlgS3R7mVodcmI
-         awa1L6FVIFv5njX3bDAo9tlXxFLzxNYtL93ANaI1MyBJDqn6MHF9ausrUhVNixPGdoYG
-         SERA==
-X-Gm-Message-State: APjAAAUnar6QuVQ/cNgMAmZyprGbgkdAmAPDLhJQOSYQWZQPZ/HCW12L
-        Tguur2hnuStMQQ31vUVvYavGUA==
-X-Google-Smtp-Source: APXvYqy2IZqfZEb8pYZbKHCl44Uhexadk5h0/fwVSteoQa1v1VP2dysxz0REKQPzCiHRqC15nDXZfg==
-X-Received: by 2002:ac8:2bc1:: with SMTP id n1mr37856804qtn.176.1552566470361;
-        Thu, 14 Mar 2019 05:27:50 -0700 (PDT)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id k33sm8837364qte.8.2019.03.14.05.27.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Mar 2019 05:27:48 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 08:27:48 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Colascione <dancol@google.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190314122748.GA101545@google.com>
-References: <20190309121141.GA30173@kroah.com>
- <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
- <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
- <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
- <20190311193612.4f09bf11@oasis.local.home>
- <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
- <20190312003912.GA170478@google.com>
- <20190311212823.60684182@oasis.local.home>
- <CAJWu+oqsD_wHGWfzj6POFowiY2qcu04auVzkA6Lu9R+LR4gkrQ@mail.gmail.com>
- <20190313101843.800dd8d6a9babb635580ebdc@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rcs1W5Jh624cN3abC6U54hsK7ZVCAgD4qFr+RxJnwoI=;
+        b=nFoSKE5oHS0FYuiK3CS5LItnSRuqE/NGKNUkVZOEaudktCknxS3Mrs+ljBP+zZ0Qun
+         IBcMEthYX0WdPfC+6xIKuwBKEDUl5qxHVOnpKXhrnnkzKHQIiyL3pCm3aSOI+cW9tHmG
+         m0wfkWYoX9etx+upcpMANnxYDAiRwRxpN2BIcBcCkwRTi5HOGZJ5xPg6Qr79Tjy9F7VO
+         uP30oaeJl/a2Ljlb9gZteAe9wdMDFzNuqQvwWf5wtjcGzk3NWfN2CH5/gfO2WhlRXb/o
+         aEfS/+kw35rqGYTyOVkKzcbyqpC6QZsNfZkbYsSa4z8Y3gZDSVGYI0jDvA1DArka+Iym
+         UgJg==
+X-Gm-Message-State: APjAAAU9eHFQZAHPcqZXPr5DgGtcZ/O4VqEtRPcQvcYWbZ4qFOjFOmPE
+        fOMxWw2H/ulCqDj4e5GUrVA=
+X-Google-Smtp-Source: APXvYqzXssN3eikufA+LnFExGlKx7CTmGCdXPBFPF8edj/HXTe96DYLSwiUieK75lWipOj8ejMmh0w==
+X-Received: by 2002:a17:902:8c84:: with SMTP id t4mr24716031plo.298.1552566531458;
+        Thu, 14 Mar 2019 05:28:51 -0700 (PDT)
+Received: from localhost.localdomain ([2001:268:c0a4:3974:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id m13sm30073685pff.175.2019.03.14.05.28.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 05:28:50 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        yamada.masahiro@socionext.com, bgolaszewski@baylibre.com,
+        linux-arm-kernel@lists.infradead.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v10 00/10] Introduce the for_each_set_clump8 macro
+Date:   Thu, 14 Mar 2019 21:29:32 +0900
+Message-Id: <cover.1552566113.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313101843.800dd8d6a9babb635580ebdc@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
-Sorry for late reply as I was traveling.
+Changes in v10:
+  - Fix off-by-one error in bitmap initialization in the
+    test_for_each_set_clump8 function
+  - Fix typos in clump_exp array definition in test_bitmap.c ("0x28"
+    should have been "0x38")
+  - Utilize for_each_set_clump8 macro in intel_soc_dts_iosf.c
 
-On Wed, Mar 13, 2019 at 10:18:43AM +0900, Masami Hiramatsu wrote:
-> On Mon, 11 Mar 2019 18:38:49 -0700
-> Joel Fernandes <joelaf@google.com> wrote:
-> 
-> > On Mon, Mar 11, 2019 at 6:28 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > >
-> > > On Mon, 11 Mar 2019 20:39:12 -0400
-> > > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > >
-> > > > I think even though the kernel-headers can't have information about all data
-> > > > structures, they do already contain a lot of data structure definitions we
-> > > > need already. And anything needed can/should arguably be moved to include/ if
-> > > > they are really needed for kernel extension by something "external" to the
-> > > > kernel such as kernel modules or eBPF, right?
-> > >
-> > > That's not my worry. I would like to be able to easily walk data
-> > > structures from within the kernel, without having to do a lot of work
-> > > in userspace to get that information. The kprobe_events could then be
-> > > passed type casts or such to access data fields of arguments to
-> > > functions and such.
-> > 
-> > Ok.
-> > 
-> > > > In any case, such a solution such as what Steve suggested, still cannot do
-> > > > what we can with headers - such as build kernel modules on the fly using the
-> > > > C-compiler without any auto-generation of C code from any debug artifiacts.
-> > > > Think systemtap working with the module-backend without any need for
-> > > > linux-headers package on the file system. So such a solution would still be a
-> > > > bit orthogonal in scope to what this proposed solution can solve IMO.
-> > > >
-> > >
-> > > With the information I would like to have, it would be trivial to read
-> > > the data to create the header files needed for modules.
-> > 
-> > But there are macros and other #define things too. We lose all of them
-> > and can't recreate them from just DWARF (AFAIK). Including
-> > include/generated/autoconf.h which #defines the CONFIG options. For
-> > that we either need headers, or full kernel's sources with build
-> > artifacts.
-> 
-> What kind of macros would you concern?
-> 
-> > I do see a use case for the debug info you are talking about as you
-> > mentioned for the kprobe_events argument list types, and I already
-> > thought about it. But it does not seem to work for all the use cases I
-> > am referring to here.
-> 
-> But the eBPF is based on kprobe-events. What kind of usage would you
-> expected? (with macros??)
+While adding GPIO get_multiple/set_multiple callback support for various
+drivers, I noticed a pattern of looping manifesting that would be useful
+standardized as a macro.
 
-eBPF C programs are compiled with kernel headers. They can execute inline
-functions or refer to macros in the kernel headers. They are similar to
-kernel modules where you build a C program that then later is executed in
-kernel context. It goes through the whole compiler pipeline. This is slightly
-different usage from pure kprobe-events.  Also eBPF kprobe programs need
-LINUX_VERSION_CODE (or similarly named) macro which it provides to the bpf(2)
-syscall when loading kprobe programs. This is because eBPF implementation in
-the kernel checks if the eBPF programs that use kprobes are being loaded
-against the right kernel.
+This patchset introduces the for_each_set_clump8 macro and utilizes it
+in several GPIO drivers. The for_each_set_clump macro8 facilitates a
+for-loop syntax that iterates over a memory region entire groups of set
+bits at a time.
 
-thanks,
+For example, suppose you would like to iterate over a 32-bit integer 8
+bits at a time, skipping over 8-bit groups with no set bit, where
+XXXXXXXX represents the current 8-bit group:
 
-- Joel
+    Example:        10111110 00000000 11111111 00110011
+    First loop:     10111110 00000000 11111111 XXXXXXXX
+    Second loop:    10111110 00000000 XXXXXXXX 00110011
+    Third loop:     XXXXXXXX 00000000 11111111 00110011
+
+Each iteration of the loop returns the next 8-bit group that has at
+least one set bit.
+
+The for_each_set_clump8 macro has four parameters:
+
+    * start: set to the bit offset of the current clump
+    * clump: set to the current clump value
+    * bits: bitmap to search within
+    * size: bitmap size in number of bits
+
+In this version of the patchset, the for_each_set_clump macro has been
+reimplemented and simplified based on the suggestions provided by Rasmus
+Villemoes and Andy Shevchenko in the version 4 submission.
+
+In particular, the function of the for_each_set_clump macro has been
+restricted to handle only 8-bit clumps; the drivers that use the
+for_each_set_clump macro only handle 8-bit ports so a generic
+for_each_set_clump implementation is not necessary. Thus, a solution for
+large clumps (i.e. those larger than the width of a bitmap word) can be
+postponed until a driver appears that actually requires such a generic
+for_each_set_clump implementation.
+
+For what it's worth, a semi-generic for_each_set_clump (i.e. for clumps
+smaller than the width of a bitmap word) can be implemented by simply
+replacing the hardcoded '8' and '0xFF' instances with respective
+variables. I have not yet had a need for such an implementation, and
+since it falls short of a true generic for_each_set_clump function, I
+have decided to forgo such an implementation for now.
+
+In addition, the bitmap_get_value8 and bitmap_set_value8 functions are
+introduced to get and set 8-bit values respectively. Their use is based
+on the behavior suggested in the patchset version 4 review.
+
+William Breathitt Gray (10):
+  bitops: Introduce the for_each_set_clump8 macro
+  lib/test_bitmap.c: Add for_each_set_clump8 test cases
+  gpio: 104-dio-48e: Utilize for_each_set_clump8 macro
+  gpio: 104-idi-48: Utilize for_each_set_clump8 macro
+  gpio: gpio-mm: Utilize for_each_set_clump8 macro
+  gpio: ws16c48: Utilize for_each_set_clump8 macro
+  gpio: pci-idio-16: Utilize for_each_set_clump8 macro
+  gpio: pcie-idio-24: Utilize for_each_set_clump8 macro
+  gpio: uniphier: Utilize for_each_set_clump8 macro
+  thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 macro
+
+ drivers/gpio/gpio-104-dio-48e.c            |  73 ++++----------
+ drivers/gpio/gpio-104-idi-48.c             |  37 ++-----
+ drivers/gpio/gpio-gpio-mm.c                |  73 ++++----------
+ drivers/gpio/gpio-pci-idio-16.c            |  75 ++++++--------
+ drivers/gpio/gpio-pcie-idio-24.c           | 111 ++++++++-------------
+ drivers/gpio/gpio-uniphier.c               |  16 ++-
+ drivers/gpio/gpio-ws16c48.c                |  72 ++++---------
+ drivers/thermal/intel/intel_soc_dts_iosf.c |  29 +++---
+ drivers/thermal/intel/intel_soc_dts_iosf.h |   2 -
+ include/asm-generic/bitops/find.h          |  14 +++
+ include/linux/bitops.h                     |   5 +
+ lib/find_bit.c                             |  81 +++++++++++++++
+ lib/test_bitmap.c                          |  65 ++++++++++++
+ 13 files changed, 330 insertions(+), 323 deletions(-)
+
+-- 
+2.21.0
 
