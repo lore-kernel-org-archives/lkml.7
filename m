@@ -2,411 +2,132 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1C7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26345C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED98620811
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B802087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:39:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="y3bBwXXV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o+3v5zMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfCNQhp (ORCPT
+        id S1727393AbfCNQjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:37:45 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33071 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727551AbfCNQhk (ORCPT
+        Thu, 14 Mar 2019 12:39:23 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55292 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfCNQjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:37:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id i8so6601227wrm.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 09:37:38 -0700 (PDT)
+        Thu, 14 Mar 2019 12:39:23 -0400
+Received: by mail-it1-f196.google.com with SMTP id w18so5705915itj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 09:39:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3EiWbWRN93h/NWe41N/AubEalZGmqmPngrZfTt6A0e4=;
-        b=y3bBwXXV8JGLlzOQbd+ek2EZsz6sGBcS577RgoxHfKUPNETEg3rxbKiGGdcxUsyX5C
-         ZIyOiVBz7xCBZ6R/EWITvppM/Cq9v28iaZh96lg9RfuZOkOTeX26kCMcNW8DeGLDKp+T
-         GsYBdjnFiTUvKVQKZzKZ9rNbMRe46Pu4Yz7D9TffMpfnD6GTgOfS6pKiaaiXzhw4QCgr
-         P7j4c+C47sAnc67Sq8dqMd9NXKQ8iS6EdBtOBy0zkkMZfyJQ6W1ThvF4/i2d0+YjKli1
-         Fu9cBN67zAjlL0lshZxQf1Wq2LODGzXNAPoF5qLRLDmpiuHIehY2Q8O8n/bMRwYJsQ83
-         WQ4Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TdPxKhSCPORUgKyJSeR7Of9rvDzrHujfXr7KWt38S/M=;
+        b=o+3v5zMk+4V0e6/vcNI7mhuX+nPbwBnW1vymJKSlDI78SxCqx7IAUjwCOTaZqzNOlY
+         pF1atKo6di+/ifEOAB2cpfP6dmJkKTYnqv2sWPkkhKKwogxdmeb/TNIL8GzcJtYb9atV
+         /tyx5ZGQ5bvu9kUqz61SpjSqdv7TtO/w1TZyG0gZ6PmL4XkQ9nzaEhGxkJWqoliq9+1V
+         GheXSppBkze6/pXXjoeazEcO2JLgagq3mKAEOyBqNVBrIQgZ1QnG3Cx/lw5xoxxLK782
+         eAU6ObIjHkH4+fPxq15N3vOgqDswtYK5mzah5zHWW2yMrYkWUyvf7d5gwdZ6D/nkUdwU
+         TNDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3EiWbWRN93h/NWe41N/AubEalZGmqmPngrZfTt6A0e4=;
-        b=Bi8qg2jJw3VRxmqCskK0XbcH+O9Eyohvy0iHHyEhdk8XdweGamNIlSg+J2e9tPCqor
-         EmsBfUwL0GjQFYhGwcDs4XAunv/hyDVZSYk9G/VREUczeUD4W4cL5Rl3XI82CjvU0wfr
-         A+nNSfW9udVFFkIZffazLPcYAL4XziDOfL1qctL2f5zFXAJl7bcoDGUex3y6XE/kv8kn
-         OLGiCnA8Kz9uNIOZpFMTx+gofQa7oY7p82DwOKTznd0ZN1ymuxWzal4Hu/og76BV3ruc
-         2lwDRscPmra3yH7r2Laha9sZcz4ZmgoTatpCIjKg8i9dtiHM5W5qBoou2WeDNzQ7pXgp
-         6P5g==
-X-Gm-Message-State: APjAAAXmQ+Qx0ZHqT5SVEBMteHbaJnpdHleNeEl5TDRhTNKvLlcPwETm
-        OXoSpXxprUQYXhxey2orsLgO/g==
-X-Google-Smtp-Source: APXvYqwu6WV9i0kuUBZZe/PXtw6z32e3GtZyWKzHd4ewkE97oTby5vPf22lq05IkNXuXMA6SYAtR2Q==
-X-Received: by 2002:a05:6000:104b:: with SMTP id c11mr34094780wrx.9.1552581457582;
-        Thu, 14 Mar 2019 09:37:37 -0700 (PDT)
-Received: from boomer.local ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
-        by smtp.googlemail.com with ESMTPSA id u17sm45003315wrg.71.2019.03.14.09.37.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Mar 2019 09:37:36 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Guillaume La Roque <glaroque@baylibre.com>,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] pinctrl: meson: add support of drive-strength
-Date:   Thu, 14 Mar 2019 17:37:25 +0100
-Message-Id: <20190314163725.7918-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190314163725.7918-1-jbrunet@baylibre.com>
-References: <20190314163725.7918-1-jbrunet@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TdPxKhSCPORUgKyJSeR7Of9rvDzrHujfXr7KWt38S/M=;
+        b=t7ESfyjSWYdixEwiWd/291neiguL/BzBMZBIZwWQv9LzD+bplrBl1j+e/qy+EDqfOx
+         scI58XqyISWEcoxWomH2u0SJbps4elI/ZApmHO/Cg5ZbtnQMJW3D95dUau/5IkJeufoD
+         iCBMZiThM2ZGzGTNjKIDRzfGe5E1OmUzbyd4KT0omRwy+2rq/sU78eVAIn+Q7gB0JamB
+         nRZtnQWnsFGLiS/CVIHCzq6U9GkmSNaZNN8hFfppqfrX+ANvxuUa+pt8ZVna7n9IWpVu
+         0vwTrVBjBcsaiCmRQGMR+q/pER+3M9qNpQ5nNTb5S55yi/FnbbJJxhH2GQGiwMa7qTjD
+         qN/w==
+X-Gm-Message-State: APjAAAW0Vh5ZV3wvOw3P6wvKmIhGf4SUARGzSOf9XNRsAoD/G/S0Q0Bf
+        T6KLlbzWYo0F0v4pJIL665ZEN75CWCh1iifNOFCERw==
+X-Google-Smtp-Source: APXvYqztkSCBWvbKVl91mTK5YOowxSpMrLgHSQhGznWDGqgcW1h3aiM6g2eLjrjugWcVf44PDU0MlFkd7O292RhT7nI=
+X-Received: by 2002:a24:dd82:: with SMTP id t124mr2814312itf.102.1552581561557;
+ Thu, 14 Mar 2019 09:39:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-2-patrick.bellasi@arm.com> <CAJuCfpGAZ6XxJj=e-wVzGx3zmRRLPs=wXm8K0BcjWOm5hM0FcQ@mail.gmail.com>
+ <20190314144600.2ulpeipad7jbxyiy@e110439-lin> <CAJuCfpFDVi7O+yqQ+F0DT3pRZN=BtRD8NyUH5Tys0VVkd9JAGg@mail.gmail.com>
+ <20190314154052.345v74snhtc4cqbe@e110439-lin>
+In-Reply-To: <20190314154052.345v74snhtc4cqbe@e110439-lin>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Thu, 14 Mar 2019 09:39:09 -0700
+Message-ID: <CAJuCfpEWCcWj=B2SPai2pQt+wcjsAhEfVV1O+H0A+_fqLCnb8Q@mail.gmail.com>
+Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets refcounting
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume La Roque <glaroque@baylibre.com>
+On Thu, Mar 14, 2019 at 8:41 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+>
+> On 14-Mar 08:29, Suren Baghdasaryan wrote:
+> > On Thu, Mar 14, 2019 at 7:46 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+> > > On 13-Mar 14:32, Suren Baghdasaryan wrote:
+> > > > On Fri, Feb 8, 2019 at 2:06 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+>
+> [...]
+>
+> > > > > The rq::uclamp::bucket[clamp_id][] array is scanned every time we need
+> > > > > to find a new MAX aggregated clamp value for a clamp_id. This operation
+> > > > > is required only when we dequeue the last task of a clamp bucket
+> > > > > tracking the current MAX aggregated clamp value. In these cases, the CPU
+> > > > > is either entering IDLE or going to schedule a less boosted or more
+> > > > > clamped task.
+>
+> The following:
+>
+> > > > > The expected number of different clamp values, configured at build time,
+> > > > > is small enough to fit the full unordered array into a single cache
+> > > > > line.
+>
+> will read:
+>
+> The expected number of different clamp values, configured at build time,
+> is small enough to fit the full unordered array into a single cache
+> line for the default UCLAMP_BUCKETS configuration of 7 buckets.
 
-drive-strength is a new feature needed for G12A SoC.
-the default DS setting after boot is usually 0.5mA and it is not enough for
-many functions. We need to be able to set the drive strength to reliably
-enable things like MMC, I2C, etc ...
+I think keeping default to be 5 is good. As you mentioned it's a nice
+round number and keeping it at the minimum also hints that this is not
+a free resource and the more buckets you use the more you pay.
+Documentation might say "to fit the full unordered array into a single
+cache line for configurations of up to 7 buckets".
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/pinctrl/meson/pinctrl-meson-g12a.c |  36 ++---
- drivers/pinctrl/meson/pinctrl-meson.c      | 166 ++++++++++++++++-----
- drivers/pinctrl/meson/pinctrl-meson.h      |  20 ++-
- 3 files changed, 162 insertions(+), 60 deletions(-)
-
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-index d494492e98e9..3475cd7bd2af 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-@@ -1304,28 +1304,28 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
- };
- 
- static struct meson_bank meson_g12a_periphs_banks[] = {
--	/* name  first  last  irq  pullen  pull  dir  out  in */
--	BANK("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
--	     4,  0,  4,  0,  12,  0,  13, 0,  14, 0),
--	BANK("H",    GPIOH_0,    GPIOH_8, 28, 36,
--	     3,  0,  3,  0,  9,  0,  10,  0,  11,  0),
--	BANK("BOOT", BOOT_0,     BOOT_15,  37, 52,
--	     0,  0,  0,  0,  0, 0,  1, 0,  2, 0),
--	BANK("C",    GPIOC_0,    GPIOC_7,  53, 60,
--	     1,  0,  1,  0,  3, 0,  4, 0,  5, 0),
--	BANK("A",    GPIOA_0,    GPIOA_15,  61, 76,
--	     5,  0,  5,  0,  16,  0,  17,  0,  18,  0),
--	BANK("X",    GPIOX_0,    GPIOX_19,   77, 96,
--	     2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
-+	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
-+	BANK_DS("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
-+		4,  0,  4,  0,  12,  0,  13, 0,  14, 0, 5, 0),
-+	BANK_DS("H",    GPIOH_0,    GPIOH_8, 28, 36,
-+		3,  0,  3,  0,  9,  0,  10,  0,  11,  0, 4, 0),
-+	BANK_DS("BOOT", BOOT_0,     BOOT_15,  37, 52,
-+		0,  0,  0,  0,  0, 0,  1, 0,  2, 0, 0, 0),
-+	BANK_DS("C",    GPIOC_0,    GPIOC_7,  53, 60,
-+		1,  0,  1,  0,  3, 0,  4, 0,  5, 0, 1, 0),
-+	BANK_DS("A",    GPIOA_0,    GPIOA_15,  61, 76,
-+		5,  0,  5,  0,  16,  0,  17,  0,  18,  0, 6, 0),
-+	BANK_DS("X",    GPIOX_0,    GPIOX_19,   77, 96,
-+		2,  0,  2,  0,  6,  0,  7,  0,  8,  0, 2, 0),
- };
- 
- static struct meson_bank meson_g12a_aobus_banks[] = {
--	/* name  first  last  irq  pullen  pull  dir  out  in  */
--	BANK("AO",   GPIOAO_0,  GPIOAO_11,  0, 11,
--	     3,  0,  2, 0,  0,  0,  4, 0,  1,  0),
-+	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
-+	BANK_DS("AO", GPIOAO_0, GPIOAO_11, 0, 11, 3, 0, 2, 0, 0, 0, 4, 0, 1, 0,
-+		0, 0),
- 	/* GPIOE actually located in the AO bank */
--	BANK("E",   GPIOE_0,  GPIOE_2,   97, 99,
--	     3,  16,  2, 16,  0,  16,  4, 16,  1,  16),
-+	BANK_DS("E", GPIOE_0, GPIOE_2, 97, 99, 3, 16, 2, 16, 0, 16, 4, 16, 1,
-+		16, 1, 0),
- };
- 
- static struct meson_pmx_bank meson_g12a_periphs_pmx_banks[] = {
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index 96a4a72708e4..786640f98f83 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -174,65 +174,108 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev, unsigned selector,
- 	return 0;
- }
- 
--static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
--			     unsigned long *configs, unsigned num_configs)
-+static int meson_pinconf_set_bias(struct meson_pinctrl *pc, unsigned int pin,
-+				  enum pin_config_param conf)
-+{
-+	struct meson_bank *bank;
-+	unsigned int reg, bit, val = 0;
-+	int ret;
-+
-+	ret = meson_get_bank(pc, pin, &bank);
-+	if (ret)
-+		return ret;
-+
-+	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
-+
-+	if (conf == PIN_CONFIG_BIAS_DISABLE) {
-+		ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit),	0);
-+		if (ret)
-+			return ret;
-+	} else {
-+		meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
-+		if (conf == PIN_CONFIG_BIAS_PULL_UP)
-+			val = BIT(bit);
-+
-+		ret = regmap_update_bits(pc->reg_pull, reg, BIT(bit), val);
-+		if (ret)
-+			return ret;
-+
-+		meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
-+		ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit),
-+					 BIT(bit));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
-+					    unsigned int pin, u16 arg)
- {
--	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
- 	struct meson_bank *bank;
--	enum pin_config_param param;
- 	unsigned int reg, bit;
--	int i, ret;
-+	unsigned int ds_val;
-+	int ret;
-+
-+	if (!pc->reg_ds) {
-+		dev_err(pc->dev, "drive-strength not supported\n");
-+		return -ENOTSUPP;
-+	}
- 
- 	ret = meson_get_bank(pc, pin, &bank);
- 	if (ret)
- 		return ret;
- 
-+	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
-+	bit = bit << 1;
-+
-+	if (arg <= 500) {
-+		ds_val = MESON_PINCONF_DRV_500UA;
-+	} else if (arg <= 2500) {
-+		ds_val = MESON_PINCONF_DRV_2500UA;
-+	} else if (arg <= 3000) {
-+		ds_val = MESON_PINCONF_DRV_3000UA;
-+	} else if (arg <= 4000) {
-+		ds_val = MESON_PINCONF_DRV_4000UA;
-+	} else {
-+		dev_warn_once(pc->dev,
-+			      "pin %u: invalid drive-strength : %d , default to 4mA\n",
-+			      pin, arg);
-+		ds_val = MESON_PINCONF_DRV_4000UA;
-+	}
-+
-+	ret = regmap_update_bits(pc->reg_ds, reg, 0x3 << bit, ds_val << bit);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
-+			     unsigned long *configs, unsigned num_configs)
-+{
-+	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
-+	enum pin_config_param param;
-+	unsigned int arg;
-+	int i, ret;
-+
- 	for (i = 0; i < num_configs; i++) {
- 		param = pinconf_to_config_param(configs[i]);
- 
- 		switch (param) {
- 		case PIN_CONFIG_BIAS_DISABLE:
--			dev_dbg(pc->dev, "pin %u: disable bias\n", pin);
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg,
--					       &bit);
--			ret = regmap_update_bits(pc->reg_pullen, reg,
--						 BIT(bit), 0);
--			if (ret)
--				return ret;
--			break;
- 		case PIN_CONFIG_BIAS_PULL_UP:
--			dev_dbg(pc->dev, "pin %u: enable pull-up\n", pin);
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
--					       &reg, &bit);
--			ret = regmap_update_bits(pc->reg_pullen, reg,
--						 BIT(bit), BIT(bit));
--			if (ret)
--				return ret;
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
--			ret = regmap_update_bits(pc->reg_pull, reg,
--						 BIT(bit), BIT(bit));
--			if (ret)
--				return ret;
--			break;
- 		case PIN_CONFIG_BIAS_PULL_DOWN:
--			dev_dbg(pc->dev, "pin %u: enable pull-down\n", pin);
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
--					       &reg, &bit);
--			ret = regmap_update_bits(pc->reg_pullen, reg,
--						 BIT(bit), BIT(bit));
-+			ret = meson_pinconf_set_bias(pc, pin, param);
- 			if (ret)
- 				return ret;
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
--			ret = regmap_update_bits(pc->reg_pull, reg,
--						 BIT(bit), 0);
-+			break;
-+		case PIN_CONFIG_DRIVE_STRENGTH:
-+			arg = pinconf_to_config_argument(configs[i]);
-+			ret = meson_pinconf_set_drive_strength(pc, pin, arg);
- 			if (ret)
- 				return ret;
--			break;
- 		default:
- 			return -ENOTSUPP;
- 		}
-@@ -275,12 +318,51 @@ static int meson_pinconf_get_pull(struct meson_pinctrl *pc, unsigned int pin)
- 	return conf;
- }
- 
-+static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
-+					    unsigned int pin, u16 *arg)
-+{
-+	struct meson_bank *bank;
-+	unsigned int reg, bit;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = meson_get_bank(pc, pin, &bank);
-+	if (ret)
-+		return ret;
-+
-+	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
-+
-+	ret = regmap_read(pc->reg_ds, reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	switch ((val >> bit) & 0x3) {
-+	case MESON_PINCONF_DRV_500UA:
-+		*arg = 500;
-+		break;
-+	case MESON_PINCONF_DRV_2500UA:
-+		*arg = 2500;
-+		break;
-+	case MESON_PINCONF_DRV_3000UA:
-+		*arg = 3000;
-+		break;
-+	case MESON_PINCONF_DRV_4000UA:
-+		*arg = 4000;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
- 			     unsigned long *config)
- {
- 	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
- 	enum pin_config_param param = pinconf_to_config_param(*config);
- 	u16 arg;
-+	int ret;
- 
- 	switch (param) {
- 	case PIN_CONFIG_BIAS_DISABLE:
-@@ -291,6 +373,10 @@ static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
- 		else
- 			return -EINVAL;
- 		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		ret = meson_pinconf_get_drive_strength(pc, pin, &arg);
-+		if (ret)
-+			return ret;
- 	default:
- 		return -ENOTSUPP;
- 	}
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-index 5eaab925f427..1a88103dcb9b 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.h
-+++ b/drivers/pinctrl/meson/pinctrl-meson.h
-@@ -71,9 +71,20 @@ enum meson_reg_type {
- 	REG_DIR,
- 	REG_OUT,
- 	REG_IN,
-+	REG_DS,
- 	NUM_REG,
- };
- 
-+/**
-+ * enum meson_pinconf_drv - value of drive-strength supported
-+ */
-+enum meson_pinconf_drv {
-+	MESON_PINCONF_DRV_500UA,
-+	MESON_PINCONF_DRV_2500UA,
-+	MESON_PINCONF_DRV_3000UA,
-+	MESON_PINCONF_DRV_4000UA,
-+};
-+
- /**
-  * struct meson bank
-  *
-@@ -132,7 +143,8 @@ struct meson_pinctrl {
- 		.num_groups = ARRAY_SIZE(fn ## _groups),		\
- 	}
- 
--#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib)	\
-+#define BANK_DS(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib,     \
-+		dsr, dsb)                                                      \
- 	{								\
- 		.name		= n,					\
- 		.first		= f,					\
-@@ -145,8 +157,12 @@ struct meson_pinctrl {
- 			[REG_DIR]	= { dr, db },			\
- 			[REG_OUT]	= { or, ob },			\
- 			[REG_IN]	= { ir, ib },			\
-+			[REG_DS]	= { dsr, dsb },			\
- 		},							\
--	 }
-+	}
-+
-+#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib) \
-+	BANK_DS(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib, 0, 0)
- 
- #define MESON_PIN(x) PINCTRL_PIN(x, #x)
- 
--- 
-2.20.1
-
+> [...]
+>
+> > Got it. From reading the documentation at the beginning my impression
+> > was that whatever value I choose within allowed 5-20 range it would
+> > still fit in a cache line. To disambiguate it might be worse
+> > mentioning that this is true for the default value or for values up to
+> > 7. Thanks!
+>
+> Right, I hope the above proposed change helps to clarify that.
+>
+> --
+> #include <best/regards.h>
+>
+> Patrick Bellasi
