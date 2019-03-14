@@ -5,148 +5,118 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD89C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB484C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC28520854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F2320854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfCNADz (ORCPT
+        id S1726981AbfCNAKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 20:03:55 -0400
-Received: from mx.sdf.org ([205.166.94.20]:51035 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbfCNADz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 20:03:55 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2E03YBx027700
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Thu, 14 Mar 2019 00:03:34 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x2E03VZO028625;
-        Thu, 14 Mar 2019 00:03:31 GMT
-Date:   Thu, 14 Mar 2019 00:03:31 GMT
-From:   George Spelvin <lkml@sdf.org>
-Message-Id: <201903140003.x2E03VZO028625@sdf.org>
-To:     linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
-        lkml@sdf.org
-Subject: Re: [PATCH 2/5] lib/sort: Use more efficient bottom-up heapsort variant
-Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        daniel.wagner@siemens.com, dchinner@redhat.com,
-        don.mullis@gmail.com, geert@linux-m68k.org, st5pub@yandex.ru
-In-Reply-To: <472510ad-77f9-49e8-4122-52f447cb1c15@rasmusvillemoes.dk>
-References: <cover.1552097842.git.lkml@sdf.org>,
-    <dbac34c6052fc973fb55df4966981bae24c7cce9.1552097842.git.lkml@sdf.org>,
-    <472510ad-77f9-49e8-4122-52f447cb1c15@rasmusvillemoes.dk>
+        Wed, 13 Mar 2019 20:10:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55166 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726218AbfCNAKB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 20:10:01 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2E04BC9096656
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 20:10:00 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r78379tqb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 20:10:00 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
+        Thu, 14 Mar 2019 00:09:50 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Mar 2019 00:09:47 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2E09kmm33882310
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 Mar 2019 00:09:46 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CDF842041;
+        Thu, 14 Mar 2019 00:09:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4AEF542042;
+        Thu, 14 Mar 2019 00:09:46 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Mar 2019 00:09:46 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 309FFA00D1;
+        Thu, 14 Mar 2019 11:09:45 +1100 (AEDT)
+Subject: Re: [PATCH 1/1] arch/powerpc: Rework local_paca to avoid LTO warnings
+To:     Daniel Axtens <dja@axtens.net>,
+        "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        "Alastair D'Silva" <alastair@d-silva.org>,
+        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190313034208.13134-1-alastair@au1.ibm.com>
+ <87ef7atjnk.fsf@dja-thinkpad.axtens.net>
+From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Date:   Thu, 14 Mar 2019 11:09:42 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <87ef7atjnk.fsf@dja-thinkpad.axtens.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031400-0016-0000-0000-00000262059C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031400-0017-0000-0000-000032BD05A3
+Message-Id: <52392d47-4b69-2353-b831-6db4250bed78@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=870 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903130165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 at 23:29:40 +0100, Rasmus Villemoes wrote:
-> On 21/02/2019 09.21, George Spelvin wrote:
->> +/**
->> + * parent - given the offset of the child, find the offset of the parent.
->> + * @i: the offset of the heap element whose parent is sought.  Non-zero.
->> + * @lsbit: a precomputed 1-bit mask, equal to "size & -size"
->> + * @size: size of each element
->> + *
->> + * In terms of array indexes, the parent of element j = i/size is simply
->> + * (j-1)/2.  But when working in byte offsets, we can't use implicit
->> + * truncation of integer divides.
->> + *
->> + * Fortunately, we only need one bit of the quotient, not the full divide.
->> + * size has a least significant bit.  That bit will be clear if i is
->> + * an even multiple of size, and set if it's an odd multiple.
->> + *
->> + * Logically, we're doing "if (i & lsbit) i -= size;", but since the
->> + * branch is unpredictable, it's done with a bit of clever branch-free
->> + * code instead.
->> + */
->> +__attribute_const__ __always_inline
->> +static size_t parent(size_t i, unsigned int lsbit, size_t size)
+On 14/3/19 10:54 am, Daniel Axtens wrote:
+>> +static inline struct paca_struct *get_paca_no_preempt_check(void)
 >> +{
->> +	i -= size;
->> +	i -= size & -(i & lsbit);
->> +	return i / 2;
+>> +	register struct paca_struct *paca asm("r13");
+>> +	return paca;
 >> +}
->> +
->
-> Really nice :) I had to work through this by hand, but it's solid.
+> 
+> Isn't the convention to have the { on the same line as the function, or
+> am I horrible mis-remembering things?
 
-Thank you!  Yes, the way the mask doesn't include the low-order bits
-that don't matter anyway is a bit subtle.
+However, there is one special case, namely functions: they have the
+opening brace at the beginning of the next line, thus:
 
-When the code is subtle, use lots of comments.  The entire reason
-for making this a separate helper function is to leave room for
-the large comment.
+         int function(int x)
+         {
+                 body of function
+         }
 
->> +	unsigned const lsbit = size & -size;	/* Used to find parent */
->
-> Nit: qualifier before type, "const unsigned". And this sets ZF, so a
-> paranoid check for zero size (cf. the other mail) by doing "if (!lsbit)
-> return;" is practically free. Though it's probably a bit obscure doing
-> it that way...
+Heretic people all over the world have claimed that this inconsistency
+is ...  well ...  inconsistent, but all right-thinking people know that
+(a) K&R are **right** and (b) K&R are right.  Besides, functions are
+special anyway (you can't nest them in C).
 
-Actually, this is a personal style thing which I can ignore for the sake
-of the kernel, but I believe that it's better to put the qualifier
-*after* the type.  This is due to C's pointer declaration syntax.
 
-The standard example of the issue is:
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+andrew.donnellan@au1.ibm.com  IBM Australia Limited
 
-	typedef char *pointer;
-	const char *a;
-	char const *b;
-	char * const c;
-	const pointer d;
-	pointer const e;
-
-Now, which variables are the same types?
-
-The answer is that a & b are the same (mutable pointer to const
-char), and c, d & e are the same (const pointer to mutable char).
-
-I you make a habit of putting the qualifier *after* the type, then
-a simple "textual substitution" mental model for the typedef works,
-and it's clear that c and e are the same.
-
-It's also clear that b cannot be represented by the typedef because
-the const is between "char" and "*", and you obviously can't do that
-with the typedef.
-
-But if you put the qualifier first, it's annoying to rememeber why
-a and d are not the same type.
-
-So I've deliberately cultivated the style of putting the qualifier
-after the type.
-
-But if the kernel prefers it before...
-
->> +	if (!n)
->> +		return;
->
-> I'd make that n <= 1. Shouldn't be much more costly.
-
-(Actually, it's "num <= 1"; n is the pre-multiplied form so
-n <= 1 can only happen when sorting one one-byte value.)
-
-I actually thought about this and decided not to bother.  I did it
-this way during development to stress the general-case code.  But
-should I change it?
-
-=== NEVER MIND ===
-
-I had written a long reply justifying leaving it alone to save one
-instruction when the light dawned: I can do *both* tests in one
-step with
-	size_t n = num * size, a = (num/2) * size;
-	unsigned const lsbit = size & -size;	/* Used to find parent */
-
-	if (!a)		/* num < 2 || size == 0 */
-		return;
-
-So now everyone's happy.
-
-> Nice!
-
-Thank you.  May I translate that into Acked-by?
