@@ -2,137 +2,87 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D564C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9971CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1D921019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFB521019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:03:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=piap.pl header.i=@piap.pl header.b="nRmYgy0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbfCNIC3 (ORCPT
+        id S1727117AbfCNIDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 04:02:29 -0400
-Received: from mout.gmx.net ([212.227.17.20]:53295 "EHLO mout.gmx.net"
+        Thu, 14 Mar 2019 04:03:24 -0400
+Received: from ni.piap.pl ([195.187.100.4]:53560 "EHLO ni.piap.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbfCNIC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 04:02:29 -0400
-Received: from [0.0.0.0] ([54.250.245.166]) by mail.gmx.com (mrgmx102
- [212.227.17.174]) with ESMTPSA (Nemesis) id 0M9vnQ-1hAy673kts-00B6Ql; Thu, 14
- Mar 2019 09:02:13 +0100
-Subject: Re: [PATCH] btrfs: fix a NULL pointer dereference
-To:     Nikolay Borisov <nborisov@suse.com>, Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190314075041.28966-1-kjlu@umn.edu>
- <b0b494f4-8686-8e50-faca-625d6f89bbe3@suse.com>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
- mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAVQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWCnQUJCWYC
- bgAKCRDCPZHzoSX+qAR8B/94VAsSNygx1C6dhb1u1Wp1Jr/lfO7QIOK/nf1PF0VpYjTQ2au8
- ihf/RApTna31sVjBx3jzlmpy+lDoPdXwbI3Czx1PwDbdhAAjdRbvBmwM6cUWyqD+zjVm4RTG
- rFTPi3E7828YJ71Vpda2qghOYdnC45xCcjmHh8FwReLzsV2A6FtXsvd87bq6Iw2axOHVUax2
- FGSbardMsHrya1dC2jF2R6n0uxaIc1bWGweYsq0LXvLcvjWH+zDgzYCUB0cfb+6Ib/ipSCYp
- 3i8BevMsTs62MOBmKz7til6Zdz0kkqDdSNOq8LgWGLOwUTqBh71+lqN2XBpTDu1eLZaNbxSI
- ilaVuQENBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAGJATwEGAEIACYWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWBrwIbDAUJA8JnAAAK
- CRDCPZHzoSX+qA3xB/4zS8zYh3Cbm3FllKz7+RKBw/ETBibFSKedQkbJzRlZhBc+XRwF61mi
- f0SXSdqKMbM1a98fEg8H5kV6GTo62BzvynVrf/FyT+zWbIVEuuZttMk2gWLIvbmWNyrQnzPl
- mnjK4AEvZGIt1pk+3+N/CMEfAZH5Aqnp0PaoytRZ/1vtMXNgMxlfNnb96giC3KMR6U0E+siA
- 4V7biIoyNoaN33t8m5FwEwd2FQDG9dAXWhG13zcm9gnk63BN3wyCQR+X5+jsfBaS4dvNzvQv
- h8Uq/YGjCoV1ofKYh3WKMY8avjq25nlrhzD/Nto9jHp8niwr21K//pXVA81R2qaXqGbql+zo
-Message-ID: <50fa02f1-18c0-b039-ec2f-e16b715f53ff@gmx.com>
-Date:   Thu, 14 Mar 2019 16:02:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        id S1726284AbfCNIDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 04:03:24 -0400
+X-Greylist: delayed 306 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Mar 2019 04:03:23 EDT
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ni.piap.pl (Postfix) with ESMTPSA id 79C174432C4;
+        Thu, 14 Mar 2019 08:58:10 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 79C174432C4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
+        t=1552550293; bh=w1fnfGqk6I7ubamWwlYbdVHCnPNFfD8bCzoMm9FymzY=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=nRmYgy0aEshe0oboXctOX7C7dBnnFDK2krd63oJML6b3zFqlj61JBLMQBeqDRTHSK
+         wl/k9+2FzaNKy7TBZjVLilQjJSivRFqQRrboKwOrdjnmCZMEIy73+/UfM1mafLMguG
+         nwK6wnoKKMYWsxQHnKBU0a+oeRZjlHLK7Tt0YYho=
+From:   khalasa@piap.pl (Krzysztof =?utf-8?Q?Ha=C5=82asa?=)
+To:     "Enrico Weigelt\, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, andrew@aj.id.au,
+        hsweeten@visionengravers.com, alexander.sverdlin@gmail.com,
+        kaloz@openwrt.org, lkundrak@v3.sk, aaro.koskinen@iki.fi,
+        tony@atomide.com, baohua@kernel.org, kgene@kernel.org,
+        krzk@kernel.org, linux@prisktech.co.nz, mcuos.com@gmail.com,
+        matthias.bgg@gmail.com, linux-omap@vger.kernel.org
+Subject: Re: [PATCH] arch: arm: Kconfig: pedantic formatting
+References: <1552312598-25574-1-git-send-email-info@metux.net>
+Date:   Thu, 14 Mar 2019 08:58:09 +0100
+In-Reply-To: <1552312598-25574-1-git-send-email-info@metux.net> (Enrico
+        Weigelt's message of "Mon, 11 Mar 2019 14:56:38 +0100")
+Message-ID: <m3r2b9ubu6.fsf@t19.piap.pl>
 MIME-Version: 1.0
-In-Reply-To: <b0b494f4-8686-8e50-faca-625d6f89bbe3@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:A6CImGBwyH0Buf3Q3eyiImwF7EuHV6hkHF78MlKq1juKlRU/bQ2
- 9Tcb6BYexmmdQzrAQNiuxkTFfxqyZVKg8fw3AuBeanI+bD+mbnXRBokxtg/b7BvkNr0qQr6
- kWO323c10C6/xyPcWNDZNQHv4d+W94i9h1ZCXtifqERkSsv/lqSKniIDnhsEyklioP1rub8
- UYTGIUxrO9smLMCin+2SQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aEUq/oyfppk=:x5uHxWuHttfcSiRKJU1nWo
- SHs+cy7kFSKsCmQ6KXkD6YIbceD5u7EqrqrRDUfNnSp5Ss1HqOoZIIyITXvOxzpwNedWXYRap
- dZPICgrwX34klqZtKeePqS7XTbtRl5FjYwJX83VuwZYGvo4wB0mCBPXiGb3ZaSlKYRbT83uMO
- u1VZGXSXqFrP6R4eAlVpKPDyenqck/o0ZZbxMJSkiY8C0AhYBjbprZQpZBpiZoyldsWOECJg2
- Ig7IUMTteMwvJzWIov7SWORntW2R4RG5ecXFpMMbJgniN1TiFG04QwOUBha7ZzoG+kb4lApg4
- TrJcZsxRWhRWAZeoEyrVb8FAUsYw9IKo9BmKU1SzFOVneGdKakG/iNlWleOrfQJVhtyNFpbTK
- eSnK5TllOfZzyKdi2LyQhYYcRBl/hfWpa9r9fjpyiITtTxIDr3Gz4KSRwC1dZ+ePGCKtvzmiP
- 3TGeSQ+JneJP9QZJPg/515nNhCWF5CkIhvorXEzdAhke7O7uvnpf8oRjWoIlvpdZRTY+3ShG0
- Xr4/hjMwD/iQGkL4OaOvvhBxl1K9w6AGesrWtp7RMBscap3Lg8Nj+Q18QxZEdPaFooTLGRdmm
- baKmgQ3/okUpeDWz0Q9S3zA+Ce9Z7fr4ECShSK7hDdQbXNW71z49cuHKZBCBE/6K3h+nCRkMf
- R5+KNShqHZ3Y8eaGktIkHOE9qM8qwvI8jv9Pk/aznv7x0YLCFJRul42hp/yI/TaLama51mkzK
- SC8y3KeA8D8NqZwpqE8uTOwE4vkPiiEABstTQbz3D2ULMW2nncyF+CHOcNZWlxVUr0ealvPUH
- d/IMUrIG2FSqdQF+GQ8tabVD70Q5uNhqJHMERA8MjuiHklQ0T+y5uxjup9GfGwsDPdh36AjGj
- /HBpg8Nol/A+faOOyYJfSMjBTEBOY/vKkUqxbiuVF6LVrlIe8m0HGJfR483RiCERWgVNsgh+f
- 2iQWfwrnu9A==
+Content-Type: text/plain
+X-KLMS-Rule-ID: 1
+X-KLMS-Message-Action: clean
+X-KLMS-AntiSpam-Lua-Profiles: 136932 [Mar 14 2019]
+X-KLMS-AntiSpam-Version: 5.8.6.0
+X-KLMS-AntiSpam-Envelope-From: khalasa@piap.pl
+X-KLMS-AntiSpam-Rate: 0
+X-KLMS-AntiSpam-Status: not_detected
+X-KLMS-AntiSpam-Method: none
+X-KLMS-AntiSpam-Info: LuaCore: 251 251 59f1bd873ce564c363d8d9090abdf2f8afae186b, {Tracking_DKIM, one}, {Tracking_marketers}, {Tracking_ sender_matches_from}, {Tracking_text_let_digits}, Auth:dkim=pass header.d=piap.pl
+X-KLMS-AntiSpam-Interceptor-Info: scan successful
+X-KLMS-AntiPhishing: Clean, 2019/03/13 10:54:23
+X-KLMS-AntiVirus: Kaspersky Security 8.0 for Linux Mail Server, version 8.0.1.721, bases: 2019/03/13 21:04:00 #9359702
+X-KLMS-AntiVirus-Status: Clean, skipped
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"Enrico Weigelt, metux IT consult" <info@metux.net> writes:
 
+> Formatting of Kconfig files doesn't look so pretty, so let the
+> Great White Handkerchief come around and clean it up.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  arch/arm/mach-ixp4xx/Kconfig  | 32 ++++++++++++++---------------
 
-On 2019/3/14 下午3:54, Nikolay Borisov wrote:
-> 
-> 
-> On 14.03.19 г. 9:50 ч., Kangjie Lu wrote:
->> btrfs_lookup_block_group may fail and return NULL. The fix goes
->> to out when it fails to avoid NULL pointer dereference.
-> 
-> Actually no, in this case btrfs_lookup_block_group must never fail
-> because if we have an allocated eb then it must have been allocated from
-> a bg.
+Acked-by: Krzysztof Halasa <khalasa@piap.pl>
 
-Yep, that's the normal case.
+Though I guess things like this one could go straight to "trivial"
+without all these Acked overkill.
+-- 
+Krzysztof Halasa
 
-However I'm wondering if it's possible to get a bad eb which is cached.
-
-Then we could hit such situation.
-
-So I still believe being safe here still makes sense, especially who
-knows future fuzzed image will be.
-
-Thanks,
-Qu
-
-> 
->>
->> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
->> ---
->>  fs/btrfs/extent-tree.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
->> index 994f0cc41799..b1e7985bcb9d 100644
->> --- a/fs/btrfs/extent-tree.c
->> +++ b/fs/btrfs/extent-tree.c
->> @@ -7303,6 +7303,8 @@ void btrfs_free_tree_block(struct btrfs_trans_handle *trans,
->>  
->>  		pin = 0;
->>  		cache = btrfs_lookup_block_group(fs_info, buf->start);
->> +		if (!cache)
->> +			goto out;
->>  
->>  		if (btrfs_header_flag(buf, BTRFS_HEADER_FLAG_WRITTEN)) {
->>  			pin_down_extent(fs_info, cache, buf->start,
->>
+Industrial Research Institute for Automation and Measurements PIAP
+Al. Jerozolimskie 202, 02-486 Warsaw, Poland
