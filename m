@@ -2,90 +2,141 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C209C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F24BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C37CD21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238C8218A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:57:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="DMZDrHpD"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="m+I+tD77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfCNO4K (ORCPT
+        id S1726932AbfCNO5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:56:10 -0400
-Received: from mail-40133.protonmail.ch ([185.70.40.133]:49852 "EHLO
-        mail-40133.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfCNO4J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:56:09 -0400
-Date:   Thu, 14 Mar 2019 14:56:02 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1552575366;
-        bh=CcTOY8yj8xn45rQwnbQ8DYshVonWoW+gp+m4OWv5Anw=;
-        h=Date:To:From:Reply-To:Subject:In-Reply-To:References:Feedback-ID:
-         From;
-        b=DMZDrHpDhuTtnl8vVNy061AHzUCw7fM3CtlMOMTUHIlC6sIK7zoWsTGmkdRjxLILQ
-         yiUlERe3Stvzit0nLnNG11xLOttNjqGZDRyKRXf1yM5pY+OzMapgLFFoGxRX3xeiSP
-         cSLuEXhFhQhwkxNncpWenVXCe0p4TMT/k/V1OxOo=
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Subject: Re: PC-SyS : Let this Fair Labour construct be the standardization and way forward for Available Source.
-Message-ID: <c3keckjDv4IldjxkT98ejAh6u2seA_kQ513dQ4NVgHKwCKnNaq5CRqUBPJpTTH1p4AHYXachiXq6Yv0aAWHdqVXv-boL-iSSNvpxtNqnA_E=@protonmail.com>
-In-Reply-To: <GIbpkAFkEWOCoImjLIDCw6orkrCgC8HmiqVhNoj2f0oOtMfJ4iJK6xxFsR4LAu9j0rBipt1RR7u1RMtbac6bV7EiQq1oLcjZl1jwbGnEAuk=@protonmail.com>
-References: <GIbpkAFkEWOCoImjLIDCw6orkrCgC8HmiqVhNoj2f0oOtMfJ4iJK6xxFsR4LAu9j0rBipt1RR7u1RMtbac6bV7EiQq1oLcjZl1jwbGnEAuk=@protonmail.com>
-Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Thu, 14 Mar 2019 10:57:03 -0400
+Received: from mail-eopbgr690129.outbound.protection.outlook.com ([40.107.69.129]:19055
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726691AbfCNO5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 10:57:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X1BW8XP2CvYd+BJDozFMywZUxRjst+0+JZdqMmeoXkM=;
+ b=m+I+tD77Z0khOSuT9squa7X83pWG9U99hAC/msTZgZ/RbUS+nD6Mu1bWUO0GCTLl4NiSY783lbu/e79q8w2YYjTqJT2e+j83IerUYRRrCOEm4sMjOmNn3Em8jLvTz2+4MTYCcStaAxatYckfSSd0NDew5Vax4jldNV39d172cWA=
+Received: from CY4PR21MB0773.namprd21.prod.outlook.com (10.173.192.19) by
+ CY4PR21MB0790.namprd21.prod.outlook.com (10.175.121.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.0; Thu, 14 Mar 2019 14:57:00 +0000
+Received: from CY4PR21MB0773.namprd21.prod.outlook.com
+ ([fe80::9595:af36:ad4:ab7d]) by CY4PR21MB0773.namprd21.prod.outlook.com
+ ([fe80::9595:af36:ad4:ab7d%9]) with mapi id 15.20.1730.003; Thu, 14 Mar 2019
+ 14:57:00 +0000
+From:   KY Srinivasan <kys@microsoft.com>
+To:     Kangjie Lu <kjlu@umn.edu>
+CC:     "pakki001@umn.edu" <pakki001@umn.edu>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] hyperv: a potential NULL pointer dereference
+Thread-Topic: [PATCH] hyperv: a potential NULL pointer dereference
+Thread-Index: AQHU2ilZRp8CWZZ0pke1kYNV+eQu/KYLMX6w
+Date:   Thu, 14 Mar 2019 14:56:59 +0000
+Message-ID: <CY4PR21MB0773FB535B3F4177CA9662C0A04B0@CY4PR21MB0773.namprd21.prod.outlook.com>
+References: <20190314054651.1315-1-kjlu@umn.edu>
+In-Reply-To: <20190314054651.1315-1-kjlu@umn.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2601:600:a280:9:6d92:a6c2:4a8e:3bad]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a20201fa-3e9d-4644-c7c8-08d6a88d4fad
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:CY4PR21MB0790;
+x-ms-traffictypediagnostic: CY4PR21MB0790:
+x-microsoft-antispam-prvs: <CY4PR21MB0790067CD84A91383C0EC340A04B0@CY4PR21MB0790.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 09760A0505
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(39860400002)(346002)(376002)(13464003)(199004)(189003)(8990500004)(9686003)(7416002)(8676002)(10290500003)(81156014)(55016002)(6436002)(6916009)(486006)(6246003)(476003)(52536014)(53936002)(81166006)(2171002)(25786009)(7696005)(71190400001)(71200400001)(86612001)(99286004)(2906002)(86362001)(186003)(68736007)(256004)(97736004)(316002)(102836004)(7736002)(33656002)(6346003)(54906003)(4326008)(14444005)(76176011)(74316002)(8936002)(6116002)(6506007)(5660300002)(53546011)(46003)(446003)(105586002)(10090500001)(229853002)(11346002)(106356001)(478600001)(305945005)(22452003)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0790;H:CY4PR21MB0773.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kys@microsoft.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IX30NSLq+c8q0mgTX74bl+lGNxT5XWS21nNYIxwgYgL+WgP7dO3Nmn9UeA14yiNV6SZKFkJegIfddLcJSrOJ9r0rKaCuv0Ci/8/+YX7tyKNzbXhADrGqiD5EdlfX7V2rhcu7EhYTTFycqFkjk3ImYOkxoDgk66g2N95emKYUvHlxaeBhekyuXXLhuMU+Lywbs8lhcam9GSAcKGfq7pxrFNq3v6K/CbzuJ2iQUNj7mZEn8ot30Dob/LBv2GaXCTSuzJHYtT33DN7lVGjjlBKBHj9xKRyow0zSc2m65dsBAbEupH98/795tWQV56XK3ePaccmJ/+RAA+BeM4mteNo4CUD7+fo0XKWAMwo0V0DOIDFLGMPU4c8s48/YKTroQvM4yYASZw5YYzT7qG9P6tON1CXEPVKetUHcc/rnjwGLck8=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a20201fa-3e9d-4644-c7c8-08d6a88d4fad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2019 14:56:59.9337
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0790
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Little recap also:
-
-We see a behavioral problem in the Available Source space. And earlier we s=
-ee ill-management in IT-space, that we can trace to biblical regressions.
-And we see the psilocybin god, at its greatest with the hippies, that has s=
-upport for Palestine, and Islam this way.
-And z=C3=ABn, has a language that we understand Islam by, egolessness and u=
-niversal transcendence. Therefore we suggest to move to a z=C3=ABn-concept =
-of the God, where 68'erBros politics is respected, and in line with Palesti=
-ne support, and with this also recognize that a Fair Labour  compliant OS, =
-may just as well be a 68'erBros cause, and work for launching this, and sup=
-port all main principles of 68'erBros politics, absolute reality of z=C3=
-=ABn, and Islam. With such a harmonization of philosophy, we think we have =
-done the best with the behavioural problems, and also establish a more prof=
-essional online space, and a good online currency, where means are indeed m=
-eant to be used and dynamic.
-
-Peace!
 
 
-Sent with ProtonMail Secure Email.
+> -----Original Message-----
+> From: Kangjie Lu <kjlu@umn.edu>
+> Sent: Wednesday, March 13, 2019 10:47 PM
+> To: kjlu@umn.edu
+> Cc: pakki001@umn.edu; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>; Thomas
+> Gleixner <tglx@linutronix.de>; Ingo Molnar <mingo@redhat.com>; Borislav
+> Petkov <bp@alien8.de>; H. Peter Anvin <hpa@zytor.com>; x86@kernel.org;
+> linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH] hyperv: a potential NULL pointer dereference
+>=20
+> In case alloc_page, the fix returns -ENOMEM to avoid the potential
+> NULL pointer dereference.
+>=20
+Thanks.
 
-=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
-ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
-On Wednesday 13. March 2019 kl. 17:16, Ywe C=C3=A6rlyn <ywecrn@protonmail.c=
-om> wrote:
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
 
-> I did som more work on my youtube profile, and its getting to be a very c=
-oherent concept. As it states: Let this fair labour construct be the standa=
-rdization and way forward for available source.
->
-> And we have decided on the name Monys for the online currency this will b=
-e about. Where everyone is a digital content creator, with a pure and reaso=
-nable supply and demand matrix.
->
-> Peace!
-> Ywe C=C3=A6rlyn,
-> initiativetaker, and philosophy groundwork.
-> https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
-
+> ---
+>  arch/x86/hyperv/hv_init.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 7abb09e2eeb8..dfdb4ce1ae9c 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -102,9 +102,13 @@ static int hv_cpu_init(unsigned int cpu)
+>  	u64 msr_vp_index;
+>  	struct hv_vp_assist_page **hvp =3D
+> &hv_vp_assist_page[smp_processor_id()];
+>  	void **input_arg;
+> +	struct page *pg;
+>=20
+>  	input_arg =3D (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
+> -	*input_arg =3D page_address(alloc_page(GFP_KERNEL));
+> +	pg =3D alloc_page(GFP_KERNEL);
+> +	if (unlikely(!pg))
+> +		return -ENOMEM;
+> +	*input_arg =3D page_address(pg);
+>=20
+>  	hv_get_vp_index(msr_vp_index);
+>=20
+> --
+> 2.17.1
 
