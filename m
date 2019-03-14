@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD42C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59125C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D8C20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B13020811
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578916;
-	bh=iCcWqZTOFaYSDG0e8LMxOQo/0V0ET2PgvAmBTAxXx0A=;
+	s=default; t=1552578919;
+	bh=7RpSNMUg9sbmjCpAWm4+1FRRVQvJHm49ZXykN6ZICTw=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Zy+O+IG1HGbc9iFnW5M6o0v+7Km7gdyBUT7jYQ4tct5viRQamxHbDNxI0olQBe05k
-	 GqOQUfeee1zq0fjILN7sdZTecM70oWq+B8tTRmT25ACp/Z4cLftZSZvbTZL9GGtv+l
-	 PFvOcKk3G2Cio7hlfzAfQxD9YSJu98APKcYsiUwc=
+	b=XJ1NH/Gqo91m0kID+XcT/lU3OL+rrJo9y8dmiZJ/1+ZeSuYYsqZ6hqz3TeOMH+bIj
+	 d+F9I/2XLWWpDPj2efYdh3c6a3TKUPEa7PLYVSy+xiFuE7iqq1HWxcUb/7bj0MC0Hn
+	 sA70DelBZU/33CmTXydekvnKoTYvJMUx/xtfMN7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbfCNPyl (ORCPT
+        id S1727180AbfCNPzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:54:41 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36384 "EHLO
+        Thu, 14 Mar 2019 11:55:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36628 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfCNPyd (ORCPT
+        with ESMTP id S1727705AbfCNPyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:54:33 -0400
+        Thu, 14 Mar 2019 11:54:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=lhiq78Xx/BO7sCW6XVz8LaJ4YnKcUhnVlL/dlC/hRMk=; b=h9A+iGjA/9ev
-        AoJXP+C2RSkk6xiiztnev6FHDAJzeaxAxuJUE2CE8QqHO+51Nuz6kL17Kv7C+BdDZkju8ZSTfVU3b
-        B6wq3uvwgMe08PQ/yFj/eOjshg+FZ3As1rHfDEisIOztlyLXxcl0WjYVRg30aIQaQBJRIpii4Oh84
-        a8nCs=;
+        List-Archive; bh=bMg03Gd6bcAgOPO6FwSfg80y+qjJq5SYCbOEe0aTwSY=; b=eoPEs3F5zOy8
+        HB2YedIVojV0rwBpYOvlxD5YZCkbicPFcbd036VmMCcth1JZrQTDTs60ixgoiz0qn9ZdTOI5T4pLD
+        ozNrHk7nm/Quob/7IndwQiyYXa0uf+dk3LuCURp+4d+Nf8FFZwyzQI2zzpw5PmMKzRF2+ZiFOA01F
+        T854U=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4Sgg-0002jh-Sv; Thu, 14 Mar 2019 15:54:30 +0000
+        id 1h4Sgi-0002jn-IM; Thu, 14 Mar 2019 15:54:32 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 5019E1126E64; Thu, 14 Mar 2019 15:54:30 +0000 (GMT)
+        id 0449C1126E64; Thu, 14 Mar 2019 15:54:31 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: gpio: Convert to devm_regulator_register" to the regulator tree
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: wm8400: Fix trivial typo" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155430.5019E1126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:54:30 +0000 (GMT)
+Message-Id: <20190314155432.0449C1126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:31 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: gpio: Convert to devm_regulator_register
+   regulator: wm8400: Fix trivial typo
 
 has been applied to the regulator tree at
 
@@ -84,76 +85,34 @@ to this mail.
 Thanks,
 Mark
 
-From 7cdc2ee7bf10705f737c22dcd4b002b87849badb Mon Sep 17 00:00:00 2001
+From 178d08ea81b1538ea0b2c432a3ddda53b7fec296 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 8 Mar 2019 14:15:28 +0800
-Subject: [PATCH] regulator: gpio: Convert to devm_regulator_register
+Date: Wed, 27 Feb 2019 13:54:21 +0800
+Subject: [PATCH] regulator: wm8400: Fix trivial typo
 
-Use devm_regulator_register to simplify the code.
+Use WM8400_DC2_ENA_MASK for DCDC2 enable_mask.
+The define is the same as WM8400_DC1_ENA_MASK, just a cleanup.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/gpio-regulator.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ drivers/regulator/wm8400-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
-index 6157001df0a4..967338bf1dc1 100644
---- a/drivers/regulator/gpio-regulator.c
-+++ b/drivers/regulator/gpio-regulator.c
-@@ -36,7 +36,6 @@
- 
- struct gpio_regulator_data {
- 	struct regulator_desc desc;
--	struct regulator_dev *dev;
- 
- 	struct gpio_desc **gpiods;
- 	int nr_gpios;
-@@ -233,6 +232,7 @@ static int gpio_regulator_probe(struct platform_device *pdev)
- 	struct device_node *np = dev->of_node;
- 	struct gpio_regulator_data *drvdata;
- 	struct regulator_config cfg = { };
-+	struct regulator_dev *rdev;
- 	enum gpiod_flags gflags;
- 	int ptr, ret, state, i;
- 
-@@ -326,9 +326,9 @@ static int gpio_regulator_probe(struct platform_device *pdev)
- 	if (IS_ERR(cfg.ena_gpiod))
- 		return PTR_ERR(cfg.ena_gpiod);
- 
--	drvdata->dev = regulator_register(&drvdata->desc, &cfg);
--	if (IS_ERR(drvdata->dev)) {
--		ret = PTR_ERR(drvdata->dev);
-+	rdev = devm_regulator_register(dev, &drvdata->desc, &cfg);
-+	if (IS_ERR(rdev)) {
-+		ret = PTR_ERR(rdev);
- 		dev_err(dev, "Failed to register regulator: %d\n", ret);
- 		return ret;
- 	}
-@@ -338,15 +338,6 @@ static int gpio_regulator_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int gpio_regulator_remove(struct platform_device *pdev)
--{
--	struct gpio_regulator_data *drvdata = platform_get_drvdata(pdev);
--
--	regulator_unregister(drvdata->dev);
--
--	return 0;
--}
--
- #if defined(CONFIG_OF)
- static const struct of_device_id regulator_gpio_of_match[] = {
- 	{ .compatible = "regulator-gpio", },
-@@ -357,7 +348,6 @@ MODULE_DEVICE_TABLE(of, regulator_gpio_of_match);
- 
- static struct platform_driver gpio_regulator_driver = {
- 	.probe		= gpio_regulator_probe,
--	.remove		= gpio_regulator_remove,
- 	.driver		= {
- 		.name		= "gpio-regulator",
- 		.of_match_table = of_match_ptr(regulator_gpio_of_match),
+diff --git a/drivers/regulator/wm8400-regulator.c b/drivers/regulator/wm8400-regulator.c
+index 40c4e6628471..5ce86b92851b 100644
+--- a/drivers/regulator/wm8400-regulator.c
++++ b/drivers/regulator/wm8400-regulator.c
+@@ -194,7 +194,7 @@ static struct regulator_desc regulators[] = {
+ 		.id = WM8400_DCDC2,
+ 		.ops = &wm8400_dcdc_ops,
+ 		.enable_reg = WM8400_DCDC2_CONTROL_1,
+-		.enable_mask = WM8400_DC1_ENA_MASK,
++		.enable_mask = WM8400_DC2_ENA_MASK,
+ 		.n_voltages = WM8400_DC2_VSEL_MASK + 1,
+ 		.vsel_reg = WM8400_DCDC2_CONTROL_1,
+ 		.vsel_mask = WM8400_DC2_VSEL_MASK,
 -- 
 2.20.1
 
