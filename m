@@ -2,113 +2,144 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82970C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0B7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1EF21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:45:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="g/7v0J10"
+	by mail.kernel.org (Postfix) with ESMTP id 3B63A217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfCNGpe (ORCPT
+        id S1726797AbfCNGuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:45:34 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:49800 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfCNGpd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:45:33 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 2355DCFD
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 06:45:32 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id z1vAY8RVD26w for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 01:45:32 -0500 (CDT)
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id E47FECE4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:45:31 -0500 (CDT)
-Received: by mail-io1-f70.google.com with SMTP id e1so3512780iod.23
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=51dtazrixZ+eTQObCrC9HFKq7DKw4LZuxV/HZx2plG4=;
-        b=g/7v0J10GkkTJkla846VfVOOHPFPg1609qo7U3aMMp800yLn1JG9rQizOYcs4nERyx
-         SN/sC9cI/JUKcLNbw+CW72gut9UJ07T8VE/+71mt4e2VXDwkoJj8rX2B+FfYI8zyuTKA
-         NrkLt1lQ4C95J8kScuJBagr3pRqh69YK/KOYe//IhHBNUvi+WSBE8rtS8wP5YmTLnQ9a
-         GxYSfO3/dhTOF/sThWUa1A+6xaFxYZm5xmXuF/jOj9hMEx9V4Qf14jmsVTpxDNHuyKhg
-         iBqxc8X4com/MmnKMAyyNNMRs/l8JJDxoJMFVOgjE4hXPOSrNe61MUJzOiRHuzOMS5s9
-         Ak/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=51dtazrixZ+eTQObCrC9HFKq7DKw4LZuxV/HZx2plG4=;
-        b=ScKt1Dm/NnTKrcnRrXuANaPo/zqwL45tJkXnZR+Ofc4M5nqLgbMfhSKxseDIRPKyS5
-         BXnyx2/4jxjWw09BbFIZlaKFIR1cwyjx4/iHgFL4Lktf4CK2PIiBm+axMDMSWC1sjOwd
-         589uPxtpwOB2TUJ4HRcW6ToNYv0DdL9UGj7TWI/V2chZjpDcJBjAgos573n9L6Ce7q48
-         XRgaJ/a/jlZAtGh0kx614hhZYciYULacW0a0wzwRpBBPVAR2qBsxMjqsDPalHe2TDlrh
-         89dGrzrdHZVGwGFOK8h4Xi5Hpv05GL4M+N6z5fnNtkyGE7KvdeXFEeZWljb2sT9kGYvl
-         8wIg==
-X-Gm-Message-State: APjAAAX8hygSfAe4ECD9vzVgv8QM4f/aP4zK7SsCu3OGiv/HZBE0N4j9
-        d3bjKYDyHiT9T4SWMGR4S9HDAGfJSuGZY8ntVRPV1s0RlR9pdLxFAmPtxEq79bwyTISGkeZ/iXt
-        YD+3YFwmghItFItpYKJ/mKAaT8h4k
-X-Received: by 2002:a5e:c742:: with SMTP id g2mr10631270iop.56.1552545931410;
-        Wed, 13 Mar 2019 23:45:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxX/oyo4XDoCcMN8aT+8XEiJrgGTPAotXMZdKMe4V0JbbeTT5c8zq4YYc0B18MmYfJQuH4LmA==
-X-Received: by 2002:a5e:c742:: with SMTP id g2mr10631266iop.56.1552545931211;
-        Wed, 13 Mar 2019 23:45:31 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id c1sm703711itd.23.2019.03.13.23.45.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 23:45:30 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Vaibhav Agarwal <vaibhav.sr@gmail.com>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] greybus: audio_manager: fix a missing check of ida_simple_get
-Date:   Thu, 14 Mar 2019 01:45:24 -0500
-Message-Id: <20190314064525.15756-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 Mar 2019 02:50:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41975 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbfCNGuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 02:50:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 23:50:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,477,1544515200"; 
+   d="scan'208";a="131528971"
+Received: from xy-skl-4s.sh.intel.com ([10.239.48.75])
+  by fmsmga008.fm.intel.com with ESMTP; 13 Mar 2019 23:50:11 -0700
+From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Cc:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Kyle Huey <khuey@kylehuey.com>, Chao Gao <chao.gao@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kvm/x86/vmx: switch MSR_MISC_FEATURES_ENABLES between host and guest
+Date:   Thu, 14 Mar 2019 14:38:58 +0800
+Message-Id: <20190314063858.18292-1-xiaoyao.li@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ida_simple_get could fail. The fix inserts a check for its
-return value.
+CPUID Faulting is a feature about CPUID instruction. When CPUID Faulting is
+enabled, all execution of the CPUID instruction outside system-management
+mode (SMM) cause a general-protection (#GP) if the CPL > 0.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+About this feature, detailed information can be found at
+https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
+
+There is an issue that current kvm doesn't switch the value of
+MSR_MISC_FEATURES_ENABLES between host and guest. If MSR_MISC_FEATURES_ENABLES
+exists on the hardware cpu, and host enables CPUID faulting (setting the bit 0
+of MSR_MISC_FEATURES_ENABLES), it will impact the guest's behavior because
+cpuid faulting is enabled by host and passed to guest.
+
+From my tests, when host enables cpuid faulting, it causes guest boot failure
+when guest uses *modprobe* to load modules. Below is the error log:
+
+[    1.233556] traps: modprobe[71] general protection fault ip:7f0077f6495c sp:7ffda148d808 error:0 in ld-2.17.so[7f0077f4d000+22000]
+[    1.237780] traps: modprobe[73] general protection fault ip:7fad5aba095c sp:7ffd36067378 error:0 in ld-2.17.so[7fad5ab89000+22000]
+[    1.241930] traps: modprobe[75] general protection fault ip:7f3edb89495c sp:7fffa1a81308 error:0 in ld-2.17.so[7f3edb87d000+22000]
+[    1.245998] traps: modprobe[77] general protection fault ip:7f91d670895c sp:7ffc25fa7f38 error:0 in ld-2.17.so[7f91d66f1000+22000]
+[    1.250016] traps: modprobe[79] general protection fault ip:7f0ddbbdc95c sp:7ffe9c34f8d8 error:0 in ld-2.17.so[7f0ddbbc5000+22000]
+
+*modprobe* calls CPUID instruction thus causing cpuid faulting in guest.
+At the end, because guest cannot *modprobe* modules, it boots failure.
+
+This patch switches MSR_MISC_FEATURES_ENABLES between host and guest when
+hardware has this MSR.
+
+This patch doesn't confict with the commit db2336a80489 ("KVM: x86: virtualize
+cpuid faulting"), which provides a software emulation of cpuid faulting for
+x86 arch. Below analysing how cpuid faulting will work after applying this patch:
+
+1. If host cpu is AMD. It doesn't have MSR_MISC_FEATURES_ENABLES, so we can just
+use the software emulation of cpuid faulting.
+
+2. If host cpu is Intel and it doesn't have MSR_MISC_FEATURES_ENABLES. The same
+as case 1, we can just use the software emulation of cpuid faulting.
+
+3. If host cpu is Intel and it has MSR_MISC_FEATURES_ENABLES. With this patch,
+it will write guest's value into MSR_MISC_FEATURES_ENABLES when vm entry.
+If guest enables cpuid faulting and when guest calls CPUID instruction with
+CPL > 0, it will cause #GP exception in guest instead of VM exit because of
+CPUID, thus it doesn't go to the kvm emualtion path but ues the hardware
+feature. Also it's a benefit that we needn't use VM exit to inject #GP to
+emulate cpuid faulting feature.
+
+Intel SDM vol3.25.1.1 specifies the priority between cpuid faulting
+and CPUID instruction.
+
+Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
 ---
- drivers/staging/greybus/audio_manager.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kvm/vmx/vmx.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/staging/greybus/audio_manager.c b/drivers/staging/greybus/audio_manager.c
-index d44b070d8862..c2a4af4c1d06 100644
---- a/drivers/staging/greybus/audio_manager.c
-+++ b/drivers/staging/greybus/audio_manager.c
-@@ -45,6 +45,9 @@ int gb_audio_manager_add(struct gb_audio_manager_module_descriptor *desc)
- 	int err;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 30a6bcd735ec..90707fae688e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6321,6 +6321,23 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+ 					msrs[i].host, false);
+ }
  
- 	id = ida_simple_get(&module_id, 0, 0, GFP_KERNEL);
-+	if (id < 0)
-+		return id;
++static void atomic_switch_msr_misc_features_enables(struct kvm_vcpu *vcpu)
++{
++	u64 host_msr;
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
 +
- 	err = gb_audio_manager_module_create(&module, manager_kset,
- 					     id, desc);
- 	if (err) {
++	/* if MSR MISC_FEATURES_ENABLES doesn't exist on the hardware, do nothing*/
++	if (rdmsrl_safe(MSR_MISC_FEATURES_ENABLES, &host_msr))
++		return;
++
++	if (host_msr == vcpu->arch.msr_misc_features_enables)
++		clear_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES);
++	else
++		add_atomic_switch_msr(vmx, MSR_MISC_FEATURES_ENABLES,
++				      vcpu->arch.msr_misc_features_enables,
++				      host_msr, false);
++}
++
+ static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
+ {
+ 	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
+@@ -6562,6 +6579,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	atomic_switch_perf_msrs(vmx);
+ 
++	atomic_switch_msr_misc_features_enables(vcpu);
++
+ 	vmx_update_hv_timer(vcpu);
+ 
+ 	/*
 -- 
-2.17.1
+2.19.1
 
