@@ -2,98 +2,112 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAE7C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 01:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4E4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 01:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 175B6217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 01:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14A2213A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 01:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfCNBwz (ORCPT
+        id S1726741AbfCNB52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 21:52:55 -0400
-Received: from mga11.intel.com ([192.55.52.93]:62605 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbfCNBwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 21:52:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 18:52:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,476,1544515200"; 
-   d="scan'208";a="133894538"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.65])
-  by orsmga003.jf.intel.com with ESMTP; 13 Mar 2019 18:52:52 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     huang ying <huang.ying.caritas@gmail.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKP ML <lkp@01.org>
-Subject: Re: [LKP] [ext4] fde872682e: fsmark.files_per_sec -38.0% regression
-References: <20190102004002.GB17624@shao2-debian>
-        <CAC=cRTO8RC0kEz9B-vx5sO=6uXwsu2tE9rd_NKH1XjVRr9easA@mail.gmail.com>
-        <20190313153056.GB672@mit.edu>
-Date:   Thu, 14 Mar 2019 09:52:52 +0800
-In-Reply-To: <20190313153056.GB672@mit.edu> (Theodore Ts'o's message of "Wed,
-        13 Mar 2019 11:30:56 -0400")
-Message-ID: <87h8c66x3f.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 13 Mar 2019 21:57:28 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4679 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726141AbfCNB52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 21:57:28 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 224F6F1C37253045D3E8;
+        Thu, 14 Mar 2019 09:57:25 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Thu, 14 Mar 2019
+ 09:57:20 +0800
+Subject: Re: [RFC PATCH] scsi: fix oops in scsi_uninit_cmd()
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@infradead.org>
+CC:     <martin.petersen@oracle.com>, <jejb@linux.vnet.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <hare@suse.com>,
+        <dan.j.williams@intel.com>, <jthumshirn@suse.de>,
+        Steffen Maier <maier@linux.ibm.com>
+References: <20190219072743.13606-1-yanaijie@huawei.com>
+ <1550595388.31902.133.camel@acm.org> <20190220151836.GA11695@infradead.org>
+ <10ea95ec-e259-3511-44c4-58e4d255eb9f@huawei.com>
+ <1552521077.45180.119.camel@acm.org>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <0043eef5-0be1-a86b-d438-252e4ef274af@huawei.com>
+Date:   Thu, 14 Mar 2019 09:57:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <1552521077.45180.119.camel@acm.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Theodore Ts'o <tytso@mit.edu> writes:
 
- > On Wed, Mar 13, 2019 at 03:26:39PM +0800, huang ying wrote:
->> >
->> >
->> > commit: fde872682e175743e0c3ef939c89e3c6008a1529 ("ext4: force inode writes when nfsd calls commit_metadata()")
->> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->> 
->> It appears that this is a performance regression caused by a
->> functionality fixing.  So we should ignore this?
->
-> Yes, this is a correctness issue that we discovered while tracking
-> down user data loss issue after a crash of the NFS server, so this is
-> a change we have to keep.  When the NFS folks added the
-> commit_metadata() hook, they didn't realize that the fallback path in
-> nfsd/vfs.c using sync_inode_metadata() doesn't work on all file
-> systems --- and in particular doesn't work for ext3 and ext4 because
-> of how we do journalling.
->
-> It only applies to NFS serving, not local ext4 use cases, so most ext4
-> users won't be impacted on it; only those who export those file
-> systems using NFS.
->
-> I do have some plans on how to claw back the performance hit.  The
-> good news is that it won't require an on-disk format change; the bad
-> news is that it's a non-trivial change to how journalling works, and
-> it's not something we can backport to the stable kernel series.  It's
-> something we're going to have to leave to a distribution who is
-> willing to do a lot of careful regression testing, once the change is
-> available, maybe in 3 months or so.
->
->      	 	      	  	      	  - Ted
->
-> P.S.  I *believe* all other file systems should be OK, and I didn't
-> want to impose a performance tax on all other file systems (such as
-> btrfs), so I fixed it in an ext4-specific way.  The more
-> general/conservative change would be to fall back to using fsync in
-> nfs/vfs.c:commit_metadata() unless the file system specifically set a
-> superblock flag indicating that using sync_inode_metadata is safe.
-> OTOH we lived with this flaw in ext3/ext4 for *years* without anyone
-> noticing or complaining, so....
+On 2019/3/14 7:51, Bart Van Assche wrote:
+> On Thu, 2019-02-21 at 16:53 +0800, Jason Yan wrote:
+>> On 2019/2/20 23:18, Christoph Hellwig wrote:
+>>> [fullquote removed, please follow proper mail etiquette]
+>>>
+>>> On Tue, Feb 19, 2019 at 08:56:28AM -0800, Bart Van Assche wrote:
+>>>> regression in the SCSI sd driver due to the switch from the legacy block
+>>>> layer to scsi-mq. The above patch introduces two atomic operations in the
+>>>> hot path and hence would introduce a performance regression. I think this
+>>>> can be avoided by making sure that sd_uninit_command() gets called before
+>>>> the request tag is freed. What changes would be required to make the block
+>>>> layer core call sd_uninit_command() before the request tag is freed? Would
+>>>> introducing prep_rq_fn and unprep_rq_fn callbacks in struct blk_mq_ops and
+>>>> making sure that the SCSI core sets these callback function pointers
+>>>> appropriately be sufficient? Would such a change allow to simplify the NVMe
+>>>> initiator driver? Are there any alternatives to this approach that are more
+>>>> elegant?
+>>>
+>>> Additional indirect calls in the I/O fast path is something I'd rather
+>>> avoid.  But I don't fully understand the problem yet - where do
+>>> we release a disk reference from blk_update_request?
+>>
+>> When userspace close the fd after blk_update_request() and before
+>> scsi_mq_uninit_cmd(), a disk reference will be released. It is not the
+>> blk_update_request() directly released it.
+>>
+>> close
+>>      ->sd_release
+>>         ->scsi_disk_put
+>>           ->scsi_disk_release
+>>             ->disk->private_data = NULL;
+>>
+>> The userspace can close the fd because blk_update_request() returned the
+>> last IO , the userspace application does not have to stuck on read() or
+>> write(). The window is very small, but it can be reproduce every day
+>> in our testcases. So I'm very curious why. One possible explanation is
+>> that we enabled kernel preempt(CONFIG_PREEMPT).
+>>
+>> And why can't we move that release to __blk_mq_end_request?
+> 
+> Hi Jason,
+> 
+> What is the current status of this issue?
+> 
 
-Got it!  Thanks for your detailed explanation!
+Hi Bart,
 
-Best Regards,
-Huang, Ying
+I did not find any other approach that will not affect the hot path. I 
+don't know if you guys have other suggestions?
+
+> Thanks,
+> 
+> Bart.
+> 
+> .
+> 
+
