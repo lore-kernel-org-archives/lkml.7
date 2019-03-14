@@ -2,214 +2,152 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D571C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1140C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18FB721019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E68A21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:37:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjJCru1a"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Ut1VptzT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfCNKcY (ORCPT
+        id S1727263AbfCNKhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:32:24 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36612 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfCNKcY (ORCPT
+        Thu, 14 Mar 2019 06:37:19 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36735 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfCNKhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:32:24 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v10so4327449lji.3;
-        Thu, 14 Mar 2019 03:32:21 -0700 (PDT)
+        Thu, 14 Mar 2019 06:37:18 -0400
+Received: by mail-ed1-f68.google.com with SMTP id e4so4172952edi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 03:37:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7O+dLdFq/mvb4A56YlPPGJkeVTKEdQbk9vN9uHyNE4Q=;
-        b=pjJCru1auQChh1wGkQiSQg6dT++kvXxYKecbIcOv8yOmzJOiB4PUix/ryRPkMCkucZ
-         4Uywde7C6tihMsreOivvr5tNs3/UHzEblH8RfRz4jdklVNp47ETHySNEXIFQV+LpZXzK
-         wd5H4KhfA57oo5Ei0xhzHqU5wv6GjWrn+vaLjyBv7BiJuWi//BoErZjtrfIA1I7rBLAV
-         ldCBdGINorrtLfl+uTFncVBlKXsRxInAd7i2UQR6Sz56caw5tgQEwrrNS8uxnObtsxCU
-         pLK07a4/FpZOaoTRCNtgdxE3p6lmQgC16/0g9UNeBp7ObvuTX+N2TV52HtTBsw47geL9
-         3zOA==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j4Sp/d45kuPj/bu/0V+pPpceqHIOF3OeyYxUYryeLEA=;
+        b=Ut1VptzTQxgk5faZTZjdxL78ERFrBuRlrvAh1uiwNLcsoAGouzCIx9sigi1E5YprFF
+         xoLUkHapYADAAG/h3f/E3hsG0rzOyynEcjPnwCgw3L5Y1fgIMUHtPCL1RoU2w6wKqwxa
+         0VPEAYSDVwc2MvvhKtIFzbB5Y18YLyjZuTpIA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7O+dLdFq/mvb4A56YlPPGJkeVTKEdQbk9vN9uHyNE4Q=;
-        b=UywaLjs+hBhoL/MgwuC3Fwnt1jJ6Vc3iquS+Ocp3UhkyfIrwclH70SWdEZiHy8H0xF
-         QMhOkxNmIoHIpAbKWkcbTdst6AUMhHZN9Q2fdUqk3WM0WQngL6HRKpg2WDD75kb/I/lO
-         pS9YfkhdA0nTwkYYC/r0a1hL9moXzYgNKv7rOkxLUyH3klVJjv29hutT0c4mGybaRhe0
-         xsR6PZT+3wav9FZHRu0cHpp/bciFTaAfSf8X/QBq8QVuspRL9KA7r2d5g3vj97ok8uhw
-         mF3XPyVch5wpF4omwdfVZrurB0SCE7bLhqdJDskaQkv3IkEo3yGxwyfH9FsYPuZHjFr6
-         SK1g==
-X-Gm-Message-State: APjAAAXjjNgR0PUBa7YhXJiiScAruB3SwFOEDY+0paTiEv7NRIX6q6Ty
-        ZnfQIvq2BcKSk1LT6TTaHUFKmM90
-X-Google-Smtp-Source: APXvYqxlEJQrNmcYdbqVe3nX2SJr7b4eg/tXhjQinFM0gfFL4crSFhmoyJ2HUSmNpjsODe4nXSXIbw==
-X-Received: by 2002:a2e:7817:: with SMTP id t23mr698044ljc.174.1552559540735;
-        Thu, 14 Mar 2019 03:32:20 -0700 (PDT)
-Received: from [192.168.1.18] (ckl5.neoplus.adsl.tpnet.pl. [83.31.87.5])
-        by smtp.gmail.com with ESMTPSA id f1sm2342330ljf.40.2019.03.14.03.32.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 03:32:20 -0700 (PDT)
-Subject: Re: [PATCH 4/4] leds: netdev trigger: allow setting initial values in
- device tree
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Pavel Machek <pavel@ucw.cz>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20190311144227.GA4404@amd>
- <20190313202615.22883-1-linux@rasmusvillemoes.dk>
- <20190313202615.22883-5-linux@rasmusvillemoes.dk>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <98fda0ee-555d-86a5-a4f1-1774271e4b6d@gmail.com>
-Date:   Thu, 14 Mar 2019 11:32:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=j4Sp/d45kuPj/bu/0V+pPpceqHIOF3OeyYxUYryeLEA=;
+        b=PgOWQWA0VmSAKBlMWkazhSRL9Qo+cP7yuhvbkAkslsMSLM8vjGfjWe2qjqAxsE++0w
+         5yH6ogDnLpACzM8baIXLxckxvn2t99FC4K7H3MXkCBSOqZdgxOkHVNhbfdA1eB97XQbK
+         ZWjeyQrgrZVmH1/y0IGjeUM5ELE8BXNZKxP8FL55c+cDWqFVIfyt9MhX42YLHRyH0SOr
+         9YwHa1GMu5uqEGoPClqCRz6hJ5SIdpOpm6seNlrahxyMDWaIPZkgT52QNT2/Borjer9a
+         0GYV8BXBSFYlsLqhHjGUUlKOZzHdI+hvDM/DJ8/65KAsL/lH9tU7i7zSjqHu3gi2wha6
+         MIcQ==
+X-Gm-Message-State: APjAAAX1JRGf/1JN6LXHyU0IPB/ZBlCdH3+skwWBQmZ8gP0PP0Rxw4ny
+        VRQ45QnG22vvqTRuEx2sT/X81g==
+X-Google-Smtp-Source: APXvYqwuvhZkg2jbNhCgjFebmEZj6HXKP8ziVQswTD0LRslUPIDO6z5kfrCQBxoGRP52osxl9nyDcg==
+X-Received: by 2002:a50:add2:: with SMTP id b18mr11156749edd.43.1552559836346;
+        Thu, 14 Mar 2019 03:37:16 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id me7sm1005449ejb.46.2019.03.14.03.37.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 03:37:15 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 11:37:13 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RfC PATCH] fbdev: list all memory bars as conflicting apertures
+Message-ID: <20190314103713.GQ2665@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190313110741.6541-1-kraxel@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190313202615.22883-5-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313110741.6541-1-kraxel@redhat.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
-
-Thank you for the patch set.
-
-I have one comment below.
-
-On 3/13/19 9:26 PM, Rasmus Villemoes wrote:
-> It can be quite convenient to initialize a netdev-triggered LED with a
-> device name and setting the rx,tx,link properties from device tree,
-> instead of having to do that in an init script in userspace.
+On Wed, Mar 13, 2019 at 12:07:41PM +0100, Gerd Hoffmann wrote:
+> Simply add all pci memory bars to struct apertures_struct in
+> remove_conflicting_pci_framebuffers().  That allows to drop
+> the res_id parameter.
 > 
-> My main motivation for this is to be able to switch away from the
-> deprecated CONFIG_CAN_LEDS, so add an example based on that and add a
-> pointer in the net/can/Kconfig file.
+> TODO: actually remove the res_id parameter.
+
+I think best to do that in a cleanup patch afterwards.
 > 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 > ---
->   .../devicetree/bindings/leds/common.txt       | 17 ++++++++++
->   drivers/leds/trigger/ledtrig-netdev.c         | 31 +++++++++++++++++++
->   drivers/net/can/Kconfig                       |  3 +-
->   3 files changed, 50 insertions(+), 1 deletion(-)
+>  drivers/video/fbdev/core/fbmem.c | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 7cb88460a47c..4f3a97e73417 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -43,6 +43,23 @@ Optional properties for child nodes:
->                   Documentation/ABI/testing/sysfs-class-led-trigger-netdev)
->                   to reflect the state and activity of a net device.
->   
-> +                The optional child node netdev can be used to
-> +                configure initial values for the link, rx, tx and
-> +                device_name properties. For example, setting
-> +                linux,default-trigger = "netdev" and adding the child
-> +                node
-> +
-> +                netdev {
-> +                    rx;
-> +                    tx;
-> +                    link;
-> +                    device-name = "can0";
-> +                };
-> +
-> +                can be used to replace 'linux,default-trigger =
-> +                "can0-rxtx"' that relies on the deprecated
-> +                CONFIG_CAN_LEDS.
-> +
->   - led-pattern : Array of integers with default pattern for certain triggers.
->                   Each trigger may parse this property differently:
->                   - one-shot : two numbers specifying delay on and delay off (in ms),
-> diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-> index 55153a7e8433..1f7c86df1e91 100644
-> --- a/drivers/leds/trigger/ledtrig-netdev.c
-> +++ b/drivers/leds/trigger/ledtrig-netdev.c
-> @@ -20,6 +20,7 @@
->   #include <linux/list.h>
->   #include <linux/module.h>
->   #include <linux/netdevice.h>
-> +#include <linux/of.h>
->   #include <linux/spinlock.h>
->   #include <linux/timer.h>
->   #include "../leds.h"
-> @@ -395,6 +396,35 @@ static void netdev_trig_work(struct work_struct *work)
->   			(atomic_read(&trigger_data->interval)*2));
->   }
->   
-> +static void netdev_trig_of_init(struct led_classdev *led_cdev,
-> +				struct led_netdev_data *trigger_data)
-> +{
-> +	struct device_node *np = led_cdev->dev->of_node;
-> +	const char *device_name;
-> +
-> +	if (!np)
-> +		return;
-> +	np = of_get_child_by_name(np, "netdev");
-> +	if (!np)
-> +		return;
-> +
-> +	if (of_property_read_bool(np, "link"))
-> +		__set_bit(NETDEV_LED_LINK, &trigger_data->mode);
-> +	if (of_property_read_bool(np, "tx"))
-> +		__set_bit(NETDEV_LED_TX, &trigger_data->mode);
-> +	if (of_property_read_bool(np, "rx"))
-> +		__set_bit(NETDEV_LED_RX, &trigger_data->mode);
-> +	if (!of_property_read_string(np, "device-name", &device_name)) {
-> +		unsigned len = strlen(device_name);
-> +
-> +		if (len < IFNAMSIZ)
-> +			set_device(trigger_data, device_name, len);
+> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+> index cb43a2258c51..e8223c231de2 100644
+> --- a/drivers/video/fbdev/core/fbmem.c
+> +++ b/drivers/video/fbdev/core/fbmem.c
+> @@ -1879,14 +1879,28 @@ int remove_conflicting_pci_framebuffers(struct pci_dev *pdev, int res_id, const
+>  {
+>  	struct apertures_struct *ap;
+>  	bool primary = false;
+> -	int err;
+> +	int err, idx, cnt, bar;
+>  
+> -	ap = alloc_apertures(1);
+> +	for (cnt = 0, bar = 0; bar < PCI_ROM_RESOURCE; bar++) {
+> +		if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM))
+> +			continue;
+> +		cnt++;
 > +	}
-> +	set_baseline_state(trigger_data);
 > +
-> +	of_node_put(np);
-> +}
-> +
->   static int netdev_trig_activate(struct led_classdev *led_cdev)
->   {
->   	struct led_netdev_data *trigger_data;
-> @@ -418,6 +448,7 @@ static int netdev_trig_activate(struct led_classdev *led_cdev)
->   	trigger_data->mode = 0;
->   	atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
->   	trigger_data->last_activity = 0;
-> +	netdev_trig_of_init(led_cdev, trigger_data);
+> +	ap = alloc_apertures(cnt);
+>  	if (!ap)
+>  		return -ENOMEM;
+>  
+> -	ap->ranges[0].base = pci_resource_start(pdev, res_id);
+> -	ap->ranges[0].size = pci_resource_len(pdev, res_id);
+> +	for (idx = 0, bar = 0; bar < PCI_ROM_RESOURCE; bar++) {
+> +		if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM))
+> +			continue;
+> +		ap->ranges[idx].base = pci_resource_start(pdev, bar);
+> +		ap->ranges[idx].size = pci_resource_len(pdev, bar);
+> +		pci_info(pdev, "%s: bar %d: 0x%lx -> 0x%lx\n", __func__, bar,
+> +			 (unsigned long)pci_resource_start(pdev, bar),
+> +			 (unsigned long)pci_resource_end(pdev, bar));
+> +		idx++;
+> +	}
 
-You want to execute this only if recently introduced flag
-LED_INIT_DEFAULT_TRIGGER is set. Please compare how
-drivers/leds/trigger/ledtrig-pattern.c uses it.
+lgtm. I think this is ok to merge as-is already ...
 
->   
->   	led_set_trigger_data(led_cdev, trigger_data);
->   
-> diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
-> index e0f0ad7a550a..91703a96b636 100644
-> --- a/drivers/net/can/Kconfig
-> +++ b/drivers/net/can/Kconfig
-> @@ -77,7 +77,8 @@ config CAN_LEDS
->   	# everything that this driver is doing. This is marked as broken
->   	# because it uses stuff that is intended to be changed or removed.
->   	# Please consider switching to the netdev trigger and confirm it
-> -	# fulfills your needs instead of fixing this driver.
-> +	# fulfills your needs instead of fixing this driver. See e.g.
-> +	# Documentation/devicetree/bindings/leds/common.txt
->   	depends on BROKEN
->   	select LEDS_TRIGGERS
->   	---help---
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+Maybe if you want to be paranoid in the conversion add a check that we're
+not skipping the pci bar requested in res_id. Then we could test this for
+a kernel and remove the parameter later on.
+-Daniel
+
+
+>  #ifdef CONFIG_X86
+>  	primary = pdev->resource[PCI_ROM_RESOURCE].flags &
+>  					IORESOURCE_ROM_SHADOW;
+> -- 
+> 2.18.1
 > 
 
 -- 
-Best regards,
-Jacek Anaszewski
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
