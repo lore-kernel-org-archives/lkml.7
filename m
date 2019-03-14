@@ -2,135 +2,125 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC2DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364C8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD3E2063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A912063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 11:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qg0Upq0j"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="SCe7d/FG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfCNLGt (ORCPT
+        id S1727451AbfCNLH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 07:06:49 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41469 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfCNLGs (ORCPT
+        Thu, 14 Mar 2019 07:07:28 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35904 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbfCNLH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 07:06:48 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k11so3719247pgb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:06:48 -0700 (PDT)
+        Thu, 14 Mar 2019 07:07:27 -0400
+Received: by mail-lf1-f66.google.com with SMTP id d18so3913204lfn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 04:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=dDpta30jYLNKF7mHLIZXQMhcyv7dkmDy6qiilMUlgNY=;
-        b=qg0Upq0jLvULMOwFu0QqrcExCbpgeGAFck4cpAGMfSMae4olbUVvqFGX5H6rszL0GD
-         Eazcbr7+WWVwiMyzT4KGFo6wy/qGb0u9hRkoQ8AHdtafW5yAo5C3pBPvPdQM6kvECJrp
-         ihbUYEWyUyWywmlbPwPcbWFv134JPlxjhB6sdEW1QRKxESzUuIiPkdoaf1yJEdKjgdo7
-         nHqcLC+biYyG7xdFsW2DiApSE8lFh/Lzk3+H8EENXT4Xp3PKSWwAzHv3fTOw9effgiKV
-         jEoPbz7kXu0+19S+GVOO0SugxanKeeF4putCQGQLQwZ04L4kHYnaEt+8rut9NQEFNKQ3
-         oslQ==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FEbkt1SNF3ru+IYVGJ38lijFQry78UHQKpKjHvW6nH0=;
+        b=SCe7d/FGSOCnW71v9V1hW+2z+1uqMYF65vMTUwJrBnJHesbi9A27BuPSp/6JLgUXFB
+         rY64Mhsodv+Q/mQ8PcatDeWLpKFg5PI/86rwgH/u3nMYYuPiQQqqTOyPfHcrgXUq3mRj
+         yAOHDse9iu7iLl4s7JMF/9q8ParKhSxjXBLdA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=dDpta30jYLNKF7mHLIZXQMhcyv7dkmDy6qiilMUlgNY=;
-        b=tjmwFKA1oFA9+lvMpmPoYgrC+2V2BHTExb/8F9NAEVs0DWet6kzASD75/kBwOL9doQ
-         RrZZNnt7qaDHNRMaBUrw4yplicuRntUJIiRavLjwTrKm068f5Wkfxu2YT+vfYj7+hiHh
-         jzVJo/iArYcfRLRXWwG2rQA9KDbILSiShHs3geSwkAiHGF3bRdxpu5HqTYzuXqRCA8jR
-         CUtVHxp4fstQ04XVroeQnylMfG4soE29eClX+JHeIeoT/c7rLbKn6/87Vt3OoD2wkAA1
-         gaIfb9ktAWLVCe8lb8U1hlmh4STEwt979zYGPXkbT6E2WWpwrmJRUNhPP/ch3ef5x5IU
-         xYMA==
-X-Gm-Message-State: APjAAAUoGoF9hVzxQgF5YIVpVkIAK4RscE+gwzovlnV7o+PnD655KFyq
-        spkGsCj/9sqKpu3Bz12l3O8=
-X-Google-Smtp-Source: APXvYqy4RS+bxR506y0XuvByBPnIl58NXLP8IhUhzOa/Zpg3bff6IB+yfFHI8pYokkVNxk/1Z81FKw==
-X-Received: by 2002:a65:4549:: with SMTP id x9mr45326928pgr.3.1552561607767;
-        Thu, 14 Mar 2019 04:06:47 -0700 (PDT)
-Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id g12sm14364692pfd.72.2019.03.14.04.06.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 14 Mar 2019 04:06:47 -0700 (PDT)
-From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
-To:     Chintan Pandya <cpandya@codeaurora.org>,
-        David Rientjes <rientjes@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] driver : staging : ion: optimization for decreasing memory fragmentaion
-Date:   Thu, 14 Mar 2019 19:06:39 +0800
-Message-Id: <1552561599-23662-1-git-send-email-huangzhaoyang@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FEbkt1SNF3ru+IYVGJ38lijFQry78UHQKpKjHvW6nH0=;
+        b=ubnhQhcQoKZ6p4ki+69ocU2oyea/tnqqBLKBa9HYsltEY7wu73XONI8pK3f5r6R1DD
+         HX/NObW2FFLWfmHNwtK5cC4ya4jCaGy1y9dXJvn/2729ii/LIGD14VqT8wjTvIu1HSLo
+         D2aurPAz91HHZRCvisuyo+lLyWNM0BArzZv+waCeJvEFqFmmhtP7KYTgrHLZytCaibdF
+         qi1K+qOr3RvfZVGX9srF8TLn4nS/XdTMQjPNObrtjDP8czUgOPI4lfPkDeF+8EVIGAA1
+         56tdkvYFXjTLJA13yIAb7kZHMrXcVn+NCCbaq/yn91mlzNCT/39KUMe4XPJrl9q19AsO
+         E7AA==
+X-Gm-Message-State: APjAAAUxkgpQ7TcRZczQPXAmk2rD2IoyitZml/JQr75eXdd21qm37gWX
+        /QPCIpb7XBYVMBlXhHLcaQELIs39uN1mxHrTZEs=
+X-Google-Smtp-Source: APXvYqywWNSWvJPPec/wwIRMd4owWVSgiRsK8TcCSKz9ZC3EbMR1gCemkFuxhobCN0EXBHXO9CKEig==
+X-Received: by 2002:ac2:41cb:: with SMTP id d11mr27144758lfi.3.1552561644554;
+        Thu, 14 Mar 2019 04:07:24 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id g20sm785870lfg.97.2019.03.14.04.07.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 04:07:24 -0700 (PDT)
+Subject: Re: [PATCH v4] lib/string.c: implement a basic bcmp
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Nick Desaulniers' <ndesaulniers@google.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Cc:     "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Y Knight <jyknight@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <7549EE7E-4172-467D-815A-63664A33D410@goodmis.org>
+ <20190313211335.165605-1-ndesaulniers@google.com>
+ <953400721b6c4b869b9278c44e0aa796@AcuMS.aculab.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <2899ec10-2ab6-d3a3-37f5-d52395c03a8e@rasmusvillemoes.dk>
+Date:   Thu, 14 Mar 2019 12:07:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <953400721b6c4b869b9278c44e0aa796@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+On 14/03/2019 10.57, David Laight wrote:
+> From: Nick Desaulniers
+>> Sent: 13 March 2019 21:14
+> ...
+>> diff --git a/include/linux/string.h b/include/linux/string.h
+>> index 7927b875f80c..6ab0a6fa512e 100644
+>> --- a/include/linux/string.h
+>> +++ b/include/linux/string.h
+>> @@ -150,6 +150,9 @@ extern void * memscan(void *,int,__kernel_size_t);
+>>  #ifndef __HAVE_ARCH_MEMCMP
+>>  extern int memcmp(const void *,const void *,__kernel_size_t);
+>>  #endif
+>> +#ifndef __HAVE_ARCH_BCMP
+>> +extern int bcmp(const void *,const void *,__kernel_size_t);
+>> +#endif
+> 
+> Shouldn't that prototype always be present?
 
-Two action for this patch:
-1. set a batch size for system heap's shrinker, which can have it buffer
-reasonable page blocks in pool for future allocation.
-2. reverse the order sequence when free page blocks, the purpose is also
-to have system heap keep as more big blocks as it can.
+Yes and no. The problem is that asm/string.h may decide to implement
+bcmp (or memcpy, memset, strcpy, ...) as a macro, which would break
+rather badly when used to declare the function. And we can't undef the
+macro temporarily. So I think the convention is that asm/string.h
+provides the prototype before it #defines the macro, see e.g.
+arch/x86/include/asm/string_32.h which has a #define of memcpy.
 
-By testing on an android system with 2G RAM, the changes with setting
-batch = 48MB can help reduce the fragmentation obviously and improve
-big block allocation speed for 15%.
+There is a fix for the "may be defined as a function-like macro", which is
 
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
----
- drivers/staging/android/ion/ion_heap.c        | 12 +++++++++++-
- drivers/staging/android/ion/ion_system_heap.c |  2 +-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+extern int (bcmp)(const void *,const void *,__kernel_size_t);
 
-diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
-index 31db510..9e9caf2 100644
---- a/drivers/staging/android/ion/ion_heap.c
-+++ b/drivers/staging/android/ion/ion_heap.c
-@@ -16,6 +16,8 @@
- #include <linux/vmalloc.h>
- #include "ion.h"
- 
-+unsigned long ion_heap_batch = 0;
-+
- void *ion_heap_map_kernel(struct ion_heap *heap,
- 			  struct ion_buffer *buffer)
- {
-@@ -303,7 +305,15 @@ int ion_heap_init_shrinker(struct ion_heap *heap)
- 	heap->shrinker.count_objects = ion_heap_shrink_count;
- 	heap->shrinker.scan_objects = ion_heap_shrink_scan;
- 	heap->shrinker.seeks = DEFAULT_SEEKS;
--	heap->shrinker.batch = 0;
-+	heap->shrinker.batch = ion_heap_batch;
- 
- 	return register_shrinker(&heap->shrinker);
- }
-+
-+static int __init ion_system_heap_batch_init(char *arg)
-+{
-+	 ion_heap_batch = memparse(arg, NULL);
-+
-+	return 0;
-+}
-+early_param("ion_batch", ion_system_heap_batch_init);
-diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
-index 701eb9f..d249f8d 100644
---- a/drivers/staging/android/ion/ion_system_heap.c
-+++ b/drivers/staging/android/ion/ion_system_heap.c
-@@ -182,7 +182,7 @@ static int ion_system_heap_shrink(struct ion_heap *heap, gfp_t gfp_mask,
- 	if (!nr_to_scan)
- 		only_scan = 1;
- 
--	for (i = 0; i < NUM_ORDERS; i++) {
-+	for (i = NUM_ORDERS - 1; i >= 0; i--) {
- 		pool = sys_heap->pools[i];
- 
- 		if (only_scan) {
--- 
-1.9.1
+I'd like to see that used rather than the ad hoc convention, but it is
+of course somewhat unconventional C.
 
+Rasmus
