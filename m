@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1916C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7AFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C4B2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D514A2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfCNWgY (ORCPT
+        id S1728287AbfCNWfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:36:24 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:55051 "EHLO
+        Thu, 14 Mar 2019 18:35:25 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:33887 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728299AbfCNWf2 (ORCPT
+        with ESMTP id S1727448AbfCNWfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:35:28 -0400
+        Thu, 14 Mar 2019 18:35:18 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N2VGj-1guDas0JF1-013tPv; Thu, 14 Mar 2019 23:34:53 +0100
+ 1N5W4y-1gxEOp193a-016wDW; Thu, 14 Mar 2019 23:35:05 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,64 +37,81 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 22/45] drivers: tty: serial: altera_uart: use devm_* functions
-Date:   Thu, 14 Mar 2019 23:33:52 +0100
-Message-Id: <1552602855-26086-23-git-send-email-info@metux.net>
+Subject: [PATCH v2 35/45] drivers: tty: serial: lpc32xx_hs: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:34:05 +0100
+Message-Id: <1552602855-26086-36-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:HRcMubCl3N0QCtdhqoBNq0bPoJCbZHNiTmEpSNwwLRZVYnt2ZMx
- jUx1m4mQpcGoYURsig0O/V4XNZY3cW0ETmLEJO181v9/Phz7JS13acIuMZJXS2kVgeCDC0e
- rCQDk9V0Sr8dqk4fgIWphZNEiZMC9v9PkGsJwYowXf2tukaPvdV5AsU5QoTedKYHXyR9w25
- T3HqZcufo578vTzTzuIsA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lpRqgLeb8zc=:sNipjjzqP8wdzFQL6Kw4vZ
- MSDB6yhuOSOfxVhWGKozjrCOY1WswqY7E+cMjEZ9JI+EZA2q6s6ZNUzB5Z0CQZnUMG1MimHmE
- wF8us2SJRAsBrBCw3i8j0cFtULXuwTzhWQJqeibknIFxtUsnfYXKM6ARtSgnj1OaM16cuqtZM
- klcjsNMSExmysWWLiGmqGmEt8CraYu25yutjQbLArR4cV3sIittiav51rKJ8XFkQRCwT9s5EI
- wU2VP79xIRiqTc7NpPIer1L/k8hLq5wV5AgzsMpbOsGCmJ4dJgtAivXp/97tQcAo0BBR3qwq/
- ln1m6hl3JYIpjMvE7s30grv/9HV3vcNE0OK8RTK+6ydQiHWS2vpscS+My9IItuhbzhvTpRmPb
- GL9nwGUGXTbYRdZaKvjSM/qJR3grbl9f0lvO7aqPg0Fmh+I7Mq6ZliNNY2/1eC0XeCLApGdPL
- HAIA7XNK5euFkmrnd7rdiGs1YCC8JPlv5CgghK6PI7xhW/ORoncvdxVjDQz2QW3QrMOF1gFiE
- +sDWYBtjGemcUtTfaCSLaKSGqKd1rS40qqiqZobymHCQV32ywtXcDLSSW7TI56c3iSgUUTXEy
- FLYD9mQYh6w3kHL/oG8SdVg93Xv95W4PJbj6Onub32os097Rd6fXeOA0odkkugrNZvZ5rdK7b
- NTLbTTiuYYijV2/ZlLH/qq6gJnxoImCjA/+GU3qu6+vNuIj4RvV5ZSqNFBgk32e+rojN8xTQV
- rBRXLv1d9wm7LwRS8b0kkH1tXHF8kb7tuoLQeg==
+X-Provags-ID: V03:K1:te4TBOLd0AsObsYwaKbuq3GQUSFWyyoYsWbEecdVNIqZj5kp8kI
+ QFrPLrflaxNteCN3YD3usBroa57u0rrRiGZp0ReH5gzoRB8gM15rA3a0NDzkIIP+k5/yDlh
+ LvR36Mr04OkvDGUp31Kzuz5czxwmL6ukyf9lXFg76Y2owmPk2zC4xjAcl4EJPSkMPPRVY8d
+ n4jk04eYTqRikCqVJesuQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AX6cckKTnAg=:ICZlOILXa9RJlGaLMOdLrX
+ COPAoGd0JasjPiu1Y71B/lNhZb7Be8bqw8kMB99yWM6jfXqQ7pnioaIpRKK6hj4uLdCR7QOwX
+ Df7FOi1yUBKW1wRFtuJD94z8EhRL/tCsdQlFZE3CdL1dCg9Cq/AlXBuHYm8I6vs+X8g9BTurv
+ e2vhSH1Op2irGi7MsVsWUXBEZ8QZdX3OVB8FJWcgzmk6a3WPF9NWvYX4usLaoUlAlzzIvFNkc
+ 9+h7XcC7vLtxsQU1D8xLfeF7yd1Wz6+sFnSaUbDLpvJ6TV0ziHhY8BGusjSk1ViNmhXqg0IkW
+ ueHfNLuwzGc0ZiiAdW5YBZt58dxVubV9VR3ibEiJqyJYwauMGdUGlXqqtTLZ77sCZFnuS03Vq
+ EbfYP1HsmI048YVxalqLTntJZSXZXmZCYqhAIopsSGu9FiUeGeQdiwBa3t35dFFXNpEpOO8lH
+ DdXE0NP1vsCHDm+0/IRug+aVM97iTaa/krVAB8Whk+XZT541V47uuF4DqSgFPO7wvh1GLujqC
+ NxSvS4ixdNEoFk79SmlU/agoAKeUWYNp+fstqhOH9yaBZvbMCx/v+q6WHifd21cOiWVGm0KqU
+ gPUefBZtFuJGl9yppjVqykWPmQKJCsBcnjmtvrmHK0meZ4dPs2+gNwhwWFayLLZxzTEFI1Q8S
+ 9FE8c1olRhlmn4mbE+P/M8gCxph4b5nR1R/WIQ/ShFcoB2uubZl5um/y0XHo9I6GXKT3u3luX
+ GbS3nwowSy/89EsnNQ07BoAKR+e/y+pvb7+EsQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Use the safer devm versions of memory mapping functions.
-The iounmap() call isn't necessary anymore, as devm will clean up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/altera_uart.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/tty/serial/lpc32xx_hs.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/altera_uart.c b/drivers/tty/serial/altera_uart.c
-index 0e487ce..d4f7150 100644
---- a/drivers/tty/serial/altera_uart.c
-+++ b/drivers/tty/serial/altera_uart.c
-@@ -595,7 +595,9 @@ static int altera_uart_probe(struct platform_device *pdev)
- 			return ret;
+diff --git a/drivers/tty/serial/lpc32xx_hs.c b/drivers/tty/serial/lpc32xx_hs.c
+index f4e27d0..0bb86d7 100644
+--- a/drivers/tty/serial/lpc32xx_hs.c
++++ b/drivers/tty/serial/lpc32xx_hs.c
+@@ -575,11 +575,11 @@ static void serial_lpc32xx_release_port(struct uart_port *port)
+ {
+ 	if ((port->iotype == UPIO_MEM32) && (port->mapbase)) {
+ 		if (port->flags & UPF_IOREMAP) {
+-			iounmap(port->membase);
++			devm_iounmap(port->dev, port->membase);
+ 			port->membase = NULL;
+ 		}
+ 
+-		release_mem_region(port->mapbase, SZ_4K);
++		devm_release_mem_region(port->dev, port->mapbase, SZ_4K);
  	}
+ }
  
--	port->membase = ioremap(port->mapbase, ALTERA_UART_SIZE);
-+	port->membase = devm_ioremap(port->dev,
-+				     port->mapbase,
-+				     ALTERA_UART_SIZE);
- 	if (!port->membase)
- 		return -ENOMEM;
+@@ -590,12 +590,19 @@ static int serial_lpc32xx_request_port(struct uart_port *port)
+ 	if ((port->iotype == UPIO_MEM32) && (port->mapbase)) {
+ 		ret = 0;
  
-@@ -625,7 +627,6 @@ static int altera_uart_remove(struct platform_device *pdev)
- 	if (port) {
- 		uart_remove_one_port(&altera_uart_driver, port);
- 		port->mapbase = 0;
--		iounmap(port->membase);
- 	}
- 
- 	return 0;
+-		if (!request_mem_region(port->mapbase, SZ_4K, MODNAME))
++		if (!devm_request_mem_region(port->dev,
++					     port->mapbase,
++					     SZ_4K,
++					     MODNAME))
+ 			ret = -EBUSY;
+ 		else if (port->flags & UPF_IOREMAP) {
+-			port->membase = ioremap(port->mapbase, SZ_4K);
++			port->membase = devm_ioremap(port->dev,
++						     port->mapbase,
++						     SZ_4K);
+ 			if (!port->membase) {
+-				release_mem_region(port->mapbase, SZ_4K);
++				devm_release_mem_region(port->dev,
++							port->mapbase,
++							SZ_4K);
+ 				ret = -ENOMEM;
+ 			}
+ 		}
 -- 
 1.9.1
 
