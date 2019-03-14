@@ -2,63 +2,54 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AF9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6D4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF292085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCEB21852
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfCNOMu (ORCPT
+        id S1727607AbfCNOMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:12:50 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45256 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbfCNOMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:12:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4017E80D;
-        Thu, 14 Mar 2019 07:12:49 -0700 (PDT)
-Received: from [10.37.12.84] (unknown [10.37.12.84])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAC713F59C;
-        Thu, 14 Mar 2019 07:12:45 -0700 (PDT)
-Subject: Re: [Xen-devel] xen: Can't insert balloon page into VM userspace (WAS
- Re: [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
-To:     Juergen Gross <jgross@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     k.khlebnikov@samsung.com,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        osstest service owner <osstest-admin@xenproject.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Julien Freche <jfreche@vmware.com>,
-        Nadav Amit <namit@vmware.com>, xen-devel@lists.xenproject.org
-References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
- <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
- <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
- <20190312171421.GJ19508@bombadil.infradead.org>
- <e0b64793-260d-5e70-0544-e7290509b605@redhat.com>
- <45323ea0-2a50-8891-830e-e1f8a8ed23ea@citrix.com>
- <f4b40d91-9c41-60ed-6b4e-df47af8e5292@oracle.com>
- <9a40e1ff-7605-e822-a1d2-502a12d0fba7@redhat.com>
- <6f8aca6c-355b-7862-75aa-68fe566f76fb@redhat.com>
- <ec71c03e-987d-2b73-9fe6-2604a3c32017@suse.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <cb525882-b52f-c142-8a6a-e5cb491e05d0@arm.com>
-Date:   Thu, 14 Mar 2019 14:12:43 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 14 Mar 2019 10:12:53 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:27348 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727572AbfCNOMv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 10:12:51 -0400
+Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2EECm0H079546;
+        Thu, 14 Mar 2019 23:12:48 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp);
+ Thu, 14 Mar 2019 23:12:48 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2EECmbv079543
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 14 Mar 2019 23:12:48 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+X-Mozilla-News-Host: news://news.gmane.org:119
+In-Reply-To: <20190308150914.ifqp36en3pyd4ljy@pathway.suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Calvin Owens <calvinowens@fb.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: Re: [PATCH 1/4] printk: Introduce per-console loglevel setting
+Message-ID: <c7a9c83c-524d-c0da-a355-6cd4b7ec690c@I-love.SAKURA.ne.jp>
+Date:   Thu, 14 Mar 2019 23:12:49 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <ec71c03e-987d-2b73-9fe6-2604a3c32017@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,56 +57,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 3/14/19 8:37 AM, Juergen Gross wrote:
-> On 12/03/2019 20:46, David Hildenbrand wrote:
->> On 12.03.19 19:23, David Hildenbrand wrote:
->>
->> I guess something like this could do the trick if I understood it correctly:
->>
->> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
->> index 39b229f9e256..d37dd5bb7a8f 100644
->> --- a/drivers/xen/balloon.c
->> +++ b/drivers/xen/balloon.c
->> @@ -604,6 +604,7 @@ int alloc_xenballooned_pages(int nr_pages, struct
->> page **pages)
->>          while (pgno < nr_pages) {
->>                  page = balloon_retrieve(true);
->>                  if (page) {
->> +                       __ClearPageOffline(page);
->>                          pages[pgno++] = page;
->>   #ifdef CONFIG_XEN_HAVE_PVMMU
->>                          /*
->> @@ -645,8 +646,10 @@ void free_xenballooned_pages(int nr_pages, struct
->> page **pages)
->>          mutex_lock(&balloon_mutex);
->>
->>          for (i = 0; i < nr_pages; i++) {
->> -               if (pages[i])
->> +               if (pages[i]) {
->> +                       __SetPageOffline(pages[i]);
->>                          balloon_append(pages[i]);
->> +               }
->>          }
->>
->>          balloon_stats.target_unpopulated -= nr_pages;
->>
->>
->> At least this way, the pages allocated (and thus eventually mapped to
->> user space) would not be marked, but the other ones would remain marked
->> and could be excluded by makedumptool.
->>
+Petr Mladek wrote:
+> It might be even more straightforward when the per-console value
+> defines the effective console level. I mean the following semantic:
 > 
-> I think this patch should do the trick. Julien, could you give it a
-> try? On x86 I can't reproduce your problem easily as dom0 is PV with
-> plenty of unpopulated pages for grant memory not suffering from
-> missing "offline" bit.
+>    + "console_loglevel" would define the default loglevel used
+>      by consoles at runtime.
+> 
+>    + the per-console loglevel could override the default
+>      console_loglevel.
+> 
+>    + We would need a custom handler for the sysctl "console_loglevel".
+>      It would write the given value to the global console_loglevel
+>      variable and for all already registered consoles (con->loglevel).
 
-Sure. I managed to get the console working with the patch suggested by 
-David. Feel free to add my tested-by if when you resend it as is.
+But some functions change console_loglevel without sysctl (e.g.
+console_verbose() when reporting hung tasks and panic()). Should
+con->loglevel be changed (which might result in too much messages to
+slow consoles) when console_loglevel changes?
 
-Cheers,
-
--- 
-Julien Grall
+> 
+>      The value will be used also for all newly registered consoles
+>      when they do not have any custom one.
+> 
+> 
+>    + The handler for "loglevel" early param should behave the same
+>      as the sysctl handler.
+> 
+> 
+> IMHO, there is no perfect solution. The advantage of the above
+> proposal is that you "see" and "use" exactly what you "set".
