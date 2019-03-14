@@ -2,129 +2,130 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1269AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410E5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B3321852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D24E20811
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="a7krBakc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O97VXI/E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfCNPIH (ORCPT
+        id S1727091AbfCNPKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:08:07 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40382 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727161AbfCNPIG (ORCPT
+        Thu, 14 Mar 2019 11:10:19 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43751 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfCNPKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:08:06 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t5so6251194wri.7
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 08:08:05 -0700 (PDT)
+        Thu, 14 Mar 2019 11:10:18 -0400
+Received: by mail-lf1-f67.google.com with SMTP id g7so4489404lfh.10;
+        Thu, 14 Mar 2019 08:10:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/6fuNqsQ+BOvEoXpno6EWlv6F6RdSdbtUvXoIjHVdh0=;
-        b=a7krBakciN2OwiMBchmY9jcxNhB7cZPjD0V8bzqPocFfnSjzzGeAT6X/HWbBUIVGm7
-         j2QFXWIoi1kXJ9HXIf1l/clPmUf4lrhbnYSUYYmOy5+2XvdSaVTYaKe5CZuzfI56w3n/
-         ggF1qhhLAKyhCKn2kn7bzL6OMvwwLbsSdPrLzxW6hc08o9eQOZtRzyoPHd/sz1Wb+ul5
-         EIlnU9QIV6KSn6rg0uMYSkRCcNSrgiyjqJ6WvWuhim2ZWg4WbHcTXpiyRG36EcUmH2Vs
-         0bkX+H0/85xiZR0ycFtH5BRNQgz43dShR2XOwHSWdHVaa1OD4gaV98cLNChnYAq6UdQh
-         oK3Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=QFv7XgSuT6xBTdO3jmwBeBBZOivd4lt0c9Ic6gJvH9I=;
+        b=O97VXI/EDTg68BPr4Zgh72YNRtAhr4mALMd/1ETaQFtbcILFB9E0IhSYeHLgSXrHXk
+         pEJ21a2rLyWA0UG1JY1aEEPagcxKVev2pTz7PUmu6B6iOSYvFivKbmvZDwN1/2NrFW8T
+         AOYf43SATgS9W+ZlHnPgOQ0uiAzPeTCDN1/3ngPIntaiB80+HjrxIu4so/AxxiAycG8L
+         3ceTHj3BkfAtTuaglDzuNhZdLIzJ0o+Z/aRVoXrt7b7HvlFiF7nbccM1E1/qsu/YoNr3
+         zHg6DDMZj3ee8LGW4aixDcssOp2EvgcQ8Rb9axLy98VIv5J79xCoFkMWP2XujHwXHTCP
+         tmBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/6fuNqsQ+BOvEoXpno6EWlv6F6RdSdbtUvXoIjHVdh0=;
-        b=ANXPGGseoLR5HSIrI6x9rtJ5QVUQAhCVkjgXrdL/iqJ8lu0osfb7HCP0YZRkX0aoEZ
-         K020ddh9tnnTM/F9zn4gD70GAYmVOgMJLOGoyBl/j6EK7FA4itJCAwbx1wozoygHHAvH
-         Z6sDjNHVsoTJTbaP+4kyWkdjdGjbtka1UsOPCnFbY71QflU3MmTi5pt6IrjONqgNla31
-         EaRfouhJhgF7AqR+MsbjjXFwhb+5ibAAh+HGj4lgnas2O0MPr6yKj/ySqIDYQugU/yJw
-         0PwfhUpzNm/92nqR8AmF7eeor9dSlBjg2SSmGIstC5mVgDFnPjk+vscE/lhjgradND1j
-         9/zw==
-X-Gm-Message-State: APjAAAWAgeVyROEHpPTEgCyAQdvEzAnXtjhoxUzx0gTievqfQSCsdYeN
-        6HeeqmKwSvmLcMlClKydPR5L/wGIjBQ=
-X-Google-Smtp-Source: APXvYqyXl65hU7NlqkkGkzGHl4jHfMg/wv0GfbVstxK5CLojU1SUfBCTabKcr+JRdf8s5HseG9SjHw==
-X-Received: by 2002:adf:b591:: with SMTP id c17mr33921681wre.195.1552576084866;
-        Thu, 14 Mar 2019 08:08:04 -0700 (PDT)
-Received: from localhost.localdomain (aputeaux-684-1-31-143.w90-86.abo.wanadoo.fr. [90.86.86.143])
-        by smtp.gmail.com with ESMTPSA id p6sm42947662wre.63.2019.03.14.08.08.03
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=QFv7XgSuT6xBTdO3jmwBeBBZOivd4lt0c9Ic6gJvH9I=;
+        b=YBUDIXsxkXf1kE9zZQ4Xo18OYvpyTeiFtiRRHEcF3mPaGDHxaHudIpSEi8kq34gxMm
+         ZKynuAXWE79XT4uNXdFK63s2Bs577Fld23Mm97HYTdZKk4sc30LbUZ1g1DmFJZu3KbfJ
+         twdN7XOYxmxBjKlt9dDqmYskBChiD27/I29z/WzFnXe7Y7+pFjVrhfA33QhZZUtZ1NGS
+         yWbAF7Mw4uZX7pYXOZDMub57nqrUsapGZRSd9z3UOrD8455ZergaND6n6Rj1zLOqGXH9
+         dOqYpXqWJningIw+UTA1UOYqSM6rKmNOT92wswyhnraVGauxNxbMC9q03gnXh9ckQtiL
+         j7ng==
+X-Gm-Message-State: APjAAAXFEhRD9RN2aAwaoOf5dW9Z7iuZytDeGUI9WjGoR0sigiwLgWje
+        6mBPNa2w169G3k5BaS2WE3k=
+X-Google-Smtp-Source: APXvYqz7wFFEbo+hVRZO1gVc80Rjj3BbN8gA5bJyO2gIJ8DcbPG84f/LkEkTBnXtnVhUMwSXoviEJg==
+X-Received: by 2002:a19:48d5:: with SMTP id v204mr16000029lfa.70.1552576216324;
+        Thu, 14 Mar 2019 08:10:16 -0700 (PDT)
+Received: from [10.17.182.20] (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
+        by smtp.gmail.com with ESMTPSA id p3sm2506353ljj.14.2019.03.14.08.10.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 08:08:04 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/2] gpio: mockup: move the driver out of the IOMEM drivers section
-Date:   Thu, 14 Mar 2019 16:07:50 +0100
-Message-Id: <20190314150750.9371-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190314150750.9371-1-brgl@bgdev.pl>
-References: <20190314150750.9371-1-brgl@bgdev.pl>
+        Thu, 14 Mar 2019 08:10:15 -0700 (PDT)
+Subject: Re: [Xen-devel][PATCH] xen/netfront: Remove unneeded .resume callback
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        netdev@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, jgross@suse.com,
+        sstabellini@kernel.org, davem@davemloft.net
+Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+References: <20190314131749.25706-1-andr2000@gmail.com>
+ <c87d2bfb-b029-6c18-e3ad-cb798055f761@oracle.com>
+ <6205819a-af39-8cd8-db87-f3fe047ff064@gmail.com>
+ <ecc825e6-89d3-bbd5-5243-5cc66fa93045@oracle.com>
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+Message-ID: <b55d4f90-100c-7a2a-9651-c99c06953465@gmail.com>
+Date:   Thu, 14 Mar 2019 17:10:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <ecc825e6-89d3-bbd5-5243-5cc66fa93045@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-The testing driver doesn't really depend on HAS_IOMEM. We may want to
-build it for testing purposes on architectures not supporting IOMEM,
-for example: on user-mode linux. Move it out of the "Memory Mapped GPIO
-drivers" section.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/Kconfig | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index e9473e968d9a..474ab3f7f9ce 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -330,18 +330,6 @@ config GPIO_MM_LANTIQ
- 	  (EBU) found on Lantiq SoCs. The gpios are output only as they are
- 	  created by attaching a 16bit latch to the bus.
- 
--config GPIO_MOCKUP
--	tristate "GPIO Testing Driver"
--	depends on GPIOLIB
--	select IRQ_SIM
--	help
--	  This enables GPIO Testing driver, which provides a way to test GPIO
--	  subsystem through sysfs(or char device) and debugfs. GPIO_SYSFS
--	  must be selected for this test.
--	  User could use it through the script in
--	  tools/testing/selftests/gpio/gpio-mockup.sh. Reference the usage in
--	  it.
--
- config GPIO_MPC5200
- 	def_bool y
- 	depends on PPC_MPC52xx
-@@ -1440,4 +1428,16 @@ config GPIO_VIPERBOARD
- 
- endmenu
- 
-+config GPIO_MOCKUP
-+	tristate "GPIO Testing Driver"
-+	depends on GPIOLIB
-+	select IRQ_SIM
-+	help
-+	  This enables GPIO Testing driver, which provides a way to test GPIO
-+	  subsystem through sysfs(or char device) and debugfs. GPIO_SYSFS
-+	  must be selected for this test.
-+	  User could use it through the script in
-+	  tools/testing/selftests/gpio/gpio-mockup.sh. Reference the usage in
-+	  it.
-+
- endif
--- 
-2.20.1
-
+On 3/14/19 5:02 PM, Boris Ostrovsky wrote:
+> On 3/14/19 10:52 AM, Oleksandr Andrushchenko wrote:
+>> On 3/14/19 4:47 PM, Boris Ostrovsky wrote:
+>>> On 3/14/19 9:17 AM, Oleksandr Andrushchenko wrote:
+>>>> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+>>>>
+>>>> Currently on driver resume we remove all the network queues and
+>>>> destroy shared Tx/Rx rings leaving the driver in its current state
+>>>> and never signaling the backend of this frontend's state change.
+>>>> This leads to the number of consequences:
+>>>> - when frontend withdraws granted references to the rings etc. it
+>>>> cannot
+>>>>     be cleanly done as the backend still holds those (it was not told to
+>>>>     free the resources)
+>>>> - it is not possible to resume driver operation as all the
+>>>> communication
+>>>>     means with the backned were destroyed by the frontend, thus
+>>>>     making the frontend appear to the guest OS as functional, but
+>>>>     not really.
+>>> What do you mean? Are you saying that after resume you lose
+>>> connectivity?
+>> Exactly, if you take a look at the .resume callback as it is now
+>> what it does it destroys the rings etc. and never notifies the backend
+>> of that, e.g. it stays in, say, connected state with communication
+>> channels destroyed. It never goes into any other Xen bus state, so
+>> there is
+>> no way its state machine can help recovering.
+>
+> My tree is about a month old so perhaps there is some sort of regression
+> but this certainly works for me. After resume netfront gets
+> XenbusStateInitWait from backend which causes xennet_connect().
+Ah, the difference can be of the way we get the guest enter
+the suspend state. I am making my guest to suspend with:
+echo mem > /sys/power/state
+And then I use an interrupt to the guest (this is a test code)
+to wake it up.
+Could you please share your exact use-case when the guest enters suspend
+and what you do to resume it?
+I can see no way backend may want enter XenbusStateInitWait in my use-case
+as it simply doesn't know we want him to.
+>
+> -boris
+>
+>
+Thank you,
+Oleksandr
