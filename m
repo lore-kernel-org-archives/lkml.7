@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8690CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2E3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D4421873
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207EB21873
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfCNWfN (ORCPT
+        id S1728527AbfCNWhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:35:13 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:55955 "EHLO
+        Thu, 14 Mar 2019 18:37:31 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:45381 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbfCNWfH (ORCPT
+        with ESMTP id S1728155AbfCNWfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:35:07 -0400
+        Thu, 14 Mar 2019 18:35:09 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M2fM1-1h3Bl93DKR-004C7v; Thu, 14 Mar 2019 23:34:40 +0100
+ 1M9Evp-1h9lL217Kh-006Q6t; Thu, 14 Mar 2019 23:34:51 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,54 +37,79 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 09/45] drivers: tty: serial: 8250_mtk: use devm_ioremap_resource()
-Date:   Thu, 14 Mar 2019 23:33:39 +0100
-Message-Id: <1552602855-26086-10-git-send-email-info@metux.net>
+Subject: [PATCH v2 20/45] drivers: tty: serial: msm_serial: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:33:50 +0100
+Message-Id: <1552602855-26086-21-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:tq46V5HkrKkArgmZSws3car69JUj8undTbtBhIc70QwufTd1mZL
- sWiBwGH86COST0US8abTbeTb+YuOxrd+ByPEkwf/3SUkGlon3TFUmogQpGmbYbN/Dfqd/m7
- scOAUvc5wsVofgiem9lmqwyaaNquTW8jzLZVbee2wrjJYMuaEh5tI2/4lwJL8McPMlhNDpW
- Wl1Zwfy3og3RCloZTQzWA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:50IfZNt8boc=:CfXBiApkrcTvBgZbLg35Dg
- upFwS8Jm4wS6YmMKSzaino3Z3YUe21ImLvvnheGbFiomoRy/8sOeNvni5VPgcP3niv8WSba/Y
- 5oGgUxCzwtsNo3Io79U4eaBB8CL8y/9VMgnfWwDf7jglVbT99W/fPLp46qRiEMe71drhaqT+u
- BAejh6vGvOjLPxkJG41nxO67GxaQMaZGp86zGhMLFsnbASFg4BZK3ROkKHMHTAqVW9I3jwSnF
- wJLQJoz2caFIgOMmFmUHlVE/V1rlXGrpBqUitTw0Ozjr3gTkixXjStuSJImTG6hCr/OcrUH+P
- DpwjMIuLjE28vAYDl0b6XmcYdWY3JppJTY4zHFG3Z+zBQbZLb16qRTaPbJKnDAJmxqt5MOUFP
- OQZmOh9w0GiqVFdLURWlC6HUb1wGgQDY6NmMK5/jf08TnmJMXzEKaeQsfcEeLBmAQQHEwJt8d
- bnmKZUVHBoqAKD7bx6jkAqRq4KWSTrRACEYdsxaqyBAbssEIWsre5UcS5BIqBeZk+s4q+ZNFH
- 7KXwofGkW5LdCtbELQXHPtcN0F91MGcnMsi8qYHgRZoXLo8icJEgznN/KPtnPSpH7/4TubAza
- L8kmQUg172IS0m+ShXugb66ec7IQwOYDlooUxrqNXrDE4H4O/JNid8LOndJBDFKuBnY4AIW5/
- vtOFqwUx7yXOkrCRKsStLmTVXfVmFcn6zRJiIkfQP0oHEptegSoykuvOhdAAJWuxEqs/IjKdt
- rZyG3kM6Ei1DqWCJc5ovuL41R9OtBEwXcFq0wA==
+X-Provags-ID: V03:K1:diJhcXtKr0D9/1hkZLjn+AYb9Hm7J40LLWi5x1os7vmD7rQjq8n
+ 3bxGMqvIElvCGM73BifRMbUwOFvxrGZEifs0Z3hFJKocT1wm1CRFsh3vC0w7MgHsbmqeLn1
+ l5L4Nn633+AouAwf6GZGNXuKFqbJNOmzN6VqXSDgBASKzGng88Sndkk4Wn/BUROPz9gt8QY
+ 9eAP7TVtiyekp/lSOR46g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qWdwZrcrphM=:Vr4g6+GcLb2UrH5sHtuy7G
+ j6THHVI47163HDaXyn/+41uCVvxMTdb8Vccwz3gazk3aCqu+gVphY4WiZeMTV4rIY2Er1gVDj
+ An3FU7LhKef8cKXhjnpEgecEw4jF6tE/tdOiz7+jgNyLkoRLakMYz4WqzeM3kOGbrdkVH7bCa
+ Jwo78HU4gB6em7EqQzT83KADUbfKNjCxrjHk7+ldawsluv8ETpSr63V8BWGC+8c+5prhaq5KK
+ l114KsrEdNsOHxiXD+j54QivTlEF1hK2k/Nz9mtQzgj+6XwZq+EX9AomI6SG8HVYrBcBQFDvC
+ SEYIvqTCpQIX8rM30Y5C7115rhYsD8ij9d/GkHkoiA9L4TWC02vFDR/7bmY5I9RA4wslMv1mq
+ ohVRNvWfEDBOUzKage64NoPr/yrRPSXNMQPtu3ML56MpHT1SC+AzCFnAQLpT1oDOTh08TDWPP
+ 1zW/1hLpbV/n7DtRMy3k1Y43XNlTMi3rKUT0oE40aHlVlX+unHI/FymKD8xaT+wrovVlKZ80i
+ 7tpYOmVeukpTQaDRUBhfVe/D51lKnFJe2bGRJsh/TbZyNkhgoQT/3wHELxbHQagjMfFlcxdar
+ vJfjwf75X5t+pDHOoaMLZtt8g/At7ZC17krKlWXDwBHB1JVb4qiI8dGpPzqqSaY1meLQXdp7P
+ 2rVEOGChkDikRzIeKlJ7zBqkRBP1pcMwZ5/qW2Rit37Geaxk20vgVbY6zq5uKO0qSS5ePf1m3
+ Knw6YvC3SksmRcQ34BvMll/UO7d3fqWe7lnl1A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of fetching out data from a struct resource for passing
-it to devm_ioremap(), directly use devm_ioremap_resource()
+Use the safer devm versions of memory mapping functions.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/8250/8250_mtk.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/tty/serial/msm_serial.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-index c1fdbc0..bf6eb8d 100644
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -383,8 +383,7 @@ static int mtk8250_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
+diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+index 1090960..e8e0c87 100644
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -1324,8 +1324,8 @@ static void msm_release_port(struct uart_port *port)
+ 		return;
+ 	size = resource_size(uart_resource);
  
--	uart.port.membase = devm_ioremap(&pdev->dev, regs->start,
--					 resource_size(regs));
-+	uart.port.membase = devm_ioremap_resource(&pdev->dev, regs);
- 	if (!uart.port.membase)
- 		return -ENOMEM;
+-	release_mem_region(port->mapbase, size);
+-	iounmap(port->membase);
++	devm_release_mem_region(port->dev, port->mapbase, size);
++	devm_iounmap(port->dev, port->membase);
+ 	port->membase = NULL;
+ }
+ 
+@@ -1342,10 +1342,13 @@ static int msm_request_port(struct uart_port *port)
+ 
+ 	size = resource_size(uart_resource);
+ 
+-	if (!request_mem_region(port->mapbase, size, "msm_serial"))
++	if (!devm_request_mem_region(port->dev,
++				     port->mapbase,
++				     size,
++				     "msm_serial"))
+ 		return -EBUSY;
+ 
+-	port->membase = ioremap(port->mapbase, size);
++	port->membase = ioremap(port->dev, port->mapbase, size);
+ 	if (!port->membase) {
+ 		ret = -EBUSY;
+ 		goto fail_release_port;
+@@ -1354,7 +1357,7 @@ static int msm_request_port(struct uart_port *port)
+ 	return 0;
+ 
+ fail_release_port:
+-	release_mem_region(port->mapbase, size);
++	devm_release_mem_region(port->dev, port->mapbase, size);
+ 	return ret;
+ }
  
 -- 
 1.9.1
