@@ -2,105 +2,98 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3A5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F31C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CDC205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:08:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mmwXQ3k4"
+	by mail.kernel.org (Postfix) with ESMTP id DB3102085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfCNJIn (ORCPT
+        id S1726797AbfCNJKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:08:43 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39637 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfCNJIn (ORCPT
+        Thu, 14 Mar 2019 05:10:21 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:36675 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfCNJKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:08:43 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h8so3543440pgp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:08:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uZCZbVWvjMcSe3Gq3aWQrxKbzamdcnkBDPRD2xJtoGY=;
-        b=mmwXQ3k4rCuFovOKIyClyz3NR/FFnocQLNt5WWTiRUTKiu14KegmlAh0tYZi5aASx+
-         MA9Li8rOuctuo9dQOSkGtwRaJIw9ee0XiW05PNqyg5qVlhUbNbbbQgT3Mkb2tAjvqbvo
-         rtfZrTq9J/KrtkRlWeWYMl2FIzqIK70Is5CykeXfIYVXCHkKC4nXND1GwtbO5AgCTK5s
-         z3OYrslha+pTpd/mOJRgUfxI4lMUIjnXzqYxOqUrTlE1rKB6prak4aLTQWP930RcRVzS
-         wR70R0KZ2iV5gKMWbMh8zHhwWgpkkxUPzfva6AbjdsKHcEE0sojQ0TmgcB7nFVm60SK8
-         YyPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uZCZbVWvjMcSe3Gq3aWQrxKbzamdcnkBDPRD2xJtoGY=;
-        b=LASKR/HckhWbF94RnE2f4WodMeZibuPFER6Mst1/kegwdiL3ze3n54lRNTjQcLf3It
-         p4aZHsKonCeiIGsTwrZSu/LhAAT9z33qHZqndElm74N902D6piVeyC0CC1EbL6ObL2kL
-         NIHl0Fd5SG6s0vsD7FrOK0B7akpSuLyWi8db/9/5d+90nP6G2zxswMSroEBlvpw1d3sF
-         +6Afhyi8rqwrWo1+KwYeXR8F3Jg4ovNbmrUVOCRG1t88OwoD+ptKo6AX8fzHvewRqEan
-         BK2fgBI9vohAo+x+XRqhyeMTNh9sGLrSQ1YpOCqs/xM4e3+2lm0bLjdV1MHQqFjkvkt9
-         sKkw==
-X-Gm-Message-State: APjAAAW+HnA+AJ0YyTk1/8RD32725P+j0uqvL0oiYGfYQTGpwyOhNpZw
-        JErLrPNM45LcvvSZ5Xzs8J0MtQ==
-X-Google-Smtp-Source: APXvYqw6JcM0OFAWNy2Hp9qFPVqo8KbWYvRM92mfbx8BL9KeeCQ5RMAoU0kWBcHg/nGjxb+1fy0DEw==
-X-Received: by 2002:a65:64c3:: with SMTP id t3mr31389008pgv.14.1552554522308;
-        Thu, 14 Mar 2019 02:08:42 -0700 (PDT)
-Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id a2sm18289335pff.58.2019.03.14.02.08.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 02:08:41 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 14:38:38 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     devel@driverdev.osuosl.org, Alex Elder <elder@kernel.org>,
-        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
-        pakki001@umn.edu, linux-kernel@vger.kernel.org
-Subject: Re: [greybus-dev] [PATCH] greybus: audio_manager: fix a missing
- check of ida_simple_get
-Message-ID: <20190314090838.ort5tluai4t2zvcu@vireshk-i7>
-References: <20190314064525.15756-1-kjlu@umn.edu>
+        Thu, 14 Mar 2019 05:10:21 -0400
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M2fHt-1h2ynU0CvH-0049NE; Thu, 14 Mar 2019 10:09:55 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Eric Biggers <ebiggers@google.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: ccree - reduce kernel stack usage with clang
+Date:   Thu, 14 Mar 2019 10:09:44 +0100
+Message-Id: <20190314090951.840339-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314064525.15756-1-kjlu@umn.edu>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:dC2/9ebq8Fl87hFsAGo8uXPuzKOIpvo5VAfANriH0gumyH5BOTy
+ z/B8RkJxqYPeuEf2Usa/7AfuMd6ADIfBgjmf6BHXuBg8D7Xz+JcCGlbEdAjfX/pNUSrv5JO
+ kSCI+5Z3j7U2zDbIRE15lP+xOYp6wXIm540MO9MUcgC90d2xQtHYMhov0Bs7U3n/yn4uaVj
+ MPCytK7jL6ymKPkKwiZhg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2hnnBTrxZqQ=:4s80T4F2tNNIaYm7AxA+Cv
+ aSGxZJQ2YlUVfDbLMo696alA+z6wMIR0X8XmruAKbJctlCTJuW9rWtC+qj2f4xJbbXEUgDneX
+ 1i305sLyEaqi3uegdTD9wYpj7vCdXW1BaugAW4IK1FhOGpQeLRlOqQQMHk83UogADm4lM/slB
+ 5Pb6+EbQemIZG7M5rZ2Zwmn+camQ/HTvxuESWHriJMOIVGsrDftysDJW2Vwv7vf18GMlBcrCC
+ b8UKk2p2ShHylSNUo8Fu20e1aBEbQLOG49PJ16/zaD/GthYh1AHUsz+RmrGF/P7SsaheOLUVp
+ RyA/GbERaeuFeXWuWym7JKXt69gahnCz8CEH/zZX2f1Hp7BKn6KeL+6wcZHfbMtR//N4kgvI/
+ +sL+JbfBG1EEhVNLGrCuyKeGtn1zFW1Gj3ArqZZ03ccWszC/phEvoCZR1wKfPzpiacZ+osF1K
+ mB8LvHhN4XtdBUwp2WuAViTWAQIMhd/qhDdVQW/2oEEFag82qwMPL1A50k5ze+Q4OFrax+j3v
+ m4CSQrN3mfZqw6hIxnUYG6mtUm1Opfgf/mfs9WhPWLEGusoGmKNkfl0wAue6FbA+5MANSszcX
+ W8Awiz17WgMRsf4TsjR1SmdwK4U94pkRLOmjMQrCuC6GBSrqf+mIB3HtUEwxp4uJhWo5Hswls
+ waFVJDO6SoGYnItivaxnH544Kr0mj7RTc2AU71WcpdR2hjzL6zMi4ivH4WRAfj+fcnDpr72Tg
+ aNcTV5dnx0dOUiwSzFr7PGyVZgcACcqCUloIvw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-03-19, 01:45, Kangjie Lu wrote:
-> ida_simple_get could fail. The fix inserts a check for its
-> return value.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->  drivers/staging/greybus/audio_manager.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/staging/greybus/audio_manager.c b/drivers/staging/greybus/audio_manager.c
-> index d44b070d8862..c2a4af4c1d06 100644
-> --- a/drivers/staging/greybus/audio_manager.c
-> +++ b/drivers/staging/greybus/audio_manager.c
-> @@ -45,6 +45,9 @@ int gb_audio_manager_add(struct gb_audio_manager_module_descriptor *desc)
->  	int err;
->  
->  	id = ida_simple_get(&module_id, 0, 0, GFP_KERNEL);
-> +	if (id < 0)
-> +		return id;
-> +
->  	err = gb_audio_manager_module_create(&module, manager_kset,
->  					     id, desc);
->  	if (err) {
+Building with clang for a 32-bit architecture runs over the stack
+frame limit in the setkey function:
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+drivers/crypto/ccree/cc_cipher.c:318:12: error: stack frame size of 1152 bytes in function 'cc_cipher_setkey' [-Werror,-Wframe-larger-than=]
 
+The problem is that there are two large variables: the temporary
+'tmp' array and the SHASH_DESC_ON_STACK() declaration. Moving
+the first into the block in which it is used reduces the
+total frame size to 768 bytes, which seems more reasonable
+and is under the warning limit.
+
+Fixes: 63ee04c8b491 ("crypto: ccree - add skcipher support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/crypto/ccree/cc_cipher.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
+index d9c17078517b..0abcdc224ab0 100644
+--- a/drivers/crypto/ccree/cc_cipher.c
++++ b/drivers/crypto/ccree/cc_cipher.c
+@@ -321,7 +321,6 @@ static int cc_cipher_setkey(struct crypto_skcipher *sktfm, const u8 *key,
+ 	struct crypto_tfm *tfm = crypto_skcipher_tfm(sktfm);
+ 	struct cc_cipher_ctx *ctx_p = crypto_tfm_ctx(tfm);
+ 	struct device *dev = drvdata_to_dev(ctx_p->drvdata);
+-	u32 tmp[DES3_EDE_EXPKEY_WORDS];
+ 	struct cc_crypto_alg *cc_alg =
+ 			container_of(tfm->__crt_alg, struct cc_crypto_alg,
+ 				     skcipher_alg.base);
+@@ -347,6 +346,7 @@ static int cc_cipher_setkey(struct crypto_skcipher *sktfm, const u8 *key,
+ 	 * HW does the expansion on its own.
+ 	 */
+ 	if (ctx_p->flow_mode == S_DIN_to_DES) {
++		u32 tmp[DES3_EDE_EXPKEY_WORDS];
+ 		if (keylen == DES3_EDE_KEY_SIZE &&
+ 		    __des3_ede_setkey(tmp, &tfm->crt_flags, key,
+ 				      DES3_EDE_KEY_SIZE)) {
 -- 
-viresh
+2.20.0
+
