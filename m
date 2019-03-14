@@ -2,230 +2,226 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D563AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79601C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C70A2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 413142184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARcFjw0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfCNOib (ORCPT
+        id S1726850AbfCNOjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:38:31 -0400
-Received: from mailproxy07.manitu.net ([217.11.48.71]:36268 "EHLO
-        mailproxy07.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfCNOia (ORCPT
+        Thu, 14 Mar 2019 10:39:04 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37821 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfCNOjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:38:30 -0400
-Received: from [10.55.189.239] (x59cc87ef.dyn.telefonica.de [89.204.135.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: wg@grandegger.com)
-        by mailproxy07.manitu.net (Postfix) with ESMTPSA id 24251C810A;
-        Thu, 14 Mar 2019 15:40:09 +0100 (CET)
-Subject: Re: [PATCH v9 1/4] can: m_can: Create a m_can platform framework
-To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
-        davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190313162629.11937-1-dmurphy@ti.com>
- <87f14a09-244e-c698-1372-f8b49e60faee@grandegger.com>
- <a578dd22-a581-8421-fac4-605fa8f63d1a@ti.com>
-From:   Wolfgang Grandegger <wg@grandegger.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
- 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
- 8QEfHnPzgykCs2DOOQ==
-Message-ID: <470e0028-7e4c-b1ba-7c50-7464f4904801@grandegger.com>
-Date:   Thu, 14 Mar 2019 15:38:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 14 Mar 2019 10:39:03 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 8so558189pfr.4;
+        Thu, 14 Mar 2019 07:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uMYUK7RPlp8j3dak4mWgOA5Idd4g6CZf5DQziPdU6as=;
+        b=ARcFjw0Oy24hRfSYMTwVQ1JoC1H/fP2K7H6+ajdiQV1+7vNEA18XgfkkjOteGTqkvO
+         QUDEL8VeFI0iHFpcfHo1l+bsEYQP56XJ9MKhFh7/KUirGbPFMxoFjN/fc6dbQ4rRin+Z
+         IrgAVTT9jhE+8R4w/UsaQciCadrDarIe/0mkqjjeYi9rzm7a0bEEH/aiSpwrk5WHe3Rs
+         bu7X7H2Cj8BalLVu8ykJNyJMoRKAyv0k1qmmxPub7XfDo2/mbd9G+wR/M2tcd7WBNx5y
+         BUPcksGlEIG+bB7wg1PAKMfiMytseYZL9oK0nrWBeXNoQinvS0nNBebWtsAfu+6JhaZ2
+         Tgtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uMYUK7RPlp8j3dak4mWgOA5Idd4g6CZf5DQziPdU6as=;
+        b=Vjcvsmq74R8KbHmjm4yi2fX/IJ/sUYs6qfAVB38IqJ6voLrgDMi4EnAcJVnQJdKb1i
+         Rh5grmL44pEui3WPYtL0wJfZHBrMZ7ssW2NdWCNP+6eTwyqBLajr7DuJ9/4dPgc0kLYw
+         hlmCYQ98PTxSzrgQCrExQBIcSlomGitFdRA7R2h9yGWq1Xi9KQkJPHRBOLCJ+2iL2vEt
+         jgWxjsuEn8IF0Drx0alT2aVbxwOwd1HgjnknsyefUrgPafyF4r/jR1DD/f3tPlz/fOlB
+         JdIWEZ157SPj9FCHbo8AweUaybTSroOpGYwguRzEvAH5WnFg4YY9tWk0iWlOiHpiHfmC
+         9DMQ==
+X-Gm-Message-State: APjAAAWNw3fBvgKPzytvV9LuzPfpYhLBJePTyTtbt/T4UzqYnE7eqLUG
+        MW/GVFIkVtomdxhnLXk5V/E=
+X-Google-Smtp-Source: APXvYqzWFsVHojlnIXKjmnjcwvdTWaY1vK2F3cPMd0vJqBuRU6oLRGfZYEBWGq7/AYG2ERIHy/3OMw==
+X-Received: by 2002:a63:6c43:: with SMTP id h64mr43577598pgc.22.1552574342762;
+        Thu, 14 Mar 2019 07:39:02 -0700 (PDT)
+Received: from icarus ([2001:268:c0a4:3974:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id b6sm24621185pfo.27.2019.03.14.07.38.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 07:39:02 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 23:39:44 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linus.walleij@linaro.org, akpm@linux-foundation.org,
+        linux-gpio@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
+        yamada.masahiro@socionext.com, bgolaszewski@baylibre.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v10 10/10] thermal: intel: intel_soc_dts_iosf: Utilize
+ for_each_set_clump8 macro
+Message-ID: <20190314143944.GA10184@icarus>
+References: <cover.1552566113.git.vilhelm.gray@gmail.com>
+ <a240216a143782e3cfecf6f963578067b68b6007.1552566114.git.vilhelm.gray@gmail.com>
+ <20190314142640.GZ9224@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <a578dd22-a581-8421-fac4-605fa8f63d1a@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190314142640.GZ9224@smile.fi.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-Am 14.03.19 um 15:04 schrieb Dan Murphy:
-> Hello
+On Thu, Mar 14, 2019 at 04:26:40PM +0200, Andy Shevchenko wrote:
+> On Thu, Mar 14, 2019 at 09:32:57PM +0900, William Breathitt Gray wrote:
+> > Utilize for_each_set_clump8 macro, and the bitmap_set_value8 and
+> > bitmap_get_value8 functions, where appropriate. In addition, remove the
+> > now unnecessary temp_mask and temp_shift members of the
+> > intel_soc_dts_sensor_entry structure.
 > 
-> On 3/14/19 2:26 AM, Wolfgang Grandegger wrote:
->> Hello Dan,
->>
->> we are close...
->>
->> Am 13.03.19 um 17:26 schrieb Dan Murphy:
->>> Create a m_can platform framework that peripherial
->>> devices can register to and use common code and register sets.
->>> The peripherial devices may provide read/write and configuration
->>> support of the IP.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>
->>> v9 - Added back the CSR clearing as this is needed for TCAN device, fixed clean
->>> function to clean index for version > 30, removed extra skb free and fixed work
->>> handler to handle FIFO full for perpheral devices - https://lore.kernel.org/patchwork/patch/1050120/
->>>
->>> v8 - Added a clean function for the tx_skb, cleaned up skb on BUS_OFF and on xmit
->>> BUSY - https://lore.kernel.org/patchwork/patch/1047980/
->>> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
->>> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
->>> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
->>> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
->>> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
->>> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
->>> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
->>>
->>>  drivers/net/can/m_can/Kconfig          |  13 +-
->>>  drivers/net/can/m_can/Makefile         |   1 +
->>>  drivers/net/can/m_can/m_can.c          | 733 +++++++++++++------------
->>>  drivers/net/can/m_can/m_can.h          | 110 ++++
->>>  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
->>>  5 files changed, 714 insertions(+), 345 deletions(-)
->>>  create mode 100644 drivers/net/can/m_can/m_can.h
->>>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
->>>
->>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
->>> index 04f20dd39007..f7119fd72df4 100644
->>> --- a/drivers/net/can/m_can/Kconfig
->>> +++ b/drivers/net/can/m_can/Kconfig
->>> @@ -1,5 +1,14 @@
->>>  config CAN_M_CAN
->>> +	tristate "Bosch M_CAN support"
->>> +	---help---
->>> +	  Say Y here if you want support for Bosch M_CAN controller framework.
->>> +	  This is common support for devices that embed the Bosch M_CAN IP.
->>> +
->>> +config CAN_M_CAN_PLATFORM
->>> +	tristate "Bosch M_CAN support for io-mapped devices"
->>>  	depends on HAS_IOMEM
->>> -	tristate "Bosch M_CAN devices"
->>> +	depends on CAN_M_CAN
->>>  	---help---
->>> -	  Say Y here if you want to support for Bosch M_CAN controller.
->>> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
->>> +	  This support is for devices that have the Bosch M_CAN controller
->>> +	  IP embedded into the device and the IP is IO Mapped to the processor.
->>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
->>> index 8bbd7f24f5be..057bbcdb3c74 100644
->>> --- a/drivers/net/can/m_can/Makefile
->>> +++ b/drivers/net/can/m_can/Makefile
->>> @@ -3,3 +3,4 @@
->>>  #
->>>  
->>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
->>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
->>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
->>> index 9b449400376b..56336aefc567 100644
->>> --- a/drivers/net/can/m_can/m_can.c
->>> +++ b/drivers/net/can/m_can/m_can.c
-...  snip ...
+> I think you need to Cc thermal maintainers.
 
->>> +static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
->>> +				    struct net_device *dev)
->>> +{
->>> +	struct m_can_priv *priv = netdev_priv(dev);
->>> +
->>> +	if (can_dropped_invalid_skb(dev, skb))
->>> +		return NETDEV_TX_OK;
->>> +
->>> +	if (priv->is_peripherial) {
->>> +		if (priv->tx_skb) {
->>> +			netdev_err(dev, "hard_xmit called while tx busy\n");
->>> +			return NETDEV_TX_BUSY;
->>> +		}
->>> +
->>> +		if (priv->can.state == CAN_STATE_BUS_OFF) {
->>> +			m_can_clean(dev);
->>> +		} else {
->>> +			priv->tx_skb = skb;
->>> +			queue_work(priv->tx_wq, &priv->tx_work);
->>
->> You removed "netif_stop_queue(cdev->net)" here. Does that work with just
->> *one* "tx_skb"? I think you need an array then!? I'm afraid, this will
->> require quite some changes and you should also measure the benefit of
->> queuing outgoing messages first. For the time being, it would be fine
->> for me to stop the queue here and add an appropriate comment.
->>
-> 
-> Yes I removed this in favor of allowing the work handler to stop the queue.
-> 
-> If the version is < 30 then the queue is stopped immediately.  If the version > 30 then the queue is
-> only stopped if FIFO is full.
+Ah, you're right, I overlooked them. Should I resend this patchset, or
+add them to the CC list on the next version?
 
-Yes, and the next call to m_can_start_xmit() will probably return with
-NETDEV_TX_BUSY. You should at least add a "netif_stop_queue(cdev->net)"
-before returning NETDEV_TX_BUSY, otherwice the upper layer will retry
-immediately resulting in high CPU load. Anyway, the purpose of this
-return code is to signal errors/bugs in the start/stop flow control:
-
-https://elixir.bootlin.com/linux/latest/source/Documentation/networking/netdevices.txt#L81
+William Breathitt Gray
 
 > 
-> I did see the message "tcan4x5x spi1.0 can0: hard_xmit called while tx busy" 
-> more with no gap and no polling in the cangen request.
-
-You usually should never see that message.
-
+> I will test this next week.
+> Thanks!
 > 
->> BTW, how big is the FIFO size on your system:
->>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> This value is set to 1.
+> Suggested-by?
 > 
->>   tx_fifo_size = mram_config_vals[7];
-
-Then I'm surprised that you see "hard_xmit called while tx busy" at all.
-Are you sure that "cdev->version" is 32 on the tcan4x5?
-
-Wolfgang
+> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > ---
+> >  drivers/thermal/intel/intel_soc_dts_iosf.c | 29 +++++++++++++---------
+> >  drivers/thermal/intel/intel_soc_dts_iosf.h |  2 --
+> >  2 files changed, 17 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/intel/intel_soc_dts_iosf.c b/drivers/thermal/intel/intel_soc_dts_iosf.c
+> > index e0813dfaa278..b66f554670f7 100644
+> > --- a/drivers/thermal/intel/intel_soc_dts_iosf.c
+> > +++ b/drivers/thermal/intel/intel_soc_dts_iosf.c
+> > @@ -15,6 +15,7 @@
+> >  
+> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> >  
+> > +#include <linux/bitops.h>
+> >  #include <linux/module.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/interrupt.h>
+> > @@ -111,6 +112,7 @@ static int update_trip_temp(struct intel_soc_dts_sensor_entry *dts,
+> >  {
+> >  	int status;
+> >  	u32 temp_out;
+> > +	unsigned long update_ptps;
+> >  	u32 out;
+> >  	u32 store_ptps;
+> >  	u32 store_ptmc;
+> > @@ -129,8 +131,9 @@ static int update_trip_temp(struct intel_soc_dts_sensor_entry *dts,
+> >  	if (status)
+> >  		return status;
+> >  
+> > -	out = (store_ptps & ~(0xFF << (thres_index * 8)));
+> > -	out |= (temp_out & 0xFF) << (thres_index * 8);
+> > +	update_ptps = store_ptps;
+> > +	bitmap_set_value8(&update_ptps, 32, temp_out & 0xFF, thres_index * 8);
+> > +	out = update_ptps;
+> >  	status = iosf_mbi_write(BT_MBI_UNIT_PMC, MBI_REG_WRITE,
+> >  				SOC_DTS_OFFSET_PTPS, out);
+> >  	if (status)
+> > @@ -232,6 +235,7 @@ static int sys_get_curr_temp(struct thermal_zone_device *tzd,
+> >  	u32 out;
+> >  	struct intel_soc_dts_sensor_entry *dts;
+> >  	struct intel_soc_dts_sensors *sensors;
+> > +	unsigned long temp_raw;
+> >  
+> >  	dts = tzd->devdata;
+> >  	sensors = dts->sensors;
+> > @@ -240,7 +244,8 @@ static int sys_get_curr_temp(struct thermal_zone_device *tzd,
+> >  	if (status)
+> >  		return status;
+> >  
+> > -	out = (out & dts->temp_mask) >> dts->temp_shift;
+> > +	temp_raw = out;
+> > +	out = bitmap_get_value8(&temp_raw, 32, dts->id * 8);
+> >  	out -= SOC_DTS_TJMAX_ENCODING;
+> >  	*temp = sensors->tj_max - out * 1000;
+> >  
+> > @@ -290,10 +295,13 @@ static int add_dts_thermal_zone(int id, struct intel_soc_dts_sensor_entry *dts,
+> >  {
+> >  	char name[10];
+> >  	int trip_count = 0;
+> > +	int writable_trip_count = 0;
+> >  	int trip_mask = 0;
+> >  	u32 store_ptps;
+> >  	int ret;
+> > -	int i;
+> > +	unsigned int i;
+> > +	unsigned long trip;
+> > +	unsigned long ptps;
+> >  
+> >  	/* Store status to restor on exit */
+> >  	ret = iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ,
+> > @@ -302,11 +310,10 @@ static int add_dts_thermal_zone(int id, struct intel_soc_dts_sensor_entry *dts,
+> >  		goto err_ret;
+> >  
+> >  	dts->id = id;
+> > -	dts->temp_mask = 0x00FF << (id * 8);
+> > -	dts->temp_shift = id * 8;
+> >  	if (notification_support) {
+> >  		trip_count = min(SOC_MAX_DTS_TRIPS, trip_cnt);
+> > -		trip_mask = BIT(trip_count - read_only_trip_cnt) - 1;
+> > +		writable_trip_count = trip_count - read_only_trip_cnt;
+> > +		trip_mask = GENMASK(writable_trip_count - 1, 0);
+> >  	}
+> >  
+> >  	/* Check if the writable trip we provide is not used by BIOS */
+> > @@ -315,11 +322,9 @@ static int add_dts_thermal_zone(int id, struct intel_soc_dts_sensor_entry *dts,
+> >  	if (ret)
+> >  		trip_mask = 0;
+> >  	else {
+> > -		for (i = 0; i < trip_count; ++i) {
+> > -			if (trip_mask & BIT(i))
+> > -				if (store_ptps & (0xff << (i * 8)))
+> > -					trip_mask &= ~BIT(i);
+> > -		}
+> > +		ptps = store_ptps;
+> > +		for_each_set_clump8(i, trip, ptps, writable_trip_count * 8)
+> > +			trip_mask &= ~BIT(i / 8);
+> >  	}
+> >  	dts->trip_mask = trip_mask;
+> >  	dts->trip_count = trip_count;
+> > diff --git a/drivers/thermal/intel/intel_soc_dts_iosf.h b/drivers/thermal/intel/intel_soc_dts_iosf.h
+> > index 625e37bf93dc..d0362d7acdef 100644
+> > --- a/drivers/thermal/intel/intel_soc_dts_iosf.h
+> > +++ b/drivers/thermal/intel/intel_soc_dts_iosf.h
+> > @@ -33,8 +33,6 @@ struct intel_soc_dts_sensors;
+> >  
+> >  struct intel_soc_dts_sensor_entry {
+> >  	int id;
+> > -	u32 temp_mask;
+> > -	u32 temp_shift;
+> >  	u32 store_status;
+> >  	u32 trip_mask;
+> >  	u32 trip_count;
+> > -- 
+> > 2.21.0
+> > 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
