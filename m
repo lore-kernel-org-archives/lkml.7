@@ -2,94 +2,112 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83212C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A95C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8F5217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="KFKEmxYF"
+	by mail.kernel.org (Postfix) with ESMTP id 7B3EE217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfCNQNj (ORCPT
+        id S1728069AbfCNQNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:13:39 -0400
-Received: from kadath.azazel.net ([81.187.231.250]:46246 "EHLO
-        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbfCNQNh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:13:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
-         s=20190108; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
-        :To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=zHZvUmtgru+dgFTcc/bXxF0SH+hBPYRf31OcbKR5PIk=; b=KFKEmxYFeP8Ik2AhWQI21fTwtf
-        WjzcBGP8IARZ+28IReRwIV5kRhSFE9aJcQFI7XEybOH+PW0Q+ZnOXQffkFziY4HAPSlzrHqDmUqVs
-        qMAAO1pD+bdW03D2HyHwU0aVLopVPhxY0kLbsaMvYoHQzL2tWqujb5GGVT7gIEZZHnZ1WKvlCImM2
-        VBuR0BzRn/4UMESEOuagE7ERUJcM4XLSykI1qke5u/jhcw674E43DrSdV13DAnYe8w6s6GhhVDp8o
-        NRFt4Yyal4JvaIyW90yAEhhKWySAZoegUG4Wi5f2vga33zDF1N6pq7I8bDbz0YksFmrH/4b9mtsR+
-        3df/fjog==;
-Received: from ulthar.dreamlands ([192.168.96.2])
-        by kadath.azazel.net with esmtp (Exim 4.89)
-        (envelope-from <jeremy@azazel.net>)
-        id 1h4Sz7-0004Td-SG; Thu, 14 Mar 2019 16:13:33 +0000
-From:   Jeremy Sowden <jeremy@azazel.net>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] vti4: ipip tunnel deregistration fixes.
-Date:   Thu, 14 Mar 2019 16:13:33 +0000
-Message-Id: <20190314161333.6550-1-jeremy@azazel.net>
-X-Mailer: git-send-email 2.20.1
+        Thu, 14 Mar 2019 12:13:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50964 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728050AbfCNQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 12:13:38 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4A49FC0AC368;
+        Thu, 14 Mar 2019 16:13:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 47B1E60634;
+        Thu, 14 Mar 2019 16:13:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 35/38] vfs: Convert securityfs to fs_context
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 14 Mar 2019 16:13:36 +0000
+Message-ID: <155258001652.13720.11473812959592965169.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
+References: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 192.168.96.2
-X-SA-Exim-Mail-From: jeremy@azazel.net
-X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 14 Mar 2019 16:13:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If tunnel registration failed during module initialization, the module
-would fail to deregister the IPPROTO_COMP protocol and would attempt to
-deregister the tunnel.
-
-The tunnel was not deregistered during module-exit.
-
-Fixes: d9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-security-module@vger.kernel.org
 ---
- net/ipv4/ip_vti.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
-index 68a21bf75dd0..b6235ca09fa5 100644
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -659,9 +659,9 @@ static int __init vti_init(void)
- 	return err;
+ security/inode.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/security/inode.c b/security/inode.c
+index b7772a9b315e..4fecbc8b072a 100644
+--- a/security/inode.c
++++ b/security/inode.c
+@@ -16,6 +16,7 @@
+ #include <linux/sysfs.h>
+ #include <linux/kobject.h>
+ #include <linux/fs.h>
++#include <linux/fs_context.h>
+ #include <linux/mount.h>
+ #include <linux/pagemap.h>
+ #include <linux/init.h>
+@@ -40,7 +41,7 @@ static const struct super_operations securityfs_super_operations = {
+ 	.evict_inode	= securityfs_evict_inode,
+ };
  
- rtnl_link_failed:
--	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
--xfrm_tunnel_failed:
- 	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
-+xfrm_tunnel_failed:
-+	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
- xfrm_proto_comp_failed:
- 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
- xfrm_proto_ah_failed:
-@@ -676,6 +676,7 @@ static int __init vti_init(void)
- static void __exit vti_fini(void)
+-static int fill_super(struct super_block *sb, void *data, int silent)
++static int securityfs_fill_super(struct super_block *sb, struct fs_context *fc)
  {
- 	rtnl_link_unregister(&vti_link_ops);
-+	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
- 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
- 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
- 	xfrm4_protocol_deregister(&vti_esp4_protocol, IPPROTO_ESP);
--- 
-2.20.1
+ 	static const struct tree_descr files[] = {{""}};
+ 	int error;
+@@ -54,17 +55,25 @@ static int fill_super(struct super_block *sb, void *data, int silent)
+ 	return 0;
+ }
+ 
+-static struct dentry *get_sb(struct file_system_type *fs_type,
+-		  int flags, const char *dev_name,
+-		  void *data)
++static int securityfs_get_tree(struct fs_context *fc)
+ {
+-	return mount_single(fs_type, flags, data, fill_super);
++	return vfs_get_super(fc, vfs_get_single_super, securityfs_fill_super);
++}
++
++static const struct fs_context_operations securityfs_context_ops = {
++	.get_tree	= securityfs_get_tree,
++};
++
++static int securityfs_init_fs_context(struct fs_context *fc)
++{
++	fc->ops = &securityfs_context_ops;
++	return 0;
+ }
+ 
+ static struct file_system_type fs_type = {
+ 	.owner =	THIS_MODULE,
+ 	.name =		"securityfs",
+-	.mount =	get_sb,
++	.init_fs_context = securityfs_init_fs_context,
+ 	.kill_sb =	kill_litter_super,
+ };
+ 
 
