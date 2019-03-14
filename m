@@ -2,117 +2,130 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9326DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A61C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6AB20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552601297;
-	bh=dAwEj6hkwJVav2HocTLKe+eCNkrMI6uCPIGIBc6CxtE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=chcbIEmHy7ZQKYvLrCNCumdORUMgDRvttntwJVenF+vj7gKAvZFeNJvJUK305zmID
-	 I8IJwEsZXxTo7gf/Oy1ACyCeGnQMNVHDkV1IP7sSSFBTyJEK61V0YBYYd1jytugF6L
-	 EYfDQT8NKyfU6ZTP1vqWz6m5oxnoUb7A1VJD7QR4=
+	by mail.kernel.org (Postfix) with ESMTP id DE2452186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:15:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ezyo80UF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfCNWIQ (ORCPT
+        id S1727633AbfCNWPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:08:16 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39382 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfCNWIP (ORCPT
+        Thu, 14 Mar 2019 18:15:12 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:34038 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfCNWPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:08:15 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e15so6612529otk.6;
-        Thu, 14 Mar 2019 15:08:15 -0700 (PDT)
+        Thu, 14 Mar 2019 18:15:12 -0400
+Received: by mail-pg1-f201.google.com with SMTP id z14so7843063pgu.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 15:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=a0Z+F0fmFULDIL5rprNh3E5BB87HBNzyaQEazZwo8Qo=;
+        b=ezyo80UFCqF77L/UIQxJ158UXxq76PaoXjEMckKTRveE72ftF7nAsQicf+Bl2pscg7
+         CKg4CHZE5cGPVOrG4Q4zRmvz2e/RfXxj9QberpSCQ1WQxdNTaHdt+b3ia/F04nMygpK1
+         dylUAO/Yh1nr52563Hx9Jleo0Brv3/+hZet0iZmGBZ378pP0vRjdHh5yqG3I7Xrg6O3o
+         9N75eQ5p8t2fnMsgH5+j5IcTEJ7DwTqR43YwgDhuyfnOyeEK8RIkvu8mDAF7yRxykJC4
+         i58pfCrF4djBE5ZefEq68LIAizmZoLVNYbJ2x2boj6t39bqKNFzd4ct10GP9RkYP9siC
+         rQQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GXCPmTlnAZhHllNvpnoywKNTmWdgGF6QJBXrvsJXaE8=;
-        b=h1ikMsNYTsDEoicI+4CKjJplgfrTZUm+y7ZneuLBrjFMf3KlecIgL18/72vYBWD9n5
-         Qib5mPNI1xYbkx4DPLbvgJkWScl2eQ9tNiLZxBqI/UqWZofJYnUXYfE2gAk5in2OEVLN
-         Vpzy6s7TNa3gfVSYa7AXnGuMKV2djwpL2wFdwHKNHygWQU/NKEFSkoZjUZ4raILPDrsV
-         +Ix8+1y1XaKNUMC5wyfCmmPd+Puu607tmnwD/+F9Cyg2m3uLzqoHF6avYLyBg810uB3G
-         ityCgJuKXuTIC8hHxUKG7sb5b+BBOugMc/9QANHudx3BFQPexF9EzuT20LmCy+GPkhz4
-         BFTQ==
-X-Gm-Message-State: APjAAAVD+75rl/0Z4pTdl1WBPCOmDEwaaGXdAJnigjepNRCEJfUZ6cA+
-        m5qZOg9diI0zoeY6FowO1afrFx450cp77uDI/NI=
-X-Google-Smtp-Source: APXvYqzu/zUvObsbRaHCJL+Q+PS45dNc10MPZf7UO4nob5//59dzQa2seZjuSmT+LLFBKYIm3A5ClqlxeEjnAtjQhqI=
-X-Received: by 2002:a9d:4e08:: with SMTP id p8mr193749otf.124.1552601294428;
- Thu, 14 Mar 2019 15:08:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <6369897.qxlu8PgE1t@house>
-In-Reply-To: <6369897.qxlu8PgE1t@house>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 Mar 2019 23:08:03 +0100
-Message-ID: <CAJZ5v0h3zLrqqMXzt_cqGV1rBR0muosZwy1Zu3fV9O1kqGc6gw@mail.gmail.com>
-Subject: Re: [PATCH] [RESEND] Do not modify perf bias performance setting by
- default at boot
-To:     Thomas Renninger <trenn@suse.de>
-Cc:     Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>,
-        Hannes Reinecke <hare@suse.de>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Simon Schricker <sschricker@suse.de>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Len Brown <len.brown@intel.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=a0Z+F0fmFULDIL5rprNh3E5BB87HBNzyaQEazZwo8Qo=;
+        b=loz3TeYmHb+xD+qjRo2sYH9u5KVRJGdQIzkXnpN/PwidKgRJO//whSOSGUs7lpNcIx
+         7jc84YfkYKx+KS2STKnKvXdEfuYCiYrXo5zaJ7DUzt/xt+3cpazn83/MXDT612sPFu+d
+         Vjhdx7lW/neNL6mu5nVGU4JIiBP9hORV4DLWpnBSGRCdIejApwULWx6tLavQW33tR3J0
+         +kCFm1/pf5mPg2W81uz+bz70QsdTfQDgu9gEXaa9JF1WB0n5XQ94793xfr2Th0etSBIb
+         nr08Gr9wCh1VZQtvsGGsOzcwqNaZQ+3F77CT0QF8K28bglqfaaaE2VDCQltWG+TayACq
+         Swcg==
+X-Gm-Message-State: APjAAAVF/1tqdJskhyMsEAYB5caJpynv5iGXRryae9nPL8VfmMvmbFWd
+        hOEL8et/5Va9ak4U18JtnU0rFbGP1ks9EGrliHk=
+X-Google-Smtp-Source: APXvYqyQrj3Vx5wD8I8YjHCK8XkS7nQ2eCCjOt7vZDrLgBIMuLkU4oMqgEBW+ru+fuxG+s7Vpfemam9bcwQt8NtYmn4=
+X-Received: by 2002:a62:1f12:: with SMTP id f18mr310434pff.49.1552601711421;
+ Thu, 14 Mar 2019 15:15:11 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 15:14:57 -0700
+In-Reply-To: <20190305085707.GA8256@zn.tnic>
+Message-Id: <20190314221458.83047-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20190305085707.GA8256@zn.tnic>
+X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
+Subject: [PATCH v4] x86/boot: clean up headers
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     bp@alien8.de
+Cc:     natechancellor@gmail.com, niravd@google.com, sfr@canb.auug.org.au,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 3:42 PM Thomas Renninger <trenn@suse.de> wrote:
->
-> This is a revert of mainline git commits:
-> commit b51ef52df71cb28e9d90cd1d48b79bf19f0bab06
-> commit 17edf2d79f1ea6dfdb4c444801d928953b9f98d6
-> commit abe48b108247e9b90b4c6739662a2e5c765ed114
+The inclusion of <linux/kernel.h> was causing issue as the definition of
+__arch_hweight64 from arch/x86/include/asm/arch_hweight.h eventually gets
+included. The definition is problematic when compiled with -m16 (all code
+in arch/x86/boot/ is) as the "D" inline assembly constraint is rejected
+by both compilers when passed an argument of type long long (regardless
+of signedness, anything smaller is fine).
 
-I'm not quite convinced that reverting these is the right thing to do here.
+Because GCC performs inlining before semantic analysis, and
+__arch_hweight64 is dead in this translation unit, GCC does not report
+any issues at compile time.  Clang does the semantic analysis in the
+front end, before inlining (run in the middle) can determine the code is
+dead. I consider this another case of PR33587, which I think we can do
+more work to solve.
 
-> It is about this kernel message showing up on quite a lot servers:
-> [    0.072652] ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
-> [    0.076003] ENERGY_PERF_BIAS: View and update with x86_energy_perf_policy(8)
+It turns out that arch/x86/boot/string.c doesn't actually need
+linux/kernel.h, simply linux/limits.h and linux/compiler.h.
 
-What happens on boot is a matter of convention and the convention by
-which the EPB is set to "neutral" at that point has been used for
-quite a while.  Changing it now may confuse some users or even worse.
+Link: https://bugs.llvm.org/show_bug.cgi?id=33587
+Link: https://github.com/ClangBuiltLinux/linux/issues/347
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V3 -> V4:
+* Drop sentence from commit message about sorting headers.
 
-It would be fine to change the log level of these messages in my view, though.
+Changes V2 -> V3:
+* keep linux/types.h
 
-> The background afaik were some BIOS which "forgot to set a default value".
-> Certainly some (one?) broken laptop BIOS was meant, because
-> the value zero (performance) is quite a reasonable default value on server systems
-> and this is how a lot CPUs typically come up there.
+Changes V1 -> V2:
+* Add Reviewed, Tested, Suggested tags.
+* Drop linux/types.h; it's included in linux/limits.h.
 
-That depends on the expected power/perf profile of the system and the
-kernel has no information regarding that.  Arguably, user space can
-set the EPB to whatever it wants at the init time according to the
-information it has.  It is not quite realistic to expect that either
-the BIOS or the kernel will do the right thing on all systems in that
-respect anyway.
+ arch/x86/boot/string.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Another sever bug with above patches:
-> If you really set performance BIAS MSR value to 'performance'
-> as mentioned in kernel boot log, it is reset on next CPU offline/online cycle
-> (see below).
+diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
+index 315a67b8896b..90154df8f125 100644
+--- a/arch/x86/boot/string.c
++++ b/arch/x86/boot/string.c
+@@ -13,8 +13,9 @@
+  */
+ 
+ #include <linux/types.h>
+-#include <linux/kernel.h>
++#include <linux/compiler.h>
+ #include <linux/errno.h>
++#include <linux/limits.h>
+ #include <asm/asm.h>
+ #include "ctype.h"
+ #include "string.h"
+-- 
+2.21.0.360.g471c308f928-goog
 
-That is a bug.  There is no reason to change the EPB on CPU
-offline/online and I agree that this needs to be fixed.  The reverts
-would make this problem go away, but that's not the only possible way
-to fix it.
-
-Moreover, what is done during system-wide resume appears to be a bug
-too.  Whatever EPB value is there during suspend should be saved and
-it should be restored during resume. Reverting the commits above will
-not fix that particular issue.
-
-Thanks,
-Rafael
