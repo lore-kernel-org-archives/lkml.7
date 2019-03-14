@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67027C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB5BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D652184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C000D2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfCNWfa (ORCPT
+        id S1728389AbfCNWfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:35:30 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:42053 "EHLO
+        Thu, 14 Mar 2019 18:35:38 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:35639 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbfCNWfV (ORCPT
+        with ESMTP id S1728291AbfCNWf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:35:21 -0400
+        Thu, 14 Mar 2019 18:35:27 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MnZwp-1gfQnb1weL-00jcjx; Thu, 14 Mar 2019 23:34:46 +0100
+ 1Mnqfc-1gfhVr0JQY-00pPMk; Thu, 14 Mar 2019 23:35:13 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,63 +37,86 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 15/45] drivers: tty: serial: uartlite: use dev_err() instead of printk()
-Date:   Thu, 14 Mar 2019 23:33:45 +0100
-Message-Id: <1552602855-26086-16-git-send-email-info@metux.net>
+Subject: [PATCH v2 43/45] drivers: tty: serial: pmac_zilog: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:34:13 +0100
+Message-Id: <1552602855-26086-44-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:RSoecuiUMCZFKu5zI3Fmkey2Q65perOqK2cY4diVUxs0pMNgGPN
- PalJtmCPaFOSbfC4yBadqBKEZNlvOncF3ajHkufnu5rz1QboqDrdwUmUfiRhC+TgF+g0cbS
- JAE7DLET49TPjeUt1osFGFk20Kwdvucf6IpD2gjUvnVwceSTJfeslXtvexXj65EC854gWo3
- 6okcQAIGUF2YtkvTtnAyg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FWwdgWppYgs=:W94AFim0QvzBf6t3n2dCL5
- hPsR5ArPLhY9IWEl2ixGTD7ritzbAyx9G/JmIBeUYdk7vlwwOW53nxltuxwi+VIcXY2f8MY7z
- eisYgmkKv3XlU8q5ufnExo46SHv/xNjEZLfFNFJ2Fs4YFznEWgHl2hkiGpsiqBK8q352SvtcD
- hc6CULneGrDS1TKXOZUMx5PVj1mDPOBDvTFeO6KBMwMaDZiYA5PcMQw9xxgHT3Q3oRNuy8t9H
- Q1Tc5aWf9WZmn6J5UuNHMc4+lwaZnbfcIwjKP5/GI6T32PiWjk+R83MCK9LjC1gERWpny9Pd8
- GpfMAheYjUrjW3tZME1pLEd+Og2uw9CgWs5PaY+RPDXRflofmt4+hMmAzPU1rsGZJGPEWU9sg
- z+4mo6FDO+cQXTGA7KVW48RzatuHWiCssx41GtL9vX+T7PC7LX8Whx7tfyx9gCKnXvBHeKn62
- MdqHRHA0XqaxKtXNZXg2mJmZnwqLoYyJP9q0dcbOa+bz/gDZ0bN1Mu0rFmw8p4BP7kE1wN3n3
- D9tY3z/cKKslWoNmVDVYDJ8ulHx/PChE/Eyjn1dz7GVWXjm9D5B28WQw90ALAiZK4x0O2Tt+0
- WbG34ohEc0bLmNEZ9C5LrqvZagjpRmJebG5njAl9z2Y40hRSUUzBuyIfd78hssq9zDYCe3lB6
- x1sZIw5nvHq0TKWRffsANWkbflirk5N6pOHgWYVglAaPi3xSFh+9CcEztzXLcqMeFdHBOOO+D
- c9k2Q/KKmdHMGejs/D7YXJYsTt2ZOJU0S0lPGg==
+X-Provags-ID: V03:K1:h8L3vUD1hqRCDdoedxoMxbXPzNL0BOzZpGwAj5Iv5os2xWwwPjK
+ 74QvRmvyzA2dsoMmyBD0FXBwhfu1u8FSUXEl2W9nkKRWYLSWIy613rAJu0XWPBRmOKjaTmb
+ MYPIhJiSAGeQiwf12i9DlucbIkHdq7FdZaTxWuXQVDCyTYrHkG5FS4nebi1ruYLxt9f/UlP
+ nstSxBvZF8mdO1cHjUqTQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NQakjFCqD30=:3wb9HWwyA+mTGE5oMNepZt
+ TmLZftY9Sv5WN/7JjevuM0O/h8v17ZqI4ahFkFs+wYGFaGAzN/vmwZAfWChZ5b7msW0qwSGR/
+ omNEB6xvaC+8il39/XzdwXCXzqaV/nC9M32id9wAH8miAxtS3qlKBPWJTdb6Uq1yqO/Aa5TNu
+ U2+J6+ibwrxaf8p+w6vwdVQ6+aA59gfhv1PfoUEepXW5zO/5C8fyr981b838+UYyyHFOH4InN
+ DUmJx256+iIDjz3b3b8B+PebbGUcg/VA+kl606FCB/dp2WOuxJOoigvV5EYxSvAGAwk9TRpTT
+ KdKB17dgYSU9NMr0x/nCfAlEBTVCXashfnBqcDmZYb5rp0HrhAglxnaVA+C5NhCe7KPcYq7wB
+ PPVZNruY+uI6axA8X6RLG9wb9OgP+A3CtlnpB8GwAN2YwzjESuXGR3Mm3IEJfKHYmCcXQHmM1
+ nenzEKACzlVRhm7lTJ49eE+tSuuXCFv8Sxnk0DaZNJs3pzEZmAElkaRj5+pjuBxF/5rM/5qfP
+ XPd4tUlhVueeSHucedcwh6z9g8uOU51t7NsK/C62RyQFQ/5cO+KV+GIJWaPblSWQWR+I3T9eD
+ E/hNLprZ6xMLUuj1UIScrnkcWwALgyJGlx07Vr+sWLbEW970qmX74mJ07AAJwl/9xsZuDaFKI
+ s0dptY1p1Z8Ukh32S8imvoPDzoJmuEEWGWI2fBmHD5qI1epXW/uYkmhRNY43FUQ7/NsYZeNMf
+ kW/jorUQGumZZsgvUkXeQLFCPV6rk+ogBMhkYw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using dev_err() instead of printk() for more consistent output.
-(prints device name, etc).
+Use the safer devm versions of memory mapping functions.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/uartlite.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/pmac_zilog.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index b8b912b..aa461b8 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -352,7 +352,7 @@ static int ulite_request_port(struct uart_port *port)
- 	struct uartlite_data *pdata = port->private_data;
- 	int ret;
- 
--	pr_debug("ulite console: port=%p; port->mapbase=%llx\n",
-+	dev_dbg(port->dev, "ulite console: port=%p; port->mapbase=%llx\n",
- 		 port, (unsigned long long) port->mapbase);
- 
- 	if (!request_mem_region(port->mapbase, ULITE_REGION, "uartlite")) {
-@@ -519,7 +519,7 @@ static int ulite_console_setup(struct console *co, char *options)
- 
- 	/* Has the device been initialized yet? */
- 	if (!port->mapbase) {
--		pr_debug("console on ttyUL%i not present\n", co->index);
-+		dev_dbg(port->dev, "console on ttyUL%i not present\n", co->index);
+diff --git a/drivers/tty/serial/pmac_zilog.c b/drivers/tty/serial/pmac_zilog.c
+index bcb5bf7..bce19b0 100644
+--- a/drivers/tty/serial/pmac_zilog.c
++++ b/drivers/tty/serial/pmac_zilog.c
+@@ -1411,7 +1411,7 @@ static int __init pmz_init_port(struct uart_pmac_port *uap)
+ 	if (of_address_to_resource(np, 0, &r_ports))
  		return -ENODEV;
- 	}
+ 	uap->port.mapbase = r_ports.start;
+-	uap->port.membase = ioremap(uap->port.mapbase, 0x1000);
++	uap->port.membase = devm_ioremap(uap->port->dev, uap->port.mapbase, 0x1000);
  
+ 	uap->control_reg = uap->port.membase;
+ 	uap->data_reg = uap->control_reg + 0x10;
+@@ -1428,14 +1428,16 @@ static int __init pmz_init_port(struct uart_pmac_port *uap)
+ 	memset(&r_rxdma, 0, sizeof(struct resource));
+ #endif	
+ 	if (ZS_HAS_DMA(uap)) {
+-		uap->tx_dma_regs = ioremap(r_txdma.start, 0x100);
++		uap->tx_dma_regs = devm_ioremap(uap->port.dev,
++					        r_txdma.start, 0x100);
+ 		if (uap->tx_dma_regs == NULL) {	
+ 			uap->flags &= ~PMACZILOG_FLAG_HAS_DMA;
+ 			goto no_dma;
+ 		}
+-		uap->rx_dma_regs = ioremap(r_rxdma.start, 0x100);
++		uap->rx_dma_regs = devm_ioremap(uap->port.dev,
++					        r_rxdma.start, 0x100);
+ 		if (uap->rx_dma_regs == NULL) {	
+-			iounmap(uap->tx_dma_regs);
++			devm_iounmap(uap->port.dev, uap->tx_dma_regs);
+ 			uap->tx_dma_regs = NULL;
+ 			uap->flags &= ~PMACZILOG_FLAG_HAS_DMA;
+ 			goto no_dma;
+@@ -1530,9 +1532,9 @@ static void pmz_dispose_port(struct uart_pmac_port *uap)
+ 	struct device_node *np;
+ 
+ 	np = uap->node;
+-	iounmap(uap->rx_dma_regs);
+-	iounmap(uap->tx_dma_regs);
+-	iounmap(uap->control_reg);
++	devm_iounmap(uap->port.dev, uap->rx_dma_regs);
++	devm_iounmap(uap->port.dev, uap->tx_dma_regs);
++	devm_iounmap(uap->port.dev, uap->control_reg);
+ 	uap->node = NULL;
+ 	of_node_put(np);
+ 	memset(uap, 0, sizeof(struct uart_pmac_port));
 -- 
 1.9.1
 
