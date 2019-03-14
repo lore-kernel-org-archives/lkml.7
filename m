@@ -2,213 +2,171 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DBAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AC8C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325D82087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11F22087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WL9Hd2LL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvXM+imU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfCNHBW (ORCPT
+        id S1726766AbfCNHEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:01:22 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:56301 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfCNHBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:01:21 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id c2df480a
-        for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 06:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=1ntL2n5GEiCS0SNcUaaDGUqhM58=; b=WL9Hd2
-        LLZX6fdFg2e8v99R7CdhXC7VHevY3VoKgpO412t/bLZJxTApq0j76BfqBI/RAqJ4
-        NoQ9RDXTy1AahPZHwiYX/PvgiGai6pDPhWkdqJ5yEqkyXXLyIZkbBpQHz6VAO24h
-        4FvJSFSwmRkPHGN0GP02ytlzmywVWvTYf8zoU9Zr+BsUGSrQddbjTYx/IF9AqleW
-        BT5k1AbhJOrSNPd++Z4Ns8togn1YHdIiQqc+h+w0wZiKQIF/gyc7nWIrT12rDFsP
-        KArjjRxx2DQLDnmYnJyEtudfRPULCuT/br7fkTNnaZREHSvnvCzp6gAftXEMjCHT
-        JxTQZqjjLmsRHj/w==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ea4fbd6a (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 06:40:37 +0000 (UTC)
-Received: by mail-ot1-f46.google.com with SMTP id c18so4137666otl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:01:19 -0700 (PDT)
-X-Gm-Message-State: APjAAAUGgBGgXzXSzQcz3nKPXbvdkWEj+V2FWwwOhEyeQi0taJeIo5uz
-        v3kACq5yBhQS3tJLQyT5kN4EjsGQxSVHgjHRqLE=
-X-Google-Smtp-Source: APXvYqxH6H+49MZXaY5VM7EOIdthQm8triTY5ARxkGAF7lHFHN1wy79oBQTWp5RCjZlnYsq8x4A21LV6t+cexyIXD/c=
-X-Received: by 2002:a9d:7645:: with SMTP id o5mr31858423otl.225.1552546878335;
- Thu, 14 Mar 2019 00:01:18 -0700 (PDT)
+        Thu, 14 Mar 2019 03:04:55 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36748 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfCNHEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 03:04:55 -0400
+Received: by mail-pf1-f194.google.com with SMTP id n22so3223527pfa.3;
+        Thu, 14 Mar 2019 00:04:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GAnkE7uTGWOj/qtWamMd9e/0Ms9Nc3Bb4p1S+Xkzpi0=;
+        b=DvXM+imU8fFVAkj1Qsizcp+eYaJAJBK27um/HlcezBR7wS0NSkvge6Sd/BXQ7d3kkO
+         xhHZKDiw65qZFgnSapApofBdCUHAEejXMsUOiGSSfZx2p6aBV+mCmopn8UIveDj0kL4a
+         l61+I5GhX83epXQvLW5GTOKGmKOdio5bK5vqX8sVroS511y/I1DzjIrzyBeQ2AVUNZcr
+         GZmXsmsipSNWgUiGhKJKamuukq48Ir/kNr4L9gAGgCZCgQhwynxVgvmarXQE72+u8NHB
+         MsPzvZhCAKDy+jUJBBJijDaaqa63yo6qyNgHKFSgxRVJ1XavYhljGOOpDgQdlw7Gq02J
+         aTxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GAnkE7uTGWOj/qtWamMd9e/0Ms9Nc3Bb4p1S+Xkzpi0=;
+        b=DEYbrQuVjTkq+NKkgz+9JSwe3QHvZ76xOedgtL74z8+CEXool76cqnXOUzahOdtP1Y
+         GjCQtSyjrQnqAWDYS00kWuKZLkOrifJJGkSwjTRQS5++gmHk9eFgL0PL6DRYq/hNR8XH
+         KvTE4qyO/SMKBdjMH0gw2om1nnEII3p35tDmQpgQLkmU5OOlwFfJPiJlpG3Rz73y0iot
+         fQDdR4xUkYTDACEOY++z1r0tPYeTAjs29tZ+0lFln/sShrNzP/3EAuy4pRFxG6Ir06YW
+         x/HbH2dyKO0jXWieM8pwngIsSZtRwbXFX3Pvx6U5JVVXT6ni9bvImhym+ui3/22Cw5Vv
+         C2JA==
+X-Gm-Message-State: APjAAAUYZUMJfYfuMO4aOEurUb2YIRVgaut+re1NlkNGRy+8GpKcHLUG
+        VtJekLfDvk6CLlvlTMl3MQu3kB1HgceF1FvrnsEEgA==
+X-Google-Smtp-Source: APXvYqwFOj46Zi1mmsKQxNxInbmhNpACHMmnMDrh+vwaatDDpq4kRURSYcVamLIexCmKqN770iUxO/Iv4J0Hq3MhG+Q=
+X-Received: by 2002:a17:902:1744:: with SMTP id i62mr49311619pli.24.1552547093941;
+ Thu, 14 Mar 2019 00:04:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190114201911.13725-1-malat@debian.org> <20190313211230.17527-1-malat@debian.org>
-In-Reply-To: <20190313211230.17527-1-malat@debian.org>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 14 Mar 2019 01:01:07 -0600
-X-Gmail-Original-Message-ID: <CAHmME9rA+eM0PcsbZtFgBYObxaBOQvWt7EcGYE-yM+O2aHd6uQ@mail.gmail.com>
-Message-ID: <CAHmME9rA+eM0PcsbZtFgBYObxaBOQvWt7EcGYE-yM+O2aHd6uQ@mail.gmail.com>
-Subject: Re: [PATCH v3] lib/siphash.c: annotate implicit fall throughs
-To:     Mathieu Malaterre <malat@debian.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+References: <20190314061716.19892-1-sergey.senozhatsky@gmail.com> <CAH2r5msYG4H19GK1Fmnqb1dNCcp2qahULc_t4v9qdJ=OOZmGXg@mail.gmail.com>
+In-Reply-To: <CAH2r5msYG4H19GK1Fmnqb1dNCcp2qahULc_t4v9qdJ=OOZmGXg@mail.gmail.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Thu, 14 Mar 2019 02:04:42 -0500
+Message-ID: <CAH2r5msCs5ks3FUi_GhV2REsUR8t2h1=ybgLS6FyBEyka7Qb9g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] cifs: remove unused status severity defines
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Content-Type: multipart/mixed; boundary="0000000000000833b80584088a80"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+--0000000000000833b80584088a80
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks for getting this v3 into shape.
+updated it to fix the spelling mistake
 
-On Wed, Mar 13, 2019 at 3:12 PM Mathieu Malaterre <malat@debian.org> wrote:
-> There is a plan to build the kernel with -Wimplicit-fallthrough and
-> these places in the code produced warnings (W=1). Fix them up.
+
+On Thu, Mar 14, 2019 at 1:54 AM Steve French <smfrench@gmail.com> wrote:
 >
-> This commit remove the following warnings:
+> Since this file (smb2status.h) is intended to track the official
+> protocol documentation (albeit smb2status.h probably needs to be
+> updated), in this case the protocol document MS-ERREF.  I would prefer
+> to keep it closer to MS-ERREF and leave definitions in even if unused
+> (if nothing else it helps some of us when debugging to recognize what
+> these errors on the wire mean).  There is a real danger that we have
+> run into in the past that in removing some protocol definitions
+> (flags, etc.) from the code or forgetting to update our headers to
+> match newer versions of the protocol specifications, that  with future
+> code changes we can forget to handle flags (for example) or misparse
+> responses due to not realizing that there are additional flags that
+> need to be parsed.
 >
->   lib/siphash.c:71:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:72:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:73:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:75:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:108:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:109:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:110:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:112:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:434:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   lib/siphash.c:462:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> On Thu, Mar 14, 2019 at 1:17 AM Sergey Senozhatsky
+> <sergey.senozhatsky.work@gmail.com> wrote:
+> >
+> > STATUS_SEVERITY_* do not appear to be used by anyone, so
+> > drop them. Besides, the name of __constant_cpu_to_le32()
+> > is misspelled there: __constanst_cpu_to_le32().
+> >
+> > Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> > ---
+> >  fs/cifs/smb2status.h | 5 -----
+> >  1 file changed, 5 deletions(-)
+> >
+> > diff --git a/fs/cifs/smb2status.h b/fs/cifs/smb2status.h
+> > index 3d5f62150de4..e9da9c6da277 100644
+> > --- a/fs/cifs/smb2status.h
+> > +++ b/fs/cifs/smb2status.h
+> > @@ -29,11 +29,6 @@
+> >   *  C is set if "customer defined" error, N bit is reserved and MBZ
+> >   */
+> >
+> > -#define STATUS_SEVERITY_SUCCESS __constant_cpu_to_le32(0x0000)
+> > -#define STATUS_SEVERITY_INFORMATIONAL __constanst_cpu_to_le32(0x0001)
+> > -#define STATUS_SEVERITY_WARNING __constanst_cpu_to_le32(0x0002)
+> > -#define STATUS_SEVERITY_ERROR __constanst_cpu_to_le32(0x0003)
+> > -
+> >  struct ntstatus {
+> >         /* Facility is the high 12 bits of the following field */
+> >         __le32 Facility; /* low 2 bits Severity, next is Customer, then rsrvd */
+> > --
+> > 2.21.0
+> >
 >
-> Move the break statement onto the next line to match the fall-through
-> comment pattern. Also move the trailing statement onto the next line to
-> pass checkpatch verification.
 >
-> Acked-by: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
-> v3: move break statements onto next line and please checkpatch
-> v2: some cases were missed in v1, update missing ones
->
->  lib/siphash.c | 76 +++++++++++++++++++++++++++++++++++++--------------
->  1 file changed, 56 insertions(+), 20 deletions(-)
->
-> diff --git a/lib/siphash.c b/lib/siphash.c
-> index 3ae58b4edad6..f459e0f4a14e 100644
-> --- a/lib/siphash.c
-> +++ b/lib/siphash.c
-> @@ -68,13 +68,26 @@ u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key)
->                                                   bytemask_from_count(left)));
->  #else
->         switch (left) {
-> -       case 7: b |= ((u64)end[6]) << 48;
-> -       case 6: b |= ((u64)end[5]) << 40;
-> -       case 5: b |= ((u64)end[4]) << 32;
-> -       case 4: b |= le32_to_cpup(data); break;
-> -       case 3: b |= ((u64)end[2]) << 16;
-> -       case 2: b |= le16_to_cpup(data); break;
-> -       case 1: b |= end[0];
-> +       case 7:
-> +               b |= ((u64)end[6]) << 48;
-> +               /* fall through */
-> +       case 6:
-> +               b |= ((u64)end[5]) << 40;
-> +               /* fall through */
-> +       case 5:
-> +               b |= ((u64)end[4]) << 32;
-> +               /* fall through */
-> +       case 4:
-> +               b |= le32_to_cpup(data);
-> +               break;
-> +       case 3:
-> +               b |= ((u64)end[2]) << 16;
-> +               /* fall through */
-> +       case 2:
-> +               b |= le16_to_cpup(data);
-> +               break;
-> +       case 1:
-> +               b |= end[0];
->         }
->  #endif
->         POSTAMBLE
-> @@ -101,13 +114,26 @@ u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key)
->                                                   bytemask_from_count(left)));
->  #else
->         switch (left) {
-> -       case 7: b |= ((u64)end[6]) << 48;
-> -       case 6: b |= ((u64)end[5]) << 40;
-> -       case 5: b |= ((u64)end[4]) << 32;
-> -       case 4: b |= get_unaligned_le32(end); break;
-> -       case 3: b |= ((u64)end[2]) << 16;
-> -       case 2: b |= get_unaligned_le16(end); break;
-> -       case 1: b |= end[0];
-> +       case 7:
-> +               b |= ((u64)end[6]) << 48;
-> +               /* fall through */
-> +       case 6:
-> +               b |= ((u64)end[5]) << 40;
-> +               /* fall through */
-> +       case 5:
-> +               b |= ((u64)end[4]) << 32;
-> +               /* fall through */
-> +       case 4:
-> +               b |= get_unaligned_le32(end);
-> +               break;
-> +       case 3:
-> +               b |= ((u64)end[2]) << 16;
-> +               /* fall through */
-> +       case 2:
-> +               b |= get_unaligned_le16(end);
-> +               break;
-> +       case 1:
-> +               b |= end[0];
->         }
->  #endif
->         POSTAMBLE
-> @@ -431,9 +457,14 @@ u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
->                 v0 ^= m;
->         }
->         switch (left) {
-> -       case 3: b |= ((u32)end[2]) << 16;
-> -       case 2: b |= le16_to_cpup(data); break;
-> -       case 1: b |= end[0];
-> +       case 3:
-> +               b |= ((u32)end[2]) << 16;
-> +               /* fall through */
-> +       case 2:
-> +               b |= le16_to_cpup(data);
-> +               break;
-> +       case 1:
-> +               b |= end[0];
->         }
->         HPOSTAMBLE
->  }
-> @@ -454,9 +485,14 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
->                 v0 ^= m;
->         }
->         switch (left) {
-> -       case 3: b |= ((u32)end[2]) << 16;
-> -       case 2: b |= get_unaligned_le16(end); break;
-> -       case 1: b |= end[0];
-> +       case 3:
-> +               b |= ((u32)end[2]) << 16;
-> +               /* fall through */
-> +       case 2:
-> +               b |= get_unaligned_le16(end);
-> +               break;
-> +       case 1:
-> +               b |= end[0];
->         }
->         HPOSTAMBLE
->  }
 > --
-> 2.20.1
+> Thanks,
+>
+> Steve
 
-Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
-Greg - would you take this through your tree?
 
-Jason
+-- 
+Thanks,
+
+Steve
+
+--0000000000000833b80584088a80
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-smb2-fix-typo-in-definition-of-a-few-error-flags.patch"
+Content-Disposition: attachment; 
+	filename="0001-smb2-fix-typo-in-definition-of-a-few-error-flags.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jt8ag0ku0>
+X-Attachment-Id: f_jt8ag0ku0
+
+RnJvbSBjMWQwNjFkMmQ0N2Q1MzZkNzY3NGExNjI5MzdiNTFkOGRkN2FjN2RjIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBTdGV2ZSBGcmVuY2ggPHN0ZnJlbmNoQG1pY3Jvc29mdC5jb20+
+CkRhdGU6IFRodSwgMTQgTWFyIDIwMTkgMDE6NTY6MzQgLTA1MDAKU3ViamVjdDogW1BBVENIXSBz
+bWIyOiBmaXggdHlwbyBpbiBkZWZpbml0aW9uIG9mIGEgZmV3IGVycm9yIGZsYWdzCgpBcyBTZXJn
+ZXkgU2Vub3poYXRza3kgcG9pbnRlZCBvdXQgX19jb25zdGFudF9jcHVfdG9fbGUzMigpCmlzIG1p
+c3NwZWxsZWQgaW4gYSBmZXcgZGVmaW5pdGlvbnMgaW4gdGhlIGxpc3Qgb2Ygc3RhdHVzCmNvZGVz
+IHNtYjJzdGF0dXMuaCBhcyBfX2NvbnN0YW5zdF9jcHVfdG9fbGUzMigpCgpTaWduZWQtb2ZmLWJ5
+OiBTdGV2ZSBGcmVuY2ggPHN0ZnJlbmNoQG1pY3Jvc29mdC5jb20+CkNDOiBTZXJnZXkgU2Vub3po
+YXRza3kgPHNlcmdleS5zZW5vemhhdHNreUBnbWFpbC5jb20+Ci0tLQogZnMvY2lmcy9zbWIyc3Rh
+dHVzLmggfCA2ICsrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxl
+dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9mcy9jaWZzL3NtYjJzdGF0dXMuaCBiL2ZzL2NpZnMvc21i
+MnN0YXR1cy5oCmluZGV4IDNkNWY2MjE1MGRlNC4uZjU0MjljOGJmYjBkIDEwMDY0NAotLS0gYS9m
+cy9jaWZzL3NtYjJzdGF0dXMuaAorKysgYi9mcy9jaWZzL3NtYjJzdGF0dXMuaApAQCAtMzAsOSAr
+MzAsOSBAQAogICovCiAKICNkZWZpbmUgU1RBVFVTX1NFVkVSSVRZX1NVQ0NFU1MgX19jb25zdGFu
+dF9jcHVfdG9fbGUzMigweDAwMDApCi0jZGVmaW5lIFNUQVRVU19TRVZFUklUWV9JTkZPUk1BVElP
+TkFMIF9fY29uc3RhbnN0X2NwdV90b19sZTMyKDB4MDAwMSkKLSNkZWZpbmUgU1RBVFVTX1NFVkVS
+SVRZX1dBUk5JTkcgX19jb25zdGFuc3RfY3B1X3RvX2xlMzIoMHgwMDAyKQotI2RlZmluZSBTVEFU
+VVNfU0VWRVJJVFlfRVJST1IgX19jb25zdGFuc3RfY3B1X3RvX2xlMzIoMHgwMDAzKQorI2RlZmlu
+ZSBTVEFUVVNfU0VWRVJJVFlfSU5GT1JNQVRJT05BTCBjcHVfdG9fbGUzMigweDAwMDEpCisjZGVm
+aW5lIFNUQVRVU19TRVZFUklUWV9XQVJOSU5HIGNwdV90b19sZTMyKDB4MDAwMikKKyNkZWZpbmUg
+U1RBVFVTX1NFVkVSSVRZX0VSUk9SIGNwdV90b19sZTMyKDB4MDAwMykKIAogc3RydWN0IG50c3Rh
+dHVzIHsKIAkvKiBGYWNpbGl0eSBpcyB0aGUgaGlnaCAxMiBiaXRzIG9mIHRoZSBmb2xsb3dpbmcg
+ZmllbGQgKi8KLS0gCjIuMTcuMQoK
+--0000000000000833b80584088a80--
