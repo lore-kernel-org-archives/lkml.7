@@ -2,140 +2,201 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F2FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AD1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F1321019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5777E2085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfCNJfX (ORCPT
+        id S1726822AbfCNJhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:35:23 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49901 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfCNJfW (ORCPT
+        Thu, 14 Mar 2019 05:37:03 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59811 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfCNJhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:35:22 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1h4Mlb-0007BC-6M; Thu, 14 Mar 2019 10:35:11 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        linux-serial@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sebastian Siewior <bigeasy@linutronix.de>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
-        <20190213025520.GA5803@jagdpanzerIV> <874l9721hf.fsf@linutronix.de>
-        <20190304052335.GA6648@jagdpanzerIV> <87lg1rggcz.fsf@linutronix.de>
-        <20190311105411.GA368@jagdpanzerIV>
-        <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
-        <874l8815uc.fsf@linutronix.de>
-        <20190314091434.ci26htgagjx6mk4k@pathway.suse.cz>
-Date:   Thu, 14 Mar 2019 10:35:02 +0100
-In-Reply-To: <20190314091434.ci26htgagjx6mk4k@pathway.suse.cz> (Petr Mladek's
-        message of "Thu, 14 Mar 2019 10:14:34 +0100")
-Message-ID: <87y35hn6ih.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Thu, 14 Mar 2019 05:37:02 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h4MnL-0003zx-NK; Thu, 14 Mar 2019 10:36:59 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h4MnL-0001ca-Ea; Thu, 14 Mar 2019 10:36:59 +0100
+Date:   Thu, 14 Mar 2019 10:36:59 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 4/4] leds: netdev trigger: allow setting initial values
+ in device tree
+Message-ID: <20190314093659.srtlgqljcasbawva@pengutronix.de>
+References: <20190311144227.GA4404@amd>
+ <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190313202615.22883-5-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190313202615.22883-5-linux@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-14, Petr Mladek <pmladek@suse.com> wrote:
->>> I suggest the following way forward (separate patchsets):
->>>
->>>     1. Replace log buffer (least controversial thing)
->> 
->> Yes. I will post a series that only implements the ringbuffer using
->> your simplified API. That will be enough to remove printk_safe and
->> actually does most of the work of updating devkmsg, kmsg_dump, and
->> syslog.
->
-> Great. I just wonder if it is going to be fully lockless or
-> still using the prb_lock. I could understand the a fully lockless
-> solution will be much more complicated. But I think that it would
-> make a lot of things easier in the long run. Especially it might
-> help to avoid the big-kernel-lock-like approach.
+Hello,
 
-I will re-visit my lockless implementation and see if I can minimize
-complexity. We have since identified a couple other negative affects of
-the prb_lock for PREEMPT_RT relating to CPU isolated setups. So the
-lockless version is starting to look more attractive from a PREEMPT_RT
-perspective as well.
+On Wed, Mar 13, 2019 at 09:26:15PM +0100, Rasmus Villemoes wrote:
+> It can be quite convenient to initialize a netdev-triggered LED with a
+> device name and setting the rx,tx,link properties from device tree,
+> instead of having to do that in an init script in userspace.
 
->>>     2. Reliable offload to kthread (would be useful anyway)
->> 
->> Yes. I would like to implement per-console kthreads for this
->> series. I think the advantages are obvious. For PREEMPT_RT the
->> offloading will need to be always active. (PREEMPT_RT cannot call the
->> console->write() from atomic contexts.) But I think this would be
->> acceptable at first. It would certainly be better than what
->> PREEMPT_RT is doing now.
->
-> I would personally start with one kthread. I am afraid that
-> the discussion about it will be complicated enough. We could
-> always make it more complicated later.
->
-> I understand the immediate offloading might be necessary for
-> PREEMPT_RT. But a more conservative approach is needed for
-> non-rt kernels.
->
-> Well, if there won't be a big difference in the complexity
-> between one and more threads then we could mix it. But
-> I personally see this a two steps that are better be done
-> separately.
+Well, you'd do this in an udev rule instead of an init script.
 
-I will create the series in a way that a complete solution with 1
-kthread exists and all following patches in the series add per-console
-kthreads. Then we have a clean cut if we decide we only want the first
-part of the series.
+> My main motivation for this is to be able to switch away from the
+> deprecated CONFIG_CAN_LEDS, so add an example based on that and add a
+> pointer in the net/can/Kconfig file.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>  .../devicetree/bindings/leds/common.txt       | 17 ++++++++++
+>  drivers/leds/trigger/ledtrig-netdev.c         | 31 +++++++++++++++++++
+>  drivers/net/can/Kconfig                       |  3 +-
+>  3 files changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 7cb88460a47c..4f3a97e73417 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -43,6 +43,23 @@ Optional properties for child nodes:
+>                  Documentation/ABI/testing/sysfs-class-led-trigger-netdev)
+>                  to reflect the state and activity of a net device.
+>  
+> +                The optional child node netdev can be used to
+> +                configure initial values for the link, rx, tx and
+> +                device_name properties. For example, setting
+> +                linux,default-trigger = "netdev" and adding the child
+> +                node
+> +
+> +                netdev {
+> +                    rx;
+> +                    tx;
+> +                    link;
+> +                    device-name = "can0";
 
->>>     3. Atomic consoles (a lot of tricky code, might not be
->>> 		worth the effort)
->> 
->> I think this will be necessary. PREEMPT_RT cannot support reliable
->> emergency console messages without it. And for kernel developers this
->> is also very helpful. People like PeterZ are using their own patches
->> because the mainline kernel is not providing this functionality.
->> 
->> The decision about _when_ to use it is still in the air. But I guess
->> we'll worry about that when we get that far. There's enough to do
->> until then.
->
-> I am sure that there are situations where the direct output
-> to atomic consoles would help with debugging. PeteZ and Steven
-> are using their own patches for a reason.
->
-> Let's see how the code is complicated and how many consoles
-> might get supported a reasonable way.
+Maybe make this:
 
-Agreed.
+	device = <&can0>;
 
-I will post each of the above series as RFCv2 because I expect we still
-need some discussion. Especially if I post the fully lockless version of
-the ringbuffer.
+?
 
-I have taken a *lot* of notes about things that need changing during
-this thread. I think a lot of great feedback has come out of this
-RFC. Thank you to everyone that responded (publicly and privately)! I'll
-need several weeks before the RFCv2 for the ringbuffer is ready.
+> +                };
+> +
+> +                can be used to replace 'linux,default-trigger =
+> +                "can0-rxtx"' that relies on the deprecated
+> +                CONFIG_CAN_LEDS.
 
-John Ogness
+Mentioning "CONFIG_CAN_LEDS" is wrong for a binding document that is
+supposed to be independent from the kernel.
+
+>  - led-pattern : Array of integers with default pattern for certain triggers.
+>                  Each trigger may parse this property differently:
+>                  - one-shot : two numbers specifying delay on and delay off (in ms),
+> diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+> index 55153a7e8433..1f7c86df1e91 100644
+> --- a/drivers/leds/trigger/ledtrig-netdev.c
+> +++ b/drivers/leds/trigger/ledtrig-netdev.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/netdevice.h>
+> +#include <linux/of.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/timer.h>
+>  #include "../leds.h"
+> @@ -395,6 +396,35 @@ static void netdev_trig_work(struct work_struct *work)
+>  			(atomic_read(&trigger_data->interval)*2));
+>  }
+>  
+> +static void netdev_trig_of_init(struct led_classdev *led_cdev,
+> +				struct led_netdev_data *trigger_data)
+> +{
+> +	struct device_node *np = led_cdev->dev->of_node;
+> +	const char *device_name;
+> +
+> +	if (!np)
+> +		return;
+> +	np = of_get_child_by_name(np, "netdev");
+> +	if (!np)
+> +		return;
+> +
+> +	if (of_property_read_bool(np, "link"))
+> +		__set_bit(NETDEV_LED_LINK, &trigger_data->mode);
+> +	if (of_property_read_bool(np, "tx"))
+> +		__set_bit(NETDEV_LED_TX, &trigger_data->mode);
+> +	if (of_property_read_bool(np, "rx"))
+> +		__set_bit(NETDEV_LED_RX, &trigger_data->mode);
+> +	if (!of_property_read_string(np, "device-name", &device_name)) {
+> +		unsigned len = strlen(device_name);
+> +
+> +		if (len < IFNAMSIZ)
+> +			set_device(trigger_data, device_name, len);
+
+if set_device contained the length check you'd have it in only one
+place.
+
+> +	}
+> +	set_baseline_state(trigger_data);
+> +
+> +	of_node_put(np);
+> +}
+> +
+>  static int netdev_trig_activate(struct led_classdev *led_cdev)
+>  {
+>  	struct led_netdev_data *trigger_data;
+> @@ -418,6 +448,7 @@ static int netdev_trig_activate(struct led_classdev *led_cdev)
+>  	trigger_data->mode = 0;
+>  	atomic_set(&trigger_data->interval, msecs_to_jiffies(50));
+>  	trigger_data->last_activity = 0;
+> +	netdev_trig_of_init(led_cdev, trigger_data);
+>  
+>  	led_set_trigger_data(led_cdev, trigger_data);
+>  
+> diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
+> index e0f0ad7a550a..91703a96b636 100644
+> --- a/drivers/net/can/Kconfig
+> +++ b/drivers/net/can/Kconfig
+> @@ -77,7 +77,8 @@ config CAN_LEDS
+>  	# everything that this driver is doing. This is marked as broken
+>  	# because it uses stuff that is intended to be changed or removed.
+>  	# Please consider switching to the netdev trigger and confirm it
+> -	# fulfills your needs instead of fixing this driver.
+> +	# fulfills your needs instead of fixing this driver. See e.g.
+> +	# Documentation/devicetree/bindings/leds/common.txt
+>  	depends on BROKEN
+>  	select LEDS_TRIGGERS
+>  	---help---
+
+This hunk can better live in the patch adding to
+Documentation/devicetree/bindings/leds/common.txt or a separate patch.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
