@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B74C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480AFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95525218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A0821874
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbfCNWhE (ORCPT
+        id S1728525AbfCNWhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:37:04 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:41927 "EHLO
+        Thu, 14 Mar 2019 18:37:10 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:59871 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbfCNWfV (ORCPT
+        with ESMTP id S1728217AbfCNWfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:35:21 -0400
+        Thu, 14 Mar 2019 18:35:19 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mdv2u-1gVlt40Nfy-00b3ty; Thu, 14 Mar 2019 23:35:08 +0100
+ 1MZk1p-1ha7vI0XKR-00WmeJ; Thu, 14 Mar 2019 23:35:07 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,28 +37,28 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 38/45] drivers: tty: serial: samsung: use devm_* functions
-Date:   Thu, 14 Mar 2019 23:34:08 +0100
-Message-Id: <1552602855-26086-39-git-send-email-info@metux.net>
+Subject: [PATCH v2 37/45] drivers: tty: serial: apbuart: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:34:07 +0100
+Message-Id: <1552602855-26086-38-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:6UXVHHSN/pSBbNy6AuA8qQkx6AtLHwlQl48BR55G72r4iZNdygr
- 41CzcU0EUEiy9E8U/gKNs9RKX+r0+HDvVNw9phNXgBrTiysdxISUDMeZYutFSVuwHc+siq8
- KCu3fiiqgRtnherFTgfS+lKex81+mnGAWOWPNUrRrnz7bpSbnDHsTqH7IVgMQKsxi699gu7
- Tg3YiWSOGXDVfYsd8iUeQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gVsb7my8ifs=:ZlKeXjpmAVa7MpOXnQxYOj
- TzwAOTJlsCSA1CYJRA7azVKI+6fmsfBjTiEc0hDFveZvvvzccJ/n09vK39Z0RNAdN/8LabStb
- 4P04VpHWZk5jlYee6Gz6+lVfqgQL8Vl2wb8SI5KPTJhCAzw5G4L0coOhwM71E2EqIQGfQgDMy
- Z/E8w3a9D2QRzo40a2cLm5Wg4H6tVSBOGvLXweU112hflMWLORA0fyHydRxetlsu1sNXsm6ur
- vf+EEjTyOpxYFpGXJ68XGxGTv6+UUVW9DMLEoKbJVcpXFmFVHgkUbhxwXorP+YaIIu0cu3qa/
- DOUieeg+PhibNmneDV9x7g+xo+hBcUdwHmgtFPFOR/Iai7cSysC1awvFbcF4m0M3y233Kn60N
- aBBX23OTNm55txYykyg/uCfkVoItv7QUOT12Bg7J4q+hyVN/i7BEaVfSDYrxRV4IrC+slGJKq
- 5RME/jO4Et159K9Fu520nBitb/o2wQ6ngakOzUk/n2Z2Odn7xHKBYezhePnVdn6zq83eJz2wM
- IRzuY/MHktcsbyGwiNfAiZoDJkadtoDvIqrbU2xd40sm0X9ac9cCOd2ulRQcRCjgSEC8x8w/l
- 1L7FH/j6mpUUbuwbbiP4bYLR5Plv5H5fB26rtZjRkmf9Sz8B84DzLRniHXAurkMdfu5WNozRn
- CndnG6Zabu00wLRTTTFpDRT/mh1+ngNQ68zCNqqZfBCY4S1pxj11Z4ocT1UUWheif0niYrvle
- CjrrijuPP3dK/aJo7G0leJo+mpdG2F/QsyqXfw==
+X-Provags-ID: V03:K1:2dk2jESpJv/HEfcNhm6LprNXtUCqzVx1Rvdfnjmt87/bGDbVsf/
+ n6IJXGpfOh+ytlsw3dFBHYudgyuS1XDPdOT3eQYpN7QrEUJ5zFh4jnOO9OqQ2oHIhZfyLL4
+ qnqLTDRTXuIfKvf0gzGuMPkPi3Z4BrPcuHcKwYjrIS+IbAxFB1cehvHku5NKfqbqPZdYaSb
+ GBkxJfegQWU/hAuuGRPaw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2rOfErufcPA=:2/hDprE9Ghh6MvquzUy22u
+ mN8+IDIauukhHoPPk+W+k9L4oLy46DK0ThHqo2W8BH+HtmEg0eqrLIcBKJf+XGrkOhthWLSfA
+ NB0SSVGgzssGmqKehw/S7FoiD6W3RyQMvnZ5TCLZVfwhUwaxsbZuVIoVIlJAiXomhHd74u76N
+ p562cJZNfqJE6r2W5OuqsUUr9yGFGvwdsQ1uCRZnbrxfBAviyrMQGTRxOn4rxektMrIrMOq9m
+ exBeGNyGCWAiOft1vosaIKYsTpLu7zXvEHV80Dt615vJNnn7RZuIukLmd5f7OY2MXsSVhR+nr
+ oZKl/Jvox98y+G6mtnL+E0FrX0i0+7WzaMToWRcBJT3NQaxAKSAuFK10kQ6rOgujPWosxnPGR
+ V9ydwETF5HrKtlLnR421q0vvmAxr/FU7QOsiv5poqJw9gC8MOutsi/9AQ8KMTINqCTB8cuh9i
+ RZyCrDuQ9jShqj62DNCoFeEjUbGmlwoYRYCdR19l9PpLvIdIo0dG+ElfprOQCkk7HNy3oaFZL
+ O/3u0A/5d2FcTU1TMaIA46lAONoCRR8UPszBvNndJ9qaR8qDKx4MQXDMV7fqoUCLu6ptEEMbj
+ iXHB0SRsovoPKH+j0tU259t8AQFYabf53z6lYaQoMpfSMbiWKKHR5ZgpMsxjxQTD974kL3xSP
+ 8ckMHatFoGN6iB08Z2HVzEa+PsjbhlTbxaLwG9U6xThjvSc/MVn/ir45gFrytl8QzGUl1+LUq
+ hObTVSpfZFgbS7/SoooABz615U7N0uG+0rwq9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,32 +68,42 @@ Use the safer devm versions of memory mapping functions.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/samsung.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/tty/serial/apbuart.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
-index a49cf15..e0bab87 100644
---- a/drivers/tty/serial/samsung.c
-+++ b/drivers/tty/serial/samsung.c
-@@ -1436,13 +1436,16 @@ static const char *s3c24xx_serial_type(struct uart_port *port)
+diff --git a/drivers/tty/serial/apbuart.c b/drivers/tty/serial/apbuart.c
+index 60cd133..5eaaee9 100644
+--- a/drivers/tty/serial/apbuart.c
++++ b/drivers/tty/serial/apbuart.c
+@@ -293,12 +293,15 @@ static const char *apbuart_type(struct uart_port *port)
  
- static void s3c24xx_serial_release_port(struct uart_port *port)
+ static void apbuart_release_port(struct uart_port *port)
  {
--	release_mem_region(port->mapbase, MAP_SIZE);
-+	devm_release_mem_region(port->dev, port->mapbase, MAP_SIZE);
+-	release_mem_region(port->mapbase, 0x100);
++	devm_release_mem_region(port->dev, port->mapbase, 0x100);
  }
  
- static int s3c24xx_serial_request_port(struct uart_port *port)
+ static int apbuart_request_port(struct uart_port *port)
  {
- 	const char *name = s3c24xx_serial_portname(port);
--	return request_mem_region(port->mapbase, MAP_SIZE, name) ? 0 : -EBUSY;
+-	return request_mem_region(port->mapbase, 0x100, "grlib-apbuart")
 +	return devm_request_mem_region(port->dev,
 +				       port->mapbase,
-+				       MAP_SIZE,
-+				       name) ? 0 : -EBUSY;
++				       0x100,
++				       "grlib-apbuart")
+ 	    != NULL ? 0 : -EBUSY;
+ 	return 0;
  }
+@@ -622,7 +625,9 @@ static int __init grlib_apbuart_configure(void)
+ 		port = &grlib_apbuart_ports[line];
  
- static void s3c24xx_serial_config_port(struct uart_port *port, int flags)
+ 		port->mapbase = addr;
+-		port->membase = ioremap(addr, sizeof(struct grlib_apbuart_regs_map));
++		port->membase = devm_ioremap(port->dev,
++					     addr,
++					     sizeof(struct grlib_apbuart_regs_map));
+ 		port->irq = 0;
+ 		port->iotype = UPIO_MEM;
+ 		port->ops = &grlib_apbuart_ops;
 -- 
 1.9.1
 
