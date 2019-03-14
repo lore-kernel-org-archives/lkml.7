@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764D9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D502DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C132184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40CA2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kvmziy7z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="giZeOeKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfCNNLv (ORCPT
+        id S1727607AbfCNNMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:11:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59866 "EHLO
+        Thu, 14 Mar 2019 09:12:00 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59864 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfCNNLn (ORCPT
+        with ESMTP id S1727474AbfCNNLn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Mar 2019 09:11:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -28,25 +28,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UYG49NhyVu7cNtNRCL20P1Z39GZ6lT/pWSkNg1mi8D4=; b=Kvmziy7zhGNL8F91u4nj8sobuf
-        kf5QEQvma4Pb8+umK5xp/TY3iVqo3MtDY7xXv3UQ0USSMjIcEYvomvSW67zrgosSuU75/0TQeVu7e
-        ONiV10iqmQVUlKLRxTxV4qnSYkucSWjuPLqF8C8i8iFI1eUY2WWIRPQB6+l8lT6AeYOeBYJM9Gjbn
-        jYPIvBOMOoA7w8nF77hMdf/Zv0VNxNaZhWbxwGvlYuGSIKtAS0wNIEi+sAhGWhkciNQ4BR+wdazGQ
-        PDPN7Ts2fmGbN1sran/sNtvXXCIA1wRyQWw1Hlzx2ZZ2HB+75YIHDtPxAg5NOneVXfboklBb5PcUE
-        qjqGPdSA==;
+        bh=YC9Gx+HXorwzGNqBKj+TM2KVrVoaiE1QTzQwhAmO6WI=; b=giZeOeKcV1HWC5Gwd+rxs5mbq5
+        CsYvYhaW7tCsyAIUOB6pKemQ1kw8M7nyY1tTgto0rS7MD2cq5HF4SyQ5DqOhHtHYssKgHkNSS6g/w
+        l4Y2bu3WNGeaUWGpc55g+a8jUf6k02lffV7AjKOGu3HoJwuOlMdyot9Ir8ncnf0GVdZq3HelVc8VX
+        +Nplmw/M/Wb1zXRxGwgWd7eGfmpg8WrLVWDKTPziy7GPz/W4TK+bpXktlkuztfer+lAJhVGP91OeD
+        d8/M22TGOx1Zs7S0MZoi+hpvs+DmfmMxOY1el5Jlkv/ZEvhEvVwW5bm5ztr6Ph8h4Yz25l4hd0vLN
+        RwgbImJg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4Q8w-0005RX-6R; Thu, 14 Mar 2019 13:11:30 +0000
+        id 1h4Q8u-0005RK-Kk; Thu, 14 Mar 2019 13:11:28 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 5A57D203C774E; Thu, 14 Mar 2019 14:11:27 +0100 (CET)
-Message-Id: <20190314130705.852659665@infradead.org>
+        id 4898E2028B0E8; Thu, 14 Mar 2019 14:11:27 +0100 (CET)
+Message-Id: <20190314130705.547793802@infradead.org>
 User-Agent: quilt/0.65
-Date:   Thu, 14 Mar 2019 14:01:18 +0100
+Date:   Thu, 14 Mar 2019 14:01:15 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org, eranian@google.com, jolsa@redhat.com
 Cc:     linux-kernel@vger.kernel.org, tonyj@suse.com,
         nelson.dsouza@intel.com, peterz@infradead.org
-Subject: [RFC][PATCH 5/8] perf/x86/intel: Optimize intel_get_excl_constraints()
+Subject: [RFC][PATCH 2/8] perf/x86/intel: Simplify intel_tfa_commit_scheduling()
 References: <20190314130113.919278615@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -55,72 +55,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid the POPCNT by noting we can decrement the weight for each
-cleared bit.
+validate_group() calls x86_schedule_events(.assign=NULL) and therefore
+will not call intel_tfa_commit_scheduling(). So there is no point in
+checking cpuc->is_fake, we'll never get there.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/events/intel/core.c |   22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ arch/x86/events/intel/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2838,7 +2838,7 @@ intel_get_excl_constraints(struct cpu_hw
- 	struct intel_excl_cntrs *excl_cntrs = cpuc->excl_cntrs;
- 	struct intel_excl_states *xlo;
- 	int tid = cpuc->excl_thread_id;
--	int is_excl, i;
-+	int is_excl, i, w;
- 
+@@ -2015,7 +2015,7 @@ static void intel_tfa_commit_scheduling(
  	/*
- 	 * validating a group does not require
-@@ -2894,36 +2894,40 @@ intel_get_excl_constraints(struct cpu_hw
- 	 * SHARED   : sibling counter measuring non-exclusive event
- 	 * UNUSED   : sibling counter unused
+ 	 * We're going to use PMC3, make sure TFA is set before we touch it.
  	 */
-+	w = c->weight;
- 	for_each_set_bit(i, c->idxmsk, X86_PMC_IDX_MAX) {
- 		/*
- 		 * exclusive event in sibling counter
- 		 * our corresponding counter cannot be used
- 		 * regardless of our event
- 		 */
--		if (xlo->state[i] == INTEL_EXCL_EXCLUSIVE)
-+		if (xlo->state[i] == INTEL_EXCL_EXCLUSIVE) {
- 			__clear_bit(i, c->idxmsk);
-+			w--;
-+			continue;
-+		}
- 		/*
- 		 * if measuring an exclusive event, sibling
- 		 * measuring non-exclusive, then counter cannot
- 		 * be used
- 		 */
--		if (is_excl && xlo->state[i] == INTEL_EXCL_SHARED)
-+		if (is_excl && xlo->state[i] == INTEL_EXCL_SHARED) {
- 			__clear_bit(i, c->idxmsk);
-+			w--;
-+			continue;
-+		}
- 	}
- 
- 	/*
--	 * recompute actual bit weight for scheduling algorithm
--	 */
--	c->weight = hweight64(c->idxmsk64);
--
--	/*
- 	 * if we return an empty mask, then switch
- 	 * back to static empty constraint to avoid
- 	 * the cost of freeing later on
- 	 */
--	if (c->weight == 0)
-+	if (!w)
- 		c = &emptyconstraint;
- 
-+	c->weight = w;
-+
- 	return c;
+-	if (cntr == 3 && !cpuc->is_fake)
++	if (cntr == 3)
+ 		intel_set_tfa(cpuc, true);
  }
  
 
