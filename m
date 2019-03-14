@@ -2,131 +2,119 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A268C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E28C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD1020811
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552579008;
-	bh=wPtCKCMhCQ/Eyhh/9zkkUwa2ahTKJz+xvyI0JuaeucQ=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=OfZgEe2dUjmXOwxGVfAsgbC2lbqUOXQn8aJHKv2csPnot9WjL87aiBaKwB5mBGZ1k
-	 UT0+k8IJZLlk7RNhFXTJYFQvqy74Kw3399aAjN+UJpi9ZE+ct85Z0K3Z0JXmo87ecC
-	 y04detQtDPNMnlLoyeGCeKIuUAk0xG21XaNMJAug=
+	by mail.kernel.org (Postfix) with ESMTP id E1D5D2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NV8vS0NT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfCNP4r (ORCPT
+        id S1727131AbfCNP6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:56:47 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35056 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727216AbfCNPxx (ORCPT
+        Thu, 14 Mar 2019 11:58:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40020 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfCNP6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:53:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=IyZ1aIEkaAhiOlWzkTbi3AeQ3U09TOy2g7vmarIUVNM=; b=u56aUHpCyXjt
-        /qXrc1HCLY2ahxuRV0DdfzY3MPifTGP8g9dqgTeNlEBSAPTJW252LCPXckz03BtNI84Jm1yCDGPM8
-        L9NO6IBliXteC4+oLdMJQVOFHzN2CvKRE3MnB8fu2/qNaLD8i27U8E28OrVLZyAzkJzf3c4SqUzej
-        0sqHw=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h4Sfy-0002gW-Aj; Thu, 14 Mar 2019 15:53:46 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 858DA1126E64; Thu, 14 Mar 2019 15:53:45 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Cheng-Yi Chiang <cychiang@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        alsa-devel@alsa-project.org
-Subject: Applied "ASoC: qcom: add i2c dependency for SND_SOC_SDM845" to the asoc tree
-In-Reply-To:  <20190304203114.1894822-3-arnd@arndb.de>
-X-Patchwork-Hint: ignore
-Message-Id: <20190314155345.858DA1126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:53:45 +0000 (GMT)
+        Thu, 14 Mar 2019 11:58:51 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u9so4268110pgo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 08:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references:from
+         :subject:cc:to:message-id:user-agent:date;
+        bh=SO2qVZCQ0sHoD86dU2fe3ja3UME6r79be+S1UxhQDuU=;
+        b=NV8vS0NTxzARF1SPfUo/A74H44nJeZdogUqaH2nbNQc3mZjtmT7qkkhA9LFACv5qfj
+         celH3HzNAhjbTR5FQccm2AQFmlDnaBNGu/KSMzJyBAtcttDLrDs1tbAFS0bSeqUhHqRx
+         t4AAC6zhTp475axNMHCtJAvwdRTZDSf5ynPmY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
+         :date;
+        bh=SO2qVZCQ0sHoD86dU2fe3ja3UME6r79be+S1UxhQDuU=;
+        b=Jntm4UVmNf0Ism/qXNRNaTPPeJNYtEbXSDfUjnejfIaR8fbX33IzS9GFSvEoEQBOdI
+         VpZ/Nvqo1fs2VPXlzjZ6aIDESpMnFXeyHHrqeHEEkznOQ7ZL2Pcj9oXRhOYDNUq9PRRq
+         qB0NVsmaNgJZCPcHGJf1s8QWSY1XoCsQGPyqkhwQycv3q9ie+f51tTWjrr/xMm0MmQM5
+         Q4HC6+duA+ofVhGpdY3F3A8WDC/8M2OGQ95PEVDUrYeqWT2LVDcs4ksGwbHZKS+RQCdF
+         FS72Oj9Irxmrx6xpUra58ITpknl44xtDIj5xyJEasF5bcxPZNlie+saiqDIUhr6oeKcP
+         hILg==
+X-Gm-Message-State: APjAAAUF4OBZJpXibhX28pqJRgeiYAXbndNBY7oReEV75VnMJ2XpppAl
+        eHexSvdwxB+lXNLmPlyeSjRiRA==
+X-Google-Smtp-Source: APXvYqxw0t+rzh4R6jr62qgnAl4Yazwdm74Ad1r1jDH5XgMpgtQcrIBWRfKbL7ZOcKF1ZbrySW4wjA==
+X-Received: by 2002:a62:1611:: with SMTP id 17mr3863307pfw.139.1552579130312;
+        Thu, 14 Mar 2019 08:58:50 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s4sm22148658pfe.16.2019.03.14.08.58.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 08:58:49 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CANNG1HWDc-PraBwG=8TBcfJSFFe+X+k6oVhOqyU=i5fAjpuoLw@mail.gmail.com>
+References: <20190225065044.11023-1-vaishali.thakkar@linaro.org> <20190225065044.11023-5-vaishali.thakkar@linaro.org> <155138953788.16805.6820097041346672619@swboyd.mtv.corp.google.com> <CANNG1HWDc-PraBwG=8TBcfJSFFe+X+k6oVhOqyU=i5fAjpuoLw@mail.gmail.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v4 4/5] soc: qcom: socinfo: Expose custom attributes
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+To:     Vaishali Thakkar <vaishali.thakkar@linaro.org>
+Message-ID: <155257912871.20095.1653828341120157988@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 14 Mar 2019 08:58:48 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Quoting Vaishali Thakkar (2019-03-14 04:25:16)
+> On Fri, 1 Mar 2019 at 03:02, Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Why can't we use the debugfs_create_u32 function? It would make things
+> > clearer if there was either a debugfs_create_le32() function or if the
+> > socinfo structure stored in smem was unmarshalled from little endian
+> > to the cpu native endian format during probe time and then all the rest
+> > of the code can treat it as a native endian u32 values.
+>=20
+> Thanks for the review. I've worked on the next version with all the
+> changes you suggested in the patchset but I'm kind of not sure
+> what would be the best solution in this case.
 
-   ASoC: qcom: add i2c dependency for SND_SOC_SDM845
+Alright, thanks.
 
-has been applied to the asoc tree at
+>=20
+> I'm bit skeptical about introducing debugfs_create_le32 as we don't
+> really have any endian specific functions in the debugfs core at the
+> moment. And if I do that, should I also introduce debugfs_create_be32
+> [and to an extent debugfs_create_le{16,64}]? More importantly, would
+> it be useful to introduce them in core?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+I suppose it's ambiguous if the endianness should be swapped to be CPU
+native, or if it should just export them as little endian or big endian
+to userspace. I wouldn't introduce any APIs that aren't used, because
+it's just dead code. If the code is documented clearly and indicates
+what it does then it should be fine. This patch has pretty much already
+written the code, so it's just a matter of moving it into debugfs core
+now and getting gregkh to approve.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+>=20
+> In the case of converting it to cpu native during probe, I'll need to
+> declare an extra struct with u32 being the parsed version for it to be
+> correct. Wouldn't it add extra overhead?
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Yes it would be some small extra overhead that could be allocated on the
+kernel's heap. What's the maximum size? A hundred bytes or so?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 686174a0989b1c33698b26523a1e4ccdcc84cf22 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 4 Mar 2019 21:30:52 +0100
-Subject: [PATCH] ASoC: qcom: add i2c dependency for SND_SOC_SDM845
-
-We must not select SND_SOC_MAX98927 unless CONFIG_I2C
-is also enabled:
-
-WARNING: unmet direct dependencies detected for SND_SOC_MAX98927
-  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && I2C [=n]
-  Selected by [y]:
-  - SND_SOC_SDM845 [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && QCOM_APR [=y] && MFD_CROS_EC [=y]
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/qcom/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index 75ceb04d8bf0..b1764af858ba 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -98,7 +98,7 @@ config SND_SOC_MSM8996
- 
- config SND_SOC_SDM845
- 	tristate "SoC Machine driver for SDM845 boards"
--	depends on QCOM_APR && MFD_CROS_EC
-+	depends on QCOM_APR && MFD_CROS_EC && I2C
- 	select SND_SOC_QDSP6
- 	select SND_SOC_QCOM_COMMON
- 	select SND_SOC_RT5663
--- 
-2.20.1
+I don't see much of a problem with this approach. It simplifies the
+patch series because nothing new is introduced in debugfs core and the
+endian conversion is done once in one place instead of being scattered
+throughout the code. Sounds like a good improvement to me.
 
