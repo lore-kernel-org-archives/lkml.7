@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D948DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2568C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC2F218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BA72184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbfCNWiK (ORCPT
+        id S1728455AbfCNWiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:38:10 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:48117 "EHLO
+        Thu, 14 Mar 2019 18:38:08 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:47471 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbfCNWfF (ORCPT
+        with ESMTP id S1728115AbfCNWfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:35:05 -0400
+        Thu, 14 Mar 2019 18:35:06 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MnZwp-1gfQqZ046X-00jcjx; Thu, 14 Mar 2019 23:34:38 +0100
+ 1MK3mS-1hKRez1baA-00LRrW; Thu, 14 Mar 2019 23:34:47 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,54 +37,79 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 06/45] drivers: tty: serial: samsung: use devm_ioremap_resource()
-Date:   Thu, 14 Mar 2019 23:33:36 +0100
-Message-Id: <1552602855-26086-7-git-send-email-info@metux.net>
+Subject: [PATCH v2 16/45] drivers: tty: serial: uartlite: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:33:46 +0100
+Message-Id: <1552602855-26086-17-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:biPYKTkboYb/1OcCYoABqLwj1O505ksU/PyTR3LJ7Da35VWUqJk
- KaLZ2YHPrK+MwI0vSMJbRK2E3/v/XiYFWvv74iQVL1ADferdn+dvJmjrKVVTOtQGW9LHINY
- pYkp6FZIW2ft1INaMVS460EQaeKy7jQqTy12j0ZJ0Qb+sLxC5h+erEeWrmtopbd4om5ulZ5
- /5eWv8ekIAvi+Ut3e1bvQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QkSB6AzkaFA=:/04NccFh0LgsEP9J2BJ72q
- B1eFmVEwPpMjYm749dnhjlR1rmq+dnbhS6j1MXeV82rBiAi26ThL9pAAc7klQcrBlTg+hkxu8
- h1rJLzQ/4yonbiJVN6eV4GUs3aA1WldGeFNX3MyrNaGjcDvKrgDaf92xZ3GjkVlxMznHPwgBu
- gorsROrsJc3QPP05pvlrxMcoB8Odwxr/OOInZYZ1C8+7iJGYltXL+homHLriVX2jA4ZRjrwbO
- iz5G+tXjg0v4D3B/kBij3/OsX4pNtdNL2e0s9P+at5Tm1wAQFNb+/c0POxcgyoplqD2JoeoMs
- pUu27HM70pR+0N6EtOCi0mQOFd2p3OkgwemsL69XOYPm/La/tKOs1xZKj1G4dpxC0IQHXuFR9
- bEV6dEwTq5AgGjNTs4l+xEl3Wsp4guxJObrvwleGgxuo9fBmOykncZQxvcZwazG7u9EVYIZAN
- ZmSt4oaQYJaHNFvKNAjUfcz0OwDd9BSt7BAEmhy006a9MCW7ol88W+fQ9eqj0Bspk8Ap/2zHt
- oWG0svr6rviYWfub8FWEsOoQfavzOW8eEzn8Kg71fNi8NLLmJDHbocxubhmKWsODbTO3Ns9PU
- twaMKF7mHGFdqfjwXzeDqMUPwvvjX/tAWETSvK9Uyly9LwBTcWZDnARxTOHT6WdMHl55Dr8lK
- 2X3WCBPEkivrB4HiM9zjH19trWcXVULV7kI3OG/2ZThodsdZk/jgKz8GwO1He91bKQOtyQJwo
- D01Eu3eXeIA/cG/JFR2C/6WCsl7Bv0pmQa7DCA==
+X-Provags-ID: V03:K1:SlzeGhHlOuxFduqp5QuUml5rOBQzKNh69j7CDj7Ua0DFA/PwUiw
+ 1lhjZUG18/PBNkuKf+0Ltm8rhlvh77rYT5Hwow7OUXX/JTdcUgQZh/oKi5/EsA2RFNKzX47
+ UrPJmeeH1jZk48JBFb1CyoHx7Cu4A3gTsWPn/T7TGVztCN2KHvV4sDeNv+Iiyeh4eQltg7e
+ p9J66Ais57XCJGu26Su2g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:S3GpsMXKkd8=:18iZLGQUyS/zWRDlmeJy1l
+ t+CUbbf7JicHBp9EJh5e/ge6UxEsJBFnHeFriW9pXaNeQk9y7UMIvZlK/WxDYPLxs7Z8T+vlp
+ UJmdkA8z2wEl7aOWq+zC52paCNg9uiRwydirnMv4QxQusIR48nyZfe2UKcWpXn99jtVQzhnrL
+ L1K5XO4WxYMCOqaOKL1EfQd69BCunSgT3DsGqP08X0lClf2fhdB1hGT5V49TBvrEAoQ+DhiA+
+ zfBDR3I3PDq0b0W4oi11+SZDLA8mgnD9Q4jR3XV+Im04Qd7Px7N5jjW8FcrAxEtRlcsCkOSvw
+ 5Yjsl0RJVzmdLdA/y6beeeN8xoyff16M6UNDEp290o4TJ3bnAVT1FEO1HL2B994SNxfrQMPy1
+ k7+6S0B78z+VQPRThV0hABwx0X0k+L/nuzYoHdhhgeKiSSC7FHfEeYM/bKd73mhuRoihT2tY/
+ AWwRGa/UejhwRpXUqHqYN3paVYS2uwbHam7aqscs2rwfd+bygDQTQQQSGTjTCp0RaLcicv+TT
+ rAxojJeLPEk8x4NoPz9BdjumexSv27cwtiqNWmDl/YkisO7gavxnakRMt45QBmlrNrUOsn2LF
+ nfFQ9k+mabqGs9eC9OVGzFsu5mC7PLm+GpPCUvHAfcC2rNEcmZiKOaXP7aZPbnqkAo5t5zJmM
+ ZcUXg0utXbXRUpOHU9d3axMc2LXLTx1zFWdmMkEsbSBQCeKSjKvIyttaet8ejhl1Hour8g5EC
+ vKnDtaCzqmclKRrrQNiTCIpzP6RM2skLaFdHqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of fetching out data from a struct resource for passing
-it to devm_ioremap(), directly use devm_ioremap_resource()
+Use the safer devm versions of memory mapping functions.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/samsung.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/uartlite.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
-index 83fd516..a49cf15 100644
---- a/drivers/tty/serial/samsung.c
-+++ b/drivers/tty/serial/samsung.c
-@@ -1775,7 +1775,7 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
+diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
+index aa461b8..f068d00 100644
+--- a/drivers/tty/serial/uartlite.c
++++ b/drivers/tty/serial/uartlite.c
+@@ -342,8 +342,8 @@ static const char *ulite_type(struct uart_port *port)
  
- 	dbg("resource %pR)\n", res);
+ static void ulite_release_port(struct uart_port *port)
+ {
+-	release_mem_region(port->mapbase, ULITE_REGION);
+-	iounmap(port->membase);
++	devm_release_mem_region(port->dev, port->mapbase, ULITE_REGION);
++	devm_iounmap(port->dev, port->membase);
+ 	port->membase = NULL;
+ }
  
--	port->membase = devm_ioremap(port->dev, res->start, resource_size(res));
-+	port->membase = devm_ioremap_resource(port->dev, res);
- 	if (!port->membase) {
- 		dev_err(port->dev, "failed to remap controller address\n");
+@@ -355,15 +355,20 @@ static int ulite_request_port(struct uart_port *port)
+ 	dev_dbg(port->dev, "ulite console: port=%p; port->mapbase=%llx\n",
+ 		 port, (unsigned long long) port->mapbase);
+ 
+-	if (!request_mem_region(port->mapbase, ULITE_REGION, "uartlite")) {
++	if (!devm_request_mem_region(port->dev,
++				     port->mapbase,
++				     ULITE_REGION,
++				     "uartlite")) {
+ 		dev_err(port->dev, "Memory region busy\n");
  		return -EBUSY;
+ 	}
+ 
+-	port->membase = ioremap(port->mapbase, ULITE_REGION);
++	port->membase = devm_ioremap(port->dev, port->mapbase, ULITE_REGION);
+ 	if (!port->membase) {
+ 		dev_err(port->dev, "Unable to map registers\n");
+-		release_mem_region(port->mapbase, ULITE_REGION);
++		devm_release_mem_region(port->dev,
++					port->mapbase,
++					ULITE_REGION);
+ 		return -EBUSY;
+ 	}
+ 
 -- 
 1.9.1
 
