@@ -2,113 +2,151 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCD1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ACBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07BF4217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:55:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="XRYUAOBi"
+	by mail.kernel.org (Postfix) with ESMTP id 88EEF2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfCNGzk (ORCPT
+        id S1726851AbfCNG5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:55:40 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:49846 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfCNGzj (ORCPT
+        Thu, 14 Mar 2019 02:57:44 -0400
+Received: from 6.mo173.mail-out.ovh.net ([46.105.43.93]:45959 "EHLO
+        6.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfCNG5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:55:39 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 6687EC4F
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 06:55:38 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id p007qJI1OT7I for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 01:55:38 -0500 (CDT)
-Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 347B4BF0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:55:38 -0500 (CDT)
-Received: by mail-it1-f197.google.com with SMTP id y6so1273352itj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:55:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0wysLjVZTWrkN4pEpW8FoQb9oTPXdHUHYTODbADcuFw=;
-        b=XRYUAOBitTxGUW47TpCvTzJ/g4J35KjBLJL2fq+l1ZW5gXFgLuXXdx/Fpcy69ZbuLq
-         YcSGc4/TqxePRcFGPK5TLdcjZiQfxKO/vByZFzkHgpowyqjc5d5r+YNhoJusr+4fDRH2
-         tdJUzKglfhUXvvemu9c5Tfk0Sk7dntocyY7z11pzMIxcocjAq01M5Q9FT+qzh2hVctri
-         PYDCbOcJQiXcdR+TxCTAQSAeK+xHW9sd0CncxlGRopCBxHp/9pSetj0QiX5gbteSpCxJ
-         lfduewSCR7/b7HUrTdvUi4gijYJiuD2KLziEQCmRCEekUQRm3sjZmyScawcInxPWjE3j
-         gBXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0wysLjVZTWrkN4pEpW8FoQb9oTPXdHUHYTODbADcuFw=;
-        b=XXx/Z5bBv/MDgRVtG9F5F0Fjw6hvsbLZMjCm6l4rGOVXL1V8G4FG8RoVxvxYsp6JiF
-         +FYyHeeQnxNtGnT1zzvG2vbUMQCsD44OkMb4x7nuYKN+DI6uVtpM7qSU0VZSZyzRSLJc
-         GXyvbigJ+Pi64SwcYEWlq3CdZ3jAHxKQFJCV8QZxt3wHImELQGOjXOmdEIme/c8ZpTew
-         OBSwk9bbAJRcU9Z7Foi6UAzRVhtsG1ASbfbZKq60vd3QxTHzzVR3+Hz9/A7KHbl4eLxJ
-         yqnPbw8EWnZVIP+Elp0LLPv9pI5Yml+6mA2QZPPNDZu+7x6qNlzGOjkK2STU6Bx2nC8+
-         yVYQ==
-X-Gm-Message-State: APjAAAVk90TQXTPQpKUH2BUf1Fc/jYuOfa8qtLcbHs4EMtm0X1h633CC
-        /6Mci4yUDbXeNP9Pe7S3TEmQlL/lLoVEbvNTfIzk/dLzhboXXpIltWn2l9BohJ1hmVDdsn4B/Ht
-        ymY1uguQrPItHE2k/galcG0AOzlWo
-X-Received: by 2002:a5d:9a8d:: with SMTP id c13mr178664iom.195.1552546537821;
-        Wed, 13 Mar 2019 23:55:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxca02iLz7CKzuBBVdOM4AbjL+hLQDHebyBiP4XjE56JVa8eWhGE53k+wKstdtw+gThNIKwGg==
-X-Received: by 2002:a5d:9a8d:: with SMTP id c13mr178656iom.195.1552546537589;
-        Wed, 13 Mar 2019 23:55:37 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id i5sm733983itb.3.2019.03.13.23.55.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 23:55:36 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] thunderbolt: fix a missing check of kmemdup
-Date:   Thu, 14 Mar 2019 01:55:31 -0500
-Message-Id: <20190314065531.16776-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 Mar 2019 02:57:43 -0400
+Received: from player731.ha.ovh.net (unknown [10.109.146.76])
+        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 5DB4BF9D5A
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:52:22 +0100 (CET)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player731.ha.ovh.net (Postfix) with ESMTPSA id 939E538B7730;
+        Thu, 14 Mar 2019 06:51:35 +0000 (UTC)
+Date:   Thu, 14 Mar 2019 07:50:55 +0100
+From:   Greg Kurz <groug@kaod.org>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 5/5] ocxl: Remove some unused exported symbols
+Message-ID: <20190314075055.6c4eb970@bahia.lan>
+In-Reply-To: <1dd6d24f3ee5a2029ee6fbb2890356197e881101.camel@au1.ibm.com>
+References: <20190227045741.21412-1-alastair@au1.ibm.com>
+        <20190313040702.14276-1-alastair@au1.ibm.com>
+        <20190313040702.14276-6-alastair@au1.ibm.com>
+        <20190313101045.6712f156@bahia.lan>
+        <1dd6d24f3ee5a2029ee6fbb2890356197e881101.camel@au1.ibm.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 18025094560251812171
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedutddrhedugddutddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmemdup may fail and return NULL. The fix adds a check and returns
-NULL in case it fails to avoid NULL pointer dereferecen.
+On Thu, 14 Mar 2019 13:23:21 +1100
+"Alastair D'Silva" <alastair@au1.ibm.com> wrote:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/thunderbolt/property.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> On Wed, 2019-03-13 at 10:10 +0100, Greg Kurz wrote:
+> > On Wed, 13 Mar 2019 15:07:01 +1100
+> > "Alastair D'Silva" <alastair@au1.ibm.com> wrote:
+> >   
+> > > From: Alastair D'Silva <alastair@d-silva.org>
+> > > 
+> > > Remove some unused exported symbols.
+> > > 
+> > > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > > ---
+> > >  drivers/misc/ocxl/config.c        |  2 --
+> > >  drivers/misc/ocxl/ocxl_internal.h | 23 +++++++++++++++++++++++
+> > >  include/misc/ocxl.h               | 23 -----------------------
+> > >  3 files changed, 23 insertions(+), 25 deletions(-)
+> > > 
+> > > diff --git a/drivers/misc/ocxl/config.c
+> > > b/drivers/misc/ocxl/config.c
+> > > index 026ac2ac4f9c..c90c2e4875bf 100644
+> > > --- a/drivers/misc/ocxl/config.c
+> > > +++ b/drivers/misc/ocxl/config.c
+> > > @@ -299,7 +299,6 @@ int ocxl_config_check_afu_index(struct pci_dev
+> > > *dev,
+> > >  	}
+> > >  	return 1;
+> > >  }
+> > > -EXPORT_SYMBOL_GPL(ocxl_config_check_afu_index);
+> > >  
+> > >  static int read_afu_name(struct pci_dev *dev, struct
+> > > ocxl_fn_config *fn,
+> > >  			struct ocxl_afu_config *afu)
+> > > @@ -535,7 +534,6 @@ int ocxl_config_get_pasid_info(struct pci_dev
+> > > *dev, int *count)
+> > >  {
+> > >  	return pnv_ocxl_get_pasid_count(dev, count);
+> > >  }
+> > > -EXPORT_SYMBOL_GPL(ocxl_config_get_pasid_info);
+> > >  
+> > >  void ocxl_config_set_afu_pasid(struct pci_dev *dev, int pos, int
+> > > pasid_base,
+> > >  			u32 pasid_count_log)
+> > > diff --git a/drivers/misc/ocxl/ocxl_internal.h
+> > > b/drivers/misc/ocxl/ocxl_internal.h
+> > > index 321b29e77f45..06fd98c989c8 100644
+> > > --- a/drivers/misc/ocxl/ocxl_internal.h
+> > > +++ b/drivers/misc/ocxl/ocxl_internal.h
+> > > @@ -107,6 +107,29 @@ void ocxl_pasid_afu_free(struct ocxl_fn *fn,
+> > > u32 start, u32 size);
+> > >  int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
+> > >  void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+> > >  
+> > > +/*
+> > > + * Get the max PASID value that can be used by the function
+> > > + */
+> > > +int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+> > > +
+> > > +/*
+> > > + * Check if an AFU index is valid for the given function.
+> > > + *
+> > > + * AFU indexes can be sparse, so a driver should check all indexes
+> > > up
+> > > + * to the maximum found in the function description
+> > > + */
+> > > +int ocxl_config_check_afu_index(struct pci_dev *dev,
+> > > +				struct ocxl_fn_config *fn, int
+> > > afu_idx);
+> > > +
+> > > +/**  
+> > 
+> > Two *s ?
+> >   
+> 
+> These are Sphinx formatted comments (similar, but not quite the same as
+> Doxygen).
+> 
 
-diff --git a/drivers/thunderbolt/property.c b/drivers/thunderbolt/property.c
-index ee76449524a3..841314deb446 100644
---- a/drivers/thunderbolt/property.c
-+++ b/drivers/thunderbolt/property.c
-@@ -176,6 +176,10 @@ static struct tb_property_dir *__tb_property_parse_dir(const u32 *block,
- 	} else {
- 		dir->uuid = kmemdup(&block[dir_offset], sizeof(*dir->uuid),
- 				    GFP_KERNEL);
-+		if (!dir->uuid) {
-+			tb_property_free_dir(dir);
-+			return NULL;
-+		}
- 		content_offset = dir_offset + 4;
- 		content_len = dir_len - 4; /* Length includes UUID */
- 	}
--- 
-2.17.1
+Oh... should the other comments be converted to this format for consistency ?
 
+> > Also, this results in an ocxl_internal.h header file where only these
+> > three functions are documented... which looks a bit weird IMHO. Since
+> > these are ocxl internals, do we _really_ need to keep the comments ?  
+> 
+> I believe we should, it's a courtesy to the next person who has to work
+> in the area.
+> 
+> There are more documentation comments coming in further series.
+> 
+
+Fair enough.
+
+Reviewed-by: Greg Kurz <groug@kaod.org>
