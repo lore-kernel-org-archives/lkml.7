@@ -2,92 +2,165 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08A9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F18CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD0B20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:58:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="bNu4Ji+1"
+	by mail.kernel.org (Postfix) with ESMTP id 3C54720854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfCNJ6A (ORCPT
+        id S1726962AbfCNKA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:58:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37342 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfCNJ57 (ORCPT
+        Thu, 14 Mar 2019 06:00:57 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46827 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfCNKA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:57:59 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a17so4235556ljd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NuSK0qOPLXxH7vhF0A67emmli0VyceoxlDDTT3FCfac=;
-        b=bNu4Ji+16FXSqNVd2X6tyw2n1bEq8Gi+CACP2GwVjOxPUcgsgl0SO7r1Mxln0OMDFr
-         N62zKvkajrRJOdMXvvhAH4UrZGcGMcp2D1tHW6nEQBFdUIEHmHyJNLb8147ItktBzcgd
-         XMOrFXwfwd5lU37g+woqdhOekkVmeSWVeLs/I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NuSK0qOPLXxH7vhF0A67emmli0VyceoxlDDTT3FCfac=;
-        b=YCkz592/j3On2mnTCmFKEkzbh1I7/2hr8lwZPOMIZgfULBE/n02d3/MOOqaHTxi/4Q
-         nb8f9RcKZmhoJ8eivOhHQn5XZ2RrdMvFWh/KDeGEOxZlFyicbIwF82nSUKaUgjLqXH9e
-         5Yy4fBMvkUr7Xe7MsbymjkmT3oXQcG670uLM8NqyfQeJpAD4+4PQ3aiBZMginxcsa5pH
-         6+K+CpwsjN71kUSkR7gFQeMv6yxfa8BQn0Kjk1b/2m5U8bcLOiQbrHjXAo3kuXuIIOVw
-         n2bBh5ML9tvzF1q8f/KKtJd27LHby5s+T8dW7ubpGEJHE2zx12vod1v7ri+562q1KJjc
-         pCig==
-X-Gm-Message-State: APjAAAXoKVyBHcZquLc78Yp9s8cbbexa+M4To8CXrx3phS9fB5Xz8YON
-        hpLCxAK/F5iRu/MsCmnwEoSm9w==
-X-Google-Smtp-Source: APXvYqzfoDW4YIqGAQydrHS7IYHc5KVDEF4P14BiLGFI1yhUqrDjB0Hun2D+aAODl1CcBD3292ux6A==
-X-Received: by 2002:a2e:90cd:: with SMTP id o13mr14743771ljg.153.1552557477304;
-        Thu, 14 Mar 2019 02:57:57 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id q2sm1302809ljb.86.2019.03.14.02.57.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 02:57:56 -0700 (PDT)
-Subject: Re: [PATCH 2/4] leds: netdev trigger: factor out middle part of
- device_name_store
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
-References: <20190311144227.GA4404@amd>
- <20190313202615.22883-1-linux@rasmusvillemoes.dk>
- <20190313202615.22883-3-linux@rasmusvillemoes.dk>
- <20190314093111.7ivkdg7ozk4vylio@pengutronix.de>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <c6eb8d99-67ff-defd-31fc-fa55deb16b5b@rasmusvillemoes.dk>
-Date:   Thu, 14 Mar 2019 10:57:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 14 Mar 2019 06:00:57 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h4NAJ-0006O9-DV; Thu, 14 Mar 2019 11:00:43 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h4NAI-0002HD-JJ; Thu, 14 Mar 2019 11:00:42 +0100
+Date:   Thu, 14 Mar 2019 11:00:42 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2 2/5] pwm: Add i.MX TPM PWM driver support
+Message-ID: <20190314100042.fl4kdwn7awcw4aov@pengutronix.de>
+References: <1552461970-20813-1-git-send-email-Anson.Huang@nxp.com>
+ <1552461970-20813-3-git-send-email-Anson.Huang@nxp.com>
+ <20190314091702.sooxvnzd4mqr2ilz@pengutronix.de>
+ <DB3PR0402MB3916975BC10346C612135334F54B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190314093111.7ivkdg7ozk4vylio@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB3PR0402MB3916975BC10346C612135334F54B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 10.31, Uwe Kleine-KÃ¶nig wrote:
-> Hello,
+Hello,
+
+On Thu, Mar 14, 2019 at 09:49:06AM +0000, Anson Huang wrote:
+> > On Wed, Mar 13, 2019 at 07:31:16AM +0000, Anson Huang wrote:
+> > > +static void imx_tpm_pwm_config(struct pwm_chip *chip,
+> > > +			       struct pwm_device *pwm,
+> > > +			       struct pwm_state *state)
+> > > +{
+> > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> > > +	static bool tpm_cnt_initialized;
+> > > +	unsigned int duty_cnt;
+> > > +	u32 val;
+> > > +	u64 tmp;
+> > > +
+> > > +	/*
+> > > +	 * TPM counter is shared by multi channels, let's make it to be
+> > > +	 * ONLY first channel can config TPM counter's precale and period
+> > > +	 * count.
+> > > +	 */
+> > > +	if (!tpm_cnt_initialized) {
+> > > +		imx_tpm_pwm_config_counter(chip, state->period);
+> > > +		tpm_cnt_initialized = true;
+> > > +	}
+> > 
+> > So the period can only be configured once. That is not as good as it could be.
+> > You should allow a change whenever there is exactly one PWM in use.
 > 
-> On Wed, Mar 13, 2019 at 09:26:13PM +0100, Rasmus Villemoes wrote:
->> +static void set_device(struct led_netdev_data *trigger_data,
->> +		       const char *buf, size_t size)
+> OK, maybe I can add check for other channels' statue here, and allow the period
+> update if ONLY 1 channel is enabled.
+
+See how the SiFive patch that I already pointed out solves this same
+problem.
+
+> > > +	/* set duty counter */
+> > > +	tmp = readl(tpm->base + TPM_MOD) & TPM_MOD_MOD_MASK;
+> > > +	tmp *= state->duty_cycle;
+> > > +	duty_cnt = DIV_ROUND_CLOSEST_ULL(tmp, state->period);
+> > 
+> > Uah, you use state->period here even though for the 2nd PWM the Divider
+> > might not be setup appropriately.
 > 
-> "set_device" is a very generic name. Can you please prefix it with
-> "ledtrig_netdev_"?
+> I think that is 1 limitation here, the dts should make sure the period used for
+> different channels are same or at least they can share same divider, otherwise,
+> what if multiple channels can NOT find a divider good for every channel? How to
+> deal with this case?
 
-Sure. Will do next round.
+You should return -ERANGE or -EINVAL for the calls that cannot be
+satisfied.
 
+> > > [...]
+> > > +static int imx_tpm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > +			  struct pwm_state *state)
+> > > +{
+> > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> > > +	struct pwm_state curstate;
+> > > +	unsigned long flags;
+> > > +
+> > > +	imx_tpm_pwm_get_state(chip, pwm, &curstate);
+> > > +
+> > > +	spin_lock_irqsave(&tpm->lock, flags);
+> > > +
+> > > +	if (state->period != curstate.period ||
+> > > +	    state->duty_cycle != curstate.duty_cycle ||
+> > > +	    state->polarity != curstate.polarity)
+> > > +		imx_tpm_pwm_config(chip, pwm, state);
+> > > +
+> > > +	if (state->enabled != curstate.enabled)
+> > > +		imx_tpm_pwm_enable(chip, pwm, state->enabled);
+> > 
+> > This is wrong. This sequence:
+> > 
+> > 	pwm_apply_state(pwm, { .duty_cycle = 0, .period = 10000, .enabled =
+> > true });
+> > 	pwm_apply_state(pwm, { .duty_cycle = 10000, .period =
+> > 10000, .enabled = false });
+> > 
+> > must keep the output pin low which isn't guaranteed here.
+> 
+> So you mean for every .apply operation, the channel MUST be disabled first, then config
+> it, then enable it?
 
+No. I only say that you should not configure the new period and duty
+cycle if in the end the hardware should be disabled. Always disabling is
+wrong, too.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
