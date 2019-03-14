@@ -2,115 +2,130 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241BBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEAAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2D72184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4CF2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="kS2EueFz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=openedev.com header.i=@openedev.com header.b="T7aoFyaS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfCNINQ (ORCPT
+        id S1727277AbfCNIN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 04:13:16 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:43910 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfCNINO (ORCPT
+        Thu, 14 Mar 2019 04:13:26 -0400
+Received: from se15t.web-hosting.com ([162.255.118.154]:60251 "EHLO
+        se15t.web-hosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbfCNIN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 04:13:14 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 1C71571D
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 08:13:13 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6cY6mDvKlPLX for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 03:13:13 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id E07936C0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 03:13:12 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id a9so3711183iol.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SElI6m5e00A1NPP8AKqKf6Qas4qlMROeovLlOxjk3bo=;
-        b=kS2EueFzs0+HOgcKzlHjWWi1Pat6HCleHqp6JS6om9IatI15wFbvKv/9Tbh7RFRd5D
-         IZSk27mlIf9+t+QI4jHvUpnyfs8zDikj4WRqpOqBhAdUJa6e80JrKeJB5poNFm8cxwQM
-         pcKFwkaN/Y7sFD7C2F+XyLa6qC2U35wgrbiFJSHTaJkebRlQO5yOdGsdWq/k+hmtf61E
-         ntXZGUmbAKmmUKo1xPJkWGrbuUKwMl7u94ZEklhEwRVUUyv1aBoRVDFj1cKsa877Mj/V
-         E4GwaWioVZvRSF7Hy/kUcmi1OMON+8Ymnpfu0H2AJKXBfNmX8mXF5q2c1EZHSccUMIEt
-         C8OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=SElI6m5e00A1NPP8AKqKf6Qas4qlMROeovLlOxjk3bo=;
-        b=G+3IEq9do5fSP2k+vfIqOk+MMxsMbzZAhwOpUivm+Xi1Xrt3v9enGM1jH/1445pZtJ
-         32nFAQ/8xNBAbkCWoDEpEUeUEIz8fR/uExohazqWUb7kTzR6V1RBjbw62fptE1jz6frS
-         Bko5uHFrYZfBOK5EbRihU7RX+f49GaZIHb39AT8jnciYIe87fmzDwerJC2uXosKDz6wG
-         28E3WdIGRtSnx8wpdUCnlSYBzjjmYJHggV1K/bVMXNSEr2RrPlHZk50xOa3AAx3aKuaj
-         rwqidWfq8r4ahms5BfqMke17eARNRq8vHabY6aF3DiK9geuodo0UCiuzzmCgChzPDbWx
-         lu5Q==
-X-Gm-Message-State: APjAAAUoJuMzhorR+gtBwGmMJGFZHMywFjaDRNHAups+BCEXA9MJX8eZ
-        G40LT9NrORuthfXBLQjK//uNmyGqL+Wm3/wNN3w4e2ASo1TBqZSv+3A22k609H53hrV7oRndgrg
-        k94V4JSk33M7F9hx6tURHyg9IXhQb
-X-Received: by 2002:a24:2a88:: with SMTP id w130mr1226299itw.95.1552551192049;
-        Thu, 14 Mar 2019 01:13:12 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwL0NZSm/Pb5W3j99/lYGM73qdZBwKCtLfcEIeEGTHRNTDZytsRp5yJQfL21Zo7QkYGkxEWGA==
-X-Received: by 2002:a24:2a88:: with SMTP id w130mr1226285itw.95.1552551191811;
-        Thu, 14 Mar 2019 01:13:11 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id x25sm6272745ion.78.2019.03.14.01.13.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 01:13:11 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] btrfs: fix a NULL pointer dereference
-Date:   Thu, 14 Mar 2019 03:13:04 -0500
-Message-Id: <20190314081304.469-1-kjlu@umn.edu>
+        Thu, 14 Mar 2019 04:13:26 -0400
+Received: from [68.65.123.203] (helo=server153.web-hosting.com)
+        by se15.registrar-servers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <akash@openedev.com>)
+        id 1h4KfS-0004zi-6E; Thu, 14 Mar 2019 00:20:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=openedev.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=p7oBEUindrNXrdVNdE/N1Btj9T8KDQpLx5eEhEcMwOo=; b=T7aoFyaSbzkD1ZuP2sS8XFRX6v
+        aOfS+MgqPDOWMfe49wcb/YpQ45CPDNmhHXsQqADonOEs2i3vwb3bTCNLsmLHQ6wW97p9ZWhgFDi9B
+        qCV6IgEc9LMS5lKwEqRNzOXji64rxzaiydHtuDqvGdzOjSuetJrFVcvVVg2mF5yWch5J9/pBbkJqM
+        PHGTh4tWnQmgrfU5rXJN+dA1Jkinub8H+HBt1UHdxpOQL5gGiYSFpaieNgz2EeB95ftNi8v7tsV76
+        c2/1g6XiARSALqrFaHTxl+3mWMdPdbdZCJD2LdEGyuINpGpkQPnK0NnHlyDGd4tgKa3d8/+ciSJ9D
+        2hWTZ+Kw==;
+Received: from nat-inn.mentorg.com ([192.94.34.34]:19766 helo=agajjar-vr.inn-wifi.mentorg.com)
+        by server153.web-hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <akash@openedev.com>)
+        id 1h4KfK-002iQG-08; Thu, 14 Mar 2019 03:20:35 -0400
+From:   Akash Gajjar <akash@openedev.com>
+To:     heiko@sntech.de
+Cc:     Akash Gajjar <akash@openedev.com>,
+        =?UTF-8?q?Andrius=20=C5=A0tikonas?= <andrius@stikonas.eu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] arm64: dts: rockchip: add mali gpu support on rockpi4
+Date:   Thu, 14 Mar 2019 12:48:41 +0530
+Message-Id: <20190314071853.32176-2-akash@openedev.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <fcdf722f-d128-03c0-99fb-a220f680193c@suse.com>
-References: <fcdf722f-d128-03c0-99fb-a220f680193c@suse.com>
+In-Reply-To: <20190314071853.32176-1-akash@openedev.com>
+References: <20190314071853.32176-1-akash@openedev.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-OutGoing-Spam-Status: No, score=-0.5
+X-Originating-IP: 68.65.123.203
+X-SpamExperts-Domain: nctest.net
+X-SpamExperts-Username: whmcalls3
+Authentication-Results: registrar-servers.com; auth=pass (login) smtp.auth=whmcalls3@nctest.net
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.03)
+X-Recommended-Action: accept
+X-Filter-ID: EX5BVjFpneJeBchSMxfU5ij+o4XTbdl80nGjUslSxGF602E9L7XzfQH6nu9C/Fh9KJzpNe6xgvOx
+ q3u0UDjvO9Kz5dih1EthU2MWX/atyIZ0kTMsB94LwW8ZN2sS57gfLwzUX7TXOtaq5aORn2baFRjr
+ dLldmwqWZjEw2lWOqONg+6d+vVnClNcaHHg4+HBie3u1qNGW8JhNDRlyXw90mNUojfcw2mvVYgaF
+ 7R4Nq6PF5EYYKsv1Iy1+p+sENA/1KiBNZ07bQDadIcu8/csL3oG7nsM6SxDKJRrjvIldwrEvf/h3
+ fSiR6G1ZJmhs4dtpFHegK+QIj3D1cFGWe4EhszEXR00Vk7A+XBJm/gJGXhFB7E8QnXyyk/hIi6CM
+ s/aTvbJpT/mxZlO1IZshKr1EmeODS0oxiz8CEBqhTHaeiLrQQFzDBjhPYYLyyVl/DO04GZWT6Tsv
+ DXKv683dSPZhX8v6RglqCRiWLLlJfXqOwsSEQ1zg63VRC9n5o9IubHRCajhI/osHQYQOY9tKQuYh
+ V0/2daO84E+CJIUWxPZgHA4oVG4R1QSBae5eMu8El8wp8YJwPcY3BZj5hjW3jSN7kDZQ6OtBjX2d
+ hf8r1xeX6dGaEFvYj4y8eeqFFdtAEhWvd4DaCK6Pjpd0ktFAUcyBO1wJcz06mWheBRpSDkCuyxjZ
+ VLoBIQ/0Yot61dtATH/YcHV3Z1OBPe/w0eb4hi6pY39q0aZI3qbhXsaDdLgW9bq7ONs0Jo7siUxp
+ CnbQuxznTS5wWhJczORue9s9vxMyvT3ZEg7qDAZihU7TNifj61aWKjPv6Se6da4XjLm88/LDLnDH
+ LQNX6Z9k7LHvI3S8k8yoD25LMd/8Q6GyVYHQHyyqls2q2f6GiuILRCoVzcAUesmMQdfOVPytGy0v
+ aP8A+OIp7Ll3zg39paKeqrIPi/nXs2KsRjKrCowEavDwQuKonn43CVihpNXqOZnA1kmofBq13Vtd
+ PYPpQDJAG8jZaE6kPx28ZCmzF6xraiN8yTq5LrsYgOOLVP0PfMA01LCiikBDOYLztKvzrLSd1VxM
+ Ru4N5NrpfsZsRnl/I/FTR139Shj4g7fEqX8BGOvWI8yqhtlg1q14MI9rG0MenXlswhagQUZsv+gI
+ bNgg9Wk/fX2SRnPRYcAeHV8hxEmZPAz5djibSz1TZEeHqHdttKvBUzCN4NAlGxY6r4hMSxGQ+U5v
+ Nu4rMPKlzWU9qMOiGXHBuQl7kvd3Y9+UVnnGTsDuvLq0N5hlE2LuZbV6X+y312KNJBBUMCfNurEz
+ NHtW0EZg83LYM3A6BXfvel8OEFDbU50ueTym1wgy3QoDz1w5VXFhebjHJPwXPZ6YHMJ8vHED6QY4
+ ei+01UVhKsXWCf/f12Vc+wcBvq1ZAdP9Br8WkgqueLGXOud3vgQ6Lwxr8Zs7itcxKJJ78am5WUrT
+ xjBCYAo5Ix7/C9VwqPH/5QpQnZ0BqABLpxpkKfYdpWqgBL2Mh16HX+6x4KcU/f2CYrvOMnz/q172
+ TuUUAfA6uqFnxU12
+X-Report-Abuse-To: spam@se16.registrar-servers.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-btrfs_lookup_block_group may fail and return NULL. The fix uses
-assert to ensure cache is not NULL.
+add gpu node support on board and add the supplying regulator
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-
+Signed-off-by: Akash Gajjar <akash@openedev.com>
+Signed-off-by: Andrius Štikonas <andrius@stikonas.eu>
 ---
-V2: use assert as suggested by Nikolay Borisov <nborisov@suse.com>
----
- fs/btrfs/extent-tree.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index 994f0cc41799..80d7c272d282 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -7303,6 +7303,7 @@ void btrfs_free_tree_block(struct btrfs_trans_handle *trans,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+index 4a543f2117d4..1e479d06e67e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+@@ -157,6 +157,11 @@
+ 	status = "okay";
+ };
  
- 		pin = 0;
- 		cache = btrfs_lookup_block_group(fs_info, buf->start);
-+		ASSERT(cache);
- 
- 		if (btrfs_header_flag(buf, BTRFS_HEADER_FLAG_WRITTEN)) {
- 			pin_down_extent(fs_info, cache, buf->start,
++&gpu {
++	mali-supply = <&vdd_gpu>;
++	status = "okay";
++};
++
+ &hdmi {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&hdmi_cec>;
 -- 
 2.17.1
 
