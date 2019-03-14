@@ -2,1193 +2,215 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E390C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307F8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506E12087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD662087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfCNQsc (ORCPT
+        id S1727371AbfCNQvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:48:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36966 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726737AbfCNQsc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:48:32 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2EGi1kj082093
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 12:48:27 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r7qh3txs6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 12:48:27 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Thu, 14 Mar 2019 16:48:24 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Mar 2019 16:48:22 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2EGmKe932309416
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 Mar 2019 16:48:20 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C0F9A4055;
-        Thu, 14 Mar 2019 16:48:20 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D891EA4040;
-        Thu, 14 Mar 2019 16:48:19 +0000 (GMT)
-Received: from [9.101.4.34] (unknown [9.101.4.34])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Mar 2019 16:48:19 +0000 (GMT)
-Subject: Re: [PATCH 3/7] ocxl: Split pci.c
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        "Alastair D'Silva" <alastair@d-silva.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190313041524.14644-1-alastair@au1.ibm.com>
- <20190313041524.14644-4-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Thu, 14 Mar 2019 17:48:19 +0100
+        Thu, 14 Mar 2019 12:51:46 -0400
+Received: from mga17.intel.com ([192.55.52.151]:20881 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727131AbfCNQvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 12:51:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 09:51:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
+   d="scan'208";a="282689880"
+Received: from unknown (HELO [10.7.201.133]) ([10.7.201.133])
+  by orsmga004.jf.intel.com with ESMTP; 14 Mar 2019 09:51:43 -0700
+Subject: Re: Kernel bug with MPX?
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Richard Biener <rguenther@suse.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+References: <alpine.LSU.2.20.1903060944550.7898@zhemvz.fhfr.qr>
+ <ba1d2d3c-e616-611d-3cff-acf6b8aaeb66@intel.com>
+ <20190308071249.GJ30234@dhcp22.suse.cz>
+ <20190308073949.GA5232@dhcp22.suse.cz>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <ec2110b1-abae-4df5-fcd7-244620634a00@intel.com>
+Date:   Thu, 14 Mar 2019 09:51:42 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190313041524.14644-4-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031416-0016-0000-0000-000002625F7D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031416-0017-0000-0000-000032BD6550
-Message-Id: <53856ea6-405c-d737-2320-ca1d40952dde@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-14_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903140119
+In-Reply-To: <20190308073949.GA5232@dhcp22.suse.cz>
+Content-Type: multipart/mixed;
+ boundary="------------4B1430DFFB257B969B0701CD"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------4B1430DFFB257B969B0701CD
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
+For those just joining the thread now, here's the background:
 
-Le 13/03/2019 à 05:15, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+> https://lkml.kernel.org/r/alpine.LSU.2.20.1903060944550.7898@zhemvz.fhfr.qr
+
+Turning on a bunch of kernel debugging found the culprit:
+
+>         /*
+>          * mpx unmap needs to be called with mmap_sem held for write.
+>          * It is safe to call it before unmap_region().
+>          */
+>         arch_unmap(mm, vma, start, end);
 > 
-> In preparation for making core code available for external drivers,
-> move the core code out of pci.c and into core.c
+>         if (downgrade)
+>                 downgrade_write(&mm->mmap_sem);
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
+>         unmap_region(mm, vma, prev, start, end);
+
+arch_unmap() can, in some cases, free 'prev'.  unmap_region() uses
+'prev' to calculate the page table ranges that it frees.  It's probably
+working on incorrect or garbage ranges at times.
+
+I have some patches to really fix this by pre-calculating the
+page-table-free ranges before arch_unmap().  They're not *too* bad, but
+they do involve mucking with mm/mmap.c a bit to pass some new parameters
+around.
+
+The other option would be to just use this opportunity to start removing
+MPX and apply the attached patch so this is no longer able to be triggered.
+
+I'm inclined to opt for the patch to addle MPX rather than trying to fix
+it for real.
+
+--------------4B1430DFFB257B969B0701CD
+Content-Type: text/x-patch;
+ name="mpx-remove-apis.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="mpx-remove-apis.patch"
 
 
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Dave Hansen <dave.hansen@linux.intel.com>
 
+MPX is being removed from the kernel due to a lack of support
+in the toolchain going forward (gcc).
 
->   drivers/misc/ocxl/Makefile        |   1 +
->   drivers/misc/ocxl/core.c          | 517 ++++++++++++++++++++++++++++++
->   drivers/misc/ocxl/ocxl_internal.h |   5 +
->   drivers/misc/ocxl/pci.c           | 517 ------------------------------
->   4 files changed, 523 insertions(+), 517 deletions(-)
->   create mode 100644 drivers/misc/ocxl/core.c
-> 
-> diff --git a/drivers/misc/ocxl/Makefile b/drivers/misc/ocxl/Makefile
-> index 922e47cd4f0d..d07d1bb8e8d4 100644
-> --- a/drivers/misc/ocxl/Makefile
-> +++ b/drivers/misc/ocxl/Makefile
-> @@ -3,6 +3,7 @@ ccflags-$(CONFIG_PPC_WERROR)	+= -Werror
->   
->   ocxl-y				+= main.o pci.o config.o file.o pasid.o mmio.o
->   ocxl-y				+= link.o context.o afu_irq.o sysfs.o trace.o
-> +ocxl-y				+= core.o
->   obj-$(CONFIG_OCXL)		+= ocxl.o
->   
->   # For tracepoints to include our trace.h from tracepoint infrastructure:
-> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-> new file mode 100644
-> index 000000000000..b47cfda83e46
-> --- /dev/null
-> +++ b/drivers/misc/ocxl/core.c
-> @@ -0,0 +1,517 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// Copyright 2017 IBM Corp.
-> +#include <linux/idr.h>
-> +#include "ocxl_internal.h"
-> +
-> +static struct ocxl_fn *ocxl_fn_get(struct ocxl_fn *fn)
-> +{
-> +	return (get_device(&fn->dev) == NULL) ? NULL : fn;
-> +}
-> +
-> +static void ocxl_fn_put(struct ocxl_fn *fn)
-> +{
-> +	put_device(&fn->dev);
-> +}
-> +
-> +struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu)
-> +{
-> +	return (get_device(&afu->dev) == NULL) ? NULL : afu;
-> +}
-> +
-> +void ocxl_afu_put(struct ocxl_afu *afu)
-> +{
-> +	put_device(&afu->dev);
-> +}
-> +
-> +static struct ocxl_afu *alloc_afu(struct ocxl_fn *fn)
-> +{
-> +	struct ocxl_afu *afu;
-> +
-> +	afu = kzalloc(sizeof(struct ocxl_afu), GFP_KERNEL);
-> +	if (!afu)
-> +		return NULL;
-> +
-> +	mutex_init(&afu->contexts_lock);
-> +	mutex_init(&afu->afu_control_lock);
-> +	idr_init(&afu->contexts_idr);
-> +	afu->fn = fn;
-> +	ocxl_fn_get(fn);
-> +	return afu;
-> +}
-> +
-> +static void free_afu(struct ocxl_afu *afu)
-> +{
-> +	idr_destroy(&afu->contexts_idr);
-> +	ocxl_fn_put(afu->fn);
-> +	kfree(afu);
-> +}
-> +
-> +static void free_afu_dev(struct device *dev)
-> +{
-> +	struct ocxl_afu *afu = to_ocxl_afu(dev);
-> +
-> +	ocxl_unregister_afu(afu);
-> +	free_afu(afu);
-> +}
-> +
-> +static int set_afu_device(struct ocxl_afu *afu, const char *location)
-> +{
-> +	struct ocxl_fn *fn = afu->fn;
-> +	int rc;
-> +
-> +	afu->dev.parent = &fn->dev;
-> +	afu->dev.release = free_afu_dev;
-> +	rc = dev_set_name(&afu->dev, "%s.%s.%hhu", afu->config.name, location,
-> +		afu->config.idx);
-> +	return rc;
-> +}
-> +
-> +static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
-> +{
-> +	struct ocxl_fn *fn = afu->fn;
-> +	int actag_count, actag_offset;
-> +
-> +	/*
-> +	 * if there were not enough actags for the function, each afu
-> +	 * reduces its count as well
-> +	 */
-> +	actag_count = afu->config.actag_supported *
-> +		fn->actag_enabled / fn->actag_supported;
-> +	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
-> +	if (actag_offset < 0) {
-> +		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
-> +			actag_count, actag_offset);
-> +		return actag_offset;
-> +	}
-> +	afu->actag_base = fn->actag_base + actag_offset;
-> +	afu->actag_enabled = actag_count;
-> +
-> +	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
-> +				afu->actag_base, afu->actag_enabled);
-> +	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
-> +		afu->actag_base, afu->actag_enabled);
-> +	return 0;
-> +}
-> +
-> +static void reclaim_afu_actag(struct ocxl_afu *afu)
-> +{
-> +	struct ocxl_fn *fn = afu->fn;
-> +	int start_offset, size;
-> +
-> +	start_offset = afu->actag_base - fn->actag_base;
-> +	size = afu->actag_enabled;
-> +	ocxl_actag_afu_free(afu->fn, start_offset, size);
-> +}
-> +
-> +static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
-> +{
-> +	struct ocxl_fn *fn = afu->fn;
-> +	int pasid_count, pasid_offset;
-> +
-> +	/*
-> +	 * We only support the case where the function configuration
-> +	 * requested enough PASIDs to cover all AFUs.
-> +	 */
-> +	pasid_count = 1 << afu->config.pasid_supported_log;
-> +	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
-> +	if (pasid_offset < 0) {
-> +		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
-> +			pasid_count, pasid_offset);
-> +		return pasid_offset;
-> +	}
-> +	afu->pasid_base = fn->pasid_base + pasid_offset;
-> +	afu->pasid_count = 0;
-> +	afu->pasid_max = pasid_count;
-> +
-> +	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
-> +				afu->pasid_base,
-> +				afu->config.pasid_supported_log);
-> +	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
-> +		afu->pasid_base, pasid_count);
-> +	return 0;
-> +}
-> +
-> +static void reclaim_afu_pasid(struct ocxl_afu *afu)
-> +{
-> +	struct ocxl_fn *fn = afu->fn;
-> +	int start_offset, size;
-> +
-> +	start_offset = afu->pasid_base - fn->pasid_base;
-> +	size = 1 << afu->config.pasid_supported_log;
-> +	ocxl_pasid_afu_free(afu->fn, start_offset, size);
-> +}
-> +
-> +static int reserve_fn_bar(struct ocxl_fn *fn, int bar)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> +	int rc, idx;
-> +
-> +	if (bar != 0 && bar != 2 && bar != 4)
-> +		return -EINVAL;
-> +
-> +	idx = bar >> 1;
-> +	if (fn->bar_used[idx]++ == 0) {
-> +		rc = pci_request_region(dev, bar, "ocxl");
-> +		if (rc)
-> +			return rc;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static void release_fn_bar(struct ocxl_fn *fn, int bar)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> +	int idx;
-> +
-> +	if (bar != 0 && bar != 2 && bar != 4)
-> +		return;
-> +
-> +	idx = bar >> 1;
-> +	if (--fn->bar_used[idx] == 0)
-> +		pci_release_region(dev, bar);
-> +	WARN_ON(fn->bar_used[idx] < 0);
-> +}
-> +
-> +static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
-> +{
-> +	int rc;
-> +
-> +	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = reserve_fn_bar(afu->fn, afu->config.pp_mmio_bar);
-> +	if (rc) {
-> +		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> +		return rc;
-> +	}
-> +
-> +	afu->global_mmio_start =
-> +		pci_resource_start(dev, afu->config.global_mmio_bar) +
-> +		afu->config.global_mmio_offset;
-> +	afu->pp_mmio_start =
-> +		pci_resource_start(dev, afu->config.pp_mmio_bar) +
-> +		afu->config.pp_mmio_offset;
-> +
-> +	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
-> +				afu->config.global_mmio_size);
-> +	if (!afu->global_mmio_ptr) {
-> +		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
-> +		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> +		dev_err(&dev->dev, "Error mapping global mmio area\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/*
-> +	 * Leave an empty page between the per-process mmio area and
-> +	 * the AFU interrupt mappings
-> +	 */
-> +	afu->irq_base_offset = afu->config.pp_mmio_stride + PAGE_SIZE;
-> +	return 0;
-> +}
-> +
-> +static void unmap_mmio_areas(struct ocxl_afu *afu)
-> +{
-> +	if (afu->global_mmio_ptr) {
-> +		iounmap(afu->global_mmio_ptr);
-> +		afu->global_mmio_ptr = NULL;
-> +	}
-> +	afu->global_mmio_start = 0;
-> +	afu->pp_mmio_start = 0;
-> +	release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
-> +	release_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> +}
-> +
-> +static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
-> +{
-> +	int rc;
-> +
-> +	rc = ocxl_config_read_afu(dev, &afu->fn->config, &afu->config, afu_idx);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = set_afu_device(afu, dev_name(&dev->dev));
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = assign_afu_actag(afu, dev);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = assign_afu_pasid(afu, dev);
-> +	if (rc) {
-> +		reclaim_afu_actag(afu);
-> +		return rc;
-> +	}
-> +
-> +	rc = map_mmio_areas(afu, dev);
-> +	if (rc) {
-> +		reclaim_afu_pasid(afu);
-> +		reclaim_afu_actag(afu);
-> +		return rc;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static void deconfigure_afu(struct ocxl_afu *afu)
-> +{
-> +	unmap_mmio_areas(afu);
-> +	reclaim_afu_pasid(afu);
-> +	reclaim_afu_actag(afu);
-> +}
-> +
-> +static int activate_afu(struct pci_dev *dev, struct ocxl_afu *afu)
-> +{
-> +	int rc;
-> +
-> +	ocxl_config_set_afu_state(dev, afu->config.dvsec_afu_control_pos, 1);
-> +	/*
-> +	 * Char device creation is the last step, as processes can
-> +	 * call our driver immediately, so all our inits must be finished.
-> +	 */
-> +	rc = ocxl_create_cdev(afu);
-> +	if (rc)
-> +		return rc;
-> +	return 0;
-> +}
-> +
-> +static void deactivate_afu(struct ocxl_afu *afu)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> +
-> +	ocxl_destroy_cdev(afu);
-> +	ocxl_config_set_afu_state(dev, afu->config.dvsec_afu_control_pos, 0);
-> +}
-> +
-> +int init_afu(struct pci_dev *dev, struct ocxl_fn *fn, u8 afu_idx)
-> +{
-> +	int rc;
-> +	struct ocxl_afu *afu;
-> +
-> +	afu = alloc_afu(fn);
-> +	if (!afu)
-> +		return -ENOMEM;
-> +
-> +	rc = configure_afu(afu, afu_idx, dev);
-> +	if (rc) {
-> +		free_afu(afu);
-> +		return rc;
-> +	}
-> +
-> +	rc = ocxl_register_afu(afu);
-> +	if (rc)
-> +		goto err;
-> +
-> +	rc = ocxl_sysfs_add_afu(afu);
-> +	if (rc)
-> +		goto err;
-> +
-> +	rc = activate_afu(dev, afu);
-> +	if (rc)
-> +		goto err_sys;
-> +
-> +	list_add_tail(&afu->list, &fn->afu_list);
-> +	return 0;
-> +
-> +err_sys:
-> +	ocxl_sysfs_remove_afu(afu);
-> +err:
-> +	deconfigure_afu(afu);
-> +	device_unregister(&afu->dev);
-> +	return rc;
-> +}
-> +
-> +void remove_afu(struct ocxl_afu *afu)
-> +{
-> +	list_del(&afu->list);
-> +	ocxl_context_detach_all(afu);
-> +	deactivate_afu(afu);
-> +	ocxl_sysfs_remove_afu(afu);
-> +	deconfigure_afu(afu);
-> +	device_unregister(&afu->dev);
-> +}
-> +
-> +static struct ocxl_fn *alloc_function(struct pci_dev *dev)
-> +{
-> +	struct ocxl_fn *fn;
-> +
-> +	fn = kzalloc(sizeof(struct ocxl_fn), GFP_KERNEL);
-> +	if (!fn)
-> +		return NULL;
-> +
-> +	INIT_LIST_HEAD(&fn->afu_list);
-> +	INIT_LIST_HEAD(&fn->pasid_list);
-> +	INIT_LIST_HEAD(&fn->actag_list);
-> +	return fn;
-> +}
-> +
-> +static void free_function(struct ocxl_fn *fn)
-> +{
-> +	WARN_ON(!list_empty(&fn->afu_list));
-> +	WARN_ON(!list_empty(&fn->pasid_list));
-> +	kfree(fn);
-> +}
-> +
-> +static void free_function_dev(struct device *dev)
-> +{
-> +	struct ocxl_fn *fn = to_ocxl_function(dev);
-> +
-> +	free_function(fn);
-> +}
-> +
-> +static int set_function_device(struct ocxl_fn *fn, struct pci_dev *dev)
-> +{
-> +	int rc;
-> +
-> +	fn->dev.parent = &dev->dev;
-> +	fn->dev.release = free_function_dev;
-> +	rc = dev_set_name(&fn->dev, "ocxlfn.%s", dev_name(&dev->dev));
-> +	if (rc)
-> +		return rc;
-> +	pci_set_drvdata(dev, fn);
-> +	return 0;
-> +}
-> +
-> +static int assign_function_actag(struct ocxl_fn *fn)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> +	u16 base, enabled, supported;
-> +	int rc;
-> +
-> +	rc = ocxl_config_get_actag_info(dev, &base, &enabled, &supported);
-> +	if (rc)
-> +		return rc;
-> +
-> +	fn->actag_base = base;
-> +	fn->actag_enabled = enabled;
-> +	fn->actag_supported = supported;
-> +
-> +	ocxl_config_set_actag(dev, fn->config.dvsec_function_pos,
-> +			fn->actag_base,	fn->actag_enabled);
-> +	dev_dbg(&fn->dev, "actag range starting at %d, enabled %d\n",
-> +		fn->actag_base, fn->actag_enabled);
-> +	return 0;
-> +}
-> +
-> +static int set_function_pasid(struct ocxl_fn *fn)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> +	int rc, desired_count, max_count;
-> +
-> +	/* A function may not require any PASID */
-> +	if (fn->config.max_pasid_log < 0)
-> +		return 0;
-> +
-> +	rc = ocxl_config_get_pasid_info(dev, &max_count);
-> +	if (rc)
-> +		return rc;
-> +
-> +	desired_count = 1 << fn->config.max_pasid_log;
-> +
-> +	if (desired_count > max_count) {
-> +		dev_err(&fn->dev,
-> +			"Function requires more PASIDs than is available (%d vs. %d)\n",
-> +			desired_count, max_count);
-> +		return -ENOSPC;
-> +	}
-> +
-> +	fn->pasid_base = 0;
-> +	return 0;
-> +}
-> +
-> +static int configure_function(struct ocxl_fn *fn, struct pci_dev *dev)
-> +{
-> +	int rc;
-> +
-> +	rc = pci_enable_device(dev);
-> +	if (rc) {
-> +		dev_err(&dev->dev, "pci_enable_device failed: %d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	/*
-> +	 * Once it has been confirmed to work on our hardware, we
-> +	 * should reset the function, to force the adapter to restart
-> +	 * from scratch.
-> +	 * A function reset would also reset all its AFUs.
-> +	 *
-> +	 * Some hints for implementation:
-> +	 *
-> +	 * - there's not status bit to know when the reset is done. We
-> +	 *   should try reading the config space to know when it's
-> +	 *   done.
-> +	 * - probably something like:
-> +	 *	Reset
-> +	 *	wait 100ms
-> +	 *	issue config read
-> +	 *	allow device up to 1 sec to return success on config
-> +	 *	read before declaring it broken
-> +	 *
-> +	 * Some shared logic on the card (CFG, TLX) won't be reset, so
-> +	 * there's no guarantee that it will be enough.
-> +	 */
-> +	rc = ocxl_config_read_function(dev, &fn->config);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = set_function_device(fn, dev);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = assign_function_actag(fn);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = set_function_pasid(fn);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = ocxl_link_setup(dev, 0, &fn->link);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = ocxl_config_set_TL(dev, fn->config.dvsec_tl_pos);
-> +	if (rc) {
-> +		ocxl_link_release(dev, fn->link);
-> +		return rc;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static void deconfigure_function(struct ocxl_fn *fn)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> +
-> +	ocxl_link_release(dev, fn->link);
-> +	pci_disable_device(dev);
-> +}
-> +
-> +struct ocxl_fn *init_function(struct pci_dev *dev)
-> +{
-> +	struct ocxl_fn *fn;
-> +	int rc;
-> +
-> +	fn = alloc_function(dev);
-> +	if (!fn)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	rc = configure_function(fn, dev);
-> +	if (rc) {
-> +		free_function(fn);
-> +		return ERR_PTR(rc);
-> +	}
-> +
-> +	rc = device_register(&fn->dev);
-> +	if (rc) {
-> +		deconfigure_function(fn);
-> +		put_device(&fn->dev);
-> +		return ERR_PTR(rc);
-> +	}
-> +	return fn;
-> +}
-> +
-> +void remove_function(struct ocxl_fn *fn)
-> +{
-> +	deconfigure_function(fn);
-> +	device_unregister(&fn->dev);
-> +}
-> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index 779d15ef60b5..1319406ce5c6 100644
-> --- a/drivers/misc/ocxl/ocxl_internal.h
-> +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -144,4 +144,9 @@ int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
->   			int eventfd);
->   u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
->   
-> +struct ocxl_fn *init_function(struct pci_dev *dev);
-> +void remove_function(struct ocxl_fn *fn);
-> +int init_afu(struct pci_dev *dev, struct ocxl_fn *fn, u8 afu_idx);
-> +void remove_afu(struct ocxl_afu *afu);
-> +
->   #endif /* _OCXL_INTERNAL_H_ */
-> diff --git a/drivers/misc/ocxl/pci.c b/drivers/misc/ocxl/pci.c
-> index 21f425472a82..5926c863716c 100644
-> --- a/drivers/misc/ocxl/pci.c
-> +++ b/drivers/misc/ocxl/pci.c
-> @@ -1,9 +1,6 @@
->   // SPDX-License-Identifier: GPL-2.0+
->   // Copyright 2017 IBM Corp.
->   #include <linux/module.h>
-> -#include <linux/pci.h>
-> -#include <linux/idr.h>
-> -#include <asm/pnv-ocxl.h>
->   #include "ocxl_internal.h"
->   
->   /*
-> @@ -17,520 +14,6 @@ static const struct pci_device_id ocxl_pci_tbl[] = {
->   };
->   MODULE_DEVICE_TABLE(pci, ocxl_pci_tbl);
->   
-> -
-> -static struct ocxl_fn *ocxl_fn_get(struct ocxl_fn *fn)
-> -{
-> -	return (get_device(&fn->dev) == NULL) ? NULL : fn;
-> -}
-> -
-> -static void ocxl_fn_put(struct ocxl_fn *fn)
-> -{
-> -	put_device(&fn->dev);
-> -}
-> -
-> -struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu)
-> -{
-> -	return (get_device(&afu->dev) == NULL) ? NULL : afu;
-> -}
-> -
-> -void ocxl_afu_put(struct ocxl_afu *afu)
-> -{
-> -	put_device(&afu->dev);
-> -}
-> -
-> -static struct ocxl_afu *alloc_afu(struct ocxl_fn *fn)
-> -{
-> -	struct ocxl_afu *afu;
-> -
-> -	afu = kzalloc(sizeof(struct ocxl_afu), GFP_KERNEL);
-> -	if (!afu)
-> -		return NULL;
-> -
-> -	mutex_init(&afu->contexts_lock);
-> -	mutex_init(&afu->afu_control_lock);
-> -	idr_init(&afu->contexts_idr);
-> -	afu->fn = fn;
-> -	ocxl_fn_get(fn);
-> -	return afu;
-> -}
-> -
-> -static void free_afu(struct ocxl_afu *afu)
-> -{
-> -	idr_destroy(&afu->contexts_idr);
-> -	ocxl_fn_put(afu->fn);
-> -	kfree(afu);
-> -}
-> -
-> -static void free_afu_dev(struct device *dev)
-> -{
-> -	struct ocxl_afu *afu = to_ocxl_afu(dev);
-> -
-> -	ocxl_unregister_afu(afu);
-> -	free_afu(afu);
-> -}
-> -
-> -static int set_afu_device(struct ocxl_afu *afu, const char *location)
-> -{
-> -	struct ocxl_fn *fn = afu->fn;
-> -	int rc;
-> -
-> -	afu->dev.parent = &fn->dev;
-> -	afu->dev.release = free_afu_dev;
-> -	rc = dev_set_name(&afu->dev, "%s.%s.%hhu", afu->config.name, location,
-> -		afu->config.idx);
-> -	return rc;
-> -}
-> -
-> -static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
-> -{
-> -	struct ocxl_fn *fn = afu->fn;
-> -	int actag_count, actag_offset;
-> -
-> -	/*
-> -	 * if there were not enough actags for the function, each afu
-> -	 * reduces its count as well
-> -	 */
-> -	actag_count = afu->config.actag_supported *
-> -		fn->actag_enabled / fn->actag_supported;
-> -	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
-> -	if (actag_offset < 0) {
-> -		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
-> -			actag_count, actag_offset);
-> -		return actag_offset;
-> -	}
-> -	afu->actag_base = fn->actag_base + actag_offset;
-> -	afu->actag_enabled = actag_count;
-> -
-> -	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
-> -				afu->actag_base, afu->actag_enabled);
-> -	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
-> -		afu->actag_base, afu->actag_enabled);
-> -	return 0;
-> -}
-> -
-> -static void reclaim_afu_actag(struct ocxl_afu *afu)
-> -{
-> -	struct ocxl_fn *fn = afu->fn;
-> -	int start_offset, size;
-> -
-> -	start_offset = afu->actag_base - fn->actag_base;
-> -	size = afu->actag_enabled;
-> -	ocxl_actag_afu_free(afu->fn, start_offset, size);
-> -}
-> -
-> -static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
-> -{
-> -	struct ocxl_fn *fn = afu->fn;
-> -	int pasid_count, pasid_offset;
-> -
-> -	/*
-> -	 * We only support the case where the function configuration
-> -	 * requested enough PASIDs to cover all AFUs.
-> -	 */
-> -	pasid_count = 1 << afu->config.pasid_supported_log;
-> -	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
-> -	if (pasid_offset < 0) {
-> -		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
-> -			pasid_count, pasid_offset);
-> -		return pasid_offset;
-> -	}
-> -	afu->pasid_base = fn->pasid_base + pasid_offset;
-> -	afu->pasid_count = 0;
-> -	afu->pasid_max = pasid_count;
-> -
-> -	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
-> -				afu->pasid_base,
-> -				afu->config.pasid_supported_log);
-> -	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
-> -		afu->pasid_base, pasid_count);
-> -	return 0;
-> -}
-> -
-> -static void reclaim_afu_pasid(struct ocxl_afu *afu)
-> -{
-> -	struct ocxl_fn *fn = afu->fn;
-> -	int start_offset, size;
-> -
-> -	start_offset = afu->pasid_base - fn->pasid_base;
-> -	size = 1 << afu->config.pasid_supported_log;
-> -	ocxl_pasid_afu_free(afu->fn, start_offset, size);
-> -}
-> -
-> -static int reserve_fn_bar(struct ocxl_fn *fn, int bar)
-> -{
-> -	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> -	int rc, idx;
-> -
-> -	if (bar != 0 && bar != 2 && bar != 4)
-> -		return -EINVAL;
-> -
-> -	idx = bar >> 1;
-> -	if (fn->bar_used[idx]++ == 0) {
-> -		rc = pci_request_region(dev, bar, "ocxl");
-> -		if (rc)
-> -			return rc;
-> -	}
-> -	return 0;
-> -}
-> -
-> -static void release_fn_bar(struct ocxl_fn *fn, int bar)
-> -{
-> -	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> -	int idx;
-> -
-> -	if (bar != 0 && bar != 2 && bar != 4)
-> -		return;
-> -
-> -	idx = bar >> 1;
-> -	if (--fn->bar_used[idx] == 0)
-> -		pci_release_region(dev, bar);
-> -	WARN_ON(fn->bar_used[idx] < 0);
-> -}
-> -
-> -static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
-> -{
-> -	int rc;
-> -
-> -	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = reserve_fn_bar(afu->fn, afu->config.pp_mmio_bar);
-> -	if (rc) {
-> -		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> -		return rc;
-> -	}
-> -
-> -	afu->global_mmio_start =
-> -		pci_resource_start(dev, afu->config.global_mmio_bar) +
-> -		afu->config.global_mmio_offset;
-> -	afu->pp_mmio_start =
-> -		pci_resource_start(dev, afu->config.pp_mmio_bar) +
-> -		afu->config.pp_mmio_offset;
-> -
-> -	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
-> -				afu->config.global_mmio_size);
-> -	if (!afu->global_mmio_ptr) {
-> -		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
-> -		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> -		dev_err(&dev->dev, "Error mapping global mmio area\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	/*
-> -	 * Leave an empty page between the per-process mmio area and
-> -	 * the AFU interrupt mappings
-> -	 */
-> -	afu->irq_base_offset = afu->config.pp_mmio_stride + PAGE_SIZE;
-> -	return 0;
-> -}
-> -
-> -static void unmap_mmio_areas(struct ocxl_afu *afu)
-> -{
-> -	if (afu->global_mmio_ptr) {
-> -		iounmap(afu->global_mmio_ptr);
-> -		afu->global_mmio_ptr = NULL;
-> -	}
-> -	afu->global_mmio_start = 0;
-> -	afu->pp_mmio_start = 0;
-> -	release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
-> -	release_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> -}
-> -
-> -static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
-> -{
-> -	int rc;
-> -
-> -	rc = ocxl_config_read_afu(dev, &afu->fn->config, &afu->config, afu_idx);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = set_afu_device(afu, dev_name(&dev->dev));
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = assign_afu_actag(afu, dev);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = assign_afu_pasid(afu, dev);
-> -	if (rc) {
-> -		reclaim_afu_actag(afu);
-> -		return rc;
-> -	}
-> -
-> -	rc = map_mmio_areas(afu, dev);
-> -	if (rc) {
-> -		reclaim_afu_pasid(afu);
-> -		reclaim_afu_actag(afu);
-> -		return rc;
-> -	}
-> -	return 0;
-> -}
-> -
-> -static void deconfigure_afu(struct ocxl_afu *afu)
-> -{
-> -	unmap_mmio_areas(afu);
-> -	reclaim_afu_pasid(afu);
-> -	reclaim_afu_actag(afu);
-> -}
-> -
-> -static int activate_afu(struct pci_dev *dev, struct ocxl_afu *afu)
-> -{
-> -	int rc;
-> -
-> -	ocxl_config_set_afu_state(dev, afu->config.dvsec_afu_control_pos, 1);
-> -	/*
-> -	 * Char device creation is the last step, as processes can
-> -	 * call our driver immediately, so all our inits must be finished.
-> -	 */
-> -	rc = ocxl_create_cdev(afu);
-> -	if (rc)
-> -		return rc;
-> -	return 0;
-> -}
-> -
-> -static void deactivate_afu(struct ocxl_afu *afu)
-> -{
-> -	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> -
-> -	ocxl_destroy_cdev(afu);
-> -	ocxl_config_set_afu_state(dev, afu->config.dvsec_afu_control_pos, 0);
-> -}
-> -
-> -static int init_afu(struct pci_dev *dev, struct ocxl_fn *fn, u8 afu_idx)
-> -{
-> -	int rc;
-> -	struct ocxl_afu *afu;
-> -
-> -	afu = alloc_afu(fn);
-> -	if (!afu)
-> -		return -ENOMEM;
-> -
-> -	rc = configure_afu(afu, afu_idx, dev);
-> -	if (rc) {
-> -		free_afu(afu);
-> -		return rc;
-> -	}
-> -
-> -	rc = ocxl_register_afu(afu);
-> -	if (rc)
-> -		goto err;
-> -
-> -	rc = ocxl_sysfs_add_afu(afu);
-> -	if (rc)
-> -		goto err;
-> -
-> -	rc = activate_afu(dev, afu);
-> -	if (rc)
-> -		goto err_sys;
-> -
-> -	list_add_tail(&afu->list, &fn->afu_list);
-> -	return 0;
-> -
-> -err_sys:
-> -	ocxl_sysfs_remove_afu(afu);
-> -err:
-> -	deconfigure_afu(afu);
-> -	device_unregister(&afu->dev);
-> -	return rc;
-> -}
-> -
-> -static void remove_afu(struct ocxl_afu *afu)
-> -{
-> -	list_del(&afu->list);
-> -	ocxl_context_detach_all(afu);
-> -	deactivate_afu(afu);
-> -	ocxl_sysfs_remove_afu(afu);
-> -	deconfigure_afu(afu);
-> -	device_unregister(&afu->dev);
-> -}
-> -
-> -static struct ocxl_fn *alloc_function(struct pci_dev *dev)
-> -{
-> -	struct ocxl_fn *fn;
-> -
-> -	fn = kzalloc(sizeof(struct ocxl_fn), GFP_KERNEL);
-> -	if (!fn)
-> -		return NULL;
-> -
-> -	INIT_LIST_HEAD(&fn->afu_list);
-> -	INIT_LIST_HEAD(&fn->pasid_list);
-> -	INIT_LIST_HEAD(&fn->actag_list);
-> -	return fn;
-> -}
-> -
-> -static void free_function(struct ocxl_fn *fn)
-> -{
-> -	WARN_ON(!list_empty(&fn->afu_list));
-> -	WARN_ON(!list_empty(&fn->pasid_list));
-> -	kfree(fn);
-> -}
-> -
-> -static void free_function_dev(struct device *dev)
-> -{
-> -	struct ocxl_fn *fn = to_ocxl_function(dev);
-> -
-> -	free_function(fn);
-> -}
-> -
-> -static int set_function_device(struct ocxl_fn *fn, struct pci_dev *dev)
-> -{
-> -	int rc;
-> -
-> -	fn->dev.parent = &dev->dev;
-> -	fn->dev.release = free_function_dev;
-> -	rc = dev_set_name(&fn->dev, "ocxlfn.%s", dev_name(&dev->dev));
-> -	if (rc)
-> -		return rc;
-> -	pci_set_drvdata(dev, fn);
-> -	return 0;
-> -}
-> -
-> -static int assign_function_actag(struct ocxl_fn *fn)
-> -{
-> -	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> -	u16 base, enabled, supported;
-> -	int rc;
-> -
-> -	rc = ocxl_config_get_actag_info(dev, &base, &enabled, &supported);
-> -	if (rc)
-> -		return rc;
-> -
-> -	fn->actag_base = base;
-> -	fn->actag_enabled = enabled;
-> -	fn->actag_supported = supported;
-> -
-> -	ocxl_config_set_actag(dev, fn->config.dvsec_function_pos,
-> -			fn->actag_base,	fn->actag_enabled);
-> -	dev_dbg(&fn->dev, "actag range starting at %d, enabled %d\n",
-> -		fn->actag_base, fn->actag_enabled);
-> -	return 0;
-> -}
-> -
-> -static int set_function_pasid(struct ocxl_fn *fn)
-> -{
-> -	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> -	int rc, desired_count, max_count;
-> -
-> -	/* A function may not require any PASID */
-> -	if (fn->config.max_pasid_log < 0)
-> -		return 0;
-> -
-> -	rc = ocxl_config_get_pasid_info(dev, &max_count);
-> -	if (rc)
-> -		return rc;
-> -
-> -	desired_count = 1 << fn->config.max_pasid_log;
-> -
-> -	if (desired_count > max_count) {
-> -		dev_err(&fn->dev,
-> -			"Function requires more PASIDs than is available (%d vs. %d)\n",
-> -			desired_count, max_count);
-> -		return -ENOSPC;
-> -	}
-> -
-> -	fn->pasid_base = 0;
-> -	return 0;
-> -}
-> -
-> -static int configure_function(struct ocxl_fn *fn, struct pci_dev *dev)
-> -{
-> -	int rc;
-> -
-> -	rc = pci_enable_device(dev);
-> -	if (rc) {
-> -		dev_err(&dev->dev, "pci_enable_device failed: %d\n", rc);
-> -		return rc;
-> -	}
-> -
-> -	/*
-> -	 * Once it has been confirmed to work on our hardware, we
-> -	 * should reset the function, to force the adapter to restart
-> -	 * from scratch.
-> -	 * A function reset would also reset all its AFUs.
-> -	 *
-> -	 * Some hints for implementation:
-> -	 *
-> -	 * - there's not status bit to know when the reset is done. We
-> -	 *   should try reading the config space to know when it's
-> -	 *   done.
-> -	 * - probably something like:
-> -	 *	Reset
-> -	 *	wait 100ms
-> -	 *	issue config read
-> -	 *	allow device up to 1 sec to return success on config
-> -	 *	read before declaring it broken
-> -	 *
-> -	 * Some shared logic on the card (CFG, TLX) won't be reset, so
-> -	 * there's no guarantee that it will be enough.
-> -	 */
-> -	rc = ocxl_config_read_function(dev, &fn->config);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = set_function_device(fn, dev);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = assign_function_actag(fn);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = set_function_pasid(fn);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = ocxl_link_setup(dev, 0, &fn->link);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = ocxl_config_set_TL(dev, fn->config.dvsec_tl_pos);
-> -	if (rc) {
-> -		ocxl_link_release(dev, fn->link);
-> -		return rc;
-> -	}
-> -	return 0;
-> -}
-> -
-> -static void deconfigure_function(struct ocxl_fn *fn)
-> -{
-> -	struct pci_dev *dev = to_pci_dev(fn->dev.parent);
-> -
-> -	ocxl_link_release(dev, fn->link);
-> -	pci_disable_device(dev);
-> -}
-> -
-> -static struct ocxl_fn *init_function(struct pci_dev *dev)
-> -{
-> -	struct ocxl_fn *fn;
-> -	int rc;
-> -
-> -	fn = alloc_function(dev);
-> -	if (!fn)
-> -		return ERR_PTR(-ENOMEM);
-> -
-> -	rc = configure_function(fn, dev);
-> -	if (rc) {
-> -		free_function(fn);
-> -		return ERR_PTR(rc);
-> -	}
-> -
-> -	rc = device_register(&fn->dev);
-> -	if (rc) {
-> -		deconfigure_function(fn);
-> -		put_device(&fn->dev);
-> -		return ERR_PTR(rc);
-> -	}
-> -	return fn;
-> -}
-> -
-> -static void remove_function(struct ocxl_fn *fn)
-> -{
-> -	deconfigure_function(fn);
-> -	device_unregister(&fn->dev);
-> -}
-> -
->   static int ocxl_probe(struct pci_dev *dev, const struct pci_device_id *id)
->   {
->   	int rc, afu_count = 0;
-> 
+The first thing we need to do is remove the userspace-visible
+ABIs so that applications will stop using it.  The most visible
+one are the enable/disable prctl()s.  Remove them first.
 
+This is the most minimal and least invasive patch needed to
+start removing MPX.
+
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+---
+
+ b/include/uapi/linux/prctl.h |    2 +-
+ b/kernel/sys.c               |   16 ++--------------
+ 2 files changed, 3 insertions(+), 15 deletions(-)
+
+diff -puN include/uapi/linux/prctl.h~mpx-remove-apis include/uapi/linux/p=
+rctl.h
+--- a/include/uapi/linux/prctl.h~mpx-remove-apis	2019-01-04 14:40:06.8535=
+14089 -0800
++++ b/include/uapi/linux/prctl.h	2019-01-04 14:40:06.860514089 -0800
+@@ -181,7 +181,7 @@ struct prctl_mm_map {
+ #define PR_GET_THP_DISABLE	42
+=20
+ /*
+- * Tell the kernel to start/stop helping userspace manage bounds tables.=
+
++ * No longer implemented, but left here to ensure the numbers stay reser=
+ved:
+  */
+ #define PR_MPX_ENABLE_MANAGEMENT  43
+ #define PR_MPX_DISABLE_MANAGEMENT 44
+diff -puN kernel/sys.c~mpx-remove-apis kernel/sys.c
+--- a/kernel/sys.c~mpx-remove-apis	2019-01-04 14:40:06.857514089 -0800
++++ b/kernel/sys.c	2019-01-04 14:40:06.860514089 -0800
+@@ -103,12 +103,6 @@
+ #ifndef SET_TSC_CTL
+ # define SET_TSC_CTL(a)		(-EINVAL)
+ #endif
+-#ifndef MPX_ENABLE_MANAGEMENT
+-# define MPX_ENABLE_MANAGEMENT()	(-EINVAL)
+-#endif
+-#ifndef MPX_DISABLE_MANAGEMENT
+-# define MPX_DISABLE_MANAGEMENT()	(-EINVAL)
+-#endif
+ #ifndef GET_FP_MODE
+ # define GET_FP_MODE(a)		(-EINVAL)
+ #endif
+@@ -2448,15 +2442,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsi
+ 		up_write(&me->mm->mmap_sem);
+ 		break;
+ 	case PR_MPX_ENABLE_MANAGEMENT:
+-		if (arg2 || arg3 || arg4 || arg5)
+-			return -EINVAL;
+-		error =3D MPX_ENABLE_MANAGEMENT();
+-		break;
+ 	case PR_MPX_DISABLE_MANAGEMENT:
+-		if (arg2 || arg3 || arg4 || arg5)
+-			return -EINVAL;
+-		error =3D MPX_DISABLE_MANAGEMENT();
+-		break;
++		/* No longer implemented: */
++		return -EINVAL;
+ 	case PR_SET_FP_MODE:
+ 		error =3D SET_FP_MODE(me, arg2);
+ 		break;
+_
+
+--------------4B1430DFFB257B969B0701CD--
