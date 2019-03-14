@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94245C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E44C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CF221872
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9916A2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578865;
-	bh=OYqpqCGjhWBGqba9M3R05S0p97R1oSp847nk+ME2Y84=;
+	s=default; t=1552578867;
+	bh=ywRGNlCsVRrb6F70zKYexIH9iIKf49akhsC8rqNitDc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=B7xj/j50yUEbu6DwsxmpB3GFhnm58d9NNXlMn5cab4zF7U17t4Jmh8swABfD2abNk
-	 KwmUrVT5dZx3sDeqKdbJRzcpdj6rtpTGcO4mjS3wMDESu8lyY/8YFZnE86N3MEg3WQ
-	 fMQNeE8EOxIooTCWhSAjBRqXKBzBKgKCw/6zhibk=
+	b=Xh9uvJ2tNg/PjUHCnlEYW8zaTm1E+v8trSNYy949gM52Vw/t5ayskkhBLUZY7c8+k
+	 WE2gPfnbZ7/6vUlljAs8dJBUIg4IZymsHpAmXlgzYrbevxHw9DJZZ+cWIhWNNDtHcF
+	 toC/Dnygk8+nAKC2Rm2G7bxZ0Okw/DqTVi9oEtpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfCNPyY (ORCPT
+        id S1727634AbfCNPy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:54:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35908 "EHLO
+        Thu, 14 Mar 2019 11:54:26 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36032 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfCNPyS (ORCPT
+        with ESMTP id S1727484AbfCNPyW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:54:18 -0400
+        Thu, 14 Mar 2019 11:54:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=A4vtzUc/vZ68Bm3zo1w2rT3Xtu1Cv8Rpn+yK+FUrBWs=; b=fhqhWx+kzcrU
-        lTArftqnZHiOxOGk0PePvthQRepUpCqrCTffAZmeQIIKa6Ltt7WHDHF45szIaZm5Y2pS1NTOGeqGv
-        VD/h1jCvzIYB/TpAmc34WogXr/VpFMtlwh26c08zXY3c7T8GHn0Y+OVoKpDCthGRrcNLPYKPq1svp
-        ug0gw=;
+        List-Archive; bh=+xAaR4iGsxnwhLF6voosLS84VrhOyAnHo9/V71zoIbA=; b=HOdieLTLnK3x
+        wubvp0YYDh/1qmeHZ0n8BO1BObAPRS8gkmtB/ezlIelWU/FtFl5No6+JtTms3o6DDI8Dbfp7vEYh5
+        OCdOVp/n++1cS6awP7HH8drdM32Hlxul+45XpPdJSyYRAmxdrjzAxsaLmmRljfkm2fvfkQ7yUqwUt
+        AiiAY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4SgR-0002io-ME; Thu, 14 Mar 2019 15:54:15 +0000
+        id 1h4SgV-0002j0-4v; Thu, 14 Mar 2019 15:54:19 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 422611126E64; Thu, 14 Mar 2019 15:54:15 +0000 (GMT)
+        id 960B41126E64; Thu, 14 Mar 2019 15:54:18 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Steve Twiss <stwiss.opensource@diasemi.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: lp8755: Fix notifier mutex lock warning" to the regulator tree
+Subject: Applied "regulator: da9063: Fix notifier mutex lock warning" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155415.422611126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:54:15 +0000 (GMT)
+Message-Id: <20190314155418.960B41126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:18 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: lp8755: Fix notifier mutex lock warning
+   regulator: da9063: Fix notifier mutex lock warning
 
 has been applied to the regulator tree at
 
@@ -84,10 +84,10 @@ to this mail.
 Thanks,
 Mark
 
-From 89b2758c192c35068b07766a6830433bfbdc1f44 Mon Sep 17 00:00:00 2001
+From 29d40b4a5776ec4727c9f0e00a884423dd5e3366 Mon Sep 17 00:00:00 2001
 From: Steve Twiss <stwiss.opensource@diasemi.com>
-Date: Tue, 26 Feb 2019 15:32:18 +0000
-Subject: [PATCH] regulator: lp8755: Fix notifier mutex lock warning
+Date: Tue, 26 Feb 2019 15:23:02 +0000
+Subject: [PATCH] regulator: da9063: Fix notifier mutex lock warning
 
 The mutex for the regulator_dev must be controlled by the caller of
 the regulator_notifier_call_chain(), as described in the comment
@@ -98,60 +98,32 @@ in a kernel WARN_ON_ONCE() which will dump a backtrace for the
 regulator_notifier_call_chain() when that function call is first made.
 The mutex can be controlled using the regulator_lock/unlock() API.
 
-Fixes: b59320cc5a5e ("regulator: lp8755: new driver for LP8755")
+Fixes: 69ca3e58d178 ("regulator: da9063: Add Dialog DA9063 voltage regulators support.")
 Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/lp8755.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/regulator/da9063-regulator.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/lp8755.c b/drivers/regulator/lp8755.c
-index 14fd38807134..2e16a6ab491d 100644
---- a/drivers/regulator/lp8755.c
-+++ b/drivers/regulator/lp8755.c
-@@ -372,10 +372,13 @@ static irqreturn_t lp8755_irq_handler(int irq, void *data)
- 	for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
- 		if ((flag0 & (0x4 << icnt))
- 		    && (pchip->irqmask & (0x04 << icnt))
--		    && (pchip->rdev[icnt] != NULL))
-+		    && (pchip->rdev[icnt] != NULL)) {
-+			regulator_lock(pchip->rdev[icnt]);
- 			regulator_notifier_call_chain(pchip->rdev[icnt],
- 						      LP8755_EVENT_PWR_FAULT,
- 						      NULL);
-+			regulator_unlock(pchip->rdev[icnt]);
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 2b0c7a85306a..d7bdb95b7602 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -615,9 +615,12 @@ static irqreturn_t da9063_ldo_lim_event(int irq, void *data)
+ 		if (regl->info->oc_event.reg != DA9063_REG_STATUS_D)
+ 			continue;
+ 
+-		if (BIT(regl->info->oc_event.lsb) & bits)
++		if (BIT(regl->info->oc_event.lsb) & bits) {
++		        regulator_lock(regl->rdev);
+ 			regulator_notifier_call_chain(regl->rdev,
+ 					REGULATOR_EVENT_OVER_CURRENT, NULL);
++		        regulator_unlock(regl->rdev);
 +		}
+ 	}
  
- 	/* read flag1 register */
- 	ret = lp8755_read(pchip, 0x0E, &flag1);
-@@ -389,18 +392,24 @@ static irqreturn_t lp8755_irq_handler(int irq, void *data)
- 	/* send OCP event to all regulator devices */
- 	if ((flag1 & 0x01) && (pchip->irqmask & 0x01))
- 		for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
--			if (pchip->rdev[icnt] != NULL)
-+			if (pchip->rdev[icnt] != NULL) {
-+				regulator_lock(pchip->rdev[icnt]);
- 				regulator_notifier_call_chain(pchip->rdev[icnt],
- 							      LP8755_EVENT_OCP,
- 							      NULL);
-+				regulator_unlock(pchip->rdev[icnt]);
-+			}
- 
- 	/* send OVP event to all regulator devices */
- 	if ((flag1 & 0x02) && (pchip->irqmask & 0x02))
- 		for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
--			if (pchip->rdev[icnt] != NULL)
-+			if (pchip->rdev[icnt] != NULL) {
-+				regulator_lock(pchip->rdev[icnt]);
- 				regulator_notifier_call_chain(pchip->rdev[icnt],
- 							      LP8755_EVENT_OVP,
- 							      NULL);
-+				regulator_unlock(pchip->rdev[icnt]);
-+			}
  	return IRQ_HANDLED;
- 
- err_i2c:
 -- 
 2.20.1
 
