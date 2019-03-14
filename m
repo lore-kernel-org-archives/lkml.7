@@ -2,208 +2,138 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C46D8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AC6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA2D2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E502146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 00:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfCNAVU (ORCPT
+        id S1726922AbfCNAZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 20:21:20 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38198 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfCNAVT (ORCPT
+        Wed, 13 Mar 2019 20:25:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45974 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726218AbfCNAZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 20:21:19 -0400
-Received: from localhost.localdomain (unknown [IPv6:2804:431:9719:798c:867b:ebff:fe52:de60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 20519281462;
-        Thu, 14 Mar 2019 00:21:10 +0000 (GMT)
-From:   Helen Koike <helen.koike@collabora.com>
-To:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com
-Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        boris.brezillon@collabora.com, David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
-        harry.wentland@amd.com,
-        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@google.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Sandy Huang <hjc@rock-chips.com>,
-        linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        eric@anholt.net, robdclark@gmail.com,
-        amd-gfx@lists.freedesktop.org,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 5/5] drm: don't block fb changes for async plane updates
-Date:   Wed, 13 Mar 2019 21:20:26 -0300
-Message-Id: <20190314002027.7833-6-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190314002027.7833-1-helen.koike@collabora.com>
-References: <20190314002027.7833-1-helen.koike@collabora.com>
+        Wed, 13 Mar 2019 20:25:08 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2E0J44V100934
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 20:25:07 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r7873a1jn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 20:25:06 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 14 Mar 2019 00:25:06 -0000
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Mar 2019 00:25:02 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2E0P1aN20971656
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Mar 2019 00:25:01 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FF30B2067;
+        Thu, 14 Mar 2019 00:25:01 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D70FB2064;
+        Thu, 14 Mar 2019 00:25:01 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Mar 2019 00:25:01 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 780E716C5F31; Wed, 13 Mar 2019 17:25:05 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 17:25:05 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Nikos Tsironis <ntsironis@arrikto.com>, agk@redhat.com,
+        dm-devel@redhat.com, mpatocka@redhat.com, iliastsi@arrikto.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] list_bl: Add hlist_bl_add_before/behind helpers
+Reply-To: paulmck@linux.ibm.com
+References: <20181220180651.4879-1-ntsironis@arrikto.com>
+ <20181220180651.4879-2-ntsironis@arrikto.com>
+ <20190228213201.GB23527@redhat.com>
+ <20190311181607.GA9388@infradead.org>
+ <20190311221321.GP13351@linux.ibm.com>
+ <20190311224333.GA16968@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311224333.GA16968@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19031400-0072-0000-0000-0000040AA984
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010753; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01173994; UDB=6.00613855; IPR=6.00954657;
+ MB=3.00025969; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-14 00:25:04
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031400-0073-0000-0000-00004B7B01BD
+Message-Id: <20190314002505.GD13351@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903140000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the case of a normal sync update, the preparation of framebuffers (be
-it calling drm_atomic_helper_prepare_planes() or doing setups with
-drm_framebuffer_get()) are performed in the new_state and the respective
-cleanups are performed in the old_state.
+On Mon, Mar 11, 2019 at 06:43:33PM -0400, Mike Snitzer wrote:
+> On Mon, Mar 11 2019 at  6:13pm -0400,
+> Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> 
+> > On Mon, Mar 11, 2019 at 11:16:08AM -0700, Christoph Hellwig wrote:
+> > > On Thu, Feb 28, 2019 at 04:32:02PM -0500, Mike Snitzer wrote:
+> > > > Hi Paul and Christoph,
+> > > > 
+> > > > You've added your Signed-off-by to include/linux/list_bl.h commits in
+> > > > the past.  I'm not sure how this proposed patch should be handled.
+> > > > 
+> > > > These new hlist_bl_add_{before,behind} changes are a prereq for
+> > > > dm-snapshot changes that Nikos has proposed, please see:
+> > > > https://patchwork.kernel.org/patch/10739265/
+> > > > 
+> > > > Any assistance/review you, or others on LKML, might be able to provide
+> > > > would be appreciated.
+> > > 
+> > > I just killed two helpers.  That being said assuming that we only
+> > > rely on the next pointer for the lockless traversals the changes look
+> > > fine to me, but the code might be beyond my paygrade..
+> > 
+> > First, apologies for being slow on this one.
+> 
+> No problem.
+>  
+> > Second, were the two helpers hlist_bl_add_{before,behind}()?  If so, I
+> > guess there is not much point in me looking them over.  Though perhaps
+> > I should be looking something else over?
+> 
+> No, think Christoph was referring to his commit 1879fd6a26571fd4e8e1f
+> from 2011.
+> 
+> Anyway, I'd like you to look over this new proposed patch that
+> introduces hlist_bl_add_{before,behind}(), please see:
+> https://patchwork.kernel.org/patch/10835713/
+> 
+> If you're happy with the patch, and can provide your Reviewed-by or
+> Acked-by, I'll then pick it up as a prereq for the broader dm-snapshot
+> changes that Nikos has provided.
 
-In the case of async updates, the preparation is also done in the
-new_state but the cleanups are done in the new_state (because updates
-are performed in place, i.e. in the current state).
+I replied to the version earlier in this email thread.  Looks close,
+but a couple of questions.
 
-The current code blocks async udpates when the fb is changed, turning
-async updates into sync updates, slowing down cursor updates and
-introducing regressions in igt tests with errors of type:
-
-"CRITICAL: completed 97 cursor updated in a period of 30 flips, we
-expect to complete approximately 15360 updates, with the threshold set
-at 7680"
-
-Fb changes in async updates were prevented to avoid the following scenario:
-
-- Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
-- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
-- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
-Where we have a single call to prepare fb2 but double cleanup call to fb2.
-
-To solve the above problems, instead of blocking async fb changes, we
-place the old framebuffer in the new_state object, so when the code
-performs cleanups in the new_state it will cleanup the old_fb and we
-will have the following scenario instead:
-
-- Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
-- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
-- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
-
-Where calls to prepare/cleanup are balanced.
-
-Cc: <stable@vger.kernel.org> # v4.14+
-Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
-Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-
----
-Hello,
-
-I added a TODO in drm_atomic_helper_async_commit() regarding doing a
-full state swap(), Boris and Nicholas, let me know if this is ok and if
-I can keep your Reviewed-by tags)
-
-As mentioned in the cover letter, I tested in almost all platforms with
-igt plane_cursor_legacy and kms_cursor_legacy and I didn't see any
-regressions. But I couldn't test on MSM and AMD because I don't have
-the hardware I would appreciate if anyone could help me testing those.
-
-Thanks!
-Helen
-
-Changes in v3:
-- Add Reviewed-by tags
-- Add TODO in drm_atomic_helper_async_commit()
-
-Changes in v2:
-- Change the order of the patch in the series, add this as the last one.
-- Add documentation
-- s/ballanced/balanced
-
- drivers/gpu/drm/drm_atomic_helper.c      | 22 ++++++++++++----------
- include/drm/drm_modeset_helper_vtables.h |  5 +++++
- 2 files changed, 17 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 2453678d1186..de5812c362b5 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
- 	    old_plane_state->crtc != new_plane_state->crtc)
- 		return -EINVAL;
- 
--	/*
--	 * FIXME: Since prepare_fb and cleanup_fb are always called on
--	 * the new_plane_state for async updates we need to block framebuffer
--	 * changes. This prevents use of a fb that's been cleaned up and
--	 * double cleanups from occuring.
--	 */
--	if (old_plane_state->fb != new_plane_state->fb)
--		return -EINVAL;
--
- 	funcs = plane->helper_private;
- 	if (!funcs->atomic_async_update)
- 		return -EINVAL;
-@@ -1647,6 +1638,8 @@ EXPORT_SYMBOL(drm_atomic_helper_async_check);
-  * drm_atomic_async_check() succeeds. Async commits are not supposed to swap
-  * the states like normal sync commits, but just do in-place changes on the
-  * current state.
-+ *
-+ * TODO: Implement full swap instead of doing in-place changes.
-  */
- void drm_atomic_helper_async_commit(struct drm_device *dev,
- 				    struct drm_atomic_state *state)
-@@ -1657,6 +1650,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
- 	int i;
- 
- 	for_each_new_plane_in_state(state, plane, plane_state, i) {
-+		struct drm_framebuffer *new_fb = plane_state->fb;
-+		struct drm_framebuffer *old_fb = plane->state->fb;
-+
- 		funcs = plane->helper_private;
- 		funcs->atomic_async_update(plane, plane_state);
- 
-@@ -1665,11 +1661,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
- 		 * plane->state in-place, make sure at least common
- 		 * properties have been properly updated.
- 		 */
--		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
-+		WARN_ON_ONCE(plane->state->fb != new_fb);
- 		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
- 		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
- 		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
- 		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
-+
-+		/*
-+		 * Make sure the FBs have been swapped so that cleanups in the
-+		 * new_state performs a cleanup in the old FB.
-+		 */
-+		WARN_ON_ONCE(plane_state->fb != old_fb);
- 	}
- }
- EXPORT_SYMBOL(drm_atomic_helper_async_commit);
-diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
-index cfb7be40bed7..ce582e8e8f2f 100644
---- a/include/drm/drm_modeset_helper_vtables.h
-+++ b/include/drm/drm_modeset_helper_vtables.h
-@@ -1174,6 +1174,11 @@ struct drm_plane_helper_funcs {
- 	 * current one with the new plane configurations in the new
- 	 * plane_state.
- 	 *
-+	 * Drivers should also swap the framebuffers between plane state
-+	 * and new_state. This is required because prepare and cleanup calls
-+	 * are performed on the new_state object, then to cleanup the old
-+	 * framebuffer, it needs to be placed inside the new_state object.
-+	 *
- 	 * FIXME:
- 	 *  - It only works for single plane updates
- 	 *  - Async Pageflips are not supported yet
--- 
-2.20.1
+							Thanx, Paul
 
