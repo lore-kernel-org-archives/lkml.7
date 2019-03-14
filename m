@@ -7,107 +7,104 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A82C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9299CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7474B2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5949C2085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:02:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Wc46MVTM"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="FTewbtH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfCNF67 (ORCPT
+        id S1726751AbfCNGC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 01:58:59 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:38692 "EHLO
+        Thu, 14 Mar 2019 02:02:56 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:39708 "EHLO
         mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfCNF67 (ORCPT
+        with ESMTP id S1726130AbfCNGC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 01:58:59 -0400
+        Thu, 14 Mar 2019 02:02:56 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id B0EFFA2C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 05:58:57 +0000 (UTC)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id C91B3C84
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 06:02:54 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
 Received: from mta-p6.oit.umn.edu ([127.0.0.1])
         by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id W3Wqtlncn7Ia for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 00:58:57 -0500 (CDT)
+        with ESMTP id wEjlLXp0jyfp for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 01:02:54 -0500 (CDT)
 Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 7F64757A
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:58:57 -0500 (CDT)
-Received: by mail-it1-f200.google.com with SMTP id v12so3693454itv.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 22:58:57 -0700 (PDT)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 975C7C01
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 01:02:54 -0500 (CDT)
+Received: by mail-it1-f200.google.com with SMTP id v125so3647627itc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 23:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=SvUQKGDIhYdSlut3wvJ7Ur1Pv1VSspxRjzKmTkLbVH0=;
-        b=Wc46MVTMUeWCjqeD1bwQrvoVQ+iQflpk3FE/nhef3V+W4DAy8XblvrcTAZTGc/+s2N
-         wNwe8RssZP+fbSN4nDBKvsUH+duSJgj3u3nnF8XRW28Zwt062Zh742LkZTKQs7H+yD/q
-         F4NjXsDMnge4hs0wF5toePIr2Rfszy/dhN3DtQZBtVNBaa+plCV69MrfaSrKDBtgBxYA
-         bXyFk8q+AoI5QRqwk5UNuC2yPUHgO3nPf6HU0UvaKNAW64phnqLTlnzoPrpDfLkTfb5p
-         Nu66dIonrj6o+LEjd02GlZIY/j7FJq1fRYynr8rv405BDwizI20hQ8P2qblrcKdhz4o6
-         Gk2Q==
+        bh=neXuhYsdTWmlAnx3qkR0cwBJA2h7eTxStzKGtWycc1A=;
+        b=FTewbtH3aB7IV0JNJOoPpslKbetBDgKSsFGAW1wzbOm3JQCifqwMHLf2lErZ0Gdcdh
+         p6cRoXCj9Q0ysrFuqmGduL3AuAL3qsGGyB/VW9NcXc/OHzQZVnRZnYTI3qt+rOuJF2QN
+         BzlaJb+mt95JZhnsKcZmxeUj1aGNQeDF1TYstwESfCLS11hWR9GIX2mRKmFIWFfREAJF
+         UIBmZ12BDAYcv7AsQziqPBJJeNYMw4SzfHNkVXPMSKKKrtrRPQvBLr5GkSDBjUtcHeUU
+         xQBmjS63SSoSLukZrBLo5WEk+jPB/27ocsEqwZAXl2PQETyrjqGhlUc+QNWW/oLNzwSX
+         TcGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SvUQKGDIhYdSlut3wvJ7Ur1Pv1VSspxRjzKmTkLbVH0=;
-        b=FiVRnjX4FfMooxc7gmKgFahUd8TvHRbXkmZykv9tLT1zsakMb6addf1tITg800RBvj
-         JkdWJ6ZxypBP6jkSED4Bfmo0DlXp+kaEu8nVHuiP20jI7leVi04p3CcnK4huPRqhbBG2
-         0ng7EwQkXczOzNsO5SF7wmlfTR5KmqHM1gSeEFII1yVahCzJ6+5J/0ASYDJJoDDofrqd
-         mwZkH9xqhb//1CnHaDYaION6KSqq4G31kqAHEGVZnWKTJrWAXGvCtQdtAiGKawWRfV3M
-         EjggC5XeGkMfttDYe8Aiiv/mrIaz0ZUFWMjtYMCNjjNRacYvZ1r2hVgF9znnBta84ukl
-         PCiQ==
-X-Gm-Message-State: APjAAAVHsfJvh8KAoSeCrQmzK77h0SPoW1uUkNFcYYqHBuTfTG4IwHM6
-        jSSNZ3Kf5um7uPj6fgt7ztg4n6FHygkuBHUMdC2uUPMjcvBLny6qDqtu6Ku2j7/lJDyDCKkliVL
-        NA+Ls+eIwc1lMrHobzg0BVgAmG/7I
-X-Received: by 2002:a24:5407:: with SMTP id t7mr1129654ita.128.1552543137156;
-        Wed, 13 Mar 2019 22:58:57 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyaU9bzz2EpnQcxcXTWVnK19DaawKPbD94d82adMrlaZ8GpwI9zcoRFkFU/5yNtHwJb8AlOxw==
-X-Received: by 2002:a24:5407:: with SMTP id t7mr1129646ita.128.1552543136955;
-        Wed, 13 Mar 2019 22:58:56 -0700 (PDT)
+        bh=neXuhYsdTWmlAnx3qkR0cwBJA2h7eTxStzKGtWycc1A=;
+        b=OlPnjLuaia+Xs5/pqpIx2GKI98UBjfkPQFsGvussbqMfk/KVXeQSlT7PvGHBOt2l/V
+         3SFDmflkswT75RH5TfVpbsed/azoQxF4cpBT79As4EmfIO0O5WBiYV3R4ejBkKh5qOA6
+         N4xVQe4iUBXiEHl1b+ZBev4kQ5ugZy0ZwezLpcDnz4AF3x90T2x/20mTZbZp630e66xS
+         BywsNttor2qP6I9QG+H7pK0CZ7zndEnPjWafnWObX6f4KSJy5eaXCmzrd3woNeaVSa7E
+         SE/xksh7YCs6fnoLT4oBX6N1vN3RDACAemspZAq4l0eeo+obgTm3XTeGD+I4oync86N1
+         FOAg==
+X-Gm-Message-State: APjAAAWyWYW9LglSwxdbh7emfStG+diiyAvQqxeqWR3p23fjYuLPgXDI
+        rmT/cb6OMCMIvdRKXE8jdhy6ae91TfIj8zVpsmlPji9exAtQqN5ffoVq4Gsjx4GYygIyPWD5u3Q
+        7qmA4iefqOOQGnQU4Y7Dgg8Z0Dv5i
+X-Received: by 2002:a02:308:: with SMTP id y8mr27016142jad.142.1552543374226;
+        Wed, 13 Mar 2019 23:02:54 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyJDG1+jR07ZIyV5jIvgpDHlOL3koRjAIkQNXBxMV/NtQ3hrlsI5il1c5c0UL26spFL0gIwfA==
+X-Received: by 2002:a02:308:: with SMTP id y8mr27016132jad.142.1552543374011;
+        Wed, 13 Mar 2019 23:02:54 -0700 (PDT)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id w8sm682394ita.21.2019.03.13.22.58.55
+        by smtp.gmail.com with ESMTPSA id 22sm6735419ioc.28.2019.03.13.23.02.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 22:58:56 -0700 (PDT)
+        Wed, 13 Mar 2019 23:02:53 -0700 (PDT)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pci: pcie-xilinx: fix a missing-check bug for __get_free_pages
-Date:   Thu, 14 Mar 2019 00:58:51 -0500
-Message-Id: <20190314055851.6884-1-kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Sebastian Reichel <sre@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] power: charger-manager: fix a potential NULL pointer dereference
+Date:   Thu, 14 Mar 2019 01:02:47 -0500
+Message-Id: <20190314060247.7848-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case __get_free_pages fail, the fix returns to avoid NULL
-pointer dereference.
+In case create_freezable_workqueue fails, the fix return -ENOMEM
+to avoid a potential NULL pointer dereference.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/pci/controller/pcie-xilinx.c | 3 +++
+ drivers/power/supply/charger-manager.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-index 9bd1a35cd5d8..b7083e995c45 100644
---- a/drivers/pci/controller/pcie-xilinx.c
-+++ b/drivers/pci/controller/pcie-xilinx.c
-@@ -341,6 +341,9 @@ static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
- 	phys_addr_t msg_addr;
- 
- 	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
-+	if (unlikely(!port->msi_pages))
-+		return;
+diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
+index 38be91f21cc4..d29c4f338157 100644
+--- a/drivers/power/supply/charger-manager.c
++++ b/drivers/power/supply/charger-manager.c
+@@ -1987,6 +1987,9 @@ static struct platform_driver charger_manager_driver = {
+ static int __init charger_manager_init(void)
+ {
+ 	cm_wq = create_freezable_workqueue("charger_manager");
++	if (unlikely(!cm_wq))
++		return -ENOMEM;
 +
- 	msg_addr = virt_to_phys((void *)port->msi_pages);
- 	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
- 	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
+ 	INIT_DELAYED_WORK(&cm_monitor_work, cm_monitor_poller);
+ 
+ 	return platform_driver_register(&charger_manager_driver);
 -- 
 2.17.1
 
