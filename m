@@ -2,222 +2,277 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B940C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF052C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F642070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C11721855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kcH9UPV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfCNOHM (ORCPT
+        id S1727770AbfCNOHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:07:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48140 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727569AbfCNOHM (ORCPT
+        Thu, 14 Mar 2019 10:07:16 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34495 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727569AbfCNOHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:07:12 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2EE2QPf100770
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 10:07:11 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r7rcar8rv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 10:07:10 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 14 Mar 2019 14:07:10 -0000
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Mar 2019 14:07:05 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2EE740n20054082
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Mar 2019 14:07:05 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1D74B205F;
-        Thu, 14 Mar 2019 14:07:04 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4F6CB2064;
-        Thu, 14 Mar 2019 14:07:04 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Mar 2019 14:07:04 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 2E5E016C32A0; Thu, 14 Mar 2019 07:07:50 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 07:07:50 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Nikos Tsironis <ntsironis@arrikto.com>
-Cc:     Mike Snitzer <snitzer@redhat.com>, hch@infradead.org,
-        agk@redhat.com, dm-devel@redhat.com, mpatocka@redhat.com,
-        iliastsi@arrikto.com, linux-kernel@vger.kernel.org
-Subject: Re: [dm-devel] [PATCH 1/3] list_bl: Add hlist_bl_add_before/behind
- helpers
-Reply-To: paulmck@linux.ibm.com
-References: <20181220180651.4879-1-ntsironis@arrikto.com>
- <20181220180651.4879-2-ntsironis@arrikto.com>
- <20190228213201.GB23527@redhat.com>
- <20190313234853.GA7797@linux.ibm.com>
- <20190314003027.GE4202@redhat.com>
- <f70ea4c9-658d-5770-be7f-a1a97bb67643@arrikto.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f70ea4c9-658d-5770-be7f-a1a97bb67643@arrikto.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19031414-0060-0000-0000-0000031C5B50
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010757; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01174264; UDB=6.00614020; IPR=6.00954929;
- MB=3.00025978; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-14 14:07:08
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031414-0061-0000-0000-0000489B8D96
-Message-Id: <20190314140750.GB4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-14_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903140099
+        Thu, 14 Mar 2019 10:07:15 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k2so6186542qtm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=5iJnHF8Pb0pzI2sh2ryvQW8OFemSrBwyS9FuB9ORbTA=;
+        b=kcH9UPV3qou2OsNGhvYwYsqaZdVn8ZaikfS6iaTqLzE0q2hhSoNgjcAjr2KfWgohlD
+         a1WQnLT80jqeV3EAEsvKk7lJTIwHH5GcatsSOLa8zCn5eIIYSp6D/4a6aar8uGg52B64
+         +EDjdlN4mABlJImSorOS7PsU7faoekQuXvuxVjqhm1UDbNOrGgyf1mS46ZqCGDPSVw2M
+         omBvHGtgV1cMlZPqQ0ao/QX1QeZZo4N3b0AHmAPGXeRhlRiXqR9CADxLodahwfWiV3DV
+         7BtaUPZnnJDeT8neEZTp2eRVeIuIJJ96NmAbLq4XPVayngQHwZfaI+at//OAv7PIUUQv
+         6Ktw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5iJnHF8Pb0pzI2sh2ryvQW8OFemSrBwyS9FuB9ORbTA=;
+        b=eZQ3+gjgvK8Gfr2JOD7TUVbAIXEerar/3ODUtpJNf9JGi/qEY3yBWnC8ZK9OKPMEIK
+         mt4cXsCpPsI8OKukJsagLwp5/5D9VmRLq5c9ihAFa+CuCWZCeNOcLiRVvnN2wteYWqK2
+         vHHHOWsG9pVE53UyZwK6vkTG8jclaRVLcaaU63g2t8jwfEJMQn07qeiNDJNbrjjsowhC
+         dVibHnyw2MvilQdwJh7fhiXgn0nsQkQ2NQSgc7l9GtLBLIROu9Ly35UyDat7Ea6V9YyZ
+         KPW2PKDcL6y9MI+qhYAvHt0s07RDwZvrGafw+g+3y8PLEYLGf6UIFseUtRrX5QmQk5D1
+         cEuQ==
+X-Gm-Message-State: APjAAAU4/csxIeAZDBCgurCu44GVLRWhi0WYbHPxHlnhozaOreR9lymM
+        WqZRZPYrmYsWH7Mm0SGrH4KltQ==
+X-Google-Smtp-Source: APXvYqwY1Ga7bUmn9ECzxYvaz4veSE3FmtrAZb/U7jldjkgjIw0VhM+ZRUdEBMPadnA+jQFidgIjJw==
+X-Received: by 2002:aed:3608:: with SMTP id e8mr39425056qtb.31.1552572433845;
+        Thu, 14 Mar 2019 07:07:13 -0700 (PDT)
+Received: from ovpn-121-103.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id c2sm11636828qtc.41.2019.03.14.07.07.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 07:07:13 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, osalvador@suse.de, vbabka@suse.cz,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v3] mm/hotplug: fix offline undo_isolate_page_range()
+Date:   Thu, 14 Mar 2019 10:06:54 -0400
+Message-Id: <20190314140654.58883-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 03:28:23PM +0200, Nikos Tsironis wrote:
-> On 3/14/19 2:30 AM, Mike Snitzer wrote:
-> > On Wed, Mar 13 2019 at  7:48pm -0400,
-> > Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > 
-> Hi Paul,
-> 
-> Thanks a lot for your feedback!
+The commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
+memory to zones until online") introduced move_pfn_range_to_zone() which
+calls memmap_init_zone() during onlining a memory block.
+memmap_init_zone() will reset pagetype flags and makes migrate type to
+be MOVABLE.
 
-NP, and apologies for the delay.
+However, in __offline_pages(), it also call undo_isolate_page_range()
+after offline_isolated_pages() to do the same thing. Due to
+the commit 2ce13640b3f4 ("mm: __first_valid_page skip over offline
+pages") changed __first_valid_page() to skip offline pages,
+undo_isolate_page_range() here just waste CPU cycles looping around the
+offlining PFN range while doing nothing, because __first_valid_page()
+will return NULL as offline_isolated_pages() has already marked all
+memory sections within the pfn range as offline via
+offline_mem_sections().
 
-> >> On Thu, Feb 28, 2019 at 04:32:02PM -0500, Mike Snitzer wrote:
-> >>> On Thu, Dec 20 2018 at  1:06pm -0500,
-> >>> Nikos Tsironis <ntsironis@arrikto.com> wrote:
-> >>>
-> >>>> Add hlist_bl_add_before/behind helpers to add an element before/after an
-> >>>> existing element in a bl_list.
-> >>>>
-> >>>> Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
-> >>>> Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
-> >>>> ---
-> >>>>  include/linux/list_bl.h | 27 +++++++++++++++++++++++++++
-> >>>>  1 file changed, 27 insertions(+)
-> >>>>
-> >>>> diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
-> >>>> index 3fc2cc57ba1b..2fd918e5fd48 100644
-> >>>> --- a/include/linux/list_bl.h
-> >>>> +++ b/include/linux/list_bl.h
-> >>>> @@ -86,6 +86,33 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
-> >>>>  	hlist_bl_set_first(h, n);
-> >>>>  }
-> >>>>  
-> >>>> +static inline void hlist_bl_add_before(struct hlist_bl_node *n,
-> >>>> +				       struct hlist_bl_node *next)
-> >>>> +{
-> >>>> +	struct hlist_bl_node **pprev = next->pprev;
-> >>>> +
-> >>>> +	n->pprev = pprev;
-> >>>> +	n->next = next;
-> >>>> +	next->pprev = &n->next;
-> >>>> +
-> >>>> +	/* pprev may be `first`, so be careful not to lose the lock bit */
-> >>>> +	WRITE_ONCE(*pprev,
-> >>>> +		   (struct hlist_bl_node *)
-> >>>> +			((unsigned long)n |
-> >>>> +			 ((unsigned long)*pprev & LIST_BL_LOCKMASK)));
-> >>
-> >> A nit, but use of uintptr_t shrinks things a bit:
-> >>
-> >> +		   (struct hlist_bl_node *)
-> >> +			((uintptr_t)n | ((uintptr_t)*pprev & LIST_BL_LOCKMASK)));
-> >>
-> >> I am not too concerned about this, though.
-> > 
-> > I'm fine with folding in your suggestion.
-> 
-> Indeed, this looks better.
-> 
-> >> The WRITE_ONCE() is to handle races with hlist_bl_empty() (which does contain
-> >> the corresponding READ_ONCE()) correct?
-> > 
-> > Correct.
-> 
-> Yes that's correct.
-> 
-> >>>> +}
-> >>>> +
-> >>>> +static inline void hlist_bl_add_behind(struct hlist_bl_node *n,
-> >>>> +				       struct hlist_bl_node *prev)
-> >>>> +{
-> >>>> +	n->next = prev->next;
-> >>>> +	n->pprev = &prev->next;
-> >>>> +	WRITE_ONCE(prev->next, n);
-> >>
-> >> I don't see what this WRITE_ONCE() is interacting with.  The traversals
-> >> use plain C-language reads, and hlist_bl_empty() can't get here.  All
-> >> uses of hlist_bl_for_each_entry() invoke hlist_bl_lock() before starting
-> >> the traversal, and hlist_bl_for_each_entry_safe() looks to be unused.
-> >> (Perhaps it should be removed?  Or is there some anticipated use?)
-> 
-> I am using hlist_bl_for_each_entry_safe() in this proposed patch for
-> dm-snapshot: https://patchwork.kernel.org/patch/10835709/
+Also, after calling the "useless" undo_isolate_page_range() here, it
+reaches the point of no returning by notifying MEM_OFFLINE. Those pages
+will be marked as MIGRATE_MOVABLE again once onlining. The only thing
+left to do is to decrease the number of isolated pageblocks zone
+counter which would make some paths of the page allocation slower that
+the above commit introduced.
 
-Probably should keep it, then.  ;-)
+Even if alloc_contig_range() can be used to isolate 16GB-hugetlb pages
+on ppc64, an "int" should still be enough to represent the number of
+pageblocks there. Fix an incorrect comment along the way.
 
-> >>
-> >> I don't believe that the WRITE_ONCE() is needed.  What am I missing?
-> >>
-> >> Other than that, looks good.
-> >>
-> >> 							Thanx, Paul
-> >>
-> > 
-> > I'd imagine it was just born out of symmetry with hlist_bl_add_before()
-> > and/or caution.  But let's see what Nikos has to say.
-> 
-> I also don't believe that this WRITE_SAME() is needed. But, looking at
-> hlist_add_behind() in include/linux/list.h, which, if I am not missing
-> something, is used in the same way as hlist_bl_add_behind(), it also
-> uses WRITE_ONCE() to update prev->next:
-> 
-> static inline void hlist_add_behind(struct hlist_node *n,
-> 				    struct hlist_node *prev)
-> {
-> 	n->next = prev->next;
-> 	WRITE_ONCE(prev->next, n);
-> 	n->pprev = &prev->next;
-> 
-> 	if (n->next)
-> 		n->next->pprev  = &n->next;
-> }
-> 
-> Could it be the case that the WRITE_ONCE() in hlist_add_behind() is also
-> not needed? This WRITE_ONCE() was introduced by commit 1c97be677f72b3
-> ("list: Use WRITE_ONCE() when adding to lists and hlists").
+Fixes: 2ce13640b3f4 ("mm: __first_valid_page skip over offline pages")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
-Looks like I have no one to blame but myself!
+v3: Reconstruct the kernel-doc comments.
+    Use a more meaningful variable name per Oscar.
+    Update the commit log a bit.
+v2: Return the nubmer of isolated pageblocks in start_isolate_page_range() per
+    Oscar; take the zone lock when undoing zone->nr_isolate_pageblock per
+    Michal.
 
-Would you like to remove that as part of your patch series?
+ include/linux/page-isolation.h |  4 ----
+ mm/memory_hotplug.c            | 17 +++++++++++++----
+ mm/page_alloc.c                |  2 +-
+ mm/page_isolation.c            | 35 +++++++++++++++++++++-------------
+ mm/sparse.c                    |  2 +-
+ 5 files changed, 37 insertions(+), 23 deletions(-)
 
-> But, since I am not an expert in lockless programming, I opted to be on
-> the safe side and followed the example of hlist_add_behind().
-> 
-> That said, I will follow up with a new version of the patch removing the
-> WRITE_ONCE() and using uintptr_t instead of unsigned long.
-
-Sounds good!
-
-							Thanx, Paul
+diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
+index 4eb26d278046..5b24d56b2296 100644
+--- a/include/linux/page-isolation.h
++++ b/include/linux/page-isolation.h
+@@ -47,10 +47,6 @@ int move_freepages_block(struct zone *zone, struct page *page,
+  * For isolating all pages in the range finally, the caller have to
+  * free all pages in the range. test_page_isolated() can be used for
+  * test it.
+- *
+- * The following flags are allowed (they can be combined in a bit mask)
+- * SKIP_HWPOISON - ignore hwpoison pages
+- * REPORT_FAILURE - report details about the failure to isolate the range
+  */
+ int
+ start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index d63c5a2959cf..cd1a8c4c6183 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1580,7 +1580,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ {
+ 	unsigned long pfn, nr_pages;
+ 	long offlined_pages;
+-	int ret, node;
++	int ret, node, nr_isolate_pageblock;
+ 	unsigned long flags;
+ 	unsigned long valid_start, valid_end;
+ 	struct zone *zone;
+@@ -1606,10 +1606,11 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 	ret = start_isolate_page_range(start_pfn, end_pfn,
+ 				       MIGRATE_MOVABLE,
+ 				       SKIP_HWPOISON | REPORT_FAILURE);
+-	if (ret) {
++	if (ret < 0) {
+ 		reason = "failure to isolate range";
+ 		goto failed_removal;
+ 	}
++	nr_isolate_pageblock = ret;
+ 
+ 	arg.start_pfn = start_pfn;
+ 	arg.nr_pages = nr_pages;
+@@ -1661,8 +1662,16 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 	/* Ok, all of our target is isolated.
+ 	   We cannot do rollback at this point. */
+ 	offline_isolated_pages(start_pfn, end_pfn);
+-	/* reset pagetype flags and makes migrate type to be MOVABLE */
+-	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
++
++	/*
++	 * Onlining will reset pagetype flags and makes migrate type
++	 * MOVABLE, so just need to decrease the number of isolated
++	 * pageblocks zone counter here.
++	 */
++	spin_lock_irqsave(&zone->lock, flags);
++	zone->nr_isolate_pageblock -= nr_isolate_pageblock;
++	spin_unlock_irqrestore(&zone->lock, flags);
++
+ 	/* removal success */
+ 	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
+ 	zone->present_pages -= offlined_pages;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 03fcf73d47da..d96ca5bc555b 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8233,7 +8233,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
+ 
+ 	ret = start_isolate_page_range(pfn_max_align_down(start),
+ 				       pfn_max_align_up(end), migratetype, 0);
+-	if (ret)
++	if (ret < 0)
+ 		return ret;
+ 
+ 	/*
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index e8baab91b1d1..dd7c002cd5ae 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -162,19 +162,22 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
+ }
+ 
+ /*
+- * start_isolate_page_range() -- make page-allocation-type of range of pages
+- * to be MIGRATE_ISOLATE.
+- * @start_pfn: The lower PFN of the range to be isolated.
+- * @end_pfn: The upper PFN of the range to be isolated.
+- * @migratetype: migrate type to set in error recovery.
++ * start_isolate_page_range() - make page-allocation-type of range of pages to
++ * be MIGRATE_ISOLATE.
++ * @start_pfn:		The lower PFN of the range to be isolated.
++ * @end_pfn:		The upper PFN of the range to be isolated.
++ *			start_pfn/end_pfn must be aligned to pageblock_order.
++ * @migratetype:	migrate type to set in error recovery.
++ * @flags:		The following flags are allowed (they can be combined in
++ *			a bit mask)
++ *			SKIP_HWPOISON - ignore hwpoison pages
++ *			REPORT_FAILURE - report details about the failure to
++ *			isolate the range
+  *
+  * Making page-allocation-type to be MIGRATE_ISOLATE means free pages in
+  * the range will never be allocated. Any free pages and pages freed in the
+  * future will not be allocated again.
+  *
+- * start_pfn/end_pfn must be aligned to pageblock_order.
+- * Return 0 on success and -EBUSY if any part of range cannot be isolated.
+- *
+  * There is no high level synchronization mechanism that prevents two threads
+  * from trying to isolate overlapping ranges.  If this happens, one thread
+  * will notice pageblocks in the overlapping range already set to isolate.
+@@ -182,6 +185,9 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
+  * returns an error.  We then clean up by restoring the migration type on
+  * pageblocks we may have modified and return -EBUSY to caller.  This
+  * prevents two threads from simultaneously working on overlapping ranges.
++ *
++ * Return: the number of isolated pageblocks on success and -EBUSY if any part
++ * of range cannot be isolated.
+  */
+ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+ 			     unsigned migratetype, int flags)
+@@ -189,6 +195,7 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+ 	unsigned long pfn;
+ 	unsigned long undo_pfn;
+ 	struct page *page;
++	int nr_isolate_pageblock = 0;
+ 
+ 	BUG_ON(!IS_ALIGNED(start_pfn, pageblock_nr_pages));
+ 	BUG_ON(!IS_ALIGNED(end_pfn, pageblock_nr_pages));
+@@ -197,13 +204,15 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+ 	     pfn < end_pfn;
+ 	     pfn += pageblock_nr_pages) {
+ 		page = __first_valid_page(pfn, pageblock_nr_pages);
+-		if (page &&
+-		    set_migratetype_isolate(page, migratetype, flags)) {
+-			undo_pfn = pfn;
+-			goto undo;
++		if (page) {
++			if (set_migratetype_isolate(page, migratetype, flags)) {
++				undo_pfn = pfn;
++				goto undo;
++			}
++			nr_isolate_pageblock++;
+ 		}
+ 	}
+-	return 0;
++	return nr_isolate_pageblock;
+ undo:
+ 	for (pfn = start_pfn;
+ 	     pfn < undo_pfn;
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 69904aa6165b..56e057c432f9 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -567,7 +567,7 @@ void online_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ }
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+-/* Mark all memory sections within the pfn range as online */
++/* Mark all memory sections within the pfn range as offline */
+ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ {
+ 	unsigned long pfn;
+-- 
+2.17.2 (Apple Git-113)
 
