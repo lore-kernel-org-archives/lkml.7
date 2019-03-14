@@ -3,195 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4475EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEECC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB762085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234C32184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfCNMnR (ORCPT
+        id S1727547AbfCNMom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:43:17 -0400
-Received: from foss.arm.com ([217.140.101.70]:43696 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbfCNMnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 08:43:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A108C80D;
-        Thu, 14 Mar 2019 05:43:16 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA67B3F614;
-        Thu, 14 Mar 2019 05:43:13 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 12:43:11 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190314124311.f6azk66rnwk4p6zx@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190313135238.GC5922@hirez.programming.kicks-ass.net>
- <CAJuCfpHNgSOR_ZujZ4XFS2sqGUaJKPOYoc8aqToO=qxA2LhBag@mail.gmail.com>
+        Thu, 14 Mar 2019 08:44:42 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5530 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727091AbfCNMol (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 08:44:41 -0400
+X-UUID: d1705e43722d4a0baf257db8f13cd08f-20190314
+X-UUID: d1705e43722d4a0baf257db8f13cd08f-20190314
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1753450216; Thu, 14 Mar 2019 20:44:35 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 14 Mar 2019 20:44:34 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 14 Mar 2019 20:44:33 +0800
+From:   <yongqiang.niu@mediatek.com>
+To:     <ck.hu@mediatek.com>, <p.zabel@pengutronix.de>,
+        <robh+dt@kernel.org>, <matthias.bgg@gmail.com>
+CC:     <airlied@linux.ie>, <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
+        <yt.shen@mediatek.com>, Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [RESEND PATCH v1 00/18] add drm support for MT8183
+Date:   Thu, 14 Mar 2019 20:05:02 +0800
+Message-ID: <1552565120-24329-1-git-send-email-yongqiang.niu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpHNgSOR_ZujZ4XFS2sqGUaJKPOYoc8aqToO=qxA2LhBag@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Mar 14:23, Suren Baghdasaryan wrote:
-> On Wed, Mar 13, 2019 at 6:52 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
-> > > +/*
-> > > + * When a task is enqueued on a rq, the clamp bucket currently defined by the
-> > > + * task's uclamp::bucket_id is reference counted on that rq. This also
-> > > + * immediately updates the rq's clamp value if required.
-> > > + *
-> > > + * Since tasks know their specific value requested from user-space, we track
-> > > + * within each bucket the maximum value for tasks refcounted in that bucket.
-> > > + * This provide a further aggregation (local clamping) which allows to track
-> > > + * within each bucket the exact "requested" clamp value whenever all tasks
-> > > + * RUNNABLE in that bucket require the same clamp.
-> > > + */
-> > > +static inline void uclamp_rq_inc_id(struct task_struct *p, struct rq *rq,
-> > > +                                 unsigned int clamp_id)
-> > > +{
-> > > +     unsigned int bucket_id = p->uclamp[clamp_id].bucket_id;
-> > > +     unsigned int rq_clamp, bkt_clamp, tsk_clamp;
-> > > +
-> > > +     rq->uclamp[clamp_id].bucket[bucket_id].tasks++;
-> > > +
-> > > +     /*
-> > > +      * Local clamping: rq's buckets always track the max "requested"
-> > > +      * clamp value from all RUNNABLE tasks in that bucket.
-> > > +      */
-> > > +     tsk_clamp = p->uclamp[clamp_id].value;
-> > > +     bkt_clamp = rq->uclamp[clamp_id].bucket[bucket_id].value;
-> > > +     rq->uclamp[clamp_id].bucket[bucket_id].value = max(bkt_clamp, tsk_clamp);
-> >
-> > So, if I read this correct:
-> >
-> >  - here we track a max value in a bucket,
-> >
-> > > +     rq_clamp = READ_ONCE(rq->uclamp[clamp_id].value);
-> > > +     WRITE_ONCE(rq->uclamp[clamp_id].value, max(rq_clamp, tsk_clamp));
-> > > +}
-> > > +
-> > > +/*
-> > > + * When a task is dequeued from a rq, the clamp bucket reference counted by
-> > > + * the task is released. If this is the last task reference counting the rq's
-> > > + * max active clamp value, then the rq's clamp value is updated.
-> > > + * Both the tasks reference counter and the rq's cached clamp values are
-> > > + * expected to be always valid, if we detect they are not we skip the updates,
-> > > + * enforce a consistent state and warn.
-> > > + */
-> > > +static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
-> > > +                                 unsigned int clamp_id)
-> > > +{
-> > > +     unsigned int bucket_id = p->uclamp[clamp_id].bucket_id;
-> > > +     unsigned int rq_clamp, bkt_clamp;
-> > > +
-> > > +     SCHED_WARN_ON(!rq->uclamp[clamp_id].bucket[bucket_id].tasks);
-> > > +     if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
-> > > +             rq->uclamp[clamp_id].bucket[bucket_id].tasks--;
-> > > +
-> > > +     /*
-> > > +      * Keep "local clamping" simple and accept to (possibly) overboost
-> > > +      * still RUNNABLE tasks in the same bucket.
-> > > +      */
-> > > +     if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
-> > > +             return;
-> >
-> > (Oh man, I hope that generates semi sane code; long live CSE passes I
-> > suppose)
-> >
-> > But we never decrement that bkt_clamp value on dequeue.
-> >
-> > > +     bkt_clamp = rq->uclamp[clamp_id].bucket[bucket_id].value;
-> > > +
-> > > +     /* The rq's clamp value is expected to always track the max */
-> > > +     rq_clamp = READ_ONCE(rq->uclamp[clamp_id].value);
-> > > +     SCHED_WARN_ON(bkt_clamp > rq_clamp);
-> > > +     if (bkt_clamp >= rq_clamp) {
-> >
-> > head hurts, this reads ==, how can this ever not be so?
-> >
-> > > +             /*
-> > > +              * Reset rq's clamp bucket value to its nominal value whenever
-> > > +              * there are anymore RUNNABLE tasks refcounting it.
-> >
-> > -ENOPARSE
-> >
-> > > +              */
-> > > +             rq->uclamp[clamp_id].bucket[bucket_id].value =
-> > > +                     uclamp_bucket_value(rq_clamp);
-> >
-> > But basically you decrement the bucket value to the nominal value.
-> >
-> > > +             uclamp_rq_update(rq, clamp_id);
-> > > +     }
-> > > +}
-> >
-> > Given all that, what is to stop the bucket value to climbing to
-> > uclamp_bucket_value(+1)-1 and staying there (provided there's someone
-> > runnable)?
-> >
-> > Why are we doing this... ?
-> 
-> I agree with Peter, this part of the patch was the hardest to read.
-> SCHED_WARN_ON line makes sense to me. The condition that follows and
-> the following comment are a little baffling. Condition seems to
-> indicate that the code that follows should be executed only if we are
-> in the top-most occupied bucket (the bucket which has tasks and has
-> the highest uclamp value).
-> So this bucket just lost its last task and we should update
-> rq->uclamp[clamp_id].value.
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-Right.
+This series are based on 4.20-rc1 and provide 18 patches to
+support mediatek SOC MT8183
+Resend first version 
 
-> However that's not exactly what the code does... It also resets
-> rq->uclamp[clamp_id].bucket[bucket_id].value.
+Yongqiang Niu (18):
+  drm/mediatek: update dt-bindings for mt8183
+  drm/mediatek: add mutex mod and sof into ddp private data
+  drm/mediatek: redefine mtk_ddp_sout_sel
+  drm/mediatek: move rdma sout from mtk_ddp_mout_en into
+    mtk_ddp_sout_sel
+  drm/mediatek: add ddp component CCORR
+  drm/mediatek: add mmsys private data for ddp path config
+  drm/mediatek: add commponent OVL0_2L
+  drm/mediatek: add component OVL1_2L
+  drm/mediatek: add component DITHER
+  drm/mediatek: add gmc_bits for ovl private data
+  drm/medaitek: add layer_nr for ovl private data
+  drm/mediatek: add function to connect module with it's previous one
+  drm/mediatek: add ddp write register common api
+  drm/mediatek: add connect function for ovl
+  drm/mediatek: add RDMA1 fifo size into RDMA private data
+  drm/mediatek: add function mtk_ddp_comp_get_type
+  drm/mediatek: add ovl0/ovl0_2l usecase
+  drm/mediatek: add support for mediatek SOC MT8183
 
-Right...
-
-> So if I understand correctly, unless the bucket that just lost its
-> last task is the top-most one its value will not be reset to nominal
-> value. That looks like a bug to me. Am I missing something?
-
-... and I think you've got a point here!
-
-The reset to nominal value line should be done unconditionally.
-I'll move it outside its current block. Thanks for spotting it.
-
-> Side note: some more explanation would be very helpful.
-
-Will move that "bucket local max" management code into a separate
-patch as suggested by Peter. Hopefully that should make the logic more
-clear and allows me to add some notes in the changelog.
+ .../bindings/display/mediatek/mediatek,disp.txt    |  11 +-
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  64 ++-
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  23 +-
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  42 +-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 458 ++++++++++++++++-----
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |  11 +
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 100 +++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  24 ++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  55 +++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   4 +
+ 10 files changed, 688 insertions(+), 104 deletions(-)
 
 -- 
-#include <best/regards.h>
+1.8.1.1.dirty
 
-Patrick Bellasi
