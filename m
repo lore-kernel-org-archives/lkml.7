@@ -3,137 +3,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C77C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC963C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 591EE2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A2E2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbfCNQLr (ORCPT
+        id S1727941AbfCNQLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:11:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42392 "EHLO mx1.redhat.com"
+        Thu, 14 Mar 2019 12:11:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53826 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfCNQLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:11:45 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S1727247AbfCNQLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 12:11:52 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E22F131688E6;
-        Thu, 14 Mar 2019 16:11:44 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id D37E030EEF69;
+        Thu, 14 Mar 2019 16:11:52 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5AAED1001DEB;
-        Thu, 14 Mar 2019 16:11:43 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBE0817DF5;
+        Thu, 14 Mar 2019 16:11:51 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 21/38] vfs: Convert rpc_pipefs to fs_context
+Subject: [PATCH 22/38] vfs: Kill off mount_ns()
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 14 Mar 2019 16:11:41 +0000
-Message-ID: <155257990160.13720.944023301124879434.stgit@warthog.procyon.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, dhowells@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 14 Mar 2019 16:11:50 +0000
+Message-ID: <155257991012.13720.8391821897746891570.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
 References: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 14 Mar 2019 16:11:45 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 14 Mar 2019 16:11:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-cc: Anna Schumaker <anna.schumaker@netapp.com>
-cc: "J. Bruce Fields" <bfields@fieldses.org>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-nfs@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
 ---
 
- net/sunrpc/rpc_pipe.c |   34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
+ fs/super.c         |   44 --------------------------------------------
+ include/linux/fs.h |    3 ---
+ 2 files changed, 47 deletions(-)
 
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index 69663681bf9d..2d697861d49a 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -13,6 +13,7 @@
- #include <linux/string.h>
- #include <linux/pagemap.h>
- #include <linux/mount.h>
-+#include <linux/fs_context.h>
- #include <linux/namei.h>
- #include <linux/fsnotify.h>
- #include <linux/kernel.h>
-@@ -1354,11 +1355,11 @@ rpc_gssd_dummy_depopulate(struct dentry *pipe_dentry)
+diff --git a/fs/super.c b/fs/super.c
+index 6c3acd633cca..3b5275298f7c 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1148,50 +1148,6 @@ void kill_litter_super(struct super_block *sb)
  }
+ EXPORT_SYMBOL(kill_litter_super);
  
- static int
--rpc_fill_super(struct super_block *sb, void *data, int silent)
-+rpc_fill_super(struct super_block *sb, struct fs_context *fc)
+-static int ns_test_super(struct super_block *sb, void *data)
+-{
+-	return sb->s_fs_info == data;
+-}
+-
+-static int ns_set_super(struct super_block *sb, void *data)
+-{
+-	sb->s_fs_info = data;
+-	return set_anon_super(sb, NULL);
+-}
+-
+-struct dentry *mount_ns(struct file_system_type *fs_type,
+-	int flags, void *data, void *ns, struct user_namespace *user_ns,
+-	int (*fill_super)(struct super_block *, void *, int))
+-{
+-	struct super_block *sb;
+-
+-	/* Don't allow mounting unless the caller has CAP_SYS_ADMIN
+-	 * over the namespace.
+-	 */
+-	if (!(flags & SB_KERNMOUNT) && !ns_capable(user_ns, CAP_SYS_ADMIN))
+-		return ERR_PTR(-EPERM);
+-
+-	sb = sget_userns(fs_type, ns_test_super, ns_set_super, flags,
+-			 user_ns, ns);
+-	if (IS_ERR(sb))
+-		return ERR_CAST(sb);
+-
+-	if (!sb->s_root) {
+-		int err;
+-		err = fill_super(sb, data, flags & SB_SILENT ? 1 : 0);
+-		if (err) {
+-			deactivate_locked_super(sb);
+-			return ERR_PTR(err);
+-		}
+-
+-		sb->s_flags |= SB_ACTIVE;
+-	}
+-
+-	return dget(sb->s_root);
+-}
+-
+-EXPORT_SYMBOL(mount_ns);
+-
+ int set_anon_super_fc(struct super_block *sb, struct fs_context *fc)
  {
- 	struct inode *inode;
- 	struct dentry *root, *gssd_dentry;
--	struct net *net = get_net(sb->s_fs_info);
-+	struct net *net = sb->s_fs_info;
- 	struct sunrpc_net *sn = net_generic(net, sunrpc_net_id);
- 	int err;
+ 	return set_anon_super(sb, NULL);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index b738e8e5b096..20c15794c2ac 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2194,9 +2194,6 @@ struct file_system_type {
  
-@@ -1415,12 +1416,29 @@ gssd_running(struct net *net)
- }
- EXPORT_SYMBOL_GPL(gssd_running);
+ #define MODULE_ALIAS_FS(NAME) MODULE_ALIAS("fs-" NAME)
  
--static struct dentry *
--rpc_mount(struct file_system_type *fs_type,
--		int flags, const char *dev_name, void *data)
-+static int rpc_fs_get_tree(struct fs_context *fc)
-+{
-+	fc->s_fs_info = get_net(fc->net_ns);
-+	return vfs_get_super(fc, vfs_get_keyed_super, rpc_fill_super);
-+}
-+
-+static void rpc_fs_free_fc(struct fs_context *fc)
- {
--	struct net *net = current->nsproxy->net_ns;
--	return mount_ns(fs_type, flags, data, net, net->user_ns, rpc_fill_super);
-+	if (fc->s_fs_info)
-+		put_net(fc->s_fs_info);
-+}
-+
-+static const struct fs_context_operations rpc_fs_context_ops = {
-+	.free		= rpc_fs_free_fc,
-+	.get_tree	= rpc_fs_get_tree,
-+};
-+
-+static int rpc_init_fs_context(struct fs_context *fc)
-+{
-+	put_user_ns(fc->user_ns);
-+	fc->user_ns = get_user_ns(fc->net_ns->user_ns);
-+	fc->ops = &rpc_fs_context_ops;
-+	return 0;
- }
- 
- static void rpc_kill_sb(struct super_block *sb)
-@@ -1448,7 +1466,7 @@ static void rpc_kill_sb(struct super_block *sb)
- static struct file_system_type rpc_pipe_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "rpc_pipefs",
--	.mount		= rpc_mount,
-+	.init_fs_context = rpc_init_fs_context,
- 	.kill_sb	= rpc_kill_sb,
- };
- MODULE_ALIAS_FS("rpc_pipefs");
+-extern struct dentry *mount_ns(struct file_system_type *fs_type,
+-	int flags, void *data, void *ns, struct user_namespace *user_ns,
+-	int (*fill_super)(struct super_block *, void *, int));
+ #ifdef CONFIG_BLOCK
+ extern struct dentry *mount_bdev(struct file_system_type *fs_type,
+ 	int flags, const char *dev_name, void *data,
 
