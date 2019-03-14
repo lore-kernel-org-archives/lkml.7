@@ -2,141 +2,101 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DF7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E2FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4CB321019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6CA21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HnKhKe+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfCNKh0 (ORCPT
+        id S1727398AbfCNKiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:37:26 -0400
-Received: from mga14.intel.com ([192.55.52.115]:3335 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727087AbfCNKhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:37:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 03:37:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
-   d="scan'208";a="328559692"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Mar 2019 03:37:24 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1h4Njo-0005Dh-2Y; Thu, 14 Mar 2019 18:37:24 +0800
-Date:   Thu, 14 Mar 2019 18:37:08 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Taehee Yoo <ap420073@gmail.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: net/ipv4/netfilter/ipt_CLUSTERIP.c:513 clusterip_tg_check() error:
- potential null dereference 'config'.  (clusterip_config_init returns null)
-Message-ID: <201903141804.SyujYY4l%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 14 Mar 2019 06:38:00 -0400
+Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:34412 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfCNKh7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 06:37:59 -0400
+Received: from mailhost1.synopsys.com (mailhost1.synopsys.com [10.12.238.239])
+        by smtprelay.synopsys.com (Postfix) with ESMTP id 1B91010C25E5;
+        Thu, 14 Mar 2019 03:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1552559879; bh=zu3IXV2x1enxJJVP8oX8x9XRSshj58jSUHa/Lew54a0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HnKhKe+f7VYIeAwbvTLp2nHTxT2qBUoGNeDIm7geR7Gn7clApes2iAenOJ7G6/9br
+         Rd/8Qep3e+8DybGOGsY71emxZP17cUydmWSauM8n7fRhketgP6CaJf+ALslRX04rpO
+         pIszYCKFGM5IAYj3NkwNFZBFUI9jk10YgmiEJOVnYEMp5kuwfTmMUrpqE9BqRo+gCt
+         QxjEwUiojwppLMKoi8yNEcHmtwh3xll2n3G15R+l1wVcW1YKRlJe1HNh6zXQOPDg/6
+         10uh7uNG9B0M0v/u4T53oipAPsRpM/y1pumH3fTZr/KFAhPagemn3u8vwKY29x6VLp
+         t5udvTClsTBEw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost1.synopsys.com (Postfix) with ESMTP id D07D45B41;
+        Thu, 14 Mar 2019 03:37:25 -0700 (PDT)
+From:   Jose Abreu <jose.abreu@synopsys.com>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jose Abreu <jose.abreu@synopsys.com>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Joao Pinto <joao.pinto@synopsys.com>
+Subject: [PATCH net] net: phy: Don't assume loopback is supported
+Date:   Thu, 14 Mar 2019 11:37:21 +0100
+Message-Id: <eeea080649153eefafef8ff93274733fe8f25b01.1552559796.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   fa3d493f7a573b4e4e2538486e912093a0161c1b
-commit: 5a86d68bcf02f2d1e9a5897dd482079fd5f75e7f netfilter: ipt_CLUSTERIP: fix deadlock in netns exit routine
-date:   3 months ago
+Some PHYs may not support loopback mode so we need to check if register
+is read-only.
 
-New smatch warnings:
-net/ipv4/netfilter/ipt_CLUSTERIP.c:513 clusterip_tg_check() error: potential null dereference 'config'.  (clusterip_config_init returns null)
-
-Old smatch warnings:
-net/ipv4/netfilter/ipt_CLUSTERIP.c:134 clusterip_config_entry_put() warn: inconsistent returns 'spin_lock:&cn->lock'.
-  Locked on:   line 134
-  Unlocked on: line 132
-
-vim +/config +513 net/ipv4/netfilter/ipt_CLUSTERIP.c
-
-   456	
-   457	static int clusterip_tg_check(const struct xt_tgchk_param *par)
-   458	{
-   459		struct ipt_clusterip_tgt_info *cipinfo = par->targinfo;
-   460		const struct ipt_entry *e = par->entryinfo;
-   461		struct clusterip_config *config;
-   462		int ret, i;
-   463	
-   464		if (par->nft_compat) {
-   465			pr_err("cannot use CLUSTERIP target from nftables compat\n");
-   466			return -EOPNOTSUPP;
-   467		}
-   468	
-   469		if (cipinfo->hash_mode != CLUSTERIP_HASHMODE_SIP &&
-   470		    cipinfo->hash_mode != CLUSTERIP_HASHMODE_SIP_SPT &&
-   471		    cipinfo->hash_mode != CLUSTERIP_HASHMODE_SIP_SPT_DPT) {
-   472			pr_info("unknown mode %u\n", cipinfo->hash_mode);
-   473			return -EINVAL;
-   474	
-   475		}
-   476		if (e->ip.dmsk.s_addr != htonl(0xffffffff) ||
-   477		    e->ip.dst.s_addr == 0) {
-   478			pr_info("Please specify destination IP\n");
-   479			return -EINVAL;
-   480		}
-   481		if (cipinfo->num_local_nodes > ARRAY_SIZE(cipinfo->local_nodes)) {
-   482			pr_info("bad num_local_nodes %u\n", cipinfo->num_local_nodes);
-   483			return -EINVAL;
-   484		}
-   485		for (i = 0; i < cipinfo->num_local_nodes; i++) {
-   486			if (cipinfo->local_nodes[i] - 1 >=
-   487			    sizeof(config->local_nodes) * 8) {
-   488				pr_info("bad local_nodes[%d] %u\n",
-   489					i, cipinfo->local_nodes[i]);
-   490				return -EINVAL;
-   491			}
-   492		}
-   493	
-   494		config = clusterip_config_find_get(par->net, e->ip.dst.s_addr, 1);
-   495		if (!config) {
-   496			if (!(cipinfo->flags & CLUSTERIP_FLAG_NEW)) {
-   497				pr_info("no config found for %pI4, need 'new'\n",
-   498					&e->ip.dst.s_addr);
-   499				return -EINVAL;
-   500			} else {
-   501				config = clusterip_config_init(par->net, cipinfo,
-   502							       e->ip.dst.s_addr,
-   503							       e->ip.iniface);
-   504				if (IS_ERR(config))
-   505					return PTR_ERR(config);
-   506			}
-   507		}
-   508	
-   509		ret = nf_ct_netns_get(par->net, par->family);
-   510		if (ret < 0) {
-   511			pr_info("cannot load conntrack support for proto=%u\n",
-   512				par->family);
- > 513			clusterip_config_entry_put(config);
-   514			clusterip_config_put(config);
-   515			return ret;
-   516		}
-   517	
-   518		if (!par->net->xt.clusterip_deprecated_warning) {
-   519			pr_info("ipt_CLUSTERIP is deprecated and it will removed soon, "
-   520				"use xt_cluster instead\n");
-   521			par->net->xt.clusterip_deprecated_warning = true;
-   522		}
-   523	
-   524		cipinfo->config = config;
-   525		return ret;
-   526	}
-   527	
-
+Fixes: f0f9b4ed2338 ("net: phy: Add phy loopback support in net phy framework")
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Joao Pinto <joao.pinto@synopsys.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ drivers/net/phy/phy_device.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 49fdd1ee798e..a749639d98c3 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1918,8 +1918,24 @@ EXPORT_SYMBOL(genphy_resume);
+ 
+ int genphy_loopback(struct phy_device *phydev, bool enable)
+ {
+-	return phy_modify(phydev, MII_BMCR, BMCR_LOOPBACK,
+-			  enable ? BMCR_LOOPBACK : 0);
++	int ret;
++
++	ret = phy_modify(phydev, MII_BMCR, BMCR_LOOPBACK,
++			 enable ? BMCR_LOOPBACK : 0);
++	if (ret < 0)
++		return ret;
++
++	ret = phy_read(phydev, MII_BMCR);
++	if (ret < 0)
++		return ret;
++
++	if (enable) {
++		if (ret & BMCR_LOOPBACK)
++			return 0;
++		return -EOPNOTSUPP;
++	}
++
++	return 0;
+ }
+ EXPORT_SYMBOL(genphy_loopback);
+ 
+-- 
+2.7.4
+
