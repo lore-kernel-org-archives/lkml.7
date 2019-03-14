@@ -2,171 +2,124 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AC8C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE2FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11F22087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE972184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:05:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvXM+imU"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="KRHG+Xem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfCNHEz (ORCPT
+        id S1727100AbfCNHFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 03:04:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36748 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfCNHEz (ORCPT
+        Thu, 14 Mar 2019 03:05:43 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:51664 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfCNHFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 03:04:55 -0400
-Received: by mail-pf1-f194.google.com with SMTP id n22so3223527pfa.3;
-        Thu, 14 Mar 2019 00:04:54 -0700 (PDT)
+        Thu, 14 Mar 2019 03:05:42 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 39890B10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:05:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bUWjlC_oB5Dp for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 02:05:41 -0500 (CDT)
+Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 07971AF7
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:05:41 -0500 (CDT)
+Received: by mail-it1-f199.google.com with SMTP id 9so3760256ita.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:05:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GAnkE7uTGWOj/qtWamMd9e/0Ms9Nc3Bb4p1S+Xkzpi0=;
-        b=DvXM+imU8fFVAkj1Qsizcp+eYaJAJBK27um/HlcezBR7wS0NSkvge6Sd/BXQ7d3kkO
-         xhHZKDiw65qZFgnSapApofBdCUHAEejXMsUOiGSSfZx2p6aBV+mCmopn8UIveDj0kL4a
-         l61+I5GhX83epXQvLW5GTOKGmKOdio5bK5vqX8sVroS511y/I1DzjIrzyBeQ2AVUNZcr
-         GZmXsmsipSNWgUiGhKJKamuukq48Ir/kNr4L9gAGgCZCgQhwynxVgvmarXQE72+u8NHB
-         MsPzvZhCAKDy+jUJBBJijDaaqa63yo6qyNgHKFSgxRVJ1XavYhljGOOpDgQdlw7Gq02J
-         aTxA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=geyknCHJBN9QzuUmxBhzQkvAPR4fFq898CG938LPR8E=;
+        b=KRHG+Xem/qWECXN0PlkxHB7LqNeTZCApusewf7DczDTtaeO/W9Rw8oArue3ATqquM9
+         j1ZfNnP0CPPFqPIHAlAGK8ikQ672BMkGD4LolmCm1eu+NcBs0BadSX0czpQGbhd3bR7w
+         jp21/ofjvt/aPZYl6DDankWzGkMieHfRQhqSavbsMTjDsA+pz4yiD1GPoVzDBJpY/z/g
+         mABSV9LwQxqy/h9O1itdbaquw6RJpKbo2pRFjf8YYWLIOKBv+U+LG0BfftxPmGDOunMq
+         ChqFLksNAm8yB3O9uqGMxkR7ZU3PSaXQDUDux3dJsNgIG/MmepPbnXsMyFjfwnUqeuPn
+         +5Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GAnkE7uTGWOj/qtWamMd9e/0Ms9Nc3Bb4p1S+Xkzpi0=;
-        b=DEYbrQuVjTkq+NKkgz+9JSwe3QHvZ76xOedgtL74z8+CEXool76cqnXOUzahOdtP1Y
-         GjCQtSyjrQnqAWDYS00kWuKZLkOrifJJGkSwjTRQS5++gmHk9eFgL0PL6DRYq/hNR8XH
-         KvTE4qyO/SMKBdjMH0gw2om1nnEII3p35tDmQpgQLkmU5OOlwFfJPiJlpG3Rz73y0iot
-         fQDdR4xUkYTDACEOY++z1r0tPYeTAjs29tZ+0lFln/sShrNzP/3EAuy4pRFxG6Ir06YW
-         x/HbH2dyKO0jXWieM8pwngIsSZtRwbXFX3Pvx6U5JVVXT6ni9bvImhym+ui3/22Cw5Vv
-         C2JA==
-X-Gm-Message-State: APjAAAUYZUMJfYfuMO4aOEurUb2YIRVgaut+re1NlkNGRy+8GpKcHLUG
-        VtJekLfDvk6CLlvlTMl3MQu3kB1HgceF1FvrnsEEgA==
-X-Google-Smtp-Source: APXvYqwFOj46Zi1mmsKQxNxInbmhNpACHMmnMDrh+vwaatDDpq4kRURSYcVamLIexCmKqN770iUxO/Iv4J0Hq3MhG+Q=
-X-Received: by 2002:a17:902:1744:: with SMTP id i62mr49311619pli.24.1552547093941;
- Thu, 14 Mar 2019 00:04:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190314061716.19892-1-sergey.senozhatsky@gmail.com> <CAH2r5msYG4H19GK1Fmnqb1dNCcp2qahULc_t4v9qdJ=OOZmGXg@mail.gmail.com>
-In-Reply-To: <CAH2r5msYG4H19GK1Fmnqb1dNCcp2qahULc_t4v9qdJ=OOZmGXg@mail.gmail.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 14 Mar 2019 02:04:42 -0500
-Message-ID: <CAH2r5msCs5ks3FUi_GhV2REsUR8t2h1=ybgLS6FyBEyka7Qb9g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cifs: remove unused status severity defines
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Content-Type: multipart/mixed; boundary="0000000000000833b80584088a80"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=geyknCHJBN9QzuUmxBhzQkvAPR4fFq898CG938LPR8E=;
+        b=Y5CNPFeiG4kZ9cxPJiCpQQFZBD7MfkN2mP8UaDVKscZyNO40zbhp5HZdJV3QKeAquM
+         GHXNGa4/8XjlsH/Xh7SUB+wBbR2Ks2tcw/6FaIWMyvzybx60nkH5JfLzaKHHdu/NQVQt
+         MSoCDkSZSFzRmgOXck+vE15nOoMFhCXNgxAGs3G/8y7LnJEKhv9sCiUydf8QRePtHd5Q
+         nRHS9QbDx8QSd6usXhCWCJIWzMwhjydrZJQCb6r9M17bHr3/ZOvH+heN6wmcX6Sbz0Hj
+         aphz8I9bblnVUeRaO6k3Smxwpllf45QqF6NboVfagmr6aQPtBDWo0fhONFLvPDs/4Fpc
+         iAug==
+X-Gm-Message-State: APjAAAWY1T2uMNYTpGCBSDiYx+AYPPftoqDBiFg73fBqh+v5YSwxkU50
+        KAXvBQ1QteZeRgUYhmYmW0deHVpXmXTPgGqXWpN3kp7ViZR9T0iACFp72WnURO6TdRE2k0oMHvD
+        JsoKhvYNxEEkmLfEKnALfMHI0t0J2
+X-Received: by 2002:a5e:db48:: with SMTP id r8mr11155761iop.220.1552547140628;
+        Thu, 14 Mar 2019 00:05:40 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqypDjJma3wZ5K/YwGFldO9WEouPyKn33YkVS0jxN/HQ7NG4JiNv5fkdO9qQqWO9/3m7DKgBHQ==
+X-Received: by 2002:a5e:db48:: with SMTP id r8mr11155747iop.220.1552547140388;
+        Thu, 14 Mar 2019 00:05:40 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id a8sm4685101iol.35.2019.03.14.00.05.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 00:05:39 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Jiri Kosina <jikos@kernel.org>,
+        David Sterba <dsterba@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: ipwireless: fix missing checks for ioremap
+Date:   Thu, 14 Mar 2019 02:05:32 -0500
+Message-Id: <20190314070534.17819-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000000833b80584088a80
-Content-Type: text/plain; charset="UTF-8"
+ipw->attr_memory and ipw->common_memory are assigned with the
+ return value of ioremap. ioremap may fail, but not checks
+are enforced. The fix insertss the checks.
 
-updated it to fix the spelling mistake
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/tty/ipwireless/main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-
-On Thu, Mar 14, 2019 at 1:54 AM Steve French <smfrench@gmail.com> wrote:
->
-> Since this file (smb2status.h) is intended to track the official
-> protocol documentation (albeit smb2status.h probably needs to be
-> updated), in this case the protocol document MS-ERREF.  I would prefer
-> to keep it closer to MS-ERREF and leave definitions in even if unused
-> (if nothing else it helps some of us when debugging to recognize what
-> these errors on the wire mean).  There is a real danger that we have
-> run into in the past that in removing some protocol definitions
-> (flags, etc.) from the code or forgetting to update our headers to
-> match newer versions of the protocol specifications, that  with future
-> code changes we can forget to handle flags (for example) or misparse
-> responses due to not realizing that there are additional flags that
-> need to be parsed.
->
-> On Thu, Mar 14, 2019 at 1:17 AM Sergey Senozhatsky
-> <sergey.senozhatsky.work@gmail.com> wrote:
-> >
-> > STATUS_SEVERITY_* do not appear to be used by anyone, so
-> > drop them. Besides, the name of __constant_cpu_to_le32()
-> > is misspelled there: __constanst_cpu_to_le32().
-> >
-> > Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> > ---
-> >  fs/cifs/smb2status.h | 5 -----
-> >  1 file changed, 5 deletions(-)
-> >
-> > diff --git a/fs/cifs/smb2status.h b/fs/cifs/smb2status.h
-> > index 3d5f62150de4..e9da9c6da277 100644
-> > --- a/fs/cifs/smb2status.h
-> > +++ b/fs/cifs/smb2status.h
-> > @@ -29,11 +29,6 @@
-> >   *  C is set if "customer defined" error, N bit is reserved and MBZ
-> >   */
-> >
-> > -#define STATUS_SEVERITY_SUCCESS __constant_cpu_to_le32(0x0000)
-> > -#define STATUS_SEVERITY_INFORMATIONAL __constanst_cpu_to_le32(0x0001)
-> > -#define STATUS_SEVERITY_WARNING __constanst_cpu_to_le32(0x0002)
-> > -#define STATUS_SEVERITY_ERROR __constanst_cpu_to_le32(0x0003)
-> > -
-> >  struct ntstatus {
-> >         /* Facility is the high 12 bits of the following field */
-> >         __le32 Facility; /* low 2 bits Severity, next is Customer, then rsrvd */
-> > --
-> > 2.21.0
-> >
->
->
-> --
-> Thanks,
->
-> Steve
-
-
-
+diff --git a/drivers/tty/ipwireless/main.c b/drivers/tty/ipwireless/main.c
+index 3475e841ef5c..4c18bbfe1a92 100644
+--- a/drivers/tty/ipwireless/main.c
++++ b/drivers/tty/ipwireless/main.c
+@@ -114,6 +114,10 @@ static int ipwireless_probe(struct pcmcia_device *p_dev, void *priv_data)
+ 
+ 	ipw->common_memory = ioremap(p_dev->resource[2]->start,
+ 				resource_size(p_dev->resource[2]));
++	if (!ipw->common_memory) {
++		ret = -ENOMEM;
++		goto exit1;
++	}
+ 	if (!request_mem_region(p_dev->resource[2]->start,
+ 				resource_size(p_dev->resource[2]),
+ 				IPWIRELESS_PCCARD_NAME)) {
+@@ -134,6 +138,10 @@ static int ipwireless_probe(struct pcmcia_device *p_dev, void *priv_data)
+ 
+ 	ipw->attr_memory = ioremap(p_dev->resource[3]->start,
+ 				resource_size(p_dev->resource[3]));
++	if (!ipw->attr_memory) {
++		ret = -ENOMEM;
++		goto exit3;
++	}
+ 	if (!request_mem_region(p_dev->resource[3]->start,
+ 				resource_size(p_dev->resource[3]),
+ 				IPWIRELESS_PCCARD_NAME)) {
 -- 
-Thanks,
+2.17.1
 
-Steve
-
---0000000000000833b80584088a80
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-smb2-fix-typo-in-definition-of-a-few-error-flags.patch"
-Content-Disposition: attachment; 
-	filename="0001-smb2-fix-typo-in-definition-of-a-few-error-flags.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jt8ag0ku0>
-X-Attachment-Id: f_jt8ag0ku0
-
-RnJvbSBjMWQwNjFkMmQ0N2Q1MzZkNzY3NGExNjI5MzdiNTFkOGRkN2FjN2RjIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBTdGV2ZSBGcmVuY2ggPHN0ZnJlbmNoQG1pY3Jvc29mdC5jb20+
-CkRhdGU6IFRodSwgMTQgTWFyIDIwMTkgMDE6NTY6MzQgLTA1MDAKU3ViamVjdDogW1BBVENIXSBz
-bWIyOiBmaXggdHlwbyBpbiBkZWZpbml0aW9uIG9mIGEgZmV3IGVycm9yIGZsYWdzCgpBcyBTZXJn
-ZXkgU2Vub3poYXRza3kgcG9pbnRlZCBvdXQgX19jb25zdGFudF9jcHVfdG9fbGUzMigpCmlzIG1p
-c3NwZWxsZWQgaW4gYSBmZXcgZGVmaW5pdGlvbnMgaW4gdGhlIGxpc3Qgb2Ygc3RhdHVzCmNvZGVz
-IHNtYjJzdGF0dXMuaCBhcyBfX2NvbnN0YW5zdF9jcHVfdG9fbGUzMigpCgpTaWduZWQtb2ZmLWJ5
-OiBTdGV2ZSBGcmVuY2ggPHN0ZnJlbmNoQG1pY3Jvc29mdC5jb20+CkNDOiBTZXJnZXkgU2Vub3po
-YXRza3kgPHNlcmdleS5zZW5vemhhdHNreUBnbWFpbC5jb20+Ci0tLQogZnMvY2lmcy9zbWIyc3Rh
-dHVzLmggfCA2ICsrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxl
-dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9mcy9jaWZzL3NtYjJzdGF0dXMuaCBiL2ZzL2NpZnMvc21i
-MnN0YXR1cy5oCmluZGV4IDNkNWY2MjE1MGRlNC4uZjU0MjljOGJmYjBkIDEwMDY0NAotLS0gYS9m
-cy9jaWZzL3NtYjJzdGF0dXMuaAorKysgYi9mcy9jaWZzL3NtYjJzdGF0dXMuaApAQCAtMzAsOSAr
-MzAsOSBAQAogICovCiAKICNkZWZpbmUgU1RBVFVTX1NFVkVSSVRZX1NVQ0NFU1MgX19jb25zdGFu
-dF9jcHVfdG9fbGUzMigweDAwMDApCi0jZGVmaW5lIFNUQVRVU19TRVZFUklUWV9JTkZPUk1BVElP
-TkFMIF9fY29uc3RhbnN0X2NwdV90b19sZTMyKDB4MDAwMSkKLSNkZWZpbmUgU1RBVFVTX1NFVkVS
-SVRZX1dBUk5JTkcgX19jb25zdGFuc3RfY3B1X3RvX2xlMzIoMHgwMDAyKQotI2RlZmluZSBTVEFU
-VVNfU0VWRVJJVFlfRVJST1IgX19jb25zdGFuc3RfY3B1X3RvX2xlMzIoMHgwMDAzKQorI2RlZmlu
-ZSBTVEFUVVNfU0VWRVJJVFlfSU5GT1JNQVRJT05BTCBjcHVfdG9fbGUzMigweDAwMDEpCisjZGVm
-aW5lIFNUQVRVU19TRVZFUklUWV9XQVJOSU5HIGNwdV90b19sZTMyKDB4MDAwMikKKyNkZWZpbmUg
-U1RBVFVTX1NFVkVSSVRZX0VSUk9SIGNwdV90b19sZTMyKDB4MDAwMykKIAogc3RydWN0IG50c3Rh
-dHVzIHsKIAkvKiBGYWNpbGl0eSBpcyB0aGUgaGlnaCAxMiBiaXRzIG9mIHRoZSBmb2xsb3dpbmcg
-ZmllbGQgKi8KLS0gCjIuMTcuMQoK
---0000000000000833b80584088a80--
