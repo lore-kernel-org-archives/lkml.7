@@ -2,109 +2,84 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B95C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2760C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A0D21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE75205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbfCNJGh (ORCPT
+        id S1727152AbfCNJHw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:06:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54422 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726284AbfCNJGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:06:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A2D92AEA3;
-        Thu, 14 Mar 2019 09:06:35 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 49D8B1E3FE8; Thu, 14 Mar 2019 10:06:35 +0100 (CET)
-Date:   Thu, 14 Mar 2019 10:06:35 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Christopher Lameter <cl@linux.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, john.hubbard@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v3 0/1] mm: introduce put_user_page*(), placeholder
- versions
-Message-ID: <20190314090635.GC16658@quack2.suse.cz>
-References: <20190306235455.26348-1-jhubbard@nvidia.com>
- <010001695b4631cd-f4b8fcbf-a760-4267-afce-fb7969e3ff87-000000@email.amazonses.com>
- <20190310224742.GK26298@dastard>
- <01000169705aecf0-76f2b83d-ac18-4872-9421-b4b6efe19fc7-000000@email.amazonses.com>
- <20190312103932.GD1119@iweiny-DESK2.sc.intel.com>
- <20190312221113.GF23020@dastard>
- <20190313160319.GA15134@infradead.org>
- <010001697880bfdc-4503d0dd-03cd-4c91-84a0-c18af1eab145-000000@email.amazonses.com>
+        Thu, 14 Mar 2019 05:07:52 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:35312 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfCNJHw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 05:07:52 -0400
+Received: by mail-vs1-f66.google.com with SMTP id e1so1778367vsp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:07:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+wA7WEdatafTwrBsI9kco+k6FbaaexDv9oaeFWOEIsw=;
+        b=fCqhN8Uk71jgcWqf6MqVqJ+ZnE6DB3R7x3Vxqlo4XsGbnPzor46XVBNN4gRAzrqZee
+         I8Kga2LAYo9030hpsI0d+IkdS94cpLhCK4bq8XUSoYSQdIybxneJecqr5EtdOyY9eco7
+         pwNR8HgcDpf1BjE/y3dRkD5ezb5eJNeHPvRtkqfZTXcJAuPD7GKpptyIYnp0HtPgS4pa
+         AaSFwlhfUcauhsYVW0VRLVtdOf7PjTOCISQsVNMFSHAkiHIpESln1JXnu9SIpWzFhIj1
+         5JVu22YU9DZl0qJ9SDpS4vIvV1c5jYthuA2bmyqzGNlAKODrITXqydBsbpgn6RLm4TL2
+         c1vA==
+X-Gm-Message-State: APjAAAXAp4iiLJ6j8+AYV2IY2pvHGsqk+yUsSowqEJQFWXLkA/28US9z
+        c5nPLKYC8yIvzuZOk31vTg/WMkGjc6W5DTQHUww=
+X-Google-Smtp-Source: APXvYqx9gI/sDuzROvcWnaXWvnAsHFEVFSc03qckgL6Nlo1f+RJ7fkzJ4CPIBEQiW6N+EYl7pncIQjjjeTA8ANtvS5Q=
+X-Received: by 2002:a67:ebcd:: with SMTP id y13mr3680960vso.152.1552554471045;
+ Thu, 14 Mar 2019 02:07:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <010001697880bfdc-4503d0dd-03cd-4c91-84a0-c18af1eab145-000000@email.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <19432668-ffd3-fbb2-af4f-1c8e48f6cc81@infradead.org>
+In-Reply-To: <19432668-ffd3-fbb2-af4f-1c8e48f6cc81@infradead.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 14 Mar 2019 10:07:39 +0100
+Message-ID: <CAMuHMdUxPv+jjk894j8rLhn+Q7FWHz2LRCKLOyOXOvPd_LXoQg@mail.gmail.com>
+Subject: Re: [PATCH -mmotm/-next] fs: fs_parser: fix printk format warning
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 13-03-19 19:21:37, Christopher Lameter wrote:
-> On Wed, 13 Mar 2019, Christoph Hellwig wrote:
-> 
-> > On Wed, Mar 13, 2019 at 09:11:13AM +1100, Dave Chinner wrote:
-> > > On Tue, Mar 12, 2019 at 03:39:33AM -0700, Ira Weiny wrote:
-> > > > IMHO I don't think that the copy_file_range() is going to carry us through the
-> > > > next wave of user performance requirements.  RDMA, while the first, is not the
-> > > > only technology which is looking to have direct access to files.  XDP is
-> > > > another.[1]
-> > >
-> > > Sure, all I doing here was demonstrating that people have been
-> > > trying to get local direct access to file mappings to DMA directly
-> > > into them for a long time. Direct Io games like these are now
-> > > largely unnecessary because we now have much better APIs to do
-> > > zero-copy data transfer between files (which can do hardware offload
-> > > if it is available!).
-> >
-> > And that is just the file to file case.  There are tons of other
-> > users of get_user_pages, including various drivers that do large
-> > amounts of I/O like video capture.  For them it makes tons of sense
-> > to transfer directly to/from a mmap()ed file.
-> 
-> That is very similar to the RDMA case and DAX etc. We need to have a way
-> to tell a filesystem that this is going to happen and that things need to
-> be setup for this to work properly.
+On Sat, Feb 9, 2019 at 4:21 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Fix printk format warning (seen on i386 builds) by using ptrdiff
+> format specifier (%t):
+>
+> ../fs/fs_parser.c:413:6: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 3 has type ‘int’ [-Wformat=]
 
-The way to tell filesystem what's happening is exactly what we are working
-on with these patches...
+Now seen in upstream on all 32-bit platforms, I guess.
 
-> But if that has not been done then I think its proper to fail a long term
-> pin operation on page cache pages. Meaning the regular filesystems
-> maintain control of whats happening with their pages.
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
 
-And as I mentioned in my other email, we cannot just fail the pin for
-pagecache pages as that would regress existing applications.
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-								Honza
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
