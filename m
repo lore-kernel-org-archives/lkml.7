@@ -2,109 +2,99 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C266C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F329DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A1F20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:57:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="bjW4Iynx"
+	by mail.kernel.org (Postfix) with ESMTP id B27702184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 09:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfCNJ5T (ORCPT
+        id S1727184AbfCNJ5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 05:57:19 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38856 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfCNJ5T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 05:57:19 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x13so4222154ljj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 02:57:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rXeqVAoGvBVydv+RhfxK9GaqekG4Esi7VZP8mLTr20g=;
-        b=bjW4IynxhuC6+hPAsGklPNK8kDi1FJlv6096njp84hJdKvWHdzM89rUWS+kQtMQlUC
-         3VfukUdCWwvGe1sRNHi1IdJBBgHpMke0l+yIJUikgaVt6RqwUPNLaNDlzft2NNXePANt
-         dhlehwgj6ECzvqA3vbxQ/D8/Gx0zZ/4T8KfSk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rXeqVAoGvBVydv+RhfxK9GaqekG4Esi7VZP8mLTr20g=;
-        b=lpjFBOw3NOOp2wFkzICTFYquEoLj06g6LlBzhxr6z/F8R9+fj1r16jU5qV4mnM9s9N
-         NmZ0jGR6a+xnAed7SV7w8XtaVKvxtREkE+C1/mAq7yYWQFbp+c4fC6edHFqIIQW9RBzv
-         NT3XWjhY9KveXZHCmcvUuxItnkiSi1kFMFn0ARuhqvkQSeTI2ORpwvy2iul8eF6nNIrp
-         ASQs8bce10rPinwdBzawpSJT0QfUj5VtwKCYyLSmF3GwfSwHVrM9tsAXFg0IYFNR1hA8
-         9rn5ZRY0iH1Pfn+OZUotO9QTg8f4tzLqGlogBHC5aMGJM5Vqu4ljkhmkL3cCY7LBjCHQ
-         EEGg==
-X-Gm-Message-State: APjAAAXdj/PieV/JRqCIWJJSVV2Js8vBjnc0sBiRwXiP76x37K0Ox+xc
-        mToKrWlVDFFfU2mQsasXXsnMZg==
-X-Google-Smtp-Source: APXvYqyXy1IAUn4PHisgLHarAflG+aOsxAY/8Dk4EclU9cpqzEavnluiiCjcFfqvH58UFuNtwf0fEQ==
-X-Received: by 2002:a2e:9b83:: with SMTP id z3mr637718lji.148.1552557436908;
-        Thu, 14 Mar 2019 02:57:16 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id h3sm2608993lfj.25.2019.03.14.02.57.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 02:57:16 -0700 (PDT)
-Subject: Re: [PATCH 1/4] leds: netdev trigger: use memcpy in device_name_store
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
-References: <20190311144227.GA4404@amd>
- <20190313202615.22883-1-linux@rasmusvillemoes.dk>
- <20190313202615.22883-2-linux@rasmusvillemoes.dk>
- <20190314092929.65amwzsaswcvsexl@pengutronix.de>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <8b2903c9-e56b-ea22-41b2-d6f96bec1d96@rasmusvillemoes.dk>
-Date:   Thu, 14 Mar 2019 10:57:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 14 Mar 2019 05:57:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50446 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726697AbfCNJ5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 05:57:34 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C4E003089EEB;
+        Thu, 14 Mar 2019 09:57:33 +0000 (UTC)
+Received: from localhost (ovpn-12-22.pek2.redhat.com [10.72.12.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2224419C65;
+        Thu, 14 Mar 2019 09:57:32 +0000 (UTC)
+Date:   Thu, 14 Mar 2019 17:57:30 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, keescook@chromium.org, kirill@shutemov.name,
+        yamada.masahiro@socionext.com, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, x86@kernel.org, thgarnie@google.com
+Subject: Re: [PATCH v4 3/6] mm: Add build time sanity check for struct page
+ size
+Message-ID: <20190314095730.GB12200@MiWiFi-R3L-srv>
+References: <20190314094645.4883-1-bhe@redhat.com>
+ <20190314094645.4883-4-bhe@redhat.com>
+ <20190314095019.GA12200@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <20190314092929.65amwzsaswcvsexl@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314095019.GA12200@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 14 Mar 2019 09:57:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 10.29, Uwe Kleine-König wrote:
-> Hello,
+On 03/14/19 at 05:50pm, Baoquan He wrote:
+> On 03/14/19 at 05:46pm, Baoquan He wrote:
+> > Size of struct page might be larger than 64 bytes if debug options
+> > enabled, or fields added for debugging intentionally. Yet an upper
+> > limit need be added at build time to trigger an alert in case the
+> > size is too big to boot up system, warning people to check if it's
+> > be done on purpose in advance.
+> > 
+> > Here 1/4 of PAGE_SIZE is chosen since system must have been insane
+> > with this value. For those systems with PAGE_SIZE larger than 4KB,
+> > 1KB is simply taken.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 > 
-> On Wed, Mar 13, 2019 at 09:26:12PM +0100, Rasmus Villemoes wrote:
->> --- a/drivers/leds/trigger/ledtrig-netdev.c
->> +++ b/drivers/leds/trigger/ledtrig-netdev.c
->> @@ -122,7 +122,8 @@ static ssize_t device_name_store(struct device *dev,
->>  		trigger_data->net_dev = NULL;
->>  	}
->>  
->> -	strncpy(trigger_data->device_name, buf, size);
->> +	memcpy(trigger_data->device_name, buf, size);
->> +	trigger_data->device_name[size] = '\0';
-> 
-> This is open-coding
-> 
-> 	strlcpy(trigger_data->device_name, buf, size);
+> Sorry, I forgot adding 'Acked-by' tag here.
+ Should be "Suggested-by:" tag.
 
-No. size here is the number of bytes userspace wrote, which never (well,
-almost never, they could do something odd) contain a nul byte. Passing
-that as size to strlcpy would guarantee that we chopped off the last
-character from the user input. And while I do think the generic sysfs
-layer guarantees that the PAGE_SIZE buffer is zeroed before reading from
-userspace, I don't really want to rely on buf being a nul-terminated
-string (which it must be if using strlcpy - remember that that does a
-full strlen() to compute its return value). If anything, one could do
-strlcpy(, buf, size+1), but IMO copying the actual characters the user
-wrote, then explicitly making that into a nul-terminated string is much
-more straight-forward.
-
-Rasmus
+> 
+> > ---
+> >  mm/page_alloc.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index 3eb01dedfb50..eddf96c137f2 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -67,6 +67,7 @@
+> >  #include <linux/lockdep.h>
+> >  #include <linux/nmi.h>
+> >  #include <linux/psi.h>
+> > +#include <linux/sizes.h>
+> >  
+> >  #include <asm/sections.h>
+> >  #include <asm/tlbflush.h>
+> > @@ -7170,6 +7171,7 @@ void __init free_area_init_nodes(unsigned long *max_zone_pfn)
+> >  	unsigned long start_pfn, end_pfn;
+> >  	int i, nid;
+> >  
+> > +	BUILD_BUG_ON(sizeof(struct page) > min_t(size_t, SZ_1K, PAGE_SIZE/4));
+> >  	/* Record where the zone boundaries are */
+> >  	memset(arch_zone_lowest_possible_pfn, 0,
+> >  				sizeof(arch_zone_lowest_possible_pfn));
+> > -- 
+> > 2.17.2
+> > 
