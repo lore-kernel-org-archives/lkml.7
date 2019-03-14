@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B51C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4EAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78832184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74C321855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:37:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfCNNhB (ORCPT
+        id S1727521AbfCNNht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
+        Thu, 14 Mar 2019 09:37:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfCNNhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 09:37:00 -0400
+        id S1726845AbfCNNht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 09:37:49 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 731A32085A;
-        Thu, 14 Mar 2019 13:36:59 +0000 (UTC)
-Date:   Thu, 14 Mar 2019 09:36:57 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id B30822085A;
+        Thu, 14 Mar 2019 13:37:47 +0000 (UTC)
+Date:   Thu, 14 Mar 2019 09:37:46 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Joel Fernandes <joel@joelfernandes.org>
 Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
@@ -34,8 +34,8 @@ Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
         luto@kernel.org, byungchul.park@lge.com
 Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
  half-interrupts
-Message-ID: <20190314093657.2c1a3485@gandalf.local.home>
-In-Reply-To: <20190314123159.GB101545@google.com>
+Message-ID: <20190314093746.028e57f1@gandalf.local.home>
+In-Reply-To: <20190314093657.2c1a3485@gandalf.local.home>
 References: <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
         <20190311133939.GA29747@google.com>
         <20190311222903.GR13351@linux.ibm.com>
@@ -47,6 +47,7 @@ References: <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
         <20190313125125.1a1fb2f3@gandalf.local.home>
         <20190313180730.GU13351@linux.ibm.com>
         <20190314123159.GB101545@google.com>
+        <20190314093657.2c1a3485@gandalf.local.home>
 X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -56,17 +57,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019 08:31:59 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
+On Thu, 14 Mar 2019 09:36:57 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Oh thanks for pointing that out. Yes it does work for me. I agree with the
-> lockdep API addition and others could benefit from it too. I will incorporate
-> the lockdep API addition into the RCU patch, but let me know if I should
-> rather split it.
+> On Thu, 14 Mar 2019 08:31:59 -0400
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> > Oh thanks for pointing that out. Yes it does work for me. I agree with the
+> > lockdep API addition and others could benefit from it too. I will incorporate
+> > the lockdep API addition into the RCU patch, but let me know if I should
+> > rather split it.  
+> 
+> I'd recommend splitting it (adding the lockdep_assert in a patch by
+> itself), but make sure that patch Cc's the lockdep maintainers and
+> explains the reason for adding it. Might as well Cc the lockdep
+> maintainers on the entire series too.
+>
 
-I'd recommend splitting it (adding the lockdep_assert in a patch by
-itself), but make sure that patch Cc's the lockdep maintainers and
-explains the reason for adding it. Might as well Cc the lockdep
-maintainers on the entire series too.
+Feel free to add "Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>"
+on that patch too.
 
 -- Steve
