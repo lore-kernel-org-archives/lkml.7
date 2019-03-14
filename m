@@ -4,60 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46DCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACDFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B26121852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687FC20811
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578841;
-	bh=uU12uTsRPOGiYuB6QZAJ0LCrLtd9PFc1YKEa7hVAjeM=;
+	s=default; t=1552578846;
+	bh=d4UdD16OQq8BCqz38LiAC7H1j/rVITfCm0tW1YIvEhI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=1+h0Bkn4bH5kgBm6HvzQoqAl2hpRNGKXv7LKJLxU9QMuVrx+l8ODXHLO8dF0Dj8u6
-	 RkTwshB24FP/bIKSe0BmXkPLxfLB5gD59n9rGV6FHv3vsXqoNb+bKsIVyP+DE9rRR/
-	 rzhG6rWFReXemo97rs2XdM0pm9Il1bZafN8e+QZM=
+	b=fAoKVZ/nf2nU0y9VMneJCgxc2R5Knjp/JUoyWjuncnoB8bkXtHj3/UcJ7CfWD5FWR
+	 rGatAKNN4JgNgBp9QPQ/gXqclqu8TmbCIy5poKQIX44xLvmV2jdP8U5mu0U0+MTXmL
+	 bB0S75aQfR/cOBatQlpYatB+KSreRgVWPbYuWdgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfCNPyA (ORCPT
+        id S1727385AbfCNPyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:54:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35232 "EHLO
+        Thu, 14 Mar 2019 11:54:05 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35262 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbfCNPx5 (ORCPT
+        with ESMTP id S1727309AbfCNPx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:53:57 -0400
+        Thu, 14 Mar 2019 11:53:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=hcxY13NOHnSFaaLSuZXOLFWv8u3iM3oCfS2F5I5URkg=; b=u8AzI75Y2oYG
-        wUmC+vJmup5XL8LErNmWpg0HoME2Sw11BkRwaZw724rNjP3Z/gEVacwn26vv9Cx4ojjjgLr/V6TP4
-        67YVRWSjE9SHUpUKaJ3iKVhurzgSuqMwnybrR+41c/uRMHBBE51hHkJf2rE6XsNjloDDm1C9RhIDO
-        IZRyc=;
+        List-Archive; bh=7WFL3W2M3ADq+FKR8oU8nBzoFiliH+Io6Beopa2Nrfg=; b=lwF4d6lHRkVR
+        l4edQtK3HqswKcKIO4gxYNkBThKqu2s2tFRuPZ2Zrx0gHljbfuMSisMoOWxBJL8kjAmAHX2Xa/kdr
+        OYdo0E71Biu54Wyhn2RBFTmocq4ahYduw1RAtbsubJEFqRUKdU5LGovLbEuBjHWuZhSFx3XHe8uof
+        kHu6c=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4Sfi-0002fh-GE; Thu, 14 Mar 2019 15:53:30 +0000
+        id 1h4Sg0-0002gj-8j; Thu, 14 Mar 2019 15:53:48 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 0DAF61126E64; Thu, 14 Mar 2019 15:53:30 +0000 (GMT)
+        id AD7301126E64; Thu, 14 Mar 2019 15:53:47 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Takashi Iwai <tiwai@suse.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: axi-i2s: let both capture and playback be optional" to the asoc tree
-In-Reply-To:  <20190307214456.16445-1-luca@lucaceresoli.net>
+        Vishal Thanki <vishalthanki@gmail.com>,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM" to the asoc tree
+In-Reply-To:  <20190307101145.636705-1-arnd@arndb.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155330.0DAF61126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:53:30 +0000 (GMT)
+Message-Id: <20190314155347.AD7301126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:53:47 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +69,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: axi-i2s: let both capture and playback be optional
+   ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
 
 has been applied to the asoc tree at
 
@@ -90,143 +94,49 @@ to this mail.
 Thanks,
 Mark
 
-From 7bf7d0554890c53478ec04d3d4bfced0c881f6c8 Mon Sep 17 00:00:00 2001
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Date: Thu, 7 Mar 2019 22:44:55 +0100
-Subject: [PATCH] ASoC: axi-i2s: let both capture and playback be optional
+From 8ca5104715cfd14254ea5aecc390ae583b707607 Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Thu, 7 Mar 2019 11:11:30 +0100
+Subject: [PATCH] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
 
-Both the capture and playback channels are optional in the axi_i2s IP
-block. Reflect this in the driver by enabling only the channel(s) that
-have a DMA.
+Building with clang shows a variable that is only used by the
+suspend/resume functions but defined outside of their #ifdef block:
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
+
+We commonly fix these by marking the PM functions as __maybe_unused,
+but here that would grow the davinci_mcasp structure, so instead
+add another #ifdef here.
+
+Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/adi/axi-i2s.c | 68 +++++++++++++++++++++++++++++------------
- 1 file changed, 48 insertions(+), 20 deletions(-)
+ sound/soc/ti/davinci-mcasp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/adi/axi-i2s.c b/sound/soc/adi/axi-i2s.c
-index 4c23381727a1..273c543e8ff3 100644
---- a/sound/soc/adi/axi-i2s.c
-+++ b/sound/soc/adi/axi-i2s.c
-@@ -43,6 +43,9 @@ struct axi_i2s {
- 	struct clk *clk;
- 	struct clk *clk_ref;
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index a3a67a8f0f54..9fbc759fdefe 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -45,6 +45,7 @@
  
-+	bool   has_capture;
-+	bool   has_playback;
-+
- 	struct snd_soc_dai_driver dai_driver;
+ #define MCASP_MAX_AFIFO_DEPTH	64
  
- 	struct snd_dmaengine_dai_dma_data capture_dma_data;
-@@ -136,8 +139,10 @@ static int axi_i2s_dai_probe(struct snd_soc_dai *dai)
- {
- 	struct axi_i2s *i2s = snd_soc_dai_get_drvdata(dai);
- 
--	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
--		&i2s->capture_dma_data);
-+	snd_soc_dai_init_dma_data(
-+		dai,
-+		i2s->has_playback ? &i2s->playback_dma_data : NULL,
-+		i2s->has_capture  ? &i2s->capture_dma_data  : NULL);
- 
- 	return 0;
- }
-@@ -151,18 +156,6 @@ static const struct snd_soc_dai_ops axi_i2s_dai_ops = {
- 
- static struct snd_soc_dai_driver axi_i2s_dai = {
- 	.probe = axi_i2s_dai_probe,
--	.playback = {
--		.channels_min = 2,
--		.channels_max = 2,
--		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
--	},
--	.capture = {
--		.channels_min = 2,
--		.channels_max = 2,
--		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
--	},
- 	.ops = &axi_i2s_dai_ops,
- 	.symmetric_rates = 1,
++#ifdef CONFIG_PM
+ static u32 context_regs[] = {
+ 	DAVINCI_MCASP_TXFMCTL_REG,
+ 	DAVINCI_MCASP_RXFMCTL_REG,
+@@ -68,6 +69,7 @@ struct davinci_mcasp_context {
+ 	u32	*xrsr_regs; /* for serializer configuration */
+ 	bool	pm_state;
  };
-@@ -178,6 +171,19 @@ static const struct regmap_config axi_i2s_regmap_config = {
- 	.max_register = AXI_I2S_REG_STATUS,
- };
++#endif
  
-+static void axi_i2s_parse_of(struct axi_i2s *i2s, const struct device_node *np)
-+{
-+	struct property *dma_names;
-+	const char *dma_name;
-+
-+	of_property_for_each_string(np, "dma-names", dma_names, dma_name) {
-+		if (strcmp(dma_name, "rx") == 0)
-+			i2s->has_capture = true;
-+		if (strcmp(dma_name, "tx") == 0)
-+			i2s->has_playback = true;
-+	}
-+}
-+
- static int axi_i2s_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -191,6 +197,8 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, i2s);
- 
-+	axi_i2s_parse_of(i2s, pdev->dev.of_node);
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(base))
-@@ -213,13 +221,29 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
--	i2s->playback_dma_data.addr_width = 4;
--	i2s->playback_dma_data.maxburst = 1;
-+	if (i2s->has_playback) {
-+		axi_i2s_dai.playback.channels_min = 2;
-+		axi_i2s_dai.playback.channels_max = 2;
-+		axi_i2s_dai.playback.rates = SNDRV_PCM_RATE_KNOT;
-+		axi_i2s_dai.playback.formats =
-+			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
-+
-+		i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
-+		i2s->playback_dma_data.addr_width = 4;
-+		i2s->playback_dma_data.maxburst = 1;
-+	}
-+
-+	if (i2s->has_capture) {
-+		axi_i2s_dai.capture.channels_min = 2;
-+		axi_i2s_dai.capture.channels_max = 2;
-+		axi_i2s_dai.capture.rates = SNDRV_PCM_RATE_KNOT;
-+		axi_i2s_dai.capture.formats =
-+			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
- 
--	i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
--	i2s->capture_dma_data.addr_width = 4;
--	i2s->capture_dma_data.maxburst = 1;
-+		i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
-+		i2s->capture_dma_data.addr_width = 4;
-+		i2s->capture_dma_data.maxburst = 1;
-+	}
- 
- 	i2s->ratnum.num = clk_get_rate(i2s->clk_ref) / 2 / AXI_I2S_BITS_PER_FRAME;
- 	i2s->ratnum.den_step = 1;
-@@ -240,6 +264,10 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clk_disable;
- 
-+	dev_info(&pdev->dev, "probed, capture %s, playback %s\n",
-+		 i2s->has_capture ? "enabled" : "disabled",
-+		 i2s->has_playback ? "enabled" : "disabled");
-+
- 	return 0;
- 
- err_clk_disable:
+ struct davinci_mcasp_ruledata {
+ 	struct davinci_mcasp *mcasp;
 -- 
 2.20.1
 
