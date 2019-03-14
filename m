@@ -2,145 +2,187 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90711C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBEFC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643E32085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="TzGY9GUp"
+	by mail.kernel.org (Postfix) with ESMTP id 6C96521852
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfCNOQR (ORCPT
+        id S1727726AbfCNOQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:16:17 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40103 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727542AbfCNOQR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:16:17 -0400
-Received: by mail-qk1-f196.google.com with SMTP id h28so3385897qkk.7
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 07:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=MjuRscEAQa7uwFVR6a/4goUiLyW9U+N9/Zr4EMvkSUk=;
-        b=TzGY9GUpDJlyOipgu0GlApSeHoZ2NjC71ClIrVvUgAl7Ra4oA1wXnF5YhungNkCBZ/
-         v8sJCRawQ3/Gf2QgiIJKWukoFSxKZbD5kH3X52J0IpwGgOXreA39gVyk4Rh0h6UFPFDw
-         fBcQduJB/gWYLCCTfXPTv2Fo5wUTy2ncJjj3udv0DkHOhwA+wR6w5VvlVk4mCR1odbdW
-         h0ZTCfp50s92N7ajGxcLQYM5WiVZ22PrKEvayTw9wwnUfu/QrpKXoiSpoHMITZunE61/
-         BvGrnh6O0gGzg74GxL+odQL1GC6KFLfvnzDCf3ztFn1SSRqubv4URoRuYJ3IaHw2x3d+
-         y96w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=MjuRscEAQa7uwFVR6a/4goUiLyW9U+N9/Zr4EMvkSUk=;
-        b=qprYF/s9zXbYvR4tJdw1/xvnP3baxMFHXBavYQMnHuyAQnVm0mbDqwcELfpOkRBIC1
-         NKczTF/8SA8O9BfLxczDwSXpWNVxRiTjcS2GSAsq5pZe8U/AfupglQUUMLMZFhjby4Dn
-         B2rjDD9LcnY6isgh4EjZ699GPnhPl9hHv/TGyiP985OZgmc9XqVi+u1JADMzaUhtsO/Z
-         xg/HTIHj4czwAQ0M4F/SwR2Krvb13vfF9C/b1j5KRF4IOBGCaA889r8RWMHV/Z7EMK92
-         cDiR05rXZwdCgC83LXSuz5EKxj92RF3a+Gc/hUDQ6AbNqjcLdtCuSllW3kY4Y3X0Z60C
-         rzLg==
-X-Gm-Message-State: APjAAAXTSDGXN/P/k8yBMOQVFlV/T0ca6Oes3iTGvVbq+fe2zNqIlOmb
-        6wqwqchPzWwnMasbucVHKlKNCA==
-X-Google-Smtp-Source: APXvYqyXMbE7hIPu7gGzBELNcJU5d33w7JUY3hg9O/6/OZSBXUT5paEEZCaM9P+hDTk4OfyZIjpVXA==
-X-Received: by 2002:a37:8345:: with SMTP id f66mr10831132qkd.154.1552572975340;
-        Thu, 14 Mar 2019 07:16:15 -0700 (PDT)
-Received: from [172.16.152.72] ([50.238.205.70])
-        by smtp.gmail.com with ESMTPSA id b5sm5333451qkf.69.2019.03.14.07.16.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 07:16:14 -0700 (PDT)
-From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
-Message-Id: <FE25456B-A63E-4601-960D-96F519250B8C@javigon.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_B9CC8382-AEDB-478E-8C52-3DA0748DFD4D";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH RFC] lightnvm: pblk: fix crash in pblk_end_partial_read
- due to multipage bvecs
-Date:   Thu, 14 Mar 2019 07:16:12 -0700
-In-Reply-To: <103c19f4-02a2-f54c-13f8-30bc5447426e@intel.com>
-Cc:     Hans Holmberg <hans@owltronix.com>,
-        =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Klaus Birkelund Jensen <klaus.jensen@cnexlabs.com>,
-        linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>
-To:     "Konopko, Igor J" <igor.j.konopko@intel.com>
-References: <20190314111637.20236-1-hans@owltronix.com>
- <103c19f4-02a2-f54c-13f8-30bc5447426e@intel.com>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Thu, 14 Mar 2019 10:16:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49472 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727546AbfCNOQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 10:16:42 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8C7113005FCB;
+        Thu, 14 Mar 2019 14:16:41 +0000 (UTC)
+Received: from [10.36.117.188] (ovpn-117-188.ams2.redhat.com [10.36.117.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 46F1E1001E62;
+        Thu, 14 Mar 2019 14:16:38 +0000 (UTC)
+Subject: Re: [Xen-devel] xen: Can't insert balloon page into VM userspace (WAS
+ Re: [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
+To:     Juergen Gross <jgross@suse.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     k.khlebnikov@samsung.com,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        osstest service owner <osstest-admin@xenproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Julien Freche <jfreche@vmware.com>,
+        Nadav Amit <namit@vmware.com>, xen-devel@lists.xenproject.org
+References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
+ <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
+ <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
+ <20190312171421.GJ19508@bombadil.infradead.org>
+ <e0b64793-260d-5e70-0544-e7290509b605@redhat.com>
+ <45323ea0-2a50-8891-830e-e1f8a8ed23ea@citrix.com>
+ <f4b40d91-9c41-60ed-6b4e-df47af8e5292@oracle.com>
+ <9a40e1ff-7605-e822-a1d2-502a12d0fba7@redhat.com>
+ <6f8aca6c-355b-7862-75aa-68fe566f76fb@redhat.com>
+ <ec71c03e-987d-2b73-9fe6-2604a3c32017@suse.com>
+ <cb525882-b52f-c142-8a6a-e5cb491e05d0@arm.com>
+ <d3e87824-b3a2-ed8a-d2ca-1a9fd439a204@suse.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <7ab068a3-2eaf-0eb0-cf25-43635e198ef7@redhat.com>
+Date:   Thu, 14 Mar 2019 15:16:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <d3e87824-b3a2-ed8a-d2ca-1a9fd439a204@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 14 Mar 2019 14:16:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 14.03.19 15:15, Juergen Gross wrote:
+> On 14/03/2019 15:12, Julien Grall wrote:
+>> Hi,
+>>
+>> On 3/14/19 8:37 AM, Juergen Gross wrote:
+>>> On 12/03/2019 20:46, David Hildenbrand wrote:
+>>>> On 12.03.19 19:23, David Hildenbrand wrote:
+>>>>
+>>>> I guess something like this could do the trick if I understood it
+>>>> correctly:
+>>>>
+>>>> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+>>>> index 39b229f9e256..d37dd5bb7a8f 100644
+>>>> --- a/drivers/xen/balloon.c
+>>>> +++ b/drivers/xen/balloon.c
+>>>> @@ -604,6 +604,7 @@ int alloc_xenballooned_pages(int nr_pages, struct
+>>>> page **pages)
+>>>>          while (pgno < nr_pages) {
+>>>>                  page = balloon_retrieve(true);
+>>>>                  if (page) {
+>>>> +                       __ClearPageOffline(page);
+>>>>                          pages[pgno++] = page;
+>>>>   #ifdef CONFIG_XEN_HAVE_PVMMU
+>>>>                          /*
+>>>> @@ -645,8 +646,10 @@ void free_xenballooned_pages(int nr_pages, struct
+>>>> page **pages)
+>>>>          mutex_lock(&balloon_mutex);
+>>>>
+>>>>          for (i = 0; i < nr_pages; i++) {
+>>>> -               if (pages[i])
+>>>> +               if (pages[i]) {
+>>>> +                       __SetPageOffline(pages[i]);
+>>>>                          balloon_append(pages[i]);
+>>>> +               }
+>>>>          }
+>>>>
+>>>>          balloon_stats.target_unpopulated -= nr_pages;
+>>>>
+>>>>
+>>>> At least this way, the pages allocated (and thus eventually mapped to
+>>>> user space) would not be marked, but the other ones would remain marked
+>>>> and could be excluded by makedumptool.
+>>>>
+>>>
+>>> I think this patch should do the trick. Julien, could you give it a
+>>> try? On x86 I can't reproduce your problem easily as dom0 is PV with
+>>> plenty of unpopulated pages for grant memory not suffering from
+>>> missing "offline" bit.
+>>
+>> Sure. I managed to get the console working with the patch suggested by
+>> David. Feel free to add my tested-by if when you resend it as is.
+> 
+> David, could you please send a proper patch with your Sob?
+> 
 
---Apple-Mail=_B9CC8382-AEDB-478E-8C52-3DA0748DFD4D
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+Yes, on it :)
 
-> On 14 Mar 2019, at 06.49, Igor Konopko <igor.j.konopko@intel.com> =
-wrote:
->=20
-> While reading this patch, idea came to my mind - maybe it would be =
-simply better to get rid of partial read handling from pblk in current =
-form at all and use bio_split() & bio_chain() combination instead?
->=20
-> This would definitely reduce a number of this 'kind of complicated' =
-code inside pblk and let block layer help us with that. Even that the =
-performance of such a requests could be a little worse (few smaller IOs =
-instead of single vector IO), I believe that partial read is more a =
-corner case, then a typical use case, so maybe this would be a path to =
-go.
->=20
-> Let me know what you think about such an approach - I can make a patch =
-with that if you want.
+Cheers!
 
-I agree with Igor.
+> 
+> Juergen
+> 
 
-As I mentioned offline, we should fix this in a way that survives
-further changes in struct bio; either making pblk handling visible to
-the outside or rethinking the whole thing.
 
-Igor: If you can send a patch you mention, it would be great. I have
-been trying the helper approach for some time, but it is too specific,
-as fixing holes in the bvec breaks the bio advance-only semantics. Your
-approach seems much better.
+-- 
 
 Thanks,
-Javier
 
---Apple-Mail=_B9CC8382-AEDB-478E-8C52-3DA0748DFD4D
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAlyKYiwACgkQPEYBfS0l
-eOAJsQ/+P6PVANXWaGOaAJxzxM0mI8di+DjBN5QmM+PNKhN5fQlB7D7MCvlxO+zP
-/30aASUuoFVE9uqCc3rxMfwghknAWeaXsTh4lO9NB21QqE3EDIwjONx57OwFJ4RB
-XCJcPJfXGYZVLEnE1vTroXsIrvY+4W+w2zh400kuphP4J8s6JrPVb89Xfptu67lm
-6fmwUxrtlqqw+sTUsU16UBP7OVsJUV7t8Ykj4BqmUGJSIo5nJ0GqOVuiUzikPbDj
-9gp9QRqjyWDUFnuIOq6C8LnLiLekUvK0UHj1+Xt9uo71ITCTMKUu/9/AgvL+l+oa
-RIv3DpmQLHGh7in6gMibrvHqaWOyDG830HiBbghBdEI/XCyEGJRjM+mA6U8ZCzDE
-Hxpb9eICb+v5WxrGNBzhf+Te/pRvfmBbXhF9kZEFLUbR6M3kh/0Reb/ZAs45kHY2
-xbMCc2ZYNpmLG3yAqfhQ4Gr5+vvtAdWW+OtaKjgNCmj30UHvOtOU833Yng5BlpNV
-48sGfFllWso2Y99Bk1pSOf+2u9aicuowGVYhGUdkNN+xZ25VqZKLCTqr0FERoH+W
-N+cz58eln7Q2kw8XRxzWfIt6VJ8eiSgtuSQ31JyPHWSRwcD+CCRShmGUqBhDD874
-QtuTTh26q7Y2hFq7u1hpvSoizGKO3+xa+V9d+odca4OfkGJjUdA=
-=6XRK
------END PGP SIGNATURE-----
-
---Apple-Mail=_B9CC8382-AEDB-478E-8C52-3DA0748DFD4D--
+David / dhildenb
