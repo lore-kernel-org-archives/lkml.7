@@ -2,281 +2,314 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CB5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1ECC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5422070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4600921852
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 14:01:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="y477G6Un"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfCNOB3 (ORCPT
+        id S1727653AbfCNOBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 10:01:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:1710 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbfCNOB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 10:01:28 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5143A306C3EB;
-        Thu, 14 Mar 2019 14:01:27 +0000 (UTC)
-Received: from krava (unknown [10.43.17.124])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E2B595D9C4;
-        Thu, 14 Mar 2019 14:01:24 +0000 (UTC)
-Date:   Thu, 14 Mar 2019 15:01:24 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
-        Nageswara R Sastry <nasastry@in.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCHv2 5/8] perf tools: Get precise_ip from the pmu config
-Message-ID: <20190314140124.GE4406@krava>
-References: <20190305152536.21035-1-jolsa@kernel.org>
- <20190305152536.21035-6-jolsa@kernel.org>
- <20190305161319.GC17272@tassilo.jf.intel.com>
- <20190305162854.GB4533@krava>
- <20190305164017.GD17272@tassilo.jf.intel.com>
- <20190307153500.GC29474@krava>
- <20190307165123.GE7535@tassilo.jf.intel.com>
+        Thu, 14 Mar 2019 10:01:36 -0400
+Received: from mail-eopbgr780087.outbound.protection.outlook.com ([40.107.78.87]:3842
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726996AbfCNOBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 10:01:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZEPHlzCTOIWudqwGQoIfISPgdzP9S3GjioN7K859cP8=;
+ b=y477G6Un7t7TigYU33vJm0xUCLZ9TQJWkN5+2ptyTls+e/j1VlGjwjiSGoRQcEuyTwuVcNHXGNISZemupG+KA/M2Rg5+MEL1+2KC4yS/fN5gfSphC1qnn2JHCUexbY1bna2+1xR3NIhqnzWLQGe/8livIireMPz8MZiJgq8k27U=
+Received: from MWHPR02CA0017.namprd02.prod.outlook.com (2603:10b6:300:4b::27)
+ by DM6PR02MB4954.namprd02.prod.outlook.com (2603:10b6:5:11::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1709.13; Thu, 14 Mar
+ 2019 14:01:32 +0000
+Received: from BL2NAM02FT040.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::200) by MWHPR02CA0017.outlook.office365.com
+ (2603:10b6:300:4b::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.13 via Frontend
+ Transport; Thu, 14 Mar 2019 14:01:31 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ BL2NAM02FT040.mail.protection.outlook.com (10.152.77.193) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1709.13
+ via Frontend Transport; Thu, 14 Mar 2019 14:01:31 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:52624 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <nava.manne@xilinx.com>)
+        id 1h4QvK-0002kO-IZ; Thu, 14 Mar 2019 07:01:30 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <nava.manne@xilinx.com>)
+        id 1h4QvF-0005Na-Ek; Thu, 14 Mar 2019 07:01:25 -0700
+Received: from [172.23.37.118] (helo=xhdnavam40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <nava.manne@xilinx.com>)
+        id 1h4Qv6-0004xG-N8; Thu, 14 Mar 2019 07:01:17 -0700
+From:   Nava kishore Manne <nava.manne@xilinx.com>
+To:     <atull@kernel.org>, <mdf@kernel.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <michal.simek@xilinx.com>,
+        <rajanv@xilinx.com>, <jollys@xilinx.com>, <nava.manne@xilinx.com>,
+        <linux-fpga@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <chinnikishore369@gmail.com>
+Subject: [PATCH v4 3/6] dt-bindings: reset: Add bindings for ZynqMP reset driver
+Date:   Thu, 14 Mar 2019 19:31:19 +0530
+Message-ID: <20190314140122.23372-4-nava.manne@xilinx.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190314140122.23372-1-nava.manne@xilinx.com>
+References: <20190314140122.23372-1-nava.manne@xilinx.com>
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(39860400002)(136003)(376002)(396003)(2980300002)(199004)(189003)(16586007)(5660300002)(316002)(50466002)(7696005)(478600001)(26005)(106466001)(47776003)(51416003)(76176011)(63266004)(305945005)(36386004)(1076003)(36756003)(8936002)(356004)(77096007)(48376002)(14444005)(186003)(106002)(2906002)(110136005)(486006)(50226002)(426003)(11346002)(476003)(2616005)(446003)(126002)(336012)(9786002)(81156014)(8676002)(81166006)(2201001)(921003)(83996005)(1121003)(5001870100001)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4954;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307165123.GE7535@tassilo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 14 Mar 2019 14:01:27 +0000 (UTC)
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 05d11505-8fa4-4b8f-4477-08d6a8858fb0
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:DM6PR02MB4954;
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4954:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <DM6PR02MB495431F4C38AC904188C4D06C24B0@DM6PR02MB4954.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 09760A0505
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: roL4dDXSFih6zEIWB2tXHgsEwb+RmcE0gFyqZ8QT3i6JrQ2RasyfCBKyr0Ir2ZEtl/n+Y+om1fGL7hgcSfkb6d3jhg+cLcprLAhYz4vnFuRsAcTGjLMMOArC0gNyDwytPlLG+V5km+9GCLlabNtUmlJ+EHa45OCdOPYlGnu+SkwvmrkMXztk3BrxYuR2FQNH+N7oisdRf+qym3Hi1Sa3FRV7au2N2Qg/XQeiJcb5wTGvmddVGdmyy98Xc+d3e2JtD+PtEGwN+MeyOgCNG/T0+BXIBbuRQuUV1k7XCFiPGczxc0Q5y915QJLzcyHwOMKjgVV2Uz55U89KsHevZJzVMAW83MZh2Uc7V0RUi2mIUXwZ8QGE6UcMUO1yw89RR2oa/HwKN5hFYCA56s9ufKTdoagsrDo/gH3ABYwTJgpI16w=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2019 14:01:31.1882
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05d11505-8fa4-4b8f-4477-08d6a8858fb0
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4954
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 08:51:23AM -0800, Andi Kleen wrote:
-> On Thu, Mar 07, 2019 at 04:35:00PM +0100, Jiri Olsa wrote:
-> > On Tue, Mar 05, 2019 at 08:40:17AM -0800, Andi Kleen wrote:
-> > > On Tue, Mar 05, 2019 at 05:28:54PM +0100, Jiri Olsa wrote:
-> > > > On Tue, Mar 05, 2019 at 08:13:19AM -0800, Andi Kleen wrote:
-> > > > > On Tue, Mar 05, 2019 at 04:25:33PM +0100, Jiri Olsa wrote:
-> > > > > > Getting precise_ip field from the perf_pmu::max_precise
-> > > > > > config read from sysfs. If it's not available falling
-> > > > > > back to current detection function.
-> > > > > 
-> > > > > max_precise depends on the event.  This won't work for all
-> > > > > events. For example only instructions and cycles support
-> > > > > ppp
-> > > > 
-> > > > I'm getting  precise_ip=3 on mem-* events as well, that's why I
-> > > > was fixing this.. now it's not working for any event
-> > > 
-> > > I don't think it means anything for mem-*
-> > > 
-> > > There's some support for it on Goldmont plus for other events,
-> > > but it doesn't support mem-*. On big core it's only
-> > > for instructions and cycles, all implemented with the same
-> > > event. All other PEBS events only have two levels
-> > > switching between the two IPs.
-> > 
-> > ok, so how about this, it's the change I posted merged with the patch
-> 
-> Still seems like a hack. Even though I don't know of a case that
-> would break now. But it would be better to have the precise probing
-> in the open retry loop, instead of trying to reinvent it here.
+Add documentation to describe Xilinx ZynqMP reset driver
+bindings.
 
-how about something like below?
-
-jirka
-
-
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- tools/perf/util/evlist.c | 29 ----------------
- tools/perf/util/evlist.h |  2 --
- tools/perf/util/evsel.c  | 73 +++++++++++++++++++++++++++++++++-------
- 3 files changed, 60 insertions(+), 44 deletions(-)
+ .../bindings/reset/xlnx,zynqmp-reset.txt      |  52 +++++++
+ .../dt-bindings/reset/xlnx-zynqmp-resets.h    | 130 ++++++++++++++++++
+ 2 files changed, 182 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+ create mode 100644 include/dt-bindings/reset/xlnx-zynqmp-resets.h
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index ed20f4379956..3a243c249c29 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -230,35 +230,6 @@ void perf_evlist__set_leader(struct perf_evlist *evlist)
- 	}
- }
- 
--void perf_event_attr__set_max_precise_ip(struct perf_event_attr *pattr)
--{
--	struct perf_event_attr attr = {
--		.type		= PERF_TYPE_HARDWARE,
--		.config		= PERF_COUNT_HW_CPU_CYCLES,
--		.exclude_kernel	= 1,
--		.precise_ip	= 3,
--	};
--
--	event_attr_init(&attr);
--
--	/*
--	 * Unnamed union member, not supported as struct member named
--	 * initializer in older compilers such as gcc 4.4.7
--	 */
--	attr.sample_period = 1;
--
--	while (attr.precise_ip != 0) {
--		int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
--		if (fd != -1) {
--			close(fd);
--			break;
--		}
--		--attr.precise_ip;
--	}
--
--	pattr->precise_ip = attr.precise_ip;
--}
--
- int __perf_evlist__add_default(struct perf_evlist *evlist, bool precise)
- {
- 	struct perf_evsel *evsel = perf_evsel__new_cycles(precise);
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 744906dd4887..cb15e3366eba 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -303,8 +303,6 @@ void perf_evlist__to_front(struct perf_evlist *evlist,
- void perf_evlist__set_tracking_event(struct perf_evlist *evlist,
- 				     struct perf_evsel *tracking_evsel);
- 
--void perf_event_attr__set_max_precise_ip(struct perf_event_attr *attr);
--
- struct perf_evsel *
- perf_evlist__find_evsel_by_str(struct perf_evlist *evlist, const char *str);
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3bbf73e979c0..7cd70f99201a 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -295,7 +295,6 @@ struct perf_evsel *perf_evsel__new_cycles(bool precise)
- 	if (!precise)
- 		goto new_event;
- 
--	perf_event_attr__set_max_precise_ip(&attr);
- 	/*
- 	 * Now let the usual logic to set up the perf_event_attr defaults
- 	 * to kick in when we return and before perf_evsel__open() is called.
-@@ -305,6 +304,8 @@ struct perf_evsel *perf_evsel__new_cycles(bool precise)
- 	if (evsel == NULL)
- 		goto out;
- 
-+	evsel->precise_max = true;
+diff --git a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+new file mode 100644
+index 000000000000..27a45fe5ecf1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+@@ -0,0 +1,52 @@
++--------------------------------------------------------------------------
++ =  Zynq UltraScale+ MPSoC reset driver binding =
++--------------------------------------------------------------------------
++The Zynq UltraScale+ MPSoC has several different resets.
 +
- 	/* use asprintf() because free(evsel) assumes name is allocated */
- 	if (asprintf(&evsel->name, "cycles%s%s%.*s",
- 		     (attr.precise_ip || attr.exclude_kernel) ? ":" : "",
-@@ -1083,7 +1084,7 @@ void perf_evsel__config(struct perf_evsel *evsel, struct record_opts *opts,
- 	}
- 
- 	if (evsel->precise_max)
--		perf_event_attr__set_max_precise_ip(attr);
-+		attr->precise_ip = 3;
- 
- 	if (opts->all_user) {
- 		attr->exclude_kernel = 1;
-@@ -1749,6 +1750,60 @@ static bool ignore_missing_thread(struct perf_evsel *evsel,
- 	return true;
- }
- 
-+static void display_attr(struct perf_event_attr *attr)
-+{
-+	if (verbose >= 2) {
-+		fprintf(stderr, "%.60s\n", graph_dotted_line);
-+		fprintf(stderr, "perf_event_attr:\n");
-+		perf_event_attr__fprintf(stderr, attr, __open_attr__fprintf, NULL);
-+		fprintf(stderr, "%.60s\n", graph_dotted_line);
-+	}
-+}
++See Chapter 36 of the Zynq UltraScale+ MPSoC TRM (UG) for more information
++about zynqmp resets.
 +
-+static int perf_event_open(struct perf_evsel *evsel,
-+			   pid_t pid, int cpu, int group_fd,
-+			   unsigned long flags)
-+{
-+	int precise_ip = evsel->attr.precise_ip;
-+	int fd;
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
 +
-+	while (1) {
-+		pr_debug2("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
-+			  pid, cpu, group_fd, flags);
++Required Properties:
++- compatible:	"xlnx,zynqmp-reset"
++- #reset-cells:	Specifies the number of cells needed to encode reset
++		line, should be 1
 +
-+		fd = sys_perf_event_open(&evsel->attr, pid, cpu, group_fd, flags);
-+		if (fd >= 0)
-+			break;
++-------
++Example
++-------
 +
-+		/*
-+		 * Do quick precise_ip fallback if requested:
-+		 *  - there is some precise_ip
-+		 *  - maximum precise is requested
-+		 *  - we failed with ENOTSUP error, which is
-+		 *    associated with wrong precise_ip config
-+		 */
-+		if (!precise_ip || !evsel->precise_max || (errno != ENOTSUP))
-+			break;
++firmware {
++	zynqmp_firmware: zynqmp-firmware {
++		compatible = "xlnx,zynqmp-firmware";
++		method = "smc";
 +
-+		/*
-+		 * We tried all the precise_ip values, and it's
-+		 * still failing, so leave it to standard fallabck.
-+		 */
-+		if (!evsel->attr.precise_ip) {
-+			evsel->attr.precise_ip = precise_ip;
-+			break;
-+		}
++		zynqmp_reset: reset-controller {
++			compatible = "xlnx,zynqmp-reset";
++			#reset-cells = <1>;
++		};
++	};
++};
 +
-+		pr_debug2("\nsys_perf_event_open failed, error %d\n", -ENOTSUP);
++Specifying reset lines connected to IP modules
++==============================================
 +
-+		evsel->attr.precise_ip--;
-+		pr_debug2("decreasing precise_ip by one (%d)\n", evsel->attr.precise_ip);
-+		display_attr(&evsel->attr);
-+	}
++Device nodes that need access to reset lines should
++specify them as a reset phandle in their corresponding node as
++specified in reset.txt.
 +
-+	return fd;
-+}
++For list of all valid reset indicies see
++<dt-bindings/reset/xlnx-zynqmp-resets.h>
 +
- int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
- 		     struct thread_map *threads)
- {
-@@ -1824,12 +1879,7 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
- 	if (perf_missing_features.sample_id_all)
- 		evsel->attr.sample_id_all = 0;
- 
--	if (verbose >= 2) {
--		fprintf(stderr, "%.60s\n", graph_dotted_line);
--		fprintf(stderr, "perf_event_attr:\n");
--		perf_event_attr__fprintf(stderr, &evsel->attr, __open_attr__fprintf, NULL);
--		fprintf(stderr, "%.60s\n", graph_dotted_line);
--	}
-+	display_attr(&evsel->attr);
- 
- 	for (cpu = 0; cpu < cpus->nr; cpu++) {
- 
-@@ -1841,13 +1891,10 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
- 
- 			group_fd = get_group_fd(evsel, cpu, thread);
- retry_open:
--			pr_debug2("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
--				  pid, cpus->map[cpu], group_fd, flags);
--
- 			test_attr__ready();
- 
--			fd = sys_perf_event_open(&evsel->attr, pid, cpus->map[cpu],
--						 group_fd, flags);
-+			fd = perf_event_open(evsel, pid, cpus->map[cpu],
-+					     group_fd, flags);
- 
- 			FD(evsel, cpu, thread) = fd;
- 
++Example:
++
++serdes: zynqmp_phy@fd400000 {
++	...
++
++	resets = <&zynqmp_reset ZYNQMP_RESET_SATA>;
++	reset-names = "sata_rst";
++
++	...
++};
+diff --git a/include/dt-bindings/reset/xlnx-zynqmp-resets.h b/include/dt-bindings/reset/xlnx-zynqmp-resets.h
+new file mode 100644
+index 000000000000..e295fd5d824e
+--- /dev/null
++++ b/include/dt-bindings/reset/xlnx-zynqmp-resets.h
+@@ -0,0 +1,130 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *  Copyright (C) 2018 Xilinx, Inc.
++ */
++
++#ifndef _DT_BINDINGS_ZYNQMP_RESETS_H
++#define _DT_BINDINGS_ZYNQMP_RESETS_H
++
++#define		ZYNQMP_RESET_PCIE_CFG		0
++#define		ZYNQMP_RESET_PCIE_BRIDGE	1
++#define		ZYNQMP_RESET_PCIE_CTRL		2
++#define		ZYNQMP_RESET_DP			3
++#define		ZYNQMP_RESET_SWDT_CRF		4
++#define		ZYNQMP_RESET_AFI_FM5		5
++#define		ZYNQMP_RESET_AFI_FM4		6
++#define		ZYNQMP_RESET_AFI_FM3		7
++#define		ZYNQMP_RESET_AFI_FM2		8
++#define		ZYNQMP_RESET_AFI_FM1		9
++#define		ZYNQMP_RESET_AFI_FM0		10
++#define		ZYNQMP_RESET_GDMA		11
++#define		ZYNQMP_RESET_GPU_PP1		12
++#define		ZYNQMP_RESET_GPU_PP0		13
++#define		ZYNQMP_RESET_GPU		14
++#define		ZYNQMP_RESET_GT			15
++#define		ZYNQMP_RESET_SATA		16
++#define		ZYNQMP_RESET_ACPU3_PWRON	17
++#define		ZYNQMP_RESET_ACPU2_PWRON	18
++#define		ZYNQMP_RESET_ACPU1_PWRON	19
++#define		ZYNQMP_RESET_ACPU0_PWRON	20
++#define		ZYNQMP_RESET_APU_L2		21
++#define		ZYNQMP_RESET_ACPU3		22
++#define		ZYNQMP_RESET_ACPU2		23
++#define		ZYNQMP_RESET_ACPU1		24
++#define		ZYNQMP_RESET_ACPU0		25
++#define		ZYNQMP_RESET_DDR		26
++#define		ZYNQMP_RESET_APM_FPD		27
++#define		ZYNQMP_RESET_SOFT		28
++#define		ZYNQMP_RESET_GEM0		29
++#define		ZYNQMP_RESET_GEM1		30
++#define		ZYNQMP_RESET_GEM2		31
++#define		ZYNQMP_RESET_GEM3		32
++#define		ZYNQMP_RESET_QSPI		33
++#define		ZYNQMP_RESET_UART0		34
++#define		ZYNQMP_RESET_UART1		35
++#define		ZYNQMP_RESET_SPI0		36
++#define		ZYNQMP_RESET_SPI1		37
++#define		ZYNQMP_RESET_SDIO0		38
++#define		ZYNQMP_RESET_SDIO1		39
++#define		ZYNQMP_RESET_CAN0		40
++#define		ZYNQMP_RESET_CAN1		41
++#define		ZYNQMP_RESET_I2C0		42
++#define		ZYNQMP_RESET_I2C1		43
++#define		ZYNQMP_RESET_TTC0		44
++#define		ZYNQMP_RESET_TTC1		45
++#define		ZYNQMP_RESET_TTC2		46
++#define		ZYNQMP_RESET_TTC3		47
++#define		ZYNQMP_RESET_SWDT_CRL		48
++#define		ZYNQMP_RESET_NAND		49
++#define		ZYNQMP_RESET_ADMA		50
++#define		ZYNQMP_RESET_GPIO		51
++#define		ZYNQMP_RESET_IOU_CC		52
++#define		ZYNQMP_RESET_TIMESTAMP		53
++#define		ZYNQMP_RESET_RPU_R50		54
++#define		ZYNQMP_RESET_RPU_R51		55
++#define		ZYNQMP_RESET_RPU_AMBA		56
++#define		ZYNQMP_RESET_OCM		57
++#define		ZYNQMP_RESET_RPU_PGE		58
++#define		ZYNQMP_RESET_USB0_CORERESET	59
++#define		ZYNQMP_RESET_USB1_CORERESET	60
++#define		ZYNQMP_RESET_USB0_HIBERRESET	61
++#define		ZYNQMP_RESET_USB1_HIBERRESET	62
++#define		ZYNQMP_RESET_USB0_APB		63
++#define		ZYNQMP_RESET_USB1_APB		64
++#define		ZYNQMP_RESET_IPI		65
++#define		ZYNQMP_RESET_APM_LPD		66
++#define		ZYNQMP_RESET_RTC		67
++#define		ZYNQMP_RESET_SYSMON		68
++#define		ZYNQMP_RESET_AFI_FM6		69
++#define		ZYNQMP_RESET_LPD_SWDT		70
++#define		ZYNQMP_RESET_FPD		71
++#define		ZYNQMP_RESET_RPU_DBG1		72
++#define		ZYNQMP_RESET_RPU_DBG0		73
++#define		ZYNQMP_RESET_DBG_LPD		74
++#define		ZYNQMP_RESET_DBG_FPD		75
++#define		ZYNQMP_RESET_APLL		76
++#define		ZYNQMP_RESET_DPLL		77
++#define		ZYNQMP_RESET_VPLL		78
++#define		ZYNQMP_RESET_IOPLL		79
++#define		ZYNQMP_RESET_RPLL		80
++#define		ZYNQMP_RESET_GPO3_PL_0		81
++#define		ZYNQMP_RESET_GPO3_PL_1		82
++#define		ZYNQMP_RESET_GPO3_PL_2		83
++#define		ZYNQMP_RESET_GPO3_PL_3		84
++#define		ZYNQMP_RESET_GPO3_PL_4		85
++#define		ZYNQMP_RESET_GPO3_PL_5		86
++#define		ZYNQMP_RESET_GPO3_PL_6		87
++#define		ZYNQMP_RESET_GPO3_PL_7		88
++#define		ZYNQMP_RESET_GPO3_PL_8		89
++#define		ZYNQMP_RESET_GPO3_PL_9		90
++#define		ZYNQMP_RESET_GPO3_PL_10		91
++#define		ZYNQMP_RESET_GPO3_PL_11		92
++#define		ZYNQMP_RESET_GPO3_PL_12		93
++#define		ZYNQMP_RESET_GPO3_PL_13		94
++#define		ZYNQMP_RESET_GPO3_PL_14		95
++#define		ZYNQMP_RESET_GPO3_PL_15		96
++#define		ZYNQMP_RESET_GPO3_PL_16		97
++#define		ZYNQMP_RESET_GPO3_PL_17		98
++#define		ZYNQMP_RESET_GPO3_PL_18		99
++#define		ZYNQMP_RESET_GPO3_PL_19		100
++#define		ZNQMP_RESET_GPO3_PL_20		101
++#define		ZYNQMP_RESET_GPO3_PL_21		102
++#define		ZYNQMP_RESET_GPO3_PL_22		103
++#define		ZYNQMP_RESET_GPO3_PL_23		104
++#define		ZYNQMP_RESET_GPO3_PL_24		105
++#define		ZYNQMP_RESET_GPO3_PL_25		106
++#define		ZYNQMP_RESET_GPO3_PL_26		107
++#define		ZYNQMP_RESET_GPO3_PL_27		108
++#define		ZYNQMP_RESET_GPO3_PL_28		109
++#define		ZYNQMP_RESET_GPO3_PL_29		110
++#define		ZYNQMP_RESET_GPO3_PL_30		111
++#define		ZYNQMP_RESET_GPO3_PL_31		112
++#define		ZYNQMP_RESET_RPU_LS		113
++#define		ZYNQMP_RESET_PS_ONLY		114
++#define		ZYNQMP_RESET_PL			115
++#define		ZYNQMP_RESET_PS_PL0		116
++#define		ZYNQMP_RESET_PS_PL1		117
++#define		ZYNQMP_RESET_PS_PL2		118
++#define		ZYNQMP_RESET_PS_PL3		119
++
++#endif
 -- 
-2.17.2
+2.18.0
 
