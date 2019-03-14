@@ -2,152 +2,141 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1140C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DF7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E68A21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:37:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Ut1VptzT"
+	by mail.kernel.org (Postfix) with ESMTP id D4CB321019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfCNKhT (ORCPT
+        id S1727364AbfCNKh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:37:19 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36735 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbfCNKhS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:37:18 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e4so4172952edi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 03:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j4Sp/d45kuPj/bu/0V+pPpceqHIOF3OeyYxUYryeLEA=;
-        b=Ut1VptzTQxgk5faZTZjdxL78ERFrBuRlrvAh1uiwNLcsoAGouzCIx9sigi1E5YprFF
-         xoLUkHapYADAAG/h3f/E3hsG0rzOyynEcjPnwCgw3L5Y1fgIMUHtPCL1RoU2w6wKqwxa
-         0VPEAYSDVwc2MvvhKtIFzbB5Y18YLyjZuTpIA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=j4Sp/d45kuPj/bu/0V+pPpceqHIOF3OeyYxUYryeLEA=;
-        b=PgOWQWA0VmSAKBlMWkazhSRL9Qo+cP7yuhvbkAkslsMSLM8vjGfjWe2qjqAxsE++0w
-         5yH6ogDnLpACzM8baIXLxckxvn2t99FC4K7H3MXkCBSOqZdgxOkHVNhbfdA1eB97XQbK
-         ZWjeyQrgrZVmH1/y0IGjeUM5ELE8BXNZKxP8FL55c+cDWqFVIfyt9MhX42YLHRyH0SOr
-         9YwHa1GMu5uqEGoPClqCRz6hJ5SIdpOpm6seNlrahxyMDWaIPZkgT52QNT2/Borjer9a
-         0GYV8BXBSFYlsLqhHjGUUlKOZzHdI+hvDM/DJ8/65KAsL/lH9tU7i7zSjqHu3gi2wha6
-         MIcQ==
-X-Gm-Message-State: APjAAAX1JRGf/1JN6LXHyU0IPB/ZBlCdH3+skwWBQmZ8gP0PP0Rxw4ny
-        VRQ45QnG22vvqTRuEx2sT/X81g==
-X-Google-Smtp-Source: APXvYqwuvhZkg2jbNhCgjFebmEZj6HXKP8ziVQswTD0LRslUPIDO6z5kfrCQBxoGRP52osxl9nyDcg==
-X-Received: by 2002:a50:add2:: with SMTP id b18mr11156749edd.43.1552559836346;
-        Thu, 14 Mar 2019 03:37:16 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id me7sm1005449ejb.46.2019.03.14.03.37.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Mar 2019 03:37:15 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 11:37:13 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RfC PATCH] fbdev: list all memory bars as conflicting apertures
-Message-ID: <20190314103713.GQ2665@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190313110741.6541-1-kraxel@redhat.com>
+        Thu, 14 Mar 2019 06:37:26 -0400
+Received: from mga14.intel.com ([192.55.52.115]:3335 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727087AbfCNKhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 06:37:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 03:37:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
+   d="scan'208";a="328559692"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Mar 2019 03:37:24 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1h4Njo-0005Dh-2Y; Thu, 14 Mar 2019 18:37:24 +0800
+Date:   Thu, 14 Mar 2019 18:37:08 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Taehee Yoo <ap420073@gmail.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: net/ipv4/netfilter/ipt_CLUSTERIP.c:513 clusterip_tg_check() error:
+ potential null dereference 'config'.  (clusterip_config_init returns null)
+Message-ID: <201903141804.SyujYY4l%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190313110741.6541-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 12:07:41PM +0100, Gerd Hoffmann wrote:
-> Simply add all pci memory bars to struct apertures_struct in
-> remove_conflicting_pci_framebuffers().  That allows to drop
-> the res_id parameter.
-> 
-> TODO: actually remove the res_id parameter.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   fa3d493f7a573b4e4e2538486e912093a0161c1b
+commit: 5a86d68bcf02f2d1e9a5897dd482079fd5f75e7f netfilter: ipt_CLUSTERIP: fix deadlock in netns exit routine
+date:   3 months ago
 
-I think best to do that in a cleanup patch afterwards.
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/video/fbdev/core/fbmem.c | 22 ++++++++++++++++++----
->  1 file changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-> index cb43a2258c51..e8223c231de2 100644
-> --- a/drivers/video/fbdev/core/fbmem.c
-> +++ b/drivers/video/fbdev/core/fbmem.c
-> @@ -1879,14 +1879,28 @@ int remove_conflicting_pci_framebuffers(struct pci_dev *pdev, int res_id, const
->  {
->  	struct apertures_struct *ap;
->  	bool primary = false;
-> -	int err;
-> +	int err, idx, cnt, bar;
->  
-> -	ap = alloc_apertures(1);
-> +	for (cnt = 0, bar = 0; bar < PCI_ROM_RESOURCE; bar++) {
-> +		if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM))
-> +			continue;
-> +		cnt++;
-> +	}
-> +
-> +	ap = alloc_apertures(cnt);
->  	if (!ap)
->  		return -ENOMEM;
->  
-> -	ap->ranges[0].base = pci_resource_start(pdev, res_id);
-> -	ap->ranges[0].size = pci_resource_len(pdev, res_id);
-> +	for (idx = 0, bar = 0; bar < PCI_ROM_RESOURCE; bar++) {
-> +		if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM))
-> +			continue;
-> +		ap->ranges[idx].base = pci_resource_start(pdev, bar);
-> +		ap->ranges[idx].size = pci_resource_len(pdev, bar);
-> +		pci_info(pdev, "%s: bar %d: 0x%lx -> 0x%lx\n", __func__, bar,
-> +			 (unsigned long)pci_resource_start(pdev, bar),
-> +			 (unsigned long)pci_resource_end(pdev, bar));
-> +		idx++;
-> +	}
+New smatch warnings:
+net/ipv4/netfilter/ipt_CLUSTERIP.c:513 clusterip_tg_check() error: potential null dereference 'config'.  (clusterip_config_init returns null)
 
-lgtm. I think this is ok to merge as-is already ...
+Old smatch warnings:
+net/ipv4/netfilter/ipt_CLUSTERIP.c:134 clusterip_config_entry_put() warn: inconsistent returns 'spin_lock:&cn->lock'.
+  Locked on:   line 134
+  Unlocked on: line 132
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+vim +/config +513 net/ipv4/netfilter/ipt_CLUSTERIP.c
 
-Maybe if you want to be paranoid in the conversion add a check that we're
-not skipping the pci bar requested in res_id. Then we could test this for
-a kernel and remove the parameter later on.
--Daniel
+   456	
+   457	static int clusterip_tg_check(const struct xt_tgchk_param *par)
+   458	{
+   459		struct ipt_clusterip_tgt_info *cipinfo = par->targinfo;
+   460		const struct ipt_entry *e = par->entryinfo;
+   461		struct clusterip_config *config;
+   462		int ret, i;
+   463	
+   464		if (par->nft_compat) {
+   465			pr_err("cannot use CLUSTERIP target from nftables compat\n");
+   466			return -EOPNOTSUPP;
+   467		}
+   468	
+   469		if (cipinfo->hash_mode != CLUSTERIP_HASHMODE_SIP &&
+   470		    cipinfo->hash_mode != CLUSTERIP_HASHMODE_SIP_SPT &&
+   471		    cipinfo->hash_mode != CLUSTERIP_HASHMODE_SIP_SPT_DPT) {
+   472			pr_info("unknown mode %u\n", cipinfo->hash_mode);
+   473			return -EINVAL;
+   474	
+   475		}
+   476		if (e->ip.dmsk.s_addr != htonl(0xffffffff) ||
+   477		    e->ip.dst.s_addr == 0) {
+   478			pr_info("Please specify destination IP\n");
+   479			return -EINVAL;
+   480		}
+   481		if (cipinfo->num_local_nodes > ARRAY_SIZE(cipinfo->local_nodes)) {
+   482			pr_info("bad num_local_nodes %u\n", cipinfo->num_local_nodes);
+   483			return -EINVAL;
+   484		}
+   485		for (i = 0; i < cipinfo->num_local_nodes; i++) {
+   486			if (cipinfo->local_nodes[i] - 1 >=
+   487			    sizeof(config->local_nodes) * 8) {
+   488				pr_info("bad local_nodes[%d] %u\n",
+   489					i, cipinfo->local_nodes[i]);
+   490				return -EINVAL;
+   491			}
+   492		}
+   493	
+   494		config = clusterip_config_find_get(par->net, e->ip.dst.s_addr, 1);
+   495		if (!config) {
+   496			if (!(cipinfo->flags & CLUSTERIP_FLAG_NEW)) {
+   497				pr_info("no config found for %pI4, need 'new'\n",
+   498					&e->ip.dst.s_addr);
+   499				return -EINVAL;
+   500			} else {
+   501				config = clusterip_config_init(par->net, cipinfo,
+   502							       e->ip.dst.s_addr,
+   503							       e->ip.iniface);
+   504				if (IS_ERR(config))
+   505					return PTR_ERR(config);
+   506			}
+   507		}
+   508	
+   509		ret = nf_ct_netns_get(par->net, par->family);
+   510		if (ret < 0) {
+   511			pr_info("cannot load conntrack support for proto=%u\n",
+   512				par->family);
+ > 513			clusterip_config_entry_put(config);
+   514			clusterip_config_put(config);
+   515			return ret;
+   516		}
+   517	
+   518		if (!par->net->xt.clusterip_deprecated_warning) {
+   519			pr_info("ipt_CLUSTERIP is deprecated and it will removed soon, "
+   520				"use xt_cluster instead\n");
+   521			par->net->xt.clusterip_deprecated_warning = true;
+   522		}
+   523	
+   524		cipinfo->config = config;
+   525		return ret;
+   526	}
+   527	
 
-
->  #ifdef CONFIG_X86
->  	primary = pdev->resource[PCI_ROM_RESOURCE].flags &
->  					IORESOURCE_ROM_SHADOW;
-> -- 
-> 2.18.1
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
