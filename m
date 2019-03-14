@@ -2,113 +2,227 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A46CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E024C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B5D20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0200620854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:44:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YB+ceC9T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cd/lj9oL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfCNKny (ORCPT
+        id S1727449AbfCNKoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:43:54 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38856 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbfCNKny (ORCPT
+        Thu, 14 Mar 2019 06:44:22 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:33788 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfCNKoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:43:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2EAhnGx014078;
-        Thu, 14 Mar 2019 05:43:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552560229;
-        bh=GAjC5l57/8fSJx9tJ+c2oVjaNgQVjJ2OvdGfyncv3nY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YB+ceC9TODQDynxI6NRbbJutZy3mq1zZcqyvcaLUKkVnH+WciSIZshcX0BcOow9vb
-         ATeR6RZN4XjR5CYDdq9P2YPC0XyeGq6mAI3dRvZm+4CigIAyuh90QznEOTIy6wzbAR
-         TfB0ocRcPiv0T0uodt6A/d+T7tTeN0gw2Kp83Gao=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2EAhnuq113507
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 Mar 2019 05:43:49 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 14
- Mar 2019 05:43:49 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Thu, 14 Mar 2019 05:43:49 -0500
-Received: from [172.22.128.177] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2EAhk7i024057;
-        Thu, 14 Mar 2019 05:43:47 -0500
-Subject: Re: [PATCH] drivers: gpio: omap: use devm_platform_ioremap_resource()
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        <linux-kernel@vger.kernel.org>
-CC:     <ssantosh@kernel.org>, <khilman@kernel.org>,
-        <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <d3b12ed4-67e6-2993-4f56-80b1be572a24@gmail.com>
- <1552333805-23235-1-git-send-email-info@metux.net>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <d9f45854-e4f6-824a-330f-2ec76a41089c@ti.com>
-Date:   Thu, 14 Mar 2019 12:43:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 14 Mar 2019 06:44:22 -0400
+Received: by mail-it1-f194.google.com with SMTP id f186so7478426ita.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 03:44:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qd8n3KqbDahoPwCZIcSO29r3/qbS//0/Sc4AHCuc2OA=;
+        b=cd/lj9oLnlnFZtNouHHalTbuFniLYV5Qji+yNGwBxL7Qa2yMXRBYYpJtbMf1TLG1aO
+         IwS13cvtko4rV1IjGpftQ0GkqOHurddGkGrpSzWMTuRg9YqOsEDpE0H0YNtg8t4v26Zv
+         mPJwZ2xRjLUj73DaX0T84XAhQ4fVGOSwpgKvPobeLnV4WG3r0YAoZGASKJicfSaIF3Gi
+         9eL5XjQsLUjEihVdVkyx+UEi2qwn1MgGLKwLpOQwPNFZAhcprFHNB62Xw3vxwqjpxAbF
+         hP1aI61EdhP3zQ7JuMNTjfpKHXt538V9jppV2VY3wl0Gd6P1ftrt0X22PcRymRU2M8SJ
+         X8Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qd8n3KqbDahoPwCZIcSO29r3/qbS//0/Sc4AHCuc2OA=;
+        b=W5uPMNXJOIKtMgJsrXg/ivUJIql/2qCgdCUwO0AcS4lTf4mOcymR4X1ONJUYMSP2zK
+         pz1Z28Q1zwsArOGJnrNKlvmxSHHn/EkDCzmpnJHVYrj02OefTkD1DpnBjKghzHVtxjNJ
+         WSlICi+qBtGdiO4HbIiW1PqNKfhmiK2hb+Tezbl3EM38Yi7T+Lm71wa+B/LYg7VU8RS/
+         wr9Td/F6UWfI5coB1tuCdeXQz+z8lw9R5xIF8qZUm+g4wf1DLh4FqepANVlPLcNSr2Kq
+         C/8MZ3sEvQUwhfSsKgvuoOuLBkmymCY/pP+SeA0MgnjMsHgMFclj6PWxEYm4655CMIWE
+         rWBA==
+X-Gm-Message-State: APjAAAU4HHC0W4pCs941/J9amnU310hLIp6TOGCl/mBtMI/zBxAXebUc
+        cQeVlR4rAwjs20dsEKBab619LVubsR3euZcLWDo=
+X-Google-Smtp-Source: APXvYqwTZ2icNGbQbSX9V2gpjOJMOh3gHL8RUUHTBbZgmkW7UUxUjnRP77DQXawmmoMxdJ/jxOWWhU4yRpZ6YrbHsdc=
+X-Received: by 2002:a24:b34f:: with SMTP id z15mr1543254iti.97.1552560260894;
+ Thu, 14 Mar 2019 03:44:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1552333805-23235-1-git-send-email-info@metux.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1551421452-5385-1-git-send-email-laoar.shao@gmail.com>
+ <1551421452-5385-2-git-send-email-laoar.shao@gmail.com> <20190314101915.GI7473@dhcp22.suse.cz>
+In-Reply-To: <20190314101915.GI7473@dhcp22.suse.cz>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 14 Mar 2019 18:43:44 +0800
+Message-ID: <CALOAHbAuGLe_Cw+xChmM3=cuhdis3=LwaT1yRoH72zmg+uhUTw@mail.gmail.com>
+Subject: Re: [PATCH] mm: vmscan: drop may_writepage and classzone_idx from
+ direct reclaim begin template
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, shaoyafang@didiglobal.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 14, 2019 at 6:19 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Fri 01-03-19 14:24:12, Yafang Shao wrote:
+> > There are three tracepoints using this template, which are
+> > mm_vmscan_direct_reclaim_begin,
+> > mm_vmscan_memcg_reclaim_begin,
+> > mm_vmscan_memcg_softlimit_reclaim_begin.
+> >
+> > Regarding mm_vmscan_direct_reclaim_begin,
+> > sc.may_writepage is !laptop_mode, that's a static setting, and
+> > reclaim_idx is derived from gfp_mask which is already show in this
+> > tracepoint.
+> >
+> > Regarding mm_vmscan_memcg_reclaim_begin,
+> > may_writepage is !laptop_mode too, and reclaim_idx is (MAX_NR_ZONES-1),
+> > which are both static value.
+> >
+> > mm_vmscan_memcg_softlimit_reclaim_begin is the same with
+> > mm_vmscan_memcg_reclaim_begin.
+> >
+> > So we can drop them all.
+>
+> I agree. Although classzone_idx is PITA to calculate nothing really
+> prevents us to have a tool to do that. may_writepage is not all that
+> useful anymore.
+>
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+>
+> From a quick glance this looks ok. I haven't really checked deeply or
+> tried to compile it but the change makes sense.
+>
 
+Thanks for your quick response!
+This patch works fine, I have verified it.
 
-On 11.03.19 21:50, Enrico Weigelt, metux IT consult wrote:
-> Use the new helper that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together.
-> 
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
->  drivers/gpio/gpio-omap.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-> index 7f33024..ce6e67a 100644
-> --- a/drivers/gpio/gpio-omap.c
-> +++ b/drivers/gpio/gpio-omap.c
-> @@ -1289,7 +1289,6 @@ static int omap_gpio_probe(struct platform_device *pdev)
->  	struct device_node *node = dev->of_node;
->  	const struct of_device_id *match;
->  	const struct omap_gpio_platform_data *pdata;
-> -	struct resource *res;
->  	struct gpio_bank *bank;
->  	struct irq_chip *irqc;
->  	int ret;
-> @@ -1375,8 +1374,7 @@ static int omap_gpio_probe(struct platform_device *pdev)
->  	raw_spin_lock_init(&bank->wa_lock);
->  
->  	/* Static mapping, never released */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	bank->base = devm_ioremap_resource(dev, res);
-> +	bank->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(bank->base)) {
->  		return PTR_ERR(bank->base);
->  	}
-> 
-
-Acked-by: Grygorii Strashko <grygorii.strashko@ti.com> 
-
--- 
-Best regards,
-grygorii
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> > ---
+> >  include/trace/events/vmscan.h | 26 ++++++++++----------------
+> >  mm/vmscan.c                   | 14 +++-----------
+> >  2 files changed, 13 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> > index a1cb913..153d90c 100644
+> > --- a/include/trace/events/vmscan.h
+> > +++ b/include/trace/events/vmscan.h
+> > @@ -105,51 +105,45 @@
+> >
+> >  DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
+> >
+> > -     TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
+> > +     TP_PROTO(int order, gfp_t gfp_flags),
+> >
+> > -     TP_ARGS(order, may_writepage, gfp_flags, classzone_idx),
+> > +     TP_ARGS(order, gfp_flags),
+> >
+> >       TP_STRUCT__entry(
+> >               __field(        int,    order           )
+> > -             __field(        int,    may_writepage   )
+> >               __field(        gfp_t,  gfp_flags       )
+> > -             __field(        int,    classzone_idx   )
+> >       ),
+> >
+> >       TP_fast_assign(
+> >               __entry->order          = order;
+> > -             __entry->may_writepage  = may_writepage;
+> >               __entry->gfp_flags      = gfp_flags;
+> > -             __entry->classzone_idx  = classzone_idx;
+> >       ),
+> >
+> > -     TP_printk("order=%d may_writepage=%d gfp_flags=%s classzone_idx=%d",
+> > +     TP_printk("order=%d gfp_flags=%s",
+> >               __entry->order,
+> > -             __entry->may_writepage,
+> > -             show_gfp_flags(__entry->gfp_flags),
+> > -             __entry->classzone_idx)
+> > +             show_gfp_flags(__entry->gfp_flags))
+> >  );
+> >
+> >  DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_direct_reclaim_begin,
+> >
+> > -     TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
+> > +     TP_PROTO(int order, gfp_t gfp_flags),
+> >
+> > -     TP_ARGS(order, may_writepage, gfp_flags, classzone_idx)
+> > +     TP_ARGS(order, gfp_flags)
+> >  );
+> >
+> >  #ifdef CONFIG_MEMCG
+> >  DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_reclaim_begin,
+> >
+> > -     TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
+> > +     TP_PROTO(int order, gfp_t gfp_flags),
+> >
+> > -     TP_ARGS(order, may_writepage, gfp_flags, classzone_idx)
+> > +     TP_ARGS(order, gfp_flags)
+> >  );
+> >
+> >  DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_softlimit_reclaim_begin,
+> >
+> > -     TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
+> > +     TP_PROTO(int order, gfp_t gfp_flags),
+> >
+> > -     TP_ARGS(order, may_writepage, gfp_flags, classzone_idx)
+> > +     TP_ARGS(order, gfp_flags)
+> >  );
+> >  #endif /* CONFIG_MEMCG */
+> >
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index ac4806f..cdc0305 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -3304,10 +3304,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+> >       if (throttle_direct_reclaim(sc.gfp_mask, zonelist, nodemask))
+> >               return 1;
+> >
+> > -     trace_mm_vmscan_direct_reclaim_begin(order,
+> > -                             sc.may_writepage,
+> > -                             sc.gfp_mask,
+> > -                             sc.reclaim_idx);
+> > +     trace_mm_vmscan_direct_reclaim_begin(order, sc.gfp_mask);
+> >
+> >       nr_reclaimed = do_try_to_free_pages(zonelist, &sc);
+> >
+> > @@ -3338,9 +3335,7 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
+> >                       (GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
+> >
+> >       trace_mm_vmscan_memcg_softlimit_reclaim_begin(sc.order,
+> > -                                                   sc.may_writepage,
+> > -                                                   sc.gfp_mask,
+> > -                                                   sc.reclaim_idx);
+> > +                                                   sc.gfp_mask);
+> >
+> >       /*
+> >        * NOTE: Although we can get the priority field, using it
+> > @@ -3389,10 +3384,7 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+> >
+> >       zonelist = &NODE_DATA(nid)->node_zonelists[ZONELIST_FALLBACK];
+> >
+> > -     trace_mm_vmscan_memcg_reclaim_begin(0,
+> > -                                         sc.may_writepage,
+> > -                                         sc.gfp_mask,
+> > -                                         sc.reclaim_idx);
+> > +     trace_mm_vmscan_memcg_reclaim_begin(0, sc.gfp_mask);
+> >
+> >       psi_memstall_enter(&pflags);
+> >       noreclaim_flag = memalloc_noreclaim_save();
+> > --
+> > 1.8.3.1
+> >
+>
+> --
+> Michal Hocko
+> SUSE Labs
