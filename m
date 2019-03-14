@@ -2,117 +2,258 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D108C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ADFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A38E2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EKZ6EDw3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="R4aZ0hg5"
+	by mail.kernel.org (Postfix) with ESMTP id 5DC922184D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 05:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552541569;
+	bh=vrbA7aXj4QQAW/fXy5Qdn5jm6Wfryz0D02Fwo0UW6KI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LNCNeyJAMReOnDplxCcip7AJFRNbhechrZ4JuqRazKsrdvX5/ytT4qKMtOMQLPb96
+	 GrXd0aKE6WE3NubdKUE5aC3iVk66PSe6T7CdOop/z6o9w3xvAgHscV47oxx6duJ6BX
+	 50XKXlhMpHS0gwd/Izgww914hfC1E74es7q3doGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfCNFcm (ORCPT
+        id S1727222AbfCNFcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 01:32:42 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58014 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfCNFcg (ORCPT
+        Thu, 14 Mar 2019 01:32:31 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:45377 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727030AbfCNFc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 01:32:36 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7E5FB60909; Thu, 14 Mar 2019 05:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552541555;
-        bh=pxermHq6zXeNhOFIdRTWlt/5Pj8meTaPBvybhvwtFMw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EKZ6EDw3Ap/lvcq0Zq+7abMy0DPafGXsX7TGGg/auXn5/amD+odauCHtO62DkrXYf
-         1UprJQksIGfxWued0m2m4SmE55gIsW2heS1tyc53ms6ntrluuWu4HIwVcqJMQC5z/S
-         sbt4QsXYeUYZRV3ZdBXRWX2xB4JXrbnZdXeqOnZk=
-Received: from [10.206.25.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: riteshh@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C5C7660909;
-        Thu, 14 Mar 2019 05:32:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552541554;
-        bh=pxermHq6zXeNhOFIdRTWlt/5Pj8meTaPBvybhvwtFMw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=R4aZ0hg5n5n/ZKW26RTxt4hSav7zmH8Y5NXObxCbcTWhsBrTf/5zE5qj9BDxfh+xB
-         j6QvA9dEg7M9eJsxhsRLKmCujta5TwbQJ1lZNIezh45QsB6YdoyHw8OTyW2gG1MH08
-         S0H3NPnm4Z9xckqTx3gz9ASigVNjIw+w5nDxVz0I=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5C7660909
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=riteshh@codeaurora.org
-Subject: Re: [PATCH V3 06/10] mmc: cqhci: allow hosts to update dcmd cmd desc
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
-References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
- <1552513552-23423-6-git-send-email-skomatineni@nvidia.com>
-From:   Ritesh Harjani <riteshh@codeaurora.org>
-Message-ID: <8a90c2e5-fd0a-9ea3-59a5-c237c0003a3b@codeaurora.org>
-Date:   Thu, 14 Mar 2019 11:02:28 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Thu, 14 Mar 2019 01:32:26 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 08CC2214E0;
+        Thu, 14 Mar 2019 01:32:26 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 14 Mar 2019 01:32:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=CDYia77DvmbgSMo0ig5s08PvnjuxIbLDQT/0qMx7ZFE=; b=QB7lwDAt
+        qaYokPpKcM/8jy+xe5qQ75mWZyiWH1ykAoex1QxLI+ynOh3z9vwrRxFcLZXdxFc1
+        JOsNgRKpidOoAoPm8Zpf9xDBpIAZNnuZdhwoc3Kpm3NpOVs9H259Oe9RDX5g8wGD
+        /3N06MO17idYXC/sgIn8rADeyEFppnF93UPUbchhaZe52loh8kI+dJucH0i6tLVr
+        70G4QqPrixhWRpBZwgapwUPUtE+F3fFNJYN7j3trb70y1oq54g7N4yEUFm5FdJw1
+        E3SyT0tBzEk2t5rYTSdDq4xhkNcygrqSPKOV1/XqHm5uDvE085UTYlkAseVi1PvM
+        NDWjoFCpqchYvQ==
+X-ME-Sender: <xms:aeeJXET4CmGUOZzRurzr2gKL5HzIT3b3Pi53QCNRhyYAVhf6hsfcmQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrhedugdekgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
+    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
+    epuddvgedrudeiledrvdefrddukeegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
+    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeef
+X-ME-Proxy: <xmx:aeeJXKvBGukFQPbX1c219GowTD2JnQ8TcNkWIwlpGKjBMb0QRoYw-Q>
+    <xmx:aeeJXKk9hIS-1yA5HdBRTimdiYUiIe6FUPNSHGTZVhCP0AAwfuQzKg>
+    <xmx:aeeJXLIxCswZ8ajxU3th4VnbA72U3xeiGGpnpK_YN3W0pZOAOectbA>
+    <xmx:aueJXH6BbapL2513L7uUa-9Pv8K04b73F_H_Q8QPaGVBt9i0SMkQuQ>
+Received: from eros.localdomain (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6CB94E4482;
+        Thu, 14 Mar 2019 01:32:22 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 5/7] slub: Use slab_list instead of lru
+Date:   Thu, 14 Mar 2019 16:31:33 +1100
+Message-Id: <20190314053135.1541-6-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190314053135.1541-1-tobin@kernel.org>
+References: <20190314053135.1541-1-tobin@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1552513552-23423-6-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently we use the page->lru list for maintaining lists of slabs.  We
+have a list in the page structure (slab_list) that can be used for this
+purpose.  Doing so makes the code cleaner since we are not overloading
+the lru list.
 
-On 3/14/2019 3:15 AM, Sowjanya Komatineni wrote:
-> This patch adds update_dcmd_desc interface to cqhci_host_ops to
-> allow hosts to update any of the DCMD task descriptor attributes
-> and parameters.
->
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Use the slab_list instead of the lru list for maintaining lists of
+slabs.
 
-Thanks,
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Christoph Lameter <cl@linux.com>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+---
+ mm/slub.c | 40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-Reviewed-by: Ritesh Harjani <riteshh@codeaurora.org>
+diff --git a/mm/slub.c b/mm/slub.c
+index b282e22885cd..d692b5e0163d 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1023,7 +1023,7 @@ static void add_full(struct kmem_cache *s,
+ 		return;
+ 
+ 	lockdep_assert_held(&n->list_lock);
+-	list_add(&page->lru, &n->full);
++	list_add(&page->slab_list, &n->full);
+ }
+ 
+ static void remove_full(struct kmem_cache *s, struct kmem_cache_node *n, struct page *page)
+@@ -1032,7 +1032,7 @@ static void remove_full(struct kmem_cache *s, struct kmem_cache_node *n, struct
+ 		return;
+ 
+ 	lockdep_assert_held(&n->list_lock);
+-	list_del(&page->lru);
++	list_del(&page->slab_list);
+ }
+ 
+ /* Tracking of the number of slabs for debugging purposes */
+@@ -1773,9 +1773,9 @@ __add_partial(struct kmem_cache_node *n, struct page *page, int tail)
+ {
+ 	n->nr_partial++;
+ 	if (tail == DEACTIVATE_TO_TAIL)
+-		list_add_tail(&page->lru, &n->partial);
++		list_add_tail(&page->slab_list, &n->partial);
+ 	else
+-		list_add(&page->lru, &n->partial);
++		list_add(&page->slab_list, &n->partial);
+ }
+ 
+ static inline void add_partial(struct kmem_cache_node *n,
+@@ -1789,7 +1789,7 @@ static inline void remove_partial(struct kmem_cache_node *n,
+ 					struct page *page)
+ {
+ 	lockdep_assert_held(&n->list_lock);
+-	list_del(&page->lru);
++	list_del(&page->slab_list);
+ 	n->nr_partial--;
+ }
+ 
+@@ -1863,7 +1863,7 @@ static void *get_partial_node(struct kmem_cache *s, struct kmem_cache_node *n,
+ 		return NULL;
+ 
+ 	spin_lock(&n->list_lock);
+-	list_for_each_entry_safe(page, page2, &n->partial, lru) {
++	list_for_each_entry_safe(page, page2, &n->partial, slab_list) {
+ 		void *t;
+ 
+ 		if (!pfmemalloc_match(page, flags))
+@@ -2407,7 +2407,7 @@ static unsigned long count_partial(struct kmem_cache_node *n,
+ 	struct page *page;
+ 
+ 	spin_lock_irqsave(&n->list_lock, flags);
+-	list_for_each_entry(page, &n->partial, lru)
++	list_for_each_entry(page, &n->partial, slab_list)
+ 		x += get_count(page);
+ 	spin_unlock_irqrestore(&n->list_lock, flags);
+ 	return x;
+@@ -3702,10 +3702,10 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
+ 
+ 	BUG_ON(irqs_disabled());
+ 	spin_lock_irq(&n->list_lock);
+-	list_for_each_entry_safe(page, h, &n->partial, lru) {
++	list_for_each_entry_safe(page, h, &n->partial, slab_list) {
+ 		if (!page->inuse) {
+ 			remove_partial(n, page);
+-			list_add(&page->lru, &discard);
++			list_add(&page->slab_list, &discard);
+ 		} else {
+ 			list_slab_objects(s, page,
+ 			"Objects remaining in %s on __kmem_cache_shutdown()");
+@@ -3713,7 +3713,7 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
+ 	}
+ 	spin_unlock_irq(&n->list_lock);
+ 
+-	list_for_each_entry_safe(page, h, &discard, lru)
++	list_for_each_entry_safe(page, h, &discard, slab_list)
+ 		discard_slab(s, page);
+ }
+ 
+@@ -3993,7 +3993,7 @@ int __kmem_cache_shrink(struct kmem_cache *s)
+ 		 * Note that concurrent frees may occur while we hold the
+ 		 * list_lock. page->inuse here is the upper limit.
+ 		 */
+-		list_for_each_entry_safe(page, t, &n->partial, lru) {
++		list_for_each_entry_safe(page, t, &n->partial, slab_list) {
+ 			int free = page->objects - page->inuse;
+ 
+ 			/* Do not reread page->inuse */
+@@ -4003,10 +4003,10 @@ int __kmem_cache_shrink(struct kmem_cache *s)
+ 			BUG_ON(free <= 0);
+ 
+ 			if (free == page->objects) {
+-				list_move(&page->lru, &discard);
++				list_move(&page->slab_list, &discard);
+ 				n->nr_partial--;
+ 			} else if (free <= SHRINK_PROMOTE_MAX)
+-				list_move(&page->lru, promote + free - 1);
++				list_move(&page->slab_list, promote + free - 1);
+ 		}
+ 
+ 		/*
+@@ -4019,7 +4019,7 @@ int __kmem_cache_shrink(struct kmem_cache *s)
+ 		spin_unlock_irqrestore(&n->list_lock, flags);
+ 
+ 		/* Release empty slabs */
+-		list_for_each_entry_safe(page, t, &discard, lru)
++		list_for_each_entry_safe(page, t, &discard, slab_list)
+ 			discard_slab(s, page);
+ 
+ 		if (slabs_node(s, node))
+@@ -4211,11 +4211,11 @@ static struct kmem_cache * __init bootstrap(struct kmem_cache *static_cache)
+ 	for_each_kmem_cache_node(s, node, n) {
+ 		struct page *p;
+ 
+-		list_for_each_entry(p, &n->partial, lru)
++		list_for_each_entry(p, &n->partial, slab_list)
+ 			p->slab_cache = s;
+ 
+ #ifdef CONFIG_SLUB_DEBUG
+-		list_for_each_entry(p, &n->full, lru)
++		list_for_each_entry(p, &n->full, slab_list)
+ 			p->slab_cache = s;
+ #endif
+ 	}
+@@ -4432,7 +4432,7 @@ static int validate_slab_node(struct kmem_cache *s,
+ 
+ 	spin_lock_irqsave(&n->list_lock, flags);
+ 
+-	list_for_each_entry(page, &n->partial, lru) {
++	list_for_each_entry(page, &n->partial, slab_list) {
+ 		validate_slab_slab(s, page, map);
+ 		count++;
+ 	}
+@@ -4443,7 +4443,7 @@ static int validate_slab_node(struct kmem_cache *s,
+ 	if (!(s->flags & SLAB_STORE_USER))
+ 		goto out;
+ 
+-	list_for_each_entry(page, &n->full, lru) {
++	list_for_each_entry(page, &n->full, slab_list) {
+ 		validate_slab_slab(s, page, map);
+ 		count++;
+ 	}
+@@ -4639,9 +4639,9 @@ static int list_locations(struct kmem_cache *s, char *buf,
+ 			continue;
+ 
+ 		spin_lock_irqsave(&n->list_lock, flags);
+-		list_for_each_entry(page, &n->partial, lru)
++		list_for_each_entry(page, &n->partial, slab_list)
+ 			process_slab(&t, s, page, alloc, map);
+-		list_for_each_entry(page, &n->full, lru)
++		list_for_each_entry(page, &n->full, slab_list)
+ 			process_slab(&t, s, page, alloc, map);
+ 		spin_unlock_irqrestore(&n->list_lock, flags);
+ 	}
+-- 
+2.21.0
 
-> ---
->   drivers/mmc/host/cqhci.c | 2 ++
->   drivers/mmc/host/cqhci.h | 2 ++
->   2 files changed, 4 insertions(+)
->
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index a8af682a9182..d59cb0a51964 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -537,6 +537,8 @@ static void cqhci_prep_dcmd_desc(struct mmc_host *mmc,
->   		 CQHCI_ACT(0x5) |
->   		 CQHCI_CMD_INDEX(mrq->cmd->opcode) |
->   		 CQHCI_CMD_TIMING(timing) | CQHCI_RESP_TYPE(resp_type));
-> +	if (cq_host->ops->update_dcmd_desc)
-> +		cq_host->ops->update_dcmd_desc(mmc, mrq, &data);
->   	*task_desc |= data;
->   	desc = (u8 *)task_desc;
->   	pr_debug("%s: cqhci: dcmd: cmd: %d timing: %d resp: %d\n",
-> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
-> index 9e68286a07b4..8c8ec6f01c45 100644
-> --- a/drivers/mmc/host/cqhci.h
-> +++ b/drivers/mmc/host/cqhci.h
-> @@ -210,6 +210,8 @@ struct cqhci_host_ops {
->   	u32 (*read_l)(struct cqhci_host *host, int reg);
->   	void (*enable)(struct mmc_host *mmc);
->   	void (*disable)(struct mmc_host *mmc, bool recovery);
-> +	void (*update_dcmd_desc)(struct mmc_host *mmc, struct mmc_request *mrq,
-> +				 u64 *data);
->   };
->   
->   static inline void cqhci_writel(struct cqhci_host *host, u32 val, int reg)
