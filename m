@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08D8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E15BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735D32184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4523D218A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfCNWf1 (ORCPT
+        id S1728320AbfCNWfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:35:27 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:59435 "EHLO
+        Thu, 14 Mar 2019 18:35:30 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:33925 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728215AbfCNWfT (ORCPT
+        with ESMTP id S1728222AbfCNWfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:35:19 -0400
+        Thu, 14 Mar 2019 18:35:20 -0400
 Received: from orion.localdomain ([95.117.89.18]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MMWcT-1hMuVR0qhD-00JX7L; Thu, 14 Mar 2019 23:35:06 +0100
+ 1McYP5-1gUPEz1VCn-00cyuf; Thu, 14 Mar 2019 23:35:04 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
@@ -37,28 +37,28 @@ Cc:     gregkh@linuxfoundation.org, eric@anholt.net,
         s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 36/45] drivers: tty: serial: pic32_uart: use devm_* functions
-Date:   Thu, 14 Mar 2019 23:34:06 +0100
-Message-Id: <1552602855-26086-37-git-send-email-info@metux.net>
+Subject: [PATCH v2 34/45] drivers: tty: serial: sb1250-duart: use devm_* functions
+Date:   Thu, 14 Mar 2019 23:34:04 +0100
+Message-Id: <1552602855-26086-35-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
 References: <1552602855-26086-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:470VhaLpNC6lKxsvkwsuYrMW/TNf5OEECXD1f0Sbftri6x8ZrSB
- /Kps+C6NL9+/F2nl9xWr+/6JWiQsAGwxrb3GEj2aqNfH/38CZFmS4flrktATiwUi4M/rjev
- qSVUDYZCFAQj9Bvzey7VKBOwFhkD/hTiCCJcXorivOizFH8JN0RIHFGQSFhrKlNgvkQv5ii
- Q+GrPPjQjta3ydAQ+blNQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:D9c0qOR8ong=:juCLVtgDScU3i+htrRvVfW
- QeEgKi/DbwtBxOExSsZAXM+NjfGByaBXZIifSyOoiXRDncdTlGuiBnrYLloy2PBfJfK8xh/hy
- +p8Kx0KmLNfnS+cXkiaJrnDvMxPour0HREFaz1Dd/HrmXJG9wej1NPO1TfM1vRhdZf11pQJy1
- CGDCI1QbmzMK8F9ZJQmWSd1I9xu/W+SClRNYLbzVl//6ZMrxmE72ZXHVlITUXuVQQpalQDtBH
- VrHs+aDhYOgBo4W/8hzl3+7HNGH2WOzvEQgk9XezGNM4X/jbCfOH1toswng+9sOFLDHNZayng
- 1a7A7uJtvTELw/hYFrbAuRD1Uzrwok2TfkSI4K0d3ICsA+2x8x935rkilJ/fABlUEganBd8xL
- 09isMTlCwm8OQqc3ejl5D3RfpgorTbYvGlW6smSGNCu2qew3xCV+H//M62A9yWh0oxZE4vHRB
- fOEYwm2xVQvGJ9PDJLck3rvWKmGEYGi/gG8aS+fSGjZXJ4LMtXKY6OYtCMcq/w1KMi3fejy8v
- 6swY+x1CrSGZeLvsww2Ffc6Lx904IuYMgjDTtQcH2UNT2I/MhTau1hbZHkwFo3m408dTbD0Aa
- QUs6f04ot3yaPfGpEvmfyKUXYGSX2GqkAHcwvTR3P2z4OPWv843M8g5TWPk38sVC+cblcdrWC
- vvqcfBgEFAKmd/+cblnsE353y/FiFV9XBCJmijoaJt3sUzkkjJIbnyWg/9DI8wphMzAGbifFO
- 8F+2d1KTJPIRaJrCDAjLGHs6g+CpGFjqEMLU+g==
+X-Provags-ID: V03:K1:GivYaYpI5CFgJ/Y6XyM0cFoodaogwjyFq9nJQTf5KB4miOPPElm
+ TG7RnYiBDHHcGmQFX1YrCsFTVufVxUO2YXer2tyeeaFh1RQG/tiGlTQMuXcK926eQPH9QfT
+ 3bwHlNMp71kzHH3byvVqe08VFHmfl+1E2yRQY0rVg87iUp3J1p2cFhTfKh6Uaz5iQrssU6Z
+ UWLr47C8sq0+M/4O7eceQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IG7rlAKrUkw=:OCafeg8PsmhaowzMNjMiRF
+ cAk0TchRX0GICaLGSFjivMk0z9ja+1cepd8jRjMX3eckPCB4zHI862JkcnuJ/hsq8VLTlP+mc
+ khvslUxRYU0kQtCP/+Gbe6B4PDyqD/QA1zAYaz0jFy5ruHtyuyljbf2S/RxigB16bRR1CX6dE
+ qXm9vOF0h4dwpAAWywVo/GmSlGbE5/Yd5fL2kRUWfg0IcdOohXK5CrfNtNZcqH+thQhOXY7yU
+ /lNuvWCLmcfIxCWVcKp0uw2HjUrpS36H2FwF9yuqd3qLNeLK8bSdvHXW1vXGMKmn9DPIk/DlQ
+ KNPOR7hNDLVHXkyCPSLaaTWUEAdVgFKsQNnvoua/5UeK67zPZcct6ezghT7UEV+P7TPcGlTaC
+ IKVmWG60kIPrYOA6pfHXxNOnBuxIGrle+WPtHfaQYaayYZjRTTxttecrEsMPnA3nflydA60Gq
+ 5fuTr8vBxWgq/oT4CDF7qdirTwiWRNFPw9vTz6KVpqbSaChVapCmQuslnhsyPCQhC25Q0gtkn
+ 70MWUF5EpKfLsFh8O4CxEZfkiF3vYPiBTL+VtKrJMZB4b+rpXaXVCXQBTOYsPpJDnSA884aC9
+ pWHN8hQoW1VKvOvmAp+4HuEG2Tn8cJe7+KDjPaL7Z7YtT8znkuAtswxltJJ4WbZ/FTfMu5AY7
+ TnkoQ+icRvdZFkHRhKYhoJvIG9QfF7SmkaG9aG9kju9eaNTddpFiokMAieT6xGQgiNTiKBfPR
+ ST0FMWysfEHtCHRi7vEgJpMVHxfe8+NqHLw4KQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,45 +68,104 @@ Use the safer devm versions of memory mapping functions.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/tty/serial/pic32_uart.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/tty/serial/sb1250-duart.c | 42 +++++++++++++++++++++++++--------------
+ 1 file changed, 27 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/tty/serial/pic32_uart.c b/drivers/tty/serial/pic32_uart.c
-index 0bdf168..b4f0b29 100644
---- a/drivers/tty/serial/pic32_uart.c
-+++ b/drivers/tty/serial/pic32_uart.c
-@@ -614,15 +614,19 @@ static int pic32_uart_request_port(struct uart_port *port)
- 	if (unlikely(!res_mem))
- 		return -EINVAL;
+diff --git a/drivers/tty/serial/sb1250-duart.c b/drivers/tty/serial/sb1250-duart.c
+index 655961c..e77eef6 100644
+--- a/drivers/tty/serial/sb1250-duart.c
++++ b/drivers/tty/serial/sb1250-duart.c
+@@ -651,14 +651,18 @@ static void sbd_release_port(struct uart_port *uport)
+ 	struct sbd_port *sport = to_sport(uport);
+ 	struct sbd_duart *duart = sport->duart;
  
--	if (!request_mem_region(port->mapbase, resource_size(res_mem),
--				"pic32_uart_mem"))
-+	if (!devm_request_mem_region(port->dev,
-+				     port->mapbase,
-+				     resource_size(res_mem),
-+				     "pic32_uart_mem"))
- 		return -EBUSY;
+-	iounmap(sport->memctrl);
++	devm_iounmap(uport->dev, sport->memctrl);
+ 	sport->memctrl = NULL;
+-	iounmap(uport->membase);
++	devm_iounmap(uport->dev, uport->membase);
+ 	uport->membase = NULL;
  
- 	port->membase = devm_ioremap_nocache(port->dev, port->mapbase,
- 						resource_size(res_mem));
- 	if (!port->membase) {
- 		dev_err(port->dev, "Unable to map registers\n");
--		release_mem_region(port->mapbase, resource_size(res_mem));
-+		devm_release_mem_region(port->dev,
-+					port->mapbase,
-+					resource_size(res_mem));
+ 	if(refcount_dec_and_test(&duart->map_guard))
+-		release_mem_region(duart->mapctrl, DUART_CHANREG_SPACING);
+-	release_mem_region(uport->mapbase, DUART_CHANREG_SPACING);
++		devm_release_mem_region(uport->dev,
++					duart->mapctrl,
++					DUART_CHANREG_SPACING);
++	devm_release_mem_region(uport->dev,
++				uport->mapbase,
++				DUART_CHANREG_SPACING);
+ }
+ 
+ static int sbd_map_port(struct uart_port *uport)
+@@ -667,19 +671,21 @@ static int sbd_map_port(struct uart_port *uport)
+ 	struct sbd_duart *duart = sport->duart;
+ 
+ 	if (!uport->membase)
+-		uport->membase = ioremap_nocache(uport->mapbase,
+-						 DUART_CHANREG_SPACING);
++		uport->membase = devm_ioremap_nocache(uport->dev,
++						      uport->mapbase,
++						      DUART_CHANREG_SPACING);
+ 	if (!uport->membase) {
+ 		dev_err(uport->dev, "Cannot map MMIO (base)\n");
  		return -ENOMEM;
  	}
  
-@@ -641,7 +645,7 @@ static void pic32_uart_release_port(struct uart_port *port)
- 		return;
- 	res_size = resource_size(res_mem);
+ 	if (!sport->memctrl)
+-		sport->memctrl = ioremap_nocache(duart->mapctrl,
+-						 DUART_CHANREG_SPACING);
++		sport->memctrl = devm_ioremap_nocache(uport->dev,
++						      duart->mapctrl,
++						      DUART_CHANREG_SPACING);
+ 	if (!sport->memctrl) {
+ 		dev_err(uport->dev, "Cannot map MMIO (ctrl)\n");
+-		iounmap(uport->membase);
++		devm_iounmap(uport->dev, uport->membase);
+ 		uport->membase = NULL;
+ 		return -ENOMEM;
+ 	}
+@@ -693,15 +699,18 @@ static int sbd_request_port(struct uart_port *uport)
+ 	struct sbd_duart *duart = to_sport(uport)->duart;
+ 	int ret = 0;
  
--	release_mem_region(port->mapbase, res_size);
-+	devm_release_mem_region(port->dev, port->mapbase, res_size);
- }
- 
- /* serial core request to do any port required auto-configuration */
+-	if (!request_mem_region(uport->mapbase, DUART_CHANREG_SPACING,
++	if (!devm_request_mem_region(uport->dev,
++				uport->mapbase, DUART_CHANREG_SPACING,
+ 				"sb1250-duart")) {
+ 		printk(err);
+ 		return -EBUSY;
+ 	}
+ 	refcount_inc(&duart->map_guard);
+ 	if (refcount_read(&duart->map_guard) == 1) {
+-		if (!request_mem_region(duart->mapctrl, DUART_CHANREG_SPACING,
+-					"sb1250-duart")) {
++		if (!devm_request_mem_region(uport->dev,
++					     duart->mapctrl,
++					     DUART_CHANREG_SPACING,
++					     "sb1250-duart")) {
+ 			refcount_dec(&duart->map_guard);
+ 			printk(err);
+ 			ret = -EBUSY;
+@@ -711,12 +720,15 @@ static int sbd_request_port(struct uart_port *uport)
+ 		ret = sbd_map_port(uport);
+ 		if (ret) {
+ 			if (refcount_dec_and_test(&duart->map_guard))
+-				release_mem_region(duart->mapctrl,
+-						   DUART_CHANREG_SPACING);
++				devm_release_mem_region(uport->dev,
++							duart->mapctrl,
++							DUART_CHANREG_SPACING);
+ 		}
+ 	}
+ 	if (ret) {
+-		release_mem_region(uport->mapbase, DUART_CHANREG_SPACING);
++		devm_release_mem_region(uport->dev,
++					uport->mapbase,
++					DUART_CHANREG_SPACING);
+ 		return ret;
+ 	}
+ 	return 0;
 -- 
 1.9.1
 
