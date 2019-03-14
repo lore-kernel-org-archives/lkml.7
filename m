@@ -6,252 +6,192 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05885C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDA8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEFA921855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5448921855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfCNRBD (ORCPT
+        id S1727216AbfCNRB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 13:01:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51844 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726157AbfCNRBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 13:01:02 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2EGoX1O070054
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 13:01:01 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r7stguq3p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 13:01:00 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Thu, 14 Mar 2019 17:00:58 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Mar 2019 17:00:56 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2EH0sk027132024
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 Mar 2019 17:00:55 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DFF22A405F;
-        Thu, 14 Mar 2019 17:00:54 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8BDDDA4053;
-        Thu, 14 Mar 2019 17:00:54 +0000 (GMT)
-Received: from [9.101.4.34] (unknown [9.101.4.34])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Mar 2019 17:00:54 +0000 (GMT)
-Subject: Re: [PATCH 4/7] ocxl: Don't pass pci_dev around
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20190313041524.14644-1-alastair@au1.ibm.com>
- <20190313041524.14644-5-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Thu, 14 Mar 2019 18:00:54 +0100
+        Thu, 14 Mar 2019 13:01:26 -0400
+Received: from mx0.arrikto.com ([212.71.252.59]:34328 "EHLO mx0.arrikto.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfCNRB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 13:01:26 -0400
+Received: from troi.prod.arr (mail.arr [10.99.0.5])
+        by mx0.arrikto.com (Postfix) with ESMTP id 3CF50182004;
+        Thu, 14 Mar 2019 19:01:24 +0200 (EET)
+Received: from [10.89.50.3] (nivel.vpn.arr [10.89.50.3])
+        by troi.prod.arr (Postfix) with ESMTPSA id B4EB260;
+        Thu, 14 Mar 2019 19:01:23 +0200 (EET)
+Subject: Re: [dm-devel] [PATCH 1/3] list_bl: Add hlist_bl_add_before/behind
+ helpers
+To:     paulmck@linux.ibm.com
+Cc:     Mike Snitzer <snitzer@redhat.com>, linux-kernel@vger.kernel.org,
+        iliastsi@arrikto.com, hch@infradead.org, dm-devel@redhat.com,
+        mpatocka@redhat.com, agk@redhat.com
+References: <20181220180651.4879-1-ntsironis@arrikto.com>
+ <20181220180651.4879-2-ntsironis@arrikto.com>
+ <20190228213201.GB23527@redhat.com> <20190313234853.GA7797@linux.ibm.com>
+ <20190314003027.GE4202@redhat.com>
+ <f70ea4c9-658d-5770-be7f-a1a97bb67643@arrikto.com>
+ <20190314140750.GB4102@linux.ibm.com>
+From:   Nikos Tsironis <ntsironis@arrikto.com>
+Message-ID: <86a26792-03ad-0dc4-737e-8fd5a3a79fa8@arrikto.com>
+Date:   Thu, 14 Mar 2019 19:01:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190313041524.14644-5-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031417-0012-0000-0000-00000302AC76
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031417-0013-0000-0000-00002139D807
-Message-Id: <b081548c-588d-05d7-df00-5da457a76af8@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-14_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903140120
+In-Reply-To: <20190314140750.GB4102@linux.ibm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 13/03/2019 à 05:15, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On 3/14/19 4:07 PM, Paul E. McKenney wrote:
+> On Thu, Mar 14, 2019 at 03:28:23PM +0200, Nikos Tsironis wrote:
+>> On 3/14/19 2:30 AM, Mike Snitzer wrote:
+>>> On Wed, Mar 13 2019 at  7:48pm -0400,
+>>> Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+>>>
+>> Hi Paul,
+>>
+>> Thanks a lot for your feedback!
 > 
-> This data is already available in a struct
+> NP, and apologies for the delay.
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
-
-good idea
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-
-
->   drivers/misc/ocxl/core.c | 38 +++++++++++++++++++++-----------------
->   1 file changed, 21 insertions(+), 17 deletions(-)
+>>>> On Thu, Feb 28, 2019 at 04:32:02PM -0500, Mike Snitzer wrote:
+>>>>> On Thu, Dec 20 2018 at  1:06pm -0500,
+>>>>> Nikos Tsironis <ntsironis@arrikto.com> wrote:
+>>>>>
+>>>>>> Add hlist_bl_add_before/behind helpers to add an element before/after an
+>>>>>> existing element in a bl_list.
+>>>>>>
+>>>>>> Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
+>>>>>> Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
+>>>>>> ---
+>>>>>>  include/linux/list_bl.h | 27 +++++++++++++++++++++++++++
+>>>>>>  1 file changed, 27 insertions(+)
+>>>>>>
+>>>>>> diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
+>>>>>> index 3fc2cc57ba1b..2fd918e5fd48 100644
+>>>>>> --- a/include/linux/list_bl.h
+>>>>>> +++ b/include/linux/list_bl.h
+>>>>>> @@ -86,6 +86,33 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
+>>>>>>  	hlist_bl_set_first(h, n);
+>>>>>>  }
+>>>>>>  
+>>>>>> +static inline void hlist_bl_add_before(struct hlist_bl_node *n,
+>>>>>> +				       struct hlist_bl_node *next)
+>>>>>> +{
+>>>>>> +	struct hlist_bl_node **pprev = next->pprev;
+>>>>>> +
+>>>>>> +	n->pprev = pprev;
+>>>>>> +	n->next = next;
+>>>>>> +	next->pprev = &n->next;
+>>>>>> +
+>>>>>> +	/* pprev may be `first`, so be careful not to lose the lock bit */
+>>>>>> +	WRITE_ONCE(*pprev,
+>>>>>> +		   (struct hlist_bl_node *)
+>>>>>> +			((unsigned long)n |
+>>>>>> +			 ((unsigned long)*pprev & LIST_BL_LOCKMASK)));
+>>>>
+>>>> A nit, but use of uintptr_t shrinks things a bit:
+>>>>
+>>>> +		   (struct hlist_bl_node *)
+>>>> +			((uintptr_t)n | ((uintptr_t)*pprev & LIST_BL_LOCKMASK)));
+>>>>
+>>>> I am not too concerned about this, though.
+>>>
+>>> I'm fine with folding in your suggestion.
+>>
+>> Indeed, this looks better.
+>>
+>>>> The WRITE_ONCE() is to handle races with hlist_bl_empty() (which does contain
+>>>> the corresponding READ_ONCE()) correct?
+>>>
+>>> Correct.
+>>
+>> Yes that's correct.
+>>
+>>>>>> +}
+>>>>>> +
+>>>>>> +static inline void hlist_bl_add_behind(struct hlist_bl_node *n,
+>>>>>> +				       struct hlist_bl_node *prev)
+>>>>>> +{
+>>>>>> +	n->next = prev->next;
+>>>>>> +	n->pprev = &prev->next;
+>>>>>> +	WRITE_ONCE(prev->next, n);
+>>>>
+>>>> I don't see what this WRITE_ONCE() is interacting with.  The traversals
+>>>> use plain C-language reads, and hlist_bl_empty() can't get here.  All
+>>>> uses of hlist_bl_for_each_entry() invoke hlist_bl_lock() before starting
+>>>> the traversal, and hlist_bl_for_each_entry_safe() looks to be unused.
+>>>> (Perhaps it should be removed?  Or is there some anticipated use?)
+>>
+>> I am using hlist_bl_for_each_entry_safe() in this proposed patch for
+>> dm-snapshot: https://patchwork.kernel.org/patch/10835709/
 > 
-> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-> index b47cfda83e46..2fd0c700e8a0 100644
-> --- a/drivers/misc/ocxl/core.c
-> +++ b/drivers/misc/ocxl/core.c
-> @@ -66,10 +66,11 @@ static int set_afu_device(struct ocxl_afu *afu, const char *location)
->   	return rc;
->   }
->   
-> -static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
-> +static int assign_afu_actag(struct ocxl_afu *afu)
->   {
->   	struct ocxl_fn *fn = afu->fn;
->   	int actag_count, actag_offset;
-> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
->   
->   	/*
->   	 * if there were not enough actags for the function, each afu
-> @@ -79,16 +80,16 @@ static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
->   		fn->actag_enabled / fn->actag_supported;
->   	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
->   	if (actag_offset < 0) {
-> -		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
-> +		dev_err(&pci_dev->dev, "Can't allocate %d actags for AFU: %d\n",
->   			actag_count, actag_offset);
->   		return actag_offset;
->   	}
->   	afu->actag_base = fn->actag_base + actag_offset;
->   	afu->actag_enabled = actag_count;
->   
-> -	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
-> +	ocxl_config_set_afu_actag(pci_dev, afu->config.dvsec_afu_control_pos,
->   				afu->actag_base, afu->actag_enabled);
-> -	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
-> +	dev_dbg(&pci_dev->dev, "actag base=%d enabled=%d\n",
->   		afu->actag_base, afu->actag_enabled);
->   	return 0;
->   }
-> @@ -103,10 +104,11 @@ static void reclaim_afu_actag(struct ocxl_afu *afu)
->   	ocxl_actag_afu_free(afu->fn, start_offset, size);
->   }
->   
-> -static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
-> +static int assign_afu_pasid(struct ocxl_afu *afu)
->   {
->   	struct ocxl_fn *fn = afu->fn;
->   	int pasid_count, pasid_offset;
-> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
->   
->   	/*
->   	 * We only support the case where the function configuration
-> @@ -115,7 +117,7 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
->   	pasid_count = 1 << afu->config.pasid_supported_log;
->   	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
->   	if (pasid_offset < 0) {
-> -		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
-> +		dev_err(&pci_dev->dev, "Can't allocate %d PASIDs for AFU: %d\n",
->   			pasid_count, pasid_offset);
->   		return pasid_offset;
->   	}
-> @@ -123,10 +125,10 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
->   	afu->pasid_count = 0;
->   	afu->pasid_max = pasid_count;
->   
-> -	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
-> +	ocxl_config_set_afu_pasid(pci_dev, afu->config.dvsec_afu_control_pos,
->   				afu->pasid_base,
->   				afu->config.pasid_supported_log);
-> -	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
-> +	dev_dbg(&pci_dev->dev, "PASID base=%d, enabled=%d\n",
->   		afu->pasid_base, pasid_count);
->   	return 0;
->   }
-> @@ -172,9 +174,10 @@ static void release_fn_bar(struct ocxl_fn *fn, int bar)
->   	WARN_ON(fn->bar_used[idx] < 0);
->   }
->   
-> -static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
-> +static int map_mmio_areas(struct ocxl_afu *afu)
->   {
->   	int rc;
-> +	struct pci_dev *pci_dev = to_pci_dev(afu->fn->dev.parent);
->   
->   	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
->   	if (rc)
-> @@ -187,10 +190,10 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
->   	}
->   
->   	afu->global_mmio_start =
-> -		pci_resource_start(dev, afu->config.global_mmio_bar) +
-> +		pci_resource_start(pci_dev, afu->config.global_mmio_bar) +
->   		afu->config.global_mmio_offset;
->   	afu->pp_mmio_start =
-> -		pci_resource_start(dev, afu->config.pp_mmio_bar) +
-> +		pci_resource_start(pci_dev, afu->config.pp_mmio_bar) +
->   		afu->config.pp_mmio_offset;
->   
->   	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
-> @@ -198,7 +201,7 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
->   	if (!afu->global_mmio_ptr) {
->   		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
->   		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> -		dev_err(&dev->dev, "Error mapping global mmio area\n");
-> +		dev_err(&pci_dev->dev, "Error mapping global mmio area\n");
->   		return -ENOMEM;
->   	}
->   
-> @@ -234,17 +237,17 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
->   	if (rc)
->   		return rc;
->   
-> -	rc = assign_afu_actag(afu, dev);
-> +	rc = assign_afu_actag(afu);
->   	if (rc)
->   		return rc;
->   
-> -	rc = assign_afu_pasid(afu, dev);
-> +	rc = assign_afu_pasid(afu);
->   	if (rc) {
->   		reclaim_afu_actag(afu);
->   		return rc;
->   	}
->   
-> -	rc = map_mmio_areas(afu, dev);
-> +	rc = map_mmio_areas(afu);
->   	if (rc) {
->   		reclaim_afu_pasid(afu);
->   		reclaim_afu_actag(afu);
-> @@ -331,7 +334,7 @@ void remove_afu(struct ocxl_afu *afu)
->   	device_unregister(&afu->dev);
->   }
->   
-> -static struct ocxl_fn *alloc_function(struct pci_dev *dev)
-> +static struct ocxl_fn *alloc_function(void)
->   {
->   	struct ocxl_fn *fn;
->   
-> @@ -342,6 +345,7 @@ static struct ocxl_fn *alloc_function(struct pci_dev *dev)
->   	INIT_LIST_HEAD(&fn->afu_list);
->   	INIT_LIST_HEAD(&fn->pasid_list);
->   	INIT_LIST_HEAD(&fn->actag_list);
-> +
->   	return fn;
->   }
->   
-> @@ -491,7 +495,7 @@ struct ocxl_fn *init_function(struct pci_dev *dev)
->   	struct ocxl_fn *fn;
->   	int rc;
->   
-> -	fn = alloc_function(dev);
-> +	fn = alloc_function();
->   	if (!fn)
->   		return ERR_PTR(-ENOMEM);
->   
+> Probably should keep it, then.  ;-)
 > 
+>>>>
+>>>> I don't believe that the WRITE_ONCE() is needed.  What am I missing?
+>>>>
+>>>> Other than that, looks good.
+>>>>
+>>>> 							Thanx, Paul
+>>>>
+>>>
+>>> I'd imagine it was just born out of symmetry with hlist_bl_add_before()
+>>> and/or caution.  But let's see what Nikos has to say.
+>>
+>> I also don't believe that this WRITE_SAME() is needed. But, looking at
+>> hlist_add_behind() in include/linux/list.h, which, if I am not missing
+>> something, is used in the same way as hlist_bl_add_behind(), it also
+>> uses WRITE_ONCE() to update prev->next:
+>>
+>> static inline void hlist_add_behind(struct hlist_node *n,
+>> 				    struct hlist_node *prev)
+>> {
+>> 	n->next = prev->next;
+>> 	WRITE_ONCE(prev->next, n);
+>> 	n->pprev = &prev->next;
+>>
+>> 	if (n->next)
+>> 		n->next->pprev  = &n->next;
+>> }
+>>
+>> Could it be the case that the WRITE_ONCE() in hlist_add_behind() is also
+>> not needed? This WRITE_ONCE() was introduced by commit 1c97be677f72b3
+>> ("list: Use WRITE_ONCE() when adding to lists and hlists").
+> 
+> Looks like I have no one to blame but myself!
+> 
+> Would you like to remove that as part of your patch series?
 
+Yes, Of course. I will add an extra patch removing the WRITE_ONCE() from
+hlist_add_behind().
+
+Thanks,
+Nikos
+
+> 
+>> But, since I am not an expert in lockless programming, I opted to be on
+>> the safe side and followed the example of hlist_add_behind().
+>>
+>> That said, I will follow up with a new version of the patch removing the
+>> WRITE_ONCE() and using uintptr_t instead of unsigned long.
+> 
+> Sounds good!
+> 
+> 							Thanx, Paul
+> 
+> --
+> dm-devel mailing list
+> dm-devel@redhat.com
+> https://www.redhat.com/mailman/listinfo/dm-devel
+> 
