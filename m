@@ -2,165 +2,131 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C6BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F2BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D840721872
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IXODJ79V"
+	by mail.kernel.org (Postfix) with ESMTP id D8CA320811
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552578903;
+	bh=9MViBI/7U+ijEtdQopBnK4+pprgCBKwBC0w9f2JcJBs=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=QcGTs/8comxW+K1VdxlnGUTciFM6gkFhQW8S1g49+vzmBPTSx9WfjjpvfyAj+I9Ei
+	 vgByLbLti+dDLsdB8U6BRdyUv1HuXalc++X2ZnzDtDpvpvAUGo/PAtyn4xinzqj3Qg
+	 h3mOgnG7HyGdmUTNOYaqVbhcDusugP2ie9nOQ1V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfCNPy7 (ORCPT
+        id S1727826AbfCNPzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:54:59 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55134 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbfCNPyy (ORCPT
+        Thu, 14 Mar 2019 11:55:02 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37208 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbfCNPzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:54:54 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2EFskie116047;
-        Thu, 14 Mar 2019 10:54:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552578886;
-        bh=JuRJZcsL7dV1ONwDJpjUxO8QNMOl3XY3FrYYaCJUQiI=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=IXODJ79VZ6HaVXvBnTEDKsEVYyW/dpRkhbZKNz6X6wS4G/ZX4i/u7DWFAEgv1le0s
-         yp46hVVapc/PyZGYF7QFP16kH0Jq1UWQTbos6RMJRZHkvYqbUzTjo9JKZWi7kKfrxC
-         GwDeCGfEQUbg3MNODGXdTZsPAoI751N5SnNttWjU=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2EFskk1120281
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 Mar 2019 10:54:46 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 14
- Mar 2019 10:54:46 -0500
-Received: from dlep32.itg.ti.com (157.170.170.100) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Thu, 14 Mar 2019 10:54:46 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2EFsjKs004984;
-        Thu, 14 Mar 2019 10:54:45 -0500
-Date:   Thu, 14 Mar 2019 10:54:48 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-CC:     Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Jyri Sarha <jsarha@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [Patch 1/1] drm/atomic: integrate private objects with
- suspend/resume helpers
-Message-ID: <20190314155448.ea5wgfexnaeymdrm@ti.com>
-References: <20190314134445.19260-1-bparrot@ti.com>
- <20190314153129.GS3888@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190314153129.GS3888@intel.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 14 Mar 2019 11:55:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=mT5mK1CNPKvbZJvdJUcgtev/XZ45Ga6+qTbmebanZQo=; b=SCaINeCO3bro
+        N3GPPyWm2Vot82xA+4J7u8o5Lfg2+mobXsxbgH2Y8+ET2m2FVlNKjoZuIho7OR5g5n2WSnZQTrytA
+        VBb24yRldntGmoKqdlOEzJ4oPHZrZFVxzQ5rCs42rLLc7aa70zcanNAVjX2JSg/dyDOkOMX96+uYH
+        uuTTY=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h4Sh1-0002kZ-UB; Thu, 14 Mar 2019 15:54:51 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 7428D1126E64; Thu, 14 Mar 2019 15:54:51 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Applied "spi: work around clang bug in SPI_BPW_RANGE_MASK()" to the spi tree
+In-Reply-To:  <20190307155506.2993868-1-arnd@arndb.de>
+X-Patchwork-Hint: ignore
+Message-Id: <20190314155451.7428D1126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:51 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ville Syrjälä <ville.syrjala@linux.intel.com> wrote on Thu [2019-Mar-14 17:31:29 +0200]:
-> On Thu, Mar 14, 2019 at 08:44:45AM -0500, Benoit Parrot wrote:
-> > During a suspend cycle the atomic state is saved to be used during the
-> > restore cycle.
-> > 
-> > However the current state duplication logic does not duplicate private
-> > objects. This leads to state inconsistencies at resume time.
-> > 
-> > With private objects modeset lock now integrated, we can make sure that
-> > private object state are properly saved and restored.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/gpu/drm/drm_atomic_helper.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> > index 540a77a2ade9..b108021cc092 100644
-> > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > @@ -3189,6 +3189,7 @@ drm_atomic_helper_duplicate_state(struct drm_device *dev,
-> >  	struct drm_connector_list_iter conn_iter;
-> >  	struct drm_plane *plane;
-> >  	struct drm_crtc *crtc;
-> > +	struct drm_private_obj *privobj;
-> >  	int err = 0;
-> >  
-> >  	state = drm_atomic_state_alloc(dev);
-> > @@ -3218,6 +3219,16 @@ drm_atomic_helper_duplicate_state(struct drm_device *dev,
-> >  		}
-> >  	}
-> >  
-> > +	drm_for_each_privobj(privobj, dev) {
-> > +		struct drm_private_state *priv_state;
-> > +
-> > +		priv_state = drm_atomic_get_private_obj_state(state, privobj);
-> > +		if (IS_ERR(priv_state)) {
-> > +			err = PTR_ERR(priv_state);
-> > +			goto free;
-> > +		}
-> > +	}
-> > +
-> >  	drm_connector_list_iter_begin(dev, &conn_iter);
-> >  	drm_for_each_connector_iter(conn, &conn_iter) {
-> >  		struct drm_connector_state *conn_state;
-> > @@ -3325,12 +3336,17 @@ int drm_atomic_helper_commit_duplicated_state(struct drm_atomic_state *state,
-> >  	struct drm_connector_state *new_conn_state;
-> >  	struct drm_crtc *crtc;
-> >  	struct drm_crtc_state *new_crtc_state;
-> > +	struct drm_private_obj *privobj;
-> > +	struct drm_private_state *new_priv_state;
-> >  
-> >  	state->acquire_ctx = ctx;
-> >  
-> >  	for_each_new_plane_in_state(state, plane, new_plane_state, i)
-> >  		state->planes[i].old_state = plane->state;
-> >  
-> > +	for_each_new_private_obj_in_state(state, privobj, new_priv_state, i)
-> > +		state->private_objs[i].old_state = privobj->state;
-> > +
-> >  	for_each_new_crtc_in_state(state, crtc, new_crtc_state, i)
-> >  		state->crtcs[i].old_state = crtc->state;
-> 
-> Random order between crtc vs. plane vs. connector vs. priv is tickling
-> my ocd nerve a bit.
+The patch
 
-These loops are independent from each other.
-And even without this patch the order is different between
-drm_atomic_helper_duplicate_state() and
-drm_atomic_helper_commit_duplicated_state(). :)
+   spi: work around clang bug in SPI_BPW_RANGE_MASK()
 
-Benoit
+has been applied to the spi tree at
 
-> 
-> Otherwise looks sensible to me.
-> Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> 
-> >  
-> > -- 
-> > 2.17.1
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
-> -- 
-> Ville Syrjälä
-> Intel
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From eefffb42f6659c9510105f3e4ebf2a8499d56936 Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Thu, 7 Mar 2019 16:54:21 +0100
+Subject: [PATCH] spi: work around clang bug in SPI_BPW_RANGE_MASK()
+
+Clang-8 evaluates both sides of a ?: expression to check for
+valid arithmetic even in the side that is never taken. This
+results in a build warning:
+
+drivers/spi/spi-sh-msiof.c:1052:24: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+        .bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32),
+                              ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+Change the implementation to use the GENMASK() macro that does
+what we want here but does not have a problem with the shift
+count overflow.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ include/linux/spi/spi.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 662b336aa2e4..b27386450089 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -444,8 +444,7 @@ struct spi_controller {
+ 	/* bitmask of supported bits_per_word for transfers */
+ 	u32			bits_per_word_mask;
+ #define SPI_BPW_MASK(bits) BIT((bits) - 1)
+-#define SPI_BIT_MASK(bits) (((bits) == 32) ? ~0U : (BIT(bits) - 1))
+-#define SPI_BPW_RANGE_MASK(min, max) (SPI_BIT_MASK(max) - SPI_BIT_MASK(min - 1))
++#define SPI_BPW_RANGE_MASK(min, max) GENMASK((min) - 1, (max) - 1)
+ 
+ 	/* limits on transfer speed */
+ 	u32			min_speed_hz;
+-- 
+2.20.1
+
