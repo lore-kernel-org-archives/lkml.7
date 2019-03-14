@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCA2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF973C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D7020811
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D0720811
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578971;
-	bh=g/bydhW9A4mXmphbK0APWe84+T9K4ffWDqGvLU2rDds=;
+	s=default; t=1552578975;
+	bh=gfBLBOgd3rkssLOWLS4AldIYLJgeG+BJ3paH+ombBA8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=o8Baa0qX0kAzc5xTv1niVVFIHJXITB6kjVbZdOyA16tD7fjG7pPW87fFECXYicHt/
-	 2pLoduY4RiNQaK5m4LnGPB/7rr7cx5D2iUMAr1ePPgwf9w7HtIXsbqntJSSv+tFnNk
-	 Sh1DuvTMmMMyekKmuqUGqBTfDfMbZB3fRIuOTqU0=
+	b=AfST//DQndy8rcwUNEhWHi8t7CzKaPr1lLhr1qZdZbflZAgoubkg1xhi6CGkP+XRu
+	 G5lkI5s5nZOS+QF8fY1Xe7+xjvpVyYOFX4rG4dIUgQ87h/4nUU7gJJ5qUFyPHMonCY
+	 LI5+kNhw/cJoV+STrwPbH4G7g0s4lguoFV9I6B8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfCNP4J (ORCPT
+        id S1727883AbfCNP4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:56:09 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35678 "EHLO
+        Thu, 14 Mar 2019 11:56:14 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35608 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727465AbfCNPyL (ORCPT
+        with ESMTP id S1727420AbfCNPyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:54:11 -0400
+        Thu, 14 Mar 2019 11:54:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=tGuE7jnTC5eNBI5aYEdOVkMx/xPaEDEesDAc7Iz6eK8=; b=hc8qFQZP9QKm
-        En+kTq49a82MjqC+Np8GLT/8Gujun99NJmDHqsv5I7/p8n6Ahxxu4Afz+ogp5A8GyDUG9EzZ11/Xq
-        SW53nM0b+tcxZoQLz2OxHj9MDM44c2y3r7WRduI2+QcJFLfUcRSscc05leAOtH3U8xQWNVMiR3s8r
-        3vtKY=;
+        List-Archive; bh=NdGL8KOrKJe2hqkZlv8wZta21qCpcrxPXno/VI4WDCE=; b=RX5boDGxuP2j
+        CwlNl2b/C3we8+YpNZOPVLo2YdlZBJYpQlEfX0oyld8b61AlgGVexlfI5sUGc4ic3hy8ScfLYexZ8
+        EkkZIwRjqpU0WSkWRTYXapy/mlctIVWbHrwhcTauS736RRaoUd50/WScZsMxdi71AsIoOXXjKLCNi
+        sDfSo=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4SgL-0002iL-5Z; Thu, 14 Mar 2019 15:54:09 +0000
+        id 1h4SgH-0002ht-L5; Thu, 14 Mar 2019 15:54:05 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 9FB091126E64; Thu, 14 Mar 2019 15:54:08 +0000 (GMT)
+        id 4A8F01126E64; Thu, 14 Mar 2019 15:54:05 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: da903x: don't build with clang" to the regulator tree
+To:     Steve Twiss <stwiss.opensource@diasemi.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: wm831x isink: Fix notifier mutex lock warning" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155408.9FB091126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:54:08 +0000 (GMT)
+Message-Id: <20190314155405.4A8F01126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:05 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: da903x: don't build with clang
+   regulator: wm831x isink: Fix notifier mutex lock warning
 
 has been applied to the regulator tree at
 
@@ -84,57 +85,45 @@ to this mail.
 Thanks,
 Mark
 
-From 0077aaaeeb69b5dcfe15a398e38d71bf28c9505d Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 7 Mar 2019 11:26:02 +0100
-Subject: [PATCH] regulator: da903x: don't build with clang
+From f7a621728a6a23bfd2c6ac4d3e42e1303aefde0f Mon Sep 17 00:00:00 2001
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Date: Tue, 26 Feb 2019 15:51:28 +0000
+Subject: [PATCH] regulator: wm831x isink: Fix notifier mutex lock warning
 
-The da903x driver produces an annoying false-positive warning
-when built with clang:
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-drivers/regulator/da903x.c:395:2: error: division by zero is undefined [-Werror,-Wdivision-by-zero]
-        DA9030_LDO(13, 2100, 2100, 0, INVAL, 0, 0, RCTL11, 3), /* fixed @2.1V */
-        ^                          ~
-drivers/regulator/da903x.c:359:2: note: expanded from macro 'DA9030_LDO'
-        DA903x_LDO(DA9030, _id, min, max, step, vreg, shift, nbits, ereg, ebit)
-        ^                                 ~~~~
-drivers/regulator/da903x.c:320:39: note: expanded from macro 'DA903x_LDO'
-                .n_voltages = (step) ? ((max - min) / step + 1) : 1,    \
-                                                    ^ ~~~~
-drivers/regulator/da903x.c:415:2: error: division by zero is undefined [-Werror,-Wdivision-by-zero]
-        DA9034_LDO(5, 3100, 3100, 0, INVAL, 0, 0, OVER3, 7), /* fixed @3.1V */
-        ^                         ~
-drivers/regulator/da903x.c:356:2: note: expanded from macro 'DA9034_LDO'
-        DA903x_LDO(DA9034, _id, min, max, step, vreg, shift, nbits, ereg, ebit)
-        ^                                 ~~~~
-drivers/regulator/da903x.c:320:39: note: expanded from macro 'DA903x_LDO'
-                .n_voltages = (step) ? ((max - min) / step + 1) : 1,    \
-                                                    ^ ~~~~
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
 
-I already reported this as a bug in clang, but it may take a
-while to fix it. As I have not been able to come up with any
-reasonable workaround, I would just disable compilation here.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=38789
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Fixes: d4d6b722e780 ("regulator: Add WM831x ISINK support")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/wm831x-isink.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index b7f249ee5e68..6d2651cd9887 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -223,6 +223,7 @@ config REGULATOR_CPCAP
- config REGULATOR_DA903X
- 	tristate "Dialog Semiconductor DA9030/DA9034 regulators"
- 	depends on PMIC_DA903X
-+	depends on !CC_IS_CLANG # https://bugs.llvm.org/show_bug.cgi?id=38789
- 	help
- 	  Say y here to support the BUCKs and LDOs regulators found on
- 	  Dialog Semiconductor DA9030/DA9034 PMIC.
+diff --git a/drivers/regulator/wm831x-isink.c b/drivers/regulator/wm831x-isink.c
+index 6dd891d7eee3..11f351191dba 100644
+--- a/drivers/regulator/wm831x-isink.c
++++ b/drivers/regulator/wm831x-isink.c
+@@ -140,9 +140,11 @@ static irqreturn_t wm831x_isink_irq(int irq, void *data)
+ {
+ 	struct wm831x_isink *isink = data;
+ 
++	regulator_lock(isink->regulator);
+ 	regulator_notifier_call_chain(isink->regulator,
+ 				      REGULATOR_EVENT_OVER_CURRENT,
+ 				      NULL);
++	regulator_unlock(isink->regulator);
+ 
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.20.1
 
