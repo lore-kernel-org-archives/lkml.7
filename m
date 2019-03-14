@@ -2,112 +2,96 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD27C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F8C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A8C2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B3E2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:43:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="UN/J5P94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfCNXmq (ORCPT
+        id S1728100AbfCNXn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 19:42:46 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:50539 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726843AbfCNXmp (ORCPT
+        Thu, 14 Mar 2019 19:43:29 -0400
+Received: from mail-pf1-f177.google.com ([209.85.210.177]:46448 "EHLO
+        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727184AbfCNXn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 19:42:45 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-99.corp.google.com [104.133.0.99] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x2ENgU4n031164
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Mar 2019 19:42:31 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id B8B06420AA8; Thu, 14 Mar 2019 19:42:30 -0400 (EDT)
-Date:   Thu, 14 Mar 2019 19:42:30 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
-        linux-fscrypt@vger.kernel.org, jaegeuk@kernel.org,
-        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
-        amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, paullawrence@google.com
-Subject: Re: [PATCH 4/4] ubifs: Implement new mount option,
- fscrypt_key_required
-Message-ID: <20190314234230.GG6482@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
-        linux-fscrypt@vger.kernel.org, jaegeuk@kernel.org,
-        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
-        amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, paullawrence@google.com
-References: <CAJfpegvX4ANfso-Jn1zaB+m4Q_0eK9i-+MCJ+sTH5QzD3PZFMQ@mail.gmail.com>
- <20190314171559.27584-1-richard@nod.at>
- <20190314171559.27584-5-richard@nod.at>
- <1552605311.2571.6.camel@HansenPartnership.com>
+        Thu, 14 Mar 2019 19:43:29 -0400
+Received: by mail-pf1-f177.google.com with SMTP id s23so4903811pfe.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 16:43:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nIC83MkNNWtD+yghVyMZZOh3+WVU1WtBYDwPrahmWQc=;
+        b=UN/J5P94rJYL64qMojBByaatGIbMy5P0pJIgDrsjxMRJQqcr4bQ4IAt+i+xQyAbe78
+         VRMKZ5Q78V8rty2U22huxlDxR7T9MYdJLGFYu/W5wH6aFvb37U9r6zaEkrJlDcg2dxzN
+         MpHJ9qaQ+LsF/gAFieOK2LdQ6H+mU79fRg1BvjtZ6EP1XaMV0LDertFkUqO3NacKOfh5
+         AqLIXjsTmxMFQROdeEJXF6gPuXhBv9ci3/kobntL/w7nwz3eG4W8BaWIgRg3ZQGfUfcV
+         O3/m8Ln0t7kNdA4c74WGtXMw+juGDLy3PFJuZNAV//RoQSEt/lT23y+fYnqC0SRZJsU8
+         gEQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nIC83MkNNWtD+yghVyMZZOh3+WVU1WtBYDwPrahmWQc=;
+        b=qf/4r5a3Pb+ZobkzG3/nmyAuAnP9M/DdXWWQpCvpSIiCb2qNXJOXBAQLsVklGuc1uS
+         gyZdR/ZbmaxYMvOyu/9xmQWIyygh60+yN+sShCoibMm+MnaXbaj0Q7SyjLw/Huyz0nEQ
+         J7Z2kYGuBb0w6NRnOkUu9ovbQqlICUERRoNMwi6QTxV+jmiNU4kP/tZwrlEUzAgJ5zsk
+         IDu7ikWI/SCsyBr0Y7uims7x9GWUr8p4CZMwSIMw1BMlg7G/r4ButdSE+Zpg9JviFkM1
+         7JgH5hz3WaGESLpKllvFkr+/xE62GhyeBshLNQPLBWAEUPAVCDawwLtPE1a3zBMDJbkQ
+         HkyQ==
+X-Gm-Message-State: APjAAAW5aJ3s/uq9Yc3lCN6NweAVom6Di/CZWsXrTP/fBlTrH0+hnCbn
+        hH3OynhEDkfNNXwpYcMYYZb3OQ/IxikyzQ==
+X-Google-Smtp-Source: APXvYqwKkgIOmg/D28qaZrTVrMOtVC2oJFXGukQ5XnTC2ekOmHwMnlkEdg1Q//8kPWzvwc/AWFSXpg==
+X-Received: by 2002:a63:6a48:: with SMTP id f69mr466207pgc.7.1552607008767;
+        Thu, 14 Mar 2019 16:43:28 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id n75sm289187pfb.39.2019.03.14.16.43.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 16:43:27 -0700 (PDT)
+Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        linux-block <linux-block@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
+        linux-parport@lists.infradead.org
+References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
+ <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
+ <e2a66da2-5433-5b42-1ebe-9f1c135b5471@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <59cb035e-6880-de5a-33c5-d4db6ed910f4@kernel.dk>
+Date:   Thu, 14 Mar 2019 17:43:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552605311.2571.6.camel@HansenPartnership.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e2a66da2-5433-5b42-1ebe-9f1c135b5471@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 04:15:11PM -0700, James Bottomley wrote:
-> On Thu, 2019-03-14 at 18:15 +0100, Richard Weinberger wrote:
-> > Usually fscrypt allows limited access to encrypted files even
-> > if no key is available.
-> > Encrypted filenames are shown and based on this names users
-> > can unlink and move files.
+On 3/13/19 5:09 PM, Randy Dunlap wrote:
+> On 3/11/19 6:34 PM, Randy Dunlap wrote:
+>> On 3/11/19 6:25 PM, Randy Dunlap wrote:
+>>> [Has this already been addressed/fixed?]>>
+>>
+>> Same bug occurs with paride/pcd.c driver.
 > 
-> Shouldn't they be able to read/write and create as well (all with the
-> ciphertext name and contents, of course) ... otherwise how does backup
-> of encrypted files by admin without the key ever work?
+> This still happens (in blk-mq) in v5.0-11053-gebc551f2b8f9 of Mar. 12, 2019,
+> around 4pm PT.  [caused by paride: pf.c and pcd.c)
 
-That's not currently supported.  Michael Halcrow and I worked out some
-designs on how to do this, and I even had some prototype patches, but
-it's really, really, messy, and requires a lot of complex machinations
-in userspace on the save *and* restore, since there's a lot of crypto
-metadata that has to be saved, and you have to handle backing up the
-directory per-file keys, and restoring them when you recreate the
-directory on a restore, etc.
+I'll take a look at this, been busy with other stuff. How are you
+reproducing this? I'm assuming you don't actually have any hardware :-)
 
-The simpler approach would have allowed backup of encrypted files
-without the key, but would require the user's key to do the restore,
-and if we ever actually tried to get this feature supported, that's
-the approach I'd suggest.
+-- 
+Jens Axboe
 
-
-The fundamental reason why we never went did anything with this was
-that the original use case of fscrypt was for Chrome OS, where the
-original design premise was that you don't need to do backups, since
-everything is in the cloud.  A video from 2010:
-
-	https://www.youtube.com/watch?v=lm-Vnx58UYo
-
-And with Android, backups happen automatically while you have the
-encryption key.
-
-There was talk about using fscrypt for Ubuntu desktops as an ecryptfs
-replacement, and in that case, we would have use case that would have
-required backups of a shared desktop where you don't have all of the
-encryption keys for all of the users.  Maybe someday as a Google
-Summer of Code project or maybe if some potential corporate user of
-fscrypt would be willing to fund the necessary engineering work?
-
-But again, I'll repeat this because it's so important: In the vast
-majority of cases, including single-user laptops, desktops, etc., the
-real right answer is dm-crypt and *not* fscrypt.  Especially since
-time-sharing systems are *so* 1980's.  :-)
-
-So I don't use fscrypt on my upstream development laptop (except for
-testing purposes) because it's simply not the right tool for the job.
-
-		      	 	    - Ted
