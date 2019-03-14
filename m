@@ -2,126 +2,221 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C46C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11964C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C273921852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:03:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgEO9Va9"
+	by mail.kernel.org (Postfix) with ESMTP id CCF3E21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 08:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552550727;
+	bh=ejV0sZ9Dhw8vIxCoupw0ujSC9ZdU36/s7LS8llPnF1g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WFxqKjqQa/mTrquDkLqGo6v5gBsVuP29ye6icQuLq9D02+ngf4WjuZUqoyRVf8va+
+	 otzGjs2rstTPg646OdJgVjXOrnJ65sQMTKxC4YldgUouNuD+GRanxeeBVl1n6NITyG
+	 qxFMV62jK2MqmcMn1JQuH0PfVgo5a4oO+2pzcSg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfCNIDe (ORCPT
+        id S1727092AbfCNIF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 04:03:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40199 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfCNIDc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 04:03:32 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u9so3439160pgo.7;
-        Thu, 14 Mar 2019 01:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D08xpENjvwwapHL2xkx7NbHxXgA5o6HYh4aCvs0ptjc=;
-        b=VgEO9Va9g75+SKCnkC2oDfheOYuy86ZwpAFofVH90SiN8FYu9u/m587pRA4R2mT4cX
-         9nA3hw6/3pjAOcRN1jzIx1tmPCxnfV5z4Xvd8lD3NSyIpSlEEqPt8xu8TFm7cLvls245
-         akOnLrPbzvYNmJj5peO0mCG73YgJBdeFSUhd2ld60sBwdxoCc/gflqmfNcTsourFs3+Q
-         uiYlJ6jfsUnIVLBdTmy+66AnDip0ASsaUd3pp4L50mFlE380YzzsbTG/sRcKoVLlb553
-         UBx+H9jtP0+WMOYFPvNw7AleaUW3ZT0gQ5PTSGGYm5IgvoG4D/PoqDUs5NjfpHAqDOuv
-         ccDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D08xpENjvwwapHL2xkx7NbHxXgA5o6HYh4aCvs0ptjc=;
-        b=Xi5L5Z670pZz1f1mMbhUDU0/wz0TYh2xVNIbxp3tsEUhJE4OHMFwKuXCKTVn+eccgN
-         tAtlfanN+UnBM42lhBOJ7D4IoUdAb6Q/wmcYHEMF3XSHPLLZ0sTOmNRWLBi+vjyQIyIJ
-         IJH0ainJegTZ9OcntoMZtyyfwHS1oc13Rb4wrPFqdbgUKRvbR37y/qIrCm0iVlNJ7B2b
-         WESG/+cuhSsEcCcCgVQCCiS0hMSlLNqFZWPVftudUOavGPlcspzM13ODfaGF1IFPfY2H
-         uoOl/ZiYOL1ogv4B6TxfCY1DKvf0CTu1Q+TCFpaYS3WFvDJomOLsvkuTbQWgllx6VZTy
-         6yFw==
-X-Gm-Message-State: APjAAAWHpQfvp+7xfzneL9YT/jolLv+8LG2jGTBvUPCB9KJ+CkhO9Kfa
-        GzlxPIQOdMhOqVa88dmqG3fIufPQ1bOqGKV8OCM=
-X-Google-Smtp-Source: APXvYqx+3eNuyj38X0tvmcOBieGtbfAm515zdYmDVqlTPkEPhLoASXiX8eLC1nOBVTLGTtSWO3IZTc4ny11cpPtxVok=
-X-Received: by 2002:a17:902:1744:: with SMTP id i62mr49519524pli.24.1552550611032;
- Thu, 14 Mar 2019 01:03:31 -0700 (PDT)
+        Thu, 14 Mar 2019 04:05:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47360 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726292AbfCNIFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 04:05:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D970EACC1;
+        Thu, 14 Mar 2019 08:05:23 +0000 (UTC)
+Date:   Thu, 14 Mar 2019 09:05:22 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, osalvador@suse.de, vbabka@suse.cz,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/hotplug: fix offline undo_isolate_page_range()
+Message-ID: <20190314080522.GC7473@dhcp22.suse.cz>
+References: <20190313143133.46200-1-cai@lca.pw>
 MIME-Version: 1.0
-References: <20190314061716.19892-1-sergey.senozhatsky@gmail.com>
- <CAH2r5msYG4H19GK1Fmnqb1dNCcp2qahULc_t4v9qdJ=OOZmGXg@mail.gmail.com>
- <CAH2r5msCs5ks3FUi_GhV2REsUR8t2h1=ybgLS6FyBEyka7Qb9g@mail.gmail.com>
- <20190314071245.GA2001@jagdpanzerIV> <CAH2r5ms3sdFx864M4se0V1eCAj_x8_3xyyRxoxqS52_UQNNjaA@mail.gmail.com>
- <20190314073954.GA5272@jagdpanzerIV>
-In-Reply-To: <20190314073954.GA5272@jagdpanzerIV>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 14 Mar 2019 03:03:18 -0500
-Message-ID: <CAH2r5msU25CMDfTON2fSTpg5tmt7O_2sguFDL96b=vys5u+ViQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cifs: remove unused status severity defines
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313143133.46200-1-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am fine with taking a patch to get rid of __constant_cpu_to_XXX
-(and converting to the same cpu_to_XXX with the "__constant")  in
-fs/cifs  (assuming that that is still recommended).
+On Wed 13-03-19 10:31:33, Qian Cai wrote:
+> The commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
+> memory to zones until online") introduced move_pfn_range_to_zone() which
+> calls memmap_init_zone() during onlining a memory block.
+> memmap_init_zone() will reset pagetype flags and makes migrate type to
+> be MOVABLE.
+> 
+> However, in __offline_pages(), it also call undo_isolate_page_range()
+> after offline_isolated_pages() to do the same thing. Due to
+> the commit 2ce13640b3f4 ("mm: __first_valid_page skip over offline
+> pages") changed __first_valid_page() to skip offline pages,
+> undo_isolate_page_range() here just waste CPU cycles looping around the
+> offlining PFN range while doing nothing, because __first_valid_page()
+> will return NULL as offline_isolated_pages() has already marked all
+> memory sections within the pfn range as offline via
+> offline_mem_sections().
+> 
+> Also, after calling the "useless" undo_isolate_page_range() here, it
+> reaches the point of no returning by notifying MEM_OFFLINE. Those pages
+> will be marked as MIGRATE_MOVABLE again once onlining. The only thing
+> left to do is to decrease the number of isolated pageblocks zone
+> counter which would make some paths of the page allocation slower that
+> the above commit introduced. A memory block is usually at most 1GiB in
+> size, so an "int" should be enough to represent the number of pageblocks
+> in a block. Fix an incorrect comment along the way.
+> 
+> Fixes: 2ce13640b3f4 ("mm: __first_valid_page skip over offline pages")
 
-On Thu, Mar 14, 2019 at 2:39 AM Sergey Senozhatsky
-<sergey.senozhatsky.work@gmail.com> wrote:
->
-> On (03/14/19 02:19), Steve French wrote:
-> > All of those uses of __constant_cpu_to_le32 apparently (at least
-> > according to checkpatch) should be changed (someday) to cpu_to_le32
-> > but I didn't research why the change from __constant_cpu_to_le32
-> > --->   cpu_to_le32
->
-> Probably historic reasons.
->
-> Looking at linux 2.4.21
->
-> /*
->  * Allow constant folding
->  */
-> #if defined(__GNUC__) && (__GNUC__ >= 2) && defined(__OPTIMIZE__)
-> #  define __swahw32(x) \
-> (__builtin_constant_p((__u32)(x)) ? \
->  ___swahw32((x)) : \
->  __fswahw32((x)))
->
->
-> My assumption would be that __GNUC__ < 2 did no support
-> __builtin_constant_p?
->
->
-> > If it has benefit - and checkpatch is right (it warned about
-> > __constant_cpu_to_le32 being no longer preferred) ... perhaps would be
-> > worth a followup patch to clean the rest of them up?   If you have any
-> > context on why kernel code has moved away from using the older format
-> > of __constant_cpu_to_.... would be useful to know if any benefit to
-> > the change
->
-> Right, that's what I'm going to do - send out patches and update the rest
-> of __constant_cpu_to_XX users; so, eventually, __constant_cpu_to_XX
-> can be removed.
->
->         -ss
+Cc: stable # 4.13+
 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
+Yes, this looks good.
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+I would just ask you to add a return value of start_isolate_page_range documentation.
+
+Thanks!
+> ---
+> 
+> v2: return the nubmer of isolated pageblocks in start_isolate_page_range() per
+>     Oscar; take the zone lock when undoing zone->nr_isolate_pageblock per
+>     Michal.
+> 
+>  mm/memory_hotplug.c | 17 +++++++++++++----
+>  mm/page_alloc.c     |  2 +-
+>  mm/page_isolation.c | 16 ++++++++++------
+>  mm/sparse.c         |  2 +-
+>  4 files changed, 25 insertions(+), 12 deletions(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index cd23c081924d..8ffe844766da 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1580,7 +1580,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  {
+>  	unsigned long pfn, nr_pages;
+>  	long offlined_pages;
+> -	int ret, node;
+> +	int ret, node, count;
+>  	unsigned long flags;
+>  	unsigned long valid_start, valid_end;
+>  	struct zone *zone;
+> @@ -1606,10 +1606,11 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  	ret = start_isolate_page_range(start_pfn, end_pfn,
+>  				       MIGRATE_MOVABLE,
+>  				       SKIP_HWPOISON | REPORT_FAILURE);
+> -	if (ret) {
+> +	if (ret < 0) {
+>  		reason = "failure to isolate range";
+>  		goto failed_removal;
+>  	}
+> +	count = ret;
+>  
+>  	arg.start_pfn = start_pfn;
+>  	arg.nr_pages = nr_pages;
+> @@ -1661,8 +1662,16 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  	/* Ok, all of our target is isolated.
+>  	   We cannot do rollback at this point. */
+>  	offline_isolated_pages(start_pfn, end_pfn);
+> -	/* reset pagetype flags and makes migrate type to be MOVABLE */
+> -	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
+> +
+> +	/*
+> +	 * Onlining will reset pagetype flags and makes migrate type
+> +	 * MOVABLE, so just need to decrease the number of isolated
+> +	 * pageblocks zone counter here.
+> +	 */
+> +	spin_lock_irqsave(&zone->lock, flags);
+> +	zone->nr_isolate_pageblock -= count;
+> +	spin_unlock_irqrestore(&zone->lock, flags);
+> +
+>  	/* removal success */
+>  	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
+>  	zone->present_pages -= offlined_pages;
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 03fcf73d47da..d96ca5bc555b 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8233,7 +8233,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
+>  
+>  	ret = start_isolate_page_range(pfn_max_align_down(start),
+>  				       pfn_max_align_up(end), migratetype, 0);
+> -	if (ret)
+> +	if (ret < 0)
+>  		return ret;
+>  
+>  	/*
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index ce323e56b34d..bf67b63227ca 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -172,7 +172,8 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
+>   * future will not be allocated again.
+>   *
+>   * start_pfn/end_pfn must be aligned to pageblock_order.
+> - * Return 0 on success and -EBUSY if any part of range cannot be isolated.
+> + * Return the number of isolated pageblocks on success and -EBUSY if any part of
+> + * range cannot be isolated.
+>   *
+>   * There is no high level synchronization mechanism that prevents two threads
+>   * from trying to isolate overlapping ranges.  If this happens, one thread
+> @@ -188,6 +189,7 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+>  	unsigned long pfn;
+>  	unsigned long undo_pfn;
+>  	struct page *page;
+> +	int count = 0;
+>  
+>  	BUG_ON(!IS_ALIGNED(start_pfn, pageblock_nr_pages));
+>  	BUG_ON(!IS_ALIGNED(end_pfn, pageblock_nr_pages));
+> @@ -196,13 +198,15 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+>  	     pfn < end_pfn;
+>  	     pfn += pageblock_nr_pages) {
+>  		page = __first_valid_page(pfn, pageblock_nr_pages);
+> -		if (page &&
+> -		    set_migratetype_isolate(page, migratetype, flags)) {
+> -			undo_pfn = pfn;
+> -			goto undo;
+> +		if (page) {
+> +			if (set_migratetype_isolate(page, migratetype, flags)) {
+> +				undo_pfn = pfn;
+> +				goto undo;
+> +			}
+> +			count++;
+>  		}
+>  	}
+> -	return 0;
+> +	return count;
+>  undo:
+>  	for (pfn = start_pfn;
+>  	     pfn < undo_pfn;
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 69904aa6165b..56e057c432f9 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -567,7 +567,7 @@ void online_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTREMOVE
+> -/* Mark all memory sections within the pfn range as online */
+> +/* Mark all memory sections within the pfn range as offline */
+>  void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+>  {
+>  	unsigned long pfn;
+> -- 
+> 2.17.2 (Apple Git-113)
 
 -- 
-Thanks,
-
-Steve
+Michal Hocko
+SUSE Labs
