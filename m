@@ -2,181 +2,267 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228E2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62246C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E058D21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1871A21874
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="lhTZClfh"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iylZzi+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfCNRpE (ORCPT
+        id S1727159AbfCNRrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 13:45:04 -0400
-Received: from mail-eopbgr770121.outbound.protection.outlook.com ([40.107.77.121]:7552
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727413AbfCNRpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 13:45:04 -0400
+        Thu, 14 Mar 2019 13:47:40 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35113 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfCNRrj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 13:47:39 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h6so4891257lfc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 10:47:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XgOdmU3bcjakni9K4UNutpjAm3DVWPTAkT5CO5Wc/ws=;
- b=lhTZClfhmo+/wzF5QJNkDefiggb1OHIcjyTPwFzWhRiQz+LQrpgafZ6SusV2T9gG33djTTU1QehYqJefJHanBwWKnbGBy4miiBj7DWqf4EoCoi2QvL009046q/F7kJTX4h69f8JwULE0qn/6EUHI0RoX1+noowonVYINDrHRB/I=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1565.namprd22.prod.outlook.com (10.172.63.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Thu, 14 Mar 2019 17:45:00 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b8d4:8f0d:d6d1:4018]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b8d4:8f0d:d6d1:4018%3]) with mapi id 15.20.1709.011; Thu, 14 Mar 2019
- 17:45:00 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>, Jan Kara <jack@suse.cz>,
-        "kbuild-all@01.org" <kbuild-all@01.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        James Hogan <jhogan@kernel.org>
-Subject: Re: fs/notify/fanotify/fanotify.c:198:2: note: in expansion of macro
- 'pr_warn_ratelimited'
-Thread-Topic: fs/notify/fanotify/fanotify.c:198:2: note: in expansion of macro
- 'pr_warn_ratelimited'
-Thread-Index: AQHU2kE9TNc9Xz/Ru02GAeQ2iPZMrqYLBsAAgAAKToCAAB/LAIAAHTuAgAAYs4A=
-Date:   Thu, 14 Mar 2019 17:45:00 +0000
-Message-ID: <20190314174458.ncy47p6ybwc5cgg6@pburton-laptop>
-References: <201903140234.4FpTWdW3%lkp@intel.com>
- <20190314083758.GA16658@quack2.suse.cz>
- <CAOQ4uxhZH9=U63J1_bVrMbNO-Quy-8S300Qi6VmZxvKwYCogQQ@mail.gmail.com>
- <20190314123811.GH16658@quack2.suse.cz>
- <20190314143158.GC27249@linux-mips.org>
- <CAOQ4uxiEkczB7PNCXegFC-eYb9zAGaio_o=OgHAJHFd7eavBxA@mail.gmail.com>
-In-Reply-To: <CAOQ4uxiEkczB7PNCXegFC-eYb9zAGaio_o=OgHAJHFd7eavBxA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR08CA0059.namprd08.prod.outlook.com
- (2603:10b6:a03:117::36) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [67.207.99.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c4b5f40d-8316-49e7-e21b-08d6a8a4c7d1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR2201MB1565;
-x-ms-traffictypediagnostic: MWHPR2201MB1565:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <MWHPR2201MB15657B12E340B54634A4C315C14B0@MWHPR2201MB1565.namprd22.prod.outlook.com>
-x-forefront-prvs: 09760A0505
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(39850400004)(396003)(376002)(136003)(346002)(366004)(189003)(199004)(99286004)(25786009)(478600001)(81166006)(8676002)(53936002)(14454004)(4326008)(66066001)(52116002)(68736007)(81156014)(6506007)(6306002)(386003)(6246003)(76176011)(1076003)(9686003)(6512007)(1411001)(5660300002)(71190400001)(6916009)(71200400001)(26005)(102836004)(44832011)(106356001)(316002)(93886005)(97736004)(7736002)(105586002)(486006)(53546011)(305945005)(33716001)(54906003)(8936002)(966005)(6436002)(11346002)(256004)(14444005)(3846002)(58126008)(229853002)(2906002)(446003)(6116002)(476003)(42882007)(186003)(6486002)(6606295002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1565;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 464bcoS57sCl4QG8MTqxrlpFf5eIKFg/UQB6w8IKHfRoEgo8oQTvGi/JpfHeiYo7yZyxq8qOhGliHB07k8boNfurS7Py4K4ynwBXpyZf084QZiZObpKioPm6NBdHjjyEbyJLfNbFiKG7JV62o9H135H/OhdYIFxr52gft4uSnCbwQwEucJeSmQ8wXKaXPcHad1xG7YYlsaoLGFOduU8YvQ/YFWQnE03a4sDOhHE+9IqvwBDdQT4xv4OKMaO8j9ie/ohDoixft741RyxKgaJ7iL1z3Nl3IDasnj3tWioNUhMUpQ24PaAJS1bS5YvT/t1d2JTZp60vGrJkwmLHeJSksHFZiYdrw7G0THje8E+ZZ3l+JgLhDdkLCqlmhnLXVXZ3LQER0YqZm3VWf0mFxY9stUOrQlzk58F573umykva3Vw=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <71CCCE8217C4A74EAF907C5A7E6A7264@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gQYMLIgVmxQldUr4kxOlYx1VLacMHWwXJZip9LpPVrk=;
+        b=iylZzi+8eAfMi1yoAx76QVqhI6nJFaPp2w8RW26JEUv0mYEAZA8Q/n8R9390ofLy8J
+         680tRWJk5W0QGtfi2Or/5ZT9PNwA1ZdJNVb/fMXRuuPSknaxs/GKH5YwedvdmQXma0Ah
+         JcMsr3W1yBeVgwz6nYubzDMN9n7gebqxzJdEQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gQYMLIgVmxQldUr4kxOlYx1VLacMHWwXJZip9LpPVrk=;
+        b=sQyKDxx1UxVL8p9yO0+zePTLpXNJea4ANNv0uG6bdX7N3MHYK63Vc9W9g0U4OaHHG4
+         jxSwZYAX0y5WGEYC6dlkLsN00Cy0QywSFsH9/VPk0qWcLgTE+Ih3SRF+ZhaQTrbIraff
+         /rTbOUq+p9C+WC98ZaFlPn6M4MTcWPkOjB3HrCGosC8WU5k//33STsbBSmPohwgvkgUY
+         elIyyJLaKBUT+bHOIethL9EXtogmjZpX/DJ0eu85/ur1PjgDGxFtOUKz0ijfrBkCCt6D
+         o9zujcbV15ip7+dPGI+XU8HYmjVzpR/hqCbskZQ6HsRG8sYf19PuXn7vOG2wBUL+oQ/r
+         cy4w==
+X-Gm-Message-State: APjAAAVGOsRFZx3REHOG+JE0lvp7rAUS49Pf8bpN3tVp4QmD03csQER6
+        Rp56CT2Yog3qvOok47Tk+IJ3yqwfgcKMwJffUJMTEw==
+X-Google-Smtp-Source: APXvYqzj3H5LXBJMFL3NSv0Ut/9sVgD2+BPFP2JSpI5TDzO8vVnOdbvXIP0EDmouupRx9rtS7LeMK8zJ040fzJKp0L0=
+X-Received: by 2002:a19:8c1e:: with SMTP id o30mr17748637lfd.137.1552585656532;
+ Thu, 14 Mar 2019 10:47:36 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4b5f40d-8316-49e7-e21b-08d6a8a4c7d1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2019 17:45:00.2389
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1565
+References: <20190310203403.27915-1-sultan@kerneltoast.com>
+ <20190311174320.GC5721@dhcp22.suse.cz> <20190311175800.GA5522@sultan-box.localdomain>
+ <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
+ <20190311204626.GA3119@sultan-box.localdomain> <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
+ <20190312080532.GE5721@dhcp22.suse.cz> <20190312163741.GA2762@sultan-box.localdomain>
+ <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
+In-Reply-To: <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Thu, 14 Mar 2019 10:47:17 -0700
+Message-ID: <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+To:     Tim Murray <timmurray@google.com>
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amir,
+Hi Tim,
+Thanks for the detailed and excellent write-up. It will serve as a
+good future reference for low memory killer requirements. I made some
+comments below on the "how to kill" part.
 
-On Thu, Mar 14, 2019 at 06:16:35PM +0200, Amir Goldstein wrote:
-> On Thu, Mar 14, 2019 at 4:34 PM Ralf Baechle <ralf@linux-mips.org> wrote:
-> > On Thu, Mar 14, 2019 at 01:38:11PM +0100, Jan Kara wrote:
-> > > On Thu 14-03-19 14:01:18, Amir Goldstein wrote:
-> > > > On Thu, Mar 14, 2019 at 10:37 AM Jan Kara <jack@suse.cz> wrote:
-> > > > > AFAICS this is the known problem with weird mips definitions of
-> > > > > __kernel_fsid_t which uses long whereas all other architectures u=
-se int,
-> > > > > right? Seeing that mips can actually have 8-byte longs, I guess t=
-his
-> > > > > bogosity is just wired in the kernel API and we cannot easily fix=
- it in
-> > > > > mips (mips guys, correct me if I'm wrong). So what if we just
-> > > > > unconditionally typed printed values to unsigned int to silence t=
-he
-> > > > > warning?
-> > > >
-> > > > I don't understand why. To me that sounds like papering over a bug.
-> > > >
-> > > > See this reply from mips developer Paul Burton:
-> > > > https://marc.info/?l=3Dlinux-fsdevel&m=3D154783680019904&w=3D2
-> > > > mips developers have not replied to the question why __kernel_fsid_=
-t
-> > > > should use long.
-> > >
-> > > Ah, right. I've missed that mips defines __kernel_fsid_t only if
-> > > sizeof(long) =3D=3D 4. OK, than fixing MIPS headers is definitely wha=
-t we ought
-> > > to do. Mips guys, any reason why the patch from Ralf didn't get merge=
-d yet?
+On Tue, Mar 12, 2019 at 10:17 AM Tim Murray <timmurray@google.com> wrote:
+>
+> On Tue, Mar 12, 2019 at 9:37 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
 > >
-> > Paul's patch :-)
+> > On Tue, Mar 12, 2019 at 09:05:32AM +0100, Michal Hocko wrote:
+> > > The only way to control the OOM behavior pro-actively is to throttle
+> > > allocation speed. We have memcg high limit for that purpose. Along with
+> > > PSI, I can imagine a reasonably working user space early oom
+> > > notifications and reasonable acting upon that.
 > >
-> > As for the reason why the definition is as it is - 32-bit MIPS was
-> > born using long, then in 2000 64-bit MIPS started off as arch/mips64
-> > using int.  Eventually the two ports were combined using:
-> >
-> > ypedef struct {
-> > #if (_MIPS_SZLONG =3D=3D 32)
-> >         long    val[2];
-> > #endif
-> > #if (_MIPS_SZLONG =3D=3D 64)
-> >         int     val[2];
-> > #endif
-> > } __kernel_fsid_t;
-> >
-> > A desparate attempt to use asm-generic where ever possible then resulte=
-d
-> > in the confusing definition we'e having today.
-> >
-> > Normally APIs are cast into stone not to be changed.  But fsid is used =
-in
-> > struct statfs and the man page states "Nobody knows what f_fsid is supp=
-osed
-> > to contain (but see below)." and f_fsid is supposed to be opaque anyway=
- so
-> > I'm wondering if something could break at all.  Researching that.
-> >
->=20
-> Its content is opaque, but its size must be equal to that of fsid_t
-> from glibc/toolchain headers. Do the mips32 glibc headers also
-> define fsid_t as long val[2], or do they define it as int val[2]?
+> > The issue with pro-active memory management that prompted me to create this was
+> > poor memory utilization. All of the alternative means of reclaiming pages in the
+> > page allocator's slow path turn out to be very useful for maximizing memory
+> > utilization, which is something that we would have to forgo by relying on a
+> > purely pro-active solution. I have not had a chance to look at PSI yet, but
+> > unless a PSI-enabled solution allows allocations to reach the same point as when
+> > the OOM killer is invoked (which is contradictory to what it sets out to do),
+> > then it cannot take advantage of all of the alternative memory-reclaim means
+> > employed in the slowpath, and will result in killing a process before it is
+> > _really_ necessary.
+>
+> There are two essential parts of a lowmemorykiller implementation:
+> when to kill and how to kill.
+>
+> There are a million possible approaches to decide when to kill an
+> unimportant process. They usually trade off between the same two
+> failure modes depending on the workload.
+>
+> If you kill too aggressively, a transient spike that could be
+> imperceptibly absorbed by evicting some file pages or moving some
+> pages to ZRAM will result in killing processes, which then get started
+> up later and have a performance/battery cost.
+>
+> If you don't kill aggressively enough, you will encounter a workload
+> that thrashes the page cache, constantly evicting and reloading file
+> pages and moving things in and out of ZRAM, which makes the system
+> unusable when a process should have been killed instead.
+>
+> As far as I've seen, any methodology that uses single points in time
+> to decide when to kill without completely biasing toward one or the
+> other is susceptible to both. The minfree approach used by
+> lowmemorykiller/lmkd certainly is; it is both too aggressive for some
+> workloads and not aggressive enough for other workloads. My guess is
+> that simple LMK won't kill on transient spikes but will be extremely
+> susceptible to page cache thrashing. This is not an improvement; page
+> cache thrashing manifests as the entire system running very slowly.
+>
+> What you actually want from lowmemorykiller/lmkd on Android is to only
+> kill once it becomes clear that the system will continue to try to
+> reclaim memory to the extent that it could impact what the user
+> actually cares about. That means tracking how much time is spent in
+> reclaim/paging operations and the like, and that's exactly what PSI
+> does. lmkd has had support for using PSI as a replacement for
+> vmpressure for use as a wakeup trigger (to check current memory levels
+> against the minfree thresholds) since early February. It works fine;
+> unsurprisingly it's better than vmpressure at avoiding false wakeups.
+>
+> Longer term, there's a lot of work to be done in lmkd to turn PSI into
+> a kill trigger and remove minfree entirely. It's tricky (mainly
+> because of the "when to kill another process" problem discussed
+> later), but I believe it's feasible.
+>
+> How to kill is similarly messy. The latency of reclaiming memory post
+> SIGKILL can be severe (usually tens of milliseconds, occasionally
+> >100ms). The latency we see on Android usually isn't because those
+> threads are blocked in uninterruptible sleep, it's because times of
+> memory pressure are also usually times of significant CPU contention
+> and these are overwhelmingly CFS threads, some of which may be
+> assigned a very low priority. lmkd now sets priorities and resets
+> cpusets upon killing a process, and we have seen improved reclaim
+> latency because of this. oom reaper might be a good approach to avoid
+> this latency (I think some in-kernel lowmemorykiller implementations
+> rely on it), but we can't use it from userspace. Something for future
+> consideration.
+>
 
-First off, my apologies that my proposed patch slipped through the
-cracks. It somehow didn't make it onto my to-do list & after that there
-was little chance I was going to remember it until someone replied... :)
+This makes sense. If the process receiving the SIGKILL does not get CPU
+time, then the kernel may not be able to execute the unconditional
+signal handling paths in the context of the victim process to free the memory.
 
-I've just polished off the patch & submitted it [1]. Presuming nobody
-has a problem with it in the next couple of days, I'll apply it to
-mips-fixes & send it on to Linus.
+I don't see how proc-fds approach will solve this though. Say you have
+process L (which is LMKd) which sends a SIGKILL to process V(which is
+a victim). Now L sends SIGKILL to V. Unless V executes the
+signal-handling code in kernel context and is scheduled at high enough
+priority to get CPU time, I don't think the SIGKILL will be processed.
 
-To address your question about glibc headers - it shouldn't matter. On
-MIPS32 int & long are the same, so even if userland & the kernel
-disagree about the type the data in memory should be identical.
+The exact path that the process being killed executes to free its
+memory is: do_signal-> get_signal-> do_group_exit-> do_exit-> mmput.
+And this needs to execute in the context of V which needs to get
+CPU-time to do such execution.
 
-[1] https://lore.kernel.org/linux-mips/20190314173900.25454-1-paul.burton@m=
-ips.com/T/#u
+So my point is to be notified of process death, you still need SIGKILL
+to be processed. So you may still need to make sure the task is at a
+high enough priority and scheduler puts it on the CPU. Only *after
+that* can he proc-fds notification mechanism (or whichever)
+notification mechanism can kick in.
 
-Thanks,
-    Paul
+Speaking of which I wonder if the scheduler should special case
+SIGKILLed threads as higher priority automatically so that they get
+CPU time, but don't know if this can cause denial of service kind of
+attacks. I don't know if it does something like this already. Peter
+should know this right off the bat and he is on CC so he can comment
+more.
+
+About the 100ms latency, I wonder whether it is that high because of
+the way Android's lmkd is observing that a process has died. There is
+a gap between when a process memory is freed and when it disappears
+from the process-table.  Once a process is SIGKILLed, it becomes a
+zombie. Its memory is freed instantly during the SIGKILL delivery (I
+traced this so that's how I know), but until it is reaped by its
+parent thread, it will still exist in /proc/<pid> . So if testing the
+existence of /proc/<pid> is how Android is observing that the process
+died, then there can be a large latency where it takes a very long
+time for the parent to actually reap the child way after its memory
+was long freed. A quicker way to know if a process's memory is freed
+before it is reaped could be to read back /proc/<pid>/maps in
+userspace of the victim <pid>, and that file will be empty for zombie
+processes. So then one does not need wait for the parent to reap it. I
+wonder how much of that 100ms you mentioned is actually the "Waiting
+while Parent is reaping the child", than "memory freeing time". So
+yeah for this second problem, the procfds work will help.
+
+By the way another approach that can provide a quick and asynchronous
+notification of when the process memory is freed, is to monitor
+sched_process_exit trace event using eBPF. You can tell eBPF the PID
+that you want to monitor before the SIGKILL. As soon as the process
+dies and its memory is freed, the eBPF program can send a notification
+to user space (using the perf_events polling infra). The
+sched_process_exit fires just after the mmput() happens so it is quite
+close to when the memory is reclaimed. This also doesn't need any
+kernel changes. I could come up with a prototype for this and
+benchmark it on Android, if you want. Just let me know.
+
+thanks,
+
+ - Joel
+
+
+
+
+
+
+
+
+
+
+> A non-obvious consequence of both of these concerns is that when to
+> kill a second process is a distinct and more difficult problem than
+> when to kill the first. A second process should be killed if reclaim
+> from the first process has finished and there has been insufficient
+> memory reclaimed to avoid perceptible impact. Identifying whether
+> memory pressure continues at the same level can probably be handled
+> through multiple PSI monitors with different thresholds and window
+> lengths, but this is an area of future work.
+>
+> Knowing whether a SIGKILL'd process has finished reclaiming is as far
+> as I know not possible without something like procfds. That's where
+> the 100ms timeout in lmkd comes in. lowmemorykiller and lmkd both
+> attempt to wait up to 100ms for reclaim to finish by checking for the
+> continued existence of the thread that received the SIGKILL, but this
+> really means that they wait up to 100ms for the _thread_ to finish,
+> which doesn't tell you anything about the memory used by that process.
+> If those threads terminate early and lowmemorykiller/lmkd get a signal
+> to kill again, then there may be two processes competing for CPU time
+> to reclaim memory. That doesn't reclaim any faster and may be an
+> unnecessary kill.
+>
+> So, in summary, the impactful LMK improvements seem like
+>
+> - get lmkd and PSI to the point that lmkd can use PSI signals as a
+> kill trigger and remove all static memory thresholds from lmkd
+> completely. I think this is mostly on the lmkd side, but there may be
+> some PSI or PSI monitor changes that would help
+> - give userspace some path to start reclaiming memory without waiting
+> for every thread in a process to be scheduled--could be oom reaper,
+> could be something else
+> - offer a way to wait for process termination so lmkd can tell when
+> reclaim has finished and know when killing another process is
+> appropriate
