@@ -2,67 +2,81 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA64BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AFEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E44421873
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA85E21873
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p+7/XqVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfCNXrQ (ORCPT
+        id S1728005AbfCNXt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 19:47:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54382 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfCNXrP (ORCPT
+        Thu, 14 Mar 2019 19:49:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48424 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfCNXt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 19:47:15 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1h4a49-0006qR-FM; Thu, 14 Mar 2019 23:47:13 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers: net: atp: fix various indentation issues
-Date:   Thu, 14 Mar 2019 23:47:13 +0000
-Message-Id: <20190314234713.8587-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 14 Mar 2019 19:49:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pDx0F0b/cwlQ8flBSxOnlEDXSq4rrGSdcWydb6YYey0=; b=p+7/XqVoIf+C8N4dV6O1cZ+Iz
+        fdY9KXz/cjkLvpwflu7nfZ6yiDgK9uCPdtz0j8Jqi1rX3feklRyz8mFE6uqdCz7BN3swAT+TQILEM
+        to0uT/ntftd6241U7oUOMqm9WHMdMP6+Avp0qs9rbZx2mSp39SPUrRFXGCfmv06IYB1Eist2+7JVb
+        AjTaK2OQTT+puXdoVfDhoA2lSAVRUyKzS8eeu5iXFyqaHtJf0BPMkhhlsnTrUBglRTMxb1bS1t+Ep
+        O3JymfExqVheUEECeZkCYbVYDo1lg8+jXsSm/qZMo7FIT2XLQNbZFMhttzagr7pHVp+40kQChBAcV
+        04LdDfx5g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4a6l-0005ay-QW; Thu, 14 Mar 2019 23:49:55 +0000
+Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
+To:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
+        linux-parport@lists.infradead.org
+References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
+ <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
+ <e2a66da2-5433-5b42-1ebe-9f1c135b5471@infradead.org>
+ <59cb035e-6880-de5a-33c5-d4db6ed910f4@kernel.dk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4a2adc33-ef38-6a5f-65ee-8fcfaa0948a9@infradead.org>
+Date:   Thu, 14 Mar 2019 16:49:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <59cb035e-6880-de5a-33c5-d4db6ed910f4@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 3/14/19 4:43 PM, Jens Axboe wrote:
+> On 3/13/19 5:09 PM, Randy Dunlap wrote:
+>> On 3/11/19 6:34 PM, Randy Dunlap wrote:
+>>> On 3/11/19 6:25 PM, Randy Dunlap wrote:
+>>>> [Has this already been addressed/fixed?]>>
+>>>
+>>> Same bug occurs with paride/pcd.c driver.
+>>
+>> This still happens (in blk-mq) in v5.0-11053-gebc551f2b8f9 of Mar. 12, 2019,
+>> around 4pm PT.  [caused by paride: pf.c and pcd.c)
+> 
+> I'll take a look at this, been busy with other stuff. How are you
+> reproducing this? I'm assuming you don't actually have any hardware :-)
 
-There is a statement that is indented incorrectly; replace
-spaces with a tab.
+Right.  I just load the module (pf or pcd), unload it, and
+then load it again.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/realtek/atp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/realtek/atp.c b/drivers/net/ethernet/realtek/atp.c
-index cfb67b746595..58e0ca9093d3 100644
---- a/drivers/net/ethernet/realtek/atp.c
-+++ b/drivers/net/ethernet/realtek/atp.c
-@@ -482,7 +482,7 @@ static void hardware_init(struct net_device *dev)
- 	write_reg_high(ioaddr, IMR, ISRh_RxErr);
- 
- 	lp->tx_unit_busy = 0;
--    lp->pac_cnt_in_tx_buf = 0;
-+	lp->pac_cnt_in_tx_buf = 0;
- 	lp->saved_tx_size = 0;
- }
- 
 -- 
-2.20.1
-
+~Randy
