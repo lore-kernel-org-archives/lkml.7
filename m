@@ -3,80 +3,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AFEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A66C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA85E21873
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CD9217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 23:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p+7/XqVo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="kS52ctJh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbfCNXt6 (ORCPT
+        id S1728075AbfCNXzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 19:49:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48424 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfCNXt6 (ORCPT
+        Thu, 14 Mar 2019 19:55:44 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38234 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727596AbfCNXzn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 19:49:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pDx0F0b/cwlQ8flBSxOnlEDXSq4rrGSdcWydb6YYey0=; b=p+7/XqVoIf+C8N4dV6O1cZ+Iz
-        fdY9KXz/cjkLvpwflu7nfZ6yiDgK9uCPdtz0j8Jqi1rX3feklRyz8mFE6uqdCz7BN3swAT+TQILEM
-        to0uT/ntftd6241U7oUOMqm9WHMdMP6+Avp0qs9rbZx2mSp39SPUrRFXGCfmv06IYB1Eist2+7JVb
-        AjTaK2OQTT+puXdoVfDhoA2lSAVRUyKzS8eeu5iXFyqaHtJf0BPMkhhlsnTrUBglRTMxb1bS1t+Ep
-        O3JymfExqVheUEECeZkCYbVYDo1lg8+jXsSm/qZMo7FIT2XLQNbZFMhttzagr7pHVp+40kQChBAcV
-        04LdDfx5g==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4a6l-0005ay-QW; Thu, 14 Mar 2019 23:49:55 +0000
-Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
-To:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
-        linux-parport@lists.infradead.org
-References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
- <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
- <e2a66da2-5433-5b42-1ebe-9f1c135b5471@infradead.org>
- <59cb035e-6880-de5a-33c5-d4db6ed910f4@kernel.dk>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4a2adc33-ef38-6a5f-65ee-8fcfaa0948a9@infradead.org>
-Date:   Thu, 14 Mar 2019 16:49:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <59cb035e-6880-de5a-33c5-d4db6ed910f4@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 14 Mar 2019 19:55:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id BE7C98EE1EC;
+        Thu, 14 Mar 2019 16:55:42 -0700 (PDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id W9yTdsDdr4ag; Thu, 14 Mar 2019 16:55:42 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id DB9BC8EE02B;
+        Thu, 14 Mar 2019 16:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1552607742;
+        bh=YNHkuTCKoNFfsmkVdp6HeMWsym6Cwxg03ePJT7rngkw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=kS52ctJhDNWE/z5kFcof6k0KtWcjMCrUxKji3MKqlmneYBk76ZttUW9tus49y06qh
+         4x9bLGbzMtVRTVwPewHbzdPeergIv52TAwPNxyYqTe6jLV/T1XW8V1T913az7On3sz
+         5xixkHjB3ow/1FQ6QHvnhZ/n3XAHib7SZHqJP1Sw=
+Message-ID: <1552607740.2571.15.camel@HansenPartnership.com>
+Subject: Re: [PATCH 4/4] ubifs: Implement new mount option,
+ fscrypt_key_required
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
+        linux-fscrypt@vger.kernel.org, jaegeuk@kernel.org,
+        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
+        amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, paullawrence@google.com
+Date:   Thu, 14 Mar 2019 16:55:40 -0700
+In-Reply-To: <20190314234230.GG6482@mit.edu>
+References: <CAJfpegvX4ANfso-Jn1zaB+m4Q_0eK9i-+MCJ+sTH5QzD3PZFMQ@mail.gmail.com>
+         <20190314171559.27584-1-richard@nod.at>
+         <20190314171559.27584-5-richard@nod.at>
+         <1552605311.2571.6.camel@HansenPartnership.com>
+         <20190314234230.GG6482@mit.edu>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/14/19 4:43 PM, Jens Axboe wrote:
-> On 3/13/19 5:09 PM, Randy Dunlap wrote:
->> On 3/11/19 6:34 PM, Randy Dunlap wrote:
->>> On 3/11/19 6:25 PM, Randy Dunlap wrote:
->>>> [Has this already been addressed/fixed?]>>
->>>
->>> Same bug occurs with paride/pcd.c driver.
->>
->> This still happens (in blk-mq) in v5.0-11053-gebc551f2b8f9 of Mar. 12, 2019,
->> around 4pm PT.  [caused by paride: pf.c and pcd.c)
+On Thu, 2019-03-14 at 19:42 -0400, Theodore Ts'o wrote:
+> On Thu, Mar 14, 2019 at 04:15:11PM -0700, James Bottomley wrote:
+> > On Thu, 2019-03-14 at 18:15 +0100, Richard Weinberger wrote:
+> > > Usually fscrypt allows limited access to encrypted files even
+> > > if no key is available.
+> > > Encrypted filenames are shown and based on this names users
+> > > can unlink and move files.
+> > 
+> > Shouldn't they be able to read/write and create as well (all with
+> > the ciphertext name and contents, of course) ... otherwise how does
+> > backup of encrypted files by admin without the key ever work?
 > 
-> I'll take a look at this, been busy with other stuff. How are you
-> reproducing this? I'm assuming you don't actually have any hardware :-)
+> That's not currently supported.  Michael Halcrow and I worked out
+> some designs on how to do this, and I even had some prototype
+> patches, but it's really, really, messy, and requires a lot of
+> complex machinations in userspace on the save *and* restore, since
+> there's a lot of crypto metadata that has to be saved, and you have
+> to handle backing up the directory per-file keys, and restoring them
+> when you recreate the directory on a restore, etc.
+> 
+> The simpler approach would have allowed backup of encrypted files
+> without the key, but would require the user's key to do the restore,
+> and if we ever actually tried to get this feature supported, that's
+> the approach I'd suggest.
 
-Right.  I just load the module (pf or pcd), unload it, and
-then load it again.
+Well, as I said above encrypted file backup by an admin who doesn't
+have the key was what I was thinking of.
 
--- 
-~Randy
+> The fundamental reason why we never went did anything with this was
+> that the original use case of fscrypt was for Chrome OS, where the
+> original design premise was that you don't need to do backups, since
+> everything is in the cloud.  A video from 2010:
+> 
+> 	https://www.youtube.com/watch?v=lm-Vnx58UYo
+> 
+> And with Android, backups happen automatically while you have the
+> encryption key.
+
+Heh, colour me paranoid, but if I backup my sensitive data to any
+medium (including the cloud) I *want* the backup to be encrypted so
+that if someone is careless with my backup data at least they don't get
+the contents.
+
+> There was talk about using fscrypt for Ubuntu desktops as an ecryptfs
+> replacement, and in that case, we would have use case that would have
+> required backups of a shared desktop where you don't have all of the
+> encryption keys for all of the users.  Maybe someday as a Google
+> Summer of Code project or maybe if some potential corporate user of
+> fscrypt would be willing to fund the necessary engineering work?
+> 
+> But again, I'll repeat this because it's so important: In the vast
+> majority of cases, including single-user laptops, desktops, etc., the
+> real right answer is dm-crypt and *not* fscrypt.  Especially since
+> time-sharing systems are *so* 1980's.  :-)
+> 
+> So I don't use fscrypt on my upstream development laptop (except for
+> testing purposes) because it's simply not the right tool for the job.
+
+I was thinking of the container use case again.  It's not really backup
+per se but it is serialization: if you can't do a backup ... i.e. save
+and restore an encrypted tar image, you can't use the filesystem for
+container image protection.  But it also strikes me that inability to
+do backup and restore without the key really restricts the use cases
+for the entire filesystem.
+
+James
+
