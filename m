@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1CBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B28FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59B221855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0042184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfCNP7z (ORCPT
+        id S1727249AbfCNQAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:59:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40708 "EHLO mx1.redhat.com"
+        Thu, 14 Mar 2019 12:00:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32884 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfCNP7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:59:55 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1726330AbfCNQAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 12:00:19 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 005DAD7150;
-        Thu, 14 Mar 2019 15:59:54 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id EF75781138;
+        Thu, 14 Mar 2019 16:00:18 +0000 (UTC)
 Received: from [10.36.117.188] (ovpn-117-188.ams2.redhat.com [10.36.117.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A050282DD;
-        Thu, 14 Mar 2019 15:59:51 +0000 (UTC)
-Subject: Re: [PATCH v1] xen/balloon: Fix mapping PG_offline pages to user
- space
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Julien Grall <julien.grall@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B32460F87;
+        Thu, 14 Mar 2019 16:00:16 +0000 (UTC)
+Subject: Re: [Xen-devel] [PATCH v1] xen/balloon: Fix mapping PG_offline pages
+ to user space
+To:     Jan Beulich <JBeulich@suse.com>
+Cc:     Julien Grall <julien.grall@arm.com>,
         Andrew Cooper <andrew.cooper3@citrix.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org
+        Matthew Wilcox <willy@infradead.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+        Nadav Amit <namit@vmware.com>
 References: <20190314154025.21128-1-david@redhat.com>
- <20190314154907.wcwh5ricj6v7p23v@d104.suse.de>
+ <5C8A77FD020000780021EC87@prv1-mh.provo.novell.com>
 From:   David Hildenbrand <david@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
@@ -86,39 +86,50 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <2268eedd-65f6-4715-792f-702bfca4659c@redhat.com>
-Date:   Thu, 14 Mar 2019 16:59:50 +0100
+Message-ID: <81175478-d6cf-56ce-587c-87473e79fd50@redhat.com>
+Date:   Thu, 14 Mar 2019 17:00:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190314154907.wcwh5ricj6v7p23v@d104.suse.de>
+In-Reply-To: <5C8A77FD020000780021EC87@prv1-mh.provo.novell.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 14 Mar 2019 15:59:54 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 14 Mar 2019 16:00:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.03.19 16:49, Oscar Salvador wrote:
-> On Thu, Mar 14, 2019 at 04:40:25PM +0100, David Hildenbrand wrote:
+On 14.03.19 16:49, Jan Beulich wrote:
+>>>> On 14.03.19 at 16:40, <david@redhat.com> wrote:
+>> --- a/drivers/xen/balloon.c
+>> +++ b/drivers/xen/balloon.c
+>> @@ -604,6 +604,7 @@ int alloc_xenballooned_pages(int nr_pages, struct page **pages)
+>>  	while (pgno < nr_pages) {
+>>  		page = balloon_retrieve(true);
+>>  		if (page) {
+>> +			__ClearPageOffline(page);
+>>  			pages[pgno++] = page;
+> 
+> While this one's fine, ...
+> 
 >> @@ -646,6 +647,7 @@ void free_xenballooned_pages(int nr_pages, struct page **pages)
 >>  
 >>  	for (i = 0; i < nr_pages; i++) {
 >>  		if (pages[i])
 >> +			__SetPageOffline(pages[i]);
 >>  			balloon_append(pages[i]);
+>>  	}
 > 
-> didn't you forget {} there? ;-)
+> ... I think you want to add a pair of braces here.
+> 
+> Jan
+> 
 > 
 
-That's what happens when you stashed the original patch and try to
-recreate it quickly from a mail ;)
-
-Thanks!
-
+Indeed, dropped by accident. Will resend in a minute. Thanks!
 
 -- 
 
