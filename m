@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422F9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCE2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121FD2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F8721855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578870;
-	bh=GWp+XMOG3nz+SgIvr8m1htApixWbtNGRkkkizOMuXII=;
+	s=default; t=1552578876;
+	bh=PncR2uC5rwylKgdBzFv7PQArEYAhdShLI6BL1EZ1RsU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=JPwQkeW+UgF56MEfHm0LMHDZTAbCjWQ3ZSKhQF23aHYsjE8JD7LAzMdJupu05NbOb
-	 E/eWlJK9/sxDhs+ws+s5mwvbs4xEVeh0GIo16pgNprobMKh50yTjpSxogAtA/2GLkv
-	 3ezkr0WDcc7uR3rflmuvlxCRiwlrJwmoNCQ9F7LM=
+	b=g1JPai23RjQVcLltYxPGk5iovutublMVvjfQPIJOlGEuLI+MSTps2zHTO1Oc1Py1N
+	 0r3dhNSc/0R3mtnGfsOAmgjrYUj54ubGTQeM6vbQWolWfztHf4s74gfnwCt9SoU8+5
+	 YAKWDaQwuX8oE6d+wsXKIiShX8YHbza0RIr+zJGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfCNPy2 (ORCPT
+        id S1727701AbfCNPye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:54:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36164 "EHLO
+        Thu, 14 Mar 2019 11:54:34 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36322 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727618AbfCNPy0 (ORCPT
+        with ESMTP id S1727657AbfCNPya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:54:26 -0400
+        Thu, 14 Mar 2019 11:54:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=au3dvNXzmjYN1ENUgBg2PdRM6Yahivow2cEMYRREeAM=; b=VuWlpp47vyot
-        V85jkQ5Xe2KHOe0DlQ6Kwcp5kPNbMfXFTHJ7QOWDPr5CUMMEYl0kTyhBlRHfOiQ8Mlr9EReIml6uM
-        2/GyTY8qji7F79fmRfc79yyqVLfUp3Aa4riOnIWQHrMmPcB3BLFPoqZOjc4z0p1mtY60xmAXkNnlT
-        SHGJE=;
+        List-Archive; bh=aHpRfMr7WQXjq7PUaew04ukI0mD+0YkzrNCtHE+vJiA=; b=VgoTJxhAfHOL
+        ooHdq2A8Lz2XUHTDRwovXKgOGMpcX/UwFUN+4d4aGQjcAmh7FDssIckO9iJT0UjUuj3cFj6bi4rfO
+        mX1HZmV8cbHcqwPoQ8sekjRWbBJS1cC+lZRVjzp+0NlRFGijDpklAmpfRC7JRQKR+5hCtFdckDE0h
+        z94GM=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4Sga-0002jI-3n; Thu, 14 Mar 2019 15:54:24 +0000
+        id 1h4Sgf-0002jb-77; Thu, 14 Mar 2019 15:54:29 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 94CE71126E64; Thu, 14 Mar 2019 15:54:23 +0000 (GMT)
+        id 99F1F1126E64; Thu, 14 Mar 2019 15:54:28 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: pv88080: Fix notifier mutex lock warning" to the regulator tree
+Subject: Applied "regulator: gpio: Constify regulator_ops" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155423.94CE71126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:54:23 +0000 (GMT)
+Message-Id: <20190314155428.99F1F1126E64@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:28 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: pv88080: Fix notifier mutex lock warning
+   regulator: gpio: Constify regulator_ops
 
 has been applied to the regulator tree at
 
@@ -84,56 +84,42 @@ to this mail.
 Thanks,
 Mark
 
-From 1867af94cfdf37fc70fe67b3d522e78352800196 Mon Sep 17 00:00:00 2001
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Date: Tue, 26 Feb 2019 15:44:54 +0000
-Subject: [PATCH] regulator: pv88080: Fix notifier mutex lock warning
+From 705e2a905a0407c3fffb248b43c8d7d1de6b4e51 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Fri, 8 Mar 2019 14:15:29 +0800
+Subject: [PATCH] regulator: gpio: Constify regulator_ops
 
-The mutex for the regulator_dev must be controlled by the caller of
-the regulator_notifier_call_chain(), as described in the comment
-for that function.
+gpio_regulator_voltage_ops and gpio_regulator_current_ops should never
+change, make them const.
 
-Failure to mutex lock and unlock surrounding the notifier call results
-in a kernel WARN_ON_ONCE() which will dump a backtrace for the
-regulator_notifier_call_chain() when that function call is first made.
-The mutex can be controlled using the regulator_lock/unlock() API.
-
-Fixes: 99cf3af5e2d5 ("regulator: pv88080: new regulator driver")
-Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/pv88080-regulator.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/regulator/gpio-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/pv88080-regulator.c b/drivers/regulator/pv88080-regulator.c
-index bdddacdbeb99..6279216fb254 100644
---- a/drivers/regulator/pv88080-regulator.c
-+++ b/drivers/regulator/pv88080-regulator.c
-@@ -345,9 +345,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 	if (reg_val & PV88080_E_VDD_FLT) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_UNDER_VOLTAGE,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
+index 967338bf1dc1..f50d86a66138 100644
+--- a/drivers/regulator/gpio-regulator.c
++++ b/drivers/regulator/gpio-regulator.c
+@@ -124,7 +124,7 @@ static int gpio_regulator_set_current_limit(struct regulator_dev *dev,
+ 	return 0;
+ }
  
-@@ -362,9 +364,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 	if (reg_val & PV88080_E_OVER_TEMP) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_OVER_TEMP,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+-static struct regulator_ops gpio_regulator_voltage_ops = {
++static const struct regulator_ops gpio_regulator_voltage_ops = {
+ 	.get_voltage = gpio_regulator_get_value,
+ 	.set_voltage = gpio_regulator_set_voltage,
+ 	.list_voltage = gpio_regulator_list_voltage,
+@@ -220,7 +220,7 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
+ 	return config;
+ }
  
+-static struct regulator_ops gpio_regulator_current_ops = {
++static const struct regulator_ops gpio_regulator_current_ops = {
+ 	.get_current_limit = gpio_regulator_get_value,
+ 	.set_current_limit = gpio_regulator_set_current_limit,
+ };
 -- 
 2.20.1
 
