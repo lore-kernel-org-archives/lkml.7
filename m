@@ -2,130 +2,112 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A61C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A608EC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2452186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B54E2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 22:16:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ezyo80UF"
+	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="nAE6WDg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfCNWPM (ORCPT
+        id S1727927AbfCNWQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 18:15:12 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:34038 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfCNWPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 18:15:12 -0400
-Received: by mail-pg1-f201.google.com with SMTP id z14so7843063pgu.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 15:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=a0Z+F0fmFULDIL5rprNh3E5BB87HBNzyaQEazZwo8Qo=;
-        b=ezyo80UFCqF77L/UIQxJ158UXxq76PaoXjEMckKTRveE72ftF7nAsQicf+Bl2pscg7
-         CKg4CHZE5cGPVOrG4Q4zRmvz2e/RfXxj9QberpSCQ1WQxdNTaHdt+b3ia/F04nMygpK1
-         dylUAO/Yh1nr52563Hx9Jleo0Brv3/+hZet0iZmGBZ378pP0vRjdHh5yqG3I7Xrg6O3o
-         9N75eQ5p8t2fnMsgH5+j5IcTEJ7DwTqR43YwgDhuyfnOyeEK8RIkvu8mDAF7yRxykJC4
-         i58pfCrF4djBE5ZefEq68LIAizmZoLVNYbJ2x2boj6t39bqKNFzd4ct10GP9RkYP9siC
-         rQQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=a0Z+F0fmFULDIL5rprNh3E5BB87HBNzyaQEazZwo8Qo=;
-        b=loz3TeYmHb+xD+qjRo2sYH9u5KVRJGdQIzkXnpN/PwidKgRJO//whSOSGUs7lpNcIx
-         7jc84YfkYKx+KS2STKnKvXdEfuYCiYrXo5zaJ7DUzt/xt+3cpazn83/MXDT612sPFu+d
-         Vjhdx7lW/neNL6mu5nVGU4JIiBP9hORV4DLWpnBSGRCdIejApwULWx6tLavQW33tR3J0
-         +kCFm1/pf5mPg2W81uz+bz70QsdTfQDgu9gEXaa9JF1WB0n5XQ94793xfr2Th0etSBIb
-         nr08Gr9wCh1VZQtvsGGsOzcwqNaZQ+3F77CT0QF8K28bglqfaaaE2VDCQltWG+TayACq
-         Swcg==
-X-Gm-Message-State: APjAAAVF/1tqdJskhyMsEAYB5caJpynv5iGXRryae9nPL8VfmMvmbFWd
-        hOEL8et/5Va9ak4U18JtnU0rFbGP1ks9EGrliHk=
-X-Google-Smtp-Source: APXvYqyQrj3Vx5wD8I8YjHCK8XkS7nQ2eCCjOt7vZDrLgBIMuLkU4oMqgEBW+ru+fuxG+s7Vpfemam9bcwQt8NtYmn4=
-X-Received: by 2002:a62:1f12:: with SMTP id f18mr310434pff.49.1552601711421;
- Thu, 14 Mar 2019 15:15:11 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 15:14:57 -0700
-In-Reply-To: <20190305085707.GA8256@zn.tnic>
-Message-Id: <20190314221458.83047-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20190305085707.GA8256@zn.tnic>
-X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
-Subject: [PATCH v4] x86/boot: clean up headers
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     bp@alien8.de
-Cc:     natechancellor@gmail.com, niravd@google.com, sfr@canb.auug.org.au,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 14 Mar 2019 18:16:05 -0400
+Received: from rfvt.org.uk ([37.187.119.221]:48116 "EHLO rfvt.org.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726885AbfCNWQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 18:16:04 -0400
+Received: from wylie.me.uk (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by rfvt.org.uk (Postfix) with ESMTPS id 1B02A821B4;
+        Thu, 14 Mar 2019 22:16:02 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
+        s=mydkim005; t=1552601762;
+        bh=pbOI9QrDiQUfsKVWPs056XmDc4zkl9xyF7DFauWcvzM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=nAE6WDg2c9v93IT7UiUVhKA66Eml6YJU/UOjwk+tt/P248CwRTrkZ53CJtGRBOUTm
+         +ho0j3jx7sbR54YZIkn+cnMxVDl9MDwirJTE1qCClDl/Xde3cyuGtcHnBzCVXqw0Ta
+         eDKde1X6Zkj9kqvpMBz3wA+ET/rEsVVF292QC5tU2ddgP/62qQpbmkunDuVwI5GO1z
+         hXXRNZMoRvaJOn4wJ/ovDY6S3q6FBFoQP7uRgQJS/F+sXivZUVjpzxvJz79oFVQg9j
+         zdQ+jNdNYTrbM/JB1c0g7aZTS5Xk9ybFQMx+CkfLOv/nKv2ymc2qBy0DlWHcchOh4W
+         Ixm6sR4OkNc4g==
+From:   alan@wylie.me.uk (Alan J. Wylie)
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Alec Ari <neotheuser@gmail.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [Regression] Re: Linux 5.0.2
+References: <20190314162756.GA20704@kroah.com> <87pnqtkz23.fsf@wylie.me.uk>
+        <20190314200709.GA16125@kroah.com> <87ftrpkx0d.fsf@wylie.me.uk>
+        <20190314215250.GB17893@kroah.com> <20190314215901.GA19535@kroah.com>
+Date:   Thu, 14 Mar 2019 22:16:01 +0000
+In-Reply-To: <20190314215901.GA19535@kroah.com> (Greg KH's message of "Thu, 14
+        Mar 2019 14:59:01 -0700")
+Message-ID: <875zslkspq.fsf@wylie.me.uk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The inclusion of <linux/kernel.h> was causing issue as the definition of
-__arch_hweight64 from arch/x86/include/asm/arch_hweight.h eventually gets
-included. The definition is problematic when compiled with -m16 (all code
-in arch/x86/boot/ is) as the "D" inline assembly constraint is rejected
-by both compilers when passed an argument of type long long (regardless
-of signedness, anything smaller is fine).
+Greg KH <gregkh@linuxfoundation.org> writes:
 
-Because GCC performs inlining before semantic analysis, and
-__arch_hweight64 is dead in this translation unit, GCC does not report
-any issues at compile time.  Clang does the semantic analysis in the
-front end, before inlining (run in the middle) can determine the code is
-dead. I consider this another case of PR33587, which I think we can do
-more work to solve.
+> On Thu, Mar 14, 2019 at 02:52:50PM -0700, Greg KH wrote:
+>> On Thu, Mar 14, 2019 at 08:43:14PM +0000, Alan J. Wylie wrote:
+>> > 
+>> > (Adding Linus, since his tree is also broken)
+>> 
+>> Again, can you try running 'git bisect' to find the offending commit?
+>
+> Ah, looks like Guenter found it, nevermind...
 
-It turns out that arch/x86/boot/string.c doesn't actually need
-linux/kernel.h, simply linux/limits.h and linux/compiler.h.
+I'd just finished bisecting:
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=33587
-Link: https://github.com/ClangBuiltLinux/linux/issues/347
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V3 -> V4:
-* Drop sentence from commit message about sorting headers.
+$ git bisect good
+3ad8e57560d7652a66da12b41c668a593509f3ad is the first bad commit
+commit 3ad8e57560d7652a66da12b41c668a593509f3ad
+Author: Peter Zijlstra (Intel) <peterz@infradead.org>
+Date:   Tue Mar 5 22:23:15 2019 +0100
 
-Changes V2 -> V3:
-* keep linux/types.h
+    perf/x86/intel: Make cpuc allocations consistent
+    
+    The cpuc data structure allocation is different between fake and real
+    cpuc's; use the same code to init/free both.
+    
+    Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+    Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Changes V1 -> V2:
-* Add Reviewed, Tested, Suggested tags.
-* Drop linux/types.h; it's included in linux/limits.h.
+:040000 040000 9066c98aacccc5c85a5783907a8431fe3ab7004c 139f04cab3ddd303ffc595e848d01fac3989ac75 M      arch
+$ git bisect log
+git bisect start
+# good: [283506fcd65de1bc10fcc6e2ca633a7b63171ffa] Linux 5.0.1
+git bisect good 283506fcd65de1bc10fcc6e2ca633a7b63171ffa
+# bad: [9e6fdea016e45c5feab60589241e0d3607d39945] Linux 5.0.2
+git bisect bad 9e6fdea016e45c5feab60589241e0d3607d39945
+# good: [e3f5c3cbe16356cd98518765d891aec90dc34e3d] drm: disable uncached DMA optimization for ARM and arm64
+git bisect good e3f5c3cbe16356cd98518765d891aec90dc34e3d
+# good: [e7b0b71c22e7f9529ae677ba7299efbe6bfbb232] staging: erofs: compressed_pages should not be accessed again after freed
+git bisect good e7b0b71c22e7f9529ae677ba7299efbe6bfbb232
+# bad: [3ad8e57560d7652a66da12b41c668a593509f3ad] perf/x86/intel: Make cpuc allocations consistent
+git bisect bad 3ad8e57560d7652a66da12b41c668a593509f3ad
+# good: [3dfe7538f80acf0edf33ae4ae4f639c86e3a3be5] ath9k: Avoid OF no-EEPROM quirks without qca,no-eeprom
+git bisect good 3dfe7538f80acf0edf33ae4ae4f639c86e3a3be5
+# first bad commit: [3ad8e57560d7652a66da12b41c668a593509f3ad] perf/x86/intel: Make cpuc allocations consistent
+$ 
 
- arch/x86/boot/string.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Regards
+Alan
 
-diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
-index 315a67b8896b..90154df8f125 100644
---- a/arch/x86/boot/string.c
-+++ b/arch/x86/boot/string.c
-@@ -13,8 +13,9 @@
-  */
- 
- #include <linux/types.h>
--#include <linux/kernel.h>
-+#include <linux/compiler.h>
- #include <linux/errno.h>
-+#include <linux/limits.h>
- #include <asm/asm.h>
- #include "ctype.h"
- #include "string.h"
 -- 
-2.21.0.360.g471c308f928-goog
+Alan J. Wylie                                          https://www.wylie.me.uk/
 
+Dance like no-one's watching. / Encrypt like everyone is.
+Security is inversely proportional to convenience
