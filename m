@@ -2,174 +2,71 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A09C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B51C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE0B2085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78832184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfCNNfl (ORCPT
+        id S1727473AbfCNNhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:35:41 -0400
-Received: from mx0.arrikto.com ([212.71.252.59]:33699 "EHLO mx0.arrikto.com"
+        Thu, 14 Mar 2019 09:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfCNNfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 09:35:40 -0400
-X-Greylist: delayed 434 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Mar 2019 09:35:38 EDT
-Received: from troi.prod.arr (mail.arr [10.99.0.5])
-        by mx0.arrikto.com (Postfix) with ESMTP id E91E3182004;
-        Thu, 14 Mar 2019 15:28:23 +0200 (EET)
-Received: from [10.94.250.119] (dhcp-119.hq.arr [10.94.250.119])
-        by troi.prod.arr (Postfix) with ESMTPSA id 924EF60;
-        Thu, 14 Mar 2019 15:28:23 +0200 (EET)
-Subject: Re: [dm-devel] [PATCH 1/3] list_bl: Add hlist_bl_add_before/behind
- helpers
-To:     Mike Snitzer <snitzer@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     hch@infradead.org, agk@redhat.com, dm-devel@redhat.com,
-        mpatocka@redhat.com, iliastsi@arrikto.com,
-        linux-kernel@vger.kernel.org
-References: <20181220180651.4879-1-ntsironis@arrikto.com>
- <20181220180651.4879-2-ntsironis@arrikto.com>
- <20190228213201.GB23527@redhat.com> <20190313234853.GA7797@linux.ibm.com>
- <20190314003027.GE4202@redhat.com>
-From:   Nikos Tsironis <ntsironis@arrikto.com>
-Message-ID: <f70ea4c9-658d-5770-be7f-a1a97bb67643@arrikto.com>
-Date:   Thu, 14 Mar 2019 15:28:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726845AbfCNNhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 09:37:00 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 731A32085A;
+        Thu, 14 Mar 2019 13:36:59 +0000 (UTC)
+Date:   Thu, 14 Mar 2019 09:36:57 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        luto@kernel.org, byungchul.park@lge.com
+Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
+ half-interrupts
+Message-ID: <20190314093657.2c1a3485@gandalf.local.home>
+In-Reply-To: <20190314123159.GB101545@google.com>
+References: <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
+        <20190311133939.GA29747@google.com>
+        <20190311222903.GR13351@linux.ibm.com>
+        <20190312150514.GB249405@google.com>
+        <20190312152034.GZ13351@linux.ibm.com>
+        <20190313150948.GA84821@google.com>
+        <20190313112726.01d974fc@gandalf.local.home>
+        <20190313155155.GN13351@linux.ibm.com>
+        <20190313125125.1a1fb2f3@gandalf.local.home>
+        <20190313180730.GU13351@linux.ibm.com>
+        <20190314123159.GB101545@google.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190314003027.GE4202@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/14/19 2:30 AM, Mike Snitzer wrote:
-> On Wed, Mar 13 2019 at  7:48pm -0400,
-> Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> 
-Hi Paul,
+On Thu, 14 Mar 2019 08:31:59 -0400
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-Thanks a lot for your feedback!
+> Oh thanks for pointing that out. Yes it does work for me. I agree with the
+> lockdep API addition and others could benefit from it too. I will incorporate
+> the lockdep API addition into the RCU patch, but let me know if I should
+> rather split it.
 
->> On Thu, Feb 28, 2019 at 04:32:02PM -0500, Mike Snitzer wrote:
->>> On Thu, Dec 20 2018 at  1:06pm -0500,
->>> Nikos Tsironis <ntsironis@arrikto.com> wrote:
->>>
->>>> Add hlist_bl_add_before/behind helpers to add an element before/after an
->>>> existing element in a bl_list.
->>>>
->>>> Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
->>>> Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
->>>> ---
->>>>  include/linux/list_bl.h | 27 +++++++++++++++++++++++++++
->>>>  1 file changed, 27 insertions(+)
->>>>
->>>> diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
->>>> index 3fc2cc57ba1b..2fd918e5fd48 100644
->>>> --- a/include/linux/list_bl.h
->>>> +++ b/include/linux/list_bl.h
->>>> @@ -86,6 +86,33 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
->>>>  	hlist_bl_set_first(h, n);
->>>>  }
->>>>  
->>>> +static inline void hlist_bl_add_before(struct hlist_bl_node *n,
->>>> +				       struct hlist_bl_node *next)
->>>> +{
->>>> +	struct hlist_bl_node **pprev = next->pprev;
->>>> +
->>>> +	n->pprev = pprev;
->>>> +	n->next = next;
->>>> +	next->pprev = &n->next;
->>>> +
->>>> +	/* pprev may be `first`, so be careful not to lose the lock bit */
->>>> +	WRITE_ONCE(*pprev,
->>>> +		   (struct hlist_bl_node *)
->>>> +			((unsigned long)n |
->>>> +			 ((unsigned long)*pprev & LIST_BL_LOCKMASK)));
->>
->> A nit, but use of uintptr_t shrinks things a bit:
->>
->> +		   (struct hlist_bl_node *)
->> +			((uintptr_t)n | ((uintptr_t)*pprev & LIST_BL_LOCKMASK)));
->>
->> I am not too concerned about this, though.
-> 
-> I'm fine with folding in your suggestion.
-> 
+I'd recommend splitting it (adding the lockdep_assert in a patch by
+itself), but make sure that patch Cc's the lockdep maintainers and
+explains the reason for adding it. Might as well Cc the lockdep
+maintainers on the entire series too.
 
-Indeed, this looks better.
-
->> The WRITE_ONCE() is to handle races with hlist_bl_empty() (which does contain
->> the corresponding READ_ONCE()) correct?
-> 
-> Correct.
-
-Yes that's correct.
-
-> 
->>>> +}
->>>> +
->>>> +static inline void hlist_bl_add_behind(struct hlist_bl_node *n,
->>>> +				       struct hlist_bl_node *prev)
->>>> +{
->>>> +	n->next = prev->next;
->>>> +	n->pprev = &prev->next;
->>>> +	WRITE_ONCE(prev->next, n);
->>
->> I don't see what this WRITE_ONCE() is interacting with.  The traversals
->> use plain C-language reads, and hlist_bl_empty() can't get here.  All
->> uses of hlist_bl_for_each_entry() invoke hlist_bl_lock() before starting
->> the traversal, and hlist_bl_for_each_entry_safe() looks to be unused.
->> (Perhaps it should be removed?  Or is there some anticipated use?)
-
-I am using hlist_bl_for_each_entry_safe() in this proposed patch for
-dm-snapshot: https://patchwork.kernel.org/patch/10835709/
-
->>
->> I don't believe that the WRITE_ONCE() is needed.  What am I missing?
->>
->> Other than that, looks good.
->>
->> 							Thanx, Paul
->>
-> 
-> I'd imagine it was just born out of symmetry with hlist_bl_add_before()
-> and/or caution.  But let's see what Nikos has to say.
-
-I also don't believe that this WRITE_SAME() is needed. But, looking at
-hlist_add_behind() in include/linux/list.h, which, if I am not missing
-something, is used in the same way as hlist_bl_add_behind(), it also
-uses WRITE_ONCE() to update prev->next:
-
-static inline void hlist_add_behind(struct hlist_node *n,
-				    struct hlist_node *prev)
-{
-	n->next = prev->next;
-	WRITE_ONCE(prev->next, n);
-	n->pprev = &prev->next;
-
-	if (n->next)
-		n->next->pprev  = &n->next;
-}
-
-Could it be the case that the WRITE_ONCE() in hlist_add_behind() is also
-not needed? This WRITE_ONCE() was introduced by commit 1c97be677f72b3
-("list: Use WRITE_ONCE() when adding to lists and hlists").
-
-But, since I am not an expert in lockless programming, I opted to be on
-the safe side and followed the example of hlist_add_behind().
-
-That said, I will follow up with a new version of the patch removing the
-WRITE_ONCE() and using uintptr_t instead of unsigned long.
-
-Thanks,
-Nikos
+-- Steve
