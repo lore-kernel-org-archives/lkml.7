@@ -2,101 +2,106 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202ACC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFFCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2608217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:53:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mfwaJzkl"
+	by mail.kernel.org (Postfix) with ESMTP id 745B3217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 02:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfCNCxY (ORCPT
+        id S1727109AbfCNCxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 22:53:24 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:40061 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfCNCxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 22:53:24 -0400
-Received: by mail-vk1-f195.google.com with SMTP id l17so1020500vke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 19:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NU+/QzXH/p7mQCPsMWv39Ij6HJV4jm8oyx/Pl7R4Tg4=;
-        b=mfwaJzklZoV05HjVg5ywP1uITZCsuj6KEie/yRWLa6N0aXwaPH01sIMUL59KrThGG9
-         QqV2NdTqoVhOSIcdXzAtjA8+JUz+r7YmMtdzCgmPXmNvyVVbYHNcSkIjHc41ToLzyAPt
-         ruVgIQtRrkdf9BI6V6O02gfQPgON+nLGeNqR4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NU+/QzXH/p7mQCPsMWv39Ij6HJV4jm8oyx/Pl7R4Tg4=;
-        b=A6yTmJ6yPoSNeXybRnaPQOwhbZYtxwLOYfMkQZwtsG86wvqfZlB+s5tWmNua8AR4M0
-         I0h6rCGrx9txAXg7S7wpp9oakGw8W7cAQbu13iF//G9nGVoW16DL/wMsoTwEd5IgOaf9
-         kAwsjhk5MW0busOm1pWBr1naNJvV4Gp//bJQ4sBtxwLcDx1059KxoQIHPNzj9QMbR37L
-         U3Y5UqBncanwdC8mfr2IX6s6vxpMGXyfOGwq7WKLI1thV+jbpHr7d8UbhHfRl78rW5rV
-         u0eN7xo43zjl+JMFddpCU6LHdB7my/DgVJcaNagj7Jo3vMwVRkXz9HHk9C4MhKA/DHzd
-         8mZQ==
-X-Gm-Message-State: APjAAAWRp/FwcFCCb3uH/Kgb4OYl/t1yeksGuR3OqzisXZ4bpQBLH3Wh
-        lMi+By14xMaSOandd9WZp7y9Zt4PINU=
-X-Google-Smtp-Source: APXvYqy9CsXQzfKBzrrZ4q7uOlDIY95WPszcAcwd0cEkXI/bt0bvZLynD67aiLM4O/ee0wrgdV5MBw==
-X-Received: by 2002:a1f:c7c3:: with SMTP id x186mr5265297vkf.6.1552532002763;
-        Wed, 13 Mar 2019 19:53:22 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id t4sm2487383uaq.0.2019.03.13.19.53.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 19:53:21 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id z18so2352592vso.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 19:53:21 -0700 (PDT)
-X-Received: by 2002:a67:ed0c:: with SMTP id l12mr6665405vsp.66.1552532001342;
- Wed, 13 Mar 2019 19:53:21 -0700 (PDT)
+        Wed, 13 Mar 2019 22:53:30 -0400
+Received: from ozlabs.org ([203.11.71.1]:42321 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbfCNCx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 22:53:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44KYDf4Y26z9s70;
+        Thu, 14 Mar 2019 13:53:21 +1100 (AEDT)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Alexandre Ghiti <alex@ghiti.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH v6 4/4] hugetlb: allow to free gigantic pages regardless of the configuration
+In-Reply-To: <20190307132015.26970-5-alex@ghiti.fr>
+References: <20190307132015.26970-1-alex@ghiti.fr> <20190307132015.26970-5-alex@ghiti.fr>
+Date:   Thu, 14 Mar 2019 13:53:21 +1100
+Message-ID: <87va0m9nfi.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-References: <9fa84db9-084b-cf7f-6c13-06131efb0cfa@infradead.org>
-In-Reply-To: <9fa84db9-084b-cf7f-6c13-06131efb0cfa@infradead.org>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 13 Mar 2019 19:53:09 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+yRt_yf2CwvaZDUiEUMwTRRiWab6aeStxqodx9i+BR4g@mail.gmail.com>
-Message-ID: <CAGXu5j+yRt_yf2CwvaZDUiEUMwTRRiWab6aeStxqodx9i+BR4g@mail.gmail.com>
-Subject: Re: lib/test_overflow.c causes WARNING and tainted kernel
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+[ Cc += Aneesh ]
 
-On Wed, Mar 13, 2019 at 2:29 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> This is v5.0-11053-gebc551f2b8f9, MAR-12 around 4:00pm PT.
->
-> In the first test_kmalloc() in test_overflow_allocation():
->
-> [54375.073895] test_overflow: ok: (s64)(0 << 63) == 0
-> [54375.074228] WARNING: CPU: 2 PID: 5462 at ../mm/page_alloc.c:4584 __alloc_pages_nodemask+0x33f/0x540
-> [...]
-> [54375.079236] ---[ end trace 754acb68d8d1a1cb ]---
-> [54375.079313] test_overflow: kmalloc detected saturation
+Alexandre Ghiti <alex@ghiti.fr> writes:
+> diff --git a/arch/powerpc/include/asm/book3s/64/hugetlb.h b/arch/powerpc/include/asm/book3s/64/hugetlb.h
+> index 5b0177733994..d04a0bcc2f1c 100644
+> --- a/arch/powerpc/include/asm/book3s/64/hugetlb.h
+> +++ b/arch/powerpc/include/asm/book3s/64/hugetlb.h
+> @@ -32,13 +32,6 @@ static inline int hstate_get_psize(struct hstate *hstate)
+>  	}
+>  }
+>  
+> -#ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+> -static inline bool gigantic_page_supported(void)
+> -{
+> -	return true;
+> -}
+> -#endif
 
-Yup! This is expected and operating as intended: it is exercising the
-allocator's detection of insane allocation sizes. :)
+This is going to clash with:
 
-If we want to make it less noisy, perhaps we could add a global flag
-the allocators could check before doing their WARNs?
+  https://patchwork.ozlabs.org/patch/1047003/
 
--Kees
+Which does:
 
--- 
-Kees Cook
+@@ -35,6 +35,13 @@  static inline int hstate_get_psize(struct hstate *hstate)
+ #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+ static inline bool gigantic_page_supported(void)
+ {
++	/*
++	 * We used gigantic page reservation with hypervisor assist in some case.
++	 * We cannot use runtime allocation of gigantic pages in those platforms
++	 * This is hash translation mode LPARs.
++	 */
++	if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
++		return false;
+ 	return true;
+ }
+ #endif
+
+
+Not sure how to resolve it.
+
+cheers
