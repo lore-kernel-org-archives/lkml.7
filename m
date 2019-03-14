@@ -2,227 +2,160 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49428C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C51C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185D82184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1642184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:03:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R/zCdByu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfCNPC6 (ORCPT
+        id S1726980AbfCNPDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:02:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49288 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726337AbfCNPC5 (ORCPT
+        Thu, 14 Mar 2019 11:03:06 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:52274 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbfCNPDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 11:02:57 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2EF1TAY070001
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 11:02:57 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r7pbrhx7n-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 11:02:52 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 14 Mar 2019 15:02:25 -0000
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Mar 2019 15:02:22 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2EF2Lbt22937730
+        Thu, 14 Mar 2019 11:03:05 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2EEs5VU008786;
+        Thu, 14 Mar 2019 15:02:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=sGIgXtFyPdbyPSzIHcEisDm3tBg8fH1T0JJ4BjWLnms=;
+ b=R/zCdByuc72MsFlL9srjZeOAyWY8Al1ssLtjIw6urtPEzWuChzvr6SgbkXfFFT5oduZq
+ fHP7pr73/RD9RXJ9SEfjBHya5SryZUCiHGiRYZBFtdmLAKAx6D9xf9lCCNqCVQz9TCnd
+ nJEdVFrMzKIvCngji6LfjRgaAv9IaZ7C74csULjvmF1/d9XscRLzMaeR7kJ7pexoTWhw
+ YJzlGTNKH9xxtV0B9JdM8VzKC1SmLDbwkQBSIwo1csxTQcPX1oY02bk7hrsfrHvsiKil
+ SHj4UodhYNdOZK3HBMCw/wZOivxx8ZAsZCfSbXXdbzTbLlkF2DU+xoMzLwUleZxme23M Mw== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by aserp2130.oracle.com with ESMTP id 2r430f21xw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Mar 2019 15:02:27 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2EF2QLQ007258
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Mar 2019 15:02:21 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1B0EB2066;
-        Thu, 14 Mar 2019 15:02:20 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C4240B2064;
-        Thu, 14 Mar 2019 15:02:20 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Mar 2019 15:02:20 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 5AB1F16C32B8; Thu, 14 Mar 2019 08:03:06 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 08:03:06 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Nikos Tsironis <ntsironis@arrikto.com>
-Cc:     Mike Snitzer <snitzer@redhat.com>, hch@infradead.org,
-        agk@redhat.com, dm-devel@redhat.com, mpatocka@redhat.com,
-        iliastsi@arrikto.com, linux-kernel@vger.kernel.org
-Subject: Re: [dm-devel] [PATCH 1/3] list_bl: Add hlist_bl_add_before/behind
- helpers
-Reply-To: paulmck@linux.ibm.com
-References: <20181220180651.4879-1-ntsironis@arrikto.com>
- <20181220180651.4879-2-ntsironis@arrikto.com>
- <20190228213201.GB23527@redhat.com>
- <20190313234853.GA7797@linux.ibm.com>
- <20190314003027.GE4202@redhat.com>
- <f70ea4c9-658d-5770-be7f-a1a97bb67643@arrikto.com>
- <20190314140750.GB4102@linux.ibm.com>
+        Thu, 14 Mar 2019 15:02:26 GMT
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2EF2OPE016956;
+        Thu, 14 Mar 2019 15:02:24 GMT
+Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 14 Mar 2019 15:02:24 +0000
+Subject: Re: [Xen-devel][PATCH] xen/netfront: Remove unneeded .resume callback
+To:     Oleksandr Andrushchenko <andr2000@gmail.com>,
+        netdev@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, jgross@suse.com,
+        sstabellini@kernel.org, davem@davemloft.net
+Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+References: <20190314131749.25706-1-andr2000@gmail.com>
+ <c87d2bfb-b029-6c18-e3ad-cb798055f761@oracle.com>
+ <6205819a-af39-8cd8-db87-f3fe047ff064@gmail.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <ecc825e6-89d3-bbd5-5243-5cc66fa93045@oracle.com>
+Date:   Thu, 14 Mar 2019 11:02:12 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314140750.GB4102@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19031415-0072-0000-0000-0000040B129D
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010757; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01174283; UDB=6.00614031; IPR=6.00954947;
- MB=3.00025978; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-14 15:02:24
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031415-0073-0000-0000-00004B7CCA0F
-Message-Id: <20190314150306.GA22051@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-14_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903140106
+In-Reply-To: <6205819a-af39-8cd8-db87-f3fe047ff064@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9194 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903140106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 07:07:50AM -0700, Paul E. McKenney wrote:
-> On Thu, Mar 14, 2019 at 03:28:23PM +0200, Nikos Tsironis wrote:
-> > On 3/14/19 2:30 AM, Mike Snitzer wrote:
-> > > On Wed, Mar 13 2019 at  7:48pm -0400,
-> > > Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > > 
-> > Hi Paul,
-> > 
-> > Thanks a lot for your feedback!
-> 
-> NP, and apologies for the delay.
-> 
-> > >> On Thu, Feb 28, 2019 at 04:32:02PM -0500, Mike Snitzer wrote:
-> > >>> On Thu, Dec 20 2018 at  1:06pm -0500,
-> > >>> Nikos Tsironis <ntsironis@arrikto.com> wrote:
-> > >>>
-> > >>>> Add hlist_bl_add_before/behind helpers to add an element before/after an
-> > >>>> existing element in a bl_list.
-> > >>>>
-> > >>>> Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
-> > >>>> Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
-> > >>>> ---
-> > >>>>  include/linux/list_bl.h | 27 +++++++++++++++++++++++++++
-> > >>>>  1 file changed, 27 insertions(+)
-> > >>>>
-> > >>>> diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
-> > >>>> index 3fc2cc57ba1b..2fd918e5fd48 100644
-> > >>>> --- a/include/linux/list_bl.h
-> > >>>> +++ b/include/linux/list_bl.h
-> > >>>> @@ -86,6 +86,33 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
-> > >>>>  	hlist_bl_set_first(h, n);
-> > >>>>  }
-> > >>>>  
-> > >>>> +static inline void hlist_bl_add_before(struct hlist_bl_node *n,
-> > >>>> +				       struct hlist_bl_node *next)
-> > >>>> +{
-> > >>>> +	struct hlist_bl_node **pprev = next->pprev;
-> > >>>> +
-> > >>>> +	n->pprev = pprev;
-> > >>>> +	n->next = next;
-> > >>>> +	next->pprev = &n->next;
-> > >>>> +
-> > >>>> +	/* pprev may be `first`, so be careful not to lose the lock bit */
-> > >>>> +	WRITE_ONCE(*pprev,
-> > >>>> +		   (struct hlist_bl_node *)
-> > >>>> +			((unsigned long)n |
-> > >>>> +			 ((unsigned long)*pprev & LIST_BL_LOCKMASK)));
-> > >>
-> > >> A nit, but use of uintptr_t shrinks things a bit:
-> > >>
-> > >> +		   (struct hlist_bl_node *)
-> > >> +			((uintptr_t)n | ((uintptr_t)*pprev & LIST_BL_LOCKMASK)));
-> > >>
-> > >> I am not too concerned about this, though.
-> > > 
-> > > I'm fine with folding in your suggestion.
-> > 
-> > Indeed, this looks better.
-> > 
-> > >> The WRITE_ONCE() is to handle races with hlist_bl_empty() (which does contain
-> > >> the corresponding READ_ONCE()) correct?
-> > > 
-> > > Correct.
-> > 
-> > Yes that's correct.
-> > 
-> > >>>> +}
-> > >>>> +
-> > >>>> +static inline void hlist_bl_add_behind(struct hlist_bl_node *n,
-> > >>>> +				       struct hlist_bl_node *prev)
-> > >>>> +{
-> > >>>> +	n->next = prev->next;
-> > >>>> +	n->pprev = &prev->next;
-> > >>>> +	WRITE_ONCE(prev->next, n);
-> > >>
-> > >> I don't see what this WRITE_ONCE() is interacting with.  The traversals
-> > >> use plain C-language reads, and hlist_bl_empty() can't get here.  All
-> > >> uses of hlist_bl_for_each_entry() invoke hlist_bl_lock() before starting
-> > >> the traversal, and hlist_bl_for_each_entry_safe() looks to be unused.
-> > >> (Perhaps it should be removed?  Or is there some anticipated use?)
-> > 
-> > I am using hlist_bl_for_each_entry_safe() in this proposed patch for
-> > dm-snapshot: https://patchwork.kernel.org/patch/10835709/
-> 
-> Probably should keep it, then.  ;-)
-> 
-> > >>
-> > >> I don't believe that the WRITE_ONCE() is needed.  What am I missing?
-> > >>
-> > >> Other than that, looks good.
-> > >>
-> > >> 							Thanx, Paul
-> > >>
-> > > 
-> > > I'd imagine it was just born out of symmetry with hlist_bl_add_before()
-> > > and/or caution.  But let's see what Nikos has to say.
-> > 
-> > I also don't believe that this WRITE_SAME() is needed. But, looking at
-> > hlist_add_behind() in include/linux/list.h, which, if I am not missing
-> > something, is used in the same way as hlist_bl_add_behind(), it also
-> > uses WRITE_ONCE() to update prev->next:
-> > 
-> > static inline void hlist_add_behind(struct hlist_node *n,
-> > 				    struct hlist_node *prev)
-> > {
-> > 	n->next = prev->next;
-> > 	WRITE_ONCE(prev->next, n);
-> > 	n->pprev = &prev->next;
-> > 
-> > 	if (n->next)
-> > 		n->next->pprev  = &n->next;
-> > }
-> > 
-> > Could it be the case that the WRITE_ONCE() in hlist_add_behind() is also
-> > not needed? This WRITE_ONCE() was introduced by commit 1c97be677f72b3
-> > ("list: Use WRITE_ONCE() when adding to lists and hlists").
-> 
-> Looks like I have no one to blame but myself!
-> 
-> Would you like to remove that as part of your patch series?
-> 
-> > But, since I am not an expert in lockless programming, I opted to be on
-> > the safe side and followed the example of hlist_add_behind().
-> > 
-> > That said, I will follow up with a new version of the patch removing the
-> > WRITE_ONCE() and using uintptr_t instead of unsigned long.
-> 
-> Sounds good!
+On 3/14/19 10:52 AM, Oleksandr Andrushchenko wrote:
+> On 3/14/19 4:47 PM, Boris Ostrovsky wrote:
+>> On 3/14/19 9:17 AM, Oleksandr Andrushchenko wrote:
+>>> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+>>>
+>>> Currently on driver resume we remove all the network queues and
+>>> destroy shared Tx/Rx rings leaving the driver in its current state
+>>> and never signaling the backend of this frontend's state change.
+>>> This leads to the number of consequences:
+>>> - when frontend withdraws granted references to the rings etc. it
+>>> cannot
+>>>    be cleanly done as the backend still holds those (it was not told to
+>>>    free the resources)
+>>> - it is not possible to resume driver operation as all the
+>>> communication
+>>>    means with the backned were destroyed by the frontend, thus
+>>>    making the frontend appear to the guest OS as functional, but
+>>>    not really.
+>>
+>> What do you mean? Are you saying that after resume you lose
+>> connectivity?
+> Exactly, if you take a look at the .resume callback as it is now
+> what it does it destroys the rings etc. and never notifies the backend
+> of that, e.g. it stays in, say, connected state with communication
+> channels destroyed. It never goes into any other Xen bus state, so
+> there is
+> no way its state machine can help recovering.
 
-Oh, and of course intptr_t is one character shorter than uintptr_t, and
-looks to work just as well in this context.  ;-)
 
-							Thanx, Paul
+My tree is about a month old so perhaps there is some sort of regression
+but this certainly works for me. After resume netfront gets
+XenbusStateInitWait from backend which causes xennet_connect().
+
+-boris
+
 
