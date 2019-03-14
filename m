@@ -2,135 +2,111 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EACC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AA4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E782184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B9F2184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:11:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EAdXQNZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfCNNLM (ORCPT
+        id S1727332AbfCNNLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:11:12 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:54161 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726786AbfCNNLL (ORCPT
+        Thu, 14 Mar 2019 09:11:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44340 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfCNNLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 09:11:11 -0400
-Received: from [IPv6:2001:420:44c1:2579:e8a7:494:d652:7065] ([IPv6:2001:420:44c1:2579:e8a7:494:d652:7065])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 4Q8WhgPY0I8AW4Q8ahjWoD; Thu, 14 Mar 2019 14:11:09 +0100
-Subject: Re: [RFC PATCH] media/doc: Allow sizeimage to be set by v4l clients
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Malathi Gottam <mgottam@codeaurora.org>
-References: <20190116123701.10344-1-stanimir.varbanov@linaro.org>
- <299e8aeb-6deb-b383-8f63-cf2cbf5d2e9f@xs4all.nl>
- <adecdc4e-1aed-fc33-b14b-083322797c70@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c103b0d8-0020-17e0-4584-e5c3ca6bbc51@xs4all.nl>
-Date:   Thu, 14 Mar 2019 14:11:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 14 Mar 2019 09:11:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=W3f8VEDuJT2Wi3frobQjhAtHTusNd+EzUN5waR2V9Ig=; b=EAdXQNZ7veFQwNBtz4Xxv6De3W
+        E3mb0/a7XT0BNLarTU1R5ubQt82UkBVl4XhwLE48BFOPbb0RgJDtiVw+6Cvbwgi8pvD6IkkKPQ1Nz
+        +xDGm7S5VzLK6bEPIx81FbhiHPwOf5vNq9gUha06HBqmyYTB4yDqjdbMIQcqFRe5sEEdmvl6ag38W
+        7IY89OQ0mq83xiCIpnb9GPojC9JzVYvG1MmLqSJXpZmNXzQF/I1ReQCctVZkpxSdi0BgHuQpyQ2gJ
+        y8YLg/bVYS5LEozDac7afNg5UfDt7J7cpLsXIyMRSwnX1fnmR4i1eeSaDx1pDGMaeKSSAjbXTrZ2z
+        HA8nP68w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4Q8w-0006XS-G1; Thu, 14 Mar 2019 13:11:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 6C70620138B9C; Thu, 14 Mar 2019 14:11:27 +0100 (CET)
+Message-Id: <20190314130706.164351344@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 14 Mar 2019 14:01:21 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mingo@kernel.org, eranian@google.com, jolsa@redhat.com
+Cc:     linux-kernel@vger.kernel.org, tonyj@suse.com,
+        nelson.dsouza@intel.com, peterz@infradead.org
+Subject: [RFC][PATCH 8/8] perf/x86: Add sanity checks to x86_schedule_events()
+References: <20190314130113.919278615@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <adecdc4e-1aed-fc33-b14b-083322797c70@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNDkJ5evP5sBZWMgZyXh26c5RxV10K9mYOgGtfEhfvmUEuJq5UWoXIsiGetaHLoAhaoGHr7mMwhStLptAbLwI4nOtndjyhahk5GTSe5KHIwCGzJLJjDj
- QqDePI2GezC5MnOJ/gr4mGx/+WC6JFvxZFz4kd0kDkopN4h27pAHbiefYTt9kl2/pihMaiHVN3LXSHvKTZ/RbLJYVmvwFjGPCJpzPyEtfLS+CYvfIZ4kwPFt
- dR8aebEmzrusmZ9H0BMHbFZXLfqJsJNHw8CTpArThwJcaB9usrJw1QOLfipYZfLQPCnnMsmbEWY9rHvolFN/Jp0Kn6kcy3f/mr+vwOs0W4UGLZNDUMm95NV2
- 0AaWVSjSOzfRwQGg62I0TkIHQzAJ2/OwrxpvP2sAAmaPTzd2NIY/A2BBmYPic9FY5XCNMaxetnQc6RLyERq4p1LInuqcBVwbxRVQIBFf4gOnWsnruOVMW1/0
- tfVQUb9A8p3me4Jus5uw6eKKsecVLP7sDafERqbLr5mZcVkIBVsuZKK/K6d1+0OgkZOA3xp1qCgNLqdpcfmxv4yE/hv8QvwAxVlY7g==
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/19 11:48 AM, Stanimir Varbanov wrote:
-> Hi Hans,
-> 
-> On 1/18/19 11:13 AM, Hans Verkuil wrote:
->> On 1/16/19 1:37 PM, Stanimir Varbanov wrote:
->>> This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
->>> field description to allow v4l clients to set bigger image size
->>> in case of variable length compressed data.
->>>
->>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>> ---
->>>  Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst | 5 ++++-
->>>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst        | 3 ++-
->>>  2 files changed, 6 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
->>> index 7f82dad9013a..dbe0b74e9ba4 100644
->>> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
->>> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
->>> @@ -30,7 +30,10 @@ describing all planes of that format.
->>>  
->>>      * - __u32
->>>        - ``sizeimage``
->>> -      - Maximum size in bytes required for image data in this plane.
->>> +      - Maximum size in bytes required for image data in this plane,
->>> +        set by the driver. When the image consists of variable length
->>> +        compressed data this is the maximum number of bytes required
->>> +        to hold an image, and it is allowed to be set by the client.
->>>      * - __u32
->>>        - ``bytesperline``
->>>        - Distance in bytes between the leftmost pixels in two adjacent
->>> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
->>> index 71eebfc6d853..54b6d2b67bd7 100644
->>> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
->>> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
->>> @@ -89,7 +89,8 @@ Single-planar format structure
->>>        - Size in bytes of the buffer to hold a complete image, set by the
->>>  	driver. Usually this is ``bytesperline`` times ``height``. When
->>>  	the image consists of variable length compressed data this is the
->>> -	maximum number of bytes required to hold an image.
->>> +	maximum number of bytes required to hold an image, and it is
->>> +	allowed to be set by the client.
->>>      * - __u32
->>>        - ``colorspace``
->>>        - Image colorspace, from enum :c:type:`v4l2_colorspace`.
->>>
->>
->> Hmm. "maximum number of bytes required to hold an image": that's not actually true
->> for bitstream formats like MPEG. It's just the size of the buffer used to store the
->> bitstream, i.e. one buffer may actually contain multiple compressed images, or a
->> compressed image is split over multiple buffers.
->>
-> 
-> Do you want me to change something in the current documentation, i.e.
-> the quoted above?
 
-Hmm, it looks like this discussion stalled (i.e. I forgot to reply).
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/events/core.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-How about this:
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -855,17 +855,30 @@ int x86_schedule_events(struct cpu_hw_ev
+ 	struct event_constraint *c;
+ 	unsigned long used_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
+ 	struct perf_event *e;
+-	int i, wmin, wmax, unsched = 0;
++	int n0, i, wmin, wmax, unsched = 0;
+ 	struct hw_perf_event *hwc;
+ 
+ 	bitmap_zero(used_mask, X86_PMC_IDX_MAX);
+ 
++	/*
++	 * Compute the number of events already present; see x86_pmu_add(),
++	 * validate_group() and x86_pmu_commit_txn(). For the former two
++	 * cpuc->n_events hasn't been updated yet, while for the latter
++	 * cpuc->n_txn contains the number of events added in the current
++	 * transaction.
++	 */
++	n0 = cpuc->n_events;
++	if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
++		n0 -= cpuc->n_txn;
++
+ 	if (x86_pmu.start_scheduling)
+ 		x86_pmu.start_scheduling(cpuc);
+ 
+ 	for (i = 0, wmin = X86_PMC_IDX_MAX, wmax = 0; i < n; i++) {
+ 		c = cpuc->event_constraint[i];
+ 
++		WARN_ON_ONCE((c && i >= n0) || (!c && i < n0));
++
+ 		/*
+ 		 * Request constraints for new events; or for those events that
+ 		 * have a dynamic constraint due to the HT workaround -- for
+@@ -945,11 +958,7 @@ int x86_schedule_events(struct cpu_hw_ev
+ 				x86_pmu.commit_scheduling(cpuc, i, assign[i]);
+ 		}
+ 	} else {
+-		i = cpuc->n_events;
+-		if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
+-			i -= cpuc->n_txn;
+-
+-		for (; i < n; i++) {
++		for (i = n0; i < n; i++) {
+ 			e = cpuc->event_list[i];
+ 
+ 			/*
 
-"When the image consists of variable length compressed data this is the
-number of bytes required by the encoder to support the worst-case
-compression scenario. Clients are allowed to set this field. However,
-drivers may ignore the value or modify it."
-
-Regards,
-
-	Hans
-
-> 
->> Only for MJPEG is this statement true since each buffer will contain a single
->> compressed JPEG image.
->>
->> Regards,
->>
->> 	Hans
->>
-> 
 
