@@ -2,101 +2,91 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970B3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FAFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7C52184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:04:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q5/D2H23"
+	by mail.kernel.org (Postfix) with ESMTP id 8338020854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfCNKED (ORCPT
+        id S1727186AbfCNKET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:04:03 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38491 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfCNKEC (ORCPT
+        Thu, 14 Mar 2019 06:04:19 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52051 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfCNKET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:04:02 -0400
-Received: by mail-pg1-f196.google.com with SMTP id m2so3635763pgl.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 03:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1/MoDfOhaWXRaehyHKveslvpP5vSpRnPhv+CQKaRgnU=;
-        b=q5/D2H239OGDOF2imYzkeRdcuHnM/e1pJ0iLcsoCtczIP/wXM1vwkhsiNfgjnkW3hY
-         H66w08UnxW3m3wkI9DWBJy/fKiF4H+0L7W+Y2WTOPGXnlTB6KQODQCtTYhqpaK2zuclu
-         WVVKMTQJeRiOtOh7+JBZwZdeDSUxPbSysWDflY2cT9HMnpoVxmskJfte6SeTCF1yn7zS
-         3lEtovAzn5HJN2TB8m/7ephqTF+pjfCiEFi+cXzwZwUh00+lE/39Ix2Yvar+Z/J7Xb8Q
-         JsOYdKQwe1v8w9jvnBD9WhLg7SLRGbwRVnZ1cy7r9B9ENXYjTAJPMXfdDnxrGpMoT+1A
-         +kNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1/MoDfOhaWXRaehyHKveslvpP5vSpRnPhv+CQKaRgnU=;
-        b=lgntQcy3xTa6rQtrPaRMbdI1WFoiNvjCc8B3v6S7HhocH1sqWxMpHZZk1gJbG2zjkA
-         tETc34g4KzIUHHhwjA6GmynDI0VNsdCdY6TTFcVYS8d8022fleJYXC0nQN0HZKxFuYD8
-         QWkD4I472P0o+Q6HVMWWPSXAZ9p+Ei+XYOK//XChKW2V6zebFpLPsu8Mi5LQiicUXhjp
-         kCMJuSk8HHThbQeiWXQ49AkhPisniAul7Ub478XwrU0+fjPoHxylTAM1c0NATQNrqb9V
-         Ga8EF9qgpxN/VloVJgir6q6L/sZ7wPqKrvdewNuXRTt4jTbtnHXmvKv4kWgiW2lu7kGT
-         samA==
-X-Gm-Message-State: APjAAAVkEP7O/yloiHTCFh3AeRzT6C8ur69zJ7qcc5xBK3yorj7ryf7J
-        l61doDBqYq48SIrXMOMivQwWww==
-X-Google-Smtp-Source: APXvYqw8VfQeMmMJCXpghYwiyq/XHQdnirN6x9JcEceegJ6jRe4xlSFVeB4efUTXY8vDFwAdZ+Wr6g==
-X-Received: by 2002:aa7:8c13:: with SMTP id c19mr12115601pfd.247.1552557841697;
-        Thu, 14 Mar 2019 03:04:01 -0700 (PDT)
-Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id u18sm32610783pfa.176.2019.03.14.03.04.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 03:04:00 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 15:33:58 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/7] x86/tsc: Update cpufreq transition notifier to
- handle multiple CPUs
-Message-ID: <20190314100358.tpkianohhoxnfsmu@vireshk-i7>
-References: <cover.1552545525.git.viresh.kumar@linaro.org>
- <8a27342332bc467242f6ccdb4d4bd4d10f8aa552.1552545525.git.viresh.kumar@linaro.org>
- <CAJZ5v0i=QoToW0WCaL50t0qe5sKSe6J3W+EnFTvYuVCp6MvZDA@mail.gmail.com>
+        Thu, 14 Mar 2019 06:04:19 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h4NDl-0006id-IW; Thu, 14 Mar 2019 11:04:17 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h4NDk-0002hp-8t; Thu, 14 Mar 2019 11:04:16 +0100
+Date:   Thu, 14 Mar 2019 11:04:16 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
+Subject: Re: [PATCH 1/4] leds: netdev trigger: use memcpy in device_name_store
+Message-ID: <20190314100416.5ywtxhsbhqz6rvdq@pengutronix.de>
+References: <20190311144227.GA4404@amd>
+ <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190313202615.22883-2-linux@rasmusvillemoes.dk>
+ <20190314092929.65amwzsaswcvsexl@pengutronix.de>
+ <8b2903c9-e56b-ea22-41b2-d6f96bec1d96@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0i=QoToW0WCaL50t0qe5sKSe6J3W+EnFTvYuVCp6MvZDA@mail.gmail.com>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8b2903c9-e56b-ea22-41b2-d6f96bec1d96@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-03-19, 10:33, Rafael J. Wysocki wrote:
-> On Thu, Mar 14, 2019 at 7:43 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > -               set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
-> > +               if (boot_cpu) {
-> > +                       boot_cpu_data.loops_per_jiffy = lpj;
-> > +               } else {
-> > +                       for_each_cpu(cpu, freq->cpus)
+On Thu, Mar 14, 2019 at 10:57:14AM +0100, Rasmus Villemoes wrote:
+> On 14/03/2019 10.29, Uwe Kleine-König wrote:
+> > Hello,
+> > 
+> > On Wed, Mar 13, 2019 at 09:26:12PM +0100, Rasmus Villemoes wrote:
+> >> --- a/drivers/leds/trigger/ledtrig-netdev.c
+> >> +++ b/drivers/leds/trigger/ledtrig-netdev.c
+> >> @@ -122,7 +122,8 @@ static ssize_t device_name_store(struct device *dev,
+> >>  		trigger_data->net_dev = NULL;
+> >>  	}
+> >>  
+> >> -	strncpy(trigger_data->device_name, buf, size);
+> >> +	memcpy(trigger_data->device_name, buf, size);
+> >> +	trigger_data->device_name[size] = '\0';
+> > 
+> > This is open-coding
+> > 
+> > 	strlcpy(trigger_data->device_name, buf, size);
 > 
-> This needs to iterate over policy->cpus or you change the behavior.
-> 
-> Not that it will matter a lot (x86 in one CPU per policy anyway in the
-> vast majority of cases), but it is a change nevertheless.  Moreover,
-> I'm not even sure if doing that for offline CPUs makes sense.
+> No. size here is the number of bytes userspace wrote, which never (well,
+> almost never, they could do something odd) contain a nul byte. Passing
+> that as size to strlcpy would guarantee that we chopped off the last
+> character from the user input.
 
-Okay.
+You're right here, strlcpy isn't a replacement here. I withdraw my
+suggestion.
+
+Best regards
+Uwe
 
 -- 
-viresh
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
