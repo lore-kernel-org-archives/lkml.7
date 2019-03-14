@@ -2,180 +2,159 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5594C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DB7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C042E2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60C52184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:40:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="cc937uCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfCNRjc (ORCPT
+        id S1727593AbfCNRkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 13:39:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51138 "EHLO huawei.com"
+        Thu, 14 Mar 2019 13:40:22 -0400
+Received: from mail-eopbgr820134.outbound.protection.outlook.com ([40.107.82.134]:64425
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726485AbfCNRjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 13:39:32 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4EC82A647B1B31D17CEB;
-        Fri, 15 Mar 2019 01:39:29 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Fri, 15 Mar 2019
- 01:39:19 +0800
-Subject: Re: [RFC PATCH 1/2] resource: Request IO port regions from children
- of ioport_resource
-To:     Guenter Roeck <linux@roeck-us.net>
-References: <1552582516-70855-1-git-send-email-john.garry@huawei.com>
- <1552582516-70855-2-git-send-email-john.garry@huawei.com>
- <20190314171200.GC14159@roeck-us.net>
-CC:     <jdelvare@suse.com>, <bhelgaas@google.com>, <rafael@kernel.org>,
-        <arnd@arndb.de>, <lorenzo.pieralisi@arm.com>, <bp@suse.de>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <linuxarm@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <57946772-f0e0-4099-3fa1-e59b216bad22@huawei.com>
-Date:   Thu, 14 Mar 2019 17:39:12 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1726485AbfCNRkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 13:40:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D3xG7kEEOfmn068eHFGVBGNIYHb9jk0WSU8n5QXM8/I=;
+ b=cc937uCvUgDDA9OwGkfaYjlcku4WbnzKHXiOsXyPk9QGdCZp188YhMds8kv/LWPoEjx+h+KEqx/x4ZbU9LzMzHJ894gCT4TY+nYqEzMrxSA1A9pkeSiycSPfa/Lm7z+AgsFX0skrNckDjAjdVs0fzuYbVx4GyRFucneP8A8Yx4I=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1565.namprd22.prod.outlook.com (10.172.63.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Thu, 14 Mar 2019 17:40:16 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018%3]) with mapi id 15.20.1709.011; Thu, 14 Mar 2019
+ 17:40:16 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jan Kara <jack@suse.cz>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: [PATCH] MIPS: Remove custom MIPS32 __kernel_fsid_t type
+Thread-Topic: [PATCH] MIPS: Remove custom MIPS32 __kernel_fsid_t type
+Thread-Index: AQHU2oz8biJKb9VnB02dJhiRtaA49w==
+Date:   Thu, 14 Mar 2019 17:40:16 +0000
+Message-ID: <20190314173900.25454-1-paul.burton@mips.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR21CA0012.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::22) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.21.0
+x-originating-ip: [67.207.99.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d6645d8f-54f3-40c6-565c-08d6a8a41e64
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR2201MB1565;
+x-ms-traffictypediagnostic: MWHPR2201MB1565:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MWHPR2201MB15655422973E7E78162DC70AC14B0@MWHPR2201MB1565.namprd22.prod.outlook.com>
+x-forefront-prvs: 09760A0505
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(39840400004)(376002)(366004)(396003)(52314003)(199004)(189003)(97736004)(7736002)(105586002)(2351001)(8936002)(966005)(54906003)(305945005)(486006)(26005)(102836004)(316002)(106356001)(44832011)(5640700003)(42882007)(50226002)(6486002)(186003)(6116002)(476003)(2616005)(256004)(6436002)(2906002)(3846002)(14444005)(14454004)(66066001)(52116002)(4326008)(81166006)(478600001)(99286004)(25786009)(53936002)(8676002)(6916009)(71190400001)(5660300002)(71200400001)(36756003)(386003)(68736007)(6306002)(6506007)(81156014)(6512007)(1076003)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1565;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XqP+B8TINw3rTTbFNc9xPwI/6dIJc1ZPpgJdiudJJNYJAdjKXrC7N1GzNZ55qd7yT+t3WGFm7381xe+2hkN32/EpepNyiR5NQnB7SK+QTih0RKbHli5slH2cKiElxcV+yRvySQARxT8FHaAAXM6FmPEJGRR4kFY8PNAySJL6ckpdifMSShtn2nr/ztUzlmLQxh8Tf5yxXFH2yv0oVAbepBdnWilJAfukGF62gX5jzy2tLEUueZ4izaqYt0i25Br/Ex5wE1MShfouZt+NTeuMDEtrfx4YU3ZCFWfNcO8zIT0bGoU1/YWFTw0iI8F3164HMvZoEcZTc+FKJtIhBVAzTO9P/wU+F4prkKeoS2fnqxhWmw1R1DA7IjzgVzgWSqDbWaHXkAayU98DD6V+B4KQky5+IMYhxJPajsXzf3Yjs9U=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190314171200.GC14159@roeck-us.net>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6645d8f-54f3-40c6-565c-08d6a8a41e64
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2019 17:40:16.2883
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1565
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 17:12, Guenter Roeck wrote:
-> On Fri, Mar 15, 2019 at 12:55:15AM +0800, John Garry wrote:
->> Currently when we request an IO port region, the request is made directly
->> to the top resource, ioport_resource.
->>
->> There is an issue here, in that drivers may request an IO port region even
->> if the IO port region has not even been mapped in (in pci_remap_iospace()).
->>
->> This may lead to crashes when the PCI host has not enumerated prior to
->> accessing the IO port region, as below:
->>
->> root@(none)$ insmod f71805f.ko
->> [   32.264016] Unable to handle kernel paging request at virtual address ffff7dfffee0002e
->> [   32.279936] Mem abort info:
->> [   32.285536]   ESR = 0x96000046
->> [   32.291657]   Exception class = DABT (current EL), IL = 32 bits
->> [   32.303542]   SET = 0, FnV = 0
->> [   32.309661]   EA = 0, S1PTW = 0
->> [   32.315957] Data abort info:
->> [   32.321728]   ISV = 0, ISS = 0x00000046
->> [   32.329420]   CM = 0, WnR = 1
->> [   32.335367] swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
->> [   32.349174] [ffff7dfffee0002e] pgd=0000000001392003, pud=0000000001393003, pmd=0000000000000000
->> [   32.366652] Internal error: Oops: 96000046 [#1] PREEMPT SMP
->> [   32.377835] Modules linked in: f71805f(+)
->> [   32.385876] CPU: 4 PID: 2681 Comm: insmod Not tainted 5.0.0-00003-ga6247cc0f8f2 #52
->> [   32.401252] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
->> [   32.419597] pstate: 80000005 (Nzcv daif -PAN -UAO)
->> [   32.429213] pc : logic_outb+0x54/0xb8
->> [   32.436556] lr : f71805f_find+0x2c/0x1b8 [f71805f]
->> [   32.446167] sp : ffff0000256bba90
->> [   32.452808] x29: ffff0000256bba90 x28: ffff000008b544d0
->> [   32.463468] x27: ffff0000256bbdf0 x26: 0000000000000100
->> [   32.474127] x25: 000000000000002c x24: ffff000011396000
->> [   32.484787] x23: ffff0000256bbb3e x22: ffff0000256bbb40
->> [   32.495446] x21: ffff000008b591b8 x20: 0000000000000087
->> [   32.506106] x19: 000000000000002e x18: ffffffffffffffff
->> [   32.516765] x17: 0000000000000000 x16: 0000000000000000
->> [   32.527424] x15: 0000000000000400 x14: 0000000000000400
->> [   32.538084] x13: 0000000000001832 x12: 0000000000000000
->> [   32.548743] x11: ffff801ffbf08ac0 x10: 0000801fead02000
->> [   32.559403] x9 : ffff801ffbffe840 x8 : 0000000000000001
->> [   32.570062] x7 : 0000000000210d00 x6 : 0000000000000000
->> [   32.580721] x5 : ffff801fb3eac380 x4 : ffff801ffbef4b20
->> [   32.591381] x3 : 0000000000ffbffe x2 : ffff0000256bbb40
->> [   32.602040] x1 : ffff7dfffee0002e x0 : ffff7dfffee00000
->> [   32.612701] Process insmod (pid: 2681, stack limit = 0x(____ptrval____))
->> [   32.626155] Call trace:
->> [   32.631050]  logic_outb+0x54/0xb8
->> [   32.637693]  f71805f_find+0x2c/0x1b8 [f71805f]
->> [   32.646607]  f71805f_init+0x38/0xe48 [f71805f]
->> [   32.655521]  do_one_initcall+0x5c/0x178
->> [   32.663212]  do_init_module+0x58/0x1b0
->> [   32.670728]  load_module+0x1dc8/0x2178
->> [   32.678243]  __se_sys_init_module+0x14c/0x1e8
->> [   32.686981]  __arm64_sys_init_module+0x18/0x20
->> [   32.695894]  el0_svc_common+0x60/0x100
->> [   32.703409]  el0_svc_handler+0x2c/0x80
->> [   32.710924]  el0_svc+0x8/0xc
->> [   32.716693] Code: d2bfdc00 f2cfbfe0 f2ffffe0 8b000021 (39000034)
->> [   32.728925] ---[ end trace ddb5e493ee686685 ]---
->> Segmentation fault
->> root@(none)$
->>
->> This issue was originally reported in [1].
->>
->> This patch changes the functionality of request_region() to request a
->> region of the direct children of the top ioport_resource.
->>
->> In this, if the IO port region has not been mapped for a particular IO
->> region, a suitable child region will not exist, and, as such,
->> request_region() calls will fail.
->>
->> A side note: there are many drivers in the kernel which fail to even call
->> request_region() prior to IO port accesses, and they also need to be fixed
->> (to call request_region() as appropriate).
->>
+For MIPS32 kernels we have a custom definition of __kernel_fsid_t. This
+differs from the asm-generic version used by all other architectures &
+MIPS64 in one way - it declares the val field as an array of long,
+rather than an array of int. Since int & long have identical size &
+alignment when targeting MIPS32 anyway, this makes little sense.
 
-Hi Guenter,
+Beyond the pointlessness this causes problems for code which prints
+entries from the val array, for example the fanotify_encode_fid()
+function [1]. If such code uses a format specified suited to an int then
+it encounters compiler warnings when building for MIPS32, such as:
 
->
-> Isn't that orthogonal to this problem ?
+  In file included from include/linux/kernel.h:14:0,
+                   from include/linux/list.h:9,
+                   from include/linux/preempt.h:11,
+                   from include/linux/spinlock.h:51,
+                   from include/linux/fdtable.h:11,
+                   from fs/notify/fanotify/fanotify.c:3:
+  fs/notify/fanotify/fanotify.c: In function 'fanotify_encode_fid':
+  include/linux/kern_levels.h:5:18: warning: format '%x' expects argument
+    of type 'unsigned int', but argument 2 has type 'long int' [-Wformat=3D=
+]
 
-Yes, it is really. I only added the f71805f driver fixup to illustrate 
-the problem in resource.c and the potential system crash, and how this 
-patch would fix it.
+Remove the custom __kernel_fsid_t definition & make use of the
+asm-generic version which will have an identical layout in memory
+anyway, in order to remove the inconsistency with other architectures.
 
->
->> [1] https://www.spinics.net/lists/linux-pci/msg49821.html
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
->> ---
->>  include/linux/ioport.h |  6 +++++-
->>  kernel/resource.c      | 19 +++++++++++++++++++
->>  2 files changed, 24 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
->> index da0ebaec25f0..cf40e1ed8211 100644
->> --- a/include/linux/ioport.h
->> +++ b/include/linux/ioport.h
->> @@ -217,7 +217,7 @@ static inline bool resource_contains(struct resource *r1, struct resource *r2)
->>
->>
->>  /* Convenience shorthand with allocation */
->> -#define request_region(start,n,name)		__request_region(&ioport_resource, (start), (n), (name), 0)
->> +#define request_region(start,n,name)		__request_region_from_children(&ioport_resource, (start), (n), (name), 0)
->>  #define request_muxed_region(start,n,name)	__request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
->>  #define __request_mem_region(start,n,name, excl) __request_region(&iomem_resource, (start), (n), (name), excl)
->>  #define request_mem_region(start,n,name) __request_region(&iomem_resource, (start), (n), (name), 0)
->
-> I can't comment on the merits of the patch (though I am a bit concerned
-> about its impact and potential source of regressions),but I don't really
-> understand why it would only apply to request_region() and not to
-> request_muxed_region(). Is this an oversight or on purpose ?
+One possible regression this could cause if is any code is attempting to
+print entries from the val array with a long-sized format specifier, in
+which case it would begin seeing compiler warnings when built against
+kernel headers including this change. Since such code is exceedingly
+rare, and would have to be MIPS32-specific to expect a long, this seems
+to be a problem that it's extremely unlikely anyone will encounter.
 
-It's an oversight, which would be fixed.
+[1] https://lore.kernel.org/linux-mips/CAOQ4uxiEkczB7PNCXegFC-eYb9zAGaio_o=
+=3DOgHAJHFd7eavBxA@mail.gmail.com/T/#mb43103277c79ef06b884359209e817db1c136=
+140
 
-Thanks,
-John
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jan Kara <jack@suse.cz>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+---
 
->
-> Guenter
->
-> .
->
+ arch/mips/include/uapi/asm/posix_types.h | 7 -------
+ 1 file changed, 7 deletions(-)
 
+diff --git a/arch/mips/include/uapi/asm/posix_types.h b/arch/mips/include/u=
+api/asm/posix_types.h
+index 6aa49c10f88f..f0ccb5b90ce9 100644
+--- a/arch/mips/include/uapi/asm/posix_types.h
++++ b/arch/mips/include/uapi/asm/posix_types.h
+@@ -21,13 +21,6 @@
+ typedef long		__kernel_daddr_t;
+ #define __kernel_daddr_t __kernel_daddr_t
+=20
+-#if (_MIPS_SZLONG =3D=3D 32)
+-typedef struct {
+-	long	val[2];
+-} __kernel_fsid_t;
+-#define __kernel_fsid_t __kernel_fsid_t
+-#endif
+-
+ #include <asm-generic/posix_types.h>
+=20
+ #endif /* _ASM_POSIX_TYPES_H */
+--=20
+2.21.0
 
