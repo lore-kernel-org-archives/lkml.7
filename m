@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83605C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ABEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C2820811
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7948C218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578855;
-	bh=5rYT6J7t5CIWAD3D/3Gllo/cCwpnd7w/WAHu9/kfawM=;
+	s=default; t=1552578857;
+	bh=nHCSrXACDGwcD9+IsRcx+pOwkYJiTFTk5ljnQi0ksxY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=pJPAHfCtjEB+mYoY8yVD6IaPi5C4rd9Ph4N+uu+KNY0AVP3lby1haY93udDDwhA5k
-	 Yplw//8kys+Agj2//O4YMoTZu7IanTVWljyAZb0SIQDnlINIZyldZwpbOFTVb3ki2O
-	 +X7u3bgk3LUbgSJmVZ6blfXxrg2PBzLHBUQTvfog=
+	b=UHOZgGSwXwn5AJEIpQiYWeOCfjGUeDEcV0JEuzQXoSaE0xEEHGLYMLPhD3GHm4pxO
+	 NOTMKD97yFLbnX5LJG6hCM+4C5boLRVoBSzaU0hJm7mFu6/RNKLaUIH6JzsTF99ua8
+	 R3cYjpTd7eKWIdghimNt4q0UVeMJyL7pzNLY2yts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfCNPyO (ORCPT
+        id S1727547AbfCNPyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:54:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35642 "EHLO
+        Thu, 14 Mar 2019 11:54:16 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35644 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbfCNPyK (ORCPT
+        with ESMTP id S1727440AbfCNPyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Mar 2019 11:54:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,24 +34,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=hBNxWOYJs3vCcxGwuayZtqBJ6dzlIMyiqwSIKuWWeH8=; b=qCiruYGjrmcL
-        ypumjkMWfqu6WbwY9PkbWEOdEkE1Ddtkq1dD4gBWmjINHCuC1xfOlq7ycRgpHnw9w06MZSq9IAVuZ
-        lJUPZWq+/TgIjbIKboPHKVq3EG/TP073/jSpQF4EcdLE3PSJrXer6qfxQXEHQ9e8uXLVAwVRu/r6B
-        1K1Fw=;
+        List-Archive; bh=dWfjekqwx4bW3nj1RrAgRmAyhSw562UmxjYiViKnTVc=; b=jJ7T77Vs/EEx
+        PFIqF9sgpFQdDl095dKhzcfoNUkO2A7gc4PK3R6jY9dAEh0MGhL46q1rq9cz//p+q3LlDdxFOx3Cc
+        FidLTxedwYTadv6r7tNuUCbRcMJbg1cb+vcw46fXBIwxPSOeOKwSS0Ga8avIPjP81FADKUkqG6STZ
+        eGmTw=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4SgJ-0002ht-Gy; Thu, 14 Mar 2019 15:54:07 +0000
+        id 1h4SgC-0002hl-MH; Thu, 14 Mar 2019 15:54:00 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id EAB371126E64; Thu, 14 Mar 2019 15:54:06 +0000 (GMT)
+        id 4FFBA1126E65; Thu, 14 Mar 2019 15:54:00 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: max14577: Get rid of match_init_data/match_of_node functions" to the regulator tree
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: wm8350: Select maximum current in specific range" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155406.EAB371126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:54:06 +0000 (GMT)
+Message-Id: <20190314155400.4FFBA1126E65@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:00 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: max14577: Get rid of match_init_data/match_of_node functions
+   regulator: wm8350: Select maximum current in specific range
 
 has been applied to the regulator tree at
 
@@ -84,95 +85,33 @@ to this mail.
 Thanks,
 Mark
 
-From ae15c519a6b97fff087cf69502bdf8fc8892f4be Mon Sep 17 00:00:00 2001
+From 5816df2f75f52f74b6fe48b1b20579acd4dfe8fb Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 12 Mar 2019 23:52:41 +0800
-Subject: [PATCH] regulator: max14577: Get rid of match_init_data/match_of_node
- functions
+Date: Wed, 13 Mar 2019 00:33:55 +0800
+Subject: [PATCH] regulator: wm8350: Select maximum current in specific range
 
-This driver has been converted to use regulator core's simplified DT
-parsing code. So the match_init_data/match_of_node functions are not
-necessary now, remove them.
+.set_current_limit callback should select the current closest to max_uA.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/max14577-regulator.c | 55 --------------------------
- 1 file changed, 55 deletions(-)
+ drivers/regulator/wm8350-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/max14577-regulator.c b/drivers/regulator/max14577-regulator.c
-index 85a88a9e4d42..07a150c9bbf2 100644
---- a/drivers/regulator/max14577-regulator.c
-+++ b/drivers/regulator/max14577-regulator.c
-@@ -155,58 +155,6 @@ static const struct regulator_desc max77836_supported_regulators[] = {
- 	[MAX77836_LDO2] = MAX77836_LDO_REG(2),
- };
+diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
+index a1c7dfee5c37..d1758a2bc769 100644
+--- a/drivers/regulator/wm8350-regulator.c
++++ b/drivers/regulator/wm8350-regulator.c
+@@ -99,7 +99,7 @@ static int get_isink_val(int min_uA, int max_uA, u16 *setting)
+ {
+ 	int i;
  
--#ifdef CONFIG_OF
--static struct of_regulator_match max14577_regulator_matches[] = {
--	{ .name	= "SAFEOUT", },
--	{ .name = "CHARGER", },
--};
--
--static struct of_regulator_match max77836_regulator_matches[] = {
--	{ .name	= "SAFEOUT", },
--	{ .name = "CHARGER", },
--	{ .name = "LDO1", },
--	{ .name = "LDO2", },
--};
--
--static inline struct regulator_init_data *match_init_data(int index,
--		enum maxim_device_type dev_type)
--{
--	switch (dev_type) {
--	case MAXIM_DEVICE_TYPE_MAX77836:
--		return max77836_regulator_matches[index].init_data;
--
--	case MAXIM_DEVICE_TYPE_MAX14577:
--	default:
--		return max14577_regulator_matches[index].init_data;
--	}
--}
--
--static inline struct device_node *match_of_node(int index,
--		enum maxim_device_type dev_type)
--{
--	switch (dev_type) {
--	case MAXIM_DEVICE_TYPE_MAX77836:
--		return max77836_regulator_matches[index].of_node;
--
--	case MAXIM_DEVICE_TYPE_MAX14577:
--	default:
--		return max14577_regulator_matches[index].of_node;
--	}
--}
--#else /* CONFIG_OF */
--static inline struct regulator_init_data *match_init_data(int index,
--		enum maxim_device_type dev_type)
--{
--	return NULL;
--}
--
--static inline struct device_node *match_of_node(int index,
--		enum maxim_device_type dev_type)
--{
--	return NULL;
--}
--#endif /* CONFIG_OF */
--
- /**
-  * Registers for regulators of max77836 use different I2C slave addresses so
-  * different regmaps must be used for them.
-@@ -265,9 +213,6 @@ static int max14577_regulator_probe(struct platform_device *pdev)
- 		if (pdata && pdata->regulators) {
- 			config.init_data = pdata->regulators[i].initdata;
- 			config.of_node = pdata->regulators[i].of_node;
--		} else {
--			config.init_data = match_init_data(i, dev_type);
--			config.of_node = match_of_node(i, dev_type);
- 		}
- 		config.regmap = max14577_get_regmap(max14577,
- 				supported_regulators[i].id);
+-	for (i = 0; i < ARRAY_SIZE(isink_cur); i++) {
++	for (i = ARRAY_SIZE(isink_cur) - 1; i >= 0; i--) {
+ 		if (min_uA <= isink_cur[i] && max_uA >= isink_cur[i]) {
+ 			*setting = i;
+ 			return 0;
 -- 
 2.20.1
 
