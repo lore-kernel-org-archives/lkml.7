@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A24BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAABC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE7220811
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D84620811
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 15:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552578950;
-	bh=3vosEVn19NY46+11FCjyHyO6jAus324/NKY67XUMK2I=;
+	s=default; t=1552578953;
+	bh=c6QhG/BiRfCVbpnx6YDq2s671rbz/C2QWbBMsWvTj4U=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=U9Dma9oqWhPj0iDqYgRY3L7NnPfoqsdZiCr6t7lTNmtcRrRRDf8EQTo8EfuMc9fFw
-	 FubmcspIbd7/wzVSfhSLcZxMBhu5g5jgYD36/SxOCZ5dBKno4q+nMggF62CNeXWofI
-	 O1c24wL1ysx0c4HEXnpMLi8/5AmSz8oGvgJ3Qr5U=
+	b=KsViIbnebWo9/f8YEhwIyyJTbxlGWQiUolDRUH5PueKKCaCxmp19xDHw9w4TSoUf4
+	 Vg0wQLiUvvIwHsb8+oCB6OVRZmGO5ovq/UM6CU2bevymaT5ZeWpsCuI1gM977gs91b
+	 qLP3zQYDteEDjRVVCimhBUaOBKC64A/yPu4PSnGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfCNPzt (ORCPT
+        id S1727871AbfCNPzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 11:55:49 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35844 "EHLO
+        Thu, 14 Mar 2019 11:55:51 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35842 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727536AbfCNPyQ (ORCPT
+        with ESMTP id S1727533AbfCNPyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Mar 2019 11:54:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,24 +34,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=gCAb2oLKzO2npBX3IR/hO0e1fl4uvXgZEkkvF+gK21U=; b=Jlw9fBzgC3OT
-        0f6Nd1Pi5zwhETaEo1/PjD5uMFodz6z6RbMuctDCSWs09PtnuANdeZ0QW5nJkIJJ2YINcqSIoKjmL
-        i6BrbQq8nTMMjqIC8smvcFmHDDGGwAj5aWz+EOqlwkDh7ITP8+lfEieqiN0Y4SiO7HPGU2OnevLzz
-        bj7gE=;
+        List-Archive; bh=qr3eoAlqU7RWrC7DmzRiPHZ9fAtx5MB2D9DVR/McsBE=; b=p0i9eI83TCSY
+        Y3ACnwfJrSTdlW2wYd0g/7uXJjknWsZhfPygRc5/84mCL2IFrs4K0RI4m7YU9+IsnAxliZMAwOQKJ
+        szF2lRhCNH2pqCzL1XRg5rFytnLMx+bbEdnRVf4q265xV/8IqcmXhRdoepFsg9auZ2eJ3PaFzblzw
+        x5EBY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4SgQ-0002ih-3f; Thu, 14 Mar 2019 15:54:14 +0000
+        id 1h4SgJ-0002hl-FX; Thu, 14 Mar 2019 15:54:07 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 931501126E64; Thu, 14 Mar 2019 15:54:13 +0000 (GMT)
+        id F21B21126E65; Thu, 14 Mar 2019 15:54:01 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Steve Twiss <stwiss.opensource@diasemi.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: ltc3589: Fix notifier mutex lock warning" to the regulator tree
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: wm831x-isink: Select maximum current in specific range" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190314155413.931501126E64@debutante.sirena.org.uk>
-Date:   Thu, 14 Mar 2019 15:54:13 +0000 (GMT)
+Message-Id: <20190314155401.F21B21126E65@debutante.sirena.org.uk>
+Date:   Thu, 14 Mar 2019 15:54:01 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: ltc3589: Fix notifier mutex lock warning
+   regulator: wm831x-isink: Select maximum current in specific range
 
 has been applied to the regulator tree at
 
@@ -84,57 +85,34 @@ to this mail.
 Thanks,
 Mark
 
-From f132da2534ec6599c78c4adcef15340cff2e9dd9 Mon Sep 17 00:00:00 2001
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Date: Tue, 26 Feb 2019 15:35:35 +0000
-Subject: [PATCH] regulator: ltc3589: Fix notifier mutex lock warning
+From 45aa908d9b720f9fe44100fe099d6fd5ab9f12ab Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 13 Mar 2019 00:33:54 +0800
+Subject: [PATCH] regulator: wm831x-isink: Select maximum current in specific
+ range
 
-The mutex for the regulator_dev must be controlled by the caller of
-the regulator_notifier_call_chain(), as described in the comment
-for that function.
+.set_current_limit callback should select the current closest to max_uA.
 
-Failure to mutex lock and unlock surrounding the notifier call results
-in a kernel WARN_ON_ONCE() which will dump a backtrace for the
-regulator_notifier_call_chain() when that function call is first made.
-The mutex can be controlled using the regulator_lock/unlock() API.
-
-Fixes: 3eb2c7ecb7ea ("regulator: Add LTC3589 support")
-Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/ltc3589.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/regulator/wm831x-isink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/ltc3589.c b/drivers/regulator/ltc3589.c
-index 63f724f260ef..75089b037b72 100644
---- a/drivers/regulator/ltc3589.c
-+++ b/drivers/regulator/ltc3589.c
-@@ -419,16 +419,22 @@ static irqreturn_t ltc3589_isr(int irq, void *dev_id)
+diff --git a/drivers/regulator/wm831x-isink.c b/drivers/regulator/wm831x-isink.c
+index 11f351191dba..5611890a724b 100644
+--- a/drivers/regulator/wm831x-isink.c
++++ b/drivers/regulator/wm831x-isink.c
+@@ -99,7 +99,7 @@ static int wm831x_isink_set_current(struct regulator_dev *rdev,
+ 	struct wm831x *wm831x = isink->wm831x;
+ 	int ret, i;
  
- 	if (irqstat & LTC3589_IRQSTAT_THERMAL_WARN) {
- 		event = REGULATOR_EVENT_OVER_TEMP;
--		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
-+		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
-+		        regulator_lock(ltc3589->regulators[i]);
- 			regulator_notifier_call_chain(ltc3589->regulators[i],
- 						      event, NULL);
-+		        regulator_unlock(ltc3589->regulators[i]);
-+		}
- 	}
- 
- 	if (irqstat & LTC3589_IRQSTAT_UNDERVOLT_WARN) {
- 		event = REGULATOR_EVENT_UNDER_VOLTAGE;
--		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
-+		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
-+		        regulator_lock(ltc3589->regulators[i]);
- 			regulator_notifier_call_chain(ltc3589->regulators[i],
- 						      event, NULL);
-+		        regulator_unlock(ltc3589->regulators[i]);
-+		}
- 	}
- 
- 	/* Clear warning condition */
+-	for (i = 0; i < ARRAY_SIZE(wm831x_isinkv_values); i++) {
++	for (i = ARRAY_SIZE(wm831x_isinkv_values) - 1; i >= 0; i--) {
+ 		int val = wm831x_isinkv_values[i];
+ 		if (min_uA <= val && val <= max_uA) {
+ 			ret = wm831x_set_bits(wm831x, isink->reg,
 -- 
 2.20.1
 
