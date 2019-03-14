@@ -2,126 +2,111 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF2CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAABC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB0A21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:05:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0Xf8zoD"
+	by mail.kernel.org (Postfix) with ESMTP id 77F5B21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfCNRFi (ORCPT
+        id S1727356AbfCNRG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 13:05:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35521 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfCNRFi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 13:05:38 -0400
-Received: by mail-pf1-f195.google.com with SMTP id j5so4277716pfa.2;
-        Thu, 14 Mar 2019 10:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PbRwO4bTo46IUBcANVEXyYvr4JJT9mh+sEJE9ITj3xc=;
-        b=X0Xf8zoD9wAOlgjd4II2gRWCdetyfOckBfQE6vMZahGWW4F48E2D/YrCse5PuCUgys
-         U0Q810JTLcVmF2mtrDmnbTN5or2AIU1Hq4OANLwuhr9m3y+NRshAb8gpYc2C71hfXpaE
-         367oGOs2j7pvA5Hmhh3RoRkw0xBkvlVz742FAamSuoePprvQzHsBsSn6DeGQTOGz4lCX
-         Gbxekdg6Vb+I4cav9beRCneBayQqCMmPhdm6/jhuT8wffxrO/RJruoRM46LdOoP+ZYuS
-         G6LMFdv/Pq4JCJ+CdHKtiCrJWpBHTW6rqFSYYhuXDpSv6FwPgq02CE3CLvmgAcHDS9cw
-         zjUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PbRwO4bTo46IUBcANVEXyYvr4JJT9mh+sEJE9ITj3xc=;
-        b=oVVwNGMcr0XuT6VnP+adns++LHBI0FEjCxFn4vkh0qYTsOXD+ew0ckThR20GYVKsqk
-         xVMyEW3yruL+qWhTCAtzchA032nxMW2l5IyCK2cxg1RdtJVQ1KESXPrJ4TN9LDElJwrq
-         lO3g1VkdzAoBYXD+Bg9a0UVvILXTpED1DQgBygoLjkNV2Wdib8rln4O053wpiKAARlZf
-         dJYdfRu7A+I3In409CBG0FkIfu+fLPtBvuO3al8hBlEjmSVTWuU6OOWG8CRgJp4eUQTj
-         kBRxQgt8/4b72o9vrvhjCpLhvCL+u7lHX2EXLk2ytXF+z8vNH8EIRJ7ApEqv6Y9UAEia
-         6SHA==
-X-Gm-Message-State: APjAAAXWfFo8OdjIeyL74m6TdybWgm7KFODXrLdO7eVYM3FjHodDEez0
-        3QVC3btHugL9YaF4dl4WyCxUkuhe
-X-Google-Smtp-Source: APXvYqzcsXHeJnk6CamJjkFG5oHz6TxyKz84oe8rFqM7hWa/ReOwaxU46jCNigWnR5xJDkCSAkxxWQ==
-X-Received: by 2002:a17:902:2e01:: with SMTP id q1mr5909887plb.253.1552583136770;
-        Thu, 14 Mar 2019 10:05:36 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l2sm20668782pgj.64.2019.03.14.10.05.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 10:05:35 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 10:05:34 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     John Garry <john.garry@huawei.com>
-Cc:     jdelvare@suse.com, bhelgaas@google.com, rafael@kernel.org,
-        arnd@arndb.de, lorenzo.pieralisi@arm.com, bp@suse.de,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, wangkefeng.wang@huawei.com,
-        linuxarm@huawei.com
-Subject: Re: [RFC PATCH 2/2] hwmon: (f71805f): Use request_region() in
- f71805f_init()
-Message-ID: <20190314170534.GB14159@roeck-us.net>
-References: <1552582516-70855-1-git-send-email-john.garry@huawei.com>
- <1552582516-70855-3-git-send-email-john.garry@huawei.com>
+        Thu, 14 Mar 2019 13:06:26 -0400
+Received: from foss.arm.com ([217.140.101.70]:47720 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfCNRG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 13:06:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 587C180D;
+        Thu, 14 Mar 2019 10:06:25 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 642B53F71D;
+        Thu, 14 Mar 2019 10:06:22 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 17:06:19 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>
+Subject: Re: [PATCH v7 02/15] sched/core: uclamp: Enforce last task UCLAMP_MAX
+Message-ID: <20190314170619.rt6yhelj3y6dzypu@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-3-patrick.bellasi@arm.com>
+ <20190313141253.GG5922@hirez.programming.kicks-ass.net>
+ <20190313161646.fp2gswuqgzi7z7ow@e110439-lin>
+ <CAJuCfpH2QPgB3D+qsbF7gzDhrD4Y6oo3Q-b8iwtUxZe-dDWR7Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552582516-70855-3-git-send-email-john.garry@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAJuCfpH2QPgB3D+qsbF7gzDhrD4Y6oo3Q-b8iwtUxZe-dDWR7Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 12:55:16AM +0800, John Garry wrote:
-> Currently the driver does not call request_region() prior to
-> accessing IO port regions in f71805f_init(), so add it.
+On 13-Mar 17:29, Suren Baghdasaryan wrote:
+> On Wed, Mar 13, 2019 at 9:16 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+> >
+> > On 13-Mar 15:12, Peter Zijlstra wrote:
+> > > On Fri, Feb 08, 2019 at 10:05:41AM +0000, Patrick Bellasi wrote:
+> > > > +static inline void uclamp_idle_reset(struct rq *rq, unsigned int clamp_id,
+> > > > +                                unsigned int clamp_value)
+> > > > +{
+> > > > +   /* Reset max-clamp retention only on idle exit */
+> > > > +   if (!(rq->uclamp_flags & UCLAMP_FLAG_IDLE))
+> > > > +           return;
+> > > > +
+> > > > +   WRITE_ONCE(rq->uclamp[clamp_id].value, clamp_value);
+> > > > +
+> > > > +   /*
+> > > > +    * This function is called for both UCLAMP_MIN (before) and UCLAMP_MAX
+> > > > +    * (after). The idle flag is reset only the second time, when we know
+> > > > +    * that UCLAMP_MIN has been already updated.
+> > >
+> > > Why do we care? That is, what is this comment trying to tell us.
+> >
+> > Right, the code is clear enough, I'll remove this comment.
 > 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->  drivers/hwmon/f71805f.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwmon/f71805f.c b/drivers/hwmon/f71805f.c
-> index 73c681162653..910082c7f184 100644
-> --- a/drivers/hwmon/f71805f.c
-> +++ b/drivers/hwmon/f71805f.c
-> @@ -1617,10 +1617,21 @@ static int __init f71805f_init(void)
->  	int err;
->  	unsigned short address;
->  	struct f71805f_sio_data sio_data;
-> +	struct resource *res;
-> +	size_t size = 0x4e - 0x2e + SIO_REG_ADDR + 4;
-> +
-> +	/* Request the whole 0x2e - 0x4e region */
-> +	res = request_region(0x2e, size, "f71805f");
+> It would be probably even clearer if rq->uclamp_flags &=
+> ~UCLAMP_FLAG_IDLE is done from inside uclamp_rq_inc after
+> uclamp_rq_inc_id for both clamps is called.
 
-request_muxed_region() would be a better choice here since it doesn't
-bail out immediately if the region is temporarily busy.
+Good point! I'll move it there to have something like:
 
-Thanks,
-Guenter
+---8<---
+static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+{
+	unsigned int clamp_id;
 
-> +	if (!res)
-> +		return -EBUSY;
->  
->  	if (f71805f_find(0x2e, &address, &sio_data)
-> -	 && f71805f_find(0x4e, &address, &sio_data))
-> +	 && f71805f_find(0x4e, &address, &sio_data)) {
-> +		release_region(0x2e, size);
->  		return -ENODEV;
-> +	}
-> +
-> +	release_region(0x2e, size);
->  
->  	err = platform_driver_register(&f71805f_driver);
->  	if (err)
-> -- 
-> 2.17.1
-> 
+	if (unlikely(!p->sched_class->uclamp_enabled))
+		return;
+
+	for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id)
+		uclamp_rq_inc_id(p, rq, clamp_id);
+
+	/* Reset clamp holding when we have at least one RUNNABLE task */
+	if (rq->uclamp_flags & UCLAMP_FLAG_IDLE)
+		rq->uclamp_flags &= ~UCLAMP_FLAG_IDLE;
+}
+---8<---
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
