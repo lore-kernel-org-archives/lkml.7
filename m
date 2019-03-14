@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF076C43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D823AC4360F
 	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5FE2064A
+	by mail.kernel.org (Postfix) with ESMTP id AF02A21019
 	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfCNKLW (ORCPT
+        id S1727131AbfCNKNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:11:22 -0400
-Received: from ol.sdf.org ([205.166.94.20]:49214 "EHLO mx.sdf.org"
+        Thu, 14 Mar 2019 06:13:32 -0400
+Received: from ol.sdf.org ([205.166.94.20]:65129 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbfCNKLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:11:22 -0400
+        id S1726737AbfCNKNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 06:13:32 -0400
 Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2EA9rGt024533
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2EABZau016183
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Thu, 14 Mar 2019 10:09:53 GMT
+        Thu, 14 Mar 2019 10:11:35 GMT
 Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x2EA9q1Z025888;
-        Thu, 14 Mar 2019 10:09:52 GMT
-Date:   Thu, 14 Mar 2019 10:09:52 GMT
+        by sdf.org (8.15.2/8.12.8/Submit) id x2EABZAl015257;
+        Thu, 14 Mar 2019 10:11:35 GMT
+Date:   Thu, 14 Mar 2019 10:11:35 GMT
 From:   George Spelvin <lkml@sdf.org>
-Message-Id: <201903141009.x2EA9q1Z025888@sdf.org>
-To:     13@sdf.org, andriy.shevchenko@linux.intel.com, lkml@sdf.org,
-        st5pub@yandex.ru
+Message-Id: <201903141011.x2EABZAl015257@sdf.org>
+To:     andriy.shevchenko@linux.intel.com, lkml@sdf.org, st5pub@yandex.ru
 Subject: Re: [PATCH 1/5] lib/sort: Make swap functions more generic
 Cc:     akpm@linux-foundation.org, daniel.wagner@siemens.com,
         dchinner@redhat.com, don.mullis@gmail.com, geert@linux-m68k.org,
