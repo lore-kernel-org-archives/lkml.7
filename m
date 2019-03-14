@@ -2,82 +2,213 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D17C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DBAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01BD92087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 06:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325D82087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 07:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WL9Hd2LL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfCNG7w (ORCPT
+        id S1727004AbfCNHBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 02:59:52 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:57139 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726464AbfCNG7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 02:59:52 -0400
-X-IronPort-AV: E=Sophos;i="5.58,477,1544457600"; 
-   d="scan'208";a="56744257"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 14 Mar 2019 14:59:49 +0800
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
-        by cn.fujitsu.com (Postfix) with ESMTP id A764E4C8B058;
-        Thu, 14 Mar 2019 14:59:27 +0800 (CST)
-Received: from localhost.localdomain (10.167.226.33) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 14 Mar 2019 14:59:50 +0800
-From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
-To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <suyj.fnst@cn.fujitsu.com>
-Subject: [PATCH] xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
-Date:   Thu, 14 Mar 2019 14:59:42 +0800
-Message-ID: <1552546782-102587-1-git-send-email-suyj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 14 Mar 2019 03:01:22 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:56301 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726464AbfCNHBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 03:01:21 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id c2df480a
+        for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 06:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=1ntL2n5GEiCS0SNcUaaDGUqhM58=; b=WL9Hd2
+        LLZX6fdFg2e8v99R7CdhXC7VHevY3VoKgpO412t/bLZJxTApq0j76BfqBI/RAqJ4
+        NoQ9RDXTy1AahPZHwiYX/PvgiGai6pDPhWkdqJ5yEqkyXXLyIZkbBpQHz6VAO24h
+        4FvJSFSwmRkPHGN0GP02ytlzmywVWvTYf8zoU9Zr+BsUGSrQddbjTYx/IF9AqleW
+        BT5k1AbhJOrSNPd++Z4Ns8togn1YHdIiQqc+h+w0wZiKQIF/gyc7nWIrT12rDFsP
+        KArjjRxx2DQLDnmYnJyEtudfRPULCuT/br7fkTNnaZREHSvnvCzp6gAftXEMjCHT
+        JxTQZqjjLmsRHj/w==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ea4fbd6a (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
+        for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 06:40:37 +0000 (UTC)
+Received: by mail-ot1-f46.google.com with SMTP id c18so4137666otl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 00:01:19 -0700 (PDT)
+X-Gm-Message-State: APjAAAUGgBGgXzXSzQcz3nKPXbvdkWEj+V2FWwwOhEyeQi0taJeIo5uz
+        v3kACq5yBhQS3tJLQyT5kN4EjsGQxSVHgjHRqLE=
+X-Google-Smtp-Source: APXvYqxH6H+49MZXaY5VM7EOIdthQm8triTY5ARxkGAF7lHFHN1wy79oBQTWp5RCjZlnYsq8x4A21LV6t+cexyIXD/c=
+X-Received: by 2002:a9d:7645:: with SMTP id o5mr31858423otl.225.1552546878335;
+ Thu, 14 Mar 2019 00:01:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.167.226.33]
-X-yoursite-MailScanner-ID: A764E4C8B058.A0B7C
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
+References: <20190114201911.13725-1-malat@debian.org> <20190313211230.17527-1-malat@debian.org>
+In-Reply-To: <20190313211230.17527-1-malat@debian.org>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Thu, 14 Mar 2019 01:01:07 -0600
+X-Gmail-Original-Message-ID: <CAHmME9rA+eM0PcsbZtFgBYObxaBOQvWt7EcGYE-yM+O2aHd6uQ@mail.gmail.com>
+Message-ID: <CAHmME9rA+eM0PcsbZtFgBYObxaBOQvWt7EcGYE-yM+O2aHd6uQ@mail.gmail.com>
+Subject: Re: [PATCH v3] lib/siphash.c: annotate implicit fall throughs
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
-frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
-xfrm6_tunnel_spi, so need to wait it.
+Hi Mathieu,
 
-Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
-Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
----
- net/ipv6/xfrm6_tunnel.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks for getting this v3 into shape.
 
-diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
-index bc65db7..12cb3aa 100644
---- a/net/ipv6/xfrm6_tunnel.c
-+++ b/net/ipv6/xfrm6_tunnel.c
-@@ -402,6 +402,10 @@ static void __exit xfrm6_tunnel_fini(void)
- 	xfrm6_tunnel_deregister(&xfrm6_tunnel_handler, AF_INET6);
- 	xfrm_unregister_type(&xfrm6_tunnel_type, AF_INET6);
- 	unregister_pernet_subsys(&xfrm6_tunnel_net_ops);
-+	/* Someone maybe has gotten the xfrm6_tunnel_spi.
-+	 * So need to wait it.
-+	 */
-+	rcu_barrier();
- 	kmem_cache_destroy(xfrm6_tunnel_spi_kmem);
- }
- 
--- 
-2.7.4
+On Wed, Mar 13, 2019 at 3:12 PM Mathieu Malaterre <malat@debian.org> wrote:
+> There is a plan to build the kernel with -Wimplicit-fallthrough and
+> these places in the code produced warnings (W=1). Fix them up.
+>
+> This commit remove the following warnings:
+>
+>   lib/siphash.c:71:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   lib/siphash.c:72:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   lib/siphash.c:73:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   lib/siphash.c:75:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   lib/siphash.c:108:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   lib/siphash.c:109:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   lib/siphash.c:110:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   lib/siphash.c:112:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   lib/siphash.c:434:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   lib/siphash.c:462:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>
+> Move the break statement onto the next line to match the fall-through
+> comment pattern. Also move the trailing statement onto the next line to
+> pass checkpatch verification.
+>
+> Acked-by: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+> v3: move break statements onto next line and please checkpatch
+> v2: some cases were missed in v1, update missing ones
+>
+>  lib/siphash.c | 76 +++++++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 56 insertions(+), 20 deletions(-)
+>
+> diff --git a/lib/siphash.c b/lib/siphash.c
+> index 3ae58b4edad6..f459e0f4a14e 100644
+> --- a/lib/siphash.c
+> +++ b/lib/siphash.c
+> @@ -68,13 +68,26 @@ u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key)
+>                                                   bytemask_from_count(left)));
+>  #else
+>         switch (left) {
+> -       case 7: b |= ((u64)end[6]) << 48;
+> -       case 6: b |= ((u64)end[5]) << 40;
+> -       case 5: b |= ((u64)end[4]) << 32;
+> -       case 4: b |= le32_to_cpup(data); break;
+> -       case 3: b |= ((u64)end[2]) << 16;
+> -       case 2: b |= le16_to_cpup(data); break;
+> -       case 1: b |= end[0];
+> +       case 7:
+> +               b |= ((u64)end[6]) << 48;
+> +               /* fall through */
+> +       case 6:
+> +               b |= ((u64)end[5]) << 40;
+> +               /* fall through */
+> +       case 5:
+> +               b |= ((u64)end[4]) << 32;
+> +               /* fall through */
+> +       case 4:
+> +               b |= le32_to_cpup(data);
+> +               break;
+> +       case 3:
+> +               b |= ((u64)end[2]) << 16;
+> +               /* fall through */
+> +       case 2:
+> +               b |= le16_to_cpup(data);
+> +               break;
+> +       case 1:
+> +               b |= end[0];
+>         }
+>  #endif
+>         POSTAMBLE
+> @@ -101,13 +114,26 @@ u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key)
+>                                                   bytemask_from_count(left)));
+>  #else
+>         switch (left) {
+> -       case 7: b |= ((u64)end[6]) << 48;
+> -       case 6: b |= ((u64)end[5]) << 40;
+> -       case 5: b |= ((u64)end[4]) << 32;
+> -       case 4: b |= get_unaligned_le32(end); break;
+> -       case 3: b |= ((u64)end[2]) << 16;
+> -       case 2: b |= get_unaligned_le16(end); break;
+> -       case 1: b |= end[0];
+> +       case 7:
+> +               b |= ((u64)end[6]) << 48;
+> +               /* fall through */
+> +       case 6:
+> +               b |= ((u64)end[5]) << 40;
+> +               /* fall through */
+> +       case 5:
+> +               b |= ((u64)end[4]) << 32;
+> +               /* fall through */
+> +       case 4:
+> +               b |= get_unaligned_le32(end);
+> +               break;
+> +       case 3:
+> +               b |= ((u64)end[2]) << 16;
+> +               /* fall through */
+> +       case 2:
+> +               b |= get_unaligned_le16(end);
+> +               break;
+> +       case 1:
+> +               b |= end[0];
+>         }
+>  #endif
+>         POSTAMBLE
+> @@ -431,9 +457,14 @@ u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
+>                 v0 ^= m;
+>         }
+>         switch (left) {
+> -       case 3: b |= ((u32)end[2]) << 16;
+> -       case 2: b |= le16_to_cpup(data); break;
+> -       case 1: b |= end[0];
+> +       case 3:
+> +               b |= ((u32)end[2]) << 16;
+> +               /* fall through */
+> +       case 2:
+> +               b |= le16_to_cpup(data);
+> +               break;
+> +       case 1:
+> +               b |= end[0];
+>         }
+>         HPOSTAMBLE
+>  }
+> @@ -454,9 +485,14 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
+>                 v0 ^= m;
+>         }
+>         switch (left) {
+> -       case 3: b |= ((u32)end[2]) << 16;
+> -       case 2: b |= get_unaligned_le16(end); break;
+> -       case 1: b |= end[0];
+> +       case 3:
+> +               b |= ((u32)end[2]) << 16;
+> +               /* fall through */
+> +       case 2:
+> +               b |= get_unaligned_le16(end);
+> +               break;
+> +       case 1:
+> +               b |= end[0];
+>         }
+>         HPOSTAMBLE
+>  }
+> --
+> 2.20.1
 
+Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
+Greg - would you take this through your tree?
 
+Jason
