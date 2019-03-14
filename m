@@ -2,136 +2,135 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D45CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59B7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4844120449
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61C3218A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 13:18:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Pk9TYiY6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="byKyxjAn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/tr6J2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfCNNQl (ORCPT
+        id S1727356AbfCNNR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 09:16:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47864 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfCNNQk (ORCPT
+        Thu, 14 Mar 2019 09:17:59 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34356 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbfCNNR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 09:16:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3819760767; Thu, 14 Mar 2019 13:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552569399;
-        bh=jo9pe66jaamYZnQ5lg6IBwaBgp3wAxGqI9I8uIJdCYM=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Pk9TYiY6QEremnrQ9+qKxo0kgV15aVGeGOnJ38bEkIyRoCE7HWbKflJ3YN3lEeVxR
-         34xbkGeuxVLeRmEt2ouy7NoJ4dh1X4fIuQOwce6XgEyUkaSaMYeJTCvX8qgiMFDTb6
-         mpA9WAtnMHKgT04Ia9AIowjdm/sbauYgK90svIxI=
-Received: from purkki.adurom.net (purkki.adurom.net [80.68.90.206])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0CB0F6013C;
-        Thu, 14 Mar 2019 13:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552569398;
-        bh=jo9pe66jaamYZnQ5lg6IBwaBgp3wAxGqI9I8uIJdCYM=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=byKyxjAnzwJ7YIVKxn9U+pJUpCo7rQtm0Ct72E4TEP2jqj2DYG6xgAQvCNkn5TQDX
-         BKrlKV6/Shd5ebIlRFzd65F6uab3y4ZBvEp/kkQzJOvADKaDi54xvbw9y93Fs8qSOD
-         NhZXX+izv1Bn3XfDbwx4PExJFuCeoBCK2U2TrZww=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0CB0F6013C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "H Peter Anvin" <hpa@zytor.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Xiaoyao Li " <xiaoyao.li@intel.com>,
-        "Michael Chan" <michael.chan@broadcom.com>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "x86" <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v5 03/18] wlcore: simplify/fix/optimize reg_ch_conf_pending operations
-References: <1552431636-31511-1-git-send-email-fenghua.yu@intel.com>
-        <1552431636-31511-4-git-send-email-fenghua.yu@intel.com>
-Date:   Thu, 14 Mar 2019 15:16:33 +0200
-In-Reply-To: <1552431636-31511-4-git-send-email-fenghua.yu@intel.com> (Fenghua
-        Yu's message of "Tue, 12 Mar 2019 16:00:21 -0700")
-Message-ID: <87a7hxzjda.fsf@purkki.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Thu, 14 Mar 2019 09:17:58 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l5so4795247lje.1;
+        Thu, 14 Mar 2019 06:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/7jFaqzBkBgJOqqcmYk+H8RgQmMqHirtHzXa3rG7ILY=;
+        b=E/tr6J2xgdxNI4dV5BJmLthQudBaXiXEIzVOJgdw1bJ34gPE1jYJFPnEzmiuioZapi
+         XqhLSGwAlvxza3sT+1+NRzwtM/UgjG0KfFWPZcwI3bR9l7+4WlGQft4xO3LC3xd54Ipt
+         c6ydk5F64I7TVsKZ79QjRwWjlnNzfFfXyXD5aBSDCcYo0CKFobdNJUmwEkRXmnkUWISs
+         F7d0eRWtdUQxl5s1vzTCtS7YOMu/Ey1ryQaFhzgY783DAtq8Fsa05hm8Vjrn2dcgvIYQ
+         SKGzE3Chfm3P2YTuwZa5GW0a1GoYECYrY/RcjLZujxSGeYrHCIhiL2XmqD+jOs14LBAW
+         rj5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/7jFaqzBkBgJOqqcmYk+H8RgQmMqHirtHzXa3rG7ILY=;
+        b=PrlWSnEoMRcAK7KC+GzLapLp25KzIRsJVmoIEvvUUT1NXQDD89cWqvqz7XPSEkF9GG
+         t/usv7OoBF9g/nDaQOLZHYp/1VrAJaG24M+vfrcYvd/46edU9qh+J29DKPeS0mD9634w
+         G+HbTT1chh9yH/NStlaW9JqWS8XISH4QbQY7XS5aJlKrKDQaFlLTTluoVJdFstqQ4lg5
+         jVBaZli9OyYh/ihPL5+KpkYkWPdDrjkY9Kq+2xOhTyEBXsBsXYVIwTnq1Ecv08oWNsYP
+         bNW85aUyPfsBYCXUKW9d6D2lPfMyeXbMrt9znqD/3kboTKE1piDShyc8CJezI8+ukuYf
+         S/vw==
+X-Gm-Message-State: APjAAAXov+D6RBes7d41Uff1yq8M2weFJ+GlIy5Rwh7CTnF3/+7Xp4qr
+        dlgvXQQ/eKGYSyuA39z4llNZRvKJ
+X-Google-Smtp-Source: APXvYqxeuPnTRROXqIz8/xnaTcRk2dQyBypVKc+uk7fZ4IN3js4PpNLviHAx55KF4TrDPKfCL9jc4A==
+X-Received: by 2002:a2e:425b:: with SMTP id p88mr25332270lja.78.1552569475936;
+        Thu, 14 Mar 2019 06:17:55 -0700 (PDT)
+Received: from a2k-HP-ProDesk-600-G2-SFF.kyiv.epam.com (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
+        by smtp.gmail.com with ESMTPSA id y63sm2733082lfd.58.2019.03.14.06.17.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 14 Mar 2019 06:17:55 -0700 (PDT)
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+To:     netdev@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, jgross@suse.com,
+        boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        davem@davemloft.net
+Cc:     andr2000@gmail.com,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Subject: [Xen-devel][PATCH] xen/netfront: Remove unneeded .resume callback
+Date:   Thu, 14 Mar 2019 15:17:49 +0200
+Message-Id: <20190314131749.25706-1-andr2000@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fenghua Yu <fenghua.yu@intel.com> writes:
+From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-> From: Paolo Bonzini <pbonzini@redhat.com>
->
-> Bitmaps are defined on unsigned longs, so the usage of u32[2] in the
-> wlcore driver is incorrect.  As noted by Peter Zijlstra, casting arrays
-> to a bitmap is incorrect for big-endian architectures.
->
-> When looking at it I observed that:
->
-> - operations on reg_ch_conf_pending is always under the wl_lock mutex,
-> so set_bit is overkill
->
-> - the only case where reg_ch_conf_pending is accessed a u32 at a time is
-> unnecessary too.
->
-> This patch cleans up everything in this area, and changes tmp_ch_bitmap
-> to have the proper alignment.
->
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Currently on driver resume we remove all the network queues and
+destroy shared Tx/Rx rings leaving the driver in its current state
+and never signaling the backend of this frontend's state change.
+This leads to the number of consequences:
+- when frontend withdraws granted references to the rings etc. it cannot
+  be cleanly done as the backend still holds those (it was not told to
+  free the resources)
+- it is not possible to resume driver operation as all the communication
+  means with the backned were destroyed by the frontend, thus
+  making the frontend appear to the guest OS as functional, but
+  not really.
 
-[...]
+Fix this by not destroying communication channels/rings on driver
+resume.
 
->  int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
->  {
->  	struct wl12xx_cmd_regdomain_dfs_config *cmd = NULL;
->  	int ret = 0, i, b, ch_bit_idx;
-> -	u32 tmp_ch_bitmap[2];
-> +	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
->  	struct wiphy *wiphy = wl->hw->wiphy;
->  	struct ieee80211_supported_band *band;
->  	bool timeout = false;
+Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+---
+ drivers/net/xen-netfront.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-[...]
-
-> @@ -1754,8 +1751,8 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
->  		goto out;
->  	}
->  
-> -	cmd->ch_bit_map1 = cpu_to_le32(tmp_ch_bitmap[0]);
-> -	cmd->ch_bit_map2 = cpu_to_le32(tmp_ch_bitmap[1]);
-> +	cmd->ch_bit_map1 = tmp_ch_bitmap[0];
-> +	cmd->ch_bit_map2 = tmp_ch_bitmap[1];
-
-Will sparse still be happy? AFAICS you are now assigning u32 to __le32:
-
-struct wl12xx_cmd_regdomain_dfs_config {
-       struct wl1271_cmd_header header;
-
-       __le32 ch_bit_map1;
-       __le32 ch_bit_map2;
-
-Also this doesn't depend on anything else from this patchset, right? So
-I could apply this directly?
-
+diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
+index c914c24f880b..2ca162048da4 100644
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -1422,22 +1422,6 @@ static void xennet_disconnect_backend(struct netfront_info *info)
+ 	}
+ }
+ 
+-/**
+- * We are reconnecting to the backend, due to a suspend/resume, or a backend
+- * driver restart.  We tear down our netif structure and recreate it, but
+- * leave the device-layer structures intact so that this is transparent to the
+- * rest of the kernel.
+- */
+-static int netfront_resume(struct xenbus_device *dev)
+-{
+-	struct netfront_info *info = dev_get_drvdata(&dev->dev);
+-
+-	dev_dbg(&dev->dev, "%s\n", dev->nodename);
+-
+-	xennet_disconnect_backend(info);
+-	return 0;
+-}
+-
+ static int xen_net_read_mac(struct xenbus_device *dev, u8 mac[])
+ {
+ 	char *s, *e, *macstr;
+@@ -2185,7 +2169,6 @@ static struct xenbus_driver netfront_driver = {
+ 	.ids = netfront_ids,
+ 	.probe = netfront_probe,
+ 	.remove = xennet_remove,
+-	.resume = netfront_resume,
+ 	.otherend_changed = netback_changed,
+ };
+ 
 -- 
-Kalle Valo
+2.21.0
+
