@@ -2,338 +2,109 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BC4C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605BDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7453B2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D6521019
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 10:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S8ZAjb2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfCNKzr (ORCPT
+        id S1727433AbfCNK6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 06:55:47 -0400
-Received: from foss.arm.com ([217.140.101.70]:42198 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727374AbfCNKzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 06:55:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19F2480D;
-        Thu, 14 Mar 2019 03:55:46 -0700 (PDT)
-Received: from en101 (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B31283F71D;
-        Thu, 14 Mar 2019 03:55:43 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 10:55:37 +0000
-From:   Suzuki K Poulose <Suzuki.Poulose@arm.com>
-To:     Zheng Xiang <zhengxiang9@huawei.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>, christoffer.dall@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-        lious.lilei@hisilicon.com, lishuo1@hisilicon.com,
-        suzuki.poulose@arm.com
-Subject: Re: [RFC] Question about TLB flush while set Stage-2 huge pages
-Message-ID: <20190314105537.GA15323@en101>
-References: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
- <e2a94937-c324-e2d6-7e61-3f998e6e6e22@arm.com>
- <1c0e07b9-73f0-efa4-c1b7-ad81789b42c5@huawei.com>
- <5188e3b9-5b5a-a6a7-7ef0-09b7b4f06af6@arm.com>
- <348d0b3b-c74b-7b39-ec30-85905c077c38@huawei.com>
+        Thu, 14 Mar 2019 06:58:25 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36920 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbfCNK6Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 06:58:25 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2EAwBol012260;
+        Thu, 14 Mar 2019 05:58:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552561091;
+        bh=ij0v6/c4XznrS6VH0qbWL31+ThtFCQqjuwaHX9q3IYw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=S8ZAjb2J8GSS4vFxv4z0KY0gYpGGnT8DYGNOvJ0dOJByc5rMEX+/CaN2hht0ubzTX
+         LlvGmTBSuFNxXrafnrBppMMMw7ULI56y4qKScjDfbTeQUxCHqMfADy1tyV2tYTjtJw
+         hV+1KE61hYL+DjBEoksKecR09VMpqjLsTEoHwod0=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2EAwBMk042533
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 Mar 2019 05:58:11 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 14
+ Mar 2019 05:58:10 -0500
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Thu, 14 Mar 2019 05:58:11 -0500
+Received: from [172.22.128.177] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2EAw7R3005299;
+        Thu, 14 Mar 2019 05:58:08 -0500
+Subject: Re: [PATCH] gpio: omap: avoid clang warning
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     Nick Desaulniers <ndesaulniers@google.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190307103348.1591457-1-arnd@arndb.de>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <e15686f1-7ec7-194f-d5f2-0892964f91c5@ti.com>
+Date:   Thu, 14 Mar 2019 12:58:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <348d0b3b-c74b-7b39-ec30-85905c077c38@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190307103348.1591457-1-arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zheng,
+Hi Arnd,
 
-On Wed, Mar 13, 2019 at 05:45:31PM +0800, Zheng Xiang wrote:
+On 07.03.19 12:33, Arnd Bergmann wrote:
+> clang warns about a tentative array definition in the gpio-omap driver:
 > 
+> drivers/gpio/gpio-omap.c:1282:34: error: tentative array definition assumed to have one element [-Werror]
+> static const struct of_device_id omap_gpio_match[];
 > 
-> On 2019/3/13 2:18, Marc Zyngier wrote:
-> > Hi Zheng,
-> > 
-> > On 12/03/2019 15:30, Zheng Xiang wrote:
-> >> Hi Marc,
-> >>
-> >> On 2019/3/12 19:32, Marc Zyngier wrote:
-> >>> Hi Zheng,
-> >>>
-> >>> On 11/03/2019 16:31, Zheng Xiang wrote:
-> >>>> Hi all,
-> >>>>
-> >>>> While a page is merged into a transparent huge page, KVM will invalidate Stage-2 for
-> >>>> the base address of the huge page and the whole of Stage-1.
-> >>>> However, this just only invalidates the first page within the huge page and the other
-> >>>> pages are not invalidated, see bellow:
-> >>>>
-> >>>>     +---------------+--------------+
-> >>>>     |abcde       2MB-Page          |
-> >>>>     +---------------+--------------+
-> >>>>
-> >>>>     TLB before setting new pmd:
-> >>>>     +---------------+--------------+
-> >>>>     |      VA       |    PAGESIZE  |
-> >>>>     +---------------+--------------+
-> >>>>     |      a        |      4KB     |
-> >>>>     +---------------+--------------+
-> >>>>     |      b        |      4KB     |
-> >>>>     +---------------+--------------+
-> >>>>     |      c        |      4KB     |
-> >>>>     +---------------+--------------+
-> >>>>     |      d        |      4KB     |
-> >>>>     +---------------+--------------+
-> >>>>
-> >>>>     TLB after setting new pmd:
-> >>>>     +---------------+--------------+
-> >>>>     |      VA       |    PAGESIZE  |
-> >>>>     +---------------+--------------+
-> >>>>     |      a        |      2MB     |
-> >>>>     +---------------+--------------+
-> >>>>     |      b        |      4KB     |
-> >>>>     +---------------+--------------+
-> >>>>     |      c        |      4KB     |
-> >>>>     +---------------+--------------+
-> >>>>     |      d        |      4KB     |
-> >>>>     +---------------+--------------+
-> >>>>
-> >>>> When VM access *b* address, it will hit the TLB and result in TLB conflict aborts or other potential exceptions.
-> >>>
-> >>> That's really bad. I can only imagine two scenarios:
-> >>>
-> >>> 1) We fail to unmap a,b,c,d (and potentially another 508 PTEs), loosing
-> >>> the PTE table in the process, and place the PMD instead. I can't see
-> >>> this happening.
-> >>>
-> >>> 2) We fail to invalidate on unmap, and that slightly less bad (but still
-> >>> quite bad).
-> >>>
-> >>> Which of the two cases are you seeing?
-> >>>
-> >>>> For example, we need to keep tracking of the VM memory dirty pages when VM is in live migration.
-> >>>> KVM will set the memslot READONLY and split the huge pages.
-> >>>> After live migration is canceled and abort, the pages will be merged into THP.
-> >>>> The later access to these pages which are READONLY will cause level-3 Permission Fault until they are invalidated.
-> >>>>
-> >>>> So should we invalidate the tlb entries for all relative pages(e.g a,b,c,d), like __flush_tlb_range()?
-> >>>> Or we can call __kvm_tlb_flush_vmid() to invalidate all tlb entries.
-> >>>
-> >>> We should perform an invalidate on each unmap. unmap_stage2_range seems
-> >>> to do the right thing. __flush_tlb_range only caters for Stage1
-> >>> mappings, and __kvm_tlb_flush_vmid() is too big a hammer, as it nukes
-> >>> TLBs for the whole VM.
-> >>>
-> >>> I'd really like to understand what you're seeing, and how to reproduce
-> >>> it. Do you have a minimal example I could run on my own HW?
-> >>
-> >> When I start the live migration for a VM, qemu then begins to log and count dirty pages.
-> >> During the live migration, KVM set the pages READONLY so that we can count how many pages
-> >> would be wrote afterwards.
-> >>
-> >> Anything is OK until I cancel the live migration and qemu stop logging. Later the VM gets hang.
-> >> The trace log shows repeatedly level-3 permission fault caused by a write on a same IPA. After
-> >> analyzing the source code, I find KVM always return from the bellow *if* statement in
-> >> stage2_set_pmd_huge() even if we only have a single VCPU:
-> >>
-> >>         /*
-> >>          * Multiple vcpus faulting on the same PMD entry, can
-> >>          * lead to them sequentially updating the PMD with the
-> >>          * same value. Following the break-before-make
-> >>          * (pmd_clear() followed by tlb_flush()) process can
-> >>          * hinder forward progress due to refaults generated
-> >>          * on missing translations.
-> >>          *
-> >>          * Skip updating the page table if the entry is
-> >>          * unchanged.
-> >>          */
-> >>         if (pmd_val(old_pmd) == pmd_val(*new_pmd))
-> >>             return 0;
-> >>
-> >> The PMD has already set the PMD_S2_RDWR bit. I doubt kvm_tlb_flush_vmid_ipa() does not invalidate
-> >> Stage-2 for the subpages of the PMD(except the first PTE of this PMD). Finally I add some debug
-> >> code to flush tlb for all subpages of the PMD, as shown bellow:
-> >>
-> >>         /*
-> >>          * Mapping in huge pages should only happen through a
-> >>          * fault.  If a page is merged into a transparent huge
-> >>          * page, the individual subpages of that huge page
-> >>          * should be unmapped through MMU notifiers before we
-> >>          * get here.
-> >>          *
-> >>          * Merging of CompoundPages is not supported; they
-> >>          * should become splitting first, unmapped, merged,
-> >>          * and mapped back in on-demand.
-> >>          */
-> >>         VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
-> >>
-> >>         pmd_clear(pmd);
-> >>         for (cnt = 0; cnt < 512; cnt++)
-> >>             kvm_tlb_flush_vmid_ipa(kvm, addr + cnt*PAGE_SIZE);
-> >>
-> >> Then the problem no longer reproduce.
-> > 
-> > This makes very little sense. We shouldn't be able to enter this path
-> > for anything else but a permission update, otherwise the VM_BUG_ON
-> > should fire.
+> It's best to just reorder the entire file to avoid forward declarations,
+> which lets us use the regular declaration. To do this, the unnecessary
+> CONFIG_OF check must also be removed.
 > 
-> Hmm, I think I didn't describe it very clearly.
-> Look at the following sequence:
-> 
-> 1) Set a PMD READONLY and logging_active.
-> 
-> 2) KVM handles permission fault caused by writing a subpage(assumpt *b*) within this huge PMD.
-> 
-> 3) KVM dissolves PMD and invalidates TLB for this PMD. Then set a writable PTE.
-> 
-> 4) Read another 511 PTEs and setup Stage-2 PTE table.
-> 
-> 5) Now remove logging_active and keep another 511 PTEs READONLY.
-> 
-> 6) VM continues to write a subpage(assumpt *c*) and cause permission fault.
-> 
-> 7) KVM handles this new fault and makes a new writable PMD after transparent_hugepage_adjust().
-> 
-> 8) KVM invalidates TLB for the first page(*a*) of the PMD.
->    Here another 511 RO PTEs entries still stay in TLB, especially *c* which will be wrote later.
-> 
-> 9) KVM then set this new writable PMD.
->    Step 8-9 is what stage2_set_pmd_huge() does.
-> 
-> 10) VM continues to write *c*, but this time it hits the RO PTE entry in TLB and causes permission fault again.
->    Sometimes it can also cause TLB conflict aborts.
-> 
-> 11) KVM repeats step 6 and goes to the following statement and return 0:
-> 
->          * Skip updating the page table if the entry is
->          * unchanged.
->          */
->         if (pmd_val(old_pmd) == pmd_val(*new_pmd))
->             return 0;
-> 
-> 12) Then it will repeat step 10-11 until the PTE entry is invalidated.
-> 
-> I think there is something abnormal in step 8.
-> Should I blame my hardware? Or is it a kernel bug?
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/gpio/gpio-omap.c | 549 +++++++++++++++++++--------------------
+>  1 file changed, 267 insertions(+), 282 deletions(-)
 
-Marc and I had a discussion about this and it looks like we may have an
-issue here. So with the cancellation of logging, we do not trigger the
-mmu_notifiers (as the userspace memory mapping hasn't changed) and thus
-have memory leaks while trying to install a huge mapping. Would it be
-possible for you to try the patch below ? It will trigger a WARNING
-to confirm our theory, but should not cause the hang. As we unmap
-the PMD/PUD range of PTE mappings before reinstalling a block map.
+Sry, for delayed reply
+
+I do not have objection to the patch itself, so
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com> 
+
+but personally i do not like such changes as they kill "git blame" :(,
 
 
----8>---
+I assume there would be merge conflict with 
+https://lkml.org/lkml/2019/3/11/945
 
-test: kvm: arm: Fix handling of stage2 huge mappings
 
-We rely on the mmu_notifier call backs to handle the split/merging
-of huge pages and thus we are guaranteed that while creating a
-block mapping, the entire block is unmapped at stage2. However,
-we miss a case where the block mapping is split for dirty logging
-case and then could later be made block mapping, if we cancel the
-dirty logging. This not only creates inconsistent TLB entries for
-the pages in the the block, but also leakes the table pages for
-PMD level.
-
-Handle these corner cases for the huge mappings at stage2.
-
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- virt/kvm/arm/mmu.c | 51 +++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 35 insertions(+), 16 deletions(-)
-
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 66e0fbb5..04b0f9b 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1076,24 +1076,38 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
- 		 * Skip updating the page table if the entry is
- 		 * unchanged.
- 		 */
--		if (pmd_val(old_pmd) == pmd_val(*new_pmd))
-+		if (pmd_val(old_pmd) == pmd_val(*new_pmd)) {
- 			return 0;
--
-+		} else if (WARN_ON_ONCE(!pmd_thp_or_huge(old_pmd))) {
- 		/*
--		 * Mapping in huge pages should only happen through a
--		 * fault.  If a page is merged into a transparent huge
--		 * page, the individual subpages of that huge page
--		 * should be unmapped through MMU notifiers before we
--		 * get here.
--		 *
--		 * Merging of CompoundPages is not supported; they
--		 * should become splitting first, unmapped, merged,
--		 * and mapped back in on-demand.
-+		 * If we have PTE level mapping for this block,
-+		 * we must unmap it to avoid inconsistent TLB
-+		 * state. We could end up in this situation if
-+		 * the memory slot was marked for dirty logging
-+		 * and was reverted, leaving PTE level mappings
-+		 * for the pages accessed during the period.
-+		 * Normal THP split/merge follows mmu_notifier
-+		 * callbacks and do get handled accordingly.
- 		 */
--		VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
-+			unmap_stage2_range(kvm, (addr & S2_PMD_MASK), S2_PMD_SIZE);
-+		} else {
- 
--		pmd_clear(pmd);
--		kvm_tlb_flush_vmid_ipa(kvm, addr);
-+			/*
-+			 * Mapping in huge pages should only happen through a
-+			 * fault.  If a page is merged into a transparent huge
-+			 * page, the individual subpages of that huge page
-+			 * should be unmapped through MMU notifiers before we
-+			 * get here.
-+			 *
-+			 * Merging of CompoundPages is not supported; they
-+			 * should become splitting first, unmapped, merged,
-+			 * and mapped back in on-demand.
-+			 */
-+			WARN_ON_ONCE(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
-+
-+			pmd_clear(pmd);
-+			kvm_tlb_flush_vmid_ipa(kvm, addr);
-+		}
- 	} else {
- 		get_page(virt_to_page(pmd));
- 	}
-@@ -1122,8 +1136,13 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
- 		return 0;
- 
- 	if (stage2_pud_present(kvm, old_pud)) {
--		stage2_pud_clear(kvm, pudp);
--		kvm_tlb_flush_vmid_ipa(kvm, addr);
-+		/* If we have PTE level mapping, unmap the entire range */
-+		if (WARN_ON_ONCE(!stage2_pud_huge(kvm, old_pud))) {
-+			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
-+		} else {
-+			stage2_pud_clear(kvm, pudp);
-+			kvm_tlb_flush_vmid_ipa(kvm, addr);
-+		}
- 	} else {
- 		get_page(virt_to_page(pudp));
- 	}
 -- 
-2.7.4
-
-
-
-> 
-> -- 
-> 
-> Thanks,
-> Xiang
-> 
-> 
+Best regards,
+grygorii
