@@ -2,161 +2,256 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4B1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05885C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4771121855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 16:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rzqJD/j6"
+	by mail.kernel.org (Postfix) with ESMTP id BEFA921855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 17:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfCNQ7P (ORCPT
+        id S1727084AbfCNRBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 12:59:15 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44003 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfCNQ7O (ORCPT
+        Thu, 14 Mar 2019 13:01:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51844 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726157AbfCNRBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 12:59:14 -0400
-Received: by mail-io1-f65.google.com with SMTP id y6so5719498ioq.10;
-        Thu, 14 Mar 2019 09:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t1ZJF5pxHLlvonD5kwj4CQXdlk9wvpLi5Mia1fTZw9E=;
-        b=rzqJD/j6zV8hQYLdmgizw1uO/WHf3X1ylOoY+PLlyDOP5r/+hAbit1ZV7bVQhMt7CN
-         TmOM/K+KFwOqHpBLsPghfV+1T+bA80HtzyFX23I9OTvdn9W0vU7K1kVWFhAMDf3b/qya
-         Y7wPsxexSchJu1dFj9xWi6+jnp0UdeyOnb4XtNnOYBlhqTsF9sbuompH0Gh/Gw6iSpN/
-         3BVvOZ/kVGAflyXBrGYPT/3I1q925dzZVJDiw/G9Lq07+vLJAj8cD7xODzcUAPzxG5Yi
-         Pc9nV9+3yDAke0LPSXdQ+pb2avCMSaxZ9fhcVBrffRDCbBcKXhm2gfRFjvkcxwVmX8fU
-         nyaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t1ZJF5pxHLlvonD5kwj4CQXdlk9wvpLi5Mia1fTZw9E=;
-        b=hM6hZpXhDaXZu5yO5cCJ8JjPEkCxVmXtbkkNDz7NaDBiwl4ji4lQBnq87KIDus9EiK
-         klsSMalY1A964oLZ4NKtl59uoP6F8nd93vl1fuBKOoPNHFX+kS76L//VYSy7kAhqmSk5
-         yxiJHn/QJ+RvG7b0hwMlsmM8FskB7WGsLnSQ8fSBwWW4NOhQ7n1+ayBPEzd8U5OgJAHo
-         LmueLH75XbOpP9Iu7rYZULcSC2OyFBWYFd4spzr01eO2FEP8LhwKDBvEjQ5QXIgH0Lpz
-         XM6YaChbHNM3KBEQFInlP4saS9CUdvwzi2AonfCLVqrETMx1CZ7YwFCk1V8nzooGj0lS
-         1YLA==
-X-Gm-Message-State: APjAAAVbPtO/PfWSYSqVSgQfSw5fWuCZwlNfc7yUDDbBsrJWm7HlO8JZ
-        bc8gihVlF6z+h53dq5EJQzTwAOpcIDfJmI57ax8=
-X-Google-Smtp-Source: APXvYqxbrbMnYkQK1hQaarIGqPkjNArWfgQTSiaNwzMOza+mzEAWPg1XgoHd1NFH8Du7CP7i57BYzNohOZf/JtIH6B0=
-X-Received: by 2002:a6b:700d:: with SMTP id l13mr8198998ioc.248.1552582753038;
- Thu, 14 Mar 2019 09:59:13 -0700 (PDT)
+        Thu, 14 Mar 2019 13:01:02 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2EGoX1O070054
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 13:01:01 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r7stguq3p-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 13:01:00 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Thu, 14 Mar 2019 17:00:58 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Mar 2019 17:00:56 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2EH0sk027132024
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 Mar 2019 17:00:55 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DFF22A405F;
+        Thu, 14 Mar 2019 17:00:54 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BDDDA4053;
+        Thu, 14 Mar 2019 17:00:54 +0000 (GMT)
+Received: from [9.101.4.34] (unknown [9.101.4.34])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Mar 2019 17:00:54 +0000 (GMT)
+Subject: Re: [PATCH 4/7] ocxl: Don't pass pci_dev around
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20190313041524.14644-1-alastair@au1.ibm.com>
+ <20190313041524.14644-5-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Thu, 14 Mar 2019 18:00:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
- <1552414422-9568-5-git-send-email-jcrouse@codeaurora.org> <CAF6AEGt74Hs+VMgMOMAyFw9FGk5mrY2NU07JUh=OKSOhj-h6CA@mail.gmail.com>
- <20190314052020.GC6435@tuxbook-pro>
-In-Reply-To: <20190314052020.GC6435@tuxbook-pro>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 14 Mar 2019 12:59:01 -0400
-Message-ID: <CAF6AEGvhYQfnP2yJ89xCX56uOzvTi6Ui+5Znxt_C4jAKBoLhUw@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH v1 4/4] arm64: dts: sdm845: Add zap shader
- region for GPU
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <andy.gross@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190313041524.14644-5-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031417-0012-0000-0000-00000302AC76
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031417-0013-0000-0000-00002139D807
+Message-Id: <b081548c-588d-05d7-df00-5da457a76af8@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-14_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903140120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 1:20 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Wed 13 Mar 08:42 PDT 2019, Rob Clark wrote:
->
-> > On Tue, Mar 12, 2019 at 2:14 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> > >
-> > > Some Adreno GPU targets require a special zap shader to bring the GPU
-> > > out of secure mode. Define a region to allocate and store the zap
-> > > shader.
-> > >
-> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > > ---
-> > >
-> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > index fed7a29..526456d 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > @@ -100,6 +100,11 @@
-> > >                         no-map;
-> > >                 };
-> > >
-> > > +               zap_shader_region: memory@8c415000 {
-> > > +                       reg = <0 0x8c415000 0 0x2000>;
-> > > +                       no-map;
-> > > +               };
-> > > +
-> > >                 mpss_region: memory@8e000000 {
-> > >                         reg = <0 0x8e000000 0 0x7800000>;
-> > >                         no-map;
-> > > @@ -109,6 +114,8 @@
-> > >                         reg = <0 0x96500000 0 0x200000>;
-> > >                         no-map;
-> > >                 };
-> > > +
-> > > +
-> >
-> > I guess we don't really need this hunk..
-> >
->
-> I'll trim that as I pick up the patch.
->
-> > other than that, the series lgtm
-> >
->
-> Will you pick up patch 1-3 and I'll pick patch 4 through Andy's tree?
 
-yeah, sounds good.
 
-BR,
--R
+Le 13/03/2019 à 05:15, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> This data is already available in a struct
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
 
-> Regards,
-> Bjorn
->
-> > BR,
-> > -R
-> >
-> > >         };
-> > >
-> > >         cpus {
-> > > @@ -1514,6 +1521,10 @@
-> > >
-> > >                         qcom,gmu = <&gmu>;
-> > >
-> > > +                       zap-shader {
-> > > +                               memory-region = <&zap_shader_region>;
-> > > +                       };
-> > > +
-> > >                         gpu_opp_table: opp-table {
-> > >                                 compatible = "operating-points-v2";
-> > >
-> > > --
-> > > 2.7.4
-> > >
-> > > _______________________________________________
-> > > Freedreno mailing list
-> > > Freedreno@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/freedreno
+good idea
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+
+
+>   drivers/misc/ocxl/core.c | 38 +++++++++++++++++++++-----------------
+>   1 file changed, 21 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+> index b47cfda83e46..2fd0c700e8a0 100644
+> --- a/drivers/misc/ocxl/core.c
+> +++ b/drivers/misc/ocxl/core.c
+> @@ -66,10 +66,11 @@ static int set_afu_device(struct ocxl_afu *afu, const char *location)
+>   	return rc;
+>   }
+>   
+> -static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
+> +static int assign_afu_actag(struct ocxl_afu *afu)
+>   {
+>   	struct ocxl_fn *fn = afu->fn;
+>   	int actag_count, actag_offset;
+> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+>   
+>   	/*
+>   	 * if there were not enough actags for the function, each afu
+> @@ -79,16 +80,16 @@ static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
+>   		fn->actag_enabled / fn->actag_supported;
+>   	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
+>   	if (actag_offset < 0) {
+> -		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
+> +		dev_err(&pci_dev->dev, "Can't allocate %d actags for AFU: %d\n",
+>   			actag_count, actag_offset);
+>   		return actag_offset;
+>   	}
+>   	afu->actag_base = fn->actag_base + actag_offset;
+>   	afu->actag_enabled = actag_count;
+>   
+> -	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
+> +	ocxl_config_set_afu_actag(pci_dev, afu->config.dvsec_afu_control_pos,
+>   				afu->actag_base, afu->actag_enabled);
+> -	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
+> +	dev_dbg(&pci_dev->dev, "actag base=%d enabled=%d\n",
+>   		afu->actag_base, afu->actag_enabled);
+>   	return 0;
+>   }
+> @@ -103,10 +104,11 @@ static void reclaim_afu_actag(struct ocxl_afu *afu)
+>   	ocxl_actag_afu_free(afu->fn, start_offset, size);
+>   }
+>   
+> -static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+> +static int assign_afu_pasid(struct ocxl_afu *afu)
+>   {
+>   	struct ocxl_fn *fn = afu->fn;
+>   	int pasid_count, pasid_offset;
+> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+>   
+>   	/*
+>   	 * We only support the case where the function configuration
+> @@ -115,7 +117,7 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	pasid_count = 1 << afu->config.pasid_supported_log;
+>   	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
+>   	if (pasid_offset < 0) {
+> -		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
+> +		dev_err(&pci_dev->dev, "Can't allocate %d PASIDs for AFU: %d\n",
+>   			pasid_count, pasid_offset);
+>   		return pasid_offset;
+>   	}
+> @@ -123,10 +125,10 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	afu->pasid_count = 0;
+>   	afu->pasid_max = pasid_count;
+>   
+> -	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
+> +	ocxl_config_set_afu_pasid(pci_dev, afu->config.dvsec_afu_control_pos,
+>   				afu->pasid_base,
+>   				afu->config.pasid_supported_log);
+> -	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
+> +	dev_dbg(&pci_dev->dev, "PASID base=%d, enabled=%d\n",
+>   		afu->pasid_base, pasid_count);
+>   	return 0;
+>   }
+> @@ -172,9 +174,10 @@ static void release_fn_bar(struct ocxl_fn *fn, int bar)
+>   	WARN_ON(fn->bar_used[idx] < 0);
+>   }
+>   
+> -static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+> +static int map_mmio_areas(struct ocxl_afu *afu)
+>   {
+>   	int rc;
+> +	struct pci_dev *pci_dev = to_pci_dev(afu->fn->dev.parent);
+>   
+>   	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
+>   	if (rc)
+> @@ -187,10 +190,10 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	}
+>   
+>   	afu->global_mmio_start =
+> -		pci_resource_start(dev, afu->config.global_mmio_bar) +
+> +		pci_resource_start(pci_dev, afu->config.global_mmio_bar) +
+>   		afu->config.global_mmio_offset;
+>   	afu->pp_mmio_start =
+> -		pci_resource_start(dev, afu->config.pp_mmio_bar) +
+> +		pci_resource_start(pci_dev, afu->config.pp_mmio_bar) +
+>   		afu->config.pp_mmio_offset;
+>   
+>   	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
+> @@ -198,7 +201,7 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	if (!afu->global_mmio_ptr) {
+>   		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
+>   		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
+> -		dev_err(&dev->dev, "Error mapping global mmio area\n");
+> +		dev_err(&pci_dev->dev, "Error mapping global mmio area\n");
+>   		return -ENOMEM;
+>   	}
+>   
+> @@ -234,17 +237,17 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+>   	if (rc)
+>   		return rc;
+>   
+> -	rc = assign_afu_actag(afu, dev);
+> +	rc = assign_afu_actag(afu);
+>   	if (rc)
+>   		return rc;
+>   
+> -	rc = assign_afu_pasid(afu, dev);
+> +	rc = assign_afu_pasid(afu);
+>   	if (rc) {
+>   		reclaim_afu_actag(afu);
+>   		return rc;
+>   	}
+>   
+> -	rc = map_mmio_areas(afu, dev);
+> +	rc = map_mmio_areas(afu);
+>   	if (rc) {
+>   		reclaim_afu_pasid(afu);
+>   		reclaim_afu_actag(afu);
+> @@ -331,7 +334,7 @@ void remove_afu(struct ocxl_afu *afu)
+>   	device_unregister(&afu->dev);
+>   }
+>   
+> -static struct ocxl_fn *alloc_function(struct pci_dev *dev)
+> +static struct ocxl_fn *alloc_function(void)
+>   {
+>   	struct ocxl_fn *fn;
+>   
+> @@ -342,6 +345,7 @@ static struct ocxl_fn *alloc_function(struct pci_dev *dev)
+>   	INIT_LIST_HEAD(&fn->afu_list);
+>   	INIT_LIST_HEAD(&fn->pasid_list);
+>   	INIT_LIST_HEAD(&fn->actag_list);
+> +
+>   	return fn;
+>   }
+>   
+> @@ -491,7 +495,7 @@ struct ocxl_fn *init_function(struct pci_dev *dev)
+>   	struct ocxl_fn *fn;
+>   	int rc;
+>   
+> -	fn = alloc_function(dev);
+> +	fn = alloc_function();
+>   	if (!fn)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> 
+
