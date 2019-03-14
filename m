@@ -2,109 +2,116 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60186C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE41C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 393E62184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150DA21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:08:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Jcw1JdHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfCNSHY (ORCPT
+        id S1727735AbfCNSIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 14:07:24 -0400
-Received: from foss.arm.com ([217.140.101.70]:48258 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfCNSHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 14:07:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0378680D;
-        Thu, 14 Mar 2019 11:07:24 -0700 (PDT)
-Received: from [10.37.12.84] (unknown [10.37.12.84])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 779ED3F71D;
-        Thu, 14 Mar 2019 11:07:21 -0700 (PDT)
-Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rt-users@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190208165513.8435-1-julien.grall@arm.com>
- <20190213143029.ad2kzg7vtuo3zpjk@linutronix.de>
- <20190213153630.GK3567@e103592.cambridge.arm.com>
- <CAKv+Gu__0uy6Y-EJGSygSYH4RqpLDWMMNFE3yauF_x7-UNcgFQ@mail.gmail.com>
- <20190213165227.7ekekkxazhbaqxoe@linutronix.de>
- <20190214103449.GN3567@e103592.cambridge.arm.com>
- <32ba7e1e-37ce-c904-15e4-9c908e873479@arm.com>
- <20190304172535.v5pf7yboii7ayxnb@linutronix.de>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <abd861af-023f-2f9e-acee-4e1837aa8897@arm.com>
-Date:   Thu, 14 Mar 2019 18:07:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 14 Mar 2019 14:08:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40078 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfCNSIx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 14:08:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u9so4518037pgo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 11:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=U7BBK7vlWP/t8lFMd6v5xn5vdx3A6D9GtU1E9MvUOTA=;
+        b=Jcw1JdHo6y4yboLPPnhZh47MtMHiT4Fqwj+FE9MGFoOdY887/gZsoUJI3jtA1fNT/8
+         qK20DTQLIeqbgiOJzICXJ+IdyOH2LcDqEQKGKE8XAqLVaIIUbfLCBJGAyOs5l/nHYfvA
+         qS7O4X/OFWIJJNmmcEeBcVdUFultNgaYcUoGWMD3iun3BxrM4/6/zWWLOeNUonJJ9c8K
+         NNwotLKLTIHCaAC/2MbnWyhajFq3LH8R9nxvnfu6fkjuZ2HHiwXSxhCI2X0qTjmGK1Fm
+         2KJShQEKsuwTdfCs92gc4YdzQ9tF1BmgYukP4LCz+2giV58bchmqPlmPdhmx6Q4BDvP7
+         1xKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=U7BBK7vlWP/t8lFMd6v5xn5vdx3A6D9GtU1E9MvUOTA=;
+        b=DyAndBCg4fff9JSISn6ECQyspK95mCMTqdnOpFJ3ORB2+uHTmtBXg6qIGrjGBKhL1p
+         LOiVj5UrpM6TWxsQm32po5OKwJ0sIVQn7AAur9x5P2vZUQTGTQsxaL2+AxL5NPu2xM2V
+         4gcewhxZZgm6bLe7XU+kSXtsir/hKvR826wFNZMqy9KlFcbECvaFpB6D0ZwY51m8OOYa
+         jF5tA7CVUGVsrTGa0YpLp2GEpIEwup98CnW4TmSwov4CHkislquV3hZwnWlqV4ZM3Qdz
+         0mOr1iz9ghvsa3NYvExedmoqPda4rP6Lp/tabSDojqZ6GSSYGlpe9M7AgStlroZipDuz
+         aqKw==
+X-Gm-Message-State: APjAAAVN71TrH7kLUUrF1e4AWWAVYM894YV1LKkOyis9h7vFChRRfyiX
+        uEHdU9HeLpQDghaoqvMEavKM7A==
+X-Google-Smtp-Source: APXvYqybvV6viQ3TJykIomrDJ8ksvexT9T3eKWTz4aia1ppNeY2NwqascFJHl9mQTXcQTRK3yxhfDQ==
+X-Received: by 2002:a17:902:681:: with SMTP id 1mr52755468plh.185.1552586931867;
+        Thu, 14 Mar 2019 11:08:51 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:a567:ae30:4f79:6ce5])
+        by smtp.googlemail.com with ESMTPSA id p2sm32348009pfi.95.2019.03.14.11.08.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 11:08:50 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Chuanhong Guo <gch981213@gmail.com>, devicetree@vger.kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: meson-gxl-s905d-phicomm-n1: add status LED
+In-Reply-To: <5c580f1b-1038-2c34-7047-e504eb4ac323@baylibre.com>
+References: <20190312083326.18029-1-gch981213@gmail.com> <5c580f1b-1038-2c34-7047-e504eb4ac323@baylibre.com>
+Date:   Thu, 14 Mar 2019 11:08:50 -0700
+Message-ID: <7hva0lwcp9.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190304172535.v5pf7yboii7ayxnb@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-On 3/4/19 5:25 PM, Sebastian Andrzej Siewior wrote:
-> On 2019-02-18 15:07:51 [+0000], Julien Grall wrote:
->> Hi,
-> Hi,
-> 
->>> Wouldn't this arbitrarily increase softirq latency?  Unconditionally
->>> forbidding SIMD in softirq might make more sense.  It depends on how
->>> important the use cases are...
-> 
-> It would increase the softirq latency but the question is how bad would
-> it be. It would continue once the SIMD section is done.
+> Hi Chuanhong,
+>
+> On 12/03/2019 09:33, Chuanhong Guo wrote:
+>> There is a white LED on the front panel behind the logo and the
+>> manufacturer uses that LED to indicate network and USB drive status.
+>> 
+>> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+>> ---
+>>  .../boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts    | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+>> index 9a8a8a7e4b53..b5667f1fb2c8 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+>> @@ -14,6 +14,16 @@
+>>  	cvbs-connector {
+>>  		status = "disabled";
+>>  	};
+>> +
+>> +	leds {
+>> +		compatible = "gpio-leds";
+>> +
+>> +		status {
+>> +			label = "n1:white:status";
+>> +			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
+>> +			default-state = "on";
+>> +		};
+>> +	};
+>>  };
+>>  
+>>  &cvbs_vdac_port {
+>> 
+>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-On Arm, the kernel may use either FPSIMD or SVE (if supported by the 
-platform). While the FPSIMD context is fairly small (~4K), the SVE 
-context can be up to ~64KB.
+Queued for v5.2 with Neil's tag (branch: v5.2/dt64)
 
-> If you allow it but made it impossible to use (and use the software
-> fallback) then it would slow down the processing. So…
-
-This is a fair point. However, the use of crypto in softirqs seem to be 
-limited. So I am wondering whether disabling softirq in all the case is 
-worth it.
-
-Would it be possible to consider to forbid/warn about using crypto in 
-softirqs?
-
-> 
->> Looking at the commit message from cb84d11e1625 "arm64: neon: Remove support
->> for nested or hardirq kernel-mode NEON", one of the use case for crypto in
->> softirq is certain mac80211 drivers.
->>
->> Is there any other use case for use crypto in softirqs?
-> 
-> mac80211 does it for some wifi drivers. There used to be IPsec but I
-> *think* this moved to the "parallel processing kthread".
-
-I was able to find my way through mac80211 and confirm the use a taslket 
-and therefore softirqs. However, I got lost in the ipsec code.
-
-> During my FPU rework on x86 I didn't find anything that does the
-> processing in softirq (on my machine) so I hacked something so that I
-> could test that I didn't break anything…
-
-This is the same on the platform I have been using for testing.
-
-Cheers,
-
--- 
-Julien Grall
+Kevin
