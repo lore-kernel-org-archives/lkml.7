@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D63BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637CEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDC821852
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3283121852
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:26:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="sWNKIa3g"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vHBy3v8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfCNM0h (ORCPT
+        id S1727517AbfCNM0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:26:37 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:56986 "EHLO
+        Thu, 14 Mar 2019 08:26:42 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:56962 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727449AbfCNM0e (ORCPT
+        with ESMTP id S1727458AbfCNM0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Mar 2019 08:26:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1552566391; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1552566392; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Jw+ycHAh/5+AZWuxM1OQ5dDXraOB17p3NUHrMl/Tnpw=;
-        b=sWNKIa3g0IqRFuK70zgCvEVHb5rLfIhgJ2JSGZ4FzjaFEQm/i53CNBwU7W9CbdCmDLV5RN
-        d+o7qzVDlV0nK2HSNFLU+G4oNBZlYU50tWhz8mprHDouGrzWvvdXsY0Oz2OzaHi9GxwrX9
-        ZSpc1DrFuuPYX4Di6llWYengHYKxKv8=
+        bh=1qWytRmIFY5/SHV9i3eEbww5dvI2u61znbayYnWoBEw=;
+        b=vHBy3v8P0qtmIDjs3OXdGyxlYWlHtqguC5m5dttJMkPrqZc2T7Gh9YkGUk67fu6+k8HrjX
+        j5g+iD6UgEK85GHkuiV7RMl+FzfoJi1GJEHq+J4nw5KhktV7kJ4DmjinHlV0yoW9/moL7A
+        ywtwPJ7wnm9qBXwMf45s+yi1eKH0TtQ=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,9 +37,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 4/5] drm/panel: simple: Add Sharp LS020B1DD01D panel support
-Date:   Thu, 14 Mar 2019 13:26:21 +0100
-Message-Id: <20190314122622.7597-4-paul@crapouillou.net>
+Subject: [PATCH v2 5/5] drm/panel: simple: Add GiantPlus GPM940B0 panel support
+Date:   Thu, 14 Mar 2019 13:26:22 +0100
+Message-Id: <20190314122622.7597-5-paul@crapouillou.net>
 In-Reply-To: <20190314122622.7597-1-paul@crapouillou.net>
 References: <20190314122622.7597-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,63 +47,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Sharp LS020B1DD01D is a simple 2.0" 240x160 16-bit TFT panel.
+The GiantPlus GPM940B0 is a simple 3.0" 320x240 24-bit TFT panel.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
 
 Notes:
-    v2: No change
+    v2: Change bus format to MEDIA_BUS_FMT_RGB888_3X8_BE
 
  drivers/gpu/drm/panel/panel-simple.c | 28 ++++++++++++++++++++++++++++
  1 file changed, 28 insertions(+)
 
 diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 9e8218f6a3f2..3ab604f5477e 100644
+index 3ab604f5477e..18fa34b88a53 100644
 --- a/drivers/gpu/drm/panel/panel-simple.c
 +++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2278,6 +2278,31 @@ static const struct panel_desc sharp_lq150x1lg11 = {
- 	.bus_format = MEDIA_BUS_FMT_RGB565_1X16,
+@@ -1208,6 +1208,31 @@ static const struct panel_desc giantplus_gpg482739qs5 = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
  };
  
-+static const struct display_timing sharp_ls020b1dd01d_timing = {
-+	.pixelclock = { 2000000, 4200000, 5000000 },
-+	.hactive = { 240, 240, 240 },
-+	.hfront_porch = { 66, 66, 66 },
-+	.hback_porch = { 1, 1, 1 },
++static const struct display_timing giantplus_gpm940b0_timing = {
++	.pixelclock = { 13500000, 27000000, 27500000 },
++	.hactive = { 320, 320, 320 },
++	.hfront_porch = { 14, 686, 718 },
++	.hback_porch = { 50, 70, 255 },
 +	.hsync_len = { 1, 1, 1 },
-+	.vactive = { 160, 160, 160 },
-+	.vfront_porch = { 52, 52, 52 },
-+	.vback_porch = { 6, 6, 6 },
-+	.vsync_len = { 10, 10, 10 },
-+	.flags = DISPLAY_FLAGS_HSYNC_HIGH | DISPLAY_FLAGS_VSYNC_LOW,
++	.vactive = { 240, 240, 240 },
++	.vfront_porch = { 1, 1, 179 },
++	.vback_porch = { 1, 21, 31 },
++	.vsync_len = { 1, 1, 6 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
 +};
 +
-+static const struct panel_desc sharp_ls020b1dd01d = {
-+	.timings = &sharp_ls020b1dd01d_timing,
++static const struct panel_desc giantplus_gpm940b0 = {
++	.timings = &giantplus_gpm940b0_timing,
 +	.num_timings = 1,
-+	.bpc = 6,
++	.bpc = 8,
 +	.size = {
-+		.width = 42,
-+		.height = 28,
++		.width = 60,
++		.height = 45,
 +	},
-+	.bus_format = MEDIA_BUS_FMT_RGB565_1X16,
++	.bus_format = MEDIA_BUS_FMT_RGB888_3X8_BE,
 +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
 +};
 +
- static const struct drm_display_mode shelly_sca07010_bfn_lnn_mode = {
- 	.clock = 33300,
- 	.hdisplay = 800,
-@@ -2767,6 +2792,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "sharp,lq150x1lg11",
- 		.data = &sharp_lq150x1lg11,
+ static const struct display_timing hannstar_hsd070pww1_timing = {
+ 	.pixelclock = { 64300000, 71100000, 82000000 },
+ 	.hactive = { 1280, 1280, 1280 },
+@@ -2666,6 +2691,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "giantplus,gpg482739qs5",
+ 		.data = &giantplus_gpg482739qs5
  	}, {
-+		.compatible = "sharp,ls020b1dd01d",
-+		.data = &sharp_ls020b1dd01d,
++		.compatible = "giantplus,gpm940b0",
++		.data = &giantplus_gpm940b0,
 +	}, {
- 		.compatible = "shelly,sca07010-bfn-lnn",
- 		.data = &shelly_sca07010_bfn_lnn,
+ 		.compatible = "hannstar,hsd070pww1",
+ 		.data = &hannstar_hsd070pww1,
  	}, {
 -- 
 2.11.0
