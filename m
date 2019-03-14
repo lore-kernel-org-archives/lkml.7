@@ -6,177 +6,86 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E13FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7D2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE4320854
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7265A20854
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 12:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfCNMQo (ORCPT
+        id S1727258AbfCNMSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 08:16:44 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:44609 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbfCNMQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 08:16:44 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 556AF80693; Thu, 14 Mar 2019 13:16:33 +0100 (CET)
-Date:   Thu, 14 Mar 2019 13:16:39 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
-Subject: Re: [PATCH 1/4] leds: netdev trigger: use memcpy in device_name_store
-Message-ID: <20190314121639.GB19072@amd>
-References: <20190311144227.GA4404@amd>
- <20190313202615.22883-1-linux@rasmusvillemoes.dk>
- <20190313202615.22883-2-linux@rasmusvillemoes.dk>
- <20190314101419.GA14455@amd>
- <9324dc3c-a9dd-e179-6fc5-17b2fdaab74b@rasmusvillemoes.dk>
+        Thu, 14 Mar 2019 08:18:16 -0400
+Received: from mga14.intel.com ([192.55.52.115]:8576 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726932AbfCNMSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 08:18:16 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 05:18:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,478,1544515200"; 
+   d="scan'208";a="131599582"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga008.fm.intel.com with ESMTP; 14 Mar 2019 05:18:13 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h4PJM-0004j0-04; Thu, 14 Mar 2019 14:18:12 +0200
+Date:   Thu, 14 Mar 2019 14:18:11 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     George Spelvin <lkml@sdf.org>
+Cc:     geert@linux-m68k.org, 13@sdf.org, akpm@linux-foundation.org,
+        daniel.wagner@siemens.com, dchinner@redhat.com,
+        don.mullis@gmail.com, linux-kernel@vger.kernel.org,
+        linux@rasmusvillemoes.dk, st5pub@yandex.ru
+Subject: Re: [PATCH 1/5] lib/sort: Make swap functions more generic
+Message-ID: <20190314121811.GY9224@smile.fi.intel.com>
+References: <cover.1552097842.git.lkml@sdf.org>
+ <dc6cc09e71f8687ff2ef4cbfc2b11accc9aba8aa.1552097842.git.lkml@sdf.org>
+ <20190309140653.GO9224@smile.fi.intel.com>
+ <201903091553.x29FrfMR018600@sdf.org>
+ <20190314092958.GV9224@smile.fi.intel.com>
+ <201903141009.x2EA9q1Z025888@sdf.org>
+ <CAMuHMdW0jd-oNtgBf=aHfzVoBbVh0OJYC6ELhDv3VrcGwUECwA@mail.gmail.com>
+ <201903141153.x2EBrtKi000133@sdf.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pvezYHf7grwyp3Bc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9324dc3c-a9dd-e179-6fc5-17b2fdaab74b@rasmusvillemoes.dk>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <201903141153.x2EBrtKi000133@sdf.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---pvezYHf7grwyp3Bc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> >> If userspace doesn't end the input with a newline (which can easily
-> >> happen if the write happens from a C program that does write(fd,
-> >> iface, strlen(iface))), we may end up including garbage from a
-> >> previous, longer value in the device_name. For example
+On Thu, Mar 14, 2019 at 11:53:55AM +0000, George Spelvin wrote:
+> On Thu, 14 Mar 2019 at 11:41:26 +0100, Geert Uytterhoeven wrote:
+> > On Thu, Mar 14, 2019 at 11:10 AM George Spelvin <lkml@sdf.org> wrote:
+> >> On Sat, 09 Mar 2019 at 23:19:49 +0300, Andrey Abramov wrote:
+> >>>> How about one of:
+> >>>> swap_bytes / swap_ints / swap_longs
+> >>>> swap_1 / swap_4 / swap_8
+> >>>
+> >>> longs are ambiguous, so I would prefer bit-sized types.
 > >>
-> >> # cat device_name
+> >> I already implemented Andrey's suggestions, which were the exact
+> >> opposite of yours.
 > >>
-> >> # printf 'eth12' > device_name
-> >> # cat device_name
-> >> eth12
-> >> # printf 'eth3' > device_name
-> >> # cat device_name
-> >> eth32
-> >>
-> >> I highly doubt anybody is relying on this behaviour, so switch to
-> >> simply copying the bytes (we've already checked that size is <
-> >> IFNAMSIZ) and unconditionally zero-terminate it; of course, we also
-> >> still have to strip a trailing newline.
-> >=20
-> >   char device_name[IFNAMSIZ];
-> >=20
-> > Ok, good catch reporting the bug, but are you sure the fix is right?
-> >=20
-> > AFAICT the design is that device_name does _not_ have to be zero
-> > terminated, and your fix incorrectly limits the size of device_name.
->=20
-> Yes, I'm sure.
->=20
-> /**
->  *      dev_valid_name - check if name is okay for network device
->  *      @name: name string
->  *
->  *      Network device names need to be valid file names to
->  *      to allow sysfs to work.  We also disallow any kind of
->  *      whitespace.
->  */
-> bool dev_valid_name(const char *name)
-> {
->         if (*name =3D=3D '\0')
->                 return false;
->         if (strnlen(name, IFNAMSIZ) =3D=3D IFNAMSIZ)
->                 return false;
->=20
-> so no netdevice name has a string length > 15 (IOW, there must be a nul
-> byte within the first 16 bytes of name). Also note all the places a
-> net_device->name is printed with a simple %s, so they are definitely
-> always 0-terminated.
->=20
-> Moreover, I'm actually not limiting anything more than was already done;
-> we already reject any input from userspace >=3D 16 bytes. I'm simply
-> ensuring that we're never confused by leftover garbage.
+> >> Pistols at dawn?
 
-Ok. Sorry for the noise.
+> I just want to pick some names and move on.  Since nothing so far seems
+> satsify everyone, I'll go with the ponderous but utterly unambiguous:
 
-> >> --- a/drivers/leds/trigger/ledtrig-netdev.c
-> >> +++ b/drivers/leds/trigger/ledtrig-netdev.c
-> >> @@ -122,7 +122,8 @@ static ssize_t device_name_store(struct device *de=
-v,
-> >>  		trigger_data->net_dev =3D NULL;
-> >>  	}
-> >> =20
-> >> -	strncpy(trigger_data->device_name, buf, size);
-> >> +	memcpy(trigger_data->device_name, buf, size);
-> >> +	trigger_data->device_name[size] =3D '\0';
-> >=20
-> > I'd do =3D 0 for consistency with code below.
->=20
-> I'd rather the other way around :) but yeah, let's just be consistent.
-> I'll fix in next version.
+> swap_bytes
+> swap_4byte_words
+> swap_8byte_words
 
-Or just use your version and fix both places :-). Your option, as long
-as it is consistent.=20
+Works for me, or if someone insists it might be also bits there.
 
-> > I believe the strncpy() is right to use here, but code should be
-> > modified so that zero-termination is not required.
->=20
-> So, I believe the above should convince you that strncpy is wrong. Or
-> rather, strncpy is really just a convoluted memcpy: the userspace input
-> doesn't contain a nul among the size bytes [1], so the "copy all the
-> bytes, but don't nul-terminate" semantics of strncpy kick in - which is
-> often a security bug, but the code is such that the zero at
-> device_name[15] (because it was originally kzalloc'ed) is never
-> overwritten. So in theory, we could keep strncpy and just add the
-> nul-termination, but the str* prefix is very misleading (which is
-> probably why the bug happened in the first place).
->=20
-> [1] And if it did, the "zero the rest of the output buffer" semantics
-> kick in. That's functionally equivalent to my memcpy() + write one nul
-> byte, since nothing after that first nul byte in device_name would ever
-> be inspected.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Actually "zero the rest" semantics kind of makes sense here.
 
-No, I'm sorry, I don't understand. How are you getting stale data
-there?
-
-> >> # printf 'eth12' > device_name
-> >> # cat device_name
-> >> eth12
-> >> # printf 'eth3' > device_name
-> >> # cat device_name
-> >> eth32
-
-strncpy() should zero the rest, and you should get "eth3"...?!
-
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pvezYHf7grwyp3Bc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyKRicACgkQMOfwapXb+vIjwgCfduXA/6kZKv1i59goSO1ZCrtc
-y88AmwUj98ZvcR5MLZtu5DngzJqzluUB
-=BlIj
------END PGP SIGNATURE-----
-
---pvezYHf7grwyp3Bc--
