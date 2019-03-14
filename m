@@ -2,116 +2,177 @@ Return-Path: <SRS0=GgR0=RR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE41C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8200DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150DA21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D37120811
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Mar 2019 18:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Jcw1JdHo"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="MFlai26N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfCNSIx (ORCPT
+        id S1727696AbfCNSNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 14:08:53 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40078 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfCNSIx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 14:08:53 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u9so4518037pgo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 11:08:52 -0700 (PDT)
+        Thu, 14 Mar 2019 14:13:13 -0400
+Received: from mail-eopbgr740111.outbound.protection.outlook.com ([40.107.74.111]:6601
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726531AbfCNSNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 14:13:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=U7BBK7vlWP/t8lFMd6v5xn5vdx3A6D9GtU1E9MvUOTA=;
-        b=Jcw1JdHo6y4yboLPPnhZh47MtMHiT4Fqwj+FE9MGFoOdY887/gZsoUJI3jtA1fNT/8
-         qK20DTQLIeqbgiOJzICXJ+IdyOH2LcDqEQKGKE8XAqLVaIIUbfLCBJGAyOs5l/nHYfvA
-         qS7O4X/OFWIJJNmmcEeBcVdUFultNgaYcUoGWMD3iun3BxrM4/6/zWWLOeNUonJJ9c8K
-         NNwotLKLTIHCaAC/2MbnWyhajFq3LH8R9nxvnfu6fkjuZ2HHiwXSxhCI2X0qTjmGK1Fm
-         2KJShQEKsuwTdfCs92gc4YdzQ9tF1BmgYukP4LCz+2giV58bchmqPlmPdhmx6Q4BDvP7
-         1xKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=U7BBK7vlWP/t8lFMd6v5xn5vdx3A6D9GtU1E9MvUOTA=;
-        b=DyAndBCg4fff9JSISn6ECQyspK95mCMTqdnOpFJ3ORB2+uHTmtBXg6qIGrjGBKhL1p
-         LOiVj5UrpM6TWxsQm32po5OKwJ0sIVQn7AAur9x5P2vZUQTGTQsxaL2+AxL5NPu2xM2V
-         4gcewhxZZgm6bLe7XU+kSXtsir/hKvR826wFNZMqy9KlFcbECvaFpB6D0ZwY51m8OOYa
-         jF5tA7CVUGVsrTGa0YpLp2GEpIEwup98CnW4TmSwov4CHkislquV3hZwnWlqV4ZM3Qdz
-         0mOr1iz9ghvsa3NYvExedmoqPda4rP6Lp/tabSDojqZ6GSSYGlpe9M7AgStlroZipDuz
-         aqKw==
-X-Gm-Message-State: APjAAAVN71TrH7kLUUrF1e4AWWAVYM894YV1LKkOyis9h7vFChRRfyiX
-        uEHdU9HeLpQDghaoqvMEavKM7A==
-X-Google-Smtp-Source: APXvYqybvV6viQ3TJykIomrDJ8ksvexT9T3eKWTz4aia1ppNeY2NwqascFJHl9mQTXcQTRK3yxhfDQ==
-X-Received: by 2002:a17:902:681:: with SMTP id 1mr52755468plh.185.1552586931867;
-        Thu, 14 Mar 2019 11:08:51 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:a567:ae30:4f79:6ce5])
-        by smtp.googlemail.com with ESMTPSA id p2sm32348009pfi.95.2019.03.14.11.08.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Mar 2019 11:08:50 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Chuanhong Guo <gch981213@gmail.com>, devicetree@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: meson-gxl-s905d-phicomm-n1: add status LED
-In-Reply-To: <5c580f1b-1038-2c34-7047-e504eb4ac323@baylibre.com>
-References: <20190312083326.18029-1-gch981213@gmail.com> <5c580f1b-1038-2c34-7047-e504eb4ac323@baylibre.com>
-Date:   Thu, 14 Mar 2019 11:08:50 -0700
-Message-ID: <7hva0lwcp9.fsf@baylibre.com>
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vv+/jVCpaQDNAYTPEMv3dEMLJupz+pTeEwW+pgdkKAs=;
+ b=MFlai26N1W1wCZHtQiqcq/eFxsWCw3RmUGehrR+7HFZ+bT3Y01SPkrt2UDaHzq9P1f1P/rjhO0qoJr1OxzA/khrae8XJSK5wAbJvJBAwLCGTU2NufEXPlUJc7oZYpvGNsscYRciz34KlG0M3umuG6q2D41l7dTJJjUMZl1TNDBo=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1759.namprd22.prod.outlook.com (10.164.206.39) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Thu, 14 Mar 2019 18:13:07 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018%3]) with mapi id 15.20.1709.011; Thu, 14 Mar 2019
+ 18:13:07 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH 06/14] MIPS: entry: Remove unneeded need_resched() loop
+Thread-Topic: [PATCH 06/14] MIPS: entry: Remove unneeded need_resched() loop
+Thread-Index: AQHU2FyFR/j/WMmRLk2V/nucBCrOZKYLcmsA
+Date:   Thu, 14 Mar 2019 18:13:07 +0000
+Message-ID: <20190314181306.k6vxmaomyqalhi65@pburton-laptop>
+References: <20190311224752.8337-1-valentin.schneider@arm.com>
+ <20190311224752.8337-7-valentin.schneider@arm.com>
+In-Reply-To: <20190311224752.8337-7-valentin.schneider@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0060.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::37) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.99.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 73e27bee-3d1c-4cd0-8a5e-08d6a8a8b5ac
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR2201MB1759;
+x-ms-traffictypediagnostic: MWHPR2201MB1759:
+x-microsoft-antispam-prvs: <MWHPR2201MB17593FFD64B4688756A04599C14B0@MWHPR2201MB1759.namprd22.prod.outlook.com>
+x-forefront-prvs: 09760A0505
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(396003)(366004)(346002)(376002)(136003)(39850400004)(189003)(199004)(52314003)(478600001)(42882007)(71190400001)(53936002)(68736007)(6916009)(105586002)(106356001)(14454004)(71200400001)(54906003)(229853002)(476003)(44832011)(6486002)(186003)(26005)(486006)(5660300002)(6436002)(1076003)(58126008)(52116002)(102836004)(11346002)(446003)(386003)(6506007)(25786009)(305945005)(7736002)(81156014)(81166006)(66066001)(2906002)(316002)(76176011)(8676002)(14444005)(256004)(8936002)(4326008)(97736004)(99286004)(33716001)(6246003)(3846002)(9686003)(6116002)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1759;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZDVnl515RHW9f80w7xSDf6hTRiBpx3ohrmEHmo+acpgZEiPLEIrStzeQOtXbn35atxgH+ok0lRGZxXibHMcPfNtzA+gzkvjBXdZQLBfP2lA7D2vlVSsq2cBdDC/Z6LmZ7ajtpAFCi3qOzKCWwQ87wuAJoLI8sx6ezquIGrqQ5Hv0awm7PPCHVwZ8Q/DszKaxbEFDTWvUDWVwNIYbDfJfB/IZa0x1+jML6/FbA6jnimToSZJZTJXTaiA/i77K71BdmiDnbWXCsWt61SqXopRyO5nvlHiCZvFVZXcJyEpeoqJfC+xjSh/2om9Z/Ieo0DfY146HET1uQMaTWyiDYalJtb/8Gzl5iOGWGsUTA2WY6nsKzlrJ0wL4nJlVO0WD1MHMPynpyXLVsn5jVZNBaXNnWBq19ItVrLdKh0bVMqHtOHU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EF357C9F3F3E9D44B6AA388F84A73ECB@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73e27bee-3d1c-4cd0-8a5e-08d6a8a8b5ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2019 18:13:07.8992
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1759
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Hi Valentin,
 
-> Hi Chuanhong,
->
-> On 12/03/2019 09:33, Chuanhong Guo wrote:
->> There is a white LED on the front panel behind the logo and the
->> manufacturer uses that LED to indicate network and USB drive status.
->> 
->> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
->> ---
->>  .../boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts    | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
->> index 9a8a8a7e4b53..b5667f1fb2c8 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
->> @@ -14,6 +14,16 @@
->>  	cvbs-connector {
->>  		status = "disabled";
->>  	};
->> +
->> +	leds {
->> +		compatible = "gpio-leds";
->> +
->> +		status {
->> +			label = "n1:white:status";
->> +			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
->> +			default-state = "on";
->> +		};
->> +	};
->>  };
->>  
->>  &cvbs_vdac_port {
->> 
->
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+On Mon, Mar 11, 2019 at 10:47:44PM +0000, Valentin Schneider wrote:
+> Since the enabling and disabling of IRQs within preempt_schedule_irq()
+> is contained in a need_resched() loop, we don't need the outer arch
+> code loop.
+>=20
+> Do note that commit a18815abcdfd ("Use preempt_schedule_irq.")
+> initially removed the existing loop, but commit cdaed73afb61 ("Fix
+> preemption bug.") reintroduced it. It is however not clear what the
+> issue was and why such a loop was reintroduced, so I'm probably
+> missing something.
 
-Queued for v5.2 with Neil's tag (branch: v5.2/dt64)
+It looks to me like commit a18815abcdfd ("Use preempt_schedule_irq.")
+forgot the branch to restore_all, so would have fallen through to
+ret_from_fork() & done weird things.
 
-Kevin
+Adding the branch to restore_all as you're doing here would have been a
+better fix than commit cdaed73afb61 ("Fix preemption bug.").
+
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> ---
+>  arch/mips/kernel/entry.S | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/arch/mips/kernel/entry.S b/arch/mips/kernel/entry.S
+> index d7de8adcfcc8..2240faeda62a 100644
+> --- a/arch/mips/kernel/entry.S
+> +++ b/arch/mips/kernel/entry.S
+> @@ -58,7 +58,6 @@ resume_kernel:
+>  	local_irq_disable
+>  	lw	t0, TI_PRE_COUNT($28)
+>  	bnez	t0, restore_all
+> -need_resched:
+>  	LONG_L	t0, TI_FLAGS($28)
+>  	andi	t1, t0, _TIF_NEED_RESCHED
+>  	beqz	t1, restore_all
+> @@ -66,7 +65,7 @@ need_resched:
+>  	andi	t0, 1
+>  	beqz	t0, restore_all
+>  	jal	preempt_schedule_irq
+> -	b	need_resched
+> +	j	restore_all
+
+One nit - why change from branch to jump? It's not a big deal, but I'd
+prefer we stick with the branch ("b") instruction for a few reasons:
+
+- restore_all is nearby so there's no issue with it being out of range
+  of a branch in any variation of the MIPS ISA.
+
+- It's more consistent with the future of the MIPS architecture, eg.
+  nanoMIPS in which branch instructions all use PC-relative immediate
+  offsets & jump instructions are always of the "register" variety where
+  the destination is specified by a register rather than an immediate
+  encoded in the instruction (the assembler will fix it up & emit a
+  branch anyway, but I generally prefer to invoke less magic in these
+  areas...).
+
+- A PC-relative branch won't generate an extra reloc in a relocatable
+  kernel, whereas a jump will.
+
+Even better would be if we take advantage of this being a tail call & do
+this:
+
+	PTR_LA	ra, restore_all
+	j	preempt_schedule_irq
+
+(Where I left the call to preempt_schedule_irq using a jump because it
+may be further away.)
+
+Though I don't mind if you wanna just s/j/b/ & leave the tail call
+optimisation for someone else to do as a later change.
+
+Thanks,
+    Paul
+
+>  #endif
+> =20
+>  FEXPORT(ret_from_kernel_thread)
+> --=20
+> 2.20.1
+>=20
