@@ -2,224 +2,269 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B428C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398A9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F8621872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:12:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Pc4yYNrz"
+	by mail.kernel.org (Postfix) with ESMTP id EE074218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfCOLMc (ORCPT
+        id S1728168AbfCOLMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 07:12:32 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:52763 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbfCOLMc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 07:12:32 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190315111230euoutp026240c68c87de3d174a7a5bde85ed9692~MHXLBrtJb2715127151euoutp02a
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 11:12:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190315111230euoutp026240c68c87de3d174a7a5bde85ed9692~MHXLBrtJb2715127151euoutp02a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1552648350;
-        bh=WVcmpIUQygj/dY8xEZ8fP4ABs2KlXNaICx40zhLw0QA=;
-        h=To:Cc:From:Subject:Date:References:From;
-        b=Pc4yYNrzSJCF2OOQy3NCIPqpUcqklUTez57ICT6z2f//40iQgL0T8k4oN51o7zs55
-         Sg3hry9ZVv/Ij1VNGcI9jtaC45DMgIvABydM2QG0GXlxa2YKvv+JM5fSmseopZG1P1
-         27oPGNCHDajZcYyqqz8ySztT1LnlcS16VIS+4kWc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190315111229eucas1p284757a4e47606a0ce532e74de899af7c~MHXKoes5Z1096210962eucas1p25;
-        Fri, 15 Mar 2019 11:12:29 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id A2.D2.04441.D988B8C5; Fri, 15
-        Mar 2019 11:12:29 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190315111228eucas1p24628f949b96a13bc3434d36425fa0be0~MHXJoaQ2x1096210962eucas1p24;
-        Fri, 15 Mar 2019 11:12:28 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190315111228eusmtrp129b3bbc25a904d000087e1c56bb1742f~MHXJVFh9y0421704217eusmtrp1e;
-        Fri, 15 Mar 2019 11:12:28 +0000 (GMT)
-X-AuditID: cbfec7f2-5c9ff70000001159-df-5c8b889dabe3
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E7.E5.04284.C988B8C5; Fri, 15
-        Mar 2019 11:12:28 +0000 (GMT)
-Received: from [106.120.53.102] (unknown [106.120.53.102]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190315111228eusmtip1c8bb503ba7e34160475a9ae9fff566df~MHXJCsiTP0202102021eusmtip1d;
-        Fri, 15 Mar 2019 11:12:28 +0000 (GMT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [GIT PULL] fbdev changes for v5.1
-Message-ID: <4114bd4f-9c58-a295-c767-47720dcf2c37@samsung.com>
-Date:   Fri, 15 Mar 2019 12:12:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
+        Fri, 15 Mar 2019 07:12:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56962 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727000AbfCOLMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 07:12:50 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2EC88806B6;
+        Fri, 15 Mar 2019 11:12:49 +0000 (UTC)
+Received: from [10.36.117.12] (ovpn-117-12.ams2.redhat.com [10.36.117.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 32DAB5D9C5;
+        Fri, 15 Mar 2019 11:12:46 +0000 (UTC)
+Subject: Re: [RFC v3] sched/topology: fix kernel crash when a CPU is
+ hotplugged in a memoryless node
+To:     linux-kernel@vger.kernel.org
+Cc:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Borislav Petkov <bp@suse.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20190304195952.16879-1-lvivier@redhat.com>
+From:   Laurent Vivier <lvivier@redhat.com>
+Message-ID: <77b142fe-0886-1510-28bd-d432ea2c796a@redhat.com>
+Date:   Fri, 15 Mar 2019 12:12:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZduznOd25Hd0xBi/vyVlc+fqezeJE3wdW
-        i8u75rBZPOp7y+7A4nFixm8Wj/vdx5k8Pm+SC2CO4rJJSc3JLEst0rdL4MrYeH0RY8ELxYqb
-        r06wNjD+kOhi5OSQEDCR+DPnIVMXIxeHkMAKRom+OzOgnC+MEpubFzBCOJ8ZJbZfWsbexcgB
-        1vK0ywcivpxRouXKaxYI5z2jxNGl/9lA5ooIGEl8fnGFFcRmFkiQ+HLzMzOIzSZgJTGxfRUj
-        yCBhAS2Jq80VIGFeATuJt8e/MoHYLAKqEs2bnoCViApESPSfUYcoEZQ4OfMJC8REeYnmrbOZ
-        QdZKCDxnkzhwcz0jxDsuEi3zdrND2MISr45vgbJlJE5P7mGBaFjHKNE6s58FIrGdUeLkBycI
-        21ri8PGLrCCLmQU0Jdbv0ocIO0qcvruDGeJ3PokbbwUhbuCTmLRtOlSYV6KjTQiiWk1iw7IN
-        bDBbu3auhCrxkOh6qwoSFhKIlXj+YT/7BEaFWUgem4XksVkIJyxgZF7FKJ5aWpybnlpsmJda
-        rlecmFtcmpeul5yfu4kRmDJO/zv+aQfj10tJhxgFOBiVeHg3RHbFCLEmlhVX5h5ilOBgVhLh
-        fazfHSPEm5JYWZValB9fVJqTWnyIUZqDRUmct5rhQbSQQHpiSWp2ampBahFMlomDU6qBkZ9T
-        Xe+f43R9nt/fVtQLVTgu//tD4oPe6ovbRW788s6U9l2f0LByruqhAwZrfjxZ8r+Jx1xbskbu
-        anBhUvWixA7Tu3M6FQq4pnHFLzWIPv5tde6H9vZnpSxMxb8looz4b10xyA/exXJoj+ZBrRXz
-        T3/REb606Mk1xgIBOcew8+J+J05P2qpzS4mlOCPRUIu5qDgRAPBppNoVAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsVy+t/xu7pzOrpjDH6dELe48vU9m8WJvg+s
-        Fpd3zWGzeNT3lt2BxePEjN8sHve7jzN5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
-        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJex8foixoIXihU3X51gbWD8IdHFyMEhIWAi8bTL
-        p4uRi0NIYCmjRMfzg2wQcRmJ4+vLuhg5gUxhiT/XuthAbCGBt4wSM8+7g9giAkYSn19cYQWx
-        mQUSJDbdnwpWwyZgJTGxfRUjyBhhAS2Jq80VIGFeATuJt8e/MoHYLAKqEs2bnjCC2KICERK3
-        HnawQNQISpyc+YQFYqS6xJ95l5ghbHmJ5q2zmScw8s9CUjYLSdksJGULGJlXMYqklhbnpucW
-        G+oVJ+YWl+al6yXn525iBIb2tmM/N+9gvLQx+BCjAAejEg/viqCuGCHWxLLiytxDjBIczEoi
-        vI/1u2OEeFMSK6tSi/Lji0pzUosPMZoCHT6RWUo0OR8Yd3kl8YamhuYWlobmxubGZhZK4rzn
-        DSqjhATSE0tSs1NTC1KLYPqYODilGhgzzMS4DYsSVr0N26UzJ8fuznW1v02PZSd/szt7kG3L
-        Xgnfm853xVc+lYpVUOZZpmf9uO21y5XwFt5zScLzGac4fXZ1dF9TpB+6akff4yP/K9+82rS9
-        a/rU503XZr+KOH518kzVxEbPvG7pD0c/fSidxpuelyd8I2bS3VO5209M789e7DEza5+rEktx
-        RqKhFnNRcSIA+LhmzIMCAAA=
-X-CMS-MailID: 20190315111228eucas1p24628f949b96a13bc3434d36425fa0be0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190315111228eucas1p24628f949b96a13bc3434d36425fa0be0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190315111228eucas1p24628f949b96a13bc3434d36425fa0be0
-References: <CGME20190315111228eucas1p24628f949b96a13bc3434d36425fa0be0@eucas1p2.samsung.com>
+In-Reply-To: <20190304195952.16879-1-lvivier@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 15 Mar 2019 11:12:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/03/2019 20:59, Laurent Vivier wrote:
+> When we hotplug a CPU in a memoryless/cpuless node,
+> the kernel crashes when it rebuilds the sched_domains data.
+> 
+> I reproduce this problem on POWER and with a pseries VM, with the following
+> QEMU parameters:
+> 
+>   -machine pseries -enable-kvm -m 8192 \
+>   -smp 2,maxcpus=8,sockets=4,cores=2,threads=1 \
+>   -numa node,nodeid=0,cpus=0-1,mem=0 \
+>   -numa node,nodeid=1,cpus=2-3,mem=8192 \
+>   -numa node,nodeid=2,cpus=4-5,mem=0 \
+>   -numa node,nodeid=3,cpus=6-7,mem=0
+> 
+> Then I can trigger the crash by hotplugging a CPU on node-id 3:
+> 
+>   (qemu) device_add host-spapr-cpu-core,core-id=7,node-id=3
+> 
+>     Built 2 zonelists, mobility grouping on.  Total pages: 130162
+>     Policy zone: Normal
+>     WARNING: workqueue cpumask: online intersect > possible intersect
+>     BUG: Kernel NULL pointer dereference at 0x00000400
+>     Faulting instruction address: 0xc000000000170edc
+>     Oops: Kernel access of bad area, sig: 11 [#1]
+>     LE SMP NR_CPUS=2048 NUMA pSeries
+>     Modules linked in: ip6t_rpfilter ipt_REJECT nf_reject_ipv4 ip6t_REJECT nf_reject_ipv6 xt_conntrack ip_set nfnetlink ebtable_nat ebtable_broute bridge stp llc ip6table_nat nf_nat_ipv6 ip6table_mangle ip6table_security ip6table_raw iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle iptable_security iptable_raw ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter xts vmx_crypto ip_tables xfs libcrc32c virtio_net net_failover failover virtio_blk virtio_pci virtio_ring virtio dm_mirror dm_region_hash dm_log dm_mod
+>     CPU: 2 PID: 5661 Comm: kworker/2:0 Not tainted 5.0.0-rc6+ #20
+>     Workqueue: events cpuset_hotplug_workfn
+>     NIP:  c000000000170edc LR: c000000000170f98 CTR: 0000000000000000
+>     REGS: c000000003e931a0 TRAP: 0380   Not tainted  (5.0.0-rc6+)
+>     MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 22284028  XER: 00000000
+>     CFAR: c000000000170f20 IRQMASK: 0
+>     GPR00: c000000000170f98 c000000003e93430 c0000000011ac500 c0000001efe22000
+>     GPR04: 0000000000000001 0000000000000000 0000000000000000 0000000000000010
+>     GPR08: 0000000000000001 0000000000000400 ffffffffffffffff 0000000000000000
+>     GPR12: 0000000000008800 c00000003fffd680 c0000001f14b0000 c0000000011e1bf0
+>     GPR16: c0000000011e61f4 c0000001efe22200 c0000001efe22020 c0000001fba80000
+>     GPR20: c0000001ff567a80 0000000000000001 c000000000e27a80 ffffffffffffe830
+>     GPR24: ffffffffffffec30 000000000000102f 000000000000102f c0000001efca1000
+>     GPR28: c0000001efca0400 c0000001efe22000 c0000001efe23bff c0000001efe22a00
+>     NIP [c000000000170edc] free_sched_groups+0x5c/0xf0
+>     LR [c000000000170f98] destroy_sched_domain+0x28/0x90
+>     Call Trace:
+>     [c000000003e93430] [000000000000102f] 0x102f (unreliable)
+>     [c000000003e93470] [c000000000170f98] destroy_sched_domain+0x28/0x90
+>     [c000000003e934a0] [c0000000001716e0] cpu_attach_domain+0x100/0x920
+>     [c000000003e93600] [c000000000173128] build_sched_domains+0x1228/0x1370
+>     [c000000003e93740] [c00000000017429c] partition_sched_domains+0x23c/0x400
+>     [c000000003e937e0] [c0000000001f5ec8] rebuild_sched_domains_locked+0x78/0xe0
+>     [c000000003e93820] [c0000000001f9ff0] rebuild_sched_domains+0x30/0x50
+>     [c000000003e93850] [c0000000001fa1c0] cpuset_hotplug_workfn+0x1b0/0xb70
+>     [c000000003e93c80] [c00000000012e5a0] process_one_work+0x1b0/0x480
+>     [c000000003e93d20] [c00000000012e8f8] worker_thread+0x88/0x540
+>     [c000000003e93db0] [c00000000013714c] kthread+0x15c/0x1a0
+>     [c000000003e93e20] [c00000000000b55c] ret_from_kernel_thread+0x5c/0x80
+>     Instruction dump:
+>     2e240000 f8010010 f821ffc1 409e0014 48000080 7fbdf040 7fdff378 419e0074
+>     ebdf0000 4192002c e93f0010 7c0004ac <7d404828> 314affff 7d40492d 40c2fff4
+>     ---[ end trace f992c4a7d47d602a ]---
+> 
+>     Kernel panic - not syncing: Fatal exception
+> 
+> This happens in free_sched_groups() because the linked list of the
+> sched_groups is corrupted. Here what happens when we hotplug the CPU:
+> 
+>  - build_sched_groups() builds a sched_groups linked list for
+>    sched_domain D1, with only one entry A, refcount=1
+> 
+>    D1: A(ref=1)
+> 
+>  - build_sched_groups() builds a sched_groups linked list for
+>    sched_domain D2, with the same entry A
+> 
+>    D2: A(ref=2)
+> 
+>  - build_sched_groups() builds a sched_groups linked list for
+>    sched_domain D3, with the same entry A and a new entry B:
+> 
+>    D3: A(ref=3) -> B(ref=1)
+> 
+>  - destroy_sched_domain() is called for D1:
+> 
+>    D1: A(ref=3) -> B(ref=1) and as ref is 1, memory of B is released,
+>                                              but A->next always points to B
+> 
+>  - destroy_sched_domain() is called for D3:
+> 
+>    D3: A(ref=2) -> B(ref=0)
+> 
+> kernel crashes when it tries to use data inside B, as the memory has been
+> corrupted as it has been freed, the linked list (next) is broken too.
+> 
+> This problem appears with commit 051f3ca02e46
+> ("sched/topology: Introduce NUMA identity node sched domain").
+> 
+> If I compare function calls sequence before and after this commit I can see
+> in the working case build_overlap_sched_groups() is called instead of
+> build_sched_groups() and in this case the reference counters have all the
+> same value and the linked list can be correctly unallocated.
+> The involved commit has introduced the node domain, and in the case of
+> powerpc the node domain can overlap, whereas it should not happen.
+> 
+> This happens because initially powerpc code computes
+> sched_domains_numa_masks of offline nodes as if they were merged with
+> node 0 (because firmware doesn't provide the distance information for
+> memoryless/cpuless nodes):
+> 
+>   node   0   1   2   3
+>     0:  10  40  10  10
+>     1:  40  10  40  40
+>     2:  10  40  10  10
+>     3:  10  40  10  10
+> 
+> We should have:
+> 
+>   node   0   1   2   3
+>     0:  10  40  40  40
+>     1:  40  10  40  40
+>     2:  40  40  10  40
+>     3:  40  40  40  10
+> 
+> And once a new CPU is added, node is onlined, numa masks are updated
+> but initial set bits are not cleared. This explains why nodes can overlap.
+> 
+> This patch changes the initial code to not initialize the distance for
+> offline nodes. The distances will be updated when node will become online
+> (on CPU hotplug) as it is already done.
+> 
+> This patch has been tested on powerpc but not on the other architectures.
+> They are impacted because the modified part is in the common code.
+> All comments are welcome (how to move the change to powerpc specific code
+> or if the other architectures can work with this change).
+> 
+> Fixes: 051f3ca02e46 ("sched/topology: Introduce NUMA identity node sched domain")
+> Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: David Gibson <david@gibson.dropbear.id.au>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+> Cc: Michael Bringmann <mwb@linux.vnet.ibm.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+> ---
+> 
+> Notes:
+>     v3: fix the root cause of the problem (sched numa mask initialization)
+>     v2: add scheduler maintainers in the CC: list
+> 
+>  kernel/sched/topology.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index 3f35ba1d8fde..24831b86533b 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -1622,8 +1622,10 @@ void sched_init_numa(void)
+>  				return;
+>  
+>  			sched_domains_numa_masks[i][j] = mask;
+> +			if (!node_state(j, N_ONLINE))
+> +				continue;
+>  
+> -			for_each_node(k) {
+> +			for_each_online_node(k) {
+>  				if (node_distance(j, k) > sched_domains_numa_distance[i])
+>  					continue;
+>  
+> 
 
-Hi Linus,
+Another way to avoid the nodes overlapping for the offline nodes at
+startup is to ensure the default values don't define a distance that
+merge all offline nodes into node 0.
 
-Please pull fbdev changes for v5.1. Just a couple of small fixes and
-cleanups (please see the signed tag description for details).
+A powerpc specific patch can workaround the kernel crash by doing this:
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 87f0dd0..3ba29bb 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -623,6 +623,7 @@ static int __init parse_numa_properties(void)
+        struct device_node *memory;
+        int default_nid = 0;
+        unsigned long i;
++       int nid, dist;
 
+        if (numa_enabled == 0) {
+                printk(KERN_WARNING "NUMA disabled by user\n");
+@@ -636,6 +637,10 @@ static int __init parse_numa_properties(void)
 
-The following changes since commit 8834f5600cf3c8db365e18a3d5cac2c2780c81e5:
+        dbg("NUMA associativity depth for CPU/Memory: %d\n",
+min_common_depth);
 
-  Linux 5.0-rc5 (2019-02-03 13:48:04 -0800)
++       for (nid = 0; nid < MAX_NUMNODES; nid ++)
++               for (dist = 0; dist < MAX_DISTANCE_REF_POINTS; dist++)
++                       distance_lookup_table[nid][dist] = nid;
++
+        /*
+         * Even though we connect cpus to numa domains later in SMP
+         * init, we need to know the node ids now. This is because
 
-are available in the git repository at:
+Any comment?
 
-  https://github.com/bzolnier/linux.git tags/fbdev-v5.1
+If this is not the good way to do, does someone have a better idea how
+to fix the kernel crash?
 
-for you to fetch changes up to 9a9f1d1a81a972513636c333e26c542f8aebae55:
+Thanks,
+Laurent
 
-  fbdev: mbx: fix a misspelled variable name (2019-03-05 12:36:33 +0100)
-
-----------------------------------------------------------------
-fbdev changes for v5.1:
-
-- fix memory access if logo is bigger than the screen (Manfred
-  Schlaegl)
-
-- silence fbcon logo on 'quiet' boots (Prarit Bhargava)
-
-- use kvmalloc() for scrollback buffer in fbcon (Konstantin Khorenko)
-
-- misc fixes (Colin Ian King, YueHaibing, Matteo Croce, Mathieu
-  Malaterre, Anders Roxell, Arnd Bergmann)
-
-- misc cleanups (Rob Herring, Lubomir Rintel, Greg Kroah-Hartman,
-  Jani Nikula, Michal Vokáč)
-
-----------------------------------------------------------------
-Anders Roxell (1):
-      fbdev: omap2: fix warnings in dss core
-
-Arnd Bergmann (1):
-      fbdev: mbx: fix a misspelled variable name
-
-Bartlomiej Zolnierkiewicz (1):
-      Merge tag 'v5.0-rc5' of https://git.kernel.org/.../torvalds/linux into fbdev-for-next
-
-Colin Ian King (1):
-      fbdev/via: fix spelling mistake "Expandsion" -> "Expansion"
-
-Greg Kroah-Hartman (2):
-      fbdev: omap2: no need to check return value of debugfs_create functions
-      fbdev: mbx: fix up debugfs file creation
-
-Jani Nikula (1):
-      video/fbdev: refactor video= cmdline parsing
-
-Konstantin Khorenko (1):
-      fbcon: use kvmalloc() for scrollback buffer
-
-Lubomir Rintel (1):
-      video: fbdev: geode: remove ifdef OLPC noise
-
-Manfred Schlaegl (1):
-      fbdev: fbmem: fix memory access if logo is bigger than the screen
-
-Mathieu Malaterre (1):
-      video: offb: annotate implicit fall throughs
-
-Matteo Croce (1):
-      omapfb: fix typo
-
-Michal Vokáč (3):
-      dt-bindings: display: ssd1307fb: Remove reset-active-low from examples
-      video: ssd1307fb: Do not hard code active-low reset sequence
-      ARM: dts: imx28-cfa10036: Fix the reset gpio signal polarity
-
-Prarit Bhargava (2):
-      printk: Export console_printk
-      fbcon: Silence fbcon logo on 'quiet' boots
-
-Rob Herring (1):
-      fbdev: Use of_node_name_eq for node name comparisons
-
-YueHaibing (2):
-      fbdev: chipsfb: remove set but not used variable 'size'
-      video: fbdev: Fix potential NULL pointer dereference
-
- .../devicetree/bindings/display/ssd1307fb.txt      |  2 --
- arch/arm/boot/dts/imx28-cfa10036.dts               |  3 +-
- drivers/video/fbdev/aty/radeon_pm.c                |  6 ++--
- drivers/video/fbdev/cg14.c                         |  4 +--
- drivers/video/fbdev/cg3.c                          |  2 +-
- drivers/video/fbdev/chipsfb.c                      |  3 +-
- drivers/video/fbdev/core/fb_cmdline.c              | 23 ++++++-------
- drivers/video/fbdev/core/fbcon.c                   | 14 +++++---
- drivers/video/fbdev/core/fbmem.c                   |  3 ++
- drivers/video/fbdev/core/fbmon.c                   |  2 ++
- drivers/video/fbdev/ffb.c                          |  2 +-
- drivers/video/fbdev/geode/gxfb_core.c              | 13 ++-----
- drivers/video/fbdev/geode/lxfb_core.c              | 13 ++-----
- drivers/video/fbdev/imsttfb.c                      |  4 +--
- drivers/video/fbdev/mbx/mbxdebugfs.c               | 40 +++++++---------------
- drivers/video/fbdev/mbx/mbxfb.c                    |  2 +-
- drivers/video/fbdev/offb.c                         |  4 ++-
- drivers/video/fbdev/omap2/omapfb/dss/core.c        | 34 ++++--------------
- drivers/video/fbdev/omap2/omapfb/dss/dss-of.c      |  4 +--
- drivers/video/fbdev/omap2/omapfb/dss/dss.h         |  2 +-
- drivers/video/fbdev/omap2/omapfb/dss/hdmi4_core.c  |  2 +-
- drivers/video/fbdev/ssd1307fb.c                    |  4 +--
- drivers/video/fbdev/via/viafbdev.c                 |  2 +-
- kernel/printk/printk.c                             |  1 +
- 24 files changed, 72 insertions(+), 117 deletions(-)
