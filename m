@@ -2,140 +2,86 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F85C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383FDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F3B218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012F8218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tR9ODxM1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bddu/U8W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbfCOH5L (ORCPT
+        id S1728503AbfCOIBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 03:57:11 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43781 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbfCOH5K (ORCPT
+        Fri, 15 Mar 2019 04:01:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38166 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728428AbfCOIBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 03:57:10 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d17so8488517wre.10;
-        Fri, 15 Mar 2019 00:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FDToaXoGDM3HZpW27l4n5SxEsOzQOt6FD5PqD/o0Mu8=;
-        b=tR9ODxM1Uzy7lUWblPlmK+PjJqLPegZvtFyo6b1vpYP/FIYwGwhkIbQoCAZNhI0lz/
-         CcTjnKCfrAfZpAL8GKFCZ+gYBnIQL+aBzevN2+FaQgNjBmcJBmAZsM38AfyHPU74zzY3
-         xfVGCALQ8Da8F0lO0sTaeDKUKkwqODvg6nCdV3hrWgwuPHmbSmyE2NPPIjFHlVV6xcvA
-         ucasa7Sk7aM4TDGkIABdAse4h0EUZhepA/6ZozrVF5m2VslGTxG8gwEJJ7v3cOHxT8v6
-         jbh+pcvMdOlV6//1LedpbIVYaHHdFi/98xF0EOaQQ8bEC202c0XQbzVrtfUrNVOHTWc7
-         8kJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FDToaXoGDM3HZpW27l4n5SxEsOzQOt6FD5PqD/o0Mu8=;
-        b=e/avC5E6dsHxkX8pUT7aokD2J0uKmM5jxp0SG0XX/W0GrP9LaLvkfyC+Gb5GH4souU
-         /K828wOEjoXyShKKAjgpluxqwP4UnAydX/shTlMUqBkwOOsgqMPhE3p4ylYbjWpPh7hD
-         my74Fg0HJp4Oyp3jcjHyRh51/406VC2QZq5U6LTKENR8ED3QWwwpsC3/VSXpulHht6qr
-         6JXvqehSRMGiI8moseuTztG7rMWKjAfROMfMlTScyneANfbp7Q5X12DDmWmCiYXXp4be
-         DCdLpVxJoh7LzP6ZvvX0UEarmTbGYgJwiGcplL02Vued7WuYAe+T/OmpZMRjLr4KESZx
-         Ok3w==
-X-Gm-Message-State: APjAAAVA0wbHywIGvRpUnKWdhHLANJbslHRy2WoVEahkKbDBBFX3A31t
-        M/lKnSAAop+Ej5sGNoHXO5FEhpFZaARPjmHDOEA=
-X-Google-Smtp-Source: APXvYqzpoxMoT/Ju2INd2ZSjBzaRfiB7dzdm6gvcPCR/R8t1lhzWjsib7geq5yqTJH3X1x8GHVqw0CfOf1XskszZrxs=
-X-Received: by 2002:adf:d081:: with SMTP id y1mr1332114wrh.283.1552636628689;
- Fri, 15 Mar 2019 00:57:08 -0700 (PDT)
+        Fri, 15 Mar 2019 04:01:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sOd1YPPJQcxyiI72hmu+RbcgIfVsjyy4EFW10+SkYSA=; b=bddu/U8Wr0rdAPVNr4IT3eK81
+        1gPfx229RiXe93Xkg9tgOdOl3Yo09dMCrHi2F/IV+vR+XhMF4UPPhZfiAENdswEsKCzTFPlleYLX7
+        uDug1Qf2dX8vH7aQKBVgiwhrGOPDq8naeiO53WBopaWc6L1MGvPp/r2vwtnQQRA75YhQImMj3sy26
+        3k3dwWN+cqwayfZbOSzH5HGpIt+ERwp5nVfo0ffbzUTJfV+z9nuiOCdxMeWLtWKiHKWs4a0mglIVl
+        XY+c6AORs01s3Rp2dk3CiRJ9xSHg1iLN3GlNDJH16H6FwrwKi1K03mf/5WWlKxX8qfjw9hpiX5vFZ
+        4X6Qpag+g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4hmB-00049x-QD; Fri, 15 Mar 2019 08:01:12 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6D48221419E59; Fri, 15 Mar 2019 09:01:09 +0100 (CET)
+Date:   Fri, 15 Mar 2019 09:01:09 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
+        nelson.dsouza@intel.com
+Subject: Re: [RFC][PATCH 0/8] perf/x86: event scheduling cleanups
+Message-ID: <20190315080109.GQ5996@hirez.programming.kicks-ass.net>
+References: <20190314130113.919278615@infradead.org>
+ <CABPqkBT9_ayhH2puPtLiemtM=VOXxNhC4AXrKkOaDMatWifLxQ@mail.gmail.com>
+ <CABPqkBRkPQewqJQsNtEESd9Jo2qd8iVG7KDzbQRK_Lg_21p-bA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190219072743.13606-1-yanaijie@huawei.com> <1550595388.31902.133.camel@acm.org>
- <20190220151836.GA11695@infradead.org> <10ea95ec-e259-3511-44c4-58e4d255eb9f@huawei.com>
-In-Reply-To: <10ea95ec-e259-3511-44c4-58e4d255eb9f@huawei.com>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Fri, 15 Mar 2019 15:56:56 +0800
-Message-ID: <CACVXFVMWDD+8rrVh9TYnA6awLPQZNscC6OrYmpAizj9PxxuZJw@mail.gmail.com>
-Subject: Re: [RFC PATCH] scsi: fix oops in scsi_uninit_cmd()
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        James Bottomley <jejb@linux.vnet.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Steffen Maier <maier@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABPqkBRkPQewqJQsNtEESd9Jo2qd8iVG7KDzbQRK_Lg_21p-bA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 4:55 PM Jason Yan <yanaijie@huawei.com> wrote:
->
-> Hi, Christoph
->
-> On 2019/2/20 23:18, Christoph Hellwig wrote:
-> > [fullquote removed, please follow proper mail etiquette]
+On Fri, Mar 15, 2019 at 12:15:55AM -0700, Stephane Eranian wrote:
+> On Fri, Mar 15, 2019 at 12:15 AM Stephane Eranian <eranian@google.com> wrote:
 > >
-> > On Tue, Feb 19, 2019 at 08:56:28AM -0800, Bart Van Assche wrote:
-> >> regression in the SCSI sd driver due to the switch from the legacy block
-> >> layer to scsi-mq. The above patch introduces two atomic operations in the
-> >> hot path and hence would introduce a performance regression. I think this
-> >> can be avoided by making sure that sd_uninit_command() gets called before
-> >> the request tag is freed. What changes would be required to make the block
-> >> layer core call sd_uninit_command() before the request tag is freed? Would
-> >> introducing prep_rq_fn and unprep_rq_fn callbacks in struct blk_mq_ops and
-> >> making sure that the SCSI core sets these callback function pointers
-> >> appropriately be sufficient? Would such a change allow to simplify the NVMe
-> >> initiator driver? Are there any alternatives to this approach that are more
-> >> elegant?
-> >
-> > Additional indirect calls in the I/O fast path is something I'd rather
-> > avoid.  But I don't fully understand the problem yet - where do
-> > we release a disk reference from blk_update_request?
->
-> When userspace close the fd after blk_update_request() and before
-> scsi_mq_uninit_cmd(), a disk reference will be released. It is not the
-> blk_update_request() directly released it.
->
-> close
->     ->sd_release
->        ->scsi_disk_put
->          ->scsi_disk_release
->            ->disk->private_data = NULL;
->
-> The userspace can close the fd because blk_update_request() returned the
-> last IO , the userspace application does not have to stuck on read() or
-> write(). The window is very small, but it can be reproduce every day
-> in our testcases. So I'm very curious why. One possible explanation is
-> that we enabled kernel preempt(CONFIG_PREEMPT).
+> > On Thu, Mar 14, 2019 at 6:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > These here patches are the result of chasing a bug in the TSX Force Abort
+> > > patches.
+> > >
+> > > The first patch is simple and fixes the issue and should be marked /urgent and
+> > > backported.
+> > >
+> > > The rest is the result of having a hard look at how all that event scheduling
+> > > stuff worked while trying to figure out wth was going wrong.
+> > >
+> > > Stephane, since you were involved with writing much of that code, can you
+> > > please have a good look? I _think_ I got it, but... :-)
+> > >
+> > Will do today.
+> > But you did not send me PATCH 1/8 apparently.
+> 
+> Correction : I got it. Mail client had just moved it somewhere else!
 
-Another solution is to drain in-flight FS IO in scsi_disk_release(),
-and one counter
-is needed for tracking in-flight passthrough IO, so we can use sdev->device_busy
-- sdev->passthrough_ios to drain inflight FS IO.
-
->
-> And why can't
-> > we move that release to __blk_mq_end_request?
-
-I think it is doable, then ending bio needs to be moved out of
-blk_update_request(),
-such as, add one list of rq->done_bio to track completed bio, then complete all
-in free request.
-
-And for partial completion, the completed bio can be done in
-blk_update_request(),
-since the remained bios will cause fs to hold the disk.
-
-
-Thanks,
-Ming Lei
+Also please look at all 8, I'm reasonably sure 1/8 is correct, but it is
+rather more ugly than I'd wish. So the remaining 7 clean it all up (and
+effectively revert 1 again) but are much more invasive.
