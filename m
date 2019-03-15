@@ -4,636 +4,853 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EA8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B2DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E023221872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E16121872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbfCOJfx (ORCPT
+        id S1728738AbfCOJg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:35:53 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48173 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbfCOJfx (ORCPT
+        Fri, 15 Mar 2019 05:36:59 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:37061 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726886AbfCOJg6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:35:53 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h4jFW-0007K7-Lj; Fri, 15 Mar 2019 10:35:34 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h4jFU-0006Ph-Aq; Fri, 15 Mar 2019 10:35:32 +0100
-Date:   Fri, 15 Mar 2019 10:35:32 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V4 2/5] pwm: Add i.MX TPM PWM driver support
-Message-ID: <20190315093532.xw5ivfkxrwvrkvix@pengutronix.de>
-References: <1552610505-13568-1-git-send-email-Anson.Huang@nxp.com>
- <1552610505-13568-3-git-send-email-Anson.Huang@nxp.com>
+        Fri, 15 Mar 2019 05:36:58 -0400
+X-Originating-IP: 90.88.22.102
+Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 9A8AFC000B;
+        Fri, 15 Mar 2019 09:36:54 +0000 (UTC)
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH] dt-bindings: Add YAML description for Allwinner boards
+Date:   Fri, 15 Mar 2019 10:36:51 +0100
+Message-Id: <20190315093651.24978-1-maxime.ripard@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1552610505-13568-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 12:46:51AM +0000, Anson Huang wrote:
-> i.MX7ULP has TPM(Low Power Timer/Pulse Width Modulation Module)
-> inside, add TPM PWM driver support.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V3:
-> 	- use "PWM_IMX_" as macro definition prefix and "pwm_imx_" as function prefix;
-> 	- improve the limitation txt;
-> 	- return error for configuring period/prescale fail;
-> 	- disable clock when driver probe failed and remove;
-> 	- improve module build dependency;
-> 	- introduce user_count to determine whether configuing period is allowed;
-> 	- some logic improvement for setting duty/status etc.;
-> ---
->  drivers/pwm/Kconfig       |  12 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-imx-tpm.c | 396 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 409 insertions(+)
->  create mode 100644 drivers/pwm/pwm-imx-tpm.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index a8f47df..6117fe6 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -201,6 +201,18 @@ config PWM_IMX
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx.
->  
-> +config PWM_IMX_TPM
-> +	tristate "i.MX TPM PWM support"
-> +	depends on ARCH_MXC || COMPILE_TEST
-> +	depends on HAVE_CLK && HAS_IOMEM
-> +
-
-I think this empty newline is unusual.
-
-> +	help
-> +	  Generic PWM framework driver for i.MX7ULP TPM module, TPM's full
-> +	  name is Low Power Timer/Pulse Width Modulation Module.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-imx-tpm.
-> +
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 9c676a0..64e036c 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -18,6 +18,7 @@ obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
->  obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
->  obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
->  obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
-> +obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
->  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
->  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
->  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
-> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-> new file mode 100644
-> index 0000000..f108f75
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-imx-tpm.c
-> @@ -0,0 +1,396 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2018-2019 NXP.
-> + *
-> + * Limitations:
-> + * - The TPM counter and period counter are shared between
-> + *   multiple channels, so all channels should use same period
-> + *   settings.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/log2.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/slab.h>
-> +
-> +#define PWM_IMX_TPM_GLOBAL	0x8
-> +#define PWM_IMX_TPM_SC		0x10
-> +#define PWM_IMX_TPM_CNT		0x14
-> +#define PWM_IMX_TPM_MOD		0x18
-> +#define PWM_IMX_TPM_C0SC	0x20
-> +#define PWM_IMX_TPM_C0V		0x24
-> +
-> +#define PWM_IMX_TPM_SC_CMOD			GENMASK(4, 3)
-> +#define PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK	BIT(3)
-> +#define PWM_IMX_TPM_SC_CPWMS			BIT(5)
-> +
-> +#define PWM_IMX_TPM_CnSC_CHF	BIT(7)
-> +#define PWM_IMX_TPM_CnSC_MSnB	BIT(5)
-> +#define PWM_IMX_TPM_CnSC_MSnA	BIT(4)
-> +#define PWM_IMX_TPM_CnSC_ELSnB	BIT(3)
-> +#define PWM_IMX_TPM_CnSC_ELSnA	BIT(2)
-> +
-> +#define PWM_IMX_TPM_SC_PS_MASK		0x7
-> +#define PWM_IMX_TPM_MOD_MOD_MASK	0xffff
-> +
-> +#define PWM_IMX_TPM_MAX_COUNT		0xffff
-> +
-> +#define PWM_IMX_TPM_MAX_CHANNEL_NUM	6
-> +
-> +#define PWM_IMX_TPM_CnSC(n)	(PWM_IMX_TPM_C0SC + n * 0x8)
-> +#define PWM_IMX_TPM_CnV(n)	(PWM_IMX_TPM_C0V + n * 0x8)
-
-parenthesis around n please.
-
-> +struct imx_tpm_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	struct mutex lock;
-> +	u32 user_count;
-> +	u32 chn_config[PWM_IMX_TPM_MAX_CHANNEL_NUM];
-> +	bool chn_status[PWM_IMX_TPM_MAX_CHANNEL_NUM];
-> +};
-> +
-> +#define to_imx_tpm_pwm_chip(_chip)	\
-> +		container_of(_chip, struct imx_tpm_pwm_chip, chip)
-> +
-> +static int pwm_imx_tpm_config_counter(struct pwm_chip *chip, u32 period)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	u32 period_cnt, val, div, saved_cmod;
-> +	u64 tmp;
-> +
-> +	tmp = clk_get_rate(tpm->clk);
-> +	tmp *= period;
-> +	val = DIV_ROUND_CLOSEST_ULL(tmp, NSEC_PER_SEC);
-> +	if (val < PWM_IMX_TPM_MAX_COUNT)
-
-<= ?
-
-> +		div = 0;
-> +	else
-> +		div = ilog2(roundup_pow_of_two(val /
-> +			(PWM_IMX_TPM_MAX_COUNT + 1)));
-> +	if (div > PWM_IMX_TPM_SC_PS_MASK) {
-
-#define PWM_IMX_TPM_SC_PS	GENMASK(0, 2)
-
-if (!FIELD_FIT(PWM_IMX_TPM_SC_PS, div)) {
-	...
-
-> +		dev_err(chip->dev,
-> +			"failed to find valid prescale value!\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* make sure counter is disabled for programming prescale */
-> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-> +	saved_cmod = val & PWM_IMX_TPM_SC_CMOD;
-
-saved_cmod = FIELD_GET(PWM_IMX_TPM_SC_CMOD, val) ?
-
-> +	val &= ~PWM_IMX_TPM_SC_CMOD;
-> +	writel(val, tpm->base + PWM_IMX_TPM_SC);
-
-As this interrupts the output, please only do it if necessary.
-
-> +	/* set TPM counter prescale */
-> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-> +	val &= ~PWM_IMX_TPM_SC_PS_MASK;
-> +	val |= div;
-
-val |= FIELD_PREP(PWM_IMX_TPM_SC_PS_MASK, div);
-
-> +	writel(val, tpm->base + PWM_IMX_TPM_SC);
-> +
-> +	/*
-> +	 * set period counter: according to RM, the MOD register is
-> +	 * updated immediately when CMOD[1:0] = 2b'00 (counter disabled).
-
-	updated immediately after CMOD[1:0] = 2b'00 above
-
-> +	 */
-> +	do_div(tmp, NSEC_PER_SEC);
-> +	period_cnt = DIV_ROUND_CLOSEST_ULL(tmp, 1 << div)
-
-The (partial) RHS is equivalent to
-
-	(tmp + (1 << div) >> 1) >> div
-
-which might be cheaper for the CPU to calculate.
-
-> +			& PWM_IMX_TPM_MOD_MOD_MASK;
-
-If it can happen, that this masking changes the result, this is an error
-that needs handling. (And if not, drop it; maybe in favour of a
-comment.)
-
-> +	writel(period_cnt, tpm->base + PWM_IMX_TPM_MOD);
-> +
-> +	/* restore the clock mode */
-> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-> +	val |= saved_cmod;
-> +	writel(val, tpm->base + PWM_IMX_TPM_SC);
-> +
-> +	return 0;
-> +}
-> +
-> +static void pwm_imx_tpm_config(struct pwm_chip *chip,
-> +			       struct pwm_device *pwm,
-> +			       u32 period,
-> +			       u32 duty_cycle,
-> +			       enum pwm_polarity polarity)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	u32 duty_cnt, val;
-> +	u64 tmp;
-> +
-> +	/* set duty counter */
-> +	tmp = readl(tpm->base + PWM_IMX_TPM_MOD) & PWM_IMX_TPM_MOD_MOD_MASK;
-
-I recommend storing this value in driver data.
-
-> +	tmp *= duty_cycle;
-> +	duty_cnt = DIV_ROUND_CLOSEST_ULL(tmp, period);
-> +	writel(duty_cnt & PWM_IMX_TPM_MOD_MOD_MASK,
-> +		 tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
-
-Please align the 2nd line to the opening parenthesis.
-
-> +
-> +	/* set polarity */
-> +	val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-> +	val &= ~(PWM_IMX_TPM_CnSC_ELSnB | PWM_IMX_TPM_CnSC_ELSnA |
-> +		 PWM_IMX_TPM_CnSC_MSnA);
-> +	val |= PWM_IMX_TPM_CnSC_MSnB;
-> +	val |= polarity ? PWM_IMX_TPM_CnSC_ELSnA : PWM_IMX_TPM_CnSC_ELSnB;
-
-I'd recommend not hard coding here that PWM_POLARITY_NORMAL evaluates to
-false.
-
-In the reference manual I have (Rev. F, 07/2017) MSnA is called MSA
-only. Ditto for MSnB -> MSB, ELSnA -> ELSA, ELSnB -> ELSB. (Hmm, but it
-is not entirely consistent. So Table 64-4 indeed has the 'n's.)
-
-I wonder why MSA and MSB are two bits instead of making this a field of
-width 2 with 2b10 meaning PWM mode. But maybe it's just me not
-understanding the independent semantic of these two bits?
-
-Reading the reference manual I'd say in PWM mode the semantic of ELSA
-and ELSB is:
-
-	On counter reload set the output to ELSB
-	On counter match set the output to ELSA
-
-Noting that in a comment would ease understanding the code here.
-
-> +	/*
-> +	 * polarity settings will enabled/disable output statue
-
-s/statue/status/
-
-> +	 * immediately, so here ONLY save the config and will be
-> +	 * written into register when channel is enabled/disabled.
-
-s/will be written/write it/
-
-> +	 */
-> +	tpm->chn_config[pwm->hwpwm] = val;
-> +}
-
-A comment here about how and when the values written in
-pwm_imx_tpm_config take effect would be good.
-
-> +static void pwm_imx_tpm_enable(struct pwm_chip *chip,
-> +			       struct pwm_device *pwm,
-> +			       bool enable)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	u32 val, i;
-> +
-> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-> +	if (enable) {
-> +		/* restore channel config */
-> +		writel(tpm->chn_config[pwm->hwpwm],
-> +			tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-> +
-> +		/* start TPM counter anyway */
-> +		val |= PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK;
-> +		writel(val, tpm->base + PWM_IMX_TPM_SC);
-> +	} else {
-> +		/*
-> +		 * When a channel is disabled, its polarity settings will be
-> +		 * saved and its output will be disabled by clearing polarity
-> +		 * setting, when channel is enabled, polarity settings will be
-> +		 * restored and output will be enabled again.
-> +		 */
-> +		/* save channel config */
-> +		tpm->chn_config[pwm->hwpwm] = readl(tpm->base +
-> +			PWM_IMX_TPM_CnSC(pwm->hwpwm));
-
-Doesn't tpm->chn_config[pwm->hwpwm] already contain the right value?
-Please align the 2nd line to the opening parenthesis.
-
-> +		/* disable channel */
-> +		writel(PWM_IMX_TPM_CnSC_CHF,
-> +			tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-
-Clearing CHF doens't disable the channel as I read the manual.
-
-> +		for (i = 0; i < chip->npwm; i++)
-> +			if (i != pwm->hwpwm && tpm->chn_status[i])
-
-If you set tpm->chn_status[i] = false before this loop, you don't have
-to care for i != pwm->hwpwm. If you maintain an "enable count" you don't
-have to loop at all.
-
-> +				break;
-> +		if (i == chip->npwm) {
-> +			/* stop TPM counter since all channels are disabled */
-> +			val &= ~PWM_IMX_TPM_SC_CMOD;
-> +			writel(val, tpm->base + PWM_IMX_TPM_SC);
-> +		}
-> +	}
-> +
-> +	/* update channel statue */
-> +	tpm->chn_status[pwm->hwpwm] = enable;
-> +}
-> +
-> +static void pwm_imx_tpm_get_state(struct pwm_chip *chip,
-> +				  struct pwm_device *pwm,
-> +				  struct pwm_state *state)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	u64 tmp;
-> +	u32 val, rate;
-> +
-> +	mutex_lock(&tpm->lock);
-> +
-> +	/* get period */
-> +	rate = clk_get_rate(tpm->clk);
-> +	tmp = readl(tpm->base + PWM_IMX_TPM_MOD);
-> +	val = readl(tpm->base + PWM_IMX_TPM_SC);
-> +	val &= PWM_IMX_TPM_SC_PS_MASK;
-> +	tmp *= (1 << val) * NSEC_PER_SEC;
-> +	state->period = DIV_ROUND_CLOSEST_ULL(tmp, rate);
-> +
-> +	/* get duty cycle */
-> +	tmp = readl(tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
-> +	tmp *= (1 << val) * NSEC_PER_SEC;
-> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, rate);
-> +
-> +	/* get polarity */
-> +	val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-> +	if (val & PWM_IMX_TPM_CnSC_ELSnA)
-> +		state->polarity = PWM_POLARITY_INVERSED;
-> +	else
-> +		state->polarity = PWM_POLARITY_NORMAL;
-> +
-> +	/* get channel status */
-> +	state->enabled = tpm->chn_status[pwm->hwpwm] ? true : false;
-> +
-> +	mutex_unlock(&tpm->lock);
-> +}
-> +
-> +static int pwm_imx_tpm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			     struct pwm_state *state)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	struct pwm_state curstate;
-> +	u32 duty_cycle = state->duty_cycle;
-> +	int ret;
-> +
-> +	pwm_imx_tpm_get_state(chip, pwm, &curstate);
-> +
-> +	mutex_lock(&tpm->lock);
-
-What should this lock protect? Does it hurt if the state changes between
-pwm_imx_tpm_get_state releasing the lock and pwm_imx_tpm_apply taking
-it?
-
-> +
-> +	if (state->period != curstate.period) {
-> +		/*
-> +		 * TPM counter is shared by multiple channels, so
-> +		 * the prescale and period can NOT be modified when
-> +		 * there are multiple channels used.
-
-s/the //; s/used/in use/
-
-> +		 */
-> +		if (tpm->user_count != 1)
-> +			return -EBUSY;
-
-Ideally if say period = 37 is requested but currently we have period =
-36 and configuring 37 would result in 36 anyhow, don't return EBUSY.
-
-> +		ret = pwm_imx_tpm_config_counter(chip, state->period);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	if (!state->enabled)
-> +		duty_cycle = 0;
-
-A comment above this block that explains why this is done would be
-great (but see below).
-
-> +
-> +	if (state->duty_cycle != curstate.duty_cycle ||
-> +	    state->polarity != curstate.polarity)
-> +		pwm_imx_tpm_config(chip, pwm,
-> +			state->period, duty_cycle, state->polarity);
-> +
-> +	if (state->enabled != curstate.enabled)
-> +		pwm_imx_tpm_enable(chip, pwm, state->enabled);
-
-This is a bit unintuitive I think. For example I had to think for a
-while why you pass duty_cycle to pwm_imx_tpm_config() but check
-state->duty_cycle in the if condition. I'd suggest:
-
-	if (state->enabled == false) {
-		/*
-		 * configure for duty_cycle == 0 here? Wait until this
-		 * setting is active?
-		 */
-		if (curstate.enabled)
-			pwm_imx_tpm_enable(chip, pwm, false);
-	} else {
-		...
-
-	}
-
-
-> +
-> +	mutex_unlock(&tpm->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pwm_imx_tpm_request(struct pwm_chip *chip, struct pwm_device *dev)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +
-> +	mutex_lock(&tpm->lock);
-> +	tpm->user_count++;
-> +	mutex_unlock(&tpm->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void pwm_imx_tpm_free(struct pwm_chip *chip, struct pwm_device *dev)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +
-> +	mutex_lock(&tpm->lock);
-> +	tpm->user_count--;
-> +	mutex_unlock(&tpm->lock);
-> +}
-> +
-> +static const struct pwm_ops imx_tpm_pwm_ops = {
-> +	.get_state = pwm_imx_tpm_get_state,
-> +	.request = pwm_imx_tpm_request,
-> +	.apply = pwm_imx_tpm_apply,
-> +	.free = pwm_imx_tpm_free,
-> +	.owner = THIS_MODULE,
-
-Can you please group "request" with "free"? The order as defined in
-struct pwm_ops would be optimal.
-
-> +};
-> +
-> +static int pwm_imx_tpm_probe(struct platform_device *pdev)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	tpm = devm_kzalloc(&pdev->dev, sizeof(*tpm), GFP_KERNEL);
-> +	if (!tpm)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, tpm);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	tpm->base = devm_ioremap_resource(&pdev->dev, res);
-
-You can use devm_platform_ioremap_resource instead of the two previous
-calls.
-
-> +	if (IS_ERR(tpm->base)) {
-> +		ret = PTR_ERR(tpm->base);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "pwm ioremap failed %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	tpm->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(tpm->clk)) {
-> +		ret = PTR_ERR(tpm->clk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "failed to get pwm clk %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(tpm->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev,
-> +			"failed to prepare or enable clk %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	tpm->chip.dev = &pdev->dev;
-> +	tpm->chip.ops = &imx_tpm_pwm_ops;
-> +	tpm->chip.base = -1;
-> +	tpm->chip.npwm = PWM_IMX_TPM_MAX_CHANNEL_NUM;
-
-This is wrong, as some only have 2 channels?
-
-> +	mutex_init(&tpm->lock);
-> +
-> +	ret = pwmchip_add(&tpm->chip);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to add pwm chip %d\n", ret);
-> +		clk_disable_unprepare(tpm->clk);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int pwm_imx_tpm_remove(struct platform_device *pdev)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(tpm->clk);
-> +
-> +	return pwmchip_remove(&tpm->chip);
-
-Wrong order. Before pwmchip_remove returns the PWM must stay functional.
-
-> +}
-> +
-> +static int __maybe_unused pwm_imx_tpm_suspend(struct device *dev)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = dev_get_drvdata(dev);
-> +
-> +	clk_disable_unprepare(tpm->clk);
-
-You must not disable the clock if the PWM is in use.
-
-> +	return 0;
-> +}
-
-The time I want to/can spend on community review is over now for this
-week. I didn't look at all details yet but I think it is still worth to
-send this mail out to not make you bored :-) Also I think further
-thoughts by me will be eased if you address my comments here first.
-
-Best regards
-Uwe
-
+We've never had a board compatibles documentation for the Allwinner boards
+so far.
+
+Let's create a json-schema for them.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ .../devicetree/bindings/arm/sunxi.yaml        | 792 ++++++++++++++++++
+ 1 file changed, 792 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/sunxi.yaml
+
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+new file mode 100644
+index 000000000000..b34d9c5b7fd8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -0,0 +1,792 @@
++# SPDX-License-Identifier: (GPL-2.0+ OR X11)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/sunxi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner platforms device tree bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++
++      - description: Allwinner A23 Evaluation Board
++        items:
++          - const: allwinner,sun8i-a23-evb
++          - const: allwinner,sun8i-a23
++
++      - description: Allwinner A31 APP4 Evaluation Board
++        items:
++          - const: allwinner,app4-evb1
++          - const: allwinner,sun6i-a31
++
++      - description: Allwinner A83t Homlet Evaluation Board v2
++        items:
++          - const: allwinner,h8homlet-v2
++          - const: allwinner,sun8i-a83t
++
++      - description: Allwinner GA10H Quad Core Tablet v1.1
++        items:
++          - const: allwinner,ga10h-v1.1
++          - const: allwinner,sun8i-a33
++
++      - description: Allwinner GT90H Tablet v4
++        items:
++          - const: allwinner,gt90h-v4
++          - const: allwinner,sun8i-a23
++
++      - description: Allwinner R16 EVB (Parrot)
++        items:
++          - const: allwinner,parrot
++          - const: allwinner,sun8i-a33
++
++      - description: Amarula A64 Relic
++        items:
++          - const: amarula,a64-relic
++          - const: allwinner,sun50i-a64
++
++      - description: Auxtek T003 A10s HDMI TV Stick
++        items:
++          - const: allwinner,auxtek-t003
++          - const: allwinner,sun5i-a10s
++
++      - description: Auxtek T004 A10s HDMI TV Stick
++        items:
++          - const: allwinner,auxtek-t004
++          - const: allwinner,sun5i-a10s
++
++      - description: BA10 TV Box
++        items:
++          - const: allwinner,ba10-tvbox
++          - const: allwinner,sun4i-a10
++
++      - description: Beelink X2
++        items:
++          - const: roofull,beelink-x2
++          - const: allwinner,sun8i-h3
++
++      - description: LeMaker BananaPi
++        items:
++          - const: lemaker,bananapi
++          - const: allwinner,sun7i-a20
++
++      - description: LeMaker BananaPro
++        items:
++          - const: lemaker,bananapro
++          - const: allwinner,sun7i-a20
++
++      - description: Chuwi V7 CW0825
++        items:
++          - const: chuwi,v7-cw0825
++          - const: allwinner,sun4i-a10
++
++      - description: Colorfly E708 Q1 Tablet
++        items:
++          - const: colorfly,e708-q1
++          - const: allwinner,sun6i-a31s
++
++      - description: CSQ CS908 Set Top Box
++        items:
++          - const: csq,cs908
++          - const: allwinner,sun6i-a31s
++
++      - description: Cubietech Cubieboard
++        items:
++          - const: cubietech,a10-cubieboard
++          - const: allwinner,sun4i-a10
++
++      - description: Cubietech Cubieboard2
++        items:
++          - const: cubietech,cubieboard2
++          - const: allwinner,sun7i-a20
++
++      - description: Cubietech Cubieboard4
++        items:
++          - const: cubietech,a80-cubieboard4
++          - const: allwinner,sun9i-a80
++
++      - description: Cubietech Cubietruck
++        items:
++          - const: cubietech,cubietruck
++          - const: allwinner,sun7i-a20
++
++      - description: Cubietech Cubietruck Plus
++        items:
++          - const: cubietech,cubietruck-plus
++          - const: allwinner,sun8i-a83t
++
++      - description: Difrnce DIT4350
++        items:
++          - const: difrnce,dit4350
++          - const: allwinner,sun5i-a13
++
++      - description: Dserve DSRV9703C
++        items:
++          - const: dserve,dsrv9703c
++          - const: allwinner,sun4i-a10
++
++      - description: Empire Electronix D709 Tablet
++        items:
++          - const: empire-electronix,d709
++          - const: allwinner,sun5i-a13
++
++      - description: Empire Electronix M712 Tablet
++        items:
++          - const: empire-electronix,m712
++          - const: allwinner,sun5i-a13
++
++      - description: FriendlyARM NanoPi A64
++        items:
++          - const: friendlyarm,nanopi-a64
++          - const: allwinner,sun50i-a64
++
++      - description: FriendlyARM NanoPi M1
++        items:
++          - const: friendlyarm,nanopi-m1
++          - const: allwinner,sun8i-h3
++
++      - description: FriendlyARM NanoPi M1 Plus
++        items:
++          - const: friendlyarm,nanopi-m1-plus
++          - const: allwinner,sun8i-h3
++
++      - description: FriendlyARM NanoPi Neo
++        items:
++          - const: friendlyarm,nanopi-neo
++          - const: allwinner,sun8i-h3
++
++      - description: FriendlyARM NanoPi Neo 2
++        items:
++          - const: friendlyarm,nanopi-neo2
++          - const: allwinner,sun50i-h5
++
++      - description: FriendlyARM NanoPi Neo Air
++        items:
++          - const: friendlyarm,nanopi-neo-air
++          - const: allwinner,sun8i-h3
++
++      - description: FriendlyARM NanoPi Neo Plus2
++        items:
++          - const: friendlyarm,nanopi-neo-plus2
++          - const: allwinner,sun50i-h5
++
++      - description: Gemei G9 Tablet
++        items:
++          - const: gemei,g9
++          - const: allwinner,sun4i-a10
++
++      - description: Hyundai A7HD
++        items:
++          - const: hyundai,a7hd
++          - const: allwinner,sun4i-a10
++
++      - description: HSG H702
++        items:
++          - const: hsg,h702
++          - const: allwinner,sun5i-a13
++
++      - description: I12 TV Box
++        items:
++          - const: allwinner,i12-tvbox
++          - const: allwinner,sun7i-a20
++
++      - description: ICNova A20 SWAC
++        items:
++          - const: swac,icnova-a20-swac
++          - const: incircuit,icnova-a20
++          - const: allwinner,sun7i-a20
++
++      - description: INet-1
++        items:
++          - const: inet-tek,inet1
++          - const: allwinner,sun4i-a10
++
++      - description: iNet-86DZ Rev 01
++        items:
++          - const: primux,inet86dz
++          - const: allwinner,sun8i-a23
++
++      - description: iNet-9F Rev 03
++        items:
++          - const: inet-tek,inet9f-rev03
++          - const: allwinner,sun4i-a10
++
++      - description: iNet-97F Rev 02
++        items:
++          - const: primux,inet97fv2
++          - const: allwinner,sun4i-a10
++
++      - description: iNet-98V Rev 02
++        items:
++          - const: primux,inet98v-rev2
++          - const: allwinner,sun5i-a13
++
++      - description: iNet D978 Rev 02 Tablet
++        items:
++          - const: primux,inet-d978-rev2
++          - const: allwinner,sun8i-a33
++
++      - description: iNet Q972 Tablet
++        items:
++          - const: inet-tek,inet-q972
++          - const: allwinner,sun6i-a31s
++
++      - description: Itead Ibox A20
++        items:
++          - const: itead,itead-ibox-a20
++          - const: allwinner,sun7i-a20
++
++      - description: Itead Iteaduino Plus A10
++        items:
++          - const: itead,iteaduino-plus-a10
++          - const: allwinner,sun4i-a10
++
++      - description: Jesurun Q5
++        items:
++          - const: jesurun,q5
++          - const: allwinner,sun4i-a10
++
++      - description: Lamobo R1
++        items:
++          - const: lamobo,lamobo-r1
++          - const: allwinner,sun7i-a20
++
++      - description: Libre Computer Board ALL-H3-CC H2+
++        items:
++          - const: libretech,all-h3-cc-h2-plus
++          - const: allwinner,sun8i-h2-plus
++
++      - description: Libre Computer Board ALL-H3-CC H3
++        items:
++          - const: libretech,all-h3-cc-h3
++          - const: allwinner,sun8i-h3
++
++      - description: Libre Computer Board ALL-H3-CC H5
++        items:
++          - const: libretech,all-h3-cc-h5
++          - const: allwinner,sun50i-h5
++
++      - description: Lichee Pi One
++        items:
++          - const: licheepi,licheepi-one
++          - const: allwinner,sun5i-a13
++
++      - description: Lichee Pi Zero
++        items:
++          - const: licheepi,licheepi-zero
++          - const: allwinner,sun8i-v3s
++
++      - description: Lichee Pi Zero (with Dock)
++        items:
++          - const: licheepi,licheepi-zero-dock
++          - const: licheepi,licheepi-zero
++          - const: allwinner,sun8i-v3s
++
++      - description: Linksprite PCDuino
++        items:
++          - const: linksprite,a10-pcduino
++          - const: allwinner,sun4i-a10
++
++      - description: Linksprite PCDuino2
++        items:
++          - const: linksprite,a10-pcduino2
++          - const: allwinner,sun4i-a10
++
++      - description: Linksprite PCDuino3
++        items:
++          - const: linksprite,pcduino3
++          - const: allwinner,sun7i-a20
++
++      - description: Linksprite PCDuino3 Nano
++        items:
++          - const: linksprite,pcduino3-nano
++          - const: allwinner,sun7i-a20
++
++      - description: HAOYU Electronics Marsboard A10
++        items:
++          - const: haoyu,a10-marsboard
++          - const: allwinner,sun4i-a10
++
++      - description: MapleBoard MP130
++        items:
++          - const: mapleboard,mp130
++          - const: allwinner,sun8i-h3
++
++      - description: Mele A1000
++        items:
++          - const: mele,a1000
++          - const: allwinner,sun4i-a10
++
++      - description: Mele A1000G Quad Set Top Box
++        items:
++          - const: mele,a1000g-quad
++          - const: allwinner,sun6i-a31
++
++      - description: Mele I7 Quad Set Top Box
++        items:
++          - const: mele,i7
++          - const: allwinner,sun6i-a31
++
++      - description: Mele M3
++        items:
++          - const: mele,m3
++          - const: allwinner,sun7i-a20
++
++      - description: Mele M9 Set Top Box
++        items:
++          - const: mele,m9
++          - const: allwinner,sun6i-a31
++
++      - description: Merrii A20 Hummingboard
++        items:
++          - const: merrii,a20-hummingbird
++          - const: allwinner,sun7i-a20
++
++      - description: Merrii A31 Hummingboard
++        items:
++          - const: merrii,a31-hummingbird
++          - const: allwinner,sun6i-a31
++
++      - description: Merrii A80 Optimus
++        items:
++          - const: merrii,a80-optimus
++          - const: allwinner,sun9i-a80
++
++      - description: Miniand Hackberry
++        items:
++          - const: miniand,hackberry
++          - const: allwinner,sun4i-a10
++
++      - description: MK802
++        items:
++          - const: allwinner,mk802
++          - const: allwinner,sun4i-a10
++
++      - description: MK802-A10s
++        items:
++          - const: allwinner,a10s-mk802
++          - const: allwinner,sun5i-a10s
++
++      - description: MK802-II
++        items:
++          - const: allwinner,mk802ii
++          - const: allwinner,sun4i-a10
++
++      - description: MK808c
++        items:
++          - const: allwinner,mk808c
++          - const: allwinner,sun7i-a20
++
++      - description: MSI Primo81 Tablet
++        items:
++          - const: msi,primo81
++          - const: allwinner,sun6i-a31s
++
++      - description: Emlid Neutis N5 Developper Board
++        items:
++          - const: emlid,neutis-n5-devboard
++          - const: emlid,neutis-n5
++          - const: allwinner,sun50i-h5
++
++      - description: NextThing Co. CHIP
++        items:
++          - const: nextthing,chip
++          - const: allwinner,sun5i-r8
++          - const: allwinner,sun5i-a13
++
++      - description: NextThing Co. CHIP Pro
++        items:
++          - const: nextthing,chip-pro
++          - const: nextthing,gr8
++
++      - description: NextThing Co. GR8 Evaluation Board
++        items:
++          - const: nextthing,gr8-evb
++          - const: nextthing,gr8
++
++      - description: Nintendo NES Classic
++        items:
++          - const: nintendo,nes-classic
++          - const: allwinner,sun8i-r16
++          - const: allwinner,sun8i-a33
++
++      - description: Nintendo Super NES Classic
++        items:
++          - const: nintendo,super-nes-classic
++          - const: nintendo,nes-classic
++          - const: allwinner,sun8i-r16
++          - const: allwinner,sun8i-a33
++
++      - description: Oceanic 5inMFD (5205)
++        items:
++          - const: oceanic,5205-5inmfd
++          - const: allwinner,sun50i-a64
++
++      - description: Olimex A10-OlinuXino LIME
++        items:
++          - const: olimex,a10-olinuxino-lime
++          - const: allwinner,sun4i-a10
++
++      - description: Olimex A10s-OlinuXino Micro
++        items:
++          - const: olimex,a10s-olinuxino-micro
++          - const: allwinner,sun5i-a10s
++
++      - description: Olimex A13-OlinuXino
++        items:
++          - const: olimex,a13-olinuxino
++          - const: allwinner,sun5i-a13
++
++      - description: Olimex A13-OlinuXino Micro
++        items:
++          - const: olimex,a13-olinuxino-micro
++          - const: allwinner,sun5i-a13
++
++      - description: Olimex A20-Olimex SOM Evaluation Board
++        items:
++          - const: olimex,a20-olimex-som-evb
++          - const: allwinner,sun7i-a20
++
++      - description: Olimex A20-Olimex SOM Evaluation Board (with eMMC)
++        items:
++          - const: olimex,a20-olimex-som-evb-emmc
++          - const: allwinner,sun7i-a20
++
++      - description: Olimex A20-OlinuXino LIME
++        items:
++          - const: olimex,a20-olinuxino-lime
++          - const: allwinner,sun7i-a20
++
++      - description: Olimex A20-OlinuXino LIME2
++        items:
++          - const: olimex,a20-olinuxino-lime2
++          - const: allwinner,sun7i-a20
++
++      - description: Olimex A20-OlinuXino LIME2 (with eMMC)
++        items:
++          - const: olimex,a20-olinuxino-lime2-emmc
++          - const: allwinner,sun7i-a20
++
++      - description: Olimex A20-OlinuXino Micro
++        items:
++          - const: olimex,a20-olinuxino-micro
++          - const: allwinner,sun7i-a20
++
++      - description: Olimex A20-OlinuXino Micro (with eMMC)
++        items:
++          - const: olimex,a20-olinuxino-micro-emmc
++          - const: allwinner,sun7i-a20
++
++      - description: Olimex A20-SOM204 Evaluation Board
++        items:
++          - const: olimex,a20-olimex-som204-evb
++          - const: allwinner,sun7i-a20
++
++      - description: Olimex A20-SOM204 Evaluation Board (with eMMC)
++        items:
++          - const: olimex,a20-olimex-som204-evb-emmc
++          - const: allwinner,sun7i-a20
++
++      - description: Olimex A33-OlinuXino
++        items:
++          - const: olimex,a33-olinuxino
++          - const: allwinner,sun8i-a33
++
++      - description: Olimex A64-OlinuXino
++        items:
++          - const: olimex,a64-olinuxino
++          - const: allwinner,sun50i-a64
++
++      - description: Olimex A64 Teres-I
++        items:
++          - const: olimex,a64-teres-i
++          - const: allwinner,sun50i-a64
++
++      - description: Pine64
++        items:
++          - const: pine64,pine64
++          - const: allwinner,sun50i-a64
++
++      - description: Pine64+
++        items:
++          - const: pine64,pine64-plus
++          - const: allwinner,sun50i-a64
++
++      - description: Pine64 PineH64
++        items:
++          - const: pine64,pine-h64
++          - const: allwinner,sun50i-h6
++
++      - description: Pine64 LTS
++        items:
++          - const: pine64,pine64-lts
++          - const: allwinner,sun50i-r18
++          - const: allwinner,sun50i-a64
++
++      - description: Pine64 Pinebook
++        items:
++          - const: pine64,pinebook
++          - const: allwinner,sun50i-a64
++
++      - description: Pine64 SoPine Baseboard
++        items:
++          - const: pine64,sopine-baseboard
++          - const: pine64,sopine
++          - const: allwinner,sun50i-a64
++
++      - description: PineRiver Mini X-Plus
++        items:
++          - const: pineriver,mini-xplus
++          - const: allwinner,sun4i-a10
++
++      - description: Point of View Protab2-IPS9
++        items:
++          - const: pov,protab2-ips9
++          - const: allwinner,sun4i-a10
++
++      - description: Polaroid MID2407PXE03 Tablet
++        items:
++          - const: polaroid,mid2407pxe03
++          - const: allwinner,sun8i-a23
++
++      - description: Polaroid MID2809PXE04 Tablet
++        items:
++          - const: polaroid,mid2809pxe04
++          - const: allwinner,sun8i-a23
++
++      - description: Q8 A13 Tablet
++        items:
++          - const: allwinner,q8-a13
++          - const: allwinner,sun5i-a13
++
++      - description: Q8 A23 Tablet
++        items:
++          - const: allwinner,q8-a23
++          - const: allwinner,sun8i-a23
++
++      - description: Q8 A33 Tablet
++        items:
++          - const: allwinner,q8-a33
++          - const: allwinner,sun8i-a33
++
++      - description: Qihua CQA3T BV3
++        items:
++          - const: qihua,t3-cqa3t-bv3
++          - const: allwinner,sun8i-t3
++          - const: allwinner,sun8i-r40
++
++      - description: R7 A10s HDMI TV Stick
++        items:
++          - const: allwinner,r7-tv-dongle
++          - const: allwinner,sun5i-a10s
++
++      - description: Sinlinx SinA31s Core Board
++        items:
++          - const: sinlinx,sina31s
++          - const: allwinner,sun6i-a31s
++
++      - description: Sinlinx SinA31s Development Board
++        items:
++          - const: sinlinx,sina31s-sdk
++          - const: allwinner,sun6i-a31s
++
++      - description: Sinlinx SinA33
++        items:
++          - const: sinlinx,sina33
++          - const: allwinner,sun8i-a33
++
++      - description: Sinovoip BananaPi M1 Plus
++        items:
++          - const: sinovoip,bpi-m1-plus
++          - const: allwinner,sun7i-a20
++
++      - description: Sinovoip BananaPi M2
++        items:
++          - const: sinovoip,bpi-m2
++          - const: allwinner,sun6i-a31s
++
++      - description: Sinovoip BananaPi M2 Berry
++        items:
++          - const: sinovoip,bpi-m2-berry
++          - const: allwinner,sun8i-r40
++
++      - description: Sinovoip BananaPi M2 Plus
++        items:
++          - const: sinovoip,bpi-m2-plus
++          - const: allwinner,sun8i-h3
++
++      - description: Sinovoip BananaPi M2 Plus
++        items:
++          - const: sinovoip,bpi-m2-plus
++          - const: allwinner,sun50i-h5
++
++      - description: Sinovoip BananaPi M2 Plus v1.2
++        items:
++          - const: bananapi,bpi-m2-plus-v1.2
++          - const: allwinner,sun8i-h3
++
++      - description: Sinovoip BananaPi M2 Plus v1.2
++        items:
++          - const: bananapi,bpi-m2-plus-v1.2
++          - const: allwinner,sun50i-h5
++
++      - description: Sinovoip BananaPi M2 Magic
++        items:
++          - const: sinovoip,bananapi-m2m
++          - const: allwinner,sun8i-a33
++
++      - description: Sinovoip BananaPi M2 Ultra
++        items:
++          - const: sinovoip,bpi-m2-ultra
++          - const: allwinner,sun8i-r40
++
++      - description: Sinovoip BananaPi M2 Zero
++        items:
++          - const: sinovoip,bpi-m2-zero
++          - const: allwinner,sun8i-h2-plus
++
++      - description: Sinovoip BananaPi M3
++        items:
++          - const: sinovoip,bpi-m3
++          - const: allwinner,sun8i-a83t
++
++      - description: Sinovoip BananaPi M64
++        items:
++          - const: sinovoip,bananapi-m64
++          - const: allwinner,sun50i-a64
++
++      - description: TBS A711 Tablet
++        items:
++          - const: tbs-biometrics,a711
++          - const: allwinner,sun8i-a83t
++
++      - description: Utoo P66
++        items:
++          - const: utoo,p66
++          - const: allwinner,sun5i-a13
++
++      - description: Wexler TAB7200
++        items:
++          - const: wexler,tab7200
++          - const: allwinner,sun7i-a20
++
++      - description: WITS A31 Colombus Evaluation Board
++        items:
++          - const: wits,colombus
++          - const: allwinner,sun6i-a31
++
++      - description: WITS Pro A20 DKT
++        items:
++          - const: wits,pro-a20-dkt
++          - const: allwinner,sun7i-a20
++
++      - description: Wobo i5
++        items:
++          - const: wobo,a10s-wobo-i5
++          - const: allwinner,sun5i-a10s
++
++      - description: Yones TopTech BS1078 v2 Tablet
++        items:
++          - const: yones-toptech,bs1078-v2
++          - const: allwinner,sun6i-a31s
++
++      - description: Xunlong OrangePi
++        items:
++          - const: xunlong,orangepi
++          - const: allwinner,sun7i-a20
++
++      - description: Xunlong OrangePi 2
++        items:
++          - const: xunlong,orangepi-2
++          - const: allwinner,sun8i-h3
++
++      - description: Xunlong OrangePi Lite
++        items:
++          - const: xunlong,orangepi-lite
++          - const: allwinner,sun8i-h3
++
++      - description: Xunlong OrangePi Lite2
++        items:
++          - const: xunlong,orangepi-lite2
++          - const: allwinner,sun50i-h6
++
++      - description: Xunlong OrangePi Mini
++        items:
++          - const: xunlong,orangepi-mini
++          - const: allwinner,sun7i-a20
++
++      - description: Xunlong OrangePi One
++        items:
++          - const: xunlong,orangepi-one
++          - const: allwinner,sun8i-h3
++
++      - description: Xunlong OrangePi One Plus
++        items:
++          - const: xunlong,orangepi-one-plus
++          - const: allwinner,sun50i-h6
++
++      - description: Xunlong OrangePi PC
++        items:
++          - const: xunlong,orangepi-pc
++          - const: allwinner,sun8i-h3
++
++      - description: Xunlong OrangePi PC 2
++        items:
++          - const: xunlong,orangepi-pc2
++          - const: allwinner,sun50i-h5
++
++      - description: Xunlong OrangePi PC Plus
++        items:
++          - const: xunlong,orangepi-pc-plus
++          - const: allwinner,sun8i-h3
++
++      - description: Xunlong OrangePi Plus
++        items:
++          - const: xunlong,orangepi-plus
++          - const: allwinner,sun8i-h3
++
++      - description: Xunlong OrangePi Plus 2E
++        items:
++          - const: xunlong,orangepi-plus2e
++          - const: allwinner,sun8i-h3
++
++      - description: Xunlong OrangePi Prime
++        items:
++          - const: xunlong,orangepi-prime
++          - const: allwinner,sun50i-h5
++
++      - description: Xunlong OrangePi R1
++        items:
++          - const: xunlong,orangepi-r1
++          - const: allwinner,sun8i-h2-plus
++
++      - description: Xunlong OrangePi Win
++        items:
++          - const: xunlong,orangepi-win
++          - const: allwinner,sun50i-a64
++
++      - description: Xunlong OrangePi Zero
++        items:
++          - const: xunlong,orangepi-zero
++          - const: allwinner,sun8i-h2-plus
++
++      - description: Xunlong OrangePi Zero Plus
++        items:
++          - const: xunlong,orangepi-zero-plus
++          - const: allwinner,sun50i-h5
++
++      - description: Xunlong OrangePi Zero Plus2
++        items:
++          - const: xunlong,orangepi-zero-plus2
++          - const: allwinner,sun50i-h5
++
++      - description: Xunlong OrangePi Zero Plus2
++        items:
++          - const: xunlong,orangepi-zero-plus2-h3
++          - const: allwinner,sun8i-h3
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.20.1
+
