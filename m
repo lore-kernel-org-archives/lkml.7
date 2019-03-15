@@ -2,100 +2,97 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ED2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85ACC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8262184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85082077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:29:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AYzyXTy8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfCOJ0w (ORCPT
+        id S1728626AbfCOJ3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:26:52 -0400
-Received: from mga18.intel.com ([134.134.136.126]:38685 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728695AbfCOJ0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:26:51 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 02:26:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,481,1544515200"; 
-   d="scan'208";a="155290664"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 15 Mar 2019 02:26:45 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 15 Mar 2019 11:26:45 +0200
-Date:   Fri, 15 Mar 2019 11:26:44 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by node
-Message-ID: <20190315092644.GG7752@kuha.fi.intel.com>
-References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
- <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
- <20190315081835.GD7752@kuha.fi.intel.com>
- <1552641204.10179.133.camel@mhfsdcap03>
+        Fri, 15 Mar 2019 05:29:32 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38764 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726886AbfCOJ3c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 05:29:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1INBsZm+ek7jfaZTIBp7ZalHhP5aZMVyyAMDX29iJ/s=; b=AYzyXTy8zXzsQmKgYOjUGMk8h
+        xq64KrxnOzlWGZVoAhRsV/2cPrPl+Ga1X12ZMoenW1pkmlfIL2Pwe+f7tszjav8sMEjtOE6pkJ2Yf
+        DpkZaki9Vmwa6NqA4mFpvnalCHSWpcWXFTGlXiIRrRN24om/0wi1UJGgqpJyfhPK6jSaxuhBihQ9/
+        4/0nym/GzrUp9dnNLbfIBfyHLoRyV5G5ZYmw+XBqL++g8W8GeagEWLfOFu7VrQdwmzedfec8iocGY
+        znEo2e7WQNVrfQ2LqN6lIAEde4FD+oiKtN9iqRY5jnKq2yOIc3hqwSGlMPV/1TmNMHEoOkIAGTAuX
+        RNd9zbemQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4j9X-0004Wp-Td; Fri, 15 Mar 2019 09:29:24 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5F81921A7734D; Fri, 15 Mar 2019 10:29:22 +0100 (CET)
+Date:   Fri, 15 Mar 2019 10:29:22 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Waiman Long <longman@redhat.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>, x86@kernel.org
+Subject: Re: [PATCH 2/2] Revert "x86/hpet: Reduce HPET counter read
+ contention"
+Message-ID: <20190315092922.GB6521@hirez.programming.kicks-ass.net>
+References: <1552552932-21821-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1552552932-21821-2-git-send-email-zhenzhong.duan@oracle.com>
+ <20190315092529.GU5996@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552641204.10179.133.camel@mhfsdcap03>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190315092529.GU5996@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chunfeng,
-
-On Fri, Mar 15, 2019 at 05:13:24PM +0800, Chunfeng Yun wrote:
-> I encounter a build error when CONFIG_USB_ROLE_SWITCH is not enabled,
+On Fri, Mar 15, 2019 at 10:25:29AM +0100, Peter Zijlstra wrote:
+> On Thu, Mar 14, 2019 at 04:42:12PM +0800, Zhenzhong Duan wrote:
+> > This reverts commit f99fd22e4d4bc84880a8a3117311bbf0e3a6a9dc.
+> > 
+> > It's unnecessory after commit "acpi_pm: Fix bootup softlockup due to PMTMR
+> > counter read contention", the simple HPET access code could be restored.
+> > 
+> > On a general system with good TSC, TSC is the final default clocksource.
+> > So the potential performce loss is only at bootup stage before TSC
+> > replacing HPET, we didn't observe obvious delay of bootup.
 > 
-> drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_role_sw_register':
-> ./drivers/usb/mtu3/mtu3_dr.c:460: undefined reference to
-> `usb_role_switch_register'
-> drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_otg_switch_exit':
-> ./drivers/usb/mtu3/mtu3_dr.c:491: undefined reference to
-> `usb_role_switch_unregister'
+> The timeline here is:
+> 
+>  - Len took out SKX from native_calibrate_tsc
+>    b51120309348 ("x86/tsc: Fix erroneous TSC rate on Skylake Xeon")
+> 
+>    This causes the TSC to run through the calibration code, which
+>    completes _after_ SMP bringup.
+> 
+>  - This then caused HPET to be used during SMP bringup, which resulted
+>    in Waiman doing the patch you now propose removing.
+> 
+>    Because large (multi-socket) SKX machines would barely boot.
+> 
+>    f99fd22e4d4b ("x86/hpet: Reduce HPET counter read contention")
 
-So you need to add dependency on USB_ROLE_SWITCH, right?
+Damn, my memory tricked me.. I just checked the dates on those patches
+and I got it in reverse.
 
---- a/drivers/usb/mtu3/Kconfig
-+++ b/drivers/usb/mtu3/Kconfig
-@@ -43,6 +43,7 @@ config USB_MTU3_DUAL_ROLE
-        bool "Dual Role mode"
-        depends on ((USB=y || USB=USB_MTU3) && (USB_GADGET=y || USB_GADGET=USB_MTU3))
-        depends on (EXTCON=y || EXTCON=USB_MTU3)
-+       depends on USB_ROLE_SWITCH
-        help
-          This is the default mode of working of MTU3 controller where
-          both host and gadget features are enabled.
-
-> the following patch has fixed the issue, but seems not get into kernel,
-> [v3,08/12] usb: roles: Add usb role switch notifier.
-> https://patchwork.kernel.org/patch/10836525/
-
-I don't understand how that fixes the problem? That patch will in any
-case be targeting v5.2. We are in the middle of merge window, so
-nothing is happening until v5.1-rc1 is tagged.
+Anyway, the point still stands, when TSC is wrecked we still need HPET.
+And you don't see a difference with the revert because of
+clocksource_tsc_early, which didn't exist at the time.
 
 
-thanks,
-
--- 
-heikki
