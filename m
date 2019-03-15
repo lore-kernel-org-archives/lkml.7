@@ -2,158 +2,85 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CE7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC62C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B946D20854
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B29218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbfCONlt (ORCPT
+        id S1729169AbfCONlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 09:41:49 -0400
-Received: from foss.arm.com ([217.140.101.70]:59684 "EHLO foss.arm.com"
+        Fri, 15 Mar 2019 09:41:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:11365 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727705AbfCONlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 09:41:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B51B5A78;
-        Fri, 15 Mar 2019 06:41:48 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0C723F614;
-        Fri, 15 Mar 2019 06:41:45 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 13:41:39 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 03/15] sched/core: uclamp: Add system default clamps
-Message-ID: <20190315134139.hrw22zaut3shfs4d@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-4-patrick.bellasi@arm.com>
- <20190313143240.GH5922@hirez.programming.kicks-ass.net>
- <20190313170940.ngiafkmiijryhl2k@e110439-lin>
- <20190313201010.GU2482@worktop.programming.kicks-ass.net>
+        id S1727705AbfCONlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 09:41:52 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4B01530F8DAC;
+        Fri, 15 Mar 2019 13:41:52 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5843D60BE6;
+        Fri, 15 Mar 2019 13:41:43 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 14:41:41 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v5 1/7] s390: ap: kvm: add PQAP interception for AQIC
+Message-ID: <20190315144141.100f2be7.cohuck@redhat.com>
+In-Reply-To: <a0aef0e8-03e3-2cb7-3127-61521eed0629@linux.ibm.com>
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+        <1552493104-30510-2-git-send-email-pmorel@linux.ibm.com>
+        <20190315112032.13b259c2.cohuck@redhat.com>
+        <a0aef0e8-03e3-2cb7-3127-61521eed0629@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313201010.GU2482@worktop.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 15 Mar 2019 13:41:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Mar 21:10, Peter Zijlstra wrote:
-> On Wed, Mar 13, 2019 at 05:09:40PM +0000, Patrick Bellasi wrote:
-> 
-> > Yes, that should be possible... will look into splitting this out in
-> > v8 to have something like:
-> > 
-> > ---8<---
-> > struct uclamp_req {
-> > 	/* Clamp value "requested" by a scheduling entity */
-> > 	unsigned int value		: bits_per(SCHED_CAPACITY_SCALE);
-> > 	unsigned int bucket_id		: bits_per(UCLAMP_BUCKETS);
-> > 	unsigned int active		: 1;
-> > 	unsigned int user_defined	: 1;
-> > }
-> > 
-> > struct uclamp_eff {
-> > 	unsigned int value	        : bits_per(SCHED_CAPACITY_SCALE);
-> > 	unsigned int bucket_id	        : bits_per(UCLAMP_BUCKETS);
-> > }
-> 
-> No, have _1_ type. There is no point what so ever to splitting this.
-> 
-> Also, what's @user_defined about, I don't think I've seen that in the
-> parent patch.
+On Fri, 15 Mar 2019 14:26:34 +0100
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-That's a flag added by one of the following patches, but with the
-change you are suggesting below...
+> Conclusion:  we must handle this in userland, it will have the benefit 
+> to keep old behavior when there is no callback.
+> OLD QEMU will not see change as they will not set aqic facility
+> NEW QEMU will handle this correctly.
+> 
+> In this case we also do not need to handle all other tests here but can 
+> move it to the callback as Tony wanted.
+> 
+> Would you agree with something simple like:
+> 
+> static int handle_pqap(struct kvm_vcpu *vcpu)
+> {
+>          int ret = -EOPNOTSUPP;
+> 
+>          /* Verify that the hook callback is registered and call it */
+>          if (pqap_hook)
+>                  if (try_module_get(pqap_hook->owner)) {
+>                          ret = pqap_hook->hook(vcpu);
+>                          module_put(pqap_hook->owner);
+>                  }
+>          return ret;
+> }
+> 
+> All other tests in QEMU and in the callback.
 
-> > struct task_struct {
-> >         // ...
-> >         #ifdef CONFIG_UCLAMP_TASK
-> >                 struct uclamp_req uclamp_req[UCLAMP_CNT];
-> >                 struct uclamp_eff uclamp_eff[UCLAMP_CNT];
-> 
-> 		struct uclamp_se uclamp[UCLAMP_CNT];
-> 		struct uclamp_se uclamp_req[UCLAMP_CNT];
-> 
-> Where the first is the very same introduced in patch #1, and leaving it
-> in place avoids having to update the sites already using that (or start
-> #1 with the _eff name to avoid having to change things around?).
-> 
-> >         #endif
-> >         // ...
-> > }
-> > 
-> > static inline struct uclamp_eff
-> > uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
-> > {
-> >         struct uclamp_eff uc_eff = p->uclamp_eff[clamp_id];
-> 
-> just this ^, these lines seem like a superfluous duplication:
-> 
-> > 	uc_eff.bucket_id = p->uclamp_req[clamp_id].bucket_id;
-> > 	uc_eff.value = p->uclamp_req[clamp_id].value;
-> 
-> 
-> > 	if (unlikely(uc_eff.clamp_value > uclamp_default[clamp_id].value)) {
-> > 		uc_eff.clamp_value = uclamp_default[clamp_id].value;
-> > 		uc_eff.bucket_id = uclamp_default[clamp_id].bucket_id;
-> 
-> and:
-> 
-> 		uc = uclamp_default[clamp_id];
+With the hook checking for priv, fc, etc.? Yeah, might work.
 
-... with things like the above line it becomes quite tricky to exploit
-the uclamp_se bitfield to track additional flags.
-
-I'll try to remove the need for the "user_defined" flag, as long as we
-have only the "active" you we can still manage to keep it in uclamp_se.
-
-If instead we really need more flags, we will likely have to move them
-into a separate bitfield. :/
-
-> 
-> > 	}
-> > 
-> >         return uc_eff;
-> > }
-> > 
-> > static inline void
-> > uclamp_eff_set(struct task_struct *p, unsigned int clamp_id)
-> > {
-> >         p->uclamp_eff[clamp_id] = uclamp_eff_get(p, clamp_id);
-> > }
-> > ---8<---
-> > 
-> > Is that what you mean ?
-> 
-> Getting there :-)
-
-Yeah... let see :)
-
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+But don't count on my feedback too much right now, better wait for
+others' comments :) I'll resume in April, if needed.
