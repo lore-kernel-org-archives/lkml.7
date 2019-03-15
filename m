@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B97EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B26AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA71A2085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A132085A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfCOXv4 convert rfc822-to-8bit (ORCPT
+        id S1726620AbfCOXyL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 19:51:56 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48357 "EHLO
+        Fri, 15 Mar 2019 19:54:11 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51017 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfCOXv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 19:51:56 -0400
+        id S1726097AbfCOXyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 19:54:10 -0400
 Received: from [IPv6:2607:fb90:363e:8b8e:580:f482:578:5c65] ([IPv6:2607:fb90:363e:8b8e:580:f482:578:5c65])
         (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2FNpVhr1788352
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2FNriWq1788426
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Fri, 15 Mar 2019 16:51:32 -0700
-Date:   Fri, 15 Mar 2019 16:51:27 -0700
+        Fri, 15 Mar 2019 16:53:45 -0700
+Date:   Fri, 15 Mar 2019 16:53:40 -0700
 User-Agent: K-9 Mail for Android
-In-Reply-To: <20190315233410.GE112750@google.com>
-References: <CAG5bF+S6OvBnsaR6UpMCqjDR9_hMo6qRMHGiW+iCaRYQW4C3YA@mail.gmail.com> <CAKwvOdkfb_DT2p2vvxK2ye6JpGYB4qqCc8yECU_JEkrc+6HXDA@mail.gmail.com> <9C4AC321-B808-40B4-B16A-B3E28DFA3591@zytor.com> <20190315233410.GE112750@google.com>
+In-Reply-To: <20190315234701.GF112750@google.com>
+References: <CAG5bF+S6OvBnsaR6UpMCqjDR9_hMo6qRMHGiW+iCaRYQW4C3YA@mail.gmail.com> <CAKwvOdkfb_DT2p2vvxK2ye6JpGYB4qqCc8yECU_JEkrc+6HXDA@mail.gmail.com> <18F0D032-4FC4-4194-A2F4-B7ED68C2C5F2@zytor.com> <20190315234701.GF112750@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
@@ -45,16 +45,14 @@ CC:     Nick Desaulniers <ndesaulniers@google.com>,
         clang-built-linux@googlegroups.com,
         Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 From:   hpa@zytor.com
-Message-ID: <F13FF10A-C742-4330-B0D2-7DFE55510902@zytor.com>
+Message-ID: <FC1F7BFD-36DF-4002-A21C-1BB421080CCE@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 15, 2019 4:34:10 PM PDT, Matthias Kaehlcke <mka@chromium.org> wrote:
->Hi Peter,
->
->On Fri, Mar 15, 2019 at 03:08:57PM -0700, hpa@zytor.com wrote:
+On March 15, 2019 4:47:01 PM PDT, Matthias Kaehlcke <mka@chromium.org> wrote:
+>On Fri, Mar 15, 2019 at 03:12:08PM -0700, hpa@zytor.com wrote:
 >> On March 15, 2019 3:06:37 PM PDT, Nick Desaulniers
 ><ndesaulniers@google.com> wrote:
 >> >On Fri, Mar 15, 2019 at 1:54 PM Matthias Kaehlcke <mka@chromium.org>
@@ -218,12 +216,10 @@ On March 15, 2019 4:34:10 PM PDT, Matthias Kaehlcke <mka@chromium.org> wrote:
 >> >by accident?  The above linkage error mentions arch/x86/kvm/x86.o
 >> >which I wouldn't expect to be linked into the VDSO image?
 >> 
->> If we compile with the default ABI we can simply link with libgcc;
->> with -mregparm=3 all versions of gcc are broken.
+>> Or just "u64"...
 >
->I suppose you refer to linking the VDSO against libgcc? Would this be
->acceptable (as opposed to linking the kernel against it)?
+>Are you referring to TItype? It currenty is a 128-bit value.
 
-Yes.
+You're right, so "unsigned __int128"...
 -- 
 Sent from my Android device with K-9 Mail. Please excuse my brevity.
