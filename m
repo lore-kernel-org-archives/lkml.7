@@ -2,576 +2,236 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9C9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E8BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1A921871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D784221871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="bDgtsKTh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YXRVDKn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbfCOPNC (ORCPT
+        id S1729340AbfCOPO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 11:13:02 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55772 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbfCOPNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 11:13:01 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D6C4C1EC05A1;
-        Fri, 15 Mar 2019 16:12:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1552662780;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=udHtJjj/tkUtNZoyR4xKEVe9cHsbVMR02xKAA7fanvE=;
-        b=bDgtsKThPb0ZsqJSsqXeCxYtIVjhAWsO/YawKRkC9wEX5nB6d/zEFOQ0dHaTAaXS+wP1LX
-        fX+Kt+tJYHVlwDcw8zjIL+drn+JxYf5/+0pYn4GQgSFK/GWxzNglLpbbn4/NNF8JRdpbFb
-        bJwLJ3EsrnPbh2/3TGD8ODLVPsh+gk8=
-Date:   Fri, 15 Mar 2019 16:12:57 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Junhan Zhou <Junhan@mellanox.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liming Sun <lsun@mellanox.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] EDAC, mellanox: Add ECC support for BlueField DDR4
-Message-ID: <20190315151257.GB12523@zn.tnic>
-References: <e59276b6f3dc165703ddcb47a8a006d8a62d9c95.1551216637.git.Junhan@mellanox.com>
- <1551298916-4981-1-git-send-email-Junhan@mellanox.com>
+        Fri, 15 Mar 2019 11:14:59 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33042 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfCOPO7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 11:14:59 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2FFEnWp126702;
+        Fri, 15 Mar 2019 10:14:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552662889;
+        bh=4Bju1g6oUo8suraX68u2phqSTvNGr0/v4obV7zLLMf4=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=YXRVDKn7PKYKxHMEP/YLff98PbNx0fn01KplzaPZC2+Dh87yFpz0PiWyl59tE7LW7
+         WoOn25bw+ep/lTbkT189fd67JCH6P1ugU3lKQYV/R3YcK9XWHZMfzz0J9CropzxE5E
+         YEm5yxQqNfE6c++L6WVO7AknU8WmNPc2hrRevo7s=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2FFEnQH035934
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 Mar 2019 10:14:49 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 15
+ Mar 2019 10:14:48 -0500
+Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Fri, 15 Mar 2019 10:14:48 -0500
+Received: from [172.22.118.207] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2FFEmlm019617;
+        Fri, 15 Mar 2019 10:14:48 -0500
+Subject: Re: [PATCH v9 1/4] can: m_can: Create a m_can platform framework
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Wolfgang Grandegger <wg@grandegger.com>, <mkl@pengutronix.de>,
+        <davem@davemloft.net>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190313162629.11937-1-dmurphy@ti.com>
+ <87f14a09-244e-c698-1372-f8b49e60faee@grandegger.com>
+ <a578dd22-a581-8421-fac4-605fa8f63d1a@ti.com>
+ <470e0028-7e4c-b1ba-7c50-7464f4904801@grandegger.com>
+ <af88fad4-37a9-1ccb-0e06-70db34fff562@ti.com>
+Message-ID: <7433cda9-5b44-cef0-b84e-8d8a0d93af8a@ti.com>
+Date:   Fri, 15 Mar 2019 10:14:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1551298916-4981-1-git-send-email-Junhan@mellanox.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <af88fad4-37a9-1ccb-0e06-70db34fff562@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 03:21:56PM -0500, Junhan Zhou wrote:
-> Add ECC support for Mellanox BlueField SoC DDR controller.
-> This requires SMC to the running Arm Trusted Firmware to report
-> what is the current memory configuration.
+Wolfgang
+
+On 3/15/19 9:51 AM, Dan Murphy wrote:
+> On 3/14/19 9:38 AM, Wolfgang Grandegger wrote:
+>> Hello,
+>>
+>> Am 14.03.19 um 15:04 schrieb Dan Murphy:
+>>> Hello
+>>>
+>>> On 3/14/19 2:26 AM, Wolfgang Grandegger wrote:
+>>>> Hello Dan,
+>>>>
+>>>> we are close...
+>>>>
+>>>> Am 13.03.19 um 17:26 schrieb Dan Murphy:
+>>>>> Create a m_can platform framework that peripherial
+>>>>> devices can register to and use common code and register sets.
+>>>>> The peripherial devices may provide read/write and configuration
+>>>>> support of the IP.
+>>>>>
+>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>> ---
+>>>>>
+>>>>> v9 - Added back the CSR clearing as this is needed for TCAN device, fixed clean
+>>>>> function to clean index for version > 30, removed extra skb free and fixed work
+>>>>> handler to handle FIFO full for perpheral devices - https://lore.kernel.org/patchwork/patch/1050120/
+>>>>>
+>>>>> v8 - Added a clean function for the tx_skb, cleaned up skb on BUS_OFF and on xmit
+>>>>> BUSY - https://lore.kernel.org/patchwork/patch/1047980/
+>>>>> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
+>>>>> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
+>>>>> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
+>>>>> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
+>>>>> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
+>>>>> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
+>>>>> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
+>>>>>
+>>>>>  drivers/net/can/m_can/Kconfig          |  13 +-
+>>>>>  drivers/net/can/m_can/Makefile         |   1 +
+>>>>>  drivers/net/can/m_can/m_can.c          | 733 +++++++++++++------------
+>>>>>  drivers/net/can/m_can/m_can.h          | 110 ++++
+>>>>>  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
+>>>>>  5 files changed, 714 insertions(+), 345 deletions(-)
+>>>>>  create mode 100644 drivers/net/can/m_can/m_can.h
+>>>>>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
+>>>>>
+>>>>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
+>>>>> index 04f20dd39007..f7119fd72df4 100644
+>>>>> --- a/drivers/net/can/m_can/Kconfig
+>>>>> +++ b/drivers/net/can/m_can/Kconfig
+>>>>> @@ -1,5 +1,14 @@
+>>>>>  config CAN_M_CAN
+>>>>> +	tristate "Bosch M_CAN support"
+>>>>> +	---help---
+>>>>> +	  Say Y here if you want support for Bosch M_CAN controller framework.
+>>>>> +	  This is common support for devices that embed the Bosch M_CAN IP.
+>>>>> +
+>>>>> +config CAN_M_CAN_PLATFORM
+>>>>> +	tristate "Bosch M_CAN support for io-mapped devices"
+>>>>>  	depends on HAS_IOMEM
+>>>>> -	tristate "Bosch M_CAN devices"
+>>>>> +	depends on CAN_M_CAN
+>>>>>  	---help---
+>>>>> -	  Say Y here if you want to support for Bosch M_CAN controller.
+>>>>> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
+>>>>> +	  This support is for devices that have the Bosch M_CAN controller
+>>>>> +	  IP embedded into the device and the IP is IO Mapped to the processor.
+>>>>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
+>>>>> index 8bbd7f24f5be..057bbcdb3c74 100644
+>>>>> --- a/drivers/net/can/m_can/Makefile
+>>>>> +++ b/drivers/net/can/m_can/Makefile
+>>>>> @@ -3,3 +3,4 @@
+>>>>>  #
+>>>>>  
+>>>>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
+>>>>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
+>>>>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+>>>>> index 9b449400376b..56336aefc567 100644
+>>>>> --- a/drivers/net/can/m_can/m_can.c
+>>>>> +++ b/drivers/net/can/m_can/m_can.c
+>> ...  snip ...
+>>
+>>>>> +static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
+>>>>> +				    struct net_device *dev)
+>>>>> +{
+>>>>> +	struct m_can_priv *priv = netdev_priv(dev);
+>>>>> +
+>>>>> +	if (can_dropped_invalid_skb(dev, skb))
+>>>>> +		return NETDEV_TX_OK;
+>>>>> +
+>>>>> +	if (priv->is_peripherial) {
+>>>>> +		if (priv->tx_skb) {
+>>>>> +			netdev_err(dev, "hard_xmit called while tx busy\n");
+>>>>> +			return NETDEV_TX_BUSY;
+>>>>> +		}
+>>>>> +
+>>>>> +		if (priv->can.state == CAN_STATE_BUS_OFF) {
+>>>>> +			m_can_clean(dev);
+>>>>> +		} else {
+>>>>> +			priv->tx_skb = skb;
+>>>>> +			queue_work(priv->tx_wq, &priv->tx_work);
+>>>>
+>>>> You removed "netif_stop_queue(cdev->net)" here. Does that work with just
+>>>> *one* "tx_skb"? I think you need an array then!? I'm afraid, this will
+>>>> require quite some changes and you should also measure the benefit of
+>>>> queuing outgoing messages first. For the time being, it would be fine
+>>>> for me to stop the queue here and add an appropriate comment.
+>>>>
+>>>
+>>> Yes I removed this in favor of allowing the work handler to stop the queue.
+>>>
+>>> If the version is < 30 then the queue is stopped immediately.  If the version > 30 then the queue is
+>>> only stopped if FIFO is full.
+>>
+>> Yes, and the next call to m_can_start_xmit() will probably return with
+>> NETDEV_TX_BUSY. You should at least add a "netif_stop_queue(cdev->net)"
+>> before returning NETDEV_TX_BUSY, otherwice the upper layer will retry
+>> immediately resulting in high CPU load. Anyway, the purpose of this
+>> return code is to signal errors/bugs in the start/stop flow control:
+>>
 > 
-> Signed-off-by: Junhan Zhou <Junhan@mellanox.com>
-> ---
->  drivers/edac/Kconfig          |   7 +
->  drivers/edac/Makefile         |   1 +
->  drivers/edac/bluefield_edac.c | 425 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 433 insertions(+)
->  create mode 100644 drivers/edac/bluefield_edac.c
+> Ack
 > 
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index e286b5b..3bcb8fe 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -475,4 +475,11 @@ config EDAC_QCOM
->  	  For debugging issues having to do with stability and overall system
->  	  health, you should probably say 'Y' here.
->  
-> +config EDAC_BLUEFIELD
-> +	tristate "Mellanox BlueField Memory ECC"
-> +	depends on (MELLANOX_PLATFORM && ARM64 && ACPI) || COMPILE_TEST
-
-MELLANOX_PLATFORM depends on X86 || ARM but this depends on ARM64. How
-is that even supposed to work?
-
-> +	help
-> +	  Support for error detection and correction on the
-> +	  Mellanox BlueField SoCs.
-> +
->  endif # EDAC
-
-This patch needs MAINTAINERS entry so that you can get CCed on bug
-reports.
-
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index 716096d..6dd5e67 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -78,3 +78,4 @@ obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
->  obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
->  obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
->  obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
-> +obj-$(CONFIG_EDAC_BLUEFIELD)		+= bluefield_edac.o
-> diff --git a/drivers/edac/bluefield_edac.c b/drivers/edac/bluefield_edac.c
-> new file mode 100644
-> index 0000000..bdcf0cc
-> --- /dev/null
-> +++ b/drivers/edac/bluefield_edac.c
-> @@ -0,0 +1,425 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Bluefield-specific EDAC driver.
-> + *
-> + * Copyright (c) 2019 Mellanox Technologies.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/arm-smccc.h>
-> +#include <linux/edac.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "edac_module.h"
-> +
-> +#define DRIVER_NAME		"bluefield-edac"
-> +
-> +/*
-> + * Mellanox BlueField EMI (External Memory Interface) register definitions.
-> + * Registers which have individual bitfields have a union defining the
-> + * bitfields following the address define.
-> + */
-> +
-> +#define MLXBF_EMI_DRAM_ECC_COUNT 0x340
-> +
-> +union MLXBF_EMI_DRAM_ECC_COUNT_u {
-
-No all caps names pls. And no "_u" suffixing - this is not C++.
-
-> +	struct {
-> +		/* ECC single errors counter */
-> +		u32 single_error_count : 16;
-
-You have excessive comments for members whose names already describe
-what they are. Remove the comments and descrease the clutter this way.
-
-> +		/* ECC double errors counter */
-> +		u32 double_error_count : 16;
-> +	};
-> +
-> +	u32 word;
-> +};
-> +
-> +#define MLXBF_EMI_DRAM_ECC_ERROR 0x348
-> +
-> +union MLXBF_EMI_DRAM_ECC_ERROR_u {
-> +	struct {
-> +		/* 1 - ECC single error from DRAM wrapper x. */
-
-What's a "DRAM wrapper x" which is being mentioned here and there?
-
-> +		u32 dram_ecc_single : 1;
-> +		/* Reserved. */
-
-All those "Reserved" comments are completely useless.
-
-> +		u32 __reserved_0    : 15;
-> +		/* 1 - ECC double error from DRAM wrapper x. */
-> +		u32 dram_ecc_double : 1;
-> +		/* Reserved. */
-> +		u32 __reserved_1    : 15;
-> +	};
-> +
-> +	u32 word;
-> +};
-> +
-> +#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT 0x354
-> +
-> +union MLXBF_EMI_DRAM_ECC_LATCH_SELECT_u {
-> +	struct {
-> +		/*
-> +		 * For DRAM wrapper x.
-> +		 *
-> +		 * 0 - Last ECC error will be stored.
-> +		 *
-> +		 * 1 - First ECC error will be stored.
-> +		 */
-> +		u32 dram_ecc_first : 1;
-> +		/* Reserved. */
-> +		u32 __reserved_0   : 15;
-> +		/* Selects to Edge (one of 8) to get the ECC info. */
-> +		u32 edge_sel       : 4;
-> +		/* Reserved. */
-> +		u32 __reserved_1   : 4;
-> +		/* 1 - Start select DRAM_INFO */
-> +		u32 start          : 1;
-> +		/* Reserved. */
-> +		u32 __reserved_2   : 7;
-> +	};
-> +
-> +	u32 word;
-> +};
-> +
-> +#define MLXBF_EMI_DRAM_ERR_ADDR_0 0x358
-> +
-> +#define MLXBF_EMI_DRAM_ERR_ADDR_1 0x37c
-> +
-> +#define MLXBF_EMI_DRAM_SYNDROM 0x35c
-> +
-> +union MLXBF_EMI_DRAM_SYNDROM_u {
-> +	struct {
-> +		/* 1 - Double error. */
-> +		u32 derr         : 1;
-> +		/* 1 - Single error. */
-> +		u32 serr         : 1;
-> +		/* Reserved. */
-> +		u32 __reserved_0 : 14;
-> +		/* ECC syndrome (error bit according to the Hamming code). */
-> +		u32 syndrom      : 10;
-> +		/* Reserved. */
-> +		u32 __reserved_1 : 6;
-> +	};
-> +
-> +	u32 word;
-> +};
-> +
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0 0x364
-> +
-> +union MLXBF_EMI_DRAM_ADDITIONAL_INFO_0_u {
-> +	struct {
-> +		/* Physical Error Bank. */
-> +		u32 err_bank     : 4;
-> +		/* Physical Error Logical Rank. */
-> +		u32 err_lrank    : 2;
-> +		/* Reserved. */
-> +		u32 __reserved_0 : 2;
-> +		/* Physical Error Physical Rank. */
-> +		u32 err_prank    : 2;
-> +		/* Reserved. */
-> +		u32 __reserved_1 : 6;
-> +		/* Error Edge Bitmap. */
-> +		u32 err_edge     : 8;
-> +		/* Reserved. */
-> +		u32 __reserved_2 : 8;
-> +	};
-> +
-> +	u32 word;
-> +};
-> +
-> +#define MLXBF_EDAC_DIMM_PER_MC		2
-> +#define MLXBF_EDAC_ERROR_GRAIN		8
-> +
-> +/*
-> + * Request MLNX_SIP_GET_DIMM_INFO
-> + *
-> + * Retrieve information about DIMM on a certaion slot.
-					   ^^^^^^^^
-
-Run your whole patch through a spellchecker.
-
-
-> + *
-> + * Call register usage:
-> + * a0: MLNX_SIP_GET_DIMM_INFO
-> + * a1: (Memory controller index) << 16 | (Dimm index in memory controller)
-> + * a2-7: not used.
-> + *
-> + * Return status:
-> + * a0: dimm_info_smc union defined below describing the DIMM.
-> + * a1-3: not used.
-> + */
-> +#define MLNX_SIP_GET_DIMM_INFO		0x82000008
-> +
-> +/* Format for the SMC response about the memory information */
-> +union dimm_info_smc {
-> +	struct {
-> +		unsigned long size_GB : 16;	/* Dimm size in GB */
-> +		unsigned long is_rdimm : 1;	/* If is RDIMM/LRDIMM */
-> +		unsigned long is_lrdimm : 1;	/* If is LRDIMM */
-> +		unsigned long is_nvdimm : 1;	/* If is NVDIMM */
-> +		unsigned long __reserved0 : 2;
-> +		unsigned long ranks : 3;	/* Rank num of DIMM */
-> +		unsigned long package_X : 8;	/* Bits per memory package */
-> +		unsigned long __reserved1 : 32;
-> +	};
-> +	unsigned long val;
-> +};
-> +
-> +struct bluefield_edac_priv {
-> +	int dimm_ranks[MLXBF_EDAC_DIMM_PER_MC]; /* How many ranks in dimm */
-> +	void __iomem *emi_base;
-> +};
-> +
-> +static unsigned long smc_call1(unsigned long smc_op, unsigned long smc_arg)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(smc_op, smc_arg, 0, 0, 0, 0, 0, 0, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +/*
-> + * Gather the ECC information from the External Memory Interface registers
-> + * and report it to the edac handler.
-> + */
-> +static void bluefield_gather_report_ecc(struct mem_ctl_info *mci,
-> +					int error_cnt,
-> +					int is_single_ecc)
-> +{
-> +	struct bluefield_edac_priv *priv = mci->pvt_info;
-> +	union MLXBF_EMI_DRAM_ADDITIONAL_INFO_0_u edai0;
-> +	union MLXBF_EMI_DRAM_ECC_LATCH_SELECT_u edels;
-> +	union MLXBF_EMI_DRAM_SYNDROM_u eds;
-> +	enum hw_event_mc_err_type ecc_type;
-> +	unsigned long ecc_dimm_addr;
-> +	int ecc_dimm;
-> +	u32 edea0;
-> +	u32 edea1;
-> +
-> +	ecc_type = is_single_ecc ? HW_EVENT_ERR_CORRECTED :
-> +				   HW_EVENT_ERR_UNCORRECTED;
-> +
-> +	/*
-> +	 * Tell the External Memory Interface to populate the relavent
-> +	 * registers with information about the last ECC error occurrence.
-> +	 */
-> +	edels.word = 0;
-> +	edels.start = 1;
-> +	writel(edels.word, priv->emi_base + MLXBF_EMI_DRAM_ECC_LATCH_SELECT);
-> +
-> +	/*
-> +	 * Verify that the ECC reported info in the registers is of the
-> +	 * same type as the one asked to report. If not, just report the
-> +	 * error without the detailed information.
-> +	 */
-> +	eds.word = readl(priv->emi_base + MLXBF_EMI_DRAM_SYNDROM);
-> +
-> +	if ((is_single_ecc && !eds.serr) || (!is_single_ecc && !eds.derr)) {
-> +		edac_mc_handle_error(ecc_type, mci, error_cnt, 0, 0, 0,
-> +				     0, 0, -1, mci->ctl_name, "");
-> +		return;
-> +	}
-> +
-> +	edai0.word = readl(priv->emi_base + MLXBF_EMI_DRAM_ADDITIONAL_INFO_0);
-> +
-> +	ecc_dimm = edai0.err_prank >= 2 && priv->dimm_ranks[0] <= 2;
-> +
-> +	edea0 = readl(priv->emi_base + MLXBF_EMI_DRAM_ERR_ADDR_0);
-> +	edea1 = readl(priv->emi_base + MLXBF_EMI_DRAM_ERR_ADDR_1);
-> +
-> +	ecc_dimm_addr = ((unsigned long)edea1 << 32) | edea0;
-> +
-> +	edac_mc_handle_error(ecc_type, mci, error_cnt,
-> +			     ecc_dimm_addr / 0x1000, ecc_dimm_addr & 0xfff,
-> +			     eds.syndrom, ecc_dimm, 0, 0, mci->ctl_name, "");
-> +}
-> +
-> +static void bluefield_edac_check(struct mem_ctl_info *mci)
-> +{
-> +	union MLXBF_EMI_DRAM_ECC_ERROR_u edee = { .word = 0 };
-> +	struct bluefield_edac_priv *priv = mci->pvt_info;
-> +	union MLXBF_EMI_DRAM_ECC_COUNT_u edec;
-> +
-> +	/*
-> +	 * The memory controller might not be initialized by the firmware
-> +	 * when there isn't memory, which may lead to bad register readings.
-> +	 */
-> +	if (mci->edac_cap == EDAC_FLAG_NONE)
-> +		return;
-> +
-> +	edec.word = readl(priv->emi_base + MLXBF_EMI_DRAM_ECC_COUNT);
-> +
-> +	if (edec.single_error_count != 0) {
-
-
-	if (edec.single_error_count) {
-
-is enough. Below too.
-
-> +		edee.dram_ecc_single = 1;
-> +
-> +		bluefield_gather_report_ecc(mci, edec.single_error_count, 1);
-> +	}
-> +
-> +	if (edec.double_error_count != 0) {
-> +		edee.dram_ecc_double = 1;
-> +
-> +		bluefield_gather_report_ecc(mci, edec.double_error_count, 0);
-> +	}
-> +
-> +	/* Write to clear reported errors. */
-> +	if (edec.word != 0)
-> +		writel(edee.word, priv->emi_base + MLXBF_EMI_DRAM_ECC_ERROR);
-> +}
-> +
-> +/* Initialize the DIMMs information for the given memory controller. */
-> +static void bluefield_edac_init_dimms(struct mem_ctl_info *mci)
-> +{
-> +	struct bluefield_edac_priv *priv = mci->pvt_info;
-> +	int mem_ctrl_idx = mci->mc_idx;
-> +	union dimm_info_smc smc_info;
-> +	struct dimm_info *dimm;
-> +	unsigned long smc_arg;
-> +	int is_empty = 1;
-> +	int i;
-> +
-> +	for (i = 0; i < MLXBF_EDAC_DIMM_PER_MC; i++) {
-> +		dimm = mci->dimms[i];
-> +
-> +		smc_arg = mem_ctrl_idx << 16 | i;
-> +		smc_info = (union dimm_info_smc) {
-> +			.val = smc_call1(MLNX_SIP_GET_DIMM_INFO, smc_arg),
-> +		};
-> +
-> +		if (smc_info.size_GB == 0) {
-
-		if (!...
-
-> +			dimm->mtype = MEM_EMPTY;
-> +			continue;
-> +		}
-> +
-> +		is_empty = 0;
-> +
-> +		dimm->edac_mode = EDAC_SECDED;
-> +
-> +		if (smc_info.is_nvdimm)
-> +			dimm->mtype = MEM_NVDIMM;
-> +		else if (smc_info.is_lrdimm)
-> +			dimm->mtype = MEM_LRDDR4;
-> +		else if (smc_info.is_rdimm)
-> +			dimm->mtype = MEM_RDDR4;
-> +		else
-> +			dimm->mtype = MEM_DDR4;
-> +
-> +		dimm->nr_pages = smc_info.size_GB * 256 * 1024;
-> +		dimm->grain = MLXBF_EDAC_ERROR_GRAIN;
-> +
-> +		/* Mem controller for BlueField only supports x4, x8 and x16 */
-> +		if (smc_info.package_X == 4)
-> +			dimm->dtype = DEV_X4;
-> +		else if (smc_info.package_X == 8)
-> +			dimm->dtype = DEV_X8;
-> +		else if (smc_info.package_X == 16)
-> +			dimm->dtype = DEV_X16;
-> +		else
-> +			dimm->dtype = DEV_UNKNOWN;
-> +
-> +		priv->dimm_ranks[i] = smc_info.ranks;
-> +	}
-> +
-> +	if (is_empty)
-> +		mci->edac_cap = EDAC_FLAG_NONE;
-> +	else
-> +		mci->edac_cap = EDAC_FLAG_SECDED;
-> +}
-> +
-> +static int bluefield_edac_mc_probe(struct platform_device *pdev)
-> +{
-> +	struct bluefield_edac_priv *priv;
-> +	struct device *dev = &pdev->dev;
-> +	struct edac_mc_layer layers[1];
-> +	struct mem_ctl_info *mci;
-> +	struct resource *emi_res;
-> +	unsigned int mc_idx;
-> +	int rc, ret;
-> +
-> +	/* Only POLL mode supported so far. */
-> +	edac_op_state = EDAC_OPSTATE_POLL;
-
-This needs to happen *last* in this function, when everything else succeeds.
-
-> +
-> +	/* Read the MSS (Memory SubSystem) index from ACPI table. */
-> +	if (device_property_read_u32(dev, "mss_number", &mc_idx)) {
-> +		dev_warn(dev, "bf_edac: MSS number unknown\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	emi_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!emi_res)
-> +		return -EINVAL;
-> +
-> +	layers[0].type = EDAC_MC_LAYER_SLOT;
-> +	layers[0].size = MLXBF_EDAC_DIMM_PER_MC;
-> +	layers[0].is_virt_csrow = true;
-> +
-> +	mci = edac_mc_alloc(mc_idx, ARRAY_SIZE(layers), layers, sizeof(*priv));
-> +	if (mci == NULL)
-
-	if (!mci)
-
-> +		return -ENOMEM;
-> +
-> +	priv = mci->pvt_info;
-> +
-> +	priv->emi_base = devm_ioremap_resource(dev, emi_res);
-> +	if (IS_ERR(priv->emi_base)) {
-> +		dev_err(dev, "failed to map EMI IO resource\n");
-> +		ret = PTR_ERR(priv->emi_base);
-> +		goto err;
-> +	}
-> +
-> +	mci->pdev = dev;
-> +	mci->mtype_cap = MEM_FLAG_DDR4 | MEM_FLAG_RDDR4 |
-> +			 MEM_FLAG_LRDDR4 | MEM_FLAG_NVDIMM;
-> +	mci->edac_ctl_cap = EDAC_FLAG_SECDED;
-> +
-> +	mci->mod_name = DRIVER_NAME;
-> +	mci->ctl_name = "BlueField_Memory_Controller";
-> +	mci->dev_name = dev_name(dev);
-> +	mci->edac_check = bluefield_edac_check;
-> +
-> +	/* Initialize mci with the actual populated DIMM information. */
-> +	bluefield_edac_init_dimms(mci);
-> +
-> +	platform_set_drvdata(pdev, mci);
-> +
-> +	/* Register with EDAC core */
-> +	rc = edac_mc_add_mc(mci);
-> +	if (rc) {
-> +		dev_err(dev, "failed to register with EDAC core\n");
-> +		ret = rc;
-> +		goto err;
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	edac_mc_free(mci);
-> +
-> +	return ret;
-> +
-> +}
-> +
-> +static int bluefield_edac_mc_remove(struct platform_device *pdev)
-> +{
-> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-> +
-> +	edac_mc_del_mc(&pdev->dev);
-> +	edac_mc_free(mci);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct acpi_device_id bluefield_mc_acpi_ids[] = {
-> +	{"MLNXBF08", 0},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(acpi, bluefield_mc_acpi_ids);
-> +
-> +static struct platform_driver bluefield_edac_mc_driver = {
-> +	.driver = {
-> +		.name = DRIVER_NAME,
-> +		.acpi_match_table = bluefield_mc_acpi_ids,
-> +	},
-> +	.probe = bluefield_edac_mc_probe,
-> +	.remove = bluefield_edac_mc_remove,
-> +};
-> +
-> +module_platform_driver(bluefield_edac_mc_driver);
-> +
-> +MODULE_DESCRIPTION("Mellanox BlueField memory edac driver");
-> +MODULE_AUTHOR("Mellanox Technologies");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.1.2
+>> https://elixir.bootlin.com/linux/latest/source/Documentation/networking/netdevices.txt#L81
+>>
+>>>
+>>> I did see the message "tcan4x5x spi1.0 can0: hard_xmit called while tx busy" 
+>>> more with no gap and no polling in the cangen request.
+>>
+>> You usually should never see that message.
+>>
+>>>
+>>>> BTW, how big is the FIFO size on your system:
+>>>>
+>>>
+>>> This value is set to 1.
+>>>
+>>>>   tx_fifo_size = mram_config_vals[7];
+>>
+>> Then I'm surprised that you see "hard_xmit called while tx busy" at all.
+>> Are you sure that "cdev->version" is 32 on the tcan4x5?
+>>
 > 
+> tcan4x5x spi1.0 can0: Version of M_CAN is 32
+> 
+
+UGH!  I just found that I spelled peripheral wrong so I am making that change in the code as
+well
+
+Dan
+
+
+>> Wolfgang
+>>
+> 
+> 
+
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+------------------
+Dan Murphy
