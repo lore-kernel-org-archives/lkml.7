@@ -2,197 +2,210 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B809C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B073DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C95218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552670223;
-	bh=V3/XgsQWVmPCXl4GDlQD79hp94lmq10+5QAqPCddwss=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=Xp9J19x+UO++Bq842zBjM/R5qDHbYmMNk0hAgZu2Ayfu+cjYVKY0i3zep47lX+6zN
-	 nhhaG2a4wzxGZIO8pMQDHTfe420gzLXy/ZEELTibBA5uTeVMVrliQ329WAGjWbGB+o
-	 CgT8uJZI0uSKQ2+LU9ZBI4DC2Vh18NeyO5q2hEz8=
+	by mail.kernel.org (Postfix) with ESMTP id 76CFA218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfCORRB (ORCPT
+        id S1729740AbfCORRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 13:17:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47354 "EHLO mail.kernel.org"
+        Fri, 15 Mar 2019 13:17:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39616 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbfCORRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 13:17:01 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727001AbfCORRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 13:17:16 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FA8721019;
-        Fri, 15 Mar 2019 17:17:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552670220;
-        bh=V3/XgsQWVmPCXl4GDlQD79hp94lmq10+5QAqPCddwss=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=DGyXZRh4ufdls23OelKLRSrvihXBHg7ql0YkMRNtlzVz/aSCH1IKWvAVeFJEtn50M
-         VtJoAUMEx11YABdxMbMp3h6+Dr9/SzKdVS85BR0CDCxDTrkg9XqJUgTF8Z7zFTvHjt
-         3cwQh6PAh0yn6R6GHf5FAC3BhNVPQkSCFDKQPLfs=
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id C33DF307EAA3;
+        Fri, 15 Mar 2019 17:17:15 +0000 (UTC)
+Received: from [10.36.112.50] (ovpn-112-50.ams2.redhat.com [10.36.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 40F155D6A6;
+        Fri, 15 Mar 2019 17:17:08 +0000 (UTC)
+Subject: Re: [PATCH v5 03/18] wlcore: simplify/fix/optimize
+ reg_ch_conf_pending operations
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, kvm@vger.kernel.org
+References: <1552431636-31511-1-git-send-email-fenghua.yu@intel.com>
+ <1552431636-31511-4-git-send-email-fenghua.yu@intel.com>
+ <87a7hxzjda.fsf@purkki.adurom.net>
+ <20190314231614.GA41447@romley-ivt3.sc.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <02f06de8-ebb2-24ff-27e1-f697cadc02c4@redhat.com>
+Date:   Fri, 15 Mar 2019 18:17:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3e6aa4c392ccdd3bac76b556645139536e61e5e6.camel@baylibre.com>
-References: <20190226223429.193873-1-sboyd@kernel.org> <20190226223429.193873-7-sboyd@kernel.org> <3e6aa4c392ccdd3bac76b556645139536e61e5e6.camel@baylibre.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 6/8] clk: Allow parents to be specified without string names
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Chen-Yu Tsai <wens@csie.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Message-ID: <155267021941.20095.16439182841724325601@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Fri, 15 Mar 2019 10:16:59 -0700
+In-Reply-To: <20190314231614.GA41447@romley-ivt3.sc.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 15 Mar 2019 17:17:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jerome Brunet (2019-03-15 03:01:53)
-> On Tue, 2019-02-26 at 14:34 -0800, Stephen Boyd wrote:
-> > ---
-> >  drivers/clk/clk.c            | 260 ++++++++++++++++++++++++++---------
-> >  include/linux/clk-provider.h |  19 +++
-> >  2 files changed, 217 insertions(+), 62 deletions(-)
->=20
-> Sorry for the delay.
->=20
-> With the fix you sent to Jeffrey
-> Tested by porting the aoclk controller of Amlogic g12a SoC.
-> This allowed to test
->  * hws only table
->  * parent_data with a mix of hw pointers and fw_name (with different input
-> controllers and also an input that is optional and never provided)
->=20
-> Tested-by: Jerome Brunet <jbrunet@baylibre.com>
->=20
-> With the small comment below
->=20
-> Reviewed-by Jerome Brunet <jbrunet@baylibre.com>
->=20
+On 15/03/19 00:16, Fenghua Yu wrote:
+> Hi, Valo,
+> 
+> On Thu, Mar 14, 2019 at 03:16:33PM +0200, Kalle Valo wrote:
+>> Fenghua Yu <fenghua.yu@intel.com> writes:
+>>
+>>> From: Paolo Bonzini <pbonzini@redhat.com>
+>>>
+>>> Bitmaps are defined on unsigned longs, so the usage of u32[2] in the
+>>> wlcore driver is incorrect.  As noted by Peter Zijlstra, casting arrays
+>>> to a bitmap is incorrect for big-endian architectures.
+>>>
+>>> When looking at it I observed that:
+>>>
+>>> - operations on reg_ch_conf_pending is always under the wl_lock mutex,
+>>> so set_bit is overkill
+>>>
+>>> - the only case where reg_ch_conf_pending is accessed a u32 at a time is
+>>> unnecessary too.
+>>>
+>>> This patch cleans up everything in this area, and changes tmp_ch_bitmap
+>>> to have the proper alignment.
+>>>
+>>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+>>
+>> [...]
+>>
+>>>  int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
+>>>  {
+>>>  	struct wl12xx_cmd_regdomain_dfs_config *cmd = NULL;
+>>>  	int ret = 0, i, b, ch_bit_idx;
+>>> -	u32 tmp_ch_bitmap[2];
+>>> +	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
+>>>  	struct wiphy *wiphy = wl->hw->wiphy;
+>>>  	struct ieee80211_supported_band *band;
+>>>  	bool timeout = false;
+>>
+>> [...]
+>>
+>>> @@ -1754,8 +1751,8 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
+>>>  		goto out;
+>>>  	}
+>>>  
+>>> -	cmd->ch_bit_map1 = cpu_to_le32(tmp_ch_bitmap[0]);
+>>> -	cmd->ch_bit_map2 = cpu_to_le32(tmp_ch_bitmap[1]);
+>>> +	cmd->ch_bit_map1 = tmp_ch_bitmap[0];
+>>> +	cmd->ch_bit_map2 = tmp_ch_bitmap[1];
+>>
+>> Will sparse still be happy? AFAICS you are now assigning u32 to __le32:
+>>
+>> struct wl12xx_cmd_regdomain_dfs_config {
+>>        struct wl1271_cmd_header header;
+>>
+>>        __le32 ch_bit_map1;
+>>        __le32 ch_bit_map2;
+> 
+> Discussion between Peter and Paolo (https://lkml.org/lkml/2019/3/4/521)
+> may answer your question.
 
-Awesome. Thanks! I need to Cc Rob H to hopefully get an ack on the
-concept of relying on DT so I'll resend this series again next week. It
-would also be nice if I can throw in a couple more patches to let
-drivers specify a DT node when registering a clk if they don't have a
-struct device on hand and let drivers lookup with clk_lookups somehow.
+No, Kalle is right.  You do need to change
 
->=20
-> >=20
-> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > index 937b8d092d17..3d01e8c56400 100644
-> > --- a/drivers/clk/clk.c
-> > +++ b/drivers/clk/clk.c
-> > @@ -39,6 +39,13 @@ static LIST_HEAD(clk_notifier_list);
-> > =20
->=20
-> [...]
->=20
-> > =20
-> > +static int clk_cpy_name(const char *dst, const char *src, bool must_ex=
-ist)
-> > +{
-> > +     if (!src) {
-> > +             if (must_exist)
-> > +                     return -EINVAL;
-> > +             return 0;
-> > +     }
-> > +
-> > +     dst =3D kstrdup_const(src, GFP_KERNEL);
-> > +     if (!dst)
-> > +             return -ENOMEM;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int clk_core_populate_parent_map(struct clk_core *core)
-> > +{
-> > +     const struct clk_init_data *init =3D core->hw->init;
-> > +     u8 num_parents =3D init->num_parents;
-> > +     const char * const *parent_names =3D init->parent_names;
-> > +     const struct clk_hw **parent_hws =3D init->parent_hws;
-> > +     const struct clk_parent_data *parent_data =3D init->parent_data;
-> > +     int i, ret =3D 0;
-> > +     struct clk_parent_map *parents, *parent;
-> > +
-> > +     if (!num_parents)
-> > +             return 0;
-> > +
-> > +     /*
-> > +      * Avoid unnecessary string look-ups of clk_core's possible paren=
-ts by
-> > +      * having a cache of names/clk_hw pointers to clk_core pointers.
-> > +      */
-> > +     parents =3D kcalloc(num_parents, sizeof(*parents), GFP_KERNEL);
-> > +     core->parents =3D parents;
-> > +     if (!parents)
-> > +             return -ENOMEM;
-> > +
-> > +     /* Copy everything over because it might be __initdata */
-> > +     for (i =3D 0, parent =3D parents; i < num_parents; i++, parent++)=
- {
-> > +             if (parent_names) {
-> > +                     /* throw a WARN if any entries are NULL */
-> > +                     WARN(!parent_names[i],
-> > +                             "%s: invalid NULL in %s's .parent_names\n=
-",
-> > +                             __func__, core->name);
-> > +                     ret =3D clk_cpy_name(parent->name, parent_names[i=
-],
-> > +                                        true);
-> > +             } else if (parent_data) {
->=20
-> While testing, I mistakenly left both parent_names and parent_data. I was
-> surprised that parent_data did not take precedence of parent_names.
->=20
-> Maybe it should ? (... but I understand we are not supposed to provide bo=
-th)
+-	u32 tmp_ch_bitmap[2];
++	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
 
-I don't think we can. We have a problem where drivers don't initialize
-the init structure properly, opting to just throw it on the stack and
-leave junk in there that they overwrite. We'd have to go through all the
-init structures and initialize them. I suppose we could make a macro for
-that:
+into
 
-	DECLARE_CLK_INIT_DATA(init);
+-	u32 tmp_ch_bitmap[2];
++	__le32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
 
-or something like that that does this. We could bury a magic number in
-there under some debug option too so that we can make sure drivers are
-doing this properly. Otherwise we're left to doing these weird tricks
-like I've done here.
+The assignment from wl->reg_ch_conf_pending to tmp_ch_bitmap is fine
+because it goes through memcpy.
 
-Regardless. I'll have to add a comment to this fact in the code. Thanks.
+Paolo
 
->=20
-> > +                     parent->hw =3D parent_data[i].hw;
-> > +                     ret =3D clk_cpy_name(parent->fw_name,
-> > +                                        parent_data[i].fw_name, false);
-> > +                     if (!ret)
-> > +                             ret =3D clk_cpy_name(parent->name,
-> > +                                                parent_data[i].name,
-> > +                                                false);
-> > +             } else if (parent_hws) {
-> > +                     parent->hw =3D parent_hws[i];
-> > +             } else {
->=20
-> Maybe there should also some kinda of check to verify if more than one op=
-tion
-> (among hws, parent_data and parent_names) was provided and throw a warn ?
->=20
-> Could be useful with drivers move away from parent_names ?
-
-Same thing. It would be nice but we're sort of unable to do so unless we
-do what I suggest above. Should we do it?
+> (Sorry I didn't send to you v4 patch set)
+> 
+>>
+>> Also this doesn't depend on anything else from this patchset, right? So
+>> I could apply this directly?
+> 
+> You are right. This patch doesn't rely on other patches from this patchset.
+> This patch just fixes a split lock issue. You could apply this directly
+> without other patches.
+> 
+> Thanks.
+> 
+> -Fenghua
+> 
 
