@@ -2,216 +2,195 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E85BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 22:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C512C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 22:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E117E218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 22:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E95218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 22:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PY2OTJMW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfCOWMb convert rfc822-to-8bit (ORCPT
+        id S1727234AbfCOW3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 18:12:31 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35253 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbfCOWMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 18:12:31 -0400
-Received: from [IPv6:2607:fb90:363e:8b8e:45:329:f804:e0bb] ([IPv6:2607:fb90:363e:8b8e:45:329:f804:e0bb])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2FMCBS11753937
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Fri, 15 Mar 2019 15:12:11 -0700
-Date:   Fri, 15 Mar 2019 15:12:08 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAKwvOdkfb_DT2p2vvxK2ye6JpGYB4qqCc8yECU_JEkrc+6HXDA@mail.gmail.com>
-References: <CAG5bF+S6OvBnsaR6UpMCqjDR9_hMo6qRMHGiW+iCaRYQW4C3YA@mail.gmail.com> <CAKwvOdkfb_DT2p2vvxK2ye6JpGYB4qqCc8yECU_JEkrc+6HXDA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH] lib: Add shared copy of __lshrti3 from libgcc
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-CC:     Andy Lutomirski <luto@kernel.org>,
+        Fri, 15 Mar 2019 18:29:09 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34624 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbfCOW3I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 18:29:08 -0400
+Received: by mail-pg1-f194.google.com with SMTP id v12so7413845pgq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 15:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tEqipMkmPrwuZy0D121gbGL9+fu8h62ZcrJU46Deif8=;
+        b=PY2OTJMWhe8nWOnu9fcoaSh5m3Mlvj+LorPk2yvi51QDH/RN46ZtAG8eThQI8Bu+j9
+         VufniDVkgiw8kIvmbziNZ809AxO1c9hhIVWANljmS+MQ0CwnxsYrHcvWvK26wFvfOwJl
+         V3x3cOCqkqs6YBavygTSPJ4mXdiek1o+gLR1Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tEqipMkmPrwuZy0D121gbGL9+fu8h62ZcrJU46Deif8=;
+        b=aOXMWe5gnHWIlBxbKFTi9UXsrtk5Dm6xJ8V0KC/A6TviWazXTMK7cJBWKTyjV6nITC
+         J1VqFjsTbe0RM8jzipoV2MbbY5VsK8xEo5bf6bL9kqDiV2zucFw6uBlAVSWmH/IfWA44
+         mxrzDmUx0j136+1uPhqHR2b3QLeLO7evNPbcgueOMcBwUQPgmRjyzimmSsoc9aUlZHfU
+         pCL4u6I36oNxN0wIWapsi6TfsSlpK+hyBXH07tLF32/lPMYBvhWNki8bWmEe7R34FXmt
+         oWwZcA3vPo0ifpfK2c6e+mYpX4mI8TeMw0g+DnKJDw7vdN8+YTxEmj5TkIRayllHdGLa
+         J3bQ==
+X-Gm-Message-State: APjAAAXe4u4Q21FcXoa063z0vz+TT8ntiWebUkSrANnFkSyc70nDEmkm
+        uN2WXM5nSxJNaliFZ87DmH4+nw==
+X-Google-Smtp-Source: APXvYqy7LihTpgqltqd3Xx8vrQhv2VU8eTShuiqSUb8qBJxo2Sw5oMFIle9mV9a0SpqwfVxE4mIdkg==
+X-Received: by 2002:a63:6f46:: with SMTP id k67mr5633363pgc.174.1552688947866;
+        Fri, 15 Mar 2019 15:29:07 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id j4sm4252130pfn.132.2019.03.15.15.29.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 15:29:07 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 15:29:06 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
         Manoj Gupta <manojgupta@chromium.org>,
         Tiancong Wang <tcwang@chromium.org>,
         Stephen Hines <srhines@google.com>,
         clang-built-linux@googlegroups.com,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-From:   hpa@zytor.com
-Message-ID: <18F0D032-4FC4-4194-A2F4-B7ED68C2C5F2@zytor.com>
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] x86/vdso: include generic __lshrdi3 in 32-bit vDSO
+Message-ID: <20190315222906.GC112750@google.com>
+References: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com>
+ <CAKwvOd=aqWvjzC1ZF5_pXx2VutAX0dneDPxU_=jroqHUGw-X6g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=aqWvjzC1ZF5_pXx2VutAX0dneDPxU_=jroqHUGw-X6g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 15, 2019 3:06:37 PM PDT, Nick Desaulniers <ndesaulniers@google.com> wrote:
->On Fri, Mar 15, 2019 at 1:54 PM Matthias Kaehlcke <mka@chromium.org>
->wrote:
->>
->> The compiler may emit calls to __lshrti3 from the compiler runtime
->> library, which results in undefined references:
->>
->> arch/x86/kvm/x86.o: In function `mul_u64_u64_shr':
->>   include/linux/math64.h:186: undefined reference to `__lshrti3'
->
->Looks like Clang will emit this at -Oz (but not -O2):
->https://godbolt.org/z/w1_2YC
->
->>
->> Add a copy of the __lshrti3 libgcc routine (from gcc v4.9.2).
->
->Has it changed since? If so why not a newer version of libgcc_s?
->
->>
->> Include the function for x86 builds with clang, which is the
->> environment where the above error was observed.
->>
->> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->> ---
->>  arch/x86/Kconfig       |  1 +
->>  include/linux/libgcc.h | 16 ++++++++++++++++
->>  lib/Kconfig            |  3 +++
->>  lib/Makefile           |  1 +
->>  lib/lshrti3.c          | 31 +++++++++++++++++++++++++++++++
->>  5 files changed, 52 insertions(+)
->>  create mode 100644 lib/lshrti3.c
->>
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index c1f9b3cf437c..a5e0d923845d 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -105,6 +105,7 @@ config X86
->>         select GENERIC_IRQ_PROBE
->>         select GENERIC_IRQ_RESERVATION_MODE
->>         select GENERIC_IRQ_SHOW
->> +       select GENERIC_LIB_LSHRTI3              if CC_IS_CLANG
->>         select GENERIC_PENDING_IRQ              if SMP
->>         select GENERIC_SMP_IDLE_THREAD
->>         select GENERIC_STRNCPY_FROM_USER
->> diff --git a/include/linux/libgcc.h b/include/linux/libgcc.h
->> index 32e1e0f4b2d0..a71036471838 100644
->> --- a/include/linux/libgcc.h
->> +++ b/include/linux/libgcc.h
->> @@ -22,15 +22,26 @@
->>  #include <asm/byteorder.h>
->>
->>  typedef int word_type __attribute__ ((mode (__word__)));
->> +typedef int TItype __attribute__ ((mode (TI)));
->
->Well that's an interesting new compiler attribute.
->https://stackoverflow.com/questions/4559025/what-does-gcc-attribute-modexx-actually-do
->Please use `__mode(TI)` from include/linux/compiler_attributes.h ex.
->typedef int TItype __mode(TI);
->
->>
->>  #ifdef __BIG_ENDIAN
->>  struct DWstruct {
->>         int high, low;
->>  };
->> +
->> +struct DWstruct128 {
->> +       long long high, low;
->> +};
->> +
->>  #elif defined(__LITTLE_ENDIAN)
->>  struct DWstruct {
->>         int low, high;
->>  };
->> +
->> +struct DWstruct128 {
->> +       long long low, high;
->> +};
->> +
->>  #else
->>  #error I feel sick.
->>  #endif
->> @@ -40,4 +51,9 @@ typedef union {
->>         long long ll;
->>  } DWunion;
->>
->> +typedef union {
->> +       struct DWstruct128 s;
->> +       TItype ll;
->> +} DWunion128;
->> +
->>  #endif /* __ASM_LIBGCC_H */
->> diff --git a/lib/Kconfig b/lib/Kconfig
->> index a9e56539bd11..369e10259ea6 100644
->> --- a/lib/Kconfig
->> +++ b/lib/Kconfig
->> @@ -624,6 +624,9 @@ config GENERIC_LIB_ASHRDI3
->>  config GENERIC_LIB_LSHRDI3
->>         bool
->>
->> +config GENERIC_LIB_LSHRTI3
->> +       bool
->> +
->>  config GENERIC_LIB_MULDI3
->>         bool
->>
->> diff --git a/lib/Makefile b/lib/Makefile
->> index 4e066120a0d6..42648411f451 100644
->> --- a/lib/Makefile
->> +++ b/lib/Makefile
->> @@ -277,6 +277,7 @@ obj-$(CONFIG_PARMAN) += parman.o
->>  obj-$(CONFIG_GENERIC_LIB_ASHLDI3) += ashldi3.o
->>  obj-$(CONFIG_GENERIC_LIB_ASHRDI3) += ashrdi3.o
->>  obj-$(CONFIG_GENERIC_LIB_LSHRDI3) += lshrdi3.o
->> +obj-$(CONFIG_GENERIC_LIB_LSHRTI3) += lshrti3.o
->>  obj-$(CONFIG_GENERIC_LIB_MULDI3) += muldi3.o
->>  obj-$(CONFIG_GENERIC_LIB_CMPDI2) += cmpdi2.o
->>  obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
->> diff --git a/lib/lshrti3.c b/lib/lshrti3.c
->> new file mode 100644
->> index 000000000000..2d2123bb3030
->> --- /dev/null
->> +++ b/lib/lshrti3.c
->> @@ -0,0 +1,31 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/export.h>
->> +#include <linux/libgcc.h>
->> +
->> +long long __lshrti3(long long u, word_type b)
->> +{
->> +       DWunion128 uu, w;
->> +       word_type bm;
->> +
->> +       if (b == 0)
->> +               return u;
->> +
->> +       uu.ll = u;
->> +       bm = 64 - b;
->> +
->> +       if (bm <= 0) {
->> +               w.s.high = 0;
->> +               w.s.low = (unsigned long long) uu.s.high >> -bm;
->> +       } else {
->> +               const unsigned long long carries =
->> +                       (unsigned long long) uu.s.high << bm;
->> +               w.s.high = (unsigned long long) uu.s.high >> b;
->> +               w.s.low = ((unsigned long long) uu.s.low >> b) |
->carries;
->> +       }
->> +
->> +       return w.ll;
->> +}
->> +#ifndef BUILD_VDSO
->> +EXPORT_SYMBOL(__lshrti3);
->> +#endif
->
->I don't think you want this.  Maybe that was carried over from
->https://lkml.org/lkml/2019/3/15/669
->by accident?  The above linkage error mentions arch/x86/kvm/x86.o
->which I wouldn't expect to be linked into the VDSO image?
+Hi Nick,
 
-Or just "u64"...
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+On Fri, Mar 15, 2019 at 02:31:09PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> On Fri, Mar 15, 2019 at 12:54 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > Building the 32-bit vDSO with a recent clang version fails due
+> > to undefined symbols:
+> >
+> > arch/x86/entry/vdso/vdso32.so.dbg: undefined symbols found
+> >
+> > The undefined symbol in this case is __lshrdi3, which is part of
+> > the compiler runtime library, however the vDSO isn't linked against
+> > this library.
+> >
+> > Include the kernel version of __lshrdi3 in the 32-bit vDSO build.
+> 
+> __lshrdi3 is used for "logical shift right double-word by int" (best
+> guess), so anywhere there's a right shift of a u64.  Looks like
+> there's a few of these in arch/x86/entry/vdso/, so it's legal for the
+> compiler to emit this libcall.  Do you know which function
+> specifically in the .so has a relocation referencing __lshrdi3
+> specifically?
+
+It's the right shifts in do_realtime() and do_monotonic().
+
+> Is there a config I can set to reproduce this, in order to help
+> test?
+
+I encountered it with a Chrome OS specific configuration, but a
+defconfig should do. Note that you probably need a development version
+of clang to reproduce this.
+
+> >
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> >  arch/x86/entry/vdso/Makefile | 7 ++++++-
+> >  lib/lshrdi3.c                | 4 +++-
+> >  2 files changed, 9 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+> > index 5bfe2243a08f..7517cd87e10b 100644
+> > --- a/arch/x86/entry/vdso/Makefile
+> > +++ b/arch/x86/entry/vdso/Makefile
+> > @@ -144,6 +144,7 @@ KBUILD_CFLAGS_32 += $(call cc-option, -fno-stack-protector)
+> >  KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
+> >  KBUILD_CFLAGS_32 += -fno-omit-frame-pointer
+> >  KBUILD_CFLAGS_32 += -DDISABLE_BRANCH_PROFILING
+> > +KBUILD_CFLAGS_32 += -DBUILD_VDSO
+> >
+> >  ifdef CONFIG_RETPOLINE
+> >  ifneq ($(RETPOLINE_VDSO_CFLAGS),)
+> > @@ -153,12 +154,16 @@ endif
+> >
+> >  $(obj)/vdso32.so.dbg: KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
+> >
+> > +$(obj)/vdso32/lshrdi3.o: $(srctree)/lib/lshrdi3.c FORCE
+> > +       $(call if_changed_rule,cc_o_c)
+> 
+> + Masahiro to help look at this part (I don't understand this part
+> of kbuild).
+
+I bluntly stole that from arch/x86/purgatory/Makefile , which does
+something similar.
+
+> 
+> > +
+> >  $(obj)/vdso32.so.dbg: FORCE \
+> >                       $(obj)/vdso32/vdso32.lds \
+> >                       $(obj)/vdso32/vclock_gettime.o \
+> >                       $(obj)/vdso32/note.o \
+> >                       $(obj)/vdso32/system_call.o \
+> > -                     $(obj)/vdso32/sigreturn.o
+> > +                     $(obj)/vdso32/sigreturn.o \
+> > +                     $(obj)/vdso32/lshrdi3.o
+> >         $(call if_changed,vdso)
+> >
+> >  #
+> > diff --git a/lib/lshrdi3.c b/lib/lshrdi3.c
+> > index 99cfa5721f2d..8a4fc6bcf3a4 100644
+> > --- a/lib/lshrdi3.c
+> > +++ b/lib/lshrdi3.c
+> > @@ -16,7 +16,7 @@
+> >   * to the Free Software Foundation, Inc.
+> >   */
+> >
+> > -#include <linux/module.h>
+> > +#include <linux/export.h>
+> 
+> Is this a simple cleanup, or?
+
+The vDSO build is unhappy when modules.h draws in a whole bunch of
+other kernel headers and export.h is all that's need. It seemed
+reasonable to do the 'cleanup' in this patch since we touch it anyway
+to place EXPORT_SYMBOL within an #ifdef.
+
+> >  #include <linux/libgcc.h>
+> >
+> >  long long notrace __lshrdi3(long long u, word_type b)
+> > @@ -42,4 +42,6 @@ long long notrace __lshrdi3(long long u, word_type b)
+> >
+> >         return w.ll;
+> >  }
+> > +#ifndef BUILD_VDSO
+> >  EXPORT_SYMBOL(__lshrdi3);
+> > +#endif
+> 
+> Compilers (GCC and Clang) will always assume their runtime has these
+> helper functions; whether or not they emit libcalls vs inline routines
+> is implementation defined.  So I agree with this patch; I just would
+> like to help confirm/test it.
+
+Thanks for your help!
+
+Matthias
