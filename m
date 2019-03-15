@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D190C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9296C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9A5218D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84CC218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552686322;
-	bh=VL/Cx1eDzt3+/KTMRymoOH6jteQX78pc4wVmDU8pDyg=;
+	s=default; t=1552686326;
+	bh=+zNs4mlNXc8DUokN0jqv2cMNXWPr0QtluzrbJis5wGQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=1xKfNRwTfTWnu9giUPAmrp9CVajbfD/QGghnux9r0kG0c+bExkNL+GR3ji8fWTK/w
-	 Et0CqjckjNEzdhQEUERsD8soWjgDlSgklb/rHLdXqIjcjZ+rrvKLQ7SUYpiOSZsv2k
-	 ScSvTWXL6ZWLTAWAU4HC4XJkhw+US56ww7dtRTsI=
+	b=kSfN3BdQyek+l6g502H+CE+yzfv0JJcO6KSh8DWoSaMo9s3vqgUpXppQNhOQ2iUqn
+	 SueD0QCkzOnIPI4AIclNEUxrwi1ALh5YOTh+kZB7AYqwiwgqaupkYj9FZXAaKRwS4l
+	 YZY3B6lBefnC9ILKryd7oX/2gZFnEEddbStZcqDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfCOVpV (ORCPT
+        id S1727228AbfCOVpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 17:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41780 "EHLO mail.kernel.org"
+        Fri, 15 Mar 2019 17:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbfCOVpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 17:45:20 -0400
-Subject: Re: [GIT PULL] fbdev changes for v5.1
+        id S1727207AbfCOVpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 17:45:22 -0400
+Subject: Re: [GIT PULL] xfs: minor cleanups for 5.1-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552686319;
-        bh=VL/Cx1eDzt3+/KTMRymoOH6jteQX78pc4wVmDU8pDyg=;
+        s=default; t=1552686321;
+        bh=+zNs4mlNXc8DUokN0jqv2cMNXWPr0QtluzrbJis5wGQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=SPzJjVz3HCoCjdbcJC7jh7gzNb662MwXh6AseyrqUi710TCwG0UHV1H+/89ltP/7V
-         OgYsKUWjuYLqB3tYvfk0FAqNX/3ozcUWGs8u4zYtkNGKIYpIaCRwEl8VtvNihi2B2y
-         YLRhktMHBBRfUP+9CmBVq6QFi65QrYW9uoa3SqAY=
+        b=kUySrZByJ1rwhwsvWuwwfVZPXaqtKxl3UZ/orsS861y8DP4FtOs6wmWu1M0vRqGmU
+         Lqp11DgtWFOhfHE2mx5UP9dvIvrmUPMl/zQ/TcqI82WnrRISgVnJl+QDvoaoq05oFO
+         TIsTEgtbwQBpYrQao8hAQ2lPDsGW80v0hoQ6Anl4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <4114bd4f-9c58-a295-c767-47720dcf2c37@samsung.com>
-References: <CGME20190315111228eucas1p24628f949b96a13bc3434d36425fa0be0@eucas1p2.samsung.com>
- <4114bd4f-9c58-a295-c767-47720dcf2c37@samsung.com>
+In-Reply-To: <20190315160706.GI4929@magnolia>
+References: <20190315160706.GI4929@magnolia>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <4114bd4f-9c58-a295-c767-47720dcf2c37@samsung.com>
-X-PR-Tracked-Remote: https://github.com/bzolnier/linux.git tags/fbdev-v5.1
-X-PR-Tracked-Commit-Id: 9a9f1d1a81a972513636c333e26c542f8aebae55
+X-PR-Tracked-Message-Id: <20190315160706.GI4929@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/xfs-5.1-merge-5
+X-PR-Tracked-Commit-Id: 6ef50fe9afae63d11220f3f66b5f4c75d09c8bf0
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2b9c272cf5cd81708e51b4ce3e432ce9566cfa47
-Message-Id: <155268631966.16247.2067961556776700130.pr-tracker-bot@kernel.org>
-Date:   Fri, 15 Mar 2019 21:45:19 +0000
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: de578188ed0161713c9515eeafa394296516ff27
+Message-Id: <155268632152.16247.17715679919899654983.pr-tracker-bot@kernel.org>
+Date:   Fri, 15 Mar 2019 21:45:21 +0000
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     torvalds@linux-foundation.org, Dave Chinner <david@fromorbit.com>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 15 Mar 2019 12:12:27 +0100:
+The pull request you sent on Fri, 15 Mar 2019 09:07:06 -0700:
 
-> https://github.com/bzolnier/linux.git tags/fbdev-v5.1
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.1-merge-5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2b9c272cf5cd81708e51b4ce3e432ce9566cfa47
+https://git.kernel.org/torvalds/c/de578188ed0161713c9515eeafa394296516ff27
 
 Thank you!
 
