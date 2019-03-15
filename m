@@ -2,144 +2,142 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD3BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D4BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32FD218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D682186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BOrKvCBJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QCLYFU77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfCOTxy (ORCPT
+        id S1726743AbfCOTy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 15:53:54 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:56502 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbfCOTwG (ORCPT
+        Fri, 15 Mar 2019 15:54:28 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:39416 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfCOTyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 15:52:06 -0400
-Received: by mail-qt1-f202.google.com with SMTP id e1so9624851qth.23
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 12:52:06 -0700 (PDT)
+        Fri, 15 Mar 2019 15:54:15 -0400
+Received: by mail-yw1-f68.google.com with SMTP id z191so8215224ywa.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 12:54:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=z6K/c9VtqxQi5aBAmUht43d+X7x4sfj8BAD1AB++2bA=;
-        b=BOrKvCBJgVmoeAFlZRf59PYgkXTKjrRMRrX63X976vqS2WZ9qHZEKHeBVwJtTWhSuu
-         lUvSWiTVC/sbszWaQppDDR/3GWTkX31v65WrFbh4cWKv7GdWuy0PXeDkNLjKRPen898X
-         V9cymVDbaCKNbzgoG3JjfivP1S/Za/rbL9bJ2fcItc9gQOVwpi9wJOepWPz1VdAZPUT1
-         cjQr07t64SwJCV+OZh/j0pkNHMF9Z/MNDj5cHLhFPLalavSnR7OPvVyx0xN4qyU3goh4
-         CsFQJ7ZthwFgkdSG7A7Q7uo8+32OwkFTx9gfh1M9rs57t4EWTuZWy/0ZLkAzrIEKwWdx
-         tB7w==
+        d=chromium.org; s=google;
+        h=from:mime-version:date:message-id:subject:to:cc;
+        bh=0RCX3Ltyuj+IFk9jI40YoK7mwfQtQVtvVQbx4Yv4YiM=;
+        b=QCLYFU77ErSpHb/s1QV0ApuMMdOUn1ZDIR78tKYrg/jxn91lOdBBQ+oE/VJM0NxjLL
+         u+TZMWXVvDi0kcw8XsAeksBL4X64PFW3MXy7fE6uHIRygZV2BDZAGOlqH5sVlMkiYRwD
+         dTIDsxdhMIV0RSS2z4A6uyUaJQwSy5ti7W7ng=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=z6K/c9VtqxQi5aBAmUht43d+X7x4sfj8BAD1AB++2bA=;
-        b=kapupAoHoHP0nNnFq+JHY2MGwpcAlghIFajfqGUMzEeVGLGvBO/Lyy/+3RD1nIWTzg
-         MwDioKSV8LBaxftxebxjTGVotTwxD2GLfi9VlEhUCBs+PCD+RbnFBRJQhU3+beFNrpNx
-         mYqTwZf2hk6M8kE7vvq6JoZz0z/3gYPd1/ncR/7ta3bAyvCg/Yl5ih3vCceycHBE+yom
-         I5RiV0aGKz1+taPaVGRYXhjfAi/92suAKVCaY7KmKqmCbl8JIa8z9ls51tNb6LD/X4Gj
-         IBZJwhTXfCcgTX52R7zrR0c8pvjjuY/r+lQWJJafD3ZFJhQLLgUB2MMpcuSZ1Kk3wDCZ
-         v6JA==
-X-Gm-Message-State: APjAAAXmVS8mpMptFY/6HB7vdhshGYNGFQkgY2JnzocYG/uNegDalING
-        R4mbiMkZk0opP7W9JuC1RB0OYdZMEgbdMt1l
-X-Google-Smtp-Source: APXvYqwJfi74QVD/zofU2P0/g2gg7ooywVFBEIF7szplHks32+LZURK6/93aOzRnjw5Hkh4ZybpGRgonk8XbJOel
-X-Received: by 2002:ac8:3798:: with SMTP id d24mr3191740qtc.40.1552679526081;
- Fri, 15 Mar 2019 12:52:06 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 20:51:31 +0100
-In-Reply-To: <cover.1552679409.git.andreyknvl@google.com>
-Message-Id: <4368bfa2a799442392ee9582dd1cccb8c96e524d.1552679409.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1552679409.git.andreyknvl@google.com>
+        h=x-gm-message-state:from:mime-version:date:message-id:subject:to:cc;
+        bh=0RCX3Ltyuj+IFk9jI40YoK7mwfQtQVtvVQbx4Yv4YiM=;
+        b=hlLZaWga2NabNQyrUOh1WYeo4NUCBx9Iau2pzZDmZVQbT4euGxARQ5U902yZFKAw2Q
+         xST+gJaMd7Rrdka/lbGiETGbTQPIouR1MbpRZS+a/X97jACkd14RZvkQJfwc+6ldBDEz
+         CSZo467y5Annnf/0N0LD58YBfmRiuP5KRNeO9oZVCew+LrhVfFFovhjUEwVcGT7oToOO
+         i+3l3bdOSCvx1hdCJUyLzYxDFRPyMjQnnbib8NMp0PDT/oWnIli16OT2C12uV27W/zm6
+         hSU0uL8LCfhZjKkWdkf4zpnTK6G/NMF7/uDPN6RZZYXLvtBvWGBKkWgOuRRUlYd3FN/t
+         F+FQ==
+X-Gm-Message-State: APjAAAW0GcaU4TzZdoG7I02QQ9NI61pRri+s1x+DDXcvntLzUmacEUH8
+        /oDoLoAD4ngdA4zT3A4vFxLYte24shLc3jqjyYBZnQ==
+X-Google-Smtp-Source: APXvYqx11p/WV9bZIM36YCpP8/Sbo4A9LFCEceafrqfRTMlsilj9QLFJMzyi7X3yJG2WYuSVAdbBfhTPt/CmKLX1Gus=
+X-Received: by 2002:a25:2f8e:: with SMTP id v136mr4646345ybv.200.1552679654879;
+ Fri, 15 Mar 2019 12:54:14 -0700 (PDT)
+Received: from 764776645087 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 15 Mar 2019 12:54:14 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
 X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
-Subject: [PATCH v11 07/14] fs, arm64: untag user pointers in fs/userfaultfd.c
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
+MIME-Version: 1.0
+Date:   Fri, 15 Mar 2019 12:54:13 -0700
+Message-ID: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com>
+Subject: [PATCH] x86/vdso: include generic __lshrdi3 in 32-bit vDSO
+To:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Manoj Gupta <manojgupta@chromium.org>,
+        Tiancong Wang <tcwang@chromium.org>,
+        Stephen Hines <srhines@google.com>,
+        clang-built-linux@googlegroups.com,
+        Matthias Kaehlcke <mka@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a part of a series that extends arm64 kernel ABI to allow to
-pass tagged user pointers (with the top byte set to something else other
-than 0x00) as syscall arguments.
+Building the 32-bit vDSO with a recent clang version fails due
+to undefined symbols:
 
-userfaultfd_register() and userfaultfd_unregister() use provided user
-pointers for vma lookups, which can only by done with untagged pointers.
+arch/x86/entry/vdso/vdso32.so.dbg: undefined symbols found
 
-Untag user pointers in these functions.
+The undefined symbol in this case is __lshrdi3, which is part of
+the compiler runtime library, however the vDSO isn't linked against
+this library.
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Include the kernel version of __lshrdi3 in the 32-bit vDSO build.
+
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
- fs/userfaultfd.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/entry/vdso/Makefile | 7 ++++++-
+ lib/lshrdi3.c                | 4 +++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 89800fc7dc9d..a3b70e0d9756 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -1320,6 +1320,9 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
- 		goto out;
- 	}
- 
-+	uffdio_register.range.start =
-+		untagged_addr(uffdio_register.range.start);
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 5bfe2243a08f..7517cd87e10b 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -144,6 +144,7 @@ KBUILD_CFLAGS_32 += $(call cc-option, -fno-stack-protector)
+ KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
+ KBUILD_CFLAGS_32 += -fno-omit-frame-pointer
+ KBUILD_CFLAGS_32 += -DDISABLE_BRANCH_PROFILING
++KBUILD_CFLAGS_32 += -DBUILD_VDSO
+
+ ifdef CONFIG_RETPOLINE
+ ifneq ($(RETPOLINE_VDSO_CFLAGS),)
+@@ -153,12 +154,16 @@ endif
+
+ $(obj)/vdso32.so.dbg: KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
+
++$(obj)/vdso32/lshrdi3.o: $(srctree)/lib/lshrdi3.c FORCE
++	$(call if_changed_rule,cc_o_c)
 +
- 	ret = validate_range(mm, uffdio_register.range.start,
- 			     uffdio_register.range.len);
- 	if (ret)
-@@ -1507,6 +1510,8 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
- 	if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
- 		goto out;
- 
-+	uffdio_unregister.start = untagged_addr(uffdio_unregister.start);
-+
- 	ret = validate_range(mm, uffdio_unregister.start,
- 			     uffdio_unregister.len);
- 	if (ret)
+ $(obj)/vdso32.so.dbg: FORCE \
+ 		      $(obj)/vdso32/vdso32.lds \
+ 		      $(obj)/vdso32/vclock_gettime.o \
+ 		      $(obj)/vdso32/note.o \
+ 		      $(obj)/vdso32/system_call.o \
+-		      $(obj)/vdso32/sigreturn.o
++		      $(obj)/vdso32/sigreturn.o \
++		      $(obj)/vdso32/lshrdi3.o
+ 	$(call if_changed,vdso)
+
+ #
+diff --git a/lib/lshrdi3.c b/lib/lshrdi3.c
+index 99cfa5721f2d..8a4fc6bcf3a4 100644
+--- a/lib/lshrdi3.c
++++ b/lib/lshrdi3.c
+@@ -16,7 +16,7 @@
+  * to the Free Software Foundation, Inc.
+  */
+
+-#include <linux/module.h>
++#include <linux/export.h>
+ #include <linux/libgcc.h>
+
+ long long notrace __lshrdi3(long long u, word_type b)
+@@ -42,4 +42,6 @@ long long notrace __lshrdi3(long long u, word_type b)
+
+ 	return w.ll;
+ }
++#ifndef BUILD_VDSO
+ EXPORT_SYMBOL(__lshrdi3);
++#endif
 -- 
 2.21.0.360.g471c308f928-goog
-
