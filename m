@@ -5,84 +5,150 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32579C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12F3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D78218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B010218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbfCOKWr (ORCPT
+        id S1728861AbfCOKXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 06:22:47 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56804 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727428AbfCOKWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 06:22:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCEC9A78;
-        Fri, 15 Mar 2019 03:22:46 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73BCD3F71D;
-        Fri, 15 Mar 2019 03:22:45 -0700 (PDT)
-Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rt-users@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190208165513.8435-1-julien.grall@arm.com>
- <20190213143029.ad2kzg7vtuo3zpjk@linutronix.de>
- <20190213153630.GK3567@e103592.cambridge.arm.com>
- <CAKv+Gu__0uy6Y-EJGSygSYH4RqpLDWMMNFE3yauF_x7-UNcgFQ@mail.gmail.com>
- <20190213165227.7ekekkxazhbaqxoe@linutronix.de>
- <20190214103449.GN3567@e103592.cambridge.arm.com>
- <32ba7e1e-37ce-c904-15e4-9c908e873479@arm.com>
- <20190304172535.v5pf7yboii7ayxnb@linutronix.de>
- <abd861af-023f-2f9e-acee-4e1837aa8897@arm.com>
- <20190315100634.GN3567@e103592.cambridge.arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <715fed53-7c2d-f5fd-813b-211b204475d6@arm.com>
-Date:   Fri, 15 Mar 2019 10:22:43 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190315100634.GN3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 15 Mar 2019 06:23:32 -0400
+Received: from mx.sdf.org ([205.166.94.20]:64830 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727428AbfCOKXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 06:23:32 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2FANFZM017594
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Fri, 15 Mar 2019 10:23:15 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id x2FANDVY013031;
+        Fri, 15 Mar 2019 10:23:13 GMT
+Date:   Fri, 15 Mar 2019 10:23:13 GMT
+From:   George Spelvin <lkml@sdf.org>
+Message-Id: <201903151023.x2FANDVY013031@sdf.org>
+To:     geert@linux-m68k.org, lkml@sdf.org
+Subject: Re: [PATCH 4/5] lib/list_sort: Simplify and remove MAX_LIST_LENGTH_BITS
+Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        daniel.wagner@siemens.com, dchinner@redhat.com,
+        don.mullis@gmail.com, linux-kernel@vger.kernel.org,
+        linux@rasmusvillemoes.dk, st5pub@yandex.ru
+In-Reply-To: <CAMuHMdVF6pQ_-vidvtAyacOHw8WsJp4esu7o7o9DoR_GLahnzA@mail.gmail.com>
+References: <cover.1552097842.git.lkml@sdf.org>,
+    <dd447448384883bd42c41f0de6a83430b6435dc1.1552097842.git.lkml@sdf.org>,
+    <20190314091041.GU9224@smile.fi.intel.com>,
+    <201903150433.x2F4X9oT024601@sdf.org>,
+    <CAMuHMdVF6pQ_-vidvtAyacOHw8WsJp4esu7o7o9DoR_GLahnzA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 15/03/2019 10:06, Dave Martin wrote:
-> On Thu, Mar 14, 2019 at 06:07:19PM +0000, Julien Grall wrote:
->> Hi Sebastian,
+On Fri, 15 Mar 2019 at 09:20:58 +0100, Geert Uytterhoeven wrote:
+> On Fri, Mar 15, 2019 at 5:33 AM George Spelvin <lkml@sdf.org> wrote:
+>> On Thu, 14 Mar 2019 at 11:10:41 +0200, Andy Shevchenko wrote:
+>>> On Tue, Mar 05, 2019 at 03:06:44AM +0000, George Spelvin wrote:
+>>>> +            for (bit = 1; count & bit; bit <<= 1) {
+>>>> +                    cur = merge(priv, (cmp_func)cmp, pending, cur);
+>>>> +                    pending = pending->prev;  /* Untouched by merge() */
+>>>>              }
+>>>
+>>> Wouldn't be it the same to
+>>>
+>>>       bit = ffz(count);
+>>>       while (bit--) {
+>>>               ...
+>>>       }
+>>> ?
+>>>
+>>> Though I dunno which one is generating better code.
 >>
->> On 3/4/19 5:25 PM, Sebastian Andrzej Siewior wrote:
-> 
-> [...]
-> 
->>> It would increase the softirq latency but the question is how bad would
->>> it be. It would continue once the SIMD section is done.
+>> One question I should ask everyone: should "count" be 32 or 64 bits
+>> on 64-bit machines?  That would let x86 save a few REX bytes.  (815
+>> vs. 813 byte code, if anyone cares.)
 >>
->> On Arm, the kernel may use either FPSIMD or SVE (if supported by the
->> platform). While the FPSIMD context is fairly small (~4K), the SVE context
->> can be up to ~64KB.
-> 
-> It's not quite as bad as that.  The FPSIMD state is ~0.5K, with the SVE
-> state size being up to ~8.5K (though for today's implementations ~2K may
-> be considered typical).
+>> Allegedy ARM can save a few pJ by gating the high 32
+>> bits of the ALU.
+>>
+>> Most other 64-bit processors would prefer 64-bit operations as
+>> it saves masking operations.
+>>
+>> If we never sort a list with more than 2^32 entries, it
+>> makes no difference.
+>>
+>> If we use a 32-bit count and we *do* sort a list with more than
+>> 2^32 entries, then it still sorts, but the performance degrades to
+>> O((n/2^32)^2).
+>>
+>> Just how often do we expect the kernel to face lists that long?
+>> (Note that the old code was O((n/2^20)^2).)
+>
+> Using size_t sounds most logical to me (argument of least surprise).
 
-Whoops, I forgot to divide by 8. Thank you for spotting it!
+Yes, it is the obvious solution, which is why that's my default choice.
 
-Cheers,
+But a bit of thought shows that a list long enough to break a
+32-bit implementation is beyond ridiculous.
 
--- 
-Julien Grall
+The list must be at least 3 * 2^32 elements long to make the sort
+merge non-optimally.  That's 1.5 * 2^37 bytes (192 GiB) of list_head
+structures alone; at least double that for any practical application.
+And 32 * 3 * 2^32 + (2 + 3) * 2^32 = 101 * 2^32 = 1.57 * 2^38
+compares.
+
+That seems like a lot but that's not the botteneck.  Each compare
+reads from a new list element, and pretty soon, they'll miss all
+caches and go to main memory.
+
+Since the memory locations are random, for any small subset of the
+list, you'll get only one element per cache line.  A 32 MiB L3
+cache is 2^19 cache lines (assuming 64B lines).  So merge levels
+20 through 33 will go to main memory.
+
+That's (12 * 3 + 5) * 2^32 = 1.28 * 2^37 cache misses.  At 60 ns each (typical
+local DRAM access time on i7 & Xeon according to Intel), that's a
+hard minimum of 10565 seconds = 2h 56m 05s in one list_sort call.
+
+This is definitely the scale of problem where a mutithreaded sort is
+called for.
+
+It's *so* impossible that maybe it's worth trading that capability
+for a couple of bytes in the inner loop.
+
+>> In the code, I could do something like
+>>
+>> #ifdef CONFIG_X86_64
+>> /* Comment explaining why */
+>> typedef uint32_t count_t;
+>> #else
+>> typedef size_t count_t;
+>> #endif
+>>
+>> ...
+>>         count_t count = 0;
+>
+> Using different types makes it more complex, e.g. to print the value
+> in debug code.
+> And adding more typedefs is frowned upon.
+
+It's a *local* typedef, purely for the purpose of moving #ifdef clutter
+out of the function declaration.  I agree that *global* typedefs are
+discouraged.
+
+As for debugging, that's a red herring; it's easy to cast to (size_t).
+
+> Just my 0.02€.
+
+Thank you for considering the issue!
+
+>> I prefer the shorter _ints and _longs names, but this is just
+>> not a hill I want to die on.
+>
+> Argument of least surprise: don't call something a duck if it's not
+> guaranteed to behave like a duck.
+>
+> If I read "long", this triggers a warning flag in my head: be careful,
+> this is 32-bit on 32-bit platforms, and 64-bit on 64-bit platforms.
+
+Good point.  And "_longlong" or "_llong" is a bit ugly, too.
