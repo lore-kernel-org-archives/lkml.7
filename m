@@ -2,90 +2,138 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BA9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114ABC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6482F2184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB1920651
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:03:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A8zG5Dg0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbfCOL7B (ORCPT
+        id S1728839AbfCOMDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 07:59:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:46247 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbfCOL7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 07:59:00 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 04:59:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,482,1544515200"; 
-   d="scan'208";a="155328773"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 15 Mar 2019 04:58:54 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 15 Mar 2019 13:58:54 +0200
-Date:   Fri, 15 Mar 2019 13:58:54 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by node
-Message-ID: <20190315115854.GJ7752@kuha.fi.intel.com>
-References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
- <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
- <20190315081835.GD7752@kuha.fi.intel.com>
- <1552641204.10179.133.camel@mhfsdcap03>
+        Fri, 15 Mar 2019 08:03:24 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:39440 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727441AbfCOMDX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 08:03:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WzxXKYm1YsUi7LIyFK/BfGSJlhvaM3nxioJ6/CDHwJQ=; b=A8zG5Dg0VB97zAuEcjk59IXrx
+        Mfi5X0nIRh7xtwVZQxJUcLYwEaxzkRm7aF8pJhZsdsDfEqeGSle2h9PbL3gFXs314R6EhgQ8fz+W8
+        jjy1SF7CqEeeDHwR6IdXaufG6d2EyEPDSw/i6bhKU71lchUuqWIUbUKtq3/j+Ekp4LXS1zqyFX64j
+        2s4+YmOrpqw9PhOISwYJldQLLoP87J3EaRvW9apy8WXapV9NSUL5PxeDKcNC+SOXldoGfK8JUHCOL
+        Sdl+trwerU5Tsp+S9Mq5OaihLa9rCPdxtaagSQMaZCNfMZjvM9CJWFnlx6/hG1XWiufD2JrtLoQWT
+        hjr0DK26w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4lYQ-0005XT-Mw; Fri, 15 Mar 2019 12:03:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7685C2142294F; Fri, 15 Mar 2019 13:03:11 +0100 (CET)
+Date:   Fri, 15 Mar 2019 13:03:11 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [RFC PATCH 2/2] x86/perf/amd: Resolve NMI latency issues when
+ multiple PMCs are active
+Message-ID: <20190315120311.GX5996@hirez.programming.kicks-ass.net>
+References: <155232291547.21417.2499429555505085131.stgit@tlendack-t1.amdoffice.net>
+ <155232292961.21417.3665243457569518550.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552641204.10179.133.camel@mhfsdcap03>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <155232292961.21417.3665243457569518550.stgit@tlendack-t1.amdoffice.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 05:13:24PM +0800, Chunfeng Yun wrote:
-> I encounter a build error when CONFIG_USB_ROLE_SWITCH is not enabled,
-> 
-> drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_role_sw_register':
-> ./drivers/usb/mtu3/mtu3_dr.c:460: undefined reference to
-> `usb_role_switch_register'
-> drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_otg_switch_exit':
-> ./drivers/usb/mtu3/mtu3_dr.c:491: undefined reference to
-> `usb_role_switch_unregister'
-> 
-> the following patch has fixed the issue, but seems not get into kernel,
-> [v3,08/12] usb: roles: Add usb role switch notifier.
-> https://patchwork.kernel.org/patch/10836525/
-> 
-> What should I do if I add a new API? Thanks
+On Mon, Mar 11, 2019 at 04:48:51PM +0000, Lendacky, Thomas wrote:
+> @@ -467,6 +470,45 @@ static void amd_pmu_wait_on_overflow(int idx, u64 config)
+>  	}
+>  }
+>  
+> +/*
+> + * Because of NMI latency, if multiple PMC counters are active we need to take
+> + * into account that multiple PMC overflows can generate multiple NMIs but be
+> + * handled by a single invocation of the NMI handler (think PMC overflow while
+> + * in the NMI handler). This could result in subsequent unknown NMI messages
+> + * being issued.
+> + *
+> + * Attempt to mitigate this by using the number of active PMCs to determine
+> + * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
+> + * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of one
+> + * less than the number of active PMCs or 2. The value of 2 is used in case the
+> + * NMI does not arrive at the APIC in time to be collapsed into an already
+> + * pending NMI.
 
-So if you are asking should you supply dummy functions for the new API,
-then I would just say that if you do so, you need to prepare these
-patches on top of that series from Yu Chen. In general I'm not sure we
-need dummy functions with this API.
+LAPIC I really do hope?!
 
-Hans, comments?
+> + */
+> +static int amd_pmu_mitigate_nmi_latency(unsigned int active, int handled)
+> +{
+> +	/* If multiple counters are not active return original handled count */
+> +	if (active <= 1)
+> +		return handled;
+
+Should we not reset perf_nmi_counter in this case?
+
+> +
+> +	/*
+> +	 * If a counter was handled, record the number of possible remaining
+> +	 * NMIs that can occur.
+> +	 */
+> +	if (handled) {
+> +		this_cpu_write(perf_nmi_counter,
+> +			       min_t(unsigned int, 2, active - 1));
+> +
+> +		return handled;
+> +	}
+> +
+> +	if (!this_cpu_read(perf_nmi_counter))
+> +		return NMI_DONE;
+> +
+> +	this_cpu_dec(perf_nmi_counter);
+> +
+> +	return NMI_HANDLED;
+> +}
+> +
+>  static struct event_constraint *
+>  amd_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+>  			  struct perf_event *event)
+> @@ -689,6 +731,7 @@ static __initconst const struct x86_pmu amd_pmu = {
+>  
+>  	.amd_nb_constraints	= 1,
+>  	.wait_on_overflow	= amd_pmu_wait_on_overflow,
+> +	.mitigate_nmi_latency	= amd_pmu_mitigate_nmi_latency,
+>  };
+
+Again, you could just do amd_pmu_handle_irq() and avoid an extra
+callback.
+
+Anyway, we already had code to deal with spurious NMIs from AMD; see
+commit:
+
+  63e6be6d98e1 ("perf, x86: Catch spurious interrupts after disabling counters")
+
+And that looks to be doing something very much the same. Why then do you
+still need this on top?
 
 
-thanks,
-
--- 
-heikki
