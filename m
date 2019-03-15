@@ -2,152 +2,199 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE389C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB522C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C73E2184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFD1218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bFgIz75b"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="JhT22P9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfCOXXl (ORCPT
+        id S1727526AbfCOXZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 19:23:41 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:39162 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfCOXXl (ORCPT
+        Fri, 15 Mar 2019 19:25:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36219 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfCOXZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 19:23:41 -0400
-Received: by mail-ua1-f66.google.com with SMTP id m11so710128uad.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 16:23:40 -0700 (PDT)
+        Fri, 15 Mar 2019 19:25:45 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y13so6672534wrd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 16:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=t925Fe6p1JfFbcxLsJ4YZ5IC7rsRB1Ds+u1RXMtkZNc=;
-        b=bFgIz75bFsS9uxq0DaaO3U/4bcdw3JwTfNAyXBO8uCMpG1MLZ/P/4/pHi6PhY6js0O
-         VG2pKp6tX6JHmYZwHpXSkoc+aTD1Ms00LWvv5wStFueoVU6E+prpcm5EB7g4I6vZH1DP
-         Lk9dKdEEO/RGVvZTfozYvPdmGLkT84qljPXKk=
+        bh=VhmV0Ym8zTNoxl16iSULzSsU9aIBHAEGCcVFmXC8SdE=;
+        b=JhT22P9GAYy/4Fcetb6OJfrhyX5aA9QhL75pJ5GdWNu33WiuUbDz9m4D2YYRtn/6+g
+         jq3j/xO+kFzWicHSH4I2BBq1M94KZiCJmcccv4vUiz4XXsrErT59TntIEK+gIGehPktx
+         rgWg7GN1nIMJK6bU4rY7vsyFvtGmO2y8HmVSrmMNQbKf6f+aJCq+aahjD3Tr5ayJ365c
+         fxZGP2d5k+rnzdmm5Wag80B++5wjhqxaVjHPfVX9D79hzYMZ6QYp9tca2U8Dy43zfUcz
+         8YYPHPCViwT+BsJvYJ+svSCYQMj/TT/IxCWMEvJv42E8A1NjmGwf00Er6IpKGoiw05uO
+         Kgow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t925Fe6p1JfFbcxLsJ4YZ5IC7rsRB1Ds+u1RXMtkZNc=;
-        b=hXza0fQ0rzR+FSs+aWXAqxbQ2xlC2ajiHXLj3QhbwX70O/6tHWgbEvCugPLEzNqCnn
-         ChQLuAHInNowhtNgQVwbQO3Ybo5DuNpyD+oGOYdb33UDesIu8VMMWGtX/yDKbSa71qtP
-         v2SHtAiSDZT7zrzBg3d4c16KGFpR9uKelBsNt1vsPvKV9X4VJdwq7cAUaJNIF4/eibGF
-         v4/9vMYtJ3DZAeycrmU5LradeBt3oblHu7gm/eM/laW1W1liVcT1DVIo9AGCUwIMBzID
-         MhRxutf+YcpX2OCann3WnrhAvLwdK+TSY5u/uBOrRSt2jw3rG5EVAxhtrz24VhadO++8
-         yxaA==
-X-Gm-Message-State: APjAAAUwsXcMxAuBJgfOUMyCZAvmNuq7zhZ5U0zqWF8Bhu4XnYJH1ONf
-        yXwSDrplZbQSAkn2Qaq6deFZjCxGNsI=
-X-Google-Smtp-Source: APXvYqy6JI+PFA6xUtf7j6ehAAW2VEzNU6+9eWFZVt5FM2xTB8v8/sEbPlGhXESJPsLlV0KL1jlP6w==
-X-Received: by 2002:ab0:4e17:: with SMTP id g23mr1089791uah.95.1552692219721;
-        Fri, 15 Mar 2019 16:23:39 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id j92sm154532uad.6.2019.03.15.16.23.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 16:23:38 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id w14so6371917vso.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 16:23:38 -0700 (PDT)
-X-Received: by 2002:a67:b60c:: with SMTP id d12mr2247764vsm.149.1552692218037;
- Fri, 15 Mar 2019 16:23:38 -0700 (PDT)
+        bh=VhmV0Ym8zTNoxl16iSULzSsU9aIBHAEGCcVFmXC8SdE=;
+        b=rPsoLrufYCrzlIv5bCCHKnyoSrg8GmtF86dP0MU0qW7/QWxWMBuHrPB2N97q8svk/r
+         +cD3hzNCISJbLE5oePPqaeW0OkIvvlEiZBxmt6EazjEfB4qe3LDBu/Z/8EbTbEIogqMw
+         x2i3yQavCw0JMPUIEtlXuZVLFzohWfAO10sCTissKkU7YSKx5/Kbp6Ojgsiv7ZkyLoXq
+         Z/09GfuqkTGp/bhhFnrLrc9LWezrm5gANvvfP3KFUmlI5+AKoBgG4uiuS/QvRAYh7EMB
+         uxkn+nhfj3umzHObJG/XBj0Owm7N2pW2qgHfo6Gif/mqca4bzI8Cwc1iiMGC1VwlmJ9D
+         MM/Q==
+X-Gm-Message-State: APjAAAXBapOfGyYjAqoUSg60Q4gS+jlJ/pjHrsXIhIEmlR33WhkFt+4b
+        8iqiZx20r35639n74iHHkhOpjw7OowAb5JQWl04h8w==
+X-Google-Smtp-Source: APXvYqxZSzviY9Gni1dRQMhn9BJcAmTqEM3/nDlW/9elnlYJqrajZO+Ulp+TUgmk11UCi0KX2NKeBa8wr6qR5z2B6Ns=
+X-Received: by 2002:a5d:52ca:: with SMTP id r10mr4186703wrv.187.1552692342409;
+ Fri, 15 Mar 2019 16:25:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
- <yw1x5zsx5wc7.fsf@mansr.com> <CAJ+vNU1PxK-B63Dc3AgzYb9POyxxoF-xPOWBEpxJ+3eVNK8xqw@mail.gmail.com>
- <d5310138-7fdd-973d-5210-3fc91c4686ee@denx.de>
-In-Reply-To: <d5310138-7fdd-973d-5210-3fc91c4686ee@denx.de>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 15 Mar 2019 16:23:26 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XLuPWKjQBMLApRQxk0K30p_TPcztB7g_1DB7iRA9BGRQ@mail.gmail.com>
-Message-ID: <CAD=FV=XLuPWKjQBMLApRQxk0K30p_TPcztB7g_1DB7iRA9BGRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk numbering
- w/ device tree
-To:     Marek Vasut <marex@denx.de>
-Cc:     Tim Harvey <tharvey@gateworks.com>,
-        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jisheng Zhang <jszhang@marvell.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree-spec@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Venu Byravarasu <vbyravarasu@nvidia.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Russell King - ARM Linux <linux@arm.linux.org.uk>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Grant Grundler <grundler@chromium.org>,
-        Kumar Gala <galak@codeaurora.org>,
-        "Luca Porzio (lporzio)" <lporzio@micron.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?B?Q2hhb3RpYW4gSmluZyAo5LqV5pyd5aSpKQ==?= 
-        <chaotian.jing@mediatek.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        zhonghui.fu@linux.intel.com, kirill.shutemov@linux.intel.com
+References: <20190312220752.128141-1-anup.patel@wdc.com> <20190312220752.128141-4-anup.patel@wdc.com>
+ <20190313183121.GB28630@rapoport-lnx> <CAAhSdy1mrV2CakS0cfOY8F1B7uH_yXjO3W-CiMUcYonkRnVbeQ@mail.gmail.com>
+ <20190314065311.GC24380@rapoport-lnx> <CAAhSdy2uEgyvs=5NdoZ3H208qeDGJ9OrTOeaz6HQ+1va+R3dUA@mail.gmail.com>
+ <20190315155828.GB920@rapoport-lnx> <CAAhSdy0HoTTccyy203Y9m3kdAjCOzjjMdrb670huU71pjOMw4A@mail.gmail.com>
+In-Reply-To: <CAAhSdy0HoTTccyy203Y9m3kdAjCOzjjMdrb670huU71pjOMw4A@mail.gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Sat, 16 Mar 2019 04:55:30 +0530
+Message-ID: <CAAhSdy0D6JpySExCG7ziSSDmQ_88=paiMwjjXTTR1gbKCEOs3g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] RISC-V: Allow booting kernel from any 4KB aligned address
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Mar 15, 2019 at 4:00 PM Marek Vasut <marex@denx.de> wrote:
+On Fri, Mar 15, 2019 at 9:52 PM Anup Patel <anup@brainfault.org> wrote:
 >
-> > Completely agree here - we need a dt solution that allows us to
-> > specify ordering.
+> On Fri, Mar 15, 2019 at 9:28 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >
+> > On Thu, Mar 14, 2019 at 11:28:32PM +0530, Anup Patel wrote:
+> > > On Thu, Mar 14, 2019 at 12:23 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > > >
+> > > > On Thu, Mar 14, 2019 at 02:36:01AM +0530, Anup Patel wrote:
+> > > > > On Thu, Mar 14, 2019 at 12:01 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > > > > >
+> > > > > > On Tue, Mar 12, 2019 at 10:08:22PM +0000, Anup Patel wrote:
+> > > > > > > Currently, we have to boot RISCV64 kernel from a 2MB aligned physical
+> > > > > > > address and RISCV32 kernel from a 4MB aligned physical address. This
+> > > > > > > constraint is because initial pagetable setup (i.e. setup_vm()) maps
+> > > > > > > entire RAM using hugepages (i.e. 2MB for 3-level pagetable and 4MB for
+> > > > > > > 2-level pagetable).
+> > > > > > >
+> > > > > > > Further, the above booting contraint also results in memory wastage
+> > > > > > > because if we boot kernel from some <xyz> address (which is not same as
+> > > > > > > RAM start address) then RISCV kernel will map PAGE_OFFSET virtual address
+> > > > > > > lineraly to <xyz> physical address and memory between RAM start and <xyz>
+> > > > > > > will be reserved/unusable.
+> > > > > > >
+> > > > > > > For example, RISCV64 kernel booted from 0x80200000 will waste 2MB of RAM
+> > > > > > > and RISCV32 kernel booted from 0x80400000 will waste 4MB of RAM.
+> > > > > > >
+> > > > > > > This patch re-writes the initial pagetable setup code to allow booting
+> > > > > > > RISV32 and RISCV64 kernel from any 4KB (i.e. PAGE_SIZE) aligned address.
+> > > > > > >
+> > > > > > > To achieve this:
+> > > > > > > 1. We map kernel, dtb and only some amount of RAM (few MBs) using 4KB
+> > > > > > >    mappings in setup_vm() (called from head.S)
+> > > > > > > 2. Once we reach paging_init() (called from setup_arch()) after
+> > > > > > >    memblock setup, we map all available memory banks using 4KB
+> > > > > > >    mappings and memblock APIs.
+> > > > > >
+> > > > > > I'm not really familiar with RISC-V, but my guess would be that you'd get
+> > > > > > worse TLB performance with 4KB mappings. Not mentioning the amount of
+> > > > > > memory required for the page table itself.
+> > > > >
+> > > > > I agree we will see a hit in TLB performance due to 4KB mappings.
+> > > > >
+> > > > > To address this we can create, 2MB (or 4MB on 32bit system) mappings
+> > > > > whenever load_pa is aligned to it otherwise we prefer 4KB mappings. In other
+> > > > > words, we create bigger mappings whenever possible and fallback to 4KB
+> > > > > mappings when not possible.
+> > > > >
+> > > > > This way if kernel is booted from 2MB (or 4MB) aligned address then we will
+> > > > > see good TLB performance for kernel addresses. Also, users are still free to
+> > > > > boot Linux RISC-V kernel from any 4KB aligned address.
+> > > > >
+> > > > > Of course, we will have to document this as part of Linux RISC-V booting
+> > > > > requirements under Documentation/ (which does not exist currently).
+> > > > >
+> > > > > >
+> > > > > > If the only goal is to utilize the physical memory below the kernel, it
+> > > > > > simply should not be reserved at the first place, something like:
+> > > > >
+> > > > > Well, our goal was two-fold:
+> > > > >
+> > > > > 1. We wanted to unify boot-time alignment requirements for 32bit and
+> > > > > 64bit RISC-V systems
+> > > >
+> > > > Can't they both start from 4MB aligned address provided the memory below
+> > > > the kernel can be freed?
+> > >
+> > > Yes, they can both start from 4MB aligned address.
+> > >
+> > > >
+> > > > > 2. Save memory by allowing users to place kernel just after the runtime
+> > > > > firmware at starting of RAM.
+> > > >
+> > > > If the firmware should be alive after kernel boot, it's memory is the only
+> > > > part that should be reserved below the kernel. Otherwise, the entire region
+> > > > <physical memory start> - <kernel start> can be free.
+> > > >
+> > > > Using 4K pages for the swapper_pg_dir is quite a change and I'm not
+> > > > convinced its really justified.
+> > >
+> > > I understand your concern about TLB performance and more page
+> > > tables.
+> > >
+> > > Not just 2MB/4MB mappings, we should be able to create even 1GB
+> > > mappings as well for good TLB performance.
+> > >
+> > > I suggest we should use best possible mapping size (4KB, 2MB, or
+> > > 1GB) based on alignment of kernel load address. This way users can
+> > > boot from any 4KB aligned address and setup_vm() will try to use
+> > > biggest possible mapping size.
+> > >
+> > > For example, If the kernel load address is aligned to 2MB then we 2MB
+> > > mappings bigger mappings and use fewer page tables. Same thing
+> > > possible for 1GB mappings as well.
+> >
+> > I still don't get why it is that important to relax alignment of the kernel
+> > load address. Provided you can use the memory below the kernel, it really
+> > should not matter.
 >
-> Nope, ordering would be a policy and does not describe hardware, thus it
-> shouldn't be in the DT. Use UUID or PARTUUID, they apply both to raw FS
-> (fsuuid) and to partitions (part uuid). Linux kernel can mount FS using
-> PARTUUID, to support UUID you need initramfs.
+> Irrespective to constraint on kernel load address, we certainly need
+> to allow memory below kernel to be usable but that's a separate change.
+>
+> Currently, the memory below kernel is ignored by
+> early_init_dt_add_memory_arch() in
+> drivers/of/fdt.c
+>
 
-Two thoughts about that:
+I explored the possibility of re-claiming memory below kernel but then
+we have an issue in this case.
 
-1. Some amount of policy is allowed in device tree.  At some point in
-time there was a big discussion about the need for a separate "config
-tree" that was totally parallel to the device tree so we could put
-policy stuff in that.  Nobody wanted that and (as I recall) it was
-agreed that in some cases policy could go there if that policy
-expressed policy that was the generic intent of how the board ought to
-be run.  I believe this is how things like the assigned-clocks is
-justified.
+For RISC-V kernel, PAGE_OFFSET is mapped to kernel load address
+(i.e. load_pa in this code). The va_pa_offset is based on load_pa so linear
+conversion of VA-to-PA and PA-to-VA won't be possible on the memory
+below kernel. I guess this is why early_init_dt_add_memory_arch() is
+marking memory below kernel as reserved. Is there better way to do it??
 
-2. In some cases this number does describe the hardware.  You look at
-the hardware reference manual and see that there are 3 MMC
-controllers: 0, 1, and 2.  In such cases it seems like it's an OK
-description of the hardware to encode this info into the DTS.
+We started exploring ways to re-claim memory below kernel because
+we are trying to get Linux working on Kendryte K210 board
+(https://kendryte.com/). This board has dual-core 64bit RISC-V but it
+only has 8MB RAM.
 
-...from what I recall, one big objection is for SoCs that didn't just
-have numbers for their controllers.  AKA I think some SoCs might call
-their controllers the "eMMC" controller, the "SD" controller, and the
-"SDIO" controller.  They may be nearly the same hardware, but perhaps
-the SoC allows for a GPIO interrupt on the SDIO controller and perhaps
-the eMMC controller exposes the strobe line or has an 8-bit wide
-datapath.  In this case making up numbers does become a bit more
-arbitrary and folks didn't like it.
-
-IIRC there was general consensus that it'd be OK to somehow specify a
-string (AKA non-numeric) name for different SD controllers.  I don't
-have pointers to that conversation offhand and it's possible I
-imagined it.
-
-
--Doug
+Regards,
+Anup
