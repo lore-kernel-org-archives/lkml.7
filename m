@@ -2,131 +2,126 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02978C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0308C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA6F21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0CAF21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:26:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FBezPb+P"
+	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="d9lMe1M8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfCOUZN (ORCPT
+        id S1726693AbfCOU0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 16:25:13 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45450 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfCOUZN (ORCPT
+        Fri, 15 Mar 2019 16:26:13 -0400
+Received: from mail-yw1-f42.google.com ([209.85.161.42]:44044 "EHLO
+        mail-yw1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfCOU0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 16:25:13 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2FKOjGj040565;
-        Fri, 15 Mar 2019 15:24:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552681485;
-        bh=wABOveJnWUn+P+j/gJAh/x9s3BNdmYToGkKoqGqody0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FBezPb+PgE5XufIuf6h4WCPH1unzj743zXaKGUQsZSoYr7jF8AnDLXliG5R99xt9i
-         zHWImE4xdhVZtdBLLAAzJz/Fsfm1ufVpdGB6EKGOOR+y6cSc6ZH6YpVaVohK17SA2W
-         IR4xZoZ5wmABeSU62wJtFGHGvNeQlffF6dL34FS0=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2FKOjCs109470
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 15 Mar 2019 15:24:45 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 15
- Mar 2019 15:24:44 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Fri, 15 Mar 2019 15:24:44 -0500
-Received: from [128.247.58.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2FKOicJ030323;
-        Fri, 15 Mar 2019 15:24:44 -0500
-Subject: Re: [RFC][PATCH 1/5 v2] dma-buf: Add dma-buf heaps framework
-To:     Christoph Hellwig <hch@infradead.org>,
-        John Stultz <john.stultz@linaro.org>
-CC:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        <dri-devel@lists.freedesktop.org>
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
- <1551819273-640-2-git-send-email-john.stultz@linaro.org>
- <20190315085446.GA4470@infradead.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <525c65f4-7d73-bc77-5086-4db70e6e54f2@ti.com>
-Date:   Fri, 15 Mar 2019 15:24:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 15 Mar 2019 16:26:13 -0400
+Received: by mail-yw1-f42.google.com with SMTP id c4so8281711ywa.11
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 13:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=imglNq7US/IlKgwEpDczslE8BUnl4ZUnjr04nClPZgs=;
+        b=d9lMe1M8J1GgEEar/zSDxTOne7m5EmeP/irLj4ZiGz8pErm06dtTvZCOcCLOjsnsNB
+         rheseUhDoUbCyx5duGweJDzQUbdljJupN/t0ApzEVQWmKZAJPM/dxufjqlTgnZDqjitI
+         WFUBlP1Ax6ERN3O165Vhp2AFXZ6GMYbmZnvL63+iyoDdI0N6R4INUOWnzcCJHTZvWns1
+         mw6YoZXqBqzF+FREaem2nYZ52mL4/PW82TItRmL85Y0QPQLxzkY+LDZH1MYryvH729+p
+         SRehS/3/MSC5C1SUBGohSW5dMK+efqkj5D281SdPpuex2N0Vg9jzTKF+2o3x4rYbzEJ4
+         Qc4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=imglNq7US/IlKgwEpDczslE8BUnl4ZUnjr04nClPZgs=;
+        b=s8YOcBfmIOnqJWSjyNm1hv6Q713vohTOpZYakrzJ7+e/pYL+S4ZGjtiyzyra4DDgzl
+         tRzKG3msSubOemcxt3nQn5SgcBgtea8qgg1GC+Sn435flINqqrRmdQeL+aANK0WzN3kM
+         vWmOl150sPROFev8HFZ1/77l7gOX9mhVvrGWPmfkJGDJAtkgLzCbl+lo65A68rajHi63
+         W4kb5JcIp7ZA3LI27N1hQm7a+TLyxFZQNt0MLZZdk9ebisDswWFAsnVMpl/4VnK/D4xy
+         AYaAnnIxSbwHqbDx9tp+iIpQKYif64YY1FLuXvZ/AhAt+5sXqVAa/6PIG3SH0F/uT0R3
+         o+Sw==
+X-Gm-Message-State: APjAAAUSzGhP5zz+WLvHXxju5w+UHl2/TUkid9UD4UMn7mvn/E5xdmEX
+        4qlKrc/Ky5nWWrY/SlUe5hho2fKREpV0cw==
+X-Google-Smtp-Source: APXvYqzYGLkheXwHSSoZQYxEMthVRvOjwOr7kFMDJsTu/UoosiCivM4JQTxwwho8ISgFd7bS9+zZ6w==
+X-Received: by 2002:a25:d601:: with SMTP id n1mr4632836ybg.342.1552681571918;
+        Fri, 15 Mar 2019 13:26:11 -0700 (PDT)
+Received: from graymalkin (76-230-155-4.lightspeed.rlghnc.sbcglobal.net. [76.230.155.4])
+        by smtp.gmail.com with ESMTPSA id p17sm1077905ywg.27.2019.03.15.13.26.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 13:26:11 -0700 (PDT)
+From:   Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jdm@graymalkin.kudzu.us>
+Received: by graymalkin (sSMTP sendmail emulation); Fri, 15 Mar 2019 16:26:09 -0400
+Date:   Fri, 15 Mar 2019 16:26:09 -0400
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
+Subject: [GIT PULL] NTB bug fixes for v5.1
+Message-ID: <20190315202609.GA30826@graymalkin.kudzu.us>
 MIME-Version: 1.0
-In-Reply-To: <20190315085446.GA4470@infradead.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/15/19 3:54 AM, Christoph Hellwig wrote:
->> +static int dma_heap_release(struct inode *inode, struct file *filp)
->> +{
->> +	filp->private_data = NULL;
->> +
->> +	return 0;
->> +}
-> 
-> No point in clearing ->private_data, the file is about to be freed.
-> 
+Hello Linus,
+Here are a few NTB fixes for v5.1.  While the tag is new, the patches
+have been in my tree (and thus linux-next) for weeks now.  Please
+consider pulling them.
 
-This was leftover from when release had some memory to free, will remove.
+Thanks,
+Jon
 
->> +
->> +static long dma_heap_ioctl(struct file *filp, unsigned int cmd,
->> +			   unsigned long arg)
-> 
-> Pleae don't use the weird legacy filp naming, file is a perfectly
-> valid and readable default name for struct file pointers.
-> 
 
-Thanks for info, I saw both used and this was used where I found the
-prototype so I used it too, will fix.
 
->> +{
->> +	switch (cmd) {
->> +	case DMA_HEAP_IOC_ALLOC:
->> +	{
->> +		struct dma_heap_allocation_data heap_allocation;
->> +		struct dma_heap *heap = filp->private_data;
->> +		int fd;
-> 
-> Please split each ioctl into a separate function from the very start,
-> otherwise this will grow into a spaghetty mess sooner than you can
-> see cheese.
-> 
+The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
 
-Good idea, will fix.
+  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
 
->> +	dev_ret = device_create(dma_heap_class,
->> +				NULL,
->> +				heap->heap_devt,
->> +				NULL,
->> +				heap->name);
-> 
-> No need this weird argument alignment.
-> 
+are available in the Git repository at:
 
-I kinda like it this way, if everything cant fit on one line then
-everything gets its own line, seems more consistent. If there is strong
-objection I can fix.
+  git://github.com/jonmason/ntb tags/ntb-5.1
+
+for you to fetch changes up to ebb09b33c60c46fd4f7ffa0af9e693eebe765d1b:
+
+  NTB: add new parameter to peer_db_addr() db_bit and db_data (2019-02-13 11:03:18 -0500)
+
+----------------------------------------------------------------
+Fixes for switchtec debugability and mapping table entries, NTB
+transport improvements, and a reworking of the peer_db_addr to all for
+better abstraction
+
+----------------------------------------------------------------
+Joey Zhang (1):
+      NTB: ntb_transport: Free MWs in ntb_transport_link_cleanup()
+
+Leonid Ravich (1):
+      NTB: add new parameter to peer_db_addr() db_bit and db_data
+
+Logan Gunthorpe (1):
+      NTB: ntb_transport: Ensure the destination buffer is mapped for TX DMA
+
+Paul Selles (2):
+      ntb_hw_switchtec: debug print 64bit aligned crosslink BAR Numbers
+      ntb_hw_switchtec: Added support of >=4G memory windows
+
+Wesley Sheng (1):
+      ntb_hw_switchtec: NT req id mapping table register entry number should be 512
+
+ drivers/ntb/hw/intel/ntb_hw_gen1.c     | 25 +++++++++++++++++++------
+ drivers/ntb/hw/intel/ntb_hw_gen1.h     |  5 +++--
+ drivers/ntb/hw/intel/ntb_hw_gen3.c     | 33 ++++++++++++++++++++++++++++++++-
+ drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 20 ++++++++++++++++----
+ drivers/ntb/ntb_transport.c            | 31 +++++++++++++++++++++++++++++--
+ include/linux/ntb.h                    | 10 +++++++---
+ include/linux/switchtec.h              | 10 +++++++---
+ 7 files changed, 113 insertions(+), 21 deletions(-)
