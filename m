@@ -2,207 +2,74 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4522C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F542C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97AF721871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5008B21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbfCOMi5 (ORCPT
+        id S1729036AbfCOMlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 08:38:57 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:33561 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728157AbfCOMi5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 08:38:57 -0400
-X-Originating-IP: 90.88.22.102
-Received: from localhost.localdomain (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id D3A24E0017;
-        Fri, 15 Mar 2019 12:38:52 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v3] ARM: dts: sun8i-h3: Add support for the RerVision H3-DVK board
-Date:   Fri, 15 Mar 2019 13:38:28 +0100
-Message-Id: <20190315123828.3224-1-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 15 Mar 2019 08:41:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60112 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726996AbfCOMlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 08:41:17 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9B8993005FCA;
+        Fri, 15 Mar 2019 12:41:17 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E0F05C223;
+        Fri, 15 Mar 2019 12:41:14 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 13:41:12 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Dongli Zhang <dongli.zhang@oracle.com>, mst@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, axboe@kernel.dk,
+        linux-kernel@vger.kernel.org
+Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
+Message-ID: <20190315134112.7d63348c.cohuck@redhat.com>
+In-Reply-To: <537e6420-8994-43d6-1d4d-ccb6e0fafa0b@redhat.com>
+References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
+        <20190312183351.74764f4f.cohuck@redhat.com>
+        <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
+        <20190313103900.1ea7f996.cohuck@redhat.com>
+        <a3f24cfa-5160-0ccc-decc-a48362c8de19@oracle.com>
+        <537e6420-8994-43d6-1d4d-ccb6e0fafa0b@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 15 Mar 2019 12:41:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an H3-based board that sticks close to the reference design.
+On Fri, 15 Mar 2019 12:50:11 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-Supported features:
-* UART
-* DRAM
-* MMC
-* eMMC
-* Ethernet
-* USB host
-* USB peripheral
-* HDMI
+> Or something like I proposed several years ago? 
+> https://do-db2.lkml.org/lkml/2014/12/25/169
+> 
+> Btw, for virtio-net, I think we actually want to go for having a maximum 
+> number of supported queues like what hardware did. This would be useful 
+> for e.g cpu hotplug or XDP (requires per cpu TX queue). But the current 
+> vector allocation doesn't support this which will results all virtqueues 
+> to share a single vector. We may indeed need more flexible policy here.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
-Changes since v2:
-* Actually made the changes instead of sending the same patch again.
-
-Changes since v1:
-* Removed unneeded changes to mmc2_8bit_pins node;
-* Renamed HDMI connector nodes to match other boards.
-
- arch/arm/boot/dts/Makefile                   |   1 +
- arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts | 114 +++++++++++++++++++
- 2 files changed, 115 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bd40148a15b2..8db275b75214 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1078,6 +1078,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-h3-orangepi-plus.dtb \
- 	sun8i-h3-orangepi-plus2e.dtb \
- 	sun8i-h3-orangepi-zero-plus2.dtb \
-+	sun8i-h3-rervision-dvk.dtb \
- 	sun8i-r16-bananapi-m2m.dtb \
- 	sun8i-r16-nintendo-nes-classic.dtb \
- 	sun8i-r16-nintendo-super-nes-classic.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-new file mode 100644
-index 000000000000..51bd2c00bbae
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Bootlin
-+ * Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-h3.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "RerVision H3-DVK";
-+	compatible = "rervision,h3-dvk", "allwinner,sun8i-h3";
-+
-+	aliases {
-+		ethernet0 = &emac;
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+};
-+
-+&de {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&ehci2 {
-+	status = "okay";
-+};
-+
-+&ehci3 {
-+	status = "okay";
-+};
-+
-+&emac {
-+	phy-handle = <&int_mii_phy>;
-+	phy-mode = "mii";
-+	allwinner,leds-active-low;
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
-+&mmc0 {
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-+	status = "okay";
-+	vmmc-supply = <&reg_vcc3v3>;
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&ohci2 {
-+	status = "okay";
-+};
-+
-+&ohci3 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	status = "okay";
-+	dr_mode = "peripheral";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
--- 
-2.21.0
-
+I think it should be possible for the driver to give the transport
+hints how to set up their queues/interrupt structures. (The driver
+probably knows best about its requirements.) Perhaps whether a queue is
+high or low frequency, or whether it should be low latency, or even
+whether two queues could share a notification mechanism without
+drawbacks. It's up to the transport to make use of that information, if
+possible.
