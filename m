@@ -2,175 +2,124 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BC8C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94DBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA3320854
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A49F20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:38:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="DypriJsH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bGYfWOy4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbfCONgO (ORCPT
+        id S1729091AbfCONi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 09:36:14 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35388 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727248AbfCONgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 09:36:13 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h39so10073649qte.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 06:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VKfVpaxZoxyBURh7QyO3ZULqx69a8OaThEQCt8FoTew=;
-        b=DypriJsHzRFZ8FHMG3w+iXrHK4g88dJrwe9SlU6tuDtj36SzuZ8nyphK4opqxcD2rC
-         iXyUj2WTVz6Sg5zw3n6zHK2edM7QYZygthWj5HMZuuylhy4TGmwP62F4wIa8AVE8np70
-         CJFmX1ZOs7jXHhVBGCEG2BTyDzdL+xy1R3gOU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VKfVpaxZoxyBURh7QyO3ZULqx69a8OaThEQCt8FoTew=;
-        b=ZBPRveoxvU7V3dJkedjt5LP3+vqEhLSVYOrBO/5WWvk3AKF/7rLYmC9oTgFJl+HaJz
-         2IOjIbDPiohxehTRFodwZk6tRGengCS6lEX4VC+HPx/+b1/5ENnZpDoobI+VMrb315rz
-         oyM+XdO9yp5o6EUMM39TBEzGQu3RDvTNQk3BFVqL4+ZlPJuxmK2cng0sGFyYcg77M4Vs
-         W32W7kCKEidnEzekwh0iLfReun/Lgi9pbEqWvXOs6Bm67HxZqjJ9aJvuj1Ck855wt3zt
-         Z58PB+NI4QQo4jiXmccQGRgzb4a3/qg8GBAUmnermvUCyb3SYh7ZI2eDjyGsEFY33NHe
-         zoWw==
-X-Gm-Message-State: APjAAAW/pteBS7ju2Vrgfubzs8XHD2dUWUAnXU40RWw6FKX1WpzPU/fp
-        cbR27o6Ae6DO2K1aQfI8THW04Q==
-X-Google-Smtp-Source: APXvYqwDKGSWS1TnWrym7jTm0Yjc6txyLmC1XATdlVnftbixDMdIVIiWhjfELCUcRhoCb9+SznndkQ==
-X-Received: by 2002:a0c:be8f:: with SMTP id n15mr2508855qvi.203.1552656972351;
-        Fri, 15 Mar 2019 06:36:12 -0700 (PDT)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id c12sm1119065qkb.86.2019.03.15.06.36.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 06:36:11 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 09:36:10 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190315133610.GC3378@google.com>
-References: <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
- <20190311204626.GA3119@sultan-box.localdomain>
- <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
- <20190312080532.GE5721@dhcp22.suse.cz>
- <20190312163741.GA2762@sultan-box.localdomain>
- <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
- <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
- <20190314204911.GA875@sultan-box.localdomain>
- <20190314231641.5a37932b@oasis.local.home>
- <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com>
+        Fri, 15 Mar 2019 09:38:56 -0400
+Received: from mail-eopbgr70079.outbound.protection.outlook.com ([40.107.7.79]:44737
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727248AbfCONi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 09:38:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bR+eKCyJFZeis89XUCW9jYGf405HpaFMCVHmwZI6kws=;
+ b=bGYfWOy4qdjWiDisokdL/ChS1WSxBS++Q4kVwC4atrByt3gxfhhb02uknXGmfC+m5tnzZD+TZ4Dq3ahJ2BJBOw3iXrX/f1DOSefiethWtwdG3WFJaCithI9qHppB0fv+QnRdlZENXUlDSRgL5loPHYMYS3gEp2kTgNScXrnzcm4=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB4435.eurprd04.prod.outlook.com (52.135.150.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Fri, 15 Mar 2019 13:38:50 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::50ed:d1b5:c043:3b79]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::50ed:d1b5:c043:3b79%2]) with mapi id 15.20.1709.011; Fri, 15 Mar 2019
+ 13:38:50 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "van.freenix@gmail.com" <van.freenix@gmail.com>
+Subject: RE: [PATCH 1/2] ARM: imx: drop uneccessary
+ of_platform_default_populate
+Thread-Topic: [PATCH 1/2] ARM: imx: drop uneccessary
+ of_platform_default_populate
+Thread-Index: AQHU2Xv1SFnRc4p0SkOOn59vTkEkO6YMepnAgAAsWECAAA3s4A==
+Date:   Fri, 15 Mar 2019 13:38:49 +0000
+Message-ID: <AM0PR04MB421176101FD9525175463D5F80440@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190313091757.16410-1-peng.fan@nxp.com>
+ <AM0PR04MB4211DC74D7E72F886A4333D680440@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <AM0PR04MB4481232D83340F894644673C88440@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB4481232D83340F894644673C88440@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c2fefdfd-f949-4816-d2de-08d6a94b8ea3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB4435;
+x-ms-traffictypediagnostic: AM0PR04MB4435:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR04MB443551068AD0564FAB08415E80440@AM0PR04MB4435.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09778E995A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(366004)(39860400002)(376002)(346002)(199004)(189003)(966005)(4326008)(71190400001)(86362001)(4744005)(76176011)(6116002)(33656002)(3846002)(478600001)(7696005)(486006)(6436002)(102836004)(105586002)(106356001)(14454004)(476003)(2501003)(8676002)(74316002)(81156014)(305945005)(68736007)(7736002)(44832011)(81166006)(256004)(11346002)(2201001)(6246003)(8936002)(2906002)(71200400001)(5660300002)(53936002)(229853002)(6506007)(110136005)(99286004)(26005)(97736004)(9686003)(316002)(186003)(66066001)(55016002)(6306002)(446003)(14444005)(52536014)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4435;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: optquMhBTAAB6MYAhZsW33f4311PqrohmD9Z0qkQg5k6Zfe2L0AQ6CKuk0XXDnd0Hox5a+ckUhKpXV/QEJ0dZBYpk+Knvgt0cMg396bW6uoifYbqH/AnfhYopxSVUWlwLLYYi/0m6BNcrnFmJozv+gGoXeHcRrgKDY6r+4a3/H5ebqYL400XKEcWLpEgyHOmMDTe3B1hTPv9nR8niTVplRhK/dYxiw7i7uYV35QmilGlFkTpXG0eOHPOMGhcMmG3C7cYJKU/Xm9DibnPREmPieucm59n59WYfBNNiLk8cUCvEOpY27lbfJ1WrLpn04S/4K7WE35FEtQMSoXZxW9qX9UreZI7yfvc3vHYu+Zyco7cIXfUjJju4uex1TOsExGrIrV81hJ3y4zQBhl7xB573RNc/Sz1aW7gJRvMZZepFNI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2fefdfd-f949-4816-d2de-08d6a94b8ea3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 13:38:49.8995
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4435
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 09:36:43PM -0700, Daniel Colascione wrote:
-[snip] 
-> > If you can solve this with an ebpf program, I
-> > strongly suggest you do that instead.
-> 
-> Regarding process death notification: I will absolutely not support
-> putting aBPF and perf trace events on the critical path of core system
-> memory management functionality. Tracing and monitoring facilities are
-> great for learning about the system, but they were never intended to
-> be load-bearing. The proposed eBPF process-monitoring approach is just
-> a variant of the netlink proposal we discussed previously on the pidfd
-> threads; it has all of its drawbacks. We really need a core system
-> call  --- really, we've needed robust process management since the
-> creation of unix --- and I'm glad that we're finally getting it.
-> Adding new system calls is not expensive; going to great lengths to
-> avoid adding one is like calling a helicopter to avoid crossing the
-> street. I don't think we should present an abuse of the debugging and
-> performance monitoring infrastructure as an alternative to a robust
-> and desperately-needed bit of core functionality that's neither hard
-> to add nor complex to implement nor expensive to use.
+[...]
 
-The eBPF-based solution to this would be just as simple while avoiding any
-kernel changes. I don't know why you think it is not load-bearing. However, I
-agree the proc/pidfd approach is better and can be simpler for some users who
-don't want to deal with eBPF - especially since something like this has many
-usecases. I was just suggesting the eBPF solution as a better alternative to
-the task_struct surgery idea from Sultan since that sounded to me quite
-hackish (that could just be my opinion).
+> > Originally devices are registered in arch_initcall. Now it will be a
+> > bit later in arch_initcall_sync and this may cause a bit risk if the
+> > code under the default_populate want to access the device service provi=
+ded
+> by early probe.
+> >
+> > Probably it's more safe to leave as it is unless you can double
+> > confirm there're no such code depends on accessing early probed
+> > devices as follows before we can make the change.
+>=20
+> This has been boot tested on 6Q-SDB/6UL-EVK/6SL-EVK board.
+> For i.MX, I only see pinctrl driver use arch_initcall from the link,
+> https://elixir.bootlin.com/linux/latest/ident/arch_initcall
+>=20
+> From my boot test, the pinctrl driver probe will be delayed a bit, but I =
+do not
+> see issues.
+>=20
 
-> Regarding the proposal for a new kernel-side lmkd: when possible, the
-> kernel should provide mechanism, not policy. Putting the low memory
-> killer back into the kernel after we've spent significant effort
-> making it possible for userspace to do that job. Compared to kernel
-> code, more easily understood, more easily debuggable, more easily
-> updated, and much safer. If we *can* move something out of the kernel,
-> we should. This patch moves us in exactly the wrong direction. Yes, we
-> need *something* that sits synchronously astride the page allocation
-> path and does *something* to stop a busy beaver allocator that eats
-> all the available memory before lmkd, even mlocked and realtime, can
-> respond. The OOM killer is adequate for this very rare case.
-> 
-> With respect to kill timing: Tim is right about the need for two
-> levels of policy: first, a high-level process prioritization and
-> memory-demand balancing scheme (which is what OOM score adjustment
-> code in ActivityManager amounts to); and second, a low-level
-> process-killing methodology that maximizes sustainable memory reclaim
-> and minimizes unwanted side effects while killing those processes that
-> should be dead. Both of these policies belong in userspace --- because
-> they *can* be in userspace --- and userspace needs only a few tools,
-> most of which already exist, to do a perfectly adequate job.
-> 
-> We do want killed processes to die promptly. That's why I support
-> boosting a process's priority somehow when lmkd is about to kill it.
-> The precise way in which we do that --- involving not only actual
-> priority, but scheduler knobs, cgroup assignment, core affinity, and
-> so on --- is a complex topic best left to userspace. lmkd already has
-> all the knobs it needs to implement whatever priority boosting policy
-> it wants.
-> 
-> Hell, once we add a pidfd_wait --- which I plan to work on, assuming
-> nobody beats me to it, after pidfd_send_signal lands --- you can
-> imagine a general-purpose priority inheritance mechanism expediting
-> process death when a high-priority process waits on a pidfd_wait
-> handle for a condemned process. You know you're on the right track
-> design-wise when you start seeing this kind of elegant constructive
-> interference between seemingly-unrelated features. What we don't need
-> is some kind of blocking SIGKILL alternative or backdoor event
-> delivery system.
-> 
-> We definitely don't want to have to wait for a process's parent to
-> reap it. Instead, we want to wait for it to become a zombie. That's
-> why I designed my original exithand patch to fire death notification
-> upon transition to the zombie state, not upon process table removal,
-> and I expect pidfd_wait (or whatever we call it) to act the same way.
+From what I saw, imx6q_1588_init() and imx6q_axi_init() will use syscon whi=
+ch is
+registered with postcore_initcall. Without having syscon devices populated,
+I wonder those calls may fall.
+Can you double check it?
 
-Agreed. Looking forward to the patches. :)
-
-thanks,
-
- - Joel
-
+Regards
+Dong Aisheng
