@@ -2,193 +2,129 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8192C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08ADC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40A9218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA33B218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfCOSle (ORCPT
+        id S1726957AbfCOSlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfCOSld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:41:33 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E44D218A1;
-        Fri, 15 Mar 2019 18:41:32 +0000 (UTC)
-Date:   Fri, 15 Mar 2019 14:41:30 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Brian Norris <briannorris@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing: kdb: Allow ftdump to skip all but the last
- few lines
-Message-ID: <20190315144130.1aa36931@gandalf.local.home>
-In-Reply-To: <20190315174528.16531-1-dianders@chromium.org>
-References: <20190315174528.16531-1-dianders@chromium.org>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 15 Mar 2019 14:41:40 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:39417 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfCOSlj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 14:41:39 -0400
+Received: from [192.168.1.110] ([77.2.38.11]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MirfI-1gb17s0I5M-00exYF; Fri, 15 Mar 2019 19:41:20 +0100
+Subject: Re: serial driver cleanups v2
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tobias Klauser <tklauser@distanz.ch>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        macro@linux-mips.org,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>, slemieux.tyco@gmail.com,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, baohua@kernel.org,
+        Peter Korsgaard <jacmet@sunsite.dk>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>
+References: <1552602855-26086-1-git-send-email-info@metux.net>
+ <CAHp75VeH9isvFkp+AECgsN8du__8tBBp_4zZEVXJ083BdFweeg@mail.gmail.com>
+ <afc51d27-3312-cdf4-68a5-4486db1d006b@metux.net>
+ <20190315181118.GF9224@smile.fi.intel.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <d9ac8446-c7ff-6e57-5eaa-f1a09d549081@metux.net>
+Date:   Fri, 15 Mar 2019 19:41:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190315181118.GF9224@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:SEhWkGTngchVaGOi1VLTckafsrasxjLcF1GzXHt0mnNThnYbRaw
+ QfYHKt7uxK+IYwNNtICBankPHlIcLqxdx139j3YzHaskDIfe8r/jK8AyOQhUuNgUIe9tzTC
+ WcG9jAOjUZpESxhSdjbcQMp3fY9dKCpffjGyz8EyYPzNQPcvVVBAHa337c3hpGqWvmrOJlm
+ VXJ3TblaMwQXQ1Y+/esrw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:R7ZrnfxgAfQ=:rL5sQ46e4F1ZssU4Lie9q8
+ TiFQOrT49OGtBxsKHK17dAqW3yKY6TRE3dhUmkzFmidH7HeTMhjU6xv3EcPpE032Ld9YAKPG9
+ TTarjVkqwPYxp++a6f/PkxY32EbYfqdFQiL8ShW2dRiM69I9kt1WiaysrZuIrfsUyr+LMsTTC
+ rmDtf535Fwm3rn4PXc7C0ytNBIZAdVV8jkhwi7VUjaGyrGcmmZOnZwa9XRs6L01hU4Hi2r1S9
+ IjSHSgxw6DvRNdoJfeCuNeH0vlWaKyuds5uzfyC3YhnZs6PaTFv64kKqKiqWgwluSoNtgXKay
+ yn6wXU2huXFZnA7oa/TtQdF1CbxQAXfplo3buTpd4c7cPUe2y2/g+u4fm7fAlYi7reI1I9cq8
+ MYQsQXgXZwoRmQk/zDjB/YjPQ4JX4yqgm22xM8NfQzrmxIF8IfKCMSlV6YVgqansv2VAY51h+
+ tyhJu+5K4oq8rJU4YteauXvjP9xL6/qDyFhue+JZRy5cmPvaJAya5NzEDAcfle2vDwHUTG1OV
+ YOmlKy7Ub04Lw9P6FWVGOI9mwhZB0Ztv04yD5NPZ6x0OZfwCzXniRvRQOWbYfE+TrfCO0zGxk
+ NUqncL4oNJFDbbEJcmUlfThIEfxfWvBRUKnLyxVNDp2YlYFB1KjORqrY70854HDvW7L8LZln3
+ sKl17L2TBqxTnyVtqgBNrCSYXSsWcEHVlzrZizXbaAATCLvDmvQf0lUe12NQDp6vtTg1bCb/c
+ EanI9e7fgqqlWPUto8fwIZioEWJ9IEaldROXiZgvT/UmFvBzk0J9dAiNFd8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Mar 2019 10:45:28 -0700
-Douglas Anderson <dianders@chromium.org> wrote:
+On 15.03.19 19:11, Andy Shevchenko wrote:
 
-
-> Changes in v3:
-> - Optimize counting as per Steven Rostedt.
-> - Down to 1 patch since patch #1 from v2 landed.
+>> The actual goal is generalizing the whole iomem handling, so individual
+>> usually just need to call some helpers that do most of the things.
+>> Finally, I also wanted to have all io region information consolidated
+>> in struct resource.
 > 
->  kernel/trace/trace_kdb.c | 38 +++++++++++++++++++++++++++++---------
->  1 file changed, 29 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-> index 810d78a8d14c..cc6ca6c0d6de 100644
-> --- a/kernel/trace/trace_kdb.c
-> +++ b/kernel/trace/trace_kdb.c
-> @@ -17,7 +17,7 @@
->  #include "trace.h"
->  #include "trace_output.h"
->  
-> -static void ftrace_dump_buf(int skip_lines, long cpu_file)
-> +static int ftrace_dump_buf(int skip_lines, long cpu_file, bool quiet)
+> That's should be a selling point, not just conversion per se.
 
-Not quite what I wanted you to do.
+hmm, I never was good at selling :o
+
+but I'll try anyways: it shall make the code smaller and easier to
+read/understand.
+
+does that count ?
+
+> You have to explain that in each commit message, that the change does bring a
+> possible new error message printed.
+
+Ok, I wasn't aware of that. Yes, I missed to read the code of that
+function carefully and didn't expect that it does more than just a dumb
+wrapper around dev_ioremap() that picks out the params from struct
+resource.
+
+OTOH, the name, IMHO, is a bit misleading. Any chance of ever changing
+it to a more clear name (eg. devm_request_and_ioremap_resource()) ?
+
+> The performance side of the deal, you are lucky here, is not significant
+> because it's slow path.
+
+okay :)
 
 
->  {
->  	/* use static because iter can be a bit big for the stack */
->  	static struct trace_iterator iter;
-> @@ -39,8 +39,6 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
->  	/* don't look at user memory in panic mode */
->  	tr->trace_flags &= ~TRACE_ITER_SYM_USEROBJ;
->  
-> -	kdb_printf("Dumping ftrace buffer:\n");
-> -
->  	/* reset all but tr, trace, and overruns */
->  	memset(&iter.seq, 0,
->  		   sizeof(struct trace_iterator) -
-> @@ -55,6 +53,9 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
->  						 cpu, GFP_ATOMIC);
->  			ring_buffer_read_start(iter.buffer_iter[cpu]);
->  			tracing_iter_reset(&iter, cpu);
-> +
-> +			cnt +=
-> +			ring_buffer_entries_cpu(iter.trace_buffer->buffer, cpu);
+--mtx
 
-BTW, 80 char limit is a guideline not a rule. Don't break a line to
-make it look worse. But that doesn't matter because this isn't the
-change I meant.
-
->  		}
->  	} else {
->  		iter.cpu_file = cpu_file;
-> @@ -63,13 +64,21 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
->  						 cpu_file, GFP_ATOMIC);
->  		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
->  		tracing_iter_reset(&iter, cpu_file);
-> +
-> +		cnt += ring_buffer_entries_cpu(iter.trace_buffer->buffer,
-> +					       cpu_file);
->  	}
->  
-> -	while (trace_find_next_entry_inc(&iter)) {
-> -		if (!cnt)
-> -			kdb_printf("---------------------------------\n");
-> -		cnt++;
-> +	if (quiet)
-> +		goto out;
-> +
-> +	kdb_printf("Dumping ftrace buffer (skipping %d lines):\n",
-> +		   skip_lines);
-> +
-> +	if (cnt)
-> +		kdb_printf("---------------------------------\n");
->  
-> +	while (trace_find_next_entry_inc(&iter)) {
->  		if (!skip_lines) {
->  			print_trace_line(&iter);
->  			trace_printk_seq(&iter.seq);
-> @@ -99,6 +108,8 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
->  			iter.buffer_iter[cpu] = NULL;
->  		}
->  	}
-> +
-> +	return cnt;
->  }
->  
->  /*
-> @@ -109,6 +120,7 @@ static int kdb_ftdump(int argc, const char **argv)
->  	int skip_lines = 0;
->  	long cpu_file;
->  	char *cp;
-> +	int cnt;
->  
->  	if (argc > 2)
->  		return KDB_ARGCOUNT;
-> @@ -129,7 +141,14 @@ static int kdb_ftdump(int argc, const char **argv)
->  	}
->  
->  	kdb_trap_printk++;
-> -	ftrace_dump_buf(skip_lines, cpu_file);
-> +
-> +	/* A negative skip_lines means skip all but the last lines */
-> +	if (skip_lines < 0) {
-> +		cnt = ftrace_dump_buf(0, cpu_file, true);
-
-Actually, you can add a function in trace.c that exposes
-get_total_entries:
-
-unsigned long trace_total_entries(struct trace_array *tr)
-{
-	unsigned long total, entries;
-
-	if (!tr)
-		tr = &global_trace;
-
-	get_total_entries(tr->trace_buffer, &total, &entries);
-
-	return entries;
-}
-
-and then do:
-		cnt = trace_total_entries(NULL);
-
-Don't modify ftrace_dump_buf()
-
--- Steve
-
-> +		skip_lines = max(cnt + skip_lines, 0);
-> +	}
-> +
-> +	ftrace_dump_buf(skip_lines, cpu_file, false);
->  	kdb_trap_printk--;
->  
->  	return 0;
-> @@ -138,7 +157,8 @@ static int kdb_ftdump(int argc, const char **argv)
->  static __init int kdb_ftrace_register(void)
->  {
->  	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#lines] [cpu]",
-> -			    "Dump ftrace log", 0, KDB_ENABLE_ALWAYS_SAFE);
-> +			    "Dump ftrace log; -skip dumps last #lines", 0,
-> +			    KDB_ENABLE_ALWAYS_SAFE);
->  	return 0;
->  }
->  
-
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
