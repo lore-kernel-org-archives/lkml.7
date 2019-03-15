@@ -2,159 +2,115 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A6CC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947D3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F7721871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552666524;
-	bh=RpaS2pcVdJu5kJQz+kSIhUPYav7ZYzDmpAIosxThCJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YVxOyEhl9izRySLPHJEAv7oVW8Dw+MvR6SAaQHxzwGpGcEerUGlw1x8LRaMI4WaPO
-	 54uxzv0FC7IuKUx//eV29n34FSLtlC0HanuVqmLmzi+NYtc9GL/oprl92VzlBoHlx0
-	 NGFWShSYhg0dg8fOV6aaD5kcQgrlbg+2U6y+/4DE=
+	by mail.kernel.org (Postfix) with ESMTP id 6BD9921871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbfCOQPX (ORCPT
+        id S1729488AbfCOQRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:15:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:51229 "EHLO mga14.intel.com"
+        Fri, 15 Mar 2019 12:17:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47364 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729465AbfCOQPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:15:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 09:15:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,482,1544515200"; 
-   d="scan'208";a="327645325"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Mar 2019 09:15:21 -0700
-Date:   Fri, 15 Mar 2019 10:16:08 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Jianchao Wang <jianchao.w.wang@oracle.com>
-Cc:     "axboe@kernel.dk" <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>,
-        "jthumshirn@suse.de" <jthumshirn@suse.de>,
-        "hare@suse.de" <hare@suse.de>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "jsmart2021@gmail.com" <jsmart2021@gmail.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/8] blk-mq: change the method of iterating busy tags of
- a request_queue
-Message-ID: <20190315161608.GB15153@localhost.localdomain>
-References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
- <1552640264-26101-3-git-send-email-jianchao.w.wang@oracle.com>
+        id S1726632AbfCOQRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:17:10 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5666F68575;
+        Fri, 15 Mar 2019 16:17:10 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 830D25C219;
+        Fri, 15 Mar 2019 16:17:09 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 12:17:07 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Ben Segall <bsegall@google.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH] sched/fair: Limit sched_cfs_period_timer loop to avoid
+ hard lockup
+Message-ID: <20190315161707.GG27131@pauld.bos.csb>
+References: <20190313150826.16862-1-pauld@redhat.com>
+ <20190315101150.GV5996@hirez.programming.kicks-ass.net>
+ <20190315153042.GF27131@pauld.bos.csb>
+ <20190315160347.GZ5996@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552640264-26101-3-git-send-email-jianchao.w.wang@oracle.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20190315160347.GZ5996@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 15 Mar 2019 16:17:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 01:57:38AM -0700, Jianchao Wang wrote:
-> tags->rqs[] will not been cleaned when free driver tag and there
-> is a window between get driver tag and write tags->rqs[], so we
-> may see stale rq in tags->rqs[] which may have been freed, as
-> following case,
-> blk_mq_get_request         blk_mq_queue_tag_busy_iter
->   -> blk_mq_get_tag
->                              -> bt_for_each
->                                -> bt_iter
->                                  -> rq = taags->rqs[]
->                                  -> rq->q
->   -> blk_mq_rq_ctx_init
->     -> data->hctx->tags->rqs[rq->tag] = rq;
+On Fri, Mar 15, 2019 at 05:03:47PM +0100 Peter Zijlstra wrote:
+> On Fri, Mar 15, 2019 at 11:30:42AM -0400, Phil Auld wrote:
 > 
-> To fix this, the blk_mq_queue_tag_busy_iter is changed in this
-> patch to use tags->static_rqs[] instead of tags->rqs[]. We have
-> to identify whether there is a io scheduler attached to decide
-> to use hctx->tags or hctx->sched_tags. And we will try to get a
-> non-zero q_usage_counter before that, so it is safe to access
-> them. Add 'inflight' parameter to determine to iterate in-flight
-> requests or just busy tags. A correction here is that
-> part_in_flight should count the busy tags instead of rqs that
-> have got driver tags.
+> > In my defense here, all the fair.c imbalance pct code also uses 100 :)
 > 
-> Moreover, get rid of the 'hctx' parameter in iter function as
-> we could get it from rq->mq_hctx and export this interface for
-> drivers.
+> Yes, I know, I hate on that too ;-) Just never got around to fixing
+> that.
 > 
-> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
-> ---
->  block/blk-mq-tag.c     | 76 +++++++++++++++++++++++++++++++++-----------------
->  block/blk-mq-tag.h     |  2 --
->  block/blk-mq.c         | 31 ++++++++------------
->  include/linux/blk-mq.h |  5 ++--
->  4 files changed, 64 insertions(+), 50 deletions(-)
 > 
-> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-> index b792537..cdec2cd 100644
-> --- a/block/blk-mq-tag.c
-> +++ b/block/blk-mq-tag.c
-> @@ -216,26 +216,38 @@ struct bt_iter_data {
->  	busy_iter_fn *fn;
->  	void *data;
->  	bool reserved;
-> +	bool inflight;
->  };
->  
->  static bool bt_iter(struct sbitmap *bitmap, unsigned int bitnr, void *data)
->  {
->  	struct bt_iter_data *iter_data = data;
->  	struct blk_mq_hw_ctx *hctx = iter_data->hctx;
-> -	struct blk_mq_tags *tags = hctx->tags;
->  	bool reserved = iter_data->reserved;
-> +	struct blk_mq_tags *tags;
->  	struct request *rq;
->  
-> +	tags =  hctx->sched_tags ? hctx->sched_tags : hctx->tags;
-> +
->  	if (!reserved)
->  		bitnr += tags->nr_reserved_tags;
-> -	rq = tags->rqs[bitnr];
-> +	/*
-> +	 * Because tags->rqs[] will not been cleaned when free driver tag
-> +	 * and there is a window between get driver tag and write tags->rqs[],
-> +	 * so we may see stale rq in tags->rqs[] which may have been freed.
-> +	 * Using static_rqs[] is safer.
-> +	 */
-> +	rq = tags->static_rqs[bitnr];
->  
->  	/*
-> -	 * We can hit rq == NULL here, because the tagging functions
-> -	 * test and set the bit before assigning ->rqs[].
-> +	 * There is a small window between get tag and blk_mq_rq_ctx_init,
-> +	 * so rq->q and rq->mq_hctx maybe different.
->  	 */
-> -	if (rq && rq->q == hctx->queue)
-> -		return iter_data->fn(hctx, rq, iter_data->data, reserved);
-> +	if (rq && rq->q == hctx->queue &&
-> +	    rq->mq_hctx == hctx &&
-> +	    (!iter_data->inflight ||
-> +	     blk_mq_rq_state(rq) == MQ_RQ_IN_FLIGHT))
-> +		return iter_data->fn(rq, iter_data->data, reserved);
+> > with the below:
+> > 
+> > [  117.235804] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 2492, cfs_quota_us = 143554)
+> > [  117.346807] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 2862, cfs_quota_us = 164863)
+> > [  117.470569] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 3286, cfs_quota_us = 189335)
+> > [  117.574883] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 3774, cfs_quota_us = 217439)
+> > [  117.652907] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 4335, cfs_quota_us = 249716)
+> > [  118.090535] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 4978, cfs_quota_us = 286783)
+> > [  122.098009] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 5717, cfs_quota_us = 329352)
+> > [  126.255209] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 6566, cfs_quota_us = 378240)
+> > [  126.358060] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 7540, cfs_quota_us = 434385)
+> > [  126.538358] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 8660, cfs_quota_us = 498865)
+> > [  126.614304] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 9945, cfs_quota_us = 572915)
+> > [  126.817085] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 11422, cfs_quota_us = 657957)
+> > [  127.352038] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 13117, cfs_quota_us = 755623)
+> > [  127.598043] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 15064, cfs_quota_us = 867785)
+> > 
+> > 
+> > Plus on repeats I see an occasional 
+> > 
+> > [  152.803384] sched_cfs_period_timer: 9 callbacks suppressed
+> 
+> That should be fine, right? It's a fallback for an edge case and
+> shouldn't trigger too often anyway.
 
-There is still a window where the check may succeed, but the request is
-being assigned to a completely different request_queue. The callback
-then operates on a request it doesn't own.
+It doesn't hit the NMI, just takes a bit longer to get out. It is a little messier 
+output, but as you say, it's a fallback. If you're okay with it do you want to 
+just use your patch? 
 
-Tag iteration from a driver can be safe only if the driver initiates a
-freeze and quiesced all queues sharing the same tagset first. The nvme
-driver does that, but I think there may need to be an additional grace
-period to wait for the allocation's queue_enter to call queue_exit to
-ensure the request is initialized through blk_mq_rq_ctx_init().
+Otherwise, I'm happy to do a fixup v2.
+
+> 
+> >> I'll rework the maths in the averaged version and post v2 if that makes sense.
+> > 
+> > It may have the extra timer fetch, although maybe I could rework it so that it used the 
+> > nsstart time the first time and did not need to do it twice in a row. I had originally
+> > reverted the hrtimer_forward_now() to hrtimer_forward() but put that back. 
+> 
+> Sure; but remember, simpler is often better, esp. for code that
+> typically 'never' runs.
+> 
+> > Also, fwiw, this was reported earlier by Anton Blanchard in https://lkml.org/lkml/2018/12/3/1047
+> 
+> Bah, yes, I sometimes loose track of things :/
+
+
+No worries. I just meant that to show I was not the only one with these low settings, 
+and to give credit, or whatever :)
+
+
+Cheers,
+Phil
+
+-- 
