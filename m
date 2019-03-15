@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E5FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED572C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E443E218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C695F21901
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbfCOQK2 (ORCPT
+        id S1729635AbfCOQKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:10:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36716 "EHLO mx1.redhat.com"
+        Fri, 15 Mar 2019 12:10:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45666 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729489AbfCOQK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:10:27 -0400
+        id S1729489AbfCOQKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:10:32 -0400
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 879B73150085;
-        Fri, 15 Mar 2019 16:10:26 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0ED2211B761;
+        Fri, 15 Mar 2019 16:10:31 +0000 (UTC)
 Received: from laptop.redhat.com (ovpn-116-102.ams2.redhat.com [10.36.116.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B38F60BE6;
-        Fri, 15 Mar 2019 16:10:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E059260BE6;
+        Fri, 15 Mar 2019 16:10:26 +0000 (UTC)
 From:   Eric Auger <eric.auger@redhat.com>
 To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
@@ -37,104 +37,81 @@ To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
 Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
         christoffer.dall@arm.com, peter.maydell@linaro.org,
         vincent.stehle@arm.com
-Subject: [PATCH v5 08/22] vfio: VFIO_IOMMU_CACHE_INVALIDATE
-Date:   Fri, 15 Mar 2019 17:08:52 +0100
-Message-Id: <20190315160906.12900-9-eric.auger@redhat.com>
+Subject: [PATCH v5 09/22] vfio: VFIO_IOMMU_BIND/UNBIND_MSI
+Date:   Fri, 15 Mar 2019 17:08:53 +0100
+Message-Id: <20190315160906.12900-10-eric.auger@redhat.com>
 In-Reply-To: <20190315160906.12900-1-eric.auger@redhat.com>
 References: <20190315160906.12900-1-eric.auger@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 15 Mar 2019 16:10:26 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 15 Mar 2019 16:10:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Liu, Yi L" <yi.l.liu@linux.intel.com>
+This patch adds the VFIO_IOMMU_BIND/UNBIND_MSI ioctl which aim
+to pass/withdraw the guest MSI binding to/from the host.
 
-When the guest "owns" the stage 1 translation structures,  the host
-IOMMU driver has no knowledge of caching structure updates unless
-the guest invalidation requests are trapped and passed down to the
-host.
-
-This patch adds the VFIO_IOMMU_CACHE_INVALIDATE ioctl with aims
-at propagating guest stage1 IOMMU cache invalidations to the host.
-
-Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
 Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
 ---
+v3 -> v4:
+- add UNBIND
+- unwind on BIND error
 
 v2 -> v3:
-- introduce vfio_iommu_for_each_dev back in this patch
+- adapt to new proto of bind_guest_msi
+- directly use vfio_iommu_for_each_dev
 
 v1 -> v2:
-- s/TLB/CACHE
-- remove vfio_iommu_task usage
-- commit message rewording
+- s/vfio_iommu_type1_guest_msi_binding/vfio_iommu_type1_bind_guest_msi
 ---
- drivers/vfio/vfio_iommu_type1.c | 47 +++++++++++++++++++++++++++++++++
- include/uapi/linux/vfio.h       | 13 +++++++++
- 2 files changed, 60 insertions(+)
+ drivers/vfio/vfio_iommu_type1.c | 58 +++++++++++++++++++++++++++++++++
+ include/uapi/linux/vfio.h       | 29 +++++++++++++++++
+ 2 files changed, 87 insertions(+)
 
 diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 222e9199edbf..12a40b9db6aa 100644
+index 12a40b9db6aa..66513679081b 100644
 --- a/drivers/vfio/vfio_iommu_type1.c
 +++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -113,6 +113,26 @@ struct vfio_regions {
- #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
- 					(!list_empty(&iommu->domain_list))
- 
-+/* iommu->lock must be held */
-+static int
-+vfio_iommu_for_each_dev(struct vfio_iommu *iommu, void *data,
-+			int (*fn)(struct device *, void *))
-+{
-+	struct vfio_domain *d;
-+	struct vfio_group *g;
-+	int ret = 0;
-+
-+	list_for_each_entry(d, &iommu->domain_list, next) {
-+		list_for_each_entry(g, &d->group_list, next) {
-+			ret = iommu_group_for_each_dev(g->iommu_group,
-+						       data, fn);
-+			if (ret)
-+				break;
-+		}
-+	}
-+	return ret;
-+}
-+
- static int put_pfn(unsigned long pfn, int prot);
- 
- /*
-@@ -1681,6 +1701,15 @@ vfio_attach_pasid_table(struct vfio_iommu *iommu,
- 	return ret;
+@@ -1710,6 +1710,25 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
+ 	return iommu_cache_invalidate(d, dev, &ustruct->info);
  }
  
-+static int vfio_cache_inv_fn(struct device *dev, void *data)
++static int vfio_bind_msi_fn(struct device *dev, void *data)
 +{
-+	struct vfio_iommu_type1_cache_invalidate *ustruct =
-+		(struct vfio_iommu_type1_cache_invalidate *)data;
++	struct vfio_iommu_type1_bind_msi *ustruct =
++		(struct vfio_iommu_type1_bind_msi *)data;
 +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);
 +
-+	return iommu_cache_invalidate(d, dev, &ustruct->info);
++	return iommu_bind_guest_msi(d, dev, ustruct->iova,
++				    ustruct->gpa, ustruct->size);
++}
++
++static int vfio_unbind_msi_fn(struct device *dev, void *data)
++{
++	dma_addr_t *iova = (dma_addr_t *)data;
++	struct iommu_domain *d = iommu_get_domain_for_dev(dev);
++
++	iommu_unbind_guest_msi(d, dev, *iova);
++	return 0;
 +}
 +
  static long vfio_iommu_type1_ioctl(void *iommu_data,
  				   unsigned int cmd, unsigned long arg)
  {
-@@ -1767,6 +1796,24 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
- 	} else if (cmd == VFIO_IOMMU_DETACH_PASID_TABLE) {
- 		vfio_detach_pasid_table(iommu);
- 		return 0;
-+	} else if (cmd == VFIO_IOMMU_CACHE_INVALIDATE) {
-+		struct vfio_iommu_type1_cache_invalidate ustruct;
+@@ -1814,6 +1833,45 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+ 					      vfio_cache_inv_fn);
+ 		mutex_unlock(&iommu->lock);
+ 		return ret;
++	} else if (cmd == VFIO_IOMMU_BIND_MSI) {
++		struct vfio_iommu_type1_bind_msi ustruct;
 +		int ret;
 +
-+		minsz = offsetofend(struct vfio_iommu_type1_cache_invalidate,
-+				    info);
++		minsz = offsetofend(struct vfio_iommu_type1_bind_msi,
++				    size);
 +
 +		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
 +			return -EFAULT;
@@ -144,32 +121,69 @@ index 222e9199edbf..12a40b9db6aa 100644
 +
 +		mutex_lock(&iommu->lock);
 +		ret = vfio_iommu_for_each_dev(iommu, &ustruct,
-+					      vfio_cache_inv_fn);
++					      vfio_bind_msi_fn);
++		if (ret)
++			vfio_iommu_for_each_dev(iommu, &ustruct.iova,
++						vfio_unbind_msi_fn);
++		mutex_unlock(&iommu->lock);
++		return ret;
++	} else if (cmd == VFIO_IOMMU_UNBIND_MSI) {
++		struct vfio_iommu_type1_unbind_msi ustruct;
++		int ret;
++
++		minsz = offsetofend(struct vfio_iommu_type1_unbind_msi,
++				    iova);
++
++		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
++			return -EFAULT;
++
++		if (ustruct.argsz < minsz || ustruct.flags)
++			return -EINVAL;
++
++		mutex_lock(&iommu->lock);
++		ret = vfio_iommu_for_each_dev(iommu, &ustruct.iova,
++					      vfio_unbind_msi_fn);
 +		mutex_unlock(&iommu->lock);
 +		return ret;
  	}
  
  	return -ENOTTY;
 diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 329d378565d9..29f0ef2d805d 100644
+index 29f0ef2d805d..6763389b6adc 100644
 --- a/include/uapi/linux/vfio.h
 +++ b/include/uapi/linux/vfio.h
-@@ -776,6 +776,19 @@ struct vfio_iommu_type1_attach_pasid_table {
- #define VFIO_IOMMU_ATTACH_PASID_TABLE	_IO(VFIO_TYPE, VFIO_BASE + 22)
- #define VFIO_IOMMU_DETACH_PASID_TABLE	_IO(VFIO_TYPE, VFIO_BASE + 23)
+@@ -789,6 +789,35 @@ struct vfio_iommu_type1_cache_invalidate {
+ };
+ #define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 24)
  
 +/**
-+ * VFIO_IOMMU_CACHE_INVALIDATE - _IOWR(VFIO_TYPE, VFIO_BASE + 24,
-+ *			struct vfio_iommu_type1_cache_invalidate)
++ * VFIO_IOMMU_BIND_MSI - _IOWR(VFIO_TYPE, VFIO_BASE + 25,
++ *			struct vfio_iommu_type1_bind_msi)
 + *
-+ * Propagate guest IOMMU cache invalidation to the host.
++ * Pass a stage 1 MSI doorbell mapping to the host so that this
++ * latter can build a nested stage2 mapping
 + */
-+struct vfio_iommu_type1_cache_invalidate {
++struct vfio_iommu_type1_bind_msi {
 +	__u32   argsz;
 +	__u32   flags;
-+	struct iommu_cache_invalidate_info info;
++	__u64	iova;
++	__u64	gpa;
++	__u64	size;
 +};
-+#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 24)
++#define VFIO_IOMMU_BIND_MSI      _IO(VFIO_TYPE, VFIO_BASE + 25)
++
++/**
++ * VFIO_IOMMU_UNBIND_MSI - _IOWR(VFIO_TYPE, VFIO_BASE + 26,
++ *			struct vfio_iommu_type1_unbind_msi)
++ *
++ * Unregister an MSI mapping
++ */
++struct vfio_iommu_type1_unbind_msi {
++	__u32   argsz;
++	__u32   flags;
++	__u64	iova;
++};
++#define VFIO_IOMMU_UNBIND_MSI      _IO(VFIO_TYPE, VFIO_BASE + 26)
 +
  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
  
