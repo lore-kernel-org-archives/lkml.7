@@ -2,185 +2,170 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD039C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2529C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A401E21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C48821872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbfCOHxG (ORCPT
+        id S1728476AbfCOH4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 03:53:06 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:26469 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727557AbfCOHxG (ORCPT
+        Fri, 15 Mar 2019 03:56:16 -0400
+Received: from a2nlsmtp01-05.prod.iad2.secureserver.net ([198.71.225.49]:57274
+        "EHLO a2nlsmtp01-05.prod.iad2.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727476AbfCOH4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 03:53:06 -0400
-X-UUID: 74200d71c15b4ddb9fc49abef31b0c0a-20190315
-X-UUID: 74200d71c15b4ddb9fc49abef31b0c0a-20190315
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1407047240; Fri, 15 Mar 2019 15:52:56 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 15 Mar
- 2019 15:52:55 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 15 Mar 2019 15:52:54 +0800
-Message-ID: <1552636374.10179.121.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 2/6] dt-bindings: usb: add binding for Type-B dual
- role switch by GPIO
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        "Badhri Jagan Sridharan" <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 15 Mar 2019 15:52:54 +0800
-In-Reply-To: <1552635513-2378-3-git-send-email-chunfeng.yun@mediatek.com>
-References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1552635513-2378-3-git-send-email-chunfeng.yun@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 15 Mar 2019 03:56:16 -0400
+Received: from linuxonhyperv2.linuxonhyperv.com ([107.180.71.197])
+        by : HOSTING RELAY : with ESMTP
+        id 4hgQhpap6vHD34hgQhNjov; Fri, 15 Mar 2019 00:55:14 -0700
+x-originating-ip: 107.180.71.197
+Received: from longli by linuxonhyperv2.linuxonhyperv.com with local (Exim 4.91)
+        (envelope-from <longli@linuxonhyperv2.linuxonhyperv.com>)
+        id 1h4hgP-0007EK-Tr; Fri, 15 Mar 2019 00:55:13 -0700
+From:   Long Li <longli@linuxonhyperv.com>
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v2 1/2] CIFS: Fix an issue with re-sending wdata when transport returning -EAGAIN
+Date:   Fri, 15 Mar 2019 07:54:59 +0000
+Message-Id: <20190315075500.27747-1-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-X-MTK:  N
+Reply-To: longli@microsoft.com
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfKSI2fFxYg5Qun/7wIhri5PIZGr2XNF22LqVqfCnTFxGfzj9P7zCbasGBF5174eRc/S1BWP1Psy5GSg9Nd4DV8JpawczHGCWUjN0E7XIEwIrDq2vEMC4
+ uOzgj/hRXHf3JAASo/ShJaVC8IzfDZX/I2eF6yJxJFTDQzp+KCGRimcT62mHOa9vSkGki5Duk+mCF5phplT3dDkPadfi8F8XL8useBbQEHw0b8YbsgRChy/F
+ em+O3sfsX9sAm2WLw7ThdzM4fqd5IRITXP+LDDe4ampIxQSHmYBe4ZolE7y/UuOyg/mw1lFIsX+xlHFu0eJmV/KvBS25GXlGpzKERiwTbNJyn5psFK+cETuZ
+ vk9KhnvB1fFoaMzOGSsMtbiUHN8p7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+From: Long Li <longli@microsoft.com>
 
-There are two ways that I think out to support type-B GPIO based dual
-role switch.
+When sending a wdata, transport may return -EAGAIN. In this case
+we should re-obtain credits because the session may have been
+reconnected.
 
-The first one, as the series used:
+Change in v2: adjust_credits before re-sending
 
-&mtu3 {
-    status = "okay";
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ fs/cifs/file.c | 77 ++++++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 45 insertions(+), 32 deletions(-)
 
-    connector@0 {
-        compatible = "usb-b-connector", "linux,typeb-switch-gpio";
-        label = "micro-USB";
-        type = "micro";
-        id-gpio = <&pio 12 GPIO_ACTIVE_HIGH>;
-        vbus-supply = <&usb_p0_vbus>;
-    };
-};
-
-but there are some shortcomings:
-1. It's not transparent, USB controller driver should be modified, and
-call of_platform_populate() to create platform device for connector,
-this is not friendly when the controller driver hasn't child node
-before, and also not compatible with other cases, such as Type-C
-
-2. It doesn't keep format consistent with the case using Type-C, or
-using PMIC to detect ID pin.
-
-3. vbus-supply will be got by USB controller driver if it aready
-supports it
-
-
-another way as following:
-
-role_sw_iddig {
-    compatible = "linux,typeb-switch-gpio";
-    status = "okay";
-
-    connector {
-        compatible = "usb-b-connector";
-        label = "micro-USB";
-        type = "micro";
-        id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
-        vbus-supply = <&usb_p0_vbus>;
-    };
-
-    port {
-        bsw_ep: endpoint@0 {
-            remote-endpoint = <&usb_role_sw>;
-        };
-    };
-};
-
-&mtu3 {
-    status = "okay";
-
-    port {
-        usb_role_sw: endpoint@0 {
-            remote-endpoint = <&bsw_ep>;
-        };
-    };
-};
-
-strength:
-avoid the shortcomings of the first way
-shortcoming:
-it's a virtual device and seems not following graph.txt binding,
-
-Do you have any suggestion?
-
-Thanks
-
-
-On Fri, 2019-03-15 at 15:38 +0800, Chunfeng Yun wrote:
-> It's used to support dual role switch via GPIO when use Type-B
-> receptacle
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v2 changes:
->   1. new patch to make binding clear suggested by Hans
-> ---
->  .../bindings/usb/typeb-switch-gpio.txt        | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/typeb-switch-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/typeb-switch-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-switch-gpio.txt
-> new file mode 100644
-> index 000000000000..d46d83bc6500
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/typeb-switch-gpio.txt
-> @@ -0,0 +1,26 @@
-> +USB Type-B dual role switch via a GPIO
-> +
-> +This is a virtual device used to switch dual role mode from the USB ID pin
-> +connected to a GPIO pin.
-> +
-> +Required properties:
-> +- compatible: Should be "linux,typeb-switch-gpio"
-> +
-> +Either one of id-gpios or vbus-gpios must be present, and both can be present
-> +as well.
-> +vbus-supply could be present if needed when support dual role mode.
-> +	see connector/usb-connector.txt
-> +
-> +Example:
-> +
-> +&mtu3 {
-> +	status = "okay";
-> +
-> +	connector@0 {
-> +		compatible = "usb-b-connector", "linux,typeb-switch-gpio";
-> +		label = "micro-USB";
-> +		type = "micro";
-> +		id-gpio = <&pio 12 GPIO_ACTIVE_HIGH>;
-> +		vbus-supply = <&usb_p0_vbus>;
-> +	};
-> +};
-
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 9b53f33137b3..321df1d27422 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -2620,43 +2620,56 @@ cifs_resend_wdata(struct cifs_writedata *wdata, struct list_head *wdata_list,
+ 	struct TCP_Server_Info *server =
+ 		tlink_tcon(wdata->cfile->tlink)->ses->server;
+ 
+-	/*
+-	 * Wait for credits to resend this wdata.
+-	 * Note: we are attempting to resend the whole wdata not in segments
+-	 */
+ 	do {
+-		rc = server->ops->wait_mtu_credits(server, wdata->bytes, &wsize,
+-						   &credits);
++		if (wdata->cfile->invalidHandle) {
++			rc = cifs_reopen_file(wdata->cfile, false);
++			if (rc == -EAGAIN)
++				continue;
++			else if (rc)
++				break;
++		}
+ 
+-		if (rc)
+-			goto out;
+ 
+-		if (wsize < wdata->bytes) {
+-			add_credits_and_wake_if(server, &credits, 0);
+-			msleep(1000);
+-		}
+-	} while (wsize < wdata->bytes);
++		/*
++		 * Wait for credits to resend this wdata.
++		 * Note: we are attempting to resend the whole wdata not in
++		 * segments
++		 */
++		do {
++			rc = server->ops->wait_mtu_credits(server, wdata->bytes,
++						&wsize, &credits);
++			if (rc)
++				goto fail;
++
++			if (wsize < wdata->bytes) {
++				add_credits_and_wake_if(server, &credits, 0);
++				msleep(1000);
++			}
++		} while (wsize < wdata->bytes);
++		wdata->credits = credits;
+ 
+-	wdata->credits = credits;
+-	rc = -EAGAIN;
+-	while (rc == -EAGAIN) {
+-		rc = 0;
+-		if (wdata->cfile->invalidHandle)
+-			rc = cifs_reopen_file(wdata->cfile, false);
+-		if (!rc)
+-			rc = server->ops->async_writev(wdata,
++		rc = adjust_credits(server, &wdata->credits, wdata->bytes);
++
++		if (!rc) {
++			if (wdata->cfile->invalidHandle)
++				rc = -EAGAIN;
++			else
++				rc = server->ops->async_writev(wdata,
+ 					cifs_uncached_writedata_release);
+-	}
++		}
+ 
+-	if (!rc) {
+-		list_add_tail(&wdata->list, wdata_list);
+-		return 0;
+-	}
++		/* If the write was successfully sent, we are done */
++		if (!rc) {
++			list_add_tail(&wdata->list, wdata_list);
++			return 0;
++		}
+ 
+-	add_credits_and_wake_if(server, &wdata->credits, 0);
+-out:
+-	kref_put(&wdata->refcount, cifs_uncached_writedata_release);
++		/* Roll back credits and retry if needed */
++		add_credits_and_wake_if(server, &wdata->credits, 0);
++	} while (rc == -EAGAIN);
+ 
++fail:
++	kref_put(&wdata->refcount, cifs_uncached_writedata_release);
+ 	return rc;
+ }
+ 
+@@ -2884,12 +2897,12 @@ static void collect_uncached_write_data(struct cifs_aio_ctx *ctx)
+ 						wdata->bytes, &tmp_from,
+ 						ctx->cfile, cifs_sb, &tmp_list,
+ 						ctx);
++
++					kref_put(&wdata->refcount,
++						cifs_uncached_writedata_release);
+ 				}
+ 
+ 				list_splice(&tmp_list, &ctx->list);
+-
+-				kref_put(&wdata->refcount,
+-					 cifs_uncached_writedata_release);
+ 				goto restart_loop;
+ 			}
+ 		}
+-- 
+2.14.1
 
