@@ -2,77 +2,86 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B09C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E82AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9655D218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F4E2087C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RK2oq/2m"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="J54zJ/dB";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="J54zJ/dB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfCOVwt (ORCPT
+        id S1726797AbfCOVyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 17:52:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44948 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbfCOVws (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 17:52:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g1so9646169otj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 14:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1WmB2OkuQotcGSTkifMaHZvWiPCi6moalFzp/XsjASE=;
-        b=RK2oq/2mRorl3FIXezSTAvF8jdyRjJqKwA86Cm+hlZ4wW7+Kpum8YuJZ3GwjUj0wAs
-         XhzD6BzEj66h5v5x8JZbFFDEB/d3ZMzFIG9nPpXMRnCVjSYuhUG5c0xfMYz3BlGGxoJm
-         jAdTad8jUq2CSVWMuTmrGe5viNYsBs9nGdO0b4dgudXmpGH1nxKs7XvOn89tTxjTPMiD
-         yvjGNC23piTrR8p8F2XkHVzI7cXz0lxUeZ/+JYY5RgDEknThfN+w7Le9y4BF74nesWr5
-         1Wb+X9rZUmG/cMU6T51kZa4L6P/0JyHtIyBqcmfS2nGvbkSxLmyAa4k0VwjU2NJHwHCy
-         jUYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1WmB2OkuQotcGSTkifMaHZvWiPCi6moalFzp/XsjASE=;
-        b=ZCxkiRLVsqeCge2fBbsozZ8Oven/j7ntZlJN3PV0AUJlOQ6FGH95q3IBJrYmWh203E
-         oJnu9NPLHeSDaTydOwfqKhEtlwnr0lJDbVzFnqKxjFtxcFZ293ZVASDKXRtmgMkY/+cM
-         Lcn8FFVKca/sgyA2FWesl8KhJm9OsJtbkRDMiQJTwpm2NbKhF6f/b1VbxLqiZTUbaWi3
-         ntHaG1//NPgbwqUWZQL3UWcUinitOe4Eumtufod2TOBB0lBHM5FsD9GLsiD5vETI5kcN
-         Sv3mosftct+aSXIsF34SuEtjx9wYJlzdaQr39Day+jnFTDzEK59Nm35lBGC0AiyXhGH5
-         XgJw==
-X-Gm-Message-State: APjAAAUqhiLBzU43rbAQLNyHeDNOF+v2SE6dBAUHepL1c0SzfB1ytnRx
-        lzrhy63nwcWX1Zswb4VfU1/ajd2NU8WAKG9bn8lT1FDH
-X-Google-Smtp-Source: APXvYqwbfSSdK/faD3hkOPxJ1zB+wXSq0fDj/DeIUWHqMBCq6n6xA2Enfr48FpZ6KC/Kr0hhwgiUP/ah9DYOnPNh4UY=
-X-Received: by 2002:a9d:6306:: with SMTP id q6mr3457660otk.86.1552686768062;
- Fri, 15 Mar 2019 14:52:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190311095613.11371-1-narmstrong@baylibre.com> <20190311095613.11371-11-narmstrong@baylibre.com>
-In-Reply-To: <20190311095613.11371-11-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 15 Mar 2019 22:52:37 +0100
-Message-ID: <CAFBinCCRWV425Uon7BnR8+cFLO4T=bGXvSvkrnBWKvLYco6nwA@mail.gmail.com>
-Subject: Re: [PATCH 10/11] arm64: dts: meson-g12a-u200: Enable USB
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Mar 2019 17:54:41 -0400
+Received: from node.akkea.ca ([192.155.83.177]:35116 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbfCOVyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 17:54:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id EE4064E204E;
+        Fri, 15 Mar 2019 21:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1552686880; bh=9N4biJJEaFKsuJVAaC7yDIHSjDYZ5bi0hQQsogDxEak=;
+        h=From:To:Cc:Subject:Date;
+        b=J54zJ/dBpwZe/D63inu9R1RXLNaBET+ZUU2iYn5WmpBbHK2GCQk2Kxooz9ZGsHBiG
+         GRqp5gW91aQQjQvVTwFNUxxJpMtKG90oGMbedld2v3JmLjTLN1k5yW8LqGz+I9dGHC
+         DYu+obkzgYq7zd+s2OU8CN2SGBY1NHAEpXuOpfw4=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Y5A_wlA3Ohio; Fri, 15 Mar 2019 21:54:40 +0000 (UTC)
+Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
+        by node.akkea.ca (Postfix) with ESMTPSA id C809E4E204B;
+        Fri, 15 Mar 2019 21:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1552686880; bh=9N4biJJEaFKsuJVAaC7yDIHSjDYZ5bi0hQQsogDxEak=;
+        h=From:To:Cc:Subject:Date;
+        b=J54zJ/dBpwZe/D63inu9R1RXLNaBET+ZUU2iYn5WmpBbHK2GCQk2Kxooz9ZGsHBiG
+         GRqp5gW91aQQjQvVTwFNUxxJpMtKG90oGMbedld2v3JmLjTLN1k5yW8LqGz+I9dGHC
+         DYu+obkzgYq7zd+s2OU8CN2SGBY1NHAEpXuOpfw4=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     angus.ainslie@puri.sm
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Tomas Novotny <tomas@novotny.cz>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Brian Masney <masneyb@onstation.org>,
+        Robert Eshleman <bobbyeshleman@gmail.com>,
+        Mathieu Othacehe <m.othacehe@gmail.com>,
+        Parthiban Nallathambi <pn@denx.de>, ryang <decatf@gmail.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 0/2] Add a VCNL4040 light and proximity driver
+Date:   Fri, 15 Mar 2019 14:54:23 -0700
+Message-Id: <20190315215425.24140-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 10:58 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Enable the USB2 OTG and USB3 Host ports on the S905D2 Reference Design.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-I have no details on the U200 board (whether it has a micro USB OTG
-port, etc.) but this looks sane so:
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Extend the Vishay VCNL40x0/4200 driver to work with the VCNL4040
+chip.
+
+Angus Ainslie (Purism) (2):
+  iio: light: vcnl4000 add support for the VCNL4040 proximity and light
+    sensor
+  dt-bindings: iio: light: Document the VCNL4xx0 device tree bindings
+
+ .../bindings/iio/light/vcnl4xx0.txt           | 15 ++++
+ drivers/iio/light/vcnl4000.c                  | 89 ++++++++++++++++---
+ 2 files changed, 91 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4xx0.txt
+
+-- 
+2.17.1
+
