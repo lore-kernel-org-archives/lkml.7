@@ -2,170 +2,101 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67DFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 05:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DADBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 05:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F32218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 05:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE66218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 05:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="UY/qewNh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAvpBYaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfCOFTM (ORCPT
+        id S1728199AbfCOFUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 01:19:12 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:33178 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbfCOFTM (ORCPT
+        Fri, 15 Mar 2019 01:20:23 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41064 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726993AbfCOFUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 01:19:12 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 82DEA82F
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 05:19:10 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id kGE4iSpJp2PI for <linux-kernel@vger.kernel.org>;
-        Fri, 15 Mar 2019 00:19:10 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 51997712
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 00:19:10 -0500 (CDT)
-Received: by mail-io1-f72.google.com with SMTP id e1so6054517iod.23
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 22:19:10 -0700 (PDT)
+        Fri, 15 Mar 2019 01:20:23 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k8so6347258oik.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 22:20:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=j6U+y4iY6osT5hFspHyeI/vwu/lDKXRQlpMa/rD0jqM=;
-        b=UY/qewNhGz4utE7ET1BCB4W5qFAv9i/7Ym8Kw+LRwCcnUAtGFZTsGqLboUPZBk3zD8
-         NzSeeYN8KEk/a0aSTPHEL9yECaerc0sxDJZDOLOc3fkbyvsBKOVloEOZgzmW8XVxxF5v
-         SxLGn0+J1zW1vvhFzzDTTSX+8ODPg7h2a570FG4+VGRpt1x6jYG3scXOdf6bsQWCi5yn
-         WwcQkgsks/blMfe1pJmvEbKkdOW2IaV8ShnxizXFJHDv62UsiocKDmjLIcMJ1yk1DLKV
-         oFMGRSVE+urfcFRcsjt40/Wa7qBBRPTVmrzRVGEBBD4xvAfrR1kWDUrpd28a/4q3yFem
-         Gqgg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IAGLbKDU7b1+gCsbgNXFOwg0Sk1ObZTtlc2Ab4OPJAI=;
+        b=NAvpBYaPJeOFWI8kil9X3geoSONlcvKZwIw8GdYpMeT46UDdlUYAX+Mobdb4p0t2JH
+         qQMP9AUi37xYQSqz+5IYaabb/IVf1hki5GuH4e/TyrZ+NQw7YLXXFoNncVSJO22mjGqY
+         v1r0PJ1OozkC8zcgl5w2oVp/TfB2nxCeXxptyy6B5qeo9Xghx5pp8R7lfFwT4eg0CFdn
+         6m0twyJW1bnW13hKWmJEhqzDvqGueCbmHnSBxQLmK52p3WYRV/Ty+J4zPy+cyKVMsxrU
+         gMPWfsPH7kiHbZJVZjPB+4Q/2Zg4dfedr6L1zM8ap88xlOW4QE2nyDCXi6eV6cJluY/q
+         YRbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=j6U+y4iY6osT5hFspHyeI/vwu/lDKXRQlpMa/rD0jqM=;
-        b=q618NUTxEpjqBSFOh8tYBSYECxP7p/jZ3xUl2NOKf3kcaInPw1rDPrwcx1u9L3ikeY
-         u65ATfFfnoytRNp15tVpL7oWRNdJhuaY6+HAdEd9C6RF9oEg85WjPb94E51jITsNee10
-         qDl2JeZ1KQbOIaoqg1UmLDCjARIIO8wuvD6D4fSY4Y7ooyj3TlIRMhorlURoeGJLAosS
-         uKBMsrp3hhQkLDbN+ltNacxKna7+z2ePdbywrE/pZCZwM0vIXdwpi/WNNsqrvJSBRdLG
-         OMzCQ1a/g9Ps/d4nQKV5gKcet7z4SG5n8CWx/zMaCKElrFLCXQ2GQpID7pumTQkCpCNd
-         V+aA==
-X-Gm-Message-State: APjAAAWXNDDEhq3USIfWuhmf6IFc2BZZZbvG9WZBrr9qJ4T9GUlOSeHW
-        PjDC5b1QvoxxCGxIOYEnIqhUOv7DdVo8HgsNIYzUwK55yXVNloxYSXMiVyVXAIc9RWi6Mw2UqpV
-        TtynOr4A8UL9MypKELgc8+3rNkjnS
-X-Received: by 2002:a24:418c:: with SMTP id b12mr841780itd.74.1552627149661;
-        Thu, 14 Mar 2019 22:19:09 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxNQimi15aoZT/w9cz7ZwWP0xM9MwZMlkkoQWsF9RX+9EIVw1Okv1h5KXV753E2PkvarZnfgQ==
-X-Received: by 2002:a24:418c:: with SMTP id b12mr841772itd.74.1552627149389;
-        Thu, 14 Mar 2019 22:19:09 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id l134sm530985itb.12.2019.03.14.22.19.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 22:19:08 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ath: fix missing checks for bmi reads and writes
-Date:   Fri, 15 Mar 2019 00:19:03 -0500
-Message-Id: <20190315051903.10664-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IAGLbKDU7b1+gCsbgNXFOwg0Sk1ObZTtlc2Ab4OPJAI=;
+        b=LPAenxNOwHGyEqIWpJqtcrmD104bqdRtqlxHXQOErw78deeWLZCOtZXFWP1t1s7JRA
+         3CWYUVjwsW2BQp0nPlDH6/AstBV6BGvh+WUuBk7xo3PdNks0S52lmQqwFXJ1umOZeeqi
+         4TMhUq3gXe/HKMvvV51oF6guuHOWMOaqxZa3goAouFGdqQUBPIclPxnRHK4f9y9Y4LxG
+         me4lqyNC7pas9kLPFojLg0dUfwRa6iCd7TUdghUeSnGM6E/UrAqKFyOeVlk067cj687g
+         c5/33ejYINh9WQUCKIvhvK2kKu0YvP/Zu9DoLSXNpbo8YGCLO4qaCBZuKRQW368W8O4f
+         OPyw==
+X-Gm-Message-State: APjAAAXbWX7HekWgS8Iov9Dnt2xDSuxbeUWmhywo2svXXaHCkWb1PGGS
+        KOSA1cbkTsAQ9NvZw0S8yufGKJyEeC3/Yb0DGLA=
+X-Google-Smtp-Source: APXvYqyxeQ2P+HETPeS8/9Pc8PtBe2xH7EgjmDReisx/8RrZ8+e87yP7X+8Tc4gqPPRVxiYGjvFPmdOGSk0Nv0hyIHo=
+X-Received: by 2002:aca:e0c6:: with SMTP id x189mr450295oig.78.1552627222291;
+ Thu, 14 Mar 2019 22:20:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190314064525.15756-1-kjlu@umn.edu>
+In-Reply-To: <20190314064525.15756-1-kjlu@umn.edu>
+From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Date:   Fri, 15 Mar 2019 10:49:46 +0530
+Message-ID: <CAAs364_6MpywkbsFdZrT5TEdrD8+u1eTmg-8_KY0dypy_PgMxQ@mail.gmail.com>
+Subject: Re: [PATCH] greybus: audio_manager: fix a missing check of ida_simple_get
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Mark Greer <mgreer@animalcreek.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ath10k_bmi_write32 and ath10k_bmi_read32 can fail. The fix
-checks their statuses to avoid potential undefined behaviors.
+On Thu, Mar 14, 2019 at 12:15 PM Kangjie Lu <kjlu@umn.edu> wrote:
+>
+> ida_simple_get could fail. The fix inserts a check for its
+> return value.
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/staging/greybus/audio_manager.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/staging/greybus/audio_manager.c b/drivers/staging/greybus/audio_manager.c
+> index d44b070d8862..c2a4af4c1d06 100644
+> --- a/drivers/staging/greybus/audio_manager.c
+> +++ b/drivers/staging/greybus/audio_manager.c
+> @@ -45,6 +45,9 @@ int gb_audio_manager_add(struct gb_audio_manager_module_descriptor *desc)
+>         int err;
+>
+>         id = ida_simple_get(&module_id, 0, 0, GFP_KERNEL);
+> +       if (id < 0)
+> +               return id;
+> +
+>         err = gb_audio_manager_module_create(&module, manager_kset,
+>                                              id, desc);
+>         if (err) {
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/net/wireless/ath/ath10k/core.c | 40 ++++++++++++++++++++------
- 1 file changed, 31 insertions(+), 9 deletions(-)
+Reviewed-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
-index 835b8de92d55..1bb586f0040e 100644
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -629,13 +629,20 @@ static void ath10k_send_suspend_complete(struct ath10k *ar)
- 	complete(&ar->target_suspend);
- }
- 
--static void ath10k_init_sdio(struct ath10k *ar)
-+static int ath10k_init_sdio(struct ath10k *ar)
- {
-+	int ret;
- 	u32 param = 0;
- 
--	ath10k_bmi_write32(ar, hi_mbox_io_block_sz, 256);
--	ath10k_bmi_write32(ar, hi_mbox_isr_yield_limit, 99);
--	ath10k_bmi_read32(ar, hi_acs_flags, &param);
-+	ret = ath10k_bmi_write32(ar, hi_mbox_io_block_sz, 256);
-+	if (ret)
-+		return ret;
-+	ret = ath10k_bmi_write32(ar, hi_mbox_isr_yield_limit, 99);
-+	if (ret)
-+		return ret;
-+	ret = ath10k_bmi_read32(ar, hi_acs_flags, &param);
-+	if (ret)
-+		return ret;
- 
- 	/* Data transfer is not initiated, when reduced Tx completion
- 	 * is used for SDIO. disable it until fixed
-@@ -647,14 +654,22 @@ static void ath10k_init_sdio(struct ath10k *ar)
- 	 */
- 	param &= ~HI_ACS_FLAGS_ALT_DATA_CREDIT_SIZE;
- 	param |= HI_ACS_FLAGS_SDIO_SWAP_MAILBOX_SET;
--	ath10k_bmi_write32(ar, hi_acs_flags, param);
-+	ret = ath10k_bmi_write32(ar, hi_acs_flags, param);
-+	if (ret)
-+		return ret;
- 
- 	/* Explicitly set fwlog prints to zero as target may turn it on
- 	 * based on scratch registers.
- 	 */
--	ath10k_bmi_read32(ar, hi_option_flag, &param);
-+	ret = ath10k_bmi_read32(ar, hi_option_flag, &param);
-+	if (ret)
-+		return ret;
- 	param |= HI_OPTION_DISABLE_DBGLOG;
--	ath10k_bmi_write32(ar, hi_option_flag, param);
-+	ret = ath10k_bmi_write32(ar, hi_option_flag, param);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
- }
- 
- static int ath10k_init_configure_target(struct ath10k *ar)
-@@ -2500,8 +2515,15 @@ int ath10k_core_start(struct ath10k *ar, enum ath10k_firmware_mode mode,
- 		if (status)
- 			goto err;
- 
--		if (ar->hif.bus == ATH10K_BUS_SDIO)
--			ath10k_init_sdio(ar);
-+		if (ar->hif.bus == ATH10K_BUS_SDIO) {
-+			status = ath10k_init_sdio(ar);
-+			if (status) {
-+				ath10k_err(ar,
-+					   "could not init HTC (%d)\n",
-+					   status);
-+				goto err;
-+			}
-+		}
- 	}
- 
- 	ar->htc.htc_ops.target_send_suspend_complete =
--- 
-2.17.1
-
+--
+./va
