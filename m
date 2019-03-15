@@ -2,171 +2,141 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EDBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11FBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36787218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8863218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbfCOQmn (ORCPT
+        id S1729630AbfCOQnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:42:43 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:53783 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728480AbfCOQmm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:42:42 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1h4pum-0004z8-7P; Fri, 15 Mar 2019 17:42:36 +0100
-Date:   Fri, 15 Mar 2019 17:42:36 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Liu, Yongxin" <Yongxin.Liu@windriver.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "pagupta@redhat.com" <pagupta@redhat.com>,
-        "Gortmaker, Paul" <Paul.Gortmaker@windriver.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Subject: Re: [PATCH RT] nvdimm: make lane acquirement RT aware
-Message-ID: <20190315164236.rzbwe7reeprjv3um@linutronix.de>
-References: <20190306095709.23138-1-yongxin.liu@windriver.com>
- <20190307143344.ytsnbmot5tjzjhip@linutronix.de>
- <597B109EC20B76429F71A8A97770610D12A52669@ALA-MBD.corp.ad.wrs.com>
- <20190308094131.ge4wbsvz4p6xikdf@linutronix.de>
- <597B109EC20B76429F71A8A97770610D12A5643B@ALA-MBD.corp.ad.wrs.com>
+        Fri, 15 Mar 2019 12:43:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728182AbfCOQnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:43:52 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09713218AC;
+        Fri, 15 Mar 2019 16:43:49 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 12:43:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?UTF-8?B?SGrDuG5uZXY=?= =?UTF-8?B?w6Vn?= 
+        <arve@android.com>, Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for
+ Android
+Message-ID: <20190315124348.528ecd87@gandalf.local.home>
+In-Reply-To: <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com>
+References: <20190310203403.27915-1-sultan@kerneltoast.com>
+        <20190311174320.GC5721@dhcp22.suse.cz>
+        <20190311175800.GA5522@sultan-box.localdomain>
+        <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
+        <20190311204626.GA3119@sultan-box.localdomain>
+        <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
+        <20190312080532.GE5721@dhcp22.suse.cz>
+        <20190312163741.GA2762@sultan-box.localdomain>
+        <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
+        <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
+        <20190314204911.GA875@sultan-box.localdomain>
+        <20190314231641.5a37932b@oasis.local.home>
+        <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <597B109EC20B76429F71A8A97770610D12A5643B@ALA-MBD.corp.ad.wrs.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-11 00:44:58 [+0000], Liu, Yongxin wrote:
-> > but you still have the ndl_lock->lock which protects the resource. So in
-> > the unlikely (but possible event) that you switch CPUs after obtaining
-> > the CPU number you block on the lock. No harm is done, right?
-> 
-> The resource "lane" can be acquired recursively, so "ndl_lock->lock" is a conditional lock.
-> 
-> ndl_count->count is per CPU.
-> ndl_lock->lock is per lane.
-> 
-> Here is an example:
-> Thread A  on CPU 5 --> nd_region_acquire_lane --> lane# 5 --> get "ndl_lock->lock"
-> --> nd_region_acquire_lane --> lane# 5 --> bypass "ndl_lock->lock" due to "ndl_count->count++".
-> 
-> Thread B on CPU 5 --> nd_region_acquire_lane --> lane# 5 --> bypass "ndl_lock->lock" ("ndl_count->count"
-> was changed by Thread A)
-> 
-> If we use raw_smp_processor_id(), no matter which CPU the thread was migrated to, 
-> if there is another thread running on the old CPU, there will be race condition 
-> due to per CPU variable "ndl_count->count".
+On Thu, 14 Mar 2019 21:36:43 -0700
+Daniel Colascione <dancol@google.com> wrote:
 
-so I've been looking at it again. The recursive locking could have been
-solved better. Like the local_lock() on -RT is doing it.
-Given that you lock with preempt_disable() there should be no in-IRQ
-usage.
-But in the "nd_region->num_lanes >= nr_cpu_ids" case you don't take any
-locks. That would be a problem with raw_smp_processor_id() approach.
+> On Thu, Mar 14, 2019 at 8:16 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Thu, 14 Mar 2019 13:49:11 -0700
+> > Sultan Alsawaf <sultan@kerneltoast.com> wrote:
+> >  
+> > > Perhaps I'm missing something, but if you want to know when a process has died
+> > > after sending a SIGKILL to it, then why not just make the SIGKILL optionally
+> > > block until the process has died completely? It'd be rather trivial to just
+> > > store a pointer to an onstack completion inside the victim process' task_struct,
+> > > and then complete it in free_task().  
+> >
+> > How would you implement such a method in userspace? kill() doesn't take
+> > any parameters but the pid of the process you want to send a signal to,
+> > and the signal to send. This would require a new system call, and be
+> > quite a bit of work.  
+> 
+> That's what the pidfd work is for. Please read the original threads
+> about the motivation and design of that facility.
 
-So what about the completely untested patch here:
+I wasn't Cc'd on the original work, so I haven't read them.
 
-diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index 379bf4305e615..98c2e9df4b2e4 100644
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -109,7 +109,8 @@ unsigned sizeof_namespace_label(struct nvdimm_drvdata *ndd);
- 			res; res = next, next = next ? next->sibling : NULL)
- 
- struct nd_percpu_lane {
--	int count;
-+	struct task_struct *owner;
-+	int nestcnt;
- 	spinlock_t lock;
- };
- 
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index e2818f94f2928..8a62f9833513f 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -946,19 +946,17 @@ int nd_blk_region_init(struct nd_region *nd_region)
-  */
- unsigned int nd_region_acquire_lane(struct nd_region *nd_region)
- {
-+	struct nd_percpu_lane *ndl_lock;
- 	unsigned int cpu, lane;
- 
--	cpu = get_cpu();
--	if (nd_region->num_lanes < nr_cpu_ids) {
--		struct nd_percpu_lane *ndl_lock, *ndl_count;
--
--		lane = cpu % nd_region->num_lanes;
--		ndl_count = per_cpu_ptr(nd_region->lane, cpu);
--		ndl_lock = per_cpu_ptr(nd_region->lane, lane);
--		if (ndl_count->count++ == 0)
--			spin_lock(&ndl_lock->lock);
--	} else
--		lane = cpu;
-+	cpu = raw_smp_processor_id();
-+	lane = cpu % nd_region->num_lanes;
-+	ndl_lock  = per_cpu_ptr(nd_region->lane, lane);
-+	if (ndl_lock->owner != current) {
-+		spin_lock(&ndl_lock->lock);
-+		ndl_lock->owner = current;
-+	}
-+	ndl_lock->nestcnt++;
- 
- 	return lane;
- }
-@@ -966,17 +964,16 @@ EXPORT_SYMBOL(nd_region_acquire_lane);
- 
- void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane)
- {
--	if (nd_region->num_lanes < nr_cpu_ids) {
--		unsigned int cpu = get_cpu();
--		struct nd_percpu_lane *ndl_lock, *ndl_count;
-+	struct nd_percpu_lane *ndl_lock;
- 
--		ndl_count = per_cpu_ptr(nd_region->lane, cpu);
--		ndl_lock = per_cpu_ptr(nd_region->lane, lane);
--		if (--ndl_count->count == 0)
--			spin_unlock(&ndl_lock->lock);
--		put_cpu();
--	}
--	put_cpu();
-+	ndl_lock = per_cpu_ptr(nd_region->lane, lane);
-+	WARN_ON(ndl_lock->nestcnt == 0);
-+	WARN_ON(ndl_lock->owner != current);
-+	if (--ndl_lock->nestcnt)
-+		return;
-+
-+	ndl_lock->owner = NULL;
-+	spin_unlock(&ndl_lock->lock);
- }
- EXPORT_SYMBOL(nd_region_release_lane);
- 
-@@ -1042,7 +1039,8 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 
- 		ndl = per_cpu_ptr(nd_region->lane, i);
- 		spin_lock_init(&ndl->lock);
--		ndl->count = 0;
-+		ndl->owner = NULL;
-+		ndl->nestcnt = 0;
- 	}
- 
- 	for (i = 0; i < ndr_desc->num_mappings; i++) {
+> 
+> > If you can solve this with an ebpf program, I
+> > strongly suggest you do that instead.  
+> 
 
-> Thanks,
-> Yongxin
 
-Sebastian
+
+> We do want killed processes to die promptly. That's why I support
+> boosting a process's priority somehow when lmkd is about to kill it.
+> The precise way in which we do that --- involving not only actual
+> priority, but scheduler knobs, cgroup assignment, core affinity, and
+> so on --- is a complex topic best left to userspace. lmkd already has
+> all the knobs it needs to implement whatever priority boosting policy
+> it wants.
+> 
+> Hell, once we add a pidfd_wait --- which I plan to work on, assuming
+> nobody beats me to it, after pidfd_send_signal lands --- you can
+> imagine a general-purpose priority inheritance mechanism expediting
+> process death when a high-priority process waits on a pidfd_wait
+> handle for a condemned process. You know you're on the right track
+> design-wise when you start seeing this kind of elegant constructive
+> interference between seemingly-unrelated features. What we don't need
+> is some kind of blocking SIGKILL alternative or backdoor event
+> delivery system.
+> 
+> We definitely don't want to have to wait for a process's parent to
+> reap it. Instead, we want to wait for it to become a zombie. That's
+> why I designed my original exithand patch to fire death notification
+> upon transition to the zombie state, not upon process table removal,
+> and I expect pidfd_wait (or whatever we call it) to act the same way.
+> 
+> In any case, there's a clear path forward here --- general-purpose,
+> cheap, and elegant --- and we should just focus on doing that instead
+> of more complex proposals with few advantages.
+
+If you add new pidfd systemcalls then making a new way to send a signal
+and block till it does die or whatever is more acceptable than adding a
+new signal that changes the semantics of sending signals, which is what
+I was against.
+
+I do agree with Joel about bloating task_struct too. If anything, have
+a wait queue you add, where you can allocate a descriptor with the task
+dieing and task killing, and just search this queue on dying. We could
+add a TIF flag to the task as well to let the exiting of this task know
+it should do such an operation.
+
+-- Steve
