@@ -2,100 +2,56 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFE5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77F7C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D162184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1042184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbfCOJOT (ORCPT
+        id S1728629AbfCOJUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:14:19 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:21571 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727282AbfCOJOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:14:19 -0400
-X-UUID: dad85c0880044b85b0c26a529b841199-20190315
-X-UUID: dad85c0880044b85b0c26a529b841199-20190315
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 823694479; Fri, 15 Mar 2019 17:14:10 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 15 Mar
- 2019 17:14:09 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 15 Mar 2019 17:14:08 +0800
-Message-ID: <1552641248.10179.134.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by
- node
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 15 Mar 2019 17:14:08 +0800
-In-Reply-To: <20190315091127.GF7752@kuha.fi.intel.com>
-References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
-         <20190315081835.GD7752@kuha.fi.intel.com>
-         <20190315091127.GF7752@kuha.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 15 Mar 2019 05:20:30 -0400
+Received: from verein.lst.de ([213.95.11.211]:33266 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727282AbfCOJUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 05:20:30 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id BC9AC68C4E; Fri, 15 Mar 2019 10:20:20 +0100 (CET)
+Date:   Fri, 15 Mar 2019 10:20:20 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jianchao Wang <jianchao.w.wang@oracle.com>
+Cc:     axboe@kernel.dk, hch@lst.de, jthumshirn@suse.de, hare@suse.de,
+        josef@toxicpanda.com, bvanassche@acm.org, sagi@grimberg.me,
+        keith.busch@intel.com, jsmart2021@gmail.com,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8]: blk-mq: use static_rqs to iterate busy tags
+Message-ID: <20190315092020.GA2405@lst.de>
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Fri, 2019-03-15 at 11:11 +0200, Heikki Krogerus wrote:
-> On Fri, Mar 15, 2019 at 10:18:35AM +0200, Heikki Krogerus wrote:
-> > Andy already pointed out that you need to use fwnodes.
-> > 
-> > Rule of thumb: You always use fwnodes. Only if there is something that
-> > can't be done with fwnodes you use DT or ACPI nodes directly.
-> > 
-> > In this case there is absolutely nothing that would prevent you from
-> > using fwnodes.
+On Fri, Mar 15, 2019 at 04:57:36PM +0800, Jianchao Wang wrote:
+> Hi Jens
 > 
-> ...
-> 
-> > +/**
-> > + * usb_role_switch_get_by_node - Find USB role switch by it's parent node
-> > + * @node: The node that register USB role switch
-> > + *
-> > + * Finds and returns role switch registered by @node. The reference count
-> > + * for the found switch is incremented.
-> > + */
-> > +struct usb_role_switch *usb_role_switch_get_by_node(struct device_node *node)
-> 
-> This is my proposal for function prototype:
-> 
-> struct usb_role_switch *
-> fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
-Ok, thanks again
-> 
-> 
-> thanks,
-> 
+> As we know, there is a risk of accesing stale requests when iterate
+> in-flight requests with tags->rqs[] and this has been talked in following
+> thread,
+> [1] https://marc.info/?l=linux-scsi&m=154511693912752&w=2
+> [2] https://marc.info/?l=linux-block&m=154526189023236&w=2
 
-
+I'd rather take one step back and figure out why we are iterating
+the busy requests.  There really shouldn't be any reason why a driver
+is even doings that (vs some error handling helpers in the core
+block code that can properly synchronize).
