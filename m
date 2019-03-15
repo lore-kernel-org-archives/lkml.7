@@ -2,308 +2,213 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64305C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB81C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283A921871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDB92077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbfCOEkE (ORCPT
+        id S1727478AbfCOEtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 00:40:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:13410 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbfCOEkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 00:40:03 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 15 Mar 2019 00:49:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726116AbfCOEtM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 00:49:12 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2F4hox8070048
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 00:49:11 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r83935crk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 00:49:11 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
+        Fri, 15 Mar 2019 04:49:09 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 15 Mar 2019 04:49:07 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2F4n6O841156646
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 Mar 2019 04:49:06 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 84B9A11C05B;
+        Fri, 15 Mar 2019 04:49:06 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED6DE11C05C;
+        Fri, 15 Mar 2019 04:49:05 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 15 Mar 2019 04:49:05 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B41F811DB98;
-        Fri, 15 Mar 2019 04:40:02 +0000 (UTC)
-Received: from [10.72.12.187] (ovpn-12-187.pek2.redhat.com [10.72.12.187])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A9B65E7DC;
-        Fri, 15 Mar 2019 04:39:54 +0000 (UTC)
-Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
- vmap()
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Miller <davem@davemloft.net>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peterx@redhat.com,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-parisc@vger.kernel.org
-References: <20190311235140-mutt-send-email-mst@kernel.org>
- <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
- <20190312075033-mutt-send-email-mst@kernel.org>
- <1552405610.3083.17.camel@HansenPartnership.com>
- <20190312200450.GA25147@redhat.com>
- <1552424017.14432.11.camel@HansenPartnership.com>
- <20190313160529.GB15134@infradead.org>
- <1552495028.3022.37.camel@HansenPartnership.com>
- <20190314064004-mutt-send-email-mst@kernel.org>
- <74015196-2e18-4fe0-50ac-0c9d497315c7@redhat.com>
- <20190314193333.GA24542@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <37ef63f2-b2f5-a9b0-564a-912970e46af1@redhat.com>
-Date:   Fri, 15 Mar 2019 12:39:47 +0800
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 35EF8A00E9;
+        Fri, 15 Mar 2019 15:49:03 +1100 (AEDT)
+Subject: Re: [PATCH 5/5] ocxl: Remove some unused exported symbols
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190227045741.21412-1-alastair@au1.ibm.com>
+ <20190313040702.14276-1-alastair@au1.ibm.com>
+ <20190313040702.14276-6-alastair@au1.ibm.com>
+From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Date:   Fri, 15 Mar 2019 15:49:02 +1100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190314193333.GA24542@redhat.com>
+In-Reply-To: <20190313040702.14276-6-alastair@au1.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 15 Mar 2019 04:40:03 +0000 (UTC)
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031504-0020-0000-0000-0000032386CC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031504-0021-0000-0000-000021758E07
+Message-Id: <c563cc4c-0bfd-6fa3-3919-63a1306e621e@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-15_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=941 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903150034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 13/3/19 3:07 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> Remove some unused exported symbols.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-On 2019/3/15 上午3:33, Andrea Arcangeli wrote:
-> Hello Jason,
->
-> On Thu, Mar 14, 2019 at 09:49:03PM +0800, Jason Wang wrote:
->> Yes since we don't want to slow down 32bit.
-> If you've a lot of ram there's no justification to stick to a 32bit
-> kernel, so I don't think there's need to maintain a separate model
-> just for 32bit. I really wouldn't care about the performance of 32bit
-> with >700MB of RAM if that would cause any maintenance burden. Let's
-> focus on the best 64bit implementation that will work equally
-> optimally on 32bit with <= 700M of RAM.
+See comments on v1
 
+> ---
+>   drivers/misc/ocxl/config.c        |  2 --
+>   drivers/misc/ocxl/ocxl_internal.h | 23 +++++++++++++++++++++++
+>   include/misc/ocxl.h               | 23 -----------------------
+>   3 files changed, 23 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+> index 026ac2ac4f9c..c90c2e4875bf 100644
+> --- a/drivers/misc/ocxl/config.c
+> +++ b/drivers/misc/ocxl/config.c
+> @@ -299,7 +299,6 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
+>   	}
+>   	return 1;
+>   }
+> -EXPORT_SYMBOL_GPL(ocxl_config_check_afu_index);
+>   
+>   static int read_afu_name(struct pci_dev *dev, struct ocxl_fn_config *fn,
+>   			struct ocxl_afu_config *afu)
+> @@ -535,7 +534,6 @@ int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count)
+>   {
+>   	return pnv_ocxl_get_pasid_count(dev, count);
+>   }
+> -EXPORT_SYMBOL_GPL(ocxl_config_get_pasid_info);
+>   
+>   void ocxl_config_set_afu_pasid(struct pci_dev *dev, int pos, int pasid_base,
+>   			u32 pasid_count_log)
+> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+> index 321b29e77f45..06fd98c989c8 100644
+> --- a/drivers/misc/ocxl/ocxl_internal.h
+> +++ b/drivers/misc/ocxl/ocxl_internal.h
+> @@ -107,6 +107,29 @@ void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+>   int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
+>   void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+>   
+> +/*
+> + * Get the max PASID value that can be used by the function
+> + */
+> +int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+> +
+> +/*
+> + * Check if an AFU index is valid for the given function.
+> + *
+> + * AFU indexes can be sparse, so a driver should check all indexes up
+> + * to the maximum found in the function description
+> + */
+> +int ocxl_config_check_afu_index(struct pci_dev *dev,
+> +				struct ocxl_fn_config *fn, int afu_idx);
+> +
+> +/**
+> + * Update values within a Process Element
+> + *
+> + * link_handle: the link handle associated with the process element
+> + * pasid: the PASID for the AFU context
+> + * tid: the new thread id for the process element
+> + */
+> +int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+> +
+>   struct ocxl_context *ocxl_context_alloc(void);
+>   int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+>   			struct address_space *mapping);
+> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> index 4544573cc93c..9530d3be1b30 100644
+> --- a/include/misc/ocxl.h
+> +++ b/include/misc/ocxl.h
+> @@ -56,15 +56,6 @@ struct ocxl_fn_config {
+>   int ocxl_config_read_function(struct pci_dev *dev,
+>   				struct ocxl_fn_config *fn);
+>   
+> -/*
+> - * Check if an AFU index is valid for the given function.
+> - *
+> - * AFU indexes can be sparse, so a driver should check all indexes up
+> - * to the maximum found in the function description
+> - */
+> -int ocxl_config_check_afu_index(struct pci_dev *dev,
+> -				struct ocxl_fn_config *fn, int afu_idx);
+> -
+>   /*
+>    * Read the configuration space of a function for the AFU specified by
+>    * the index 'afu_idx'. Fills in a ocxl_afu_config structure
+> @@ -74,11 +65,6 @@ int ocxl_config_read_afu(struct pci_dev *dev,
+>   				struct ocxl_afu_config *afu,
+>   				u8 afu_idx);
+>   
+> -/*
+> - * Get the max PASID value that can be used by the function
+> - */
+> -int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+> -
+>   /*
+>    * Tell an AFU, by writing in the configuration space, the PASIDs that
+>    * it can use. Range starts at 'pasid_base' and its size is a multiple
+> @@ -188,15 +174,6 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
+>   		void *xsl_err_data);
+>   
+> -/**
+> - * Update values within a Process Element
+> - *
+> - * link_handle: the link handle associated with the process element
+> - * pasid: the PASID for the AFU context
+> - * tid: the new thread id for the process element
+> - */
+> -int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+> -
+>   /*
+>    * Remove a Process Element from the Shared Process Area for a link
+>    */
+> 
 
-Yes, but probably there are still some reasons of keeping copy_user() 
-friends as a fallback. When we have a large virtqueue, the ring may 
-occupy more than one page. This means the VA might not be contiguous 
-when using kmap(). Instead of doing tricks in the accessories, maybe 
-it's or simpler better just fall back to copy_user() in this case. And 
-we meet the similar issue when software device IOTLB is used for vhost. 
-And in the following example for gup, we can simply do a fallback when 
-we race with the invalidation.
-
-Michael also tends to keep the copy_user(), he suggested to use 
-copy_user() for VIVT archs then there's no need for a explicit 
-flush_dcache_page(). And he also want a module parameter for falling 
-back to copy_user() for e.g debugging purpose.
-
-
->
-> Talking to Jerome about the set_page_dirty issue, he raised the point
-> of what happens if two thread calls a mmu notifier invalidate
-> simultaneously. The first mmu notifier could call set_page_dirty and
-> then proceed in try_to_free_buffers or page_mkclean and then the
-> concurrent mmu notifier that arrives second, then must not call
-> set_page_dirty a second time.
->
-> With KVM sptes mappings and vhost mappings you would call
-> set_page_dirty (if you invoked gup with FOLL_WRITE) only when
-> effectively tearing down any secondary mapping (you've got pointers in
-> both cases for the mapping). So there's no way to risk a double
-> set_page_dirty from concurrent mmu notifier invalidate because the
-> invalidate takes a lock when it has to teardown the mapping and so
-> set_page_dirty is only run in the first invalidate method and not in
-> the second. In the spte case even better, as you wouldn't need to call
-> it even at teardown time unless the spte is dirty (if shadow mask
-> allows dirty sptes with EPT2 or NPT or shadow MMU).
-
-
-I see, the sounds indeed better.
-
-
->
-> If you instead had to invalidate a secondary MMU mapping that isn't
-> tracked by the driver (again: not vhost nor KVM case), you could have
-> used the dirty bit of the kernel pagetable to call set_page_dirty and
-> disambiguate but that's really messy, and it would prevent the use of
-> gigapages in the direct mapping too and it'd require vmap for 4k
-> tracking.
->
-> To make sure set_page_dirty is run a single time no matter if the
-> invalidate known when a mapping is tear down, I suggested the below
-> model:
->
->    access = FOLL_WRITE
->
-> repeat:
->    page = gup_fast(access)
->    put_page(page) /* need a way to drop FOLL_GET from gup_fast instead! */
->
->    spin_lock(mmu_notifier_lock);
->    if (race with invalidate) {
->      spin_unlock..
->      goto repeat;
->    }
->    if (access == FOLL_WRITE)
->      set_page_dirty(page)
->    establish writable mapping in secondary MMU on page
->    spin_unlock
->
-> (replace spin_lock with mutex_lock for vhost of course if you stick to
-> a mutex and _start/_end instead of non-sleepable ->invalidate_range)
-
-
-Yes, I probably stick to the vq mutex since the invalidation needs to be 
-synchronized with the whole packet processing routine.
-
-
-> "race with invalidate" is the usual "mmu_notifier_retry" in kvm_host.h
-> to be implemented for vhost.
->
-> We could add a FOLL_DIRTY flag to add to FOLL_TOUCH to move the
-> set_page_dirty inside GUP forced (currently it's not forced if the
-> linux pte is already dirty). And we could remove FOLL_GET.
->
-> Then if you have the ability to disambiguate which is the first
-> invalidate that tears down a mapping to any given page (vhost can do
-> that trivially, it's just a pointer to a page struct to kmap), in the
-> mmu notifier invalidate just before dropping the spinlock you would
-> do this check:
->
-> def vhost_invalidate_range_start():
->     [..]
->     spin_lock(mmu_notifier_lock);
->     [..]
->     if (vhost->page_pointer) {
->        if (access == FOLL_WRITE)
-> 	VM_WARN_ON(!PageDirty(vhost->page_pointer));
->        vhost->page_pointer = NULL;
->        /* no put_page, already done at gup time */
->     }
->     spin_unlock(..
->
-> Generally speaking set_page_dirty is safer done after the last
-> modification to the data of the page. However the way stable page
-> works, as long as the mmu notifier invalidate didn't run, the PG_dirty
-> cannot go away.
-
-
-Ok.
-
-
->
-> So this model solves the issue with guaranteeing a single
-> set_page_dirty is run before page_mkclean or try_to_free_buffers can
-> run, even for drivers that implement the invalidate as a generic "TLB
-> flush" across the whole secondary MMU and that cannot disambiguate the
-> first invalidate from a second invalidate if they're issued
-> concurrently on the same address by two different CPUs.
->
-> So for those drivers that can disambiguate trivially (like KVM and
-> vhost) we'll just add a debug check in the invalidate to validate the
-> common code for all mmu notifier users.
->
-> This is the solution for RDMA hardware and everything that can support
-> mmu notifiers too and they can take infinitely long secondary MMU
-> mappins without interfering with stable pages at all (i.e. long term
-> pins but without pinning) perfectly safe and transparent to the whole
-> stable page code.
->
-> I think O_DIRECT for stable pages shall be solved taking the page lock
-> or writeback lock or a new rwsem in the inode that is taken for
-> writing by page_mkclean and try_to_free_buffers and for reading by
-> outstanding O_DIRECT in flight I/O, like I suggested probably ages ago
-> but then we only made GUP take the page pin, which is fine for mmu
-> notifier actually (except those didn't exist back then). To solve
-> O_DIRECT we can leverage the 100% guarantee that the pin will be
-> dropped ASAP and stop page_mkclean and stop or trylock in
-> try_to_free_buffers in such case.
->
-> mm_take_all_locks is major hurdle that prevents usage in O_DIRECT
-> case, even if we "cache it" if you fork(); write; exit() in a loop
-> it'll still cause heavy lock overhead. MMU notifier registration isn't
-> intended to happen in fast and frequent paths like the write()
-> syscall. Dropping mm_take_all_locks would bring other downsides: a
-> regular quiescent point can happen in between _start/_end and _start
-> must be always called first all the mmu notifier retry counters we
-> rely on would break. One way would be to add srcu_read_lock _before_
-> you can call mm_has_mm_has_notifiers(mm), then yes we could replace
-> mm_take_all_locks with synchronize_srcu. It would save a lot of CPU
-> and a ton of locked operations, but it'd potentially increase the
-> latency of the registration so the first O_DIRECT write() in a process
-> could still potentially stall (still better than mm_take_all_locks
-> which would use a lot more CPU and hurt SMP scalability in threaded
-> programs). The downside is all VM fast paths would get some overhead
-> because of srcu_read_lock even when mmu notifier is not registered,
-> which is what we carefully avoided by taking a larger hit in the
-> registration with mm_take_all_locks. This is why I don't think mmu
-> notifier is a good solution to solve O_DIRECT stable pages even in
-> theory O_DIRECT could use the exact same model as vhost to solve
-> stable pages.
->
-> If we solve O_DIRECT with new per-page locking or a new rwsem inode
-> lock leveraging the fact we're guaranteed the pin to go away ASAP,
-> what's left is the case of PCI devices mapping userland memory for
-> indefinite amount of time that cannot support MMU notifier because of
-> hardware limitations.
-
-
-Yes and this is part of the issue we met in vhost TX zerocopy code. 
-What's more interesting is that a skb could be held of a software layer 
-e.g qdisc as well. MMU notifier could be used for dealing with such 
-software holding e.g copy packets into new pages. But this may requires 
-more thoughts since this may race with networking stack.
-
-
->
-> Mentioning virtualization as a case taking long term PIN is incorrect,
-> that didn't happen since the introduction of MMU notifier.
->
-> vfio for device assignment to KVM takes the long term pins, but that's
-> because the iommus may not support the mmu notifier, mmu notifier
-> could solve the vfio case too.
-
-
-This might require the support of page faults from IOMMU hardware.
-
-
->
-> PCI devices that pretend to keep a constant mapping on userland
-> virtual memory and that cannot support MMU notifier because they lack
-> a secondary MMU, cripple the Linux VM and there's no solution to
-> that. Even if we solve the stable pages problem, they will still
-> practically disable all advanced VM features.
->
-> I think it would be ok to solve the stable pages in 3 different ways:
->
-> 1) mmu notifier as above when mmu_notifier_register doesn't need to
->     run often and the hardware can support it
->
-> 2) O_DIRECT with new locking stopping page_mkclean/try_to_free_buffers
->     until I/O completion, leveraging the fact the pin&lock are
->     guaranteed to be dropped&released ASAP
->
-> 3) something else for pci devices that cannot support MMU notifier
->     because of hardware limitations, bounce buffers would be fine as
->     well
->
-> I'm not even sure if in 3) it is worth worrying about being able to
-> routinely flush to disk the dirty data, but then bounce buffers could
-> solve that. Altering the page mapped in the pte sounds like a complex
-> solution when you could copy the physical page just before issuing the
-> I/O in the writeback code. To find if a GUP pin exists it's enough to
-> check what KSM does:
->
-> 		/*
-> 		 * Check that no O_DIRECT or similar I/O is in progress on the
-> 		 * page
-> 		 */
-> 		if (page_mapcount(page) + 1 + swapped != page_count(page)) {
->
-> That can give false positives (even through random pins coming from
-> speculative cache lookups), but not false negatives.
->
-> Thanks,
-> Andrea
-
-
-Thanks for the patient and detailed explanation with lots of 
-backgrounds. It help to understand the whole picture a lot.
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+andrew.donnellan@au1.ibm.com  IBM Australia Limited
 
