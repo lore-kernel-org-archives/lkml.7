@@ -2,182 +2,93 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE64C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339E0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD54218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFE621872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552664718;
-	bh=Bvuob3aBdY3fJSwQ9N7TrCmMqBOE9Jo7y/wVG2WYZ5Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NwG45+Ymglk1yz1ttt2AWTpQJis7bLHkjlneXNLIl7gHDsVh251pTyWDZ5bI5U+ho
-	 jH6QX5koFklzd4XGwUDVYeyGYM/ZbbV6/J+d7EucFHR/19QzONFRZDT3+DogMx3PrN
-	 OiAwJ1Z4sRa3T+G07yznpPGf/CIOp1dKwhm9GIRw=
+	s=default; t=1552664876;
+	bh=TbYzODbXfxV0ga7bs7I3xFjsxqoiCyvzDFDz+5RF6KE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rJJduib8eX4qOERVrFCuOi42CO6psWFDnTnnjxtDVCOdb4qI5AjyHgfo1poksh5MV
+	 BxttlRx7DjBPcoNc2YcAN2WJcT0qK/IVrZkORbnh4oekH0IBveRdrRDb57Vo4il5U1
+	 Vm32Cr7FJ/bjFRhfhkjs8hBWopWWN6x8UXL5YXss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbfCOPpR (ORCPT
+        id S1729346AbfCOPry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 11:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbfCOPpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 11:45:17 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1CB0218C3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 15:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552664715;
-        bh=Bvuob3aBdY3fJSwQ9N7TrCmMqBOE9Jo7y/wVG2WYZ5Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zdbDsxmXCqXVRrPnVsJnhAH3vVcr3CoSOk/r1mUjFeCU785NzqXD62aNMgr41AQi0
-         6nfbohXoo4IrcCW9xb0psdE8NTeY6Qe9tKRBoD1Ap1ekrCegwbshMHQ4nAm8yVKdw9
-         WQV1bGPEddTonprgHvlOjQGt7c1M/WTxsJMgUpSE=
-Received: by mail-qk1-f169.google.com with SMTP id c189so5770967qke.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 08:45:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAVLo6AQl3ldMjZaFqzGgVrRMnZmsi/DD5lFWgC+NcczNOas91oT
-        HM5miCTkpL6wN7nK9B56VvPbXO1jr2Iu5mpXgg==
-X-Google-Smtp-Source: APXvYqwrlOTUWoFVXlcXfVIB4JA4jgMrwfdOxySg9vTNR3xP7KKIOldumKwT/x2Ced1rB/YzNIjlM/bO1AfoCy2aXYY=
-X-Received: by 2002:a37:d285:: with SMTP id f127mr3346624qkj.147.1552664714936;
- Fri, 15 Mar 2019 08:45:14 -0700 (PDT)
+        Fri, 15 Mar 2019 11:47:54 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:42369 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfCOPrx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 11:47:53 -0400
+Received: by mail-yw1-f68.google.com with SMTP id e76so7603878ywa.9
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 08:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=toHu9kiGB504MlX/pYUW3ZiVDLdNJnCMuFCUpttf+Cc=;
+        b=df3VcRvtyVWA6kKsgkrakmP8Fmnrmn6kjIC6ev8joHwaKHQahex9DLZrN5HnWIVK2F
+         mpQncZ+cTttGxmbwhWbdJlH1It525sI+9vFyaBtJN0rxA/IQkXIussT/lIjpqeysY8Ca
+         nSjNOMU0diZ0ylMjP47uWmlWEooOLjVyaYZS1v3cto4Ilp7jEcvF+mJ/edasL7mPc84t
+         R0QbzPPjfgqPofs6yqhOpFgGTnJl4sr5W6f5F6qMKCiatUcDdlvRGUR9KrlM98Tia4PW
+         Ib8n24A0czBt4n2w1YlewpUrKp6r9BOJ2gtFs+1hlp9/ozOdEkxD5AtyxN56//gfFkeP
+         zbyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=toHu9kiGB504MlX/pYUW3ZiVDLdNJnCMuFCUpttf+Cc=;
+        b=WwnrnJ1bcNxdU812Wcki5+a4wSxfeQs8ibGB+XvE4PAySuo5wvWK4pL/O9Uc0exwqI
+         SqRlXMP8d/mbGLJAtWX0MjNIzch1pyXE79EwyC2Y7xBVQqYeRe5SPhTcwshYw7ZISsKX
+         SlIPPkpXi0crtsL57RaBiKDYDoB+9QnMHWFF8GhW/KO2i3S78RfzgXvM72/BeB6bxrQG
+         vbrYFih6a3baOtrBFAV7gZ8c33P2IZ+EuUNZKxG0nqDWTrfgYP8d181xH9pM5LGt9/4b
+         Y3sSxd2pu27TvNlhu25K3GIiEXzZgCGuOQ2Vii1mVAuGo3l/OkkhQNKEY8prst7+JJSC
+         ui5Q==
+X-Gm-Message-State: APjAAAVRh0YeCIl53aBKFTtInnYL3HlAduXpjbElaaMoGSEUG/Xbvzfg
+        AyV53+6Zr7PDI1rDRFP7Zko=
+X-Google-Smtp-Source: APXvYqxZHYhxv9Fp9qaezwdtiwV3FBRL861GuB3mX0pTCGsk5iZ19rkU+Csgzs11ysa7gymqaCKW5w==
+X-Received: by 2002:a25:9701:: with SMTP id d1mr3534773ybo.125.1552664872754;
+        Fri, 15 Mar 2019 08:47:52 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::2:5c56])
+        by smtp.gmail.com with ESMTPSA id p7sm115174ywl.17.2019.03.15.08.47.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Mar 2019 08:47:51 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 08:47:49 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel/workqueue: Use __printf markup to silence
+ compiler in function 'alloc_workqueue'
+Message-ID: <20190315154749.GM50184@devbig004.ftw2.facebook.com>
+References: <20190312202126.29868-1-malat@debian.org>
 MIME-Version: 1.0
-References: <20190315095414.28520-1-narmstrong@baylibre.com>
-In-Reply-To: <20190315095414.28520-1-narmstrong@baylibre.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 15 Mar 2019 10:45:03 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ_+=h_Xpdm2RJd0mtHS1YxtxDwNxY19oAe4-+JNd8A7A@mail.gmail.com>
-Message-ID: <CAL_JsqJ_+=h_Xpdm2RJd0mtHS1YxtxDwNxY19oAe4-+JNd8A7A@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: dw-hdmi: disable SCDC configuration for
- invalid setups
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        linux-amlogic@lists.infradead.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190312202126.29868-1-malat@debian.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 4:54 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> This patch is an attempt to limit HDMI 2.0 SCDC setup when :
-> - the SoC embeds an HDMI 1.4 only controller
-> - the EDID supports SCDC but not scrambling
-> - the EDID supports SCDC scrambling but not for low TMDS bit rates,
->   while only supporting low TMDS bit rates
->
-> This to avoid communicating with the SCDC DDC slave uncessary, and
-> setting the DW-HDMI TMDS Scrambler setup when not supported by the
-> underlying hardware.
->
-> Reported-by: Rob Herring <robh@kernel.org>
-> Fixes: 264fce6cc2c1 ("drm/bridge: dw-hdmi: Add SCDC and TMDS Scrambling support")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->
-> Rob,
->
-> this patch should also solve your issue with your 11' display, could you
-> test it ?
+On Tue, Mar 12, 2019 at 09:21:26PM +0100, Mathieu Malaterre wrote:
+> Silence warnings (triggered at W=1) by adding relevant __printf attributes.
+> 
+>   kernel/workqueue.c:4249:2: warning: function 'alloc_workqueue' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+> 
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 
-That works for me.
+Applied to wq/for-5.2.
 
-Tested-by: Rob Herring <robh@kernel.org>
+Thanks.
 
-Too answer your question on the other thread, there's not really any
-model name for the panel I have. Probably what's in the EDID is the
-best thing to go on.
-
-Here's the panel on Amazon:
-
-https://www.amazon.com/gp/product/B07GDDG3WJ/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1
-
-> If this works, I will focus on the underlying issue where the RK3399 SoC
-> freezes in your setup.
->
-> Thanks,
-> Neil
->
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 34 ++++++++++++++++++++---
->  1 file changed, 30 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index a63e5f0dae56..db761329a1e3 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -1037,6 +1037,31 @@ void dw_hdmi_phy_i2c_write(struct dw_hdmi *hdmi, unsigned short data,
->  }
->  EXPORT_SYMBOL_GPL(dw_hdmi_phy_i2c_write);
->
-> +/* Filter out invalid setups to avoid configuring SCDC and scrambling */
-> +static bool dw_hdmi_support_scdc(struct dw_hdmi *hdmi)
-> +{
-> +       struct drm_display_info *display = &hdmi->connector.display_info;
-> +
-> +       /* Completely disable SCDC support for older controllers */
-> +       if (hdmi->version < 0x200a)
-> +               return false;
-> +
-> +       /* Disable if SCDC is not supported, or if an HF-VSDB block is absent */
-> +       if (!display->hdmi.scdc.supported ||
-> +           !display->hdmi.scdc.scrambling.supported)
-> +               return false;
-> +
-> +       /*
-> +        * Disable if display only support low TMDS rates and scrambling
-> +        * for low rates is not supported either
-> +        */
-> +       if (!display->hdmi.scdc.scrambling.low_rates &&
-> +           display->max_tmds_clock <= 340000)
-> +               return false;
-> +
-> +       return true;
-> +}
-> +
->  /*
->   * HDMI2.0 Specifies the following procedure for High TMDS Bit Rates:
->   * - The Source shall suspend transmission of the TMDS clock and data
-> @@ -1055,7 +1080,7 @@ void dw_hdmi_set_high_tmds_clock_ratio(struct dw_hdmi *hdmi)
->         unsigned long mtmdsclock = hdmi->hdmi_data.video_mode.mtmdsclock;
->
->         /* Control for TMDS Bit Period/TMDS Clock-Period Ratio */
-> -       if (hdmi->connector.display_info.hdmi.scdc.supported) {
-> +       if (dw_hdmi_support_scdc(hdmi)) {
->                 if (mtmdsclock > HDMI14_MAX_TMDSCLK)
->                         drm_scdc_set_high_tmds_clock_ratio(hdmi->ddc, 1);
->                 else
-> @@ -1579,8 +1604,9 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
->
->         /* Set up HDMI_FC_INVIDCONF */
->         inv_val = (hdmi->hdmi_data.hdcp_enable ||
-> -                  vmode->mtmdsclock > HDMI14_MAX_TMDSCLK ||
-> -                  hdmi_info->scdc.scrambling.low_rates ?
-> +                  (dw_hdmi_support_scdc(hdmi) &&
-> +                   (vmode->mtmdsclock > HDMI14_MAX_TMDSCLK ||
-> +                    hdmi_info->scdc.scrambling.low_rates)) ?
->                 HDMI_FC_INVIDCONF_HDCP_KEEPOUT_ACTIVE :
->                 HDMI_FC_INVIDCONF_HDCP_KEEPOUT_INACTIVE);
->
-> @@ -1646,7 +1672,7 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
->         }
->
->         /* Scrambling Control */
-> -       if (hdmi_info->scdc.supported) {
-> +       if (dw_hdmi_support_scdc(hdmi)) {
->                 if (vmode->mtmdsclock > HDMI14_MAX_TMDSCLK ||
->                     hdmi_info->scdc.scrambling.low_rates) {
->                         /*
-> --
-> 2.20.1
->
+-- 
+tejun
