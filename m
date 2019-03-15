@@ -2,112 +2,89 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88625C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEF3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD43218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYIpj78U"
+	by mail.kernel.org (Postfix) with ESMTP id 0B4CA21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfCOSp6 (ORCPT
+        id S1727218AbfCOSqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:45:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35278 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfCOSp5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:45:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id j5so6962451pfa.2;
-        Fri, 15 Mar 2019 11:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VK+LR0HkVqg+g+PEO6ILwoTxff4AKvWaTBsfdr3of4I=;
-        b=iYIpj78Uow+epfVI2I4/DzbxPYJo+kPm8shi/mF9THDc2mHwDQ7+QfdOkqwWuWszJN
-         5n6ZW891Z5JP0F38trCOPPevhIl38tHasEC+R5Om/hD0xMO7WfPKzBnoouFxgHySeD8a
-         b2go/a1LrpojG1Jtjs23b4Z7jDVWNz/UXDobDx8CaIeU1C7xpawuRrHHfNNeXQK3EdAT
-         KBAQytW9RdyH23f9LFb2QtaIEywM8onAMO5JsDPt5hLmWBexeKeyIWXNSwGt+UOUfsU7
-         kDaPfOoUUpi9Os0AgqukbTED8SLsBS+Q8G39Qgh7tqgjLcaY8dJPw73fpWlu1Zbm8RVY
-         lL7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VK+LR0HkVqg+g+PEO6ILwoTxff4AKvWaTBsfdr3of4I=;
-        b=N/sXrYj6aMS8K86X/KGuHSO5FJz3YhcDnEpCAZ5H8WKtsbysgdBD4O+A+s0B2QfpZw
-         CZjLU1t6A5ncur2R4inT8ljK6cLKjBdpWPDBjF3pNzMlld6uKcxQOeu4KAVgDExZXMsF
-         lrImxbov+jHJ8QCPvbsvf3ilLvnLhe7Lxyy52FSuw28l1UMgJYF0Lg0xIcpp/KXYzQeW
-         LFYOQqwD3IzQ21g2c25Fte+ICpkt6d7+MDIAp0u8Pv+4TgdF+34ObNcbQlKERipMY0sr
-         Nh7UK90QdFvrDMG6rOEWGzxqhERw8GKa7pO5lPJmLjT4ipyWuhpxYb87JTqU4W6BRvh/
-         gA4Q==
-X-Gm-Message-State: APjAAAU3XBr78NBvfX0AqaHVnufKYApTb4xas/vK0CRZNAK3RimFo1JR
-        7XmQeyO9jOpNCXagnHmUlj0qz8H4EHJXIzyLtHY=
-X-Google-Smtp-Source: APXvYqw3TaxggeBqtyecfcMSQvxbFW+vbW2qdzwAX7pBaJpkFDvdlCJlVOt04//Li6XBATgSfVeNl6ARjOea5LrZAvY=
-X-Received: by 2002:a63:2907:: with SMTP id p7mr4803411pgp.161.1552675556399;
- Fri, 15 Mar 2019 11:45:56 -0700 (PDT)
+        Fri, 15 Mar 2019 14:46:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbfCOSpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 14:45:38 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB94E218FC;
+        Fri, 15 Mar 2019 18:45:37 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1h4rpp-0000Ay-5f; Fri, 15 Mar 2019 14:45:37 -0400
+Message-Id: <20190315184537.060433134@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Fri, 15 Mar 2019 14:45:11 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 6/8] tracing/probe: Check the size of argument name and body
+References: <20190315184505.655928086@goodmis.org>
 MIME-Version: 1.0
-References: <1552602855-26086-1-git-send-email-info@metux.net>
- <CAHp75VeH9isvFkp+AECgsN8du__8tBBp_4zZEVXJ083BdFweeg@mail.gmail.com>
- <afc51d27-3312-cdf4-68a5-4486db1d006b@metux.net> <20190315181118.GF9224@smile.fi.intel.com>
- <d9ac8446-c7ff-6e57-5eaa-f1a09d549081@metux.net>
-In-Reply-To: <d9ac8446-c7ff-6e57-5eaa-f1a09d549081@metux.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 15 Mar 2019 20:45:45 +0200
-Message-ID: <CAHp75VdCy0vtk0wYKrCKFKzdGQXaXQkgL_zWfCZGKas5JO9HtA@mail.gmail.com>
-Subject: Re: serial driver cleanups v2
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Tobias Klauser <tklauser@distanz.ch>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        macro@linux-mips.org,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>, slemieux.tyco@gmail.com,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, baohua@kernel.org,
-        Peter Korsgaard <jacmet@sunsite.dk>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 8:44 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
-> On 15.03.19 19:11, Andy Shevchenko wrote:
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
+Check the size of argument name and expression is not 0
+and smaller than maximum length.
 
-> OTOH, the name, IMHO, is a bit misleading. Any chance of ever changing
-> it to a more clear name (eg. devm_request_and_ioremap_resource()) ?
+Link: http://lkml.kernel.org/r/155253783029.14922.12650939303827581096.stgit@devnote2
 
-Compare  iomap vs. ioREmap.
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_probe.c | 2 ++
+ kernel/trace/trace_probe.h | 1 +
+ 2 files changed, 3 insertions(+)
 
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 0dc13bff2847..bf9d3d7e0c9d 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -554,6 +554,8 @@ int traceprobe_parse_probe_arg(struct trace_probe *tp, int i, char *arg,
+ 
+ 	body = strchr(arg, '=');
+ 	if (body) {
++		if (body - arg > MAX_ARG_NAME_LEN || body == arg)
++			return -EINVAL;
+ 		parg->name = kmemdup_nul(arg, body - arg, GFP_KERNEL);
+ 		body++;
+ 	} else {
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 8a63f8bc01bc..2177c206de15 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -32,6 +32,7 @@
+ #define MAX_TRACE_ARGS		128
+ #define MAX_ARGSTR_LEN		63
+ #define MAX_ARRAY_LEN		64
++#define MAX_ARG_NAME_LEN	32
+ #define MAX_STRING_SIZE		PATH_MAX
+ 
+ /* Reserved field names */
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
+
