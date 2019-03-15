@@ -2,130 +2,144 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A3FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020E0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1CD218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF2E21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:12:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u8/mt62+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbfCOPAT (ORCPT
+        id S1727780AbfCOPLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 11:00:19 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:41936 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfCOPAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 11:00:19 -0400
-Received: from localhost.localdomain (85-171-63-107.rev.numericable.fr [85.171.63.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: aballier)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 801BA335CEF;
-        Fri, 15 Mar 2019 15:00:02 +0000 (UTC)
-From:   Alexis Ballier <aballier@gentoo.org>
-Cc:     Alexis Ballier <aballier@gentoo.org>, devicetree@vger.kernel.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] arm64: dts: rockchip: rk3399-orangepi: Add the fusb typec manager
-Date:   Fri, 15 Mar 2019 15:58:21 +0100
-Message-Id: <20190315145818.23610-4-aballier@gentoo.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190315145818.23610-1-aballier@gentoo.org>
-References: <20190315145818.23610-1-aballier@gentoo.org>
+        Fri, 15 Mar 2019 11:11:24 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:40520 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfCOPLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 11:11:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WH+mhh1U03ZhBYk41Hu8JvupxkfHg7aEqGBgx4656B4=; b=u8/mt62+oDr/gv8PeRPA3/ZWV
+        i7utCi1XFwQbgj1ooowqmijDxAn69VoHt3Y0P5YaALED88s3NpU/qleskECUhkkRJvOJ1ijeyTioA
+        yfSYshfsDzn4+7BdQEp4ZMYE0mF9eSLLqA/QajYUDlfwQYR7X1oIJrYN1SdWLxXztkTmiNJXp8l4K
+        7mQw53BXUi47JWtHSa6fTOnU2Y8up44aEVmOwVuJFJKEhYitGLOAal6OJleNBdopeHefkd/myAvV0
+        8DBbg74n7cRnyvAwxLZ8Kxx9fNlVcfJlnqVeeElEgwzcmRaTiV8gGSUlu1BG/2b76Ft83n25h7cMr
+        tnO2rsfvA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4oUG-0006Uj-Ji; Fri, 15 Mar 2019 15:11:08 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 42A7F236812A9; Fri, 15 Mar 2019 16:11:07 +0100 (CET)
+Date:   Fri, 15 Mar 2019 16:11:07 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [RFC PATCH 2/2] x86/perf/amd: Resolve NMI latency issues when
+ multiple PMCs are active
+Message-ID: <20190315151107.GG6058@hirez.programming.kicks-ass.net>
+References: <155232291547.21417.2499429555505085131.stgit@tlendack-t1.amdoffice.net>
+ <155232292961.21417.3665243457569518550.stgit@tlendack-t1.amdoffice.net>
+ <20190315120311.GX5996@hirez.programming.kicks-ass.net>
+ <ef7fb4f8-29a8-16e6-5a8c-18da2eaf4243@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ef7fb4f8-29a8-16e6-5a8c-18da2eaf4243@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also rename its regulator to match the schematic names.
+On Fri, Mar 15, 2019 at 02:44:32PM +0000, Lendacky, Thomas wrote:
 
-Signed-off-by: Alexis Ballier <aballier@gentoo.org>
-Cc: devicetree@vger.kernel.org
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+> >> @@ -689,6 +731,7 @@ static __initconst const struct x86_pmu amd_pmu = {
+> >>   
+> >>   	.amd_nb_constraints	= 1,
+> >>   	.wait_on_overflow	= amd_pmu_wait_on_overflow,
+> >> +	.mitigate_nmi_latency	= amd_pmu_mitigate_nmi_latency,
+> >>   };
+> > 
+> > Again, you could just do amd_pmu_handle_irq() and avoid an extra
+> > callback.
+> 
+> This is where there would be a bunch of code duplication where I thought
+> adding the callback at the end would be better. But if it's best to add
+> an AMD handle_irq callback I can do that. I'm easy, let me know if you'd
+> prefer that.
 
----
- .../boot/dts/rockchip/rk3399-orangepi.dts     | 26 +++++++++++++++----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+Hmm, the thing that avoids you directly using x86_pmu_handle_irq() is
+that added active count, but is that not the same as the POPCNT of
+cpuc->active_mask?
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-index 96ccbe5c4f0c..2166be171df8 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-@@ -136,13 +136,13 @@
- 		vin-supply = <&vcc_sys>;
- 	};
- 
--	vcc5v0_typec0: vcc5v0-typec0-regulator {
-+	vbus_typec: vbus-typec-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
- 		gpio = <&gpio1 RK_PA3 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&vcc5v0_typec0_en>;
--		regulator-name = "vcc5v0_typec0";
-+		pinctrl-0 = <&vcc5v0_typec_en>;
-+		regulator-name = "vbus_typec";
- 		vin-supply = <&vcc_sys>;
- 	};
- 
-@@ -505,6 +505,16 @@
- 		pinctrl-0 = <&light_int_l>;
- 		vdd-supply = <&vcc3v3_s3>;
- 	};
+Is the latency of POPCNT so bad that we need avoid it?
+
+That is, I was thinking of something like:
+
+int amd_pmu_handle_irq(struct pt_regs *regs)
+{
+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+	int active = hweight_long(cpuc->active_mask);
+	int handled = x86_pmu_handle_irq(regs);
+
++       if (active <= 1) {
+		this_cpu_write(perf_nmi_counter, 0);
++               return handled;
+	}
 +
-+	fusb302@22 {
-+		compatible = "fcs,fusb302";
-+		reg = <0x22>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <RK_PA2 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&chg_cc_int_l>;
-+		vbus-supply = <&vbus_typec>;
-+	};
- };
- 
- &io_domains {
-@@ -547,7 +557,7 @@
- 				<4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 
--		vcc5v0_typec0_en: vcc5v0-typec0-en {
-+		vcc5v0_typec_en: vcc5v0-typec-en {
- 			rockchip,pins =
- 				<1 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
-@@ -596,6 +606,12 @@
- 			rockchip,pins = <4 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
++       /*
++        * If a counter was handled, record the number of possible remaining
++        * NMIs that can occur.
++        */
++       if (handled) {
++               this_cpu_write(perf_nmi_counter,
++                              min_t(unsigned int, 2, active - 1));
 +
-+	fusb302 {
-+		chg_cc_int_l: chg-cc-int-l {
-+			rockchip,pins = <1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
- };
- 
- &pwm0 {
-@@ -677,7 +693,7 @@
- 	status = "okay";
- 
- 	u2phy0_otg: otg-port {
--		phy-supply = <&vcc5v0_typec0>;
-+		phy-supply = <&vbus_typec>;
- 		status = "okay";
- 	};
- 
--- 
-2.21.0
++               return handled;
++       }
++
++       if (!this_cpu_read(perf_nmi_counter))
++               return NMI_DONE;
++
++       this_cpu_dec(perf_nmi_counter);
++
++       return NMI_HANDLED;
+}
 
+> > Anyway, we already had code to deal with spurious NMIs from AMD; see
+> > commit:
+> > 
+> >    63e6be6d98e1 ("perf, x86: Catch spurious interrupts after disabling counters")
+> > 
+> > And that looks to be doing something very much the same. Why then do you
+> > still need this on top?
+> 
+> This can happen while perf is handling normal counter overflow as opposed
+> to covering the disabling of the counter case. When multiple counters
+> overflow at roughly the same time, but the NMI doesn't arrive in time to
+> get collapsed into a pending NMI, the back-to-back support in
+> do_default_nmi() doesn't kick in.
+> 
+> Hmmm... I wonder if the wait on overflow in the disable_all() function
+> would eliminate the need for 63e6be6d98e1. That would take a more testing
+> on some older hardware to verify. That's something I can look into
+> separate from this series.
+
+Yes please, or at least better document the reason for their separate
+existence. It's all turning into a bit of magic it seems.
