@@ -2,146 +2,354 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20B1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3490C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B359121871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:32:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nln3hUhR";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Fg5/dsPX"
+	by mail.kernel.org (Postfix) with ESMTP id 728E5218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfCOTca (ORCPT
+        id S1727385AbfCOTce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 15:32:30 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37358 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726360AbfCOTc3 (ORCPT
+        Fri, 15 Mar 2019 15:32:34 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49672 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfCOTcb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 15:32:29 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x2FJIarq028850;
-        Fri, 15 Mar 2019 12:31:59 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=i4MfscXP0lsV9NCd9pJga9DqwnwEL+0ZLuTPtDgLGXk=;
- b=nln3hUhRAH5t0INOcmWZq3ul+Oip8K9i7EgrPBRFGgwpGr+IW+dyURmmURxcKIajusxi
- A2qhuZBwtE7AXhpR7m6lRioHiY+C+8PE4X1Z5OY2kDWzZLdCND4KzgbJxSKmV38+Jy69
- +WQx42+C+P/Aktal/46OXL0h4MAvLjBarr4= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2r7u1c4whq-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 15 Mar 2019 12:31:49 -0700
-Received: from prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 15 Mar 2019 12:31:48 -0700
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 15 Mar 2019 12:31:47 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 15 Mar 2019 12:31:47 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i4MfscXP0lsV9NCd9pJga9DqwnwEL+0ZLuTPtDgLGXk=;
- b=Fg5/dsPXhri6wEkBHFsWyxvFZaz1XhJV4TIYUUwImRqxmwlqTuorR4uzANELo0H+03B8wjjSCmg8fjEwV1N9eTsSxVbgwkqn7YOyLJyO5/P20/s6yUFHI2Ca2UPMXW1AvoFrwLZnmWLDk58n8kKSHZnwBjXeGYFTdz7GokZp9bA=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
- MWHPR15MB1648.namprd15.prod.outlook.com (10.175.139.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Fri, 15 Mar 2019 19:31:45 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f190:6de5:7e3:e065]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f190:6de5:7e3:e065%6]) with mapi id 15.20.1709.011; Fri, 15 Mar 2019
- 19:31:45 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-CC:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Jiri Olsa" <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        "sdf@fomichev.me" <sdf@fomichev.me>
-Subject: Re: [PATCH v9 perf,bpf 09/15] perf, bpf: save btf information as
- headers to perf.data
-Thread-Topic: [PATCH v9 perf,bpf 09/15] perf, bpf: save btf information as
- headers to perf.data
-Thread-Index: AQHU2JTq1ai9qoaEF0mXPn112Pnh46YIG0yAgAAAkwCAABOYAIAACxUAgAAGdoCABNJSgIAABWUAgAABkAA=
-Date:   Fri, 15 Mar 2019 19:31:45 +0000
-Message-ID: <6211135B-6A7F-443A-9444-27F61C56A437@fb.com>
-References: <20190312053051.2690567-1-songliubraving@fb.com>
- <20190312053051.2690567-10-songliubraving@fb.com>
- <20190312151405.GG4939@kernel.org> <20190312151608.GH4939@kernel.org>
- <61901DA6-47B4-44E0-A0C9-9F2DBD6C34C1@fb.com>
- <20190312170556.GJ4939@kernel.org>
- <97D0A2F1-1F82-4CF0-ACE3-A276784DF7EA@fb.com>
- <20190315190651.GA14938@kernel.org>,<20190315192610.GB14938@kernel.org>
-In-Reply-To: <20190315192610.GB14938@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2600:1010:b00c:685f:b9b5:2a03:caa:7d6d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 85205208-1f1a-4a51-f359-08d6a97cdc1b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1648;
-x-ms-traffictypediagnostic: MWHPR15MB1648:
-x-microsoft-antispam-prvs: <MWHPR15MB1648936439C92321EE163CFCB3440@MWHPR15MB1648.namprd15.prod.outlook.com>
-x-forefront-prvs: 09778E995A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(39860400002)(136003)(366004)(189003)(199004)(33656002)(83716004)(53546011)(81156014)(6506007)(478600001)(102836004)(105586002)(186003)(25786009)(14454004)(7416002)(106356001)(4744005)(229853002)(6116002)(71200400001)(71190400001)(82746002)(4326008)(6916009)(256004)(46003)(7736002)(446003)(53936002)(97736004)(305945005)(6512007)(5660300002)(11346002)(486006)(9886003)(476003)(2616005)(68736007)(6436002)(6486002)(99286004)(6246003)(8936002)(36756003)(81166006)(2906002)(8676002)(86362001)(76176011)(316002)(93886005)(54906003)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1648;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iwJQ2Zkz5uxziChaVo2N4JtVe0dOI/1Okj1sw1cKRxhyNgG0wYxxCgtgNHp+ZCaU+TgwemRfeQT+XJGlIOWIAifXZCWpRkwTfvQqlLAi7xkQVcYperl5mxsxLIGSe9cGUEXrQUpdVgh46T1UbdURHR09dg/laFg26HXk8XhPCJcs6KuFvKiudZ5DTxOD4RqxSMkr1xlieSb+6bS4VrGZX/79wztZ4ZVviQ/kxwHxoAtI+g5QKH8yxwXBQJCcrjPk3tAnjmfEvWK+WyognBJwg24Xc7UIMNqX7BorhFnGrGZF5N1eb0LQmmgIWvsSIdYg0sguBK+atCiJiZzAYbmnpjPD8y19tsQ3AOVrs2Gnxezk2UVcL9ALJOUYQ/Uo3ExwKcoX9cjFiqheBjmYZTeZOC5E2WAp9hkFsqw7XDOs9xM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 15 Mar 2019 15:32:31 -0400
+Received: from [IPv6:2804:431:9718:4c54:5b9b:61a:a071:48bc] (unknown [IPv6:2804:431:9718:4c54:5b9b:61a:a071:48bc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9BF3628143A;
+        Fri, 15 Mar 2019 19:32:25 +0000 (GMT)
+Subject: Re: [PATCH 14/16] media: vimc: sca: Add support for multiplanar
+ formats
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, lucmaga@gmail.com,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20190315164359.626-1-andrealmeid@collabora.com>
+ <20190315164359.626-15-andrealmeid@collabora.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ mQINBFmOMD4BEADb2nC8Oeyvklh+ataw2u/3mrl+hIHL4WSWtii4VxCapl9+zILuxFDrxw1p
+ XgF3cfx7g9taWBrmLE9VEPwJA6MxaVnQuDL3GXxTxO/gqnOFgT3jT+skAt6qMvoWnhgurMGH
+ wRaA3dO4cFrDlLsZIdDywTYcy7V2bou81ItR5Ed6c5UVX7uTTzeiD/tUi8oIf0XN4takyFuV
+ Rf09nOhi24bn9fFN5xWHJooFaFf/k2Y+5UTkofANUp8nn4jhBUrIr6glOtmE0VT4pZMMLT63
+ hyRB+/s7b1zkOofUGW5LxUg+wqJXZcOAvjocqSq3VVHcgyxdm+Nv0g9Hdqo8bQHC2KBK86VK
+ vB+R7tfv7NxVhG1sTW3CQ4gZb0ZugIWS32Mnr+V+0pxci7QpV3jrtVp5W2GA5HlXkOyC6C7H
+ Ao7YhogtvFehnlUdG8NrkC3HhCTF8+nb08yGMVI4mMZ9v/KoIXKC6vT0Ykz434ed9Oc9pDow
+ VUqaKi3ey96QczfE4NI029bmtCY4b5fucaB/aVqWYRH98Jh8oIQVwbt+pY7cL5PxS7dQ/Zuz
+ 6yheqDsUGLev1O3E4R8RZ8jPcfCermL0txvoXXIA56t4ZjuHVcWEe2ERhLHFGq5Zw7KC6u12
+ kJoiZ6WDBYo4Dp+Gd7a81/WsA33Po0j3tk/8BWoiJCrjXzhtRwARAQABtCdIZWxlbiBLb2lr
+ ZSA8aGVsZW4ua29pa2VAY29sbGFib3JhLmNvbT6JAlQEEwEKAD4CGwEFCwkIBwMFFQoJCAsF
+ FgIDAQACHgECF4AWIQSofQA6zrItXEgHWTzAfqwo9yFiXQUCXEz3bwUJBKaPRQAKCRDAfqwo
+ 9yFiXdUCD/4+WZr503hQ13KB4DijOW76ju8JDPp4p++qoPxtoAsld3yROoTI+VPWmt7ojHrr
+ TZc7sTLxOFzaUC8HjGTb3r9ilIhIKf/M9KRLkpIJ+iLA+VoUbcSOMYWoVNfgLmbnqoezjPcy
+ OHJwVw9dzEeYpvG6nkY6E4UktANySp27AniSXNuHOvYsOsXmUOqU1ScdsrQ9s732p/OGdTyw
+ 1yd3gUMLZvCKFOBVHILH59HCRJgpwUPiws8G4dGMs4GTRvHT2s2mDQdQ0HEvcM9rvCRVixuC
+ 5ZeOymZNi6lDIUIysgiZ+yzk6i5l/Ni6r7v20N3JppZvhPK6LqtaYceyAGyc3jjnOqoHT/qR
+ kPjCwzmKiPtXjLw6HbRXtGgGtP5m3y8v6bfHH+66zd2vGCY0Z9EsqcnK4DCqRkLncFLPM2gn
+ 9cZcCmO4ZqXUhTyn1nHM494kd5NX1Op4HO+t9ErnpufkVjoMUeBwESdQwwwHT3rjUueGmCrn
+ VJK69/qhA4La72VTxHutl+3Z0Xy20HWsZS8Gsam39f95/LtPLzbBwnOOi5ZoXnm97tF8HrAZ
+ 2h+kcRLMWw3BXy5q4gic+oFZMZP9oq1G9XTFld4FGgJ9ys8aGmhLM+uB1pFxb3XFtWQ2z4AJ
+ iEp2VLl34quwfD6Gg4csiZe2KzvQHUe0w8SJ9LplrHPPprkCDQRZjjChARAAzISLQaHzaDOv
+ ZxcoCNBk/hUGo2/gsmBW4KSj73pkStZ+pm3Yv2CRtOD4jBlycXjzhwBV7/70ZMH70/Y25dJa
+ CnJKl/Y76dPPn2LDWrG/4EkqUzoJkhRIYFUTpkPdaVYznqLgsho19j7HpEbAum8r3jemYBE1
+ AIuVGg4bqY3UkvuHWLVRMuaHZNy55aYwnUvd46E64JH7O990mr6t/nu2a1aJ0BDdi8HZ0RMo
+ Eg76Avah+YR9fZrhDFmBQSL+mcCVWEbdiOzHmGYFoToqzM52wsNEpo2aStH9KLk8zrCXGx68
+ ohJyQoALX4sS03RIWh1jFjnlw2FCbEdj/HDX0+U0i9COtanm54arYXiBTnAnx0F7LW7pv7sb
+ 6tKMxsMLmprP/nWyV5AfFRi3jxs5tdwtDDk/ny8WH6KWeLR/zWDwpYgnXLBCdg8l97xUoPQO
+ 0VkKSa4JEXUZWZx9q6kICzFGsuqApqf9gIFJZwUmirsxH80Fe04Tv+IqIAW7/djYpOqGjSyk
+ oaEVNacwLLgZr+/j69/1ZwlbS8K+ChCtyBV4kEPzltSRZ4eU19v6sDND1JSTK9KSDtCcCcAt
+ VGFlr4aE00AD/aOkHSylc93nPinBFO4AGhcs4WypZ3GGV6vGWCpJy9svfWsUDhSwI7GS/i/v
+ UQ1+bswyYEY1Q3DjJqT7fXcAEQEAAYkEcgQYAQoAJgIbAhYhBKh9ADrOsi1cSAdZPMB+rCj3
+ IWJdBQJcTPfVBQkEpo7hAkDBdCAEGQEKAB0WIQSomGMEg78Cd/pMshveCRfNeJ05lgUCWY4w
+ oQAKCRDeCRfNeJ05lp0gD/49i95kPKjpgjUbYeidjaWuINXMCA171KyaBAp+Jp2Qrun4sIJB
+ Z6srMj6O/gC34AhZln2sXeQdxe88sNbg6HjlN+4AkhTd6DttjOfUwnamLDA7uw+YIapGgsgN
+ lznjLnqOaQ9mtEwRbZMUOdyRf9osSuL14vHl4ia3bYNJ52WYre6gLMu4K+Ghd02og+ILgIio
+ Q827h0spqIJYHrR3Ynnhxdlv5GPCobh+AKsQMdTIuCzR6JSCBk6GHkg33SiWScKMUzT8B/cn
+ ypLfGnfV/LDZ9wS2TMzIlK/uv0Vd4C0OGDd/GCi5Gwu/Ot0aY7fzZo2CiRV+/nJBWPRRBTji
+ bE4FG2rt7WSRLO/QmH2meIW4f0USDiHeNwznHkPei59vRdlMyQdsxrmgSRDuX9Y3UkERxbgd
+ uscqC8Cpcy5kpF11EW91J8aGpcxASc+5Pa66/+7CrpBC2DnfcfACdMAje7yeMn9XlHrqXNlQ
+ GaglEcnGN2qVqRcKgcjJX+ur8l56BVpBPFYQYkYkIdQAuhlPylxOvsMcqI6VoEWNt0iFF3dA
+ //0MNb8fEqw5TlxDPOt6BDhDKowkxOGIA9LOcF4PkaR9Qkvwo2P4vA/8fhCnMqlSPom4xYdk
+ Ev8P554zDoL/XMHl+s7A0MjIJzT253ejZKlWeO68pAbNy/z7QRn2lFDnjwkQwH6sKPchYl2f
+ 0g//Yu3vDkqk8+mi2letP3XBl2hjv2eCZjTh34VvtgY5oeL2ROSJWNd18+7O6q3hECZ727EW
+ gIb3LK9g4mKF6+Rch6Gwz1Y4fmC5554fd2Y2XbVzzz6AGUC6Y+ohNg7lTAVO4wu43+IyTB8u
+ ip5rX/JDGFv7Y1sl6tQJKAVIKAJE+Z3Ncqh3doQr9wWHl0UiQYKbSR9HpH1lmC1C3EEbTpwK
+ fUIpZd1eQNyNJl1jHsZZIBYFsAfVNH/u6lB1TU+9bSOsV5SepdIb88d0fm3oZ4KzjhRHLFQF
+ RwNUNn3ha6x4fbxYcwbvu5ZCiiX6yRTPoage/LUNkgQNX2PtPcur6CdxK6Pqm8EAI7PmYLfN
+ NY3y01XhKNRvaVZoH2FugfUkhsBITglTIpI+n6YU06nDAcbeINFo67TSE0iL6Pek5a6gUQQC
+ 6w+hJCaMr8KYud0q3ccHyU3TlAPDe10En3GsVz7Y5Sa3ODGdbmkfjK8Af3ogGNBVmpV16Xl8
+ 4rETFv7POSUB2eMtbpmBopd+wKqHCwUEy3fx1zDbM9mp+pcDoL73rRZmlgmNfW/4o4qBzxRf
+ FYTQLE69wAFU2IFce9PjtUAlBdC+6r3X24h3uD+EC37s/vWhxuKj2glaU9ONrVJ/SPvlqXOO
+ WR1Zqw57vHMKimLdG3c24l8PkSw1usudgAA5OyO5Ag0EWY4wyQEQAMVp0U38Le7d80Mu6AT+
+ 1dMes87iKn30TdMuLvSg2uYqJ1T2riRBF7zU6u74HF6zps0rPQviBXOgoSuKa1hnS6OwFb9x
+ yQPlk76LY96SUB5jPWJ3fO78ZGSwkVbJFuG9gpD/41n8Unn1hXgDb2gUaxD0oXv/723EmTYC
+ vSo3z6Y8A2aBQNr+PyhQAPDazvVQ+P7vnZYq1oK0w+D7aIix/Bp4mo4VbgAeAeMxXWSZs8N5
+ NQtXeTBgB7DqrfJP5wWwgCsROfeds6EoddcYgqhG0zVU9E54C8JcPOA0wKVs+9+gt2eyRNtx
+ 0UhFbah7qXuJGhWy/0CLXvVoCoS+7qpWz070TBAlPZrg9D0o2gOw01trQgoKAYBKKgJhxaX/
+ 4gzi+5Ccm33LYH9lAVTdzdorejuV1xWdsnNyc8OAPeoXBf9RIIWfQVmbhVXBp2DAPjV6/kIJ
+ Eml7MNJfEvqjV9zKsWF9AFlsqDWZDCyUdqR96ahTSD34pRwb6a9H99/GrjeowKaaL95DIVZT
+ C6STvDNL6kpys4sOe2AMmQGv2MMcJB3aYLzH8f1sEQ9S0UMX7/6CifEG6JodG6Y/W/lLo1Vv
+ DxeDA+u4Lgq6qxlksp8M78FjcmxFVlf4cpCi2ucbZxurhlBkjtZZ8MVAEde3hlqjcBl2Ah6Q
+ D826FTxscOGlHEfNABEBAAGJAjwEGAEKACYCGwwWIQSofQA6zrItXEgHWTzAfqwo9yFiXQUC
+ XEz31QUJBKaOuQAKCRDAfqwo9yFiXUvnEACBWe8wSnIvSX+9k4LxuLq6GQTOt+RNfliZQkCW
+ 5lT3KL1IJyzzOm4x+/slHRBl8bF7KEZyOPinXQXyJ/vgIdgSYxDqoZ7YZn3SvuNe4aT6kGwL
+ EYYEV8Ecj4ets15FR2jSUNnVv5YHWtZ7bP/oUzr2LT54fjRcstYxgwzoj8AREtHQ4EJWAWCO
+ ZuEHTSm5clMFoi41CmG4DlJbzbo4YfilKYm69vwh50Y8WebcRN31jh0g8ufjOJnBldYYBLwN
+ Obymhlfy/HKBDIbyCGBuwYoAkoJ6LR/cqzl/FuhwhuDocCGlXyYaJOwXgHaCvVXI3PLQPxWZ
+ +vPsD+TSVHc9m/YWrOiYDnZn6aO0Uk1Zv/m9+BBkWAwsreLJ/evn3SsJV1omNBTITG+uxXcf
+ JkgmmesIAw8mpI6EeLmReUJLasz8QkzhZIC7t5rGlQI94GQG3Jg2dC+kpaGWOaT5G4FVMcBj
+ iR1nXfMxENVYnM5ag7mBZyD/kru5W1Uj34L6AFaDMXFPwedSCpzzqUiHb0f+nYkfOodf5xy0
+ 46+3THy/NUS/ZZp/rI4F7Y77+MQPVg7vARfHHX1AxYUKfRVW5j88QUB70txn8Vgi1tDrOr4J
+ eD+xr0CvIGa5lKqgQacQtGkpOpJ8zY4ObSvpNubey/qYUE3DCXD0n2Xxk4muTvqlkFpOYA==
+Message-ID: <f84caa28-347d-57e0-839b-3dc64c6dfbeb@collabora.com>
+Date:   Fri, 15 Mar 2019 16:32:21 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85205208-1f1a-4a51-f359-08d6a97cdc1b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 19:31:45.1350
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1648
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-15_12:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+In-Reply-To: <20190315164359.626-15-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U29ycnkgZm9yIHJlcGx5aW5nIGZyb20gdGhlIHBob25lLg0KDQpTZW50IGZyb20gbXkgaVBob25l
-DQoNCj4gT24gTWFyIDE1LCAyMDE5LCBhdCAxMjoyNiBQTSwgQXJuYWxkbyBDYXJ2YWxobyBkZSBN
-ZWxvIDxhcm5hbGRvLm1lbG9AZ21haWwuY29tPiB3cm90ZToNCj4gDQo+IEVtIEZyaSwgTWFyIDE1
-LCAyMDE5IGF0IDA0OjA2OjUxUE0gLTAzMDAsIEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyBlc2Ny
-ZXZldToNCj4+IEFuZCB5ZXMsIHRoZXJlIGFyZSBCUEYgcHJvZ3JhbXMgd2l0aCBCVEYgaW5mb3Jt
-YXRpb24gYXNzb2NpYXRlZDoNCj4gDQo+PiBbcm9vdEBxdWFjbyBwZXJmXSMgYnBmdG9vbCBtYXAg
-ZHVtcCBwaWRzX2ZpbHRlcmVkDQo+PiBbew0KPj4gICAgICAgICJrZXkiOiAyNTkyLA0KPj4gICAg
-ICAgICJ2YWx1ZSI6IHRydWUNCj4+ICAgIH0sew0KPj4gICAgICAgICJrZXkiOiAyMDUxMSwNCj4+
-ICAgICAgICAidmFsdWUiOiB0cnVlDQo+PiAgICB9DQo+PiBdDQo+PiBbcm9vdEBxdWFjbyBwZXJm
-XSMNCj4gDQo+PiBJLmUuIGJwZnRvb2wgY2FuIGZpbmQgdGhlIEJURiBpbmZvIGFuZCB0aHVzIGlz
-IGFibGUgdG8gc2hvdyB0aGUNCj4+ICdwaWRzX2ZpbHRlcmVkJyBtYXAga2V5cyBhbmQgdmFsdWVz
-IHByZXR0eSBwcmludGVkLCBub3QganVzdCBhcyBoZXggcmF3DQo+PiBkYXRhLg0KPiANCj4+IEkn
-bSB0cnlpbmcgdG8gZmluZCBvdXQgd2h5ICdicGZ0b29sIG1hcCBkdW1wJyBmaW5kcyB0aGUgQlRG
-IGluZm8gd2hpbGUNCj4+IHBlcmZfZXZlbnRfX3N5bnRoZXNpemVfb25lX2JwZl9wcm9nKCkgZG9l
-c24ndC4NCj4gDQo+IEh1bW0sIHRoZSBCVEYgaW5mbyBhYm92ZSBpcyBmb3IgQlBGIF9tYXBzXyBu
-b3QgZm9yIF9wcm9ncmFtc18sIEkgdGhpbmsNCj4geW91IGhhdmVuJ3QgYWRkZWQgQlRGIGluZm8g
-Zm9yIG1hcHMgaW4gdGhlIHBlcmYuZGF0YSBoZWFkZXIsIHJpZ2h0Pw0KPiANCj4gLSBBcm5hbGRv
-DQoNClRoYXTigJlzIHJpZ2h0LiBXZSBpdGVyYXRlIGFsbCBCUEYgcHJvZ3JhbXMsIGFuZCBmZXRj
-aCBCVEYgcmVmZXJyZWQgYnkgdGhlIHByb2dyYW1zLg0KDQpUaGFua3MsDQpTb25n
+
+
+On 3/15/19 1:43 PM, André Almeida wrote:
+> Change the scaling functions in order to scale planes. This change makes
+> easier to support multiplanar pixel formats.
+> 
+> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+> ---
+>  drivers/media/platform/vimc/vimc-scaler.c | 110 ++++++++++++++--------
+>  1 file changed, 69 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+> index 65519495ecca..15fbb0914056 100644
+> --- a/drivers/media/platform/vimc/vimc-scaler.c
+> +++ b/drivers/media/platform/vimc/vimc-scaler.c
+> @@ -35,10 +35,14 @@ MODULE_PARM_DESC(sca_mult, " the image size multiplier");
+>  #define IS_SRC(pad)	(pad)
+>  #define MAX_ZOOM	8
+>  
+> +/* TODO: enum only scalable formats */
+
+why is this a TODO? Isn't what it is doing already?
+
+>  static const u32 vimc_sca_supported_pixfmt[] = {
+>  	V4L2_PIX_FMT_BGR24,
+>  	V4L2_PIX_FMT_RGB24,
+>  	V4L2_PIX_FMT_ARGB32,
+> +	V4L2_PIX_FMT_YUV420,
+> +	V4L2_PIX_FMT_YUV420M,
+> +	V4L2_PIX_FMT_NV12M,
+>  };
+>  
+>  struct vimc_sca_device {
+> @@ -51,8 +55,8 @@ struct vimc_sca_device {
+>  	struct v4l2_mbus_framefmt sink_fmt;
+>  	/* Values calculated when the stream starts */
+>  	struct vimc_frame src_frame;
+> -	unsigned int src_line_size;
+> -	unsigned int bpp;
+> +	unsigned int src_line_size[TPG_MAX_PLANES];
+> +	unsigned int bpp[TPG_MAX_PLANES];
+>  };
+>  
+>  static const struct v4l2_mbus_framefmt sink_fmt_default = {
+> @@ -207,10 +211,10 @@ static const struct v4l2_subdev_pad_ops vimc_sca_pad_ops = {
+>  static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+>  {
+>  	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
+> +	unsigned int i;
+>  
+>  	if (enable) {
+>  		u32 pixelformat = vsca->ved.stream->producer_pixfmt;
+> -		const struct v4l2_format_info *pix_info;
+>  		unsigned int frame_size;
+>  
+>  		if (!vimc_sca_is_pixfmt_supported(pixelformat)) {
+> @@ -219,32 +223,41 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+>  			return -EINVAL;
+>  		}
+>  
+> -		/* Save the bytes per pixel of the sink */
+> -		pix_info = v4l2_format_info(pixelformat);
+> -		vsca->bpp = pix_info->bpp[0];
+> -
+> -		/* Calculate the width in bytes of the src frame */
+> -		vsca->src_line_size = vsca->sink_fmt.width *
+> -				      sca_mult * vsca->bpp;
+> -
+> -		/* Calculate the frame size of the source pad */
+> -		frame_size = vsca->src_line_size * vsca->sink_fmt.height *
+> -			     sca_mult;
+> -
+> -		/* Allocate the frame buffer. Use vmalloc to be able to
+> -		 * allocate a large amount of memory
+> -		 */
+> -		vsca->src_frame.plane_addr[0] = vmalloc(frame_size);
+> -		vsca->src_frame.sizeimage[0] = frame_size;
+> -		if (!vsca->src_frame.plane_addr[0])
+> -			return -ENOMEM;
+> +		vimc_fill_frame(&vsca->src_frame, pixelformat,
+> +				vsca->sink_fmt.width, vsca->sink_fmt.height);
+> +
+> +		for (i = 0; i < vsca->src_frame.num_planes; i++) {
+> +			/* Save the bytes per pixel of the sink */
+> +			vsca->bpp[i] = vsca->src_frame.bpp[i];
+> +
+> +			/* Calculate the width in bytes of the src frame */
+> +			vsca->src_line_size[i] =
+> +				vsca->src_frame.bytesperline[i] * sca_mult;
+> +
+> +			/* Calculate the frame size of the source pad */
+> +			frame_size = vsca->src_frame.sizeimage[i] *
+> +			     sca_mult * sca_mult;
+> +
+> +			/* Allocate the frame buffer. Use vmalloc to be able to
+> +			 * allocate a large amount of memory
+> +			 */
+
+I know this comment was already like this, but could you please also
+correct the style of this comment? It should start with
+/*
+ * Allocate ...
+
+Regards,
+Helen
+
+> +			vsca->src_frame.plane_addr[i] = vmalloc(frame_size);
+> +			if (!vsca->src_frame.plane_addr[i]) {
+> +				for (i -= 1; i >= 0; i--)
+> +					vfree(vsca->src_frame.plane_addr[i]);
+> +				return -ENOMEM;
+> +			}
+> +			vsca->src_frame.sizeimage[i] = frame_size;
+> +		}
+>  
+>  	} else {
+>  		if (!vsca->src_frame.plane_addr[0])
+>  			return 0;
+>  
+> -		vfree(vsca->src_frame.plane_addr[0]);
+> -		vsca->src_frame.plane_addr[0] = NULL;
+> +		for (i = 0; i < vsca->src_frame.num_planes; i++) {
+> +			vfree(vsca->src_frame.plane_addr[i]);
+> +			vsca->src_frame.plane_addr[i] = NULL;
+> +		}
+>  	}
+>  
+>  	return 0;
+> @@ -270,18 +283,19 @@ static void vimc_sca_fill_pix(u8 *const ptr,
+>  		ptr[i] = pixel[i];
+>  }
+>  
+> -static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
+> +/* TODO: parallelize this function */
+> +static void vimc_sca_scale_plane(const struct vimc_sca_device *const vsca,
+>  			       const unsigned int lin, const unsigned int col,
+> -			       const u8 *const sink_frame)
+> +			       const struct vimc_frame *sink_frame,
+> +			       u8 num_plane, u32 width)
+> +
+>  {
+>  	unsigned int i, j, index;
+>  	const u8 *pixel;
+>  
+>  	/* Point to the pixel value in position (lin, col) in the sink frame */
+> -	index = VIMC_FRAME_INDEX(lin, col,
+> -				 vsca->sink_fmt.width,
+> -				 vsca->bpp);
+> -	pixel = &sink_frame[index];
+> +	index = VIMC_FRAME_INDEX(lin, col, width, vsca->bpp[num_plane]);
+> +	pixel = &sink_frame->plane_addr[num_plane][index];
+>  
+>  	dev_dbg(vsca->dev,
+>  		"sca: %s: --- scale_pix sink pos %dx%d, index %d ---\n",
+> @@ -291,7 +305,7 @@ static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
+>  	 * in the scaled src frame
+>  	 */
+>  	index = VIMC_FRAME_INDEX(lin * sca_mult, col * sca_mult,
+> -				 vsca->sink_fmt.width * sca_mult, vsca->bpp);
+> +				 width * sca_mult, vsca->bpp[num_plane]);
+>  
+>  	dev_dbg(vsca->dev, "sca: %s: scale_pix src pos %dx%d, index %d\n",
+>  		vsca->sd.name, lin * sca_mult, col * sca_mult, index);
+> @@ -301,32 +315,46 @@ static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
+>  		/* Iterate through each beginning of a
+>  		 * pixel repetition in a line
+>  		 */
+> -		for (j = 0; j < sca_mult * vsca->bpp; j += vsca->bpp) {
+> +		unsigned int bpp = vsca->bpp[num_plane];
+> +
+> +		for (j = 0; j < sca_mult * bpp; j += bpp) {
+>  			dev_dbg(vsca->dev,
+>  				"sca: %s: sca: scale_pix src pos %d\n",
+>  				vsca->sd.name, index + j);
+>  
+>  			/* copy the pixel to the position index + j */
+>  			vimc_sca_fill_pix(
+> -				&vsca->src_frame.plane_addr[0][index + j],
+> -				pixel, vsca->bpp);
+> +				&vsca->src_frame.plane_addr[num_plane][index + j],
+> +				pixel, bpp);
+>  		}
+>  
+>  		/* move the index to the next line */
+> -		index += vsca->src_line_size;
+> +		index += vsca->src_line_size[num_plane];
+>  	}
+>  }
+>  
+>  static void vimc_sca_fill_src_frame(const struct vimc_sca_device *const vsca,
+> -				    const u8 *const sink_frame)
+> +				    const struct vimc_frame *sink_frame)
+>  {
+> -	unsigned int i, j;
+> +	u32 i, j, width, height;
+> +	unsigned int num_plane;
+> +	const struct v4l2_format_info *info;
+> +
+> +	info = v4l2_format_info(sink_frame->pixelformat);
+>  
+>  	/* Scale each pixel from the original sink frame */
+>  	/* TODO: implement scale down, only scale up is supported for now */
+> -	for (i = 0; i < vsca->sink_fmt.height; i++)
+> -		for (j = 0; j < vsca->sink_fmt.width; j++)
+> -			vimc_sca_scale_pix(vsca, i, j, sink_frame);
+> +	for (num_plane = 0; num_plane < info->comp_planes; num_plane++) {
+> +		width = vsca->sink_fmt.width /
+> +					((num_plane == 0) ? 1 : info->vdiv);
+> +		height = vsca->sink_fmt.height /
+> +					((num_plane == 0) ? 1 : info->hdiv);
+> +
+> +		for (i = 0; i < height; i++)
+> +			for (j = 0; j < width; j++)
+> +				vimc_sca_scale_plane(vsca, i, j, sink_frame,
+> +						     num_plane, width);
+> +	}
+>  }
+>  
+>  static struct vimc_frame *vimc_sca_process_frame(struct vimc_ent_device *ved,
+> @@ -339,7 +367,7 @@ static struct vimc_frame *vimc_sca_process_frame(struct vimc_ent_device *ved,
+>  	if (!ved->stream)
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	vimc_sca_fill_src_frame(vsca, sink_frame->plane_addr[0]);
+> +	vimc_sca_fill_src_frame(vsca, sink_frame);
+>  
+>  	return &vsca->src_frame;
+>  };
+> 
