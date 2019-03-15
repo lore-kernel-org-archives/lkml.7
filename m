@@ -2,156 +2,140 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE9CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F85C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE30218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F3B218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tR9ODxM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfCOH4U (ORCPT
+        id S1728538AbfCOH5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 03:56:20 -0400
-Received: from a2nlsmtp01-02.prod.iad2.secureserver.net ([198.71.225.36]:53086
-        "EHLO a2nlsmtp01-02.prod.iad2.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727476AbfCOH4S (ORCPT
+        Fri, 15 Mar 2019 03:57:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43781 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728479AbfCOH5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 03:56:18 -0400
-Received: from linuxonhyperv2.linuxonhyperv.com ([107.180.71.197])
-        by : HOSTING RELAY : with ESMTP
-        id 4hgShlWbWhEQ74hgShRKSC; Fri, 15 Mar 2019 00:55:16 -0700
-x-originating-ip: 107.180.71.197
-Received: from longli by linuxonhyperv2.linuxonhyperv.com with local (Exim 4.91)
-        (envelope-from <longli@linuxonhyperv2.linuxonhyperv.com>)
-        id 1h4hgS-0007EQ-4t; Fri, 15 Mar 2019 00:55:16 -0700
-From:   Long Li <longli@linuxonhyperv.com>
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [Patch v2 2/2] CIFS: Fix an issue with re-sending rdata when transport returning -EAGAIN
-Date:   Fri, 15 Mar 2019 07:55:00 +0000
-Message-Id: <20190315075500.27747-2-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190315075500.27747-1-longli@linuxonhyperv.com>
-References: <20190315075500.27747-1-longli@linuxonhyperv.com>
+        Fri, 15 Mar 2019 03:57:10 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d17so8488517wre.10;
+        Fri, 15 Mar 2019 00:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FDToaXoGDM3HZpW27l4n5SxEsOzQOt6FD5PqD/o0Mu8=;
+        b=tR9ODxM1Uzy7lUWblPlmK+PjJqLPegZvtFyo6b1vpYP/FIYwGwhkIbQoCAZNhI0lz/
+         CcTjnKCfrAfZpAL8GKFCZ+gYBnIQL+aBzevN2+FaQgNjBmcJBmAZsM38AfyHPU74zzY3
+         xfVGCALQ8Da8F0lO0sTaeDKUKkwqODvg6nCdV3hrWgwuPHmbSmyE2NPPIjFHlVV6xcvA
+         ucasa7Sk7aM4TDGkIABdAse4h0EUZhepA/6ZozrVF5m2VslGTxG8gwEJJ7v3cOHxT8v6
+         jbh+pcvMdOlV6//1LedpbIVYaHHdFi/98xF0EOaQQ8bEC202c0XQbzVrtfUrNVOHTWc7
+         8kJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FDToaXoGDM3HZpW27l4n5SxEsOzQOt6FD5PqD/o0Mu8=;
+        b=e/avC5E6dsHxkX8pUT7aokD2J0uKmM5jxp0SG0XX/W0GrP9LaLvkfyC+Gb5GH4souU
+         /K828wOEjoXyShKKAjgpluxqwP4UnAydX/shTlMUqBkwOOsgqMPhE3p4ylYbjWpPh7hD
+         my74Fg0HJp4Oyp3jcjHyRh51/406VC2QZq5U6LTKENR8ED3QWwwpsC3/VSXpulHht6qr
+         6JXvqehSRMGiI8moseuTztG7rMWKjAfROMfMlTScyneANfbp7Q5X12DDmWmCiYXXp4be
+         DCdLpVxJoh7LzP6ZvvX0UEarmTbGYgJwiGcplL02Vued7WuYAe+T/OmpZMRjLr4KESZx
+         Ok3w==
+X-Gm-Message-State: APjAAAVA0wbHywIGvRpUnKWdhHLANJbslHRy2WoVEahkKbDBBFX3A31t
+        M/lKnSAAop+Ej5sGNoHXO5FEhpFZaARPjmHDOEA=
+X-Google-Smtp-Source: APXvYqzpoxMoT/Ju2INd2ZSjBzaRfiB7dzdm6gvcPCR/R8t1lhzWjsib7geq5yqTJH3X1x8GHVqw0CfOf1XskszZrxs=
+X-Received: by 2002:adf:d081:: with SMTP id y1mr1332114wrh.283.1552636628689;
+ Fri, 15 Mar 2019 00:57:08 -0700 (PDT)
 MIME-Version: 1.0
-Reply-To: longli@microsoft.com
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfEV/ZgpGjj3M+RV82U3P57nuxweXtFYuSkb21IEp+TudWgvNr40sXgQvKIw7qqODrRdTcRpq7HH4X2D8zARo8w7YegjY+UBRQYPCRD/3Pxcfs3vFJuLH
- L6dybI2eGV7X8GJEP7fv1uK6tJIjqnuxtEUOilz2NERtAOTInAFespl3kqUV/FJbxEa1aXO7c1ADNGMuoIPT38VahjfTa5DSNXnm3EthK2pspHYRWoEAtv6E
- MIck2PLUHYlrmCXWcuIWmJBfeR7Z7WFUL5FKR6sDS/amh0cYw5toqCCVlvt1R4U9VhtrDmQ7QK00iBJ32ImPJpgeCYSSzKAQVhMe6p/2JZgak2r2kZhxrvFz
- D2EzsVH22kJengRe9dFJ2tAyGuMPNA==
+References: <20190219072743.13606-1-yanaijie@huawei.com> <1550595388.31902.133.camel@acm.org>
+ <20190220151836.GA11695@infradead.org> <10ea95ec-e259-3511-44c4-58e4d255eb9f@huawei.com>
+In-Reply-To: <10ea95ec-e259-3511-44c4-58e4d255eb9f@huawei.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Fri, 15 Mar 2019 15:56:56 +0800
+Message-ID: <CACVXFVMWDD+8rrVh9TYnA6awLPQZNscC6OrYmpAizj9PxxuZJw@mail.gmail.com>
+Subject: Re: [RFC PATCH] scsi: fix oops in scsi_uninit_cmd()
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <jejb@linux.vnet.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Steffen Maier <maier@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+On Thu, Feb 21, 2019 at 4:55 PM Jason Yan <yanaijie@huawei.com> wrote:
+>
+> Hi, Christoph
+>
+> On 2019/2/20 23:18, Christoph Hellwig wrote:
+> > [fullquote removed, please follow proper mail etiquette]
+> >
+> > On Tue, Feb 19, 2019 at 08:56:28AM -0800, Bart Van Assche wrote:
+> >> regression in the SCSI sd driver due to the switch from the legacy block
+> >> layer to scsi-mq. The above patch introduces two atomic operations in the
+> >> hot path and hence would introduce a performance regression. I think this
+> >> can be avoided by making sure that sd_uninit_command() gets called before
+> >> the request tag is freed. What changes would be required to make the block
+> >> layer core call sd_uninit_command() before the request tag is freed? Would
+> >> introducing prep_rq_fn and unprep_rq_fn callbacks in struct blk_mq_ops and
+> >> making sure that the SCSI core sets these callback function pointers
+> >> appropriately be sufficient? Would such a change allow to simplify the NVMe
+> >> initiator driver? Are there any alternatives to this approach that are more
+> >> elegant?
+> >
+> > Additional indirect calls in the I/O fast path is something I'd rather
+> > avoid.  But I don't fully understand the problem yet - where do
+> > we release a disk reference from blk_update_request?
+>
+> When userspace close the fd after blk_update_request() and before
+> scsi_mq_uninit_cmd(), a disk reference will be released. It is not the
+> blk_update_request() directly released it.
+>
+> close
+>     ->sd_release
+>        ->scsi_disk_put
+>          ->scsi_disk_release
+>            ->disk->private_data = NULL;
+>
+> The userspace can close the fd because blk_update_request() returned the
+> last IO , the userspace application does not have to stuck on read() or
+> write(). The window is very small, but it can be reproduce every day
+> in our testcases. So I'm very curious why. One possible explanation is
+> that we enabled kernel preempt(CONFIG_PREEMPT).
 
-When sending a rdata, transport may return -EAGAIN. In this case
-we should re-obtain credits because the session may have been
-reconnected.
+Another solution is to drain in-flight FS IO in scsi_disk_release(),
+and one counter
+is needed for tracking in-flight passthrough IO, so we can use sdev->device_busy
+- sdev->passthrough_ios to drain inflight FS IO.
 
-Change in v2: adjust_credits before re-sending
+>
+> And why can't
+> > we move that release to __blk_mq_end_request?
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- fs/cifs/file.c | 71 +++++++++++++++++++++++++++++++++-------------------------
- 1 file changed, 41 insertions(+), 30 deletions(-)
+I think it is doable, then ending bio needs to be moved out of
+blk_update_request(),
+such as, add one list of rq->done_bio to track completed bio, then complete all
+in free request.
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 321df1d27422..9d90cc07e38b 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3347,44 +3347,55 @@ static int cifs_resend_rdata(struct cifs_readdata *rdata,
- 	struct TCP_Server_Info *server =
- 		tlink_tcon(rdata->cfile->tlink)->ses->server;
- 
--	/*
--	 * Wait for credits to resend this rdata.
--	 * Note: we are attempting to resend the whole rdata not in segments
--	 */
- 	do {
--		rc = server->ops->wait_mtu_credits(server, rdata->bytes,
-+		if (rdata->cfile->invalidHandle) {
-+			rc = cifs_reopen_file(rdata->cfile, true);
-+			if (rc == -EAGAIN)
-+				continue;
-+			else if (rc)
-+				break;
-+		}
-+
-+		/*
-+		 * Wait for credits to resend this rdata.
-+		 * Note: we are attempting to resend the whole rdata not in
-+		 * segments
-+		 */
-+		do {
-+			rc = server->ops->wait_mtu_credits(server, rdata->bytes,
- 						&rsize, &credits);
- 
--		if (rc)
--			goto out;
-+			if (rc)
-+				goto fail;
- 
--		if (rsize < rdata->bytes) {
--			add_credits_and_wake_if(server, &credits, 0);
--			msleep(1000);
--		}
--	} while (rsize < rdata->bytes);
-+			if (rsize < rdata->bytes) {
-+				add_credits_and_wake_if(server, &credits, 0);
-+				msleep(1000);
-+			}
-+		} while (rsize < rdata->bytes);
-+		rdata->credits = credits;
- 
--	rdata->credits = credits;
--	rc = -EAGAIN;
--	while (rc == -EAGAIN) {
--		rc = 0;
--		if (rdata->cfile->invalidHandle)
--			rc = cifs_reopen_file(rdata->cfile, true);
--		if (!rc)
--			rc = server->ops->async_readv(rdata);
--	}
-+		rc = adjust_credits(server, &rdata->credits, rdata->bytes);
-+		if (!rc) {
-+			if (rdata->cfile->invalidHandle)
-+				rc = -EAGAIN;
-+			else
-+				rc = server->ops->async_readv(rdata);
-+		}
- 
--	if (!rc) {
--		/* Add to aio pending list */
--		list_add_tail(&rdata->list, rdata_list);
--		return 0;
--	}
-+		/* If the read was successfully sent, we are done */
-+		if (!rc) {
-+			/* Add to aio pending list */
-+			list_add_tail(&rdata->list, rdata_list);
-+			return 0;
-+		}
- 
--	add_credits_and_wake_if(server, &rdata->credits, 0);
--out:
--	kref_put(&rdata->refcount,
--		cifs_uncached_readdata_release);
-+		/* Roll back credits and retry if needed */
-+		add_credits_and_wake_if(server, &rdata->credits, 0);
-+	} while (rc == -EAGAIN);
- 
-+fail:
-+	kref_put(&rdata->refcount, cifs_uncached_readdata_release);
- 	return rc;
- }
- 
--- 
-2.14.1
+And for partial completion, the completed bio can be done in
+blk_update_request(),
+since the remained bios will cause fs to hold the disk.
 
+
+Thanks,
+Ming Lei
