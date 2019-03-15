@@ -2,152 +2,103 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA708C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797C1C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879DB2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:18:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J4O1Tlmq"
+	by mail.kernel.org (Postfix) with ESMTP id 4ECD8218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfCOVSz (ORCPT
+        id S1726720AbfCOVUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 17:18:55 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44665 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfCOVSy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 17:18:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a3so7169070pff.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 14:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qhaACbu283jkmNCTeYJ352N38Gmocor9TOUev/P1Zxo=;
-        b=J4O1Tlmq/BXgbPVMHDNJJMAYHav4mH5MGqH8IaBrbeqzUMPqk3Bg1BV4D//AJicu4b
-         03+ySXf8AvPo4jl+noQGo7/+snZeHY40XwEiV5+nHZBSlcWrGywfelTjw/0XkDnj9ev9
-         Z1dbuS23AOzM135myhVZRe0B/Moh83NQvEXuGRa1wB/oNMKQvwIM1WXxPSxomn9+Ctd/
-         3uyGGUsIkc+ZUVwtNwBhSCOAchc2MrrUtlV+uAzy2weVQe64FL6G+71CR2xOaPNiAkvV
-         Bj/3lPDOHvMsw4MlFZ+VcLpxiMRasyH/qnwDt32SSur7+P7RDHL2+mQ1erDgUGIVdh66
-         2sbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qhaACbu283jkmNCTeYJ352N38Gmocor9TOUev/P1Zxo=;
-        b=SmJqRFap9ui3r+6AjaHwI+Q3M8bg2dwCe1BomTgUSp3qPyYwSWrRdpHH6aOE2YieFk
-         czd5IC3Apz3rBrbbeyDaWnZagPkNdmjMk/hsYdHw3WmJEzLK6GHDJF4V+jXoE8sBXO/Z
-         f0H6jPROnASwsaRpgLB3E0nzzQGhljtG+ATPcN3wTtm6LijUzq1boXwUwUswKNReM9h5
-         s41Ws8OLPhylo0TtT0qGiUxiT0KKZhrvSBMgDmdFTqAO2NN2Y2oqCr7UuQdVkLtmpWRi
-         P0gvvQdRhTANPM5gyiZ9vZlEOreTub45eHpvipRyOl3rGP9uHpvPi9VUj76LJZpDrV39
-         ps+g==
-X-Gm-Message-State: APjAAAVTUer2D2vUOPu/eJrKJOrZR7Z++xU387ExQlPtZCpt6RZXAh9K
-        lqSMqt6rmVIBHQkPBFqu+hx/CA==
-X-Google-Smtp-Source: APXvYqzzQIYOkz+Bj6GwOoHfUhF0BLdKdPLVmnnE7NqrBxBjPcuDH25K64fSVhjd0LNEw+Wgnj/Diw==
-X-Received: by 2002:a17:902:9b98:: with SMTP id y24mr6383746plp.167.1552684732828;
-        Fri, 15 Mar 2019 14:18:52 -0700 (PDT)
-Received: from google.com ([2620:15c:202:1:c562:226a:6d78:2ae4])
-        by smtp.gmail.com with ESMTPSA id m20sm9590418pfj.142.2019.03.15.14.18.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 14:18:50 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 14:18:45 -0700
-From:   Benson Leung <bleung@google.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Evan Green <evgreen@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>, bleung@google.com
-Subject: Re: [PATCH] rtc: cros-ec: Fail suspend/resume if wake IRQ can't be
- configured
-Message-ID: <20190315211845.GA165708@google.com>
-References: <20190315185112.97699-1-swboyd@chromium.org>
+        Fri, 15 Mar 2019 17:20:12 -0400
+Received: from albireo.enyo.de ([5.158.152.32]:58866 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726213AbfCOVUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 17:20:11 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1h4uFI-0001AG-95; Fri, 15 Mar 2019 21:20:04 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.89)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1h4uFI-0001RH-2d; Fri, 15 Mar 2019 22:20:04 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH] y2038: fix socket.h header inclusion
+References: <20190311153857.563743-1-arnd@arndb.de>
+        <87k1h1fgkk.fsf@mid.deneb.enyo.de>
+        <CAK8P3a1r8GRC7GTHHqWY-PUn=9rWB-7+Qo=7txanbEjGZ-wppw@mail.gmail.com>
+Date:   Fri, 15 Mar 2019 22:20:04 +0100
+In-Reply-To: <CAK8P3a1r8GRC7GTHHqWY-PUn=9rWB-7+Qo=7txanbEjGZ-wppw@mail.gmail.com>
+        (Arnd Bergmann's message of "Fri, 15 Mar 2019 21:30:25 +0100")
+Message-ID: <87a7hvded7.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Content-Disposition: inline
-In-Reply-To: <20190315185112.97699-1-swboyd@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Arnd Bergmann:
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Thu, Mar 14, 2019 at 7:41 PM Florian Weimer <fw@deneb.enyo.de> wrote:
+>>
+>> * Arnd Bergmann:
+>>
+>> > diff --git a/arch/alpha/include/uapi/asm/socket.h
+>> > b/arch/alpha/include/uapi/asm/socket.h
+>> > index 0d0fddb7e738..976e89b116e5 100644
+>> > --- a/arch/alpha/include/uapi/asm/socket.h
+>> > +++ b/arch/alpha/include/uapi/asm/socket.h
+>> > @@ -2,8 +2,8 @@
+>> >  #ifndef _UAPI_ASM_SOCKET_H
+>> >  #define _UAPI_ASM_SOCKET_H
+>> >
+>> > +#include <linux/posix_types.h>
+>> >  #include <asm/sockios.h>
+>> > -#include <asm/bitsperlong.h>
+>>
+>> This breaks POSIX conformance in glibc because the
+>> <linux/posix_types.h> header is not namespace clean.  It contains the
+>> identifiers fds_bits and val:
+>>
+>>         unsigned long fds_bits[__FD_SETSIZE / (8 * sizeof(long))];
+>>
+>>         int     val[2];
+>
+> What is problematic about the struct members here? I had thought that
+> only the struct names have to be in a namespace to be usable here,
+> but not the members.
 
-Hi Stephen,
+According POSIX, a user can do this:
 
-On Fri, Mar 15, 2019 at 11:51:12AM -0700, Stephen Boyd wrote:
-> If we encounter a failure during suspend where this RTC was programmed
-> to wakeup the system from suspend, but that wakeup couldn't be
-> configured because the system didn't support wakeup interrupts, we'll
-> run into the following warning:
->=20
-> 	Unbalanced IRQ 166 wake disable
-> 	WARNING: CPU: 7 PID: 3071 at kernel/irq/manage.c:669 irq_set_irq_wake+0x=
-108/0x278
->=20
-> This happens because the suspend process isn't aborted when the RTC
-> fails to configure the wakeup IRQ. Instead, we continue suspending the
-> system and then another suspend callback fails the suspend process and
-> "unwinds" the previously suspended drivers by calling their resume
-> callbacks. When we get back to resuming this RTC driver, we'll call
-> disable_irq_wake() on an IRQ that hasn't been configured for wake.
->=20
-> Let's just fail suspend/resume here if we can't configure the system to
-> wake and the user has chosen to wakeup with this device. This fixes this
-> warning and makes the code more robust in case there are systems out
-> there that can't wakeup from suspend on this line but the user has
-> chosen to do so.
->=20
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+#define fds_bits 1024
 
-Acked-By: Benson Leung <bleung@chromium.org>
+before including the <sys/socket.h> header file.  Similarly for val.
 
+Since glibc pulls in <asm/socket.h> indirectly, the result is a parse
+error, even though the programmer did nothing wrong (fds_bits is not
+an identifier used by POSIX, nor is it in the implementation
+namespace, ans <sys/socket.h> is a POSIX header).
 
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
+> We could use asm/posix_types.h instead of linux/posix_types.h,
+> would that address your concern?
 
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6gYDF28Li+nEiKLaHwn1ewov5lgFAlyMFrMACgkQHwn1ewov
-5liCbQ//csr76yg/XYgehOEgHVm4eOYVsF7AYJ2B/pdlWtCl+vXh95VOX5AeaUlt
-L67dOSZ6HBE3Z/4dh5qQcec4+l7SMsqR0GhW4kv/aaPB7oJuCWpIz9MGa3tjhMec
-NgnwzdXoV4Rrbq5I9Bd4uX9MNGw2DC15BhFTureDEd/TNpAPHB3a3T48mNdMqMcS
-xldgkcCvesf/o87bl33NotOu4QGhK4T0EdKVKOrX+oYlA1DkF+TpEx43LvRnuIhM
-hOuLNW8ocJQycJJVq8TQHvl7BmMGAPyTs3b5vg17MI7Uq+27Q9w6vK/wDWmfjC7L
-PPBlYQw+lAEW96wMCtG3eqahEEx0ULVlnNuwgxIhXCfiYSFLdawPrYGfaeDl7wl8
-DXXjOwGCZqF0WRsp/aOf81kXrclpunAuQlePTnq1Nv6jq2i2fXw4yPi9895eoJaF
-qUjHlxEX9nyxeaR7n/8uWhJBDTxrKZZKdL4sXJqIOvJbk/cJe1xcRoi41zxwlUhk
-qA3RYdF5o2+KM7YmB+Y1X0l4H5epSrkA/DJKHueDhuehIW6IWrP7mUv44hN2Lkff
-bzW8JmzQy8ilitQs91oJ7J9i8HnoVmKnUdZj8/LHM+EqRQg/pCJJuOdRK1LorLhL
-NzbtXLZLzoHy2Rsz8YMTj2NUDVNju8UFanPiR5uvr4M7VXZroLg=
-=dNaK
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+It should fix the fds_bits case, I think.  But
+<asm-generic/posix_types.h> still uses val, so that part of the issue
+remains.
