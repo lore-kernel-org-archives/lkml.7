@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDC3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797F0C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3867221871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4CB218CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbfCOHkg (ORCPT
+        id S1728587AbfCOHkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 03:40:36 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:36283 "EHLO
+        Fri, 15 Mar 2019 03:40:41 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:23140 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727476AbfCOHkW (ORCPT
+        with ESMTP id S1728547AbfCOHkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 03:40:22 -0400
-X-UUID: 0c423c48622a4c098ab9dece8bcd6110-20190315
-X-UUID: 0c423c48622a4c098ab9dece8bcd6110-20190315
+        Fri, 15 Mar 2019 03:40:35 -0400
+X-UUID: 3596eb8be7884ae99aed1ef2a487aa87-20190315
+X-UUID: 3596eb8be7884ae99aed1ef2a487aa87-20190315
 Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 425585661; Fri, 15 Mar 2019 15:40:10 +0800
+        with ESMTP id 1718115147; Fri, 15 Mar 2019 15:40:27 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 15 Mar 2019 15:40:08 +0800
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 15 Mar 2019 15:40:26 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 15 Mar 2019 15:40:07 +0800
+ Transport; Fri, 15 Mar 2019 15:40:24 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2 1/6] dt-bindings: connector: add optional properties for Type-B
-Date:   Fri, 15 Mar 2019 15:38:28 +0800
-Message-ID: <1552635513-2378-2-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 5/6] usb: roles: add driver of USB Type-B role switch by GPIO
+Date:   Fri, 15 Mar 2019 15:38:32 +0800
+Message-ID: <1552635513-2378-6-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
@@ -62,37 +62,347 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-usb-b-connector
+Due to the requirement of usb-connector.txt binding, the old way
+using extcon to support USB Dual-Role switch is now deprecated
+when use Type-B connector.
+This patch introduce a Type-B connector driver and try to replace
+the function provided by extcon-usb-gpio driver
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
 v2 changes:
-  1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
+  1. file name is changed
+  2. use new compatible
 ---
- .../devicetree/bindings/connector/usb-connector.txt      | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/usb/roles/Kconfig             |  14 ++
+ drivers/usb/roles/Makefile            |   1 +
+ drivers/usb/roles/typeb-switch-gpio.c | 285 ++++++++++++++++++++++++++
+ 3 files changed, 300 insertions(+)
+ create mode 100644 drivers/usb/roles/typeb-switch-gpio.c
 
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-index a9a2f2fc44f2..1c4ed6c9afa8 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-@@ -17,6 +17,15 @@ Optional properties:
- - self-powered: Set this property if the usb device that has its own power
-   source.
+diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
+index e4194ac94510..3c4320a73d17 100644
+--- a/drivers/usb/roles/Kconfig
++++ b/drivers/usb/roles/Kconfig
+@@ -24,4 +24,18 @@ config USB_ROLES_INTEL_XHCI
+ 	  To compile the driver as a module, choose M here: the module will
+ 	  be called intel-xhci-usb-role-switch.
  
-+Optional properties for usb-b-connector:
-+- id-gpios: gpio for USB ID pin.
-+- vbus-gpios: gpio for USB VBUS pin, used to detect presence of VBUS 5V.
-+  see gpio/gpio.txt.
-+- vbus-supply: a phandle to the regulator for USB VBUS if needed.
-+- pinctrl-names : a pinctrl state named "default" is optional
-+- pinctrl-0 : pin control group
-+  see pinctrl/pinctrl-bindings.txt
++config TYPEB_SWITCH_GPIO
++	tristate "USB Type-B Role Switch Via GPIO"
++	depends on GPIOLIB
++	help
++	  The driver supports USB role switch between host and device via GPIO
++	  based USB cable detection, used typically if GPIO is used for USB ID
++	  pin detection. And it's used to replace the function provided by
++	  drivers/extcon/extcon-usb-gpio.c driver due to the requirement by
++	  connector/usb-connector.txt
 +
- Optional properties for usb-c-connector:
- - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
-   connector has power support.
++	  Say Y here if your USB Type-B Connector supports Dual-Role mode.
++	  To compile the driver as a module, choose M here: the module will
++	  be called usb-b-connector.ko
++
+ endif # USB_ROLE_SWITCH
+diff --git a/drivers/usb/roles/Makefile b/drivers/usb/roles/Makefile
+index c02873206fc1..00f697bd419f 100644
+--- a/drivers/usb/roles/Makefile
++++ b/drivers/usb/roles/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_USB_ROLE_SWITCH)		+= roles.o
+ roles-y					:= class.o
++obj-$(CONFIG_TYPEB_SWITCH_GPIO)		+= typeb-switch-gpio.o
+ obj-$(CONFIG_USB_ROLES_INTEL_XHCI)	+= intel-xhci-usb-role-switch.o
+diff --git a/drivers/usb/roles/typeb-switch-gpio.c b/drivers/usb/roles/typeb-switch-gpio.c
+new file mode 100644
+index 000000000000..d8a15269bf8f
+--- /dev/null
++++ b/drivers/usb/roles/typeb-switch-gpio.c
+@@ -0,0 +1,285 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * USB Type-B Connector Driver
++ *
++ * Copyright (C) 2019 MediaTek Inc.
++ *
++ * Author: Chunfeng Yun <chunfeng.yun@mediatek.com>
++ *
++ * Some code borrowed from drivers/extcon/extcon-usb-gpio.c
++ */
++
++#include <linux/device.h>
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++#include <linux/usb/role.h>
++
++#define USB_GPIO_DEB_MS		20	/* ms */
++#define USB_GPIO_DEB_US		((USB_GPIO_DEB_MS) * 1000)	/* us */
++
++#define USB_CONN_IRQF	\
++	(IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT)
++
++struct usb_conn_info {
++	struct device *dev;
++	struct usb_role_switch *role_sw;
++	enum usb_role last_role;
++	struct regulator *vbus;
++	struct delayed_work dw_det;
++	unsigned long debounce_jiffies;
++
++	struct gpio_desc *id_gpiod;
++	struct gpio_desc *vbus_gpiod;
++	int id_irq;
++	int vbus_irq;
++};
++
++/**
++ * "DEVICE" = VBUS and "HOST" = !ID, so we have:
++ * Both "DEVICE" and "HOST" can't be set as active at the same time
++ * so if "HOST" is active (i.e. ID is 0)  we keep "DEVICE" inactive
++ * even if VBUS is on.
++ *
++ *  Role          |   ID  |  VBUS
++ * ------------------------------------
++ *  [1] DEVICE    |   H   |   H
++ *  [2] NONE      |   H   |   L
++ *  [3] HOST      |   L   |   H
++ *  [4] HOST      |   L   |   L
++ *
++ * In case we have only one of these signals:
++ * - VBUS only - we want to distinguish between [1] and [2], so ID is always 1
++ * - ID only - we want to distinguish between [1] and [4], so VBUS = ID
++ */
++static void usb_conn_detect_cable(struct work_struct *work)
++{
++	struct usb_conn_info *info;
++	enum usb_role role;
++	int id, vbus, ret;
++
++	info = container_of(to_delayed_work(work),
++			    struct usb_conn_info, dw_det);
++
++	/* check ID and VBUS */
++	id = info->id_gpiod ?
++		gpiod_get_value_cansleep(info->id_gpiod) : 1;
++	vbus = info->vbus_gpiod ?
++		gpiod_get_value_cansleep(info->vbus_gpiod) : id;
++
++	if (!id)
++		role = USB_ROLE_HOST;
++	else if (vbus)
++		role = USB_ROLE_DEVICE;
++	else
++		role = USB_ROLE_NONE;
++
++	dev_dbg(info->dev, "role %d/%d, gpios: id %d, vbus %d\n",
++		info->last_role, role, id, vbus);
++
++	if (info->last_role == role) {
++		dev_warn(info->dev, "repeated role: %d\n", role);
++		return;
++	}
++
++	if (info->last_role == USB_ROLE_HOST)
++		regulator_disable(info->vbus);
++
++	ret = usb_role_switch_set_role(info->role_sw, role);
++	if (ret)
++		dev_err(info->dev, "failed to set role: %d\n", ret);
++
++	if (role == USB_ROLE_HOST) {
++		ret = regulator_enable(info->vbus);
++		if (ret)
++			dev_err(info->dev, "enable vbus regulator failed\n");
++	}
++
++	info->last_role = role;
++
++	dev_dbg(info->dev, "vbus regulator is %s\n",
++		regulator_is_enabled(info->vbus) ? "enabled" : "disabled");
++}
++
++static void usb_conn_queue_dwork(struct usb_conn_info *info,
++				 unsigned long delay)
++{
++	queue_delayed_work(system_power_efficient_wq, &info->dw_det, delay);
++}
++
++static irqreturn_t usb_conn_isr(int irq, void *dev_id)
++{
++	struct usb_conn_info *info = dev_id;
++
++	usb_conn_queue_dwork(info, info->debounce_jiffies);
++
++	return IRQ_HANDLED;
++}
++
++static int usb_conn_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct device_node *parent;
++	struct usb_conn_info *info;
++	int ret = 0;
++
++	if (!np)
++		return -EINVAL;
++
++	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	info->dev = dev;
++	info->id_gpiod = devm_gpiod_get_optional(dev, "id", GPIOD_IN);
++	if (IS_ERR(info->id_gpiod))
++		return PTR_ERR(info->id_gpiod);
++
++	info->vbus_gpiod = devm_gpiod_get_optional(dev, "vbus", GPIOD_IN);
++	if (IS_ERR(info->vbus_gpiod))
++		return PTR_ERR(info->vbus_gpiod);
++
++	if (!info->id_gpiod && !info->vbus_gpiod) {
++		dev_err(dev, "failed to get gpios\n");
++		return -ENODEV;
++	}
++
++	if (info->id_gpiod)
++		ret = gpiod_set_debounce(info->id_gpiod, USB_GPIO_DEB_US);
++	if (!ret && info->vbus_gpiod)
++		ret = gpiod_set_debounce(info->vbus_gpiod, USB_GPIO_DEB_US);
++	if (ret < 0)
++		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEB_MS);
++
++	INIT_DELAYED_WORK(&info->dw_det, usb_conn_detect_cable);
++
++	info->vbus = devm_regulator_get(dev, "vbus");
++	if (IS_ERR(info->vbus)) {
++		dev_err(dev, "failed to get vbus\n");
++		return PTR_ERR(info->vbus);
++	}
++
++	parent = of_get_parent(np);
++	info->role_sw = usb_role_switch_get_by_node(parent);
++	if (IS_ERR_OR_NULL(info->role_sw)) {
++		dev_err(dev, "failed to get role switch\n");
++		return PTR_ERR(info->role_sw);
++	}
++
++	of_node_put(parent);
++
++	if (info->id_gpiod) {
++		info->id_irq = gpiod_to_irq(info->id_gpiod);
++		if (info->id_irq < 0) {
++			dev_err(dev, "failed to get ID IRQ\n");
++			return info->id_irq;
++		}
++
++		ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
++						usb_conn_isr, USB_CONN_IRQF,
++						pdev->name, info);
++		if (ret < 0) {
++			dev_err(dev, "failed to request ID IRQ\n");
++			return ret;
++		}
++	}
++
++	if (info->vbus_gpiod) {
++		info->vbus_irq = gpiod_to_irq(info->vbus_gpiod);
++		if (info->vbus_irq < 0) {
++			dev_err(dev, "failed to get VBUS IRQ\n");
++			return info->vbus_irq;
++		}
++
++		ret = devm_request_threaded_irq(dev, info->vbus_irq, NULL,
++						usb_conn_isr, USB_CONN_IRQF,
++						pdev->name, info);
++		if (ret < 0) {
++			dev_err(dev, "failed to request VBUS IRQ\n");
++			return ret;
++		}
++	}
++
++	platform_set_drvdata(pdev, info);
++
++	/* Perform initial detection */
++	usb_conn_queue_dwork(info, 0);
++
++	return 0;
++}
++
++static int usb_conn_remove(struct platform_device *pdev)
++{
++	struct usb_conn_info *info = platform_get_drvdata(pdev);
++
++	cancel_delayed_work_sync(&info->dw_det);
++
++	if (info->last_role == USB_ROLE_HOST)
++		regulator_disable(info->vbus);
++
++	usb_role_switch_put(info->role_sw);
++
++	return 0;
++}
++
++static int __maybe_unused usb_conn_suspend(struct device *dev)
++{
++	struct usb_conn_info *info = dev_get_drvdata(dev);
++
++	if (info->id_gpiod)
++		disable_irq(info->id_irq);
++	if (info->vbus_gpiod)
++		disable_irq(info->vbus_irq);
++
++	pinctrl_pm_select_sleep_state(dev);
++
++	return 0;
++}
++
++static int __maybe_unused usb_conn_resume(struct device *dev)
++{
++	struct usb_conn_info *info = dev_get_drvdata(dev);
++
++	pinctrl_pm_select_default_state(dev);
++
++	if (info->id_gpiod)
++		enable_irq(info->id_irq);
++	if (info->vbus_gpiod)
++		enable_irq(info->vbus_irq);
++
++	usb_conn_queue_dwork(info, 0);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(usb_conn_pm_ops,
++			 usb_conn_suspend, usb_conn_resume);
++
++#define DEV_PMS_OPS (IS_ENABLED(CONFIG_PM_SLEEP) ? &usb_conn_pm_ops : NULL)
++
++static const struct of_device_id usb_conn_dt_match[] = {
++	{ .compatible = "linux,typeb-switch-gpio", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, usb_conn_dt_match);
++
++static struct platform_driver usb_conn_driver = {
++	.probe		= usb_conn_probe,
++	.remove		= usb_conn_remove,
++	.driver		= {
++		.name	= "usb_b_conn",
++		.pm	= DEV_PMS_OPS,
++		.of_match_table = usb_conn_dt_match,
++	},
++};
++
++module_platform_driver(usb_conn_driver);
++
++MODULE_AUTHOR("Chunfeng Yun <chunfeng.yun@mediatek.com>");
++MODULE_DESCRIPTION("USB GPIO conn driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
