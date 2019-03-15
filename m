@@ -2,137 +2,172 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4F1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E698C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50EB218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046BC218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:31:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y5LkwRP2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nmTcpBqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfCOV3T (ORCPT
+        id S1726477AbfCOVbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 17:29:19 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36887 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfCOV3S (ORCPT
+        Fri, 15 Mar 2019 17:31:22 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45680 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfCOVbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 17:29:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x10so7343548wmg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 14:29:17 -0700 (PDT)
+        Fri, 15 Mar 2019 17:31:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 125so7282346pgc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 14:31:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Rk+sbPv23pHB0SWVyfwfAqc8+OMYSMQjLRlRw9iLKG8=;
-        b=y5LkwRP23VJGXrO05dM+Ihrt10z3/80/BTc5ODyZyAJ0sosI5x1XV1mMdnGcXSQt7G
-         A0doSU3k1KyN3l/kYavE9bHgPNh06zS6yc9Nz64Jw1K9OYF/lAQIrytfhF3qNaH24pq+
-         cCs7Oqhu1U0GBYKMtntjzOI98u2XB2DexwQ1qmu0ZGsLAXAkENpEfldYY/svcJTFIUPe
-         MNFkXsJVxXtWo3u8UD6/75p+Q+LmDAbrV/fnoBm0EhZPNYlBsLOhRf/4WcfWSG2Dmvh/
-         MqAT8opvaATntIZKcuuCiCjCWwlF2OlxEEZWyrjWN8hz0Qf1mWnE6BoW4WaV3fKzz9Yq
-         GyFg==
+        bh=8SftavF4SjKs7uaTaufFsPjfhMFzKpeU6qXdWt7twiY=;
+        b=nmTcpBqO67zaIRvQrvvqUChJysBmQnOdx0prCZhc6E6rIyDA8lynlcIp+GnI5GL5Nl
+         /4sRv+go7Fj1CatfQdSjvV9tGQEl/ZH8BoxwtSQqSilTxXoCNZOuyqdebvTmXBayyUAd
+         zr+14vl3/kKb/5GJI7rEveWa2kzLXxBgvpryhW6Qz9NXZ3G7hIfoyrCC2xRGKxGj6IHo
+         H816EpzuGe11fIEXSQlTX1mtsGY4+OZudsXa3vde803ag8dYYZT9WueIFjWCDlySHHhG
+         YZgk6KiGLOBY8x2/hwO4gf2hl0cTZFC9eOoG2REWD6HkP2pNuTSmvCT+UAPuoZh9iWIF
+         H/0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Rk+sbPv23pHB0SWVyfwfAqc8+OMYSMQjLRlRw9iLKG8=;
-        b=hQBqDsRfskvVTaGKGs5JeukOy/PqWxYOtgEXyaJGXo0V6xO1UFyq5Rcg10TPdAFMiP
-         Pca3/B9Bys1c35+7bpTSZ+47lbv7GzyO0e7Z/dEQhmba3fEwSy3eOR25G3D0DQONjBtr
-         TKWqqSzd3QoXUogy3XZWtLJ58kv0noFOpXNVKJcAFjEsJCMt+7ax5+8a5R4Zcr0jXOi2
-         xK1b8S74lj7R6Y75PJdeG2vi0goBkVxGgWYdPZCOxp4IIifwrUow/ztlpdqdNCFMqgGA
-         r6+E1zTSch0xwCvSLJ4gJbvUib7tSNPwEMTJqqbE1rcv4SY63oEVOgpvtuwN+eXqaQ+Y
-         +aVQ==
-X-Gm-Message-State: APjAAAVb3WNPTfASOL3dOM0LgiUdsEEwJZUzE9v5XMjimuHaxAc+u/9U
-        c3AGSkb6+N4ZlQW6R5c/ZWm6Nwhu2IsYl8E9vGHAIw==
-X-Google-Smtp-Source: APXvYqyiXO5zgF7uA4+q8K94OEhrydZxa52oOalPf3TwW+0umCrFFGWQLd8H4/i9m7sITrP9BKzxqQcnUPnD9sIiCtM=
-X-Received: by 2002:a1c:c90e:: with SMTP id f14mr3250176wmb.23.1552685356434;
- Fri, 15 Mar 2019 14:29:16 -0700 (PDT)
+        bh=8SftavF4SjKs7uaTaufFsPjfhMFzKpeU6qXdWt7twiY=;
+        b=ZJm4vyJUOYUzyPuFx7awWaWu05QBDoOB9I0awcSRZfQ0CI5DqoWt0iAnVhHBH6JLu+
+         pIpUuM5MKQSbqT0L1n2IkqehOxwQoomV7YvAZtRAlyW5+0TwaEN5ms95r+sm1Nz3ncou
+         4V6sWbMZS1vPItu+RezhGV2e38ia23HiZQMHm2cw3WSL6QREcmvluVYA/Bphl8ioatOv
+         abDLKoYQruzUc2tIDgUwTK4dnidERBcvIH5Mkds/mwuOBogdHrkTXgpata84YnZFLMha
+         of/bzNzlPnmB1V9PXxCb21aAGzFIbpQPjJUg//1SRPoF8Zl77MqQRvUeNgZfdh88GBRe
+         LllA==
+X-Gm-Message-State: APjAAAUbk0YgOpkDsixDfWHt9qATYVHVA6RgmXZA8dm23mde3gGVdxTD
+        2c1JjsAkeKTJopwrsTOKH1EvQgNLldmE46IoCaoy+A==
+X-Google-Smtp-Source: APXvYqxzszdtaKM11OX57qqpbvln0sB+pJGoRt+SHnmJqce+frLS25yUacOImRdKdbkH7JmbjreLzrOX0asqkOUt1+4=
+X-Received: by 2002:a63:c511:: with SMTP id f17mr5476141pgd.202.1552685480717;
+ Fri, 15 Mar 2019 14:31:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
- <1551819273-640-2-git-send-email-john.stultz@linaro.org> <b090063c-86ce-bc7b-4da0-80ca19883a47@redhat.com>
-In-Reply-To: <b090063c-86ce-bc7b-4da0-80ca19883a47@redhat.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 15 Mar 2019 14:29:03 -0700
-Message-ID: <CALAqxLXho_rwsdAY9u3=oTXukQnTzqfP_EFmwgdZm+A1bQRVuw@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/5 v2] dma-buf: Add dma-buf heaps framework
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
+References: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com>
+In-Reply-To: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 15 Mar 2019 14:31:09 -0700
+Message-ID: <CAKwvOd=aqWvjzC1ZF5_pXx2VutAX0dneDPxU_=jroqHUGw-X6g@mail.gmail.com>
+Subject: Re: [PATCH] x86/vdso: include generic __lshrdi3 in 32-bit vDSO
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Manoj Gupta <manojgupta@chromium.org>,
+        Tiancong Wang <tcwang@chromium.org>,
+        Stephen Hines <srhines@google.com>,
+        clang-built-linux@googlegroups.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 1:18 PM Laura Abbott <labbott@redhat.com> wrote:
+On Fri, Mar 15, 2019 at 12:54 PM Matthias Kaehlcke <mka@chromium.org> wrote:
 >
-> On 3/5/19 12:54 PM, John Stultz wrote:
-> > +DMA-BUF HEAPS FRAMEWORK
-> > +M:   Laura Abbott<labbott@redhat.com>
-> > +R:   Liam Mark<lmark@codeaurora.org>
-> > +R:   Brian Starkey<Brian.Starkey@arm.com>
-> > +R:   "Andrew F. Davis"<afd@ti.com>
-> > +R:   John Stultz<john.stultz@linaro.org>
-> > +S:   Maintained
-> > +L:   linux-media@vger.kernel.org
-> > +L:   dri-devel@lists.freedesktop.org
-> > +L:   linaro-mm-sig@lists.linaro.org  (moderated for non-subscribers)
-> > +F:   include/uapi/linux/dma-heap.h
-> > +F:   include/linux/dma-heap.h
-> > +F:   drivers/dma-buf/dma-heap.c
-> > +F:   drivers/dma-buf/heaps/*
-> > +T:   git git://anongit.freedesktop.org/drm/drm-misc
+> Building the 32-bit vDSO with a recent clang version fails due
+> to undefined symbols:
 >
-> So I talked about this with Sumit privately but I think
-> it might make sense to have me step down as maintainer when
-> this goes out of staging. I mostly worked on Ion at my
-> previous position and anything I do now is mostly a side
-> project. I still want to see it succeed which is why I
-> took on the maintainer role but I don't want to become blocking
-> for people who have a stronger vision about where this needs
-> to go (see also, I'm not working with this on a daily basis).
+> arch/x86/entry/vdso/vdso32.so.dbg: undefined symbols found
 >
-> If you just want someone to help review or take patches
-> to be pulled, I'm happy to do so but I'd hate to become
-> the bottleneck on getting things done for people who
-> are attempting to do real work.
+> The undefined symbol in this case is __lshrdi3, which is part of
+> the compiler runtime library, however the vDSO isn't linked against
+> this library.
+>
+> Include the kernel version of __lshrdi3 in the 32-bit vDSO build.
 
-I worry this will make everyone to touch the side of their nose and
-yell "NOT IT!" :)
+__lshrdi3 is used for "logical shift right double-word by int" (best
+guess), so anywhere there's a right shift of a u64.  Looks like
+there's a few of these in arch/x86/entry/vdso/, so it's legal for the
+compiler to emit this libcall.  Do you know which function
+specifically in the .so has a relocation referencing __lshrdi3
+specifically?
 
-First of all, thank you so much for your efforts maintaining ION along
-with your attempts to drag out requirements from interested parties
-and the numerous attempts to get collaborative discussion going at
-countless conferences! Your persistence and continual nudging in the
-face of apathetic private users of the code probably cannot be
-appreciated enough!
+Is there a config I can set to reproduce this, in order to help test?
 
-Your past practical experience with ION and active work with the
-upstream community made you a stand out pick for this, but I
-understand not wanting to be eternally stuck with a maintainership if
-your not active in the area.  I'm happy to volunteer as a neutral
-party, but I worry my limited experience with some of the more
-complicated usage would make my opinions less informed then they
-probably need to be.  Further, as a neutral party, Sumit would
-probably be a better pick since he's already maintaining the dmabuf
-core.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  arch/x86/entry/vdso/Makefile | 7 ++++++-
+>  lib/lshrdi3.c                | 4 +++-
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+> index 5bfe2243a08f..7517cd87e10b 100644
+> --- a/arch/x86/entry/vdso/Makefile
+> +++ b/arch/x86/entry/vdso/Makefile
+> @@ -144,6 +144,7 @@ KBUILD_CFLAGS_32 += $(call cc-option, -fno-stack-protector)
+>  KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
+>  KBUILD_CFLAGS_32 += -fno-omit-frame-pointer
+>  KBUILD_CFLAGS_32 += -DDISABLE_BRANCH_PROFILING
+> +KBUILD_CFLAGS_32 += -DBUILD_VDSO
+>
+>  ifdef CONFIG_RETPOLINE
+>  ifneq ($(RETPOLINE_VDSO_CFLAGS),)
+> @@ -153,12 +154,16 @@ endif
+>
+>  $(obj)/vdso32.so.dbg: KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
+>
+> +$(obj)/vdso32/lshrdi3.o: $(srctree)/lib/lshrdi3.c FORCE
+> +       $(call if_changed_rule,cc_o_c)
 
-So I'd nominate Andrew, Liam or Benjamin (or all three?) as they all
-have more practical experience enabling past ION heaps on real devices
-and have demonstrated active interest in working in the community.
++ Masahiro to help look at this part (I don't understand this part of kbuild).
 
-So, in other words... NOT IT! :)
--john
+> +
+>  $(obj)/vdso32.so.dbg: FORCE \
+>                       $(obj)/vdso32/vdso32.lds \
+>                       $(obj)/vdso32/vclock_gettime.o \
+>                       $(obj)/vdso32/note.o \
+>                       $(obj)/vdso32/system_call.o \
+> -                     $(obj)/vdso32/sigreturn.o
+> +                     $(obj)/vdso32/sigreturn.o \
+> +                     $(obj)/vdso32/lshrdi3.o
+>         $(call if_changed,vdso)
+>
+>  #
+> diff --git a/lib/lshrdi3.c b/lib/lshrdi3.c
+> index 99cfa5721f2d..8a4fc6bcf3a4 100644
+> --- a/lib/lshrdi3.c
+> +++ b/lib/lshrdi3.c
+> @@ -16,7 +16,7 @@
+>   * to the Free Software Foundation, Inc.
+>   */
+>
+> -#include <linux/module.h>
+> +#include <linux/export.h>
+
+Is this a simple cleanup, or?
+
+>  #include <linux/libgcc.h>
+>
+>  long long notrace __lshrdi3(long long u, word_type b)
+> @@ -42,4 +42,6 @@ long long notrace __lshrdi3(long long u, word_type b)
+>
+>         return w.ll;
+>  }
+> +#ifndef BUILD_VDSO
+>  EXPORT_SYMBOL(__lshrdi3);
+> +#endif
+> --
+> 2.21.0.360.g471c308f928-goog
+
+Compilers (GCC and Clang) will always assume their runtime has these
+helper functions; whether or not they emit libcalls vs inline routines
+is implementation defined.  So I agree with this patch; I just would
+like to help confirm/test it.
+-- 
+Thanks,
+~Nick Desaulniers
