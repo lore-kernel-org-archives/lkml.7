@@ -2,187 +2,131 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82EEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB478C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3CF218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8590B218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbfCOPaq (ORCPT
+        id S1729343AbfCOPg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 11:30:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35924 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbfCOPap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 11:30:45 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 34C9E30A9CE5;
-        Fri, 15 Mar 2019 15:30:45 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A7F035D75E;
-        Fri, 15 Mar 2019 15:30:44 +0000 (UTC)
-Date:   Fri, 15 Mar 2019 11:30:42 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ben Segall <bsegall@google.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] sched/fair: Limit sched_cfs_period_timer loop to avoid
- hard lockup
-Message-ID: <20190315153042.GF27131@pauld.bos.csb>
-References: <20190313150826.16862-1-pauld@redhat.com>
- <20190315101150.GV5996@hirez.programming.kicks-ass.net>
+        Fri, 15 Mar 2019 11:36:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36124 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726792AbfCOPg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 11:36:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D88DDAC44;
+        Fri, 15 Mar 2019 15:36:53 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Len Brown <lenb@kernel.org>, Hannes Reinecke <hare@suse.de>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Simon Schricker <sschricker@suse.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Len Brown <len.brown@intel.com>
+Subject: Re: [PATCH] [RESEND] Do not modify perf bias performance setting by default at boot
+Date:   Fri, 15 Mar 2019 16:36:53 +0100
+Message-ID: <2947538.dvgdW3vLlg@house>
+In-Reply-To: <CAJZ5v0h3zLrqqMXzt_cqGV1rBR0muosZwy1Zu3fV9O1kqGc6gw@mail.gmail.com>
+References: <6369897.qxlu8PgE1t@house> <CAJZ5v0h3zLrqqMXzt_cqGV1rBR0muosZwy1Zu3fV9O1kqGc6gw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315101150.GV5996@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 15 Mar 2019 15:30:45 +0000 (UTC)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 11:11:50AM +0100 Peter Zijlstra wrote:
-> On Wed, Mar 13, 2019 at 11:08:26AM -0400, Phil Auld wrote:
+Hi Rafael,
 
-...
-
-> Computers _suck_ at /100. And since you're free to pick the constant,
-> pick a power of two, computers love those.
+On Thursday, March 14, 2019 11:08:03 PM CET Rafael J. Wysocki wrote:
+> On Thu, Mar 14, 2019 at 3:42 PM Thomas Renninger <trenn@suse.de> wrote:
+> > This is a revert of mainline git commits:
+> > commit b51ef52df71cb28e9d90cd1d48b79bf19f0bab06
+> > commit 17edf2d79f1ea6dfdb4c444801d928953b9f98d6
+> > commit abe48b108247e9b90b4c6739662a2e5c765ed114
 > 
-> > +
-> > +			if (new_period >  max_cfs_quota_period)
-> > +				new_period = max_cfs_quota_period;
-> > +
-> > +			cfs_b->period = ns_to_ktime(new_period);
-> > +			cfs_b->quota += (cfs_b->quota * ((new_period - old_period) * 100)/old_period)/100;
-> 
-> srsly!? Again, you can pick the constant to be anything, and you pick
-> such a horrid number?!
-> 
+> I'm not quite convinced that reverting these is the right thing to do here.
 
-In my defense here, all the fair.c imbalance pct code also uses 100 :)
+Ok, I try harder.
+ 
+> > It is about this kernel message showing up on quite a lot servers:
+> > [    0.072652] ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
+> > [    0.076003] ENERGY_PERF_BIAS: View and update with
+> > x86_energy_perf_policy(8)
+> What happens on boot is a matter of convention and the convention by
+> which the EPB is set to "neutral" at that point has been used for
+> quite a while.  Changing it now may confuse some users or even worse.
 
+SUSE has this patch included for quite a while (in all kind of
+SLE 12 SP flavors), possibly other distributions as well.
+Unfortunately the patch got removed recently, because my commit (this one)
+was ignored by Len a while ago.
 
-> > +			pr_warn_ratelimited(
-> > +				"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-> > +				smp_processor_id(), cfs_b->period/NSEC_PER_USEC, cfs_b->quota/NSEC_PER_USEC);
-> 
-> period was ktime_t, remember...
+I also like to see more examples of BIOSes not initializing this value.
+This message is rare (so the setting back does not happen often, probably
+only wrongly with latest BIOSes overriding intended BIOS performance settings 
+on servers).
 
-Indeed. Worked but was incorrect. 
+On my workstation the BIOS initializes perf bias to:
+cpupower info
+analyzing CPU 0:
+perf-bias: 7
 
-> 
-> Would not something simpler like the below also work?
+I could grep through quite some dozens of machines..., but these are mostly
+servers and probably show either "zero"/"performance" or "6"/"normal" because
+the Linux kernel overrides the INTENDED performance perf bias value to 6.
 
+So we (SUSE) are going with this patch forever.
+Otherwise we would run into a similar support nightmare we ran into, when
+Intel decided to ignore CPU idle states as exported by BIOS through ACPI.
+BIOS documentation of all big server vendors mentioned "performance" settings.
+With a kernel update these BIOS C states settings have been ignored (some long 
+latency once were not exported on purpose).
 
-With my version:
+The list of breaking conventions and specifications is long...
+People mostly blame the "bad BIOS developer". In this case things have been
+broke by the kernel.
+It's now (with the resume patch) broken in way, that "performance" setting
+in the mainline kernel is unusable for years already.
 
-[ 4246.030004] cfs_period_timer[cpu16]: period too short, scaling up (new cfs_period_us 5276, cfs_quota_us = 303973)
-[ 4246.346978] cfs_period_timer[cpu16]: period too short, scaling up (new cfs_period_us 17474, cfs_quota_us = 1006569)
+Can we please get this finally properly fixed!
 
-(most of the time it's only one message. Sometimes it does a smaller increase once first like this)
+> That is a bug.  There is no reason to change the EPB on CPU
+> offline/online and I agree that this needs to be fixed.  The reverts
+> would make this problem go away, but that's not the only possible way
+> to fix it.
 
+It is the only proper way to fix this.
+ 
+> Moreover, what is done during system-wide resume appears to be a bug
+> too.  Whatever EPB value is there during suspend should be saved and
+> it should be restored during resume. Reverting the commits above will
+> not fix that particular issue.
 
+Someone could have a look what happens on a recent system
+after suspend (with this patch on top).
+I do not have laptops to test suspend/resume with latest kernels.
+These broken patches have been added a bit too quickly.
 
-with the below:
+I doubt much BIOSes "forgot to initialize this value" and I have my doubts
+that resume let's the CPU fall back to "uninitialized" value.
+I more expect BIOS resets performance value after resume and the kernel is
+doing it all wrong.
+Hm, in fact this could be proofed by modifying perf bias value, do a suspend
+resume cyle. If the value is kept we should avoid another try of complicating
+things and simply reverting touching perf bias value altogether, correct?
 
-[  117.235804] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 2492, cfs_quota_us = 143554)
-[  117.346807] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 2862, cfs_quota_us = 164863)
-[  117.470569] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 3286, cfs_quota_us = 189335)
-[  117.574883] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 3774, cfs_quota_us = 217439)
-[  117.652907] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 4335, cfs_quota_us = 249716)
-[  118.090535] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 4978, cfs_quota_us = 286783)
-[  122.098009] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 5717, cfs_quota_us = 329352)
-[  126.255209] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 6566, cfs_quota_us = 378240)
-[  126.358060] cfs_period_timer[cpu2]: period too short, scaling up (new cfs_period_us 7540, cfs_quota_us = 434385)
-[  126.538358] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 8660, cfs_quota_us = 498865)
-[  126.614304] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 9945, cfs_quota_us = 572915)
-[  126.817085] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 11422, cfs_quota_us = 657957)
-[  127.352038] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 13117, cfs_quota_us = 755623)
-[  127.598043] cfs_period_timer[cpu9]: period too short, scaling up (new cfs_period_us 15064, cfs_quota_us = 867785)
+BIOS probably does not store perf BIAS value and re-applies it after
+suspend resume. Some might re-set it to the intial value (performance..., 
+D'oh).
 
-
-Plus on repeats I see an occasional 
-
-[  152.803384] sched_cfs_period_timer: 9 callbacks suppressed
-
-
-
-I'll rework the maths in the averaged version and post v2 if that makes sense.
-
-It may have the extra timer fetch, although maybe I could rework it so that it used the 
-nsstart time the first time and did not need to do it twice in a row. I had originally
-reverted the hrtimer_forward_now() to hrtimer_forward() but put that back. 
-
-
-Thanks for looking at it. 
-
-
-Also, fwiw, this was reported earlier by Anton Blanchard in https://lkml.org/lkml/2018/12/3/1047
-
-
-Cheers,
-Phil
-
-> 
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index ea74d43924b2..b71557be6b42 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4885,6 +4885,8 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
->  	return HRTIMER_NORESTART;
->  }
->  
-> +extern const u64 max_cfs_quota_period;
-> +
->  static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
->  {
->  	struct cfs_bandwidth *cfs_b =
-> @@ -4892,6 +4894,7 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
->  	unsigned long flags;
->  	int overrun;
->  	int idle = 0;
-> +	int count = 0;
->  
->  	raw_spin_lock_irqsave(&cfs_b->lock, flags);
->  	for (;;) {
-> @@ -4899,6 +4902,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
->  		if (!overrun)
->  			break;
->  
-> +		if (++count > 3) {
-> +			u64 new, old = ktime_to_ns(cfs_b->period);
-> +
-> +			new = (old * 147) / 128; /* ~115% */
-> +			new = min(new, max_cfs_quota_period);
-> +
-> +			cfs_b->period = ns_to_ktime(new);
-> +
-> +			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-> +			cfs_b->quota *= new;
-> +			cfs_b->quota /= old;
-> +
-> +			pr_warn_ratelimited(
-> +	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-> +				smp_processor_id(),
-> +				new/NSEC_PER_USEC,
-> +				cfs_b->quota/NSEC_PER_USEC);
-> +
-> +			/* reset count so we don't come right back in here */
-> +			count = 0;
-> +		}
-> +
->  		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
->  	}
->  	if (idle)
-
--- 
+        Thomas
