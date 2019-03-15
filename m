@@ -2,198 +2,128 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AD9C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AFDC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052D1218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552670398;
-	bh=gnVQZMGSsSqKDid2/j3xNFbGWRnc4ihB/6drHnqb0yU=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=lNg0ilnMBeU5gEnNZ8hl3I8RwVLb0A+PtV+TkapEayC5z0hC6mMpD4FV8jrXoPgbm
-	 RG3hK4dYLfTaugDTwqt/ZwACCowdaB9ctqAqS0ZjPL7Nd3G9bJkFBUlNV1o4zMohxs
-	 mboCSMEILrw80OGuzJgkd4wAI9cjwFuP8pU2eZ8s=
+	by mail.kernel.org (Postfix) with ESMTP id 1A37C218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TY8hhFfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbfCORT4 (ORCPT
+        id S1729617AbfCORVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 13:19:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54680 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729865AbfCORTp (ORCPT
+        Fri, 15 Mar 2019 13:21:50 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46731 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727460AbfCORVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 13:19:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=YasJb9Hm7d92E6b0vwVihsgJvFEIP72f+5mowRHbS5c=; b=BY+euD8Jq4V2
-        bd+ytk/dmRcS8FwYOBtJwgiD/LH8i5TE7AQPHAip9hfRBYDuqtpzD+WRWobEcM5F9xqhd//cVdfO9
-        fiwYTGEE608lMKEeKK481JlSsL2ZebVUcZJibE0B04ayw5KZov43nG8MXybiMnrPvMAxqLyfnDlSc
-        uCzn4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h4qUZ-0002fD-6N; Fri, 15 Mar 2019 17:19:35 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 8C7B61126E81; Fri, 15 Mar 2019 17:19:34 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Ludovic Barre <ludovic.barre@st.com>
-Cc:     Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Applied "spi: spi-mem: stm32-qspi: add suspend/resume support" to the spi tree
-In-Reply-To:  <1552050741-27739-3-git-send-email-ludovic.Barre@st.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190315171934.8C7B61126E81@debutante.sirena.org.uk>
-Date:   Fri, 15 Mar 2019 17:19:34 +0000 (GMT)
+        Fri, 15 Mar 2019 13:21:50 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c18so8989579otl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 10:21:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=rV3K8PnVom4USqT3Gzf7IMcpT4mAIhVLDbNscsln/e4=;
+        b=TY8hhFfbk1i53/4fH5sKe15+nweaFTVhdIk/aMuUgTg4aQH7BGOHw+1HsUL2bsFSd5
+         hzY8zV9j1VpZRMMRTKvrvrnHCIeRKvCCLFqgNwxqjLn/iwjDyeNN6RI0+WWrz5hxfyR7
+         2HM6lEptgtV2XiRqodQwftKrNu4QmLZMyG9S7Aq2/vO7bu69jJOzsmvuCVSYZZ1wv5cO
+         3nCPMKLHFC+owGZrkZ9ewd1SR0arWxz363VTHWPBRqFY/u0YcKGje59fLxjfcnj+TcfC
+         M9/FR8fIve0cLLvbyZBcM4mklV782/7M7BK80Mfr7cAvoesGYIYTcFYun8NVeAAPz4Wd
+         IbgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=rV3K8PnVom4USqT3Gzf7IMcpT4mAIhVLDbNscsln/e4=;
+        b=SNrOGxK91r+EjXvl6ufFirDGQcEPpcQhTo+9i3rVTI1rgiB3Ttg7R0wWMHnpwbQiZF
+         YVl8LBXuygnAUjjBhP4gpCVJnGmJvXfauVNZJfOiIksFfxsgQvNxSEbMEfDtew0W4jSN
+         v02zUWc9ebydwJcroBnELVTiuSVNyu26kMMe/RsjkT+YEE7WyQoF+nKH6ix4ZGl7MIH2
+         bVbhIpzI0CKH2QSgtOshPPAxeQNi952y91kAsyf7r9z9z4aJBgqgwWsECD6AgaKRtvi1
+         h9lFpbReKP5UCHYJa0XwcoAJ7WwT0mEMXNOfkFYoLJlUZK/bzByT3n7rZoZ7VGmISE2/
+         5uqg==
+X-Gm-Message-State: APjAAAUk/ZxSmJA30OrjsBXzR+gJGrSJonMtFWQXnxd7JmNBRsf9J0RJ
+        CH0OkbkHA6uJ9+kjjeLVaqJUfA==
+X-Google-Smtp-Source: APXvYqxIGDlSFub6D2MZgeFN+mM5z0qNWtolTi4QKIyeLDX/QxxKp8cHd7JLtlWzrg2flcUszC6KvQ==
+X-Received: by 2002:a9d:67d3:: with SMTP id c19mr2769706otn.300.1552670508834;
+        Fri, 15 Mar 2019 10:21:48 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id h138sm1230701oic.8.2019.03.15.10.21.46
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 15 Mar 2019 10:21:47 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 10:21:18 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Oscar Salvador <osalvador@suse.de>
+cc:     Michal Hocko <mhocko@kernel.org>, akpm@linux-foundation.org,
+        anshuman.khandual@arm.com, william.kucharski@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH] mm: Fix __dump_page when mapping->host is not set
+In-Reply-To: <20190315143304.pkuvj4qwtlzgm7iq@d104.suse.de>
+Message-ID: <alpine.LSU.2.11.1903150952270.2934@eggly.anvils>
+References: <20190315121826.23609-1-osalvador@suse.de> <20190315124733.GE15672@dhcp22.suse.cz> <20190315143304.pkuvj4qwtlzgm7iq@d104.suse.de>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, 15 Mar 2019, Oscar Salvador wrote:
+> On Fri, Mar 15, 2019 at 01:47:33PM +0100, Michal Hocko wrote:
+> > diff --git a/mm/debug.c b/mm/debug.c
+> > index 1611cf00a137..499c26d5ebe5 100644
+> > --- a/mm/debug.c
+> > +++ b/mm/debug.c
+> > @@ -78,6 +78,9 @@ void __dump_page(struct page *page, const char *reason)
+> >  	else if (PageKsm(page))
+> >  		pr_warn("ksm ");
+> >  	else if (mapping) {
+> > +		if (PageSwapCache(page))
+> > +			mapping = page_swap_info(page)->swap_file->f_mapping;
+> > +
+> >  		pr_warn("%ps ", mapping->a_ops);
+> >  		if (mapping->host->i_dentry.first) {
+> >  			struct dentry *dentry;
+> 
+> This looks like a much nicer fix, indeed.
+> I gave it a spin and it works.
+> 
+> Since the mapping is set during the swapon, I would assume that this should
+> always work for swap.
+> Although I am not sure if once you start playing with e.g zswap the picture can
+> change.
+> 
+> Let us wait for Hugh and Jan.
+> 
+> Thanks Michal
 
-   spi: spi-mem: stm32-qspi: add suspend/resume support
+Sorry, I don't agree that Michal's more sophisticated patch is nicer:
+the appropriate patch was your original, just checking for NULL.
 
-has been applied to the spi tree at
+Though, would I be too snarky to suggest that your patch description
+would be better at 2 lines than 90?  Swap mapping->host is NULL,
+so of course __dump_page() needs to be careful about that.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+I was a little disturbed to see __dump_page() now getting into dentries,
+but admit that it can sometimes be very helpful to see the name of the
+file involved; so if that is not in danger of breaking anything, okay.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+It is very often useful to see if a page is PageSwapCache (typically
+because that should account for 1 of its refcount); I cannot think of
+a time when it's been useful to know the name of the underlying swap
+device (if that's indeed what f_mapping leads to: it's new to me).
+And if you need swp_type and swp_offset, they're in the raw output.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+The cleverer __dump_page() tries to get, the more likely that it will
+itself crash just when you need it most. Please just keep it simple.
 
 Thanks,
-Mark
-
-From 2e541b64ee5269278fde5c87953a9963a8219ed4 Mon Sep 17 00:00:00 2001
-From: Ludovic Barre <ludovic.barre@st.com>
-Date: Fri, 8 Mar 2019 14:12:21 +0100
-Subject: [PATCH] spi: spi-mem: stm32-qspi: add suspend/resume support
-
-This patch adds suspend and resume support for spi-stm32-qspi
-drivers.
-
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-stm32-qspi.c | 39 ++++++++++++++++++++++++++++++++----
- 1 file changed, 35 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 7354f9d68dba..3e8ca10011cc 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -13,6 +13,7 @@
- #include <linux/mutex.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- #include <linux/sizes.h>
-@@ -101,6 +102,9 @@ struct stm32_qspi {
- 	struct completion data_completion;
- 	u32 fmode;
- 
-+	u32 cr_reg;
-+	u32 dcr_reg;
-+
- 	/*
- 	 * to protect device configuration, could be different between
- 	 * 2 flash access (bk1, bk2)
-@@ -355,7 +359,7 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	struct spi_controller *ctrl = spi->master;
- 	struct stm32_qspi *qspi = spi_controller_get_devdata(ctrl);
- 	struct stm32_qspi_flash *flash;
--	u32 cr, presc;
-+	u32 presc;
- 
- 	if (ctrl->busy)
- 		return -EBUSY;
-@@ -371,11 +375,12 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	flash->presc = presc;
- 
- 	mutex_lock(&qspi->lock);
--	cr = FIELD_PREP(CR_FTHRES_MASK, 3) | CR_SSHIFT | CR_EN;
--	writel_relaxed(cr, qspi->io_base + QSPI_CR);
-+	qspi->cr_reg = FIELD_PREP(CR_FTHRES_MASK, 3) | CR_SSHIFT | CR_EN;
-+	writel_relaxed(qspi->cr_reg, qspi->io_base + QSPI_CR);
- 
- 	/* set dcr fsize to max address */
--	writel_relaxed(DCR_FSIZE_MASK, qspi->io_base + QSPI_DCR);
-+	qspi->dcr_reg = DCR_FSIZE_MASK;
-+	writel_relaxed(qspi->dcr_reg, qspi->io_base + QSPI_DCR);
- 	mutex_unlock(&qspi->lock);
- 
- 	return 0;
-@@ -489,6 +494,31 @@ static int stm32_qspi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int __maybe_unused stm32_qspi_suspend(struct device *dev)
-+{
-+	struct stm32_qspi *qspi = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(qspi->clk);
-+	pinctrl_pm_select_sleep_state(dev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused stm32_qspi_resume(struct device *dev)
-+{
-+	struct stm32_qspi *qspi = dev_get_drvdata(dev);
-+
-+	pinctrl_pm_select_default_state(dev);
-+	clk_prepare_enable(qspi->clk);
-+
-+	writel_relaxed(qspi->cr_reg, qspi->io_base + QSPI_CR);
-+	writel_relaxed(qspi->dcr_reg, qspi->io_base + QSPI_DCR);
-+
-+	return 0;
-+}
-+
-+SIMPLE_DEV_PM_OPS(stm32_qspi_pm_ops, stm32_qspi_suspend, stm32_qspi_resume);
-+
- static const struct of_device_id stm32_qspi_match[] = {
- 	{.compatible = "st,stm32f469-qspi"},
- 	{}
-@@ -501,6 +531,7 @@ static struct platform_driver stm32_qspi_driver = {
- 	.driver	= {
- 		.name = "stm32-qspi",
- 		.of_match_table = stm32_qspi_match,
-+		.pm = &stm32_qspi_pm_ops,
- 	},
- };
- module_platform_driver(stm32_qspi_driver);
--- 
-2.20.1
-
+Hugh
