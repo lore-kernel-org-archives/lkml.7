@@ -2,108 +2,112 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BC0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933ECC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB1921871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACAC21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbfCOISm (ORCPT
+        id S1727135AbfCOIT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 04:18:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:50253 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727476AbfCOISm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 04:18:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 01:18:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,481,1544515200"; 
-   d="scan'208";a="155275113"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 15 Mar 2019 01:18:36 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 15 Mar 2019 10:18:35 +0200
-Date:   Fri, 15 Mar 2019 10:18:35 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by node
-Message-ID: <20190315081835.GD7752@kuha.fi.intel.com>
-References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
- <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
+        Fri, 15 Mar 2019 04:19:57 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33243 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbfCOIT4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 04:19:56 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h4i46-0006ZF-Bq; Fri, 15 Mar 2019 09:19:42 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h4i43-000428-EX; Fri, 15 Mar 2019 09:19:39 +0100
+Date:   Fri, 15 Mar 2019 09:19:39 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, andrew@aj.id.au, f.fainelli@gmail.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        hoan@os.amperecomputing.com, orsonzhai@gmail.com,
+        baolin.wang@linaro.org, zhang.lyra@gmail.com,
+        keguang.zhang@gmail.com, vz@mleia.com, matthias.bgg@gmail.com,
+        thierry.reding@gmail.com, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org, robert.jarzmik@free.fr,
+        yamada.masahiro@socionext.com, jun.nie@linaro.org,
+        shawnguo@kernel.org, linux-gpio@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        kernel@pengutronix.de, Julia Lawall <Julia.Lawall@lip6.fr>
+Subject: Re: [PATCH 05/42] drivers: gpio: bcm-kona: use
+ devm_platform_ioremap_resource()
+Message-ID: <20190315081939.zr3vv3a7a6wf7byw@pengutronix.de>
+References: <1552330521-4276-1-git-send-email-info@metux.net>
+ <1552330521-4276-5-git-send-email-info@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1552330521-4276-5-git-send-email-info@metux.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 03:38:31PM +0800, Chunfeng Yun wrote:
-> Add usb_role_switch_get_by_node() to make easier to get
-> usb_role_switch by node which register it.
-> It's useful when there is not device_connection registered
-> between two drivers and only knows the node which register
-> usb_role_switch.
+On Mon, Mar 11, 2019 at 07:54:44PM +0100, Enrico Weigelt, metux IT consult wrote:
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 > ---
->  drivers/usb/roles/class.c | 30 ++++++++++++++++++++++++++++++
->  include/linux/usb/role.h  |  1 +
->  2 files changed, 31 insertions(+)
+>  drivers/gpio/gpio-bcm-kona.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> index 99116af07f1d..284b19856dc4 100644
-> --- a/drivers/usb/roles/class.c
-> +++ b/drivers/usb/roles/class.c
-> @@ -11,6 +11,7 @@
->  #include <linux/device.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of.h>
->  #include <linux/slab.h>
+> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+> index c5536a5..9fa6d3a 100644
+> --- a/drivers/gpio/gpio-bcm-kona.c
+> +++ b/drivers/gpio/gpio-bcm-kona.c
+> @@ -568,7 +568,6 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	const struct of_device_id *match;
+> -	struct resource *res;
+>  	struct bcm_kona_gpio_bank *bank;
+>  	struct bcm_kona_gpio *kona_gpio;
+>  	struct gpio_chip *chip;
+> @@ -618,8 +617,7 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
+>  		return -ENXIO;
+>  	}
 >  
->  static struct class *role_class;
-> @@ -121,6 +122,35 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(usb_role_switch_get);
->  
-> +static int __switch_match_node(struct device *dev, const void *node)
-> +{
-> +	return dev->parent->of_node == (const struct device_node *)node;
-> +}
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	kona_gpio->reg_base = devm_ioremap_resource(dev, res);
+> +	kona_gpio->reg_base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(kona_gpio->reg_base)) {
+>  		ret = -ENXIO;
 
-Andy already pointed out that you need to use fwnodes.
+This should be
 
-Rule of thumb: You always use fwnodes. Only if there is something that
-can't be done with fwnodes you use DT or ACPI nodes directly.
+	ret = PTR_ERR(kona_gpio->reg_base)
 
-In this case there is absolutely nothing that would prevent you from
-using fwnodes.
+, shouldn't it? (If yes, this is orthogonal to this patch, but still
+worth fixing.)
 
+@Julia: Is this something that coccinelle could catch?
 
-thanks,
+Best regards
+Uwe
 
 -- 
-heikki
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
