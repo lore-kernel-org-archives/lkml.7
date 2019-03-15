@@ -2,111 +2,187 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69213C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283CAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3738C218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:07:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FE36kIKL"
+	by mail.kernel.org (Postfix) with ESMTP id EC14D21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbfCOQH2 (ORCPT
+        id S1729475AbfCOQJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:07:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55126 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729395AbfCOQH1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:07:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2FG6A8O193757;
-        Fri, 15 Mar 2019 16:07:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=2FkcjCV52mdsp3KbWo1Wl7u7jfnZU9k6UUaKBtDC67s=;
- b=FE36kIKLlnQufTuYr3dHxxBQFk7PXi7KbyHbh8MhT5Jm68B8DQ7iVIa6pJNyVffzlwgy
- 6OI8CszC8dxS7Pi45CLTE8jYymt8LiCLfWJnRFpYF+DnRAJH4takF2ug29q2zFYgW4Zi
- pKwxkU5cKGjGXnEZa03fJBpfcArhnEM6Ecp3v/AEEmkUbZVJbnjA40ljqDRN1FSgHuhz
- x42WU2r0yNmFKNy+aNWpVVeLjI/8UU7hviJuKF7lebhKEQzpGm2+ydTEmJS5maqmBJY7
- sYdym8t0Er87zrHoyMaD0uYFqRQZIXnh6C7f528/V44RLBbSA0rvTfMAXqtp/48vvNMN xw== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2r464ryjge-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Mar 2019 16:07:19 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2FG7DUJ002019
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Mar 2019 16:07:13 GMT
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2FG7CTt017638;
-        Fri, 15 Mar 2019 16:07:12 GMT
-Received: from localhost (/10.159.140.139)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 15 Mar 2019 16:07:11 +0000
-Date:   Fri, 15 Mar 2019 09:07:06 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     torvalds@linux-foundation.org
-Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: minor cleanups for 5.1-rc1
-Message-ID: <20190315160706.GI4929@magnolia>
+        Fri, 15 Mar 2019 12:09:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60506 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729397AbfCOQJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:09:21 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F105481E14;
+        Fri, 15 Mar 2019 16:09:20 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-102.ams2.redhat.com [10.36.116.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BFE060BE6;
+        Fri, 15 Mar 2019 16:09:09 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@linux.intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, robin.murphy@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+Subject: [PATCH v5 00/22] SMMUv3 Nested Stage Setup
+Date:   Fri, 15 Mar 2019 17:08:44 +0100
+Message-Id: <20190315160906.12900-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9196 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903150114
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 15 Mar 2019 16:09:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+This series allows a virtualizer to program the nested stage mode.
+This is useful when both the host and the guest are exposed with
+an SMMUv3 and a PCI device is assigned to the guest using VFIO.
 
-Here's a few more cleanups that trickled in for the merge window.  It's
-all fixes for static checker complaints and slowly unwinding typedef
-usage.  The four patches here have gone through a few days worth of
-fstest runs with no new problems observed; and they merge cleanly with
-master as of a few minutes ago.  Please let me know if you encounter any
-problems merging them.
+In this mode, the physical IOMMU must be programmed to translate
+the two stages: the one set up by the guest (IOVA -> GPA) and the
+one set up by the host VFIO driver as part of the assignment process
+(GPA -> HPA).
 
---D
+On Intel, this is traditionnaly achieved by combining the 2 stages
+into a single physical stage. However this relies on the capability
+to trap on each guest translation structure update. This is possible
+by using the VTD Caching Mode. Unfortunately the ARM SMMUv3 does
+not offer a similar mechanism.
 
-The following changes since commit 1b9598c8fb9965fff901c4caa21fed9644c34df3:
+However, the ARM SMMUv3 architecture supports 2 physical stages! Those
+were devised exactly with that use case in mind. Assuming the HW
+implements both stages (optional), the guest now can use stage 1
+while the host uses stage 2.
 
-  xfs: fix reporting supported extra file attributes for statx() (2019-03-01 08:57:25 -0800)
+This assumes the virtualizer has means to propagate guest settings
+to the host SMMUv3 driver. This series brings this VFIO/IOMMU
+infrastructure.  Those services are:
+- bind the guest stage 1 configuration to the stream table entry
+- propagate guest TLB invalidations
+- bind MSI IOVAs
+- propagate faults collected at physical level up to the virtualizer
 
-are available in the Git repository at:
+This series largely reuses the user API and infrastructure originally
+devised for SVA/SVM and patches submitted by Jacob, Yi Liu, Tianyu in
+[1-2] and Jean-Philippe [3-4].
 
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.1-merge-5
+Best Regards
 
-for you to fetch changes up to 6ef50fe9afae63d11220f3f66b5f4c75d09c8bf0:
+Eric
 
-  xfs: clean up xfs_dir2_leaf_addname (2019-03-12 09:19:38 -0700)
+This series can be found at:
+https://github.com/eauger/linux/tree/v5.0-2stage-v5
 
-----------------------------------------------------------------
-Changes since last update:
-- Fix some clang/smatch/sparse warnings about uninitialized variables.
-- Clean up some typedef usage.
+References:
+[1] [PATCH v5 00/23] IOMMU and VT-d driver support for Shared Virtual
+    Address (SVA)
+    https://lwn.net/Articles/754331/
+[2] [RFC PATCH 0/8] Shared Virtual Memory virtualization for VT-d
+    (VFIO part)
+    https://lists.linuxfoundation.org/pipermail/iommu/2017-April/021475.html
+[3] [v2,00/40] Shared Virtual Addressing for the IOMMU
+    https://patchwork.ozlabs.org/cover/912129/
+[4] [PATCH v3 00/10] Shared Virtual Addressing for the IOMMU
+    https://patchwork.kernel.org/cover/10608299/
 
-----------------------------------------------------------------
-Darrick J. Wong (3):
-      xfs: clean up xfs_dir2_leafn_add
-      xfs: zero initialize highstale and lowstale in xfs_dir2_leaf_addname
-      xfs: clean up xfs_dir2_leaf_addname
+History:
+v4 -> v5:
+- fix bug reported by Vincent: fault handler unregistration now happens in
+  vfio_pci_release
+- IOMMU_FAULT_PERM_* moved outside of struct definition + small
+  uapi changes suggested by Kean-Philippe (except fetch_addr)
+- iommu: introduce device fault report API: removed the PRI part.
+- see individual logs for more details
+- reset the ste abort flag on detach
 
-Nathan Chancellor (1):
-      xfs: Zero initialize highstale and lowstale in xfs_dir2_leafn_add
+v3 -> v4:
+- took into account Alex, jean-Philippe and Robin's comments on v3
+- rework of the smmuv3 driver integration
+- add tear down ops for msi binding and PASID table binding
+- fix S1 fault propagation
+- put fault reporting patches at the beginning of the series following
+  Jean-Philippe's request
+- update of the cache invalidate and fault API uapis
+- VFIO fault reporting rework with 2 separate regions and one mmappable
+  segment for the fault queue
+- moved to PATCH
 
- fs/xfs/libxfs/xfs_dir2_leaf.c | 37 +++++++++++++++++--------------------
- fs/xfs/libxfs/xfs_dir2_node.c | 18 ++++++++----------
- 2 files changed, 25 insertions(+), 30 deletions(-)
+v2 -> v3:
+- When registering the S1 MSI binding we now store the device handle. This
+  addresses Robin's comment about discimination of devices beonging to
+  different S1 groups and using different physical MSI doorbells.
+- Change the fault reporting API: use VFIO_PCI_DMA_FAULT_IRQ_INDEX to
+  set the eventfd and expose the faults through an mmappable fault region
+
+v1 -> v2:
+- Added the fault reporting capability
+- asid properly passed on invalidation (fix assignment of multiple
+  devices)
+- see individual change logs for more info
+
+
+Eric Auger (13):
+  iommu: Introduce bind/unbind_guest_msi
+  vfio: VFIO_IOMMU_BIND/UNBIND_MSI
+  iommu/smmuv3: Get prepared for nested stage support
+  iommu/smmuv3: Implement attach/detach_pasid_table
+  iommu/smmuv3: Implement cache_invalidate
+  dma-iommu: Implement NESTED_MSI cookie
+  iommu/smmuv3: Implement bind/unbind_guest_msi
+  iommu/smmuv3: Report non recoverable faults
+  vfio-pci: Add a new VFIO_REGION_TYPE_NESTED region type
+  vfio-pci: Register an iommu fault handler
+  vfio_pci: Allow to mmap the fault queue
+  vfio-pci: Add VFIO_PCI_DMA_FAULT_IRQ_INDEX
+  vfio: Document nested stage control
+
+Jacob Pan (4):
+  driver core: add per device iommu param
+  iommu: introduce device fault data
+  iommu: introduce device fault report API
+  iommu: Introduce attach/detach_pasid_table API
+
+Jean-Philippe Brucker (2):
+  iommu/arm-smmu-v3: Link domains and devices
+  iommu/arm-smmu-v3: Maintain a SID->device structure
+
+Liu, Yi L (3):
+  iommu: Introduce cache_invalidate API
+  vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE
+  vfio: VFIO_IOMMU_CACHE_INVALIDATE
+
+ Documentation/vfio.txt              |  83 ++++
+ drivers/iommu/arm-smmu-v3.c         | 581 ++++++++++++++++++++++++++--
+ drivers/iommu/dma-iommu.c           | 145 ++++++-
+ drivers/iommu/iommu.c               | 201 +++++++++-
+ drivers/vfio/pci/vfio_pci.c         | 214 ++++++++++
+ drivers/vfio/pci/vfio_pci_intrs.c   |  19 +
+ drivers/vfio/pci/vfio_pci_private.h |  18 +
+ drivers/vfio/pci/vfio_pci_rdwr.c    |  73 ++++
+ drivers/vfio/vfio_iommu_type1.c     | 158 ++++++++
+ include/linux/device.h              |   3 +
+ include/linux/dma-iommu.h           |  18 +
+ include/linux/iommu.h               | 143 +++++++
+ include/uapi/linux/iommu.h          | 233 +++++++++++
+ include/uapi/linux/vfio.h           | 102 +++++
+ 14 files changed, 1957 insertions(+), 34 deletions(-)
+ create mode 100644 include/uapi/linux/iommu.h
+
+-- 
+2.20.1
+
