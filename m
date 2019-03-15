@@ -2,113 +2,218 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFBEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0208C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355F12186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5D8218EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:23:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="axLkF47r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbfCOMXQ (ORCPT
+        id S1728966AbfCOMX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 08:23:16 -0400
-Received: from mgwym02.jp.fujitsu.com ([211.128.242.41]:65335 "EHLO
-        mgwym02.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfCOMXP (ORCPT
+        Fri, 15 Mar 2019 08:23:26 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:35960 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfCOMX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 08:23:15 -0400
-Received: from yt-mxq.gw.nic.fujitsu.com (unknown [192.168.229.66]) by mgwym02.jp.fujitsu.com with smtp
-         id 28b5_d1c2_d8ae4ca9_faab_4e5d_8232_28a8d91cc97e;
-        Fri, 15 Mar 2019 21:23:07 +0900
-Received: from g01jpfmpwkw01.exch.g01.fujitsu.local (g01jpfmpwkw01.exch.g01.fujitsu.local [10.0.193.38])
-        by yt-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id 7D3FEAC00B7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 21:23:07 +0900 (JST)
-Received: from G01JPEXCHKW15.g01.fujitsu.local (G01JPEXCHKW15.g01.fujitsu.local [10.0.194.54])
-        by g01jpfmpwkw01.exch.g01.fujitsu.local (Postfix) with ESMTP id D55C9692597;
-        Fri, 15 Mar 2019 21:22:37 +0900 (JST)
-Received: from G01JPEXMBKW02.g01.fujitsu.local ([10.0.194.66]) by
- g01jpexchkw15 ([10.0.194.54]) with mapi id 14.03.0415.000; Fri, 15 Mar 2019
- 21:22:36 +0900
-From:   "Okamoto, Takayuki" <tokamoto@jp.fujitsu.com>
-To:     'Will Deacon' <will.deacon@arm.com>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Catalin Marinas' <catalin.marinas@arm.com>,
-        "'James Morse'" <james.morse@arm.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'linux-arm-kernel@lists.infradead.org'" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     "Zhang, Lei" <zhang.lei@jp.fujitsu.com>
-Subject: [RESEND PATCH] Make Fujitsu Erratum 010001 patch can be applied on
- A64FX v1r0
-Thread-Topic: [RESEND PATCH] Make Fujitsu Erratum 010001 patch can be
- applied on A64FX v1r0
-Thread-Index: AdTbJFde57o7xnMQR9OpSdZTOYeW4w==
-Date:   Fri, 15 Mar 2019 12:22:36 +0000
-Message-ID: <5FA513F682BE7F4EAAB8EE035D5B08E44E9363CC@G01JPEXMBKW02>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.87.120.48]
-Content-Type: text/plain; charset="iso-2022-jp"
+        Fri, 15 Mar 2019 08:23:26 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 9DE8F25B76D;
+        Fri, 15 Mar 2019 23:23:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=verge.net.au; s=mail;
+        t=1552652602; bh=0gua/VrmG9wPPjt3WJ2QMSRoRzTyJbDgOfBBIa6Dhe0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=axLkF47rfC7j9q3K1GzHMClcbTR20FaEWnI77RghrrSXhIVpak4Amy8KuSB5qO8hZ
+         4bwMT/rOyIQ+i5iUQ4+EEGFLov27PnBYrrroKp2XoJt8YG8ZsrblsTYO2N1kwvwg3z
+         wAZx4LgStU3JGa7aNhqJKO3EQKHmlIgdH6LGUe3Y=
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 114E79403F2; Fri, 15 Mar 2019 13:23:21 +0100 (CET)
+Date:   Fri, 15 Mar 2019 13:23:21 +0100
+From:   Simon Horman <horms@verge.net.au>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Peter Rosin <peda@axentia.se>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v2 3/7] i2c: core: introduce callbacks for atomic
+ transfers
+Message-ID: <20190315122320.34yibpfhv2b6ptwl@verge.net.au>
+References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
+ <20190302134735.4393-4-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-X-SecurityPolicyCheck-GC: OK by FENCE-Mail
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190302134735.4393-4-wsa+renesas@sang-engineering.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I resend the patch due to whitespace munging.
-
-> -----Original Message-----
-> From: James Morse <james.morse@arm.com>
-> Sent: Wednesday, February 27, 2019 3:44 AM
-> To: james.morse@arm.com; linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org; Catalin Marinas
-> <catalin.marinas@arm.com>; Mark Rutland <mark.rutland@arm.com>; Will
-> Deacon <will.deacon@arm.com>; Zhang, Lei <zhang.lei@jp.fujitsu.com>
-> Subject: [PATCH v5] arm64: Add workaround for Fujitsu A64FX erratum
-> 010001
+On Sat, Mar 02, 2019 at 02:47:31PM +0100, Wolfram Sang wrote:
+> We had the request to access devices very late when interrupts are not
+> available anymore multiple times now. Mostly to prepare shutdown or
+> reboot. Allow adapters to specify a specific callback for this case.
+> Note that we fall back to the generic {master|smbus}_xfer callback if
+> this new atomic one is not present. This is intentional to preserve the
+> previous behaviour and avoid regressions. Because there are drivers not
+> using interrupts or because it might have worked "accidently" before.
 > 
-> +/* Fujitsu Erratum 010001 affects A64FX 1.0 and 1.1, (v0r0 and v1r0) */
-> +#define MIDR_FUJITSU_ERRATUM_010001
-> 	MIDR_FUJITSU_A64FX
-> +#define MIDR_FUJITSU_ERRATUM_010001_MASK
-> 	(~MIDR_VARIANT(1))
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/i2c/i2c-core-base.c  |  6 +++++-
+>  drivers/i2c/i2c-core-smbus.c | 18 ++++++++++++++----
+>  drivers/i2c/i2c-core.h       |  7 +++++--
+>  include/linux/i2c.h          | 15 ++++++++++++---
+>  4 files changed, 36 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 004f8a3b6365..2127dd08ff01 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -1890,7 +1890,11 @@ int __i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+>  	/* Retry automatically on arbitration loss */
+>  	orig_jiffies = jiffies;
+>  	for (ret = 0, try = 0; try <= adap->retries; try++) {
+> -		ret = adap->algo->master_xfer(adap, msgs, num);
+> +		if ((in_atomic() || irqs_disabled()) && adap->algo->master_xfer_atomic)
+> +			ret = adap->algo->master_xfer_atomic(adap, msgs, num);
+> +		else
+> +			ret = adap->algo->master_xfer(adap, msgs, num);
+> +
+>  		if (ret != -EAGAIN)
+>  			break;
+>  		if (time_after(jiffies, orig_jiffies + adap->timeout))
+> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+> index 357e083e8f45..e01a548fc559 100644
+> --- a/drivers/i2c/i2c-core-smbus.c
+> +++ b/drivers/i2c/i2c-core-smbus.c
+> @@ -548,6 +548,9 @@ s32 __i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
+>  		     unsigned short flags, char read_write,
+>  		     u8 command, int protocol, union i2c_smbus_data *data)
+>  {
+> +	int (*xfer_func)(struct i2c_adapter *adap, u16 addr,
+> +			 unsigned short flags, char read_write,
+> +			 u8 command, int size, union i2c_smbus_data *data);
+>  	unsigned long orig_jiffies;
+>  	int try;
+>  	s32 res;
+> @@ -562,13 +565,20 @@ s32 __i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
+>  
+>  	flags &= I2C_M_TEN | I2C_CLIENT_PEC | I2C_CLIENT_SCCB;
+>  
+> -	if (adapter->algo->smbus_xfer) {
+> +	xfer_func = adapter->algo->smbus_xfer;
+> +	if (in_atomic() || irqs_disabled()) {
+> +		if (adapter->algo->smbus_xfer_atomic)
+> +			xfer_func = adapter->algo->smbus_xfer_atomic;
+> +		else if (adapter->algo->master_xfer_atomic)
+> +			xfer_func = NULL; /* fallback to I2C emulation */
+> +	}
+> +
+> +	if (xfer_func) {
+>  		/* Retry automatically on arbitration loss */
+>  		orig_jiffies = jiffies;
+>  		for (res = 0, try = 0; try <= adapter->retries; try++) {
+> -			res = adapter->algo->smbus_xfer(adapter, addr, flags,
+> -							read_write, command,
+> -							protocol, data);
+> +			res = xfer_func(adapter, addr, flags, read_write,
+> +					command, protocol, data);
+>  			if (res != -EAGAIN)
+>  				break;
+>  			if (time_after(jiffies,
+> diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+> index 6e98aa811980..01a6cb9b53aa 100644
+> --- a/drivers/i2c/i2c-core.h
+> +++ b/drivers/i2c/i2c-core.h
+> @@ -33,10 +33,13 @@ static inline int __i2c_lock_bus_helper(struct i2c_adapter *adap)
+>  {
+>  	int ret = 0;
+>  
+> -	if (in_atomic() || irqs_disabled())
+> +	if (in_atomic() || irqs_disabled()) {
+> +		WARN(!adap->algo->master_xfer_atomic && !adap->algo->smbus_xfer_atomic,
+> +		     "No atomic I2C transfer handler for '%s'\n", dev_name(&adap->dev));
 
-This workaround for the erratum should be applied for both A64FX v1r0 and
-v0r0, however, the patch v5 is only enabled on A64FX v0r0(MIDR.Variant == 0
-&& MIDR.Revision == 0).
-This issue is caused by the macro MIDR_FUJITSU_ERRATUM_010001_MASK.
+		Is WARN_ONCE more appropriate here?
 
-I have tested on both A64FX v1r0 and v0r0. This new patch will effect
-only for A64FX.
+>  		ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT) ? 0 : -EAGAIN;
+> -	else
+> +	} else {
+>  		i2c_lock_bus(adap, I2C_LOCK_SEGMENT);
+> +	}
+>  
+>  	return ret;
+>  }
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index 758a6db864c9..3cd921dd39e3 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -499,9 +499,13 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
+>   * @master_xfer: Issue a set of i2c transactions to the given I2C adapter
+>   *   defined by the msgs array, with num messages available to transfer via
+>   *   the adapter specified by adap.
+> + * @master_xfer_atomic: same as @master_xfer. Yet, only using atomic context
+> + *   so e.g. PMICs can be accessed very late before shutdown. Optional.
+>   * @smbus_xfer: Issue smbus transactions to the given I2C adapter. If this
+>   *   is not present, then the bus layer will try and convert the SMBus calls
+>   *   into I2C transfers instead.
+> + * @smbus_xfer_atomic: same as @smbus_xfer. Yet, only using atomic context
+> + *   so e.g. PMICs can be accessed very late before shutdown. Optional.
+>   * @functionality: Return the flags that this algorithm/adapter pair supports
+>   *   from the I2C_FUNC_* flags.
+>   * @reg_slave: Register given client to I2C slave mode of this adapter
+> @@ -512,9 +516,9 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
+>   * be addressed using the same bus algorithms - i.e. bit-banging or the PCF8584
+>   * to name two of the most common.
+>   *
+> - * The return codes from the @master_xfer field should indicate the type of
+> - * error code that occurred during the transfer, as documented in the kernel
+> - * Documentation file Documentation/i2c/fault-codes.
+> + * The return codes from the @master_xfer{_atomic} field should indicate the
 
---
-Changed to be applied for not only A64FX v0r0 but also v1r0.
+I think "field" should be "fields" in the new text.
 
-Signed-off-by: Zhang Lei <zhang.lei@jp.fujitsu.com>
----
- arch/arm64/include/asm/cputype.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index 2afb133..1fb47b5 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -129,7 +129,7 @@
- 
- /* Fujitsu Erratum 010001 affects A64FX 1.0 and 1.1, (v0r0 and v1r0) */
- #define MIDR_FUJITSU_ERRATUM_010001		MIDR_FUJITSU_A64FX
--#define MIDR_FUJITSU_ERRATUM_010001_MASK	(~MIDR_VARIANT(1))
-+#define MIDR_FUJITSU_ERRATUM_010001_MASK	(~(0x1 << MIDR_VARIANT_SHIFT))
- #define TCR_CLEAR_FUJITSU_ERRATUM_010001	(TCR_NFD1 | TCR_NFD0)
- 
- #ifndef __ASSEMBLY__
--- 
-1.8.3.1
-
+> + * type of error code that occurred during the transfer, as documented in the
+> + * Kernel Documentation file Documentation/i2c/fault-codes.
+>   */
+>  struct i2c_algorithm {
+>  	/*
+> @@ -528,9 +532,14 @@ struct i2c_algorithm {
+>  	 */
+>  	int (*master_xfer)(struct i2c_adapter *adap, struct i2c_msg *msgs,
+>  			   int num);
+> +	int (*master_xfer_atomic)(struct i2c_adapter *adap,
+> +				   struct i2c_msg *msgs, int num);
+>  	int (*smbus_xfer)(struct i2c_adapter *adap, u16 addr,
+>  			  unsigned short flags, char read_write,
+>  			  u8 command, int size, union i2c_smbus_data *data);
+> +	int (*smbus_xfer_atomic)(struct i2c_adapter *adap, u16 addr,
+> +				 unsigned short flags, char read_write,
+> +				 u8 command, int size, union i2c_smbus_data *data);
+>  
+>  	/* To determine what the adapter supports */
+>  	u32 (*functionality)(struct i2c_adapter *adap);
+> -- 
+> 2.11.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
