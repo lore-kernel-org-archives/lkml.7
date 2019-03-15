@@ -2,135 +2,104 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6F6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C9CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEC4218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8405A218FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfCOXHS (ORCPT
+        id S1727554AbfCOXHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 19:07:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59860 "EHLO mx1.redhat.com"
+        Fri, 15 Mar 2019 19:07:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:20128 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbfCOXHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 19:07:17 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 905D53001AD1;
-        Fri, 15 Mar 2019 22:59:22 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45BA5183FA;
-        Fri, 15 Mar 2019 22:59:21 +0000 (UTC)
-Subject: [PATCH 00/10] AFS fixes
-From:   David Howells <dhowells@redhat.com>
-To:     linux-afs@lists.infradead.org
-Cc:     Jonathan Billings <jsbillings@jsbillings.org>,
-        Jonathan Billings <jsbillin@umich.edu>, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 15 Mar 2019 22:59:20 +0000
-Message-ID: <155269076033.8537.10785090349210421514.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        id S1726744AbfCOXHV (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 19:07:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 16:07:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,483,1544515200"; 
+   d="scan'208";a="155476113"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.211.155]) ([10.254.211.155])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2019 16:07:18 -0700
+Subject: Re: [PATCH v1 0/3] perf: Support a new coresum event qualifier
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1552665856-27741-1-git-send-email-yao.jin@linux.intel.com>
+ <20190315133443.GA5200@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <1d1d6263-9842-7d44-8edb-dcfbb5a2e6cc@linux.intel.com>
+Date:   Sat, 16 Mar 2019 07:07:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190315133443.GA5200@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 15 Mar 2019 22:59:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Here's a set of bits and fixes for AFS to improve the life of desktop
-applications such as firefox.  It makes the following improvements:
 
- (1) Allows fine-grained locking, as required by firefox and sqlite, with
-     the caveat that you can't get a partial write lock on a file if you
-     first get a partial read lock on it as the AFS protocol only supports
-     whole-file locks.
+On 3/15/2019 9:34 PM, Jiri Olsa wrote:
+> On Sat, Mar 16, 2019 at 12:04:13AM +0800, Jin Yao wrote:
+>> The coresum event qualifier which sums up the event counts for both
+>> hardware threads in a core. For example,
+>>
+>> perf stat -e cpu/event=0,umask=0x3,coresum=1/,cpu/event=0,umask=0x3/
+>>
+>> In this example, we count the event 'ref-cycles' per-core and per-CPU in
+>> one perf stat command-line.
+>>
+>> We can already support per-core counting with --per-core, but it's
+>> often useful to do this together with other metrics that are collected
+>> per CPU (per hardware thread). So this patch series supports this
+>> per-core counting on a event level.
+> 
+> seems useful, but perhaps we should follow the --per-core option
+> we already have and call it 'per-core' instead of coresum
+> 
+> jirka
+> 
 
-     At some point I need to look at emulating OpenAFS's behaviour whereby
-     all partial locks are just granted.
+Yes, the coresum's behavior is similar as --per-core option, just 
+supports at the event level. I'm OK with calling it 'per-core'.
 
- (2) Makes processes requesting locks actually wait to get a lock where we
-     have an appropriate server lock, but there's a conflicting server
-     lock.
+For example,
+perf stat -e cpu/event=0,umask=0x3,per-core=1/
 
- (3) Makes locks appear in /proc/locks.
+Thanks
+Jin Yao
 
- (4) Handles asynchronous file lock RPC operation failure on files that get
-     deleted whilst the lock is being extended or released.
-
- (5) Implements silly-rename so that locked files that are in use continue
-     to exist if they get released or unlinked.
-
- (6) Lock expiry is now based on the time the set- or extend-lock reply is
-     seen (packet timestamp) rather than by the time at which we've done
-     processing the operation (wallclock time).
-
-It also adds/modifies tracepoints to log:
-
- (1) File locking operations and events.
-
- (2) Directory content reload.
-
- (3) Silly rename.
-
- (4) Lookups.
-
- (5) Mounts (get_tree).
-
- (6) The afs_make_fs_call tracepoint is split to give two new variants that
-     allow one or two names to be included in the log (such as the filename
-     given to FS.MakeDir).
-
- (7) The afs_edit_dir tracepoint is given a larger name and this is
-     surrounded by quotes when displayed.
-
-This also provides a more comprehensive data dump in the event that a
-directory content check fails.
-
-The patches can be found here:
-
-	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git
-	tag afs-fixes-20190315
-
-David
----
-David Howells (10):
-      afs: Split wait from afs_make_call()
-      afs: Calculate lock extend timer from set/extend reply reception
-      afs: Fix AFS file locking to allow fine grained locks
-      afs: Further fix file locking
-      afs: Add file locking tracepoints
-      afs: Improve dir check failure reports
-      afs: Handle lock rpc ops failing on a file that got deleted
-      afs: Add directory reload tracepoint
-      afs: Implement sillyrename for unlink and rename
-      afs: Add more tracepoints
-
-
- fs/afs/Makefile            |    1 
- fs/afs/dir.c               |  161 +++++++++++-
- fs/afs/dir_silly.c         |  239 ++++++++++++++++++
- fs/afs/flock.c             |  569 +++++++++++++++++++++++++++-----------------
- fs/afs/fs_probe.c          |   13 +
- fs/afs/fsclient.c          |   92 +++++--
- fs/afs/inode.c             |    2 
- fs/afs/internal.h          |   25 ++
- fs/afs/rxrpc.c             |   33 +--
- fs/afs/super.c             |    5 
- fs/afs/vl_probe.c          |   14 +
- fs/afs/vlclient.c          |   26 +-
- fs/afs/yfsclient.c         |   72 ++++--
- include/linux/fs.h         |    1 
- include/trace/events/afs.h |  348 +++++++++++++++++++++++++++
- 15 files changed, 1258 insertions(+), 343 deletions(-)
- create mode 100644 fs/afs/dir_silly.c
-
+>>
+>> Jin Yao (3):
+>>    perf: Add a coresum event qualifier
+>>    perf stat: Support coresum event qualifier
+>>    perf test: Add a simple test for term coresum
+>>
+>>   tools/perf/Documentation/perf-stat.txt |   4 ++
+>>   tools/perf/builtin-stat.c              |  21 +++++++
+>>   tools/perf/tests/parse-events.c        |  10 ++-
+>>   tools/perf/util/evsel.c                |   2 +
+>>   tools/perf/util/evsel.h                |   3 +
+>>   tools/perf/util/parse-events.c         |  27 +++++++++
+>>   tools/perf/util/parse-events.h         |   1 +
+>>   tools/perf/util/parse-events.l         |   1 +
+>>   tools/perf/util/stat-display.c         | 108 ++++++++++++++++++++++++---------
+>>   tools/perf/util/stat.c                 |   8 ++-
+>>   10 files changed, 151 insertions(+), 34 deletions(-)
+>>
+>> -- 
+>> 2.7.4
+>>
