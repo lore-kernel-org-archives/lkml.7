@@ -2,177 +2,139 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C015AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B9EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E90218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 297082184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552692189;
+	bh=G6rtwSDofx2AzrADwAlrxRce+aG23NrkMT+ORyB/7IQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dyt3j9KNsugX7+dEo1w0tf/bwnSEBRapPClqG+JkcqHf1ATw3hlDOla3aRYhGRfD6
+	 iI9+XAVRgjzifLWLLJqGe8fGAVg9RVOUGN8pEppz5INM8UiTi212aDs7pHnw6NLua3
+	 1B/uUs+572Sytr9VmG1lMqx18Dwop46JAHSgzlNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfCOXTA convert rfc822-to-8bit (ORCPT
+        id S1727183AbfCOXXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 19:19:00 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50009 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbfCOXS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 19:18:59 -0400
-Received: from [IPv6:2601:646:8680:2bb1:c81e:e06a:248a:3adc] ([IPv6:2601:646:8680:2bb1:c81e:e06a:248a:3adc])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2FNIdg71774044
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Fri, 15 Mar 2019 16:18:41 -0700
-Date:   Fri, 15 Mar 2019 16:18:31 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190315222906.GC112750@google.com>
-References: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com> <CAKwvOd=aqWvjzC1ZF5_pXx2VutAX0dneDPxU_=jroqHUGw-X6g@mail.gmail.com> <20190315222906.GC112750@google.com>
+        Fri, 15 Mar 2019 19:23:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36991 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfCOXXH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 19:23:07 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b3so9827412otp.4;
+        Fri, 15 Mar 2019 16:23:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4vWOVw173LlG102bzQxZCjkBSAnfIUTlDyFq5biQERc=;
+        b=ZNhld0OkZ0ETiyEnhkoaHpxlFDMD2uzJ/FnDhkzIOGVkJNVwIbDFyaVGZMpcnAOC4/
+         6H1LT3wNNE7DsO4UFnDYbeJBMrz0BY/5ZwVbihoyXYSrLVAK1LdPsXm/c7WMyjeuxGIU
+         iTSuhYL9z2s/yl3lfrQDzhai2rPQOgpuXL/SjZHxasTfV77cI6njups5/0/Kfx2LWyMD
+         0EWctAi9DzqXmFWlnLIMawlPY3TaYML2sW2BQKO5EMAJm6WsxKhZrWXQcfTbNZTjL4dI
+         qUQ5jDhYTlwpCRs4JSloDTnnz1aojWECj13CbfyhHU0xLXldSkLhnkTH463VqiC7K4kW
+         P8Og==
+X-Gm-Message-State: APjAAAWQbGRE5kkF4yfRJK+EDHKORRv6jH82a6+sCjBLeAwYxevRpzze
+        59oPrkeVzgtdj2uKI12aPA==
+X-Google-Smtp-Source: APXvYqwXsy9xVddmFQwMXMPmPZ4TZIlaLKBENsiCWGrqz+ULAMA/ffZ5SZupXwcqv/xhBOQAtwj71g==
+X-Received: by 2002:a9d:7597:: with SMTP id s23mr3693880otk.25.1552692186013;
+        Fri, 15 Mar 2019 16:23:06 -0700 (PDT)
+Received: from localhost ([2607:fb90:1cdc:ff1d:59ce:35b2:628:2365])
+        by smtp.gmail.com with ESMTPSA id c19sm1494396oih.46.2019.03.15.16.23.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 16:23:04 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 18:23:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tejun Heo <tj@kernel.org>,
+        Jayachandran C <jnair@caviumnetworks.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v5 1/3] dt-bindings: phy: Add Stingray USB PHY binding
+ document
+Message-ID: <20190315232303.GA17556@bogus>
+References: <1552406781-5180-1-git-send-email-srinath.mannam@broadcom.com>
+ <1552406781-5180-2-git-send-email-srinath.mannam@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH] x86/vdso: include generic __lshrdi3 in 32-bit vDSO
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Manoj Gupta <manojgupta@chromium.org>,
-        Tiancong Wang <tcwang@chromium.org>,
-        Stephen Hines <srhines@google.com>,
-        clang-built-linux@googlegroups.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-From:   hpa@zytor.com
-Message-ID: <33DE9AEF-C51C-4021-97FD-BEE2C5D98DBE@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552406781-5180-2-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 15, 2019 3:29:06 PM PDT, Matthias Kaehlcke <mka@chromium.org> wrote:
->Hi Nick,
->
->On Fri, Mar 15, 2019 at 02:31:09PM -0700, 'Nick Desaulniers' via Clang
->Built Linux wrote:
->> On Fri, Mar 15, 2019 at 12:54 PM Matthias Kaehlcke <mka@chromium.org>
->wrote:
->> >
->> > Building the 32-bit vDSO with a recent clang version fails due
->> > to undefined symbols:
->> >
->> > arch/x86/entry/vdso/vdso32.so.dbg: undefined symbols found
->> >
->> > The undefined symbol in this case is __lshrdi3, which is part of
->> > the compiler runtime library, however the vDSO isn't linked against
->> > this library.
->> >
->> > Include the kernel version of __lshrdi3 in the 32-bit vDSO build.
->> 
->> __lshrdi3 is used for "logical shift right double-word by int" (best
->> guess), so anywhere there's a right shift of a u64.  Looks like
->> there's a few of these in arch/x86/entry/vdso/, so it's legal for the
->> compiler to emit this libcall.  Do you know which function
->> specifically in the .so has a relocation referencing __lshrdi3
->> specifically?
->
->It's the right shifts in do_realtime() and do_monotonic().
->
->> Is there a config I can set to reproduce this, in order to help
->> test?
->
->I encountered it with a Chrome OS specific configuration, but a
->defconfig should do. Note that you probably need a development version
->of clang to reproduce this.
->
->> >
->> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->> > ---
->> >  arch/x86/entry/vdso/Makefile | 7 ++++++-
->> >  lib/lshrdi3.c                | 4 +++-
->> >  2 files changed, 9 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/arch/x86/entry/vdso/Makefile
->b/arch/x86/entry/vdso/Makefile
->> > index 5bfe2243a08f..7517cd87e10b 100644
->> > --- a/arch/x86/entry/vdso/Makefile
->> > +++ b/arch/x86/entry/vdso/Makefile
->> > @@ -144,6 +144,7 @@ KBUILD_CFLAGS_32 += $(call cc-option,
->-fno-stack-protector)
->> >  KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
->> >  KBUILD_CFLAGS_32 += -fno-omit-frame-pointer
->> >  KBUILD_CFLAGS_32 += -DDISABLE_BRANCH_PROFILING
->> > +KBUILD_CFLAGS_32 += -DBUILD_VDSO
->> >
->> >  ifdef CONFIG_RETPOLINE
->> >  ifneq ($(RETPOLINE_VDSO_CFLAGS),)
->> > @@ -153,12 +154,16 @@ endif
->> >
->> >  $(obj)/vdso32.so.dbg: KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
->> >
->> > +$(obj)/vdso32/lshrdi3.o: $(srctree)/lib/lshrdi3.c FORCE
->> > +       $(call if_changed_rule,cc_o_c)
->> 
->> + Masahiro to help look at this part (I don't understand this part
->> of kbuild).
->
->I bluntly stole that from arch/x86/purgatory/Makefile , which does
->something similar.
->
->> 
->> > +
->> >  $(obj)/vdso32.so.dbg: FORCE \
->> >                       $(obj)/vdso32/vdso32.lds \
->> >                       $(obj)/vdso32/vclock_gettime.o \
->> >                       $(obj)/vdso32/note.o \
->> >                       $(obj)/vdso32/system_call.o \
->> > -                     $(obj)/vdso32/sigreturn.o
->> > +                     $(obj)/vdso32/sigreturn.o \
->> > +                     $(obj)/vdso32/lshrdi3.o
->> >         $(call if_changed,vdso)
->> >
->> >  #
->> > diff --git a/lib/lshrdi3.c b/lib/lshrdi3.c
->> > index 99cfa5721f2d..8a4fc6bcf3a4 100644
->> > --- a/lib/lshrdi3.c
->> > +++ b/lib/lshrdi3.c
->> > @@ -16,7 +16,7 @@
->> >   * to the Free Software Foundation, Inc.
->> >   */
->> >
->> > -#include <linux/module.h>
->> > +#include <linux/export.h>
->> 
->> Is this a simple cleanup, or?
->
->The vDSO build is unhappy when modules.h draws in a whole bunch of
->other kernel headers and export.h is all that's need. It seemed
->reasonable to do the 'cleanup' in this patch since we touch it anyway
->to place EXPORT_SYMBOL within an #ifdef.
->
->> >  #include <linux/libgcc.h>
->> >
->> >  long long notrace __lshrdi3(long long u, word_type b)
->> > @@ -42,4 +42,6 @@ long long notrace __lshrdi3(long long u,
->word_type b)
->> >
->> >         return w.ll;
->> >  }
->> > +#ifndef BUILD_VDSO
->> >  EXPORT_SYMBOL(__lshrdi3);
->> > +#endif
->> 
->> Compilers (GCC and Clang) will always assume their runtime has these
->> helper functions; whether or not they emit libcalls vs inline
->routines
->> is implementation defined.  So I agree with this patch; I just would
->> like to help confirm/test it.
->
->Thanks for your help!
->
->Matthias
+On Tue, Mar 12, 2019 at 09:36:19PM +0530, Srinath Mannam wrote:
+> Add DT binding document for Stingray USB PHY.
+> 
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> ---
+>  .../bindings/phy/brcm,stingray-usb-phy.txt         | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> new file mode 100644
+> index 0000000..51c3d73
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> @@ -0,0 +1,40 @@
+> +Broadcom Stingray USB PHY
+> +
+> +Required properties:
+> + - compatible : should be one of the listed compatibles
+> +	- "brcm,sr-usb-combo-phy" is combo PHY has two PHYs, one SS and one HS.
+> +	- "brcm,sr-usb-hs-phy" is a single HS PHY.
+> + - reg: offset and length of the PHY blocks registers
 
-Note: it is also probably no reason to use -Os/-Oz for the vdso.
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+> + - address-cells: should be 1
+> + - size-cells: should be 0
+
+These can be dropped now. With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> + - #phy-cells:
+> +   - Must be 1 for brcm,sr-usb-combo-phy as it expects one argument to indicate
+> +     the PHY number of two PHYs. 0 for HS PHY and 1 for SS PHY.
+> +   - Must be 0 for brcm,sr-usb-hs-phy.
+> +
+> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> +
+> +Example:
+> +	usbphy0: usb-phy@0 {
+> +		compatible = "brcm,sr-usb-combo-phy";
+> +		reg = <0x00000000 0x100>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		#phy-cells = <1>;
+> +	};
+> +
+> +	usbphy1: usb-phy@10000 {
+> +		compatible = "brcm,sr-usb-combo-phy";
+> +		reg = <0x00010000 0x100>,
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		#phy-cells = <1>;
+> +	};
+> +
+> +	usbphy2: usb-phy@20000 {
+> +		compatible = "brcm,sr-usb-hs-phy";
+> +		reg = <0x00020000 0x100>,
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		#phy-cells = <0>;
+> +	};
+> -- 
+> 2.7.4
+> 
