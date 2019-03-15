@@ -2,89 +2,130 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2B4C10F06
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100BCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E5521873
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE16121872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbfCOBhY convert rfc822-to-8bit (ORCPT
+        id S1728187AbfCOBho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 21:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727284AbfCOBhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 21:37:24 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9160D21872;
-        Fri, 15 Mar 2019 01:37:23 +0000 (UTC)
-Date:   Thu, 14 Mar 2019 21:37:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Dominique Martinet <asmadeus@codewreck.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/18] blktrace: change strncpy+truncation to strlcpy
-Message-ID: <20190314213721.339979f0@oasis.local.home>
-In-Reply-To: <1531445162-19771-1-git-send-email-asmadeus@codewreck.org>
-References: <1531444483-17338-1-git-send-email-asmadeus@codewreck.org>
-        <1531445162-19771-1-git-send-email-asmadeus@codewreck.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 14 Mar 2019 21:37:44 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:25942 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727284AbfCOBho (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 21:37:44 -0400
+X-UUID: 039e97ee5c0a4093b108c4b6e85ee109-20190315
+X-UUID: 039e97ee5c0a4093b108c4b6e85ee109-20190315
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 784797563; Fri, 15 Mar 2019 09:37:29 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs01n1.mediatek.inc
+ (172.21.101.68) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 15 Mar
+ 2019 09:37:27 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 15 Mar 2019 09:37:26 +0800
+Message-ID: <1552613845.31200.7.camel@mhfsdcap03>
+Subject: Re: [RESEND PATCH v1 00/18] add drm support for MT8183
+From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
+Reply-To: <yongqiang.niu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <ck.hu@mediatek.com>, <p.zabel@pengutronix.de>,
+        <robh+dt@kernel.org>, <airlied@linux.ie>, <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
+        <yt.shen@mediatek.com>
+Date:   Fri, 15 Mar 2019 09:37:25 +0800
+In-Reply-To: <c6859dd1-5689-d64d-69cd-5996eb0abea8@gmail.com>
+References: <1552565120-24329-1-git-send-email-yongqiang.niu@mediatek.com>
+         <c6859dd1-5689-d64d-69cd-5996eb0abea8@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Jens,
-
-I noticed this old patch in my inbox. It looks like a legit cleanup.
-Want to take it?
-
--- Steve
-
-
-On Fri, 13 Jul 2018 03:26:02 +0200
-Dominique Martinet <asmadeus@codewreck.org> wrote:
-
-> Using strlcpy fixes this new gcc warning:
->     kernel/trace/blktrace.c: In function ‘do_blk_trace_setup’:
->     kernel/trace/blktrace.c:497:2: warning: ‘strncpy’ specified bound 32 equals destination size [-Wstringop-truncation]
->       strncpy(buts->name, name, BLKTRACE_BDEV_SIZE);
->       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On Thu, 2019-03-14 at 18:35 +0100, Matthias Brugger wrote:
 > 
-> Generated by scripts/coccinelle/misc/strncpy_truncation.cocci
+> On 14/03/2019 13:05, yongqiang.niu@mediatek.com wrote:
+> > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > 
+> > This series are based on 4.20-rc1 and provide 18 patches to
+> > support mediatek SOC MT8183
+> > Resend first version 
+> > 
 > 
-> Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
-> ---
+> I think you send the very same series several times yesterday. Please check your
+> config and make sure that you don't send a series more then once. If for any
+> reason you have to resend the series then please specify in the cover letter why
+> you resend it.
 > 
-> Please see https://marc.info/?l=linux-kernel&m=153144450722324&w=2 (the
-> first patch of the serie) for the motivation behind this patch
+> Reviewing series can take a while, be patient. If nobody reacts to your series
+> you can send a reminder email (best if you just hit reply-all on the cover
+> letter) asking kindly for review. Sending out the same series on a daily or
+> hourly basis will most probably lead to confusion, as people don't know which
+> version is the "good" one. In the end it has the contrary affect from what you
+> want to achieve (getting someone to review your series).
 > 
->  kernel/trace/blktrace.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Regards,
+> Matthias
 > 
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index 987d9a9ae283..2478d9838eab 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -494,8 +494,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
->  	if (!buts->buf_size || !buts->buf_nr)
->  		return -EINVAL;
->  
-> -	strncpy(buts->name, name, BLKTRACE_BDEV_SIZE);
-> -	buts->name[BLKTRACE_BDEV_SIZE - 1] = '\0';
-> +	strlcpy(buts->name, name, BLKTRACE_BDEV_SIZE);
->  
->  	/*
->  	 * some device names have larger paths - convert the slashes
+
+sorry for the confusion.
+
+there was some problem with my upstream account setting yesterday, the
+first several letters was rejected by
+"linux-arm-kernel@lists.infradead.org" and "devicetree@vger.kernel.org".
+
+after the problem was fixed, i have resent the last one, which include
+the key world "Resend first version".
+
+
+> > Yongqiang Niu (18):
+> >   drm/mediatek: update dt-bindings for mt8183
+> >   drm/mediatek: add mutex mod and sof into ddp private data
+> >   drm/mediatek: redefine mtk_ddp_sout_sel
+> >   drm/mediatek: move rdma sout from mtk_ddp_mout_en into
+> >     mtk_ddp_sout_sel
+> >   drm/mediatek: add ddp component CCORR
+> >   drm/mediatek: add mmsys private data for ddp path config
+> >   drm/mediatek: add commponent OVL0_2L
+> >   drm/mediatek: add component OVL1_2L
+> >   drm/mediatek: add component DITHER
+> >   drm/mediatek: add gmc_bits for ovl private data
+> >   drm/medaitek: add layer_nr for ovl private data
+> >   drm/mediatek: add function to connect module with it's previous one
+> >   drm/mediatek: add ddp write register common api
+> >   drm/mediatek: add connect function for ovl
+> >   drm/mediatek: add RDMA1 fifo size into RDMA private data
+> >   drm/mediatek: add function mtk_ddp_comp_get_type
+> >   drm/mediatek: add ovl0/ovl0_2l usecase
+> >   drm/mediatek: add support for mediatek SOC MT8183
+> > 
+> >  .../bindings/display/mediatek/mediatek,disp.txt    |  11 +-
+> >  drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  64 ++-
+> >  drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  23 +-
+> >  drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  42 +-
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 458 ++++++++++++++++-----
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |  11 +
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 100 +++++
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  24 ++
+> >  drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  55 +++
+> >  drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   4 +
+> >  10 files changed, 688 insertions(+), 104 deletions(-)
+> > 
+
 
