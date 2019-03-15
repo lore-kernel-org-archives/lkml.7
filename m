@@ -2,112 +2,133 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933ECC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04515C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACAC21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C496C21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfCOIT5 (ORCPT
+        id S1727404AbfCOIVL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 04:19:57 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33243 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfCOIT4 (ORCPT
+        Fri, 15 Mar 2019 04:21:11 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:34154 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbfCOIVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 04:19:56 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h4i46-0006ZF-Bq; Fri, 15 Mar 2019 09:19:42 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h4i43-000428-EX; Fri, 15 Mar 2019 09:19:39 +0100
-Date:   Fri, 15 Mar 2019 09:19:39 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, andrew@aj.id.au, f.fainelli@gmail.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        hoan@os.amperecomputing.com, orsonzhai@gmail.com,
-        baolin.wang@linaro.org, zhang.lyra@gmail.com,
-        keguang.zhang@gmail.com, vz@mleia.com, matthias.bgg@gmail.com,
-        thierry.reding@gmail.com, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org, robert.jarzmik@free.fr,
-        yamada.masahiro@socionext.com, jun.nie@linaro.org,
-        shawnguo@kernel.org, linux-gpio@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
-        kernel@pengutronix.de, Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: Re: [PATCH 05/42] drivers: gpio: bcm-kona: use
- devm_platform_ioremap_resource()
-Message-ID: <20190315081939.zr3vv3a7a6wf7byw@pengutronix.de>
-References: <1552330521-4276-1-git-send-email-info@metux.net>
- <1552330521-4276-5-git-send-email-info@metux.net>
+        Fri, 15 Mar 2019 04:21:11 -0400
+Received: by mail-vs1-f67.google.com with SMTP id e126so4672549vse.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 01:21:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nfllzvU4LySFmRQhIlKP42JxfvqsqpZKDJK6PX4JQIo=;
+        b=ljs9JxTCIAJP294FqE8GewVs1h3+lzFY9DGbmV4QPEwsX/77giPCVJL2zKzo2dzfu4
+         1+xWqfl2MvzhrLl7ip2bzJmw2/8erzL+aMu4ZDBZex88gsGQidaOhYYwc/nKqs4F/cUh
+         Yoa2NiEuDICIAIjfvK6Bdp8jBr0S9gPZD4zMktcz2DL8J7KaMxoADVI72h+6n79YZmKR
+         yk+0vDldbQLDySYqo0RDs/lmHceOe9mfpQvP6ANKs3O39uH9nVov+oDheaVKFW9Im5Go
+         qQaLRvZOJQEd9ufiyfuqs/UzO5sTQ0vJNBMtD04jeHs9vyicPH3lNtNi4PoOEXNUc952
+         Lqvg==
+X-Gm-Message-State: APjAAAWVnIgZOUmMZR9dwXkEesNNRb5Oehlu+srAohij8VML3uWpIha+
+        m7PGGiPGwhrX1ZJnHGlKALDx9A0XTruNFQyhwJw=
+X-Google-Smtp-Source: APXvYqwu6lnlKH4Ja0FHWMZaaHRRbQLePDnhQoDyxiQQEFHWI7XEtnKEDM9kM3MO+D1oymJM4M/aqP2pmUi9c5i09Oc=
+X-Received: by 2002:a67:8588:: with SMTP id h130mr1256899vsd.11.1552638069743;
+ Fri, 15 Mar 2019 01:21:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1552330521-4276-5-git-send-email-info@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <cover.1552097842.git.lkml@sdf.org> <dd447448384883bd42c41f0de6a83430b6435dc1.1552097842.git.lkml@sdf.org>
+ <20190314091041.GU9224@smile.fi.intel.com> <201903150433.x2F4X9oT024601@sdf.org>
+In-Reply-To: <201903150433.x2F4X9oT024601@sdf.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 15 Mar 2019 09:20:58 +0100
+Message-ID: <CAMuHMdVF6pQ_-vidvtAyacOHw8WsJp4esu7o7o9DoR_GLahnzA@mail.gmail.com>
+Subject: Re: [PATCH 4/5] lib/list_sort: Simplify and remove MAX_LIST_LENGTH_BITS
+To:     George Spelvin <lkml@sdf.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Wagner <daniel.wagner@siemens.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Don Mullis <don.mullis@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrey Abramov <st5pub@yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 07:54:44PM +0100, Enrico Weigelt, metux IT consult wrote:
-> Use the new helper that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together.
-> 
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
->  drivers/gpio/gpio-bcm-kona.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-> index c5536a5..9fa6d3a 100644
-> --- a/drivers/gpio/gpio-bcm-kona.c
-> +++ b/drivers/gpio/gpio-bcm-kona.c
-> @@ -568,7 +568,6 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	const struct of_device_id *match;
-> -	struct resource *res;
->  	struct bcm_kona_gpio_bank *bank;
->  	struct bcm_kona_gpio *kona_gpio;
->  	struct gpio_chip *chip;
-> @@ -618,8 +617,7 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
->  		return -ENXIO;
->  	}
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	kona_gpio->reg_base = devm_ioremap_resource(dev, res);
-> +	kona_gpio->reg_base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(kona_gpio->reg_base)) {
->  		ret = -ENXIO;
+Hi George,
 
-This should be
+On Fri, Mar 15, 2019 at 5:33 AM George Spelvin <lkml@sdf.org> wrote:
+> On Thu, 14 Mar 2019 at 11:10:41 +0200, Andy Shevchenko wrote:
+> > On Tue, Mar 05, 2019 at 03:06:44AM +0000, George Spelvin wrote:
+> >> +            for (bit = 1; count & bit; bit <<= 1) {
+> >> +                    cur = merge(priv, (cmp_func)cmp, pending, cur);
+> >> +                    pending = pending->prev;  /* Untouched by merge() */
+> >>              }
+> >
+> > Wouldn't be it the same to
+> >
+> >       bit = ffz(count);
+> >       while (bit--) {
+> >               ...
+> >       }
+> > ?
+> >
+> > Though I dunno which one is generating better code.
+>
+> One question I should ask everyone: should "count" be 32 or 64 bits
+> on 64-bit machines?  That would let x86 save a few REX bytes.  (815
+> vs. 813 byte code, if anyone cares.)
+>
+> Allegedy ARM can save a few pJ by gating the high 32
+> bits of the ALU.
+>
+> Most other 64-bit processors would prefer 64-bit operations as
+> it saves masking operations.
+>
+> If we never sort a list with more than 2^32 entries, it
+> makes no difference.
+>
+> If we use a 32-bit count and we *do* sort a list with more than
+> 2^32 entries, then it still sorts, but the performance degrades to
+> O((n/2^32)^2).
+>
+> Just how often do we expect the kernel to face lists that long?
+> (Note that the old code was O((n/2^20)^2).)
 
-	ret = PTR_ERR(kona_gpio->reg_base)
+Using size_t sounds most logical to me (argument of least surprise).
 
-, shouldn't it? (If yes, this is orthogonal to this patch, but still
-worth fixing.)
+> In the code, I could do something like
+>
+> #ifdef CONFIG_X86_64
+> /* Comment explaining why */
+> typedef uint32_t count_t;
+> #else
+> typedef size_t count_t;
+> #endif
+>
+> ...
+>         count_t count = 0;
 
-@Julia: Is this something that coccinelle could catch?
+Using different types makes it more complex, e.g. to print the value
+in debug code.
+And adding more typedefs is frowned upon.
 
-Best regards
-Uwe
+Just my 0.02â‚¬.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
