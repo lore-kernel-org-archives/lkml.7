@@ -3,661 +3,723 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66368C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA03C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F9B2085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE13218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfCOXHj (ORCPT
+        id S1727606AbfCOXIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 19:07:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40320 "EHLO mx1.redhat.com"
+        Fri, 15 Mar 2019 19:08:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56744 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727569AbfCOXHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 19:07:34 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1726487AbfCOXIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 19:08:07 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5729E5D60E;
-        Fri, 15 Mar 2019 22:59:52 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 847CA8666B;
+        Fri, 15 Mar 2019 23:00:30 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F059A5C219;
-        Fri, 15 Mar 2019 22:59:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 59EEC19C57;
+        Fri, 15 Mar 2019 23:00:29 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 04/10] afs: Further fix file locking
+Subject: [PATCH 09/10] afs: Implement sillyrename for unlink and rename
 From:   David Howells <dhowells@redhat.com>
 To:     linux-afs@lists.infradead.org
-Cc:     Jonathan Billings <jsbillin@umich.edu>, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 15 Mar 2019 22:59:49 +0000
-Message-ID: <155269078918.8537.6675346226318281290.stgit@warthog.procyon.org.uk>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 15 Mar 2019 23:00:28 +0000
+Message-ID: <155269082860.8537.16395531981499448108.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155269076033.8537.10785090349210421514.stgit@warthog.procyon.org.uk>
 References: <155269076033.8537.10785090349210421514.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 15 Mar 2019 22:59:52 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 15 Mar 2019 23:00:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Further fix the file locking in the afs filesystem client in a number of
-ways, including:
+Implement sillyrename for AFS unlink and rename, using the NFS variant
+implementation as a basis.
 
- (1) Don't submit the operation to obtain a lock from the server in a work
-     queue context, but rather do it in the process context of whoever
-     issued the requesting system call.
+Note that the asynchronous file locking extender/releaser has to be
+notified with a state change to stop it complaining if there's a race
+between that and the actual file deletion.
 
- (2) The owner of the file_lock struct at the front of the pending_locks
-     queue now owns right to talk to the server.
+A tracepoint, afs_silly_rename, is also added to note the silly rename and
+the cleanup.  The afs_edit_dir tracepoint is given some extra reason
+indicators and the afs_flock_ev tracepoint is given a silly-delete file
+lock cancellation indicator.
 
- (3) Write locks can be instantly granted if they don't overlap with any
-     other locks *and* we have a write lock on the server.
-
- (4) In the event of an authentication/permission error, all other matching
-     pending locks requests are also immediately aborted.
-
- (5) Properly use VFS core locks_lock_file_wait() to distribute the server
-     lock amongst local client locks, including waiting for the lock to
-     become available.
-
-Test with:
-
-	sqlite3 /afs/.../scratch/billings.sqlite <<EOF
-	CREATE TABLE hosts (
-	    hostname varchar(80),
-	    shorthost varchar(80),
-	    room varchar(30),
-	    building varchar(30),
-	    PRIMARY KEY(shorthost)
-	    );
-	EOF
-
-With the version of sqlite3 that I have, this should fail consistently with
-EAGAIN, whether or not the program is straced (which introduces some delays
-between lock syscalls).
-
-Fixes: 0fafdc9f888b ("afs: Fix file locking")
-Reported-by: Jonathan Billings <jsbillin@umich.edu>
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- fs/afs/flock.c |  388 ++++++++++++++++++++++++++++----------------------------
- 1 file changed, 194 insertions(+), 194 deletions(-)
+ fs/afs/Makefile            |    1 
+ fs/afs/dir.c               |  116 ++++++++++++++++++++-
+ fs/afs/dir_silly.c         |  239 ++++++++++++++++++++++++++++++++++++++++++++
+ fs/afs/flock.c             |    2 
+ fs/afs/inode.c             |    2 
+ fs/afs/internal.h          |   10 ++
+ fs/afs/super.c             |    4 +
+ include/trace/events/afs.h |   34 ++++++
+ 8 files changed, 395 insertions(+), 13 deletions(-)
+ create mode 100644 fs/afs/dir_silly.c
 
-diff --git a/fs/afs/flock.c b/fs/afs/flock.c
-index 6919f53ed4ad..c022a7bd3d29 100644
---- a/fs/afs/flock.c
-+++ b/fs/afs/flock.c
-@@ -13,9 +13,11 @@
- 
- #define AFS_LOCK_GRANTED	0
- #define AFS_LOCK_PENDING	1
-+#define AFS_LOCK_YOUR_TRY	2
- 
- struct workqueue_struct *afs_lock_manager;
- 
-+static void afs_next_locker(struct afs_vnode *vnode, int error);
- static void afs_fl_copy_lock(struct file_lock *new, struct file_lock *fl);
- static void afs_fl_release_private(struct file_lock *fl);
- 
-@@ -24,6 +26,12 @@ static const struct file_lock_operations afs_lock_ops = {
- 	.fl_release_private	= afs_fl_release_private,
+diff --git a/fs/afs/Makefile b/fs/afs/Makefile
+index 0738e2bf5193..cbf31f6cd177 100644
+--- a/fs/afs/Makefile
++++ b/fs/afs/Makefile
+@@ -13,6 +13,7 @@ kafs-y := \
+ 	cmservice.o \
+ 	dir.o \
+ 	dir_edit.o \
++	dir_silly.o \
+ 	dynroot.o \
+ 	file.o \
+ 	flock.o \
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index be5d2f932b77..6c8523501639 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -26,6 +26,7 @@ static int afs_dir_open(struct inode *inode, struct file *file);
+ static int afs_readdir(struct file *file, struct dir_context *ctx);
+ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags);
+ static int afs_d_delete(const struct dentry *dentry);
++static void afs_d_iput(struct dentry *dentry, struct inode *inode);
+ static int afs_lookup_one_filldir(struct dir_context *ctx, const char *name, int nlen,
+ 				  loff_t fpos, u64 ino, unsigned dtype);
+ static int afs_lookup_filldir(struct dir_context *ctx, const char *name, int nlen,
+@@ -85,6 +86,7 @@ const struct dentry_operations afs_fs_dentry_operations = {
+ 	.d_delete	= afs_d_delete,
+ 	.d_release	= afs_d_release,
+ 	.d_automount	= afs_d_automount,
++	.d_iput		= afs_d_iput,
  };
  
-+static inline void afs_set_lock_state(struct afs_vnode *vnode, enum afs_lock_state state)
-+{
-+	_debug("STATE %u -> %u", vnode->lock_state, state);
-+	vnode->lock_state = state;
-+}
-+
- /*
-  * if the callback is broken on this vnode, then the lock may now be available
-  */
-@@ -31,7 +39,13 @@ void afs_lock_may_be_available(struct afs_vnode *vnode)
- {
- 	_enter("{%llx:%llu}", vnode->fid.vid, vnode->fid.vnode);
- 
--	queue_delayed_work(afs_lock_manager, &vnode->lock_work, 0);
-+	if (vnode->lock_state != AFS_VNODE_LOCK_WAITING_FOR_CB)
-+		return;
-+
-+	spin_lock(&vnode->lock);
-+	if (vnode->lock_state == AFS_VNODE_LOCK_WAITING_FOR_CB)
-+		afs_next_locker(vnode, 0);
-+	spin_unlock(&vnode->lock);
+ struct afs_lookup_one_cookie {
+@@ -1083,6 +1085,16 @@ static int afs_d_delete(const struct dentry *dentry)
+ 	return 1;
  }
  
- /*
-@@ -75,22 +89,65 @@ void afs_lock_op_done(struct afs_call *call)
-  * first lock in the queue is itself a readlock)
-  * - the caller must hold the vnode lock
-  */
--static void afs_grant_locks(struct afs_vnode *vnode, struct file_lock *fl)
-+static void afs_grant_locks(struct afs_vnode *vnode)
- {
- 	struct file_lock *p, *_p;
-+	bool exclusive = (vnode->lock_type == AFS_LOCK_WRITE);
- 
--	list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
--	if (fl->fl_type == F_RDLCK) {
--		list_for_each_entry_safe(p, _p, &vnode->pending_locks,
--					 fl_u.afs.link) {
--			if (p->fl_type == F_RDLCK) {
--				p->fl_u.afs.state = AFS_LOCK_GRANTED;
--				list_move_tail(&p->fl_u.afs.link,
--					       &vnode->granted_locks);
--				wake_up(&p->fl_wait);
--			}
-+	list_for_each_entry_safe(p, _p, &vnode->pending_locks, fl_u.afs.link) {
-+		if (!exclusive && p->fl_type == F_WRLCK)
-+			continue;
-+
-+		list_move_tail(&p->fl_u.afs.link, &vnode->granted_locks);
-+		p->fl_u.afs.state = AFS_LOCK_GRANTED;
-+		wake_up(&p->fl_wait);
-+	}
++/*
++ * Clean up sillyrename files on dentry removal.
++ */
++static void afs_d_iput(struct dentry *dentry, struct inode *inode)
++{
++	if (dentry->d_flags & DCACHE_NFSFS_RENAMED)
++		afs_silly_iput(dentry, inode);
++	iput(inode);
 +}
 +
-+/*
-+ * If an error is specified, reject every pending lock that matches the
-+ * authentication and type of the lock we failed to get.  If there are any
-+ * remaining lockers, try to wake up one of them to have a go.
+ /*
+  * handle dentry release
+  */
+@@ -1225,6 +1237,12 @@ static int afs_rmdir(struct inode *dir, struct dentry *dentry)
+ 			goto error_key;
+ 	}
+ 
++	if (vnode) {
++		ret = down_write_killable(&vnode->rmdir_lock);
++		if (ret < 0)
++			goto error_key;
++	}
++
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, dvnode, key)) {
+ 		while (afs_select_fileserver(&fc)) {
+@@ -1243,6 +1261,8 @@ static int afs_rmdir(struct inode *dir, struct dentry *dentry)
+ 		}
+ 	}
+ 
++	if (vnode)
++		up_write(&vnode->rmdir_lock);
+ error_key:
+ 	key_put(key);
+ error:
+@@ -1259,9 +1279,9 @@ static int afs_rmdir(struct inode *dir, struct dentry *dentry)
+  * However, if we didn't have a callback promise outstanding, or it was
+  * outstanding on a different server, then it won't break it either...
+  */
+-static int afs_dir_remove_link(struct dentry *dentry, struct key *key,
+-			       unsigned long d_version_before,
+-			       unsigned long d_version_after)
++int afs_dir_remove_link(struct dentry *dentry, struct key *key,
++			unsigned long d_version_before,
++			unsigned long d_version_after)
+ {
+ 	bool dir_valid;
+ 	int ret = 0;
+@@ -1308,6 +1328,7 @@ static int afs_unlink(struct inode *dir, struct dentry *dentry)
+ 	struct afs_vnode *dvnode = AFS_FS_I(dir), *vnode = NULL;
+ 	struct key *key;
+ 	unsigned long d_version = (unsigned long)dentry->d_fsdata;
++	bool need_rehash = false;
+ 	u64 data_version = dvnode->status.data_version;
+ 	int ret;
+ 
+@@ -1331,6 +1352,21 @@ static int afs_unlink(struct inode *dir, struct dentry *dentry)
+ 			goto error_key;
+ 	}
+ 
++	spin_lock(&dentry->d_lock);
++	if (vnode && d_count(dentry) > 1) {
++		spin_unlock(&dentry->d_lock);
++		/* Start asynchronous writeout of the inode */
++		write_inode_now(d_inode(dentry), 0);
++		ret = afs_sillyrename(dvnode, vnode, dentry, key);
++		goto error_key;
++	}
++	if (!d_unhashed(dentry)) {
++		/* Prevent a race with RCU lookup. */
++		__d_drop(dentry);
++		need_rehash = true;
++	}
++	spin_unlock(&dentry->d_lock);
++
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, dvnode, key)) {
+ 		while (afs_select_fileserver(&fc)) {
+@@ -1362,6 +1398,9 @@ static int afs_unlink(struct inode *dir, struct dentry *dentry)
+ 					    afs_edit_dir_for_unlink);
+ 	}
+ 
++	if (need_rehash && ret < 0 && ret != -ENOENT)
++		d_rehash(dentry);
++
+ error_key:
+ 	key_put(key);
+ error:
+@@ -1582,6 +1621,8 @@ static int afs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ {
+ 	struct afs_fs_cursor fc;
+ 	struct afs_vnode *orig_dvnode, *new_dvnode, *vnode;
++	struct dentry *tmp = NULL, *rehash = NULL;
++	struct inode *new_inode;
+ 	struct key *key;
+ 	u64 orig_data_version, new_data_version;
+ 	bool new_negative = d_is_negative(new_dentry);
+@@ -1590,6 +1631,10 @@ static int afs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	if (flags)
+ 		return -EINVAL;
+ 
++	/* Don't allow silly-rename files be moved around. */
++	if (old_dentry->d_flags & DCACHE_NFSFS_RENAMED)
++		return -EINVAL;
++
+ 	vnode = AFS_FS_I(d_inode(old_dentry));
+ 	orig_dvnode = AFS_FS_I(old_dir);
+ 	new_dvnode = AFS_FS_I(new_dir);
+@@ -1608,12 +1653,48 @@ static int afs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		goto error;
+ 	}
+ 
++	/* For non-directories, check whether the target is busy and if so,
++	 * make a copy of the dentry and then do a silly-rename.  If the
++	 * silly-rename succeeds, the copied dentry is hashed and becomes the
++	 * new target.
++	 */
++	if (d_is_positive(new_dentry) && !d_is_dir(new_dentry)) {
++		/* To prevent any new references to the target during the
++		 * rename, we unhash the dentry in advance.
++		 */
++		if (!d_unhashed(new_dentry)) {
++			d_drop(new_dentry);
++			rehash = new_dentry;
++		}
++
++		if (d_count(new_dentry) > 2) {
++			/* copy the target dentry's name */
++			ret = -ENOMEM;
++			tmp = d_alloc(new_dentry->d_parent,
++				      &new_dentry->d_name);
++			if (!tmp)
++				goto error_rehash;
++
++			ret = afs_sillyrename(new_dvnode,
++					      AFS_FS_I(d_inode(new_dentry)),
++					      new_dentry, key);
++			if (ret)
++				goto error_rehash;
++
++			new_dentry = tmp;
++			rehash = NULL;
++			new_negative = true;
++			orig_data_version = orig_dvnode->status.data_version;
++			new_data_version = new_dvnode->status.data_version;
++		}
++	}
++
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, orig_dvnode, key)) {
+ 		if (orig_dvnode != new_dvnode) {
+ 			if (mutex_lock_interruptible_nested(&new_dvnode->io_lock, 1) < 0) {
+ 				afs_end_vnode_operation(&fc);
+-				goto error_key;
++				goto error_rehash;
+ 			}
+ 		}
+ 		while (afs_select_fileserver(&fc)) {
+@@ -1630,25 +1711,42 @@ static int afs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 			mutex_unlock(&new_dvnode->io_lock);
+ 		ret = afs_end_vnode_operation(&fc);
+ 		if (ret < 0)
+-			goto error_key;
++			goto error_rehash;
+ 	}
+ 
+ 	if (ret == 0) {
++		if (rehash)
++			d_rehash(rehash);
+ 		if (test_bit(AFS_VNODE_DIR_VALID, &orig_dvnode->flags))
+ 		    afs_edit_dir_remove(orig_dvnode, &old_dentry->d_name,
+-					afs_edit_dir_for_rename);
++					afs_edit_dir_for_rename_0);
+ 
+ 		if (!new_negative &&
+ 		    test_bit(AFS_VNODE_DIR_VALID, &new_dvnode->flags))
+ 			afs_edit_dir_remove(new_dvnode, &new_dentry->d_name,
+-					    afs_edit_dir_for_rename);
++					    afs_edit_dir_for_rename_1);
+ 
+ 		if (test_bit(AFS_VNODE_DIR_VALID, &new_dvnode->flags))
+ 			afs_edit_dir_add(new_dvnode, &new_dentry->d_name,
+-					 &vnode->fid,  afs_edit_dir_for_rename);
++					 &vnode->fid, afs_edit_dir_for_rename_2);
++
++		new_inode = d_inode(new_dentry);
++		if (new_inode) {
++			spin_lock(&new_inode->i_lock);
++			if (new_inode->i_nlink > 0)
++				drop_nlink(new_inode);
++			spin_unlock(&new_inode->i_lock);
++		}
++		d_move(old_dentry, new_dentry);
++		goto error_tmp;
+ 	}
+ 
+-error_key:
++error_rehash:
++	if (rehash)
++		d_rehash(rehash);
++error_tmp:
++	if (tmp)
++		dput(tmp);
+ 	key_put(key);
+ error:
+ 	_leave(" = %d", ret);
+diff --git a/fs/afs/dir_silly.c b/fs/afs/dir_silly.c
+new file mode 100644
+index 000000000000..aa4f72d24d91
+--- /dev/null
++++ b/fs/afs/dir_silly.c
+@@ -0,0 +1,239 @@
++/* AFS silly rename handling
++ *
++ * Copyright (C) 2019 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ * - Derived from NFS's sillyrename.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public Licence
++ * as published by the Free Software Foundation; either version
++ * 2 of the Licence, or (at your option) any later version.
 + */
-+static void afs_next_locker(struct afs_vnode *vnode, int error)
++
++#include <linux/kernel.h>
++#include <linux/fs.h>
++#include <linux/namei.h>
++#include <linux/fsnotify.h>
++#include "internal.h"
++
++/*
++ * Actually perform the silly rename step.
++ */
++static int afs_do_silly_rename(struct afs_vnode *dvnode, struct afs_vnode *vnode,
++			       struct dentry *old, struct dentry *new,
++			       struct key *key)
 +{
-+	struct file_lock *p, *_p, *next = NULL;
-+	struct key *key = vnode->lock_key;
-+	unsigned int fl_type = F_RDLCK;
++	struct afs_fs_cursor fc;
++	u64 dir_data_version = dvnode->status.data_version;
++	int ret = -ERESTARTSYS;
++
++	_enter("%pd,%pd", old, new);
++
++	trace_afs_silly_rename(vnode, false);
++	if (afs_begin_vnode_operation(&fc, dvnode, key)) {
++		while (afs_select_fileserver(&fc)) {
++			fc.cb_break = afs_calc_vnode_cb_break(dvnode);
++			afs_fs_rename(&fc, old->d_name.name,
++				      dvnode, new->d_name.name,
++				      dir_data_version, dir_data_version);
++		}
++
++		afs_vnode_commit_status(&fc, dvnode, fc.cb_break);
++		ret = afs_end_vnode_operation(&fc);
++	}
++
++	if (ret == 0) {
++		spin_lock(&old->d_lock);
++		old->d_flags |= DCACHE_NFSFS_RENAMED;
++		spin_unlock(&old->d_lock);
++		if (dvnode->silly_key != key) {
++			key_put(dvnode->silly_key);
++			dvnode->silly_key = key_get(key);
++		}
++
++		if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
++			afs_edit_dir_remove(dvnode, &old->d_name,
++					    afs_edit_dir_for_silly_0);
++		if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
++			afs_edit_dir_add(dvnode, &new->d_name,
++					 &vnode->fid, afs_edit_dir_for_silly_1);
++
++		/* vfs_unlink and the like do not issue this when a file is
++		 * sillyrenamed, so do it here.
++		 */
++		fsnotify_nameremove(old, 0);
++	}
++
++	_leave(" = %d", ret);
++	return ret;
++}
++
++/**
++ * afs_sillyrename - Perform a silly-rename of a dentry
++ *
++ * AFS is stateless and the server doesn't know when the client is holding a
++ * file open.  To prevent application problems when a file is unlinked while
++ * it's still open, the client performs a "silly-rename".  That is, it renames
++ * the file to a hidden file in the same directory, and only performs the
++ * unlink once the last reference to it is put.
++ *
++ * The final cleanup is done during dentry_iput.
++ */
++int afs_sillyrename(struct afs_vnode *dvnode, struct afs_vnode *vnode,
++		    struct dentry *dentry, struct key *key)
++{
++	static unsigned int sillycounter;
++	struct dentry *sdentry = NULL;
++	unsigned char silly[16];
++	int ret = -EBUSY;
 +
 +	_enter("");
 +
-+	if (vnode->lock_type == AFS_LOCK_WRITE)
-+		fl_type = F_WRLCK;
++	/* We don't allow a dentry to be silly-renamed twice. */
++	if (dentry->d_flags & DCACHE_NFSFS_RENAMED)
++		return -EBUSY;
 +
-+	list_for_each_entry_safe(p, _p, &vnode->pending_locks, fl_u.afs.link) {
-+		if (error &&
-+		    p->fl_type == fl_type &&
-+		    afs_file_key(p->fl_file) == key) {
-+			list_del_init(&p->fl_u.afs.link);
-+			p->fl_u.afs.state = error;
-+			wake_up(&p->fl_wait);
- 		}
++	sdentry = NULL;
++	do {
++		int slen;
 +
-+		/* Select the next locker to hand off to. */
-+		if (next &&
-+		    (next->fl_type == F_WRLCK || p->fl_type == F_RDLCK))
-+			continue;
-+		next = p;
- 	}
++		dput(sdentry);
++		sillycounter++;
 +
-+	vnode->lock_key = NULL;
-+	key_put(key);
++		/* Create a silly name.  Note that the ".__afs" prefix is
++		 * understood by the salvager and must not be changed.
++		 */
++		slen = scnprintf(silly, sizeof(silly), ".__afs%04X", sillycounter);
++		sdentry = lookup_one_len(silly, dentry->d_parent, slen);
 +
-+	if (next) {
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_SETTING);
-+		next->fl_u.afs.state = AFS_LOCK_YOUR_TRY;
-+		wake_up(&next->fl_wait);
-+	} else {
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_NONE);
++		/* N.B. Better to return EBUSY here ... it could be dangerous
++		 * to delete the file while it's in use.
++		 */
++		if (IS_ERR(sdentry))
++			goto out;
++	} while (!d_is_negative(sdentry));
++
++	ihold(&vnode->vfs_inode);
++
++	ret = afs_do_silly_rename(dvnode, vnode, dentry, sdentry, key);
++	switch (ret) {
++	case 0:
++		/* The rename succeeded. */
++		d_move(dentry, sdentry);
++		break;
++	case -ERESTARTSYS:
++		/* The result of the rename is unknown. Play it safe by forcing
++		 * a new lookup.
++		 */
++		d_drop(dentry);
++		d_drop(sdentry);
 +	}
 +
-+	_leave("");
- }
- 
- /*
-@@ -196,8 +253,6 @@ void afs_lock_work(struct work_struct *work)
- {
- 	struct afs_vnode *vnode =
- 		container_of(work, struct afs_vnode, lock_work.work);
--	struct file_lock *fl, *next;
--	afs_lock_type_t type;
- 	struct key *key;
- 	int ret;
- 
-@@ -210,7 +265,7 @@ void afs_lock_work(struct work_struct *work)
- 	switch (vnode->lock_state) {
- 	case AFS_VNODE_LOCK_NEED_UNLOCK:
- 		_debug("unlock");
--		vnode->lock_state = AFS_VNODE_LOCK_UNLOCKING;
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_UNLOCKING);
- 		spin_unlock(&vnode->lock);
- 
- 		/* attempt to release the server lock; if it fails, we just
-@@ -222,22 +277,9 @@ void afs_lock_work(struct work_struct *work)
- 			       vnode->fid.vid, vnode->fid.vnode, ret);
- 
- 		spin_lock(&vnode->lock);
--		key_put(vnode->lock_key);
--		vnode->lock_key = NULL;
--		vnode->lock_state = AFS_VNODE_LOCK_NONE;
--
--		if (list_empty(&vnode->pending_locks)) {
--			spin_unlock(&vnode->lock);
--			return;
--		}
--
--		/* The new front of the queue now owns the state variables. */
--		next = list_entry(vnode->pending_locks.next,
--				  struct file_lock, fl_u.afs.link);
--		vnode->lock_key = key_get(afs_file_key(next->fl_file));
--		vnode->lock_type = (next->fl_type == F_RDLCK) ? AFS_LOCK_READ : AFS_LOCK_WRITE;
--		vnode->lock_state = AFS_VNODE_LOCK_WAITING_FOR_CB;
--		goto again;
-+		afs_next_locker(vnode, 0);
-+		spin_unlock(&vnode->lock);
-+		return;
- 
- 	/* If we've already got a lock, then it must be time to extend that
- 	 * lock as AFS locks time out after 5 minutes.
-@@ -248,7 +290,7 @@ void afs_lock_work(struct work_struct *work)
- 		ASSERT(!list_empty(&vnode->granted_locks));
- 
- 		key = key_get(vnode->lock_key);
--		vnode->lock_state = AFS_VNODE_LOCK_EXTENDING;
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_EXTENDING);
- 		spin_unlock(&vnode->lock);
- 
- 		ret = afs_extend_lock(vnode, key); /* RPC */
-@@ -262,72 +304,26 @@ void afs_lock_work(struct work_struct *work)
- 
- 		if (vnode->lock_state != AFS_VNODE_LOCK_EXTENDING)
- 			goto again;
--		vnode->lock_state = AFS_VNODE_LOCK_GRANTED;
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_GRANTED);
- 
--		if (ret == 0)
--			afs_schedule_lock_extension(vnode);
--		else
-+		if (ret != 0)
- 			queue_delayed_work(afs_lock_manager, &vnode->lock_work,
- 					   HZ * 10);
- 		spin_unlock(&vnode->lock);
- 		_leave(" [ext]");
- 		return;
- 
--		/* If we don't have a granted lock, then we must've been called
--		 * back by the server, and so if might be possible to get a
--		 * lock we're currently waiting for.
--		 */
-+	/* If we're waiting for a callback to indicate lock release, we can't
-+	 * actually rely on this, so need to recheck at regular intervals.  The
-+	 * problem is that the server might not notify us if the lock just
-+	 * expires (say because a client died) rather than being explicitly
-+	 * released.
-+	 */
- 	case AFS_VNODE_LOCK_WAITING_FOR_CB:
--		_debug("get");
--
--		key = key_get(vnode->lock_key);
--		type = vnode->lock_type;
--		vnode->lock_state = AFS_VNODE_LOCK_SETTING;
-+		_debug("retry");
-+		afs_next_locker(vnode, 0);
- 		spin_unlock(&vnode->lock);
--
--		ret = afs_set_lock(vnode, key, type); /* RPC */
--		key_put(key);
--
--		spin_lock(&vnode->lock);
--		switch (ret) {
--		case -EWOULDBLOCK:
--			_debug("blocked");
--			break;
--		case 0:
--			_debug("acquired");
--			vnode->lock_state = AFS_VNODE_LOCK_GRANTED;
--			/* Fall through */
--		default:
--			/* Pass the lock or the error onto the first locker in
--			 * the list - if they're looking for this type of lock.
--			 * If they're not, we assume that whoever asked for it
--			 * took a signal.
--			 */
--			if (list_empty(&vnode->pending_locks)) {
--				_debug("withdrawn");
--				vnode->lock_state = AFS_VNODE_LOCK_NEED_UNLOCK;
--				goto again;
--			}
--
--			fl = list_entry(vnode->pending_locks.next,
--					struct file_lock, fl_u.afs.link);
--			type = (fl->fl_type == F_RDLCK) ? AFS_LOCK_READ : AFS_LOCK_WRITE;
--			if (vnode->lock_type != type) {
--				_debug("changed");
--				vnode->lock_state = AFS_VNODE_LOCK_NEED_UNLOCK;
--				goto again;
--			}
--
--			fl->fl_u.afs.state = ret;
--			if (ret == 0)
--				afs_grant_locks(vnode, fl);
--			else
--				list_del_init(&fl->fl_u.afs.link);
--			wake_up(&fl->fl_wait);
--			spin_unlock(&vnode->lock);
--			_leave(" [granted]");
--			return;
--		}
-+		return;
- 
- 	default:
- 		/* Looks like a lock request was withdrawn. */
-@@ -345,14 +341,15 @@ void afs_lock_work(struct work_struct *work)
-  */
- static void afs_defer_unlock(struct afs_vnode *vnode)
- {
--	_enter("");
-+	_enter("%u", vnode->lock_state);
- 
--	if (vnode->lock_state == AFS_VNODE_LOCK_GRANTED ||
--	    vnode->lock_state == AFS_VNODE_LOCK_EXTENDING) {
-+	if (list_empty(&vnode->granted_locks) &&
-+	    (vnode->lock_state == AFS_VNODE_LOCK_GRANTED ||
-+	     vnode->lock_state == AFS_VNODE_LOCK_EXTENDING)) {
- 		cancel_delayed_work(&vnode->lock_work);
- 
--		vnode->lock_state = AFS_VNODE_LOCK_NEED_UNLOCK;
--		afs_lock_may_be_available(vnode);
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_NEED_UNLOCK);
-+		queue_delayed_work(afs_lock_manager, &vnode->lock_work, 0);
- 	}
- }
- 
-@@ -401,50 +398,6 @@ static int afs_do_setlk_check(struct afs_vnode *vnode, struct key *key,
- 	return 0;
- }
- 
--/*
-- * Remove the front runner from the pending queue.
-- * - The caller must hold vnode->lock.
-- */
--static void afs_dequeue_lock(struct afs_vnode *vnode, struct file_lock *fl)
--{
--	struct file_lock *next;
--
--	_enter("");
--
--	/* ->lock_type, ->lock_key and ->lock_state only belong to this
--	 * file_lock if we're at the front of the pending queue or if we have
--	 * the lock granted or if the lock_state is NEED_UNLOCK or UNLOCKING.
--	 */
--	if (vnode->granted_locks.next == &fl->fl_u.afs.link &&
--	    vnode->granted_locks.prev == &fl->fl_u.afs.link) {
--		list_del_init(&fl->fl_u.afs.link);
--		afs_defer_unlock(vnode);
--		return;
--	}
--
--	if (!list_empty(&vnode->granted_locks) ||
--	    vnode->pending_locks.next != &fl->fl_u.afs.link) {
--		list_del_init(&fl->fl_u.afs.link);
--		return;
--	}
--
--	list_del_init(&fl->fl_u.afs.link);
--	key_put(vnode->lock_key);
--	vnode->lock_key = NULL;
--	vnode->lock_state = AFS_VNODE_LOCK_NONE;
--
--	if (list_empty(&vnode->pending_locks))
--		return;
--
--	/* The new front of the queue now owns the state variables. */
--	next = list_entry(vnode->pending_locks.next,
--			  struct file_lock, fl_u.afs.link);
--	vnode->lock_key = key_get(afs_file_key(next->fl_file));
--	vnode->lock_type = (next->fl_type == F_RDLCK) ? AFS_LOCK_READ : AFS_LOCK_WRITE;
--	vnode->lock_state = AFS_VNODE_LOCK_WAITING_FOR_CB;
--	afs_lock_may_be_available(vnode);
--}
--
- /*
-  * request a lock on a file on the server
-  */
-@@ -469,44 +422,66 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
- 		return ret;
- 
- 	spin_lock(&vnode->lock);
-+	list_add_tail(&fl->fl_u.afs.link, &vnode->pending_locks);
- 
--	/* If we've already got a readlock on the server then we instantly
--	 * grant another readlock, irrespective of whether there are any
--	 * pending writelocks.
-+	/* If we've already got a lock on the server then try to move to having
-+	 * the VFS grant the requested lock.  Note that this means that other
-+	 * clients may get starved out.
- 	 */
--	if (type == AFS_LOCK_READ &&
--	    vnode->lock_state == AFS_VNODE_LOCK_GRANTED &&
--	    vnode->lock_type == AFS_LOCK_READ) {
--		_debug("instant readlock");
--		ASSERT(!list_empty(&vnode->granted_locks));
--		goto share_existing_lock;
--	}
-+	_debug("try %u", vnode->lock_state);
-+	if (vnode->lock_state == AFS_VNODE_LOCK_GRANTED) {
-+		if (type == AFS_LOCK_READ) {
-+			_debug("instant readlock");
-+			list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
-+			fl->fl_u.afs.state = AFS_LOCK_GRANTED;
-+			goto vnode_is_locked_u;
-+		}
- 
--	list_add_tail(&fl->fl_u.afs.link, &vnode->pending_locks);
-+		if (vnode->lock_type == AFS_LOCK_WRITE) {
-+			_debug("instant writelock");
-+			list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
-+			fl->fl_u.afs.state = AFS_LOCK_GRANTED;
-+			goto vnode_is_locked_u;
-+		}
-+	}
- 
- 	if (vnode->lock_state != AFS_VNODE_LOCK_NONE)
- 		goto need_to_wait;
- 
-+try_to_lock:
- 	/* We don't have a lock on this vnode and we aren't currently waiting
- 	 * for one either, so ask the server for a lock.
- 	 *
- 	 * Note that we need to be careful if we get interrupted by a signal
- 	 * after dispatching the request as we may still get the lock, even
- 	 * though we don't wait for the reply (it's not too bad a problem - the
--	 * lock will expire in 10 mins anyway).
-+	 * lock will expire in 5 mins anyway).
- 	 */
- 	_debug("not locked");
- 	vnode->lock_key = key_get(key);
- 	vnode->lock_type = type;
--	vnode->lock_state = AFS_VNODE_LOCK_SETTING;
-+	afs_set_lock_state(vnode, AFS_VNODE_LOCK_SETTING);
- 	spin_unlock(&vnode->lock);
- 
- 	ret = afs_set_lock(vnode, key, type); /* RPC */
- 
- 	spin_lock(&vnode->lock);
- 	switch (ret) {
-+	case -EKEYREJECTED:
-+	case -EKEYEXPIRED:
-+	case -EKEYREVOKED:
-+	case -EPERM:
-+	case -EACCES:
-+		fl->fl_u.afs.state = ret;
-+		list_del_init(&fl->fl_u.afs.link);
-+		afs_next_locker(vnode, ret);
-+		goto error_unlock;
-+
- 	default:
--		goto abort_attempt;
-+		fl->fl_u.afs.state = ret;
-+		list_del_init(&fl->fl_u.afs.link);
-+		afs_next_locker(vnode, 0);
-+		goto error_unlock;
- 
- 	case -EWOULDBLOCK:
- 		/* The server doesn't have a lock-waiting queue, so the client
-@@ -516,29 +491,23 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
- 		_debug("would block");
- 		ASSERT(list_empty(&vnode->granted_locks));
- 		ASSERTCMP(vnode->pending_locks.next, ==, &fl->fl_u.afs.link);
--		vnode->lock_state = AFS_VNODE_LOCK_WAITING_FOR_CB;
--		goto need_to_wait;
-+		goto lock_is_contended;
- 
- 	case 0:
- 		_debug("acquired");
--		break;
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_GRANTED);
-+		afs_grant_locks(vnode);
-+		goto vnode_is_locked_u;
- 	}
- 
--	/* we've acquired a server lock, but it needs to be renewed after 5
--	 * mins */
--	vnode->lock_state = AFS_VNODE_LOCK_GRANTED;
--	afs_schedule_lock_extension(vnode);
--
--share_existing_lock:
--	/* the lock has been granted as far as we're concerned... */
--	fl->fl_u.afs.state = AFS_LOCK_GRANTED;
--	list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
--
--given_lock:
--	/* ... but we do still need to get the VFS's blessing */
-+vnode_is_locked_u:
- 	spin_unlock(&vnode->lock);
-+vnode_is_locked:
-+	/* the lock has been granted by the server... */
-+	ASSERTCMP(fl->fl_u.afs.state, ==, AFS_LOCK_GRANTED);
- 
--	ret = posix_lock_file(file, fl, NULL);
-+	/* ... but the VFS still needs to distribute access on this client. */
-+	ret = locks_lock_file_wait(file, fl);
- 	if (ret < 0)
- 		goto vfs_rejected_lock;
- 
-@@ -550,38 +519,61 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
- 	_leave(" = 0");
- 	return 0;
- 
-+lock_is_contended:
-+	if (!(fl->fl_flags & FL_SLEEP)) {
-+		list_del_init(&fl->fl_u.afs.link);
-+		afs_next_locker(vnode, 0);
-+		ret = -EAGAIN;
-+		goto error_unlock;
-+	}
-+
-+	afs_set_lock_state(vnode, AFS_VNODE_LOCK_WAITING_FOR_CB);
-+	queue_delayed_work(afs_lock_manager, &vnode->lock_work, HZ * 5);
-+
- need_to_wait:
- 	/* We're going to have to wait.  Either this client doesn't have a lock
- 	 * on the server yet and we need to wait for a callback to occur, or
--	 * the client does have a lock on the server, but it belongs to some
--	 * other process(es) and is incompatible with the lock we want.
-+	 * the client does have a lock on the server, but it's shared and we
-+	 * need an exclusive lock.
- 	 */
--	ret = -EAGAIN;
--	if (fl->fl_flags & FL_SLEEP) {
--		spin_unlock(&vnode->lock);
-+	spin_unlock(&vnode->lock);
- 
--		_debug("sleep");
--		ret = wait_event_interruptible(fl->fl_wait,
--					       fl->fl_u.afs.state != AFS_LOCK_PENDING);
-+	_debug("sleep");
-+	ret = wait_event_interruptible(fl->fl_wait,
-+				       fl->fl_u.afs.state != AFS_LOCK_PENDING);
-+	_debug("wait = %d", ret);
- 
-+	if (fl->fl_u.afs.state >= 0 && fl->fl_u.afs.state != AFS_LOCK_GRANTED) {
- 		spin_lock(&vnode->lock);
--	}
- 
--	if (fl->fl_u.afs.state == AFS_LOCK_GRANTED)
--		goto given_lock;
--	if (fl->fl_u.afs.state < 0)
--		ret = fl->fl_u.afs.state;
-+		switch (fl->fl_u.afs.state) {
-+		case AFS_LOCK_YOUR_TRY:
-+			fl->fl_u.afs.state = AFS_LOCK_PENDING;
-+			goto try_to_lock;
-+		case AFS_LOCK_PENDING:
-+			if (ret > 0) {
-+				/* We need to retry the lock.  We may not be
-+				 * notified by the server if it just expired
-+				 * rather than being released.
-+				 */
-+				ASSERTCMP(vnode->lock_state, ==, AFS_VNODE_LOCK_WAITING_FOR_CB);
-+				afs_set_lock_state(vnode, AFS_VNODE_LOCK_SETTING);
-+				fl->fl_u.afs.state = AFS_LOCK_PENDING;
-+				goto try_to_lock;
-+			}
-+			goto error_unlock;
-+		case AFS_LOCK_GRANTED:
-+		default:
-+			break;
-+		}
- 
--abort_attempt:
--	/* we aren't going to get the lock, either because we're unwilling to
--	 * wait, or because some signal happened */
--	_debug("abort");
--	afs_dequeue_lock(vnode, fl);
-+		spin_unlock(&vnode->lock);
-+	}
- 
--error_unlock:
--	spin_unlock(&vnode->lock);
--	_leave(" = %d", ret);
--	return ret;
-+	if (fl->fl_u.afs.state == AFS_LOCK_GRANTED)
-+		goto vnode_is_locked;
-+	ret = fl->fl_u.afs.state;
-+	goto error;
- 
- vfs_rejected_lock:
- 	/* The VFS rejected the lock we just obtained, so we have to discard
-@@ -591,9 +583,13 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
- 	_debug("vfs refused %d", ret);
- 	spin_lock(&vnode->lock);
- 	list_del_init(&fl->fl_u.afs.link);
--	if (list_empty(&vnode->granted_locks))
--		afs_defer_unlock(vnode);
--	goto error_unlock;
-+	afs_defer_unlock(vnode);
-+
-+error_unlock:
-+	spin_unlock(&vnode->lock);
-+error:
++	iput(&vnode->vfs_inode);
++	dput(sdentry);
++out:
 +	_leave(" = %d", ret);
 +	return ret;
- }
++}
++
++/*
++ * Tell the server to remove a sillyrename file.
++ */
++static int afs_do_silly_unlink(struct afs_vnode *dvnode, struct afs_vnode *vnode,
++			       struct dentry *dentry, struct key *key)
++{
++	struct afs_fs_cursor fc;
++	u64 dir_data_version = dvnode->status.data_version;
++	int ret;
++
++	_enter("");
++
++	trace_afs_silly_rename(vnode, true);
++	if (afs_begin_vnode_operation(&fc, dvnode, key)) {
++		while (afs_select_fileserver(&fc)) {
++			fc.cb_break = afs_calc_vnode_cb_break(dvnode);
++
++			if (test_bit(AFS_SERVER_FL_IS_YFS, &fc.cbi->server->flags) &&
++			    !test_bit(AFS_SERVER_FL_NO_RM2, &fc.cbi->server->flags)) {
++				yfs_fs_remove_file2(&fc, vnode, dentry->d_name.name,
++						    dir_data_version);
++				if (fc.ac.error != -ECONNABORTED ||
++				    fc.ac.abort_code != RXGEN_OPCODE)
++					continue;
++				set_bit(AFS_SERVER_FL_NO_RM2, &fc.cbi->server->flags);
++			}
++
++			afs_fs_remove(&fc, vnode, dentry->d_name.name, false,
++				      dir_data_version);
++		}
++
++		afs_vnode_commit_status(&fc, dvnode, fc.cb_break);
++		ret = afs_end_vnode_operation(&fc);
++		if (ret == 0) {
++			drop_nlink(&vnode->vfs_inode);
++			if (vnode->vfs_inode.i_nlink == 0) {
++				set_bit(AFS_VNODE_DELETED, &vnode->flags);
++				clear_bit(AFS_VNODE_CB_PROMISED, &vnode->flags);
++			}
++		}
++		if (ret == 0 &&
++		    test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
++			afs_edit_dir_remove(dvnode, &dentry->d_name,
++					    afs_edit_dir_for_unlink);
++	}
++
++	_leave(" = %d", ret);
++	return ret;
++}
++
++/*
++ * Remove sillyrename file on iput.
++ */
++int afs_silly_iput(struct dentry *dentry, struct inode *inode)
++{
++	struct afs_vnode *dvnode = AFS_FS_I(d_inode(dentry->d_parent));
++	struct afs_vnode *vnode = AFS_FS_I(inode);
++	struct dentry *alias;
++	int ret;
++
++	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
++
++	_enter("%p{%pd},%llx", dentry, dentry, vnode->fid.vnode);
++
++	down_read(&dvnode->rmdir_lock);
++
++	alias = d_alloc_parallel(dentry->d_parent, &dentry->d_name, &wq);
++	if (IS_ERR(alias)) {
++		up_read(&dvnode->rmdir_lock);
++		return 0;
++	}
++
++	if (!d_in_lookup(alias)) {
++		/* We raced with lookup...  See if we need to transfer the
++		 * sillyrename information to the aliased dentry.
++		 */
++		ret = 0;
++		spin_lock(&alias->d_lock);
++		if (d_really_is_positive(alias) &&
++		    !(alias->d_flags & DCACHE_NFSFS_RENAMED)) {
++			alias->d_flags |= DCACHE_NFSFS_RENAMED;
++			ret = 1;
++		}
++		spin_unlock(&alias->d_lock);
++		up_read(&dvnode->rmdir_lock);
++		dput(alias);
++		return ret;
++	}
++
++	/* Stop lock-release from complaining. */
++	spin_lock(&vnode->lock);
++	vnode->lock_state = AFS_VNODE_LOCK_DELETED;
++	trace_afs_flock_ev(vnode, NULL, afs_flock_silly_delete, 0);
++	spin_unlock(&vnode->lock);
++
++	afs_do_silly_unlink(dvnode, vnode, dentry, dvnode->silly_key);
++	up_read(&dvnode->rmdir_lock);
++	d_lookup_done(alias);
++	dput(alias);
++	return 1;
++}
+diff --git a/fs/afs/flock.c b/fs/afs/flock.c
+index 08b06f53a375..2dbdedeaabcf 100644
+--- a/fs/afs/flock.c
++++ b/fs/afs/flock.c
+@@ -300,7 +300,7 @@ void afs_lock_work(struct work_struct *work)
+ 		/* attempt to release the server lock; if it fails, we just
+ 		 * wait 5 minutes and it'll expire anyway */
+ 		ret = afs_release_lock(vnode, vnode->lock_key);
+-		if (ret < 0) {
++		if (ret < 0 && vnode->lock_state != AFS_VNODE_LOCK_DELETED) {
+ 			trace_afs_flock_ev(vnode, NULL, afs_flock_release_fail,
+ 					   ret);
+ 			printk(KERN_WARNING "AFS:"
+diff --git a/fs/afs/inode.c b/fs/afs/inode.c
+index 1a4ce07fb406..bbd3d26c669e 100644
+--- a/fs/afs/inode.c
++++ b/fs/afs/inode.c
+@@ -545,6 +545,8 @@ void afs_evict_inode(struct inode *inode)
+ #endif
+ 
+ 	afs_put_permits(rcu_access_pointer(vnode->permit_cache));
++	key_put(vnode->silly_key);
++	vnode->silly_key = NULL;
+ 	key_put(vnode->lock_key);
+ 	vnode->lock_key = NULL;
+ 	_leave("");
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index d6763e59952d..a6ce6f8c9521 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -622,6 +622,8 @@ struct afs_vnode {
+ 	struct afs_permits __rcu *permit_cache;	/* cache of permits so far obtained */
+ 	struct mutex		io_lock;	/* Lock for serialising I/O on this mutex */
+ 	struct rw_semaphore	validate_lock;	/* lock for validating this vnode */
++	struct rw_semaphore	rmdir_lock;	/* Lock for rmdir vs sillyrename */
++	struct key		*silly_key;	/* Silly rename key */
+ 	spinlock_t		wb_lock;	/* lock for wb_keys */
+ 	spinlock_t		lock;		/* waitqueue/flags lock */
+ 	unsigned long		flags;
+@@ -868,6 +870,7 @@ extern const struct address_space_operations afs_dir_aops;
+ extern const struct dentry_operations afs_fs_dentry_operations;
+ 
+ extern void afs_d_release(struct dentry *);
++extern int afs_dir_remove_link(struct dentry *, struct key *, unsigned long, unsigned long);
  
  /*
-@@ -731,7 +727,11 @@ static void afs_fl_release_private(struct file_lock *fl)
- 	_enter("");
+  * dir_edit.c
+@@ -876,6 +879,13 @@ extern void afs_edit_dir_add(struct afs_vnode *, struct qstr *, struct afs_fid *
+ 			     enum afs_edit_dir_reason);
+ extern void afs_edit_dir_remove(struct afs_vnode *, struct qstr *, enum afs_edit_dir_reason);
  
- 	spin_lock(&vnode->lock);
--	afs_dequeue_lock(vnode, fl);
++/*
++ * dir_silly.c
++ */
++extern int afs_sillyrename(struct afs_vnode *, struct afs_vnode *,
++			   struct dentry *, struct key *);
++extern int afs_silly_iput(struct dentry *, struct inode *);
 +
-+	list_del_init(&fl->fl_u.afs.link);
-+	if (list_empty(&vnode->granted_locks))
-+		afs_defer_unlock(vnode);
+ /*
+  * dynroot.c
+  */
+diff --git a/fs/afs/super.c b/fs/afs/super.c
+index 5adf012b8e27..6438849a75c4 100644
+--- a/fs/afs/super.c
++++ b/fs/afs/super.c
+@@ -45,7 +45,7 @@ struct file_system_type afs_fs_type = {
+ 	.init_fs_context	= afs_init_fs_context,
+ 	.parameters		= &afs_fs_parameters,
+ 	.kill_sb		= afs_kill_super,
+-	.fs_flags		= 0,
++	.fs_flags		= FS_RENAME_DOES_D_MOVE,
+ };
+ MODULE_ALIAS_FS("afs");
+ 
+@@ -656,6 +656,8 @@ static struct inode *afs_alloc_inode(struct super_block *sb)
+ 	vnode->cb_type		= 0;
+ 	vnode->lock_state	= AFS_VNODE_LOCK_NONE;
+ 
++	init_rwsem(&vnode->rmdir_lock);
 +
- 	_debug("state %u for %p", vnode->lock_state, vnode);
- 	spin_unlock(&vnode->lock);
+ 	_leave(" = %p", &vnode->vfs_inode);
+ 	return &vnode->vfs_inode;
  }
+diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
+index 8da9dd5bc2b6..f67815ebb1b9 100644
+--- a/include/trace/events/afs.h
++++ b/include/trace/events/afs.h
+@@ -108,8 +108,12 @@ enum afs_edit_dir_reason {
+ 	afs_edit_dir_for_create,
+ 	afs_edit_dir_for_link,
+ 	afs_edit_dir_for_mkdir,
+-	afs_edit_dir_for_rename,
++	afs_edit_dir_for_rename_0,
++	afs_edit_dir_for_rename_1,
++	afs_edit_dir_for_rename_2,
+ 	afs_edit_dir_for_rmdir,
++	afs_edit_dir_for_silly_0,
++	afs_edit_dir_for_silly_1,
+ 	afs_edit_dir_for_symlink,
+ 	afs_edit_dir_for_unlink,
+ };
+@@ -161,6 +165,7 @@ enum afs_flock_event {
+ 	afs_flock_fail_perm,
+ 	afs_flock_no_lockers,
+ 	afs_flock_release_fail,
++	afs_flock_silly_delete,
+ 	afs_flock_timestamp,
+ 	afs_flock_try_to_lock,
+ 	afs_flock_vfs_lock,
+@@ -273,8 +278,12 @@ enum afs_flock_operation {
+ 	EM(afs_edit_dir_for_create,		"Create") \
+ 	EM(afs_edit_dir_for_link,		"Link  ") \
+ 	EM(afs_edit_dir_for_mkdir,		"MkDir ") \
+-	EM(afs_edit_dir_for_rename,		"Rename") \
++	EM(afs_edit_dir_for_rename_0,		"Renam0") \
++	EM(afs_edit_dir_for_rename_1,		"Renam1") \
++	EM(afs_edit_dir_for_rename_2,		"Renam2") \
+ 	EM(afs_edit_dir_for_rmdir,		"RmDir ") \
++	EM(afs_edit_dir_for_silly_0,		"S_Ren0") \
++	EM(afs_edit_dir_for_silly_1,		"S_Ren1") \
+ 	EM(afs_edit_dir_for_symlink,		"Symlnk") \
+ 	E_(afs_edit_dir_for_unlink,		"Unlink")
+ 
+@@ -337,6 +346,7 @@ enum afs_flock_operation {
+ 	EM(afs_flock_fail_perm,			"ErrPerm ")		\
+ 	EM(afs_flock_no_lockers,		"NoLocker")		\
+ 	EM(afs_flock_release_fail,		"Rel_Fail")		\
++	EM(afs_flock_silly_delete,		"SillyDel")		\
+ 	EM(afs_flock_timestamp,			"Timestmp")		\
+ 	EM(afs_flock_try_to_lock,		"TryToLck")		\
+ 	EM(afs_flock_vfs_lock,			"VFSLock ")		\
+@@ -964,6 +974,26 @@ TRACE_EVENT(afs_reload_dir,
+ 		      __entry->fid.vid, __entry->fid.vnode, __entry->fid.unique)
+ 	    );
+ 
++TRACE_EVENT(afs_silly_rename,
++	    TP_PROTO(struct afs_vnode *vnode, bool done),
++
++	    TP_ARGS(vnode, done),
++
++	    TP_STRUCT__entry(
++		    __field_struct(struct afs_fid,	fid		)
++		    __field(bool,			done		)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->fid = vnode->fid;
++		    __entry->done = done;
++			   ),
++
++	    TP_printk("%llx:%llx:%x done=%u",
++		      __entry->fid.vid, __entry->fid.vnode, __entry->fid.unique,
++		      __entry->done)
++	    );
++
+ #endif /* _TRACE_AFS_H */
+ 
+ /* This part must be outside protection */
 
