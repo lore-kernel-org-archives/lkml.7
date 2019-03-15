@@ -2,124 +2,90 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9A9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DABC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4381820854
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A68820854
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:34:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbfCONeV (ORCPT
+        id S1729140AbfCONet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 09:34:21 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:60147 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727705AbfCONeV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 09:34:21 -0400
-X-Originating-IP: 185.94.189.187
-Received: from localhost (unknown [185.94.189.187])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 7644B60006;
-        Fri, 15 Mar 2019 13:34:15 +0000 (UTC)
-Date:   Fri, 15 Mar 2019 14:34:14 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH 4/6] dt-bindings: display: bridge: Add ICN6211 MIPI-DSI
- to RGB convertor bridge
-Message-ID: <20190315133414.5zwc5qtrivrbrzow@flea>
-References: <20190315130825.9005-1-jagan@amarulasolutions.com>
- <20190315130825.9005-5-jagan@amarulasolutions.com>
+        Fri, 15 Mar 2019 09:34:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43504 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727705AbfCONet (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 09:34:49 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 49DFA3002DC6;
+        Fri, 15 Mar 2019 13:34:49 +0000 (UTC)
+Received: from krava (unknown [10.43.17.124])
+        by smtp.corp.redhat.com (Postfix) with SMTP id E749A61369;
+        Fri, 15 Mar 2019 13:34:44 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 14:34:43 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v1 0/3] perf: Support a new coresum event qualifier
+Message-ID: <20190315133443.GA5200@krava>
+References: <1552665856-27741-1-git-send-email-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ju6ym54ol55b4fyp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190315130825.9005-5-jagan@amarulasolutions.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1552665856-27741-1-git-send-email-yao.jin@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 15 Mar 2019 13:34:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Mar 16, 2019 at 12:04:13AM +0800, Jin Yao wrote:
+> The coresum event qualifier which sums up the event counts for both
+> hardware threads in a core. For example,
+> 
+> perf stat -e cpu/event=0,umask=0x3,coresum=1/,cpu/event=0,umask=0x3/
+> 
+> In this example, we count the event 'ref-cycles' per-core and per-CPU in
+> one perf stat command-line.
+> 
+> We can already support per-core counting with --per-core, but it's
+> often useful to do this together with other metrics that are collected
+> per CPU (per hardware thread). So this patch series supports this
+> per-core counting on a event level.
 
---ju6ym54ol55b4fyp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+seems useful, but perhaps we should follow the --per-core option
+we already have and call it 'per-core' instead of coresum
 
-On Fri, Mar 15, 2019 at 06:38:23PM +0530, Jagan Teki wrote:
-> ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
-> It has a flexible configuration of MIPI DSI signal input
-> and produce RGB565, RGB666, RGB888 output format.
->=20
-> Add dt-bingings for it.
->=20
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  .../display/bridge/chipone,icn6211.txt        | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/chip=
-one,icn6211.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/display/bridge/chipone,icn=
-6211.txt b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211=
-=2Etxt
-> new file mode 100644
-> index 000000000000..7f13efd7ee7f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-> @@ -0,0 +1,36 @@
-> +Chipone ICN6211 MIPI-DSI to RGB Convertor Bridge
-> +
-> +ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
-> +It has a flexible configuration of MIPI DSI signal input
-> +and produce RGB565, RGB666, RGB888 output format.
-> +
-> +Required properties for RGB:
-> +- compatible: must be "chipone,icn6211" and one of:
-> +  * "bananapi,icn6211"
+jirka
 
-Why is that compatible needed?
-
-> +- reg: the virtual channel number of a DSI peripheral
-> +- reset-gpios: a GPIO phandle for the reset pin
-> +
-> +The device node can contain following 'port' child nodes,
-> +according to the OF graph bindings defined in [1]:
-> +  0: DSI Input, not required, if the bridge is DSI controlled
-> +  1: RGB Output, mandatory
-
-Your example doesn't have that input port
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ju6ym54ol55b4fyp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXIup1gAKCRDj7w1vZxhR
-xZxKAQDnfSaDiaZESJJHJ1oX0BmcqZXLmY4m6JHNcDhXqUZZ2AEAiPziF6Gby8Tf
-uKTb2+tCIof19wZJWdLzoTUc8LQTDwE=
-=K68j
------END PGP SIGNATURE-----
-
---ju6ym54ol55b4fyp--
+> 
+> Jin Yao (3):
+>   perf: Add a coresum event qualifier
+>   perf stat: Support coresum event qualifier
+>   perf test: Add a simple test for term coresum
+> 
+>  tools/perf/Documentation/perf-stat.txt |   4 ++
+>  tools/perf/builtin-stat.c              |  21 +++++++
+>  tools/perf/tests/parse-events.c        |  10 ++-
+>  tools/perf/util/evsel.c                |   2 +
+>  tools/perf/util/evsel.h                |   3 +
+>  tools/perf/util/parse-events.c         |  27 +++++++++
+>  tools/perf/util/parse-events.h         |   1 +
+>  tools/perf/util/parse-events.l         |   1 +
+>  tools/perf/util/stat-display.c         | 108 ++++++++++++++++++++++++---------
+>  tools/perf/util/stat.c                 |   8 ++-
+>  10 files changed, 151 insertions(+), 34 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
