@@ -2,171 +2,123 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B5CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EDCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBC3218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF4B2184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:04:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcxtl8g+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbfCOJDG (ORCPT
+        id S1728602AbfCOJEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:03:06 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:36989 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfCOJDG (ORCPT
+        Fri, 15 Mar 2019 05:04:25 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46238 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfCOJEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:03:06 -0400
-Received: from bootlin.com (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 3046420001C;
-        Fri, 15 Mar 2019 09:03:02 +0000 (UTC)
-Date:   Fri, 15 Mar 2019 10:03:01 +0100
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Willem de Bruijn <willemb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [RFC PATCH net] packets: Always register packet sk in the same
- order
-Message-ID: <20190315100301.249cb671@bootlin.com>
-In-Reply-To: <CAF=yD-+e3f1VED3+6J7rQYac9A3w=CDQhrLq+eRLA88+vLOzDA@mail.gmail.com>
-References: <20190314122450.5242-1-maxime.chevallier@bootlin.com>
-        <CAF=yD-+e3f1VED3+6J7rQYac9A3w=CDQhrLq+eRLA88+vLOzDA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 15 Mar 2019 05:04:25 -0400
+Received: by mail-pf1-f193.google.com with SMTP id s23so5861617pfe.13;
+        Fri, 15 Mar 2019 02:04:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bPoiQV0RRGf1/dW+RIXf3iiaL38X7KkyBkK+7RIVa40=;
+        b=dcxtl8g+lrfPLERPW4HkAAo8N0vEmh39tLrGJtUhBXWu1yTN/oHiNP/gu1J9l2QRHg
+         CeNvzzJxXKSed/ixjcdJVT2jnPLJNRpmGs9g1GS5zHgOU+s10yiOx0XHI1g2lpiBAJv8
+         iL5cQ83mjEMIUhL1urLzrkuhmSKWxQPJphy1Zap861LM3J0PKGfYf5oV7eTxP6An22Yq
+         EzO7YMnqgUn9x5bu3/0/QjWjl6INn2s9JHXBcRWodNptc6d/8MzJ5vC+aIosk+qIWoif
+         Oa4jLQHWPBkVjC0/07IFloUSUv4TgcpZqM4E2+9z3gXIWV6Dm/pLgPnSSdbTo9cCxlnu
+         VKUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bPoiQV0RRGf1/dW+RIXf3iiaL38X7KkyBkK+7RIVa40=;
+        b=Td2FKFtyHITP1H+/yrzNaazkHMOjmv1kHJpnp/21yEjyObOh4jHPpcCbr5Ck1gPGP4
+         DfBSyCf9d9ZOhZ4LGwZ5JYsJd22MZNHq/94J/BMMywNB/dJQuThEB1i3RDBx4fXWdzsj
+         0/cztdAEnvxH+2qaQEM4w6rjj9XFv03ftJLuxSqMPKAnSZrBdQ6Vwzxl14xpw5z6NHKf
+         CxSnococ1EFYiYVVfUpv/96DVVVzFy3DXrFgQ+CPefbpvgHJJDVeTaQGpLsNgIUWLKo5
+         gv+gic0uS3OhPTk5OF+7TeQAwIWg6XeCh73Gn83xTopxRWD+nFcedio82dTP9FEjnQKy
+         nj+w==
+X-Gm-Message-State: APjAAAW9tPvgEUujVd0bc6xRk3iUKtjUOGXJw5Oee7fzbGCypdrESY8r
+        lQxSh0TxTfe/UPPedUPxgMg/B3hhICubdFYmqr7kI+Px
+X-Google-Smtp-Source: APXvYqzOwi/B7Zkr+Lw3gDbTdHv03frg8D0ZKIR7kpZxhfs335MCtKi3ngN7V8nVoqfXP8mfpPgACfQGguUGbeJR9IE=
+X-Received: by 2002:a17:902:7289:: with SMTP id d9mr3048159pll.314.1552640664120;
+ Fri, 15 Mar 2019 02:04:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1552602855-26086-1-git-send-email-info@metux.net> <1552602855-26086-3-git-send-email-info@metux.net>
+In-Reply-To: <1552602855-26086-3-git-send-email-info@metux.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 15 Mar 2019 11:04:12 +0200
+Message-ID: <CAHp75VegzKNhH1Uza9gwQMOAEOdh57WTzsHUx7vPdVs7XvJROQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/45] drivers: tty: serial: 8250_dw: use devm_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tobias Klauser <tklauser@distanz.ch>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        macro@linux-mips.org,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>, slemieux.tyco@gmail.com,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, baohua@kernel.org,
+        Peter Korsgaard <jacmet@sunsite.dk>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Willem,
-
-On Thu, 14 Mar 2019 11:24:54 -0400
-Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
-
->On Thu, Mar 14, 2019 at 8:27 AM Maxime Chevallier
-><maxime.chevallier@bootlin.com> wrote:
->>
->> When using fanouts with AF_PACKET, the demux functions such as
->> fanout_demux_cpu will return an index in the fanout socket array, which
->> corresponds to the selected socket.
->>
->> The ordering of this array depends on the order the sockets were added
->> to a given fanout group, so for FANOUT_CPU this means sockets are bound
->> to cpus in the order they are configured, which is OK.
->>
->> However, when stopping then restarting the interface these sockets are
->> bound to, the sockets are reassigned to the fanout group in the reverse
->> order, due to the fact that they were inserted at the head of the
->> interface's AF_PACKET socket list.
->>
->> This means that traffic that was directed to the first socket in the
->> fanout group is now directed to the last one after an interface restart.
->>
->> In the case of FANOUT_CPU, traffic from CPU0 will be directed to the
->> socket that used to receive traffic from the last CPU after an interface
->> restart.  
+On Fri, Mar 15, 2019 at 12:41 AM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 >
->The above assumes that sockets are added to a fanout group in the
->order in which they are created. That is a reasonable assumption,
->though not strictly required. This can be worked around in userspace
->by inserting in the inverse order. Still, good to fix.
+> Instead of fetching out data from a struct resource for passing
+> it to devm_ioremap(), directly use devm_ioremap_resource()
+
+I don't see any advantage of this change.
+See also below.
+
+> --- a/drivers/tty/serial/8250/8250_dw.c
+> +++ b/drivers/tty/serial/8250/8250_dw.c
+> @@ -526,7 +526,7 @@ static int dw8250_probe(struct platform_device *pdev)
+>         p->set_ldisc    = dw8250_set_ldisc;
+>         p->set_termios  = dw8250_set_termios;
 >
->It does change the order of output of proc and diag, which is an
->unfortunately side effect. But insertion order is less surprising and
->I don't see a simple option to only traverse the sklist in inverse
->order on packet_notifier NETDEV_UP (which would avoid this).
+> -       p->membase = devm_ioremap(dev, regs->start, resource_size(regs));
+> +       p->membase = devm_ioremap_resource(dev, regs);
+>         if (!p->membase)
 
-Thanks for the review ! Clearly the solution proposed by this patch has
-side-effects, and as you said I don't see an easy way to do that in
-another manner.
+And how did you test this? devm_ioremap_resource() returns error
+pointer in case of error.
 
->> This commit introduces a helper to add a socket at the tail of a list,
->> then uses it to register AF_PACKET sockets.
->>
->> Fixes: 808f5114a920 ("packet: convert socket list to RCU (v3)")  
->
->Before this patch, insertion with sk_add_node is also at the head.
->This does not seem like the right commit? This behavior has probably
->existed as long as fanout.
-
-Yes I agree, I'm not even sure if this patch should be targeted to -net
-or -net-next. If this is OK after reviews, I can resend it without RFC
-and without this misleading Fixes tag.
-
-Thanks,
-
-Maxime
-
->
->> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
->> ---
->>
->> Hi All,
->>
->> I stumbled upon this issue when using FANOUT_CPU and came-up with this
->> patch, but I'm not sure that (a) this is really a bug (although this
->> behaviour is at least misleading) and (b) this is the correct fix,
->> so any input on this is welcome.
->>
->> Also David, I'm not sure about the Fixes tag, from what I see, this
->> behaviour has always been there.
->>
->> Thanks,
->>
->> Maxime
->>
->>  include/net/sock.h     | 6 ++++++
->>  net/packet/af_packet.c | 2 +-
->>  2 files changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/net/sock.h b/include/net/sock.h
->> index 328cb7cb7b0b..8de5ee258b93 100644
->> --- a/include/net/sock.h
->> +++ b/include/net/sock.h
->> @@ -710,6 +710,12 @@ static inline void sk_add_node_rcu(struct sock *sk, struct hlist_head *list)
->>                 hlist_add_head_rcu(&sk->sk_node, list);
->>  }
->>
->> +static inline void sk_add_node_tail_rcu(struct sock *sk, struct hlist_head *list)
->> +{
->> +       sock_hold(sk);
->> +       hlist_add_tail_rcu(&sk->sk_node, list);
->> +}
->> +
->>  static inline void __sk_nulls_add_node_rcu(struct sock *sk, struct hlist_nulls_head *list)
->>  {
->>         hlist_nulls_add_head_rcu(&sk->sk_nulls_node, list);
->> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
->> index 8376bc1c1508..8754d7c93b84 100644
->> --- a/net/packet/af_packet.c
->> +++ b/net/packet/af_packet.c
->> @@ -3243,7 +3243,7 @@ static int packet_create(struct net *net, struct socket *sock, int protocol,
->>         }
->>
->>         mutex_lock(&net->packet.sklist_lock);
->> -       sk_add_node_rcu(sk, &net->packet.sklist);
->> +       sk_add_node_tail_rcu(sk, &net->packet.sklist);
->>         mutex_unlock(&net->packet.sklist_lock);
->>
->>         preempt_disable();
->> --
->> 2.20.1
->>  
-
-
+>                 return -ENOMEM;
 
 -- 
-Maxime Chevallier, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
