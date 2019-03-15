@@ -2,104 +2,313 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC87C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26DBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA40721871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:15:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mY+Wld5f"
+	by mail.kernel.org (Postfix) with ESMTP id 6F1402186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbfCOMPp (ORCPT
+        id S1729005AbfCOMPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 08:15:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55992 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbfCOMPp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 08:15:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZsM3UBWajgyMamixPtpjgFQzUMJGGE2hq6RgCGdr5hw=; b=mY+Wld5f4v6nZzZzxKHxmhYCen
-        i/7K2l1CGUtCX4a6oIS+c1QeJ1hGznbStjmyaKMf0sfGFAzZ81OQ37wezTX+LXJRyaQrpzfiOwtvB
-        es5k5aeSYnRAQDk81m4NUTN0cGkPq72MzjMIB7FBnIcvYSB3HjC+W+EFdaeoZuRvLD4bMclqh3PJQ
-        zuFPKyh9SlLcjFuLrivgb6/mAW3kt0Lx8uStuWQS4xnM/o/+6cZUmSXfQObWVSNBxR0PzkYbflGAD
-        94ZXB0FVw/bUxKs3pcquZy7W3r+UrwkVgem+Pa60sHmPRwHzUDgnHmTnU68jSe0v8QBe23ieB3x42
-        iMMhzt1A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4lkV-00024r-KK; Fri, 15 Mar 2019 12:15:43 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 11B0B21419E57; Fri, 15 Mar 2019 13:15:41 +0100 (CET)
-Date:   Fri, 15 Mar 2019 13:15:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas =?iso-8859-1?Q?M=FCller?= <thomas@mathtm.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: disabling secondary CPU hangs / system fails to suspend with
- kernel 4.19+
-Message-ID: <20190315121541.GD6058@hirez.programming.kicks-ass.net>
-References: <5c48095e-028a-404f-aaa1-964f83c83817@mathtm.de>
- <20190315090950.GT5996@hirez.programming.kicks-ass.net>
- <cbaafd35-a17d-8331-4cef-281a562b91b5@mathtm.de>
+        Fri, 15 Mar 2019 08:15:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59768 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727441AbfCOMPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 08:15:51 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ACA1B30832D0;
+        Fri, 15 Mar 2019 12:15:50 +0000 (UTC)
+Received: from krava (unknown [10.43.17.124])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 1E31919C5A;
+        Fri, 15 Mar 2019 12:15:47 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 13:15:46 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
+        Nageswara R Sastry <nasastry@in.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH] perf tools: Move precise_ip detection into perf_evsel__open
+Message-ID: <20190315121546.GB1400@krava>
+References: <20190305152536.21035-1-jolsa@kernel.org>
+ <20190305152536.21035-6-jolsa@kernel.org>
+ <20190305161319.GC17272@tassilo.jf.intel.com>
+ <20190305162854.GB4533@krava>
+ <20190305164017.GD17272@tassilo.jf.intel.com>
+ <20190307153500.GC29474@krava>
+ <20190307165123.GE7535@tassilo.jf.intel.com>
+ <20190314140124.GE4406@krava>
+ <20190314154911.GE24002@tassilo.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cbaafd35-a17d-8331-4cef-281a562b91b5@mathtm.de>
+In-Reply-To: <20190314154911.GE24002@tassilo.jf.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 15 Mar 2019 12:15:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 12:41:00PM +0100, Thomas Müller wrote:
-
-> > What .config do you have?
-> The one packaged by Fedora. I've attached the one for 4.20.15 as reference.
-
-Thanks, I'll have a poke, see what, if anything, is different from the
-kernels I ran.
-
-> > And what, if anything do you see on the
-> > console when it goes funny?
-> Nothing unfortunately.
-> When trying to suspend the display immediately goes blank, the system becomes unresponsive and the
-> status LED within the power button start flashing rapidly (just like it does when the power cord is
-> attached).
-> 
-> 
-> > I think you wrote that hot-un-plug never completes? Is there anything in
-> > dmesg when it's stuck in:
+On Thu, Mar 14, 2019 at 08:49:11AM -0700, Andi Kleen wrote:
+> > > Still seems like a hack. Even though I don't know of a case that
+> > > would break now. But it would be better to have the precise probing
+> > > in the open retry loop, instead of trying to reinvent it here.
 > > 
-> >   echo 0 > /sys/devices/system/cpu/cpu1/online
-> > 
-> > ?
-> I've just tried that again and the system immediately froze.
+> > how about something like below?
+> 
+> Yes looks reasonable.
 
-Hmm, I tought you said the system remained semi usable, just that reboot
-stopped working thereafter and it needed a power cycle.
+full patch attached,
 
-> `journalctl -f` was running in a second window but it had no chance to output anything... :/
+jirka
 
-Ah, you're using a GUI!
 
-Stop doing that ;-)
+---
+After discussion with Andi, moving the precise_ip detection
+for maximum precise config (via :P modifier or for default
+cycles event) into perf_evsel__open code.
 
-See if you can use the VGA console; not a FB console or a DRM console,
-but the real ancient, proper text mode, VGA console.
+The current detection code in perf_event_attr__set_max_precise_ip
+function is tricky, because precise_ip config is specific for
+given event and it currently checks only hw cycles.
 
-Now, don't ask me how to do that, because I don't know, I've been
-running on pure serial console output for the past 10 years or so, heck
-I don't even have systemd.
+We now check for valid precise_ip value right after failing
+sys_perf_event_open for specific event, before any of the
+perf_event_attr fallback code gets executed. This way we get
+the proper config in perf_event_attr together with allowed
+precise_ip settings.
 
-And you might have to do something like: dmesg -n8, to get the console
-to print the kernel messages or something.
+We can see that code activity with -vv, like:
+
+  $ perf record -vv ls
+  ...
+  ------------------------------------------------------------
+  perf_event_attr:
+    size                             112
+    { sample_period, sample_freq }   4000
+    ...
+    precise_ip                       3
+    sample_id_all                    1
+    exclude_guest                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 9926  cpu 0  group_fd -1  flags 0x8
+  sys_perf_event_open failed, error -95
+  decreasing precise_ip by one (2)
+  ------------------------------------------------------------
+  perf_event_attr:
+    size                             112
+    { sample_period, sample_freq }   4000
+    ...
+    precise_ip                       2
+    sample_id_all                    1
+    exclude_guest                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 9926  cpu 0  group_fd -1  flags 0x8 = 4
+  ...
+
+Suggested-by: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/n/tip-dkvxxbeg7lu74155d4jhlmc9@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/util/evlist.c | 29 ----------------
+ tools/perf/util/evlist.h |  2 --
+ tools/perf/util/evsel.c  | 72 ++++++++++++++++++++++++++++++++--------
+ 3 files changed, 59 insertions(+), 44 deletions(-)
+
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index ed20f4379956..3a243c249c29 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -230,35 +230,6 @@ void perf_evlist__set_leader(struct perf_evlist *evlist)
+ 	}
+ }
+ 
+-void perf_event_attr__set_max_precise_ip(struct perf_event_attr *pattr)
+-{
+-	struct perf_event_attr attr = {
+-		.type		= PERF_TYPE_HARDWARE,
+-		.config		= PERF_COUNT_HW_CPU_CYCLES,
+-		.exclude_kernel	= 1,
+-		.precise_ip	= 3,
+-	};
+-
+-	event_attr_init(&attr);
+-
+-	/*
+-	 * Unnamed union member, not supported as struct member named
+-	 * initializer in older compilers such as gcc 4.4.7
+-	 */
+-	attr.sample_period = 1;
+-
+-	while (attr.precise_ip != 0) {
+-		int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+-		if (fd != -1) {
+-			close(fd);
+-			break;
+-		}
+-		--attr.precise_ip;
+-	}
+-
+-	pattr->precise_ip = attr.precise_ip;
+-}
+-
+ int __perf_evlist__add_default(struct perf_evlist *evlist, bool precise)
+ {
+ 	struct perf_evsel *evsel = perf_evsel__new_cycles(precise);
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 744906dd4887..cb15e3366eba 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -303,8 +303,6 @@ void perf_evlist__to_front(struct perf_evlist *evlist,
+ void perf_evlist__set_tracking_event(struct perf_evlist *evlist,
+ 				     struct perf_evsel *tracking_evsel);
+ 
+-void perf_event_attr__set_max_precise_ip(struct perf_event_attr *attr);
+-
+ struct perf_evsel *
+ perf_evlist__find_evsel_by_str(struct perf_evlist *evlist, const char *str);
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 3bbf73e979c0..f606e8a81f0e 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -295,7 +295,6 @@ struct perf_evsel *perf_evsel__new_cycles(bool precise)
+ 	if (!precise)
+ 		goto new_event;
+ 
+-	perf_event_attr__set_max_precise_ip(&attr);
+ 	/*
+ 	 * Now let the usual logic to set up the perf_event_attr defaults
+ 	 * to kick in when we return and before perf_evsel__open() is called.
+@@ -305,6 +304,8 @@ struct perf_evsel *perf_evsel__new_cycles(bool precise)
+ 	if (evsel == NULL)
+ 		goto out;
+ 
++	evsel->precise_max = true;
++
+ 	/* use asprintf() because free(evsel) assumes name is allocated */
+ 	if (asprintf(&evsel->name, "cycles%s%s%.*s",
+ 		     (attr.precise_ip || attr.exclude_kernel) ? ":" : "",
+@@ -1083,7 +1084,7 @@ void perf_evsel__config(struct perf_evsel *evsel, struct record_opts *opts,
+ 	}
+ 
+ 	if (evsel->precise_max)
+-		perf_event_attr__set_max_precise_ip(attr);
++		attr->precise_ip = 3;
+ 
+ 	if (opts->all_user) {
+ 		attr->exclude_kernel = 1;
+@@ -1749,6 +1750,59 @@ static bool ignore_missing_thread(struct perf_evsel *evsel,
+ 	return true;
+ }
+ 
++static void display_attr(struct perf_event_attr *attr)
++{
++	if (verbose >= 2) {
++		fprintf(stderr, "%.60s\n", graph_dotted_line);
++		fprintf(stderr, "perf_event_attr:\n");
++		perf_event_attr__fprintf(stderr, attr, __open_attr__fprintf, NULL);
++		fprintf(stderr, "%.60s\n", graph_dotted_line);
++	}
++}
++
++static int perf_event_open(struct perf_evsel *evsel,
++			   pid_t pid, int cpu, int group_fd,
++			   unsigned long flags)
++{
++	int precise_ip = evsel->attr.precise_ip;
++	int fd;
++
++	while (1) {
++		pr_debug2("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
++			  pid, cpu, group_fd, flags);
++
++		fd = sys_perf_event_open(&evsel->attr, pid, cpu, group_fd, flags);
++		if (fd >= 0)
++			break;
++
++		/*
++		 * Do quick precise_ip fallback if:
++		 *  - there is precise_ip set in perf_event_attr
++		 *  - maximum precise is requested
++		 *  - sys_perf_event_open failed with ENOTSUP error,
++		 *    which is associated with wrong precise_ip
++		 */
++		if (!precise_ip || !evsel->precise_max || (errno != ENOTSUP))
++			break;
++
++		/*
++		 * We tried all the precise_ip values, and it's
++		 * still failing, so leave it to standard fallback.
++		 */
++		if (!evsel->attr.precise_ip) {
++			evsel->attr.precise_ip = precise_ip;
++			break;
++		}
++
++		pr_debug2("\nsys_perf_event_open failed, error %d\n", -ENOTSUP);
++		evsel->attr.precise_ip--;
++		pr_debug2("decreasing precise_ip by one (%d)\n", evsel->attr.precise_ip);
++		display_attr(&evsel->attr);
++	}
++
++	return fd;
++}
++
+ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
+ 		     struct thread_map *threads)
+ {
+@@ -1824,12 +1878,7 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
+ 	if (perf_missing_features.sample_id_all)
+ 		evsel->attr.sample_id_all = 0;
+ 
+-	if (verbose >= 2) {
+-		fprintf(stderr, "%.60s\n", graph_dotted_line);
+-		fprintf(stderr, "perf_event_attr:\n");
+-		perf_event_attr__fprintf(stderr, &evsel->attr, __open_attr__fprintf, NULL);
+-		fprintf(stderr, "%.60s\n", graph_dotted_line);
+-	}
++	display_attr(&evsel->attr);
+ 
+ 	for (cpu = 0; cpu < cpus->nr; cpu++) {
+ 
+@@ -1841,13 +1890,10 @@ int perf_evsel__open(struct perf_evsel *evsel, struct cpu_map *cpus,
+ 
+ 			group_fd = get_group_fd(evsel, cpu, thread);
+ retry_open:
+-			pr_debug2("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
+-				  pid, cpus->map[cpu], group_fd, flags);
+-
+ 			test_attr__ready();
+ 
+-			fd = sys_perf_event_open(&evsel->attr, pid, cpus->map[cpu],
+-						 group_fd, flags);
++			fd = perf_event_open(evsel, pid, cpus->map[cpu],
++					     group_fd, flags);
+ 
+ 			FD(evsel, cpu, thread) = fd;
+ 
+-- 
+2.17.2
 
