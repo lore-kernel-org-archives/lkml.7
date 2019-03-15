@@ -2,86 +2,198 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383FDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B928CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012F8218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:01:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bddu/U8W"
+	by mail.kernel.org (Postfix) with ESMTP id 880E2218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbfCOIBZ (ORCPT
+        id S1728533AbfCOICM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 04:01:25 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38166 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728428AbfCOIBY (ORCPT
+        Fri, 15 Mar 2019 04:02:12 -0400
+Received: from lgeamrelo13.lge.com ([156.147.23.53]:38949 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728428AbfCOICL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 04:01:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sOd1YPPJQcxyiI72hmu+RbcgIfVsjyy4EFW10+SkYSA=; b=bddu/U8Wr0rdAPVNr4IT3eK81
-        1gPfx229RiXe93Xkg9tgOdOl3Yo09dMCrHi2F/IV+vR+XhMF4UPPhZfiAENdswEsKCzTFPlleYLX7
-        uDug1Qf2dX8vH7aQKBVgiwhrGOPDq8naeiO53WBopaWc6L1MGvPp/r2vwtnQQRA75YhQImMj3sy26
-        3k3dwWN+cqwayfZbOSzH5HGpIt+ERwp5nVfo0ffbzUTJfV+z9nuiOCdxMeWLtWKiHKWs4a0mglIVl
-        XY+c6AORs01s3Rp2dk3CiRJ9xSHg1iLN3GlNDJH16H6FwrwKi1K03mf/5WWlKxX8qfjw9hpiX5vFZ
-        4X6Qpag+g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4hmB-00049x-QD; Fri, 15 Mar 2019 08:01:12 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6D48221419E59; Fri, 15 Mar 2019 09:01:09 +0100 (CET)
-Date:   Fri, 15 Mar 2019 09:01:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
-Subject: Re: [RFC][PATCH 0/8] perf/x86: event scheduling cleanups
-Message-ID: <20190315080109.GQ5996@hirez.programming.kicks-ass.net>
-References: <20190314130113.919278615@infradead.org>
- <CABPqkBT9_ayhH2puPtLiemtM=VOXxNhC4AXrKkOaDMatWifLxQ@mail.gmail.com>
- <CABPqkBRkPQewqJQsNtEESd9Jo2qd8iVG7KDzbQRK_Lg_21p-bA@mail.gmail.com>
+        Fri, 15 Mar 2019 04:02:11 -0400
+Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
+        by 156.147.23.53 with ESMTP; 15 Mar 2019 16:32:07 +0900
+X-Original-SENDERIP: 156.147.1.126
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.126 with ESMTP; 15 Mar 2019 16:32:07 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Fri, 15 Mar 2019 16:31:38 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        rostedt@goodmis.org, luto@kernel.org, kernel-team@lge.com
+Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
+ half-interrupts
+Message-ID: <20190315073138.GB15148@X58A-UD3R>
+References: <20180829222021.GA29944@linux.vnet.ibm.com>
+ <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
+ <20190311133939.GA29747@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABPqkBRkPQewqJQsNtEESd9Jo2qd8iVG7KDzbQRK_Lg_21p-bA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190311133939.GA29747@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 12:15:55AM -0700, Stephane Eranian wrote:
-> On Fri, Mar 15, 2019 at 12:15 AM Stephane Eranian <eranian@google.com> wrote:
-> >
-> > On Thu, Mar 14, 2019 at 6:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > These here patches are the result of chasing a bug in the TSX Force Abort
-> > > patches.
-> > >
-> > > The first patch is simple and fixes the issue and should be marked /urgent and
-> > > backported.
-> > >
-> > > The rest is the result of having a hard look at how all that event scheduling
-> > > stuff worked while trying to figure out wth was going wrong.
-> > >
-> > > Stephane, since you were involved with writing much of that code, can you
-> > > please have a good look? I _think_ I got it, but... :-)
-> > >
-> > Will do today.
-> > But you did not send me PATCH 1/8 apparently.
+On Mon, Mar 11, 2019 at 09:39:39AM -0400, Joel Fernandes wrote:
+> On Wed, Aug 29, 2018 at 03:20:34PM -0700, Paul E. McKenney wrote:
+> > RCU's dyntick-idle code is written to tolerate half-interrupts, that it,
+> > either an interrupt that invokes rcu_irq_enter() but never invokes the
+> > corresponding rcu_irq_exit() on the one hand, or an interrupt that never
+> > invokes rcu_irq_enter() but does invoke the "corresponding" rcu_irq_exit()
+> > on the other.  These things really did happen at one time, as evidenced
+> > by this ca-2011 LKML post:
+> > 
+> > http://lkml.kernel.org/r/20111014170019.GE2428@linux.vnet.ibm.com
+> > 
+> > The reason why RCU tolerates half-interrupts is that usermode helpers
+> > used exceptions to invoke a system call from within the kernel such that
+> > the system call did a normal return (not a return from exception) to
+> > the calling context.  This caused rcu_irq_enter() to be invoked without
+> > a matching rcu_irq_exit().  However, usermode helpers have since been
+> > rewritten to make much more housebroken use of workqueues, kernel threads,
+> > and do_execve(), and therefore should no longer produce half-interrupts.
+> > No one knows of any other source of half-interrupts, but then again,
+> > no one seems insane enough to go audit the entire kernel to verify that
+> > half-interrupts really are a relic of the past.
+> > 
+> > This commit therefore adds a pair of WARN_ON_ONCE() calls that will
+> > trigger in the presence of half interrupts, which the code will continue
+> > to handle correctly.  If neither of these WARN_ON_ONCE() trigger by
+> > mid-2021, then perhaps RCU can stop handling half-interrupts, which
+> > would be a considerable simplification.
 > 
-> Correction : I got it. Mail client had just moved it somewhere else!
+> Hi Paul and everyone,
+> I was thinking some more about this patch and whether we can simplify this code
+> much in 2021. Since 2021 is a bit far away, I thought working on it in again to
+> keep it fresh in memory is a good idea ;-)
+> 
+> To me it seems we cannot easily combine the counters (dynticks_nesting and
+> dynticks_nmi_nesting) even if we confirmed that there is no possibility of a
+> half-interrupt scenario (assuming simplication means counter combining like
+> Byungchul tried to do in https://goo.gl/X1U77X). The reason is because these
+> 2 counters need to be tracked separately as they are used differently in the
+> following function:
 
-Also please look at all 8, I'm reasonably sure 1/8 is correct, but it is
-rather more ugly than I'd wish. So the remaining 7 clean it all up (and
-effectively revert 1 again) but are much more invasive.
+Hi Joel and Paul,
+
+I always love the way to logically approach problems so I'm a fan of
+all your works :) But I'm JUST curious about something here. Why can't
+we combine them the way I tried even if we confirm no possibility of
+half-interrupt? IMHO, the only thing we want to know through calling
+rcu_is_cpu_rrupt_from_idle() is whether the interrupt comes from
+RCU-idle or not - of course assuming the caller context always be an
+well-defined interrupt context like e.g. the tick handler.
+
+So the function can return true if the caller is within a RCU-idle
+region except a well-known single interrupt nested.
+
+Of course, now that we cannot confirm it yet, the crowbar is necessary.
+But does it still have a problem even after confirming it? Why? What am
+I missing? Could you explain why for me? :(
+
+Thanks,
+Byungchul
+
+> static int rcu_is_cpu_rrupt_from_idle(void)
+> {
+>         return __this_cpu_read(rcu_data.dynticks_nesting) <= 0 &&
+>                __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
+> }
+> 
+> dynticks_nesting actually tracks if we entered/exited idle or user mode.
+> 
+> dynticks_nmi_nesting tracks if we entered/exited interrupts.
+> 
+> We have to do the "dynticks_nmi_nesting <= 1" check because
+> rcu_is_cpu_rrupt_from_idle() can possibly be called from an interrupt itself
+> (like timer) so we discount 1 interrupt, and, the "dynticks_nesting <= 0"
+> check is because the CPU MUST be in user or idle for the check to return
+> true. We can't really combine these two into one counter then I think because
+> they both convey different messages.
+> 
+> The only simplication we can do, is probably the "crowbar" updates to
+> dynticks_nmi_nesting can be removed from rcu_eqs_enter/exit once we confirm
+> no more half-interrupts are possible. Which might still be a worthwhile thing
+> to do (while still keeping both counters separate).
+> 
+> However, I think we could combine the counters and lead to simplying the code
+> in case we implement rcu_is_cpu_rrupt_from_idle differently such that it does
+> not need the counters but NOHZ_FULL may take issue with that since it needs
+> rcu_user_enter->rcu_eqs_enter to convey that the CPU is "RCU"-idle.
+> 
+> Actually, I had another question... rcu_user_enter() is a NOOP in !NOHZ_FULL config.
+> In this case I was wondering if the the warning Paul added (in the patch I'm replying to)
+> will really get fired for half-interrupts. The vast majority of the systems I believe are
+> NOHZ_IDLE not NOHZ_FULL.
+> This is what a half-interrupt really looks like right? Please correct me if I'm wrong:
+> rcu_irq_enter()   [half interrupt causes an exception and thus rcu_irq_enter]
+> rcu_user_enter()  [due to usermode upcall]
+> rcu_user_exit()
+> (no more rcu_irq_exit() - hence half an interrupt)
+> 
+> But the rcu_user_enter()/exit is a NOOP in some configs, so will the warning in
+> rcu_eqs_e{xit,nter} really do anything?
+> 
+> Or was the idea with adding the new warnings, that they would fire the next
+> time rcu_idle_enter/exit is called? Like for example:
+> 
+> rcu_irq_enter()   [This is due to half-interrupt]
+> rcu_idle_enter()  [Eventually we enter the idle loop at some point
+> 		   after the half-interrupt and the rcu_eqs_enter()
+> 		   would "crowbar" the dynticks_nmi_nesting counter to 0].
+> 
+> thanks!
+> 
+>  - Joel
+> 
+> > 
+> > Reported-by: Steven Rostedt <rostedt@goodmis.org>
+> > Reported-by: Joel Fernandes <joel@joelfernandes.org>
+> > Reported-by: Andy Lutomirski <luto@kernel.org>
+> > Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  kernel/rcu/tree.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index dc041c2afbcc..d2b6ade692c9 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -714,6 +714,7 @@ static void rcu_eqs_enter(bool user)
+> >  	struct rcu_dynticks *rdtp;
+> >  
+> >  	rdtp = this_cpu_ptr(&rcu_dynticks);
+> > +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting != DYNTICK_IRQ_NONIDLE);
+> >  	WRITE_ONCE(rdtp->dynticks_nmi_nesting, 0);
+> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+> >  		     rdtp->dynticks_nesting == 0);
+> > @@ -895,6 +896,7 @@ static void rcu_eqs_exit(bool user)
+> >  	trace_rcu_dyntick(TPS("End"), rdtp->dynticks_nesting, 1, rdtp->dynticks);
+> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+> >  	WRITE_ONCE(rdtp->dynticks_nesting, 1);
+> > +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting);
+> >  	WRITE_ONCE(rdtp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
+> >  }
+> >  
+> > -- 
+> > 2.17.1
+> > 
