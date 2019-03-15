@@ -2,125 +2,184 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C41C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6BAC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4EB7218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:13:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c6935lM6"
+	by mail.kernel.org (Postfix) with ESMTP id 8E72A218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:14:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfCOUNZ (ORCPT
+        id S1726782AbfCOUOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 16:13:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51291 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfCOUNZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 16:13:25 -0400
-Received: by mail-wm1-f68.google.com with SMTP id n19so7704113wmi.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 13:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UFMdBRsGAu44JgGIkSUfbrU9EwKu+fv2CxmBbUPq/5k=;
-        b=c6935lM6XELJ+DVpw2Q5TZoexKSNVTnmA58DWVT40XM55BgdkKxexjMuw6xgbGC5jY
-         OsdFpuJAZMgojhoH8/teTFX7BDmL6z9WmQJAhIJmU63UzdBoLeou+NAnLsBYezeoOQhk
-         A6M68yE+pUo3oE9uaZ66d/MSwyhfa7qV2/JJ+NZtr4rJnuzWEP3faGJeIVnhx6BWeKWH
-         lAQMKqNAula9/t6TdRlW837AqbcusZ4apMc7HdyE3YeckhtConR5EBBvKlvLoN9h5GS3
-         ss3j+xedrdwo+318q52MSPxjOGh+xvGe9mf8VsU5dq+WB3fxJ+kCJNqE0dbN3qdbnYKf
-         1YFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UFMdBRsGAu44JgGIkSUfbrU9EwKu+fv2CxmBbUPq/5k=;
-        b=XqYPJLixbbZB0JHFumq5QIrLxwJk1bszkotCbtxupWVXx/yV325juUaG5GX6m7uh8i
-         f7qcVUQvcTY06V4d3rF03XRkF74Q+1BpdRT2inN71b8+m+Ic3+5RY3V3sn1oB9BmCvyE
-         Ql6VOc3CZWIV3609YfXAvWTeH/P8iGFKT/4dS2cCp0OvyDqQui5f5GBOQhHvoFqBY/US
-         HWBhr+xAQfknYrrDBtBO3S/aCm+rF1RJEm9xtEsklvWVJNRdkDkduVs26bPFSvQi3Qts
-         rHxvsLbhQZMFEEJ1U9gbO9WGCsFHarQnIocGwnV98zS1dkM7/1Qjd0VQchsbnOaaiOW3
-         iXwA==
-X-Gm-Message-State: APjAAAWGvzfiGpOFnpwP05JbCC6EaOzkkjGQe6Q+SEyobcnoNwqvKwfM
-        5alo1lW5hk5WBRBgETnFeInoKj33NuSOBbgk9ad3YA==
-X-Google-Smtp-Source: APXvYqxPoLg8H/w9V6sXkdXrPdPwoiA0ZVu7A3rzwdDMrlqLSfStQQBq0u73fFKG8WEr5HL7os26xomhjJQW2RBatBs=
-X-Received: by 2002:a1c:c90e:: with SMTP id f14mr3112656wmb.23.1552680803684;
- Fri, 15 Mar 2019 13:13:23 -0700 (PDT)
+        Fri, 15 Mar 2019 16:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbfCOUOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 16:14:20 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC34021871;
+        Fri, 15 Mar 2019 20:14:15 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 16:14:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v11 10/14] tracing, arm64: untag user pointers in
+ seq_print_user_ip
+Message-ID: <20190315161414.4b31fb03@gandalf.local.home>
+In-Reply-To: <355e7c0dadaa2bb79d22e0b7aac7e4efc1114d49.1552679409.git.andreyknvl@google.com>
+References: <cover.1552679409.git.andreyknvl@google.com>
+        <355e7c0dadaa2bb79d22e0b7aac7e4efc1114d49.1552679409.git.andreyknvl@google.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
- <1551819273-640-6-git-send-email-john.stultz@linaro.org> <CA+M3ks6AUmmYbXscjTRo+Vr-6cV8okafsDn2Tg3tskvzrV_dbA@mail.gmail.com>
- <CALAqxLWxpExDpiKbNGQ6Oz5h=FUPNLvehm34JdrntLQjFed41w@mail.gmail.com> <232410de-f20c-cde8-fdbb-48ca8ec1223b@redhat.com>
-In-Reply-To: <232410de-f20c-cde8-fdbb-48ca8ec1223b@redhat.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 15 Mar 2019 13:13:08 -0700
-Message-ID: <CALAqxLUjSZHBXsT0c-KTra4zLFxCYDmYHTJswk5OckrUbd=ykg@mail.gmail.com>
-Subject: Re: [RFC][PATCH 5/5 v2] kselftests: Add dma-heap test
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 1:07 PM Laura Abbott <labbott@redhat.com> wrote:
->
-> On 3/6/19 9:01 AM, John Stultz wrote:
-> > On Wed, Mar 6, 2019 at 8:14 AM Benjamin Gaignard
-> > <benjamin.gaignard@linaro.org> wrote:
-> >> Le mar. 5 mars 2019 =C3=A0 21:54, John Stultz <john.stultz@linaro.org>=
- a =C3=A9crit :
-> >>> +
-> >>> +       printf("Allocating 1 MEG\n");
-> >>> +       ret =3D dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
-> >>> +       if (ret)
-> >>> +               goto out;
-> >>> +
-> >>> +       /* DO SOMETHING WITH THE DMABUF HERE? */
-> >>
-> >> You can do a call to mmap and write a pattern in the buffer.
-> >
-> > Yea. I can also do some invalid allocations to make sure things fail pr=
-operly.
-> >
-> > But I was talking a bit w/ Sumit about the lack of any general dmabuf
-> > tests, and am curious if we need to have a importer device driver that
-> > can validate its a real dmabuf and exercise more of the dmabuf ops.
-> >
-> > thanks
-> > -john
-> >
->
-> There's the vgem driver in drm. I did some work to clean that
-> up so it could take an import af33a9190d02 ("drm/vgem: Enable dmabuf impo=
-rt
-> interfaces") . I mostly used it for private tests and never ended
-> up upstreaming any of the tests.
+On Fri, 15 Mar 2019 20:51:34 +0100
+Andrey Konovalov <andreyknvl@google.com> wrote:
 
-Thanks for the poitner, I'll check that out as well!  Also, if you
-still have them around, I'd be interested in checking out the tests to
-try to get something integrated into kselftest.
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
+> 
+> seq_print_user_ip() uses provided user pointers for vma lookups, which
+> can only by done with untagged pointers.
+> 
+> Untag user pointers in this function.
+> 
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  kernel/trace/trace_output.c |  5 +++--
+>  p                           | 45 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 48 insertions(+), 2 deletions(-)
+>  create mode 100644 p
+> 
+> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> index 54373d93e251..6376bee93c84 100644
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -370,6 +370,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
+>  {
+>  	struct file *file = NULL;
+>  	unsigned long vmstart = 0;
+> +	unsigned long untagged_ip = untagged_addr(ip);
+>  	int ret = 1;
+>  
+>  	if (s->full)
+> @@ -379,7 +380,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
+>  		const struct vm_area_struct *vma;
+>  
+>  		down_read(&mm->mmap_sem);
+> -		vma = find_vma(mm, ip);
+> +		vma = find_vma(mm, untagged_ip);
+>  		if (vma) {
+>  			file = vma->vm_file;
+>  			vmstart = vma->vm_start;
+> @@ -388,7 +389,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
+>  			ret = trace_seq_path(s, &file->f_path);
+>  			if (ret)
+>  				trace_seq_printf(s, "[+0x%lx]",
+> -						 ip - vmstart);
+> +						 untagged_ip - vmstart);
+>  		}
+>  		up_read(&mm->mmap_sem);
+>  	}
+> diff --git a/p b/p
+> new file mode 100644
+> index 000000000000..9d6fa5386e55
+> --- /dev/null
+> +++ b/p
+> @@ -0,0 +1,45 @@
+> +commit 1fa6fadf644859e8a6a8ecce258444b49be8c7ee
+> +Author: Andrey Konovalov <andreyknvl@google.com>
+> +Date:   Mon Mar 4 17:20:32 2019 +0100
+> +
+> +    kasan: fix coccinelle warnings in kasan_p*_table
+> +    
+> +    kasan_p4d_table, kasan_pmd_table and kasan_pud_table are declared as
+> +    returning bool, but return 0 instead of false, which produces a coccinelle
+> +    warning. Fix it.
+> +    
+> +    Fixes: 0207df4fa1a8 ("kernel/memremap, kasan: make ZONE_DEVICE with work with KASAN")
+> +    Reported-by: kbuild test robot <lkp@intel.com>
+> +    Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-Talking with Brian yesterday, there was some thought that we should
-try to put together some sort of example dmabuf pipeline that isn't
-hardware dependent and can be used to demonstrate the usage model as
-well as validate the frameworks and maybe even benchmark some of the
-ideas floating around right now.  So suggestions here would be
-welcome!
+Did you mean to append this commit to this patch?
 
-thanks
--john
+-- Steve
+
+> +
+> +diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+> +index 45a1b5e38e1e..fcaa1ca03175 100644
+> +--- a/mm/kasan/init.c
+> ++++ b/mm/kasan/init.c
+> +@@ -42,7 +42,7 @@ static inline bool kasan_p4d_table(pgd_t pgd)
+> + #else
+> + static inline bool kasan_p4d_table(pgd_t pgd)
+> + {
+> +-	return 0;
+> ++	return false;
+> + }
+> + #endif
+> + #if CONFIG_PGTABLE_LEVELS > 3
+> +@@ -54,7 +54,7 @@ static inline bool kasan_pud_table(p4d_t p4d)
+> + #else
+> + static inline bool kasan_pud_table(p4d_t p4d)
+> + {
+> +-	return 0;
+> ++	return false;
+> + }
+> + #endif
+> + #if CONFIG_PGTABLE_LEVELS > 2
+> +@@ -66,7 +66,7 @@ static inline bool kasan_pmd_table(pud_t pud)
+> + #else
+> + static inline bool kasan_pmd_table(pud_t pud)
+> + {
+> +-	return 0;
+> ++	return false;
+> + }
+> + #endif
+> + pte_t kasan_early_shadow_pte[PTRS_PER_PTE] __page_aligned_bss;
+
