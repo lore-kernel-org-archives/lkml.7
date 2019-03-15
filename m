@@ -2,661 +2,204 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9B4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17CFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B22521871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08DC21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:39:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fvoQqhEE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQV2256f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfCOHh5 (ORCPT
+        id S1728481AbfCOHjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 03:37:57 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33761 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727250AbfCOHh5 (ORCPT
+        Fri, 15 Mar 2019 03:39:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54887 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727250AbfCOHjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 03:37:57 -0400
-Received: by mail-qk1-f195.google.com with SMTP id x9so4952168qkf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 00:37:55 -0700 (PDT)
+        Fri, 15 Mar 2019 03:39:12 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f3so5518964wmj.4;
+        Fri, 15 Mar 2019 00:39:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Viqh9gWb0NDRNVy4CqnrQYTzIxHcpz+MPSguSCN0M8w=;
-        b=fvoQqhEEvBblE/Z3icEw3/JXIhOuRS3Le4nqW0bzkc5/CTmEoUq8CvAAuED+aE0V8i
-         aT4pTmmNX9WciKZmP1v1RoKpueWL8QkPguN3UOW/b0LSg0oi1DWcs+6eSgts7+csYFhc
-         WiElJkyPqYylYs86bo7uYup4cm3goiQEzcuIffsGMrx7eZVQ6fsbnIf00adMIfl8VLiY
-         e72DczY4xnnPTRauPVndp6qXi01P311FHZtnHmgrB+mxJFm5pFuAREH2tiisJzJsHBzQ
-         SwbEK4nuqNxiOHQlwHjX+nvGKZxggnWrWMLPQOQLP9hY4nZ8h04FZzgIItL9D5EZHMxy
-         ro6g==
+        bh=uBnsEB8fQEwmX5mAXjVYG/BTzPtYnT59fFOQv8ZKXMI=;
+        b=VQV2256fvo0EYTzZ8cqo3Rw0RufJaZGgkhWtTlSM8iLyDpVeeeIZxW7s4KcC4R8HKA
+         0QD6oC36Zsu7vXPHjrCpLKx/d5c+i9yDmG36JroRfGI1YMp4escY0e/eD4JxSJFC2xBs
+         DqX1bQ9pr53nQ+84OJX1RUsvOnl9rgHPh9wFYQUitj4dWNj05kDEhQ+dXX8KUj3o8ZMt
+         cEQln+tFo/Y6h7nQJUxZDikSRKQE01Z1a+X1UjSn0w8H6BlxEXfwvZmzsm5nuMVoKCwR
+         Pe+rzodte6sQTbscF5/4Pv2s+xLwwPIyzO2pLdzjqYeGQKVxHwG+PYiFnjN8SBUK95Py
+         wAlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Viqh9gWb0NDRNVy4CqnrQYTzIxHcpz+MPSguSCN0M8w=;
-        b=BwgsmeJILxIfFWobLcgia9IHFEJuJhcQDl+Lu6sDTiYJn1IYAUxMninfs4bU6HCAuu
-         g9WQJMrwueBeUwTtEhlxVEQEUNPiOoGP8UCGNGqisFnWNdOhu8dveP1iBeevUpcUGLsw
-         B2Qy/jkeVXP3FqsB/rhnr7dEeyNBEGjOWGs/k3z/r8f160ZD1oo2vQzoRsZKXcJOZFSn
-         Y/Y9rZzXngdSXWKrWWpeRQu/gK6KNO8sNZ/8xM/uULlwnGTaRNR7quAWt8ij+STqSoyK
-         FBa/urN5nMQ9iybF/AnOyHjNI/ZWUodMGXb/2WByzFxFBOWVRVrLdvoGO6W+bmPLX6Z1
-         yquQ==
-X-Gm-Message-State: APjAAAV1e+j4KPo/l3fWo1zgvkSiNbcwAJJUpa0exk8pJKm13+W62bBH
-        fCsgp0IQ906rSLLYsYxbBqf15nJ8zzC1+rT+KQxHKQ==
-X-Google-Smtp-Source: APXvYqw53rcZpd+yY+mXw3aUqc9Rk73FI04NNpcU1xjwtGMAtqNHo2cema7LaH5prt5AwPeh/TPTySRJWreH/wNK490=
-X-Received: by 2002:a05:620a:109b:: with SMTP id g27mr1750653qkk.128.1552635470956;
- Fri, 15 Mar 2019 00:37:50 -0700 (PDT)
+        bh=uBnsEB8fQEwmX5mAXjVYG/BTzPtYnT59fFOQv8ZKXMI=;
+        b=rwAbuzOQq3Q4Fu9tyMsEGoV7nfLgiyWJzSXEWMMSfk8M6SgT5I1vNS+vEYhHjcs2Fz
+         JwvOOx5B8jfAf5g/ZODkKFT5HK8c9jsHwzrUA5TephRAh7czMDVww9KwQMzGhBbdSuCt
+         IGezWFZXllDiBZyCdSjleOnlmMQoyHDYadUQhKgPo0lSnDZBqm0m8xg0MLQSntVkt3gJ
+         6Z5SCrzbX3FBvoepta11dg5TV4Eb6ka4l814/hFYCWuaVKFXMLM8aEHbyrQpCPTnKxtm
+         t0caIj0gnQpnf+6KiXqoBmxYYq98PMQO1cnV5DtSvj8qTFhzkwoR1XdHAcxEpUwZkyhc
+         yGMw==
+X-Gm-Message-State: APjAAAVbBT72V/QwQLS7rFoPMHOfS6L01QG8Yedz8UIKGDdL9MtuNmx3
+        y1XwfmsiOA3Ck/4elD+EKyd+90ET9fTJ5NFzDlQ=
+X-Google-Smtp-Source: APXvYqyHBecAQjfOLclHd2vynb+gtIILgnDPR1Vh1AUu9kdpbzENl4fwMe1QPJCpyxTwpTG/4Lb6sTCZJyxPah00VZw=
+X-Received: by 2002:a1c:2c4:: with SMTP id 187mr1012812wmc.77.1552635549805;
+ Fri, 15 Mar 2019 00:39:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1552275991-34648-6-git-send-email-hsin-hsiung.wang@mediatek.com> <CANMq1KCg9Bm3OQpvfNw5ZiYfzApri_+Byatrtsf8O42W+ZYiXg@mail.gmail.com>
-In-Reply-To: <CANMq1KCg9Bm3OQpvfNw5ZiYfzApri_+Byatrtsf8O42W+ZYiXg@mail.gmail.com>
-From:   Claire Chang <tientzu@google.com>
-Date:   Fri, 15 Mar 2019 15:37:39 +0800
-Message-ID: <CALiNf2_WAb1Y6_oBkRhaQSVr1xr=4UA5jRZMxAhM83USmJsK+w@mail.gmail.com>
-Subject: Re: [PATCH v2 5/9] mfd: Add support for the MediaTek MT6358 PMIC
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        tientzu@chromium.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, linux-rtc@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
+References: <0000000000000e839b0584143c8c@google.com>
+In-Reply-To: <0000000000000e839b0584143c8c@google.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Fri, 15 Mar 2019 15:38:18 +0800
+Message-ID: <CADvbK_e=qrt4K3QjeWDfDSbsNRjogtzqMeoYcfVtX8fQkK+f3Q@mail.gmail.com>
+Subject: Re: general protection fault in sctp_sched_dequeue_common (2)
+To:     syzbot <syzbot+3d357cc384ddccdc2fff@syzkaller.appspotmail.com>
+Cc:     davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
+        linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        network dev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlad Yasevich <vyasevich@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 3:10 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+I think this commit has fixed it:
+
+commit 2e990dfd13974d9eae493006f42ffb48707970ef
+Author: Xin Long <lucien.xin@gmail.com>
+Date:   Fri Mar 8 15:49:16 2019 +0800
+
+    sctp: remove sched init from sctp_stream_init
+
+On Fri, Mar 15, 2019 at 5:02 AM syzbot
+<syzbot+3d357cc384ddccdc2fff@syzkaller.appspotmail.com> wrote:
 >
-> +Claire Chang who found some issue with this patch.
+> Hello,
 >
-> On Mon, Mar 11, 2019 at 11:48 AM Hsin-Hsiung Wang
-> <hsin-hsiung.wang@mediatek.com> wrote:
-> >
-> > This adds support for the MediaTek MT6358 PMIC. This is a
-> > multifunction device with the following sub modules:
-> >
-> > - Regulator
-> > - RTC
-> > - Codec
-> > - Interrupt
-> >
-> > It is interfaced to the host controller using SPI interface
-> > by a proprietary hardware called PMIC wrapper or pwrap.
-> > MT6358 MFD is a child device of the pwrap.
-> >
-> > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > ---
-> >  drivers/mfd/Makefile                 |    2 +-
-> >  drivers/mfd/mt6358-irq.c             |  236 +++++
-> >  drivers/mfd/mt6397-core.c            |   63 +-
-> >  include/linux/mfd/mt6358/core.h      |  158 +++
-> >  include/linux/mfd/mt6358/registers.h | 1926 ++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/mt6397/core.h      |    3 +
-> >  6 files changed, 2386 insertions(+), 2 deletions(-)
-> >  create mode 100644 drivers/mfd/mt6358-irq.c
-> >  create mode 100644 include/linux/mfd/mt6358/core.h
-> >  create mode 100644 include/linux/mfd/mt6358/registers.h
-> >
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index 088e249..50be021 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -230,7 +230,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
-> >  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
-> >  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
-> >  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
-> > -obj-$(CONFIG_MFD_MT6397)       += mt6397-core.o mt6397-irq.o
-> > +obj-$(CONFIG_MFD_MT6397)       += mt6397-core.o mt6397-irq.o mt6358-irq.o
-> >
-> >  obj-$(CONFIG_MFD_ALTERA_A10SR) += altera-a10sr.o
-> >  obj-$(CONFIG_MFD_SUN4I_GPADC)  += sun4i-gpadc.o
-> > diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> > new file mode 100644
-> > index 0000000..2941d87
-> > --- /dev/null
-> > +++ b/drivers/mfd/mt6358-irq.c
-> > @@ -0,0 +1,236 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +//
-> > +// Copyright (c) 2019 MediaTek Inc.
-> > +
-> > +#include <linux/interrupt.h>
-> > +#include <linux/mfd/mt6358/core.h>
-> > +#include <linux/mfd/mt6358/registers.h>
-> > +#include <linux/mfd/mt6397/core.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +static struct irq_top_t mt6358_ints[] = {
-> > +       MT6358_TOP_GEN(BUCK),
-> > +       MT6358_TOP_GEN(LDO),
-> > +       MT6358_TOP_GEN(PSC),
-> > +       MT6358_TOP_GEN(SCK),
-> > +       MT6358_TOP_GEN(BM),
-> > +       MT6358_TOP_GEN(HK),
-> > +       MT6358_TOP_GEN(AUD),
-> > +       MT6358_TOP_GEN(MISC),
-> > +};
-> > +
-> > +static int parsing_hwirq_to_top_group(unsigned int hwirq)
-> > +{
-> > +       int top_group;
-> > +
-> > +       for (top_group = 1; top_group < ARRAY_SIZE(mt6358_ints); top_group++) {
-> > +               if (mt6358_ints[top_group].hwirq_base > hwirq) {
-> > +                       top_group--;
-> > +                       break;
-> > +               }
-> > +       }
-> > +       return top_group;
-> > +}
-> > +
-> > +static void pmic_irq_enable(struct irq_data *data)
-> > +{
-> > +       unsigned int hwirq = irqd_to_hwirq(data);
-> > +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> > +       struct pmic_irq_data *irqd = chip->irq_data;
-> > +
-> > +       irqd->enable_hwirq[hwirq] = true;
-> > +}
-> > +
-> > +static void pmic_irq_disable(struct irq_data *data)
-> > +{
-> > +       unsigned int hwirq = irqd_to_hwirq(data);
-> > +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> > +       struct pmic_irq_data *irqd = chip->irq_data;
-> > +
-> > +       irqd->enable_hwirq[hwirq] = false;
-> > +}
-> > +
-> > +static void pmic_irq_lock(struct irq_data *data)
-> > +{
-> > +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> > +
-> > +       mutex_lock(&chip->irqlock);
-> > +}
-> > +
-> > +static void pmic_irq_sync_unlock(struct irq_data *data)
-> > +{
-> > +       unsigned int i, top_gp, en_reg, int_regs, shift;
-> > +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> > +       struct pmic_irq_data *irqd = chip->irq_data;
-> > +
-> > +       for (i = 0; i < irqd->num_pmic_irqs; i++) {
-> > +               if (irqd->enable_hwirq[i] ==
-> > +                               irqd->cache_hwirq[i])
-> > +                       continue;
-> > +
-> > +               top_gp = parsing_hwirq_to_top_group(i);
-> > +               int_regs = mt6358_ints[top_gp].num_int_bits / MT6358_REG_WIDTH;
-> > +               en_reg = mt6358_ints[top_gp].en_reg +
-> > +                       mt6358_ints[top_gp].en_reg_shift * int_regs;
-> > +               shift = (i - mt6358_ints[top_gp].hwirq_base) % MT6358_REG_WIDTH;
-> > +               regmap_update_bits(chip->regmap, en_reg, BIT(shift),
-> > +                                  irqd->enable_hwirq[i] << shift);
-> > +               irqd->cache_hwirq[i] = irqd->enable_hwirq[i];
-> > +       }
-> > +       mutex_unlock(&chip->irqlock);
-> > +}
-> > +
-> > +static int pmic_irq_set_type(struct irq_data *data, unsigned int type)
-> > +{
-> > +       return 0;
-> > +}
-> > +
-> > +static struct irq_chip mt6358_irq_chip = {
-> > +       .name = "mt6358-irq",
-> > +       .irq_enable = pmic_irq_enable,
-> > +       .irq_disable = pmic_irq_disable,
-> > +       .irq_bus_lock = pmic_irq_lock,
-> > +       .irq_bus_sync_unlock = pmic_irq_sync_unlock,
-> > +       .irq_set_type = pmic_irq_set_type,
-> > +};
-Should we also add .irq_set_wake just like mt6397-irq.c?
-Without .irq_set_wake, we will have unbalanced IRQ wake disable issue
-during suspend/resume.
-> > +
-> > +static void mt6358_irq_sp_handler(struct mt6397_chip *chip,
-> > +                                 unsigned int top_gp)
-> > +{
-> > +       unsigned int sta_reg, irq_status;
-> > +       unsigned int hwirq, virq;
-> > +       int ret, i, j;
-> > +
-> > +       for (i = 0; i < mt6358_ints[top_gp].num_int_regs; i++) {
-> > +               sta_reg = mt6358_ints[top_gp].sta_reg +
-> > +                       mt6358_ints[top_gp].sta_reg_shift * i;
-> > +               ret = regmap_read(chip->regmap, sta_reg, &irq_status);
-> > +               if (ret) {
-> > +                       dev_err(chip->dev,
-> > +                               "Failed to read irq status: %d\n", ret);
-> > +                       return;
-> > +               }
-> > +
-> > +               if (!irq_status)
-> > +                       continue;
-> > +
-> > +               for (j = 0; j < MT6358_REG_WIDTH ; j++) {
-> > +                       if ((irq_status & BIT(j)) == 0)
-> > +                               continue;
-> > +                       hwirq = mt6358_ints[top_gp].hwirq_base +
-> > +                               MT6358_REG_WIDTH * i + j;
-> > +                       virq = irq_find_mapping(chip->irq_domain, hwirq);
-> > +                       if (virq)
-> > +                               handle_nested_irq(virq);
-> > +               }
-> > +
-> > +               regmap_write(chip->regmap, sta_reg, irq_status);
-> > +       }
-> > +}
-> > +
-> > +static irqreturn_t mt6358_irq_handler(int irq, void *data)
-> > +{
-> > +       struct mt6397_chip *chip = data;
-> > +       struct pmic_irq_data *mt6358_irq_data = chip->irq_data;
-> > +       unsigned int top_irq_status;
-> > +       unsigned int i;
-> > +       int ret;
-> > +
-> > +       ret = regmap_read(chip->regmap,
-> > +                         mt6358_irq_data->top_int_status_reg,
-> > +                         &top_irq_status);
-> > +       if (ret) {
-> > +               dev_err(chip->dev, "Can't read TOP_INT_STATUS ret=%d\n", ret);
-> > +               return IRQ_NONE;
-> > +       }
-> > +
-> > +       for (i = 0; i < mt6358_irq_data->num_top; i++) {
-> > +               if (top_irq_status & BIT(mt6358_ints[i].top_offset))
-> > +                       mt6358_irq_sp_handler(chip, i);
-> > +       }
-> > +
-> > +       return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int pmic_irq_domain_map(struct irq_domain *d, unsigned int irq,
-> > +                              irq_hw_number_t hw)
-> > +{
-> > +       struct mt6397_chip *mt6397 = d->host_data;
-> > +
-> > +       irq_set_chip_data(irq, mt6397);
-> > +       irq_set_chip_and_handler(irq, &mt6358_irq_chip, handle_level_irq);
-> > +       irq_set_nested_thread(irq, 1);
-> > +       irq_set_noprobe(irq);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct irq_domain_ops mt6358_irq_domain_ops = {
-> > +       .map = pmic_irq_domain_map,
-> > +       .xlate = irq_domain_xlate_twocell,
-> > +};
-> > +
-> > +int mt6358_irq_init(struct mt6397_chip *chip)
-> > +{
-> > +       int i, j, ret;
-> > +       struct pmic_irq_data *irqd;
-> > +
-> > +       irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
-> > +                           GFP_KERNEL);
-> > +       if (!irqd)
-> > +               return -ENOMEM;
-> > +
-> > +       chip->irq_data = irqd;
-> > +
-> > +       mutex_init(&chip->irqlock);
-> > +       irqd->top_int_status_reg = MT6358_TOP_INT_STATUS0;
-> > +       irqd->num_pmic_irqs = MT6358_IRQ_NR;
-> > +       irqd->num_top = ARRAY_SIZE(mt6358_ints);
-> > +
-> > +       irqd->enable_hwirq = devm_kcalloc(chip->dev,
-> > +                                         irqd->num_pmic_irqs,
-> > +                                         sizeof(bool),
-> > +                                         GFP_KERNEL);
-> > +       if (!irqd->enable_hwirq)
-> > +               return -ENOMEM;
-> > +
-> > +       irqd->cache_hwirq = devm_kcalloc(chip->dev,
-> > +                                        irqd->num_pmic_irqs,
-> > +                                        sizeof(bool),
-> > +                                        GFP_KERNEL);
-> > +       if (!irqd->cache_hwirq)
-> > +               return -ENOMEM;
-> > +
-> > +       /* Disable all interrupt for initializing */
-> > +       for (i = 0; i < irqd->num_top; i++) {
-> > +               for (j = 0; j < mt6358_ints[i].num_int_regs; j++)
-> > +                       regmap_write(chip->regmap,
-> > +                                    mt6358_ints[i].en_reg +
-> > +                                    mt6358_ints[i].en_reg_shift * j, 0);
-> > +       }
-> > +
-> > +       chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
-> > +                                                irqd->num_pmic_irqs,
-> > +                                                &mt6358_irq_domain_ops, chip);
-> > +       if (!chip->irq_domain) {
-> > +               dev_err(chip->dev, "could not create irq domain\n");
-> > +               return -ENODEV;
-> > +       }
-> > +
-> > +       ret = devm_request_threaded_irq(chip->dev, chip->irq, NULL,
-> > +                                       mt6358_irq_handler, IRQF_ONESHOT,
-> > +                                       mt6358_irq_chip.name, chip);
-> > +       if (ret) {
-> > +               dev_err(chip->dev, "failed to register irq=%d; err: %d\n",
-> > +                       chip->irq, ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       enable_irq_wake(chip->irq);
-> > +       return ret;
-> > +}
-> > diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> > index 53f1edc..9ef14f9 100644
-> > --- a/drivers/mfd/mt6397-core.c
-> > +++ b/drivers/mfd/mt6397-core.c
-> > @@ -18,12 +18,36 @@
-> >  #include <linux/regmap.h>
-> >  #include <linux/mfd/core.h>
-> >  #include <linux/mfd/mt6323/core.h>
-> > +#include <linux/mfd/mt6358/core.h>
-> >  #include <linux/mfd/mt6397/core.h>
-> >  #include <linux/mfd/mt6323/registers.h>
-> > +#include <linux/mfd/mt6358/registers.h>
-> >  #include <linux/mfd/mt6397/registers.h>
-> >
-> > +#define MT6358_RTC_BASE                0x0588
-> > +#define MT6358_RTC_SIZE                0x3c
-> > +#define MT6358_RTC_WRTGR_OFFSET        0x3a
-> >  #define MT6397_RTC_BASE                0xe000
-> >  #define MT6397_RTC_SIZE                0x3e
-> > +#define MT6397_RTC_WRTGR_OFFSET        0x3c
-> > +
-> > +static const struct resource mt6358_rtc_resources[] = {
-> > +       {
-> > +               .start = MT6358_RTC_BASE,
-> > +               .end   = MT6358_RTC_BASE + MT6358_RTC_SIZE,
-> > +               .flags = IORESOURCE_MEM,
-> > +       },
-> > +       {
-> > +               .start = MT6358_IRQ_RTC,
-> > +               .end   = MT6358_IRQ_RTC,
-> > +               .flags = IORESOURCE_IRQ,
-> > +       },
-> > +       {
-> > +               .start = MT6358_RTC_WRTGR_OFFSET,
-> > +               .end   = MT6358_RTC_WRTGR_OFFSET,
-> > +               .flags = IORESOURCE_REG,
-> > +       },
-> > +};
-> >
-> >  static const struct resource mt6397_rtc_resources[] = {
-> >         {
-> > @@ -36,6 +60,11 @@
-> >                 .end   = MT6397_IRQ_RTC,
-> >                 .flags = IORESOURCE_IRQ,
-> >         },
-> > +       {
-> > +               .start = MT6397_RTC_WRTGR_OFFSET,
-> > +               .end   = MT6397_RTC_WRTGR_OFFSET,
-> > +               .flags = IORESOURCE_REG,
-> > +       },
-> >  };
-> >
-> >  static const struct resource mt6323_keys_resources[] = {
-> > @@ -63,6 +92,21 @@
-> >         },
-> >  };
-> >
-> > +static const struct mfd_cell mt6358_devs[] = {
-> > +       {
-> > +               .name = "mt6358-regulator",
-> > +               .of_compatible = "mediatek,mt6358-regulator"
-> > +       }, {
-> > +               .name = "mt6397-rtc",
-> > +               .num_resources = ARRAY_SIZE(mt6358_rtc_resources),
-> > +               .resources = mt6358_rtc_resources,
-> > +               .of_compatible = "mediatek,mt6358-rtc",
-> > +       }, {
-> > +               .name = "mt6358-sound",
-> > +               .of_compatible = "mediatek,mt6358-sound"
-> > +       },
-> > +};
-> > +
-> >  static const struct mfd_cell mt6397_devs[] = {
-> >         {
-> >                 .name = "mt6397-rtc",
-> > @@ -97,6 +141,10 @@ struct chip_data {
-> >         .cid_addr = MT6323_CID,
-> >  };
-> >
-> > +static const struct chip_data mt6358_core = {
-> > +       .cid_addr = MT6358_SWCID,
-> > +};
-> > +
-> >  static const struct chip_data mt6397_core = {
-> >         .cid_addr = MT6397_CID,
-> >  };
-> > @@ -140,7 +188,11 @@ static int mt6397_probe(struct platform_device *pdev)
-> >         if (pmic->irq <= 0)
-> >                 return pmic->irq;
-> >
-> > -       ret = mt6397_irq_init(pmic);
-> > +       if (pmic->chip_id == MT6358_CHIP_ID)
-> > +               ret = mt6358_irq_init(pmic);
-> > +       else
-> > +               ret = mt6397_irq_init(pmic);
-> > +
-> >         if (ret)
-> >                 return ret;
-> >
-> > @@ -151,6 +203,12 @@ static int mt6397_probe(struct platform_device *pdev)
-> >                                            0, pmic->irq_domain);
-> >                 break;
-> >
-> > +       case MT6358_CHIP_ID:
-> > +               ret = devm_mfd_add_devices(&pdev->dev, -1, mt6358_devs,
-> > +                                          ARRAY_SIZE(mt6358_devs), NULL,
-> > +                                          0, pmic->irq_domain);
-> > +               break;
-> > +
-> >         case MT6391_CHIP_ID:
-> >         case MT6397_CHIP_ID:
-> >                 ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
-> > @@ -177,6 +235,9 @@ static int mt6397_probe(struct platform_device *pdev)
-> >                 .compatible = "mediatek,mt6323",
-> >                 .data = &mt6323_core,
-> >         }, {
-> > +               .compatible = "mediatek,mt6358",
-> > +               .data = &mt6358_core,
-> > +       }, {
-> >                 .compatible = "mediatek,mt6397",
-> >                 .data = &mt6397_core,
-> >         }, {
-> > diff --git a/include/linux/mfd/mt6358/core.h b/include/linux/mfd/mt6358/core.h
-> > new file mode 100644
-> > index 0000000..ce9e08a
-> > --- /dev/null
-> > +++ b/include/linux/mfd/mt6358/core.h
-> > @@ -0,0 +1,158 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (c) 2019 MediaTek Inc.
-> > + */
-> > +
-> > +#ifndef __MFD_MT6358_CORE_H__
-> > +#define __MFD_MT6358_CORE_H__
-> > +
-> > +#define MT6358_REG_WIDTH 16
-> > +
-> > +struct irq_top_t {
-> > +       int hwirq_base;
-> > +       unsigned int num_int_regs;
-> > +       unsigned int num_int_bits;
-> > +       unsigned int en_reg;
-> > +       unsigned int en_reg_shift;
-> > +       unsigned int sta_reg;
-> > +       unsigned int sta_reg_shift;
-> > +       unsigned int top_offset;
-> > +};
-> > +
-> > +struct pmic_irq_data {
-> > +       unsigned int num_top;
-> > +       unsigned int num_pmic_irqs;
-> > +       unsigned short top_int_status_reg;
-> > +       bool *enable_hwirq;
-> > +       bool *cache_hwirq;
-> > +};
-> > +
-> > +enum mt6358_irq_top_status_shift {
-> > +       MT6358_BUCK_TOP = 0,
-> > +       MT6358_LDO_TOP,
-> > +       MT6358_PSC_TOP,
-> > +       MT6358_SCK_TOP,
-> > +       MT6358_BM_TOP,
-> > +       MT6358_HK_TOP,
-> > +       MT6358_AUD_TOP,
-> > +       MT6358_MISC_TOP,
-> > +};
-> > +
-> > +enum mt6358_irq_numbers {
-> > +       MT6358_IRQ_VPROC11_OC = 0,
-> > +       MT6358_IRQ_VPROC12_OC,
-> > +       MT6358_IRQ_VCORE_OC,
-> > +       MT6358_IRQ_VGPU_OC,
-> > +       MT6358_IRQ_VMODEM_OC,
-> > +       MT6358_IRQ_VDRAM1_OC,
-> > +       MT6358_IRQ_VS1_OC,
-> > +       MT6358_IRQ_VS2_OC,
-> > +       MT6358_IRQ_VPA_OC,
-> > +       MT6358_IRQ_VCORE_PREOC,
-> > +       MT6358_IRQ_VFE28_OC = 16,
-> > +       MT6358_IRQ_VXO22_OC,
-> > +       MT6358_IRQ_VRF18_OC,
-> > +       MT6358_IRQ_VRF12_OC,
-> > +       MT6358_IRQ_VEFUSE_OC,
-> > +       MT6358_IRQ_VCN33_OC,
-> > +       MT6358_IRQ_VCN28_OC,
-> > +       MT6358_IRQ_VCN18_OC,
-> > +       MT6358_IRQ_VCAMA1_OC,
-> > +       MT6358_IRQ_VCAMA2_OC,
-> > +       MT6358_IRQ_VCAMD_OC,
-> > +       MT6358_IRQ_VCAMIO_OC,
-> > +       MT6358_IRQ_VLDO28_OC,
-> > +       MT6358_IRQ_VA12_OC,
-> > +       MT6358_IRQ_VAUX18_OC,
-> > +       MT6358_IRQ_VAUD28_OC,
-> > +       MT6358_IRQ_VIO28_OC,
-> > +       MT6358_IRQ_VIO18_OC,
-> > +       MT6358_IRQ_VSRAM_PROC11_OC,
-> > +       MT6358_IRQ_VSRAM_PROC12_OC,
-> > +       MT6358_IRQ_VSRAM_OTHERS_OC,
-> > +       MT6358_IRQ_VSRAM_GPU_OC,
-> > +       MT6358_IRQ_VDRAM2_OC,
-> > +       MT6358_IRQ_VMC_OC,
-> > +       MT6358_IRQ_VMCH_OC,
-> > +       MT6358_IRQ_VEMC_OC,
-> > +       MT6358_IRQ_VSIM1_OC,
-> > +       MT6358_IRQ_VSIM2_OC,
-> > +       MT6358_IRQ_VIBR_OC,
-> > +       MT6358_IRQ_VUSB_OC,
-> > +       MT6358_IRQ_VBIF28_OC,
-> > +       MT6358_IRQ_PWRKEY = 48,
-> > +       MT6358_IRQ_HOMEKEY,
-> > +       MT6358_IRQ_PWRKEY_R,
-> > +       MT6358_IRQ_HOMEKEY_R,
-> > +       MT6358_IRQ_NI_LBAT_INT,
-> > +       MT6358_IRQ_CHRDET,
-> > +       MT6358_IRQ_CHRDET_EDGE,
-> > +       MT6358_IRQ_VCDT_HV_DET,
-> > +       MT6358_IRQ_RTC = 64,
-> > +       MT6358_IRQ_FG_BAT0_H = 80,
-> > +       MT6358_IRQ_FG_BAT0_L,
-> > +       MT6358_IRQ_FG_CUR_H,
-> > +       MT6358_IRQ_FG_CUR_L,
-> > +       MT6358_IRQ_FG_ZCV,
-> > +       MT6358_IRQ_FG_BAT1_H,
-> > +       MT6358_IRQ_FG_BAT1_L,
-> > +       MT6358_IRQ_FG_N_CHARGE_L,
-> > +       MT6358_IRQ_FG_IAVG_H,
-> > +       MT6358_IRQ_FG_IAVG_L,
-> > +       MT6358_IRQ_FG_TIME_H,
-> > +       MT6358_IRQ_FG_DISCHARGE,
-> > +       MT6358_IRQ_FG_CHARGE,
-> > +       MT6358_IRQ_BATON_LV = 96,
-> > +       MT6358_IRQ_BATON_HT,
-> > +       MT6358_IRQ_BATON_BAT_IN,
-> > +       MT6358_IRQ_BATON_BAT_OUT,
-> > +       MT6358_IRQ_BIF,
-> > +       MT6358_IRQ_BAT_H = 112,
-> > +       MT6358_IRQ_BAT_L,
-> > +       MT6358_IRQ_BAT2_H,
-> > +       MT6358_IRQ_BAT2_L,
-> > +       MT6358_IRQ_BAT_TEMP_H,
-> > +       MT6358_IRQ_BAT_TEMP_L,
-> > +       MT6358_IRQ_AUXADC_IMP,
-> > +       MT6358_IRQ_NAG_C_DLTV,
-> > +       MT6358_IRQ_AUDIO = 128,
-> > +       MT6358_IRQ_ACCDET = 133,
-> > +       MT6358_IRQ_ACCDET_EINT0,
-> > +       MT6358_IRQ_ACCDET_EINT1,
-> > +       MT6358_IRQ_SPI_CMD_ALERT = 144,
-> > +       MT6358_IRQ_NR,
-> > +};
-> > +
-> > +#define MT6358_IRQ_BUCK_BASE MT6358_IRQ_VPROC11_OC
-> > +#define MT6358_IRQ_LDO_BASE MT6358_IRQ_VFE28_OC
-> > +#define MT6358_IRQ_PSC_BASE MT6358_IRQ_PWRKEY
-> > +#define MT6358_IRQ_SCK_BASE MT6358_IRQ_RTC
-> > +#define MT6358_IRQ_BM_BASE MT6358_IRQ_FG_BAT0_H
-> > +#define MT6358_IRQ_HK_BASE MT6358_IRQ_BAT_H
-> > +#define MT6358_IRQ_AUD_BASE MT6358_IRQ_AUDIO
-> > +#define MT6358_IRQ_MISC_BASE MT6358_IRQ_SPI_CMD_ALERT
-> > +
-> > +#define MT6358_IRQ_BUCK_BITS (MT6358_IRQ_VCORE_PREOC - MT6358_IRQ_BUCK_BASE + 1)
-> > +#define MT6358_IRQ_LDO_BITS (MT6358_IRQ_VBIF28_OC - MT6358_IRQ_LDO_BASE + 1)
-> > +#define MT6358_IRQ_PSC_BITS (MT6358_IRQ_VCDT_HV_DET - MT6358_IRQ_PSC_BASE + 1)
-> > +#define MT6358_IRQ_SCK_BITS (MT6358_IRQ_RTC - MT6358_IRQ_SCK_BASE + 1)
-> > +#define MT6358_IRQ_BM_BITS (MT6358_IRQ_BIF - MT6358_IRQ_BM_BASE + 1)
-> > +#define MT6358_IRQ_HK_BITS (MT6358_IRQ_NAG_C_DLTV - MT6358_IRQ_HK_BASE + 1)
-> > +#define MT6358_IRQ_AUD_BITS (MT6358_IRQ_ACCDET_EINT1 - MT6358_IRQ_AUD_BASE + 1)
-> > +#define MT6358_IRQ_MISC_BITS   \
-> > +       (MT6358_IRQ_SPI_CMD_ALERT - MT6358_IRQ_MISC_BASE + 1)
-> > +
-> > +#define MT6358_TOP_GEN(sp)     \
-> > +{      \
-> > +       .hwirq_base = MT6358_IRQ_##sp##_BASE,   \
-> > +       .num_int_regs = \
-> > +               (MT6358_IRQ_##sp##_BITS / MT6358_REG_WIDTH) + 1,        \
-> > +       .num_int_bits = MT6358_IRQ_##sp##_BITS, \
-> > +       .en_reg = MT6358_##sp##_TOP_INT_CON0,           \
-> > +       .en_reg_shift = 0x6,    \
-> > +       .sta_reg = MT6358_##sp##_TOP_INT_STATUS0,               \
-> > +       .sta_reg_shift = 0x2,   \
-> > +       .top_offset = MT6358_##sp##_TOP,        \
-> > +}
-> > +
-> > +#endif /* __MFD_MT6358_CORE_H__ */
+> syzbot found the following crash on:
+>
+> HEAD commit:    d9862cfb Merge tag 'mips_5.1' of git://git.kernel.org/pub/..
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=132308f7200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=73d88a42238825ad
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3d357cc384ddccdc2fff
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> userspace arch: amd64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f95493200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=133be2cf200000
+>
+> The crash was bisected to:
+>
+> commit 7efba10d6bd22030fb5931e50bf97496f932f00e
+> Author: Xin Long <lucien.xin@gmail.com>
+> Date:   Mon Jan 28 07:08:46 2019 +0000
+>
+>      sctp: add SCTP_FUTURE_ASOC and SCTP_CURRENT_ASSOC for
+> SCTP_STREAM_SCHEDULER sockopt
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467361b200000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667361b200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1267361b200000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+3d357cc384ddccdc2fff@syzkaller.appspotmail.com
+> Fixes: 7efba10d ("sctp: add SCTP_FUTURE_ASOC and SCTP_CURRENT_ASSOC for
+> SCTP_STREAM_SCHEDULER sockopt")
+>
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 7793 Comm: syz-executor452 Not tainted 5.0.0+ #97
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:__list_del_entry_valid+0x85/0xf5 lib/list_debug.c:51
+> Code: 0f 84 e1 00 00 00 48 b8 00 02 00 00 00 00 ad de 49 39 c4 0f 84 e2 00
+> 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 <80> 3c 02 00 75
+> 53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d
+> RSP: 0018:ffff88809e8c6fd8 EFLAGS: 00010247
+> RAX: dffffc0000000000 RBX: ffff88808fdd6d10 RCX: ffffffff86799d9f
+> RDX: 0000000000000000 RSI: ffffffff86815d20 RDI: ffff88808fdd6d18
+> RBP: ffff88809e8c6ff0 R08: ffff888091bc0080 R09: 0000000000000002
+> R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: 0000000000000006
+> R13: 0000000100000000 R14: ffff88808fdd6d10 R15: ffff88809e8c7198
+> FS:  0000000000fad880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000080 CR3: 00000000a1385000 CR4: 00000000001406e0
+> Call Trace:
+>   __list_del_entry include/linux/list.h:117 [inline]
+>   list_del_init include/linux/list.h:159 [inline]
+>   sctp_sched_dequeue_common+0x28/0x340 net/sctp/stream_sched.c:267
+>   sctp_sched_prio_dequeue+0xec/0x1a0 net/sctp/stream_sched_prio.c:283
+>   sctp_outq_dequeue_data net/sctp/outqueue.c:90 [inline]
+>   sctp_outq_flush_data net/sctp/outqueue.c:1079 [inline]
+>   sctp_outq_flush+0xba2/0x2790 net/sctp/outqueue.c:1205
+>   sctp_outq_uncork+0x6c/0x80 net/sctp/outqueue.c:772
+>   sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1820 [inline]
+>   sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+>   sctp_do_sm+0x513/0x5390 net/sctp/sm_sideeffect.c:1191
+>   sctp_assoc_bh_rcv+0x343/0x660 net/sctp/associola.c:1074
+>   sctp_inq_push+0x1ea/0x290 net/sctp/inqueue.c:95
+>   sctp_backlog_rcv+0x189/0xbc0 net/sctp/input.c:354
+>   sk_backlog_rcv include/net/sock.h:937 [inline]
+>   __release_sock+0x12e/0x3a0 net/core/sock.c:2413
+>   release_sock+0x59/0x1c0 net/core/sock.c:2929
+>   sctp_wait_for_connect+0x316/0x540 net/sctp/socket.c:8999
+>   sctp_sendmsg_to_asoc+0x13e2/0x17d0 net/sctp/socket.c:1968
+>   sctp_sendmsg+0x10a9/0x17e0 net/sctp/socket.c:2114
+>   inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
+>   sock_sendmsg_nosec net/socket.c:622 [inline]
+>   sock_sendmsg+0xdd/0x130 net/socket.c:632
+>   ___sys_sendmsg+0x806/0x930 net/socket.c:2137
+>   __sys_sendmsg+0x105/0x1d0 net/socket.c:2175
+>   __do_sys_sendmsg net/socket.c:2184 [inline]
+>   __se_sys_sendmsg net/socket.c:2182 [inline]
+>   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2182
+>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4402a9
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fff60414978 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402a9
+> RDX: 0000000000000000 RSI: 000000002001afc8 RDI: 0000000000000003
+> RBP: 00000000006ca018 R08: 0000000000000002 R09: 00000000004002c8
+> R10: 0000000000000008 R11: 0000000000000246 R12: 0000000000401b30
+> R13: 0000000000401bc0 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace 8121cdb67bdbbfc9 ]---
+> RIP: 0010:__list_del_entry_valid+0x85/0xf5 lib/list_debug.c:51
+> Code: 0f 84 e1 00 00 00 48 b8 00 02 00 00 00 00 ad de 49 39 c4 0f 84 e2 00
+> 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 <80> 3c 02 00 75
+> 53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d
+> RSP: 0018:ffff88809e8c6fd8 EFLAGS: 00010247
+> RAX: dffffc0000000000 RBX: ffff88808fdd6d10 RCX: ffffffff86799d9f
+> RDX: 0000000000000000 RSI: ffffffff86815d20 RDI: ffff88808fdd6d18
+> RBP: ffff88809e8c6ff0 R08: ffff888091bc0080 R09: 0000000000000002
+> R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: 0000000000000006
+> R13: 0000000100000000 R14: ffff88808fdd6d10 R15: ffff88809e8c7198
+> FS:  0000000000fad880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000080 CR3: 00000000a1385000 CR4: 00000000001406e0
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
+> syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
