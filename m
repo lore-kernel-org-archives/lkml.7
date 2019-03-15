@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82377C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60798C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0D1218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DEE218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbfCOQ62 (ORCPT
+        id S1729862AbfCOQ6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:58:28 -0400
+        Fri, 15 Mar 2019 12:58:30 -0400
 Received: from mga17.intel.com ([192.55.52.151]:39359 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729788AbfCOQ6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:58:23 -0400
+        id S1729802AbfCOQ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:58:25 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 09:58:23 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 09:58:25 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,482,1544515200"; 
-   d="scan'208";a="155397264"
+   d="scan'208";a="155397274"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2019 09:58:20 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2019 09:58:23 -0700
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 10/12] platform/x86: intel_cht_int33fe: Replacing the old connections with references
-Date:   Fri, 15 Mar 2019 19:57:58 +0300
-Message-Id: <20190315165800.5058-11-heikki.krogerus@linux.intel.com>
+Subject: [PATCH 11/12] drm: Add fwnode member to the struct drm_connector
+Date:   Fri, 15 Mar 2019 19:57:59 +0300
+Message-Id: <20190315165800.5058-12-heikki.krogerus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
 References: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
@@ -46,175 +46,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the software nodes support references, and the
-device connection API support parsing fwnode references,
-replacing the old connection descriptions with software node
-references. Relying on device names when matching the
-connection would not have been possible to link the USB
-Type-C connector and the DisplayPort connector together, but
-with real references it's not problem.
+If the system firmware supplies nodes that represent the connectors,
+they need to be associated with the connector entries.
 
-The DisplayPort ACPI node is dag up, and the drivers own
-software node for the DisplayPort is set as the secondary
-node for it. The USB Type-C connector refers the software
-node, but it is now tied to the ACPI node, and therefore any
-device entry (struct drm_connector in practice) that the
-node combo is assigned to.
+ACPI tables at least always supply a device node for every connector
+on integrated video hardware - this is explained in ACPI
+specification's ch. "Appendix B Video Extension". Many drivers appear
+to already deal with those connector firmware nodes "indirectly"
+in order to support custom Operation Regions, _DSM (device specific
+method) and access other resources the nodes supply for the
+connectors.
 
-The USB role switch device does not have ACPI node, so we
-have to wait for the device to appear. Then we can simply
-assign our software node for the to the device.
+This commit will only add the fwnode member. It's first up to the
+drivers to assign and take advantage of it. For convenience, the nodes
+are assigned to the device entries that are used for exposing the
+connectors to the user space via sysfs. That makes it possible to see
+the link between the connector and its node also from user space. In
+case of ACPI, the connector's sysfs directory will have a symlink
+named "firmware_node" pointing to the node object directory in sysfs
+if a node is associated with the connector.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/platform/x86/intel_cht_int33fe.c | 94 +++++++++++++++++++-----
- 1 file changed, 77 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/drm_sysfs.c | 49 +++++++++++++++++++++++++------------
+ include/drm/drm_connector.h |  2 ++
+ 2 files changed, 36 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-index aa71b97a22e9..5cdb7fa33f2b 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe.c
-@@ -39,15 +39,22 @@ enum {
- 	INT33FE_NODE_MAX,
+diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
+index ecb7b33002bb..7667939ef1c0 100644
+--- a/drivers/gpu/drm/drm_sysfs.c
++++ b/drivers/gpu/drm/drm_sysfs.c
+@@ -264,26 +264,50 @@ static const struct attribute_group *connector_dev_groups[] = {
+ 	NULL
  };
  
-+enum {
-+	INT33FE_REF_ORIENTATION,
-+	INT33FE_REF_MODE_MUX,
-+	INT33FE_REF_DISPLAYPORT,
-+	INT33FE_REF_ROLE_SWITCH,
-+	INT33FE_REF_MAX,
-+};
-+
- struct cht_int33fe_data {
- 	struct i2c_client *max17047;
- 	struct i2c_client *fusb302;
- 	struct i2c_client *pi3usb30532;
--	/* Contain a list-head must be per device */
--	struct device_connection connections[4];
- 
- 	struct fwnode_handle *dp;
- 	struct fwnode_handle *node[INT33FE_NODE_MAX];
-+	struct software_node_reference *ref[INT33FE_REF_MAX];
- };
- 
- /*
-@@ -290,6 +297,65 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
- 	return ret;
- }
- 
-+static void cht_int33fe_remove_references(struct cht_int33fe_data *data)
++static void drm_sysfs_release(struct device *dev)
 +{
-+	int i;
-+
-+	for (i = 0; i < INT33FE_REF_MAX; i++)
-+		fwnode_remove_software_node_reference(data->ref[i]);
++	kfree(dev);
 +}
 +
-+static int cht_int33fe_add_references(struct cht_int33fe_data *data)
-+{
-+	struct fwnode_reference_args args[2] = { };
-+	struct software_node_reference *ref;
-+	struct fwnode_handle *con;
-+
-+	con = data->node[INT33FE_NODE_USB_CONNECTOR];
-+
-+	/* USB Type-C muxes */
-+	args[0].fwnode = data->node[INT33FE_NODE_PI3USB30532];
-+	args[1].fwnode = NULL;
-+
-+	ref = fwnode_create_software_node_reference(con, "orientation-switch",
-+						    args);
-+	if (IS_ERR(ref))
-+		return PTR_ERR(ref);
-+	data->ref[INT33FE_REF_ORIENTATION] = ref;
-+
-+	ref = fwnode_create_software_node_reference(con, "mode-switch",
-+						    args);
-+	if (IS_ERR(ref)) {
-+		cht_int33fe_remove_references(data);
-+		return PTR_ERR(ref);
-+	}
-+	data->ref[INT33FE_REF_MODE_MUX] = ref;
-+
-+	/* USB role switch */
-+	args[0].fwnode = data->node[INT33FE_NODE_ROLE_SWITCH];
-+	args[1].fwnode = NULL;
-+
-+	ref = fwnode_create_software_node_reference(con, "usb-role-switch", args);
-+	if (IS_ERR(ref)) {
-+		cht_int33fe_remove_references(data);
-+		return PTR_ERR(ref);
-+	}
-+	data->ref[INT33FE_REF_ROLE_SWITCH] = ref;
-+
-+	/* DisplayPort */
-+	args[0].fwnode = data->node[INT33FE_NODE_DISPLAYPORT];
-+	args[1].fwnode = NULL;
-+
-+	ref = fwnode_create_software_node_reference(con, "displayport", args);
-+	if (IS_ERR(ref)) {
-+		cht_int33fe_remove_references(data);
-+		return PTR_ERR(ref);
-+	}
-+	data->ref[INT33FE_REF_DISPLAYPORT] = ref;
-+
-+	return 0;
-+}
-+
- static int cht_int33fe_probe(struct platform_device *pdev)
+ int drm_sysfs_connector_add(struct drm_connector *connector)
  {
- 	struct device *dev = &pdev->dev;
-@@ -358,22 +424,14 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+ 	struct drm_device *dev = connector->dev;
++	struct device *kdev;
++	int ret;
  
--	/* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
--	ret = cht_int33fe_max17047(dev, data);
-+	ret = cht_int33fe_add_references(data);
- 	if (ret)
- 		goto out_remove_nodes;
+ 	if (connector->kdev)
+ 		return 0;
  
--	data->connections[0].endpoint[0] = "port0";
--	data->connections[0].endpoint[1] = "i2c-pi3usb30532";
--	data->connections[0].id = "orientation-switch";
--	data->connections[1].endpoint[0] = "port0";
--	data->connections[1].endpoint[1] = "i2c-pi3usb30532";
--	data->connections[1].id = "mode-switch";
--	data->connections[2].endpoint[0] = "i2c-fusb302";
--	data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
--	data->connections[2].id = "usb-role-switch";
--
--	device_connections_add(data->connections);
-+	/* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
-+	ret = cht_int33fe_max17047(dev, data);
-+	if (ret)
-+		goto out_remove_references;
+-	connector->kdev =
+-		device_create_with_groups(drm_class, dev->primary->kdev, 0,
+-					  connector, connector_dev_groups,
+-					  "card%d-%s", dev->primary->index,
+-					  connector->name);
+-	DRM_DEBUG("adding \"%s\" to sysfs\n",
+-		  connector->name);
++	kdev = kzalloc(sizeof(*kdev), GFP_KERNEL);
++	if (!kdev)
++		return -ENOMEM;
  
- 	memset(&board_info, 0, sizeof(board_info));
- 	strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
-@@ -406,9 +464,11 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	i2c_unregister_device(data->fusb302);
- 
- out_unregister_max17047:
--	device_connections_remove(data->connections);
- 	i2c_unregister_device(data->max17047);
- 
-+out_remove_references:
-+	cht_int33fe_remove_references(data);
+-	if (IS_ERR(connector->kdev)) {
+-		DRM_ERROR("failed to register connector device: %ld\n", PTR_ERR(connector->kdev));
+-		return PTR_ERR(connector->kdev);
++	device_initialize(kdev);
++	kdev->class = drm_class;
++	kdev->parent = dev->primary->kdev;
++	kdev->fwnode = connector->fwnode;
++	kdev->groups = connector_dev_groups;
++	kdev->release = drm_sysfs_release;
++	dev_set_drvdata(kdev, connector);
 +
- out_remove_nodes:
- 	cht_int33fe_remove_nodes(data);
++	ret = dev_set_name(kdev, "card%d-%s", dev->primary->index,
++			   connector->name);
++	if (ret) {
++		kfree(kdev);
++		return ret;
++	}
++
++	DRM_DEBUG("adding \"%s\" to sysfs\n", connector->name);
++
++	ret = device_add(kdev);
++	if (ret) {
++		DRM_ERROR("failed to register connector device: %d\n", ret);
++		put_device(kdev);
++		return ret;
+ 	}
  
-@@ -423,7 +483,7 @@ static int cht_int33fe_remove(struct platform_device *pdev)
- 	i2c_unregister_device(data->fusb302);
- 	i2c_unregister_device(data->max17047);
++	connector->kdev = kdev;
++
+ 	/* Let userspace know we have a new connector */
+ 	drm_sysfs_hotplug_event(dev);
  
--	device_connections_remove(data->connections);
-+	cht_int33fe_remove_references(data);
- 	cht_int33fe_remove_nodes(data);
+@@ -330,11 +354,6 @@ void drm_sysfs_hotplug_event(struct drm_device *dev)
+ }
+ EXPORT_SYMBOL(drm_sysfs_hotplug_event);
  
- 	return 0;
+-static void drm_sysfs_release(struct device *dev)
+-{
+-	kfree(dev);
+-}
+-
+ struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
+ {
+ 	const char *minor_str;
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index 8fe22abb1e10..e30b7743e019 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -851,6 +851,8 @@ struct drm_connector {
+ 	struct device *kdev;
+ 	/** @attr: sysfs attributes */
+ 	struct device_attribute *attr;
++	/** @fwnode: associated device node supplied by platform firmware */
++	struct fwnode_handle *fwnode;
+ 
+ 	/**
+ 	 * @head:
 -- 
 2.20.1
 
