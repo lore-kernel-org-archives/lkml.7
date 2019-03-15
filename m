@@ -3,109 +3,148 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8994EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 14:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB81C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 14:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635F7218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 14:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DFD218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 14:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfCOOx6 (ORCPT
+        id S1727897AbfCOO4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 10:53:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56524 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727518AbfCOOx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 10:53:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B5CE6AC4A;
-        Fri, 15 Mar 2019 14:53:55 +0000 (UTC)
-Subject: Re: [PATCH v2] xen/balloon: Fix mapping PG_offline pages to user
- space
-To:     David Hildenbrand <david@redhat.com>,
-        xen-devel@lists.xenproject.org
-Cc:     linux-kernel@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Julien Grall <julien.grall@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Jan Beulich <JBeulich@suse.com>
-References: <20190314160256.21713-1-david@redhat.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a889fdc1-c857-eb94-1f5e-21943c182e4f@suse.com>
-Date:   Fri, 15 Mar 2019 15:53:54 +0100
+        Fri, 15 Mar 2019 10:56:52 -0400
+Received: from foss.arm.com ([217.140.101.70]:60550 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726655AbfCOO4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 10:56:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D52B9A78;
+        Fri, 15 Mar 2019 07:56:50 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 701FE3F614;
+        Fri, 15 Mar 2019 07:56:48 -0700 (PDT)
+Subject: Re: [RFC] Question about TLB flush while set Stage-2 huge pages
+To:     zhengxiang9@huawei.com, yuzenghui@huawei.com
+Cc:     marc.zyngier@arm.com, christoffer.dall@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com,
+        lious.lilei@hisilicon.com, lishuo1@hisilicon.com
+References: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
+ <e2a94937-c324-e2d6-7e61-3f998e6e6e22@arm.com>
+ <1c0e07b9-73f0-efa4-c1b7-ad81789b42c5@huawei.com>
+ <5188e3b9-5b5a-a6a7-7ef0-09b7b4f06af6@arm.com>
+ <348d0b3b-c74b-7b39-ec30-85905c077c38@huawei.com>
+ <20190314105537.GA15323@en101>
+ <368bd218-ac1d-19b2-6e92-960b91afee8b@huawei.com>
+ <d322e126-4da2-6dfd-a86d-088dfb3bf0f4@huawei.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <6aea4049-7860-7144-a7be-14f856cdc789@arm.com>
+Date:   Fri, 15 Mar 2019 14:56:45 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190314160256.21713-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <d322e126-4da2-6dfd-a86d-088dfb3bf0f4@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 17:02, David Hildenbrand wrote:
-> The XEN balloon driver - in contrast to other balloon drivers - allows
-> to map some inflated pages to user space. Such pages are allocated via
-> alloc_xenballooned_pages() and freed via free_xenballooned_pages().
-> The pfn space of these allocated pages is used to map other things
-> by the hypervisor using hypercalls.
-> 
-> Pages marked with PG_offline must never be mapped to user space (as
-> this page type uses the mapcount field of struct pages).
-> 
-> So what we can do is, clear/set PG_offline when allocating/freeing an
-> inflated pages. This way, most inflated pages can be excluded by
-> dumping tools and the "reused for other purpose" balloon pages are
-> correctly not marked as PG_offline.
-> 
-> Fixes: 77c4adf6a6df (xen/balloon: mark inflated pages PG_offline)
-> Reported-by: Julien Grall <julien.grall@arm.com>
-> Tested-by: Julien Grall <julien.grall@arm.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Hi Zhengui,
 
-Pushed to xen/tip.git for-linus-5.1b
+On 15/03/2019 08:21, Zheng Xiang wrote:
+> Hi Suzuki,
+> 
+> I have tested this patch, VM doesn't hang and we get expected WARNING log:
+
+Thanks for the quick testing !
+
+> However, we also get the following unexpected log:
+> 
+> [  908.329900] BUG: Bad page state in process qemu-kvm  pfn:a2fb41cf
+> [  908.339415] page:ffff7e28bed073c0 count:-4 mapcount:0 mapping:0000000000000000 index:0x0
+> [  908.339416] flags: 0x4ffffe0000000000()
+> [  908.339418] raw: 4ffffe0000000000 dead000000000100 dead000000000200 0000000000000000
+> [  908.339419] raw: 0000000000000000 0000000000000000 fffffffcffffffff 0000000000000000
+> [  908.339420] page dumped because: nonzero _refcount
+> [  908.339437] CPU: 32 PID: 72599 Comm: qemu-kvm Kdump: loaded Tainted: G    B  W        5.0.0+ #1
+> [  908.339438] Call trace:
+> [  908.339439]  dump_backtrace+0x0/0x188
+> [  908.339441]  show_stack+0x24/0x30
+> [  908.339442]  dump_stack+0xa8/0xcc
+> [  908.339443]  bad_page+0xf0/0x150
+> [  908.339445]  free_pages_check_bad+0x84/0xa0
+> [  908.339446]  free_pcppages_bulk+0x4b8/0x750
+> [  908.339448]  free_unref_page_commit+0x13c/0x198
+> [  908.339449]  free_unref_page+0x84/0xa0
+> [  908.339451]  __free_pages+0x58/0x68
+> [  908.339452]  zap_huge_pmd+0x290/0x2d8
+> [  908.339454]  unmap_page_range+0x2b4/0x470
+> [  908.339455]  unmap_single_vma+0x94/0xe8
+> [  908.339457]  unmap_vmas+0x8c/0x108
+> [  908.339458]  exit_mmap+0xd4/0x178
+> [  908.339459]  mmput+0x74/0x180
+> [  908.339460]  do_exit+0x2b4/0x5b0
+> [  908.339462]  do_group_exit+0x3c/0xe0
+> [  908.339463]  __arm64_sys_exit_group+0x24/0x28
+> [  908.339465]  el0_svc_common+0xa0/0x180
+> [  908.339466]  el0_svc_handler+0x38/0x78
+> [  908.339467]  el0_svc+0x8/0xc
+
+Thats bad, we seem to be making upto 4 unbalanced put_page().
+
+>>> ---
+>>>    virt/kvm/arm/mmu.c | 51 +++++++++++++++++++++++++++++++++++----------------
+>>>    1 file changed, 35 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>>> index 66e0fbb5..04b0f9b 100644
+>>> --- a/virt/kvm/arm/mmu.c
+>>> +++ b/virt/kvm/arm/mmu.c
+>>> @@ -1076,24 +1076,38 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
+>>>             * Skip updating the page table if the entry is
+>>>             * unchanged.
+>>>             */
+>>> -        if (pmd_val(old_pmd) == pmd_val(*new_pmd))
+>>> +        if (pmd_val(old_pmd) == pmd_val(*new_pmd)) {
+>>>                return 0;
+>>> -
+>>> +        } else if (WARN_ON_ONCE(!pmd_thp_or_huge(old_pmd))) {
+>>>            /*
+>>> -         * Mapping in huge pages should only happen through a
+>>> -         * fault.  If a page is merged into a transparent huge
+>>> -         * page, the individual subpages of that huge page
+>>> -         * should be unmapped through MMU notifiers before we
+>>> -         * get here.
+>>> -         *
+>>> -         * Merging of CompoundPages is not supported; they
+>>> -         * should become splitting first, unmapped, merged,
+>>> -         * and mapped back in on-demand.
+>>> +         * If we have PTE level mapping for this block,
+>>> +         * we must unmap it to avoid inconsistent TLB
+>>> +         * state. We could end up in this situation if
+>>> +         * the memory slot was marked for dirty logging
+>>> +         * and was reverted, leaving PTE level mappings
+>>> +         * for the pages accessed during the period.
+>>> +         * Normal THP split/merge follows mmu_notifier
+>>> +         * callbacks and do get handled accordingly.
+>>>             */
+>>> -        VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
+>>> +            unmap_stage2_range(kvm, (addr & S2_PMD_MASK), S2_PMD_SIZE);
+> 
+> It seems that kvm decreases the _refcount of the page twice in transparent_hugepage_adjust()
+> and unmap_stage2_range().
+
+But I thought we should be doing that on the head_page already, as this is THP.
+I will take a look and get back to you on this. Btw, is it possible for you
+to turn on CONFIG_DEBUG_VM and re-run with the above patch ?
+
+Kind regards
+Suzuki
 
 
-Juergen
