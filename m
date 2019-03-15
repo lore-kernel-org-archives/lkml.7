@@ -2,123 +2,138 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EDCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818D2C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF4B2184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512092184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:06:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcxtl8g+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="afodna/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbfCOJEZ (ORCPT
+        id S1728593AbfCOJGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:04:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46238 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfCOJEZ (ORCPT
+        Fri, 15 Mar 2019 05:06:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40494 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727501AbfCOJGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:04:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id s23so5861617pfe.13;
-        Fri, 15 Mar 2019 02:04:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bPoiQV0RRGf1/dW+RIXf3iiaL38X7KkyBkK+7RIVa40=;
-        b=dcxtl8g+lrfPLERPW4HkAAo8N0vEmh39tLrGJtUhBXWu1yTN/oHiNP/gu1J9l2QRHg
-         CeNvzzJxXKSed/ixjcdJVT2jnPLJNRpmGs9g1GS5zHgOU+s10yiOx0XHI1g2lpiBAJv8
-         iL5cQ83mjEMIUhL1urLzrkuhmSKWxQPJphy1Zap861LM3J0PKGfYf5oV7eTxP6An22Yq
-         EzO7YMnqgUn9x5bu3/0/QjWjl6INn2s9JHXBcRWodNptc6d/8MzJ5vC+aIosk+qIWoif
-         Oa4jLQHWPBkVjC0/07IFloUSUv4TgcpZqM4E2+9z3gXIWV6Dm/pLgPnSSdbTo9cCxlnu
-         VKUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bPoiQV0RRGf1/dW+RIXf3iiaL38X7KkyBkK+7RIVa40=;
-        b=Td2FKFtyHITP1H+/yrzNaazkHMOjmv1kHJpnp/21yEjyObOh4jHPpcCbr5Ck1gPGP4
-         DfBSyCf9d9ZOhZ4LGwZ5JYsJd22MZNHq/94J/BMMywNB/dJQuThEB1i3RDBx4fXWdzsj
-         0/cztdAEnvxH+2qaQEM4w6rjj9XFv03ftJLuxSqMPKAnSZrBdQ6Vwzxl14xpw5z6NHKf
-         CxSnococ1EFYiYVVfUpv/96DVVVzFy3DXrFgQ+CPefbpvgHJJDVeTaQGpLsNgIUWLKo5
-         gv+gic0uS3OhPTk5OF+7TeQAwIWg6XeCh73Gn83xTopxRWD+nFcedio82dTP9FEjnQKy
-         nj+w==
-X-Gm-Message-State: APjAAAW9tPvgEUujVd0bc6xRk3iUKtjUOGXJw5Oee7fzbGCypdrESY8r
-        lQxSh0TxTfe/UPPedUPxgMg/B3hhICubdFYmqr7kI+Px
-X-Google-Smtp-Source: APXvYqzOwi/B7Zkr+Lw3gDbTdHv03frg8D0ZKIR7kpZxhfs335MCtKi3ngN7V8nVoqfXP8mfpPgACfQGguUGbeJR9IE=
-X-Received: by 2002:a17:902:7289:: with SMTP id d9mr3048159pll.314.1552640664120;
- Fri, 15 Mar 2019 02:04:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <1552602855-26086-1-git-send-email-info@metux.net> <1552602855-26086-3-git-send-email-info@metux.net>
-In-Reply-To: <1552602855-26086-3-git-send-email-info@metux.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 15 Mar 2019 11:04:12 +0200
-Message-ID: <CAHp75VegzKNhH1Uza9gwQMOAEOdh57WTzsHUx7vPdVs7XvJROQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/45] drivers: tty: serial: 8250_dw: use devm_ioremap_resource()
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Tobias Klauser <tklauser@distanz.ch>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        macro@linux-mips.org,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>, slemieux.tyco@gmail.com,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, baohua@kernel.org,
-        Peter Korsgaard <jacmet@sunsite.dk>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Mar 2019 05:06:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2F8xHq8027924;
+        Fri, 15 Mar 2019 09:06:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=ooKzMHXjxB1hW4mS22uZ/3/Gq8wyTQbRb/0fnDdxmdE=;
+ b=afodna/opPv022Ix7KYXTzEzAm00+2z1BrogluY1JNaUEaEt0/RWrcDCD8omkfmLna1X
+ P2VC9FKonyna4rKupgiy4aLSlA/UP5UQcJjyy13AEnDj2PrEkQsbOrazBS4JykfymguQ
+ JY5B9ptt9z1z2mNSgsp6kBhetadJheDvfFtFylfFlAaqox4aM9AL3lpbhcKUQz8fxskd
+ 4HXmIMc7t1JjMW9BIhG7b07hpZ8IqZQafBzEBn/cXQs3S+uPO2H2OdOmqCO13/+fbBDh
+ ufPIOfOz8ZdyqjcciwdCBzcsqWjxRdYgkKcGEdYH769Wuz4+cXGTfZgVyY8IXBDoX7DH gg== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2r464rwhsu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Mar 2019 09:06:19 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2F96DmS007350
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Mar 2019 09:06:13 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2F968CE005175;
+        Fri, 15 Mar 2019 09:06:09 GMT
+Received: from will-ThinkCentre-M93p.cn.oracle.com (/10.182.71.12)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 15 Mar 2019 09:06:08 +0000
+From:   Jianchao Wang <jianchao.w.wang@oracle.com>
+To:     axboe@kernel.dk
+Cc:     hch@lst.de, jthumshirn@suse.de, hare@suse.de, josef@toxicpanda.com,
+        bvanassche@acm.org, sagi@grimberg.me, keith.busch@intel.com,
+        jsmart2021@gmail.com, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/8]: blk-mq: use static_rqs to iterate busy tags
+Date:   Fri, 15 Mar 2019 16:57:36 +0800
+Message-Id: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9195 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=868 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903150067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 12:41 AM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
->
-> Instead of fetching out data from a struct resource for passing
-> it to devm_ioremap(), directly use devm_ioremap_resource()
+Hi Jens
 
-I don't see any advantage of this change.
-See also below.
+As we know, there is a risk of accesing stale requests when iterate
+in-flight requests with tags->rqs[] and this has been talked in following
+thread,
+[1] https://marc.info/?l=linux-scsi&m=154511693912752&w=2
+[2] https://marc.info/?l=linux-block&m=154526189023236&w=2
 
-> --- a/drivers/tty/serial/8250/8250_dw.c
-> +++ b/drivers/tty/serial/8250/8250_dw.c
-> @@ -526,7 +526,7 @@ static int dw8250_probe(struct platform_device *pdev)
->         p->set_ldisc    = dw8250_set_ldisc;
->         p->set_termios  = dw8250_set_termios;
->
-> -       p->membase = devm_ioremap(dev, regs->start, resource_size(regs));
-> +       p->membase = devm_ioremap_resource(dev, regs);
->         if (!p->membase)
+A typical sence could be
+blk_mq_get_request         blk_mq_queue_tag_busy_iter
+  -> blk_mq_get_tag
+                             -> bt_for_each
+                               -> bt_iter
+                                 -> rq = taags->rqs[]
+                                 -> rq->q
+  -> blk_mq_rq_ctx_init
+    -> data->hctx->tags->rqs[rq->tag] = rq;
 
-And how did you test this? devm_ioremap_resource() returns error
-pointer in case of error.
+The root cause is that there is a window between set bit on tag sbitmap
+and set tags->rqs[].
 
->                 return -ENOMEM;
+This patch would fix this issue by iterating requests with tags->static_rqs[]
+instead of tags->rqs[] which would be changed dynamically. Moreover,
+we will try to get a non-zero q_usage_counter before access hctxs and tags and
+thus could avoid the race with updating nr_hw_queues, switching io scheduler
+and even queue clean up which are all under a frozen and drained queue.
 
--- 
-With Best Regards,
-Andy Shevchenko
+The 1st patch get rid of the useless of synchronize_rcu in __blk_mq_update_nr_hw_queues
+
+The 2nd patch modify the blk_mq_queue_tag_busy_iter to use tags->static_rqs[]
+instead of tags->rqs[] to iterate the busy tags.
+
+The 3rd ~ 7th patch change the blk_mq_tagset_busy_iter to blk_mq_queue_tag_busy_iter
+which is safer
+
+The 8th patch get rid of the blk_mq_tagset_busy_iter.
+
+Jianchao Wang(8)
+	blk-mq: get rid of the synchronize_rcu in
+	blk-mq: change the method of iterating busy tags of a
+	blk-mq: use blk_mq_queue_tag_busy_iter in debugfs
+	mtip32xx: use blk_mq_queue_tag_busy_iter
+	nbd: use blk_mq_queue_tag_busy_iter
+	skd: use blk_mq_queue_tag_busy_iter
+	nvme: use blk_mq_queue_tag_busy_iter
+	blk-mq: remove blk_mq_tagset_busy_iter
+
+diff stat
+ block/blk-mq-debugfs.c            |   4 +-
+ block/blk-mq-tag.c                | 173 +++++++++++++++++++++++++-------------------------------------------------------------
+ block/blk-mq-tag.h                |   2 -
+ block/blk-mq.c                    |  35 ++++++------------
+ drivers/block/mtip32xx/mtip32xx.c |   8 ++--
+ drivers/block/nbd.c               |   2 +-
+ drivers/block/skd_main.c          |   4 +-
+ drivers/nvme/host/core.c          |  12 ++++++
+ drivers/nvme/host/fc.c            |  12 +++---
+ drivers/nvme/host/nvme.h          |   2 +
+ drivers/nvme/host/pci.c           |   5 ++-
+ drivers/nvme/host/rdma.c          |   6 +--
+ drivers/nvme/host/tcp.c           |   5 ++-
+ drivers/nvme/target/loop.c        |   6 +--
+ include/linux/blk-mq.h            |   7 ++--
+ 15 files changed, 105 insertions(+), 178 deletions(-
+
+Thanks
+Jianchao
+
