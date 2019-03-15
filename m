@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851ADC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7C0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5420521019
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FFB21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552670370;
-	bh=TJyOOtLh9MZWJV6BcKQyBEeoGqsqjad7T2A2hZ2CB0k=;
+	s=default; t=1552670373;
+	bh=RAORQaYniy2ImQ1EuGnpG22JfXRCQ3pIRDMcQiQDbKM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=EG875u/ONcOwHF69lN4UTAf5Ay3DWfaOgPqO8yOyI5nIosn1hfnPB+wdpA/QQEQnN
-	 gTIyBSHoNlSgyNiLuc+6AOwGZWRSkdte4DxbgLehkORJK1v0GUuAakzKmVYnVy8wfF
-	 EDTMeWJAqln6Y3W7kUQEPFaY9sSZ3ie747/Hg1xg=
+	b=bdgTA3OxRZLgb8WpkVajZrIVEBo5uUgMwH4r1fkqau6uQy/3xBfg1Bf3cQCABntfH
+	 JxElBK9AmdJztRlckcX9X4e4YDMrQULRL0PeVEGGwPeAYIRX6i9K/KAA2KvNFr685/
+	 sZN7DzzrT+PMwaod53ANOPNFUky2B9H5rHoZa8TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfCORT3 (ORCPT
+        id S1729860AbfCORTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 13:19:29 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54158 "EHLO
+        Fri, 15 Mar 2019 13:19:31 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54254 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbfCORT2 (ORCPT
+        with ESMTP id S1728449AbfCORT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 13:19:28 -0400
+        Fri, 15 Mar 2019 13:19:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=fQ2TjBorWdWJotCOH4RIGOuDsSNQ7VBh/rhXMF+il/k=; b=Mr7GEYWTRGvS
-        pMlRbdaL8Y+FUiTCWyAxNfM5jeT+ViLwwWHB3OvIjIUwsJkNDmBwJ5jJhOhTuoKl+or22VDSUevWU
-        6Lraj9h30zkHFX8WLs2nwEhjT+RLqrBWs011YP5/LGF8vm3ZVFAmkrx8VGJGg38Fx2u7iM2J+IQEI
-        Esix0=;
+        List-Archive; bh=VwVBZq/1ZciebtstBWsnZK95wL18nb/xYIog7wjT/Mg=; b=nUK4rsj4Dlq0
+        3Ot5Tf6oJBCV2xLsAVg77CwU4EG7HOS2MbdHF/D1xFZmm0dCCX82O5x6os84zQrYDqcm1V40V98Vo
+        sHOkD/GwjjtZ9Qt/oW3BLwtwKI67x1A/RUidaPibuYVFpFe8ZH7RTwsRcEm/ZLOBF5JcYmYoe/rTs
+        EmHfI=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h4qUO-0002et-Ha; Fri, 15 Mar 2019 17:19:24 +0000
+        id 1h4qUR-0002f7-Mi; Fri, 15 Mar 2019 17:19:27 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id CB8DD1126E81; Fri, 15 Mar 2019 17:19:23 +0000 (GMT)
+        id 278781126E81; Fri, 15 Mar 2019 17:19:27 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: da9055: Convert to regulator core's simplified DT parsing code" to the regulator tree
+Subject: Applied "regulator: 88pm800: Get rid of struct pm800_regulators" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190315171923.CB8DD1126E81@debutante.sirena.org.uk>
-Date:   Fri, 15 Mar 2019 17:19:23 +0000 (GMT)
+Message-Id: <20190315171927.278781126E81@debutante.sirena.org.uk>
+Date:   Fri, 15 Mar 2019 17:19:27 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: da9055: Convert to regulator core's simplified DT parsing code
+   regulator: 88pm800: Get rid of struct pm800_regulators
 
 has been applied to the regulator tree at
 
@@ -84,124 +84,65 @@ to this mail.
 Thanks,
 Mark
 
-From db7ecb493cab3f27da72c6460991e1de9969f9b8 Mon Sep 17 00:00:00 2001
+From 6cabb8b7fc1428eb573f426a17a853d81227d095 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 12 Mar 2019 23:47:59 +0800
-Subject: [PATCH] regulator: da9055: Convert to regulator core's simplified DT
- parsing code
+Date: Thu, 14 Mar 2019 19:55:19 +0800
+Subject: [PATCH] regulator: 88pm800: Get rid of struct pm800_regulators
 
-Use regulator core's simplified DT parsing code to simply the driver
-implementation.
+The struct pm800_regulators only has 2 members: *chip and *map.
+The pm800_data->chip is not used. The pm800_data->map is not necessary.
+Thus remove the struct pm800_regulators.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/da9055-regulator.c | 67 +++-------------------------
- 1 file changed, 6 insertions(+), 61 deletions(-)
+ drivers/regulator/88pm800.c | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
 
-diff --git a/drivers/regulator/da9055-regulator.c b/drivers/regulator/da9055-regulator.c
-index 3ade4b8d204e..bcbc2fbd7fea 100644
---- a/drivers/regulator/da9055-regulator.c
-+++ b/drivers/regulator/da9055-regulator.c
-@@ -338,6 +338,8 @@ static const struct regulator_ops da9055_ldo_ops = {
- {\
- 	.reg_desc = {\
- 		.name = #_id,\
-+		.of_match = of_match_ptr(#_id),\
-+		.regulators_node = of_match_ptr("regulators"),\
- 		.ops = &da9055_ldo_ops,\
- 		.type = REGULATOR_VOLTAGE,\
- 		.id = DA9055_ID_##_id,\
-@@ -366,6 +368,8 @@ static const struct regulator_ops da9055_ldo_ops = {
- {\
- 	.reg_desc = {\
- 		.name = #_id,\
-+		.of_match = of_match_ptr(#_id),\
-+		.regulators_node = of_match_ptr("regulators"),\
- 		.ops = &da9055_buck_ops,\
- 		.type = REGULATOR_VOLTAGE,\
- 		.id = DA9055_ID_##_id,\
-@@ -509,59 +513,6 @@ static inline struct da9055_regulator_info *find_regulator_info(int id)
- 	return NULL;
- }
+diff --git a/drivers/regulator/88pm800.c b/drivers/regulator/88pm800.c
+index 89bbd6e8bad1..9fd379732d18 100644
+--- a/drivers/regulator/88pm800.c
++++ b/drivers/regulator/88pm800.c
+@@ -77,11 +77,6 @@ struct pm800_regulator_info {
+ 	int max_ua;
+ };
  
--#ifdef CONFIG_OF
--static struct of_regulator_match da9055_reg_matches[] = {
--	{ .name = "BUCK1", },
--	{ .name = "BUCK2", },
--	{ .name = "LDO1", },
--	{ .name = "LDO2", },
--	{ .name = "LDO3", },
--	{ .name = "LDO4", },
--	{ .name = "LDO5", },
--	{ .name = "LDO6", },
+-struct pm800_regulators {
+-	struct pm80x_chip *chip;
+-	struct regmap *map;
 -};
 -
--static int da9055_regulator_dt_init(struct platform_device *pdev,
--				    struct da9055_regulator *regulator,
--				    struct regulator_config *config,
--				    int regid)
--{
--	struct device_node *nproot, *np;
--	int ret;
--
--	nproot = of_node_get(pdev->dev.parent->of_node);
--	if (!nproot)
--		return -ENODEV;
--
--	np = of_get_child_by_name(nproot, "regulators");
--	if (!np)
--		return -ENODEV;
--
--	ret = of_regulator_match(&pdev->dev, np, &da9055_reg_matches[regid], 1);
--	of_node_put(nproot);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Error matching regulator: %d\n", ret);
--		return ret;
--	}
--
--	config->init_data = da9055_reg_matches[regid].init_data;
--	config->of_node = da9055_reg_matches[regid].of_node;
--
--	if (!config->of_node)
--		return -ENODEV;
--
--	return 0;
--}
--#else
--static inline int da9055_regulator_dt_init(struct platform_device *pdev,
--				       struct da9055_regulator *regulator,
--				       struct regulator_config *config,
--				       int regid)
--{
--	return -ENODEV;
--}
--#endif /* CONFIG_OF */
--
- static int da9055_regulator_probe(struct platform_device *pdev)
+ /*
+  * vreg - the buck regs string.
+  * ereg - the string for the enable register.
+@@ -235,7 +230,6 @@ static int pm800_regulator_probe(struct platform_device *pdev)
  {
+ 	struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
+ 	struct pm80x_platform_data *pdata = dev_get_platdata(pdev->dev.parent);
+-	struct pm800_regulators *pm800_data;
  	struct regulator_config config = { };
-@@ -582,18 +533,12 @@ static int da9055_regulator_probe(struct platform_device *pdev)
+ 	struct regulator_init_data *init_data;
+ 	int i, ret;
+@@ -252,18 +246,8 @@ static int pm800_regulator_probe(struct platform_device *pdev)
+ 			return -EINVAL;
  	}
  
- 	regulator->da9055 = da9055;
--	config.dev = &pdev->dev;
-+	config.dev = da9055->dev;
- 	config.driver_data = regulator;
- 	config.regmap = da9055->regmap;
+-	pm800_data = devm_kzalloc(&pdev->dev, sizeof(*pm800_data),
+-					GFP_KERNEL);
+-	if (!pm800_data)
+-		return -ENOMEM;
+-
+-	pm800_data->map = chip->subchip->regmap_power;
+-	pm800_data->chip = chip;
+-
+-	platform_set_drvdata(pdev, pm800_data);
+-
+ 	config.dev = chip->dev;
+-	config.regmap = pm800_data->map;
++	config.regmap = chip->subchip->regmap_power;
+ 	for (i = 0; i < PM800_ID_RG_MAX; i++) {
+ 		struct regulator_dev *regulator;
  
--	if (pdata) {
-+	if (pdata)
- 		config.init_data = pdata->regulators[pdev->id];
--	} else {
--		ret = da9055_regulator_dt_init(pdev, regulator, &config,
--					       pdev->id);
--		if (ret < 0)
--			return ret;
--	}
- 
- 	ret = da9055_gpio_init(regulator, &config, pdata, pdev->id);
- 	if (ret < 0)
 -- 
 2.20.1
 
