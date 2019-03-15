@@ -2,111 +2,129 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04837C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7C7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D328921872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B93F206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:44:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="a82Afbfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfCODne (ORCPT
+        id S1727361AbfCODox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 23:43:34 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46935 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfCODne (ORCPT
+        Thu, 14 Mar 2019 23:44:53 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:37810 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfCODow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 23:43:34 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c18so7163971otl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 20:43:33 -0700 (PDT)
+        Thu, 14 Mar 2019 23:44:52 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id C19BCD24
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 03:44:50 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xo9kCS6MMyLS for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 22:44:50 -0500 (CDT)
+Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 92470D20
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 22:44:50 -0500 (CDT)
+Received: by mail-it1-f199.google.com with SMTP id q184so6593098itd.6
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 20:44:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=jPJXF2tGj3kFA5GSZyg+ChS60xhYGukjzP4tEiro0ws=;
+        b=a82AfbfpE+dhqJ/9cmoNafieyT385EqzP6A7VexJl6+pGXAsCQk5hYXbq4zJAUFx5L
+         wiyxP8iFK76T4ouTMl2m5XevgN+B9VcpU4x0hulDIxdayAQ6IN88kQuMK/6Tsnkusb0K
+         5LFhh864PE70hvKb27zS3QEnGhU+0oKi3QfHtQ2JHTiEfdwhPP4NS0dvP2c8W5dYCML0
+         YoPSVsqe6/uDZBAxvuV03lFltVFOdZTVNfPef7vdMxC8o2pE0xxkJOBF/5uim6cfzi4M
+         yEaVhRSREqT9ogAclDnDwrhG/lNbVXTUFnbR6PGJL1vBr1kmPTzHtkVMdOPXnZ9N/3s0
+         ORXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m1cM0hD0iaSSll7TNk9VjvZsrohSkbKY0TH6w+tjBEk=;
-        b=QhrFV5jrZQj/09bQV/juO8BV3ElPFGbwUUvBG3h+1JT4iq9EgX15+aij9zXYmWryOS
-         cYCwgRZ8rIX5eelQlZVs+Imj++0x3fS8zUSXJi1Zr3xdqBozGPukybHIeA2ntAnBboR/
-         2eq2/GII3e6j/huDzdXzgIxGEdD88PLZ0h4DeM7AcTwMcSWZDwMrkeo/sZj5nVOgcl1W
-         9/ho5lL9u5FaTVXnHe1JQdT2XsBNNytR6+1qAbzq5CXiG9vE6HqrKXs6zVoS4yQ7ISK/
-         OG5mhSyeQ6BukBtWf1QcVUMFi78VqHPM2o+OeztVrEascMZmhegIlO/GPMc63bvSY0Oo
-         2jdw==
-X-Gm-Message-State: APjAAAUQ+JUsWhXOfstsXbGze9RU3T/1KoRa0uh1eYxOhI4xIKj/Bj81
-        7BZsZZ7ujEp2NF77NHIQXcI=
-X-Google-Smtp-Source: APXvYqxvFJBHD9s4I0eNbzqgQHsFbu7W9iolo8f3gFUJWFxlYyIzoe68S2SHXmshZ12diLwPvICVOA==
-X-Received: by 2002:a9d:64d0:: with SMTP id n16mr846588otl.268.1552621413062;
-        Thu, 14 Mar 2019 20:43:33 -0700 (PDT)
-Received: from sultan-box.localdomain ([107.193.118.89])
-        by smtp.gmail.com with ESMTPSA id i9sm336461otl.43.2019.03.14.20.43.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Mar 2019 20:43:32 -0700 (PDT)
-Date:   Thu, 14 Mar 2019 20:43:28 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190315034328.GA3171@sultan-box.localdomain>
-References: <20190311175800.GA5522@sultan-box.localdomain>
- <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
- <20190311204626.GA3119@sultan-box.localdomain>
- <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
- <20190312080532.GE5721@dhcp22.suse.cz>
- <20190312163741.GA2762@sultan-box.localdomain>
- <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
- <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
- <20190314204911.GA875@sultan-box.localdomain>
- <20190315025448.GA3378@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315025448.GA3378@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jPJXF2tGj3kFA5GSZyg+ChS60xhYGukjzP4tEiro0ws=;
+        b=ebhorvpE67acwKvMe0dPyvVxw1m1/wazdZilh3ao8wYyN+CDp4+/aaIA7AaJmudtyj
+         P3/+H0i7susuLRPnP5VeSBgqF3gKRtx0xFCVqEbrZZBoNhyfsNMEmWEo1cIQ5ek/3ZiH
+         UEzMXKWxaqY+Af+nRksDkl+p+P1AqB+DGMj7n4QflGjJwCklOey2SRVjoZKhPHpwgUby
+         KzHDCmzpDTV5CRRZ7iDZrHrShgQoNDOTFYce07FHh+vZppABHeh82ss6j/rRXkbTwTWb
+         cX6e+v39YY84s69adtD2s4aOjaEVI59xM/Pi8p3/snWsZvEtbRt5NKHIff0ha95Y7U5s
+         G6sw==
+X-Gm-Message-State: APjAAAWY1z43pHNxkV/u/egIDBgkGU/68NTCn5dNsTL5ibbRtlKrs78w
+        EoAVUHxIrIeFXdieHWdw2Er6sZ3L96mYXj/pTS+yxfG1js99vrkNsdJNw22bHFqywwbryrP3kzf
+        fpqmrUk424Mvn+fdj6zUjXXQ1G6Sz
+X-Received: by 2002:a24:6910:: with SMTP id e16mr774297itc.116.1552621490148;
+        Thu, 14 Mar 2019 20:44:50 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz3btbXWaDjbuQoZrXdxSRXPLpbPv2kYOQRQeRXiY02LNQbY19BRQt5e2dIXSXy7fM3VdDTxQ==
+X-Received: by 2002:a24:6910:: with SMTP id e16mr774289itc.116.1552621489855;
+        Thu, 14 Mar 2019 20:44:49 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id 5sm472268ity.40.2019.03.14.20.44.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 20:44:47 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] sound: soc-pcm: add a check to avoid NULL pointer dereference
+Date:   Thu, 14 Mar 2019 22:44:15 -0500
+Message-Id: <20190315034415.24085-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 10:54:48PM -0400, Joel Fernandes wrote:
-> I'm not sure if that makes much semantic sense for how the signal handling is
-> supposed to work. Imagine a parent sends SIGKILL to its child, and then does
-> a wait(2). Because the SIGKILL blocks in your idea, then the wait cannot
-> execute, and because the wait cannot execute, the zombie task will not get
-> reaped and so the SIGKILL senders never gets unblocked and the whole thing
-> just gets locked up. No? I don't know it just feels incorrect.
+In case debugfs_create_u32 fails, the fix frees memory and returns
+an error to notify callers.
 
-Block until the victim becomes a zombie instead.
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ sound/soc/soc-pcm.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-> Further, in your idea adding stuff to task_struct will simply bloat it - when
-> this task can easily be handled using eBPF without making any kernel changes.
-> Either by probing sched_process_free or sched_process_exit tracepoints.
-> Scheduler maintainers generally frown on adding stuff to task_struct
-> pointlessly there's a good reason since bloating it effects the performance
-> etc, and something like this would probably never be ifdef'd out behind a
-> CONFIG.
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 0d5ec68a1e50..a7d88ed8ebb5 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -1231,15 +1231,21 @@ static int dpcm_be_connect(struct snd_soc_pcm_runtime *fe,
+ 	list_add(&dpcm->list_be, &fe->dpcm[stream].be_clients);
+ 	list_add(&dpcm->list_fe, &be->dpcm[stream].fe_clients);
+ 
+-	dev_dbg(fe->dev, "connected new DPCM %s path %s %s %s\n",
+-			stream ? "capture" : "playback",  fe->dai_link->name,
+-			stream ? "<-" : "->", be->dai_link->name);
+-
+ #ifdef CONFIG_DEBUG_FS
+-	if (fe->debugfs_dpcm_root)
++	if (fe->debugfs_dpcm_root) {
+ 		dpcm->debugfs_state = debugfs_create_u32(be->dai_link->name, 0644,
+ 				fe->debugfs_dpcm_root, &dpcm->state);
++		if (!dpcm->debugfs_state) {
++			kfree(dpcm);
++			return -ENOMEM;
++		}
++	}
+ #endif
++
++	dev_dbg(fe->dev, "connected new DPCM %s path %s %s %s\n",
++			stream ? "capture" : "playback",  fe->dai_link->name,
++			stream ? "<-" : "->", be->dai_link->name);
++
+ 	return 1;
+ }
+ 
+-- 
+2.17.1
 
-Adding something to task_struct is just the easiest way to test things for
-experimentation. This can be avoided in my suggestion by passing the pointer to
-a completion via the relevant functions, and then completing it at the time the
-victim transitions to a zombie state. I understand it's possible to use eBPF for
-this, but it seems kind of messy since this functionality is something that I
-think others would want provided by the kernel (i.e., anyone using PSI to
-implement their own OOM killer daemon similar to LMKD).
-
-Thanks,
-Sultan
