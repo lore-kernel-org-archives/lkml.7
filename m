@@ -2,182 +2,326 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8A8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED033C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBAE2184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39852063F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:51:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBkLteBt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ohXTpVqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfCOTmN (ORCPT
+        id S1727159AbfCOTvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 15:42:13 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36225 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfCOTmN (ORCPT
+        Fri, 15 Mar 2019 15:51:45 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:35747 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfCOTvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 15:42:13 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y36so1655390qtb.3;
-        Fri, 15 Mar 2019 12:42:12 -0700 (PDT)
+        Fri, 15 Mar 2019 15:51:44 -0400
+Received: by mail-qt1-f201.google.com with SMTP id x12so9800607qtk.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 12:51:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+9HyiyauWUeAchfMfptz4sKxCIyLca0DY24Pz3M+TJc=;
-        b=rBkLteBth6lD2UVpUCmIOe3njhECrdn3b0BETbIgothLa9I3x/to/tBof4cUhQ5NRA
-         oJ5dtUzXGHgmFINkGRUwj4U9F0KbJl7RHul6TIWtKHVuVi8rpyYOkVJ1iYQPjKFRMPqd
-         YoZXpexeCIB0FyINRKGbPkGdbe+LlubxoC244x3usVK2JEubA/WApzIe0kXAqGBH0RSb
-         OUvRqBd4Nh+e2UGTHOr2ZuUyX2ajViyAHyBIDD7L84bSVgtvtMjzB7YZIejsxP9ZW4IW
-         iJIm4eiy7Lqk4OLXzRLnTZElaYe/UqGsOXDG3C8ifDzX/nkh2zfd4QICWj36cUNdVVAA
-         9UJg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=lS1tda5R3oyc5zhOSYqviJG5zDQpMDKfp9+O4jaegKI=;
+        b=ohXTpVqcuG0UmKJvUtKjM4R+loZ9YGqsC2TNKIovw3Vv1iDBeEQjXD0ynWS7zL0bXB
+         Wk2OGdsqFw8mnvPuT8NveZNoTQLA9nK9wvI4s6VGVH+pMEXJPBUyeXWOlhOtsZoCwlms
+         KUwwqynDBUIJq4WcicRvyBz5UqSNlQn6V+ZP24MQ1rM1oM0fIbfAeg5o7OWRBuamdpin
+         7pfcrb5tuu87BjO6+BaYvgjWOTqbs9DADOYitK3mxljNNgp4AJuQ7J5gVgDvi7CYDoTi
+         DSRSOprCSxPsX0QQuXNlfVde7yZVlfxDspCjEj2291Zi2vgMUqD0prCqJBk5sL8X8G7l
+         U4ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+9HyiyauWUeAchfMfptz4sKxCIyLca0DY24Pz3M+TJc=;
-        b=Qe6N7g+nEeJMtqWdBEoYfZJMA0X/bpEi150Ju1iO4f6g8xsI632MqNvxSpDbrOm+rz
-         gFe4zczUkQxdIPGcaNnUL2UsgtD0SGQ6uWRkVqNfL79dzAaG7Mf5pAngn3SrTH3/msH/
-         E/Ud3rhjIEy+1gWutVfaijE26cMne6U7PliD0FbvrpIW1sbYtahi0VARIkkR3StJqLLd
-         +TDu3QjwnWaWmlzuRUaCPuLzYokuTC87+3Ln3kmhnCRkFYOhDBQWyknvNLisM4G00EBP
-         G1Z/0CJYn4jGaAQl/gAswhoRMCSOzGjc9QK2VXTjAwMvJvojGIMyMIdxg6TrDJFDsHRu
-         QNkw==
-X-Gm-Message-State: APjAAAVUnluu1jNqoEt6W/IhajnzWrn5dqgY0yf6r5TagyEm/8rRX3WQ
-        a4mvMAyHOXvLrDw6GCG0XZM=
-X-Google-Smtp-Source: APXvYqycKIcChaOAzNfiS0TvVtRxI9LaVadCbhAOEbx5fFukO4L4v+kZ8wwWFsqurvcTkSjpSH949w==
-X-Received: by 2002:ac8:67cb:: with SMTP id r11mr4239097qtp.388.1552678931918;
-        Fri, 15 Mar 2019 12:42:11 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id y2sm2231466qty.63.2019.03.15.12.42.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 12:42:10 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id ED2BA4039C; Fri, 15 Mar 2019 16:42:07 -0300 (-03)
-Date:   Fri, 15 Mar 2019 16:42:07 -0300
-To:     Song Liu <songliubraving@fb.com>
-Cc:     bpf@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=lS1tda5R3oyc5zhOSYqviJG5zDQpMDKfp9+O4jaegKI=;
+        b=bYcNBLO4Q24MaLc/xh0VS2voarHHQbNPUFDpettEHk9ndI0jQnSiOK5TKaqhpKLPLN
+         auSg9DlOzCO98FJYTW4aUU/AfOUpg3vFCnaVsCttvs2qM8TaxpGKYBdsOiWnB4I5zH7Z
+         YiOKqk0VtByfJngnjXyffzrppMvmobo0vU/WRYQ+dq+yplANNPPYAWfTrMX6H9s4RvuJ
+         1AM0rFTiiFsnOUNXMOF9FVid07+pPzRENwLdLiQleS+hu4bxBWIyobkkH7dReTyKMKKB
+         mZAfZYtfWdmOCDaGHyOSgzq5alcqIKnA8nZFtmMLivQpYM3qFOLhkkhRdOOt4Egx3NIc
+         JRaA==
+X-Gm-Message-State: APjAAAU9nFFC1ZzXy7hDYdRDXk+bSEKxl5XJI8OwD5KAf5+dWga9hyog
+        +gDZayO8vFUvotMVlArXuR3gAPkAU8UIae2Y
+X-Google-Smtp-Source: APXvYqwRMzh6H6zZBhjROMaxdJyr9aQgzOzgoQ85fIaWEjxRGJIVLPkVrWIs+wGj9rIiCyPVcEVN12MIu5E7ubHP
+X-Received: by 2002:aed:222b:: with SMTP id n40mr3198208qtc.35.1552679503737;
+ Fri, 15 Mar 2019 12:51:43 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 20:51:24 +0100
+Message-Id: <cover.1552679409.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
+Subject: [PATCH v11 00/14] arm64: untag user pointers passed to the kernel
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, sdf@fomichev.me
-Subject: Re: [PATCH v9 perf,bpf 09/15] perf, bpf: save btf information as
- headers to perf.data
-Message-ID: <20190315194207.GE14938@kernel.org>
-References: <20190312053051.2690567-1-songliubraving@fb.com>
- <20190312053051.2690567-10-songliubraving@fb.com>
- <20190312151405.GG4939@kernel.org>
- <20190312151608.GH4939@kernel.org>
- <61901DA6-47B4-44E0-A0C9-9F2DBD6C34C1@fb.com>
- <20190312170556.GJ4939@kernel.org>
- <97D0A2F1-1F82-4CF0-ACE3-A276784DF7EA@fb.com>
- <20190315190651.GA14938@kernel.org>
- <20190315192610.GB14938@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315192610.GB14938@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Mar 15, 2019 at 04:26:10PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Mar 15, 2019 at 04:06:51PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > And yes, there are BPF programs with BTF information associated:
->  
-> > [root@quaco perf]# bpftool map dump pids_filtered
-> > [{
-> >         "key": 2592,
-> >         "value": true
-> >     },{
-> >         "key": 20511,
-> >         "value": true
-> >     }
-> > ]
-> > [root@quaco perf]#
->  
-> > I.e. bpftool can find the BTF info and thus is able to show the
-> > 'pids_filtered' map keys and values pretty printed, not just as hex raw
-> > data.
->  
-> > I'm trying to find out why 'bpftool map dump' finds the BTF info while
-> > perf_event__synthesize_one_bpf_prog() doesn't.
-> 
-> Humm, the BTF info above is for BPF _maps_ not for _programs_, I think
-> you haven't added BTF info for maps in the perf.data header, right?
+=== Overview
 
-And then the BPF program I was using to test this had BTF encoded from
-DWARF by pahole, so only associated to BPF maps, not to BPF programs, as
-soon as I regenerated that BPF .o with clang 9.0, I got the BTF info for
-the BPF programs and all works as expected:
+arm64 has a feature called Top Byte Ignore, which allows to embed pointer
+tags into the top byte of each pointer. Userspace programs (such as
+HWASan, a memory debugging tool [1]) might use this feature and pass
+tagged user pointers to the kernel through syscalls or other interfaces.
 
-[root@quaco perf]# clang --version
-clang version 9.0.0 (https://git.llvm.org/git/clang.git/ 7906282d3afec5dfdc2b27943fd6c0309086c507) (https://git.llvm.org/git/llvm.git/ a1b5de1ff8ae8bc79dc8e86e1f82565229bd0500)
-Target: x86_64-unknown-linux-gnu
-Thread model: posix
-InstalledDir: /opt/llvm/bin
-[root@quaco perf]# perf record -e /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c sleep 1
-LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.023 MB perf.data ]
-[root@quaco perf]# file /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-/home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o: ELF 64-bit LSB relocatable, eBPF, version 1 (SYSV), with debug_info, not stripped
-[root@quaco perf]# readelf -SW /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o | grep BTF
-  [22] .BTF              PROGBITS        0000000000000000 000ede 000b0e 00      0   0  1
-  [23] .BTF.ext          PROGBITS        0000000000000000 0019ec 0002a0 00      0   0  1
-  [24] .rel.BTF.ext      REL             0000000000000000 002fa8 000270 10     30  23  8
-[root@quaco perf]# grep examples ~/.perfconfig
-	add_events = /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-[root@quaco perf]# 
-[root@quaco perf]# perf trace -e recvmmsg
+Right now the kernel is already able to handle user faults with tagged
+pointers, due to these patches:
 
-Then, while this runs, using that augmented_raw_syscalls.o BPF program
-generated with clang 9.0 and with proper BTF for BPF programs and not
-just for BPF maps:
+1. 81cddd65 ("arm64: traps: fix userspace cache maintenance emulation on a
+             tagged pointer")
+2. 7dcd9dd8 ("arm64: hw_breakpoint: fix watchpoint matching for tagged
+	      pointers")
+3. 276e9327 ("arm64: entry: improve data abort handling of tagged
+	      pointers")
 
-[root@quaco ~]# bpftool map dump pids_filtered
-[{
-        "key": 22459,
-        "value": true
-    },{
-        "key": 2592,
-        "value": true
-    }
-]
-[root@quaco ~]#
+This patchset extends tagged pointer support to syscall arguments.
 
-[root@quaco ~]# perf record sleep 1
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.020 MB perf.data (7 samples) ]
-[root@quaco ~]# perf report --header-only | grep b[pt]f
-# event : name = cycles:ppp, , id = { 1116204, 1116205, 1116206, 1116207, 1116208, 1116209, 1116210, 1116211 }, size = 112, { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|PERIOD, read_format = ID, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, enable_on_exec = 1, task = 1, precise_ip = 3, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1
-# bpf_prog_info of id 13
-# bpf_prog_info of id 14
-# bpf_prog_info of id 15
-# bpf_prog_info of id 16
-# bpf_prog_info of id 17
-# bpf_prog_info of id 18
-# bpf_prog_info of id 21
-# bpf_prog_info of id 22
-# bpf_prog_info of id 51
-# bpf_prog_info of id 52
-# btf info of id 8
-[root@quaco ~]#
+As per the proposed ABI change [3], tagged pointers are only allowed to be
+passed to syscalls when they point to memory ranges obtained by anonymous
+mmap() or brk().
 
-Moving along the patch queue...
+For non-memory syscalls this is done by untaging user pointers when the
+kernel performs pointer checking to find out whether the pointer comes
+from userspace (most notably in access_ok). The untagging is done only
+when the pointer is being checked, the tag is preserved as the pointer
+makes its way through the kernel and stays tagged when the kernel
+dereferences the pointer when perfoming user memory accesses.
 
-- Arnaldo
+Memory syscalls (mmap, mprotect, etc.) don't do user memory accesses but
+rather deal with memory ranges, and untagged pointers are better suited to
+describe memory ranges internally. Thus for memory syscalls we untag
+pointers completely when they enter the kernel.
+
+=== Other approaches
+
+One of the alternative approaches to untagging that was considered is to
+completely strip the pointer tag as the pointer enters the kernel with
+some kind of a syscall wrapper, but that won't work with the countless
+number of different ioctl calls. With this approach we would need a custom
+wrapper for each ioctl variation, which doesn't seem practical.
+
+An alternative approach to untagging pointers in memory syscalls prologues
+is to inspead allow tagged pointers to be passed to find_vma() (and other
+vma related functions) and untag them there. Unfortunately, a lot of
+find_vma() callers then compare or subtract the returned vma start and end
+fields against the pointer that was being searched. Thus this approach
+would still require changing all find_vma() callers.
+
+=== Testing
+
+The following testing approaches has been taken to find potential issues
+with user pointer untagging:
+
+1. Static testing (with sparse [2] and separately with a custom static
+   analyzer based on Clang) to track casts of __user pointers to integer
+   types to find places where untagging needs to be done.
+
+2. Static testing with grep to find parts of the kernel that call
+   find_vma() (and other similar functions) or directly compare against
+   vm_start/vm_end fields of vma.
+
+3. Static testing with grep to find parts of the kernel that compare
+   user pointers with TASK_SIZE or other similar consts and macros.
+
+4. Dynamic testing: adding BUG_ON(has_tag(addr)) to find_vma() and running
+   a modified syzkaller version that passes tagged pointers to the kernel.
+
+Based on the results of the testing the requried patches have been added
+to the patchset.
+
+=== Notes
+
+This patchset is meant to be merged together with "arm64 relaxed ABI" [3].
+
+This patchset is a prerequisite for ARM's memory tagging hardware feature
+support [4].
+
+This patchset has been merged into the Pixel 2 kernel tree and is now
+being used to enable testing of Pixel 2 phones with HWASan.
+
+Thanks!
+
+[1] http://clang.llvm.org/docs/HardwareAssistedAddressSanitizerDesign.html
+
+[2] https://github.com/lucvoo/sparse-dev/commit/5f960cb10f56ec2017c128ef9d16060e0145f292
+
+[3] https://lkml.org/lkml/2018/12/10/402
+
+[4] https://community.arm.com/processors/b/blog/posts/arm-a-profile-architecture-2018-developments-armv85a
+
+Changes in v11:
+- Added "uprobes, arm64: untag user pointers in find_active_uprobe" patch.
+- Added "bpf, arm64: untag user pointers in stack_map_get_build_id_offset"
+  patch.
+- Fixed "tracing, arm64: untag user pointers in seq_print_user_ip" to
+  correctly perform subtration with a tagged addr.
+- Moved untagged_addr() from SYSCALL_DEFINE3(mprotect) and
+  SYSCALL_DEFINE4(pkey_mprotect) to do_mprotect_pkey().
+- Moved untagged_addr() definition for other arches from
+  include/linux/memory.h to include/linux/mm.h.
+- Changed untagging in strn*_user() to perform userspace accesses through
+  tagged pointers.
+- Updated the documentation to mention that passing tagged pointers to
+  memory syscalls is allowed.
+- Updated the test to use malloc'ed memory instead of stack memory.
+
+Changes in v10:
+- Added "mm, arm64: untag user pointers passed to memory syscalls" back.
+- New patch "fs, arm64: untag user pointers in fs/userfaultfd.c".
+- New patch "net, arm64: untag user pointers in tcp_zerocopy_receive".
+- New patch "kernel, arm64: untag user pointers in prctl_set_mm*".
+- New patch "tracing, arm64: untag user pointers in seq_print_user_ip".
+
+Changes in v9:
+- Rebased onto 4.20-rc6.
+- Used u64 instead of __u64 in type casts in the untagged_addr macro for
+  arm64.
+- Added braces around (addr) in the untagged_addr macro for other arches.
+
+Changes in v8:
+- Rebased onto 65102238 (4.20-rc1).
+- Added a note to the cover letter on why syscall wrappers/shims that untag
+  user pointers won't work.
+- Added a note to the cover letter that this patchset has been merged into
+  the Pixel 2 kernel tree.
+- Documentation fixes, in particular added a list of syscalls that don't
+  support tagged user pointers.
+
+Changes in v7:
+- Rebased onto 17b57b18 (4.19-rc6).
+- Dropped the "arm64: untag user address in __do_user_fault" patch, since
+  the existing patches already handle user faults properly.
+- Dropped the "usb, arm64: untag user addresses in devio" patch, since the
+  passed pointer must come from a vma and therefore be untagged.
+- Dropped the "arm64: annotate user pointers casts detected by sparse"
+  patch (see the discussion to the replies of the v6 of this patchset).
+- Added more context to the cover letter.
+- Updated Documentation/arm64/tagged-pointers.txt.
+
+Changes in v6:
+- Added annotations for user pointer casts found by sparse.
+- Rebased onto 050cdc6c (4.19-rc1+).
+
+Changes in v5:
+- Added 3 new patches that add untagging to places found with static
+  analysis.
+- Rebased onto 44c929e1 (4.18-rc8).
+
+Changes in v4:
+- Added a selftest for checking that passing tagged pointers to the
+  kernel succeeds.
+- Rebased onto 81e97f013 (4.18-rc1+).
+
+Changes in v3:
+- Rebased onto e5c51f30 (4.17-rc6+).
+- Added linux-arch@ to the list of recipients.
+
+Changes in v2:
+- Rebased onto 2d618bdf (4.17-rc3+).
+- Removed excessive untagging in gup.c.
+- Removed untagging pointers returned from __uaccess_mask_ptr.
+
+Changes in v1:
+- Rebased onto 4.17-rc1.
+
+Changes in RFC v2:
+- Added "#ifndef untagged_addr..." fallback in linux/uaccess.h instead of
+  defining it for each arch individually.
+- Updated Documentation/arm64/tagged-pointers.txt.
+- Dropped "mm, arm64: untag user addresses in memory syscalls".
+- Rebased onto 3eb2ce82 (4.16-rc7).
+
+Andrey Konovalov (14):
+  uaccess: add untagged_addr definition for other arches
+  arm64: untag user pointers in access_ok and __uaccess_mask_ptr
+  lib, arm64: untag user pointers in strn*_user
+  mm, arm64: untag user pointers passed to memory syscalls
+  mm, arm64: untag user pointers in mm/gup.c
+  fs, arm64: untag user pointers in copy_mount_options
+  fs, arm64: untag user pointers in fs/userfaultfd.c
+  net, arm64: untag user pointers in tcp_zerocopy_receive
+  kernel, arm64: untag user pointers in prctl_set_mm*
+  tracing, arm64: untag user pointers in seq_print_user_ip
+  uprobes, arm64: untag user pointers in find_active_uprobe
+  bpf, arm64: untag user pointers in stack_map_get_build_id_offset
+  arm64: update Documentation/arm64/tagged-pointers.txt
+  selftests, arm64: add a selftest for passing tagged pointers to kernel
+
+ Documentation/arm64/tagged-pointers.txt       | 18 +++++++---------
+ arch/arm64/include/asm/uaccess.h              | 10 +++++----
+ fs/namespace.c                                |  2 +-
+ fs/userfaultfd.c                              |  5 +++++
+ include/linux/mm.h                            |  4 ++++
+ ipc/shm.c                                     |  2 ++
+ kernel/bpf/stackmap.c                         |  6 ++++--
+ kernel/events/uprobes.c                       |  2 ++
+ kernel/sys.c                                  | 14 +++++++++++++
+ kernel/trace/trace_output.c                   |  5 +++--
+ lib/strncpy_from_user.c                       |  3 ++-
+ lib/strnlen_user.c                            |  3 ++-
+ mm/gup.c                                      |  4 ++++
+ mm/madvise.c                                  |  2 ++
+ mm/mempolicy.c                                |  5 +++++
+ mm/migrate.c                                  |  1 +
+ mm/mincore.c                                  |  2 ++
+ mm/mlock.c                                    |  5 +++++
+ mm/mmap.c                                     |  7 +++++++
+ mm/mprotect.c                                 |  1 +
+ mm/mremap.c                                   |  2 ++
+ mm/msync.c                                    |  2 ++
+ net/ipv4/tcp.c                                |  2 ++
+ tools/testing/selftests/arm64/.gitignore      |  1 +
+ tools/testing/selftests/arm64/Makefile        | 11 ++++++++++
+ .../testing/selftests/arm64/run_tags_test.sh  | 12 +++++++++++
+ tools/testing/selftests/arm64/tags_test.c     | 21 +++++++++++++++++++
+ 27 files changed, 131 insertions(+), 21 deletions(-)
+ create mode 100644 tools/testing/selftests/arm64/.gitignore
+ create mode 100644 tools/testing/selftests/arm64/Makefile
+ create mode 100755 tools/testing/selftests/arm64/run_tags_test.sh
+ create mode 100644 tools/testing/selftests/arm64/tags_test.c
+
+-- 
+2.21.0.360.g471c308f928-goog
+
