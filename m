@@ -2,135 +2,110 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4482FC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F481C10F06
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1096F21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:00:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="f39Zqjgm"
+	by mail.kernel.org (Postfix) with ESMTP id 2E46B2085A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfCOBAK (ORCPT
+        id S1728272AbfCOBB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 21:00:10 -0400
-Received: from mail.nic.cz ([217.31.204.67]:46480 "EHLO mail.nic.cz"
+        Thu, 14 Mar 2019 21:01:27 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38888 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728134AbfCOA76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 20:59:58 -0400
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id A9A4C63483;
-        Fri, 15 Mar 2019 01:59:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1552611593; bh=kaKbvPrh06oT00xDZyUk9wq+ZqUPUkEk6HDMmKKZYqo=;
-        h=From:To:Date;
-        b=f39Zqjgm/jTR9MMMM0UtB4cb90of/5IoKndMflk3cV2oCVuIopSJme08kdHtaTwOH
-         OlgSqp9YrDhMaIgzAzC1vu3uqvB5HRIenHZAreHRWRpMOPT7ahgRft3NlzkK5RO/dP
-         JBscdB031GHfq7DulAz/p6EaZk3BuwHKLhl4L86I=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, arm@kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH v3 mailbox+firmware 5/6] firmware: turris-mox-rwtm: Add sysfs documentation
-Date:   Fri, 15 Mar 2019 01:59:25 +0100
-Message-Id: <20190315005926.5994-6-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190315005926.5994-1-marek.behun@nic.cz>
-References: <20190315005926.5994-1-marek.behun@nic.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.99.2 at mail
-X-Virus-Status: Clean
+        id S1728187AbfCOBB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 21:01:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 18:01:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,480,1544515200"; 
+   d="scan'208";a="127093664"
+Received: from jekeller-desk.amr.corp.intel.com ([10.166.244.182])
+  by orsmga006.jf.intel.com with ESMTP; 14 Mar 2019 18:01:26 -0700
+From:   Jacob Keller <jacob.e.keller@intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Intel Wired LAN <intel-wired-lan@lists.osuosl.org>,
+        net-next@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
+        joe@perches.com
+Subject: [PATCH] checkpatch: fix camel case seeding when run with --root
+Date:   Thu, 14 Mar 2019 18:01:23 -0700
+Message-Id: <20190315010123.4334-1-jacob.e.keller@intel.com>
+X-Mailer: git-send-email 2.18.0.219.gaf81d287a9da
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add sysfs ABI documentation for the sysfs files created by the
-turris-mox-rwtm driver.
+checkpatch.pl avoids warning about camel case of some definitions by
+seeding a file that tracks all of the currently committed camel case
+definitions.
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
+To build this seed file, checkpatch.pl decides between using git or the
+--root parameter.
+
+This works as long as you don't run checkpatch.pl from within
+a different git tree that is not the Linux kernel.
+
+In this case, the check for ".git" will return true, and checkpatch will
+attempt to seed a camel case file using the current directory. This
+works fine if --root is not provided, but can result in an incorrect
+camel case seed file resulting in false positive warnings.
+
+Fix this by checking for $root/.git instead, so that we use the --root
+parameter properly when seeding the camel case list.
+
+Additionally, when generating the list of files to be checked, prefix
+the $root path so that the correct file will be found.
+
+These changes allow checkpatch.pl to honor the --root parameter even if
+being run from within another git repository.
+
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
 ---
- .../testing/sysfs-firmware-turris-mox-rwtm    | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-firmware-turris-mox-rwtm
 
-diff --git a/Documentation/ABI/testing/sysfs-firmware-turris-mox-rwtm b/Documentation/ABI/testing/sysfs-firmware-turris-mox-rwtm
-new file mode 100644
-index 000000000000..ff6cd30f0cf2
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-firmware-turris-mox-rwtm
-@@ -0,0 +1,60 @@
-+What:		/sys/firmware/turris-mox-rwtm/board_version
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) Board version burned into eFuses of this Turris Mox board.
-+		Format: %i
-+
-+What:		/sys/firmware/turris-mox-rwtm/do_sign
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(RW) Gate for writing requests for signature with the ECDSA
-+		private key burned into eFuses during the manufacturing process,
-+		and also for reading the resulting signature.
-+
-+		When requesting for signature, a SHA-512 hash of the message to
-+		be signed should be written in binary form to this file. This
-+		means that a write() operation into this file shall write
-+		exactly 64 bytes, buffers of other size are ignored.
-+
-+		When the signature is done or the rWTM firmware responded with
-+		an error, this file is notified via poll, and the result can
-+		then be read. On error, the read() operation fails with errno
-+		corresponding with the error. On success, 136 bytes are copied
-+		to the buffer - 68 bytes for the R value and 68 for the S value
-+		of the ECDSA signature, in binary form. These are 2 arrays of 17
-+		32-bit words, in big-endian form, most significat word first.
-+
-+		Format: binary
-+
-+What:		/sys/firmware/turris-mox-rwtm/mac_address*
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) MAC addresses burned into eFuses of this Turris Mox board.
-+		Format: %pM
-+
-+What:		/sys/firmware/turris-mox-rwtm/pubkey
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) ECDSA public key (in pubkey hex compressed form) computed
-+		as pair to the ECDSA private key burned into eFuses of this
-+		Turris Mox Board.
-+		Format: string
-+
-+What:		/sys/firmware/turris-mox-rwtm/ram_size
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) RAM size in MiB of this Turris Mox board as was detected
-+		during manufacturing and burned into eFuses. Can be 512 or 1024.
-+		Format: %i
-+
-+What:		/sys/firmware/turris-mox-rwtm/serial_number
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) Serial number burned into eFuses of this Turris Mox device.
-+		Format: %016X
+I sent this a long time ago, https://patchwork.ozlabs.org/patch/663831/ but
+it was never noticed or reviewed.
+
+I thought I'd dredge it back up and write a better description of the
+problem and the fix.
+
+ scripts/checkpatch.pl | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index d0001fd1112d..358add495e18 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -903,8 +903,8 @@ sub seed_camelcase_includes {
+ 
+ 	$camelcase_seeded = 1;
+ 
+-	if (-e ".git") {
+-		my $git_last_include_commit = `git log --no-merges --pretty=format:"%h%n" -1 -- include`;
++	if (-e "$root/.git") {
++		my $git_last_include_commit = `cd $root && git log --no-merges --pretty=format:"%h%n" -1 -- include`;
+ 		chomp $git_last_include_commit;
+ 		$camelcase_cache = ".checkpatch-camelcase.git.$git_last_include_commit";
+ 	} else {
+@@ -931,9 +931,10 @@ sub seed_camelcase_includes {
+ 		return;
+ 	}
+ 
+-	if (-e ".git") {
+-		$files = `git ls-files "include/*.h"`;
++	if (-e "$root/.git") {
++		$files = `cd $root && git ls-files "include/*.h"`;
+ 		@include_files = split('\n', $files);
++		@include_files = map("$root/$_", @include_files);
+ 	}
+ 
+ 	foreach my $file (@include_files) {
 -- 
-2.19.2
+2.18.0.219.gaf81d287a9da
 
