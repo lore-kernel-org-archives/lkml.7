@@ -2,97 +2,119 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A18C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B16CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679652186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFAB21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:48:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="bsx8eHj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbfCOKmp (ORCPT
+        id S1728898AbfCOKsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 06:42:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44206 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbfCOKmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 06:42:45 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 45DE53082A4C;
-        Fri, 15 Mar 2019 10:42:45 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-223.pek2.redhat.com [10.72.12.223])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 07F07100194A;
-        Fri, 15 Mar 2019 10:42:35 +0000 (UTC)
-Subject: Re: [PATCH 0/3] Add kdump support for the SEV enabled guest
-From:   lijiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        akpm@linux-foundation.org, dyoung@redhat.com,
-        brijesh.singh@amd.com, thomas.lendacky@amd.com, bhe@redhat.com
-References: <20190315103203.13128-1-lijiang@redhat.com>
-Message-ID: <10bf55da-7650-ed73-cc1b-57f8f127b900@redhat.com>
-Date:   Fri, 15 Mar 2019 18:42:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 15 Mar 2019 06:48:19 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38715 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728745AbfCOKsS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 06:48:18 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e10so3295080edy.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 03:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KuZv0S1tjaJAsiqq7PjT7EfO6XTWwwtL1h2LSortnxw=;
+        b=bsx8eHj3Gig6PPM0vBCI2pOLG9aSNoSrJGr9JC+Ln8AnmzzS0alpR6FirCwPb7w4hh
+         G1LZCAjm59Judza/i2vZcGgD8CKG/nEz/y8ufTmNlFRB3pTFRbb8OvLU30/4Lw07ki04
+         yoQMDSLiRHnACEC7gEv//j2z5QWRx+gLelDTY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=KuZv0S1tjaJAsiqq7PjT7EfO6XTWwwtL1h2LSortnxw=;
+        b=d+mws+Ytyx+5cBj0yNtPCeCJR5VfYbbHDAYDAWS3urWZ0ntdjiX0iH6I25wCcHEtjz
+         DOhUs9/YhSCJp9cYvjgxK9BMcSNMQP7zsgrkLNd+O8HF1YkZ2qa31GlUXJyl4gMdTJzM
+         9CVDZG2SOwhcc9Tx/GpWzh0dfeZbuwfzDJuy6LrGC77CPNZgJwBZolWXyjrHcN+vbdY5
+         EudqFp0SQAxhjNcSJ8ks8iB5JBU8dfQZcfofqiW5GEeJ5Wcx2Ot1sP5l2AmJDYX2zUIu
+         8Tuo0BNUIqa1aXOoArIXnJ+BzmlMMVrEtfJJTrcNVGX1K+SIi0evL6lW0dkB0X8SIskj
+         IwWg==
+X-Gm-Message-State: APjAAAUXYz6U6K/Hm1f+TBFqbRWleaXwzn4kLd7Wgx/a2/2bSwapbOlJ
+        O/eqo12Jw7HgWmW9bD5rLKBCYQ==
+X-Google-Smtp-Source: APXvYqy2TUaPKeC+JB4jyYCjEdZxgIzSE+HwlgPv6i4+Na2CHGUhGnYtbIpOC3i7RyVkgcfgAukAKg==
+X-Received: by 2002:a17:906:6991:: with SMTP id i17mr1826610ejr.96.1552646896740;
+        Fri, 15 Mar 2019 03:48:16 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id c8sm335077ejb.9.2019.03.15.03.48.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 03:48:15 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 11:48:13 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/3] drm: fix subtle spelling error in drm_crtc_state
+Message-ID: <20190315104813.GT2665@phenom.ffwll.local>
+Mail-Followup-To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>
+References: <20190314220420.32487-1-kieran.bingham+renesas@ideasonboard.com>
+ <20190314220420.32487-2-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20190315103203.13128-1-lijiang@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 15 Mar 2019 10:42:45 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314220420.32487-2-kieran.bingham+renesas@ideasonboard.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019年03月15日 18:32, Lianbo Jiang 写道:
-> For the AMD SEV machines, add kdump support when the SEV is enabled.
+On Thu, Mar 14, 2019 at 10:04:18PM +0000, Kieran Bingham wrote:
+> The drm_crtc_state documentation contains a subtle misspelling of the
+> word subtle. Correct it.
 > 
-> Test tools:
-> makedumpfile[v1.6.5]:
-> git://git.code.sf.net/p/makedumpfile/code
-> commit <d222b01e516b> ("Add support for AMD Secure Memory Encryption")
-> Note: This patch was merged into the devel branch.
-> 
-> crash-7.2.5: https://github.com/crash-utility/crash.git
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-commit <942d813cda35> ("Fix for the "kmem -i" option on Linux 5.0 and later kernels")
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
+> ---
+>  include/drm/drm_crtc.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> kexec-tools-2.0.19:
-> git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> commit <942d813cda35> ("Fix for the kmem '-i' option on Linux 5.0")
-> http://lists.infradead.org/pipermail/kexec/2019-March/022576.html
-> Note: The second kernel cann't boot without this patch. 
+> diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
+> index 85abd3fe9e83..f2b3762636df 100644
+> --- a/include/drm/drm_crtc.h
+> +++ b/include/drm/drm_crtc.h
+> @@ -78,7 +78,7 @@ struct drm_plane_helper_funcs;
+>  /**
+>   * struct drm_crtc_state - mutable CRTC state
+>   *
+> - * Note that the distinction between @enable and @active is rather subtile:
+> + * Note that the distinction between @enable and @active is rather subtle:
+>   * Flipping @active while @enable is set without changing anything else may
+>   * never return in a failure from the &drm_mode_config_funcs.atomic_check
+>   * callback. Userspace assumes that a DPMS On will always succeed. In other
+> -- 
+> 2.19.1
 > 
-> kernel:
-> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> commit <f261c4e529da> ("Merge branch 'akpm' (patches from Andrew)")
-> 
-> Test steps:
-> [1] load the vmlinux and initrd for kdump
-> # kexec -p /boot/vmlinuz-5.0.0+ --initrd=/boot/initramfs-5.0.0+kdump.img --command-line="BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.0.0+ ro resume=UUID=126c5e95-fc8b-48d6-a23b-28409198a52e console=ttyS0,115200 earlyprintk=serial irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never disable_cpu_apicid=0"
-> 
-> [2] trigger panic
-> # echo 1 > /proc/sys/kernel/sysrq
-> # echo c > /proc/sysrq-trigger
-> 
-> [3] check and parse the vmcore
-> # crash vmlinux /var/crash/127.0.0.1-2019-03-15-05\:03\:42/vmcore
-> 
-> Lianbo Jiang (3):
->   kexec: Do not map the kexec area as decrypted when SEV is active
->   kexec: Set the C-bit in the identity map page table when SEV is active
->   kdump,proc/vmcore: Enable kdumping encrypted memory when SEV was
->     active
-> 
->  arch/x86/kernel/machine_kexec_64.c | 20 +++++++++++++++++---
->  fs/proc/vmcore.c                   |  6 +++---
->  2 files changed, 20 insertions(+), 6 deletions(-)
-> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
