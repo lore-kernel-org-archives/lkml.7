@@ -2,66 +2,73 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDDBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C834AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2C5218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A221B218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfCOSj1 (ORCPT
+        id S1726767AbfCOSkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:39:27 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:60330 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfCOSjZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:39:25 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E22E614D9FA52;
-        Fri, 15 Mar 2019 11:39:24 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 11:39:23 -0700 (PDT)
-Message-Id: <20190315.113923.1281526892950673180.davem@davemloft.net>
-To:     aaro.koskinen@iki.fi
-Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, thor.thayer@linux.intel.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        aaro.koskinen@nokia.com
-Subject: Re: [PATCH 2/2] net: stmmac: fix jumbo frame sending with
- non-linear skbs
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190314194320.25566-2-aaro.koskinen@iki.fi>
-References: <20190314194320.25566-1-aaro.koskinen@iki.fi>
-        <20190314194320.25566-2-aaro.koskinen@iki.fi>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 15 Mar 2019 11:39:25 -0700 (PDT)
+        Fri, 15 Mar 2019 14:40:52 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60788 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbfCOSkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 14:40:51 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 11:40:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,483,1544515200"; 
+   d="scan'208";a="125812886"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga008.jf.intel.com with ESMTP; 15 Mar 2019 11:40:50 -0700
+Date:   Fri, 15 Mar 2019 11:40:50 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add KVM selftests to existing KVM entry
+Message-ID: <20190315184050.GE11324@linux.intel.com>
+References: <20190313195555.6198-1-sean.j.christopherson@intel.com>
+ <20190313201633.GE4409@linux.intel.com>
+ <3bbaa29f-e70d-45a7-b93e-24ecc006bcb7@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3bbaa29f-e70d-45a7-b93e-24ecc006bcb7@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Date: Thu, 14 Mar 2019 21:43:20 +0200
+On Fri, Mar 15, 2019 at 07:07:45PM +0100, Paolo Bonzini wrote:
+> On 13/03/19 21:16, Sean Christopherson wrote:
+> > Gah, this also needs: tools/testing/selftests/kvm/*/
+> > 
+> 
+> No, it doesn't.
+> 
+> $ scripts/get_maintainer.pl tools/testing/selftests/kvm/x86_64/state_test.c
+> Paolo Bonzini <pbonzini@redhat.com> (supporter:KERNEL VIRTUAL MACHINE (KVM),commit_signer:8/9=89%,authored:3/9=33%)
+> "Radim Krčmář" <rkrcmar@redhat.com> (supporter:KERNEL VIRTUAL MACHINE (KVM),commit_signer:1/9=11%)
 
-> From: Aaro Koskinen <aaro.koskinen@nokia.com>
-> 
-> When sending non-linear skbs with jumbo frames, we set up the non-paged
-> data and mark that as a last segment, although the paged fragments are
-> also prepared. This will stall the TX queue and trigger a watchdog warning
-> (a simple reproducer is to run an iperf client mode TCP test with a large
-> MTU - networking fails instantly).
-> 
-> Fix by checking if the skb is non-linear.
-> 
-> Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Ah, I always run with --pattern-depth=1 when sending KVM patches to avoid
+picking up the x86 maintainers.  I guess now is as good a time as any to
+dynamically select the depth.
 
-Applied.
+That means the similiar "F:      arch/x86/kvm/*/" entry I added is also
+gratutious.  Want me to send a revert for c2a7fad5fcd3 ("MAINTAINERS:
+Add arch/x86/kvm sub-directories to existing KVM/x86 entry"), or just
+leave it be?
+
+> Queued, thanks.
+> 
+> Paolo
