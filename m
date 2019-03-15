@@ -2,63 +2,141 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003F5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61531C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1C8218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC8421872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfCOX0K (ORCPT
+        id S1727572AbfCOX1P convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 19:26:10 -0400
-Received: from mga17.intel.com ([192.55.52.151]:25520 "EHLO mga17.intel.com"
+        Fri, 15 Mar 2019 19:27:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43462 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfCOX0K (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 19:26:10 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 16:26:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,483,1544515200"; 
-   d="scan'208";a="127400944"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga006.jf.intel.com with ESMTP; 15 Mar 2019 16:26:09 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 41484301BB7; Fri, 15 Mar 2019 16:26:09 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 16:26:09 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, acme@kernel.org, jolsa@kernel.org,
-        peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v1 0/3] perf: Support a new coresum event qualifier
-Message-ID: <20190315232609.GM24002@tassilo.jf.intel.com>
-References: <1552665856-27741-1-git-send-email-yao.jin@linux.intel.com>
- <20190315133443.GA5200@krava>
- <1d1d6263-9842-7d44-8edb-dcfbb5a2e6cc@linux.intel.com>
+        id S1726130AbfCOX1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 19:27:14 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1E72B3084299;
+        Fri, 15 Mar 2019 23:27:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 069665D6A6;
+        Fri, 15 Mar 2019 23:27:12 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@vger.kernel.org
+cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] AFS fixes and other bits
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d1d6263-9842-7d44-8edb-dcfbb5a2e6cc@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <10427.1552692432.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 15 Mar 2019 23:27:12 +0000
+Message-ID: <10428.1552692432@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 15 Mar 2019 23:27:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Yes, the coresum's behavior is similar as --per-core option, just supports
-> at the event level. I'm OK with calling it 'per-core'.
-> 
-> For example,
-> perf stat -e cpu/event=0,umask=0x3,per-core=1/
+Hi Linus,
 
-Please use percore, the - would need to be escaped in metric expressions.
+Here's a set of fixes and other bits for AFS to improve the life of desktop
+applications such as firefox.  It makes the following improvements/fixes:
 
--Andi
+ (1) Fix file locking to allow fine-grained locking, as required by firefox
+     and sqlite, with the caveat that you can't get a partial write lock on
+     a file if you first get a partial read lock on it as the AFS protocol
+     only supports whole-file locks.
+
+     [At some point I need to look at how best to emulate OpenAFS's
+     behaviour whereby all partial locks are just granted without reference
+     to the kernel lock - maybe with some sort of mount parameter to enable
+     it.]
+
+ (2) Fix the way the server lock, once obtained, is distributed to the
+     local processes waiting for it, thereby making sure they wait if they
+     can't be immediately granted a local lock.
+
+ (3) Fix the nonappearance of afs locks in /proc/locks.
+
+ (4) Fix the handling of asynchronous file lock RPC operation failure on
+     files that get deleted whilst the lock is being extended or released.
+
+ (5) Implement silly-rename.
+
+ (6) Fix the file lock expiry calculation to be based on the time the set-
+     or extend-lock reply is seen (packet timestamp) rather than by the
+     time at which we've done processing the operation (wallclock time) to
+     allow for delays in processing.
+
+ (7) Split the synchronous wait out of the client call dispatcher to make
+     it possible to convert synchronous calls into async calls in the event
+     of a signal.
+
+The series also:
+
+ (1) Adds/modifies a number of tracepoints, mostly related to file locking
+     and silly rename.
+
+ (2) Provides a more comprehensive data dump in the event that a directory
+     content check fails.
+
+David
+---
+The following changes since commit ebc551f2b8f905eca0e25c476c1e5c098cd92103:
+
+  Merge tag 'nfsd-5.1' of git://linux-nfs.org/~bfields/linux (2019-03-12 15:06:54 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20190315
+
+for you to fetch changes up to 78cf74c367eb608e8a15167da5aeae2c8abed902:
+
+  afs: Add more tracepoints (2019-03-15 22:06:31 +0000)
+
+----------------------------------------------------------------
+AFS fixes
+
+----------------------------------------------------------------
+David Howells (10):
+      afs: Split wait from afs_make_call()
+      afs: Calculate lock extend timer from set/extend reply reception
+      afs: Fix AFS file locking to allow fine grained locks
+      afs: Further fix file locking
+      afs: Add file locking tracepoints
+      afs: Improve dir check failure reports
+      afs: Handle lock rpc ops failing on a file that got deleted
+      afs: Add directory reload tracepoint
+      afs: Implement sillyrename for unlink and rename
+      afs: Add more tracepoints
+
+ fs/afs/Makefile            |   1 +
+ fs/afs/dir.c               | 161 +++++++++++--
+ fs/afs/dir_silly.c         | 239 +++++++++++++++++++
+ fs/afs/flock.c             | 569 +++++++++++++++++++++++++++------------------
+ fs/afs/fs_probe.c          |  13 +-
+ fs/afs/fsclient.c          |  92 +++++---
+ fs/afs/inode.c             |   2 +
+ fs/afs/internal.h          |  25 +-
+ fs/afs/rxrpc.c             |  33 ++-
+ fs/afs/super.c             |   5 +-
+ fs/afs/vl_probe.c          |  14 +-
+ fs/afs/vlclient.c          |  26 ++-
+ fs/afs/yfsclient.c         |  72 ++++--
+ include/linux/fs.h         |   1 +
+ include/trace/events/afs.h | 348 ++++++++++++++++++++++++++-
+ 15 files changed, 1258 insertions(+), 343 deletions(-)
+ create mode 100644 fs/afs/dir_silly.c
