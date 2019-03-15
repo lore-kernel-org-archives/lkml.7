@@ -2,269 +2,494 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398A9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09246C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE074218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C127B218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbfCOLMu (ORCPT
+        id S1728963AbfCOLMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 07:12:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56962 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727000AbfCOLMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 07:12:50 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2EC88806B6;
-        Fri, 15 Mar 2019 11:12:49 +0000 (UTC)
-Received: from [10.36.117.12] (ovpn-117-12.ams2.redhat.com [10.36.117.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 32DAB5D9C5;
-        Fri, 15 Mar 2019 11:12:46 +0000 (UTC)
-Subject: Re: [RFC v3] sched/topology: fix kernel crash when a CPU is
- hotplugged in a memoryless node
+        Fri, 15 Mar 2019 07:12:54 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:52705 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727454AbfCOLMw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 07:12:52 -0400
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h4klZ-00061S-J9; Fri, 15 Mar 2019 12:12:45 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
-Cc:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Borislav Petkov <bp@suse.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20190304195952.16879-1-lvivier@redhat.com>
-From:   Laurent Vivier <lvivier@redhat.com>
-Message-ID: <77b142fe-0886-1510-28bd-d432ea2c796a@redhat.com>
-Date:   Fri, 15 Mar 2019 12:12:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, tglx@linutronix.de,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Mike Galbraith <bitbucket@online.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH] rcu: Allow to eliminate softirq processing from rcutree
+Date:   Fri, 15 Mar 2019 12:11:30 +0100
+Message-Id: <20190315111130.4902-1-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190304195952.16879-1-lvivier@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 15 Mar 2019 11:12:49 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/2019 20:59, Laurent Vivier wrote:
-> When we hotplug a CPU in a memoryless/cpuless node,
-> the kernel crashes when it rebuilds the sched_domains data.
-> 
-> I reproduce this problem on POWER and with a pseries VM, with the following
-> QEMU parameters:
-> 
->   -machine pseries -enable-kvm -m 8192 \
->   -smp 2,maxcpus=8,sockets=4,cores=2,threads=1 \
->   -numa node,nodeid=0,cpus=0-1,mem=0 \
->   -numa node,nodeid=1,cpus=2-3,mem=8192 \
->   -numa node,nodeid=2,cpus=4-5,mem=0 \
->   -numa node,nodeid=3,cpus=6-7,mem=0
-> 
-> Then I can trigger the crash by hotplugging a CPU on node-id 3:
-> 
->   (qemu) device_add host-spapr-cpu-core,core-id=7,node-id=3
-> 
->     Built 2 zonelists, mobility grouping on.  Total pages: 130162
->     Policy zone: Normal
->     WARNING: workqueue cpumask: online intersect > possible intersect
->     BUG: Kernel NULL pointer dereference at 0x00000400
->     Faulting instruction address: 0xc000000000170edc
->     Oops: Kernel access of bad area, sig: 11 [#1]
->     LE SMP NR_CPUS=2048 NUMA pSeries
->     Modules linked in: ip6t_rpfilter ipt_REJECT nf_reject_ipv4 ip6t_REJECT nf_reject_ipv6 xt_conntrack ip_set nfnetlink ebtable_nat ebtable_broute bridge stp llc ip6table_nat nf_nat_ipv6 ip6table_mangle ip6table_security ip6table_raw iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle iptable_security iptable_raw ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter xts vmx_crypto ip_tables xfs libcrc32c virtio_net net_failover failover virtio_blk virtio_pci virtio_ring virtio dm_mirror dm_region_hash dm_log dm_mod
->     CPU: 2 PID: 5661 Comm: kworker/2:0 Not tainted 5.0.0-rc6+ #20
->     Workqueue: events cpuset_hotplug_workfn
->     NIP:  c000000000170edc LR: c000000000170f98 CTR: 0000000000000000
->     REGS: c000000003e931a0 TRAP: 0380   Not tainted  (5.0.0-rc6+)
->     MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 22284028  XER: 00000000
->     CFAR: c000000000170f20 IRQMASK: 0
->     GPR00: c000000000170f98 c000000003e93430 c0000000011ac500 c0000001efe22000
->     GPR04: 0000000000000001 0000000000000000 0000000000000000 0000000000000010
->     GPR08: 0000000000000001 0000000000000400 ffffffffffffffff 0000000000000000
->     GPR12: 0000000000008800 c00000003fffd680 c0000001f14b0000 c0000000011e1bf0
->     GPR16: c0000000011e61f4 c0000001efe22200 c0000001efe22020 c0000001fba80000
->     GPR20: c0000001ff567a80 0000000000000001 c000000000e27a80 ffffffffffffe830
->     GPR24: ffffffffffffec30 000000000000102f 000000000000102f c0000001efca1000
->     GPR28: c0000001efca0400 c0000001efe22000 c0000001efe23bff c0000001efe22a00
->     NIP [c000000000170edc] free_sched_groups+0x5c/0xf0
->     LR [c000000000170f98] destroy_sched_domain+0x28/0x90
->     Call Trace:
->     [c000000003e93430] [000000000000102f] 0x102f (unreliable)
->     [c000000003e93470] [c000000000170f98] destroy_sched_domain+0x28/0x90
->     [c000000003e934a0] [c0000000001716e0] cpu_attach_domain+0x100/0x920
->     [c000000003e93600] [c000000000173128] build_sched_domains+0x1228/0x1370
->     [c000000003e93740] [c00000000017429c] partition_sched_domains+0x23c/0x400
->     [c000000003e937e0] [c0000000001f5ec8] rebuild_sched_domains_locked+0x78/0xe0
->     [c000000003e93820] [c0000000001f9ff0] rebuild_sched_domains+0x30/0x50
->     [c000000003e93850] [c0000000001fa1c0] cpuset_hotplug_workfn+0x1b0/0xb70
->     [c000000003e93c80] [c00000000012e5a0] process_one_work+0x1b0/0x480
->     [c000000003e93d20] [c00000000012e8f8] worker_thread+0x88/0x540
->     [c000000003e93db0] [c00000000013714c] kthread+0x15c/0x1a0
->     [c000000003e93e20] [c00000000000b55c] ret_from_kernel_thread+0x5c/0x80
->     Instruction dump:
->     2e240000 f8010010 f821ffc1 409e0014 48000080 7fbdf040 7fdff378 419e0074
->     ebdf0000 4192002c e93f0010 7c0004ac <7d404828> 314affff 7d40492d 40c2fff4
->     ---[ end trace f992c4a7d47d602a ]---
-> 
->     Kernel panic - not syncing: Fatal exception
-> 
-> This happens in free_sched_groups() because the linked list of the
-> sched_groups is corrupted. Here what happens when we hotplug the CPU:
-> 
->  - build_sched_groups() builds a sched_groups linked list for
->    sched_domain D1, with only one entry A, refcount=1
-> 
->    D1: A(ref=1)
-> 
->  - build_sched_groups() builds a sched_groups linked list for
->    sched_domain D2, with the same entry A
-> 
->    D2: A(ref=2)
-> 
->  - build_sched_groups() builds a sched_groups linked list for
->    sched_domain D3, with the same entry A and a new entry B:
-> 
->    D3: A(ref=3) -> B(ref=1)
-> 
->  - destroy_sched_domain() is called for D1:
-> 
->    D1: A(ref=3) -> B(ref=1) and as ref is 1, memory of B is released,
->                                              but A->next always points to B
-> 
->  - destroy_sched_domain() is called for D3:
-> 
->    D3: A(ref=2) -> B(ref=0)
-> 
-> kernel crashes when it tries to use data inside B, as the memory has been
-> corrupted as it has been freed, the linked list (next) is broken too.
-> 
-> This problem appears with commit 051f3ca02e46
-> ("sched/topology: Introduce NUMA identity node sched domain").
-> 
-> If I compare function calls sequence before and after this commit I can see
-> in the working case build_overlap_sched_groups() is called instead of
-> build_sched_groups() and in this case the reference counters have all the
-> same value and the linked list can be correctly unallocated.
-> The involved commit has introduced the node domain, and in the case of
-> powerpc the node domain can overlap, whereas it should not happen.
-> 
-> This happens because initially powerpc code computes
-> sched_domains_numa_masks of offline nodes as if they were merged with
-> node 0 (because firmware doesn't provide the distance information for
-> memoryless/cpuless nodes):
-> 
->   node   0   1   2   3
->     0:  10  40  10  10
->     1:  40  10  40  40
->     2:  10  40  10  10
->     3:  10  40  10  10
-> 
-> We should have:
-> 
->   node   0   1   2   3
->     0:  10  40  40  40
->     1:  40  10  40  40
->     2:  40  40  10  40
->     3:  40  40  40  10
-> 
-> And once a new CPU is added, node is onlined, numa masks are updated
-> but initial set bits are not cleared. This explains why nodes can overlap.
-> 
-> This patch changes the initial code to not initialize the distance for
-> offline nodes. The distances will be updated when node will become online
-> (on CPU hotplug) as it is already done.
-> 
-> This patch has been tested on powerpc but not on the other architectures.
-> They are impacted because the modified part is in the common code.
-> All comments are welcome (how to move the change to powerpc specific code
-> or if the other architectures can work with this change).
-> 
-> Fixes: 051f3ca02e46 ("sched/topology: Introduce NUMA identity node sched domain")
-> Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: David Gibson <david@gibson.dropbear.id.au>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-> Cc: Michael Bringmann <mwb@linux.vnet.ibm.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
-> ---
-> 
-> Notes:
->     v3: fix the root cause of the problem (sched numa mask initialization)
->     v2: add scheduler maintainers in the CC: list
-> 
->  kernel/sched/topology.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 3f35ba1d8fde..24831b86533b 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -1622,8 +1622,10 @@ void sched_init_numa(void)
->  				return;
->  
->  			sched_domains_numa_masks[i][j] = mask;
-> +			if (!node_state(j, N_ONLINE))
-> +				continue;
->  
-> -			for_each_node(k) {
-> +			for_each_online_node(k) {
->  				if (node_distance(j, k) > sched_domains_numa_distance[i])
->  					continue;
->  
-> 
+From: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 
-Another way to avoid the nodes overlapping for the offline nodes at
-startup is to ensure the default values don't define a distance that
-merge all offline nodes into node 0.
+Running RCU out of softirq is a problem for some workloads that would
+like to manage RCU core processing independently of other softirq work,
+for example, setting kthread priority.
+This commit therefore introduces the `rcunosoftirq' option which moves
+the RCU core work from softirq to a per-CPU/per-flavor SCHED_OTHER
+kthread named rcuc.
+The SCHED_OTHER approach avoids the scalability problems that appeared
+with the earlier attempt to move RCU core processing to from softirq to
+kthreads.
+That said, kernels built with RCU_BOOST=y will run the rcuc kthreads at
+the RCU-boosting priority.
 
-A powerpc specific patch can workaround the kernel crash by doing this:
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Mike Galbraith <bitbucket@online.de>
+Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+[bigeasy: add rcunosoftirq option]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/rcu/tree.c        | 132 ++++++++++++++++++++++++++++++++---
+ kernel/rcu/tree.h        |   4 +-
+ kernel/rcu/tree_plugin.h | 145 +++++----------------------------------
+ 3 files changed, 141 insertions(+), 140 deletions(-)
 
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index 87f0dd0..3ba29bb 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -623,6 +623,7 @@ static int __init parse_numa_properties(void)
-        struct device_node *memory;
-        int default_nid = 0;
-        unsigned long i;
-+       int nid, dist;
-
-        if (numa_enabled == 0) {
-                printk(KERN_WARNING "NUMA disabled by user\n");
-@@ -636,6 +637,10 @@ static int __init parse_numa_properties(void)
-
-        dbg("NUMA associativity depth for CPU/Memory: %d\n",
-min_common_depth);
-
-+       for (nid = 0; nid < MAX_NUMNODES; nid ++)
-+               for (dist = 0; dist < MAX_DISTANCE_REF_POINTS; dist++)
-+                       distance_lookup_table[nid][dist] = nid;
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 9180158756d2c..498dc5e9287d0 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -62,6 +62,12 @@
+ #include <linux/suspend.h>
+ #include <linux/ftrace.h>
+ #include <linux/tick.h>
++#include <linux/gfp.h>
++#include <linux/oom.h>
++#include <linux/smpboot.h>
++#include <linux/jiffies.h>
++#include <linux/sched/isolation.h>
++#include "../time/tick-internal.h"
+ 
+ #include "tree.h"
+ #include "rcu.h"
+@@ -2716,7 +2722,7 @@ EXPORT_SYMBOL_GPL(rcu_fwd_progress_check);
+  * structures.  This may be called only from the CPU to whom the rdp
+  * belongs.
+  */
+-static __latent_entropy void rcu_process_callbacks(struct softirq_action *unused)
++static __latent_entropy void rcu_process_callbacks(void)
+ {
+ 	unsigned long flags;
+ 	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
+@@ -2758,6 +2764,13 @@ static __latent_entropy void rcu_process_callbacks(struct softirq_action *unused
+ 	trace_rcu_utilization(TPS("End RCU core"));
+ }
+ 
++static void rcu_process_callbacks_si(struct softirq_action *h)
++{
++	rcu_process_callbacks();
++}
 +
-        /*
-         * Even though we connect cpus to numa domains later in SMP
-         * init, we need to know the node ids now. This is because
-
-Any comment?
-
-If this is not the good way to do, does someone have a better idea how
-to fix the kernel crash?
-
-Thanks,
-Laurent
++static DEFINE_PER_CPU(struct task_struct *, rcu_cpu_kthread_task);
++
+ /*
+  * Schedule RCU callback invocation.  If the running implementation of RCU
+  * does not support RCU priority boosting, just do a direct call, otherwise
+@@ -2769,19 +2782,121 @@ static void invoke_rcu_callbacks(struct rcu_data *rdp)
+ {
+ 	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
+ 		return;
+-	if (likely(!rcu_state.boost)) {
+-		rcu_do_batch(rdp);
+-		return;
+-	}
+-	invoke_rcu_callbacks_kthread();
++	rcu_do_batch(rdp);
+ }
+ 
++static void rcu_wake_cond(struct task_struct *t, int status)
++{
++	/*
++	 * If the thread is yielding, only wake it when this
++	 * is invoked from idle
++	 */
++	if (t && (status != RCU_KTHREAD_YIELDING || is_idle_task(current)))
++		wake_up_process(t);
++}
++
++static bool rcu_softirq_enabled = true;
++
++static int __init rcunosoftirq_setup(char *str)
++{
++	rcu_softirq_enabled = false;
++	return 0;
++}
++__setup("rcunosoftirq", rcunosoftirq_setup);
++
++/*
++ * Wake up this CPU's rcuc kthread to do RCU core processing.
++ */
+ static void invoke_rcu_core(void)
+ {
+-	if (cpu_online(smp_processor_id()))
++	unsigned long flags;
++	struct task_struct *t;
++
++	if (!cpu_online(smp_processor_id()))
++		return;
++	if (rcu_softirq_enabled) {
+ 		raise_softirq(RCU_SOFTIRQ);
++	} else {
++		local_irq_save(flags);
++		__this_cpu_write(rcu_cpu_has_work, 1);
++		t = __this_cpu_read(rcu_cpu_kthread_task);
++		if (t != NULL && current != t)
++			rcu_wake_cond(t, __this_cpu_read(rcu_cpu_kthread_status));
++		local_irq_restore(flags);
++	}
+ }
+ 
++static void rcu_cpu_kthread_park(unsigned int cpu)
++{
++	per_cpu(rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
++}
++
++static int rcu_cpu_kthread_should_run(unsigned int cpu)
++{
++	return __this_cpu_read(rcu_cpu_has_work);
++}
++
++/*
++ * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
++ * the RCU softirq used in configurations of RCU that do not support RCU
++ * priority boosting.
++ */
++static void rcu_cpu_kthread(unsigned int cpu)
++{
++	unsigned int *statusp = this_cpu_ptr(&rcu_cpu_kthread_status);
++	char work, *workp = this_cpu_ptr(&rcu_cpu_has_work);
++	int spincnt;
++
++	for (spincnt = 0; spincnt < 10; spincnt++) {
++		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
++		local_bh_disable();
++		*statusp = RCU_KTHREAD_RUNNING;
++		this_cpu_inc(rcu_cpu_kthread_loops);
++		local_irq_disable();
++		work = *workp;
++		*workp = 0;
++		local_irq_enable();
++		if (work)
++			rcu_process_callbacks();
++		local_bh_enable();
++		if (*workp == 0) {
++			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
++			*statusp = RCU_KTHREAD_WAITING;
++			return;
++		}
++	}
++	*statusp = RCU_KTHREAD_YIELDING;
++	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
++	schedule_timeout_interruptible(2);
++	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
++	*statusp = RCU_KTHREAD_WAITING;
++}
++
++static struct smp_hotplug_thread rcu_cpu_thread_spec = {
++	.store			= &rcu_cpu_kthread_task,
++	.thread_should_run	= rcu_cpu_kthread_should_run,
++	.thread_fn		= rcu_cpu_kthread,
++	.thread_comm		= "rcuc/%u",
++	.setup			= rcu_cpu_kthread_setup,
++	.park			= rcu_cpu_kthread_park,
++};
++
++/*
++ * Spawn per-CPU RCU core processing kthreads.
++ */
++static int __init rcu_spawn_core_kthreads(void)
++{
++	int cpu;
++
++	for_each_possible_cpu(cpu)
++		per_cpu(rcu_cpu_has_work, cpu) = 0;
++	if (!IS_ENABLED(CONFIG_RCU_BOOST) && !rcu_softirq_enabled)
++		return 0;
++	WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__);
++	return 0;
++}
++early_initcall(rcu_spawn_core_kthreads);
++
+ /*
+  * Handle any core-RCU processing required by a call_rcu() invocation.
+  */
+@@ -3777,7 +3892,8 @@ void __init rcu_init(void)
+ 	rcu_init_one();
+ 	if (dump_tree)
+ 		rcu_dump_rcu_node_tree();
+-	open_softirq(RCU_SOFTIRQ, rcu_process_callbacks);
++	if (rcu_softirq_enabled)
++		open_softirq(RCU_SOFTIRQ, rcu_process_callbacks_si);
+ 
+ 	/*
+ 	 * We don't need protection against CPU-hotplug here because
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index d90b02b53c0ec..fb8fc6ecc391b 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -402,12 +402,10 @@ static const char *tp_rcu_varname __used __tracepoint_string = rcu_name;
+ 
+ int rcu_dynticks_snap(struct rcu_data *rdp);
+ 
+-#ifdef CONFIG_RCU_BOOST
+ DECLARE_PER_CPU(unsigned int, rcu_cpu_kthread_status);
+ DECLARE_PER_CPU(int, rcu_cpu_kthread_cpu);
+ DECLARE_PER_CPU(unsigned int, rcu_cpu_kthread_loops);
+ DECLARE_PER_CPU(char, rcu_cpu_has_work);
+-#endif /* #ifdef CONFIG_RCU_BOOST */
+ 
+ /* Forward declarations for rcutree_plugin.h */
+ static void rcu_bootup_announce(void);
+@@ -425,8 +423,8 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func);
+ static void dump_blkd_tasks(struct rcu_node *rnp, int ncheck);
+ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags);
+ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp);
+-static void invoke_rcu_callbacks_kthread(void);
+ static bool rcu_is_callbacks_kthread(void);
++static void rcu_cpu_kthread_setup(unsigned int cpu);
+ static void __init rcu_spawn_boost_kthreads(void);
+ static void rcu_prepare_kthreads(int cpu);
+ static void rcu_cleanup_after_idle(void);
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 1b3dd2fc0cd64..b440d6ef45d16 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -24,17 +24,6 @@
+  *	   Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+  */
+ 
+-#include <linux/delay.h>
+-#include <linux/gfp.h>
+-#include <linux/oom.h>
+-#include <linux/sched/debug.h>
+-#include <linux/smpboot.h>
+-#include <linux/sched/isolation.h>
+-#include <uapi/linux/sched/types.h>
+-#include "../time/tick-internal.h"
+-
+-#ifdef CONFIG_RCU_BOOST
+-
+ #include "../locking/rtmutex_common.h"
+ 
+ /*
+@@ -45,19 +34,6 @@ DEFINE_PER_CPU(unsigned int, rcu_cpu_kthread_status);
+ DEFINE_PER_CPU(unsigned int, rcu_cpu_kthread_loops);
+ DEFINE_PER_CPU(char, rcu_cpu_has_work);
+ 
+-#else /* #ifdef CONFIG_RCU_BOOST */
+-
+-/*
+- * Some architectures do not define rt_mutexes, but if !CONFIG_RCU_BOOST,
+- * all uses are in dead code.  Provide a definition to keep the compiler
+- * happy, but add WARN_ON_ONCE() to complain if used in the wrong place.
+- * This probably needs to be excluded from -rt builds.
+- */
+-#define rt_mutex_owner(a) ({ WARN_ON_ONCE(1); NULL; })
+-#define rt_mutex_futex_unlock(x) WARN_ON_ONCE(1)
+-
+-#endif /* #else #ifdef CONFIG_RCU_BOOST */
+-
+ #ifdef CONFIG_RCU_NOCB_CPU
+ static cpumask_var_t rcu_nocb_mask; /* CPUs to have callbacks offloaded. */
+ static bool __read_mostly rcu_nocb_poll;    /* Offload kthread are to poll. */
+@@ -652,7 +628,10 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 		/* Need to defer quiescent state until everything is enabled. */
+ 		if (irqs_were_disabled) {
+ 			/* Enabling irqs does not reschedule, so... */
+-			raise_softirq_irqoff(RCU_SOFTIRQ);
++			if (rcu_softirq_enabled)
++				raise_softirq_irqoff(RCU_SOFTIRQ);
++			else
++				invoke_rcu_core();
+ 		} else {
+ 			/* Enabling BH or preempt does reschedule, so... */
+ 			set_tsk_need_resched(current);
+@@ -1150,18 +1129,21 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
+ 
+ #endif /* #else #ifdef CONFIG_PREEMPT_RCU */
+ 
+-#ifdef CONFIG_RCU_BOOST
+-
+-static void rcu_wake_cond(struct task_struct *t, int status)
++/*
++ * If boosting, set rcuc kthreads to realtime priority.
++ */
++static void rcu_cpu_kthread_setup(unsigned int cpu)
+ {
+-	/*
+-	 * If the thread is yielding, only wake it when this
+-	 * is invoked from idle
+-	 */
+-	if (status != RCU_KTHREAD_YIELDING || is_idle_task(current))
+-		wake_up_process(t);
++#ifdef CONFIG_RCU_BOOST
++	struct sched_param sp;
++
++	sp.sched_priority = kthread_prio;
++	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
++#endif /* #ifdef CONFIG_RCU_BOOST */
+ }
+ 
++#ifdef CONFIG_RCU_BOOST
++
+ /*
+  * Carry out RCU priority boosting on the task indicated by ->exp_tasks
+  * or ->boost_tasks, advancing the pointer to the next task in the
+@@ -1299,23 +1281,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
+ 	}
+ }
+ 
+-/*
+- * Wake up the per-CPU kthread to invoke RCU callbacks.
+- */
+-static void invoke_rcu_callbacks_kthread(void)
+-{
+-	unsigned long flags;
+-
+-	local_irq_save(flags);
+-	__this_cpu_write(rcu_cpu_has_work, 1);
+-	if (__this_cpu_read(rcu_cpu_kthread_task) != NULL &&
+-	    current != __this_cpu_read(rcu_cpu_kthread_task)) {
+-		rcu_wake_cond(__this_cpu_read(rcu_cpu_kthread_task),
+-			      __this_cpu_read(rcu_cpu_kthread_status));
+-	}
+-	local_irq_restore(flags);
+-}
+-
+ /*
+  * Is the current CPU running the RCU-callbacks kthread?
+  * Caller must have preemption disabled.
+@@ -1369,65 +1334,6 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+ 	return 0;
+ }
+ 
+-static void rcu_kthread_do_work(void)
+-{
+-	rcu_do_batch(this_cpu_ptr(&rcu_data));
+-}
+-
+-static void rcu_cpu_kthread_setup(unsigned int cpu)
+-{
+-	struct sched_param sp;
+-
+-	sp.sched_priority = kthread_prio;
+-	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
+-}
+-
+-static void rcu_cpu_kthread_park(unsigned int cpu)
+-{
+-	per_cpu(rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
+-}
+-
+-static int rcu_cpu_kthread_should_run(unsigned int cpu)
+-{
+-	return __this_cpu_read(rcu_cpu_has_work);
+-}
+-
+-/*
+- * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
+- * the RCU softirq used in configurations of RCU that do not support RCU
+- * priority boosting.
+- */
+-static void rcu_cpu_kthread(unsigned int cpu)
+-{
+-	unsigned int *statusp = this_cpu_ptr(&rcu_cpu_kthread_status);
+-	char work, *workp = this_cpu_ptr(&rcu_cpu_has_work);
+-	int spincnt;
+-
+-	for (spincnt = 0; spincnt < 10; spincnt++) {
+-		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
+-		local_bh_disable();
+-		*statusp = RCU_KTHREAD_RUNNING;
+-		this_cpu_inc(rcu_cpu_kthread_loops);
+-		local_irq_disable();
+-		work = *workp;
+-		*workp = 0;
+-		local_irq_enable();
+-		if (work)
+-			rcu_kthread_do_work();
+-		local_bh_enable();
+-		if (*workp == 0) {
+-			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
+-			*statusp = RCU_KTHREAD_WAITING;
+-			return;
+-		}
+-	}
+-	*statusp = RCU_KTHREAD_YIELDING;
+-	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
+-	schedule_timeout_interruptible(2);
+-	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
+-	*statusp = RCU_KTHREAD_WAITING;
+-}
+-
+ /*
+  * Set the per-rcu_node kthread's affinity to cover all CPUs that are
+  * served by the rcu_node in question.  The CPU hotplug lock is still
+@@ -1458,27 +1364,13 @@ static void rcu_boost_kthread_setaffinity(struct rcu_node *rnp, int outgoingcpu)
+ 	free_cpumask_var(cm);
+ }
+ 
+-static struct smp_hotplug_thread rcu_cpu_thread_spec = {
+-	.store			= &rcu_cpu_kthread_task,
+-	.thread_should_run	= rcu_cpu_kthread_should_run,
+-	.thread_fn		= rcu_cpu_kthread,
+-	.thread_comm		= "rcuc/%u",
+-	.setup			= rcu_cpu_kthread_setup,
+-	.park			= rcu_cpu_kthread_park,
+-};
+-
+ /*
+  * Spawn boost kthreads -- called as soon as the scheduler is running.
+  */
+ static void __init rcu_spawn_boost_kthreads(void)
+ {
+ 	struct rcu_node *rnp;
+-	int cpu;
+ 
+-	for_each_possible_cpu(cpu)
+-		per_cpu(rcu_cpu_has_work, cpu) = 0;
+-	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+-		return;
+ 	rcu_for_each_leaf_node(rnp)
+ 		(void)rcu_spawn_one_boost_kthread(rnp);
+ }
+@@ -1501,11 +1393,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ }
+ 
+-static void invoke_rcu_callbacks_kthread(void)
+-{
+-	WARN_ON_ONCE(1);
+-}
+-
+ static bool rcu_is_callbacks_kthread(void)
+ {
+ 	return false;
+-- 
+2.20.1
 
