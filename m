@@ -2,89 +2,114 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A1BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 22:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD215C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 22:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D18218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 22:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552687525;
-	bh=/dwYMtZNojuciEZtYVhSa0op80b+1ysFEJisjYx8Cuc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bnyuDEZMas3AK9fImzd1w+JM9RiXpBYZhTTFoeaDGCKWS9tYUwG2KQF3MoBvQsBFA
-	 DYh+DvFtrQTyG5HmpScQiqGq2rvJLk5opoBq4g/us4SasENxWzRx865yH2+fi4WqQY
-	 hSPftw5CP8jZljmgXqMjasNu7flj9pBWADoYPya8=
+	by mail.kernel.org (Postfix) with ESMTP id A148E218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 22:05:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="ISb8iLfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfCOWFY (ORCPT
+        id S1727112AbfCOWF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 18:05:24 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35492 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfCOWFX (ORCPT
+        Fri, 15 Mar 2019 18:05:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39146 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfCOWF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 18:05:23 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t13so9241740lji.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 15:05:22 -0700 (PDT)
+        Fri, 15 Mar 2019 18:05:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i20so7247481pfo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 15:05:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sPowlvMhOrE2iPnrm0qQxZAvItkJZclhKDhFCcnt+90=;
-        b=IiU2Rhr/MEJxJ9FOhUSnw11Py1r4GVRnd1EUacGLuGcK+UGBOjnQsOIyyZ/Si3NuVi
-         QuuD49ZXNKxVBIzTDzuLhZPzD7YgJDrOFnIEtrAK6dIJM3qVS3qyEdTJCS7IzFHLbxU7
-         t/LSPAz7dZ5jyyL1ycJQJH5Q8J+PiC7ZjJqVE=
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tZR3NvyvgI9FAd6NHSH76G6CMuZEuWEAU0R2dPeChg4=;
+        b=ISb8iLfa8FTnI885XEbGnSRWKny4r0Nn4JMF0T7kKBzWQ1rjJX9npj78erz3SO3uSD
+         oFmi9NF/9Jaxn0Bqw7lbP3rCWgOef++DEiY1rXTMHfS1DsaEQXEuVj377C0nH6gh+2s7
+         eDe6/laL3VispluO9nMQnkdCeJATO5+0QvJFWpMqeoinfyHLmTPxV0W46fcpfRyFl57r
+         PCkz1SjCa5812ZGfynTsIp32bILwIv6Owj2b9oTKuU6QCy77kgK79Zc/LiZMEgHKneCm
+         Mb/4Lw8X4szAg8C3nfAAO1pG5bM8HnG1Bs3OO+/rEclUki45hDf25aSN/TV/UFlATtcj
+         UISw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sPowlvMhOrE2iPnrm0qQxZAvItkJZclhKDhFCcnt+90=;
-        b=eVwdO4I2KkJZYngo37EoHnEb/BWymcRxXZ6dV+h9vi10Don/df9zvbbh/8prSQHieG
-         q0eCDYB/LcaqEBUMITotvuzDnQJsVhvmx8EnqpoCM95vRZAOIJVt1g9/tncth3Npv6Tp
-         U9cnzwUzndCmE8Q7ziUpmXUKIq9NpBB8ZUG0Si+rmuBK50wD5GDrY9JOIBOaPI2jQ1oE
-         ODFHyLc67lC4q28wjGMjOzOmJtOAl5kBnA6l+HI+zfzSpwj0NHHG7H6UdQupKfsGiycn
-         mogXTtOoFUrjWL2uGmABmk8D5/m4XqyCn0oKKTRThvXnZTQyeTGi1cPXsOcRXZTmgVMh
-         iwYQ==
-X-Gm-Message-State: APjAAAWVc9ssYXnpN6KP915FJRFrEp+vvJLu6+UXrTDh5rR/G/sYLPp2
-        w0Aj1R+kta+NR339bQhJ8YkhnImsAN0=
-X-Google-Smtp-Source: APXvYqwLBQZ2bYkKBtp12NmbqOkT1XDgMd5oMprJbjKbRtIvmkEabsZQfNs1Z28V+6sCbaxzGDPHmw==
-X-Received: by 2002:a2e:5b44:: with SMTP id p65mr3424673ljb.182.1552687521333;
-        Fri, 15 Mar 2019 15:05:21 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id h125sm642501lfh.67.2019.03.15.15.05.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 15:05:20 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id z25so9233205ljk.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 15:05:20 -0700 (PDT)
-X-Received: by 2002:a2e:8510:: with SMTP id j16mr3284600lji.2.1552687519873;
- Fri, 15 Mar 2019 15:05:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tZR3NvyvgI9FAd6NHSH76G6CMuZEuWEAU0R2dPeChg4=;
+        b=EjS7P4tlvNhdwNAD5q45V1sXTTcRA/mAQzILA+TSzu4cmGvDtkZ0eUeQStOZtDplQ1
+         Z+NC9ueC0z3S5BXdWmQUAzs7wfgEEl8jEvi3bTtO+sLzejNDXgPrYsX6pxLz1M8zlwcA
+         Gl0aIxFynETVDxJbaLtjXPS+b9SM4/+G1CBOwIkx+2ZNrp17ehD1eyhLyvSMhZTccld3
+         mAsVm8qCgFR0H8DX53rtpZeipdcCPY1BhIBN2G3v9wl9r+5jPGANqgOYqZ2USkq47Kd3
+         Jx97FwDJU6pOWpaOyBz0B/aa5irMfTZx5l9hJqN1UMuBds5vWshhv2BUzUeyDyqgNHUS
+         cYVw==
+X-Gm-Message-State: APjAAAXJp1sQCqvgZmzjeec7bcWTQEDPO5FS0fwqSvKL+Iw3kR5Nzwh/
+        6oDSrgCpGbZ/Coqv+FlSiVYAMg==
+X-Google-Smtp-Source: APXvYqxtiVG38E4EKOUGJRR/kirQR3IXXnGELJWrHcdgCVK7SHRG7c0SB2xVpo8Tkum9Akl1tPICwA==
+X-Received: by 2002:a65:6554:: with SMTP id a20mr5632137pgw.170.1552687555620;
+        Fri, 15 Mar 2019 15:05:55 -0700 (PDT)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id q86sm8761255pfi.171.2019.03.15.15.05.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 15:05:54 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 15:05:54 -0700
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Ivan Vecera <ivecera@redhat.com>
+Cc:     netdev@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] selftests: bpf: modify urandom_read and link it
+ non-statically
+Message-ID: <20190315220554.GA7431@mini-arch.hsd1.ca.comcast.net>
+References: <20190315200414.32346-1-ivecera@redhat.com>
+ <20190315200847.GC5481@mini-arch.hsd1.ca.comcast.net>
+ <2dcdc11c-4d04-4b0e-ddb7-04d969d04651@redhat.com>
+ <20190315205652.GD5481@mini-arch.hsd1.ca.comcast.net>
+ <1595006055.9467881.1552686646726.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-References: <31705653.NnsrL61LRB@blindfold> <CAFLxGvy54Fa0Dr9jbqvv2utSi3WvCusAHbYreJ1C=wg2bWtPRg@mail.gmail.com>
-In-Reply-To: <CAFLxGvy54Fa0Dr9jbqvv2utSi3WvCusAHbYreJ1C=wg2bWtPRg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 15 Mar 2019 15:05:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whfc=JP7JAz0DKbQkrsvTYeAypjp_a0i13tMuD6Yk9szA@mail.gmail.com>
-Message-ID: <CAHk-=whfc=JP7JAz0DKbQkrsvTYeAypjp_a0i13tMuD6Yk9szA@mail.gmail.com>
-Subject: Re: [GIT PULL] UML updates for 5.1-rc1
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-Cc:     linux-um@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595006055.9467881.1552686646726.JavaMail.zimbra@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 3:01 PM Richard Weinberger
-<richard.weinberger@gmail.com> wrote:
->
-> *kind ping* to make sure this PR is not lost. :-)
-> I guess you skipped this one too after the git.infradead.org outage.
+On 03/15, Ivan Vecera wrote:
+> 
+> ----- Stanislav Fomichev <sdf@fomichev.me> wrote:
+> > On 03/15, Ivan Vecera wrote:
+> > > On 15. 03. 19 21:08, Stanislav Fomichev wrote:
+> > > > On 03/15, Ivan Vecera wrote:
+> > > > > After some experiences I found that urandom_read does not need to be
+> > > > > linked statically. When the 'read' syscall call is moved to separate
+> > > > > non-inlined function then bpf_get_stackid() is able to find
+> > > > > the executable in stack trace and extract its build_id from it.
+> > > > But why? Do you have some problems with it being linked statically?
+> > > > 
+> > > Dependency... you don't need to install static glibc to compile the bpf
+> > > samples. Shared libc is available everytime.
+> > Oh, the distros that do -devel _and_ -static packages :-)
+> > 
+> > So your patch essentially adds a call, that leaves a trace on the stack
+> > with our build-id. I guess that works as well.
+> 
+> Without that additional call this does not work and build_id selftest fails.
+Oh, yeah, I was just trying to clarify why it fails without -static and why
+your patch makes it work for non-static :-)
+You can put more details in the commit message; you'd have to resubmit
+whenever net-next/bpf-next opens anyway.
 
-Right you are. Thanks for the ping,
-
-                Linus
+> 
+> I.
