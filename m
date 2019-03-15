@@ -2,207 +2,120 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7783C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8149FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B0E218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 569E6218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfCOSfV (ORCPT
+        id S1726713AbfCOShl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:35:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51912 "EHLO mx1.redhat.com"
+        Fri, 15 Mar 2019 14:37:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52372 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbfCOSfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:35:19 -0400
+        id S1725778AbfCOShl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 14:37:41 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 708A65D60E;
-        Fri, 15 Mar 2019 18:35:13 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 316E73088B8D;
+        Fri, 15 Mar 2019 18:37:41 +0000 (UTC)
 Received: from madcap2.tricolour.ca (ovpn-112-22.phx2.redhat.com [10.3.112.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 59BF25C205;
-        Fri, 15 Mar 2019 18:35:08 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 412A05C223;
+        Fri, 15 Mar 2019 18:37:35 +0000 (UTC)
 From:   Richard Guy Briggs <rgb@redhat.com>
-To:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+To:     containers@lists.linux-foundation.org,
         Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak90 V5 10/10] audit: NETFILTER_PKT: record each container ID associated with a netNS
-Date:   Fri, 15 Mar 2019 14:29:58 -0400
-Message-Id: <56127b2a5b82f15cb0d0f040502c2e3bb6945f30.1552665316.git.rgb@redhat.com>
-In-Reply-To: <cover.1552665316.git.rgb@redhat.com>
-References: <cover.1552665316.git.rgb@redhat.com>
-In-Reply-To: <cover.1552665316.git.rgb@redhat.com>
-References: <cover.1552665316.git.rgb@redhat.com>
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     eparis@parisplace.org, Steve Grubb <sgrubb@redhat.com>,
+        omosnace@redhat.com, Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH ghau51/ghau40 v5 0/6] add support for audit container identifier
+Date:   Fri, 15 Mar 2019 14:37:01 -0400
+Message-Id: <1552675027-11635-1-git-send-email-rgb@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 15 Mar 2019 18:35:18 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 15 Mar 2019 18:37:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add audit container identifier auxiliary record(s) to NETFILTER_PKT
-event standalone records.  Iterate through all potential audit container
-identifiers associated with a network namespace.
+Add support for audit kernel container identifiers to userspace tools.
 
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
----
- include/linux/audit.h    |  5 +++++
- kernel/audit.c           | 41 +++++++++++++++++++++++++++++++++++++++++
- net/netfilter/nft_log.c  | 11 +++++++++--
- net/netfilter/xt_AUDIT.c | 11 +++++++++--
- 4 files changed, 64 insertions(+), 4 deletions(-)
+The first and second add new record types.  The third adds filter
+support.  The fourth and 5th start to add search support.
 
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 70255c2dfb9f..723e2d020228 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -214,6 +214,8 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
- extern void audit_netns_contid_del(struct net *net, u64 contid);
- extern void audit_switch_task_namespaces(struct nsproxy *ns,
- 					 struct task_struct *p);
-+extern void audit_log_netns_contid_list(struct net *net,
-+					struct audit_context *context);
- 
- extern u32 audit_enabled;
- #else /* CONFIG_AUDIT */
-@@ -290,6 +292,9 @@ static inline void audit_netns_contid_del(struct net *net, u64 contid)
- static inline void audit_switch_task_namespaces(struct nsproxy *ns,
- 						struct task_struct *p)
- { }
-+static inline void audit_log_netns_contid_list(struct net *net,
-+					       struct audit_context *context)
-+{ }
- 
- #define audit_enabled AUDIT_OFF
- #endif /* CONFIG_AUDIT */
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 7fa3194f5342..80ed323feeb5 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -451,6 +451,47 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
- 		audit_netns_contid_add(new->net_ns, contid);
- }
- 
-+/**
-+ * audit_log_netns_contid_list - List contids for the given network namespace
-+ * @net: the network namespace of interest
-+ * @context: the audit context to use
-+ *
-+ * Description:
-+ * Issues a CONTAINER_ID record with a CSV list of contids associated
-+ * with a network namespace to accompany a NETFILTER_PKT record.
-+ */
-+void audit_log_netns_contid_list(struct net *net, struct audit_context *context)
-+{
-+	struct audit_buffer *ab = NULL;
-+	struct audit_contid *cont;
-+	bool first = true;
-+	struct audit_net *aunet;
-+
-+	/* Generate AUDIT_CONTAINER_ID record with container ID CSV list */
-+	rcu_read_lock();
-+	aunet = net_generic(net, audit_net_id);
-+	if (!aunet)
-+		goto out;
-+	list_for_each_entry_rcu(cont, &aunet->contid_list, list) {
-+		if (first) {
-+			ab = audit_log_start(context, GFP_ATOMIC,
-+					     AUDIT_CONTAINER_ID);
-+			if (!ab) {
-+				audit_log_lost("out of memory in audit_log_netns_contid_list");
-+				goto out;
-+			}
-+			audit_log_format(ab, "contid=");
-+		} else 
-+			audit_log_format(ab, ",");
-+		audit_log_format(ab, "%llu", cont->id);
-+		first = false;
-+	}
-+	audit_log_end(ab);
-+out:
-+	rcu_read_unlock();
-+}
-+EXPORT_SYMBOL(audit_log_netns_contid_list);
-+
- void audit_panic(const char *message)
- {
- 	switch (audit_failure) {
-diff --git a/net/netfilter/nft_log.c b/net/netfilter/nft_log.c
-index 655187bed5d8..bdb1ec2368a7 100644
---- a/net/netfilter/nft_log.c
-+++ b/net/netfilter/nft_log.c
-@@ -69,13 +69,16 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
- 	struct sk_buff *skb = pkt->skb;
- 	struct audit_buffer *ab;
- 	int fam = -1;
-+	struct audit_context *context;
-+	struct net *net;
- 
- 	if (!audit_enabled)
- 		return;
- 
--	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
-+	context = audit_alloc_local(GFP_ATOMIC);
-+	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
- 	if (!ab)
--		return;
-+		goto errout;
- 
- 	audit_log_format(ab, "mark=%#x", skb->mark);
- 
-@@ -102,6 +105,10 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
- 		audit_log_format(ab, " saddr=? daddr=? proto=-1");
- 
- 	audit_log_end(ab);
-+	net = xt_net(&pkt->xt);
-+	audit_log_netns_contid_list(net, context);
-+errout:
-+	audit_free_context(context);
- }
- 
- static void nft_log_eval(const struct nft_expr *expr,
-diff --git a/net/netfilter/xt_AUDIT.c b/net/netfilter/xt_AUDIT.c
-index af883f1b64f9..a3e547435f13 100644
---- a/net/netfilter/xt_AUDIT.c
-+++ b/net/netfilter/xt_AUDIT.c
-@@ -71,10 +71,13 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
- {
- 	struct audit_buffer *ab;
- 	int fam = -1;
-+	struct audit_context *context;
-+	struct net *net;
- 
- 	if (audit_enabled == AUDIT_OFF)
--		goto errout;
--	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
-+		goto out;
-+	context = audit_alloc_local(GFP_ATOMIC);
-+	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
- 	if (ab == NULL)
- 		goto errout;
- 
-@@ -104,7 +107,11 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
- 
- 	audit_log_end(ab);
- 
-+	net = xt_net(par);
-+	audit_log_netns_contid_list(net, context);
- errout:
-+	audit_free_context(context);
-+out:
- 	return XT_CONTINUE;
- }
- 
+The last is intended for debugging and not for upstream, matching the
+kernel /proc read patch.
+
+See: https://github.com/linux-audit/audit-userspace/issues/51
+See: https://github.com/linux-audit/audit-userspace/issues/40
+See: https://github.com/linux-audit/audit-kernel/issues/90
+See: https://github.com/linux-audit/audit-kernel/issues/91
+See: https://github.com/linux-audit/audit-testsuite/issues/64
+See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+
+Changelog:
+v5
+- updated aux record from AUDIT_CONTAINER to AUDIT_CONTAINER_ID
+- add AUDIT_CONTAINER_ID to normalization
+- rebase on AUDIT_ANOM_LINK and AUDIT_MAC_CALIPSO_ADD
+
+v4
+- change from AUDIT_CONTAINER_ID to AUDIT_CONTAINER_OP
+- change from AUDIT_FEATURE_BITMAP_CONTAINERID_FILTER to
+  AUDIT_FEATURE_BITMAP_CONTAINERID
+- change from event_container_id to event_contid internally
+- change from container_id to contid and event_container_id to
+  event_contid internally
+- change command line option from --container-id to --contid
+
+v3
+- change from AUDIT_CONTAINER to AUDIT_CONTAINER_ID
+- change from AUDIT_CONTAINER_INFO to AUDIT_CONTAINER
+- change from AUDIT_CONTAINERID to AUDIT_CONTID
+- update github issue refs
+- add audit_get_containerid
+- change event_container_id default value
+- add --containerid to ausearch options help text
+- update ausearch parser and error codes
+v2
+- rebase on UINT_MAX patch
+- add patches for AUDIT_CONTAINER, AUDIT_CONTAINER_INFO, ausearch,
+  normalization
+
+Richard Guy Briggs (6):
+  AUDIT_CONTAINER_OP message type basic support
+  AUDIT_CONTAINER_ID message type basic support
+  auditctl: add support for AUDIT_CONTID filter
+  add ausearch containerid support
+  start normalization containerid support
+  libaudit: add support to get the task audit container identifier
+
+ auparse/normalize_record_map.h |   2 +
+ docs/Makefile.am               |   2 +-
+ docs/audit_get_containerid.3   |  25 ++++++
+ docs/auditctl.8                |   3 +
+ lib/fieldtab.h                 |   1 +
+ lib/libaudit.c                 |  65 ++++++++++++++
+ lib/libaudit.h                 |  16 ++++
+ lib/msg_typetab.h              |   2 +
+ lib/netlink.c                  |   1 +
+ src/auditctl-listing.c         |  21 +++++
+ src/aureport-options.c         |   1 +
+ src/ausearch-llist.c           |   2 +
+ src/ausearch-llist.h           |   1 +
+ src/ausearch-match.c           |   3 +
+ src/ausearch-options.c         |  47 +++++++++-
+ src/ausearch-options.h         |   1 +
+ src/ausearch-parse.c           | 199 +++++++++++++++++++++++++++++++++++++++++
+ 17 files changed, 390 insertions(+), 2 deletions(-)
+ create mode 100644 docs/audit_get_containerid.3
+
 -- 
 1.8.3.1
 
