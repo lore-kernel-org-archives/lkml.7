@@ -2,87 +2,141 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B642BC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3DEC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F37720645
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1A120645
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:33:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hL656qSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbfCOQcL (ORCPT
+        id S1729499AbfCOQdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:32:11 -0400
-Received: from foss.arm.com ([217.140.101.70]:33510 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfCOQcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:32:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C00E15AB;
-        Fri, 15 Mar 2019 09:32:10 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1F5583F71D;
-        Fri, 15 Mar 2019 09:32:08 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH v2] MIPS: entry: Remove unneeded need_resched() loop
-Date:   Fri, 15 Mar 2019 16:31:33 +0000
-Message-Id: <20190315163133.31632-1-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190311224752.8337-7-valentin.schneider@arm.com>
-References: <20190311224752.8337-7-valentin.schneider@arm.com>
+        Fri, 15 Mar 2019 12:33:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45878 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728480AbfCOQdV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:33:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 125so6800084pgc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 09:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bKyIVy1plr4oc5/xxGl3eETtPxJmReBFTCiX8YojzK4=;
+        b=hL656qSFfacJ1mvjVLBsaeu3bO8GVksUbNtBAac6O1bTYzfqn26Z8XxfKtC92uMutX
+         2EpUg9ks3a1srzQuZEfzE7VS8vwc1bxQjILlhTI8K7FA6FVNpQeAwmS+/9lCASoyExe8
+         YC2cM7+QbGyp+DbJoHdnovUlD6x0g+RfRoXg7gsityS2AM6lKJasdQgWPizUqMUp/Rum
+         k20I+67YD6t1yXu5zQngK/4PLxjAngUEjO/MkIZFZ+D5YKsAfk3st691Dg//fk8RV76K
+         ry3neAuWL3DmcgezbB9RRycywIovLuOzweEm6DPu2tebikzjGpNRs1hF/bX/DqJYATeS
+         JWNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bKyIVy1plr4oc5/xxGl3eETtPxJmReBFTCiX8YojzK4=;
+        b=MmjNn0YVPC7vwmXL5KlXm8Vj8xRF8GpL49XjBpHnpy4ixB/S6wiaxfsoZqOvuwzLVr
+         SjuDw0WmLIc1MI5b2CjHdaDwdLuuenrxJhhuIfqx0IJgvXuDi6dSOxP6LhVsD9d4uoxU
+         75T41og4kLUO5Ftaqe43f8Su2lkcVSLTMaYTvvpd4+aHokNNzVpqNzrNUBIyiFhQkXUl
+         UvYJouZXAm9UHHWZRzTpPQIa2NlO2iu5vN1qMXM4dlTSr666XWJ3j6/Lv1EkeIUGY7uK
+         3FsKOgroL7rD1qS4tgehh/awH4BvTCLjNU3b6gkONujquBD6nHiQMGyemjONRR8H3Jz2
+         albw==
+X-Gm-Message-State: APjAAAX3ZpjdprMM/BANVVe0CoSZn6L01ctnCgeETTHiXggvLLWtiEOL
+        BO/ouZrMbzOKs6kFwNE93Pkjgw==
+X-Google-Smtp-Source: APXvYqx9PQ+5f2rVcMkiVwN/6IZWa5CMZ1bvMgqGAJuZ99j5TTxX9RSkUTI+XLdd4TB+vNfdyQpXGw==
+X-Received: by 2002:a17:902:8643:: with SMTP id y3mr5065636plt.195.1552667599501;
+        Fri, 15 Mar 2019 09:33:19 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id q4sm1773070pgp.36.2019.03.15.09.33.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Mar 2019 09:33:18 -0700 (PDT)
+Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        linux-block <linux-block@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
+        linux-parport@lists.infradead.org
+References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
+ <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
+ <e2a66da2-5433-5b42-1ebe-9f1c135b5471@infradead.org>
+ <59cb035e-6880-de5a-33c5-d4db6ed910f4@kernel.dk>
+ <4a2adc33-ef38-6a5f-65ee-8fcfaa0948a9@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d22bf156-06df-ec67-121d-7dce65088b1a@kernel.dk>
+Date:   Fri, 15 Mar 2019 10:33:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4a2adc33-ef38-6a5f-65ee-8fcfaa0948a9@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the enabling and disabling of IRQs within preempt_schedule_irq()
-is contained in a need_resched() loop, we don't need the outer arch
-code loop.
+On 3/14/19 5:49 PM, Randy Dunlap wrote:
+> On 3/14/19 4:43 PM, Jens Axboe wrote:
+>> On 3/13/19 5:09 PM, Randy Dunlap wrote:
+>>> On 3/11/19 6:34 PM, Randy Dunlap wrote:
+>>>> On 3/11/19 6:25 PM, Randy Dunlap wrote:
+>>>>> [Has this already been addressed/fixed?]>>
+>>>>
+>>>> Same bug occurs with paride/pcd.c driver.
+>>>
+>>> This still happens (in blk-mq) in v5.0-11053-gebc551f2b8f9 of Mar. 12, 2019,
+>>> around 4pm PT.  [caused by paride: pf.c and pcd.c)
+>>
+>> I'll take a look at this, been busy with other stuff. How are you
+>> reproducing this? I'm assuming you don't actually have any hardware :-)
+> 
+> Right.  I just load the module (pf or pcd), unload it, and
+> then load it again.
 
-Note that commit a18815abcdfd ("Use preempt_schedule_irq.") initially
-removed the existing loop, but missed the final branch to restore_all.
-Commit cdaed73afb61 ("Fix preemption bug.") missed that and reintroduced
-the loop.
+Does this work?
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
----
- arch/mips/kernel/entry.S | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/kernel/entry.S b/arch/mips/kernel/entry.S
-index d7de8adcfcc8..5469d43b6966 100644
---- a/arch/mips/kernel/entry.S
-+++ b/arch/mips/kernel/entry.S
-@@ -58,15 +58,14 @@ resume_kernel:
- 	local_irq_disable
- 	lw	t0, TI_PRE_COUNT($28)
- 	bnez	t0, restore_all
--need_resched:
- 	LONG_L	t0, TI_FLAGS($28)
- 	andi	t1, t0, _TIF_NEED_RESCHED
- 	beqz	t1, restore_all
- 	LONG_L	t0, PT_STATUS(sp)		# Interrupts off?
- 	andi	t0, 1
- 	beqz	t0, restore_all
--	jal	preempt_schedule_irq
--	b	need_resched
-+	PTR_LA	ra, restore_all
-+	j	preempt_schedule_irq
- #endif
+diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
+index 96670eefaeb2..4681ddef5666 100644
+--- a/drivers/block/paride/pcd.c
++++ b/drivers/block/paride/pcd.c
+@@ -749,8 +749,11 @@ static int pcd_detect(void)
+ 		return 0;
  
- FEXPORT(ret_from_kernel_thread)
---
-2.20.1
+ 	printk("%s: No CD-ROM drive found\n", name);
+-	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++)
++	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++) {
++		blk_cleanup_queue(cd->disk->queue);
++		blk_mq_free_tag_set(&cd->tag_set);
+ 		put_disk(cd->disk);
++	}
+ 	pi_unregister_driver(par_drv);
+ 	return -1;
+ }
+diff --git a/drivers/block/paride/pf.c b/drivers/block/paride/pf.c
+index e92e7a8eeeb2..d27f375bb55a 100644
+--- a/drivers/block/paride/pf.c
++++ b/drivers/block/paride/pf.c
+@@ -761,8 +761,11 @@ static int pf_detect(void)
+ 		return 0;
+ 
+ 	printk("%s: No ATAPI disk detected\n", name);
+-	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++)
++	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
++		blk_cleanup_queue(pf->disk->queue);
++		blk_mq_free_tag_set(&pf->tag_set);
+ 		put_disk(pf->disk);
++	}
+ 	pi_unregister_driver(par_drv);
+ 	return -1;
+ }
+
+-- 
+Jens Axboe
 
