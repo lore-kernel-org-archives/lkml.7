@@ -2,144 +2,204 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD95C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB27C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF081218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F922218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:45:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d6EF/xAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfCORpo (ORCPT
+        id S1726727AbfCORpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 13:45:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52420 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfCORpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 13:45:43 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 39F7E806B3;
-        Fri, 15 Mar 2019 17:45:43 +0000 (UTC)
-Received: from [10.36.112.50] (ovpn-112-50.ams2.redhat.com [10.36.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8EAB319C56;
-        Fri, 15 Mar 2019 17:45:34 +0000 (UTC)
-Subject: Re: [PATCH] x86/Hyper-V: Fix definition HV_MAX_FLUSH_REP_COUNT
-To:     lantianyu1986@gmail.com
-Cc:     Lan Tianyu <Tianyu.Lan@microsoft.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, rkrcmar@redhat.com, devel@linuxdriverproject.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        michael.h.kelley@microsoft.com, vkuznets@redhat.com,
-        stable@vger.kernel.org
-References: <20190222104844.1847-1-Tianyu.Lan@microsoft.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <a379e291-b622-3535-8436-2cf3f3446c74@redhat.com>
-Date:   Fri, 15 Mar 2019 18:45:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 15 Mar 2019 13:45:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41051 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfCORpx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 13:45:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k11so6945135pgb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 10:45:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8N0lNRE/vp6+wBnPYESHVIwiQW+s55dvM92A6syMPX4=;
+        b=d6EF/xAbD+Gj7CEyabx2uRhWsP/cl+vLCyNeLkAQRzWsBdOrN6zo1kYRF/ozbGP3Ng
+         XBn1Hzxqbk9nxYHAHvoM2t2PsJOJ68xWOeuAvkgXo3VPZPPTwYrRxDfCRxSl58daI93y
+         sx9Cudl8l5fkX1kfuVKxkdkjf2lDurc21AteU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8N0lNRE/vp6+wBnPYESHVIwiQW+s55dvM92A6syMPX4=;
+        b=m44A+LQ+GK3/jmUbLkpOsznPJwe5kuwRfA+QvlY8P6P87D5oyuGh2h9RrQDu3LjIme
+         apkQTs3N33Zop4h2HQwxvtcxO0PkO9QcIaEdhD9EcUt/I1TMWo+ndQE1buP5tW0tSedB
+         s+o6kOfLxc2LCvzK/1PZCOUFsCC6bQ55VQx3JZF84GXJBHysFrZTXqeNbxfIKrdtUw22
+         DnU5X7AsWsq8XT0O6Fh/SIhyimQLrHLXG2S1g4+MnoMt5OYAcNZ4KhJPaEwrIwD4Mj5q
+         EVweJP7IkSZquHPVe0dksme3A1Yeh+SJ8lQfxWw7kgwBFcfCwyBGGWZtVLU2HeX1abVS
+         HIzQ==
+X-Gm-Message-State: APjAAAXtRkoIFz97wu0ZvA0moHpcAQaTEA/M/HGEw3G3Dt/BC5fXvX1o
+        W0VIFmkC+f+ShrvABUOE7mdhKg==
+X-Google-Smtp-Source: APXvYqxGh05CaD0PgytsF9CTwVrX5A1ze1bIljdbk8gjRT6hanpbuFhKhxvJs2dH5WISHjYgZ6iUMw==
+X-Received: by 2002:a62:4214:: with SMTP id p20mr5409552pfa.204.1552671952099;
+        Fri, 15 Mar 2019 10:45:52 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id h23sm3222761pfn.68.2019.03.15.10.45.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Mar 2019 10:45:51 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] tracing: kdb: Allow ftdump to skip all but the last few lines
+Date:   Fri, 15 Mar 2019 10:45:28 -0700
+Message-Id: <20190315174528.16531-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
 MIME-Version: 1.0
-In-Reply-To: <20190222104844.1847-1-Tianyu.Lan@microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 15 Mar 2019 17:45:43 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/02/19 11:48, lantianyu1986@gmail.com wrote:
-> From: Lan Tianyu <Tianyu.Lan@microsoft.com>
-> 
-> The max flush rep count of HvFlushGuestPhysicalAddressList hypercall
-> is equal with how many entries of union hv_gpa_page_range can be populated
-> into the input parameter page. The origin code lacks parenthesis around
-> PAGE_SIZE - 2 * sizeof(u64). This patch is to fix it.
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixs: cc4edae4b9(x86/hyper-v: Add HvFlushGuestAddressList hypercall support)
-> Signed-off-by: Lan Tianyu <Tianyu.Lan@microsoft.com>
-> ---
->  arch/x86/include/asm/hyperv-tlfs.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index 705dafc2d11a..2bdbbbcfa393 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -841,7 +841,7 @@ union hv_gpa_page_range {
->   * count is equal with how many entries of union hv_gpa_page_range can
->   * be populated into the input parameter page.
->   */
-> -#define HV_MAX_FLUSH_REP_COUNT (PAGE_SIZE - 2 * sizeof(u64) /	\
-> +#define HV_MAX_FLUSH_REP_COUNT ((PAGE_SIZE - 2 * sizeof(u64)) /	\
->  				sizeof(union hv_gpa_page_range))
->  
->  struct hv_guest_mapping_flush_list {
-> 
+The 'ftdump' command in kdb is currently a bit of a last resort, at
+least if you have lots of traces turned on.  It's going to print a
+whole boatload of lines out your serial port which is probably running
+at 115200.  This could easily take many, many minutes.
 
-Queued for after he merge window, with the fixed "Fixes" tag.
+Usually you're most interested in what's at the _end_ of the ftrace
+buffer, AKA what happened most recently.  That means you've got to
+wait the full time for the dump.  The 'ftdump' command does attempt to
+help you a little bit by allowing you to skip a fixed number of lines.
+Unfortunately it provides no way for you to know how many lines you
+should skip.
 
-Paolo
+Let's do similar to python and allow you to use a negative number to
+indicate that you want to skip all lines except the last few.  This
+allows you to quickly see what you want.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+Changes in v3:
+- Optimize counting as per Steven Rostedt.
+- Down to 1 patch since patch #1 from v2 landed.
+
+ kernel/trace/trace_kdb.c | 38 +++++++++++++++++++++++++++++---------
+ 1 file changed, 29 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index 810d78a8d14c..cc6ca6c0d6de 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -17,7 +17,7 @@
+ #include "trace.h"
+ #include "trace_output.h"
+ 
+-static void ftrace_dump_buf(int skip_lines, long cpu_file)
++static int ftrace_dump_buf(int skip_lines, long cpu_file, bool quiet)
+ {
+ 	/* use static because iter can be a bit big for the stack */
+ 	static struct trace_iterator iter;
+@@ -39,8 +39,6 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 	/* don't look at user memory in panic mode */
+ 	tr->trace_flags &= ~TRACE_ITER_SYM_USEROBJ;
+ 
+-	kdb_printf("Dumping ftrace buffer:\n");
+-
+ 	/* reset all but tr, trace, and overruns */
+ 	memset(&iter.seq, 0,
+ 		   sizeof(struct trace_iterator) -
+@@ -55,6 +53,9 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 						 cpu, GFP_ATOMIC);
+ 			ring_buffer_read_start(iter.buffer_iter[cpu]);
+ 			tracing_iter_reset(&iter, cpu);
++
++			cnt +=
++			ring_buffer_entries_cpu(iter.trace_buffer->buffer, cpu);
+ 		}
+ 	} else {
+ 		iter.cpu_file = cpu_file;
+@@ -63,13 +64,21 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 						 cpu_file, GFP_ATOMIC);
+ 		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
+ 		tracing_iter_reset(&iter, cpu_file);
++
++		cnt += ring_buffer_entries_cpu(iter.trace_buffer->buffer,
++					       cpu_file);
+ 	}
+ 
+-	while (trace_find_next_entry_inc(&iter)) {
+-		if (!cnt)
+-			kdb_printf("---------------------------------\n");
+-		cnt++;
++	if (quiet)
++		goto out;
++
++	kdb_printf("Dumping ftrace buffer (skipping %d lines):\n",
++		   skip_lines);
++
++	if (cnt)
++		kdb_printf("---------------------------------\n");
+ 
++	while (trace_find_next_entry_inc(&iter)) {
+ 		if (!skip_lines) {
+ 			print_trace_line(&iter);
+ 			trace_printk_seq(&iter.seq);
+@@ -99,6 +108,8 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 			iter.buffer_iter[cpu] = NULL;
+ 		}
+ 	}
++
++	return cnt;
+ }
+ 
+ /*
+@@ -109,6 +120,7 @@ static int kdb_ftdump(int argc, const char **argv)
+ 	int skip_lines = 0;
+ 	long cpu_file;
+ 	char *cp;
++	int cnt;
+ 
+ 	if (argc > 2)
+ 		return KDB_ARGCOUNT;
+@@ -129,7 +141,14 @@ static int kdb_ftdump(int argc, const char **argv)
+ 	}
+ 
+ 	kdb_trap_printk++;
+-	ftrace_dump_buf(skip_lines, cpu_file);
++
++	/* A negative skip_lines means skip all but the last lines */
++	if (skip_lines < 0) {
++		cnt = ftrace_dump_buf(0, cpu_file, true);
++		skip_lines = max(cnt + skip_lines, 0);
++	}
++
++	ftrace_dump_buf(skip_lines, cpu_file, false);
+ 	kdb_trap_printk--;
+ 
+ 	return 0;
+@@ -138,7 +157,8 @@ static int kdb_ftdump(int argc, const char **argv)
+ static __init int kdb_ftrace_register(void)
+ {
+ 	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#lines] [cpu]",
+-			    "Dump ftrace log", 0, KDB_ENABLE_ALWAYS_SAFE);
++			    "Dump ftrace log; -skip dumps last #lines", 0,
++			    KDB_ENABLE_ALWAYS_SAFE);
+ 	return 0;
+ }
+ 
+-- 
+2.21.0.360.g471c308f928-goog
+
