@@ -2,234 +2,211 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C62C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95FFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466662186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D953218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:12:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="fhCS1D4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfCOKLp (ORCPT
+        id S1728835AbfCOKMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 06:11:45 -0400
-Received: from mail.netline.ch ([148.251.143.178]:53303 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbfCOKLp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 06:11:45 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by netline-mail3.netline.ch (Postfix) with ESMTP id 391BE2A6054;
-        Fri, 15 Mar 2019 11:11:41 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
-Received: from netline-mail3.netline.ch ([127.0.0.1])
-        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id 8JFjP8d7FJys; Fri, 15 Mar 2019 11:11:40 +0100 (CET)
-Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
-        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 3874E2A6053;
-        Fri, 15 Mar 2019 11:11:40 +0100 (CET)
-Received: from [::1]
-        by thor with esmtp (Exim 4.92)
-        (envelope-from <michel@daenzer.net>)
-        id 1h4joO-0007MC-GK; Fri, 15 Mar 2019 11:11:36 +0100
-Subject: Re: [PATCH v2 1/5] drm/rockchip: fix fb references in async update
-To:     Helen Koike <helen.koike@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     =?UTF-8?Q?St=c3=a9phane_Marchesin?= <marcheu@google.com>,
-        Sean Paul <seanpaul@google.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        kernel@collabora.com, nicholas.kazlauskas@amd.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20190312022204.2775-1-helen.koike@collabora.com>
- <20190312022204.2775-2-helen.koike@collabora.com>
- <20190312073438.05ad8173@collabora.com>
- <f888a2d0-c6b1-8995-7254-ba2923dd22f9@collabora.com>
- <20190312165243.5b771e4a@collabora.com>
- <CAAFQd5CCEDaxLbw0E9NJJ-tEcHd8-Lidvcvt8qfPAnKu7uuj8w@mail.gmail.com>
- <05750143-708b-b84e-af67-82ec6815bd89@daenzer.net>
- <ed44e1f4-07da-b1cb-b5cb-d34d29758502@collabora.com>
- <d91d5582-3ccf-2249-21ee-9ccf115096b2@daenzer.net>
- <dd7de9ff-0ac8-80fd-b88b-250bdf988921@collabora.com>
-From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
- mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
- LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
- 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
- /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
- WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
- Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
- V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
- AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
- ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
- AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
- jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
- qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
- bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
- CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
- GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
- YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
- Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
-Message-ID: <61b8420e-9b63-b67f-e9a8-fb8a0cb7d219@daenzer.net>
-Date:   Fri, 15 Mar 2019 11:11:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 15 Mar 2019 06:12:05 -0400
+Received: from mail-eopbgr1320047.outbound.protection.outlook.com ([40.107.132.47]:41798
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727354AbfCOKME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 06:12:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c7A+K015Dp1610DNrj3TSMyR/o0jnPrfbGAkdOndjZM=;
+ b=fhCS1D4kaGh/st8JbjYWr35k6EgbXWnqtkToFN823LoEsjHK8p14s8VzDatC2jel+2WbL9wXmbpUss9oG76IaGG5QnA0Xuu5d1GG4f1kB6iG3Jr3WQw3XtfgN/ZY4+wkjZrQlRA8Sm2MD/Qp2lxWwRciawTXCf/4rgk88dnrgPo=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB3257.apcprd02.prod.outlook.com (20.177.86.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Fri, 15 Mar 2019 10:11:57 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::3180:828f:84bc:ea3]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::3180:828f:84bc:ea3%4]) with mapi id 15.20.1686.021; Fri, 15 Mar 2019
+ 10:11:57 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "minchan@kernel.org" <minchan@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "khandual@linux.vnet.ibm.com" <khandual@linux.vnet.ibm.com>,
+        "hillf.zj@alibaba-inc.com" <hillf.zj@alibaba-inc.com>,
+        "vbabka@suse.cz" <vbabka@suse.cz>
+Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
+Thread-Topic: Re: [External] Re: vmscan: Reclaim unevictable pages
+Thread-Index: AQHU2jnLyCfGly2dbEuVu40O8aA4saYKwYIOgAACnP2AAArTAIAAAt0egAAJfgCAABwNcoAAK5EogAESNQaAAERN0g==
+Date:   Fri, 15 Mar 2019 10:11:57 +0000
+Message-ID: <SG2PR02MB3098E6F2C4BAEB56AE071EDCE8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
+References: <SG2PR02MB3098A05E09B0D3F3CB1C3B9BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <SG2PR02MB309806967AE91179CAFEC34BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <SG2PR02MB3098B751EC6B8E32806A42FBE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <20190314084120.GF7473@dhcp22.suse.cz>
+ <SG2PR02MB309894F6D7DF9148846088F3E84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>,<226a92b9-94c5-b859-c54b-3aacad3089cc@virtuozzo.com>,<SG2PR02MB3098299456FB6AE2FD822C4CE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>,<SG2PR02MB30988333AD658F8124070ABEE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>,<SG2PR02MB3098AB587F4BFCD6B9D042FDE8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
+In-Reply-To: <SG2PR02MB3098AB587F4BFCD6B9D042FDE8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ddb4fa11-3e0a-4afa-8577-08d6a92ea842
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB3257;
+x-ms-traffictypediagnostic: SG2PR02MB3257:|SG2PR02MB3257:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SG2PR02MB32570CC6359D508C637EF0B5E8440@SG2PR02MB3257.apcprd02.prod.outlook.com>
+x-forefront-prvs: 09778E995A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(39850400004)(366004)(396003)(376002)(199004)(189003)(6506007)(55236004)(55016002)(110136005)(6116002)(3846002)(478600001)(53546011)(74316002)(76176011)(9686003)(6306002)(26005)(53936002)(966005)(7696005)(105586002)(106356001)(102836004)(52536014)(4326008)(25786009)(66574012)(33656002)(81156014)(8676002)(81166006)(5660300002)(316002)(6246003)(305945005)(86362001)(93886005)(71200400001)(7736002)(229853002)(68736007)(476003)(99286004)(44832011)(11346002)(186003)(71190400001)(54906003)(97736004)(8936002)(93156006)(2906002)(14454004)(78486014)(256004)(14444005)(5024004)(486006)(2501003)(6436002)(446003)(66066001)(2940100002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB3257;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 82zf/g4YP63bQJGCHWulCchJQEIHNvCAuCpVzSNGp0KnPhmdaZSZkKVvtxX+yw6xHqY1a6mFdjWH/mpR3sIDKN0wnFq4BOEpTXFGRjfQ9U3tIvg1XuUKHwg6z7G4DvmBFEYUq2wYnRLsIWFKvGO4za9nug95xCy9rHhF0BXw8SgJMRgpEQQ8N51XMs+3ybFGRYXvQ4Y0oqKqgt2MBbjY60s0UyHI2cMkUm7pj+a6h6yKigePA6hxhwTmRuiMD4s0Ctxv10S6OYtaQLwOsssA8DvlV00G7W2gCCCoWZ2fmGeznW+B1NKzTtLs5Y5ePCj6mI2NVoyofWlnL0WbKfGrWeUlb/bTqq/kQBAQndMDyM7QjeSly3rJ5gD+ffnMMepaXkGG3wRQkmi9Y2TjVYqNBZGrCqPFbES6k8sRtKPe3zA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <dd7de9ff-0ac8-80fd-b88b-250bdf988921@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddb4fa11-3e0a-4afa-8577-08d6a92ea842
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 10:11:57.3403
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3257
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-14 6:51 p.m., Helen Koike wrote:
-> On 3/14/19 6:15 AM, Michel Dänzer wrote:
->> On 2019-03-13 7:08 p.m., Helen Koike wrote:
->>> On 3/13/19 6:58 AM, Michel Dänzer wrote:
->>>> On 2019-03-13 4:42 a.m., Tomasz Figa wrote:
->>>>> On Wed, Mar 13, 2019 at 12:52 AM Boris Brezillon
->>>>> <boris.brezillon@collabora.com> wrote:
->>>>>> On Tue, 12 Mar 2019 12:34:45 -0300
->>>>>> Helen Koike <helen.koike@collabora.com> wrote:
->>>>>>> On 3/12/19 3:34 AM, Boris Brezillon wrote:
->>>>>>>> On Mon, 11 Mar 2019 23:21:59 -0300
->>>>>>>> Helen Koike <helen.koike@collabora.com> wrote:
->>>>>>>>
->>>>>>>>> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
->>>>>>>>> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
->>>>>>>>> @@ -912,30 +912,31 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
->>>>>>>>>                                      struct drm_plane_state *new_state)
->>>>>>>>>  {
->>>>>>>>>    struct vop *vop = to_vop(plane->state->crtc);
->>>>>>>>> -  struct drm_plane_state *plane_state;
->>>>>>>>> +  struct drm_framebuffer *old_fb = plane->state->fb;
->>>>>>>>>
->>>>>>>>> -  plane_state = plane->funcs->atomic_duplicate_state(plane);
->>>>>>>>> -  plane_state->crtc_x = new_state->crtc_x;
->>>>>>>>> -  plane_state->crtc_y = new_state->crtc_y;
->>>>>>>>> -  plane_state->crtc_h = new_state->crtc_h;
->>>>>>>>> -  plane_state->crtc_w = new_state->crtc_w;
->>>>>>>>> -  plane_state->src_x = new_state->src_x;
->>>>>>>>> -  plane_state->src_y = new_state->src_y;
->>>>>>>>> -  plane_state->src_h = new_state->src_h;
->>>>>>>>> -  plane_state->src_w = new_state->src_w;
->>>>>>>>> -
->>>>>>>>> -  if (plane_state->fb != new_state->fb)
->>>>>>>>> -          drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
->>>>>>>>> -
->>>>>>>>> -  swap(plane_state, plane->state);
->>>>>>>>> -
->>>>>>>>> -  if (plane->state->fb && plane->state->fb != new_state->fb) {
->>>>>>>>> +  /*
->>>>>>>>> +   * A scanout can still be occurring, so we can't drop the reference to
->>>>>>>>> +   * the old framebuffer. To solve this we get a reference to old_fb and
->>>>>>>>> +   * set a worker to release it later.
->>>>>>>>
->>>>>>>> Hm, doesn't look like an async update to me if we have to wait for the
->>>>>>>> next VBLANK to happen to get the new content on the screen. Maybe we
->>>>>>>> should reject async updates when old_fb != new_fb in the rk
->>>>>>>> ->async_check() hook.
->>>>>>>
->>>>>>> Unless I am misunderstanding this, we don't wait here, we just grab a
->>>>>>> reference to the fb in case it is being still used by the hw, so it
->>>>>>> doesn't get released prematurely.
->>>>>>
->>>>>> I was just reacting to the comment that says the new FB should stay
->>>>>> around until the next VBLANK event happens. If the FB must stay around
->>>>>> that probably means the HW is still using, which made me wonder if this
->>>>>> HW actually supports async update (where async means "update now and
->>>>>> don't care about about tearing"). Or maybe it takes some time to switch
->>>>>> to the new FB and waiting for the next VBLANK to release the old FB was
->>>>>> an easy solution to not wait for the flip to actually happen in
->>>>>> ->async_update() (which is kind of a combination of async+non-blocking).
->>>>>
->>>>> The hardware switches framebuffers on vblank, so whatever framebuffer
->>>>> is currently being scanned out from needs to stay there until the
->>>>> hardware switches to the new one in shadow registers. If that doesn't
->>>>> happen, you get IOMMU faults and the display controller stops working
->>>>> since we don't have any fault handling currently, just printing a
->>>>> message.
->>>>
->>>> Sounds like your hardware doesn't actually support async flips. It's
->>>> probably better for the driver not to pretend otherwise.
->>>
->>> I think wee need to clarify the meaning of the async_update callback
->>> (and we should clarify it in the docs).
->>>
->>> The way I understand what the async_update callback should do is: don't
->>> block (i.e. don't wait for the next vblank),
->>
->> Note that those are two separate things. "Async flips" are about "don't
->> wait for vblank", not about "don't block".
->>
->>
->>> and update the hw state at some point with the latest state from the
->>> last call to async_update.
->>>
->>> Which means that: any driver can implement the async_update callback,
->>> independently if it supports changing its state right away or not.
->>> If hw supports, async_update can change the hw state right away, if not,
->>> then changes will be applied in the next vblank (it can even amend the
->>> pending commit if there is one).
->>> With this, we can remove all the legacy cursor code to use the
->>> async_update callback, since async_update can be called 100 times before
->>> the next vblank, and the latest state will be set to the hw without
->>> waiting 100 vblanks.
->>>
->>> Please, let me know if this is your understanding as well. If not, then
->>> we need to remodel things.
->>
->> While this may make sense for cursor updates, I don't think it does for
->> async flips. If the flip only actually takes effect during the next
->> vblank, it doesn't really fit the definition and userspace expectation
->> of an async flip. It's better to clearly communicate to userspace that
->> the hardware cannot do async flips, than to pretend it can and fake
->> them. Userspace has to deal with this anyway, since async flips weren't
->> always supported in general.
-> 
-> What do you think if we separate two concepts here:
-> 
-> - amend mode: works like cursor updates, i.e, update the hw state at
-> some point with the latest state from the last call to async_update. No
-> special hardware support is required.
-> 
-> - async update: update hw state immediately. This depends if the hw
-> supports it or not.
-> 
-> Every async update is an amend, but the opposite is not necessarily true.
-> 
-> What do you think if we rename the current async_update to amend_update,
-> and we add a parameter "force_async" to it? (or maybe
-> force_immediate_update?)
-> Then amend_check with force_async=1 would fail if the hardware doesn't
-> support it (we could also add flags in the capabilities to inform
-> userspace the expected behaviour of things and if the hw supports
-> force_sync).
-> 
-> Like this, we can implement the cursors using the amend_update (which is
-> now called async_update), and async_flips with amend_update with
-> force_async=1.
 
-Might force_async make sense for cursor updates as well? I thought some
-hardware supported HW cursor updates outside of vblank, but I'm not sure.
+[ cc Aneesh kumar, Anshuman, Hillf, Vlastimil]
 
-Without force_async, are cursor updates always applied to the hardware
-on the next vblank, even if the pending commit is delayed further (e.g.
-because a fence it depends on doesn't signal before vblank)? If cursor
-updates can be delayed beyond the next vblank, that can result in bad
-user experience.
+From: Pankaj Suryawanshi
+Sent: 15 March 2019 11:35:05
+To: Kirill Tkhai; Michal Hocko
+Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.org
+Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
 
 
--- 
-Earthling Michel Dänzer               |              https://www.amd.com
-Libre software enthusiast             |             Mesa and X developer
+
+[ cc linux-mm ]
+
+
+From: Pankaj Suryawanshi
+Sent: 14 March 2019 19:14:40
+To: Kirill Tkhai; Michal Hocko
+Cc: linux-kernel@vger.kernel.org; minchan@kernel.org
+Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
+
+
+
+Hello ,
+
+Please ignore the curly braces, they are just for debugging.
+
+Below is the updated patch.
+
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index be56e2e..12ac353 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -998,7 +998,7 @@ static unsigned long shrink_page_list(struct list_head =
+*page_list,
+                sc->nr_scanned++;
+
+                if (unlikely(!page_evictable(page)))
+-                       goto activate_locked;
++                      goto cull_mlocked;
+
+                if (!sc->may_unmap && page_mapped(page))
+                        goto keep_locked;
+@@ -1331,7 +1331,12 @@ static unsigned long shrink_page_list(struct list_he=
+ad *page_list,
+                } else
+                        list_add(&page->lru, &free_pages);
+                continue;
+-
++cull_mlocked:
++                if (PageSwapCache(page))
++                        try_to_free_swap(page);
++                unlock_page(page);
++                list_add(&page->lru, &ret_pages);
++                continue;
+ activate_locked:
+                /* Not a candidate for swapping, so reclaim swap space. */
+                if (PageSwapCache(page) && (mem_cgroup_swap_full(page) ||
+
+
+
+Regards,
+Pankaj
+
+
+From: Kirill Tkhai <ktkhai@virtuozzo.com>
+Sent: 14 March 2019 14:55:34
+To: Pankaj Suryawanshi; Michal Hocko
+Cc: linux-kernel@vger.kernel.org; minchan@kernel.org
+Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
+
+
+On 14.03.2019 11:52, Pankaj Suryawanshi wrote:
+>
+> I am using kernel version 4.14.65 (on Android pie [ARM]).
+>
+> No additional patches applied on top of vanilla.(Core MM).
+>
+> If  I change in the vmscan.c as below patch, it will work.
+
+Sorry, but 4.14.65 does not have braces around trylock_page(),
+like in your patch below.
+
+See     https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tr=
+ee/mm/vmscan.c?h=3Dv4.14.65
+
+[...]
+
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index be56e2e..2e51edc 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -990,15 +990,17 @@ static unsigned long shrink_page_list(struct list_=
+head *page_list,
+>>                  page =3D lru_to_page(page_list);
+>>                  list_del(&page->lru);
+>>
+>>                 if (!trylock_page(page)) {
+>>                          goto keep;
+>>                 }
+
+***************************************************************************=
+***************************************************************************=
+******* eInfochips Business Disclaimer: This e-mail message and all attachm=
+ents transmitted with it are intended solely for the use of the addressee a=
+nd may contain legally privileged and confidential information. If the read=
+er of this message is not the intended recipient, or an employee or agent r=
+esponsible for delivering this message to the intended recipient, you are h=
+ereby notified that any dissemination, distribution, copying, or other use =
+of this message or its attachments is strictly prohibited. If you have rece=
+ived this message in error, please notify the sender immediately by replyin=
+g to this message and please delete it from your computer. Any views expres=
+sed in this message are those of the individual sender unless otherwise sta=
+ted. Company has taken enough precautions to prevent the spread of viruses.=
+ However the company accepts no liability for any damage caused by any viru=
+s transmitted by this email. **********************************************=
+***************************************************************************=
+************************************
