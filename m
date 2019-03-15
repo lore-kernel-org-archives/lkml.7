@@ -2,156 +2,197 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE7FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D79C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D142077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:49:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H58EhYlr"
+	by mail.kernel.org (Postfix) with ESMTP id 14D20217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfCOEtY (ORCPT
+        id S1727965AbfCOEuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 00:49:24 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37388 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfCOEtX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 00:49:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Cc:To:Subject:From:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jvjS3vziraRfrdex1BvhOvpEgazLfLy9tWzVLumjckU=; b=H58EhYlrowBBLyTFrWCZ4GcMvO
-        61kSAmTpqZZ5N8jfzatM8QIDQCV1m/IVdwn2kz4gpw0kBYRhoV1BZ85usuHvt14NU3qeRNPe/2mCZ
-        v9VSZ/D1jAcPNShFeAwV+HcG4z2LiUJslTw+aZPD3pNxkxjWro3p1aZqZi3wkCMHwHr5j/ybwI3oK
-        0oTUs9ctoUTuElgIzMdnEHPmcsq+pYRWDD77TN7EXjIuzMwAdXeoCyBnar+so0TABHDOhqi6Lk4IO
-        4HBFaVsQjlZlVe/vExIkt1F8bJWMBB6cjhAnIWYG+Jbu5IJimMDAY2g73Vd3SY0WIRG8e+Q9RV5xc
-        EHNulU7A==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4emW-0003Wy-SV; Fri, 15 Mar 2019 04:49:21 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: tty: uartlite: GP fault when calling tty_unregister_driver()
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Korsgaard <jacmet@sunsite.dk>, linux-serial@vger.kernel.org
-Message-ID: <5d91feb0-60dd-cab0-439c-424568f92d09@infradead.org>
-Date:   Thu, 14 Mar 2019 21:49:17 -0700
+        Fri, 15 Mar 2019 00:50:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47092 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfCOEuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 00:50:18 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E600E307CEB1;
+        Fri, 15 Mar 2019 04:50:17 +0000 (UTC)
+Received: from [10.72.12.187] (ovpn-12-187.pek2.redhat.com [10.72.12.187])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 16B3C5C231;
+        Fri, 15 Mar 2019 04:50:12 +0000 (UTC)
+Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
+To:     Dongli Zhang <dongli.zhang@oracle.com>,
+        Cornelia Huck <cohuck@redhat.com>, mst@redhat.com
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, axboe@kernel.dk,
+        linux-kernel@vger.kernel.org
+References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
+ <20190312183351.74764f4f.cohuck@redhat.com>
+ <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
+ <20190313103900.1ea7f996.cohuck@redhat.com>
+ <a3f24cfa-5160-0ccc-decc-a48362c8de19@oracle.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <537e6420-8994-43d6-1d4d-ccb6e0fafa0b@redhat.com>
+Date:   Fri, 15 Mar 2019 12:50:11 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <a3f24cfa-5160-0ccc-decc-a48362c8de19@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: base64
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 15 Mar 2019 04:50:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBpcyBvbiB2NS4wLTExMDUzLWdlYmM1NTFmMmI4Zjkgb24geDg2XzY0LiAoTWFyY2gg
-MTIsIDIwMTkpDQpKdXN0IGxvYWQgdWFydGxpdGUgbW9kdWxlIGFuZCB0aGVuIHVubG9hZCBp
-dC4NCg0KDQpbICAgNzUuMzM0MzczXSBjYWxsaW5nICB1bGl0ZV9pbml0KzB4MC8weDEwMDAg
-W3VhcnRsaXRlXSBAIDE2NTUNClsgICA3NS4zMzQ2MzRdIGluaXRjYWxsIHVsaXRlX2luaXQr
-MHgwLzB4MTAwMCBbdWFydGxpdGVdIHJldHVybmVkIDAgYWZ0ZXIgMjIzIHVzZWNzDQpbICAg
-ODAuMTQ1NTQ0XSBrYXNhbjogQ09ORklHX0tBU0FOX0lOTElORSBlbmFibGVkDQpbICAgODAu
-MTQ1NTc4XSBrYXNhbjogR1BGIGNvdWxkIGJlIGNhdXNlZCBieSBOVUxMLXB0ciBkZXJlZiBv
-ciB1c2VyIG1lbW9yeSBhY2Nlc3MNClsgICA4MC4xNDU2MTRdIGdlbmVyYWwgcHJvdGVjdGlv
-biBmYXVsdDogMDAwMCBbIzFdIFBSRUVNUFQgU01QIEtBU0FOIFBUSQ0KWyAgIDgwLjE0NTYz
-NF0gQ1BVOiAzIFBJRDogMTY1OCBDb21tOiBybW1vZCBOb3QgdGFpbnRlZCA1LjAuMG1vZCAj
-MQ0KWyAgIDgwLjE0NTY1MV0gSGFyZHdhcmUgbmFtZTogVE9TSElCQSBQT1JURUdFIFI4MzUv
-UG9ydGFibGUgUEMsIEJJT1MgVmVyc2lvbiA0LjEwICAgMDEvMDgvMjAxMw0KWyAgIDgwLjE0
-NTY3N10gUklQOiAwMDEwOnR0eV91bnJlZ2lzdGVyX2RyaXZlcisweDI1LzB4MWQwDQpbICAg
-ODAuMTQ1Njk0XSBDb2RlOiAwMCAwMCAwMCAwMCA5MCA1NSA0OCBiOCAwMCAwMCAwMCAwMCAw
-MCBmYyBmZiBkZiA0OCA4OSBlNSA0MSA1NSA0MSA1NCA1MyA0OCA4OSBmYiA0OCA4MyBjNyAz
-NCA0OCA4OSBmYSA0OCBjMSBlYSAwMyA0OCA4MyBlYyAwOCA8MGY+IGI2IDE0IDAyIDQ4IDg5
-IGY4IDgzIGUwIDA3IDgzIGMwIDAzIDM4IGQwIDdjIDA4IDg0IGQyIDBmIDg1IDVlDQpbICAg
-ODAuMTQ1NzI4XSBSU1A6IDAwMTg6ZmZmZjg4ODBhNDFmZmRhMCBFRkxBR1M6IDAwMDEwMjg2
-DQpbICAgODAuMTQ1NzQ0XSBSQVg6IGRmZmZmYzAwMDAwMDAwMDAgUkJYOiAwMDAwMDAwMDAw
-MDAwMDAwIFJDWDogMWZmZmZmZmZmODNhOWE3Yg0KWyAgIDgwLjE0NTc2MV0gUkRYOiAwMDAw
-MDAwMDAwMDAwMDA2IFJTSTogMDAwMDAwMDAwMDAwMDAwNCBSREk6IDAwMDAwMDAwMDAwMDAw
-MzQNClsgICA4MC4xNDU3NzhdIFJCUDogZmZmZjg4ODBhNDFmZmRjMCBSMDg6IGZmZmZlZDEw
-MTQ4M2ZmOWYgUjA5OiBmZmZmZWQxMDE0ODNmZjlmDQpbICAgODAuMTQ1Nzk2XSBSMTA6IDAw
-MDAwMDAwMDAwMDAwMDEgUjExOiBmZmZmZWQxMDE0ODNmZjlmIFIxMjogZmZmZmZmZmZjMWQ0
-ZTA0MA0KWyAgIDgwLjE0NTgxNF0gUjEzOiBmZmZmODg4MGE0MWZmZWYwIFIxNDogMDAwMDAw
-MDAwMDAwMDgwMCBSMTU6IGZmZmZmZmZmYzFkNGQzYTANClsgICA4MC4xNDU4MzJdIEZTOiAg
-MDAwMDdmZTZkNjAyOWI4MCgwMDAwKSBHUzpmZmZmODg4MTFmNDAwMDAwKDAwMDApIGtubEdT
-OjAwMDAwMDAwMDAwMDAwMDANClsgICA4MC4xNDU4NTFdIENTOiAgMDAxMCBEUzogMDAwMCBF
-UzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNClsgICA4MC4xNDU4NjddIENSMjogMDAw
-MDU1ZTkxMTI3OTBiOCBDUjM6IDAwMDAwMDAwYTM3NDIwMDYgQ1I0OiAwMDAwMDAwMDAwMDYw
-NmUwDQpbICAgODAuMTQ1ODg0XSBDYWxsIFRyYWNlOg0KWyAgIDgwLjE0NTkwM10gIHVhcnRf
-dW5yZWdpc3Rlcl9kcml2ZXIrMHg0My8weDFiMA0KWyAgIDgwLjE0NTkyNF0gIHVsaXRlX2V4
-aXQrMHgxYy8weDI1IFt1YXJ0bGl0ZV0NClsgICA4MC4xNDU5NDFdICBfX3g2NF9zeXNfZGVs
-ZXRlX21vZHVsZSsweDMyOS8weDQ5MA0KWyAgIDgwLjE0NTk1OF0gID8gX19pYTMyX3N5c19k
-ZWxldGVfbW9kdWxlKzB4NDkwLzB4NDkwDQpbICAgODAuMTQ1OTc2XSAgPyBibGtjZ19leGl0
-X3F1ZXVlKzB4MjAvMHgyMA0KWyAgIDgwLjE0NTk5MV0gID8gX3Jhd19zcGluX3VubG9ja19p
-cnErMHgyMi8weDQwDQpbICAgODAuMTQ2MDE0XSAgZG9fc3lzY2FsbF82NCsweGFhLzB4MzEw
-DQpbICAgODAuMTQ2MDI4XSAgPyBwcmVwYXJlX2V4aXRfdG9fdXNlcm1vZGUrMHg4Yi8weDE1
-MA0KWyAgIDgwLjE0NjA0Nl0gIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDQ0
-LzB4YTkNClsgICA4MC4xNDYwNjJdIFJJUDogMDAzMzoweDdmZTZkNTcxN2Y3Nw0KWyAgIDgw
-LjE0NjA3NV0gQ29kZTogNzMgMDEgYzMgNDggOGIgMGQgMjEgYWYgMmIgMDAgZjcgZDggNjQg
-ODkgMDEgNDggODMgYzggZmYgYzMgNjYgMmUgMGYgMWYgODQgMDAgMDAgMDAgMDAgMDAgMGYg
-MWYgNDQgMDAgMDAgYjggYjAgMDAgMDAgMDAgMGYgMDUgPDQ4PiAzZCAwMSBmMCBmZiBmZiA3
-MyAwMSBjMyA0OCA4YiAwZCBmMSBhZSAyYiAwMCBmNyBkOCA2NCA4OSAwMSA0OA0KWyAgIDgw
-LjE0NjExMV0gUlNQOiAwMDJiOjAwMDA3ZmZmZGNjMTAxYjggRUZMQUdTOiAwMDAwMDIwNiBP
-UklHX1JBWDogMDAwMDAwMDAwMDAwMDBiMA0KWyAgIDgwLjE0NjEzMF0gUkFYOiBmZmZmZmZm
-ZmZmZmZmZmRhIFJCWDogMDAwMDdmZmZkY2MxMDIxOCBSQ1g6IDAwMDA3ZmU2ZDU3MTdmNzcN
-ClsgICA4MC4xNDYxNDddIFJEWDogMDAwMDAwMDAwMDAwMDAwYSBSU0k6IDAwMDAwMDAwMDAw
-MDA4MDAgUkRJOiAwMDAwNTVlOTExMjZlN2Q4DQpbICAgODAuMTQ2MTY0XSBSQlA6IDAwMDA1
-NWU5MTEyNmU3NzAgUjA4OiAwMDAwN2ZmZmRjYzBmMTMxIFIwOTogMDAwMDAwMDAwMDAwMDAw
-MA0KWyAgIDgwLjE0NjE4MV0gUjEwOiAwMDAwN2ZlNmQ1Nzg3MWMwIFIxMTogMDAwMDAwMDAw
-MDAwMDIwNiBSMTI6IDAwMDA3ZmZmZGNjMTAzZTANClsgICA4MC4xNDYxOTldIFIxMzogMDAw
-MDdmZmZkY2MxMjc1YiBSMTQ6IDAwMDA1NWU5MTEyNmUyNjAgUjE1OiAwMDAwNTVlOTExMjZl
-NzcwDQpbICAgODAuMTQ2MjMwXSBNb2R1bGVzIGxpbmtlZCBpbjogdWFydGxpdGUoLSkgY3Ry
-IGNjbSBhZl9wYWNrZXQgeHRfdGNwdWRwIGlwNnRfcnBmaWx0ZXIgaXA2dF9SRUpFQ1QgbmZf
-cmVqZWN0X2lwdjYgaXB0X1JFSkVDVCBuZl9yZWplY3RfaXB2NCB4dF9jb25udHJhY2sgaXBf
-c2V0IG5mbmV0bGluayBlYnRhYmxlX25hdCBlYnRhYmxlX2Jyb3V0ZSBicmlkZ2Ugc3RwIGxs
-YyBpcDZ0YWJsZV9uYXQgaXA2dGFibGVfbWFuZ2xlIGlwNnRhYmxlX3JhdyBpcDZ0YWJsZV9z
-ZWN1cml0eSBpcHRhYmxlX25hdCBuZl9uYXQgbmZfY29ubnRyYWNrIG5mX2RlZnJhZ19pcHY2
-IG5mX2RlZnJhZ19pcHY0IGlwdGFibGVfbWFuZ2xlIGlwdGFibGVfcmF3IGlwdGFibGVfc2Vj
-dXJpdHkgZWJ0YWJsZV9maWx0ZXIgZWJ0YWJsZXMgaXA2dGFibGVfZmlsdGVyIGlwNl90YWJs
-ZXMgaXB0YWJsZV9maWx0ZXIgaXBfdGFibGVzIHhfdGFibGVzIGJwZmlsdGVyIGJ0cmZzIGNv
-cmV0ZW1wIGh3bW9uIG1zciB4b3IgenN0ZF9jb21wcmVzcyBpbnRlbF9yYXBsIHJhaWQ2X3Bx
-IHg4Nl9wa2dfdGVtcF90aGVybWFsIGhpZF9nZW5lcmljIGludGVsX3Bvd2VyY2xhbXAgbGli
-Y3JjMzJjIHV2Y3ZpZGVvIGt2bV9pbnRlbCB6c3RkX2RlY29tcHJlc3MgdXNibW91c2UgaVRD
-T193ZHQgdXNia2JkIGt2bSBpVENPX3ZlbmRvcl9zdXBwb3J0IHVzYmhpZCB2aWRlb2J1ZjJf
-dm1hbGxvYyB2aWRlb2J1ZjJfbWVtb3BzIGhpZCB2aWRlb2J1ZjJfdjRsMiBtZWlfaGRjcCB2
-aWRlb2J1ZjJfY29tbW9uIHZpZGVvZGV2IGFyYzQgaXdsZHZtIGlycWJ5cGFzcyBtZWRpYSBz
-bmRfaGRhX2NvZGVjX2hkbWkgbWFjODAyMTEgY3JjdDEwZGlmX3BjbG11bCBjcmMzMl9wY2xt
-dWwgY3JjMzJjX2ludGVsIGdoYXNoX2NsbXVsbmlfaW50ZWwgc25kX2hkYV9jb2RlY19yZWFs
-dGVrIHNuZF9oZGFfY29kZWNfZ2VuZXJpYyBsZWR0cmlnX2F1ZGlvIHNuZF9oZGFfaW50ZWwg
-aXdsd2lmaSBzbmRfaGRhX2NvZGVjIGFlc25pX2ludGVsDQpbICAgODAuMTQ2MzE5XSAgc25k
-X2hkYV9jb3JlIGFlc194ODZfNjQgY3J5cHRvX3NpbWQgc25kX2h3ZGVwIGNyeXB0ZCBzbmRf
-cGNtIGdsdWVfaGVscGVyIHNkaGNpX3BjaSBjcWhjaSBjZmc4MDIxMSBzbmRfdGltZXIgaW50
-ZWxfY3N0YXRlIGludGVsX3VuY29yZSB1aW9fcGRydl9nZW5pcnEgc2RoY2kgdWlvIHRvc2hp
-YmFfYWNwaSBzcGFyc2Vfa2V5bWFwIHNyX21vZCB3bWkgY2Ryb20gbW1jX2NvcmUgc25kIGpv
-eWRldiBwY3Nwa3IgaW5wdXRfbGVkcyBzb3VuZGNvcmUgcmZraWxsIG1vdXNlZGV2IGUxMDAw
-ZSBsZWRfY2xhc3MgaW50ZWxfcmFwbF9wZXJmIHNlcmlvX3JhdyBpbmR1c3RyaWFsaW8gcnRj
-X2Ntb3MgZXZkZXYgbWVpX21lIG1hY19oaWQgcGNjX2NwdWZyZXEgdGhlcm1hbCBscGNfaWNo
-IHRvc2hpYmFfaGFwcyBtZWkgYmF0dGVyeSBhYyBzZyBkbV9tdWx0aXBhdGggZG1fbW9kIHNj
-c2lfZGhfcmRhYyBzY3NpX2RoX2VtYyBzY3NpX2RoX2FsdWEgYXV0b2ZzNA0KWyAgIDgwLjE0
-NjYxN10gLS0tWyBlbmQgdHJhY2UgZTdmOWYxZDcwZWEyY2ViOSBdLS0tDQpbICAgODAuMTQ2
-NjM2XSBSSVA6IDAwMTA6dHR5X3VucmVnaXN0ZXJfZHJpdmVyKzB4MjUvMHgxZDANClsgICA4
-MC4xNDY2NTddIENvZGU6IDAwIDAwIDAwIDAwIDkwIDU1IDQ4IGI4IDAwIDAwIDAwIDAwIDAw
-IGZjIGZmIGRmIDQ4IDg5IGU1IDQxIDU1IDQxIDU0IDUzIDQ4IDg5IGZiIDQ4IDgzIGM3IDM0
-IDQ4IDg5IGZhIDQ4IGMxIGVhIDAzIDQ4IDgzIGVjIDA4IDwwZj4gYjYgMTQgMDIgNDggODkg
-ZjggODMgZTAgMDcgODMgYzAgMDMgMzggZDAgN2MgMDggODQgZDIgMGYgODUgNWUNClsgICA4
-MC4xNDY3MDJdIFJTUDogMDAxODpmZmZmODg4MGE0MWZmZGEwIEVGTEFHUzogMDAwMTAyODYN
-ClsgICA4MC4xNDY3MzBdIFJBWDogZGZmZmZjMDAwMDAwMDAwMCBSQlg6IDAwMDAwMDAwMDAw
-MDAwMDAgUkNYOiAxZmZmZmZmZmY4M2E5YTdiDQpbICAgODAuMTQ2NzUwXSBSRFg6IDAwMDAw
-MDAwMDAwMDAwMDYgUlNJOiAwMDAwMDAwMDAwMDAwMDA0IFJESTogMDAwMDAwMDAwMDAwMDAz
-NA0KWyAgIDgwLjE0Njc3MF0gUkJQOiBmZmZmODg4MGE0MWZmZGMwIFIwODogZmZmZmVkMTAx
-NDgzZmY5ZiBSMDk6IGZmZmZlZDEwMTQ4M2ZmOWYNClsgICA4MC4xNDY3OTBdIFIxMDogMDAw
-MDAwMDAwMDAwMDAwMSBSMTE6IGZmZmZlZDEwMTQ4M2ZmOWYgUjEyOiBmZmZmZmZmZmMxZDRl
-MDQwDQpbICAgODAuMTQ2ODA5XSBSMTM6IGZmZmY4ODgwYTQxZmZlZjAgUjE0OiAwMDAwMDAw
-MDAwMDAwODAwIFIxNTogZmZmZmZmZmZjMWQ0ZDNhMA0KWyAgIDgwLjE0NjgzMF0gRlM6ICAw
-MDAwN2ZlNmQ2MDI5YjgwKDAwMDApIEdTOmZmZmY4ODgxMWY0MDAwMDAoMDAwMCkga25sR1M6
-MDAwMDAwMDAwMDAwMDAwMA0KWyAgIDgwLjE0Njg1MF0gQ1M6ICAwMDEwIERTOiAwMDAwIEVT
-OiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KWyAgIDgwLjE0Njg3Ml0gQ1IyOiAwMDAw
-NTVlOTExMjc5MGI4IENSMzogMDAwMDAwMDBhMzc0MjAwNiBDUjQ6IDAwMDAwMDAwMDAwNjA2
-ZTANCg0KDQoNCi0tIA0KflJhbmR5DQo=
+
+On 2019/3/14 下午2:12, Dongli Zhang wrote:
+>
+> On 3/13/19 5:39 PM, Cornelia Huck wrote:
+>> On Wed, 13 Mar 2019 11:26:04 +0800
+>> Dongli Zhang <dongli.zhang@oracle.com> wrote:
+>>
+>>> On 3/13/19 1:33 AM, Cornelia Huck wrote:
+>>>> On Tue, 12 Mar 2019 10:22:46 -0700 (PDT)
+>>>> Dongli Zhang <dongli.zhang@oracle.com> wrote:
+>>>>    
+>>>>> I observed that there is one msix vector for config and one shared vector
+>>>>> for all queues in below qemu cmdline, when the num-queues for virtio-blk
+>>>>> is more than the number of possible cpus:
+>>>>>
+>>>>> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=6"
+>>>>>
+>>>>> # cat /proc/interrupts
+>>>>>             CPU0       CPU1       CPU2       CPU3
+>>>>> ... ...
+>>>>>   24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
+>>>>>   25:          0          0          0         59   PCI-MSI 65537-edge      virtio0-virtqueues
+>>>>> ... ...
+>>>>>
+>>>>>
+>>>>> However, when num-queues is the same as number of possible cpus:
+>>>>>
+>>>>> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=4"
+>>>>>
+>>>>> # cat /proc/interrupts
+>>>>>             CPU0       CPU1       CPU2       CPU3
+>>>>> ... ...
+>>>>>   24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
+>>>>>   25:          2          0          0          0   PCI-MSI 65537-edge      virtio0-req.0
+>>>>>   26:          0         35          0          0   PCI-MSI 65538-edge      virtio0-req.1
+>>>>>   27:          0          0         32          0   PCI-MSI 65539-edge      virtio0-req.2
+>>>>>   28:          0          0          0          0   PCI-MSI 65540-edge      virtio0-req.3
+>>>>> ... ...
+>>>>>
+>>>>> In above case, there is one msix vector per queue.
+>>>> Please note that this is pci-specific...
+>>>>    
+>>>>>
+>>>>> This is because the max number of queues is not limited by the number of
+>>>>> possible cpus.
+>>>>>
+>>>>> By default, nvme (regardless about write_queues and poll_queues) and
+>>>>> xen-blkfront limit the number of queues with num_possible_cpus().
+>>>> ...and these are probably pci-specific as well.
+>>> Not pci-specific, but per-cpu as well.
+>> Ah, I meant that those are pci devices.
+>>
+>>>>    
+>>>>>
+>>>>> Is this by design on purpose, or can we fix with below?
+>>>>>
+>>>>>
+>>>>> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+>>>>> index 4bc083b..df95ce3 100644
+>>>>> --- a/drivers/block/virtio_blk.c
+>>>>> +++ b/drivers/block/virtio_blk.c
+>>>>> @@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
+>>>>>   	if (err)
+>>>>>   		num_vqs = 1;
+>>>>>   
+>>>>> +	num_vqs = min(num_possible_cpus(), num_vqs);
+>>>>> +
+>>>>>   	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
+>>>>>   	if (!vblk->vqs)
+>>>>>   		return -ENOMEM;
+>>>> virtio-blk, however, is not pci-specific.
+>>>>
+>>>> If we are using the ccw transport on s390, a completely different
+>>>> interrupt mechanism is in use ('floating' interrupts, which are not
+>>>> per-cpu). A check like that should therefore not go into the generic
+>>>> driver.
+>>>>    
+>>> So far there seems two options.
+>>>
+>>> The 1st option is to ask the qemu user to always specify "-num-queues" with the
+>>> same number of vcpus when running x86 guest with pci for virtio-blk or
+>>> virtio-scsi, in order to assign a vector for each queue.
+>> That does seem like an extra burden for the user: IIUC, things work
+>> even if you have too many queues, it's just not optimal. It sounds like
+>> something that can be done by a management layer (e.g. libvirt), though.
+>>
+>>> Or, is it fine for virtio folks to add a new hook to 'struct virtio_config_ops'
+>>> so that different platforms (e.g., pci or ccw) would use different ways to limit
+>>> the max number of queues in guest, with something like below?
+>> That sounds better, as both transports and drivers can opt-in here.
+>>
+>> However, maybe it would be even better to try to come up with a better
+>> strategy of allocating msix vectors in virtio-pci. More vectors in the
+>> num_queues > num_cpus case, even if they still need to be shared?
+>> Individual vectors for n-1 cpus and then a shared one for the remaining
+>> queues?
+>>
+>> It might even be device-specific: Have some low-traffic status queues
+>> share a vector, and provide an individual vector for high-traffic
+>> queues. Would need some device<->transport interface, obviously.
+>>
+> This sounds a little bit similar to multiple hctx maps?
+>
+> So far, as virtio-blk only supports set->nr_maps = 1, no matter how many hw
+> queues are assigned for virtio-blk, blk_mq_alloc_tag_set() would use at most
+> nr_cpu_ids hw queues.
+>
+> 2981 int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
+> ... ...
+> 3021         /*
+> 3022          * There is no use for more h/w queues than cpus if we just have
+> 3023          * a single map
+> 3024          */
+> 3025         if (set->nr_maps == 1 && set->nr_hw_queues > nr_cpu_ids)
+> 3026                 set->nr_hw_queues = nr_cpu_ids;
+>
+> Even the block layer would limit the number of hw queues by nr_cpu_ids when
+> (set->nr_maps == 1).
+>
+> That's why I think virtio-blk should use the similar solution as nvme
+> (regardless about write_queues and poll_queues) and xen-blkfront.
+>
+> Added Jason again. I do not know why the mailing list of
+> virtualization@lists.linux-foundation.org always filters out Jason's email...
+>
+>
+> Dongli Zhang
+
+
+Or something like I proposed several years ago? 
+https://do-db2.lkml.org/lkml/2014/12/25/169
+
+Btw, for virtio-net, I think we actually want to go for having a maximum 
+number of supported queues like what hardware did. This would be useful 
+for e.g cpu hotplug or XDP (requires per cpu TX queue). But the current 
+vector allocation doesn't support this which will results all virtqueues 
+to share a single vector. We may indeed need more flexible policy here.
+
+Thanks
+
+
