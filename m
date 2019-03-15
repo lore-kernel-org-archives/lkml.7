@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF28C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEDFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24B8218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98CB218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfCOUHD (ORCPT
+        id S1727063AbfCOUHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 16:07:03 -0400
-Received: from mga01.intel.com ([192.55.52.88]:22894 "EHLO mga01.intel.com"
+        Fri, 15 Mar 2019 16:07:50 -0400
+Received: from mga01.intel.com ([192.55.52.88]:22900 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbfCOUHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 16:07:01 -0400
+        id S1726585AbfCOUHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 16:07:03 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 13:07:01 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 13:07:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,483,1544515200"; 
-   d="scan'208";a="307617691"
+   d="scan'208";a="307617710"
 Received: from chang-linux-3.sc.intel.com ([143.183.85.65])
-  by orsmga005.jf.intel.com with ESMTP; 15 Mar 2019 13:07:00 -0700
+  by orsmga005.jf.intel.com with ESMTP; 15 Mar 2019 13:07:02 -0700
 From:   "Chang S. Bae" <chang.seok.bae@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
@@ -36,9 +36,9 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
 Cc:     Ravi Shankar <ravi.v.shankar@intel.com>,
         "Chang S . Bae" <chang.seok.bae@intel.com>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: [RESEND PATCH v6 03/12] x86/fsgsbase/64: Add intrinsics for FSGSBASE instructions
-Date:   Fri, 15 Mar 2019 13:06:36 -0700
-Message-Id: <1552680405-5265-4-git-send-email-chang.seok.bae@intel.com>
+Subject: [RESEND PATCH v6 06/12] x86/fsgsbase/64: When copying a thread, use the FSGSBASE instructions if available
+Date:   Fri, 15 Mar 2019 13:06:39 -0700
+Message-Id: <1552680405-5265-7-git-send-email-chang.seok.bae@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1552680405-5265-1-git-send-email-chang.seok.bae@intel.com>
 References: <1552680405-5265-1-git-send-email-chang.seok.bae@intel.com>
@@ -47,69 +47,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+Copy real FS/GSBASE values instead of approximation when FSGSBASE is
+enabled.
 
-Add C intrinsics and assembler macros for the new FSBASE and GSBASE
-instructions.
-
-Very straight forward. Used in followon patches.
-
-[ luto: Rename the variables from FS and GS to FSBASE and GSBASE and
-  make <asm/fsgsbase.h> safe to include on 32-bit kernels. ]
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
 ---
- arch/x86/include/asm/fsgsbase.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/x86/kernel/process_64.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/fsgsbase.h b/arch/x86/include/asm/fsgsbase.h
-index bca4c743de77..fdd1177499b4 100644
---- a/arch/x86/include/asm/fsgsbase.h
-+++ b/arch/x86/include/asm/fsgsbase.h
-@@ -19,6 +19,36 @@ extern unsigned long x86_gsbase_read_task(struct task_struct *task);
- extern void x86_fsbase_write_task(struct task_struct *task, unsigned long fsbase);
- extern void x86_gsbase_write_task(struct task_struct *task, unsigned long gsbase);
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index d3abe4748d8b..c4de0907d909 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -422,7 +422,8 @@ unsigned long x86_fsbase_read_task(struct task_struct *task)
  
-+/* Must be protected by X86_FEATURE_FSGSBASE check. */
-+
-+static __always_inline unsigned long rdfsbase(void)
-+{
-+	unsigned long fsbase;
-+
-+	asm volatile("rdfsbase %0" : "=r" (fsbase) :: "memory");
-+
-+	return fsbase;
-+}
-+
-+static __always_inline unsigned long rdgsbase(void)
-+{
-+	unsigned long gsbase;
-+
-+	asm volatile("rdgsbase %0" : "=r" (gsbase) :: "memory");
-+
-+	return gsbase;
-+}
-+
-+static __always_inline void wrfsbase(unsigned long fsbase)
-+{
-+	asm volatile("wrfsbase %0" :: "r" (fsbase) : "memory");
-+}
-+
-+static __always_inline void wrgsbase(unsigned long gsbase)
-+{
-+	asm volatile("wrgsbase %0" :: "r" (gsbase) : "memory");
-+}
-+
- /* Helper functions for reading/writing FS/GS base */
+ 	if (task == current)
+ 		fsbase = x86_fsbase_read_cpu();
+-	else if (task->thread.fsindex == 0)
++	else if (static_cpu_has(X86_FEATURE_FSGSBASE) ||
++		 (task->thread.fsindex == 0))
+ 		fsbase = task->thread.fsbase;
+ 	else
+ 		fsbase = x86_fsgsbase_read_task(task, task->thread.fsindex);
+@@ -436,7 +437,8 @@ unsigned long x86_gsbase_read_task(struct task_struct *task)
  
- static inline unsigned long x86_fsbase_read_cpu(void)
+ 	if (task == current)
+ 		gsbase = x86_gsbase_read_cpu_inactive();
+-	else if (task->thread.gsindex == 0)
++	else if (static_cpu_has(X86_FEATURE_FSGSBASE) ||
++		 (task->thread.gsindex == 0))
+ 		gsbase = task->thread.gsbase;
+ 	else
+ 		gsbase = x86_fsgsbase_read_task(task, task->thread.gsindex);
+@@ -475,10 +477,11 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
+ 	p->thread.sp = (unsigned long) fork_frame;
+ 	p->thread.io_bitmap_ptr = NULL;
+ 
+-	savesegment(gs, p->thread.gsindex);
+-	p->thread.gsbase = p->thread.gsindex ? 0 : me->thread.gsbase;
+-	savesegment(fs, p->thread.fsindex);
+-	p->thread.fsbase = p->thread.fsindex ? 0 : me->thread.fsbase;
++	save_fsgs(me);
++	p->thread.fsindex = me->thread.fsindex;
++	p->thread.fsbase = me->thread.fsbase;
++	p->thread.gsindex = me->thread.gsindex;
++	p->thread.gsbase = me->thread.gsbase;
+ 	savesegment(es, p->thread.es);
+ 	savesegment(ds, p->thread.ds);
+ 	memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
 -- 
 2.19.1
 
