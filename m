@@ -6,63 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A089C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4654FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B54218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AA3218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552686318;
-	bh=CZdvWN2UugCafqB+FFM4oDTBdp2NQhrAM/4d8JWIPQ4=;
+	s=default; t=1552686322;
+	bh=4g6qcNatoOVDOWTUq7OdMxy/00E5KAicQSKCkd4pE0A=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ZVoLyTEKGSxljraS/m8zuiTnzH9IK0pykE19dzVMpTRqOmKMSovxA0TH3y3AJWErD
-	 DDzjx+m/PZSlj0GKz7eTNwQba2tCmK0goHPwWLUlJiL1sDS/HoWRDD74mzKfMcWimS
-	 4ZoOesq/HQtyOMJ6vG/NzJaK300vx7qVxaBwYZFo=
+	b=mil6Fpi29NJQO1SeZlBz0cPkGb9jWJfFciaUTM3XHyGO4MS9DAjx+MtHn8ZMfXhxn
+	 KFtB/ylB9ao1wSONPV61riv0OQimK3qQVHM8o7DmhOx6mTvOEsXIdVG/lAtRgyjDwc
+	 IJG2bWnQuI/HA40ajgH/9PI1eEw5H93G5PyQ2aJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfCOVpQ (ORCPT
+        id S1727188AbfCOVpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 17:45:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41854 "EHLO mail.kernel.org"
+        Fri, 15 Mar 2019 17:45:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfCOVpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 17:45:16 -0400
-Subject: Re: [GIT PULL] f2fs-for-5.1
+        id S1727112AbfCOVpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 17:45:19 -0400
+Subject: Re: [PULL REQUEST] i2c for 5.1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552686315;
-        bh=CZdvWN2UugCafqB+FFM4oDTBdp2NQhrAM/4d8JWIPQ4=;
+        s=default; t=1552686318;
+        bh=4g6qcNatoOVDOWTUq7OdMxy/00E5KAicQSKCkd4pE0A=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=iwH8Zl7v47b5IhbFLxKmqUBe0F4eW0kzRRrJPa7dkKyQ4PTjyRKvY6kWzO3ckV8Al
-         Sjo1j3HFkeQLCo+weYCWtoR/V9YVYe7Q60eaBs7GpdMcaEK4x71urNPbrcwuud7hzv
-         sZE+Q9vbZ+iiSEbb6dSJFfB4kOvZlDhPDl5FL2yI=
+        b=Sh9ElEhXm9s5Knw8qzaJlrGwZ+Z1B3rzxvS6boy+6WL5MQsoeb7RxCZtHuqDkbKLi
+         bQ0v+bS2We7lAxNJj7RxFKU8io3vj6WIIFf0kUFpn1BzyyKqqVSppVnTe0v2phbNZb
+         thdRNc2q+SqzuqLRjUQXjHH2cFUyRBCREcTGhO0U=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190314221806.GA87066@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190314221806.GA87066@jaegeuk-macbookpro.roam.corp.google.com>
+In-Reply-To: <20190315110010.GA2084@kunai>
+References: <20190315110010.GA2084@kunai>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190314221806.GA87066@jaegeuk-macbookpro.roam.corp.google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git
- tags/f2fs-for-5.1
-X-PR-Tracked-Commit-Id: aff7b628ac2d58616b74789389ebb1e987081f49
+X-PR-Tracked-Message-Id: <20190315110010.GA2084@kunai>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git
+ i2c/for-current-fixed
+X-PR-Tracked-Commit-Id: cd86d1403bb4c80e443d736b2a692cbf68a9f471
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5160bcce5c3c80de7d8722511c144d3041409657
-Message-Id: <155268631582.16247.7911963969038268172.pr-tracker-bot@kernel.org>
-Date:   Fri, 15 Mar 2019 21:45:15 +0000
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
+X-PR-Merge-Commit-Id: 51b1ac0fa2403d1db009189122c17b7c1ea37b33
+Message-Id: <155268631871.16247.1605102877130123097.pr-tracker-bot@kernel.org>
+Date:   Fri, 15 Mar 2019 21:45:18 +0000
+To:     Wolfram Sang <wsa@the-dreams.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux F2FS Dev Mailing List 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 14 Mar 2019 15:18:06 -0700:
+The pull request you sent on Fri, 15 Mar 2019 12:00:14 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-5.1
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current-fixed
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5160bcce5c3c80de7d8722511c144d3041409657
+https://git.kernel.org/torvalds/c/51b1ac0fa2403d1db009189122c17b7c1ea37b33
 
 Thank you!
 
