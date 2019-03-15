@@ -2,214 +2,133 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C508C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC88C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D4020854
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE7920854
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729046AbfCOMvO (ORCPT
+        id S1728143AbfCOMys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 08:51:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59988 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728143AbfCOMvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 08:51:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4C23FAFBF;
-        Fri, 15 Mar 2019 12:51:11 +0000 (UTC)
-Message-ID: <31a3530dbd75771c82bfb41a357370b90d7981d2.camel@suse.de>
-Subject: Re: [PATCH] usb: xhci: add Immediate Data Transfer support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Mathias Nyman <mathias.nyman@intel.com>
-Cc:     felipe.balbi@linux.intel.com, oneukum@suse.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 15 Mar 2019 13:51:09 +0100
-In-Reply-To: <20190219162945.22889-1-nsaenzjulienne@suse.de>
-References: <20190219162945.22889-1-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-1xg71Xz4cXB4O+O3P5ms"
-User-Agent: Evolution 3.30.5 
+        Fri, 15 Mar 2019 08:54:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36515 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfCOMyr (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 08:54:47 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D60FB301BE96;
+        Fri, 15 Mar 2019 12:54:46 +0000 (UTC)
+Received: from krava (unknown [10.43.17.124])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D9FDA1001DC0;
+        Fri, 15 Mar 2019 12:54:44 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 13:54:43 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v2] perf annotate/report: Remove hist__account_cycles
+ from callback
+Message-ID: <20190315125443.GG1400@krava>
+References: <1552657561-15744-1-git-send-email-yao.jin@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552657561-15744-1-git-send-email-yao.jin@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 15 Mar 2019 12:54:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 15, 2019 at 09:46:01PM +0800, Jin Yao wrote:
+> The hist__account_cycles is executed when the hist_iter__branch_callback
+> is called. But it looks it's not necessary. In hist__account_cycles, it
+> already walks on all branch entries.
+> 
+> This patch moves the hist__account_cycles out of callback, now the data
+> processing is much faster than before.
+> 
+> Previous code has an issue that the ch[offset].num++
+> (in __symbol__account_cycles) is executed repeatedly since
+> hist__account_cycles is called in each hist_iter__branch_callback,
+> so the counting of ch[offset].num is not correct (too big).
+> With this patch, the issue is fixed. And we don't need the code of
+> "ch->reset >= ch->num / 2" to check if there are too many overlaps
+> (in annotation__count_and_fill), otherwise some data would be
+> hidden.
+> 
+> Now, we can try, for example:
+> 
+> perf record -b ...
+> perf annotate or perf report -s symbol
 
---=-1xg71Xz4cXB4O+O3P5ms
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+im getting crash in stdio mode:
 
-On Tue, 2019-02-19 at 17:29 +0100, Nicolas Saenz Julienne wrote:
-> Immediate data transfers (IDT) allow the HCD to copy small chunks of
-> data (up to 8bytes) directly into its output transfer TRBs. This avoids
-> the somewhat expensive DMA mappings that are performed by default on
-> most URBs submissions.
->=20
-> In the case an URB was suitable for IDT. The data is directly copied
-> into the "Data Buffer Pointer" region of the TRB and the IDT flag is
-> set. Instead of triggering memory accesses the HC will use the data
-> directly.
->=20
-> The implementation could cover all kind of output endpoints. Yet
-> Isochronous endpoints are bypassed as I was unable to find one that
-> matched IDT's constraints. As we try to bypass the default DMA mappings
-> on URB buffers we'd need to find a Isochronous device with an
-> urb->transfer_buffer_length <=3D 8 bytes.
->=20
-> The implementation takes into account that the 8 byte buffers provided
-> by the URB will never cross a 64KB boundary.
->=20
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+[root@krava perf]# ./perf record -b ./perf bench sched pipe
+# Running 'sched/pipe' benchmark:
+# Executed 1000000 pipe operations between two processes
 
+     Total time: 21.384 [sec]
 
-Friendly ping, any more comments on this? :)
-
-> ---
->  drivers/usb/host/xhci-ring.c | 12 ++++++++++++
->  drivers/usb/host/xhci.c      | 16 ++++++++++++++++
->  drivers/usb/host/xhci.h      | 17 +++++++++++++++++
->  3 files changed, 45 insertions(+)
->=20
-> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-> index 40fa25c4d041..997edc908a0d 100644
-> --- a/drivers/usb/host/xhci-ring.c
-> +++ b/drivers/usb/host/xhci-ring.c
-> @@ -3272,6 +3272,12 @@ int xhci_queue_bulk_tx(struct xhci_hcd *xhci, gfp_=
-t
-> mem_flags,
->  			field |=3D TRB_IOC;
->  			more_trbs_coming =3D false;
->  			td->last_trb =3D ring->enqueue;
-> +
-> +			if (xhci_urb_suitable_for_idt(urb)) {
-> +				memcpy(&send_addr, urb->transfer_buffer,
-> +				       trb_buff_len);
-> +				field |=3D TRB_IDT;
-> +			}
->  		}
-> =20
->  		/* Only set interrupt on short packet for IN endpoints */
-> @@ -3411,6 +3417,12 @@ int xhci_queue_ctrl_tx(struct xhci_hcd *xhci, gfp_=
-t
-> mem_flags,
->  	if (urb->transfer_buffer_length > 0) {
->  		u32 length_field, remainder;
-> =20
-> +		if (xhci_urb_suitable_for_idt(urb)) {
-> +			memcpy(&urb->transfer_dma, urb->transfer_buffer,
-> +			       urb->transfer_buffer_length);
-> +			field |=3D TRB_IDT;
-> +		}
-> +
->  		remainder =3D xhci_td_remainder(xhci, 0,
->  				urb->transfer_buffer_length,
->  				urb->transfer_buffer_length,
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index 005e65922608..f04ad2290884 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -1238,6 +1238,21 @@ EXPORT_SYMBOL_GPL(xhci_resume);
-> =20
->  /*----------------------------------------------------------------------=
----*/
-> =20
-> +/*
-> + * Bypass the DMA mapping if URB is suitable for Immediate Transfer (IDT=
-),
-> + * we'll copy the actual data into the TRB address register. This is lim=
-ited
-> to
-> + * transfers up to 8 bytes on output endpoints of any kind with
-> wMaxPacketSize
-> + * >=3D 8 bytes. If suitable for IDT only one Transfer TRB per TD is all=
-owed.
-> + */
-> +static int xhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
-> +				gfp_t mem_flags)
-> +{
-> +	if (xhci_urb_suitable_for_idt(urb))
-> +		return 0;
-> +
-> +	return usb_hcd_map_urb_for_dma(hcd, urb, mem_flags);
-> +}
-> +
->  /**
->   * xhci_get_endpoint_index - Used for passing endpoint bitmasks between =
-the
-> core and
->   * HCDs.  Find the index for an endpoint given its descriptor.  Use the
-> return
-> @@ -5155,6 +5170,7 @@ static const struct hc_driver xhci_hc_driver =3D {
->  	/*
->  	 * managing i/o requests and associated device resources
->  	 */
-> +	.map_urb_for_dma =3D      xhci_map_urb_for_dma,
->  	.urb_enqueue =3D		xhci_urb_enqueue,
->  	.urb_dequeue =3D		xhci_urb_dequeue,
->  	.alloc_dev =3D		xhci_alloc_dev,
-> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> index 652dc36e3012..7dc6d2197641 100644
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -1295,6 +1295,8 @@ enum xhci_setup_dev {
->  #define TRB_IOC			(1<<5)
->  /* The buffer pointer contains immediate data */
->  #define TRB_IDT			(1<<6)
-> +/* TDs smaller than this might use IDT */
-> +#define TRB_IDT_MAX_SIZE	8
-> =20
->  /* Block Event Interrupt */
->  #define	TRB_BEI			(1<<9)
-> @@ -2141,6 +2143,21 @@ static inline struct xhci_ring
-> *xhci_urb_to_transfer_ring(struct xhci_hcd *xhci,
->  					urb->stream_id);
->  }
-> =20
-> +/*
-> + * TODO: As per spec Isochronous IDT transmissions are supported. We byp=
-ass
-> + * them anyways as we where unable to find a device that matches the
-> + * constraints.
-> + */
-> +static inline bool xhci_urb_suitable_for_idt(struct urb *urb)
-> +{
-> +	if (!usb_endpoint_xfer_isoc(&urb->ep->desc) && usb_urb_dir_out(urb) &&
-> +	    usb_endpoint_maxp(&urb->ep->desc) >=3D TRB_IDT_MAX_SIZE &&
-> +	    urb->transfer_buffer_length <=3D TRB_IDT_MAX_SIZE)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  static inline char *xhci_slot_state_string(u32 state)
->  {
->  	switch (state) {
+      21.384381 usecs/op
+          46763 ops/sec
+[ perf record: Woken up 464 times to write data ]
+[ perf record: Captured and wrote 116.873 MB perf.data (150149 samples) ]
+[root@krava perf]# ./perf report
+File perf.data not owned by current user or root (use -f to override)
+[root@krava perf]# ./perf report -f
+[root@krava perf]# ./perf report -f --stdio
+Segmentation fault (core dumped)
 
 
---=-1xg71Xz4cXB4O+O3P5ms
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+(gdb) r report -f --stdio
+Starting program: /home/jolsa/kernel/linux-perf/tools/perf/perf report -f --stdio
+Missing separate debuginfos, use: dnf debuginfo-install glibc-2.27-37.fc28.x86_64
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+warning: Loadable section ".note.gnu.property" outside of ELF segments
+Detaching after fork from child process 706.
 
------BEGIN PGP SIGNATURE-----
+Program received signal SIGSEGV, Segmentation fault.
+symbol__cycles_hist (sym=0xcfb730) at util/annotate.c:892
+892             if (!notes->src->cycles_hist) {
+Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.6-26.fc28.x86_64 elfutils-libelf-0.174-5.fc28.x86_64 elfutils-libs-0.174-5.fc28.x86_64 libgcc-8.3.1-2.fc28.x86_64 libunwind-1.2.1-5.fc28.x86_64 libxcrypt-4.4.4-1.fc28.x86_64 numactl-libs-2.0.11-8.fc28.x86_64 openssl-libs-1.1.0i-1.fc28.x86_64 perl-libs-5.26.3-416.fc28.x86_64 python2-libs-2.7.15-4.fc28.x86_64 slang-2.3.2-2.fc28.x86_64 xz-libs-5.2.4-2.fc28.x86_64 zlib-1.2.11-8.fc28.x86_64
+(gdb) bt
+#0  symbol__cycles_hist (sym=0xcfb730) at util/annotate.c:892
+#1  0x00000000004d91e8 in symbol__account_cycles (addr=140735827492712, start=140735827492708, sym=0xcfb730, cycles=2) at util/annotate.c:942
+#2  0x00000000004d9403 in addr_map_symbol__account_cycles (ams=0xd629d8, start=0xd62a68, cycles=2) at util/annotate.c:989
+#3  0x000000000056fccd in hist__account_cycles (bs=0x7fffed05f230, al=0x7fffffffaac0, sample=0x7fffffffac50, nonany_branch_mode=false) at util/hist.c:2527
+#4  0x0000000000448f6d in process_sample_event (tool=0x7fffffffb7d0, event=0x7fffed05f208, sample=0x7fffffffac50, evsel=0xccc920, machine=0xcc5ee0) at builtin-report.c:279
+#5  0x000000000053e7dd in perf_evlist__deliver_sample (evlist=0xcc5030, tool=0x7fffffffb7d0, event=0x7fffed05f208, sample=0x7fffffffac50, evsel=0xccc920, machine=0xcc5ee0) at util/session.c:1251
+#6  0x000000000053e971 in machines__deliver_event (machines=0xcc5ee0, evlist=0xcc5030, event=0x7fffed05f208, sample=0x7fffffffac50, tool=0x7fffffffb7d0, file_offset=29192) at util/session.c:1288
+#7  0x000000000053edc3 in perf_session__deliver_event (session=0xcc5de0, event=0x7fffed05f208, tool=0x7fffffffb7d0, file_offset=29192) at util/session.c:1361
+#8  0x000000000053b772 in ordered_events__deliver_event (oe=0xccc878, event=0xceae60) at util/session.c:116
+#9  0x0000000000543030 in do_flush (oe=0xccc878, show_progress=false) at util/ordered-events.c:243
+#10 0x000000000054335f in __ordered_events__flush (oe=0xccc878, how=OE_FLUSH__ROUND, timestamp=0) at util/ordered-events.c:320
+#11 0x0000000000543434 in ordered_events__flush (oe=0xccc878, how=OE_FLUSH__ROUND) at util/ordered-events.c:338
+#12 0x000000000053d7dd in process_finished_round (tool=0x7fffffffb7d0, event=0x7fffed106358, oe=0xccc878) at util/session.c:871
+#13 0x000000000053eff3 in perf_session__process_user_event (session=0xcc5de0, event=0x7fffed106358, file_offset=713560) at util/session.c:1401
+#14 0x000000000053f67e in perf_session__process_event (session=0xcc5de0, event=0x7fffed106358, file_offset=713560) at util/session.c:1528
+#15 0x000000000054066d in process_simple (session=0xcc5de0, event=0x7fffed106358, file_offset=713560) at util/session.c:1961
+#16 0x00000000005404d5 in reader__process_events (rd=0x7fffffffb560, session=0xcc5de0, prog=0x7fffffffb580) at util/session.c:1931
+#17 0x0000000000540759 in __perf_session__process_events (session=0xcc5de0) at util/session.c:1984
+#18 0x000000000054088a in perf_session__process_events (session=0xcc5de0) at util/session.c:2017
+#19 0x000000000044a984 in __cmd_report (rep=0x7fffffffb7d0) at builtin-report.c:852
+#20 0x000000000044cc24 in cmd_report (argc=0, argv=0x7fffffffd960) at builtin-report.c:1440
+#21 0x00000000004d408b in run_builtin (p=0xb47d30 <commands+240>, argc=3, argv=0x7fffffffd960) at perf.c:302
+#22 0x00000000004d42f8 in handle_internal_command (argc=3, argv=0x7fffffffd960) at perf.c:354
+#23 0x00000000004d4447 in run_argv (argcp=0x7fffffffd7bc, argv=0x7fffffffd7b0) at perf.c:398
+#24 0x00000000004d47b3 in main (argc=3, argv=0x7fffffffd960) at perf.c:520
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlyLn70ACgkQlfZmHno8
-x/4L2Qf8C3Ej72EEBELB8CwcnPnw3mVZDCawY4Z3/P6PSqPTbyJe3SJc8/SmL9e6
-d/XqRf0sexJGsWKgt5eNF5PTgNK+gyDqk97WcZs/Tj3+VWoKtfy/q3RftSCFcBeb
-GIETC8/GNBqGZspc9s/Zir2gRpXoVQAuXqDR5idDS1uZLr+sHfXOgXUrTWE2yG4o
-FwWqZaU/NK3M8jQOqfgbgskBtO6X+0PuFuUKlcqf1j9VOHs8ZhGBQD4o4X7eO4aT
-ua2LcVgvl9U7UbbQKHfXD+xcuZDY/V804IPEQM9QL1z1RLR/lE5Vfplq9e8GvbQx
-bDi2ebqRP8ozkA8eiS8kIsPvTu8Yfg==
-=K5x1
------END PGP SIGNATURE-----
 
---=-1xg71Xz4cXB4O+O3P5ms--
-
+jirka
