@@ -2,103 +2,92 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A715EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B4FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B13218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0036218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfCOVdh (ORCPT
+        id S1726404AbfCOVjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 17:33:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58888 "EHLO mail.kernel.org"
+        Fri, 15 Mar 2019 17:39:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34084 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfCOVdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 17:33:37 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725959AbfCOVjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 17:39:48 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56FC0218A1;
-        Fri, 15 Mar 2019 21:33:36 +0000 (UTC)
-Date:   Fri, 15 Mar 2019 17:33:35 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Brian Norris <briannorris@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] tracing: kdb: Allow ftdump to skip all but the last
- few lines
-Message-ID: <20190315173335.578c6cc1@gandalf.local.home>
-In-Reply-To: <CAD=FV=UHybx9ACyWePjxyqUiH7ixokPEoJYf43BvojT1U1ZB=g@mail.gmail.com>
-References: <20190315174528.16531-1-dianders@chromium.org>
-        <20190315144130.1aa36931@gandalf.local.home>
-        <CAD=FV=WUnmMxKZrH-Jfz-VocieOu-Cfsi1aLpB8G5FnLM+_W_w@mail.gmail.com>
-        <20190315161203.25dc2a0c@gandalf.local.home>
-        <CAD=FV=VcpVYjwYq3zo6ODKzRBtDkjgEM2sXC-KMUa0ObskfTnw@mail.gmail.com>
-        <20190315170822.6316f3cb@gandalf.local.home>
-        <CAD=FV=UHybx9ACyWePjxyqUiH7ixokPEoJYf43BvojT1U1ZB=g@mail.gmail.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id D20D93082B40;
+        Fri, 15 Mar 2019 21:39:47 +0000 (UTC)
+Received: from sky.random (ovpn-121-1.rdu2.redhat.com [10.10.121.1])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A36055D6A6;
+        Fri, 15 Mar 2019 21:39:45 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 17:39:44 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
+        Michal Hocko <mhocko@kernel.org>, cgroups@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
+Message-ID: <20190315213944.GD9967@redhat.com>
+References: <00000000000006457e057c341ff8@google.com>
+ <5C7BFE94.6070500@huawei.com>
+ <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com>
+ <5C7D2F82.40907@huawei.com>
+ <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com>
+ <5C7D4500.3070607@huawei.com>
+ <CACT4Y+b6y_3gTpR8LvNREHOV0TP7jB=Zp1L03dzpaz_SaeESng@mail.gmail.com>
+ <5C7E1A38.2060906@huawei.com>
+ <20190306020540.GA23850@redhat.com>
+ <5C821550.50506@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5C821550.50506@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 15 Mar 2019 21:39:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Mar 2019 14:28:39 -0700
-Doug Anderson <dianders@chromium.org> wrote:
-
-> I had a little bit of a hard time figuring out if print_trace_line()
-> plus trace_printk_seq() always printed one line or always printed one
-> entry.  I guess the point I was making was that in v1 of my patch it
-> wouldn't matter because the pseudo code looked like:
+On Fri, Mar 08, 2019 at 03:10:08PM +0800, zhong jiang wrote:
+> I can reproduce the issue in arm64 qemu machine.  The issue will leave after applying the
+> patch.
 > 
-> 1. Count how many "things" would be printed, but don't printed them.
-> 
-> 2. Use math to figure out how many "things" to skip given that we want
-> to print the last N "things".
-> 
-> 3. Skip the "things" the math told us to and then print the last N "things".
-> 
-> ...but it sounds like it _must_ print one entry because we're looping
-> over trace_find_next_entry_inc().  That means that the existing "skip
-> lines" that predates my patch should actually be "skip entries".  I'd
-> be happy adjusting the help text (and local variable name) so that
-> "skip_lines" is instead "skip_entries".  I think that would avoid
-> confusion everywhere.  It doesn't change behavior but just documents
-> the existing behavior.
+> Tested-by: zhong jiang <zhongjiang@huawei.com>
 
-Sounds like a plan.
+Thanks a lot for the quick testing!
 
-> 
-> 
-> With that I can use your optimized path assuming you can confirm that
-> "tr->trace_flags &= ~TRACE_ITER_SYM_USEROBJ" doesn't affect how many
-> entries will be iterated over by trace_find_next_entry_inc().
+> Meanwhile,  I just has a little doubt whether it is necessary to use RCU to free the task struct or not.
+> I think that mm->owner alway be NULL after failing to create to process. Because we call mm_clear_owner.
 
-Here's the code:
-
-	trace_seq_puts(s, "<user stack trace>\n"); <=== already prints a line regardless of SYM_USEROBJ.
-
-	if (tr->trace_flags & TRACE_ITER_SYM_USEROBJ) {
-		struct task_struct *task;
-		/*
-		 * we do the lookup on the thread group leader,
-		 * since individual threads might have already quit!
-		 */
-		rcu_read_lock();
-		task = find_task_by_vpid(field->tgid);
-		if (task)
-			mm = get_task_mm(task);
-		rcu_read_unlock();
-	}
-
--- Steve
+I wish it was enough, but the problem is that the other CPU may be in
+the middle of get_mem_cgroup_from_mm() while this runs, and it would
+dereference mm->owner while it is been freed without the call_rcu
+affter we clear mm->owner. What prevents this race is the
+rcu_read_lock() in get_mem_cgroup_from_mm() and the corresponding
+call_rcu to free the task struct in the fork failure path (again only
+if CONFIG_MEMCG=y is defined). Considering you can reproduce this tiny
+race on arm64 qemu (perhaps tcg JIT timing variantions helps?), you
+might also in theory be able to still reproduce the race condition if
+you remove the call_rcu from delayed_free_task and you replace it with
+free_task.
