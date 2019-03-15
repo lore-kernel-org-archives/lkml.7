@@ -3,82 +3,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D425C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F2EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321D3218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF4421873
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfCODQs (ORCPT
+        id S1727143AbfCODSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 23:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51580 "EHLO mail.kernel.org"
+        Thu, 14 Mar 2019 23:18:50 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15673 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfCODQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 23:16:48 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F404321873;
-        Fri, 15 Mar 2019 03:16:45 +0000 (UTC)
-Date:   Thu, 14 Mar 2019 23:16:41 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?UTF-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for
- Android
-Message-ID: <20190314231641.5a37932b@oasis.local.home>
-In-Reply-To: <20190314204911.GA875@sultan-box.localdomain>
-References: <20190310203403.27915-1-sultan@kerneltoast.com>
-        <20190311174320.GC5721@dhcp22.suse.cz>
-        <20190311175800.GA5522@sultan-box.localdomain>
-        <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
-        <20190311204626.GA3119@sultan-box.localdomain>
-        <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
-        <20190312080532.GE5721@dhcp22.suse.cz>
-        <20190312163741.GA2762@sultan-box.localdomain>
-        <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
-        <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
-        <20190314204911.GA875@sultan-box.localdomain>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726571AbfCODSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 23:18:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 20:18:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,480,1544515200"; 
+   d="scan'208";a="127118324"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga006.jf.intel.com with ESMTP; 14 Mar 2019 20:18:47 -0700
+Cc:     baolu.lu@linux.intel.com, Tom Murphy <tmurphy@arista.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] iommu/vt-d: Fix-up device-domain relationship by
+ refactoring to use iommu group default domain.
+To:     James Sewart <jamessewart@arista.com>,
+        iommu@lists.linux-foundation.org
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <0e74cc54-bb90-a620-5763-466cb11aaef7@linux.intel.com>
+Date:   Fri, 15 Mar 2019 11:13:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019 13:49:11 -0700
-Sultan Alsawaf <sultan@kerneltoast.com> wrote:
+Hi James,
 
-> Perhaps I'm missing something, but if you want to know when a process has died
-> after sending a SIGKILL to it, then why not just make the SIGKILL optionally
-> block until the process has died completely? It'd be rather trivial to just
-> store a pointer to an onstack completion inside the victim process' task_struct,
-> and then complete it in free_task().
+On 3/14/19 7:56 PM, James Sewart wrote:
+> Patches 1 and 2 are the same as v1.
+> 
+> v1-v2:
+>    Refactored ISA direct mappings to be returned by iommu_get_resv_regions.
+>    Integrated patch by Lu to defer turning on DMAR until iommu.c has mapped
+> reserved regions.
+>    Integrated patches by Lu to remove more unused code in cleanup.
+> 
+> Lu: I didn't integrate your patch to set the default domain type as it
+> isn't directly related to the aim of this patchset. Instead patch 4
 
-How would you implement such a method in userspace? kill() doesn't take
-any parameters but the pid of the process you want to send a signal to,
-and the signal to send. This would require a new system call, and be
-quite a bit of work. If you can solve this with an ebpf program, I
-strongly suggest you do that instead.
+Without those patches, user experience will be affected and some devices
+will not work on Intel platforms anymore.
 
--- Steve
+For a long time, Intel IOMMU driver has its own logic to determine
+whether a device requires an identity domain. For example, when user
+specifies "iommu=pt" in kernel parameter, all device will be attached
+with the identity domain. Further more, some quirky devices require
+an identity domain to be used before enabling DMA remapping, otherwise,
+it will not work. This was done by adding quirk bits in Intel IOMMU
+driver.
+
+So from my point of view, one way is porting all those quirks and kernel
+parameters into IOMMU generic layer, or opening a door for vendor IOMMU
+driver to determine the default domain type by their own. I prefer the
+latter option since it will not impact any behaviors on other
+architectures.
+
+> addresses the issue of a device requiring an identity domain by ignoring
+> the domain param in attach_device and printing a warning.
+
+This will not work as I commented in that thread.
+
+> 
+> I booted some of our devices with this patchset and haven't seen any
+> issues. It doesn't look like we have any devices with RMRR's though so
+> those codepaths aren't tested.
+> 
+> James Sewart (7):
+>    iommu: Move iommu_group_create_direct_mappings to after device_attach
+>    iommu/vt-d: Implement apply_resv_region for reserving IOVA ranges
+>    iommu/vt-d: Expose ISA direct mapping region via
+>      iommu_get_resv_regions
+>    iommu/vt-d: Ignore domain parameter in attach_device if device
+>      requires identity map
+>    iommu/vt-d: Allow IOMMU_DOMAIN_DMA to be allocated by iommu_ops
+>    iommu/vt-d: Remove lazy allocation of domains
+> 
+> Lu Baolu (1):
+>    iommu/vt-d: Enable DMA remapping after rmrr mapped
+> 
+>   drivers/iommu/intel-iommu.c | 444 +++++++++++-------------------------
+>   drivers/iommu/iommu.c       |   4 +-
+>   2 files changed, 131 insertions(+), 317 deletions(-)
+> 
+
+Best regards,
+Lu Baolu
