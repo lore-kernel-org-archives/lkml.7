@@ -4,156 +4,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22D3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2E3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6E921871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F3321871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:51:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Co32Sdu+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="AYyBhiQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbfCOKuM (ORCPT
+        id S1728968AbfCOKvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 06:50:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38770 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfCOKuL (ORCPT
+        Fri, 15 Mar 2019 06:51:03 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33293 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728891AbfCOKvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 06:50:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Qy1jr0AkgXYq/ljGe2OnfsKJt7HMkUdQp8p34xIwKAc=; b=Co32Sdu++BIbk2/vZ7GHprVPr
-        gEVyEnlyKscI1qEkhxz8iESEv4WLAk7JbZ7zUla3FCr204PJTc9zuPEuI1Hpk9vEuJNKcnsYdMLn1
-        9XK1Okd2bEnD4reffCmcNUIwnMLpGPRz+vPk25TdLxds7yg0q8kFqr4eOsgpU3rNjrTrXuAcR7IZ8
-        GRBaNfWJ3rY1br/7Lg+MvxwUV4gief3ZI3iAyUR9KfI7lDdgiEH02n2dbU/CjYMSJA/3hF9S3wiXV
-        7za/3QDK7Tnsl0mGnzlwIQmgIxsCmYfJK6lfXZJh1yKZjnozIDxN9jugdkgWFOi+5mkC6TfZo6PEp
-        HUqzgZ7yQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4kPe-0003tR-OZ; Fri, 15 Mar 2019 10:50:07 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 419802142294E; Fri, 15 Mar 2019 11:50:04 +0100 (CET)
-Date:   Fri, 15 Mar 2019 11:50:04 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [RFC PATCH 1/2] x86/perf/amd: Resolve race condition when
- disabling PMC
-Message-ID: <20190315105004.GW5996@hirez.programming.kicks-ass.net>
-References: <155232291547.21417.2499429555505085131.stgit@tlendack-t1.amdoffice.net>
- <155232292270.21417.18139649076000959940.stgit@tlendack-t1.amdoffice.net>
+        Fri, 15 Mar 2019 06:51:02 -0400
+Received: by mail-ed1-f68.google.com with SMTP id q3so557040edg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 03:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RlLVX44gwXn7in5y8DN8YgrrFZZpsKDznLZnujeWWx4=;
+        b=AYyBhiQhaFX8huoBDXwLtJZWEt60x72L8s0FgP84DH75gODKJWNt8g9RHel+i5E5WL
+         B2hHYFn1eBG/7GUZnJwj44izAFNJHDG1lO2AcUWA4FluU35K5lJVPk0ED0Qeq5oXBStP
+         7rHB4u5K0IqQynPBtlwUsJ+FUABCr5A3JiTo4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=RlLVX44gwXn7in5y8DN8YgrrFZZpsKDznLZnujeWWx4=;
+        b=m5CEjy/3Zt2jY9fJvwoJiQHi4HdH8waGwzINpbJS21IMXsyCY27azlA3KIsReOvHVu
+         yw9pBsmohrYdOsyM6EYXRdPfSJD34a48AEu9aL1qLlgOsJhmG52/aTrAHhtZX71aG4Lk
+         hAg2g1EFU10Ld8GF1RcVxjDGyI6BP2jv+UVLo1Q4SOS2FyGiTSoNDBZYSa04UjJ/Nx1B
+         5DT4eHOShnaKqHaTY2vIsMOn1XIGMV712FxN6dXFzPAMzj0lB2L72OYqh8s/jPJZlIVP
+         P3Yl/Z5yRObgHY8swycnWH7UA8njl/e3biHIdoH8cCm+KEFSZ3LYyw2BGc5C9UGa0yaV
+         X1Qw==
+X-Gm-Message-State: APjAAAXyNDlIEGnK1oON+eQJAefJs+Z5J+AhOC2vq7Ucry38vS0Zw21d
+        Gsflw94/oLKcUUOF9zRHAcjFYw==
+X-Google-Smtp-Source: APXvYqy/IF21L4v9D0A3uQD6kP0rhaf4p0+SwFK6y+ReX/7st2c3gYgZ9kY7OBPFhhFSdUpgJUQ8vw==
+X-Received: by 2002:a05:6402:2c9:: with SMTP id b9mr2396543edx.8.1552647060601;
+        Fri, 15 Mar 2019 03:51:00 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id d3sm521874edv.76.2019.03.15.03.50.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 03:50:59 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 11:50:57 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Jyri Sarha <jsarha@ti.com>
+Subject: Re: [Patch 1/1] drm/atomic: integrate private objects with
+ suspend/resume helpers
+Message-ID: <20190315105057.GU2665@phenom.ffwll.local>
+Mail-Followup-To: Benoit Parrot <bparrot@ti.com>,
+        Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>
+References: <20190314134445.19260-1-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155232292270.21417.18139649076000959940.stgit@tlendack-t1.amdoffice.net>
+In-Reply-To: <20190314134445.19260-1-bparrot@ti.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 04:48:44PM +0000, Lendacky, Thomas wrote:
-> On AMD processors, the detection of an overflowed counter in the NMI
-> handler relies on the current value of the counter. So, for example, to
-> check for overflow on a 48 bit counter, bit 47 is checked to see if it
-> is 1 (not overflowed) or 0 (overflowed).
+On Thu, Mar 14, 2019 at 08:44:45AM -0500, Benoit Parrot wrote:
+> During a suspend cycle the atomic state is saved to be used during the
+> restore cycle.
 > 
-> There is currently a race condition present when disabling and then
-> updating the PMC. Increased NMI latency in newer AMD processors makes this
-> race condition more pronounced.
-
-Increased NMI latency also makes the results less useful :/ What amount
-of skid are we talking about, and is there anything AMD is going to do
-about this?
-
-> If the counter value has overflowed, it is
-> possible to update the PMC value before the NMI handler can run.
-
-Arguably the WRMSR should sync against the PMI. That is the beahviour
-one would expect.
-
-Isn't that something you can fix in ucode? And could you very please
-tell the hardware people this is disguisting?
-
-> The updated PMC value is not an overflowed value, so when the perf NMI
-> handler does run, it will not find an overflowed counter. This may
-> appear as an unknown NMI resulting in either a panic or a series of
-> messages, depending on how the kernel is configured.
+> However the current state duplication logic does not duplicate private
+> objects. This leads to state inconsistencies at resume time.
 > 
-> To eliminate this race condition, the PMC value must be checked after
-> disabling the counter in x86_pmu_disable_all(), and, if overflowed, must
-> wait for the NMI handler to reset the value before continuing. Add a new,
-> optional, callable function that can be used to test for and resolve this
-> condition.
+> With private objects modeset lock now integrated, we can make sure that
+> private object state are properly saved and restored.
 > 
-> Cc: <stable@vger.kernel.org> # 4.14.x-
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
 
-> +static void amd_pmu_wait_on_overflow(int idx, u64 config)
-> +{
-> +	unsigned int i;
-> +	u64 counter;
-> +
-> +	/*
-> +	 * We shouldn't be calling this from NMI context, but add a safeguard
-> +	 * here to return, since if we're in NMI context we can't wait for an
-> +	 * NMI to reset an overflowed counter value.
-> +	 */
-> +	if (in_nmi())
-> +		return;
-> +
-> +	/*
-> +	 * If the interrupt isn't enabled then we won't get the NMI that will
-> +	 * reset the overflow condition, so return.
-> +	 */
-> +	if (!(config & ARCH_PERFMON_EVENTSEL_INT))
-> +		return;
-> +
-> +	/*
-> +	 * Wait for the counter to be reset if it has overflowed. This loop
-> +	 * should exit very, very quickly, but just in case, don't wait
-> +	 * forever...
-> +	 */
-> +	for (i = 0; i < OVERFLOW_WAIT_COUNT; i++) {
-> +		rdmsrl(x86_pmu_event_addr(idx), counter);
-> +		if (counter & (1ULL << (x86_pmu.cntval_bits - 1)))
-> +			break;
-> +
-> +		/* Might be in IRQ context, so can't sleep */
-> +		udelay(1);
-> +	}
-> +}
+Why do you need this? We're doing a full atomic_check, and your
+atomic_check should be pulling in any private state objects and
+recomputing their states. This smells like papering over a driver bug.
 
-Argh.. that's horrible, as I'm sure you fully appreciate :/
+The duplicate helpers should only need to duplicate the uapi-relevant
+states, i.e. connector/crtc/planes.
+-Daniel
 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index b684f0294f35..f1d2f70000cd 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -606,6 +606,9 @@ void x86_pmu_disable_all(void)
->  			continue;
->  		val &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
->  		wrmsrl(x86_pmu_config_addr(idx), val);
-> +
-> +		if (x86_pmu.wait_on_overflow)
-> +			x86_pmu.wait_on_overflow(idx, val);
+> ---
+>  drivers/gpu/drm/drm_atomic_helper.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index 540a77a2ade9..b108021cc092 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -3189,6 +3189,7 @@ drm_atomic_helper_duplicate_state(struct drm_device *dev,
+>  	struct drm_connector_list_iter conn_iter;
+>  	struct drm_plane *plane;
+>  	struct drm_crtc *crtc;
+> +	struct drm_private_obj *privobj;
+>  	int err = 0;
+>  
+>  	state = drm_atomic_state_alloc(dev);
+> @@ -3218,6 +3219,16 @@ drm_atomic_helper_duplicate_state(struct drm_device *dev,
+>  		}
 >  	}
->  }
+>  
+> +	drm_for_each_privobj(privobj, dev) {
+> +		struct drm_private_state *priv_state;
+> +
+> +		priv_state = drm_atomic_get_private_obj_state(state, privobj);
+> +		if (IS_ERR(priv_state)) {
+> +			err = PTR_ERR(priv_state);
+> +			goto free;
+> +		}
+> +	}
+> +
+>  	drm_connector_list_iter_begin(dev, &conn_iter);
+>  	drm_for_each_connector_iter(conn, &conn_iter) {
+>  		struct drm_connector_state *conn_state;
+> @@ -3325,12 +3336,17 @@ int drm_atomic_helper_commit_duplicated_state(struct drm_atomic_state *state,
+>  	struct drm_connector_state *new_conn_state;
+>  	struct drm_crtc *crtc;
+>  	struct drm_crtc_state *new_crtc_state;
+> +	struct drm_private_obj *privobj;
+> +	struct drm_private_state *new_priv_state;
+>  
+>  	state->acquire_ctx = ctx;
+>  
+>  	for_each_new_plane_in_state(state, plane, new_plane_state, i)
+>  		state->planes[i].old_state = plane->state;
+>  
+> +	for_each_new_private_obj_in_state(state, privobj, new_priv_state, i)
+> +		state->private_objs[i].old_state = privobj->state;
+> +
+>  	for_each_new_crtc_in_state(state, crtc, new_crtc_state, i)
+>  		state->crtcs[i].old_state = crtc->state;
+>  
+> -- 
+> 2.17.1
+> 
 
-One alternative is adding amd_pmu_disable_all() to amd/core.c and using
-that. Then you can also change the loop to do the wait after all the
-WRMSRs, if that helps with latency.
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
