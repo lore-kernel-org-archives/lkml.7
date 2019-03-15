@@ -2,160 +2,158 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F86FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CE7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9BC20854
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z9jFeQ89"
+	by mail.kernel.org (Postfix) with ESMTP id B946D20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbfCONkJ (ORCPT
+        id S1729112AbfCONlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 09:40:09 -0400
-Received: from mail-eopbgr50085.outbound.protection.outlook.com ([40.107.5.85]:25561
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727705AbfCONkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 09:40:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qpNyWjohMCD3qmEv2KSeRfI4oSecGwph3Ca1a2o3bfY=;
- b=Z9jFeQ89IRnMjGmSJWBhqDU4ZUzJtTuYGezySzS/R0q0Xq+t1ObpNZ+oOvC1N5rNd2AT/njeZLZw9VgSBmy1dpNjBIUMOARbZzkY5P7PA3yhjWTunAEpMoyTTxIC/IFSe1oM3k+fbr/6ZjRt/NFIt+3wMjrZRJHZ1koHipSJ990=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB4435.eurprd04.prod.outlook.com (52.135.150.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Fri, 15 Mar 2019 13:40:04 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::50ed:d1b5:c043:3b79]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::50ed:d1b5:c043:3b79%2]) with mapi id 15.20.1709.011; Fri, 15 Mar 2019
- 13:40:04 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "van.freenix@gmail.com" <van.freenix@gmail.com>
-Subject: RE: [PATCH 2/2] ARM: imx: mach-imx7ulp: warn when imx_soc_device_init
- fail
-Thread-Topic: [PATCH 2/2] ARM: imx: mach-imx7ulp: warn when
- imx_soc_device_init fail
-Thread-Index: AQHU2Xv6rc4iD5C/cU2/vwnpPpurWaYMfhWQgAAseACAAAtq8A==
-Date:   Fri, 15 Mar 2019 13:40:04 +0000
-Message-ID: <AM0PR04MB42118397D4F1F1DD2F14E7FB80440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190313091757.16410-1-peng.fan@nxp.com>
- <20190313091757.16410-2-peng.fan@nxp.com>
- <AM0PR04MB4211FE93F235498D795C2FED80440@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <AM0PR04MB44817A913A33ECEC6D572D7E88440@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB44817A913A33ECEC6D572D7E88440@AM0PR04MB4481.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bbfcc04d-757b-471b-1ade-08d6a94bbb14
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB4435;
-x-ms-traffictypediagnostic: AM0PR04MB4435:
-x-microsoft-antispam-prvs: <AM0PR04MB443525A2B433E3C8999F4A1680440@AM0PR04MB4435.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09778E995A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(366004)(39860400002)(376002)(346002)(199004)(189003)(4326008)(71190400001)(86362001)(76176011)(6116002)(33656002)(3846002)(478600001)(7696005)(486006)(6436002)(102836004)(105586002)(106356001)(14454004)(476003)(2501003)(8676002)(74316002)(81156014)(305945005)(68736007)(7736002)(44832011)(81166006)(256004)(11346002)(93886005)(2201001)(6246003)(8936002)(2906002)(71200400001)(5660300002)(53936002)(229853002)(6506007)(110136005)(99286004)(26005)(97736004)(9686003)(316002)(186003)(66066001)(55016002)(446003)(14444005)(52536014)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4435;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VYjDwldJuMtzm6rtadKqY4T5+2aTz/lPESBmpnfPPjOrjEzx/Yb1WNGCZdr3tR0WJSBhz/d5W5JPIdk60bNS7QOEusE7tAH8x0s9MBYLHlF2S5DwLcZgotJNgwPi9/R4gkZDIkXGh4h3P7zJSmXwgzx1AKJC3KglSgh7GIt3wK4mesBDnOnmHlojFZRjtssl7Hiieco2I4lwWJ9bfaIbLb3M20OkjN7mQCIjjTN/ktqzNFlzKtO2A7vjSTQ04arfcaKfOQAq0L6DuivwcwVeYdMIQ5qWOnckrY1L1UuFJLAk1cgdJjSoRQyWOQCCr+P0zUWD2D/q3gNZXdl6hiSDeO7pn5RtV3xMO8hLsUO0ZqGn08TBtBpFGFZ4+MFxThUUQnnC23OTxHaoQyIE7S2W89CbMNLoe4Rr6s6beR0YlMo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 15 Mar 2019 09:41:49 -0400
+Received: from foss.arm.com ([217.140.101.70]:59684 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727705AbfCONlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 09:41:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B51B5A78;
+        Fri, 15 Mar 2019 06:41:48 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0C723F614;
+        Fri, 15 Mar 2019 06:41:45 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 13:41:39 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 03/15] sched/core: uclamp: Add system default clamps
+Message-ID: <20190315134139.hrw22zaut3shfs4d@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-4-patrick.bellasi@arm.com>
+ <20190313143240.GH5922@hirez.programming.kicks-ass.net>
+ <20190313170940.ngiafkmiijryhl2k@e110439-lin>
+ <20190313201010.GU2482@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbfcc04d-757b-471b-1ade-08d6a94bbb14
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 13:40:04.5201
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4435
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313201010.GU2482@worktop.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
+On 13-Mar 21:10, Peter Zijlstra wrote:
+> On Wed, Mar 13, 2019 at 05:09:40PM +0000, Patrick Bellasi wrote:
+> 
+> > Yes, that should be possible... will look into splitting this out in
+> > v8 to have something like:
+> > 
+> > ---8<---
+> > struct uclamp_req {
+> > 	/* Clamp value "requested" by a scheduling entity */
+> > 	unsigned int value		: bits_per(SCHED_CAPACITY_SCALE);
+> > 	unsigned int bucket_id		: bits_per(UCLAMP_BUCKETS);
+> > 	unsigned int active		: 1;
+> > 	unsigned int user_defined	: 1;
+> > }
+> > 
+> > struct uclamp_eff {
+> > 	unsigned int value	        : bits_per(SCHED_CAPACITY_SCALE);
+> > 	unsigned int bucket_id	        : bits_per(UCLAMP_BUCKETS);
+> > }
+> 
+> No, have _1_ type. There is no point what so ever to splitting this.
+> 
+> Also, what's @user_defined about, I don't think I've seen that in the
+> parent patch.
 
-> > > Follow other i.MX6/7 machince code to check return value of
-> > > imx_soc_device_init and warn when fail.
-> > >
-> > > Also drop of_platform_default_populate, because
-> > > "arch_initcall_sync(of_platform_default_populate_init);" could be
-> > > used to populate the device tree.
-> > >
-> >
-> > This could be in separate patch.
->=20
-> I'll do it in v2 after we agree the change in the first patch.
->=20
+That's a flag added by one of the following patches, but with the
+change you are suggesting below...
 
-I think imx7ulp does not have the issue in patch 1.
+> > struct task_struct {
+> >         // ...
+> >         #ifdef CONFIG_UCLAMP_TASK
+> >                 struct uclamp_req uclamp_req[UCLAMP_CNT];
+> >                 struct uclamp_eff uclamp_eff[UCLAMP_CNT];
+> 
+> 		struct uclamp_se uclamp[UCLAMP_CNT];
+> 		struct uclamp_se uclamp_req[UCLAMP_CNT];
+> 
+> Where the first is the very same introduced in patch #1, and leaving it
+> in place avoids having to update the sites already using that (or start
+> #1 with the _eff name to avoid having to change things around?).
+> 
+> >         #endif
+> >         // ...
+> > }
+> > 
+> > static inline struct uclamp_eff
+> > uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
+> > {
+> >         struct uclamp_eff uc_eff = p->uclamp_eff[clamp_id];
+> 
+> just this ^, these lines seem like a superfluous duplication:
+> 
+> > 	uc_eff.bucket_id = p->uclamp_req[clamp_id].bucket_id;
+> > 	uc_eff.value = p->uclamp_req[clamp_id].value;
+> 
+> 
+> > 	if (unlikely(uc_eff.clamp_value > uclamp_default[clamp_id].value)) {
+> > 		uc_eff.clamp_value = uclamp_default[clamp_id].value;
+> > 		uc_eff.bucket_id = uclamp_default[clamp_id].bucket_id;
+> 
+> and:
+> 
+> 		uc = uclamp_default[clamp_id];
 
-Regards
-Dong Aisheng
+... with things like the above line it becomes quite tricky to exploit
+the uclamp_se bitfield to track additional flags.
 
-> >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  arch/arm/mach-imx/mach-imx7ulp.c | 7 ++++++-
-> > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/arm/mach-imx/mach-imx7ulp.c
-> > > b/arch/arm/mach-imx/mach-imx7ulp.c
-> > > index 11ac71aaf965..6d823f05d9aa 100644
-> > > --- a/arch/arm/mach-imx/mach-imx7ulp.c
-> > > +++ b/arch/arm/mach-imx/mach-imx7ulp.c
-> > > @@ -53,11 +53,16 @@ static void __init imx7ulp_set_revision(void)
-> > >
-> > >  static void __init imx7ulp_init_machine(void)  {
-> > > +	struct device *soc_dev;
-> > > +
-> > > +	soc_dev =3D imx_soc_device_init();
-> > > +	if (soc_dev =3D=3D NULL)
-> > > +		pr_warn("failed to initialize soc device\n");
-> > > +
-> >
-> > Should this be under set revision?
->=20
-> Just follow other i.MX6/7 platforms practice, I could move this under set
-> revision in v2 if you prefer.
->=20
-> Thanks,
-> Peng.
->=20
-> >
-> > Regards
-> > Dong Aisheng
-> >
-> > >  	imx7ulp_pm_init();
-> > >
-> > >  	mxc_set_cpu_type(MXC_CPU_IMX7ULP);
-> > >  	imx7ulp_set_revision();
-> > > -	of_platform_default_populate(NULL, NULL, imx_soc_device_init());
-> > >  }
-> > >
-> > >  static const char *const imx7ulp_dt_compat[] __initconst =3D {
-> > > --
-> > > 2.16.4
+I'll try to remove the need for the "user_defined" flag, as long as we
+have only the "active" you we can still manage to keep it in uclamp_se.
 
+If instead we really need more flags, we will likely have to move them
+into a separate bitfield. :/
+
+> 
+> > 	}
+> > 
+> >         return uc_eff;
+> > }
+> > 
+> > static inline void
+> > uclamp_eff_set(struct task_struct *p, unsigned int clamp_id)
+> > {
+> >         p->uclamp_eff[clamp_id] = uclamp_eff_get(p, clamp_id);
+> > }
+> > ---8<---
+> > 
+> > Is that what you mean ?
+> 
+> Getting there :-)
+
+Yeah... let see :)
+
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
