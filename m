@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7342CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0342C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AD1218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC47218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:17:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CBSNpIzA"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P+byZbyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfCOGRk (ORCPT
+        id S1728432AbfCOGRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 02:17:40 -0400
-Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:34531
+        Fri, 15 Mar 2019 02:17:48 -0400
+Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:19599
         "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728050AbfCOGRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 02:17:38 -0400
+        id S1728050AbfCOGRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 02:17:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7sGnsRBR11as5w8QjMfK7m6wH02zar6x4YDWvQV1bm8=;
- b=CBSNpIzAEQayp7uFLxHft4sPLH4Mn3g55ro+FUZpcb6GQ7h4Gbzo57OALg5sb99XjxyuUQVh1KdxItxsZfxzHrAYkMB44V+0CxmJJw0pHJoXnbhn2AwmgQol4mXWbvcg4tsr3nzhlPbj/nIisZPFrG9dah7zX4gYcHdNcWByqxs=
+ bh=cqFoZsQIKsDfdiJAXh1Jg3tUzHU6kQ8ML8CV0FXm2Ps=;
+ b=P+byZbyCt9GCZfcCuGhH8qOilzSXwOYeXjQTWEatEHmt1wyueDmCRbbke3sK1Z+D9EaW3MSzvzayGnl8N6yj0e/Ku9YJwlNrWtmydaNpHZ4ruuPkDMaEWBcWmKyhVyowYr3TiTCb+g2tUA968OYMcg9dCf6utyOOwlbWLBlmXiI=
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
  DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Fri, 15 Mar 2019 06:17:34 +0000
+ 15.20.1709.13; Fri, 15 Mar 2019 06:17:43 +0000
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::f1b4:a1fb:cfd1:3f08%6]) with mapi id 15.20.1709.011; Fri, 15 Mar 2019
- 06:17:34 +0000
+ 06:17:43 +0000
 From:   Anson Huang <anson.huang@nxp.com>
 To:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
         "linux@roeck-us.net" <linux@roeck-us.net>,
@@ -65,13 +65,13 @@ To:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH V8 3/4] arm64: defconfig: add support for i.MX system
- controller watchdog
-Thread-Topic: [PATCH V8 3/4] arm64: defconfig: add support for i.MX system
- controller watchdog
-Thread-Index: AQHU2vbHXeLS+eO0A0u5mLf/F8PrIw==
-Date:   Fri, 15 Mar 2019 06:17:34 +0000
-Message-ID: <1552630331-32068-4-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V8 4/4] arm64: dts: imx8qxp: add system controller watchdog
+ support
+Thread-Topic: [PATCH V8 4/4] arm64: dts: imx8qxp: add system controller
+ watchdog support
+Thread-Index: AQHU2vbMElbJYOVD/kOr7R5ht0we7Q==
+Date:   Fri, 15 Mar 2019 06:17:42 +0000
+Message-ID: <1552630331-32068-5-git-send-email-Anson.Huang@nxp.com>
 References: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
 In-Reply-To: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
 Accept-Language: en-US
@@ -85,26 +85,26 @@ x-clientproxiedby: HK0PR01CA0002.apcprd01.prod.exchangelabs.com
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 98074593-5e6c-42b3-404a-08d6a90de981
+x-ms-office365-filtering-correlation-id: 2188133c-2857-49a7-6c35-08d6a90deeb8
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3916;
 x-ms-traffictypediagnostic: DB3PR0402MB3916:
 x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <DB3PR0402MB3916ECBCE58B7301FAF974E8F5440@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+x-microsoft-antispam-prvs: <DB3PR0402MB3916255794BC950D09F53ED4F5440@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 x-forefront-prvs: 09778E995A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(346002)(39860400002)(366004)(199004)(189003)(8936002)(2501003)(102836004)(2906002)(6436002)(68736007)(5660300002)(7416002)(6116002)(66066001)(36756003)(446003)(71190400001)(486006)(4744005)(71200400001)(76176011)(6346003)(2616005)(476003)(186003)(386003)(11346002)(3846002)(26005)(52116002)(6506007)(6486002)(305945005)(6512007)(256004)(478600001)(2201001)(86362001)(4326008)(25786009)(106356001)(105586002)(7736002)(316002)(110136005)(50226002)(14454004)(99286004)(8676002)(97736004)(81156014)(81166006)(53936002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3916;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(346002)(39860400002)(366004)(199004)(189003)(8936002)(2501003)(102836004)(2906002)(6436002)(68736007)(5660300002)(7416002)(6116002)(66066001)(36756003)(446003)(71190400001)(486006)(4744005)(71200400001)(76176011)(6346003)(2616005)(476003)(186003)(386003)(11346002)(3846002)(26005)(52116002)(6506007)(6486002)(305945005)(6512007)(256004)(478600001)(2201001)(86362001)(4326008)(25786009)(106356001)(105586002)(7736002)(316002)(110136005)(50226002)(14454004)(99286004)(8676002)(97736004)(81156014)(81166006)(53936002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3916;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=anson.huang@nxp.com; 
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wFI2tJt/COVApaSW1zuQpjzC5YodNsAXFH9F7SIsyc6lZT/9yjpjhu+/sGfcBV5T7y8lQkJixwCjdnCMvO5ovSXUbN55X0RUUIqy/ACXYVot7IvmCt/nIzJraM6sLFTl0iw7YLe6M2qjbguR2xaaD2hx77VX7NY0Mh4Yu8LapSNs330c+iRljY2fBA/XHOROfjsgfjm/zk+LOJ26MIqRlboDWxZZKhTm3mC9MHN/KyaU+8Z1VBkSnwPbFHJ/FZp4XMopsO/weOkIJ+nkTfB3LyfShMgFpRdfQ4UJHEXp2/jUqLXwWljwpsWLu350Zhux5wUA+f/X83LaqQQW2UlwwVK91cmMTOXTJBaQ+MxcucT95I4jY0EUu34iEszcFZ9rXKHKp1R2YhfCs6PkPyQaEeR6WqUv2PS72gxdfaeReBM=
+x-microsoft-antispam-message-info: UmXwLbKuFSq9CFSbegp3ZIB6Pi0UHI6Gy6sKodTNYkCF3UJ4XkBonSci6Cv0/2Tnfk/UyFByGDWh55ccsoIENGlH90hrW/9wGgWqDRX7dqzTIIdwN+RHCfWMlDhq9qyIjClv5JGI4tk7zxOLu1MAx53bAXPgCc0bPnAcM95TLA2IYj1ZSFEob+FS9Rd8LdfSr2Iujtm571TuiTfZ9NWsypNtylgmXKfS0LbcdIQlO7HccVPpdRaKzKHgOmGXOQXaEH5zXPGZ/fgYjjCFKFGXAafJo2KOq96r75Lysj/ppStSUuVpJ5Kq6Zrt0B96XypCqw+yJlrzcGXgfb2StmSpkL5v2pSy7PdJSRUqhjUZZlaO6yKY+m10GSmkDSExNe55/z1vUtkecT3/lOkLHVGhCaZeUbVAgcqD6ogFdnUq/+k=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98074593-5e6c-42b3-404a-08d6a90de981
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 06:17:34.1097
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2188133c-2857-49a7-6c35-08d6a90deeb8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 06:17:42.9370
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
@@ -115,28 +115,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable CONFIG_IMX_SC_WDT as module to support i.MX system
-controller watchdog.
+Add i.MX8QXP system controller watchdog support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-No changes.
+Changes since previous version:
+	- remove label as we ONLY have one watchdog.
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2d9c390..690f4ba 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -427,6 +427,7 @@ CONFIG_WATCHDOG=3Dy
- CONFIG_ARM_SP805_WATCHDOG=3Dy
- CONFIG_S3C2410_WATCHDOG=3Dy
- CONFIG_IMX2_WDT=3Dy
-+CONFIG_IMX_SC_WDT=3Dm
- CONFIG_MESON_GXBB_WATCHDOG=3Dm
- CONFIG_MESON_WATCHDOG=3Dm
- CONFIG_RENESAS_WDT=3Dy
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
+ts/freescale/imx8qxp.dtsi
+index 4c3dd95..279482d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -443,4 +443,8 @@
+ 			power-domains =3D <&pd IMX_SC_R_GPIO_7>;
+ 		};
+ 	};
++
++	watchdog {
++		compatible =3D "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
++	};
+ };
 --=20
 2.7.4
 
