@@ -6,52 +6,53 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B3FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583FBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2510121871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C1F218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfCOS4n (ORCPT
+        id S1726927AbfCOS63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:56:43 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:60488 "EHLO
+        Fri, 15 Mar 2019 14:58:29 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60514 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726493AbfCOS4m (ORCPT
+        with ESMTP id S1725922AbfCOS63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:56:42 -0400
+        Fri, 15 Mar 2019 14:58:29 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 81FE614D9DD42;
-        Fri, 15 Mar 2019 11:56:41 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 11:56:40 -0700 (PDT)
-Message-Id: <20190315.115640.1477522812438525683.davem@davemloft.net>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, shshaikh@marvell.com, manishc@marvell.com,
-        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E79A414D9FA6B;
+        Fri, 15 Mar 2019 11:58:28 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 11:58:28 -0700 (PDT)
+Message-Id: <20190315.115828.2058474851167237390.davem@davemloft.net>
+To:     colin.king@canonical.com
+Cc:     netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] qlcnic: Avoid potential NULL pointer dereference
+Subject: Re: [PATCH] drivers: net: atp: fix various indentation issues
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190314203140.20039-1-pakki001@umn.edu>
-References: <20190314203140.20039-1-pakki001@umn.edu>
+In-Reply-To: <20190314234713.8587-1-colin.king@canonical.com>
+References: <20190314234713.8587-1-colin.king@canonical.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 15 Mar 2019 11:56:41 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 15 Mar 2019 11:58:29 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
-Date: Thu, 14 Mar 2019 15:31:40 -0500
+From: Colin King <colin.king@canonical.com>
+Date: Thu, 14 Mar 2019 23:47:13 +0000
 
-> netdev_alloc_skb can fail and return a NULL pointer which is
-> dereferenced without a check. The patch avoids such a scenario.
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> There is a statement that is indented incorrectly; replace
+> spaces with a tab.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
 Applied.
