@@ -2,160 +2,227 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A540C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BC0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148E621019
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FAE21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfCONZi (ORCPT
+        id S1729097AbfCON0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 09:25:38 -0400
-Received: from mga11.intel.com ([192.55.52.93]:42414 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726468AbfCONZi (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 09:25:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 06:25:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,482,1544515200"; 
-   d="scan'208";a="131918936"
-Received: from skl.sh.intel.com ([10.239.159.132])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Mar 2019 06:25:35 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v3] perf annotate/report: Remove hist__account_cycles from callback
-Date:   Sat, 16 Mar 2019 05:16:17 +0800
-Message-Id: <1552684577-29041-1-git-send-email-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 15 Mar 2019 09:26:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36722 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727547AbfCON0n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 09:26:43 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2FDNbHW024152
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 09:26:42 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r8brtvakt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 09:26:41 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 15 Mar 2019 13:26:40 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 15 Mar 2019 13:26:37 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2FDQZXt60489982
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 Mar 2019 13:26:35 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A042BAE04D;
+        Fri, 15 Mar 2019 13:26:35 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8FE3AE045;
+        Fri, 15 Mar 2019 13:26:34 +0000 (GMT)
+Received: from [9.145.170.151] (unknown [9.145.170.151])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 15 Mar 2019 13:26:34 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v5 1/7] s390: ap: kvm: add PQAP interception for AQIC
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+ <1552493104-30510-2-git-send-email-pmorel@linux.ibm.com>
+ <20190315112032.13b259c2.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Fri, 15 Mar 2019 14:26:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190315112032.13b259c2.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031513-0028-0000-0000-000003546FB0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031513-0029-0000-0000-000024130051
+Message-Id: <a0aef0e8-03e3-2cb7-3127-61521eed0629@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-15_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903150096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hist__account_cycles is executed when the hist_iter__branch_callback
-is called. But it looks it's not necessary. In hist__account_cycles, it
-already walks on all branch entries.
+On 15/03/2019 11:20, Cornelia Huck wrote:
+> On Wed, 13 Mar 2019 17:04:58 +0100
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+>> +/*
+>> + * handle_pqap: Handling pqap interception
+>> + * @vcpu: the vcpu having issue the pqap instruction
+>> + *
+>> + * We now support PQAP/AQIC instructions and we need to correctly
+>> + * answer the guest even if no dedicated driver's hook is available.
+>> + *
+>> + * The intercepting code calls a dedicated callback for this instruction
+>> + * if a driver did register one in the CRYPTO satellite of the
+>> + * SIE block.
+>> + *
+>> + * For PQAP/AQIC instructions only, verify privilege and specifications.
+>> + *
+>> + * If no callback available, the queues are not available, return this to
+>> + * the caller.
+>> + * Else return the value returned by the callback.
+>> + */
+>> +static int handle_pqap(struct kvm_vcpu *vcpu)
+>> +{
+>> +	uint8_t fc;
+>> +	struct ap_queue_status status = {};
+>> +	int ret;
+>> +	/* Verify that the AP instruction are available */
+>> +	if (!ap_instructions_available())
+>> +		return -EOPNOTSUPP;
+>> +	/* Verify that the guest is allowed to use AP instructions */
+>> +	if (!(vcpu->arch.sie_block->eca & ECA_APIE))
+>> +		return -EOPNOTSUPP;
+>> +	/* Verify that the function code is AQIC */
+>> +	fc = vcpu->run->s.regs.gprs[0] >> 24;
+>> +	/* We do not want to change the behavior we had before this patch*/
+>> +	if (fc != 0x03)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	/* PQAP instructions are allowed for guest kernel only */
+>> +	if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
+>> +		return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
+>> +	/* AQIC instruction is allowed only if facility 65 is available */
+>> +	if (!test_kvm_facility(vcpu->kvm, 65))
+>> +		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
+>> +	/* Verify that the hook callback is registered and call it */
+>> +	if (vcpu->kvm->arch.crypto.pqap_hook) {
+>> +		if (!try_module_get(vcpu->kvm->arch.crypto.pqap_hook->owner))
+>> +			return -EOPNOTSUPP;
+>> +		ret = vcpu->kvm->arch.crypto.pqap_hook->hook(vcpu);
+>> +		module_put(vcpu->kvm->arch.crypto.pqap_hook->owner);
+>> +		return ret;
+>> +	}
+>> +	/*
+>> +	 * It is the duty of the vfio_driver to register a hook
+>> +	 * If it does not and we get an exception on AQIC we must
+>> +	 * guess that there is no vfio_ap_driver at all and no one
+>> +	 * to handle the guests's CRYCB and the CRYCB is empty.
+>> +	 */
+>> +	status.response_code = 0x01;
+> 
+> I'm still confused here, sorry. From previous discussions I recall that
+> this indicates "no crypto device" (please correct me if I'm wrong.)
+> 
+> Before this patch, we had:
+> - guest issues PQAP/AQIC -> drop to userspace
+> 
+> With a correct implementation, we get:
+> - guest issues PQAP/AQIC -> callback does what needs to be done
+> 
+> With an incorrect implementation (no callback), we get:
+> - guest issues PQAP/AQIC -> guest gets response code 0x01
+> 
+> Why not drop to userspace in that case?
 
-This patch moves the hist__account_cycles out of callback, now the data
-processing is much faster than before.
+This is what I had in the previous patches.
+Hum, I do not remember which discussion lead me to modify this.
 
-Previous code has an issue that the ch[offset].num++
-(in __symbol__account_cycles) is executed repeatedly since
-hist__account_cycles is called in each hist_iter__branch_callback,
-so the counting of ch[offset].num is not correct (too big).
-With this patch, the issue is fixed. And we don't need the code of
-"ch->reset >= ch->num / 2" to check if there are too many overlaps
-(in annotation__count_and_fill), otherwise some data would be
-hidden.
+Anyway, now that you put the finger on this problem, I think the problem 
+is worse.
 
-Now, we can try, for example:
+The behavior with old / new Linux, vfio driver and qemu is:
 
-perf record -b ...
-perf annotate or perf report -s symbol
+LINUX	VFIO_AP	QEMU	PGM
+OLD	x	x	OPERATION
+NEW	-	OLD	SPECIFICATION
+NEW	-	NEW/aqic=off	SPECIFICATION
+NEW	x	NEW/aqic=on	-
 
-The before/after output should be no change.
+x = whatever
+- = absent/none
 
- v3:
- ---
- Fix the crash in stdio mode.
- Like previous code, it needs the checking of ui__has_annotation()
- before hist__account_cycles()
+So yes there is a change in behavior for the userland for the case QEMU 
+do not set the AQIC facility 65, OLD QEMU or NEW QEMU wanting to behave 
+like an older one.
 
- v2:
- ---
- 1. Cover the similar perf report
- 2. Remove the checking code "ch->reset >= ch->num / 2"
+I fear we have the same problem with the privileged operation...
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-annotate.c |  4 ++--
- tools/perf/builtin-report.c   | 11 +++++------
- tools/perf/util/annotate.c    |  2 +-
- 3 files changed, 8 insertions(+), 9 deletions(-)
+For the last case, when the kvm_facility(65) is set, the explication is 
+the following:
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 67f9d9f..77deb3a 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -159,8 +159,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	struct perf_evsel *evsel = iter->evsel;
- 	int err;
- 
--	hist__account_cycles(sample->branch_stack, al, sample, false);
--
- 	bi = he->branch_info;
- 	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
- 
-@@ -199,6 +197,8 @@ static int process_branch_callback(struct perf_evsel *evsel,
- 	if (a.map != NULL)
- 		a.map->dso->hit = 1;
- 
-+	hist__account_cycles(sample->branch_stack, al, sample, false);
-+
- 	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
- 	return ret;
- }
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1921aaa..493e115 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -136,9 +136,6 @@ static int hist_iter__report_callback(struct hist_entry_iter *iter,
- 	if (!ui__has_annotation() && !rep->symbol_ipc)
- 		return 0;
- 
--	hist__account_cycles(sample->branch_stack, al, sample,
--			     rep->nonany_branch_mode);
--
- 	if (sort__mode == SORT_MODE__BRANCH) {
- 		bi = he->branch_info;
- 		err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
-@@ -181,9 +178,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	if (!ui__has_annotation() && !rep->symbol_ipc)
- 		return 0;
- 
--	hist__account_cycles(sample->branch_stack, al, sample,
--			     rep->nonany_branch_mode);
--
- 	bi = he->branch_info;
- 	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
- 	if (err)
-@@ -282,6 +276,11 @@ static int process_sample_event(struct perf_tool *tool,
- 	if (al.map != NULL)
- 		al.map->dso->hit = 1;
- 
-+	if (ui__has_annotation() || rep->symbol_ipc) {
-+		hist__account_cycles(sample->branch_stack, &al, sample,
-+				     rep->nonany_branch_mode);
-+	}
-+
- 	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
- 	if (ret < 0)
- 		pr_debug("problem adding hist entry, skipping event\n");
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 5f6dbbf..e8080c0 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1015,7 +1015,7 @@ static void annotation__count_and_fill(struct annotation *notes, u64 start, u64
- 		float ipc = n_insn / ((double)ch->cycles / (double)ch->num);
- 
- 		/* Hide data when there are too many overlaps. */
--		if (ch->reset >= 0x7fff || ch->reset >= ch->num / 2)
-+		if (ch->reset >= 0x7fff)
- 			return;
- 
- 		for (offset = start; offset <= end; offset++) {
+This is related to the handling of PQAP AQIC which is now authorized by 
+this patch series.
+If we authorize PQAP AQIC, by setting the bit for facility 65, the guest 
+can use this instruction.
+If the instruction follows the specifications we must answer something 
+realistic and since there is nothing in the CRYCB (no driver) we answer 
+that there is no queue.
+
+Conclusion:  we must handle this in userland, it will have the benefit 
+to keep old behavior when there is no callback.
+OLD QEMU will not see change as they will not set aqic facility
+NEW QEMU will handle this correctly.
+
+In this case we also do not need to handle all other tests here but can 
+move it to the callback as Tony wanted.
+
+Would you agree with something simple like:
+
+static int handle_pqap(struct kvm_vcpu *vcpu)
+{
+         int ret = -EOPNOTSUPP;
+
+         /* Verify that the hook callback is registered and call it */
+         if (pqap_hook)
+                 if (try_module_get(pqap_hook->owner)) {
+                         ret = pqap_hook->hook(vcpu);
+                         module_put(pqap_hook->owner);
+                 }
+         return ret;
+}
+
+All other tests in QEMU and in the callback.
+
+Thanks for the comments.
+
+Regards,
+Pierre
+
 -- 
-2.7.4
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
