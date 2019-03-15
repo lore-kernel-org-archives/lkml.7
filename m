@@ -2,101 +2,121 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC71DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93C2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E93218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752FC21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LzTXjWqm"
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="C5VOnOD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbfCOJrk (ORCPT
+        id S1728762AbfCOJtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:47:40 -0400
-Received: from us01smtprelay-2.synopsys.com ([198.182.47.9]:55694 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbfCOJrj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:47:39 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id D762624E1EE6;
-        Fri, 15 Mar 2019 02:47:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1552643259; bh=ht9KIVYJd+XQbOcjibfzz5Yqm4/3Gpbtp1/B/WRFVb4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=LzTXjWqmR2rIwe6aG/qnsql+j90FHNN0STnMiJ66/LFGT9T27fPvv5L4TP1nYbFSV
-         NMyjTmjNSlfzoPaf1piUoqoAUe+PEYqmWxM4aBrxXvpke7/XUiaqmiIQZrqi0OKlho
-         0wuhQ1fXcMdIvuU/XFQWWflPUQAfIXxGeYWRCWoWJYOczVbYpBdhAV6Y+ab3Mzdawp
-         fl72J46g9ZqgHyLl2zP615EkQySNbRsyf2ApgmrFs1B16gLQQwVNj7ncz01ZGKzPCM
-         LjvQparWW3aitVPf5GBjnDPcKrMMJVu4iEtTreY6bEywmhkdIganDB6cgavuS+TUyY
-         HZ2z0iXjrXnuQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 655E1A0066;
-        Fri, 15 Mar 2019 09:47:37 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 15 Mar 2019 02:47:37 -0700
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- DE02WEHTCB.internal.synopsys.com (10.225.19.94) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 15 Mar 2019 10:47:34 +0100
-Received: from [10.107.19.176] (10.107.19.176) by
- DE02WEHTCA.internal.synopsys.com (10.225.19.80) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 15 Mar 2019 10:47:34 +0100
-Subject: Re: [PATCH 1/2] net: stmmac: don't set own bit too early for jumbo
- frames
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <jose.abreu@synopsys.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Aaro Koskinen <aaro.koskinen@nokia.com>
-References: <20190314194320.25566-1-aaro.koskinen@iki.fi>
-From:   Jose Abreu <jose.abreu@synopsys.com>
-Message-ID: <23cf7ae6-6262-ee45-3be7-75233dd27104@synopsys.com>
-Date:   Fri, 15 Mar 2019 09:47:33 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 15 Mar 2019 05:49:32 -0400
+Received: from mail-eopbgr1300081.outbound.protection.outlook.com ([40.107.130.81]:52214
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728200AbfCOJtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 05:49:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3xSobpf67/du1W5ZrjDfdhkHwfuTUiTkG0DJVu2WwlU=;
+ b=C5VOnOD9fv4mhP78ncmEtApBBCODuj5QC7OA8l+IaX3t7RfOytkEV4RWyXz8qvBDaBZKQXn8VNWESImVBz2lp9JRZvrQzLV1XMczWT+o6BGGc/J/x1f8o8jqsj1uYIPMHDCVCwTyF5mGzWDGKJDhjK6eTfjZCkYNOy+YTKjcaoU=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB4171.apcprd02.prod.outlook.com (20.178.158.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Fri, 15 Mar 2019 09:49:26 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::3180:828f:84bc:ea3]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::3180:828f:84bc:ea3%4]) with mapi id 15.20.1686.021; Fri, 15 Mar 2019
+ 09:49:26 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "minchan@kernel.org" <minchan@kernel.org>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: High Latency of CMA allocation
+Thread-Topic: High Latency of CMA allocation
+Thread-Index: AQHU2xLZ1UQoU59DckqzS9+63pBkgg==
+Date:   Fri, 15 Mar 2019 09:49:26 +0000
+Message-ID: <SG2PR02MB30984EA8472065757E5F32F7E8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: af77d70b-5fd2-4baf-58bf-08d6a92b831e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB4171;
+x-ms-traffictypediagnostic: SG2PR02MB4171:|SG2PR02MB4171:
+x-microsoft-antispam-prvs: <SG2PR02MB4171B2FA5B59B2F85E7DD4F8E8440@SG2PR02MB4171.apcprd02.prod.outlook.com>
+x-forefront-prvs: 09778E995A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(396003)(39850400004)(136003)(189003)(199004)(110136005)(71200400001)(478600001)(68736007)(105586002)(14454004)(78486014)(256004)(44832011)(476003)(14444005)(5024004)(3846002)(6116002)(106356001)(71190400001)(33656002)(25786009)(86362001)(4326008)(486006)(102836004)(8676002)(74316002)(97736004)(53936002)(6436002)(2501003)(9686003)(81156014)(8936002)(66574012)(26005)(55016002)(7696005)(316002)(186003)(5660300002)(2906002)(66066001)(99286004)(7736002)(305945005)(81166006)(54906003)(52536014)(6506007)(55236004);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB4171;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: p1EZh44X1rgyMmVxLJFrCW/7pdOrKIXiMmq6P8ZswEG14sVp3Y2zXe3JDxweXevo/YyYscdV/ZPbqbffxDIiDppm/BfOVznvCTsSfH0xfDhuNO9xbtFiHgDwhF3nQqH1fxMK8ZoqFlp3lo0NSLAPCFnu9UlYTLBhKyvN0G+0n9saeYXoWOw2qibTwRYA2ujDCTT+6B1oCd5KD1kOyYXUKO3PkyhfSDNgkcpbhBZ1LOK32v74B1o0OR7tkXAXpTApfklmYC1ZN0AEtho3Wbohsk8o4Zf0pgNkpRj6QfwumycXKLdNRMSRLTjmysLX+Xee5LUBdK0acmltOm+RwtbfLnlL6SQyAJIfa8r0eGIt/e2yNsvhzgphdXCF9/yuiswzgg3qDRWhfGMs15BZKC8Gnyt8r7xhbiwVo2OQCejFGAw=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190314194320.25566-1-aaro.koskinen@iki.fi>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.107.19.176]
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af77d70b-5fd2-4baf-58bf-08d6a92b831e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 09:49:26.5514
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB4171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/14/2019 7:43 PM, Aaro Koskinen wrote:
-> From: Aaro Koskinen <aaro.koskinen@nokia.com>
-> 
-> Commit 0e80bdc9a72d ("stmmac: first frame prep at the end of xmit
-> routine") overlooked jumbo frames when re-ordering the code, and as a
-> result the own bit was not getting set anymore for the first jumbo frame
-> descriptor. Commit 487e2e22ab79 ("net: stmmac: Set OWN bit for jumbo
-> frames") tried to fix this, but now the bit is getting set too early and
-> the DMA may start while we are still setting up the remaing descriptors.
-> And with the chain mode the own bit remains still unset.
-> 
-> Fix by setting the own bit at the end of xmit also with jumbo frames.
-> 
-> Fixes: 0e80bdc9a72d ("stmmac: first frame prep at the end of xmit routine")
-> Fixes: 487e2e22ab79 ("net: stmmac: Set OWN bit for jumbo frames")
-> Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Hello,
 
-With Sergei comment fix:
+I am facing issue of high latency in CMA allocation of large size buffer .
 
-Acked-by: Jose Abreu <joabreu@synopsys.com>
+I am frequently allocating/deallocation CMA memory, but latency of allocati=
+on is very high.
 
-Thanks,
-Jose Miguel Abreu
+Below are the stat for allocation/deallocation latency issue.
+
+(389120 kB),  latency 29997 us
+(389120 kB),  latency 22957 us
+(389120 kB),  latency 25735 us
+(389120 kB),  latency 12736 us
+(389120 kB),  latency 26009 us
+(389120 kB),  latency 18058 us
+(389120 kB),  latency 27997 us
+(16 kB),  latency 560 us
+(256 kB),  latency 280 us
+(4 kB), latency 311 us
+
+Is there any workaround or solution for this(cma_alloc latency) issue ?
+
+Regards,
+Pankaj
+***************************************************************************=
+***************************************************************************=
+******* eInfochips Business Disclaimer: This e-mail message and all attachm=
+ents transmitted with it are intended solely for the use of the addressee a=
+nd may contain legally privileged and confidential information. If the read=
+er of this message is not the intended recipient, or an employee or agent r=
+esponsible for delivering this message to the intended recipient, you are h=
+ereby notified that any dissemination, distribution, copying, or other use =
+of this message or its attachments is strictly prohibited. If you have rece=
+ived this message in error, please notify the sender immediately by replyin=
+g to this message and please delete it from your computer. Any views expres=
+sed in this message are those of the individual sender unless otherwise sta=
+ted. Company has taken enough precautions to prevent the spread of viruses.=
+ However the company accepts no liability for any damage caused by any viru=
+s transmitted by this email. **********************************************=
+***************************************************************************=
+************************************
