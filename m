@@ -2,102 +2,94 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BCCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3B7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10DAF21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F9821872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfCOKc5 (ORCPT
+        id S1728871AbfCOKdl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 06:32:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37722 "EHLO mx1.redhat.com"
+        Fri, 15 Mar 2019 06:33:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55488 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728886AbfCOKc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 06:32:57 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1727201AbfCOKdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 06:33:40 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 61245308218D;
-        Fri, 15 Mar 2019 10:32:57 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-223.pek2.redhat.com [10.72.12.223])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0712A5C21F;
-        Fri, 15 Mar 2019 10:32:46 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        akpm@linux-foundation.org, dyoung@redhat.com,
-        brijesh.singh@amd.com, thomas.lendacky@amd.com, bhe@redhat.com
-Subject: [PATCH 3/3] kdump,proc/vmcore: Enable kdumping encrypted memory when SEV was active
-Date:   Fri, 15 Mar 2019 18:32:03 +0800
-Message-Id: <20190315103203.13128-4-lijiang@redhat.com>
-In-Reply-To: <20190315103203.13128-1-lijiang@redhat.com>
-References: <20190315103203.13128-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 15 Mar 2019 10:32:57 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 69CE440F4F;
+        Fri, 15 Mar 2019 10:33:40 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 723215D6A6;
+        Fri, 15 Mar 2019 10:33:32 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 11:33:30 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v5 2/7] s390: ap: new vfio_ap_queue structure
+Message-ID: <20190315113330.5ef0eeef.cohuck@redhat.com>
+In-Reply-To: <1552493104-30510-3-git-send-email-pmorel@linux.ibm.com>
+References: <1552493104-30510-1-git-send-email-pmorel@linux.ibm.com>
+        <1552493104-30510-3-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 15 Mar 2019 10:33:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the kdump kernel, the memory of first kernel needs to be dumped
-into the vmcore file.
+On Wed, 13 Mar 2019 17:04:59 +0100
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-It is similar to the SME, if SEV is enabled in the first kernel, the
-old memory has to be remapped with memory encryption mask in order to
-access it properly. Following commit 992b649a3f01 ("kdump, proc/vmcore:
-Enable kdumping encrypted memory with SME enabled") took care of the
-SME case but it uses sme_active() which checks for SME only. Lets use
-the mem_encrypt_active() which returns true when either of them are
-active.
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index e9824c3..df6f21a 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -40,14 +40,42 @@ static struct ap_device_id ap_queue_ids[] = {
+>  
+>  MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+>  
+> +/**
+> + * vfio_ap_queue_dev_probe:
+> + *
+> + * Allocate a vfio_ap_queue structure and associate it
+> + * with the device as driver_data.
+> + */
+>  static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+>  {
+> +	struct vfio_ap_queue *q;
+> +
+> +	q = kzalloc(sizeof(*q), GFP_KERNEL);
+> +	if (!q)
+> +		return -ENOMEM;
+> +	dev_set_drvdata(&apdev->device, q);
+> +	q->apqn = to_ap_queue(&apdev->device)->qid;
+> +	INIT_LIST_HEAD(&q->list);
+> +	mutex_lock(&matrix_dev->lock);
+> +	list_add(&q->list, &matrix_dev->free_list);
+> +	mutex_unlock(&matrix_dev->lock);
 
-Unlike the SME, the first kernel is loaded into the encrypted memory
-when SEV was enabled, hence the kernel elf header must be remapped as
-encrypted in order to access it properly.
+From what I can see, dealing with the free_list is supposed to be
+protected by the matrix_dev mutex, and at a glance, it indeed seems to
+be held every time you interact with the list. I think it would be good
+to document that with a comment.
 
-Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- fs/proc/vmcore.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+(I have not reviewed this deeply, and I won't be able to look at this
+more until April, sorry.)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 3fe90443c1bb..cda6c1922e4f 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -165,7 +165,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, false);
-+	return read_from_oldmem(buf, count, ppos, 0, sev_active());
- }
- 
- /*
-@@ -173,7 +173,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, sme_active());
-+	return read_from_oldmem(buf, count, ppos, 0, mem_encrypt_active());
- }
- 
- /*
-@@ -373,7 +373,7 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 					    buflen);
- 			start = m->paddr + *fpos - m->offset;
- 			tmp = read_from_oldmem(buffer, tsz, &start,
--					       userbuf, sme_active());
-+					       userbuf, mem_encrypt_active());
- 			if (tmp < 0)
- 				return tmp;
- 			buflen -= tsz;
--- 
-2.17.1
 
+>  	return 0;
+>  }
