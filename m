@@ -2,433 +2,204 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636A0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDB4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF353218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:07:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyRmS0Z9"
+	by mail.kernel.org (Postfix) with ESMTP id E34F1218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 21:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfCOVHu (ORCPT
+        id S1726908AbfCOVIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 17:07:50 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39139 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfCOVHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 17:07:49 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t124so7293132wma.4;
-        Fri, 15 Mar 2019 14:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=5jLX9MF0bxrReBMShb1uickGqHI01llCQ06PJ5hF/8s=;
-        b=pyRmS0Z9DOyy1kBvYihNqGz5PUxEiH5nZMN571xpr/rFPWPIgwtrTrzD7JowpohMxt
-         WKN8Rx5DCEu8Rf4q9sMm/rdv260zcixWJgXn4aldndWclJYRv7kI4VcGmkUoSuiI140q
-         xaYEwGidCLdE8xLuDjHmVDxjFBS5uAhqoGlWZXcFTYx8sQcxHdRoQP18tqipo8SeTEl7
-         NdtNS/C/RRPeEJzV3hJktCxlqZDwyNeUTn6vPLi+tgMb8UCuuJEbKrQrMq1gm58JxNRs
-         qgN8akM+aK/rESimS3jLLLkx5fGcKISaFx3L7AkXjz3M71QUcLHDGEpYiqZvgT+sKKmM
-         W4Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=5jLX9MF0bxrReBMShb1uickGqHI01llCQ06PJ5hF/8s=;
-        b=T4Zld/m4oqta+9SUGmffHTtNJsWX8i7+7CcaBulribqR51f786iNMBZMcOSCf/9l9N
-         XR3orbZcIiNC9uvfeCWMsv7WZCvxDmGoBwBCzYQQVsLXhd3dYaEksNo0d+KVKbZbDDHQ
-         7RbHsJLB7JI0hLIBRNr80ZxSj3szp7aJYPSp/1LnLzsbaxnNrg0xek7ohWZw/hEsGKGC
-         F+wvbKOtc9UfKNIqmch7+SYd5oEPrlSaSgAaDSMB8Mprpmh6B1sxLJxXUebQIYwjdHjM
-         amaxkffcceMH7DJGvwmyzpl66tot4FK09sAkOyFQ4W9z1vsd/NN/T1rYSEIBs11gVmWB
-         00Gg==
-X-Gm-Message-State: APjAAAW3lJXF44R1k3BruQwHoprk87aBjMBCExu+uoq4CM/VIOrP27jC
-        WKUWSwmGhR27ebgdHcU4g5w=
-X-Google-Smtp-Source: APXvYqy6G/8iLVVk0SwO1BbwMU2rppNn6//87IWQ3ka7N7Z8KnyJFfH7PuQfPSYl10Rv5Dlo0B1s1A==
-X-Received: by 2002:a1c:230e:: with SMTP id j14mr3589915wmj.9.1552684066109;
-        Fri, 15 Mar 2019 14:07:46 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id k14sm3978905wmj.26.2019.03.15.14.07.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 14:07:45 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] KVM changes for 5.1 merge window
-Date:   Fri, 15 Mar 2019 22:07:42 +0100
-Message-Id: <1552684062-8119-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 15 Mar 2019 17:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726689AbfCOVIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 17:08:25 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72E8521871;
+        Fri, 15 Mar 2019 21:08:23 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 17:08:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Brian Norris <briannorris@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] tracing: kdb: Allow ftdump to skip all but the last
+ few lines
+Message-ID: <20190315170822.6316f3cb@gandalf.local.home>
+In-Reply-To: <CAD=FV=VcpVYjwYq3zo6ODKzRBtDkjgEM2sXC-KMUa0ObskfTnw@mail.gmail.com>
+References: <20190315174528.16531-1-dianders@chromium.org>
+        <20190315144130.1aa36931@gandalf.local.home>
+        <CAD=FV=WUnmMxKZrH-Jfz-VocieOu-Cfsi1aLpB8G5FnLM+_W_w@mail.gmail.com>
+        <20190315161203.25dc2a0c@gandalf.local.home>
+        <CAD=FV=VcpVYjwYq3zo6ODKzRBtDkjgEM2sXC-KMUa0ObskfTnw@mail.gmail.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Fri, 15 Mar 2019 13:54:11 -0700
+Doug Anderson <dianders@chromium.org> wrote:
 
-The following changes since commit c3c7470c75566a077c8dc71dcf8f1948b8ddfab4:
+> > Hmm, actually your method still wont work, because you are only
+> > counting entries not lines. The stack dumps are considered a single
+> > line but will print multiple lines.  
+> 
+> LOL.  Back to v1 then?  v1 of the patch [1] was definitely consistent
+> even if it was very slow.  Specifically whatever was being counted by
+> ftrace_dump_buf() (entries or lines or something in between) was
+> definitely used to figure out how many to skip.
 
-  powerpc/kvm: Save and restore host AMR/IAMR/UAMOR (2019-02-22 13:41:13 +1100)
+You'll need to read the line itself. I don't see v1 giving a different
+count than the get_total_entries() does.
 
-are available in the git repository at:
+> 
+> 
+> > Not only that, perhaps you should break apart ftrace_dump_buf(),
+> > because calling it twice (or doing what I suggested), wont stop tracing
+> > in between, and the size of the buffer might change between the two
+> > calls.
+> >
+> > You need to move out:
+> >
+> >         for_each_tracing_cpu(cpu) {
+> >                 atomic_inc(&per_cpu_ptr(iter.trace_buffer->data, cpu)->disabled);
+> >         }
+> >
+> >
+> > and
+> >
+> >         for_each_tracing_cpu(cpu) {
+> >                 atomic_dec(&per_cpu_ptr(iter.trace_buffer->data, cpu)->disabled);
+> >         }
+> >
+> > to disable tracing while you do this.  
+> 
+> Happy to do this in a v4.  I think it's very unlikely to matter
+> because we're in kdb and thus all the other CPUs are stopped and
+> interrupts are disabled.  ...so unless an NMI adds something to the
+> trace buffer in between the two calls the counts will be the same.
+> ...but it certainly is cleaner.
 
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+NMI's can indeed add to the trace.
 
-for you to fetch changes up to 4a605bc08e98381d8df61c30a4acb2eac15eb7da:
+> 
+> 
+> > The get_total_entries() is the faster approach to get the count, but in
+> > either case, the count should end up the same.  
+> 
+> If you're OK with going back to the super slow mechanism in v1 I can
+> do that and we can be guaranteed we're consistent.  Presumably it
+> can't be _that_ slow because we're going to use the same mechanism to
+> skip the lines later.
+> 
+> So, if you agree, I'll send out a v4 that looks like v1 except that it
+> disables / enables tracing directly in kdb_ftdump() so it stays
+> disabled for both calls.
+> 
+> 
+> [1] https://lkml.kernel.org/r/20190305233150.159633-1-dianders@chromium.org
+> 
 
-  kvm: vmx: fix formatting of a comment (2019-03-15 19:24:34 +0100)
+But this part of the patch:
 
-A very late pull request due to some ugly factors that complicated this
-merge window: a late discovery of a race condition, that disappeared for
-me right after I started looking at it; a bunch of fixes for old bugs
-that came in right during the merge window---I initially wanted to
-sneak them in but ultimately chose to delay them to -rc2; and just life
-being busy.
+> -static void ftrace_dump_buf(int skip_lines, long cpu_file)
+> +static int ftrace_dump_buf(int skip_lines, long cpu_file, bool quiet)
+>  {
+>  	/* use static because iter can be a bit big for the stack */
+>  	static struct trace_iterator iter;
+> @@ -39,7 +39,9 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+>  	/* don't look at user memory in panic mode */
+>  	tr->trace_flags &= ~TRACE_ITER_SYM_USEROBJ;
+>  
+> -	kdb_printf("Dumping ftrace buffer:\n");
+> +	if (!quiet)
+> +		kdb_printf("Dumping ftrace buffer (skipping %d lines):\n",
+> +			   skip_lines);
+>  
+>  	/* reset all but tr, trace, and overruns */
+>  	memset(&iter.seq, 0,
+> @@ -66,25 +68,29 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+>  	}
+>  
+>  	while (trace_find_next_entry_inc(&iter)) {
+> -		if (!cnt)
+> -			kdb_printf("---------------------------------\n");
+> -		cnt++;
+> -
+> -		if (!skip_lines) {
+> -			print_trace_line(&iter);
+> -			trace_printk_seq(&iter.seq);
+> -		} else {
+> -			skip_lines--;
+> +		if (!quiet) {
+> +			if (!cnt)
+> +				kdb_printf("---------------------------------\n");
+> +
+> +			if (!skip_lines) {
+> +				print_trace_line(&iter);
+> +				trace_printk_seq(&iter.seq);
+> +			} else {
+> +				skip_lines--;
 
-You'll see a lot of reverts in the commit list, but most of them
-are really just dropping old code that we decided was a premature
-optimization.  However, the last revert on top is actually what fixes
-the above-mentioned race condition.
+How do you know that trace_printk_seq() didn't produce more than one line?
 
-For completeness, the following patches are *not* in linux-next:
+If the event is a stack dump, you need to read the seq, and count the
+number of '\n' that are added.
 
-      Revert "KVM/MMU: Flush tlb directly in the kvm_zap_gfn_range()"
-      kvm: vmx: fix formatting of a comment
-      MAINTAINERS: Add KVM selftests to existing KVM entry
-      KVM: doc: Document the life cycle of a VM and its resources
+The cnt in this code is no different than the get_total_entries() that
+I suggested.
 
-I know this isn't kosher, but it should be safe enough in this case.
+Now the really ugly solution is to have:
 
-On the good side, conflicts are few and very easily solved.  There is
-a slightly strange one in arch/x86/kvm/vmx/vmx.h (pi_set_sn) where this
-pull request should win.
+	print_trace_line(&iter);
 
-Thanks,
+	if (quiet || skip_lines) {
+		lines = count_all_newlines(&iter.seq);
+		if (skip_lines) {
+			skip_lines -= lines;
+			if (skip_lines < 0)
+				skip_lines = 0;
+		}
+		cnt += lines
+	} else (!quiet) {
+		trace_printk_seq(&iter.seq);
+	}
 
-Paolo
-----------------------------------------------------------------
-ARM: some cleanups, direct physical timer assignment, cache sanitization
-for 32-bit guests
+Where the count_all_newlines() needs to be created to read the seq
+buffer and return the number of '\n' that are found.
 
-s390: interrupt cleanup, introduction of the Guest Information Block,
-preparation for processor subfunctions in cpu models
+-- Steve
 
-PPC: bug fixes and improvements, especially related to machine checks
-and protection keys
 
-x86: many, many cleanups, including removing a bunch of MMU code for
-unnecessary optimizations; plus AVIC fixes.
 
-Generic: memcg accounting
-
-----------------------------------------------------------------
-
-Alexey Kardashevskiy (2):
-      KVM: PPC: Release all hardware TCE tables attached to a group
-      KVM: PPC: Book3S: Improve KVM reference counting
-
-Andre Przywara (2):
-      clocksource/arm_arch_timer: Store physical timer IRQ number for KVM on VHE
-      KVM: arm/arm64: consolidate arch timer trap handlers
-
-Ard Biesheuvel (2):
-      arm64: KVM: Expose sanitised cache type register to guest
-      arm64: KVM: Describe data or unified caches as having 1 set and 1 way
-
-Ben Gardon (5):
-      kvm: Add memcg accounting to KVM allocations
-      kvm: x86: Add memcg accounting to KVM allocations
-      kvm: svm: Add memcg accounting to KVM allocations
-      kvm: vmx: Add memcg accounting to KVM allocations
-      Revert "KVM/MMU: Flush tlb directly in the kvm_zap_gfn_range()"
-
-Christian Borntraeger (2):
-      KVM: s390: implement subfunction processor calls
-      KVM: s390: add debug logging for cpu model subfunctions
-
-Christoffer Dall (6):
-      KVM: arm/arm64: Factor out VMID into struct kvm_vmid
-      KVM: arm/arm64: Simplify bg_timer programming
-      KVM: arm/arm64: timer: Rework data structures for multiple timers
-      KVM: arm/arm64: arch_timer: Assign the phys timer on VHE systems
-      KVM: arm/arm64: Rework the timer code to use a timer_map
-      KVM: arm/arm64: Move kvm_is_write_fault to header file
-
-Colin Ian King (1):
-      KVM: arm/arm64: fix spelling mistake: "auxilary" -> "auxiliary"
-
-Dave Martin (1):
-      arm64: KVM: Fix architecturally invalid reset value for FPEXC32_EL2
-
-Gustavo A. R. Silva (1):
-      kvm: Use struct_size() in kmalloc()
-
-Jordan Niethe (1):
-      KVM: PPC: Book3S HV: Fix build failure without IOMMU support
-
-Kai Huang (1):
-      kvm, x86, mmu: Use kernel generic dynamic physical address mask
-
-Lan Tianyu (1):
-      Revert "KVM: Eliminate extra function calls in kvm_get_dirty_log_protect()"
-
-Leo Yan (1):
-      KVM: Minor cleanups for kvm_main.c
-
-Liu Jingqi (2):
-      KVM: x86: expose MOVDIRI CPU feature into VM.
-      KVM: x86: expose MOVDIR64B CPU feature into VM.
-
-Luwei Kang (1):
-      KVM: x86: Sync the pending Posted-Interrupts
-
-Marc Zyngier (9):
-      arm/arm64: KVM: Introduce kvm_call_hyp_ret()
-      arm64: KVM: Allow for direct call of HYP functions when using VHE
-      arm64: KVM: Drop VHE-specific HYP call stub
-      ARM: KVM: Teach some form of type-safety to kvm_call_hyp
-      arm/arm64: KVM: Statically configure the host's view of MPIDR
-      KVM: arm64: Fix ICH_ELRSR_EL2 sysreg naming
-      KVM: arm64: Reuse sys_reg() macro when searching the trap table
-      KVM: arm/arm64: arch_timer: Mark physical interrupt active when a virtual interrupt is pending
-      KVM: arm/arm64: Update MAINTAINERS entries
-
-Marcelo Tosatti (1):
-      x86: kvmguest: use TSC clocksource if invariant TSC is exposed
-
-Masahiro Yamada (4):
-      KVM: PPC: Remove -I. header search paths
-      KVM: arm/arm64: Fix TRACE_INCLUDE_PATH
-      KVM: arm/arm64: Remove -I. header search paths
-      KVM: arm/arm64: Prefix header search paths with $(srctree)/
-
-Michael Mueller (16):
-      KVM: s390: clarify kvm related kernel message
-      KVM: s390: drop obsolete else path
-      KVM: s390: make bitmap declaration consistent
-      KVM: s390: move bitmap idle_mask into arch struct top level
-      KVM: s390: coding style kvm_s390_gisa_init/clear()
-      KVM: s390: use pending_irqs_no_gisa() where appropriate
-      KVM: s390: remove kvm_s390_ from gisa static inline functions
-      KVM: s390: introduce struct kvm_s390_gisa_interrupt
-      s390/cio: add function chsc_sgib()
-      KVM: s390: add the GIB and its related life-cyle functions
-      KVM: s390: add kvm reference to struct sie_page2
-      KVM: s390: add functions to (un)register GISC with GISA
-      KVM: s390: kvm_s390_gisa_clear() now clears the IPM only
-      KVM: s390: add gib_alert_irq_handler()
-      KVM: s390: start using the GIB
-      KVM: s390: fix possible null pointer dereference in pending_irqs()
-
-Nir Weiner (3):
-      KVM: grow_halt_poll_ns() should never shrink vCPU halt_poll_ns
-      KVM: Expose the initial start value in grow_halt_poll_ns() as a module parameter
-      KVM: Never start grow vCPU halt_poll_ns from value below halt_poll_ns_grow_start
-
-Paolo Bonzini (10):
-      selftests: kvm: add selftest for releasing VM file descriptor while in L2
-      KVM: x86: cull apicv code when userspace irqchip is requested
-      KVM: nVMX: remove useless is_protmode check
-      KVM: x86: cleanup freeing of nested state
-      KVM: nVMX: do not start the preemption timer hrtimer unnecessarily
-      Merge tag 'kvm-ppc-next-5.1-1' of git://git.kernel.org/.../paulus/powerpc into kvm-next
-      Merge tag 'kvm-s390-next-5.1-1' of git://git.kernel.org/.../kvms390/linux into kvm-next
-      Merge tag 'kvmarm-for-v5.1' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-next
-      Merge tag 'kvm-ppc-next-5.1-3' of git://git.kernel.org/.../paulus/powerpc into HEAD
-      kvm: vmx: fix formatting of a comment
-
-Paul Mackerras (4):
-      KVM: PPC: Book3S PR: Add emulation for slbfee. instruction
-      KVM: PPC: Book3S: Allow XICS emulation to work in nested hosts using XIVE
-      Merge remote-tracking branch 'remotes/powerpc/topic/ppc-kvm' into kvm-ppc-next
-      KVM: PPC: Fix compilation when KVM is not enabled
-
-Pavel Tatashin (1):
-      x86/kvmclock: set offset for kvm unstable clock
-
-Sean Christopherson (65):
-      KVM: VMX: Compare only a single byte for VMCS' "launched" in vCPU-run
-      KVM: nVMX: Check a single byte for VMCS "launched" in nested early checks
-      KVM: VMX: Zero out *all* general purpose registers after VM-Exit
-      KVM: VMX: Modify only RSP when creating a placeholder for guest's RCX
-      KVM: VMX: Save RSI to an unused output in the vCPU-run asm blob
-      KVM: VMX: Manually load RDX in vCPU-run asm blob
-      KVM: VMX: Let the compiler save/load RDX during vCPU-run
-      KVM: nVMX: Remove a rogue "rax" clobber from nested_vmx_check_vmentry_hw()
-      KVM: nVMX: Drop STACK_FRAME_NON_STANDARD from nested_vmx_check_vmentry_hw()
-      KVM: nVMX: Explicitly reference the scratch reg in nested early checks
-      KVM: nVMX: Capture VM-Fail to a local var in nested_vmx_check_vmentry_hw()
-      KVM: nVMX: Capture VM-Fail via CC_{SET,OUT} in nested early checks
-      KVM: nVMX: Reference vmx->loaded_vmcs->launched directly
-      KVM: nVMX: Let the compiler select the reg for holding HOST_RSP
-      KVM: nVMX: Cache host_rsp on a per-VMCS basis
-      KVM: VMX: Load/save guest CR2 via C code in __vmx_vcpu_run()
-      KVM: VMX: Update VMCS.HOST_RSP via helper C function
-      KVM: VMX: Pass "launched" directly to the vCPU-run asm blob
-      KVM: VMX: Invert the ordering of saving guest/host scratch reg at VM-Enter
-      KVM: VMX: Don't save guest registers after VM-Fail
-      KVM: VMX: Use vcpu->arch.regs directly when saving/loading guest state
-      KVM: x86: Explicitly #define the VCPU_REGS_* indices
-      KVM: VMX: Use #defines in place of immediates in VM-Enter inline asm
-      KVM: VMX: Create a stack frame in vCPU-run
-      KVM: VMX: Move vCPU-run code to a proper assembly routine
-      KVM: VMX: Fold __vmx_vcpu_run() back into vmx_vcpu_run()
-      KVM: VMX: Rename ____vmx_vcpu_run() to __vmx_vcpu_run()
-      KVM: VMX: Use RAX as the scratch register during vCPU-run
-      KVM: VMX: Pass @launched to the vCPU-run asm via standard ABI regs
-      KVM: VMX: Return VM-Fail from vCPU-run assembly via standard ABI reg
-      KVM: VMX: Preserve callee-save registers in vCPU-run asm sub-routine
-      KVM: VMX: Call vCPU-run asm sub-routine from C and remove clobbering
-      KVM: VMX: Reorder clearing of registers in the vCPU-run assembly flow
-      KVM: nVMX: Sign extend displacements of VMX instr's mem operands
-      KVM: nVMX: Apply addr size mask to effective address for VMX instructions
-      KVM: nVMX: Ignore limit checks on VMX instructions using flat segments
-      KVM: Call kvm_arch_memslots_updated() before updating memslots
-      KVM: x86/mmu: Detect MMIO generation wrap in any address space
-      KVM: x86/mmu: Do not cache MMIO accesses while memslots are in flux
-      KVM: Explicitly define the "memslot update in-progress" bit
-      KVM: x86: Use a u64 when passing the MMIO gen around
-      KVM: x86: Refactor the MMIO SPTE generation handling
-      KVM: Remove the hack to trigger memslot generation wraparound
-      KVM: Move the memslot update in-progress flag to bit 63
-      KVM: x86/mmu: Move slot_level_*() helper functions up a few lines
-      KVM: x86/mmu: Split remote_flush+zap case out of kvm_mmu_flush_or_zap()
-      KVM: x86/mmu: Zap only the relevant pages when removing a memslot
-      Revert "KVM: MMU: document fast invalidate all pages"
-      Revert "KVM: MMU: drop kvm_mmu_zap_mmio_sptes"
-      KVM: x86/mmu: Voluntarily reschedule as needed when zapping MMIO sptes
-      KVM: x86/mmu: Remove is_obsolete() call
-      Revert "KVM: MMU: reclaim the zapped-obsolete page first"
-      Revert "KVM: MMU: collapse TLB flushes when zap all pages"
-      Revert "KVM: MMU: zap pages in batch"
-      Revert "KVM: MMU: add tracepoint for kvm_mmu_invalidate_all_pages"
-      Revert "KVM: MMU: show mmu_valid_gen in shadow page related tracepoints"
-      Revert "KVM: x86: use the fast way to invalidate all pages"
-      KVM: x86/mmu: skip over invalid root pages when zapping all sptes
-      KVM: x86/mmu: Voluntarily reschedule as needed when zapping all sptes
-      Revert "KVM: MMU: fast invalidate all pages"
-      KVM: x86/mmu: Differentiate between nr zapped and list unstable
-      KVM: x86/mmu: WARN if zapping a MMIO spte results in zapping children
-      KVM: x86/mmu: Consolidate kvm_mmu_zap_all() and kvm_mmu_zap_mmio_sptes()
-      MAINTAINERS: Add KVM selftests to existing KVM entry
-      KVM: doc: Document the life cycle of a VM and its resources
-
-Shaokun Zhang (2):
-      KVM: arm/arm64: Remove unused gpa_end variable
-      KVM: arm/arm64: Remove unused timer variable
-
-Suraj Jitindar Singh (3):
-      KVM: PPC: Book3S HV: Optimise mmio emulation for devices on FAST_MMIO_BUS
-      KVM: PPC: Book3S HV: Add KVM stat largepages_[2M/1G]
-      KVM: PPC: Book3S: Add count cache flush parameters to kvmppc_get_cpu_char()
-
-Suthikulpanit, Suravee (2):
-      svm: Fix AVIC DFR and LDR handling
-      svm: Fix improper check when deactivate AVIC
-
-Yu Zhang (1):
-      kvm: vmx: Fix typos in vmentry/vmexit control setting
-
-Zenghui Yu (1):
-      KVM: arm64: Fix comment for KVM_PHYS_SHIFT
-
-wangbo (1):
-      KVM: PPC: Book3S HV: Replace kmalloc_node+memset with kzalloc_node
-
- Documentation/virtual/kvm/api.txt                  |  17 +
- Documentation/virtual/kvm/halt-polling.txt         |  37 +-
- Documentation/virtual/kvm/mmu.txt                  |  41 +-
- MAINTAINERS                                        |  19 +-
- arch/arm/include/asm/arch_gicv3.h                  |   4 +-
- arch/arm/include/asm/kvm_emulate.h                 |   8 +
- arch/arm/include/asm/kvm_host.h                    |  53 +-
- arch/arm/include/asm/kvm_hyp.h                     |   4 +
- arch/arm/include/asm/kvm_mmu.h                     |   9 +-
- arch/arm/kvm/Makefile                              |   5 +-
- arch/arm/kvm/coproc.c                              |  23 +-
- arch/arm/kvm/hyp/cp15-sr.c                         |   1 -
- arch/arm/kvm/hyp/hyp-entry.S                       |   2 +-
- arch/arm/kvm/hyp/switch.c                          |   2 +-
- arch/arm/kvm/hyp/tlb.c                             |   4 +-
- arch/arm/kvm/interrupts.S                          |   4 +-
- arch/arm64/include/asm/kvm_emulate.h               |  12 +
- arch/arm64/include/asm/kvm_host.h                  |  48 +-
- arch/arm64/include/asm/kvm_hyp.h                   |   3 +-
- arch/arm64/include/asm/kvm_mmu.h                   |  13 +-
- arch/arm64/include/asm/sysreg.h                    |   7 +-
- arch/arm64/kvm/Makefile                            |   4 +-
- arch/arm64/kvm/debug.c                             |   2 +-
- arch/arm64/kvm/hyp.S                               |   3 -
- arch/arm64/kvm/hyp/hyp-entry.S                     |  12 -
- arch/arm64/kvm/hyp/sysreg-sr.c                     |   1 -
- arch/arm64/kvm/sys_regs.c                          | 168 ++++--
- arch/mips/include/asm/kvm_host.h                   |   2 +-
- arch/powerpc/include/asm/kvm_host.h                |   5 +-
- arch/powerpc/include/asm/kvm_ppc.h                 |  14 +
- arch/powerpc/include/uapi/asm/kvm.h                |   2 +
- arch/powerpc/kvm/book3s.c                          |  13 +-
- arch/powerpc/kvm/book3s_32_mmu.c                   |   1 +
- arch/powerpc/kvm/book3s_64_mmu.c                   |  14 +
- arch/powerpc/kvm/book3s_64_mmu_hv.c                |  18 +
- arch/powerpc/kvm/book3s_64_mmu_radix.c             |  15 +-
- arch/powerpc/kvm/book3s_64_vio.c                   |   8 +-
- arch/powerpc/kvm/book3s_emulate.c                  |  18 +
- arch/powerpc/kvm/book3s_hv.c                       |  33 +-
- arch/powerpc/kvm/book3s_hv_builtin.c               |  14 +-
- arch/powerpc/kvm/book3s_hv_rm_xics.c               |   7 +
- arch/powerpc/kvm/book3s_hv_rmhandlers.S            |  10 +
- arch/powerpc/kvm/book3s_rtas.c                     |   8 +-
- arch/powerpc/kvm/powerpc.c                         |  22 +-
- arch/s390/include/asm/cio.h                        |   1 +
- arch/s390/include/asm/irq.h                        |   1 +
- arch/s390/include/asm/isc.h                        |   1 +
- arch/s390/include/asm/kvm_host.h                   |  39 +-
- arch/s390/kernel/irq.c                             |   1 +
- arch/s390/kvm/interrupt.c                          | 431 +++++++++++++--
- arch/s390/kvm/kvm-s390.c                           | 190 ++++++-
- arch/s390/kvm/kvm-s390.h                           |   4 +-
- arch/x86/include/asm/kvm_host.h                    |  42 +-
- arch/x86/include/asm/kvm_vcpu_regs.h               |  25 +
- arch/x86/kernel/kvmclock.c                         |  20 +-
- arch/x86/kvm/cpuid.c                               |   2 +-
- arch/x86/kvm/hyperv.c                              |   2 +-
- arch/x86/kvm/i8254.c                               |   2 +-
- arch/x86/kvm/i8259.c                               |   2 +-
- arch/x86/kvm/ioapic.c                              |   2 +-
- arch/x86/kvm/lapic.c                               |   7 +-
- arch/x86/kvm/mmu.c                                 | 466 ++++++++--------
- arch/x86/kvm/mmu.h                                 |   1 -
- arch/x86/kvm/mmutrace.h                            |  42 +-
- arch/x86/kvm/page_track.c                          |   2 +-
- arch/x86/kvm/svm.c                                 | 120 ++--
- arch/x86/kvm/vmx/nested.c                          | 129 +++--
- arch/x86/kvm/vmx/vmcs.h                            |   1 +
- arch/x86/kvm/vmx/vmenter.S                         | 167 ++++++
- arch/x86/kvm/vmx/vmx.c                             | 188 ++-----
- arch/x86/kvm/vmx/vmx.h                             |  20 +-
- arch/x86/kvm/x86.c                                 |  32 +-
- arch/x86/kvm/x86.h                                 |   7 +-
- drivers/clocksource/arm_arch_timer.c               |  11 +-
- drivers/s390/cio/chsc.c                            |  37 ++
- drivers/s390/cio/chsc.h                            |   1 +
- include/clocksource/arm_arch_timer.h               |   1 +
- include/kvm/arm_arch_timer.h                       |  68 ++-
- include/linux/kvm_host.h                           |  24 +-
- tools/testing/selftests/kvm/.gitignore             |   1 +
- tools/testing/selftests/kvm/Makefile               |   1 +
- .../kvm/x86_64/vmx_close_while_nested_test.c       |  95 ++++
- virt/kvm/arm/arch_timer.c                          | 608 +++++++++++++++------
- virt/kvm/arm/arm.c                                 |  64 +--
- virt/kvm/arm/hyp/vgic-v3-sr.c                      |   2 +-
- virt/kvm/arm/mmu.c                                 |  20 +-
- virt/kvm/arm/trace.h                               | 107 +++-
- virt/kvm/arm/vgic/vgic-v3.c                        |   4 +-
- virt/kvm/coalesced_mmio.c                          |   3 +-
- virt/kvm/eventfd.c                                 |   7 +-
- virt/kvm/irqchip.c                                 |   4 +-
- virt/kvm/kvm_main.c                                | 103 ++--
- virt/kvm/vfio.c                                    |   4 +-
- 93 files changed, 2623 insertions(+), 1199 deletions(-)
+> +			}
+>  		}
+> +		cnt++;
+>  
+>  		if (KDB_FLAG(CMD_INTERRUPT))
+>  			goto out;
+>  	}
+>  
+> -	if (!cnt)
+> -		kdb_printf("   (ftrace buffer empty)\n");
+> -	else
+> -		kdb_printf("---------------------------------\n");
+> +	if (!quiet) {
+> +		if (!cnt)
+> +			kdb_printf("   (ftrace buffer empty)\n");
+> +		else
+> +			kdb_printf("---------------------------------\n");
+> +	}
