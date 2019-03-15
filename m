@@ -2,198 +2,129 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B928CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798D7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880E2218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41731218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:10:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="2FZ+20hv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfCOICM (ORCPT
+        id S1728522AbfCOIKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 04:02:12 -0400
-Received: from lgeamrelo13.lge.com ([156.147.23.53]:38949 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728428AbfCOICL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 04:02:11 -0400
-Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
-        by 156.147.23.53 with ESMTP; 15 Mar 2019 16:32:07 +0900
-X-Original-SENDERIP: 156.147.1.126
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.126 with ESMTP; 15 Mar 2019 16:32:07 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Fri, 15 Mar 2019 16:31:38 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        rostedt@goodmis.org, luto@kernel.org, kernel-team@lge.com
-Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
- half-interrupts
-Message-ID: <20190315073138.GB15148@X58A-UD3R>
-References: <20180829222021.GA29944@linux.vnet.ibm.com>
- <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
- <20190311133939.GA29747@google.com>
+        Fri, 15 Mar 2019 04:10:03 -0400
+Received: from mx.kolabnow.com ([95.128.36.41]:3976 "EHLO mx.kolabnow.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728442AbfCOIKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 04:10:02 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTP id 807F57D2;
+        Fri, 15 Mar 2019 09:10:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:message-id:date:date:subject:subject
+        :from:from:received:received:received; s=dkim20160331; t=
+        1552637399; x=1554451800; bh=MntVy7pDmmN4mo2J9IgWxKR1N0n7ac7YMNm
+        oTHwfaQ0=; b=2FZ+20hvPiFEDjY8QBtD3O7CjVwLVmhuudgcPCuPGDWD8DSk/SS
+        ZkvVZJmBRouBTI39KTXtTPFXVEmuUuWf2uCeuuDOoTm10xsPKwx8ZR85druczHIH
+        m/LHlyIiq5o3MCs2+skNKIhs/rWLhseAxsMmr4o2hxgQfIzXIYTNAqiuef3wM4xu
+        cWRjxH+lXuCsMOWlFBxyF2rDRcUyi0GCXP5WeaIbtLMIE7FIpc6GtEt3K3rOWr0+
+        TgO7Vx82xNtydYZoPISVySSnZlonTXOv9GRMXW6KlgSJnipzOzq9VrndUAiuR/m9
+        BQtEGDmBExA7vP/zBn5177ii63cYAFitHosKmtWFHixV01JRTh6G34P/WpW7s0K6
+        HTPKO5RZnDb1q8rePH6JCbJgnYiKifoVnMQ8jLM1FoW3+ic7CRBQaZk3n9fdx7Cz
+        7NuarHtl81IAeFhI6E/VtOMN1NQAi+Gtl2rKk4mhNWfylpezau4dz/7SCgT/tfly
+        gWH11TwUNXdbJsLUgoG4Sjgj4Fz6Z8LfUKvJLMrIxSlDD7w4V646GZJ45d05hbmN
+        5d/vUiROjhVu/zjYyimeuaTx7WOo4E+lzAJ5cEOI/Hyh6zxNHTa0MmKbDIkAqJ4U
+        WN5uHBN2a8Bm3j6FiUQaY8+bn2fB9gaelbfFPbZMjqZ9N67I6assufiU=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out002.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 06FyneHdVF_p; Fri, 15 Mar 2019 09:09:59 +0100 (CET)
+Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTPS id 56E69625;
+        Fri, 15 Mar 2019 09:09:59 +0100 (CET)
+Received: from ext-subm001.mykolab.com (unknown [10.9.6.1])
+        by int-mx001.mykolab.com (Postfix) with ESMTPS id 33EA5216;
+        Fri, 15 Mar 2019 09:09:59 +0100 (CET)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc: add translation disclaimer
+Date:   Fri, 15 Mar 2019 09:09:58 +0100
+Message-ID: <1919274.WkmdDqLOpc@pcbe13614>
+In-Reply-To: <15f416d6-79a5-604b-109b-b4f788933cda@linux.alibaba.com>
+References: <20190314204516.10890-1-federico.vaga@vaga.pv.it> <15f416d6-79a5-604b-109b-b4f788933cda@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311133939.GA29747@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 09:39:39AM -0400, Joel Fernandes wrote:
-> On Wed, Aug 29, 2018 at 03:20:34PM -0700, Paul E. McKenney wrote:
-> > RCU's dyntick-idle code is written to tolerate half-interrupts, that it,
-> > either an interrupt that invokes rcu_irq_enter() but never invokes the
-> > corresponding rcu_irq_exit() on the one hand, or an interrupt that never
-> > invokes rcu_irq_enter() but does invoke the "corresponding" rcu_irq_exit()
-> > on the other.  These things really did happen at one time, as evidenced
-> > by this ca-2011 LKML post:
-> > 
-> > http://lkml.kernel.org/r/20111014170019.GE2428@linux.vnet.ibm.com
-> > 
-> > The reason why RCU tolerates half-interrupts is that usermode helpers
-> > used exceptions to invoke a system call from within the kernel such that
-> > the system call did a normal return (not a return from exception) to
-> > the calling context.  This caused rcu_irq_enter() to be invoked without
-> > a matching rcu_irq_exit().  However, usermode helpers have since been
-> > rewritten to make much more housebroken use of workqueues, kernel threads,
-> > and do_execve(), and therefore should no longer produce half-interrupts.
-> > No one knows of any other source of half-interrupts, but then again,
-> > no one seems insane enough to go audit the entire kernel to verify that
-> > half-interrupts really are a relic of the past.
-> > 
-> > This commit therefore adds a pair of WARN_ON_ONCE() calls that will
-> > trigger in the presence of half interrupts, which the code will continue
-> > to handle correctly.  If neither of these WARN_ON_ONCE() trigger by
-> > mid-2021, then perhaps RCU can stop handling half-interrupts, which
-> > would be a considerable simplification.
-> 
-> Hi Paul and everyone,
-> I was thinking some more about this patch and whether we can simplify this code
-> much in 2021. Since 2021 is a bit far away, I thought working on it in again to
-> keep it fresh in memory is a good idea ;-)
-> 
-> To me it seems we cannot easily combine the counters (dynticks_nesting and
-> dynticks_nmi_nesting) even if we confirmed that there is no possibility of a
-> half-interrupt scenario (assuming simplication means counter combining like
-> Byungchul tried to do in https://goo.gl/X1U77X). The reason is because these
-> 2 counters need to be tracked separately as they are used differently in the
-> following function:
-
-Hi Joel and Paul,
-
-I always love the way to logically approach problems so I'm a fan of
-all your works :) But I'm JUST curious about something here. Why can't
-we combine them the way I tried even if we confirm no possibility of
-half-interrupt? IMHO, the only thing we want to know through calling
-rcu_is_cpu_rrupt_from_idle() is whether the interrupt comes from
-RCU-idle or not - of course assuming the caller context always be an
-well-defined interrupt context like e.g. the tick handler.
-
-So the function can return true if the caller is within a RCU-idle
-region except a well-known single interrupt nested.
-
-Of course, now that we cannot confirm it yet, the crowbar is necessary.
-But does it still have a problem even after confirming it? Why? What am
-I missing? Could you explain why for me? :(
-
-Thanks,
-Byungchul
-
-> static int rcu_is_cpu_rrupt_from_idle(void)
-> {
->         return __this_cpu_read(rcu_data.dynticks_nesting) <= 0 &&
->                __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
-> }
-> 
-> dynticks_nesting actually tracks if we entered/exited idle or user mode.
-> 
-> dynticks_nmi_nesting tracks if we entered/exited interrupts.
-> 
-> We have to do the "dynticks_nmi_nesting <= 1" check because
-> rcu_is_cpu_rrupt_from_idle() can possibly be called from an interrupt itself
-> (like timer) so we discount 1 interrupt, and, the "dynticks_nesting <= 0"
-> check is because the CPU MUST be in user or idle for the check to return
-> true. We can't really combine these two into one counter then I think because
-> they both convey different messages.
-> 
-> The only simplication we can do, is probably the "crowbar" updates to
-> dynticks_nmi_nesting can be removed from rcu_eqs_enter/exit once we confirm
-> no more half-interrupts are possible. Which might still be a worthwhile thing
-> to do (while still keeping both counters separate).
-> 
-> However, I think we could combine the counters and lead to simplying the code
-> in case we implement rcu_is_cpu_rrupt_from_idle differently such that it does
-> not need the counters but NOHZ_FULL may take issue with that since it needs
-> rcu_user_enter->rcu_eqs_enter to convey that the CPU is "RCU"-idle.
-> 
-> Actually, I had another question... rcu_user_enter() is a NOOP in !NOHZ_FULL config.
-> In this case I was wondering if the the warning Paul added (in the patch I'm replying to)
-> will really get fired for half-interrupts. The vast majority of the systems I believe are
-> NOHZ_IDLE not NOHZ_FULL.
-> This is what a half-interrupt really looks like right? Please correct me if I'm wrong:
-> rcu_irq_enter()   [half interrupt causes an exception and thus rcu_irq_enter]
-> rcu_user_enter()  [due to usermode upcall]
-> rcu_user_exit()
-> (no more rcu_irq_exit() - hence half an interrupt)
-> 
-> But the rcu_user_enter()/exit is a NOOP in some configs, so will the warning in
-> rcu_eqs_e{xit,nter} really do anything?
-> 
-> Or was the idea with adding the new warnings, that they would fire the next
-> time rcu_idle_enter/exit is called? Like for example:
-> 
-> rcu_irq_enter()   [This is due to half-interrupt]
-> rcu_idle_enter()  [Eventually we enter the idle loop at some point
-> 		   after the half-interrupt and the rcu_eqs_enter()
-> 		   would "crowbar" the dynticks_nmi_nesting counter to 0].
-> 
-> thanks!
-> 
->  - Joel
-> 
-> > 
-> > Reported-by: Steven Rostedt <rostedt@goodmis.org>
-> > Reported-by: Joel Fernandes <joel@joelfernandes.org>
-> > Reported-by: Andy Lutomirski <luto@kernel.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Friday, March 15, 2019 6:49:55 AM CET Alex Shi wrote:
+> On 2019/3/15 4:45 =E4=B8=8A=E5=8D=88, Federico Vaga wrote:
+> > Add the translation disclaimer in English as reference
+> > for other languages.  Translations must include this disclaimer
+> > in their language so that readers are properly informed.
+> >=20
+> > This very same patch updates the Italian translation accordingly.
+> >=20
+> > Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
 > > ---
-> >  kernel/rcu/tree.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index dc041c2afbcc..d2b6ade692c9 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -714,6 +714,7 @@ static void rcu_eqs_enter(bool user)
-> >  	struct rcu_dynticks *rdtp;
-> >  
-> >  	rdtp = this_cpu_ptr(&rcu_dynticks);
-> > +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting != DYNTICK_IRQ_NONIDLE);
-> >  	WRITE_ONCE(rdtp->dynticks_nmi_nesting, 0);
-> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
-> >  		     rdtp->dynticks_nesting == 0);
-> > @@ -895,6 +896,7 @@ static void rcu_eqs_exit(bool user)
-> >  	trace_rcu_dyntick(TPS("End"), rdtp->dynticks_nesting, 1, rdtp->dynticks);
-> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
-> >  	WRITE_ONCE(rdtp->dynticks_nesting, 1);
-> > +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting);
-> >  	WRITE_ONCE(rdtp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
-> >  }
-> >  
-> > -- 
-> > 2.17.1
-> > 
+> >=20
+> >  Documentation/translations/index.rst          | 42 ++++++++++++++
+> >  .../translations/it_IT/disclaimer-ita.rst     | 13 +----
+> >  Documentation/translations/it_IT/index.rst    | 57 +++++++++++++------
+> >  3 files changed, 85 insertions(+), 27 deletions(-)
+> >=20
+> > diff --git a/Documentation/translations/index.rst
+> > b/Documentation/translations/index.rst index 7f77c52d33aa..d7a38fd28b50
+> > 100644
+> > --- a/Documentation/translations/index.rst
+> > +++ b/Documentation/translations/index.rst
+>=20
+> This part looks good for me. I don't understand Italian. :)
+
+The idea is that you (or someone who knows Chinese) translate that disclaim=
+er=20
+from English to Chinese and put it in the Chinese index.rst page (like I di=
+d=20
+for the Italian one).
+
+Let me write here the translation to English for the disclaimer-ita.rst fil=
+e=20
+that I'm including in all documents:
+
+=2D------
++   In caso di dubbi sulla correttezza del contenuto di questa traduzione,
++   l'unico riferimento valido =C3=A8 la documentazione ufficiale in ingles=
+e.
++   Per maggiori informazioni consultate le :ref:`avvertenze <it_disclaimer=
+>`.
+
+If you have any doubt about the content of this translation, the only valid=
+=20
+reference is the English official documentation. For more information pleas=
+e=20
+read :ref:`disclaimer <it_disclaimer>`
+=2D------
+
+The idea is the have a quick warning that points you to the full disclaimer.
+
+
+>=20
+> Cheers
+> Alex
+
+
+=2D-=20
+=46ederico Vaga
+http://www.federicovaga.it/
+
+
