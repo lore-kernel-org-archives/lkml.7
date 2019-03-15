@@ -2,141 +2,125 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DDDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C41C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3DB218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4EB7218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:13:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c6935lM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfCOUMG (ORCPT
+        id S1726649AbfCOUNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 16:12:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfCOUMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 16:12:06 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA10B218A1;
-        Fri, 15 Mar 2019 20:12:04 +0000 (UTC)
-Date:   Fri, 15 Mar 2019 16:12:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Brian Norris <briannorris@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] tracing: kdb: Allow ftdump to skip all but the last
- few lines
-Message-ID: <20190315161203.25dc2a0c@gandalf.local.home>
-In-Reply-To: <CAD=FV=WUnmMxKZrH-Jfz-VocieOu-Cfsi1aLpB8G5FnLM+_W_w@mail.gmail.com>
-References: <20190315174528.16531-1-dianders@chromium.org>
-        <20190315144130.1aa36931@gandalf.local.home>
-        <CAD=FV=WUnmMxKZrH-Jfz-VocieOu-Cfsi1aLpB8G5FnLM+_W_w@mail.gmail.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 15 Mar 2019 16:13:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51291 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfCOUNZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 16:13:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n19so7704113wmi.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 13:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UFMdBRsGAu44JgGIkSUfbrU9EwKu+fv2CxmBbUPq/5k=;
+        b=c6935lM6XELJ+DVpw2Q5TZoexKSNVTnmA58DWVT40XM55BgdkKxexjMuw6xgbGC5jY
+         OsdFpuJAZMgojhoH8/teTFX7BDmL6z9WmQJAhIJmU63UzdBoLeou+NAnLsBYezeoOQhk
+         A6M68yE+pUo3oE9uaZ66d/MSwyhfa7qV2/JJ+NZtr4rJnuzWEP3faGJeIVnhx6BWeKWH
+         lAQMKqNAula9/t6TdRlW837AqbcusZ4apMc7HdyE3YeckhtConR5EBBvKlvLoN9h5GS3
+         ss3j+xedrdwo+318q52MSPxjOGh+xvGe9mf8VsU5dq+WB3fxJ+kCJNqE0dbN3qdbnYKf
+         1YFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UFMdBRsGAu44JgGIkSUfbrU9EwKu+fv2CxmBbUPq/5k=;
+        b=XqYPJLixbbZB0JHFumq5QIrLxwJk1bszkotCbtxupWVXx/yV325juUaG5GX6m7uh8i
+         f7qcVUQvcTY06V4d3rF03XRkF74Q+1BpdRT2inN71b8+m+Ic3+5RY3V3sn1oB9BmCvyE
+         Ql6VOc3CZWIV3609YfXAvWTeH/P8iGFKT/4dS2cCp0OvyDqQui5f5GBOQhHvoFqBY/US
+         HWBhr+xAQfknYrrDBtBO3S/aCm+rF1RJEm9xtEsklvWVJNRdkDkduVs26bPFSvQi3Qts
+         rHxvsLbhQZMFEEJ1U9gbO9WGCsFHarQnIocGwnV98zS1dkM7/1Qjd0VQchsbnOaaiOW3
+         iXwA==
+X-Gm-Message-State: APjAAAWGvzfiGpOFnpwP05JbCC6EaOzkkjGQe6Q+SEyobcnoNwqvKwfM
+        5alo1lW5hk5WBRBgETnFeInoKj33NuSOBbgk9ad3YA==
+X-Google-Smtp-Source: APXvYqxPoLg8H/w9V6sXkdXrPdPwoiA0ZVu7A3rzwdDMrlqLSfStQQBq0u73fFKG8WEr5HL7os26xomhjJQW2RBatBs=
+X-Received: by 2002:a1c:c90e:: with SMTP id f14mr3112656wmb.23.1552680803684;
+ Fri, 15 Mar 2019 13:13:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
+ <1551819273-640-6-git-send-email-john.stultz@linaro.org> <CA+M3ks6AUmmYbXscjTRo+Vr-6cV8okafsDn2Tg3tskvzrV_dbA@mail.gmail.com>
+ <CALAqxLWxpExDpiKbNGQ6Oz5h=FUPNLvehm34JdrntLQjFed41w@mail.gmail.com> <232410de-f20c-cde8-fdbb-48ca8ec1223b@redhat.com>
+In-Reply-To: <232410de-f20c-cde8-fdbb-48ca8ec1223b@redhat.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 15 Mar 2019 13:13:08 -0700
+Message-ID: <CALAqxLUjSZHBXsT0c-KTra4zLFxCYDmYHTJswk5OckrUbd=ykg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 5/5 v2] kselftests: Add dma-heap test
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Mar 2019 12:55:31 -0700
-Doug Anderson <dianders@chromium.org> wrote:
-
+On Fri, Mar 15, 2019 at 1:07 PM Laura Abbott <labbott@redhat.com> wrote:
+>
+> On 3/6/19 9:01 AM, John Stultz wrote:
+> > On Wed, Mar 6, 2019 at 8:14 AM Benjamin Gaignard
+> > <benjamin.gaignard@linaro.org> wrote:
+> >> Le mar. 5 mars 2019 =C3=A0 21:54, John Stultz <john.stultz@linaro.org>=
+ a =C3=A9crit :
+> >>> +
+> >>> +       printf("Allocating 1 MEG\n");
+> >>> +       ret =3D dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
+> >>> +       if (ret)
+> >>> +               goto out;
+> >>> +
+> >>> +       /* DO SOMETHING WITH THE DMABUF HERE? */
+> >>
+> >> You can do a call to mmap and write a pattern in the buffer.
 > >
-> > Actually, you can add a function in trace.c that exposes
-> > get_total_entries:
+> > Yea. I can also do some invalid allocations to make sure things fail pr=
+operly.
 > >
-> > unsigned long trace_total_entries(struct trace_array *tr)
-> > {
-> >         unsigned long total, entries;
+> > But I was talking a bit w/ Sumit about the lack of any general dmabuf
+> > tests, and am curious if we need to have a importer device driver that
+> > can validate its a real dmabuf and exercise more of the dmabuf ops.
 > >
-> >         if (!tr)
-> >                 tr = &global_trace;
+> > thanks
+> > -john
 > >
-> >         get_total_entries(tr->trace_buffer, &total, &entries);
-> >
-> >         return entries;
-> > }
-> >
-> > and then do:
-> >                 cnt = trace_total_entries(NULL);  
-> 
-> OK.  I guess I'll need to figure out how to add an argument to limit
-> it to just one CPU too since the kdb command allows you to specify a
-> single CPU or all CPUs.  I think the best way would mean adding an
-> argument to get_total_entries().  ...or I can just change the kdb
-> command to not allow specifying a CPU?  Which do you prefer?  I
-> personally haven't ever used the feature to just print the ftrace
-> buffer for a certain CPU so I'd be OK removing it.
+>
+> There's the vgem driver in drm. I did some work to clean that
+> up so it could take an import af33a9190d02 ("drm/vgem: Enable dmabuf impo=
+rt
+> interfaces") . I mostly used it for private tests and never ended
+> up upstreaming any of the tests.
 
-I would make a get_total_entries_cpu() that contains the guts of
-get_total_entries() which then calls get_total_entries_cpu()
+Thanks for the poitner, I'll check that out as well!  Also, if you
+still have them around, I'd be interested in checking out the tests to
+try to get something integrated into kselftest.
 
-static void
-get_total_entries(struct trace_buffer *buf,
-		  unsigned long *total, unsigned long *entries)
-{
-	unsigned long t, e;
-	int cpu;
+Talking with Brian yesterday, there was some thought that we should
+try to put together some sort of example dmabuf pipeline that isn't
+hardware dependent and can be used to demonstrate the usage model as
+well as validate the frameworks and maybe even benchmark some of the
+ideas floating around right now.  So suggestions here would be
+welcome!
 
-	*total = 0;
-	*entries = 0;
-
-	for_each_tracing_cpu(cpu)
-		get_total_entries_cpu(buf, &t, &e, cpu);
-		*total += t;
-		*entries += e;
-	}
-}
-	
-> 
-> 
-> > Don't modify ftrace_dump_buf()  
-> 
-> I still kinda prefer modifying ftrace_dump_buf() just because it's
-> pretty important that the "count" we come up with match pretty exactly
-> the count that ftrace_dump_buf() will come up with.  My worry probably
-> comes from my lack of experience with the internals of ftrace but, for
-> instance, I see things like "tr->trace_flags &=
-> ~TRACE_ITER_SYM_USEROBJ" in ftrace_dump_buf() and I worry that it will
-> affect the count.  ...but if you tell me that I need not worry about
-> things like that then I won't.  :-)
-
-Hmm, actually your method still wont work, because you are only
-counting entries not lines. The stack dumps are considered a single
-line but will print multiple lines.
-
-Not only that, perhaps you should break apart ftrace_dump_buf(),
-because calling it twice (or doing what I suggested), wont stop tracing
-in between, and the size of the buffer might change between the two
-calls.
-
-You need to move out:
-
-	for_each_tracing_cpu(cpu) {
-		atomic_inc(&per_cpu_ptr(iter.trace_buffer->data, cpu)->disabled);
-	}
-
-
-and
-
-	for_each_tracing_cpu(cpu) {
-		atomic_dec(&per_cpu_ptr(iter.trace_buffer->data, cpu)->disabled);
-	}
-
-to disable tracing while you do this.
-
-The get_total_entries() is the faster approach to get the count, but in
-either case, the count should end up the same.
-
--- Steve
+thanks
+-john
