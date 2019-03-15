@@ -2,101 +2,111 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92016C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69213C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C058218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3738C218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VvLDJeUP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FE36kIKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfCOQHB (ORCPT
+        id S1729474AbfCOQH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:07:01 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37426 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729398AbfCOQHA (ORCPT
+        Fri, 15 Mar 2019 12:07:28 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55126 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729395AbfCOQH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:07:00 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y15so10159573wro.4
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 09:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZZuhlq6MQnsqxQA6cT5CILW35WErS0GJwl1jyOW5oTU=;
-        b=VvLDJeUPjEWcehsDKfhyGcNtduiLdxzn261rjS8+qGjwpCgYv4zTxYVbgcIjrdoTL+
-         RLIbnuhbq/Tgx9OXW3iW8hAJOiCTvArD//cw5hIwWyGGCxkwbYP8AKwsJ36HdnG9NAvt
-         XtlIELyllqTnywIXlY6CZKjc+VE+xzwEJoR7fHDNNny8znWBjPFUruhjy+Fho6LrZYJ6
-         dndLQyZUgtgRf6WB8+eJVcVb9j0d9Y/ZsLibpxywiAko2k9ZO5y1m6A4PcEBYsLxDPBh
-         Fy6xBDFms2Q/zxnd2oJLcrVL5LWxaxWsS8rJie/mHy6hMGvBD7CfTvyWyTm2Fj/fqEeH
-         q7oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZZuhlq6MQnsqxQA6cT5CILW35WErS0GJwl1jyOW5oTU=;
-        b=UraifpMG4I4n81orlA62JuRJ7ryO4FV88DS30MiAjPE2Br1yN9rSha+tJSxRQlbRBY
-         2+Hbvjz/paEsTeEUpU+tXwRQzV4QASQQjyjwIwTyPtVfIaqMBACljdVptpd5cINBmwNc
-         vIfu+DgSMQpThTbTgsCkdjBMhGMuJdyq9VikDL7k2bv/m3mh+3OzpedNfrzCqqSRl5IJ
-         eyZKACLhd5nMVMv0dP1uykLl45BWcB0x7U+g25IUSWNSp4n8hI8tD0HiDDxrKp4wbXRC
-         sJ4WFK7Ew6UJYv7FwI7ouANOfgZcQB9JfE9ei7dgUGhZ/BoNlQ6XPxeHx4Opsz8Pbqb3
-         d4xw==
-X-Gm-Message-State: APjAAAUF8iHDKGId6CvpG9kZtWecmvfZk3iI97ogXDGJC2XfEBCh4Fda
-        S2RSE6+aSa5MiyD4h02N4AHGPVQ=
-X-Google-Smtp-Source: APXvYqwUbZ4FT6l14PSyeFURK25aWZ13Kxh70yixU5KTegCUqKcRkjjcee2jXILOrdFZklPTdENPYw==
-X-Received: by 2002:a5d:4588:: with SMTP id p8mr2252839wrq.266.1552666019203;
-        Fri, 15 Mar 2019 09:06:59 -0700 (PDT)
-Received: from avx2 ([46.53.240.56])
-        by smtp.gmail.com with ESMTPSA id z12sm2387906wrt.10.2019.03.15.09.06.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 09:06:58 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 19:06:56 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] elf: print userspace address with %lx
-Message-ID: <20190315160656.GB2135@avx2>
-References: <20190314204548.GB18143@avx2>
- <20190315065327.GA15672@dhcp22.suse.cz>
+        Fri, 15 Mar 2019 12:07:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2FG6A8O193757;
+        Fri, 15 Mar 2019 16:07:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=2FkcjCV52mdsp3KbWo1Wl7u7jfnZU9k6UUaKBtDC67s=;
+ b=FE36kIKLlnQufTuYr3dHxxBQFk7PXi7KbyHbh8MhT5Jm68B8DQ7iVIa6pJNyVffzlwgy
+ 6OI8CszC8dxS7Pi45CLTE8jYymt8LiCLfWJnRFpYF+DnRAJH4takF2ug29q2zFYgW4Zi
+ pKwxkU5cKGjGXnEZa03fJBpfcArhnEM6Ecp3v/AEEmkUbZVJbnjA40ljqDRN1FSgHuhz
+ x42WU2r0yNmFKNy+aNWpVVeLjI/8UU7hviJuKF7lebhKEQzpGm2+ydTEmJS5maqmBJY7
+ sYdym8t0Er87zrHoyMaD0uYFqRQZIXnh6C7f528/V44RLBbSA0rvTfMAXqtp/48vvNMN xw== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2r464ryjge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Mar 2019 16:07:19 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2FG7DUJ002019
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Mar 2019 16:07:13 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2FG7CTt017638;
+        Fri, 15 Mar 2019 16:07:12 GMT
+Received: from localhost (/10.159.140.139)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 15 Mar 2019 16:07:11 +0000
+Date:   Fri, 15 Mar 2019 09:07:06 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     torvalds@linux-foundation.org
+Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: minor cleanups for 5.1-rc1
+Message-ID: <20190315160706.GI4929@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190315065327.GA15672@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9196 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903150114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 07:53:27AM +0100, Michal Hocko wrote:
-> On Thu 14-03-19 23:45:48, Alexey Dobriyan wrote:
-> > Use %lx, save a cast.
-> > 
-> > "addr" is userspace address so using (and mangling) pointer was never
-> > necessary.
-> 
-> There shouldn't be any mangling AFAIU. Documentation for pointer()
-> says
-> 
->  * - 'x' For printing the address. Equivalent to "%lx".
+Hi Linus,
 
-The implication of using %p/%px is that the address is kernel pointer
-which should or should not be mangled. But "map_addr" is not a kernel
-pointer. And it saves a cast.
+Here's a few more cleanups that trickled in for the merge window.  It's
+all fixes for static checker complaints and slowly unwinding typedef
+usage.  The four patches here have gone through a few days worth of
+fstest runs with no new problems observed; and they merge cleanly with
+master as of a few minutes ago.  Please let me know if you encounter any
+problems merging them.
 
-> > --- a/fs/binfmt_elf.c
-> > +++ b/fs/binfmt_elf.c
-> > @@ -376,8 +376,8 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
-> >  		map_addr = vm_mmap(filep, addr, size, prot, type, off);
-> >  
-> >  	if ((type & MAP_FIXED_NOREPLACE) && map_addr == -EEXIST)
-> > -		pr_info("%d (%s): Uhuuh, elf segment at %px requested but the memory is mapped already\n",
-> > -			task_pid_nr(current), current->comm, (void *)addr);
-> > +		pr_info("%d (%s): Uhuuh, elf segment at %lx requested but the memory is mapped already\n",
-> > +			task_pid_nr(current), current->comm, addr);
+--D
+
+The following changes since commit 1b9598c8fb9965fff901c4caa21fed9644c34df3:
+
+  xfs: fix reporting supported extra file attributes for statx() (2019-03-01 08:57:25 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.1-merge-5
+
+for you to fetch changes up to 6ef50fe9afae63d11220f3f66b5f4c75d09c8bf0:
+
+  xfs: clean up xfs_dir2_leaf_addname (2019-03-12 09:19:38 -0700)
+
+----------------------------------------------------------------
+Changes since last update:
+- Fix some clang/smatch/sparse warnings about uninitialized variables.
+- Clean up some typedef usage.
+
+----------------------------------------------------------------
+Darrick J. Wong (3):
+      xfs: clean up xfs_dir2_leafn_add
+      xfs: zero initialize highstale and lowstale in xfs_dir2_leaf_addname
+      xfs: clean up xfs_dir2_leaf_addname
+
+Nathan Chancellor (1):
+      xfs: Zero initialize highstale and lowstale in xfs_dir2_leafn_add
+
+ fs/xfs/libxfs/xfs_dir2_leaf.c | 37 +++++++++++++++++--------------------
+ fs/xfs/libxfs/xfs_dir2_node.c | 18 ++++++++----------
+ 2 files changed, 25 insertions(+), 30 deletions(-)
