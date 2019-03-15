@@ -2,217 +2,65 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CCAC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A390AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5D3218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:24:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="f5EeRTy7"
+	by mail.kernel.org (Postfix) with ESMTP id 7DD6E218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfCOSYd (ORCPT
+        id S1726564AbfCOS0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:24:33 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41576 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfCOSYc (ORCPT
+        Fri, 15 Mar 2019 14:26:15 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60136 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfCOS0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:24:32 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a25so1172350edc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 11:24:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=seT4TFi1RcdFb9g62VHCpX5ppyQ+lPqF9G727Y0W53c=;
-        b=f5EeRTy7jU1X3Z3hmqmDbEF/y9isrUEz9Jev4s64tBraL9Zo6gvA97QtmEfWXX6hbg
-         ZUsqLm9a70iyu8Tzl21XPoBZa/TKhlcYHf2rW8VGO7VkMojFuRDgyVTaYv/tHbQqkxUs
-         RDJIfe1RqTqDVVGk7frM2aWxaQbbzLSXabL+MfA9Cj7eD/hRYinK+JBUvL4RcpETcZMF
-         6j5wr55UjL2UAK8gIUbjovdNdubk7l3PcApu7a3ISJylBVplBpKcqxy86XSJTPZGa+m9
-         RtlsS3pdCUvN3AEZ9A6lkC9Lwdx/8umFrGqSwovHMf4eV1EWj2sNNetjzHbsJrbbFd+g
-         Jn4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=seT4TFi1RcdFb9g62VHCpX5ppyQ+lPqF9G727Y0W53c=;
-        b=rDY52zh2YzhLygFqHv2lzP33hxJwLbI7AHBREK9qUPx81UOau41FZzak9YKGhjJLQn
-         0zGKyC1o1FavbHdu6aIX3pnZRibWvlhjSl2pmGmiEGOnbQBOuK2gIzV55sEtBRz5x2++
-         tbdokh6lvhmNJDJUSusJd88Q8VfAsP9tvM21WIoYCNFkaQXVGHQ39sY6DcnJwQDHWS9P
-         jISbn9TRs8vyn2rUGOhGAf4eGEYNmhcyEVF9Z6UAs/Qqn+PDuKxaVC/UCO3NWwSBkHL4
-         4F7UFHkpcHDfCEL2hw4nGE9R/b5SQSLX2HJx+PMDKY3CuaF1HjBSiJF5cxqnhDd0zKgI
-         xn/w==
-X-Gm-Message-State: APjAAAV0H+gvRVBP0Cuk8bSNkD3Nl3DiH01nMhsDFonz4dTUTqPayykN
-        bbLothsXfEuhckXSwXRRjDsBKA==
-X-Google-Smtp-Source: APXvYqxwBOSWJEMRcvHNYsRrBuvRE2pd7mCR246ZSKaj0U+KVxB50kK7Q1hhv/RETEVLpHC3pQJLbQ==
-X-Received: by 2002:a17:906:c406:: with SMTP id u6mr3010081ejz.95.1552674269944;
-        Fri, 15 Mar 2019 11:24:29 -0700 (PDT)
-Received: from brauner.io ([2a02:8109:b6c0:76e:dd26:cbb7:1dbc:50af])
-        by smtp.gmail.com with ESMTPSA id u21sm568000ejm.45.2019.03.15.11.24.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 15 Mar 2019 11:24:29 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 19:24:28 +0100
-From:   Christian Brauner <christian@brauner.io>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190315182426.sujcqbzhzw4llmsa@brauner.io>
-References: <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
- <20190312080532.GE5721@dhcp22.suse.cz>
- <20190312163741.GA2762@sultan-box.localdomain>
- <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
- <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
- <20190314204911.GA875@sultan-box.localdomain>
- <20190314231641.5a37932b@oasis.local.home>
- <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com>
- <20190315180306.sq3z645p3hygrmt2@brauner.io>
- <20190315181324.GA248160@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190315181324.GA248160@google.com>
-User-Agent: NeoMutt/20180716
+        Fri, 15 Mar 2019 14:26:14 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 303FF14D9DD6B;
+        Fri, 15 Mar 2019 11:26:14 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 11:26:13 -0700 (PDT)
+Message-Id: <20190315.112613.282237147383602540.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     joe@perches.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2] appletalk: Fix potential NULL pointer dereference
+ in unregister_snap_client
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190314054759.17848-1-yuehaibing@huawei.com>
+References: <20190314054759.17848-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 15 Mar 2019 11:26:14 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 02:13:24PM -0400, Joel Fernandes wrote:
-> On Fri, Mar 15, 2019 at 07:03:07PM +0100, Christian Brauner wrote:
-> > On Thu, Mar 14, 2019 at 09:36:43PM -0700, Daniel Colascione wrote:
-> > > On Thu, Mar 14, 2019 at 8:16 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > >
-> > > > On Thu, 14 Mar 2019 13:49:11 -0700
-> > > > Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> > > >
-> > > > > Perhaps I'm missing something, but if you want to know when a process has died
-> > > > > after sending a SIGKILL to it, then why not just make the SIGKILL optionally
-> > > > > block until the process has died completely? It'd be rather trivial to just
-> > > > > store a pointer to an onstack completion inside the victim process' task_struct,
-> > > > > and then complete it in free_task().
-> > > >
-> > > > How would you implement such a method in userspace? kill() doesn't take
-> > > > any parameters but the pid of the process you want to send a signal to,
-> > > > and the signal to send. This would require a new system call, and be
-> > > > quite a bit of work.
-> > > 
-> > > That's what the pidfd work is for. Please read the original threads
-> > > about the motivation and design of that facility.
-> > > 
-> > > > If you can solve this with an ebpf program, I
-> > > > strongly suggest you do that instead.
-> > > 
-> > > Regarding process death notification: I will absolutely not support
-> > > putting aBPF and perf trace events on the critical path of core system
-> > > memory management functionality. Tracing and monitoring facilities are
-> > > great for learning about the system, but they were never intended to
-> > > be load-bearing. The proposed eBPF process-monitoring approach is just
-> > > a variant of the netlink proposal we discussed previously on the pidfd
-> > > threads; it has all of its drawbacks. We really need a core system
-> > > call  --- really, we've needed robust process management since the
-> > > creation of unix --- and I'm glad that we're finally getting it.
-> > > Adding new system calls is not expensive; going to great lengths to
-> > > avoid adding one is like calling a helicopter to avoid crossing the
-> > > street. I don't think we should present an abuse of the debugging and
-> > > performance monitoring infrastructure as an alternative to a robust
-> > > and desperately-needed bit of core functionality that's neither hard
-> > > to add nor complex to implement nor expensive to use.
-> > > 
-> > > Regarding the proposal for a new kernel-side lmkd: when possible, the
-> > > kernel should provide mechanism, not policy. Putting the low memory
-> > > killer back into the kernel after we've spent significant effort
-> > > making it possible for userspace to do that job. Compared to kernel
-> > > code, more easily understood, more easily debuggable, more easily
-> > > updated, and much safer. If we *can* move something out of the kernel,
-> > > we should. This patch moves us in exactly the wrong direction. Yes, we
-> > > need *something* that sits synchronously astride the page allocation
-> > > path and does *something* to stop a busy beaver allocator that eats
-> > > all the available memory before lmkd, even mlocked and realtime, can
-> > > respond. The OOM killer is adequate for this very rare case.
-> > > 
-> > > With respect to kill timing: Tim is right about the need for two
-> > > levels of policy: first, a high-level process prioritization and
-> > > memory-demand balancing scheme (which is what OOM score adjustment
-> > > code in ActivityManager amounts to); and second, a low-level
-> > > process-killing methodology that maximizes sustainable memory reclaim
-> > > and minimizes unwanted side effects while killing those processes that
-> > > should be dead. Both of these policies belong in userspace --- because
-> > > they *can* be in userspace --- and userspace needs only a few tools,
-> > > most of which already exist, to do a perfectly adequate job.
-> > > 
-> > > We do want killed processes to die promptly. That's why I support
-> > > boosting a process's priority somehow when lmkd is about to kill it.
-> > > The precise way in which we do that --- involving not only actual
-> > > priority, but scheduler knobs, cgroup assignment, core affinity, and
-> > > so on --- is a complex topic best left to userspace. lmkd already has
-> > > all the knobs it needs to implement whatever priority boosting policy
-> > > it wants.
-> > > 
-> > > Hell, once we add a pidfd_wait --- which I plan to work on, assuming
-> > > nobody beats me to it, after pidfd_send_signal lands --- you can
-> > 
-> > Daniel,
-> > 
-> > I've just been talking to Joel.
-> > I actually "expected" you to work pidfd_wait() after prior
-> > conversations we had on the pidfd_send_signal() patchsets. :) That's why
-> > I got a separate git tree on kernel.org since I expect a lot more work
-> > to come. I hope that Linus still decides to pull pidfd_send_signal()
-> > before Sunday (For the ones who have missed the link in a prior response
-> > of mine:
-> > https://lkml.org/lkml/2019/3/12/439
-> > 
-> > This is the first merge window I sent this PR.
-> > 
-> > The pidfd tree has a branch for-next that is already tracked by Stephen
-> > in linux-next since the 5.0 merge window. The patches for
-> > pidfd_send_signal() sit in the pidfd branch.
-> > I'd be happy to share the tree with you and Joel (We can rename it if
-> > you prefer I don't care).
-> > I would really like to centralize this work so that we sort of have a
-> > "united front" and end up with a coherent api and can send PRs from a
-> > centralized place:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/
+From: Yue Haibing <yuehaibing@huawei.com>
+Date: Thu, 14 Mar 2019 13:47:59 +0800
+
+> From: YueHaibing <yuehaibing@huawei.com>
 > 
-> I am totally onboard with working together / reviewing this work with you all
-> on a common tree somewhere (Christian's pidfd tree is fine). I was curious,
+> register_snap_client may return NULL, all the callers
+> check it, but only print a warning. This will result in
+> NULL pointer dereference in unregister_snap_client and other
+> places.
+> 
+> It has always been used like this since v2.6
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+> v2: del timer in aarp_proto_init error patch
 
-Excellent.
-
-> why do we want to add a new syscall (pidfd_wait) though? Why not just use
-> standard poll/epoll interface on the proc fd like Daniel was suggesting.
-> AFAIK, once the proc file is opened, the struct pid is essentially pinned
-> even though the proc number may be reused. Then the caller can just poll.
-> We can add a waitqueue to struct pid, and wake up any waiters on process
-> death (A quick look shows task_struct can be mapped to its struct pid) and
-> also possibly optimize it using Steve's TIF flag idea. No new syscall is
-> needed then, let me know if I missed something?
-
-Huh, I thought that Daniel was against the poll/epoll solution?
-I have no clear opinion on what is better at the moment since I have
-been mostly concerned with getting pidfd_send_signal() into shape and
-was reluctant to put more ideas/work into this if it gets shutdown.
-Once we have pidfd_send_signal() the wait discussion makes sense.
-
-Thanks!
-Christian
+Applied, thanks for following up.
