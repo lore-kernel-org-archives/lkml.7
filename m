@@ -2,121 +2,111 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD05C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388A7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101AD21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pk7cXEb9"
+	by mail.kernel.org (Postfix) with ESMTP id 1300321872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbfCOKeC (ORCPT
+        id S1728925AbfCOKeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 06:34:02 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:39126 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728744AbfCOKeC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 06:34:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DE9vYJOLUl34sVnx393zC533e+R/EoW9VaI1gxga6l0=; b=pk7cXEb9QB93vcdn5NgktPDxq
-        kHLV/dO6ZihdtcPc2RrplAxn4pmPV9gkl5002Xlb5/bC9mapQCmGtjs06Rf+6y4Vgh0ZmRzJ+FmyU
-        gp/ChAGpgtxg45tvXmKRNlBEOIm2YwHMTiaJDjcLsxftML00pAAKNM7mWME0bpuKnvQcmGGZjy8DJ
-        YuD2QpdejsK3FnoGbpb0nBrETr/AXcVPwNhxibprM1wQAM1DWNuoN9wm3D4qsu41Enm7+9ynboYjj
-        INwO7GK0yeVYHRUMABVy0n2oyqGrcrPL+p/R47Mk+XVRBzxfJd0IU6Z2PkL9ORcn/g4BdaQSKzm4N
-        92oolecnQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4kA2-00055j-IG; Fri, 15 Mar 2019 10:33:59 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 50EE020118D7E; Fri, 15 Mar 2019 11:33:57 +0100 (CET)
-Date:   Fri, 15 Mar 2019 11:33:57 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Ben Segall <bsegall@google.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] sched/fair: Limit sched_cfs_period_timer loop to avoid
- hard lockup
-Message-ID: <20190315103357.GC6521@hirez.programming.kicks-ass.net>
-References: <20190313150826.16862-1-pauld@redhat.com>
- <20190315101150.GV5996@hirez.programming.kicks-ass.net>
+        Fri, 15 Mar 2019 06:34:24 -0400
+Received: from mga18.intel.com ([134.134.136.126]:42093 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728744AbfCOKeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 06:34:23 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 03:34:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,481,1544515200"; 
+   d="scan'208";a="155309035"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 15 Mar 2019 03:34:18 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 15 Mar 2019 12:34:17 +0200
+Date:   Fri, 15 Mar 2019 12:34:17 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by node
+Message-ID: <20190315103417.GH7752@kuha.fi.intel.com>
+References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20190315081835.GD7752@kuha.fi.intel.com>
+ <1552641204.10179.133.camel@mhfsdcap03>
+ <20190315092644.GG7752@kuha.fi.intel.com>
+ <1552642379.10179.138.camel@mhfsdcap03>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190315101150.GV5996@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1552642379.10179.138.camel@mhfsdcap03>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 11:11:50AM +0100, Peter Zijlstra wrote:
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index ea74d43924b2..b71557be6b42 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4885,6 +4885,8 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
->  	return HRTIMER_NORESTART;
->  }
->  
-> +extern const u64 max_cfs_quota_period;
-> +
->  static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
->  {
->  	struct cfs_bandwidth *cfs_b =
-> @@ -4892,6 +4894,7 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
->  	unsigned long flags;
->  	int overrun;
->  	int idle = 0;
-> +	int count = 0;
->  
->  	raw_spin_lock_irqsave(&cfs_b->lock, flags);
->  	for (;;) {
-> @@ -4899,6 +4902,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
->  		if (!overrun)
->  			break;
->  
-> +		if (++count > 3) {
-> +			u64 new, old = ktime_to_ns(cfs_b->period);
-> +
-> +			new = (old * 147) / 128; /* ~115% */
-> +			new = min(new, max_cfs_quota_period);
+On Fri, Mar 15, 2019 at 05:32:59PM +0800, Chunfeng Yun wrote:
+> Hi,
+> On Fri, 2019-03-15 at 11:26 +0200, Heikki Krogerus wrote:
+> > Hi Chunfeng,
+> > 
+> > On Fri, Mar 15, 2019 at 05:13:24PM +0800, Chunfeng Yun wrote:
+> > > I encounter a build error when CONFIG_USB_ROLE_SWITCH is not enabled,
+> > > 
+> > > drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_role_sw_register':
+> > > ./drivers/usb/mtu3/mtu3_dr.c:460: undefined reference to
+> > > `usb_role_switch_register'
+> > > drivers/usb/mtu3/mtu3_dr.o: In function `ssusb_otg_switch_exit':
+> > > ./drivers/usb/mtu3/mtu3_dr.c:491: undefined reference to
+> > > `usb_role_switch_unregister'
+> > 
+> > So you need to add dependency on USB_ROLE_SWITCH, right?
+> Yes
+> 
+> > 
+> > --- a/drivers/usb/mtu3/Kconfig
+> > +++ b/drivers/usb/mtu3/Kconfig
+> > @@ -43,6 +43,7 @@ config USB_MTU3_DUAL_ROLE
+> >         bool "Dual Role mode"
+> >         depends on ((USB=y || USB=USB_MTU3) && (USB_GADGET=y || USB_GADGET=USB_MTU3))
+> >         depends on (EXTCON=y || EXTCON=USB_MTU3)
+> > +       depends on USB_ROLE_SWITCH
+> >         help
+> >           This is the default mode of working of MTU3 controller where
+> >           both host and gadget features are enabled.
+> > 
+> > > the following patch has fixed the issue, but seems not get into kernel,
+> > > [v3,08/12] usb: roles: Add usb role switch notifier.
+> > > https://patchwork.kernel.org/patch/10836525/
+> > 
+> > I don't understand how that fixes the problem? That patch will in any
+> > case be targeting v5.2. We are in the middle of merge window, so
+> > nothing is happening until v5.1-rc1 is tagged.
+> It provides some dummy inline functions when USB_ROLE_SWITCH is not
+> enabled, this will avoid build error
 
-Also, we can still engineer things to come unstuck; if we explicitly
-configure period at 1e9 and then set a really small quota and then
-create this insane amount of cgroups you have..
+Ah, true. Those should brobable be introduced in their own patch.
 
-this code has no room to manouvre left.
 
-Do we want to do anything about that? Or leave it as is, don't do that
-then?
+thanks,
 
-> +
-> +			cfs_b->period = ns_to_ktime(new);
-> +
-> +			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-> +			cfs_b->quota *= new;
-> +			cfs_b->quota /= old;
-> +
-> +			pr_warn_ratelimited(
-> +	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-> +				smp_processor_id(),
-> +				new/NSEC_PER_USEC,
-> +				cfs_b->quota/NSEC_PER_USEC);
-> +
-> +			/* reset count so we don't come right back in here */
-> +			count = 0;
-> +		}
-> +
->  		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
->  	}
->  	if (idle)
+-- 
+heikki
