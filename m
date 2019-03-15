@@ -2,82 +2,107 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCFBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868D0C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1E0218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE78218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbfCOQp5 (ORCPT
+        id S1729627AbfCOQtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:45:57 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49094 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbfCOQpw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:45:52 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id E13E0281586
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
-        lucmaga@gmail.com, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: [PATCH 16/16] media: vimc: cap: Dynamically define device caps
-Date:   Fri, 15 Mar 2019 13:43:59 -0300
-Message-Id: <20190315164359.626-17-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190315164359.626-1-andrealmeid@collabora.com>
-References: <20190315164359.626-1-andrealmeid@collabora.com>
+        Fri, 15 Mar 2019 12:49:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47876 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729192AbfCOQtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:49:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DF151AE6E;
+        Fri, 15 Mar 2019 16:49:23 +0000 (UTC)
+Subject: Re: [PATCH 7/8] nvme: use blk_mq_queue_tag_busy_iter
+To:     James Smart <james.smart@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Jianchao Wang <jianchao.w.wang@oracle.com>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, sagi@grimberg.me,
+        josef@toxicpanda.com, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org, keith.busch@intel.com,
+        jthumshirn@suse.de, hch@lst.de, bvanassche@acm.org
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1552640264-26101-8-git-send-email-jianchao.w.wang@oracle.com>
+ <62de99e8-0d8d-910a-bfdc-649f734b152c@gmail.com>
+ <f284663c-ad13-65ea-5ce0-9b305ca91d3c@broadcom.com>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <5def1025-a48b-f2a4-d58c-d37135177b0f@suse.de>
+Date:   Fri, 15 Mar 2019 17:49:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <f284663c-ad13-65ea-5ce0-9b305ca91d3c@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device capabilities are defined according to the
-multiplanar kernel parameter. A device can't support
-both CAP_VIDEO_CAPTURE and CAP_VIDEO_CAPTURE_MPLANAR
-at the same time.
+On 3/15/19 5:39 PM, James Smart wrote:
+> 
+> 
+> On 3/15/2019 9:33 AM, James Smart wrote:
+>> On 3/15/2019 1:57 AM, Jianchao Wang wrote:
+>>> blk_mq_tagset_busy_iter is not safe that it could get stale request
+>>> in tags->rqs[]. Use blk_mq_queue_tag_busy_iter here. A new helper
+>>> interface nvme_iterate_inflight_rqs is introduced to iterate
+>>> all of the ns under a ctrl.
+>>>
+>>> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
+>>> ---
+>>>   drivers/nvme/host/core.c   | 12 ++++++++++++
+>>>   drivers/nvme/host/fc.c     | 12 ++++++------
+>>>   drivers/nvme/host/nvme.h   |  2 ++
+>>>   drivers/nvme/host/pci.c    |  5 +++--
+>>>   drivers/nvme/host/rdma.c   |  6 +++---
+>>>   drivers/nvme/host/tcp.c    |  5 +++--
+>>>   drivers/nvme/target/loop.c |  6 +++---
+>>>   7 files changed, 32 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+>>> index 6a9dd68..5760fad 100644
+>>> --- a/drivers/nvme/host/core.c
+>>> +++ b/drivers/nvme/host/core.c
+>>> @@ -3816,6 +3816,18 @@ void nvme_start_queues(struct nvme_ctrl *ctrl)
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(nvme_start_queues);
+>>>   +void nvme_iterate_inflight_rqs(struct nvme_ctrl *ctrl,
+>>> +        busy_iter_fn *fn, void *data)
+>>> +{
+>>> +    struct nvme_ns *ns;
+>>> +
+>>> +    down_read(&ctrl->namespaces_rwsem);
+>>> +    list_for_each_entry(ns, &ctrl->namespaces, list)
+>>> +        blk_mq_queue_tag_busy_iter(ns->queue, fn, data, true);
+>>> +    up_read(&ctrl->namespaces_rwsem);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(nvme_iterate_inflight_rqs);
+>>
+>> Hmm... so this aborts ios for namespaces. How about ios that aren't 
+>> for a namespace but rather for the controller itself.  For example, 
+>> anything on the admin queue ?   Rather critical for those ios be 
+>> terminated as well.
+> NVM - didn't look at which tag set.  but it does highlight - doesn't 
+> cover anything issued by core/transport on the io queues.
+> 
+Actually, I would consider that an error.
+_All_ commands on io queues (internal or block-layer generated) whould 
+be tracked sbitmap and hence the tag iterator.
+That's what we have the 'private' tags for, and why the iter callback 
+has this ominous 'bool' argument...
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
- drivers/media/platform/vimc/vimc-capture.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Cheers,
 
-diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-index 50f7e71f23cd..c30a2887db33 100644
---- a/drivers/media/platform/vimc/vimc-capture.c
-+++ b/drivers/media/platform/vimc/vimc-capture.c
-@@ -652,7 +652,9 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
- 
- 	/* Initialize the vb2 queue */
- 	q = &vcap->queue;
--	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-+	q->type = multiplanar ?
-+		V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE :
-+		V4L2_BUF_TYPE_VIDEO_CAPTURE;
- 	q->io_modes = VB2_MMAP | VB2_DMABUF | VB2_USERPTR;
- 	q->drv_priv = vcap;
- 	q->buf_struct_size = sizeof(struct vimc_cap_buffer);
-@@ -697,7 +699,9 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
- 
- 	/* Initialize the video_device struct */
- 	vdev = &vcap->vdev;
--	vdev->device_caps = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING;
-+	vdev->device_caps = (multiplanar ?
-+			V4L2_CAP_VIDEO_CAPTURE_MPLANE :
-+			V4L2_BUF_TYPE_VIDEO_CAPTURE) | V4L2_CAP_STREAMING;
- 	vdev->entity.ops = &vimc_cap_mops;
- 	vdev->release = video_device_release_empty;
- 	vdev->fops = &vimc_cap_fops;
--- 
-2.21.0
-
+Hannes
