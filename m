@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1DBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE56C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2620F218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5811218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfCOUHz (ORCPT
+        id S1727124AbfCOUID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 16:07:55 -0400
-Received: from mga01.intel.com ([192.55.52.88]:22898 "EHLO mga01.intel.com"
+        Fri, 15 Mar 2019 16:08:03 -0400
+Received: from mga01.intel.com ([192.55.52.88]:22894 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfCOUHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 16:07:02 -0400
+        id S1726314AbfCOUHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 16:07:00 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 13:07:01 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 13:07:00 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,483,1544515200"; 
-   d="scan'208";a="307617697"
+   d="scan'208";a="307617683"
 Received: from chang-linux-3.sc.intel.com ([143.183.85.65])
-  by orsmga005.jf.intel.com with ESMTP; 15 Mar 2019 13:07:01 -0700
+  by orsmga005.jf.intel.com with ESMTP; 15 Mar 2019 13:06:59 -0700
 From:   "Chang S. Bae" <chang.seok.bae@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
@@ -36,10 +36,11 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
 Cc:     Ravi Shankar <ravi.v.shankar@intel.com>,
         "Chang S . Bae" <chang.seok.bae@intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [RESEND PATCH v6 04/12] x86/fsgsbase/64: Enable FSGSBASE instructions in the helper functions
-Date:   Fri, 15 Mar 2019 13:06:37 -0700
-Message-Id: <1552680405-5265-5-git-send-email-chang.seok.bae@intel.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [RESEND PATCH v6 01/12] x86/fsgsbase/64: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
+Date:   Fri, 15 Mar 2019 13:06:34 -0700
+Message-Id: <1552680405-5265-2-git-send-email-chang.seok.bae@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1552680405-5265-1-git-send-email-chang.seok.bae@intel.com>
 References: <1552680405-5265-1-git-send-email-chang.seok.bae@intel.com>
@@ -48,156 +49,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The helper functions will switch on faster accesses to FSBASE and GSBASE
-when the FSGSBASE feature is enabled.
+From: Andy Lutomirski <luto@kernel.org>
 
-Accessing user GSBASE needs a couple of SWAPGS operations. It is avoidable
-if the user GSBASE is saved at kernel entry, being updated as changes, and
-restored back at kernel exit. However, it seems to spend more cycles for
-savings and restorations. Little or no benefit was measured from
-experiments.
+This is temporary.  It will allow the next few patches to be tested
+incrementally.
 
-Also, introduce __{rd,wr}gsbase_inactive() as helpers to access user GSBASE
-with SWAPGS. Note, for Xen PV, paravirt hooks can be added, since it may
-allow a very efficient but different implementation.
+Setting unsafe_fsgsbase is a root hole.  Don't do it.
 
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Cc: Any Lutomirski <luto@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
 ---
- arch/x86/include/asm/fsgsbase.h | 27 +++++++---------
- arch/x86/kernel/process_64.c    | 56 +++++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+), 15 deletions(-)
+ .../admin-guide/kernel-parameters.txt         |  3 +++
+ arch/x86/kernel/cpu/common.c                  | 24 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/arch/x86/include/asm/fsgsbase.h b/arch/x86/include/asm/fsgsbase.h
-index fdd1177499b4..aefd53767a5d 100644
---- a/arch/x86/include/asm/fsgsbase.h
-+++ b/arch/x86/include/asm/fsgsbase.h
-@@ -49,35 +49,32 @@ static __always_inline void wrgsbase(unsigned long gsbase)
- 	asm volatile("wrgsbase %0" :: "r" (gsbase) : "memory");
- }
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index cf8f5877d85f..b6ed956a78ab 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2765,6 +2765,9 @@
+ 	no5lvl		[X86-64] Disable 5-level paging mode. Forces
+ 			kernel to use 4-level paging instead.
  
-+#include <asm/cpufeature.h>
++	unsafe_fsgsbase	[X86] Allow FSGSBASE instructions.  This will be
++			replaced with a nofsgsbase flag.
 +
- /* Helper functions for reading/writing FS/GS base */
- 
- static inline unsigned long x86_fsbase_read_cpu(void)
- {
- 	unsigned long fsbase;
- 
--	rdmsrl(MSR_FS_BASE, fsbase);
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE))
-+		fsbase = rdfsbase();
-+	else
-+		rdmsrl(MSR_FS_BASE, fsbase);
- 
- 	return fsbase;
+ 	no_console_suspend
+ 			[HW] Never suspend the console
+ 			Disable suspending of consoles during suspend and
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index cb28e98a0659..40a2f60e7251 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -365,6 +365,22 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
+ 	cr4_clear_bits(X86_CR4_UMIP);
  }
- 
--static inline unsigned long x86_gsbase_read_cpu_inactive(void)
--{
--	unsigned long gsbase;
--
--	rdmsrl(MSR_KERNEL_GS_BASE, gsbase);
--
--	return gsbase;
--}
--
- static inline void x86_fsbase_write_cpu(unsigned long fsbase)
- {
--	wrmsrl(MSR_FS_BASE, fsbase);
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE))
-+		wrfsbase(fsbase);
-+	else
-+		wrmsrl(MSR_FS_BASE, fsbase);
- }
- 
--static inline void x86_gsbase_write_cpu_inactive(unsigned long gsbase)
--{
--	wrmsrl(MSR_KERNEL_GS_BASE, gsbase);
--}
-+extern unsigned long x86_gsbase_read_cpu_inactive(void);
-+extern void x86_gsbase_write_cpu_inactive(unsigned long gsbase);
- 
- #endif /* CONFIG_X86_64 */
- 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 6a62f4af9fcf..87b5ffce2a47 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -160,6 +160,42 @@ enum which_selector {
- 	GS
- };
  
 +/*
-+ * Interrupts are disabled here. Out of line to be protected
-+ * from kprobes. It is not used on Xen paravirt. When paravirt
-+ * support is needed, it needs to be renamed with native_ prefix.
++ * Temporary hack: FSGSBASE is unsafe until a few kernel code paths are
++ * updated. This allows us to get the kernel ready incrementally.
++ *
++ * Once all the pieces are in place, these will go away and be replaced with
++ * a nofsgsbase chicken flag.
 + */
-+static noinline unsigned long __rdgsbase_inactive(void)
++static bool unsafe_fsgsbase;
++
++static __init int setup_unsafe_fsgsbase(char *arg)
 +{
-+	unsigned long gsbase, flags;
-+
-+	local_irq_save(flags);
-+	native_swapgs();
-+	gsbase = rdgsbase();
-+	native_swapgs();
-+	local_irq_restore(flags);
-+
-+	return gsbase;
++	unsafe_fsgsbase = true;
++	return 1;
 +}
-+NOKPROBE_SYMBOL(__rdgsbase_inactive);
-+
-+/*
-+ * Interrupts are disabled here. Out of line to be protected
-+ * from kprobes. It is not used on Xen paravirt. When paravirt
-+ * support is needed, it needs to be renamed with native_ prefix.
-+ */
-+static noinline void __wrgsbase_inactive(unsigned long gsbase)
-+{
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	native_swapgs();
-+	wrgsbase(gsbase);
-+	native_swapgs();
-+	local_irq_restore(flags);
-+}
-+NOKPROBE_SYMBOL(__wrgsbase_inactive);
++__setup("unsafe_fsgsbase", setup_unsafe_fsgsbase);
 +
  /*
-  * Saves the FS or GS base for an outgoing thread if FSGSBASE extensions are
-  * not available.  The goal is to be reasonably fast on non-FSGSBASE systems.
-@@ -338,6 +374,26 @@ static unsigned long x86_fsgsbase_read_task(struct task_struct *task,
- 	return base;
- }
+  * Protection Keys are not available in 32-bit mode.
+  */
+@@ -1352,6 +1368,14 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+ 	setup_smap(c);
+ 	setup_umip(c);
  
-+unsigned long x86_gsbase_read_cpu_inactive(void)
-+{
-+	unsigned long gsbase;
++	/* Enable FSGSBASE instructions if available. */
++	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
++		if (unsafe_fsgsbase)
++			cr4_set_bits(X86_CR4_FSGSBASE);
++		else
++			clear_cpu_cap(c, X86_FEATURE_FSGSBASE);
++	}
 +
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE))
-+		gsbase = __rdgsbase_inactive();
-+	else
-+		rdmsrl(MSR_KERNEL_GS_BASE, gsbase);
-+
-+	return gsbase;
-+}
-+
-+void x86_gsbase_write_cpu_inactive(unsigned long gsbase)
-+{
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE))
-+		__wrgsbase_inactive(gsbase);
-+	else
-+		wrmsrl(MSR_KERNEL_GS_BASE, gsbase);
-+}
-+
- unsigned long x86_fsbase_read_task(struct task_struct *task)
- {
- 	unsigned long fsbase;
+ 	/*
+ 	 * The vendor-specific functions might have changed features.
+ 	 * Now we do "generic changes."
 -- 
 2.19.1
 
