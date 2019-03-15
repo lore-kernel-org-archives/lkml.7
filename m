@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2940CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDC3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDAF221871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3867221871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfCOHkf (ORCPT
+        id S1728574AbfCOHkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 03:40:35 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:34154 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728060AbfCOHkd (ORCPT
+        Fri, 15 Mar 2019 03:40:36 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:36283 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727476AbfCOHkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 03:40:33 -0400
-X-UUID: bed741f6eeb447419d509c47fdb7cefc-20190315
-X-UUID: bed741f6eeb447419d509c47fdb7cefc-20190315
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Fri, 15 Mar 2019 03:40:22 -0400
+X-UUID: 0c423c48622a4c098ab9dece8bcd6110-20190315
+X-UUID: 0c423c48622a4c098ab9dece8bcd6110-20190315
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1375110782; Fri, 15 Mar 2019 15:40:25 +0800
+        with ESMTP id 425585661; Fri, 15 Mar 2019 15:40:10 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 15 Mar 2019 15:40:23 +0800
+ 15.0.1395.4; Fri, 15 Mar 2019 15:40:08 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 15 Mar 2019 15:40:16 +0800
+ Transport; Fri, 15 Mar 2019 15:40:07 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2 4/6] usb: roles: add API to get usb_role_switch by node
-Date:   Fri, 15 Mar 2019 15:38:31 +0800
-Message-ID: <1552635513-2378-5-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 1/6] dt-bindings: connector: add optional properties for Type-B
+Date:   Fri, 15 Mar 2019 15:38:28 +0800
+Message-ID: <1552635513-2378-2-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
@@ -62,78 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add usb_role_switch_get_by_node() to make easier to get
-usb_role_switch by node which register it.
-It's useful when there is not device_connection registered
-between two drivers and only knows the node which register
-usb_role_switch.
+Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+usb-b-connector
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/roles/class.c | 30 ++++++++++++++++++++++++++++++
- include/linux/usb/role.h  |  1 +
- 2 files changed, 31 insertions(+)
+v2 changes:
+  1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
+---
+ .../devicetree/bindings/connector/usb-connector.txt      | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index 99116af07f1d..284b19856dc4 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -11,6 +11,7 @@
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+index a9a2f2fc44f2..1c4ed6c9afa8 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.txt
++++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+@@ -17,6 +17,15 @@ Optional properties:
+ - self-powered: Set this property if the usb device that has its own power
+   source.
  
- static struct class *role_class;
-@@ -121,6 +122,35 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(usb_role_switch_get);
- 
-+static int __switch_match_node(struct device *dev, const void *node)
-+{
-+	return dev->parent->of_node == (const struct device_node *)node;
-+}
++Optional properties for usb-b-connector:
++- id-gpios: gpio for USB ID pin.
++- vbus-gpios: gpio for USB VBUS pin, used to detect presence of VBUS 5V.
++  see gpio/gpio.txt.
++- vbus-supply: a phandle to the regulator for USB VBUS if needed.
++- pinctrl-names : a pinctrl state named "default" is optional
++- pinctrl-0 : pin control group
++  see pinctrl/pinctrl-bindings.txt
 +
-+/**
-+ * usb_role_switch_get_by_node - Find USB role switch by it's parent node
-+ * @node: The node that register USB role switch
-+ *
-+ * Finds and returns role switch registered by @node. The reference count
-+ * for the found switch is incremented.
-+ */
-+struct usb_role_switch *usb_role_switch_get_by_node(struct device_node *node)
-+{
-+	struct usb_role_switch *sw;
-+	struct device *dev;
-+
-+	dev = class_find_device(role_class, NULL, node,
-+				__switch_match_node);
-+	if (!dev)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	sw = to_role_switch(dev);
-+	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-+
-+	return sw;
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_get_by_node);
-+
- /**
-  * usb_role_switch_put - Release handle to a switch
-  * @sw: USB Role Switch
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index edc51be4a77c..056498b83dee 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -42,6 +42,7 @@ struct usb_role_switch_desc {
- 
- int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
- enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
-+struct usb_role_switch *usb_role_switch_get_by_node(struct device_node *node);
- struct usb_role_switch *usb_role_switch_get(struct device *dev);
- void usb_role_switch_put(struct usb_role_switch *sw);
- 
+ Optional properties for usb-c-connector:
+ - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+   connector has power support.
 -- 
 2.20.1
 
