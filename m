@@ -2,169 +2,170 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5BBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD7AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D952184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:10:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZS+1egnH"
+	by mail.kernel.org (Postfix) with ESMTP id F3C06218E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfCOTKi (ORCPT
+        id S1726954AbfCOTN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 15:10:38 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35614 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfCOTKi (ORCPT
+        Fri, 15 Mar 2019 15:13:26 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:36423 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfCOTNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 15:10:38 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y15so7156113wma.0;
-        Fri, 15 Mar 2019 12:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5B/xXHEVenCPejwYpnlBrM1Xy4JUrSSBY9vU2vcGVlQ=;
-        b=ZS+1egnHyEuMCUKILaS3UB5h5rixuXGhhIWsAhTRGGT7QEcRWSF8e58k3+cFUYgxzE
-         W5ewjjpNdmlrOWUF4v0UUdWeJIfVkR928fVG+9GTG43hw5HqqH2ExgyIM5ZdKy6W1G0n
-         EghFGG9IOpB5xZZQAAxlN2bDtLtJIcusDnsH91lPUN86WM3DurAMjC2eRhmna89w4hD3
-         RsHYE5giGt8BFkITanQ1gsJ7DRSyRbIFX8+eRR6yTos5+6Q/oXd1Q1yjqiiUEpPtowsM
-         t/M65yapr/UHg55P+3W6vZ45SUCTx3gr/xOrPypjHhdwnP/aSB+vrYY3m0sdb/LbD6a5
-         xesw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5B/xXHEVenCPejwYpnlBrM1Xy4JUrSSBY9vU2vcGVlQ=;
-        b=e+tP1IA2xDwlD4U3hgPYIdJdGdQrc3VM3n+TkwGjjDiYttAOpSj0m9JAGhx/LK8dAN
-         TmFSrFw9gDq6IwX8mF4+WM+ywuXgAHIgu58XrXetWksyLsFEcec/ss+BWXNbi1UclIym
-         7NSSkEK8G5s62SR6+JOR6OHUR3XTJG0kuELHfLIDVPpOP2QAKH6JFNFUMSc6l0xSYt9U
-         Vk8Vv7MmpRW1dFLU2MEF+k6B2x0OTcy80654u+dpHjaAndWU0t3gTnYf7J4zjATuudKF
-         /mUZmQOL+1i8pCNNbFGVIsjdy+gpGG1Oj73RLwZMGQ7GARyewGNU3yPwc3O4HzaQOu9I
-         /VwA==
-X-Gm-Message-State: APjAAAVoHjegjskBYv2+VvEfSltH4FOUop+N7p+QIDCYc0duhLzVsUJc
-        e2tPmbxL60nk8IzMxyY7qTs=
-X-Google-Smtp-Source: APXvYqz3F06C9KLq1tCvxNt5JbJzY13qvWSMhL/hVJFhF5KgxQkWFY15sskSDkTdPhGvyIG2mqBMBg==
-X-Received: by 2002:a1c:9913:: with SMTP id b19mr3070854wme.127.1552677035510;
-        Fri, 15 Mar 2019 12:10:35 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:c50e:5126:7a00:3114:da88:9fb:388d])
-        by smtp.gmail.com with ESMTPSA id t18sm2752044wmt.8.2019.03.15.12.10.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 12:10:34 -0700 (PDT)
-From:   Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Simon Gene Gottlieb <simon@gottliebtfreitag.de>
-Cc:     Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
-Subject: [PATCH] HID: steam: fix deadlock with input devices.
-Date:   Fri, 15 Mar 2019 20:09:10 +0100
-Message-Id: <20190315190910.4602-1-rodrigorivascosta@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 15 Mar 2019 15:13:25 -0400
+Received: from [192.168.1.110] ([77.2.38.11]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MAwsT-1hB9eE3ZNZ-00BIzf; Fri, 15 Mar 2019 20:12:52 +0100
+Subject: Re: [PATCH v2 10/45] drivers: tty: serial: zs: use devm_* functions
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, eric@anholt.net,
+        stefan.wahren@i2se.com, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        andriy.shevchenko@linux.intel.com, vz@mleia.com,
+        matthias.bgg@gmail.com, yamada.masahiro@socionext.com,
+        tklauser@distanz.ch, richard.genoud@gmail.com,
+        macro@linux-mips.org, u.kleine-koenig@pengutronix.de,
+        kernel@pengutronix.de, slemieux.tyco@gmail.com,
+        andy.gross@linaro.org, david.brown@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <1552602855-26086-1-git-send-email-info@metux.net>
+ <1552602855-26086-11-git-send-email-info@metux.net>
+ <20190314225204.GB1795@kroah.com>
+ <3734d588-6b9c-29e2-45b6-82e778f47602@metux.net>
+ <20190315142628.GA30650@kroah.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <d81364fc-c5da-c1b2-f38a-3a23c701c50d@metux.net>
+Date:   Fri, 15 Mar 2019 20:12:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190315142628.GA30650@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:SXEacaD/ABSnz5SC+KZNJR8X78uU/ZHYhiWG9+GZ6gQCPTRGGY6
+ oMVfqetSpylUX++ls1E5S5HMu7R8JrQbuqlXNK9GlVbbb2YxtlIIR6Sf1yP6eTo7EfFHl/Z
+ Maw2+uQShcxCe04Q9AyUvT6oRLqxbx0eJetBsxpHX2vZK0Gl31iXmsQWqVvjXcebaOsL/m0
+ UpjmXfWKzQcDwYagaNBUA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:U0SKPNSdJuY=:oH4Oh2WL/2UXvNa1xcttEc
+ JapvfqqU5eJSH+zxCk1UXoC9CpcPzzmyn8dM5c9MYzhMXx07BypNuqhrITXcExIs9egcWb5xU
+ qs8bOQ4nsK5Ccib7fl/aZDNONmEiA9YO2wbKp+3nnu7A/n42004mxMiPLiX++31wJUL6S7mK2
+ g+6eQWnpLA7gGb4fg4ukKY9Afc1X3dtj0pOjhwxXivv4ruLJNt1e6tbrxsIynHTX+wvkOknAL
+ Rx/rKTJYjuSWCQVI5cGiztn/H4ddH17G9yZb68A2LjkUVrC+RkgqmekunC/y7hNFw4FhRzOUQ
+ UWAAD0r6FJazA9Rk2f/Y3MgPTiMu3uJ/vEFVXXuaLjuYor3ALPdapzAusG/112kc9xL7lIPiN
+ LNLDxa1dSXA2D96FOVQteqAwb2DDvx9ctHgc/TD/UjH9BjqzXkDjGzeBzk1soXOx9AlUnbEyv
+ GwyheLkj8ic1hJY2lD/Jfvp5dRziz25+6QEOgprLVy25JD/LfeJvYfZJCnVsv7gJh4Ycu4RXQ
+ R3pfWebRRndXb3qNThL4ulCN+gdrVBoSLE0SAiAWkAzbGTAJEF6EfPYAxzzsSfrSDA8aWcQsO
+ EB0Jcvb9XVisrzk+XgnQc7jhhQmBMonJ9/tgBYjwrv7lGNWJATn+zD4qmIlobtmNnMa6lzlZt
+ QeRSwymnrQw/VgB3fK2+g/YWTG+uB6QDyrDrK7Nu2RhOz4d3qMIiB7MZ238EnjwajX9ljbHZG
+ unFgbBFSu3XxyC2q9RZE6HifJNhAR/R+m4Sjb0snrvb/gUGvpsm7IQWMhk8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using this driver with the wireless dongle and some usermode
-program that monitors every input device (acpid, for example), while
-another usermode client opens and closes the low-level device
-repeadedly, the system eventually deadlocks.
+On 15.03.19 15:26, Greg KH wrote:
+> On Fri, Mar 15, 2019 at 10:06:16AM +0100, Enrico Weigelt, metux IT consult wrote:
+>> On 14.03.19 23:52, Greg KH wrote:
+>>> On Thu, Mar 14, 2019 at 11:33:40PM +0100, Enrico Weigelt, metux IT consult wrote:
+>>>> Use the safer devm versions of memory mapping functions.
+>>>
+>>> What is "safer" about them?
+>>
+>> Garbage collection :)
+> 
+> At times, but not when you do not use the api correctly :)
 
-The reason is that steam_input_register_device() must not be called with
-the mutex held, because the input subsystem has its own synchronization
-that clashes with this one: it is possible that steam_input_open() is
-called before input_register_device() returns, and since
-steam_input_open() needs to lock the mutex, it deadlocks.
+Okay, my fault that I didn't read the code careful enough :o
 
-However we must hold the mutex when calling any function that sends
-commands to the controller. If not, random commands end up falling fail.
+But still, I think the name is a bit misleading as it *sounds* as just
+a wrapper around devm_ioremap() that just picks the params from a
+struct resource. I guess we can't change the name easily ?
 
-Reported-by: Simon Gene Gottlieb <simon@gottliebtfreitag.de>
-Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
-Tested-by: Simon Gene Gottlieb <simon@gottliebtfreitag.de>
----
- drivers/hid/hid-steam.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+> Yes, there are lots of drivers for devices that are never unloaded or
+> removed from the system.  The fact that no one has reported any problems
+> with them means that they are never used in situations like this.
 
-diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
-index 8141cadfca0e..8dae0f9b819e 100644
---- a/drivers/hid/hid-steam.c
-+++ b/drivers/hid/hid-steam.c
-@@ -499,6 +499,7 @@ static void steam_battery_unregister(struct steam_device *steam)
- static int steam_register(struct steam_device *steam)
- {
- 	int ret;
-+	bool client_opened;
- 
- 	/*
- 	 * This function can be called several times in a row with the
-@@ -511,9 +512,11 @@ static int steam_register(struct steam_device *steam)
- 		 * Unlikely, but getting the serial could fail, and it is not so
- 		 * important, so make up a serial number and go on.
- 		 */
-+		mutex_lock(&steam->mutex);
- 		if (steam_get_serial(steam) < 0)
- 			strlcpy(steam->serial_no, "XXXXXXXXXX",
- 					sizeof(steam->serial_no));
-+		mutex_unlock(&steam->mutex);
- 
- 		hid_info(steam->hdev, "Steam Controller '%s' connected",
- 				steam->serial_no);
-@@ -528,13 +531,15 @@ static int steam_register(struct steam_device *steam)
- 	}
- 
- 	mutex_lock(&steam->mutex);
--	if (!steam->client_opened) {
-+	client_opened = steam->client_opened;
-+	if (!client_opened)
- 		steam_set_lizard_mode(steam, lizard_mode);
-+	mutex_unlock(&steam->mutex);
-+
-+	if (!client_opened)
- 		ret = steam_input_register(steam);
--	} else {
-+	else
- 		ret = 0;
--	}
--	mutex_unlock(&steam->mutex);
- 
- 	return ret;
- }
-@@ -630,14 +635,21 @@ static void steam_client_ll_close(struct hid_device *hdev)
- {
- 	struct steam_device *steam = hdev->driver_data;
- 
-+	unsigned long flags;
-+	bool connected;
-+
-+	spin_lock_irqsave(&steam->lock, flags);
-+	connected = steam->connected;
-+	spin_unlock_irqrestore(&steam->lock, flags);
-+
- 	mutex_lock(&steam->mutex);
- 	steam->client_opened = false;
-+	if (connected)
-+		steam_set_lizard_mode(steam, lizard_mode);
- 	mutex_unlock(&steam->mutex);
- 
--	if (steam->connected) {
--		steam_set_lizard_mode(steam, lizard_mode);
-+	if (connected)
- 		steam_input_register(steam);
--	}
- }
- 
- static int steam_client_ll_raw_request(struct hid_device *hdev,
+So, never touch a running system ?
+
+> No, you need to have a good reason why it needs to be changed, when you
+> can not verify that this actually resolves a problem.  As this patch
+> shows, you just replaced one api call with another, so nothing changed
+> at all, except you actually took up more memory and logic to do the same
+> thing :(
+
+Okay, I was on a wrong track here - I had the silly idea that it would
+make things easier if we'd do it the same way everywhere.
+
+>> IMHO, we should have a closer look at those and check whether that's
+>> really okay (just adding request/release blindly could cause trouble)
+> 
+> I agree, please feel free to audit these to verify they are all correct.
+> But that's not what you did here, so that's not a valid justification
+> for these patches to be accepted.
+
+Understood. Assuming I've found some of these cases, shall I use devm
+oder just add the missing release ?
+
+>> In this consolidation process, I'm trying to move everything to
+>> devm_*, to have it more generic (for now, I still need two versions
+>> of the request/release/ioremap/iounmap helpers - one w/ and one
+>> w/o devm).
+> 
+> Move everything in what part of the kernel?  The whole kernel or just
+> one subsystem?
+
+Just talking about the serial drivers.
+
+>> My idea was moving to devm first, so it can be reviewed/tested
+>> independently, before moving forward. Smaller, easily digestable
+>> pieces should minimize the risk of breaking anything. But if you
+>> prefer having this things squashed together, just let me know.
+> 
+> Small pieces are required, that's fine, but those pieces need to have a
+> justification for why they should be accepted at all points along the
+> way.
+
+Hmm, okay, in these cases, I agree there's no real justification if
+we're not seeing it as an intermediate step to the upcoming stuff.
+Having thought a bit more about this, my underlying dumbness was
+setting everything on the devm horse when converting introducing the
+helpers, and then splitted out the change to devm in even more patches
+... Silly me, I better should have catched some sleep instead :o
+
+>> In the queue are also other minor cleanups like using dev_err()
+>> instead of printk(), etc. Should I send these separately ?
+> 
+> Of course.
+
+Ok. I'll collect those things in a separate branch and send out the
+queue from time to time:
+
+https://github.com/metux/linux/tree/wip/serial/charlady
+
+>> By the way: do you have some public branch where you're collecting
+>> accepted patches, which I could base mine on ? (tty.git/tty-next ?)
+> 
+> Yes, that is the tree and branch, but remember that none of my trees can
+> open up until after -rc1 is out.
+
+So, within a merge window, you put everything else on hold ?
+
+
+--mtx
+
 -- 
-2.21.0
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
