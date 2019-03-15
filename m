@@ -2,218 +2,110 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0208C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3D1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5D8218EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982942186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="axLkF47r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ebGH4hCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbfCOMX0 (ORCPT
+        id S1728886AbfCOM0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 08:23:26 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:35960 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfCOMX0 (ORCPT
+        Fri, 15 Mar 2019 08:26:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34318 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727515AbfCOM0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 08:23:26 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 9DE8F25B76D;
-        Fri, 15 Mar 2019 23:23:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=verge.net.au; s=mail;
-        t=1552652602; bh=0gua/VrmG9wPPjt3WJ2QMSRoRzTyJbDgOfBBIa6Dhe0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=axLkF47rfC7j9q3K1GzHMClcbTR20FaEWnI77RghrrSXhIVpak4Amy8KuSB5qO8hZ
-         4bwMT/rOyIQ+i5iUQ4+EEGFLov27PnBYrrroKp2XoJt8YG8ZsrblsTYO2N1kwvwg3z
-         wAZx4LgStU3JGa7aNhqJKO3EQKHmlIgdH6LGUe3Y=
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 114E79403F2; Fri, 15 Mar 2019 13:23:21 +0100 (CET)
-Date:   Fri, 15 Mar 2019 13:23:21 +0100
-From:   Simon Horman <horms@verge.net.au>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Peter Rosin <peda@axentia.se>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH v2 3/7] i2c: core: introduce callbacks for atomic
- transfers
-Message-ID: <20190315122320.34yibpfhv2b6ptwl@verge.net.au>
-References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
- <20190302134735.4393-4-wsa+renesas@sang-engineering.com>
+        Fri, 15 Mar 2019 08:26:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IFl7tyDTxxjlEDrkxvda1xuKJBo+PzJ9ZHHegjIR54c=; b=ebGH4hCEm2810H85vbAXgXuei
+        RLVEaFn7oSgEb/Zn7VBY5DEunlt33RUHDW5kHouJngY37aCll9nYQoyAq9Ws+CsFihYPdbU9Fa+mN
+        StmingCxk5Kn1tsKY/79Fx+cx6HqqQG2rUUfvOlggHY4Gr0o0/9HtXzV2k0zFz0Wz4y2ef4C12uBv
+        33/vTOGVQl4v5c14uDBqnnghJBq/aJjxfzIxLdPuB/9NaQkexXH1aLI8rywWIJuFpks4S2nu1NgZH
+        DJLlTs+mEOOu5WNoReTBvSs0txqNHjxZw5J1GojE9EdZa9f79HjYiE1i2w1co6jGWMzYSI1+YOBIr
+        bL9HlwQ+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4luP-0006CR-Qd; Fri, 15 Mar 2019 12:25:58 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 49BE321419E57; Fri, 15 Mar 2019 13:25:56 +0100 (CET)
+Date:   Fri, 15 Mar 2019 13:25:56 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Laurent Vivier <lvivier@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Borislav Petkov <bp@suse.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>
+Subject: Re: [RFC v3] sched/topology: fix kernel crash when a CPU is
+ hotplugged in a memoryless node
+Message-ID: <20190315122556.GE6058@hirez.programming.kicks-ass.net>
+References: <20190304195952.16879-1-lvivier@redhat.com>
+ <77b142fe-0886-1510-28bd-d432ea2c796a@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190302134735.4393-4-wsa+renesas@sang-engineering.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <77b142fe-0886-1510-28bd-d432ea2c796a@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 02, 2019 at 02:47:31PM +0100, Wolfram Sang wrote:
-> We had the request to access devices very late when interrupts are not
-> available anymore multiple times now. Mostly to prepare shutdown or
-> reboot. Allow adapters to specify a specific callback for this case.
-> Note that we fall back to the generic {master|smbus}_xfer callback if
-> this new atomic one is not present. This is intentional to preserve the
-> previous behaviour and avoid regressions. Because there are drivers not
-> using interrupts or because it might have worked "accidently" before.
+On Fri, Mar 15, 2019 at 12:12:45PM +0100, Laurent Vivier wrote:
+
+> Another way to avoid the nodes overlapping for the offline nodes at
+> startup is to ensure the default values don't define a distance that
+> merge all offline nodes into node 0.
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/i2c/i2c-core-base.c  |  6 +++++-
->  drivers/i2c/i2c-core-smbus.c | 18 ++++++++++++++----
->  drivers/i2c/i2c-core.h       |  7 +++++--
->  include/linux/i2c.h          | 15 ++++++++++++---
->  4 files changed, 36 insertions(+), 10 deletions(-)
+> A powerpc specific patch can workaround the kernel crash by doing this:
 > 
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 004f8a3b6365..2127dd08ff01 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -1890,7 +1890,11 @@ int __i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
->  	/* Retry automatically on arbitration loss */
->  	orig_jiffies = jiffies;
->  	for (ret = 0, try = 0; try <= adap->retries; try++) {
-> -		ret = adap->algo->master_xfer(adap, msgs, num);
-> +		if ((in_atomic() || irqs_disabled()) && adap->algo->master_xfer_atomic)
-> +			ret = adap->algo->master_xfer_atomic(adap, msgs, num);
-> +		else
-> +			ret = adap->algo->master_xfer(adap, msgs, num);
+> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> index 87f0dd0..3ba29bb 100644
+> --- a/arch/powerpc/mm/numa.c
+> +++ b/arch/powerpc/mm/numa.c
+> @@ -623,6 +623,7 @@ static int __init parse_numa_properties(void)
+>         struct device_node *memory;
+>         int default_nid = 0;
+>         unsigned long i;
+> +       int nid, dist;
+> 
+>         if (numa_enabled == 0) {
+>                 printk(KERN_WARNING "NUMA disabled by user\n");
+> @@ -636,6 +637,10 @@ static int __init parse_numa_properties(void)
+> 
+>         dbg("NUMA associativity depth for CPU/Memory: %d\n",
+> min_common_depth);
+> 
+> +       for (nid = 0; nid < MAX_NUMNODES; nid ++)
+> +               for (dist = 0; dist < MAX_DISTANCE_REF_POINTS; dist++)
+> +                       distance_lookup_table[nid][dist] = nid;
 > +
->  		if (ret != -EAGAIN)
->  			break;
->  		if (time_after(jiffies, orig_jiffies + adap->timeout))
-> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-> index 357e083e8f45..e01a548fc559 100644
-> --- a/drivers/i2c/i2c-core-smbus.c
-> +++ b/drivers/i2c/i2c-core-smbus.c
-> @@ -548,6 +548,9 @@ s32 __i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
->  		     unsigned short flags, char read_write,
->  		     u8 command, int protocol, union i2c_smbus_data *data)
->  {
-> +	int (*xfer_func)(struct i2c_adapter *adap, u16 addr,
-> +			 unsigned short flags, char read_write,
-> +			 u8 command, int size, union i2c_smbus_data *data);
->  	unsigned long orig_jiffies;
->  	int try;
->  	s32 res;
-> @@ -562,13 +565,20 @@ s32 __i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
->  
->  	flags &= I2C_M_TEN | I2C_CLIENT_PEC | I2C_CLIENT_SCCB;
->  
-> -	if (adapter->algo->smbus_xfer) {
-> +	xfer_func = adapter->algo->smbus_xfer;
-> +	if (in_atomic() || irqs_disabled()) {
-> +		if (adapter->algo->smbus_xfer_atomic)
-> +			xfer_func = adapter->algo->smbus_xfer_atomic;
-> +		else if (adapter->algo->master_xfer_atomic)
-> +			xfer_func = NULL; /* fallback to I2C emulation */
-> +	}
-> +
-> +	if (xfer_func) {
->  		/* Retry automatically on arbitration loss */
->  		orig_jiffies = jiffies;
->  		for (res = 0, try = 0; try <= adapter->retries; try++) {
-> -			res = adapter->algo->smbus_xfer(adapter, addr, flags,
-> -							read_write, command,
-> -							protocol, data);
-> +			res = xfer_func(adapter, addr, flags, read_write,
-> +					command, protocol, data);
->  			if (res != -EAGAIN)
->  				break;
->  			if (time_after(jiffies,
-> diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
-> index 6e98aa811980..01a6cb9b53aa 100644
-> --- a/drivers/i2c/i2c-core.h
-> +++ b/drivers/i2c/i2c-core.h
-> @@ -33,10 +33,13 @@ static inline int __i2c_lock_bus_helper(struct i2c_adapter *adap)
->  {
->  	int ret = 0;
->  
-> -	if (in_atomic() || irqs_disabled())
-> +	if (in_atomic() || irqs_disabled()) {
-> +		WARN(!adap->algo->master_xfer_atomic && !adap->algo->smbus_xfer_atomic,
-> +		     "No atomic I2C transfer handler for '%s'\n", dev_name(&adap->dev));
+>         /*
+>          * Even though we connect cpus to numa domains later in SMP
+>          * init, we need to know the node ids now. This is because
 
-		Is WARN_ONCE more appropriate here?
+What does that actually do? That is, what does it make the distance
+table look like before and after you bring up the CPUs?
 
->  		ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT) ? 0 : -EAGAIN;
-> -	else
-> +	} else {
->  		i2c_lock_bus(adap, I2C_LOCK_SEGMENT);
-> +	}
->  
->  	return ret;
->  }
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index 758a6db864c9..3cd921dd39e3 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -499,9 +499,13 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
->   * @master_xfer: Issue a set of i2c transactions to the given I2C adapter
->   *   defined by the msgs array, with num messages available to transfer via
->   *   the adapter specified by adap.
-> + * @master_xfer_atomic: same as @master_xfer. Yet, only using atomic context
-> + *   so e.g. PMICs can be accessed very late before shutdown. Optional.
->   * @smbus_xfer: Issue smbus transactions to the given I2C adapter. If this
->   *   is not present, then the bus layer will try and convert the SMBus calls
->   *   into I2C transfers instead.
-> + * @smbus_xfer_atomic: same as @smbus_xfer. Yet, only using atomic context
-> + *   so e.g. PMICs can be accessed very late before shutdown. Optional.
->   * @functionality: Return the flags that this algorithm/adapter pair supports
->   *   from the I2C_FUNC_* flags.
->   * @reg_slave: Register given client to I2C slave mode of this adapter
-> @@ -512,9 +516,9 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
->   * be addressed using the same bus algorithms - i.e. bit-banging or the PCF8584
->   * to name two of the most common.
->   *
-> - * The return codes from the @master_xfer field should indicate the type of
-> - * error code that occurred during the transfer, as documented in the kernel
-> - * Documentation file Documentation/i2c/fault-codes.
-> + * The return codes from the @master_xfer{_atomic} field should indicate the
+> Any comment?
 
-I think "field" should be "fields" in the new text.
+Well, I had a few questions here:
 
-> + * type of error code that occurred during the transfer, as documented in the
-> + * Kernel Documentation file Documentation/i2c/fault-codes.
->   */
->  struct i2c_algorithm {
->  	/*
-> @@ -528,9 +532,14 @@ struct i2c_algorithm {
->  	 */
->  	int (*master_xfer)(struct i2c_adapter *adap, struct i2c_msg *msgs,
->  			   int num);
-> +	int (*master_xfer_atomic)(struct i2c_adapter *adap,
-> +				   struct i2c_msg *msgs, int num);
->  	int (*smbus_xfer)(struct i2c_adapter *adap, u16 addr,
->  			  unsigned short flags, char read_write,
->  			  u8 command, int size, union i2c_smbus_data *data);
-> +	int (*smbus_xfer_atomic)(struct i2c_adapter *adap, u16 addr,
-> +				 unsigned short flags, char read_write,
-> +				 u8 command, int size, union i2c_smbus_data *data);
->  
->  	/* To determine what the adapter supports */
->  	u32 (*functionality)(struct i2c_adapter *adap);
-> -- 
-> 2.11.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+  20190305115952.GH32477@hirez.programming.kicks-ass.net
+
+that I've not yet seen answers to.
