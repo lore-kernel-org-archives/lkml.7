@@ -2,135 +2,129 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93720C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF3DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599A021872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0121E21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="d5SswaQi"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="g+pg/yXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbfCOJuu (ORCPT
+        id S1728769AbfCOJxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:50:50 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:45510 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728718AbfCOJuu (ORCPT
+        Fri, 15 Mar 2019 05:53:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38863 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726886AbfCOJxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:50:50 -0400
-Received: by mail-yw1-f66.google.com with SMTP id r188so6729376ywb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 02:50:49 -0700 (PDT)
+        Fri, 15 Mar 2019 05:53:42 -0400
+Received: by mail-pf1-f196.google.com with SMTP id n125so5974957pfn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 02:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N2TmsKXbvDGU0X42ituryieWnNgh/sDH4QOuRfO6NR0=;
-        b=d5SswaQi/ccEEQTezLipe2b1d2URO5vZOCV8pJJJsqT3bZtdYN/FRum9RFXp87a5Eh
-         SK8iZYsqQ6G7UFz9M5ztwVeQZyLYb28LIekch3hRvgZjkppLtVL9dDIcBGHRFFXtlKjh
-         uE/m9tl6XqOmGnxJOddeNYhfsfKT8o/702AI8=
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R34Hc5VrGY8X4eTOWGoukKjOWMd10HDmULGs/URQgL8=;
+        b=g+pg/yXW7qV5PSTm7QTFnDApsNiqFWNMAP75cmNjzVnveo/6kzujpuK0ah5SEcQFyT
+         HyRyksm84LQIG3nOQNw0stSZB6kXgd9+bcYpTttB8xcK2AdFWETZRbGqvwKy1ZkFFzw5
+         Jxd1k+CJ1UYx7HIrC9NcQR+zqnYTJeZit+xhZkHSrEHV15m32VY6pnMMy7jM5bd+NPbS
+         cQ2/uuSPAn3wz0A5X5PTZPA+osB3UZ1q1r/0zdGz+TtEqbrnlcWNTlz+Zg/TtaPerocE
+         TMvbgj26MGtgLVBGqK9XCBdhtbyyYBQdhAUiYZs4MdC8OXOUmOPUgbO+y1D1pji4+DP6
+         Z47A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=N2TmsKXbvDGU0X42ituryieWnNgh/sDH4QOuRfO6NR0=;
-        b=qiRVTmk/+kzSkZ9g2rSmQZCvp8GSXLQG3qq/fwz7DSzAkMR+tf67r+SJbnuqsRAPtD
-         6MRhwgMqTHLw+rknmallaa8umrTnz1MJjhKGBzn43Q9O4EYD7XmsY11Z51mONj+PaWeZ
-         y/6baKjc+jEMCCWIbo99VkyULH8j5gBtZ39WCc+53d20jghEDUwujqzSLhbGBhLgHueO
-         jNFkfq6QCC5Wi0c3wwqdz4hwzet9gSpm5yKWzh9sCarNzUSZdeemphkAvKLNhR0IRpUD
-         LAOqJGutPZmDHFk+Pr4mN3u7HZ37UAjkbALVEHV6RktGtG0r8VzFU2gu+OPbJTgv+Xuh
-         fATw==
-X-Gm-Message-State: APjAAAWukKX7lBf290BXwww2taM09XPukQecNmOKKEXAxgrqpBT7unO+
-        EbiU3kiwR/FHeJTMBffvAOEyNj1LpbXx77IdILvJA/y2qdj9gN1EsfrlAQpwR61dD4a7V7oJe/O
-        abm8rAK0uQV1qtUZ4Dxat8ildmMYx5JJQCdjpGMYHsU80OSXRmj8GdjIj19wwhWLp34EesOAK95
-        7Nq5cC6+at+V0=
-X-Google-Smtp-Source: APXvYqxXTTLXkkGYTzAMZPXWcHhMTd6xiM1CdWUp/U2NElcRvn7Im1Lm0v3nHkG0CaAw9x2dbZ1Kng==
-X-Received: by 2002:a0d:c5c3:: with SMTP id h186mr1946124ywd.462.1552643448591;
-        Fri, 15 Mar 2019 02:50:48 -0700 (PDT)
-Received: from [10.176.68.125] ([192.19.248.250])
-        by smtp.gmail.com with ESMTPSA id 81sm652526ywr.21.2019.03.15.02.50.45
+        bh=R34Hc5VrGY8X4eTOWGoukKjOWMd10HDmULGs/URQgL8=;
+        b=kcVVhLl4XMK6Tu7QRtlC+GUjqEbX692rYjQGmuePYzgysUZpLUMGuvqamyWJPNkV4S
+         YrsWsxNuuypFwES+Qgwlg0oWCHXYS8V/Z4Cooxqk/ie3Af9iEJGVW4HPm6yL9NT/KaZ+
+         SN5tEoZkcz3jaVQcV22a4hKoLe5rA2Z07vc4XxXmNVDGZSdcIsfA7XJWpNchYJCMrhgt
+         JmhUJGB4OY7MFpz8Xi3N3oC2qatevsa6TPVQ570pqSk9dY6pCzQKnPiY/lMO+5VZ0IqQ
+         LxEaR+apD24JFtABmhR+pQ9uZ/Ga5JJ12SNsFlZUWS2xo7oVau6TmoQ9bb2y+2b2X7Ck
+         mB9w==
+X-Gm-Message-State: APjAAAXsJQNxpmYYbrdPiX/tTrl/telV8hijrzrN8iByH5JUTY2d3dc+
+        ozFjlEodHOScNDrJqytmdf00ug==
+X-Google-Smtp-Source: APXvYqwQ4PdExfkqBUDETtnV/7xg7siqZb27NlcmkwAMbb4F+M8bkTmUgT+fpu66g2xw5OnmIBwypA==
+X-Received: by 2002:a17:902:694b:: with SMTP id k11mr3298306plt.288.1552643620759;
+        Fri, 15 Mar 2019 02:53:40 -0700 (PDT)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id l28sm4439705pfi.186.2019.03.15.02.53.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 02:50:48 -0700 (PDT)
-Subject: Re: [PATCH v2] net: brcm80211: fix missing checks for kmemdup
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190312043929.727-1-kjlu@umn.edu>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <d712dd26-8b51-143a-b3ff-ad44f2774944@broadcom.com>
-Date:   Fri, 15 Mar 2019 10:50:44 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Fri, 15 Mar 2019 02:53:40 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux@endlessm.com, Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH v2] ALSA: hda/realtek: Enable headset MIC of Acer AIO with ALC286
+Date:   Fri, 15 Mar 2019 17:51:09 +0800
+Message-Id: <20190315095108.9195-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190312043929.727-1-kjlu@umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/2019 5:39 AM, Kangjie Lu wrote:
-> In case kmemdup fails, the fix sets conn_info->req_ie_len to zero
-> to avoid buffer overflows.
+Some Acer AIO desktops like Veriton Z6860G, Z4860G and Z4660G cannot
+record sound from headset MIC.  This patch adds the
+ALC286_FIXUP_ACER_AIO_HEADSET_MIC quirk to fix this issue.
 
-Hi Kangjie,
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+---
+v2: According to Realtek's suggestion, change the COEF 0x4f from 0xd429 to
+    0x5029.  Thanks to Realtek!
 
-See comment below. Also for v3 change prefix 'net:brcm80211:' to 
-'brcmfmac:' instead.
+ sound/pci/hda/patch_realtek.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->   drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> index e92f6351bd22..5d9a3c35fef5 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> @@ -5464,6 +5464,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
->   		conn_info->req_ie =
->   		    kmemdup(cfg->extra_buf, conn_info->req_ie_len,
->   			    GFP_KERNEL);
-> +		if (!conn_info->req_ie)
-> +			conn_info->req_ie_len = 0;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 384719d5c44e..191830d4fa40 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5687,6 +5687,7 @@ enum {
+ 	ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE,
+ 	ALC225_FIXUP_WYSE_AUTO_MUTE,
+ 	ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
++	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6685,6 +6686,16 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
+ 	},
++	[ALC286_FIXUP_ACER_AIO_HEADSET_MIC] = {
++		.type = HDA_FIXUP_VERBS,
++		.v.verbs = (const struct hda_verb[]) {
++			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x4f },
++			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5029 },
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -6701,9 +6712,9 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP_ASPIRE_V5_PINS),
+ 	SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
+-	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
+ 	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
+-- 
+2.20.1
 
-good.
-
->   	} else {
->   		conn_info->req_ie_len = 0;
->   		conn_info->req_ie = NULL;
-> @@ -5480,6 +5482,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
->   		conn_info->resp_ie =
->   		    kmemdup(cfg->extra_buf, conn_info->resp_ie_len,
->   			    GFP_KERNEL);
-> +		if (!conn_info->resp_ie)
-> +			conn_info->req_ie_len = 0;
-
-bad! I think you took my comment too literal. Here it should set 
-conn_info->resp_ie_len to zero.
-
-Regards,
-Arend
-
->   	} else {
->   		conn_info->resp_ie_len = 0;
->   		conn_info->resp_ie = NULL;
-> 
