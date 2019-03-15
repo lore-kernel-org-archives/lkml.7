@@ -2,114 +2,113 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9BFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A040AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B044206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67FDE205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="E6SvlpoE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfCOD4D (ORCPT
+        id S1727539AbfCOD6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 23:56:03 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4685 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727096AbfCOD4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 23:56:03 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2272329FEB20CBBEC565;
-        Fri, 15 Mar 2019 11:56:00 +0800 (CST)
-Received: from linux-work.huawei.com (10.67.189.231) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 15 Mar 2019 11:55:50 +0800
-From:   <chenjie6@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <dvhart@infradead.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <tglx@linutronix.de>, <zengweilin@huawei.com>,
-        chen jie <chenjie6@huawei.com>
-Subject: [PATCH] futex:fix robust futex alignment exception
-Date:   Fri, 15 Mar 2019 03:44:38 +0000
-Message-ID: <1552621478-119787-1-git-send-email-chenjie6@huawei.com>
-X-Mailer: git-send-email 1.8.3.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.231]
-X-CFilter-Loop: Reflected
+        Thu, 14 Mar 2019 23:58:50 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:39930 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfCOD6t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 23:58:49 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 3E4A7D2E
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 03:58:48 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Q5_HsMLEF-_A for <linux-kernel@vger.kernel.org>;
+        Thu, 14 Mar 2019 22:58:48 -0500 (CDT)
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 0E4DED43
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 22:58:48 -0500 (CDT)
+Received: by mail-io1-f71.google.com with SMTP id a9so5981764iol.6
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 20:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=iLUkp8oVLq+kPOC38MJgOVEnJVsUq0i1VhMkxALVLd0=;
+        b=E6SvlpoEwPWeiJXvJnhaDGPXNWHFg5Ns2SIKUPqI6Fiy01XUyf0+cYYnyrZLMpScOm
+         +jKQPH08Qi53FthfV3vceJ7LekOzZ1X8J63f+PwlRXVSeKYXGDXpHx7j5LTF3lP0ahcU
+         RFjyuhlKRxZZj4yRFi8qWNjDK9EwNgPqPENRfJxtk8pBUN4sTIIbB6hfGFFxJCX2d6C7
+         OQjmwkMvbl0z8x0FTEUq9NIDKwvO66X/c2zB1lZ2fOR1i06ysUnoSohKqDqS/G5/U3Rw
+         119KWA8FJmAlJuAnk6iz7w22CmwqJQvm5X+Bw3VODMZhFCEX60GgCypk++HioMNoqAvN
+         ne2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iLUkp8oVLq+kPOC38MJgOVEnJVsUq0i1VhMkxALVLd0=;
+        b=NVAHY0bonCcv/iHIGUylCBJ8Y/uaYX++x6zI2/AjqMAsa9WnXcPrE08AoeIjra3Qi/
+         qxo+X4S5qIAGYl1f/nWQ/jtTAg2W2VkG2bTo2TVlwZ1oeaEhv0WXcxxXEHrr1w74Tf81
+         t/dKj0JYvtEjANi6S+0LV8SPTfUrxv5YxK/BjE2Q9ZhhsFrRxZAlO6PIJ1W+FWZWMjSq
+         6MKt80GznSMnMErxyukmkVfQKCjMiDu3Mt22qgdfMxVPub1UHrsPq5eqyMnVjh9NEXQk
+         33bX6eOtEoNqwQA15fF72BkRZ2+utwzGAk1fot4d1wNYjMp8/vPUftqgGUcHuagwZUqi
+         dpYA==
+X-Gm-Message-State: APjAAAUMFRp/qLDXdKqTFWdq0oGg+desqfBefTL1io5D+0SHn+b7UvKl
+        hRw9qE+FNrZu76FW0+AtvkTytahfL2e+2wbopXuB4I8Wq0icOyk1zg+VsPig10atk7FXPsP+6MK
+        qpvnSgwSqiuvAOkSjDVwsp8sLFov7
+X-Received: by 2002:a5e:c604:: with SMTP id f4mr865495iok.263.1552622326624;
+        Thu, 14 Mar 2019 20:58:46 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwgUYeDx9rAeox18Vo0FsSk0JDVjFOsteVA7vc7GpjHVd+B8wqpiSbzaPVaqMHEGIuTx1mJ/Q==
+X-Received: by 2002:a5e:c604:: with SMTP id f4mr865481iok.263.1552622326390;
+        Thu, 14 Mar 2019 20:58:46 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id x191sm552885itb.8.2019.03.14.20.58.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 20:58:45 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sound: echoaudio: add a check for ioremap_nocache
+Date:   Thu, 14 Mar 2019 22:58:29 -0500
+Message-Id: <20190315035830.29557-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chen jie <chenjie6@huawei.com>
+In case ioremap_nocache fails, the fix releases chip and returns
+an error code upstream to avoid NULL pointer dereference.
 
-trinity test bug fix:
-/tmp/trinity --children 4 --quiet -N 10000000 --logging=off -X -x perf_event_open --enable-fds=testfile
-
-[1542.195981] Task track: trinity-c3(6911)>trinity-main(28313)>sh(839)>bash(824)>sshd(820)>sshd(662)>init(1)
-[11542.214694] Alignment trap: not handling instruction e1915f9f at [<c017b1d4>]
-[11542.214724] Unhandled fault: alignment exception (0x011) at 0x000265f9
-[11542.214749] pgd = edde0000
-[11542.214774] [000265f9] *pgd=84aa9831, *pte=bc10359f, *ppte=bc103e7e
-[11542.214851] Internal error: : 11 [#1] SMP ARM
-[11542.214857] Modules linked in: rtos_snapshot(O) rsm(O) nfsv3 veth(O) pthread_lsof(O) higmac(O) comm(O) nand mtdblock mtd_blkdevs nand_ecc nand_ids pramdisk(O) rtos_kbox_panic(O) double_cluster(O) uart_suspend(O) cache_ops(O) nfsd nfs_acl exportfs auth_rpcgss nfs lockd sunrpc oid_registry grace physmap cfi_probe cfi_cmdset_0002 cfi_util mtd gen_probe chipreg ohci_platform ehci_platform ohci_hcd ehci_hcd usb_device_hisi(O) vfat fat sd_mod enable_uart_rx(O) [last unloaded: rtos_snapshot]
-[11542.215042] CPU: 3 PID: 6911 Comm: trinity-c3 Tainted: G    B   W  O    4.1.12 #1
-[11542.215048] Hardware name: Hisilicon A9
-[11542.215055] task: c3df8a20 ti: ebb2c000 task.ti: ebb2c000
-[11542.215071] PC is at cmpxchg_futex_value_locked+0x44/0x88
-[11542.215081] LR is at handle_futex_death+0x78/0xcc
-[11542.215090] pc : [<c017b1d4>]    lr : [<c017da50>]    psr: 60000213
-sp : ebb2dee4  ip : fffffff2  fp : fffffff2
-[11542.215096] r10: 000238e3  r9 : 00000000  r8 : 00001000
-[11542.215103] r7 : c3df8a20  r6 : 00000000  r5 : 00001aff  r4 : ebb2def4
-[11542.215110] r3 : 40000000  r2 : 00001aff  r1 : 000265f9  r0 : 410265fc
-[11542.215119] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-[11542.215126] Control: 1ac5387d  Table: ae7e004a  DAC: 55555555
-[11542.215133] Process trinity-c3 (pid: 6911, stack limit = 0xebb2c210)
-[11542.215140] Stack: (0xebb2dee4 to 0xebb2e000)
-[11542.215151] dee0:          000265f9 00001aff c017da50 000265f9 c3df8a20 b5ebc000 00000800
-[11542.215161] df00: c3df8a20 00001000 00001000 c017dba8 c3df8a20 c399ef40 00000000 c3df8a20
-[11542.215172] df20: c399ef40 c399ef40 000000f8 c0107b84 ebb2c000 00000001 0094d810 c011b40c
-[11542.215182] df40: c3df8a20 c399ef40 c3df8a20 c399ef40 0094d830 c011f9a4 00000000 000000f8
-[11542.215192] df60: c0107b84 c0197388 00002d16 ef1d3520 00000000 0094d830 000000f8 c0107b84
-[11542.215203] df80: ebb2c000 00000200 0094d810 c0120250 00097d80 0094d8a4 0094d830 c01202a8
-[11542.215213] dfa0: 00000000 c0107b6c 00097d80 0094d8a4 00000000 b6f0f4c0 b63ef000 00000000
-[11542.215223] dfc0: 00097d80 0094d8a4 0094d830 000000f8 00000001 0094db88 0094db94 0094d810
-[11542.215233] dfe0: 00097d64 be938310 00017a40 b6e1a340 60000210 00000000 00000000 00000000
-[11542.215247] [<c017b1d4>] (cmpxchg_futex_value_locked) from [<c017da50>] (handle_futex_death+0x78/0xcc)
-[11542.215259] [<c017da50>] (handle_futex_death) from [<c017dba8>] (exit_robust_list+0x104/0x160)
-[11542.215273] [<c017dba8>] (exit_robust_list) from [<c011b40c>] (mm_release+0x1c/0x108)
-[11542.215287] [<c011b40c>] (mm_release) from [<c011f9a4>] (do_exit+0x218/0x9a4)
-[11542.215299] [<c011f9a4>] (do_exit) from [<c0120250>] (do_group_exit+0xac/0xf4)
-[11542.215311] [<c0120250>] (do_group_exit) from [<c01202a8>] (__wake_up_parent+0x0/0x18)
-[11542.215321] Code: 0dc0e0e3 0a00001a 5bf07ff5 00f091f5 (9f5f91e1)
-[11542.217918] CPU 1 will stop doing anything useful since another CPU has crashed
-[11542.217924] CPU 0 will stop doing anything useful since another CPU has crashed
-[11542.217930] CPU 2 will stop doing anything useful since another CPU has crashed
-[11542.218626] Loading crashdump kernel...
-[11542.218668] Bye!
-
-Signed-off-by: chen jie <chenjie6@huawei.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- kernel/futex.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/echoaudio/echoaudio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/futex.c b/kernel/futex.c
-index a0514e0..70231c4 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -3440,6 +3440,9 @@ static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int p
- {
- 	u32 uval, uninitialized_var(nval), mval;
+diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
+index ea876b0b02b9..dc0084dc8550 100644
+--- a/sound/pci/echoaudio/echoaudio.c
++++ b/sound/pci/echoaudio/echoaudio.c
+@@ -1952,6 +1952,11 @@ static int snd_echo_create(struct snd_card *card,
+ 	}
+ 	chip->dsp_registers = (volatile u32 __iomem *)
+ 		ioremap_nocache(chip->dsp_registers_phys, sz);
++	if (!chip->dsp_registers) {
++		dev_err(chip->card->dev, "ioremap failed\n");
++		snd_echo_free(chip);
++		return -ENOMEM;
++	}
  
-+	if (((unsigned long)uaddr & 0x3) > 0)
-+		return -1;
-+
- retry:
- 	if (get_user(uval, uaddr))
- 		return -1;
+ 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
+ 			KBUILD_MODNAME, chip)) {
 -- 
-1.8.3.4
+2.17.1
 
