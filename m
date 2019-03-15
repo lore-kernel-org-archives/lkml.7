@@ -2,118 +2,429 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16839C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA598C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA4D218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64ABA218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="okjVpbyl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lHEMOiHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfCOJMb (ORCPT
+        id S1728683AbfCOJNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:12:31 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42580 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbfCOJMa (ORCPT
+        Fri, 15 Mar 2019 05:13:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44071 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbfCOJNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:12:30 -0400
-Received: by mail-pg1-f196.google.com with SMTP id b2so5994110pgl.9;
-        Fri, 15 Mar 2019 02:12:30 -0700 (PDT)
+        Fri, 15 Mar 2019 05:13:20 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h34so5995656pgh.11
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 02:13:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TjtM6fVwWqEdIaS+4mof0Rz3Fnpu6pGIwmPSNX9Z0Hs=;
-        b=okjVpbylXBvFVCgkvxV1qQmJLa4zjX+Ltn4hpXcPdxJgbI4G5M8CxOy7IUSJBTSaK1
-         lxTdnqMoxPigmmFidAq79xK4vwU9t3E/R8inl0zU+u1AG/tT9Yr0/QzYVmYFIfglML2s
-         dQxrMA99JHHiMsSodWcXcpVheixmZ0q1hXwJQUtCTcxuqMTGYnyJ0Mk0IrjBx9eupZdT
-         HESaQGWDyHsvQPzIz3IxXh3xHFJpC+dtVICGacrmmGO3E97Nwsycj02hZpvWn5ApnqQY
-         LwwbOQjSdBHZV1aRF81dZhRikWHqpOduNjsSVpgxAaD84jXKWXuyYmTF4Y6/9aVBgenP
-         7lVw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UkeUa0P2JUNBNYzTRx3rdebmZF7ZweVBbm012prHiz8=;
+        b=lHEMOiHbFe0BNTK2ItHwbExU/Tvu6EIKyx/jO19kFW7dSZxhWK9hApaI9weYVRAJoP
+         n+det+TdAJ1b0GtDbFfCLYG+6xv/zf9q9ul4z0+nyvP9T49UzcekknAQYLdnfP6BHl+2
+         WVp90Mhvpen6RALvShkCkdvJESbXOkEeSLJRVE0OvqZFKCfnkvKTaDChvSCDnhe7M8H1
+         T38O+M85nYVHNSbn6H1Ei2i8rehgdMW+ZkacA2r7VzLkoxL4JtKTfjFZassCM2vD4f97
+         WF+wnJnU3ST0rC2nPISkGbPJ1J6MoekasHgs7trMHd4/3aW5FuppwbhxwPXYZFYOYs7h
+         3FFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TjtM6fVwWqEdIaS+4mof0Rz3Fnpu6pGIwmPSNX9Z0Hs=;
-        b=lywe0DsijrGiLSD9YUwaT5HDrdEh4Pooa6hpqQTdisLXpHSRV5WTTX/wioPj8XpD+Y
-         B3NWriUS3a8QcnalWoFndS6KDpLtoHeeEKr4c8Z2Wo4pvw6Dcol39eBIQ31jdzRXCsat
-         8GYn4SX1WkU3ivvjTwZyQmlKRlbW3TZYi7j63N8gayUEkeys7Lgh/VdKHLM9/LcDSCvB
-         Z5F08rgyQbBWulroQZ3Hk/ic+aLaLn0mqF2mwVPkYjaiC4BN4pQcxfhUodLl1zrwyMQ2
-         gC3ZQFzOJ8/pEf29Ks6bBdUG7hSj/uLR5sETF8kQGB9JDr4MbpvTuqpXc4WUIkLjict1
-         CC8A==
-X-Gm-Message-State: APjAAAWjS0SKuRcKtYpD9gSibh3ehChcQimdEUri/ONM0PQ1P4g0jlGA
-        Jdo4Z75eVap/OawbEdH+OMorWXUr9jCOMYBKO68=
-X-Google-Smtp-Source: APXvYqw4y5j6ogWahBv8cySNjqKMeUi5/6fyFYUM4L+/k48yar3AiX4XyVZiz3kwzFzdtM4+cPOsKYAEcr34phMbA2M=
-X-Received: by 2002:a17:902:a9c8:: with SMTP id b8mr3156666plr.12.1552641149781;
- Fri, 15 Mar 2019 02:12:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UkeUa0P2JUNBNYzTRx3rdebmZF7ZweVBbm012prHiz8=;
+        b=ao0tqzSrmpbGY1bbCCaTx5ZHS9cGDRkGwq/dpjUko6RS9MKR3xBZ1rYpqCOjQN2cod
+         wO2KKygs5sALIMMNLl4VtaL77Nvv5GyAsmZQT6bmZI7ie5aDqtDadeoNGFnPQiCRQeF9
+         CJz3ycOCaxco96SCvXp22fgxtvkK57nPobEpe9e+r/ND2LSRkf9nkFhkycjEsDj0PHXs
+         g0DZTMFY0v+BecxzD+XA7qWwj6ga5DnFcDSr/G13u51OkDKDngsmymoK2/A3KNVqAshE
+         FtLxD2PbdqyjBNSlyQBQZpU9Dqpd1tX6LJRmIRAr55f2NdGdzBrtV80qMXARZlPBSSjI
+         4cAw==
+X-Gm-Message-State: APjAAAUXUJSXc5qjSKgp+khhccIaAyBCo9gLAaVCzV8gFxMMWb8Od2Xf
+        JPu/VohABj9X9Fxhh937IbvAyQ==
+X-Google-Smtp-Source: APXvYqworbbQYzaIoykaoNDYgD1OhlMyiiRgENEBdcAfTDg+DlYW8Eo1vfvAsi3yNPkkfMWLLduRrA==
+X-Received: by 2002:a17:902:b402:: with SMTP id x2mr3066111plr.53.1552641198787;
+        Fri, 15 Mar 2019 02:13:18 -0700 (PDT)
+Received: from localhost ([122.166.134.37])
+        by smtp.gmail.com with ESMTPSA id f125sm2640436pfc.91.2019.03.15.02.13.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Mar 2019 02:13:17 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sparclinux@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH V2] cpufreq: Call transition notifier only once for each policy
+Date:   Fri, 15 Mar 2019 14:43:07 +0530
+Message-Id: <e2b56be446eeb67f1905d2ac6f8d82dd4389d0c5.1552640968.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-References: <1552602855-26086-1-git-send-email-info@metux.net>
-In-Reply-To: <1552602855-26086-1-git-send-email-info@metux.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 15 Mar 2019 11:12:17 +0200
-Message-ID: <CAHp75VeH9isvFkp+AECgsN8du__8tBBp_4zZEVXJ083BdFweeg@mail.gmail.com>
-Subject: Re: serial driver cleanups v2
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Tobias Klauser <tklauser@distanz.ch>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        macro@linux-mips.org,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>, slemieux.tyco@gmail.com,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, baohua@kernel.org,
-        Peter Korsgaard <jacmet@sunsite.dk>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 12:40 AM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+Currently we call these notifiers once for each CPU of the policy->cpus
+cpumask. It would be more optimal if the notifier can be called only
+once and all the relevant information be provided to it. Out of the 24
+drivers that register for the transition notifiers today, only 5 of them
+do per-cpu updates and the callback for the rest can be called only once
+for the policy without any impact.
 
-> here's v2 of my serial cleanups queue - part I:
->
-> essentially using helpers to code more compact and switching to
-> devm_*() functions for mmio management.
->
-> Part II will be about moving the mmio range from mapbase and
-> mapsize (which are used quite inconsistently) to a struct resource
-> and using helpers for that. But this one isn't finished yet.
-> (if somebody likes to have a look at it, I can send it, too)
+This would also avoid multiple function calls to the notifier callbacks
+and reduce multiple iterations of notifier core's code (which does
+locking as well).
 
-Let's do that way you are preparing a branch somewhere and anounce
-here as an RFC, since this was neither tested nor correct.
-And selling point for many of them is not true: it doesn't make any
-difference in the size in code, but increases a time to run
-(devm_ioremap_resource() does more than plain devm_iomap() call).
+This patch adds pointer to the cpufreq policy to the struct
+cpufreq_freqs, so the notifier callback has all the information
+available to it with a single call. The five drivers which perform
+per-cpu updates are updated to use the cpufreq policy. The freqs->cpu
+field is redundant now and is removed.
 
+Acked-by: David S. Miller <davem@davemloft.net> (sparc)
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V1->V2:
+- Add cpufreq policy instead of cpus in struct cpufreq_freqs.
+- Use policy->cpus instead of related_cpus everywhere in order not to
+  change the existing behavior.
+- Merged all 7 patches into a single patch.
+- Updated changlog and included Ack from David.
+
+ arch/arm/kernel/smp.c       | 24 +++++++++++++++---------
+ arch/arm/kernel/smp_twd.c   |  9 ++++++---
+ arch/sparc/kernel/time_64.c | 28 ++++++++++++++++------------
+ arch/x86/kernel/tsc.c       | 32 +++++++++++++++++++++-----------
+ arch/x86/kvm/x86.c          | 31 ++++++++++++++++++++-----------
+ drivers/cpufreq/cpufreq.c   | 19 ++++++++++---------
+ include/linux/cpufreq.h     | 14 +++++++-------
+ 7 files changed, 95 insertions(+), 62 deletions(-)
+
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 1d6f5ea522f4..6f6b981fecda 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -758,15 +758,20 @@ static int cpufreq_callback(struct notifier_block *nb,
+ 					unsigned long val, void *data)
+ {
+ 	struct cpufreq_freqs *freq = data;
+-	int cpu = freq->cpu;
++	struct cpumask *cpus = freq->policy->cpus;
++	int cpu, first = cpumask_first(cpus);
++	unsigned int lpj;
+ 
+ 	if (freq->flags & CPUFREQ_CONST_LOOPS)
+ 		return NOTIFY_OK;
+ 
+-	if (!per_cpu(l_p_j_ref, cpu)) {
+-		per_cpu(l_p_j_ref, cpu) =
+-			per_cpu(cpu_data, cpu).loops_per_jiffy;
+-		per_cpu(l_p_j_ref_freq, cpu) = freq->old;
++	if (!per_cpu(l_p_j_ref, first)) {
++		for_each_cpu(cpu, cpus) {
++			per_cpu(l_p_j_ref, cpu) =
++				per_cpu(cpu_data, cpu).loops_per_jiffy;
++			per_cpu(l_p_j_ref_freq, cpu) = freq->old;
++		}
++
+ 		if (!global_l_p_j_ref) {
+ 			global_l_p_j_ref = loops_per_jiffy;
+ 			global_l_p_j_ref_freq = freq->old;
+@@ -778,10 +783,11 @@ static int cpufreq_callback(struct notifier_block *nb,
+ 		loops_per_jiffy = cpufreq_scale(global_l_p_j_ref,
+ 						global_l_p_j_ref_freq,
+ 						freq->new);
+-		per_cpu(cpu_data, cpu).loops_per_jiffy =
+-			cpufreq_scale(per_cpu(l_p_j_ref, cpu),
+-					per_cpu(l_p_j_ref_freq, cpu),
+-					freq->new);
++
++		lpj = cpufreq_scale(per_cpu(l_p_j_ref, first),
++				    per_cpu(l_p_j_ref_freq, first), freq->new);
++		for_each_cpu(cpu, cpus)
++			per_cpu(cpu_data, cpu).loops_per_jiffy = lpj;
+ 	}
+ 	return NOTIFY_OK;
+ }
+diff --git a/arch/arm/kernel/smp_twd.c b/arch/arm/kernel/smp_twd.c
+index b30eafeef096..495cc7282096 100644
+--- a/arch/arm/kernel/smp_twd.c
++++ b/arch/arm/kernel/smp_twd.c
+@@ -162,15 +162,18 @@ static int twd_cpufreq_transition(struct notifier_block *nb,
+ 	unsigned long state, void *data)
+ {
+ 	struct cpufreq_freqs *freqs = data;
++	int cpu;
+ 
+ 	/*
+ 	 * The twd clock events must be reprogrammed to account for the new
+ 	 * frequency.  The timer is local to a cpu, so cross-call to the
+ 	 * changing cpu.
+ 	 */
+-	if (state == CPUFREQ_POSTCHANGE)
+-		smp_call_function_single(freqs->cpu, twd_update_frequency,
+-			NULL, 1);
++	if (state != CPUFREQ_POSTCHANGE)
++		return NOTIFY_OK;
++
++	for_each_cpu(cpu, freqs->policy->cpus)
++		smp_call_function_single(cpu, twd_update_frequency, NULL, 1);
+ 
+ 	return NOTIFY_OK;
+ }
+diff --git a/arch/sparc/kernel/time_64.c b/arch/sparc/kernel/time_64.c
+index 3eb77943ce12..89fb05f90609 100644
+--- a/arch/sparc/kernel/time_64.c
++++ b/arch/sparc/kernel/time_64.c
+@@ -653,19 +653,23 @@ static int sparc64_cpufreq_notifier(struct notifier_block *nb, unsigned long val
+ 				    void *data)
+ {
+ 	struct cpufreq_freqs *freq = data;
+-	unsigned int cpu = freq->cpu;
+-	struct freq_table *ft = &per_cpu(sparc64_freq_table, cpu);
++	unsigned int cpu;
++	struct freq_table *ft;
+ 
+-	if (!ft->ref_freq) {
+-		ft->ref_freq = freq->old;
+-		ft->clock_tick_ref = cpu_data(cpu).clock_tick;
+-	}
+-	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
+-	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
+-		cpu_data(cpu).clock_tick =
+-			cpufreq_scale(ft->clock_tick_ref,
+-				      ft->ref_freq,
+-				      freq->new);
++	for_each_cpu(cpu, freq->policy->cpus) {
++		ft = &per_cpu(sparc64_freq_table, cpu);
++
++		if (!ft->ref_freq) {
++			ft->ref_freq = freq->old;
++			ft->clock_tick_ref = cpu_data(cpu).clock_tick;
++		}
++
++		if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
++		    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
++			cpu_data(cpu).clock_tick =
++				cpufreq_scale(ft->clock_tick_ref, ft->ref_freq,
++					      freq->new);
++		}
+ 	}
+ 
+ 	return 0;
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 3fae23834069..cff8779fc0d2 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -956,28 +956,38 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+ 				void *data)
+ {
+ 	struct cpufreq_freqs *freq = data;
+-	unsigned long *lpj;
+-
+-	lpj = &boot_cpu_data.loops_per_jiffy;
+-#ifdef CONFIG_SMP
+-	if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+-		lpj = &cpu_data(freq->cpu).loops_per_jiffy;
+-#endif
++	struct cpumask *cpus = freq->policy->cpus;
++	bool boot_cpu = !IS_ENABLED(CONFIG_SMP) || freq->flags & CPUFREQ_CONST_LOOPS;
++	unsigned long lpj;
++	int cpu;
+ 
+ 	if (!ref_freq) {
+ 		ref_freq = freq->old;
+-		loops_per_jiffy_ref = *lpj;
+ 		tsc_khz_ref = tsc_khz;
++
++		if (boot_cpu)
++			loops_per_jiffy_ref = boot_cpu_data.loops_per_jiffy;
++		else
++			loops_per_jiffy_ref = cpu_data(cpumask_first(cpus)).loops_per_jiffy;
+ 	}
++
+ 	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
+ 			(val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
+-		*lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+-
++		lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+ 		tsc_khz = cpufreq_scale(tsc_khz_ref, ref_freq, freq->new);
++
+ 		if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+ 			mark_tsc_unstable("cpufreq changes");
+ 
+-		set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
++		if (boot_cpu) {
++			boot_cpu_data.loops_per_jiffy = lpj;
++		} else {
++			for_each_cpu(cpu, cpus)
++				cpu_data(cpu).loops_per_jiffy = lpj;
++		}
++
++		for_each_cpu(cpu, cpus)
++			set_cyc2ns_scale(tsc_khz, cpu, rdtsc());
+ 	}
+ 
+ 	return 0;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 941f932373d0..653c7da11647 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6648,10 +6648,8 @@ static void kvm_hyperv_tsc_notifier(void)
+ }
+ #endif
+ 
+-static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+-				     void *data)
++static void __kvmclock_cpufreq_notifier(struct cpufreq_freqs *freq, int cpu)
+ {
+-	struct cpufreq_freqs *freq = data;
+ 	struct kvm *kvm;
+ 	struct kvm_vcpu *vcpu;
+ 	int i, send_ipi = 0;
+@@ -6695,17 +6693,12 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
+ 	 *
+ 	 */
+ 
+-	if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
+-		return 0;
+-	if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
+-		return 0;
+-
+-	smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
++	smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
+ 
+ 	spin_lock(&kvm_lock);
+ 	list_for_each_entry(kvm, &vm_list, vm_list) {
+ 		kvm_for_each_vcpu(i, vcpu, kvm) {
+-			if (vcpu->cpu != freq->cpu)
++			if (vcpu->cpu != cpu)
+ 				continue;
+ 			kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
+ 			if (vcpu->cpu != smp_processor_id())
+@@ -6727,8 +6720,24 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
+ 		 * guest context is entered kvmclock will be updated,
+ 		 * so the guest will not see stale values.
+ 		 */
+-		smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
++		smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
+ 	}
++}
++
++static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
++				     void *data)
++{
++	struct cpufreq_freqs *freq = data;
++	int cpu;
++
++	if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
++		return 0;
++	if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
++		return 0;
++
++	for_each_cpu(cpu, freq->policy->cpus)
++		__kvmclock_cpufreq_notifier(freq, cpu);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index e10922709d13..fba38bf27d26 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -300,11 +300,14 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+ 				      struct cpufreq_freqs *freqs,
+ 				      unsigned int state)
+ {
++	int cpu;
++
+ 	BUG_ON(irqs_disabled());
+ 
+ 	if (cpufreq_disabled())
+ 		return;
+ 
++	freqs->policy = policy;
+ 	freqs->flags = cpufreq_driver->flags;
+ 	pr_debug("notification %u of frequency transition to %u kHz\n",
+ 		 state, freqs->new);
+@@ -324,10 +327,8 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+ 			}
+ 		}
+ 
+-		for_each_cpu(freqs->cpu, policy->cpus) {
+-			srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
+-						 CPUFREQ_PRECHANGE, freqs);
+-		}
++		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
++					 CPUFREQ_PRECHANGE, freqs);
+ 
+ 		adjust_jiffies(CPUFREQ_PRECHANGE, freqs);
+ 		break;
+@@ -337,11 +338,11 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+ 		pr_debug("FREQ: %u - CPUs: %*pbl\n", freqs->new,
+ 			 cpumask_pr_args(policy->cpus));
+ 
+-		for_each_cpu(freqs->cpu, policy->cpus) {
+-			trace_cpu_frequency(freqs->new, freqs->cpu);
+-			srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
+-						 CPUFREQ_POSTCHANGE, freqs);
+-		}
++		for_each_cpu(cpu, policy->cpus)
++			trace_cpu_frequency(freqs->new, cpu);
++
++		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
++					 CPUFREQ_POSTCHANGE, freqs);
+ 
+ 		cpufreq_stats_record_transition(policy, freqs->new);
+ 		policy->cur = freqs->new;
+diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+index b160e98076e3..e327523ddff2 100644
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -42,13 +42,6 @@ enum cpufreq_table_sorting {
+ 	CPUFREQ_TABLE_SORTED_DESCENDING
+ };
+ 
+-struct cpufreq_freqs {
+-	unsigned int cpu;	/* cpu nr */
+-	unsigned int old;
+-	unsigned int new;
+-	u8 flags;		/* flags of cpufreq_driver, see below. */
+-};
+-
+ struct cpufreq_cpuinfo {
+ 	unsigned int		max_freq;
+ 	unsigned int		min_freq;
+@@ -156,6 +149,13 @@ struct cpufreq_policy {
+ 	struct thermal_cooling_device *cdev;
+ };
+ 
++struct cpufreq_freqs {
++	struct cpufreq_policy *policy;
++	unsigned int old;
++	unsigned int new;
++	u8 flags;		/* flags of cpufreq_driver, see below. */
++};
++
+ /* Only for ACPI */
+ #define CPUFREQ_SHARED_TYPE_NONE (0) /* None */
+ #define CPUFREQ_SHARED_TYPE_HW	 (1) /* HW does needed coordination */
 -- 
-With Best Regards,
-Andy Shevchenko
+2.21.0.rc0.269.g1a574e7a288b
+
