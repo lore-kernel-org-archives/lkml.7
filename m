@@ -2,129 +2,150 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08ADC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0039C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA33B218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6B32186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:43:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDSdxxB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfCOSlk (ORCPT
+        id S1726743AbfCOSnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:41:40 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:39417 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfCOSlj (ORCPT
+        Fri, 15 Mar 2019 14:43:35 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39392 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfCOSnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:41:39 -0400
-Received: from [192.168.1.110] ([77.2.38.11]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MirfI-1gb17s0I5M-00exYF; Fri, 15 Mar 2019 19:41:20 +0100
-Subject: Re: serial driver cleanups v2
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Tobias Klauser <tklauser@distanz.ch>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        macro@linux-mips.org,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>, slemieux.tyco@gmail.com,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, baohua@kernel.org,
-        Peter Korsgaard <jacmet@sunsite.dk>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>
-References: <1552602855-26086-1-git-send-email-info@metux.net>
- <CAHp75VeH9isvFkp+AECgsN8du__8tBBp_4zZEVXJ083BdFweeg@mail.gmail.com>
- <afc51d27-3312-cdf4-68a5-4486db1d006b@metux.net>
- <20190315181118.GF9224@smile.fi.intel.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <d9ac8446-c7ff-6e57-5eaa-f1a09d549081@metux.net>
-Date:   Fri, 15 Mar 2019 19:41:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 15 Mar 2019 14:43:35 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i20so6941675pfo.6;
+        Fri, 15 Mar 2019 11:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UzIvI6hUKtM345OPRMvag+o1k0P7RZYP6J+h26B8ay8=;
+        b=iDSdxxB4k9x/hn52pJyNyYzdxVs7rBxwoNAFGvN0B9Cw0fswiZK57LfeNwRh1+wQy5
+         iLtCe6URXqD3yuJPsbqjHRW0t4bQvJ8cAdJ6Q/Ms3cByLM81B/d2qZZXUwkfI4Xf3c+1
+         3vk3U7wfIAmYkKW0OPt5tYHdcOMnICqk51G7ReDp9gfnl7YhFcn9BRX5EQFsNsE5pBEV
+         be/6hKDpecBViOLZse0vUIbNC/a3AuIQuLvYZ4o8ts8tGW+HycUl3Z7cI+4ztYG1gzMz
+         q14sNQytzkxf03zSoZUjuwGHRrHRdGnUjFP7QnutGItSoYCCtHnDwvC+fCTjkN/a7tAc
+         jzTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UzIvI6hUKtM345OPRMvag+o1k0P7RZYP6J+h26B8ay8=;
+        b=ppb0yqakfhbQE8wKKefXgbPtrelA1sqff7cIuL2NnxUpAKWUHOxFM+wbXtyHM040hv
+         xAayP37ANdrZzp630NRSQFN2hStq5FnPYpll5Qh4mzGlYMXNmoF7wl99rVE7j3jgYmB6
+         Z3V+EALUfwEg66bbBs+OI/oU+LOssZKAfGiaIXCQY7pioIs9wwJCSuif4uJy0au2zBde
+         63RGvzaDVlnuSICUen7N8u5VnQ5lcpYmPS5lKLNNd1N8cZT9swmzxYdanNvlHqjIKQL9
+         +TY9F3+wBDybU38lZetqWyKv57egfT7ZNXjcFpJNd0KZON5kJk8uqVlogCdUYYKRWjZR
+         8MZA==
+X-Gm-Message-State: APjAAAWO/N8M6vOJAI4ghWU8otrG/maaYmFTA1tSMOiIiW8C0XO5+6ta
+        yI6kWFmYwaVOkHb+YcX8D+2p85vVKyiuO/X4dBU=
+X-Google-Smtp-Source: APXvYqyS0+ZkigTGbGwd3UfYEmZKJPsT/bAX2aS1P3a2hiucMk4RjcizVwL8obeASZT10vxxXE8IzAMT8it/l8LCNBI=
+X-Received: by 2002:a63:b902:: with SMTP id z2mr4958179pge.428.1552675414054;
+ Fri, 15 Mar 2019 11:43:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190315181118.GF9224@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:SEhWkGTngchVaGOi1VLTckafsrasxjLcF1GzXHt0mnNThnYbRaw
- QfYHKt7uxK+IYwNNtICBankPHlIcLqxdx139j3YzHaskDIfe8r/jK8AyOQhUuNgUIe9tzTC
- WcG9jAOjUZpESxhSdjbcQMp3fY9dKCpffjGyz8EyYPzNQPcvVVBAHa337c3hpGqWvmrOJlm
- VXJ3TblaMwQXQ1Y+/esrw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:R7ZrnfxgAfQ=:rL5sQ46e4F1ZssU4Lie9q8
- TiFQOrT49OGtBxsKHK17dAqW3yKY6TRE3dhUmkzFmidH7HeTMhjU6xv3EcPpE032Ld9YAKPG9
- TTarjVkqwPYxp++a6f/PkxY32EbYfqdFQiL8ShW2dRiM69I9kt1WiaysrZuIrfsUyr+LMsTTC
- rmDtf535Fwm3rn4PXc7C0ytNBIZAdVV8jkhwi7VUjaGyrGcmmZOnZwa9XRs6L01hU4Hi2r1S9
- IjSHSgxw6DvRNdoJfeCuNeH0vlWaKyuds5uzfyC3YhnZs6PaTFv64kKqKiqWgwluSoNtgXKay
- yn6wXU2huXFZnA7oa/TtQdF1CbxQAXfplo3buTpd4c7cPUe2y2/g+u4fm7fAlYi7reI1I9cq8
- MYQsQXgXZwoRmQk/zDjB/YjPQ4JX4yqgm22xM8NfQzrmxIF8IfKCMSlV6YVgqansv2VAY51h+
- tyhJu+5K4oq8rJU4YteauXvjP9xL6/qDyFhue+JZRy5cmPvaJAya5NzEDAcfle2vDwHUTG1OV
- YOmlKy7Ub04Lw9P6FWVGOI9mwhZB0Ztv04yD5NPZ6x0OZfwCzXniRvRQOWbYfE+TrfCO0zGxk
- NUqncL4oNJFDbbEJcmUlfThIEfxfWvBRUKnLyxVNDp2YlYFB1KjORqrY70854HDvW7L8LZln3
- sKl17L2TBqxTnyVtqgBNrCSYXSsWcEHVlzrZizXbaAATCLvDmvQf0lUe12NQDp6vtTg1bCb/c
- EanI9e7fgqqlWPUto8fwIZioEWJ9IEaldROXiZgvT/UmFvBzk0J9dAiNFd8=
+References: <20190315133113.21215-1-gabriel.lazar@com.utcluj.ro> <12a67eb2-18ff-dd9f-4c48-4d01a01a2aa7@redhat.com>
+In-Reply-To: <12a67eb2-18ff-dd9f-4c48-4d01a01a2aa7@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 15 Mar 2019 20:43:21 +0200
+Message-ID: <CAHp75VeAdFdHWWRXe-Jr=kvufCrQzq5dOCj9rW3tBvtzHEcEYA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for Myria MY8307 2-in-1
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Gabriel Lazar <gabriel.lazar@com.utcluj.ro>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.03.19 19:11, Andy Shevchenko wrote:
+On Fri, Mar 15, 2019 at 7:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 3/15/19 2:31 PM, Gabriel Lazar wrote:
+> > Add touchscreen platform data for the Myrya MY8307 2-in-1 laptop.
+> >
+> > Signed-off-by: Gabriel Lazar <gabriel.lazar@com.utcluj.ro>
+>
+> Patch looks good to me:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
 
->> The actual goal is generalizing the whole iomem handling, so individual
->> usually just need to call some helpers that do most of the things.
->> Finally, I also wanted to have all io region information consolidated
->> in struct resource.
-> 
-> That's should be a selling point, not just conversion per se.
+OK, thanks for explanation.
+I'll take it after merge window will be closed.
 
-hmm, I never was good at selling :o
+> Regards,
+>
+> Hans
+>
+>
+>
+> > ---
+> >   drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+> >   1 file changed, 25 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> > index 2d56ff7c8230..3319f0cbb558 100644
+> > --- a/drivers/platform/x86/touchscreen_dmi.c
+> > +++ b/drivers/platform/x86/touchscreen_dmi.c
+> > @@ -265,6 +265,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_data = {
+> >       .properties     = jumper_ezpad_mini3_props,
+> >   };
+> >
+> > +static const struct property_entry myria_my8307_props[] = {
+> > +     PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
+> > +     PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+> > +     PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
+> > +     PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> > +     PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> > +     PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-myria-my8307.fw"),
+> > +     PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> > +     PROPERTY_ENTRY_BOOL("silead,home-button"),
+> > +     { }
+> > +};
+> > +
+> > +static const struct ts_dmi_data myria_my8307_data = {
+> > +     .acpi_name      = "MSSL1680:00",
+> > +     .properties     = myria_my8307_props,
+> > +};
+> > +
+> >   static const struct property_entry onda_obook_20_plus_props[] = {
+> >       PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+> >       PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
+> > @@ -690,6 +707,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
+> >               },
+> >       },
+> > +     {
+> > +             /* Myria MY8307 */
+> > +             .driver_data = (void *)&myria_my8307_data,
+> > +             .matches = {
+> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Complet Electro Serv"),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "MY8307"),
+> > +             },
+> > +     },
+> >       {
+> >               /* Onda oBook 20 Plus */
+> >               .driver_data = (void *)&onda_obook_20_plus_data,
+> >
 
-but I'll try anyways: it shall make the code smaller and easier to
-read/understand.
 
-does that count ?
-
-> You have to explain that in each commit message, that the change does bring a
-> possible new error message printed.
-
-Ok, I wasn't aware of that. Yes, I missed to read the code of that
-function carefully and didn't expect that it does more than just a dumb
-wrapper around dev_ioremap() that picks out the params from struct
-resource.
-
-OTOH, the name, IMHO, is a bit misleading. Any chance of ever changing
-it to a more clear name (eg. devm_request_and_ioremap_resource()) ?
-
-> The performance side of the deal, you are lucky here, is not significant
-> because it's slow path.
-
-okay :)
-
-
---mtx
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+With Best Regards,
+Andy Shevchenko
