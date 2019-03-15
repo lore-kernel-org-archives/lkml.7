@@ -2,106 +2,141 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DACC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12DEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB73218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A026E21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nCEIs6JQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbfCOQJ0 (ORCPT
+        id S1729502AbfCOQJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:09:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49302 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbfCOQJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:09:26 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C894300309B;
-        Fri, 15 Mar 2019 16:09:25 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-102.ams2.redhat.com [10.36.116.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 55D1C60BE6;
-        Fri, 15 Mar 2019 16:09:21 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@linux.intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com, robin.murphy@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-Subject: [PATCH v5 01/22] driver core: add per device iommu param
-Date:   Fri, 15 Mar 2019 17:08:45 +0100
-Message-Id: <20190315160906.12900-2-eric.auger@redhat.com>
-In-Reply-To: <20190315160906.12900-1-eric.auger@redhat.com>
-References: <20190315160906.12900-1-eric.auger@redhat.com>
+        Fri, 15 Mar 2019 12:09:35 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:16451 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729396AbfCOQJe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:09:34 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x2FG9PIQ007691;
+        Sat, 16 Mar 2019 01:09:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x2FG9PIQ007691
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1552666166;
+        bh=ciSNWk4zmFAeEwhNhN+vmqFGz1WJYZ75xB8KRrQZeVg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nCEIs6JQ7LDIoyvejSXX5lDXJ9bMz2H6E65C7PkfoBz5UBhbegdV+zM30fVNu2SzF
+         Om1tNmbzC4hTTHqsy/1uNwKtKtOG9c5VTlGFnZ7SQfw8JRONf5IAP2SBqD1QhK0tW8
+         pAP+NeDOe1ITDVzIyqyxndyocochJkW3U1929eJkHN4XFwg7zrUvZAts08xGsO1LF2
+         i/m8TlDMb7xkInQoIPsserWCHdO1VBVZuzfDR0baFNFH2cicKHTu+FgmraVOfbXmmx
+         ZVm8OdRgtvRdo0Uo8GcxkeAGa3ZGp7y6B185q9UChLQCTrzoiA64lmBBfwZibFO3Gd
+         lYB9usz6ZxCQw==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id g1so3271195uae.10;
+        Fri, 15 Mar 2019 09:09:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAVY5hceVnmX2E5VznBaKgAvE1SyzEr38cRDCAr7N2tg2bi+6B/Z
+        N5Yu8vsWZ/QrNd1WVqxnEt/XTNJ+Hr6TOdc0xik=
+X-Google-Smtp-Source: APXvYqzoGHElriZYWk064q6kNnxFPv8CK7KH/qWDiKhTd4J4mIIx2SA5LfL+mJsVK5JQ010ybMYPfC//Y+l+lg30ZcY=
+X-Received: by 2002:ab0:73d3:: with SMTP id m19mr115203uaq.46.1552666165202;
+ Fri, 15 Mar 2019 09:09:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 15 Mar 2019 16:09:25 +0000 (UTC)
+References: <20190314234159.191745-1-dianders@chromium.org>
+ <CAK7LNATa+TnXb+a6on-sx2mjNoAiORe-WeZ8UusETHdSrXowuw@mail.gmail.com>
+ <CAK7LNAT=04WAMEfN7u5N_oO2RwT9bYALMN3SZ3WFQo-=3vEjsQ@mail.gmail.com> <CAD=FV=XqH7knZwK+a+bsACwc-j2NgH914mLTc_POR_GAipVf7w@mail.gmail.com>
+In-Reply-To: <CAD=FV=XqH7knZwK+a+bsACwc-j2NgH914mLTc_POR_GAipVf7w@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 16 Mar 2019 01:08:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQff3c9zUMSyj37WT_hgPQ9x7Vf-Hxnm_u0LxNwEMJ+7w@mail.gmail.com>
+Message-ID: <CAK7LNAQff3c9zUMSyj37WT_hgPQ9x7Vf-Hxnm_u0LxNwEMJ+7w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Make NOSTDINC_FLAGS a simply expanded variable
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Hi,
 
-DMA faults can be detected by IOMMU at device level. Adding a pointer
-to struct device allows IOMMU subsystem to report relevant faults
-back to the device driver for further handling.
-For direct assigned device (or user space drivers), guest OS holds
-responsibility to handle and respond per device IOMMU fault.
-Therefore we need fault reporting mechanism to propagate faults beyond
-IOMMU subsystem.
+On Sat, Mar 16, 2019 at 12:41 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Fri, Mar 15, 2019 at 8:37 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > On Sat, Mar 16, 2019 at 12:27 AM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> > >
+> > > On Fri, Mar 15, 2019 at 8:42 AM Douglas Anderson <dianders@chromium.org> wrote:
+> > > >
+> > > > During a simple no-op (nothing changed) build I saw 39 invocations of
+> > > > the C compiler with the argument "-print-file-name=include".  We don't
+> > > > need to call the C compiler 39 times for this--one time will suffice.
+> > > >
+> > > > Let's change NOSTDINC_FLAGS to a simply expanded variable to avoid
+> > > > this since there doesn't appear to be any reason it should be
+> > > > recursively expanded.
+> > > >
+> > > > On my build this shaved ~400 ms off my "no-op" build.
+> > > >
+> > > > Note that the recursive expansion seems to date back to the (really
+> > > > old) commit e8f5bdb02ce0 ("[PATCH] Makefile include path ordering").
+> > > > It's a little unclear to me if the point of that patch was to switch
+> > > > the variable to be recursively expanded (which it did) or to avoid
+> > > > directly assigning to NOSTDINC_FLAGS (AKA to switch to +=) because
+> > > > someone else (out of tree?) was setting it.  I presume later since if
+> > > > the only goal was to switch to recursive expansion the patch would
+> > > > have just removed the ":".
+> > > >
+> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > >
+> > > Applied to linux-kbuild.
+> > > Thanks.
+> >
+> >
+> > BTW, I noticed no one else
+> > appends NOSTDINC_FLAGS.
+> >
+> >
+> > So, does it make more sense to do as follows?
+> >
+> >
+> > NOSTDINC_FLAGS := -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+>
+> It might.  ...but go back to look at commit e8f5bdb02ce0 ("[PATCH]
+> Makefile include path ordering").  Why did they do a += there since
+> even then nobody was setting it.  Try:
+>
+> $ git grep NOSTDINC_FLAGS e8f5bdb02ce0~
+>
+>
+> Do you understand what was going on in that commit?
 
-There are two other IOMMU data pointers under struct device today, here
-we introduce iommu_param as a parent pointer such that all device IOMMU
-data can be consolidated here. The idea was suggested here by Greg KH
-and Joerg. The name iommu_param is chosen here since iommu_data has been used.
 
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Link: https://lkml.org/lkml/2017/10/6/81
----
- include/linux/device.h | 3 +++
- 1 file changed, 3 insertions(+)
+No, I do not understand.
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index b425a7ee04ce..39b4dd1b01f5 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -42,6 +42,7 @@ struct iommu_ops;
- struct iommu_group;
- struct iommu_fwspec;
- struct dev_pin_info;
-+struct iommu_param;
- 
- struct bus_attribute {
- 	struct attribute	attr;
-@@ -961,6 +962,7 @@ struct dev_links_info {
-  * 		device (i.e. the bus driver that discovered the device).
-  * @iommu_group: IOMMU group the device belongs to.
-  * @iommu_fwspec: IOMMU-specific properties supplied by firmware.
-+ * @iommu_param: Per device generic IOMMU runtime data
-  *
-  * @offline_disabled: If set, the device is permanently online.
-  * @offline:	Set after successful invocation of bus type's .offline().
-@@ -1054,6 +1056,7 @@ struct device {
- 	void	(*release)(struct device *dev);
- 	struct iommu_group	*iommu_group;
- 	struct iommu_fwspec	*iommu_fwspec;
-+	struct iommu_param	*iommu_param;
- 
- 	bool			offline_disabled:1;
- 	bool			offline:1;
+Maybe, it fixed a problem in downstream code
+since there was no directory like include/asm-xen.
+
+
+If you do not want to take risk,
+I am fine with this patch, though.
+
+
+
+> -Doug
+
+
+
 -- 
-2.20.1
-
+Best Regards
+Masahiro Yamada
