@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F401EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF65C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5454218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BBE218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qdgV9tOR"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SfKmsVVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbfCON5G (ORCPT
+        id S1729225AbfCON5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 09:57:06 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38460 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728784AbfCON5C (ORCPT
+        Fri, 15 Mar 2019 09:57:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35415 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727705AbfCON5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 Mar 2019 09:57:02 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a188so6127638wmf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 06:57:01 -0700 (PDT)
+Received: by mail-wm1-f66.google.com with SMTP id y15so6231557wma.0
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 06:57:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ox5dhzmGa/6JQDhw+Y9moNKLx34n2K2pj1pY4zKasYU=;
-        b=qdgV9tORh+lf/4sku7mYCbPT/s6p04k67zrHnrzQJA9aULYXbshCXDV4v1DhJzqhov
-         1CJ6CFvTv6K/hd7gDmUPwYQZ7Ys2Uli/T1dVdn5ijxoCybkpOIjY64uxxrBLbDNUD+GT
-         hgnJjEYETb2QuxHjza7tGum719AM8P/rBtMHUvdwCNh/Pp/LXqX6wrRDxOJRe48ZMHkU
-         TTq6elMdoDBW9MJTYr5E0TLt8krzW0sTwPjM9CPIdfpqOKnSNs3ejOfLH3cGpP13KL8h
-         d0UZKgEX5h8p6GNFfsJ3ynA4RAQ94fJy3OrwATDUx1/35JeBwc/fzA1VxGNfwtoBK5Vx
-         uPFg==
+        bh=DZcsemXvfglAUC0jGESedl+RTzmszV5G64pnxTWiH4g=;
+        b=SfKmsVVC+drcRsqXUXJ6gvPIfn1f0k9kq04SPXA216aWmztGBUrCjafC40QyYDQpNb
+         a26++I1pS+z5aAE6dkcL9WhceFW6xEYvu5w7Wl8KbhOIqGo5K0q9eKFgm6yzWK/uKqxD
+         4P5LjRKEEBbIWhBcqdnSxsvbnJQy2ANUpDbNNBez6K5LvN/8fMMTXcKn1ojzGQpWmN3W
+         mGW5eF0CPP9U+/wOYjSOd2We8PtL6tEk3QJIpLsHvh5RLfEeSdm4qCENFrynm41sK8tJ
+         ze/NUB1P5/y8vZbcacgq0Scwb9XxpUw1yVZaYzEm0wqZ00DOfjZJOibVEnrGuXL5ViX7
+         /Rqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ox5dhzmGa/6JQDhw+Y9moNKLx34n2K2pj1pY4zKasYU=;
-        b=BCzKNeFFQOV6DN1ViXdKD+VbvPE+k5SGt71PF5Hx5GPi+GQlflOwWJFvkF0lGjf/g2
-         JLQZblJ5z6p9IVx+j1qyZRLIIRadOFaXpgf6Jms+lpNwm5soLj/jg2Z7Iqza6zWHiL+e
-         4pvV81m+RZay8aMbJc/njZbLxwIdjOgAMIiWH3OB9VNrLUMK+lP7W2Pep2mYBxVwOzHe
-         Q5FgRvnQwCFE8lUWhMKQD12jnAioc9glAuaYBj1KIlKyr+1E3FefQqX0Zzn8GQQ5WSjM
-         9Go7M7xnrLtxSfumUmuSZZqzcOzxhWIx5sArilDcDjrK/+6o6bq1RsTkBwwaKX4mQRA5
-         8VdQ==
-X-Gm-Message-State: APjAAAWQSc54IA2j0lM2rtbDXECam0NhlTVS//djtVqZfJ1Q/WhTJSc/
-        jfqFXmrrLIV/5MefSx7o3RavbA==
-X-Google-Smtp-Source: APXvYqwIQoneCKa9W32nALR6Tj3GimCywQ1qdcByeYfBG/0A4RWS2a3XeyPEe0eLTiJg6DWQRGfehA==
-X-Received: by 2002:a1c:e715:: with SMTP id e21mr2217652wmh.122.1552658220950;
+        bh=DZcsemXvfglAUC0jGESedl+RTzmszV5G64pnxTWiH4g=;
+        b=I3uxjEeGnbxzQfwovE5AiGpDs9pPlN5vRDX1jcGEnMEvNQ6VeM9bvQYJI0IeMi8ye+
+         bSIuA9ZTepO0c3A/VFt/45qlwShJpzFd8spB/SWU6yufPgyHNhHeUmiFuUP1NRx0sLtk
+         x0HhFdgrnaFBMV3+RGOaItKnCPbSkhBW7Obht+2Jr1sPw3HJFBs9yXjGqrpGJZfu0LLS
+         wXF8p9rW1Z0dRi4regtpSGPJ/W5IFTp73rRUXmf/sD4foF9BWpC88G2olccFQ77rjbSs
+         fiSZHOUErhtVP95PH2EoM3Ptn57jAcmiVa3Xfw8V0U1un4YGvb62bjudr1aBfpVKggno
+         BGsA==
+X-Gm-Message-State: APjAAAWbyNSJMETvR5TmSgu0XWReAUjhRoup9PBmpC2QJgz4qT3mlNMK
+        sBOghsioFI8VdkvYK4xOOtFMoQ==
+X-Google-Smtp-Source: APXvYqzLHSWXamSAChoX0YiQ6Kh+aI9iXLHASSTbYijTh2oD7ThGAS7omC/Urgn2DNOCC/Wkh3cGWA==
+X-Received: by 2002:a7b:cf27:: with SMTP id m7mr2232123wmg.80.1552658220083;
         Fri, 15 Mar 2019 06:57:00 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a14sm2131900wrx.96.2019.03.15.06.57.00
+        by smtp.gmail.com with ESMTPSA id a14sm2131900wrx.96.2019.03.15.06.56.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 15 Mar 2019 06:57:00 -0700 (PDT)
+        Fri, 15 Mar 2019 06:56:58 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+To:     devicetree@vger.kernel.org, khilman@baylibre.com, icenowy@aosc.io
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 2/2] arm64: dts: meson-gxm: Add Mali-T820 node
-Date:   Fri, 15 Mar 2019 14:56:55 +0100
-Message-Id: <20190315135655.28359-3-narmstrong@baylibre.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: gpu: mali-midgard: Add resets property
+Date:   Fri, 15 Mar 2019 14:56:54 +0100
+Message-Id: <20190315135655.28359-2-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190315135655.28359-1-narmstrong@baylibre.com>
 References: <20190315135655.28359-1-narmstrong@baylibre.com>
@@ -75,60 +74,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+The Amlogic ARM Mali Midgard requires reset controls to power on and
+software reset the GPU, adds these as optional in the bindings.
 
-The Amlogic Meson GXM SoC embeds an ARM Mali T820 GPU.
-
-This patch adds the node with all the needed properties to power
-on the GPU.
-
-This has been tested with the work-in-progress PanFrost project
-aiming support for ARM Mali Midgard and later GPUs.
-
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm.dtsi | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-index 247888d68a3a..35e59d390903 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-@@ -91,6 +91,33 @@
- 		reset-names = "phy";
- 		status = "okay";
- 	};
-+
-+	mali: gpu@c0000 {
-+		compatible = "amlogic,meson-gxm-mali", "arm,mali-t820";
-+		reg = <0x0 0xc0000 0x0 0x40000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "gpu", "mmu", "job";
-+		clocks = <&clkc CLKID_MALI>;
-+		resets = <&reset RESET_MALI_CAPB3>, <&reset RESET_MALI>;
-+
-+		/*
-+		 * Mali clocking is provided by two identical clock paths
-+		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
-+		 * free mux to safely change frequency while running.
-+		 */
-+		assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
-+				  <&clkc CLKID_MALI_0>,
-+				  <&clkc CLKID_MALI>; /* Glitch free mux */
-+		assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
-+					 <0>, /* Do Nothing */
-+					 <&clkc CLKID_MALI_0>;
-+		assigned-clock-rates = <0>, /* Do Nothing */
-+				       <666666666>,
-+				       <0>; /* Do Nothing */
-+	};
- };
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 18a2cde2e5f3..1b1a74129141 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -37,6 +37,20 @@ Optional properties:
+ - operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+   for details.
  
- &clkc_AO {
++- resets : Phandle of the GPU reset line.
++
++Vendor-specific bindings
++------------------------
++
++The Mali GPU is integrated very differently from one SoC to
++another. In order to accomodate those differences, you have the option
++to specify one more vendor-specific compatible, among:
++
++- "amlogic,meson-gxm-mali"
++  Required properties:
++  - resets : Should contain phandles of :
++    + GPU reset line
++    + GPU APB glue reset line
+ 
+ Example for a Mali-T760:
+ 
 -- 
 2.20.1
 
