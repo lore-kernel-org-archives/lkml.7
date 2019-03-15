@@ -2,167 +2,132 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25413C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14B0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5521218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D610218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="II8uCwBF"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="N3HPYaSz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbfCOREx (ORCPT
+        id S1729917AbfCORFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 13:04:53 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37958 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbfCOREx (ORCPT
+        Fri, 15 Mar 2019 13:05:04 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:46436 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728297AbfCORFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 13:04:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id v4so7832819ioj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 10:04:52 -0700 (PDT)
+        Fri, 15 Mar 2019 13:05:03 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 1E4EED31
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 17:05:02 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Lon8gnlgTRaI for <linux-kernel@vger.kernel.org>;
+        Fri, 15 Mar 2019 12:05:01 -0500 (CDT)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 29B2BDC4
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 12:04:57 -0500 (CDT)
+Received: by mail-io1-f72.google.com with SMTP id a9so7471559iol.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 10:04:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+VXjYOML74rODO2Pgrht5mdW4qPHSj01U2SY/QrNecg=;
-        b=II8uCwBFQgKIgpIN3uiyVrlwPp7Jobs2sjcDctsX6/ITlg2Gz+ClrbA35t59XSgUtx
-         cvuI3IhKcVYHtOIOWoY5tkf8409vWC/olWTrupRHZujQCRVC5K8WF43sGaoIpjGF/+oq
-         zpmG3FeuueN8/W1OCxWUQvrkGbS2wAtzhFSKk=
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=YwhJH5GB8pt3iUXHf1JwdPsOSGOUsqwtuBgclVL38OY=;
+        b=N3HPYaSzmMUcfpXv0GDgM0GirnqjPjI0rSmUip+D9QomIcsEzf/jIDvzDyaY39eh0I
+         /MKwKr8fboM3CBF23ZwhvYwNINJpAOCuuWPFxbvzG+rhSBLZI5qTCTUczE3pdWOa4VAb
+         B+AQsuDhsXT3uTiYDTLNVj90GMxoPBxrsxHMoU0VGALgDn4U7nzjtzZoer8Je/gSjOHR
+         TK9yZGpf3PBsg5UtvJGHag8qzOvlH64D392r/Kdyx90Jwyxv8/Um+43T4Bz16YO9lY9V
+         R76FtEAxxEAQYjnCt7ivwnhxRa1Yc2AE+WDgc0C9kuWhQSYtcVeAS+3gMsVSKV4Rb+xo
+         Lzdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+VXjYOML74rODO2Pgrht5mdW4qPHSj01U2SY/QrNecg=;
-        b=Fe/H1bqu7N594jAEQsuDPEUQhx40Ci5TGjf6GQFpJLDq5fv1wVs4/B3nC+od1da90/
-         aKJRsJq2zi0qF+3hQDuKjx61N1K3NbopAX2WBRf1ofa5ExCYw2qEz8yIE5ZO2AEkz75m
-         2rtjhgiiRLw7l8j1svorRqDGUnaxYOTBiHc9R5YI3a5QB07IU7BegEiYVa3HlMmr+ezz
-         9RIKfrJJTC4U7J8wL2pAriwxuDzuMG4ZsTL/eLUj3iWj26Bpcyvnnl2pA1yxksmTHlIE
-         zrp3O/2/SYUdUEQVBuKn58X2mtad80oa6C6P5bWjKhivtEaH5WSSE561lBO+QkNkAMPJ
-         PyRA==
-X-Gm-Message-State: APjAAAXADbAv9FKtFiHuH5tQC+RC53/SjDQaEFsi9XOuD0MWvBez++uj
-        LGm5MPpu3pdQqGlLpk33GEHvOg==
-X-Google-Smtp-Source: APXvYqyWZd//MwMHTENb8n7poFtLnqynCH1e5sof8heUWWTFft7q7ztD9332MLydL3Tve41ytEhrwA==
-X-Received: by 2002:a5d:9053:: with SMTP id v19mr3058515ioq.49.1552669492313;
-        Fri, 15 Mar 2019 10:04:52 -0700 (PDT)
-Received: from twawrzynczak.bld.corp.google.com ([2620:15c:183:200:3175:8c2d:44b6:cfea])
-        by smtp.gmail.com with ESMTPSA id o129sm3363720ito.0.2019.03.15.10.04.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 15 Mar 2019 10:04:51 -0700 (PDT)
-From:   Tim Wawrzynczak <twawrzynczak@chromium.org>
-To:     bleung@chromium.org
-Cc:     olof@lixom.net, lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>
-Subject: [PATCH] platform/chrome: mfd/cros_ec_sysfs: Add sysfs entry to retrieve EC uptime.
-Date:   Fri, 15 Mar 2019 11:04:13 -0600
-Message-Id: <20190315170413.108114-2-twawrzynczak@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190315170413.108114-1-twawrzynczak@chromium.org>
-References: <20190315170413.108114-1-twawrzynczak@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+         :references;
+        bh=YwhJH5GB8pt3iUXHf1JwdPsOSGOUsqwtuBgclVL38OY=;
+        b=N/VkAenyhxnr36XwDQ0gRdemmIcQNc/bM/1+/cyRZz+OTpMlJZZAI+GqPWpr5K2wsw
+         UInoyCYsXAiEgdgMD/jSCi85MltSmhEmReGCFr4ey87DHZOBnbsuzOJqpbhDRBOJWQp7
+         9o+c+JdBbWRS7sXM1p7SXEumz/vvJQD8BTuhj2PnQQ4JF5rEr2BGAqdaAEHELCZqVpkU
+         nXbRk3VQcCCXhAxPfPmNtQ7G7kUJxcuRSvIBEaT+IkAkmJskKtRU4/bQWDfavUlZu1bI
+         6CzmJJIdyFKNQ+qB/e32mO25xKGT7hUNhZm1xHs75h6t3Woa/CWs7Iccrma1xY9HGh9W
+         lH5g==
+X-Gm-Message-State: APjAAAUGfrCnqgbuCY8UzSjeEyf4Ft/Au+5wWYJcOFtXoac8i1UvhRCs
+        WfYqJuVvKeAp5gHwr86hOecBeMdyrBSWJS0ukv97ZYahq8SwIJfOnk2U6C2kakE2OIK9moqBy2T
+        1U6XBKT65wD9XauQZjef4OkGBY3YS
+X-Received: by 2002:a24:2f84:: with SMTP id j126mr2967791itj.42.1552669496535;
+        Fri, 15 Mar 2019 10:04:56 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy6M+Y0g5R4vG7BpUfWzMKZ8eyPQDVJ07+uA8YqCt1mkPv00mGK715tCuwj1IqDC2PzateaGw==
+X-Received: by 2002:a24:2f84:: with SMTP id j126mr2967759itj.42.1552669496196;
+        Fri, 15 Mar 2019 10:04:56 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id e10sm923664iok.85.2019.03.15.10.04.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Mar 2019 10:04:55 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] brcmfmac: fix missing checks for kmemdup
+Date:   Fri, 15 Mar 2019 12:04:32 -0500
+Message-Id: <20190315170433.3845-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <d712dd26-8b51-143a-b3ff-ad44f2774944@broadcom.com>
+References: <d712dd26-8b51-143a-b3ff-ad44f2774944@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds a new sysfs node under the cros_ec device which contains the uptime
-of the EC in milliseconds since boot.
+In case kmemdup fails, the fix sets conn_info->req_ie_len and
+conn_info->resp_ie_len to zero to avoid buffer overflows.
 
-Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/platform/chrome/cros_ec_sysfs.c | 34 +++++++++++++++++++++++++
- include/linux/mfd/cros_ec_commands.h    | 15 +++++++++++
- 2 files changed, 49 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
-index 5a6db3fe213a..7e5ca1e2900b 100644
---- a/drivers/platform/chrome/cros_ec_sysfs.c
-+++ b/drivers/platform/chrome/cros_ec_sysfs.c
-@@ -123,6 +123,38 @@ static ssize_t reboot_store(struct device *dev,
- 	return count;
- }
- 
-+static ssize_t uptime_show(struct device *dev,
-+			   struct device_attribute *attr, char *buf)
-+{
-+	struct ec_response_uptime_info *resp;
-+	struct cros_ec_command *msg;
-+	int ret;
-+	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
-+	u32 time_since_ec_boot_ms;
-+
-+	msg = kmalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	/* Get EC uptime information */
-+	msg->version = 0;
-+	msg->command = EC_CMD_GET_UPTIME_INFO + ec->cmd_offset;
-+	msg->insize = sizeof(*resp);
-+	msg->outsize = 0;
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	if (ret < 0) {
-+		time_since_ec_boot_ms = 0;
-+	} else {
-+		resp = (struct ec_response_uptime_info *)msg->data;
-+		time_since_ec_boot_ms = resp->time_since_ec_boot_ms;
-+	}
-+
-+	ret = scnprintf(buf, PAGE_SIZE, "%u\n", time_since_ec_boot_ms);
-+
-+	kfree(msg);
-+	return ret;
-+}
-+
- static ssize_t version_show(struct device *dev,
- 			    struct device_attribute *attr, char *buf)
- {
-@@ -330,12 +362,14 @@ static DEVICE_ATTR_RW(reboot);
- static DEVICE_ATTR_RO(version);
- static DEVICE_ATTR_RO(flashinfo);
- static DEVICE_ATTR_RW(kb_wake_angle);
-+static DEVICE_ATTR_RO(uptime);
- 
- static struct attribute *__ec_attrs[] = {
- 	&dev_attr_kb_wake_angle.attr,
- 	&dev_attr_reboot.attr,
- 	&dev_attr_version.attr,
- 	&dev_attr_flashinfo.attr,
-+	&dev_attr_uptime.attr,
- 	NULL,
- };
- 
-diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index a8c882b5c222..38e7e6dcca97 100644
---- a/include/linux/mfd/cros_ec_commands.h
-+++ b/include/linux/mfd/cros_ec_commands.h
-@@ -4697,6 +4697,21 @@ struct __ec_align4 ec_params_rwsig_action {
- 	uint32_t action;
- };
- 
-+/* For getting EC uptime & AP reset information */
-+#define EC_CMD_GET_UPTIME_INFO	0x0121
-+
-+struct __ec_align4 ec_response_uptime_info {
-+	uint32_t time_since_ec_boot_ms;   /* uptime in ms */
-+	uint32_t ap_resets_since_ec_boot; /* AP resets recorded by EC */
-+	uint32_t ec_reset_flags;          /* RESET_* flags */
-+	/* Empty log entries have cause and timestamp set to zero */
-+	struct ap_reset_log_entry {
-+		uint16_t reset_cause;     /* enum chipset_*_reason */
-+		uint16_t reserved;        /* reserved for protocol growth */
-+		uint32_t reset_time_ms;   /* time of reset assertion */
-+	} recent_ap_reset[4];
-+};
-+
- /*****************************************************************************/
- /* The command range 0x200-0x2FF is reserved for Rotor. */
- 
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index e92f6351bd22..8ee8af4e7ec4 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -5464,6 +5464,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
+ 		conn_info->req_ie =
+ 		    kmemdup(cfg->extra_buf, conn_info->req_ie_len,
+ 			    GFP_KERNEL);
++		if (!conn_info->req_ie)
++			conn_info->req_ie_len = 0;
+ 	} else {
+ 		conn_info->req_ie_len = 0;
+ 		conn_info->req_ie = NULL;
+@@ -5480,6 +5482,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
+ 		conn_info->resp_ie =
+ 		    kmemdup(cfg->extra_buf, conn_info->resp_ie_len,
+ 			    GFP_KERNEL);
++		if (!conn_info->resp_ie)
++			conn_info->resp_ie_len = 0;
+ 	} else {
+ 		conn_info->resp_ie_len = 0;
+ 		conn_info->resp_ie = NULL;
 -- 
-2.20.1
+2.17.1
 
