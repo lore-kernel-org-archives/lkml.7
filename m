@@ -7,62 +7,66 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF3DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46881C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0121E21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05934218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="g+pg/yXW"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Fcid22Cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfCOJxm (ORCPT
+        id S1728786AbfCOJyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:53:42 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38863 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbfCOJxm (ORCPT
+        Fri, 15 Mar 2019 05:54:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35905 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726886AbfCOJyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:53:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id n125so5974957pfn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 02:53:41 -0700 (PDT)
+        Fri, 15 Mar 2019 05:54:19 -0400
+Received: by mail-wm1-f67.google.com with SMTP id e16so5447089wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 02:54:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=R34Hc5VrGY8X4eTOWGoukKjOWMd10HDmULGs/URQgL8=;
-        b=g+pg/yXW7qV5PSTm7QTFnDApsNiqFWNMAP75cmNjzVnveo/6kzujpuK0ah5SEcQFyT
-         HyRyksm84LQIG3nOQNw0stSZB6kXgd9+bcYpTttB8xcK2AdFWETZRbGqvwKy1ZkFFzw5
-         Jxd1k+CJ1UYx7HIrC9NcQR+zqnYTJeZit+xhZkHSrEHV15m32VY6pnMMy7jM5bd+NPbS
-         cQ2/uuSPAn3wz0A5X5PTZPA+osB3UZ1q1r/0zdGz+TtEqbrnlcWNTlz+Zg/TtaPerocE
-         TMvbgj26MGtgLVBGqK9XCBdhtbyyYBQdhAUiYZs4MdC8OXOUmOPUgbO+y1D1pji4+DP6
-         Z47A==
+        bh=nMNxuBFkfxH/Pp2e0D/vuUTdP7DiCTna/TvHjdOEJW8=;
+        b=Fcid22Crd69kN12+21PzsGaZiUWPHL/S7LQ+Q7zdeJQedXWw0GXjWDnDQodjY/epoY
+         62EN2SZ2ZClyJ6PUCbOG3Onx2T18oolqENLp5T3DbXnxRW5G0SzBy6f1pyA1380ksDwm
+         x6+imSAGVCUpATIpi68qxfiX4tYMHwou6gJgHO+eYGYvWpX6O1NhixeprfsJsB+CFMiV
+         EKfsBAGjQ8FyR1KtZ6AuqbHAmU3BfA6fdvG5RppdvpCYrq6vFO/RhEDoDR57xzvo0PDS
+         N3AqFxS+N7WAhCh0iMqsIogIkfbmiTT+hIf+hx436I1GwMq+Jgo+6kKhW4CbDswdHDCl
+         3Y/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=R34Hc5VrGY8X4eTOWGoukKjOWMd10HDmULGs/URQgL8=;
-        b=kcVVhLl4XMK6Tu7QRtlC+GUjqEbX692rYjQGmuePYzgysUZpLUMGuvqamyWJPNkV4S
-         YrsWsxNuuypFwES+Qgwlg0oWCHXYS8V/Z4Cooxqk/ie3Af9iEJGVW4HPm6yL9NT/KaZ+
-         SN5tEoZkcz3jaVQcV22a4hKoLe5rA2Z07vc4XxXmNVDGZSdcIsfA7XJWpNchYJCMrhgt
-         JmhUJGB4OY7MFpz8Xi3N3oC2qatevsa6TPVQ570pqSk9dY6pCzQKnPiY/lMO+5VZ0IqQ
-         LxEaR+apD24JFtABmhR+pQ9uZ/Ga5JJ12SNsFlZUWS2xo7oVau6TmoQ9bb2y+2b2X7Ck
-         mB9w==
-X-Gm-Message-State: APjAAAXsJQNxpmYYbrdPiX/tTrl/telV8hijrzrN8iByH5JUTY2d3dc+
-        ozFjlEodHOScNDrJqytmdf00ug==
-X-Google-Smtp-Source: APXvYqwQ4PdExfkqBUDETtnV/7xg7siqZb27NlcmkwAMbb4F+M8bkTmUgT+fpu66g2xw5OnmIBwypA==
-X-Received: by 2002:a17:902:694b:: with SMTP id k11mr3298306plt.288.1552643620759;
-        Fri, 15 Mar 2019 02:53:40 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id l28sm4439705pfi.186.2019.03.15.02.53.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 02:53:40 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com, Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH v2] ALSA: hda/realtek: Enable headset MIC of Acer AIO with ALC286
-Date:   Fri, 15 Mar 2019 17:51:09 +0800
-Message-Id: <20190315095108.9195-1-jian-hong@endlessm.com>
+        bh=nMNxuBFkfxH/Pp2e0D/vuUTdP7DiCTna/TvHjdOEJW8=;
+        b=VWj2CjluOg+6QQTx1zrn+F2OLe/jPcv/zbM49iSNXPIQq0h8OYb4xVIJUe68QBetfm
+         l3abzgXNE862o5coeSAfx9fKI+uWrCugtMUNqUg/U0oxOaZCYeD6cz1l08JKt9ZsoD27
+         +7ko47bRgI6A/RYLGgdFy3/ehI2h49wZ4AATfkX33MKf6KIE3wJzaS6VRlUtZ/6XGT0F
+         BwvzgFx4nwLAbZKJnyCpmavBGp7esjtpQDagThqQQDSLpwmzaWyVMD968BH17GoPWSdF
+         /6LBjK6IgDC8BjWiUhlgQKJIcOSg6+Q+2hR5x+qrOO0NOtrlA8nnJlavtySomdGbl2bD
+         YgYg==
+X-Gm-Message-State: APjAAAXLvfq1lzsEQaow0m5pEFVH70S6bA19ikalEAuL83LvkPgEsIG0
+        YT62OPONL8VLbBoBkGp/O2YZRg==
+X-Google-Smtp-Source: APXvYqzpk9rciGy4Ra3i/qZ/fk86Vn9cwD5fHgaNEEQyBoEC3t7vAj+buGrW4QGk/PwPpTxt4tEbEA==
+X-Received: by 2002:a1c:eb1a:: with SMTP id j26mr1399768wmh.43.1552643656162;
+        Fri, 15 Mar 2019 02:54:16 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c202sm1683958wme.38.2019.03.15.02.54.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 15 Mar 2019 02:54:15 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        heiko@sntech.de, robh@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        jernej.skrabec@siol.net
+Subject: [PATCH] drm/bridge: dw-hdmi: disable SCDC configuration for invalid setups
+Date:   Fri, 15 Mar 2019 10:54:14 +0100
+Message-Id: <20190315095414.28520-1-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -71,60 +75,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some Acer AIO desktops like Veriton Z6860G, Z4860G and Z4660G cannot
-record sound from headset MIC.  This patch adds the
-ALC286_FIXUP_ACER_AIO_HEADSET_MIC quirk to fix this issue.
+This patch is an attempt to limit HDMI 2.0 SCDC setup when :
+- the SoC embeds an HDMI 1.4 only controller
+- the EDID supports SCDC but not scrambling
+- the EDID supports SCDC scrambling but not for low TMDS bit rates,
+  while only supporting low TMDS bit rates
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+This to avoid communicating with the SCDC DDC slave uncessary, and
+setting the DW-HDMI TMDS Scrambler setup when not supported by the
+underlying hardware.
+
+Reported-by: Rob Herring <robh@kernel.org>
+Fixes: 264fce6cc2c1 ("drm/bridge: dw-hdmi: Add SCDC and TMDS Scrambling support")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
-v2: According to Realtek's suggestion, change the COEF 0x4f from 0xd429 to
-    0x5029.  Thanks to Realtek!
 
- sound/pci/hda/patch_realtek.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+Rob,
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 384719d5c44e..191830d4fa40 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5687,6 +5687,7 @@ enum {
- 	ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE,
- 	ALC225_FIXUP_WYSE_AUTO_MUTE,
- 	ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
-+	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
- };
+this patch should also solve your issue with your 11' display, could you
+test it ?
+If this works, I will focus on the underlying issue where the RK3399 SoC
+freezes in your setup.
+
+Thanks,
+Neil
+
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 34 ++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index a63e5f0dae56..db761329a1e3 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -1037,6 +1037,31 @@ void dw_hdmi_phy_i2c_write(struct dw_hdmi *hdmi, unsigned short data,
+ }
+ EXPORT_SYMBOL_GPL(dw_hdmi_phy_i2c_write);
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6685,6 +6686,16 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
- 	},
-+	[ALC286_FIXUP_ACER_AIO_HEADSET_MIC] = {
-+		.type = HDA_FIXUP_VERBS,
-+		.v.verbs = (const struct hda_verb[]) {
-+			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x4f },
-+			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5029 },
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE
-+	},
- };
++/* Filter out invalid setups to avoid configuring SCDC and scrambling */
++static bool dw_hdmi_support_scdc(struct dw_hdmi *hdmi)
++{
++	struct drm_display_info *display = &hdmi->connector.display_info;
++
++	/* Completely disable SCDC support for older controllers */
++	if (hdmi->version < 0x200a)
++		return false;
++
++	/* Disable if SCDC is not supported, or if an HF-VSDB block is absent */
++	if (!display->hdmi.scdc.supported ||
++	    !display->hdmi.scdc.scrambling.supported)
++		return false;
++
++	/*
++	 * Disable if display only support low TMDS rates and scrambling
++	 * for low rates is not supported either
++	 */
++	if (!display->hdmi.scdc.scrambling.low_rates &&
++	    display->max_tmds_clock <= 340000)
++		return false;
++
++	return true;
++}
++
+ /*
+  * HDMI2.0 Specifies the following procedure for High TMDS Bit Rates:
+  * - The Source shall suspend transmission of the TMDS clock and data
+@@ -1055,7 +1080,7 @@ void dw_hdmi_set_high_tmds_clock_ratio(struct dw_hdmi *hdmi)
+ 	unsigned long mtmdsclock = hdmi->hdmi_data.video_mode.mtmdsclock;
  
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -6701,9 +6712,9 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP_ASPIRE_V5_PINS),
- 	SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
--	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
- 	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
+ 	/* Control for TMDS Bit Period/TMDS Clock-Period Ratio */
+-	if (hdmi->connector.display_info.hdmi.scdc.supported) {
++	if (dw_hdmi_support_scdc(hdmi)) {
+ 		if (mtmdsclock > HDMI14_MAX_TMDSCLK)
+ 			drm_scdc_set_high_tmds_clock_ratio(hdmi->ddc, 1);
+ 		else
+@@ -1579,8 +1604,9 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
+ 
+ 	/* Set up HDMI_FC_INVIDCONF */
+ 	inv_val = (hdmi->hdmi_data.hdcp_enable ||
+-		   vmode->mtmdsclock > HDMI14_MAX_TMDSCLK ||
+-		   hdmi_info->scdc.scrambling.low_rates ?
++		   (dw_hdmi_support_scdc(hdmi) &&
++		    (vmode->mtmdsclock > HDMI14_MAX_TMDSCLK ||
++		     hdmi_info->scdc.scrambling.low_rates)) ?
+ 		HDMI_FC_INVIDCONF_HDCP_KEEPOUT_ACTIVE :
+ 		HDMI_FC_INVIDCONF_HDCP_KEEPOUT_INACTIVE);
+ 
+@@ -1646,7 +1672,7 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
+ 	}
+ 
+ 	/* Scrambling Control */
+-	if (hdmi_info->scdc.supported) {
++	if (dw_hdmi_support_scdc(hdmi)) {
+ 		if (vmode->mtmdsclock > HDMI14_MAX_TMDSCLK ||
+ 		    hdmi_info->scdc.scrambling.low_rates) {
+ 			/*
 -- 
 2.20.1
 
