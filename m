@@ -2,152 +2,110 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B655CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 05:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C59DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B56218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 05:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C592184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:04:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Nv579TjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbfCOFzU (ORCPT
+        id S1728298AbfCOGEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 01:55:20 -0400
-Received: from mga02.intel.com ([134.134.136.20]:42325 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727151AbfCOFzT (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 01:55:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 22:55:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,481,1544515200"; 
-   d="scan'208";a="134239238"
-Received: from skl.sh.intel.com ([10.239.159.132])
-  by orsmga003.jf.intel.com with ESMTP; 14 Mar 2019 22:55:17 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2] perf annotate/report: Remove hist__account_cycles from callback
-Date:   Fri, 15 Mar 2019 21:46:01 +0800
-Message-Id: <1552657561-15744-1-git-send-email-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 15 Mar 2019 02:04:25 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:44206 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728267AbfCOGEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 02:04:24 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 1F5BEB37
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 06:04:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KXMd68LccPkk for <linux-kernel@vger.kernel.org>;
+        Fri, 15 Mar 2019 01:04:23 -0500 (CDT)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id E8416A7B
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 01:04:22 -0500 (CDT)
+Received: by mail-io1-f72.google.com with SMTP id u22so6212318iof.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 23:04:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=CPadDO1VqpT3JKzUg/A5BP2/PeNz2poG0NUIuTIheCU=;
+        b=Nv579TjCxM6P3b2kTU4fZ8ILGrXq/C/rs01JHuYFyGRGm/NBFQNnJ42XLPd3sxuSkm
+         kbrAevwE28jh6uoTjnlQKDAutv0nE8Gs1J7rgd7MCVlazfxCJxi+lMtfmb4REstiEisw
+         hghwuq9JcyVUo3mEZkIuXWZAwXje6sKXwQF0naIYVr9aHS/T6o2Uru0eA1VKxDoRH6C8
+         ym7/gWserpixGJRUbThyrL0clzb/rZI1yu5/JglsY+g782GubbZSghu1HwrSeXmTjpiw
+         5d2CPjT7Sjbr12a3c6P+n5CN05hQR8f8JK6wP2OKLrxXLGTvs+PhZ+mTqWKFAxSrWOG+
+         TU7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CPadDO1VqpT3JKzUg/A5BP2/PeNz2poG0NUIuTIheCU=;
+        b=l2m1PzFUiGgQI+5npzy7VE8WItBUj/G2s/AXuV16cBnM072Y5mLMpBxc95jPfLxdkK
+         ZRms390Sp3IqzS+QVcCmpqb+81XZLNhn0E3+GlrH1HBmDz64Fm1bm4L9rdmsVh5NuZ3V
+         9CdDJIg5ZXnCkPD5tnge8q/VgQ/umvC+h3FtG4AS/DqU3RTqueo+ugJpJrvXKFSNwyAC
+         jF7GOTbV6nPe96id75t8XYJjSF42BJOomkEH3JE1zUkY4mlZ5WuZ38VPqJqW+Wdjsl1w
+         +5PPPnJVDs8j5CR+AIc+AZj3GdS7Qb2rqAJ3yMQof8Opns2BN78EGyP/3LEegsWlyP74
+         HwNQ==
+X-Gm-Message-State: APjAAAX1EbYt/rZUR34D4E8zD00RpDoNttapijOneNrlwX2oUrZfOz3g
+        3uu8DjR7AT6HQAVi7FbKxOJwHzrWoofR/T97b1P2Zjvl2g5Iq7DB6qSLIgveObxItiAhHBjjnVr
+        0JJtl9wDYfpxD8p4HINepRcfIiLSv
+X-Received: by 2002:a24:50d5:: with SMTP id m204mr975630itb.103.1552629862511;
+        Thu, 14 Mar 2019 23:04:22 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyhdqmXgz616tZHm1fW+VxISkzq06UzbJAWve5l1gAxQng/BNc99cWXoTLPXf9oFFTsFWFjeQ==
+X-Received: by 2002:a24:50d5:: with SMTP id m204mr975621itb.103.1552629862231;
+        Thu, 14 Mar 2019 23:04:22 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id e12sm482862iod.6.2019.03.14.23.04.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 23:04:21 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Jon Maloy <jon.maloy@ericsson.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: socket: fix a missing check for nla_nest_start
+Date:   Fri, 15 Mar 2019 01:03:05 -0500
+Message-Id: <20190315060305.12925-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hist__account_cycles is executed when the hist_iter__branch_callback
-is called. But it looks it's not necessary. In hist__account_cycles, it
-already walks on all branch entries.
+nla_nest_start may fail. The fix check its status and returns
+-EMSGSIZE in case it fails.
 
-This patch moves the hist__account_cycles out of callback, now the data
-processing is much faster than before.
-
-Previous code has an issue that the ch[offset].num++
-(in __symbol__account_cycles) is executed repeatedly since
-hist__account_cycles is called in each hist_iter__branch_callback,
-so the counting of ch[offset].num is not correct (too big).
-With this patch, the issue is fixed. And we don't need the code of
-"ch->reset >= ch->num / 2" to check if there are too many overlaps
-(in annotation__count_and_fill), otherwise some data would be
-hidden.
-
-Now, we can try, for example:
-
-perf record -b ...
-perf annotate or perf report -s symbol
-
-The before/after output should be no change.
-
- v2:
- ---
- 1. Cover the similar perf report
- 2. Remove the checking code "ch->reset >= ch->num / 2"
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- tools/perf/builtin-annotate.c | 4 ++--
- tools/perf/builtin-report.c   | 9 +++------
- tools/perf/util/annotate.c    | 2 +-
- 3 files changed, 6 insertions(+), 9 deletions(-)
+ net/tipc/socket.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 67f9d9f..77deb3a 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -159,8 +159,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	struct perf_evsel *evsel = iter->evsel;
- 	int err;
+diff --git a/net/tipc/socket.c b/net/tipc/socket.c
+index e482b342bfa8..49ab8b27bde4 100644
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -3255,6 +3255,8 @@ static int __tipc_nl_add_sk_con(struct sk_buff *skb, struct tipc_sock *tsk)
+ 	peer_port = tsk_peer_port(tsk);
  
--	hist__account_cycles(sample->branch_stack, al, sample, false);
--
- 	bi = he->branch_info;
- 	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
+ 	nest = nla_nest_start(skb, TIPC_NLA_SOCK_CON);
++	if (!nest)
++		return -EMSGSIZE;
  
-@@ -199,6 +197,8 @@ static int process_branch_callback(struct perf_evsel *evsel,
- 	if (a.map != NULL)
- 		a.map->dso->hit = 1;
- 
-+	hist__account_cycles(sample->branch_stack, al, sample, false);
-+
- 	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
- 	return ret;
- }
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1921aaa..80874fa 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -136,9 +136,6 @@ static int hist_iter__report_callback(struct hist_entry_iter *iter,
- 	if (!ui__has_annotation() && !rep->symbol_ipc)
- 		return 0;
- 
--	hist__account_cycles(sample->branch_stack, al, sample,
--			     rep->nonany_branch_mode);
--
- 	if (sort__mode == SORT_MODE__BRANCH) {
- 		bi = he->branch_info;
- 		err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
-@@ -181,9 +178,6 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
- 	if (!ui__has_annotation() && !rep->symbol_ipc)
- 		return 0;
- 
--	hist__account_cycles(sample->branch_stack, al, sample,
--			     rep->nonany_branch_mode);
--
- 	bi = he->branch_info;
- 	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
- 	if (err)
-@@ -282,6 +276,9 @@ static int process_sample_event(struct perf_tool *tool,
- 	if (al.map != NULL)
- 		al.map->dso->hit = 1;
- 
-+	hist__account_cycles(sample->branch_stack, &al, sample,
-+			     rep->nonany_branch_mode);
-+
- 	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
- 	if (ret < 0)
- 		pr_debug("problem adding hist entry, skipping event\n");
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 5f6dbbf..e8080c0 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1015,7 +1015,7 @@ static void annotation__count_and_fill(struct annotation *notes, u64 start, u64
- 		float ipc = n_insn / ((double)ch->cycles / (double)ch->num);
- 
- 		/* Hide data when there are too many overlaps. */
--		if (ch->reset >= 0x7fff || ch->reset >= ch->num / 2)
-+		if (ch->reset >= 0x7fff)
- 			return;
- 
- 		for (offset = start; offset <= end; offset++) {
+ 	if (nla_put_u32(skb, TIPC_NLA_CON_NODE, peer_node))
+ 		goto msg_full;
 -- 
-2.7.4
+2.17.1
 
