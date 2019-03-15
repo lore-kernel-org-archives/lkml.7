@@ -2,159 +2,340 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5D3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCC7C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BD2218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BD3218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 11:05:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SSZO3wVv"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Rx4EgxY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbfCOLAh (ORCPT
+        id S1728999AbfCOLF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 07:00:37 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46026 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfCOLAg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 07:00:36 -0400
-Received: by mail-ed1-f67.google.com with SMTP id m16so645127edd.12
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 04:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WZNvd6y0YLnfxfABLpCF0Z2TBSL5fmjzDtI59hFlnFA=;
-        b=SSZO3wVvrRav+CCRVjODa1OBz6ahfVf5+/dSq7LNBUPnZfMRKl7Gjn1nTtzuW/X9QB
-         AnJSRZSm5SIfdOby+VaOyKypXqnmOe7QAb6TLYTfn+UmwbrkkUpQWGP5soQn1kFvvmp2
-         /wR2aYBgF2v7IMFgMxfIq0uSRCOO+7LE5LO4M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=WZNvd6y0YLnfxfABLpCF0Z2TBSL5fmjzDtI59hFlnFA=;
-        b=TX28MgoOHWCxV/a2QaaLm+CehGYryOl++BKXm/ovKLfP+NRDhD2+sc/7xxQwAaLFIk
-         qvD2AutFAkGcNHHgo75mLzBvA9O2bns9B2e5Desy4FtIv8KlBF+R2RI+HdhczfOyOyC8
-         o4lX7/MnhlEtaTAk0YDZLbWTJAllT1XG2VOpnc27SvJvWvewuvAFUzoU387veekq4NLS
-         Bw6tAAKmHzQLzAlhAzhN4DR8Szqr55kR9XF5P7U6egVUdg2Z+8yKQlRVk9v8l2/FY2HP
-         Fs+krv0BlnirVdm4kTSYLE6Q2bcsScn0rL8HcO9VqXv0CJpusjngESQyL15YuKCMXaiY
-         qyGQ==
-X-Gm-Message-State: APjAAAW1ncG2/xxGMtsMuWe7Hax37lPR7nLNmg5OFRI1D/i+k8NnTcLo
-        FAAZCoHkIsltn+Q8EPKkPjFQBA==
-X-Google-Smtp-Source: APXvYqwOz0kyitcV/nO2NUl+JsJmZuqZRr1eY/xEQ8TQj3MNFvHndPpsvX2eNbjo7UFHeWAM+dDlRw==
-X-Received: by 2002:a50:b4e6:: with SMTP id x35mr2304372edd.123.1552647634665;
-        Fri, 15 Mar 2019 04:00:34 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id p12sm344720ejr.58.2019.03.15.04.00.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 04:00:33 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 12:00:31 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] drm/atomic-helper: Make atomic_enable/disable crtc
- callbacks optional
-Message-ID: <20190315110031.GY2665@phenom.ffwll.local>
-Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190314184845.gjmvkamobj4dilyp@smtp.gmail.com>
+        Fri, 15 Mar 2019 07:05:28 -0400
+Received: from mail-eopbgr140053.outbound.protection.outlook.com ([40.107.14.53]:43623
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727397AbfCOLF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 07:05:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mT/00+mFx0Gb9S7OhFDbBCMWMZ10h/aQKXhOrPXeEwk=;
+ b=Rx4EgxY/O3ZNtMLyNi4m+W55b4nz/5dUWVrGXnVKawDJEYv2VONU3/pvIeWtAsKa0si3eClINPxpMLT7Tp4TScs6qoxfZEv/WLzse8zXZITmVC0ycDsabMumfj6uNfETYH7lYveXYvYxg619IQOWLTI0Sjwf9BpwBnAIh/D2LhQ=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB4337.eurprd04.prod.outlook.com (52.134.124.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Fri, 15 Mar 2019 11:05:22 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::50ed:d1b5:c043:3b79]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::50ed:d1b5:c043:3b79%2]) with mapi id 15.20.1709.011; Fri, 15 Mar 2019
+ 11:05:22 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V4 2/4] firmware: imx: enable imx scu general irq function
+Thread-Topic: [PATCH V4 2/4] firmware: imx: enable imx scu general irq
+ function
+Thread-Index: AQHUycaMJFaXS/PcVUWJ0ep29wYPYqYMonyA
+Date:   Fri, 15 Mar 2019 11:05:22 +0000
+Message-ID: <AM0PR04MB421142B1C681A0F4F991C7CB80440@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
+ <1550740354-2701-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550740354-2701-2-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 09704176-35d4-4e9d-cebc-08d6a9361e81
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB4337;
+x-ms-traffictypediagnostic: AM0PR04MB4337:
+x-microsoft-antispam-prvs: <AM0PR04MB43372F4C016D97DFABA3D86E80440@AM0PR04MB4337.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09778E995A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(39860400002)(366004)(136003)(376002)(189003)(199004)(3846002)(6116002)(66066001)(8936002)(52536014)(186003)(106356001)(71200400001)(105586002)(26005)(486006)(7416002)(478600001)(476003)(4326008)(33656002)(6506007)(86362001)(68736007)(110136005)(71190400001)(9686003)(2201001)(316002)(81166006)(81156014)(8676002)(229853002)(2501003)(44832011)(7696005)(256004)(5660300002)(99286004)(14444005)(74316002)(55016002)(11346002)(446003)(102836004)(97736004)(14454004)(6436002)(76176011)(2906002)(7736002)(6246003)(53936002)(25786009)(305945005)(21314003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4337;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: J+xQwH2ZNnUhyOAXAjfDRG0hyVhkPdxZvKcEYy1eaKw8Q7QXq9NIB4tsDf9PtSci57CcgWI0psjsA/zuS80F2JalB0Px75iM3uRJ0c84KTSO5l4jxPxgy60YSLiei3KdOzwl9cIDEX8irg4dq6nO1tPtxwQONh3jLwsajemTYWZgr/K+hUYGRq/dOERZUJuwnfMOw0qjEJAc0whsowFr7LqHyIysdUK26LlTmW5b3F83H1vPv2uvlqzoJtetcdG0+rTvkt9JPmvUl9caUAo+0RgeIhidlzWlrw2cW1NDzfxKafTIDeicoQC1q8xeWpCVbCP2FPQhmmHWGlehzFF8gZL92YOsxfy4NtUoaWh7yZwezh9UYngWtiq01irtBrUkcZMNKCXhS+2RH7DLRxExEwPbabdSA+PgXrMKKlU4/ls=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314184845.gjmvkamobj4dilyp@smtp.gmail.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09704176-35d4-4e9d-cebc-08d6a9361e81
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 11:05:22.3584
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4337
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 03:48:45PM -0300, Rodrigo Siqueira wrote:
-> Allow atomic_enable and atomic_disable operations from
-> drm_crtc_helper_funcs struct optional. With this, the target display
-> drivers don't need to define a dummy function if they don't need one.
-> 
-> Changes since v2:
-> * Don't make funcs optional
-> * Update kerneldoc for atomic_enable/disable
-> * Replace "if (funcs->atomic_enable)" by "if (funcs->commit)"
-> * Improve commit message
-> 
-> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
+> From: Anson Huang
+>=20
+> The System Controller Firmware (SCFW) controls RTC, thermal and WDOG etc.=
+,
+> these resources' interrupt function are managed by SCU. When any IRQ
+> pending, SCU will notify Linux via MU general interrupt channel #3, and L=
+inux
+> kernel needs to call SCU APIs to get IRQ status and notify each module to
+> handle the interrupt.
+>=20
+> Since there is no data transmission for SCU IRQ notification, so doorbell=
+ mode
+> is used for this MU channel, and SCU driver will use notifier mechanism t=
+o
+> broadcast to every module which registers the SCU block notifier.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  drivers/gpu/drm/drm_atomic_helper.c      | 5 ++---
->  include/drm/drm_modeset_helper_vtables.h | 4 ++++
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index 540a77a2ade9..d506e13c2945 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -1034,7 +1034,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
->  			funcs->atomic_disable(crtc, old_crtc_state);
->  		else if (funcs->disable)
->  			funcs->disable(crtc);
-> -		else
-> +		else if (funcs->dpms)
->  			funcs->dpms(crtc, DRM_MODE_DPMS_OFF);
->  
->  		if (!(dev->irq_enabled && dev->num_crtcs))
-> @@ -1277,10 +1277,9 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
->  		if (new_crtc_state->enable) {
->  			DRM_DEBUG_ATOMIC("enabling [CRTC:%d:%s]\n",
->  					 crtc->base.id, crtc->name);
-> -
->  			if (funcs->atomic_enable)
->  				funcs->atomic_enable(crtc, old_crtc_state);
-> -			else
-> +			else if (funcs->commit)
->  				funcs->commit(crtc);
->  		}
->  	}
-> diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
-> index cfb7be40bed7..ce4de6b1e444 100644
-> --- a/include/drm/drm_modeset_helper_vtables.h
-> +++ b/include/drm/drm_modeset_helper_vtables.h
-> @@ -418,6 +418,8 @@ struct drm_crtc_helper_funcs {
->  	 * Drivers can use the @old_crtc_state input parameter if the operations
->  	 * needed to enable the CRTC don't depend solely on the new state but
->  	 * also on the transition between the old state and the new state.
-> +	 *
-> +	 * This function is optional.
->  	 */
->  	void (*atomic_enable)(struct drm_crtc *crtc,
->  			      struct drm_crtc_state *old_crtc_state);
-> @@ -441,6 +443,8 @@ struct drm_crtc_helper_funcs {
->  	 * parameter @old_crtc_state which could be used to access the old
->  	 * state. Atomic drivers should consider to use this one instead
->  	 * of @disable.
-> +	 *
-> +	 * This function is optional.
->  	 */
->  	void (*atomic_disable)(struct drm_crtc *crtc,
->  			       struct drm_crtc_state *old_crtc_state);
-> -- 
-> 2.21.0
+> Changes since V3:
+> 	- use alias to get general MU interrupt channel id and then get resource
+> ID,
+> 	  this is to support different MU instance;
+> 	- add return value check for imx_scu_enable_general_irq_channel().
+> ---
+>  drivers/firmware/imx/imx-scu.c   | 116
+> +++++++++++++++++++++++++++++++++++++++
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Generally I would suggest to put scu irq support into another separate file=
+ under
+The same folder to make code clean from function point of view.
+
+>  include/linux/firmware/imx/sci.h |   3 +
+>  2 files changed, 119 insertions(+)
+>=20
+> diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-sc=
+u.c
+> index 2bb1a19..1dcd7b3 100644
+> --- a/drivers/firmware/imx/imx-scu.c
+> +++ b/drivers/firmware/imx/imx-scu.c
+> @@ -7,6 +7,7 @@
+>   *
+>   */
+>=20
+> +#include <dt-bindings/firmware/imx/rsrc.h>
+>  #include <linux/err.h>
+>  #include <linux/firmware/imx/types.h>
+>  #include <linux/firmware/imx/ipc.h>
+> @@ -21,6 +22,8 @@
+>=20
+>  #define SCU_MU_CHAN_NUM		8
+>  #define MAX_RX_TIMEOUT		(msecs_to_jiffies(30))
+> +#define IMX_SC_IRQ_FUNC_STATUS	2
+> +#define IMX_SC_IRQ_NUM_GROUP	6
+>=20
+>  struct imx_sc_chan {
+>  	struct imx_sc_ipc *sc_ipc;
+> @@ -41,6 +44,7 @@ struct imx_sc_ipc {
+>  	u32 *msg;
+>  	u8 rx_size;
+>  	u8 count;
+> +	u32 mu_resource_id;
+
+I feel it a bit strange to put this mu id in struct imx_sc_ipc.
+
+>  };
+>=20
+>  /*
+> @@ -77,7 +81,23 @@ static int imx_sc_linux_errmap[IMX_SC_ERR_LAST] =3D {
+>  	-EIO,	 /* IMX_SC_ERR_FAIL */
+>  };
+>=20
+> +struct imx_sc_msg_irq_get_status {
+> +	struct imx_sc_rpc_msg hdr;
+> +	union {
+> +		struct {
+> +			u16 resource;
+> +			u8 group;
+> +			u8 reserved;
+> +		} __packed req;
+> +		struct {
+> +			u32 status;
+> +		} __packed resp;
+
+No packed needed for this one
+
+> +	} data;
+> +};
+> +
+>  static struct imx_sc_ipc *imx_sc_ipc_handle;
+> +static struct work_struct imx_sc_general_irq_work; static
+> +BLOCKING_NOTIFIER_HEAD(imx_scu_notifier_chain);
+
+Imx_scu_irq_xxx
+
+>=20
+>  static inline int imx_sc_to_linux_errno(int errno)  { @@ -194,9 +214,90 =
+@@
+> int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp=
+)  }
+> EXPORT_SYMBOL(imx_scu_call_rpc);
+>=20
+> +int imx_scu_register_notifier(struct notifier_block *nb) {
+> +	return blocking_notifier_chain_register(&imx_scu_notifier_chain, nb);
+> +} EXPORT_SYMBOL(imx_scu_register_notifier);
+> +
+> +int imx_scu_unregister_notifier(struct notifier_block *nb) {
+> +	return blocking_notifier_chain_unregister(&imx_scu_notifier_chain,
+> +nb); } EXPORT_SYMBOL(imx_scu_unregister_notifier);
+> +
+> +static int imx_scu_notifier_call_chain(unsigned long status, u8 *group)
+> +{
+> +	return blocking_notifier_call_chain(&imx_scu_notifier_chain,
+> +					    status, (void *)group);
+> +}
+> +
+> +static void imx_scu_general_irq_work_handler(struct work_struct *work)
+> +{
+> +	struct imx_sc_msg_irq_get_status msg;
+> +	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
+> +	u32 irq_status;
+> +	int ret;
+> +	u8 i;
+> +
+> +	for (i =3D 0; i < IMX_SC_IRQ_NUM_GROUP; i++) {
+
+Do we need to support all irq group?
+
+> +		hdr->ver =3D IMX_SC_RPC_VERSION;
+> +		hdr->svc =3D IMX_SC_RPC_SVC_IRQ;
+> +		hdr->func =3D IMX_SC_IRQ_FUNC_STATUS;
+> +		hdr->size =3D 2;
+> +
+> +		msg.data.req.resource =3D imx_sc_ipc_handle->mu_resource_id;
+> +		msg.data.req.group =3D i;
+> +
+> +		ret =3D imx_scu_call_rpc(imx_sc_ipc_handle, &msg, true);
+> +		if (ret) {
+> +			pr_err("get irq status failed, ret %d\n", ret);
+
+Can the error output more useful information?
+
+> +			return;
+> +		}
+> +
+> +		irq_status =3D msg.data.resp.status;
+> +		if (!irq_status)
+> +			continue;
+> +
+> +		imx_scu_notifier_call_chain(irq_status, &i);
+> +	}
+> +}
+> +
+> +static void imx_scu_rxdb_callback(struct mbox_client *c, void *msg) {
+
+Imx_scu_irq_callback
+
+> +	schedule_work(&imx_sc_general_irq_work);
+> +}
+> +
+> +static int imx_scu_enable_general_irq_channel(struct device *dev) {
+> +	struct mbox_client *cl;
+> +	struct mbox_chan *ch;
+> +	int ret =3D 0;
+> +
+> +	cl =3D devm_kzalloc(dev, sizeof(*cl), GFP_KERNEL);
+> +	if (!cl)
+> +		return -ENOMEM;
+> +
+> +	cl->dev =3D dev;
+> +	cl->rx_callback =3D imx_scu_rxdb_callback;
+> +
+> +	/* SCU general IRQ uses general interrupt channel 3 */
+> +	ch =3D mbox_request_channel_byname(cl, "gip3");
+> +	if (IS_ERR(ch)) {
+> +		ret =3D PTR_ERR(ch);
+> +		dev_err(dev, "failed to request mbox chan gip3, ret %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	INIT_WORK(&imx_sc_general_irq_work,
+> imx_scu_general_irq_work_handler);
+> +
+> +	return ret;
+> +}
+> +
+>  static int imx_scu_probe(struct platform_device *pdev)  {
+>  	struct device *dev =3D &pdev->dev;
+> +	struct of_phandle_args spec;
+>  	struct imx_sc_ipc *sc_ipc;
+>  	struct imx_sc_chan *sc_chan;
+>  	struct mbox_client *cl;
+> @@ -246,6 +347,21 @@ static int imx_scu_probe(struct platform_device
+> *pdev)
+>=20
+>  	imx_sc_ipc_handle =3D sc_ipc;
+>=20
+> +	ret =3D imx_scu_enable_general_irq_channel(dev);
+> +	if (ret)
+> +		dev_warn(dev,
+> +			"failed to enable general irq channel: %d\n", ret);
+> +
+
+It does not make sense to parse again if failed. Pls put them into one func=
+tion.
+
+> +	if (!of_parse_phandle_with_args(dev->of_node, "mboxes",
+> +				       "#mbox-cells", 0, &spec))
+> +		i =3D of_alias_get_id(spec.np, "mu");
+
+This needs a binding doc for mailbox (mu).
+
+> +
+> +	/* use mu1 as general mu irq channel if failed */
+> +	if (i < 0)
+> +		i =3D 1;
+> +
+> +	imx_sc_ipc_handle->mu_resource_id =3D IMX_SC_R_MU_0A + i;
+> +
+>  	dev_info(dev, "NXP i.MX SCU Initialized\n");
+>=20
+>  	return devm_of_platform_populate(dev); diff --git
+> a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/sci.h
+> index ebc5509..9d608db 100644
+> --- a/include/linux/firmware/imx/sci.h
+> +++ b/include/linux/firmware/imx/sci.h
+> @@ -15,4 +15,7 @@
+>=20
+>  #include <linux/firmware/imx/svc/misc.h>  #include
+> <linux/firmware/imx/svc/pm.h>
+> +
+> +int imx_scu_register_notifier(struct notifier_block *nb); int
+> +imx_scu_unregister_notifier(struct notifier_block *nb);
+
+imx_scu_irq_xxx
+
+Regards
+Dong Aisheng
+
+>  #endif /* _SC_SCI_H */
+> --
+> 2.7.4
+
