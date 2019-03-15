@@ -2,121 +2,104 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAF3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B0CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B982184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47B22184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:23:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ozLNfJmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbfCOJXq (ORCPT
+        id S1728725AbfCOJX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:23:46 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:11402 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbfCOJXo (ORCPT
+        Fri, 15 Mar 2019 05:23:58 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46582 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726886AbfCOJX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:23:44 -0400
-X-IronPort-AV: E=Sophos;i="5.58,481,1544511600"; 
-   d="scan'208";a="28264332"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 15 Mar 2019 02:23:43 -0700
-Received: from rob-ult-m50855.microchip.com (10.10.76.4) by
- chn-sv-exch07.mchp-main.com (10.10.76.108) with Microsoft SMTP Server id
- 14.3.352.0; Fri, 15 Mar 2019 02:23:43 -0700
-From:   Razvan Stefanescu <razvan.stefanescu@microchip.com>
-To:     Richard Genoud <richard.genoud@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-CC:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        <linux-serial@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped
-Date:   Fri, 15 Mar 2019 11:23:34 +0200
-Message-ID: <20190315092334.13246-3-razvan.stefanescu@microchip.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190315092334.13246-1-razvan.stefanescu@microchip.com>
-References: <20190315092334.13246-1-razvan.stefanescu@microchip.com>
+        Fri, 15 Mar 2019 05:23:57 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a132so4898580lfa.13;
+        Fri, 15 Mar 2019 02:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rQdZ5gMTmgRW87sui8cTVUjQfnuSBZPL/HI2lxsWwHc=;
+        b=ozLNfJmDpEH0Dou4wey1btd4QCwR/4QLznqqOpNqaRzvpT6iicgiZhCoEXIbtgcCrR
+         j4mYYV85HXZU4EHsTo/GBdxZhkLpXDVjTRNS8F2/i7QK+9SWWC+ucbP4rogFyR5deeYw
+         sPRmJA8W9mv9xrnkH1et27C16pBSTCRXjSWdHQM7/TAytObRYJ+EVLPF8DrVElZHr/sI
+         CCe+hOns9g7q573Hzp8HFUzLpHsfq7I7CPlWOXUI/8X3RhCnwMFRwzAtkYGtKAMVYsdc
+         vv7mpAdno46XzjE8fE5THO6/UZHeWLxaWFHmjjr16DGXUK4tXRr0LLkq/mc4UER+5I+i
+         Ak4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rQdZ5gMTmgRW87sui8cTVUjQfnuSBZPL/HI2lxsWwHc=;
+        b=e/AHefI74hpHAOTx5XxkRpodFh2BV4Nqwm5U0xNtQK9ne826mDW0N1QVu9reKVaCCo
+         OK4OxA0mBm3sf8UkaVTPOKVYrjNVEgKiS5ChjbJrQyh4M969A8/rsNFHPyuBW3x5DP91
+         39hXkbG1o44Bqllqz3JWvzVzmYS8sXGRqAoaAXRZ50Ujp6Y50XDjjP1NJ81yg9IgbCgq
+         LpM4ETh6Ku8kZdfwv+a04yYxuk48ytfRlwIScULoBpk2+Qd+WSuJlFm4girj4E2OiEvo
+         tUXnX7hNUNabBnP5rTaYQxCIYCBx0zNuIjaJdliYoKVIawchGoDiG/m0fwt2lB9Fd+3P
+         +MrQ==
+X-Gm-Message-State: APjAAAUTKYNV2a7yTOqNTCyZHuefiMlVBe3T/Fwut39PNZpgHo1PJKCL
+        btJp6ko/edq1TqS+p0Q6b8o=
+X-Google-Smtp-Source: APXvYqx5hBQdph2XB6OjPKixqCQNjW4CQhDkGxrXH3jVhUPXw55vEMJaLXcq+gpUpPoEu+4/q3PzhA==
+X-Received: by 2002:a19:f51a:: with SMTP id j26mr1512860lfb.5.1552641835147;
+        Fri, 15 Mar 2019 02:23:55 -0700 (PDT)
+Received: from a2k-HP-ProDesk-600-G2-SFF.kyiv.epam.com (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
+        by smtp.gmail.com with ESMTPSA id j1sm327493lfk.26.2019.03.15.02.23.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 15 Mar 2019 02:23:54 -0700 (PDT)
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+To:     xen-devel@lists.xenproject.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
+        jgross@suse.com, boris.ostrovsky@oracle.com
+Cc:     andr2000@gmail.com, Volodymyr_Babchuk@epam.com,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Subject: [Xen-devel][PATCH] Input: xen-kbdfront - signal the backend that we disconnect
+Date:   Fri, 15 Mar 2019 11:23:48 +0200
+Message-Id: <20190315092348.32613-1-andr2000@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In half-duplex operation, RX should be started after TX completes.
+From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-If DMA is used, there is a case when the DMA transfer completes but the
-TX FIFO is not emptied, so the RX cannot be restarted just yet.
+While disconnecting from the backend we clean up shared resources
+(event channel, ring buffer), but never let the backend know about
+that. This may lead to inconsistent backend state and/or shared
+resources use.
+Fix this by explicitly letting the backend know that frontend has
+destroyed shared resources by changing its Xen bus state accordingly.
 
-Use a boolean variable to store this state and rearm TX interrupt mask
-to be signaled again that the transfer finished. In interrupt transmit
-handler this variable is used to start RX.
-
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 ---
- drivers/tty/serial/atmel_serial.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/input/misc/xen-kbdfront.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-index a6577b1c4461..b0141dcbbb61 100644
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -166,6 +166,8 @@ struct atmel_uart_port {
- 	unsigned int		pending_status;
- 	spinlock_t		lock_suspended;
+diff --git a/drivers/input/misc/xen-kbdfront.c b/drivers/input/misc/xen-kbdfront.c
+index 24bc5c5d876f..ecb6e719e0e2 100644
+--- a/drivers/input/misc/xen-kbdfront.c
++++ b/drivers/input/misc/xen-kbdfront.c
+@@ -488,6 +488,8 @@ static int xenkbd_connect_backend(struct xenbus_device *dev,
  
-+	bool			hd_start_rx;	/* can start RX during half-duplex operation */
+ static void xenkbd_disconnect_backend(struct xenkbd_info *info)
+ {
++	xenbus_switch_state(info->xbdev, XenbusStateClosing);
 +
- 	/* ISO7816 */
- 	unsigned int		fidi_min;
- 	unsigned int		fidi_max;
-@@ -934,8 +936,13 @@ static void atmel_complete_tx_dma(void *arg)
- 	if (!uart_circ_empty(xmit))
- 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
- 	else if (atmel_uart_is_half_duplex(port)) {
--		/* DMA done, stop TX, start RX for RS485 */
--		atmel_start_rx(port);
-+		/*
-+		 * DMA done, re-enable TXEMPTY and signal that we can stop
-+		 * TX and start RX for RS485
-+		 */
-+		atmel_port->hd_start_rx = true;
-+		atmel_uart_writel(port, ATMEL_US_IER,
-+				  atmel_port->tx_done_mask);
- 	}
- 
- 	spin_unlock_irqrestore(&port->lock, flags);
-@@ -1379,9 +1386,21 @@ atmel_handle_transmit(struct uart_port *port, unsigned int pending)
- 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
- 
- 	if (pending & atmel_port->tx_done_mask) {
--		/* Either PDC or interrupt transmission */
- 		atmel_uart_writel(port, ATMEL_US_IDR,
- 				  atmel_port->tx_done_mask);
-+
-+		/* Start RX if flag was set and FIFO is empty */
-+		if (atmel_port->hd_start_rx) {
-+			if (atmel_uart_readl(port, ATMEL_US_CSR)
-+					& ATMEL_US_TXEMPTY) {
-+				atmel_port->hd_start_rx = false;
-+				atmel_start_rx(port);
-+			} else {
-+				dev_warn(port->dev, "Should start RX, but TX fifo is not empty\n");
-+			}
-+			return;
-+		}
-+
- 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
- 	}
- }
+ 	if (info->irq >= 0)
+ 		unbind_from_irqhandler(info->irq, info);
+ 	info->irq = -1;
 -- 
-2.19.1
+2.21.0
 
