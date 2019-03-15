@@ -2,263 +2,97 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53696C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A06C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA902186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C572186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfCODc5 (ORCPT
+        id S1727226AbfCODgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 23:32:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34928 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726708AbfCODc5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 23:32:57 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2F3U4vI186942
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 23:32:55 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r846pr2fu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 23:32:55 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
-        Fri, 15 Mar 2019 03:32:53 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 15 Mar 2019 03:32:50 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2F3Wns655705794
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Mar 2019 03:32:49 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 483E24C040;
-        Fri, 15 Mar 2019 03:32:49 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A85194C050;
-        Fri, 15 Mar 2019 03:32:48 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 15 Mar 2019 03:32:48 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5ADA4A00E2;
-        Fri, 15 Mar 2019 14:32:47 +1100 (AEDT)
-Subject: Re: [PATCH 4/7] ocxl: Don't pass pci_dev around
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20190313041524.14644-1-alastair@au1.ibm.com>
- <20190313041524.14644-5-alastair@au1.ibm.com>
-From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Date:   Fri, 15 Mar 2019 14:32:47 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190313041524.14644-5-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031503-4275-0000-0000-0000031B2E5A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031503-4276-0000-0000-00003829A282
-Message-Id: <f7f9741d-dacb-3dad-5a92-84e43c28f697@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-15_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903150023
+        Thu, 14 Mar 2019 23:36:44 -0400
+Received: from mx.sdf.org ([205.166.94.20]:51241 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726708AbfCODgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 23:36:43 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2F3ZVwU004274
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Fri, 15 Mar 2019 03:35:31 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id x2F3ZUgS024157;
+        Fri, 15 Mar 2019 03:35:30 GMT
+Date:   Fri, 15 Mar 2019 03:35:30 GMT
+From:   George Spelvin <lkml@sdf.org>
+Message-Id: <201903150335.x2F3ZUgS024157@sdf.org>
+To:     andriy.shevchenko@linux.intel.com, lkml@sdf.org, st5pub@yandex.ru
+Subject: Re: [PATCH 1/5] lib/sort: Make swap functions more generic
+Cc:     akpm@linux-foundation.org, daniel.wagner@siemens.com,
+        dchinner@redhat.com, don.mullis@gmail.com, geert@linux-m68k.org,
+        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk
+In-Reply-To: <1145741552593595@sas2-2074c606c35d.qloud-c.yandex.net>
+References: <cover.1552097842.git.lkml@sdf.org>,
+    <dc6cc09e71f8687ff2ef4cbfc2b11accc9aba8aa.1552097842.git.lkml@sdf.org>,
+    <20190309140653.GO9224@smile.fi.intel.com>,
+    <201903091553.x29FrfMR018600@sdf.org>,
+    <20190314092958.GV9224@smile.fi.intel.com>,
+    <201903141009.x2EA9q1Z025888@sdf.org>,
+    <CAMuHMdW0jd-oNtgBf=aHfzVoBbVh0OJYC6ELhDv3VrcGwUECwA@mail.gmail.com>,
+    <201903141153.x2EBrtKi000133@sdf.org>,
+    <20190314121811.GY9224@smile.fi.intel.com>,
+    <1145741552593595@sas2-2074c606c35d.qloud-c.yandex.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/3/19 3:15 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> This data is already available in a struct
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+>> swap_bytes / swap_4byte_words / swap_8byte_words
+>> swap_bytes / swap_ints / swap_longs
+>> swap_1 / swap_4 / swap_8
+>> Pistols at dawn?
 
-This is a good idea.
+On Thu, 14 Mar 2019 at 22:59:55 +0300, Andrey Abramov wrote:
+> Yes, in my opinion, swap_bytes / swap_ints / swap_longs are the
+> most readable because we have both swap_ints and swap_longs functions
+> (in one file near each other), so I don't think that there will be
+> any confusion about size.
 
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Yes, that's what I thought.  They're three related but different
+functions, suffixed _bytes, _ints, and _longs.  What could the
+difference possibly be?  And if anyone has any lingering doubts,
+the functions are right there, with exquisitely clear comments.
 
-> ---
->   drivers/misc/ocxl/core.c | 38 +++++++++++++++++++++-----------------
->   1 file changed, 21 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-> index b47cfda83e46..2fd0c700e8a0 100644
-> --- a/drivers/misc/ocxl/core.c
-> +++ b/drivers/misc/ocxl/core.c
-> @@ -66,10 +66,11 @@ static int set_afu_device(struct ocxl_afu *afu, const char *location)
->   	return rc;
->   }
->   
-> -static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
-> +static int assign_afu_actag(struct ocxl_afu *afu)
->   {
->   	struct ocxl_fn *fn = afu->fn;
->   	int actag_count, actag_offset;
-> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
->   
->   	/*
->   	 * if there were not enough actags for the function, each afu
-> @@ -79,16 +80,16 @@ static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
->   		fn->actag_enabled / fn->actag_supported;
->   	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
->   	if (actag_offset < 0) {
-> -		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
-> +		dev_err(&pci_dev->dev, "Can't allocate %d actags for AFU: %d\n",
->   			actag_count, actag_offset);
->   		return actag_offset;
->   	}
->   	afu->actag_base = fn->actag_base + actag_offset;
->   	afu->actag_enabled = actag_count;
->   
-> -	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
-> +	ocxl_config_set_afu_actag(pci_dev, afu->config.dvsec_afu_control_pos,
->   				afu->actag_base, afu->actag_enabled);
-> -	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
-> +	dev_dbg(&pci_dev->dev, "actag base=%d enabled=%d\n",
->   		afu->actag_base, afu->actag_enabled);
->   	return 0;
->   }
-> @@ -103,10 +104,11 @@ static void reclaim_afu_actag(struct ocxl_afu *afu)
->   	ocxl_actag_afu_free(afu->fn, start_offset, size);
->   }
->   
-> -static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
-> +static int assign_afu_pasid(struct ocxl_afu *afu)
->   {
->   	struct ocxl_fn *fn = afu->fn;
->   	int pasid_count, pasid_offset;
-> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
->   
->   	/*
->   	 * We only support the case where the function configuration
-> @@ -115,7 +117,7 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
->   	pasid_count = 1 << afu->config.pasid_supported_log;
->   	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
->   	if (pasid_offset < 0) {
-> -		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
-> +		dev_err(&pci_dev->dev, "Can't allocate %d PASIDs for AFU: %d\n",
->   			pasid_count, pasid_offset);
->   		return pasid_offset;
->   	}
-> @@ -123,10 +125,10 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
->   	afu->pasid_count = 0;
->   	afu->pasid_max = pasid_count;
->   
-> -	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
-> +	ocxl_config_set_afu_pasid(pci_dev, afu->config.dvsec_afu_control_pos,
->   				afu->pasid_base,
->   				afu->config.pasid_supported_log);
-> -	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
-> +	dev_dbg(&pci_dev->dev, "PASID base=%d, enabled=%d\n",
->   		afu->pasid_base, pasid_count);
->   	return 0;
->   }
-> @@ -172,9 +174,10 @@ static void release_fn_bar(struct ocxl_fn *fn, int bar)
->   	WARN_ON(fn->bar_used[idx] < 0);
->   }
->   
-> -static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
-> +static int map_mmio_areas(struct ocxl_afu *afu)
->   {
->   	int rc;
-> +	struct pci_dev *pci_dev = to_pci_dev(afu->fn->dev.parent);
->   
->   	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
->   	if (rc)
-> @@ -187,10 +190,10 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
->   	}
->   
->   	afu->global_mmio_start =
-> -		pci_resource_start(dev, afu->config.global_mmio_bar) +
-> +		pci_resource_start(pci_dev, afu->config.global_mmio_bar) +
->   		afu->config.global_mmio_offset;
->   	afu->pp_mmio_start =
-> -		pci_resource_start(dev, afu->config.pp_mmio_bar) +
-> +		pci_resource_start(pci_dev, afu->config.pp_mmio_bar) +
->   		afu->config.pp_mmio_offset;
->   
->   	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
-> @@ -198,7 +201,7 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
->   	if (!afu->global_mmio_ptr) {
->   		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
->   		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> -		dev_err(&dev->dev, "Error mapping global mmio area\n");
-> +		dev_err(&pci_dev->dev, "Error mapping global mmio area\n");
->   		return -ENOMEM;
->   	}
->   
-> @@ -234,17 +237,17 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
->   	if (rc)
->   		return rc;
->   
-> -	rc = assign_afu_actag(afu, dev);
-> +	rc = assign_afu_actag(afu);
->   	if (rc)
->   		return rc;
->   
-> -	rc = assign_afu_pasid(afu, dev);
-> +	rc = assign_afu_pasid(afu);
->   	if (rc) {
->   		reclaim_afu_actag(afu);
->   		return rc;
->   	}
->   
-> -	rc = map_mmio_areas(afu, dev);
-> +	rc = map_mmio_areas(afu);
->   	if (rc) {
->   		reclaim_afu_pasid(afu);
->   		reclaim_afu_actag(afu);
-> @@ -331,7 +334,7 @@ void remove_afu(struct ocxl_afu *afu)
->   	device_unregister(&afu->dev);
->   }
->   
-> -static struct ocxl_fn *alloc_function(struct pci_dev *dev)
-> +static struct ocxl_fn *alloc_function(void)
->   {
->   	struct ocxl_fn *fn;
->   
-> @@ -342,6 +345,7 @@ static struct ocxl_fn *alloc_function(struct pci_dev *dev)
->   	INIT_LIST_HEAD(&fn->afu_list);
->   	INIT_LIST_HEAD(&fn->pasid_list);
->   	INIT_LIST_HEAD(&fn->actag_list);
-> +
->   	return fn;
->   }
->   
-> @@ -491,7 +495,7 @@ struct ocxl_fn *init_function(struct pci_dev *dev)
->   	struct ocxl_fn *fn;
->   	int rc;
->   
-> -	fn = alloc_function(dev);
-> +	fn = alloc_function();
->   	if (!fn)
->   		return ERR_PTR(-ENOMEM);
->   
-> 
+No to mention where they're used.  Is "is_aligned(base, size, 8)"
+remotely obscure?  Especially in context:
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-andrew.donnellan@au1.ibm.com  IBM Australia Limited
+		if (is_aligned(base, size, 8))
+			swap_func = swap_longs;
+		else if (is_aligned(base, size, 4))
+			swap_func = swap_ints;
+		else
+			swap_func = swap_bytes;
 
+What subtle and mysterious code.
+
+> But actually, it doesn't matter which name will you take, because
+> the meaning of each, in my opinion, is obvious enough, so I don't
+> mind about any of these options.
+
+I'm just amazed that this piece of bikeshedding is the most
+contentious thing about the patch series.
+
+I mean, if I'd named them:
+	llanfairpwllgwyngyll()
+	shravanabelagola()
+	zheleznodorozhny()
+or
+	peckish()
+	esuriant()
+	hungry()
+then yes, those would be bad names.
+
+I prefer the shorter _ints and _longs names, but this is just
+not a hill I want to die on.
