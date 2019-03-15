@@ -2,129 +2,126 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9078BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B8CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451272075C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552693072;
-	bh=dLXL7kGAqxhgekvtz3vpT5HCsL7HtHcWmfk1SG+XXUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gwEKTAyh14IPyUFmx9tOZfB5JWGJ1phVaF0VUVo+qnTrebthsS4iqViHftAT7oeAy
-	 ZSri1WdinGxzoEu4fBE4L5952SA2Akmy696oZsG3Obz1Osmrg5F9o3p7QyQ8FweTMi
-	 2ZyAbbGHyIBjToiZBOay1yyXE+/Zpge1b0YbhA0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 612A2218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 23:39:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnrIjdh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfCOXhv (ORCPT
+        id S1727563AbfCOXje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 19:37:51 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37700 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfCOXhu (ORCPT
+        Fri, 15 Mar 2019 19:39:34 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42473 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfCOXje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 19:37:50 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v84so2360343oif.4;
-        Fri, 15 Mar 2019 16:37:50 -0700 (PDT)
+        Fri, 15 Mar 2019 19:39:34 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r15so4604933pfn.9;
+        Fri, 15 Mar 2019 16:39:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=ieiWMsHRfGRpU22N8QrO5nSbBviY91mvVJqNPmZ+hH4=;
+        b=jnrIjdh3RPF4jQXt5KlgDiVsS/fJuonLz7nvw203otB6LyzXrE8hkpsO0FXdS+b4F3
+         aDUqOPewqPAWEswFf00zZPpwv+elvcj25vdib+73qbtQ7vA+j+dw78A0156nAqvnpx+M
+         cmcljjkMcKpapaiFtsAV0XnZGsKYa1Abh2N3Vo8luRfDH6x/1tBOanAcngodlmKQdvoO
+         rr1r+z6Uwb3Y/avGTvTRKoM8PiknZwMEeE7bKVJGmvXd6K+Y2kRQb7WOGGnv2mEsNL+9
+         5iGcEFei5gtRApSSafB3+lFweQVCK3UaUrt6jH4D9Pr3K0DMHZVi1Ubr7j1zkM9ODYV+
+         G+ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CLPs75sCST9BnuLqglaIrgbQ4U5qUjEloPjsVcjwgmM=;
-        b=nXQWH5wRr0yTeu2IgKj23dlafX/ZzI4nLrE/Y/Y1p8f3ThGBqODKArptMm0837rDZb
-         JsNJUvg4sRulEGdYgiWTwG20FzqscfrPA7b9fH14R9DQg9e8fQ+enlvslfg7NdXJESnr
-         c4Hyb13LhNgTV2SyXzqhIIET6qTc3Ye7Jn4BAowS+N4WS93wFTMI0mvjXU5IP8LKPyR9
-         NXLOoS8Vt++Cw6QiV4j5nRV3VGUX3uE0tYAK055L6dE1YUcpo6sO/UJ+7he87WBsijUh
-         K+Jtc3DQlyJWgRoFLv7Lv09IGceu5OqkWRKzid/f7H4VhxDsZD/KHdNbvtWDufTSj6mw
-         L97g==
-X-Gm-Message-State: APjAAAW3LrYPX6xO+CuDqbATkN8yrM7zHNUFJ0ggAiMSsIZ7r+P+8x5V
-        HwTz2TY+y2nH0bRi1GMSOQ==
-X-Google-Smtp-Source: APXvYqwBvOkOZVRlZpFfZ548be4R7ryoTgcbGnG39fbpmX/jHfR83Wr54jMPfrzP7qr5qPqJw40eWA==
-X-Received: by 2002:aca:3286:: with SMTP id y128mr3031261oiy.29.1552693069983;
-        Fri, 15 Mar 2019 16:37:49 -0700 (PDT)
-Received: from localhost (ip-108-119-106-197.ftwttx.spcsdns.net. [108.119.106.197])
-        by smtp.gmail.com with ESMTPSA id y28sm698490oix.23.2019.03.15.16.37.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 16:37:49 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 18:37:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
-        linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
-        bjorn.andersson@linaro.org, dianders@chromium.org,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 06/10] dt-bindings: sdm845-pinctrl: add wakeup
- interrupt parent for GPIO
-Message-ID: <20190315233748.GA7219@bogus>
-References: <20190313211844.29416-1-ilina@codeaurora.org>
- <20190313211844.29416-7-ilina@codeaurora.org>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=ieiWMsHRfGRpU22N8QrO5nSbBviY91mvVJqNPmZ+hH4=;
+        b=PgsOgWhwvcsla/jZV96FmJoIeuZpGeSc91R/nWYXukN8BuGXdmR8TpZM33NAmD9Y1q
+         pGBBDAawcgPySHytzDhNZKM2V3Gsu7wM721B5kwypTAILF82jQ6ZWorWkQ2SY3ypEhwz
+         gP2VK24s7gNVEfXbAPXqhlryHQxekwewyQZ0gnCfMKIol9c9iaEUld97q6ab2wz3J8Ds
+         0+zFcz+QERdzBM61lmoTganWKT0wOX0G5Ck/0ZFryhXrEOmnmCqfj7nA4qdRTAV/h56R
+         wmUQcFxjSmYtFkyN5MsS3XyhQ9J7DtPEAx/t1zvtpw0PMxtrNBPTWX9sEGuTXGEuvatl
+         rTZw==
+X-Gm-Message-State: APjAAAUI0TRlIF3wS1jVmqx6iLVianYjEbmkhlkV5b4I/bS07nPDFdOg
+        qZStwwXVQBnvH+jrOLLUHm9YyWCIdE0Nompa1E+SavNx
+X-Google-Smtp-Source: APXvYqy5lhcfE8A+eviAGyGMSxeX3CsHfum8ufqS0RLrPFy7N5baxhFXYYNvmN59qsTXdIYPinMAzbdIPuRtjJGShMA=
+X-Received: by 2002:aa7:8d42:: with SMTP id s2mr6749881pfe.116.1552693172864;
+ Fri, 15 Mar 2019 16:39:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313211844.29416-7-ilina@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Steve French <smfrench@gmail.com>
+Date:   Fri, 15 Mar 2019 18:39:21 -0500
+Message-ID: <CAH2r5mvDGcGD=GP+-5984DJ9U_cYLWvkMsJORX4LZ7_1sVKpgw@mail.gmail.com>
+Subject: [GIT] SMB3 Fixes and debugging improvements
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 03:18:40PM -0600, Lina Iyer wrote:
-> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
-> routed to the PDC as interrupts that can be used to wake the system up
-> from deep low power modes and suspend.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+Please pull the following changes since commit
+f261c4e529dac5608a604d3dd3ae1cd2adf23c89:
 
-I still don't love this being specific to wake-up, but don't have a 
-better suggestion. One nit, otherwise:
+  Merge branch 'akpm' (patches from Andrew) (2019-03-14 15:10:10 -0700)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+are available in the Git repository at:
 
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> index 665aadb5ea28..f0fedbc5d41a 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> @@ -29,6 +29,11 @@ SDM845 platform.
->  	Definition: must be 2. Specifying the pin number and flags, as defined
->  		    in <dt-bindings/interrupt-controller/irq.h>
->  
-> +- wakeup-parent:
-> +	Usage: optional
-> +	Value type: <phandle>
-> +	Definition: A phandle to the wakeup interrupt controller for the SoC.
-> +
->  - gpio-controller:
->  	Usage: required
->  	Value type: <none>
-> @@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
->  mux function to select on those pin(s)/group(s), and various pin configuration
->  parameters, such as pull-up, drive strength, etc.
->  
-> -
->  PIN CONFIGURATION NODES:
->  
->  The name of each subnode is not important; all subnodes should be enumerated
-> @@ -160,6 +164,7 @@ Example:
->  		#gpio-cells = <2>;
->  		interrupt-controller;
->  		#interrupt-cells = <2>;
-> +		wake-parent = <&pdc_intc>;
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.1-rc-smb3
 
-wakeup-parent
+for you to fetch changes up to bc31d0cdcfbadb6258b45db97e93b1c83822ba33:
 
->  
->  		qup9_active: qup9-active {
->  			mux {
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+  CIFS: fix POSIX lock leak and invalid ptr deref (2019-03-14 19:32:36 -0500)
+
+----------------------------------------------------------------
+- Various additional dynamic tracing tracepoints
+- Debugging improvements (including ability to query the server via
+SMB3 fsctl from userspace tools which can help with stats and
+debugging)
+- One minor performance improvement (root directory inode caching)
+- Crediting (SMB3 flow control) fixes
+- Some cleanup (docs and to mknod)
+- Important fixes: one to smb3 implementation of fallocate zero range
+(which fixes three xfstests) and a POSIX lock fix
+----------------------------------------------------------------
+Aurelien Aptel (2):
+      CIFS: make mknod() an smb_version_op
+      CIFS: fix POSIX lock leak and invalid ptr deref
+
+Ronnie Sahlberg (11):
+      cifs: change wait_for_free_request() to take flags as argument
+      cifs: pass flags down into wait_for_free_credits()
+      cifs: wait_for_free_credits() make it possible to wait for >=1 credits
+      cifs: prevent starvation in wait_for_free_credits for
+multi-credit requests
+      cifs: add a timeout argument to wait_for_free_credits
+      cifs: simplify how we handle credits in compound_send_recv()
+      cifs: cache FILE_ALL_INFO for the shared root handle
+      cifs: add SMB2_ioctl_init/free helpers to be used with compounding
+      cifs: fix smb3_zero_range so it can expand the file-size when required
+      cifs: fix incorrect handling of smb2_set_sparse() return in
+smb3_simple_falloc
+      SMB3: Allow SMB3 FSCTL queries to be sent to server from tools
+
+Steve French (9):
+      smb3: display security information in /proc/fs/cifs/DebugData
+more accurately
+      smb3: add dynamic tracepoint for timeout waiting for credits
+      smb3: display volume serial number for shares in /proc/fs/cifs/DebugData
+      smb3: Add dynamic trace points for various compounded smb3 ops
+      smb3: add dynamic tracepoints for simple fallocate and zero range
+      SMB3: passthru query info doesn't check for SMB3 FSCTL passthru
+      cifs: remove unused value pointed out by Coverity
+      cifs: minor documentation updates
+      smb2: fix typo in definition of a few error flags
+
+
+-- 
+Thanks,
+
+Steve
