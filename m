@@ -2,128 +2,171 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02091C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EDBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6A920854
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:39:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="K9ZdrmUe"
+	by mail.kernel.org (Postfix) with ESMTP id 36787218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbfCOQjs (ORCPT
+        id S1729616AbfCOQmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:39:48 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35784 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbfCOQjs (ORCPT
+        Fri, 15 Mar 2019 12:42:43 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:53783 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728480AbfCOQmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:39:48 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e17so6846751pgd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 09:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=4mz+ylSIlqICAal8h3K0TtTG87LIv/NBo2Pti8a7xbY=;
-        b=K9ZdrmUerygXPE45fwfRYoSkH4CRrsq8Hglken/WCC+11t53cCEF+PvQd9AEE1pbab
-         hJVTouUWEjjZnBC9FNFol/GlbZ1t1tRDCt1h1OcggzEHFHPUz4Am42bGETSVeeyxDbuz
-         D4pTH1NG/vVoU7PtU0iP1EcnE6cSYg55bxrms=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=4mz+ylSIlqICAal8h3K0TtTG87LIv/NBo2Pti8a7xbY=;
-        b=Yl+w2XhV1j0FUKUdSJfJsuxmkIPA7B9tq6KqjAIo1ezt6M9Egg+b5HFT5J0VavyTgO
-         oZqwQHjazFTqlmaGAn4LrNMViVaWe4pGe6/G8Sz6uuC69K1VPLvXCdcBSUZyesYLNTgd
-         +liefZOiJ89GCg3djq6Wllz4koimQL6nANHqZ9tguA5k3Kc9EeD0rccNIK+PeeKu+snV
-         FxH7AYo0sTzOLCmK2yrqF5wR8on0BGxgKWHRoda5p0lfPnyBTUjh14h1OGI1oJswzI94
-         p32Zx2KHr3YXbMuXvHuy3zR8XfTEGqBYh88+VravKJoEla2CMrxFTGGLK42CgV0Vp7hM
-         +H1A==
-X-Gm-Message-State: APjAAAWiUYT53BCjqLAggd50ELzhnuBiNXD56KX1GioNRZK51tfrqQ68
-        EoJvnkaV+glkhWRoBCIqPU3qsw==
-X-Google-Smtp-Source: APXvYqyG87T92MPk3iTyToQ7yH+kTfk3cppuoe7GoRV8a+l2SfdVNk/LXC60GG198c0OcCQBelVAMQ==
-X-Received: by 2002:a65:6098:: with SMTP id t24mr4328362pgu.57.1552667987632;
-        Fri, 15 Mar 2019 09:39:47 -0700 (PDT)
-Received: from [10.69.37.149] ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id f16sm7301418pga.71.2019.03.15.09.39.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 09:39:46 -0700 (PDT)
-Subject: Re: [PATCH 7/8] nvme: use blk_mq_queue_tag_busy_iter
-To:     James Smart <jsmart2021@gmail.com>,
-        Jianchao Wang <jianchao.w.wang@oracle.com>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, sagi@grimberg.me,
-        josef@toxicpanda.com, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, keith.busch@intel.com, hare@suse.de,
-        jthumshirn@suse.de, hch@lst.de, bvanassche@acm.org
-References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
- <1552640264-26101-8-git-send-email-jianchao.w.wang@oracle.com>
- <62de99e8-0d8d-910a-bfdc-649f734b152c@gmail.com>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <f284663c-ad13-65ea-5ce0-9b305ca91d3c@broadcom.com>
-Date:   Fri, 15 Mar 2019 09:39:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Fri, 15 Mar 2019 12:42:42 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h4pum-0004z8-7P; Fri, 15 Mar 2019 17:42:36 +0100
+Date:   Fri, 15 Mar 2019 17:42:36 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Liu, Yongxin" <Yongxin.Liu@windriver.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "pagupta@redhat.com" <pagupta@redhat.com>,
+        "Gortmaker, Paul" <Paul.Gortmaker@windriver.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: Re: [PATCH RT] nvdimm: make lane acquirement RT aware
+Message-ID: <20190315164236.rzbwe7reeprjv3um@linutronix.de>
+References: <20190306095709.23138-1-yongxin.liu@windriver.com>
+ <20190307143344.ytsnbmot5tjzjhip@linutronix.de>
+ <597B109EC20B76429F71A8A97770610D12A52669@ALA-MBD.corp.ad.wrs.com>
+ <20190308094131.ge4wbsvz4p6xikdf@linutronix.de>
+ <597B109EC20B76429F71A8A97770610D12A5643B@ALA-MBD.corp.ad.wrs.com>
 MIME-Version: 1.0
-In-Reply-To: <62de99e8-0d8d-910a-bfdc-649f734b152c@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <597B109EC20B76429F71A8A97770610D12A5643B@ALA-MBD.corp.ad.wrs.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-03-11 00:44:58 [+0000], Liu, Yongxin wrote:
+> > but you still have the ndl_lock->lock which protects the resource. So in
+> > the unlikely (but possible event) that you switch CPUs after obtaining
+> > the CPU number you block on the lock. No harm is done, right?
+> 
+> The resource "lane" can be acquired recursively, so "ndl_lock->lock" is a conditional lock.
+> 
+> ndl_count->count is per CPU.
+> ndl_lock->lock is per lane.
+> 
+> Here is an example:
+> Thread A  on CPU 5 --> nd_region_acquire_lane --> lane# 5 --> get "ndl_lock->lock"
+> --> nd_region_acquire_lane --> lane# 5 --> bypass "ndl_lock->lock" due to "ndl_count->count++".
+> 
+> Thread B on CPU 5 --> nd_region_acquire_lane --> lane# 5 --> bypass "ndl_lock->lock" ("ndl_count->count"
+> was changed by Thread A)
+> 
+> If we use raw_smp_processor_id(), no matter which CPU the thread was migrated to, 
+> if there is another thread running on the old CPU, there will be race condition 
+> due to per CPU variable "ndl_count->count".
 
+so I've been looking at it again. The recursive locking could have been
+solved better. Like the local_lock() on -RT is doing it.
+Given that you lock with preempt_disable() there should be no in-IRQ
+usage.
+But in the "nd_region->num_lanes >= nr_cpu_ids" case you don't take any
+locks. That would be a problem with raw_smp_processor_id() approach.
 
-On 3/15/2019 9:33 AM, James Smart wrote:
-> On 3/15/2019 1:57 AM, Jianchao Wang wrote:
->> blk_mq_tagset_busy_iter is not safe that it could get stale request
->> in tags->rqs[]. Use blk_mq_queue_tag_busy_iter here. A new helper
->> interface nvme_iterate_inflight_rqs is introduced to iterate
->> all of the ns under a ctrl.
->>
->> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
->> ---
->>   drivers/nvme/host/core.c   | 12 ++++++++++++
->>   drivers/nvme/host/fc.c     | 12 ++++++------
->>   drivers/nvme/host/nvme.h   |  2 ++
->>   drivers/nvme/host/pci.c    |  5 +++--
->>   drivers/nvme/host/rdma.c   |  6 +++---
->>   drivers/nvme/host/tcp.c    |  5 +++--
->>   drivers/nvme/target/loop.c |  6 +++---
->>   7 files changed, 32 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
->> index 6a9dd68..5760fad 100644
->> --- a/drivers/nvme/host/core.c
->> +++ b/drivers/nvme/host/core.c
->> @@ -3816,6 +3816,18 @@ void nvme_start_queues(struct nvme_ctrl *ctrl)
->>   }
->>   EXPORT_SYMBOL_GPL(nvme_start_queues);
->>   +void nvme_iterate_inflight_rqs(struct nvme_ctrl *ctrl,
->> +        busy_iter_fn *fn, void *data)
->> +{
->> +    struct nvme_ns *ns;
->> +
->> +    down_read(&ctrl->namespaces_rwsem);
->> +    list_for_each_entry(ns, &ctrl->namespaces, list)
->> +        blk_mq_queue_tag_busy_iter(ns->queue, fn, data, true);
->> +    up_read(&ctrl->namespaces_rwsem);
->> +}
->> +EXPORT_SYMBOL_GPL(nvme_iterate_inflight_rqs);
->
-> Hmm... so this aborts ios for namespaces. How about ios that aren't 
-> for a namespace but rather for the controller itself.  For example, 
-> anything on the admin queue ?   Rather critical for those ios be 
-> terminated as well.
-NVM - didn't look at which tag set.  but it does highlight - doesn't 
-cover anything issued by core/transport on the io queues.
+So what about the completely untested patch here:
 
--- james
+diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+index 379bf4305e615..98c2e9df4b2e4 100644
+--- a/drivers/nvdimm/nd.h
++++ b/drivers/nvdimm/nd.h
+@@ -109,7 +109,8 @@ unsigned sizeof_namespace_label(struct nvdimm_drvdata *ndd);
+ 			res; res = next, next = next ? next->sibling : NULL)
+ 
+ struct nd_percpu_lane {
+-	int count;
++	struct task_struct *owner;
++	int nestcnt;
+ 	spinlock_t lock;
+ };
+ 
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index e2818f94f2928..8a62f9833513f 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -946,19 +946,17 @@ int nd_blk_region_init(struct nd_region *nd_region)
+  */
+ unsigned int nd_region_acquire_lane(struct nd_region *nd_region)
+ {
++	struct nd_percpu_lane *ndl_lock;
+ 	unsigned int cpu, lane;
+ 
+-	cpu = get_cpu();
+-	if (nd_region->num_lanes < nr_cpu_ids) {
+-		struct nd_percpu_lane *ndl_lock, *ndl_count;
+-
+-		lane = cpu % nd_region->num_lanes;
+-		ndl_count = per_cpu_ptr(nd_region->lane, cpu);
+-		ndl_lock = per_cpu_ptr(nd_region->lane, lane);
+-		if (ndl_count->count++ == 0)
+-			spin_lock(&ndl_lock->lock);
+-	} else
+-		lane = cpu;
++	cpu = raw_smp_processor_id();
++	lane = cpu % nd_region->num_lanes;
++	ndl_lock  = per_cpu_ptr(nd_region->lane, lane);
++	if (ndl_lock->owner != current) {
++		spin_lock(&ndl_lock->lock);
++		ndl_lock->owner = current;
++	}
++	ndl_lock->nestcnt++;
+ 
+ 	return lane;
+ }
+@@ -966,17 +964,16 @@ EXPORT_SYMBOL(nd_region_acquire_lane);
+ 
+ void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane)
+ {
+-	if (nd_region->num_lanes < nr_cpu_ids) {
+-		unsigned int cpu = get_cpu();
+-		struct nd_percpu_lane *ndl_lock, *ndl_count;
++	struct nd_percpu_lane *ndl_lock;
+ 
+-		ndl_count = per_cpu_ptr(nd_region->lane, cpu);
+-		ndl_lock = per_cpu_ptr(nd_region->lane, lane);
+-		if (--ndl_count->count == 0)
+-			spin_unlock(&ndl_lock->lock);
+-		put_cpu();
+-	}
+-	put_cpu();
++	ndl_lock = per_cpu_ptr(nd_region->lane, lane);
++	WARN_ON(ndl_lock->nestcnt == 0);
++	WARN_ON(ndl_lock->owner != current);
++	if (--ndl_lock->nestcnt)
++		return;
++
++	ndl_lock->owner = NULL;
++	spin_unlock(&ndl_lock->lock);
+ }
+ EXPORT_SYMBOL(nd_region_release_lane);
+ 
+@@ -1042,7 +1039,8 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
+ 
+ 		ndl = per_cpu_ptr(nd_region->lane, i);
+ 		spin_lock_init(&ndl->lock);
+-		ndl->count = 0;
++		ndl->owner = NULL;
++		ndl->nestcnt = 0;
+ 	}
+ 
+ 	for (i = 0; i < ndr_desc->num_mappings; i++) {
 
+> Thanks,
+> Yongxin
+
+Sebastian
