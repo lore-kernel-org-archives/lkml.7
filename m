@@ -2,131 +2,90 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB478C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5A2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8590B218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CAA218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 15:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbfCOPg4 (ORCPT
+        id S1729364AbfCOPhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 11:36:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36124 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726792AbfCOPg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 11:36:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D88DDAC44;
-        Fri, 15 Mar 2019 15:36:53 +0000 (UTC)
-From:   Thomas Renninger <trenn@suse.de>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Len Brown <lenb@kernel.org>, Hannes Reinecke <hare@suse.de>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Simon Schricker <sschricker@suse.de>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Len Brown <len.brown@intel.com>
-Subject: Re: [PATCH] [RESEND] Do not modify perf bias performance setting by default at boot
-Date:   Fri, 15 Mar 2019 16:36:53 +0100
-Message-ID: <2947538.dvgdW3vLlg@house>
-In-Reply-To: <CAJZ5v0h3zLrqqMXzt_cqGV1rBR0muosZwy1Zu3fV9O1kqGc6gw@mail.gmail.com>
-References: <6369897.qxlu8PgE1t@house> <CAJZ5v0h3zLrqqMXzt_cqGV1rBR0muosZwy1Zu3fV9O1kqGc6gw@mail.gmail.com>
+        Fri, 15 Mar 2019 11:37:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56864 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726792AbfCOPhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 11:37:11 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D6E6A3082129;
+        Fri, 15 Mar 2019 15:37:10 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CBBA100194A;
+        Fri, 15 Mar 2019 15:37:09 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH RFC] KVM: x86: svm: make sure NMI is injected after nmi_singlestep
+Date:   Fri, 15 Mar 2019 16:37:07 +0100
+Message-Id: <20190315153707.32003-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 15 Mar 2019 15:37:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+I noticed that apic test from kvm-unit-tests always hangs on my EPYC 7401P,
+the hanging test nmi-after-sti is trying to deliver 30000 NMIs and tracing
+shows that we're sometimes able to deliver a few but never all.
 
-On Thursday, March 14, 2019 11:08:03 PM CET Rafael J. Wysocki wrote:
-> On Thu, Mar 14, 2019 at 3:42 PM Thomas Renninger <trenn@suse.de> wrote:
-> > This is a revert of mainline git commits:
-> > commit b51ef52df71cb28e9d90cd1d48b79bf19f0bab06
-> > commit 17edf2d79f1ea6dfdb4c444801d928953b9f98d6
-> > commit abe48b108247e9b90b4c6739662a2e5c765ed114
-> 
-> I'm not quite convinced that reverting these is the right thing to do here.
+When we're trying to inject an NMI we may fail to do so immediately for
+various reasons, however, we still need to inject it so enable_nmi_window()
+arms nmi_singlestep mode. #DB occurs as expected, but we're not checking
+for pending NMIs before entering the guest and unless there's a different
+event to process, the NMI will never get delivered.
 
-Ok, I try harder.
+Make KVM_REQ_EVENT request on the vCPU from db_interception() to make sure
+pending NMIs are checked and possibly injected.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+- RFC: I'm not sure this is not part of some bigger issue I'm missing.
+---
+ arch/x86/kvm/svm.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index f13a3a24d360..cc96008a6117 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -2687,6 +2687,7 @@ static int npf_interception(struct vcpu_svm *svm)
+ static int db_interception(struct vcpu_svm *svm)
+ {
+ 	struct kvm_run *kvm_run = svm->vcpu.run;
++	struct kvm_vcpu *vcpu = &svm->vcpu;
  
-> > It is about this kernel message showing up on quite a lot servers:
-> > [    0.072652] ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
-> > [    0.076003] ENERGY_PERF_BIAS: View and update with
-> > x86_energy_perf_policy(8)
-> What happens on boot is a matter of convention and the convention by
-> which the EPB is set to "neutral" at that point has been used for
-> quite a while.  Changing it now may confuse some users or even worse.
-
-SUSE has this patch included for quite a while (in all kind of
-SLE 12 SP flavors), possibly other distributions as well.
-Unfortunately the patch got removed recently, because my commit (this one)
-was ignored by Len a while ago.
-
-I also like to see more examples of BIOSes not initializing this value.
-This message is rare (so the setting back does not happen often, probably
-only wrongly with latest BIOSes overriding intended BIOS performance settings 
-on servers).
-
-On my workstation the BIOS initializes perf bias to:
-cpupower info
-analyzing CPU 0:
-perf-bias: 7
-
-I could grep through quite some dozens of machines..., but these are mostly
-servers and probably show either "zero"/"performance" or "6"/"normal" because
-the Linux kernel overrides the INTENDED performance perf bias value to 6.
-
-So we (SUSE) are going with this patch forever.
-Otherwise we would run into a similar support nightmare we ran into, when
-Intel decided to ignore CPU idle states as exported by BIOS through ACPI.
-BIOS documentation of all big server vendors mentioned "performance" settings.
-With a kernel update these BIOS C states settings have been ignored (some long 
-latency once were not exported on purpose).
-
-The list of breaking conventions and specifications is long...
-People mostly blame the "bad BIOS developer". In this case things have been
-broke by the kernel.
-It's now (with the resume patch) broken in way, that "performance" setting
-in the mainline kernel is unusable for years already.
-
-Can we please get this finally properly fixed!
-
-> That is a bug.  There is no reason to change the EPB on CPU
-> offline/online and I agree that this needs to be fixed.  The reverts
-> would make this problem go away, but that's not the only possible way
-> to fix it.
-
-It is the only proper way to fix this.
+ 	if (!(svm->vcpu.guest_debug &
+ 	      (KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP)) &&
+@@ -2697,6 +2698,8 @@ static int db_interception(struct vcpu_svm *svm)
  
-> Moreover, what is done during system-wide resume appears to be a bug
-> too.  Whatever EPB value is there during suspend should be saved and
-> it should be restored during resume. Reverting the commits above will
-> not fix that particular issue.
+ 	if (svm->nmi_singlestep) {
+ 		disable_nmi_singlestep(svm);
++		/* Make sure we check for pending NMIs upon entry */
++		kvm_make_request(KVM_REQ_EVENT, vcpu);
+ 	}
+ 
+ 	if (svm->vcpu.guest_debug &
+-- 
+2.20.1
 
-Someone could have a look what happens on a recent system
-after suspend (with this patch on top).
-I do not have laptops to test suspend/resume with latest kernels.
-These broken patches have been added a bit too quickly.
-
-I doubt much BIOSes "forgot to initialize this value" and I have my doubts
-that resume let's the CPU fall back to "uninitialized" value.
-I more expect BIOS resets performance value after resume and the kernel is
-doing it all wrong.
-Hm, in fact this could be proofed by modifying perf bias value, do a suspend
-resume cyle. If the value is kept we should avoid another try of complicating
-things and simply reverting touching perf bias value altogether, correct?
-
-BIOS probably does not store perf BIAS value and re-applies it after
-suspend resume. Some might re-set it to the intial value (performance..., 
-D'oh).
-
-        Thomas
