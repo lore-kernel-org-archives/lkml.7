@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56C6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F0FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD97218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BEF218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbfCOQpI (ORCPT
+        id S1729699AbfCOQpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:45:08 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48980 "EHLO
+        Fri, 15 Mar 2019 12:45:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48986 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729661AbfCOQpF (ORCPT
+        with ESMTP id S1729678AbfCOQpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:45:05 -0400
+        Fri, 15 Mar 2019 12:45:08 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: tonyk)
-        with ESMTPSA id 4A58F281584
+        with ESMTPSA id 725B8260215
 From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
 To:     linux-media@vger.kernel.org
 Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
         lucmaga@gmail.com, linux-kernel@vger.kernel.org,
         kernel@collabora.com
-Subject: [PATCH 02/16] media: vimc: Remove unnecessary stream check
-Date:   Fri, 15 Mar 2019 13:43:45 -0300
-Message-Id: <20190315164359.626-3-andrealmeid@collabora.com>
+Subject: [PATCH 03/16] media: vimc: Check if the stream is on using ved.stream
+Date:   Fri, 15 Mar 2019 13:43:46 -0300
+Message-Id: <20190315164359.626-4-andrealmeid@collabora.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190315164359.626-1-andrealmeid@collabora.com>
 References: <20190315164359.626-1-andrealmeid@collabora.com>
@@ -42,59 +42,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since V4L2 already checks if the stream is running (and avoid starting
-it twice), remove the check at subdevices.
+Change the way that the subdevices check if the stream is running in set
+format functions. It uses the *stream in vimc_deb_device, the more
+appropriate pointer. This also makes easier to get rid of the void* and u8*
+in the subdevices structs.
 
 Signed-off-by: André Almeida <andrealmeid@collabora.com>
 ---
- drivers/media/platform/vimc/vimc-debayer.c | 3 ---
- drivers/media/platform/vimc/vimc-scaler.c  | 3 ---
- drivers/media/platform/vimc/vimc-sensor.c  | 4 ----
- 3 files changed, 10 deletions(-)
+ drivers/media/platform/vimc/vimc-debayer.c | 2 +-
+ drivers/media/platform/vimc/vimc-scaler.c  | 4 ++--
+ drivers/media/platform/vimc/vimc-sensor.c  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-index fc3babdb3a1c..5f84cb38f0f9 100644
+index 5f84cb38f0f9..f72f888ba5a6 100644
 --- a/drivers/media/platform/vimc/vimc-debayer.c
 +++ b/drivers/media/platform/vimc/vimc-debayer.c
-@@ -337,9 +337,6 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
- 		const struct v4l2_format_info *pix_info;
- 		unsigned int frame_size;
+@@ -270,7 +270,7 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
  
+ 	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+ 		/* Do not change the format while stream is on */
 -		if (vdeb->src_frame)
--			return 0;
--
- 		/* We only support translating bayer to RGB24 */
- 		if (src_pixelformat != V4L2_PIX_FMT_RGB24) {
- 			dev_err(vdeb->dev,
++		if (vdeb->ved.stream)
+ 			return -EBUSY;
+ 
+ 		sink_fmt = &vdeb->sink_fmt;
 diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
-index d613297a75b8..3102febefd63 100644
+index 3102febefd63..6e88328dca5c 100644
 --- a/drivers/media/platform/vimc/vimc-scaler.c
 +++ b/drivers/media/platform/vimc/vimc-scaler.c
-@@ -213,9 +213,6 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
- 		const struct v4l2_format_info *pix_info;
- 		unsigned int frame_size;
+@@ -158,7 +158,7 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
  
+ 	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+ 		/* Do not change the format while stream is on */
 -		if (vsca->src_frame)
--			return 0;
--
- 		if (!vimc_sca_is_pixfmt_supported(pixelformat)) {
- 			dev_err(vsca->dev, "pixfmt (%s) is not supported\n",
- 				v4l2_get_fourcc_name(pixelformat));
++		if (vsca->ved.stream)
+ 			return -EBUSY;
+ 
+ 		sink_fmt = &vsca->sink_fmt;
+@@ -334,7 +334,7 @@ static void *vimc_sca_process_frame(struct vimc_ent_device *ved,
+ 						    ved);
+ 
+ 	/* If the stream in this node is not active, just return */
+-	if (!vsca->src_frame)
++	if (!ved->stream)
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	vimc_sca_fill_src_frame(vsca, sink_frame);
 diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
-index cfa72dd39748..44a75099ce7f 100644
+index 44a75099ce7f..e60f1985edb0 100644
 --- a/drivers/media/platform/vimc/vimc-sensor.c
 +++ b/drivers/media/platform/vimc/vimc-sensor.c
-@@ -197,10 +197,6 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
- 		const struct v4l2_format_info *pix_info;
- 		unsigned int frame_size;
+@@ -141,7 +141,7 @@ static int vimc_sen_set_fmt(struct v4l2_subdev *sd,
  
--		if (vsen->kthread_sen)
--			/* tpg is already executing */
--			return 0;
--
- 		/* Calculate the frame size */
- 		pix_info = v4l2_format_info(pixelformat);
- 		frame_size = vsen->mbus_format.width * pix_info->bpp[0] *
+ 	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+ 		/* Do not change the format while stream is on */
+-		if (vsen->frame)
++		if (vsen->ved.stream)
+ 			return -EBUSY;
+ 
+ 		mf = &vsen->mbus_format;
 -- 
 2.21.0
 
