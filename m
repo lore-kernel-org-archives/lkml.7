@@ -2,149 +2,429 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2FFC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1983C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E09F21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:30:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYaseHbW"
+	by mail.kernel.org (Postfix) with ESMTP id 9773A21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfCOTaI (ORCPT
+        id S1727179AbfCOTaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 15:30:08 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42226 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbfCOTaI (ORCPT
+        Fri, 15 Mar 2019 15:30:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49596 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfCOTaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 15:30:08 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m4so8252589oim.9;
-        Fri, 15 Mar 2019 12:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zWz7NM37J1/gsXL9QJ15ZxX6nUcfHviRQIGzCysbLrE=;
-        b=vYaseHbW/OaIr7P1XZYORsQSlKEly1q8VhoL+bDDoFeXY4QwwpEn1bYHY7xrj8puh6
-         sLfQP2KOnyDSfdXpFyBV53tYM05EgyRqMBkhJUitRv04uyosEwdBl72x0E+IC/RYw1zb
-         B4WUsb1avZRm1mpRqrhVuRd6IOkewiGfJYgMPLzSLbPpxXsCUvkwhupOo/TZgE4iP/H6
-         b1oX+1AnhL0SDprLkc5BgQTrFsrLHr5cJkoY7P38DBQClGE/6u/0mTYXkxgIDNVekYyu
-         bWerI5Ta2cI9PEvFq9sgv91S+AfTS9SvN7WEadJEEEKVcg3AyhGVFTr4iRhcO5cd4m63
-         vBRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zWz7NM37J1/gsXL9QJ15ZxX6nUcfHviRQIGzCysbLrE=;
-        b=o4rDflYAFSKN+/rUXpHv36Wz4pdPb7fK0z97Qi13Gq/uiAqWboZloks8Y44lIQbQWE
-         Dp2IWnXchm6Cl/0EPYZg39yPl7hMIPdTwyZaWV74GtBIcS1zV3bluA6+Db9n5GJJKILW
-         F/Mx3ROBB9fHvmz9MByBzw/919zWe0wpH6Qyfll1Yug3i+giJZEVcE/s6Eo/Ge/vt43O
-         98hRKmWVxH4ycgqmJIeqO2fQfyy9uaj8zSuingNC83BZEC5tHGRHJA7OsCBCpkpJeITE
-         fKBOTOndfRs75KNscOf+PbOGDoSqKe4xgBh5QpLAt4N/10yHEHHLwI4zsAmDTp5T/ybA
-         kGlg==
-X-Gm-Message-State: APjAAAWZv3b4ZCOOUf39Dxq05mRJXYA6wIVUPpobhEBhRTHQQrjzHp6g
-        39jF5Vs/MdNOfHnxl7C0w2Y=
-X-Google-Smtp-Source: APXvYqw904hNUZIO3L09VUQi9EDFPb2Oo+J6gM/nrcXcNoYnikl4IBXD2aD/qoKror08s3C8euZ0VA==
-X-Received: by 2002:aca:ba06:: with SMTP id k6mr2701614oif.159.1552678206701;
-        Fri, 15 Mar 2019 12:30:06 -0700 (PDT)
-Received: from nuclearis2-1.lan (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id q8sm1088417oih.6.2019.03.15.12.30.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 12:30:06 -0700 (PDT)
-From:   Alexandru Gagniuc <mr.nuke.me@gmail.com>
-To:     bhelgaas@google.com
-Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        okaya@kernel.org, Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 4/4] PCI/ACPI: Advertise HPX type 3 support via _OSC
-Date:   Fri, 15 Mar 2019 14:29:40 -0500
-Message-Id: <20190315192947.13807-1-mr.nuke.me@gmail.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190307213834.5914-1-mr.nuke.me@gmail.com>
-References: <20190307213834.5914-1-mr.nuke.me@gmail.com>
+        Fri, 15 Mar 2019 15:30:16 -0400
+Received: from [IPv6:2804:431:9718:4c54:5b9b:61a:a071:48bc] (unknown [IPv6:2804:431:9718:4c54:5b9b:61a:a071:48bc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 802DE28143A;
+        Fri, 15 Mar 2019 19:30:12 +0000 (GMT)
+Subject: Re: [PATCH 01/16] media: Move sp2mp functions to v4l2-common
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, lucmaga@gmail.com,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20190315164359.626-1-andrealmeid@collabora.com>
+ <20190315164359.626-2-andrealmeid@collabora.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <31ce0b97-4b1d-8f1e-0f0e-cbd2a4bcf6ce@collabora.com>
+Date:   Fri, 15 Mar 2019 16:30:08 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190315164359.626-2-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-_OSC now has a way to inform firmware that OS has the capability to
-interpret HPX type 3 tables. Since ACPI 6.3 deprecated _OSC specifics,
-these are now part of the PCI Firmware Specification.
 
-The following is the document describing the changes:
-ECN:	_HPX and PCIe Completion Timeout related _OSC Enhancements
-Date:	September 12, 2018
-Affected Document: PCI Firmware Specification, Rev. 3.2
 
-Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
----
+On 3/15/19 1:43 PM, André Almeida wrote:
+> Move sp2mp functions from vivid cote to v4l2-common as it will be reused
+> by vimc driver for multiplanar support.
 
-This patch is designed to go on top of the following series
-"PCI: ACPI: Implement support for _HPX Type 3 tables"
-	https://lkml.org/lkml/2019/3/7/790
+s/cote/code
 
-Although the patch can technically be applied independently, it
-doesn't make sense without the rest of the series.
+> 
+> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+> ---
+>  drivers/media/platform/vivid/vivid-vid-cap.c  |  6 +-
+>  .../media/platform/vivid/vivid-vid-common.c   | 59 ------------------
+>  .../media/platform/vivid/vivid-vid-common.h   |  9 ---
+>  drivers/media/platform/vivid/vivid-vid-out.c  |  6 +-
+>  drivers/media/v4l2-core/v4l2-common.c         | 62 +++++++++++++++++++
+>  include/media/v4l2-common.h                   | 31 ++++++++++
+>  6 files changed, 99 insertions(+), 74 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vivid/vivid-vid-cap.c b/drivers/media/platform/vivid/vivid-vid-cap.c
+> index 52eeda624d7e..b5ad71bbf7bf 100644
+> --- a/drivers/media/platform/vivid/vivid-vid-cap.c
+> +++ b/drivers/media/platform/vivid/vivid-vid-cap.c
+> @@ -815,7 +815,7 @@ int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_g_fmt_vid_cap);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_g_fmt_vid_cap);
+>  }
+>  
+>  int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
+> @@ -825,7 +825,7 @@ int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_try_fmt_vid_cap);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_try_fmt_vid_cap);
+>  }
+>  
+>  int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
+> @@ -835,7 +835,7 @@ int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_s_fmt_vid_cap);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_s_fmt_vid_cap);
+>  }
+>  
+>  int vivid_vid_cap_g_selection(struct file *file, void *priv,
+> diff --git a/drivers/media/platform/vivid/vivid-vid-common.c b/drivers/media/platform/vivid/vivid-vid-common.c
+> index 74b83bcc6119..3dd3a05d2e67 100644
+> --- a/drivers/media/platform/vivid/vivid-vid-common.c
+> +++ b/drivers/media/platform/vivid/vivid-vid-common.c
+> @@ -674,65 +674,6 @@ void vivid_send_source_change(struct vivid_dev *dev, unsigned type)
+>  	}
+>  }
+>  
+> -/*
+> - * Conversion function that converts a single-planar format to a
+> - * single-plane multiplanar format.
+> - */
+> -void fmt_sp2mp(const struct v4l2_format *sp_fmt, struct v4l2_format *mp_fmt)
+> -{
+> -	struct v4l2_pix_format_mplane *mp = &mp_fmt->fmt.pix_mp;
+> -	struct v4l2_plane_pix_format *ppix = &mp->plane_fmt[0];
+> -	const struct v4l2_pix_format *pix = &sp_fmt->fmt.pix;
+> -	bool is_out = sp_fmt->type == V4L2_BUF_TYPE_VIDEO_OUTPUT;
+> -
+> -	memset(mp->reserved, 0, sizeof(mp->reserved));
+> -	mp_fmt->type = is_out ? V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE :
+> -			   V4L2_CAP_VIDEO_CAPTURE_MPLANE;
+> -	mp->width = pix->width;
+> -	mp->height = pix->height;
+> -	mp->pixelformat = pix->pixelformat;
+> -	mp->field = pix->field;
+> -	mp->colorspace = pix->colorspace;
+> -	mp->xfer_func = pix->xfer_func;
+> -	/* Also copies hsv_enc */
+> -	mp->ycbcr_enc = pix->ycbcr_enc;
+> -	mp->quantization = pix->quantization;
+> -	mp->num_planes = 1;
+> -	mp->flags = pix->flags;
+> -	ppix->sizeimage = pix->sizeimage;
+> -	ppix->bytesperline = pix->bytesperline;
+> -	memset(ppix->reserved, 0, sizeof(ppix->reserved));
+> -}
+> -
+> -int fmt_sp2mp_func(struct file *file, void *priv,
+> -		struct v4l2_format *f, fmtfunc func)
+> -{
+> -	struct v4l2_format fmt;
+> -	struct v4l2_pix_format_mplane *mp = &fmt.fmt.pix_mp;
+> -	struct v4l2_plane_pix_format *ppix = &mp->plane_fmt[0];
+> -	struct v4l2_pix_format *pix = &f->fmt.pix;
+> -	int ret;
+> -
+> -	/* Converts to a mplane format */
+> -	fmt_sp2mp(f, &fmt);
+> -	/* Passes it to the generic mplane format function */
+> -	ret = func(file, priv, &fmt);
+> -	/* Copies back the mplane data to the single plane format */
+> -	pix->width = mp->width;
+> -	pix->height = mp->height;
+> -	pix->pixelformat = mp->pixelformat;
+> -	pix->field = mp->field;
+> -	pix->colorspace = mp->colorspace;
+> -	pix->xfer_func = mp->xfer_func;
+> -	/* Also copies hsv_enc */
+> -	pix->ycbcr_enc = mp->ycbcr_enc;
+> -	pix->quantization = mp->quantization;
+> -	pix->sizeimage = ppix->sizeimage;
+> -	pix->bytesperline = ppix->bytesperline;
+> -	pix->flags = mp->flags;
+> -	return ret;
+> -}
+> -
+>  int vivid_vid_adjust_sel(unsigned flags, struct v4l2_rect *r)
+>  {
+>  	unsigned w = r->width;
+> diff --git a/drivers/media/platform/vivid/vivid-vid-common.h b/drivers/media/platform/vivid/vivid-vid-common.h
+> index 29b6c0b40a1b..13adea56baa0 100644
+> --- a/drivers/media/platform/vivid/vivid-vid-common.h
+> +++ b/drivers/media/platform/vivid/vivid-vid-common.h
+> @@ -8,15 +8,6 @@
+>  #ifndef _VIVID_VID_COMMON_H_
+>  #define _VIVID_VID_COMMON_H_
+>  
+> -typedef int (*fmtfunc)(struct file *file, void *priv, struct v4l2_format *f);
+> -
+> -/*
+> - * Conversion function that converts a single-planar format to a
+> - * single-plane multiplanar format.
+> - */
+> -void fmt_sp2mp(const struct v4l2_format *sp_fmt, struct v4l2_format *mp_fmt);
+> -int fmt_sp2mp_func(struct file *file, void *priv,
+> -		struct v4l2_format *f, fmtfunc func);
+>  
+>  extern const struct v4l2_dv_timings_cap vivid_dv_timings_cap;
+>  
+> diff --git a/drivers/media/platform/vivid/vivid-vid-out.c b/drivers/media/platform/vivid/vivid-vid-out.c
+> index e61b91b414f9..c42ba5ade6cf 100644
+> --- a/drivers/media/platform/vivid/vivid-vid-out.c
+> +++ b/drivers/media/platform/vivid/vivid-vid-out.c
+> @@ -612,7 +612,7 @@ int vidioc_g_fmt_vid_out(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_g_fmt_vid_out);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_g_fmt_vid_out);
+>  }
+>  
+>  int vidioc_try_fmt_vid_out(struct file *file, void *priv,
+> @@ -622,7 +622,7 @@ int vidioc_try_fmt_vid_out(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_try_fmt_vid_out);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_try_fmt_vid_out);
+>  }
+>  
+>  int vidioc_s_fmt_vid_out(struct file *file, void *priv,
+> @@ -632,7 +632,7 @@ int vidioc_s_fmt_vid_out(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_s_fmt_vid_out);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_s_fmt_vid_out);
+>  }
+>  
+>  int vivid_vid_out_g_selection(struct file *file, void *priv,
+> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+> index 779e44d6db43..d118f8f34d32 100644
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -653,3 +653,65 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, int pixelformat, int width,
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
+> +
+> +/*
+> + * Conversion functions that convert a single-planar format to a
+> + * multi-planar format.
+> + */
+> +void v4l2_fmt_sp2mp(const struct v4l2_format *sp_fmt,
+> +		struct v4l2_format *mp_fmt)
+> +{
+> +	struct v4l2_pix_format_mplane *mp = &mp_fmt->fmt.pix_mp;
+> +	struct v4l2_plane_pix_format *ppix = &mp->plane_fmt[0];
+> +	const struct v4l2_pix_format *pix = &sp_fmt->fmt.pix;
+> +	bool is_out = sp_fmt->type == V4L2_BUF_TYPE_VIDEO_OUTPUT;
+> +
+> +	memset(mp->reserved, 0, sizeof(mp->reserved));
+> +	mp_fmt->type = is_out ? V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE :
+> +			   V4L2_CAP_VIDEO_CAPTURE_MPLANE;
+> +	mp->width = pix->width;
+> +	mp->height = pix->height;
+> +	mp->pixelformat = pix->pixelformat;
+> +	mp->field = pix->field;
+> +	mp->colorspace = pix->colorspace;
+> +	mp->xfer_func = pix->xfer_func;
+> +	/* Also copies hsv_enc */
+> +	mp->ycbcr_enc = pix->ycbcr_enc;
+> +	mp->quantization = pix->quantization;
+> +	mp->num_planes = 1;
+> +	mp->flags = pix->flags;
+> +	ppix->sizeimage = pix->sizeimage;
+> +	ppix->bytesperline = pix->bytesperline;
+> +	memset(ppix->reserved, 0, sizeof(ppix->reserved));
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_fmt_sp2mp);
+> +
+> +int v4l2_fmt_sp2mp_func(struct file *file, void *priv,
+> +		struct v4l2_format *f, v4l2_fmtfunc func)
+> +{
+> +	struct v4l2_format fmt;
+> +	struct v4l2_pix_format_mplane *mp = &fmt.fmt.pix_mp;
+> +	struct v4l2_plane_pix_format *ppix = &mp->plane_fmt[0];
+> +	struct v4l2_pix_format *pix = &f->fmt.pix;
+> +	int ret;
+> +
+> +	/* Converts to a mplane format */
+> +	v4l2_fmt_sp2mp(f, &fmt);
+> +	/* Passes it to the generic mplane format function */
+> +	ret = func(file, priv, &fmt);
+> +	/* Copies back the mplane data to the single plane format */
+> +	pix->width = mp->width;
+> +	pix->height = mp->height;
+> +	pix->pixelformat = mp->pixelformat;
+> +	pix->field = mp->field;
+> +	pix->colorspace = mp->colorspace;
+> +	pix->xfer_func = mp->xfer_func;
+> +	/* Also copies hsv_enc */
+> +	pix->ycbcr_enc = mp->ycbcr_enc;
+> +	pix->quantization = mp->quantization;
+> +	pix->sizeimage = ppix->sizeimage;
+> +	pix->bytesperline = ppix->bytesperline;
+> +	pix->flags = mp->flags;
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_fmt_sp2mp_func);
+> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> index 937b74a946cd..d106f36ebaf4 100644
+> --- a/include/media/v4l2-common.h
+> +++ b/include/media/v4l2-common.h
+> @@ -424,4 +424,35 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, int pixelformat,
+>  int v4l2_fill_pixfmt_mp(struct v4l2_pix_format_mplane *pixfmt, int pixelformat,
+>  			int width, int height);
+>  
+> +/**
+> + * v4l2_fmtfunc - type to be used by v4l2_fmt_sp2mp_func to pass the generic
+> + * mp function as argument
 
-The HPX3 capability bit, to my understanding, is designed to be
-informational. i.e. Setting or not setting it would not affect whether
-firmware would export HPX3 tables. It may have implications in FFS
-systems, where FW might need to make sure things like the completion
-timeout value is set correctly throughout the tree.
+You can use a shorter title, e.g.
+Function pointer type for v4l2_fmt_sp2mp()
 
-My understanding is that firmware will prefer to set these with HPX3,
-in lieu of firing up SMM on hotplug and other events. Firmware can use
-the HPX3 support bit to know how to proceed.
+And you can add a better description below,
+e.g.https://git.linuxtv.org/media_tree.git/tree/include/media/v4l2-common.h#n287
 
- drivers/acpi/pci_root.c | 2 ++
- include/linux/acpi.h    | 3 ++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+this also applies to other docs.
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 707aafc7c2aa..0bee23893297 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -145,6 +145,7 @@ static struct pci_osc_bit_struct pci_osc_support_bit[] = {
- 	{ OSC_PCI_CLOCK_PM_SUPPORT, "ClockPM" },
- 	{ OSC_PCI_SEGMENT_GROUPS_SUPPORT, "Segments" },
- 	{ OSC_PCI_MSI_SUPPORT, "MSI" },
-+	{ OSC_PCI_HPX_TYPE_3_SUPPORT, "HPX-type3" },
- };
- 
- static struct pci_osc_bit_struct pci_osc_control_bit[] = {
-@@ -446,6 +447,7 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
- 	 * PCI domains, so we indicate this in _OSC support capabilities.
- 	 */
- 	support = OSC_PCI_SEGMENT_GROUPS_SUPPORT;
-+	support |= OSC_PCI_HPX_TYPE_3_SUPPORT;
- 	if (pci_ext_cfg_avail())
- 		support |= OSC_PCI_EXT_CONFIG_SUPPORT;
- 	if (pcie_aspm_support_enabled())
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 87715f20b69a..028c138b9082 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -508,7 +508,8 @@ extern bool osc_pc_lpi_support_confirmed;
- #define OSC_PCI_CLOCK_PM_SUPPORT		0x00000004
- #define OSC_PCI_SEGMENT_GROUPS_SUPPORT		0x00000008
- #define OSC_PCI_MSI_SUPPORT			0x00000010
--#define OSC_PCI_SUPPORT_MASKS			0x0000001f
-+#define OSC_PCI_HPX_TYPE_3_SUPPORT		0x00000100
-+#define OSC_PCI_SUPPORT_MASKS			0x0000011f
- 
- /* PCI Host Bridge _OSC: Capabilities DWORD 3: Control Field */
- #define OSC_PCI_EXPRESS_NATIVE_HP_CONTROL	0x00000001
--- 
-2.19.2
+> + * @file: device's descriptor file
+> + * @priv: private data pointer
+> + * @f: format that holds a mp pixel format
+> + */
+> +typedef int (*v4l2_fmtfunc)(struct file *file, void *priv,
+> +		struct v4l2_format *f);
 
+It would be nice if you could align the second line with the arguments
+of the function in the first line.
+
+> +
+> +/**
+> + * v4l2_fmt_sp2mp - transforms a single-planar format struct into a multi-planar
+> + * struct
+> + * @sp_fmt: pointer to the single-planar format struct (in)
+> + * @mp_fmt: pointer to the multi-planar format struct (out)
+> + */
+> +void v4l2_fmt_sp2mp(const struct v4l2_format *sp_fmt,
+> +		struct v4l2_format *mp_fmt);
+
+same here regarding alignment.
+
+> +
+> +/**
+> + * v4l2_fmt_sp2mp_func - handler to call a generic multi-planar format function
+> + * using single-planar format. It converts the sp to a mp, calls the
+> + * function and converts mp back to sp.
+> + * @file: device's descriptor file
+> + * @priv: private data pointer
+> + * @f: format that holds a sp pixel format
+> + * @func: generic mp function
+> + */
+> +int v4l2_fmt_sp2mp_func(struct file *file, void *priv,
+> +		struct v4l2_format *f, v4l2_fmtfunc func);
+
+same here regarding alignment.
+
+Regards,
+Helen
+
+> +
+>  #endif /* V4L2_COMMON_H_ */
+> 
