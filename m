@@ -2,129 +2,136 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42C5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59D0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73AF021872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B640218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfCOI1F (ORCPT
+        id S1728488AbfCOI1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 04:27:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45128 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbfCOI1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 04:27:05 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E259A3083392;
-        Fri, 15 Mar 2019 08:27:04 +0000 (UTC)
-Received: from xz-x1 (ovpn-12-78.pek2.redhat.com [10.72.12.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B9CFE1001DEB;
-        Fri, 15 Mar 2019 08:26:54 +0000 (UTC)
-Date:   Fri, 15 Mar 2019 16:26:55 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Maxime Coquelin <maxime.coquelin@redhat.com>,
-        kvm@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        linux-fsdevel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/3] userfaultfd: allow to forbid unprivileged users
-Message-ID: <20190315082655.GA6654@xz-x1>
-References: <20190311093701.15734-1-peterx@redhat.com>
- <58e63635-fc1b-cb53-a4d1-237e6b8b7236@oracle.com>
- <20190313060023.GD2433@xz-x1>
- <dd56566e-7b7f-51f6-bf01-ffda530a8073@oracle.com>
+        Fri, 15 Mar 2019 04:27:20 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:44692 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfCOI1U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 04:27:20 -0400
+Received: by mail-vk1-f193.google.com with SMTP id q189so2006947vkq.11
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 01:27:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=edV51IMGqi37Bq2Ov795/4uUFjHDrNZKnaa7EIRiumk=;
+        b=biWLV4UO8ZF5M1WELMu+bJruN3z039zOJc59O3m6assfANVh2mNuLsymLXQ+bkinmU
+         2CPNiT6VyK1mZqx3Q6+GHBVnNof38Prr83RM5VU6MECzQmhgWv/nLPR5abWGkQz092rH
+         uf2T2HJ2NjAt4fcVZW9j4BJahThi9N4jGzNEjQFVr86Aq7aNrVYkCVNiy2KudDa1clcT
+         pLD1q5OCbRKEUJdcE2GWC1j8Ad1p9lhkoyy8v6kmWmVO8lH8if4U5Tleuo9R2HhTeR3k
+         8BPF0Q7vhTgjyDz3by/R0nC1F/mz95+9xZ3YavNfjDbzQeJ5CXH4TUqR/KYRBqUZMDdf
+         NS/A==
+X-Gm-Message-State: APjAAAVlWRSPfFSqalMQEyF8LG9xwuD9OnQ+ugxM29QQX6iv0Bkaj17a
+        WHKwhniW/ADfJsm8fnhmpR38jmqKG0Ajn7I23Lg=
+X-Google-Smtp-Source: APXvYqzjvBgHPirIikYuBs4jRprm/slQSun4dBpyqxSzw0EjK+LxxNP+ZNB2YKXsWz2oDU/zYksOxIL1irge5WG8dPg=
+X-Received: by 2002:a1f:a5d3:: with SMTP id o202mr1441787vke.40.1552638438944;
+ Fri, 15 Mar 2019 01:27:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <dd56566e-7b7f-51f6-bf01-ffda530a8073@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 15 Mar 2019 08:27:05 +0000 (UTC)
+References: <cover.1552097842.git.lkml@sdf.org> <dc6cc09e71f8687ff2ef4cbfc2b11accc9aba8aa.1552097842.git.lkml@sdf.org>
+ <20190309140653.GO9224@smile.fi.intel.com> <201903091553.x29FrfMR018600@sdf.org>
+ <20190314092958.GV9224@smile.fi.intel.com> <201903141009.x2EA9q1Z025888@sdf.org>
+ <CAMuHMdW0jd-oNtgBf=aHfzVoBbVh0OJYC6ELhDv3VrcGwUECwA@mail.gmail.com>
+ <201903141153.x2EBrtKi000133@sdf.org> <20190314121811.GY9224@smile.fi.intel.com>
+ <1145741552593595@sas2-2074c606c35d.qloud-c.yandex.net> <201903150335.x2F3ZUgS024157@sdf.org>
+In-Reply-To: <201903150335.x2F3ZUgS024157@sdf.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 15 Mar 2019 09:27:06 +0100
+Message-ID: <CAMuHMdVB+OgR9-rc+pksAc05vx5jeCwFF+LvBOnvmXO=VQKq2Q@mail.gmail.com>
+Subject: Re: [PATCH 1/5] lib/sort: Make swap functions more generic
+To:     George Spelvin <lkml@sdf.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrey Abramov <st5pub@yandex.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Wagner <daniel.wagner@siemens.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Don Mullis <don.mullis@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 10:50:48AM -0700, Mike Kravetz wrote:
-> On 3/12/19 11:00 PM, Peter Xu wrote:
-> > On Tue, Mar 12, 2019 at 12:59:34PM -0700, Mike Kravetz wrote:
-> >> On 3/11/19 2:36 AM, Peter Xu wrote:
-> >>>
-> >>> The "kvm" entry is a bit special here only to make sure that existing
-> >>> users like QEMU/KVM won't break by this newly introduced flag.  What
-> >>> we need to do is simply set the "unprivileged_userfaultfd" flag to
-> >>> "kvm" here to automatically grant userfaultfd permission for processes
-> >>> like QEMU/KVM without extra code to tweak these flags in the admin
-> >>> code.
-> >>
-> >> Another user is Oracle DB, specifically with hugetlbfs.  For them, we would
-> >> like to add a special case like kvm described above.  The admin controls
-> >> who can have access to hugetlbfs, so I think adding code to the open
-> >> routine as in patch 2 of this series would seem to work.
-> > 
-> > Yes I think if there's an explicit and safe place we can hook for
-> > hugetlbfs then we can do the similar trick as KVM case.  Though I
-> > noticed that we can not only create hugetlbfs files under the
-> > mountpoint (which the admin can control), but also using some other
-> > ways.  The question (of me... sorry if it's a silly one!) is whether
-> > all other ways to use hugetlbfs is still under control of the admin.
-> > One I know of is memfd_create() which seems to be doable even as
-> > unprivileged users.  If so, should we only limit the uffd privilege to
-> > those hugetlbfs users who use the mountpoint directly?
-> 
-> Wow!  I did not realize that apps which specify mmap(MAP_HUGETLB) do not
-> need any special privilege to use huge pages.  Honestly, I am not sure if
-> that was by design or a bug.  The memfd_create code is based on the MAP_HUGETLB
-> code and also does not need any special privilege.  Not to sidetrack this
-> discussion, but people on Cc may know if this is a bug or by design.  My
-> opinion is that huge pages are a limited resource and should be under control.
-> One needs to be a member of a special group (or root) to access via System V
-> interfaces.
+Hi George,
 
-Yeah I completely agree that huge pages should need some special
-care...
+On Fri, Mar 15, 2019 at 4:36 AM George Spelvin <lkml@sdf.org> wrote:
+> >> swap_bytes / swap_4byte_words / swap_8byte_words
+> >> swap_bytes / swap_ints / swap_longs
+> >> swap_1 / swap_4 / swap_8
+> >> Pistols at dawn?
+>
+> On Thu, 14 Mar 2019 at 22:59:55 +0300, Andrey Abramov wrote:
+> > Yes, in my opinion, swap_bytes / swap_ints / swap_longs are the
+> > most readable because we have both swap_ints and swap_longs functions
+> > (in one file near each other), so I don't think that there will be
+> > any confusion about size.
+>
+> Yes, that's what I thought.  They're three related but different
+> functions, suffixed _bytes, _ints, and _longs.  What could the
+> difference possibly be?  And if anyone has any lingering doubts,
+> the functions are right there, with exquisitely clear comments.
+>
+> No to mention where they're used.  Is "is_aligned(base, size, 8)"
+> remotely obscure?  Especially in context:
+>
+>                 if (is_aligned(base, size, 8))
+>                         swap_func = swap_longs;
+>                 else if (is_aligned(base, size, 4))
+>                         swap_func = swap_ints;
+>                 else
+>                         swap_func = swap_bytes;
+>
+> What subtle and mysterious code.
+>
+> > But actually, it doesn't matter which name will you take, because
+> > the meaning of each, in my opinion, is obvious enough, so I don't
+> > mind about any of these options.
+>
+> I'm just amazed that this piece of bikeshedding is the most
+> contentious thing about the patch series.
+>
+> I mean, if I'd named them:
+>         llanfairpwllgwyngyll()
+>         shravanabelagola()
+>         zheleznodorozhny()
+> or
+>         peckish()
+>         esuriant()
+>         hungry()
+> then yes, those would be bad names.
+>
+> I prefer the shorter _ints and _longs names, but this is just
+> not a hill I want to die on.
 
-> 
-> The DB use case only does mmap of files in an explicitly mounted filesystem.
-> So, limiting it in that manner would work for them.
-> 
-> > Another question is about fork() of privileged processes - for KVM we
-> > only grant privilege for the exact process that opened the /dev/kvm
-> > node, and the privilege will be lost for any forked childrens.  Is
-> > that the same thing for OracleDB/Hugetlbfs?
-> 
-> I need to confirm with the DB people, but it is my understanding that the
-> exact process which does the open/mmap will be the one using userfaultfd.
+Argument of least surprise: don't call something a duck if it's not
+guaranteed to behave like a duck.
 
-It'll be nice if these can be confirmed and if above proposal could
-still be an alternative for us (grant privilege for processes who do
-mknod() upon the hugetlbfs mountpoint; drop privilege when fork as
-usual), since IMHO it is still the simplest approach comparing to what
-we've discussed in the other threads...
+If I read "long", this triggers a warning flag in my head: be careful, this is
+32-bit on 32-bit platforms, and 64-bit on 64-bit platforms.
 
-Thanks,
+There's a reason the newer I/O ioread{8,16,32} accessors use explicit
+sizes, unlike the ancient x86-centric read[bwl]().
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Peter Xu
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
