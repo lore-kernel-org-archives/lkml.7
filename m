@@ -2,145 +2,1823 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB317C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50068C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69DC21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0161221872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfCOC56 (ORCPT
+        id S1727808AbfCODHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 22:57:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37614 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727380AbfCOC55 (ORCPT
+        Thu, 14 Mar 2019 23:07:24 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:47256 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfCODHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 22:57:57 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2F2sR2x108847
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 22:57:56 -0400
-Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r80xay157-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 22:57:56 -0400
-Received: from localhost
-        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Fri, 15 Mar 2019 02:57:55 -0000
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 15 Mar 2019 02:57:48 -0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2F2vkTu24313968
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Mar 2019 02:57:46 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E663AAE060;
-        Fri, 15 Mar 2019 02:57:45 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 019C2AE05C;
-        Fri, 15 Mar 2019 02:57:36 +0000 (GMT)
-Received: from [9.85.75.142] (unknown [9.85.75.142])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 15 Mar 2019 02:57:36 +0000 (GMT)
-Subject: Re: [PATCH v6 4/4] hugetlb: allow to free gigantic pages regardless
- of the configuration
-To:     Alexandre Ghiti <alex@ghiti.fr>,
+        Thu, 14 Mar 2019 23:07:24 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 4014928DF1;
+        Thu, 14 Mar 2019 23:07:13 -0400 (EDT)
+Date:   Fri, 15 Mar 2019 14:07:01 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Like Xu <like.xu@linux.intel.com>
+cc:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190307132015.26970-1-alex@ghiti.fr>
- <20190307132015.26970-5-alex@ghiti.fr> <87va0movdh.fsf@linux.ibm.com>
- <e39f5b5b-efa1-c7b1-c1d8-89155b926027@ghiti.fr>
- <972208b7-5c05-cc05-efbf-0d48bff4cf77@linux.ibm.com>
- <b6259684-ddc0-ade4-1881-016b5e7fff66@ghiti.fr>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Date:   Fri, 15 Mar 2019 08:27:35 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH] scripts/spelling.txt: add more typos to spelling.txt
+ and sort
+In-Reply-To: <1552613886-13845-1-git-send-email-like.xu@linux.intel.com>
+Message-ID: <alpine.LNX.2.21.1903151359480.8@nippy.intranet>
+References: <1552613886-13845-1-git-send-email-like.xu@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <b6259684-ddc0-ade4-1881-016b5e7fff66@ghiti.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031502-0040-0000-0000-000004D269EF
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010760; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01174508; UDB=6.00606765; IPR=6.00955172;
- MB=3.00025982; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-15 02:57:54
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031502-0041-0000-0000-000008DD80A3
-Message-Id: <a96fefc5-c7dc-a335-8d87-603a0be03ac6@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-15_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903150020
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/14/19 7:22 PM, Alexandre Ghiti wrote:
+
+Does it makes sense to list every typo that is simply a transposition of 
+characters or a character omitted? This file will become very large very 
+quickly if we do that.
+
+Such errors can be found algorithmically where the correct spelling is 
+known. E.g. the file contains 'algorithm' so 'algrthm' can easily be 
+obtained programatically.
+
+Suggest you restrict this to common misspellings. That's not a NAK and I'm 
+not the relevant maintainer. Just my $0.02.
+
+-- 
+
+On Fri, 15 Mar 2019, Like Xu wrote:
+
+> Here are some of the more common spelling mistakes and typos that I've
+> found while fixing up spelling mistakes in the kernel.
 > 
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> ---
+>  scripts/spelling.txt | 579 +++++++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 492 insertions(+), 87 deletions(-)
 > 
-> On 03/14/2019 02:17 PM, Aneesh Kumar K.V wrote:
->> On 3/14/19 5:13 PM, Alexandre Ghiti wrote:
->>> On 03/14/2019 06:52 AM, Aneesh Kumar K.V wrote:
->>>> Alexandre Ghiti <alex@ghiti.fr> writes:
->>>>
->>
->>> Thanks for noticing Aneesh.
->>>
->>> I can't find a better solution than bringing back 
->>> gigantic_page_supported check,
->>> since it is must be done at runtime in your case.
->>> I'm not sure of one thing though: you say that freeing boottime 
->>> gigantic pages
->>> is not needed, but is it forbidden ? Just to know where the check and 
->>> what its
->>> new name should be.
+> diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+> index 86b8733..dcd25a3 100644
+> --- a/scripts/spelling.txt
+> +++ b/scripts/spelling.txt
+> @@ -21,11 +21,14 @@ absolut||absolute
+>  absoulte||absolute
+>  acccess||access
+>  acceess||access
+> +accelaration||acceleration
+>  acceleratoin||acceleration
+> +acceleratrion||acceleration
+>  accelleration||acceleration
+>  accesing||accessing
+>  accesnt||accent
+>  accessable||accessible
+> +accessiable||accessible
+>  accesss||access
+>  accidentaly||accidentally
+>  accidentually||accidentally
+> @@ -39,45 +42,58 @@ accout||account
+>  accquire||acquire
+>  accquired||acquired
+>  accross||across
+> +accss||access
+>  acessable||accessible
+>  acess||access
+> +acheived||achieved
+>  achitecture||architecture
+>  acient||ancient
+>  acitions||actions
+>  acitve||active
+>  acknowldegement||acknowledgment
+>  acknowledgement||acknowledgment
+> +acknowleding||acknowledging
+>  ackowledge||acknowledge
+>  ackowledged||acknowledged
+> +ackowledgement||acknowledgement
+> +ackowledges||acknowledges
+>  acording||according
+> -activete||activate
+>  actived||activated
+> +activete||activate
+>  actualy||actually
+>  acumulating||accumulating
+>  acumulator||accumulator
+> +acutally||actually
+>  adapater||adapter
+> +adddress||address
+> +adderss||address
+>  addional||additional
+>  additionaly||additionally
+> +additionnally||additionally
+> +additoinal||additional
+>  additonal||additional
+>  addres||address
+> -adddress||address
+>  addreses||addresses
+>  addresss||address
+>  addrress||address
+>  aditional||additional
+>  aditionally||additionally
+>  aditionaly||additionally
+> +adjusment||adjustment
+>  adminstrative||administrative
+>  adress||address
+>  adresses||addresses
+>  adrresses||addresses
+>  advertisment||advertisement
+>  adviced||advised
+> +advnace||advance
+>  afecting||affecting
+> +affvecs||affects
+>  againt||against
+>  agaist||against
+>  aggreataon||aggregation
+>  aggreation||aggregation
+> +agruments||arguments
+>  albumns||albums
+>  alegorical||allegorical
+>  algined||aligned
+> @@ -87,12 +103,15 @@ algoritm||algorithm
+>  algoritms||algorithms
+>  algorrithm||algorithm
+>  algorritm||algorithm
+> +algrthm||algorithm
+>  aligment||alignment
+>  alignement||alignment
+>  allign||align
+>  alligned||aligned
+>  alllocate||allocate
+>  alloated||allocated
+> +allocagtor||allocator
+> +allocas||allices
+>  allocatote||allocate
+>  allocatrd||allocated
+>  allocte||allocate
+> @@ -103,23 +122,29 @@ alogrithm||algorithm
+>  alot||a lot
+>  alow||allow
+>  alows||allows
+> +alreaady||already
+>  altough||although
+>  alue||value
+> +amacout||mahout
+>  ambigious||ambiguous
+> +ammount||amount
+> +ammounts||amounts
+>  amoung||among
+>  amout||amount
+>  amplifer||amplifier
+>  amplifyer||amplifier
+> -an union||a union
+> -an user||a user
+> -an userspace||a userspace
+> -an one||a one
+> +analagous||analogous
+> +analogous||analogous
+>  analysator||analyzer
+>  ang||and
+>  anniversery||anniversary
+>  annoucement||announcement
+>  anomolies||anomalies
+>  anomoly||anomaly
+> +an one||a one
+> +an union||a union
+> +an user||a user
+> +an userspace||a userspace
+>  anway||anyway
+>  aplication||application
+>  appearence||appearance
+> @@ -134,48 +159,68 @@ approriate||appropriate
+>  approriately||appropriately
+>  apropriate||appropriate
+>  aquainted||acquainted
+> +aquaris||Aquarius
+> +aquire||acquire
+>  aquired||acquired
+>  aquisition||acquisition
+>  arbitary||arbitrary
+> +arbitralrily||arbitrarily
+> +arbitray||arbitrary
+>  architechture||architecture
+>  arguement||argument
+>  arguements||arguments
+> +argumetns||arguments
+>  aritmetic||arithmetic
+>  arne't||aren't
+>  arraival||arrival
+>  artifical||artificial
+>  artillary||artillery
+>  asign||assign
+> +assebmly||assembly
+>  asser||assert
+>  assertation||assertion
+>  assertting||asserting
+> +assgined||assigned
+>  assiged||assigned
+>  assigment||assignment
+>  assigments||assignments
+>  assistent||assistant
+> +assmebly||assembly
+> +assocaition||association
+>  assocation||association
+> +assocativity||associativity
+>  associcated||associated
+> +assoicatied||associated
+>  assotiated||associated
+>  asssert||assert
+>  assum||assume
+> +assumming||assuming
+>  assumtpion||assumption
+> +asume||assume
+>  asuming||assuming
+>  asycronous||asynchronous
+> -asynchnous||asynchronous
+> -asynchromous||asynchronous
+>  asymetric||asymmetric
+>  asymmeric||asymmetric
+> +asynchnous||asynchronous
+> +asynchromous||asynchronous
+> +asynchrounous||asynchronous
+> +atempt||attempt
+>  atomatically||automatically
+>  atomicly||atomically
+> -atempt||attempt
+> +atribute||attribute
+>  attachement||attachment
+>  attched||attached
+> -attemps||attempts
+>  attemping||attempting
+> +attemppt||attempt
+> +attemps||attempts
+>  attepmpt||attempt
+> +attirbutes||attributes
+>  attnetion||attention
+> +attribut||attribute
+>  attruibutes||attributes
+>  authentification||authentication
+> +autherr||author
+> +automagicaly||automatically
+>  automaticaly||automatically
+>  automaticly||automatically
+>  automatize||automate
+> @@ -185,9 +230,11 @@ autonymous||autonomous
+>  auxillary||auxiliary
+>  auxilliary||auxiliary
+>  avaiable||available
+> +avaialable||available
+>  avaible||available
+>  availabe||available
+>  availabled||available
+> +availablility||availability
+>  availablity||availability
+>  availaible||available
+>  availale||available
+> @@ -205,6 +252,7 @@ bahavior||behavior
+>  bakup||backup
+>  baloon||balloon
+>  baloons||balloons
+> +bandwitdh||bandwidth
+>  bandwith||bandwidth
+>  banlance||balance
+>  batery||battery
+> @@ -215,17 +263,24 @@ becuase||because
+>  beeing||being
+>  befor||before
+>  begining||beginning
+> +beginnning||beginning
+> +beiginning||beginning
+>  beter||better
+>  betweeen||between
+>  bianries||binaries
+> +bidirectionnal||bidirectional
+>  bitmast||bitmask
+>  boardcast||broadcast
+> +bondary||boundary
+> +boook||book
+>  borad||board
+>  boundry||boundary
+>  brievely||briefly
+>  broadcase||broadcast
+>  broadcat||broadcast
+>  bufufer||buffer
+> +byteen||between
+> +cachces||caches
+>  cacluated||calculated
+>  caculate||calculate
+>  caculation||calculation
+> @@ -238,20 +293,27 @@ calucate||calculate
+>  calulate||calculate
+>  cancelation||cancellation
+>  cancle||cancel
+> +capabale||capable
+> +capabiliities||capabilities
+>  capabilites||capabilities
+> +capabilitie||capabilities
+> +capabilitites||capabilities
+> +capabilitiy||capability
+> +capabilties||capabilities
+>  capabilty||capability
+>  capabitilies||capabilities
+>  capablity||capability
+> -capatibilities||capabilities
+>  capapbilities||capabilities
+> +capatibilities||capabilities
+>  caputure||capture
+>  carefuly||carefully
+>  cariage||carriage
+>  catagory||category
+> +cconcentrator||concentrator
+>  cehck||check
+> +chache||cache
+>  challange||challenge
+>  challanges||challenges
+> -chache||cache
+>  chanell||channel
+>  changable||changeable
+>  chanined||chained
+> @@ -259,6 +321,7 @@ channle||channel
+>  channnel||channel
+>  charachter||character
+>  charachters||characters
+> +characteristcs||characteristics
+>  charactor||character
+>  charater||character
+>  charaters||characters
+> @@ -268,6 +331,7 @@ chck||check
+>  checksumed||checksummed
+>  checksuming||checksumming
+>  childern||children
+> +child'ren||children
+>  childs||children
+>  chiled||child
+>  chked||checked
+> @@ -282,138 +346,212 @@ clared||cleared
+>  closeing||closing
+>  clustred||clustered
+>  coexistance||coexistence
+> +cofigured||configured
+>  colescing||coalescing
+>  collapsable||collapsible
+> +collpased||collapsed
+>  colorfull||colorful
+> +comamnd||command
+>  comand||command
+> +combatibility||compatibility
+>  comit||commit
+>  commerical||commercial
+>  comming||coming
+> +comminicate||communicate
+>  comminucation||communication
+>  commited||committed
+>  commiting||committing
+>  committ||commit
+>  commoditiy||commodity
+> -comsume||consume
+> -comsumer||consumer
+> -comsuming||consuming
+> +communation||commination
+> +communicaion||communication
+>  compability||compatibility
+>  compaibility||compatibility
+> +comparation||compilation
+>  comparsion||comparison
+>  compatability||compatibility
+>  compatable||compatible
+> +compatbility||compatibility
+> +compatibile||compatible
+>  compatibiliy||compatibility
+>  compatibilty||compatibility
+> +compatibl||compatible
+>  compatiblity||compatibility
+> +compatile||compatible
+>  competion||completion
+>  compilant||compliant
+>  compleatly||completely
+> +completey||completely
+> +completiom||completion
+> +completited||completed
+> +completition||competition
+>  completition||completion
+>  completly||completely
+>  complient||compliant
+> -componnents||components
+>  compoment||component
+> +componnents||components
+> +componse||compose
+>  comppatible||compatible
+>  compres||compress
+>  compresion||compression
+>  comression||compression
+> +comsume||consume
+> +comsumer||consumer
+> +comsuming||consuming
+>  comunication||communication
+>  conbination||combination
+> +conditinal||conditional
+>  conditionaly||conditionally
+>  conected||connected
+>  conector||connector
+> -connecetd||connected
+> +conerter||converter
+> +configuared||configured
+>  configuartion||configuration
+>  configuation||configuration
+> +configued||configured
+> +configuraions||configurations
+>  configuratoin||configuration
+>  configuraton||configuration
+> +configuredi||configured
+>  configuretion||configuration
+> +configurtion||configuration
+>  configutation||configuration
+> +congifured||configured
+>  conider||consider
+>  conjuction||conjunction
+> +connecetd||connected
+> +connecteded||connected
+>  connectinos||connections
+>  connnection||connection
+>  connnections||connections
+> +consecutivity||consecutively
+> +consel||console
+>  consistancy||consistency
+>  consistant||consistent
+> +consitional||conditional
+> +constitue||constitute
+>  containes||contains
+>  containts||contains
+>  contaisn||contains
+>  contant||contact
+>  contence||contents
+> +contigious||contagious
+>  continious||continuous
+>  continous||continuous
+>  continously||continuously
+>  continueing||continuing
+> -contraints||constraints
+> -contruct||construct
+> +continuosuly||continuously
+> +continuying||continuing
+>  contol||control
+>  contoller||controller
+> +contraints||constraints
+>  controled||controlled
+>  controler||controller
+> +controlers||controllers
+>  controll||control
+> +controlller||controller
+> +controllor||controller
+> +contruct||construct
+>  contruction||construction
+>  contry||country
+>  conuntry||country
+> +converstion||conversation
+>  convertion||conversion
+>  convertor||converter
+> +conveter||converter
+>  convienient||convenient
+>  convinient||convenient
+> +convnetional||conventional
+> +convrate||concrete
+> +convrates||concretes
+> +coommon||common
+> +coonnected||connected
+> +coordiante||coordinate
+>  corected||corrected
+> +correcly||correctly
+>  correponding||corresponding
+>  correponds||corresponds
+> +corresonding||corresponding
+>  correspoding||corresponding
+>  cotrol||control
+>  cound||could
+>  couter||counter
+>  coutner||counter
+> +coutry||country
+> +creater||creator
+> +criticial||critical
+>  cryptocraphic||cryptographic
+>  cunter||counter
+> +curcuit||circuit
+> +cureent||current
+>  curently||currently
+>  cylic||cyclic
+> +daemonise||demonize
+>  dafault||default
+>  deafult||default
+>  deamon||daemon
+> +debufs||debugs
+> +decapsulates||encapsulates
+> +decendents||decedents
+>  decompres||decompress
+> -decsribed||described
+> +decomression||decompression
+> +decrementation||defragmentation
+> +decremeter||decremented
+> +decribed||described
+>  decription||description
+> +decriptor||descriptor
+> +decsribed||described
+>  dectected||detected
+>  defailt||default
+> +defaiult||default
+>  deferal||deferral
+>  deffered||deferred
+>  defferred||deferred
+>  definate||definite
+>  definately||definitely
+> +defin||define
+> +definetly||definitely
+> +definision||definition
+> +defintiion||definition
+>  defintion||definition
+>  defintions||definitions
+> +defragmentaion||defragmentation
+>  defualt||default
+>  defult||default
+> -deintializing||deinitializing
+> -deintialize||deinitialize
+>  deintialized||deinitialized
+> +deintialize||deinitialize
+> +deintializing||deinitializing
+>  deivce||device
+>  delared||declared
+>  delare||declare
+>  delares||declares
+>  delaring||declaring
+>  delemiter||delimiter
+> -demodualtor||demodulator
+> +delievers||delivers
+>  demension||dimension
+> +demodualtor||demodulator
+> +depdendency||dependency
+>  dependancies||dependencies
+>  dependancy||dependency
+>  dependant||dependent
+> +depenedent||dependent
+> +depenencies||dependencies
+>  depreacted||deprecated
+>  depreacte||deprecate
+>  desactivate||deactivate
+> +descibe||describe
+>  desciptor||descriptor
+>  desciptors||descriptors
+> +descpriptor||descriptor
+> +descripition||description
+>  descripton||description
+>  descrition||description
+>  descritptor||descriptor
+>  desctiptor||descriptor
+> +desination||destination
+> +desribe||describe
+>  desriptor||descriptor
+>  desriptors||descriptors
+> -desination||destination
+>  destionation||destination
+>  destoried||destroyed
+>  destory||destroy
+> @@ -422,6 +560,8 @@ destorys||destroys
+>  destroied||destroyed
+>  detabase||database
+>  deteced||detected
+> +detemine||determine
+> +detroyed||destroyed
+>  develope||develop
+>  developement||development
+>  developped||developed
+> @@ -435,79 +575,102 @@ diable||disable
+>  dictionnary||dictionary
+>  didnt||didn't
+>  diferent||different
+> +differenciate||differentiate
+>  differrence||difference
+>  diffrent||different
+> -differenciate||differentiate
+>  diffrentiate||differentiate
+>  difinition||definition
+> +digigram||decigram
+>  dimention||dimension
+>  dimesions||dimensions
+> -dispalying||displaying
+>  diplay||display
+> +direcly||directly
+>  directon||direction
+>  direectly||directly
+>  diregard||disregard
+> -disassocation||disassociation
+>  disapear||disappear
+>  disapeared||disappeared
+>  disappared||disappeared
+> -disbale||disable
+> +disassocation||disassociation
+>  disbaled||disabled
+> -disble||disable
+> +disbale||disable
+>  disbled||disabled
+> +disble||disable
+>  disconnet||disconnect
+>  discontinous||discontinuous
+> +discpline||discipline
+> +discription||description
+> +discsignr||discoing
+>  disharge||discharge
+> +disinguish||distinguish
+>  disnabled||disabled
+> +dispalying||displaying
+>  dispertion||dispersion
+>  dissapears||disappears
+>  distiction||distinction
+> +distinquish||distinguish
+> +distributon||distribution
+>  divisable||divisible
+>  divsiors||divisors
+>  docuentation||documentation
+>  documantation||documentation
+> +documenation||documentation
+>  documentaion||documentation
+>  documment||document
+> +documnetation||documentation
+>  doesnt||doesn't
+> +dont't||don't
+>  dorp||drop
+>  dosen||doesn
+>  downlad||download
+>  downlads||downloads
+>  droped||dropped
+>  druing||during
+> +dyanamically||dynamically
+>  dynmaic||dynamic
+>  eanable||enable
+> +eariler||earlier
+>  easilly||easily
+>  ecspecially||especially
+>  edditable||editable
+>  editting||editing
+>  efective||effective
+> +effectiv||effective
+>  efficently||efficiently
+>  ehther||ether
+>  eigth||eight
+> +ejectcd||ejected
+>  elementry||elementary
+>  eletronic||electronic
+>  embeded||embedded
+> +emergerncy||emergency
+> +emualted||emulated
+> +emultor||emulator
+>  enabledi||enabled
+>  enble||enable
+>  enchanced||enhanced
+> +encomapssing||encompassing
+>  encorporating||incorporating
+>  encrupted||encrypted
+>  encrypiton||encryption
+>  encryptio||encryption
+>  endianess||endianness
+>  enhaced||enhanced
+> +enlightment||enlighten
+>  enlightnment||enlightenment
+> +enocded||encoded
+>  enqueing||enqueuing
+> +enterily||entirely
+> +entimate||intimate
+>  entires||entries
+>  entites||entities
+> +entrancy||entrance
+>  entrys||entries
+> -enocded||encoded
+> -enterily||entirely
+>  enviroiment||environment
+>  enviroment||environment
+>  environement||environment
+>  environent||environment
+> +epected||expected
+>  eqivalent||equivalent
+>  equiped||equipped
+>  equivelant||equivalent
+> @@ -515,63 +678,78 @@ equivilant||equivalent
+>  eror||error
+>  errorr||error
+>  estbalishment||establishment
+> +ethernel||eternal
+>  etsablishment||establishment
+>  etsbalishment||establishment
+> +evntse||vents
+> +exacltly||exactly
+>  excecutable||executable
+>  exceded||exceeded
+>  excellant||excellent
+> +excluevt||exclave
+>  execeeded||exceeded
+>  execeeds||exceeds
+>  exeed||exceed
+> +exiample||example
+>  existance||existence
+>  existant||existent
+>  exixt||exist
+>  exlcude||exclude
+>  exlcusive||exclusive
+>  exmaple||example
+> +exmaples||examples
+>  expecially||especially
+>  experies||expires
+> +explainig||explaining
+>  explicite||explicit
+>  explicitely||explicitly
+> -explict||explicit
+> +explicity||explicitly
+>  explictely||explicitly
+> +explict||explicit
+>  explictly||explicitly
+>  expresion||expression
+>  exprimental||experimental
+>  extened||extended
+>  extensability||extensibility
+> -extention||extension
+>  extenstion||extension
+> +extention||extension
+>  extracter||extractor
+>  faield||failed
+> -falied||failed
+> -faild||failed
+>  failded||failed
+> +faild||failed
+>  failer||failure
+> -faill||fail
+>  failied||failed
+> +faill||fail
+>  faillure||failure
+> +failng||failing
+>  failue||failure
+>  failuer||failure
+> -failng||failing
+>  faireness||fairness
+>  falied||failed
+>  faliure||failure
+>  fallbck||fallback
+>  familar||familiar
+> +familiy||family
+>  fatser||faster
+> +faulure||failure
+> +favorit||favorite
+> +featues||features
+>  feauture||feature
+>  feautures||features
+> +ferequencies||frequencies
+> +feroceon||ferrocene
+>  fetaure||feature
+>  fetaures||features
+>  fileystem||filesystem
+>  fimware||firmware
+> -firmare||firmware
+> -firware||firmware
+>  finanize||finalize
+>  findn||find
+>  finilizes||finalizes
+>  finsih||finish
+> +firmare||firmware
+> +firware||firmware
+> +firwmware||firmware
+> +flexsible||flexible
+>  flusing||flushing
+>  folloing||following
+>  followign||following
+> @@ -582,19 +760,27 @@ forseeable||foreseeable
+>  forse||force
+>  fortan||fortran
+>  forwardig||forwarding
+> +fotmat||format
+>  frambuffer||framebuffer
+> +framewor||framework
+>  framming||framing
+>  framwork||framework
+>  frequncy||frequency
+>  frome||from
+> +frramework||framework
+>  fucntion||function
+>  fuction||function
+>  fuctions||functions
+>  funcation||function
+> +funcional||functional
+>  funcion||function
+>  functionallity||functionality
+> +functionalty||functionality
+>  functionaly||functionally
+> +functionlity||functionality
+>  functionnality||functionality
+> +functionnals||functional
+> +functiuon||function
+>  functonality||functionality
+>  funtion||function
+>  funtions||functions
+> @@ -603,104 +789,143 @@ futhermore||furthermore
+>  futrue||future
+>  gauage||gauge
+>  gaurenteed||guaranteed
+> -generiously||generously
+>  genereate||generate
+>  genereted||generated
+> +genericization||generalization
+> +generiously||generously
+>  genric||generic
+>  globel||global
+>  grabing||grabbing
+>  grahical||graphical
+>  grahpical||graphical
+> +grammathical||grammatical
+>  grapic||graphic
+>  grranted||granted
+>  guage||gauge
+> +guaratees||guarantees
+>  guarenteed||guaranteed
+>  guarentee||guarantee
+> +guarentees||guarantees
+> +gurantee||guarantee
+>  halfs||halves
+>  hander||handler
+>  handfull||handful
+>  hanlde||handle
+>  hanled||handled
+>  happend||happened
+> +hardocde||hardcode
+>  harware||hardware
+>  heirarchically||hierarchically
+>  helpfull||helpful
+> -hybernate||hibernate
+> +hertergenous||heterogeneous
+> +hieararchy||hierarchy
+> +hiearchy||hierarchy
+>  hierachy||hierarchy
+>  hierarchie||hierarchy
+>  homogenous||homogeneous
+>  howver||however
+>  hsould||should
+> +hybernate||hibernate
+>  hypervior||hypervisor
+>  hypter||hyper
+> +idential||identical
+>  identidier||identifier
+> +identificator||identification
+> +iinclude||include
+>  iligal||illegal
+> -illigal||illegal
+>  illgal||illegal
+> -iomaped||iomapped
+> +illigal||illegal
+>  imblance||imbalance
+> +imeediate||immediate
+> +imlemented||implemented
+>  immeadiately||immediately
+>  immedaite||immediate
+>  immediatelly||immediately
+>  immediatly||immediately
+>  immidiate||immediate
+> +impatients||impatient
+>  impelentation||implementation
+>  impementated||implemented
+>  implemantation||implementation
+>  implemenation||implementation
+>  implementaiton||implementation
+>  implementated||implemented
+> -implemention||implementation
+>  implementd||implemented
+> +implemention||implementation
+>  implemetation||implementation
+>  implemntation||implementation
+>  implentation||implementation
+>  implmentation||implementation
+>  implmenting||implementing
+> +inavlid||invalid
+>  incative||inactive
+> +incluing||including
+>  incomming||incoming
+>  incompatabilities||incompatibilities
+>  incompatable||incompatible
+> +incompleted||incomplete
+>  inconsistant||inconsistent
+> +incoporate||incorporate
+>  increas||increase
+> +incrementes||increments
+>  incremeted||incremented
+> +incresed||increased
+>  incrment||increment
+> +indecated||indicated
+>  indendation||indentation
+>  indended||intended
+> +indentifier||identifier
+> +indentifies||identifies
+> +indentify||identify
+>  independant||independent
+>  independantly||independently
+>  independed||independent
+> +independend||independent
+>  indiate||indicate
+>  indicat||indicate
+> +indicies||indices
+> +indix||index
+> +indle||idle
+> +inefficint||inefficient
+>  inexpect||inexpected
+>  inferface||interface
+>  infomation||information
+> +informaion||information
+>  informatiom||information
+>  informations||information
+>  informtion||information
+>  infromation||information
+>  ingore||ignore
+> +inialized||animalized
+>  inital||initial
+> -initalized||initialized
+>  initalised||initialized
+>  initalise||initialize
+> +initalized||initialized
+>  initalize||initialize
+>  initation||initiation
+>  initators||initiators
+> +initerface||interface
+>  initialiazation||initialization
+> +initializatiion||initialization
+>  initializiation||initialization
+> -initialze||initialize
+>  initialzed||initialized
+> +initialze||initialize
+>  initialzing||initializing
+>  initilization||initialization
+>  initilize||initialize
+> +inititalizing||initializing
+> +initted||ignited
+> +inmediately||immediately
+>  inofficial||unofficial
+>  inrerface||interface
+>  insititute||institute
+>  instace||instance
+>  instal||install
+> -instanciate||instantiate
+>  instanciated||instantiated
+> +instanciate||instantiate
+> +instantanous||instantaneous
+> +instituto||institute
+> +instuction||instruction
+>  insufficent||insufficient
+>  inteface||interface
+>  integreated||integrated
+> @@ -710,14 +935,14 @@ intendet||intended
+>  intented||intended
+>  interanl||internal
+>  interchangable||interchangeable
+> +intercs||inters
+>  interferring||interfering
+>  interger||integer
+>  intermittant||intermittent
+> +internallly||internally
+>  internel||internal
+>  interoprability||interoperability
+> -interuupt||interrupt
+> -interupt||interrupt
+> -interupts||interrupts
+> +interprete||interpreted
+>  interrface||interface
+>  interrrupt||interrupt
+>  interrup||interrupt
+> @@ -725,6 +950,8 @@ interrups||interrupts
+>  interruptted||interrupted
+>  interupted||interrupted
+>  interupt||interrupt
+> +interupts||interrupts
+> +interuupt||interrupt
+>  intial||initial
+>  intialisation||initialisation
+>  intialised||initialised
+> @@ -732,23 +959,26 @@ intialise||initialise
+>  intialization||initialization
+>  intialized||initialized
+>  intialize||initialize
+> +intializes||initializes
+>  intregral||integral
+>  intrerrupt||interrupt
+>  intrrupt||interrupt
+> +intruction||instruction
+> +intstruments||instruments
+>  intterrupt||interrupt
+>  intuative||intuitive
+> -inavlid||invalid
+>  invaid||invalid
+>  invaild||invalid
+>  invailid||invalid
+> -invald||invalid
+>  invalde||invalid
+> +invald||invalid
+>  invalide||invalid
+>  invalidiate||invalidate
+>  invalud||invalid
+>  invididual||individual
+>  invokation||invocation
+>  invokations||invocations
+> +iomaped||iomapped
+>  ireelevant||irrelevant
+>  irrelevent||irrelevant
+>  isnt||isn't
+> @@ -757,16 +987,20 @@ iternations||iterations
+>  itertation||iteration
+>  itslef||itself
+>  jave||java
+> +jection||ejection
+>  jeffies||jiffies
+> +journalid||journaled
+>  juse||just
+>  jus||just
+>  kown||known
+> +kthreadd's||thread's
+>  langage||language
+>  langauage||language
+>  langauge||language
+>  langugage||language
+>  lauch||launch
+>  layed||laid
+> +leftoever||leftover
+>  legnth||length
+>  leightweight||lightweight
+>  lengh||length
+> @@ -778,6 +1012,7 @@ libary||library
+>  librairies||libraries
+>  libraris||libraries
+>  licenceing||licencing
+> +limitiaion||limitation
+>  loggging||logging
+>  loggin||login
+>  logile||logfile
+> @@ -786,23 +1021,29 @@ loosing||losing
+>  losted||lost
+>  machinary||machinery
+>  maibox||mailbox
+> +mailformed||malformed
+>  maintainance||maintenance
+>  maintainence||maintenance
+> +maintanence||maintenance
+>  maintan||maintain
+>  makeing||making
+> -mailformed||malformed
+>  malplaced||misplaced
+>  malplace||misplace
+>  managable||manageable
+> +managament||management
+> +managememt||management
+>  managment||management
+>  mangement||management
+>  manoeuvering||maneuvering
+> +manufactor||manufactory
+>  manufaucturing||manufacturing
+> +mappigns||mappings
+>  mappping||mapping
+>  matchs||matches
+>  mathimatical||mathematical
+>  mathimatic||mathematic
+>  mathimatics||mathematics
+> +maximim||maximum
+>  maximium||maximum
+>  maxium||maximum
+>  mechamism||mechanism
+> @@ -810,45 +1051,60 @@ meetign||meeting
+>  memeory||memory
+>  memmber||member
+>  memoery||memory
+> +memomry||memory
+>  ment||meant
+> +menual||manual
+>  mergable||mergeable
+>  mesage||message
+> +messagges||messages
+>  messags||messages
+> +messgae||message
+>  messgaes||messages
+>  messsage||message
+>  messsages||messages
+>  micropone||microphone
+>  microprocesspr||microprocessor
+> +migarion||migration
+>  migrateable||migratable
+> +migratecd||migrated
+> +miliseconds||milliseconds
+> +millenium||millennium
+>  milliseonds||milliseconds
+> -minium||minimum
+>  minimam||minimum
+> +minimim||minimum
+> +minium||minimum
+>  miniumum||minimum
+>  minumum||minimum
+>  misalinged||misaligned
+>  miscelleneous||miscellaneous
+>  misformed||malformed
+> -mispelled||misspelled
+> -mispelt||misspelt
+>  mising||missing
+>  mismactch||mismatch
+> +mispelled||misspelled
+> +mispelt||misspelt
+>  missmanaged||mismanaged
+>  missmatch||mismatch
+> +misterious||mysterious
+>  miximum||maximum
+>  mmnemonic||mnemonic
+>  mnay||many
+>  modfiy||modify
+>  modulues||modules
+> +modyfying||modifying
+>  momery||memory
+> -memomry||memory
+>  monochorome||monochrome
+>  monochromo||monochrome
+>  monocrome||monochrome
+>  mopdule||module
+> +mordern||modern
+>  mroe||more
+> +muliptle||multiple
+>  mulitplied||multiplied
+>  multidimensionnal||multidimensional
+> +multipe||multiple
+> +multipy||multiply
+>  multple||multiple
+> +muma||numa
+>  mumber||number
+>  muticast||multicast
+>  mutilcast||multicast
+> @@ -860,19 +1116,27 @@ nead||need
+>  neccecary||necessary
+>  neccesary||necessary
+>  neccessary||necessary
+> +nececssary||necessary
+>  necesary||necessary
+>  neded||needed
+>  negaive||negative
+> +negitive||negative
+> +neglibigle||negligible
+> +negligeable||negligible
+>  negoitation||negotiation
+>  negotation||negotiation
+> +negtive||negative
+>  nerver||never
+>  nescessary||necessary
+>  nessessary||necessary
+>  noticable||noticeable
+>  notications||notifications
+>  notifed||notified
+> +notifer||rotifer
+> +notifys||notifies
+>  numebr||number
+>  numner||number
+> +numnodes||nimrods
+>  obtaion||obtain
+>  obusing||abusing
+>  occassionally||occasionally
+> @@ -881,12 +1145,14 @@ occurance||occurrence
+>  occurances||occurrences
+>  occured||occurred
+>  occurence||occurrence
+> +occurences||occurrences
+>  occure||occurred
+> -occured||occurred
+> +occures||occurs
+>  occuring||occurring
+> -offser||offset
+>  offet||offset
+>  offloded||offloaded
+> +offseet||offset
+> +offser||offset
+>  omited||omitted
+>  omiting||omitting
+>  omitt||omit
+> @@ -894,26 +1160,35 @@ ommiting||omitting
+>  ommitted||omitted
+>  onself||oneself
+>  ony||only
+> +openattr||operator
+>  operatione||operation
+>  opertaions||operations
+> +optimzation||optimization
+>  optionnal||optional
+>  optmizations||optimizations
+> +orginally||originally
+>  orientatied||orientated
+>  orientied||oriented
+> -orignal||original
+>  originial||original
+> +orignal||original
+>  otherise||otherwise
+> +othrewise||otherwise
+>  ouput||output
+>  oustanding||outstanding
+>  overaall||overall
+> +overcommited||overcommitted
+>  overhread||overhead
+> -overlaping||overlapping
+> +overidden||overridden
+>  overide||override
+> +overlaping||overlapping
+> +overriddenp||overridden
+>  overrided||overridden
+>  overriden||overridden
+>  overun||overrun
+> -overwritting||overwriting
+>  overwriten||overwritten
+> +overwritting||overwriting
+> +ovewrite||overwrite
+> +ovrie||ovaries
+>  pacakge||package
+>  pachage||package
+>  packacge||package
+> @@ -922,11 +1197,12 @@ packge||package
+>  packtes||packets
+>  pakage||package
+>  paket||packet
+> +palaeontologic||paleontological
+>  pallette||palette
+>  paln||plan
+>  paramameters||parameters
+> -paramaters||parameters
+>  paramater||parameter
+> +paramaters||parameters
+>  parametes||parameters
+>  parametised||parametrised
+>  paramter||parameter
+> @@ -936,6 +1212,7 @@ particuarly||particularly
+>  particularily||particularly
+>  partion||partition
+>  partions||partitions
+> +partititon||partition
+>  partiton||partition
+>  pased||passed
+>  passin||passing
+> @@ -947,12 +1224,19 @@ peice||piece
+>  pendantic||pedantic
+>  peprocessor||preprocessor
+>  perfoming||performing
+> +periperal||peripheral
+>  peripherial||peripheral
+> +permision||permission
+>  permissons||permissions
+>  peroid||period
+>  persistance||persistence
+>  persistant||persistent
+> +pessemistic||pessimistic
+>  phoneticly||phonetically
+> +phyical||physical
+> +physcial||physical
+> +physial||physical
+> +pipleline||pipeline
+>  plalform||platform
+>  platfoem||platform
+>  platfrom||platform
+> @@ -961,11 +1245,17 @@ pleaes||please
+>  ploting||plotting
+>  plugable||pluggable
+>  poinnter||pointer
+> +pointee||pointer
+>  pointeur||pointer
+>  poiter||pointer
+> +polluate||pollute
+> +poroperties||properties
+>  posible||possible
+> +posioned||poisoned
+>  positon||position
+> +positve||positive
+>  possibilites||possibilities
+> +posssible||possible
+>  powerfull||powerful
+>  pramater||parameter
+>  preamle||preamble
+> @@ -976,26 +1266,36 @@ preceeding||preceding
+>  preceed||precede
+>  precendence||precedence
+>  precission||precision
+> +predictible||predictable
+>  preemptable||preemptible
+>  prefered||preferred
+> +prefetcht||prefect
+>  prefferably||preferably
+>  premption||preemption
+>  prepaired||prepared
+> +prepapre||prepare
+>  preperation||preparation
+> +presentes||presents
+>  pressre||pressure
+> +pretetch||protect
+> +previosuly||previously
+> +prileged||pillaged
+>  primative||primitive
+>  princliple||principle
+> +princples||principles
+>  priorty||priority
+> +privatep||private
+>  privilaged||privileged
+>  privilage||privilege
+>  priviledge||privilege
+>  priviledges||privileges
+> +privilged||privileged
+>  probaly||probably
+>  procceed||proceed
+>  proccesors||processors
+>  procesed||processed
+> -proces||process
+>  procesing||processing
+> +proces||process
+>  processessing||processing
+>  processess||processes
+>  processpr||processor
+> @@ -1006,30 +1306,39 @@ prodecure||procedure
+>  progams||programs
+>  progess||progress
+>  programers||programmers
+> +programmble||programmable
+>  programm||program
+>  programms||programs
+>  progresss||progress
+> +promiscouos||promiscuous
+>  promiscous||promiscuous
+> +promixity||proximity
+>  promps||prompts
+> +promsicuous||promiscuous
+>  pronnounced||pronounced
+>  prononciation||pronunciation
+>  pronouce||pronounce
+>  pronunce||pronounce
+> +properies||properties
+> +properites||properties
+> +properities||prosperities
+>  propery||property
+>  propigate||propagate
+>  propigation||propagation
+>  propogate||propagate
+> +proptery||property
+>  prosess||process
+>  protable||portable
+>  protcol||protocol
+>  protecion||protection
+>  protocoll||protocol
+> -promixity||proximity
+>  psudo||pseudo
+>  psuedo||pseudo
+>  psychadelic||psychedelic
+> +publishhed||published
+>  pwoer||power
+>  queing||queuing
+> +quently||queenly
+>  quering||querying
+>  randomally||randomly
+>  raoming||roaming
+> @@ -1045,6 +1354,7 @@ recieves||receives
+>  recogniced||recognised
+>  recognizeable||recognizable
+>  recommanded||recommended
+> +recurive||recursive
+>  recyle||recycle
+>  redircet||redirect
+>  redirectrion||redirection
+> @@ -1054,23 +1364,33 @@ refcounf||refcount
+>  refence||reference
+>  refered||referred
+>  referenace||reference
+> +refererence||reference
+>  refering||referring
+>  refernces||references
+>  refernnce||reference
+>  refrence||reference
+>  registed||registered
+> -registerd||registered
+>  registeration||registration
+> +registerd||registered
+> +registe||register
+>  registeresd||registered
+>  registerred||registered
+>  registes||registers
+>  registraration||registration
+>  regsiter||register
+>  regster||register
+> +regsters||registers
+> +regstiers||registers
+>  regualar||regular
+> +regualtor||regulator
+> +regualtors||regulators
+>  reguator||regulator
+> +regulaltor||regulator
+>  regulamentations||regulations
+> +regularily||regularly
+>  reigstration||registration
+> +reinititalise||reinitialize
+> +relatime||realtime
+>  releated||related
+>  relevent||relevant
+>  reloade||reload
+> @@ -1086,60 +1406,78 @@ representaion||representation
+>  reqeust||request
+>  requestied||requested
+>  requiere||require
+> +requiremenst||requirements
+>  requirment||requirement
+>  requred||required
+>  requried||required
+> +requsted||requested
+>  requst||request
+>  reregisteration||reregistration
+> +reselient||resilient
+> +reservd||reserved
+>  reseting||resetting
+>  reseved||reserved
+>  reseverd||reserved
+>  resizeable||resizable
+> +resoltuion||resolution
+>  resouce||resource
+>  resouces||resources
+>  resoures||resources
+> +resovle||resolve
+>  responce||response
+>  resrouce||resource
+>  ressizes||resizes
+>  ressource||resource
+>  ressources||resources
+>  restesting||retesting
+> +restrct||restrict
+>  resumbmitting||resubmitting
+> +resvered||revered
+>  retransmited||retransmitted
+>  retreived||retrieved
+>  retreive||retrieve
+>  retreiving||retrieving
+>  retrive||retrieve
+> +retuerned||returned
+>  retuned||returned
+>  reudce||reduce
+>  reuest||request
+>  reuqest||request
+>  reutnred||returned
+>  revsion||revision
+> +rgister||register
+>  rmeoved||removed
+>  rmeove||remove
+>  rmeoves||removes
+> +robustneess||robustness
+>  rountine||routine
+>  routins||routines
+>  rquest||request
+>  runing||running
+>  runned||ran
+> +runnig||running
+>  runnning||running
+>  runtine||runtime
+>  sacrifying||sacrificing
+>  safly||safely
+>  safty||safety
+> +sasitfy||salsify
+>  savable||saveable
+> +scalabilty||scalability
+>  scaleing||scaling
+>  scaned||scanned
+>  scaning||scanning
+>  scarch||search
+> +scehduled||scheduled
+> +schd||scud
+> +schduler||scheduler
+>  seach||search
+>  searchs||searches
+>  secquence||sequence
+>  secund||second
+>  segement||segment
+>  semaphone||semaphore
+> +sempahore||semaphore
+>  senario||scenario
+>  senarios||scenarios
+>  sentivite||sensitive
+> @@ -1152,15 +1490,21 @@ seperate||separate
+>  seperatly||separately
+>  seperator||separator
+>  sepperate||separate
+> -seqeunce||sequence
+> -seqeuncer||sequencer
+>  seqeuencer||sequencer
+> +seqeuncer||sequencer
+> +seqeunce||sequence
+>  sequece||sequence
+>  sequencial||sequential
+> +serivced||serviced
+> +serliazed||sterilized
+>  serveral||several
+>  servive||service
+>  setts||sets
+>  settting||setting
+> +severly||severely
+> +shapping||shaping
+> +sharability||salability
+> +shimphy||simply
+>  shotdown||shutdown
+>  shoud||should
+>  shouldnt||shouldn't
+> @@ -1168,44 +1512,64 @@ shoule||should
+>  shrinked||shrunk
+>  siginificantly||significantly
+>  signabl||signal
+> +signifcant||significant
+>  similary||similarly
+>  similiar||similar
+>  simlar||similar
+>  simliar||similar
+>  simpified||simplified
+> +simplely||simplify
+>  singaled||signaled
+>  singal||signal
+>  singed||signed
+> +singnalled||signaled
+>  sleeped||slept
+>  softwares||software
+> +solidum||solidus
+> +spcified||specified
+>  speach||speech
+>  specfic||specific
+> +specfied||specified
+>  specfield||specified
+> +specfiers||specifiers
+> +speciall||special
+>  speciefied||specified
+> +specifcally||specifically
+>  specifc||specific
+>  specifed||specified
+> +specifer||specifier
+>  specificatin||specification
+>  specificaton||specification
+> +specifiction||specification
+>  specifing||specifying
+>  specifiying||specifying
+> +specifiy||specify
+> +specyfing||specifying
+>  speficied||specified
+> +speicific||specific
+>  speicify||specify
+>  speling||spelling
+> +spiint||splint
+>  spinlcok||spinlock
+>  spinock||spinlock
+> +splited||spited
+>  splitted||split
+>  spreaded||spread
+> +spuriuous||spurious
+> +spurriously||spuriously
+>  spurrious||spurious
+>  sructure||structure
+>  stablilization||stabilization
+>  staically||statically
+>  staion||station
+>  standardss||standards
+> +standarized||standardized
+>  standartization||standardization
+>  standart||standard
+>  standy||standby
+>  stardard||standard
+>  staticly||statically
+> +statistcs||statistics
+>  statuss||status
+>  stoped||stopped
+>  stoping||stopping
+> @@ -1213,56 +1577,70 @@ stoppped||stopped
+>  straming||streaming
+>  struc||struct
+>  structres||structures
+> -stuct||struct
+>  strucuture||structure
+> +stuct||struct
+>  stucture||structure
+>  sturcture||structure
+> +subcribed||subscribed
+>  subdirectoires||subdirectories
+>  suble||subtle
+> -substract||subtract
+>  submition||submission
+> -suceed||succeed
+> +submmitted||submitted
+> +substract||subtract
+> +subsytem||subsystem
+> +subystem||subsystem
+> +succecss||success
+>  succesfully||successfully
+>  succesful||successful
+>  successed||succeeded
+>  successfull||successful
+>  successfuly||successfully
+> +successully||successfully
+> +succsful||successful
+> +suceed||succeed
+>  sucessfully||successfully
+> +sucessful||successful
+>  sucess||success
+>  superflous||superfluous
+>  superseeded||superseded
+>  suplied||supplied
+>  suported||supported
+>  suport||support
+> -supportet||supported
+>  suppored||supported
+> +supportet||supported
+>  supportin||supporting
+>  suppoted||supported
+>  suppported||supported
+>  suppport||support
+> +supressed||suppressed
+>  supress||suppress
+>  surpressed||suppressed
+>  surpresses||suppresses
+>  susbsystem||subsystem
+> +suseconds||seconds
+> +susepnd||suspend
+>  suspeneded||suspended
+> -suspsend||suspend
+>  suspicously||suspiciously
+> +suspsend||suspend
+>  swaping||swapping
+>  switchs||switches
+> -swith||switch
+>  swithable||switchable
+> -swithc||switch
+>  swithced||switched
+>  swithcing||switching
+> +swithc||switch
+>  swithed||switched
+>  swithing||switching
+> +swith||switch
+>  swtich||switch
+> +sychronize||synchronize
+>  symetric||symmetric
+>  synax||syntax
+> +synchonization||synchronization
+>  synchonized||synchronized
+> +synchornization||synchronization
+>  synchronuously||synchronously
+> -syncronize||synchronize
+>  syncronized||synchronized
+> +syncronize||synchronize
+>  syncronizing||synchronizing
+>  syncronus||synchronous
+>  syste||system
+> @@ -1273,23 +1651,30 @@ tansmit||transmit
+>  targetted||targeted
+>  targetting||targeting
+>  taskelt||tasklet
+> +technologie||technologies
+> +technologt||technology
+>  teh||the
+>  temorary||temporary
+>  temproarily||temporarily
+> +terminage||terminate
+> +terminted||terminated
+>  thead||thread
+> +theorical||theatrical
+>  therfore||therefore
+> +theroretical||theoretical
+>  thier||their
+> +thourgh||though
+>  threds||threads
+>  threshhold||threshold
+>  thresold||threshold
+>  throught||through
+> -troughput||throughput
+>  thses||these
+> -tiggers||triggers
+>  tiggered||triggered
+> -tipically||typically
+> +tiggers||triggers
+>  timeing||timing
+> +timestampns||timestamps
+>  timout||timeout
+> +tipically||typically
+>  tmis||this
+>  toogle||toggle
+>  torerable||tolerable
+> @@ -1298,19 +1683,31 @@ tramsmitted||transmitted
+>  tramsmit||transmit
+>  tranasction||transaction
+>  tranfer||transfer
+> +tranlsate||translate
+> +transceive||transceiver
+>  transcevier||transceiver
+>  transciever||transceiver
+>  transferd||transferred
+>  transfered||transferred
+>  transfering||transferring
+> +transferrs||transfers
+>  transision||transition
+> +transistions||transitions
+> +translarion||translation
+>  transmittd||transmitted
+> +transofrmed||transformed
+>  transormed||transformed
+> +transparantly||transparently
+> +transportt||transport
+> +transpport||transport
+>  trasfer||transfer
+>  trasmission||transmission
+>  treshold||threshold
+>  trigerred||triggered
+>  trigerring||triggering
+> +trivialy||trivially
+> +troughput||throughput
+> +trsfr||turfs
+>  trun||turn
+>  tunning||tuning
+>  ture||true
+> @@ -1318,11 +1715,13 @@ tyep||type
+>  udpate||update
+>  uesd||used
+>  uknown||unknown
+> -usupported||unsupported
+> +ulility||utility
+> +unamed||unnamed
+>  uncommited||uncommitted
+>  unconditionaly||unconditionally
+>  underun||underrun
+>  unecessary||unnecessary
+> +uneeded||unneeded
+>  unexecpted||unexpected
+>  unexepected||unexpected
+>  unexpcted||unexpected
+> @@ -1330,37 +1729,40 @@ unexpectd||unexpected
+>  unexpeted||unexpected
+>  unexpexted||unexpected
+>  unfortunatelly||unfortunately
+> +unhandeable||unchangeable
+>  unifiy||unify
+> -uniterrupted||uninterrupted
+> +uninitialzed||uninitialized
+>  unintialized||uninitialized
+> +uniterrupted||uninterrupted
+>  unitialized||uninitialized
+>  unkmown||unknown
+>  unknonw||unknown
+>  unknow||unknown
+>  unkown||unknown
+> -unamed||unnamed
+> -uneeded||unneeded
+> -unneded||unneeded
+> +unmached||unmatched
+>  unneccecary||unnecessary
+>  unneccesary||unnecessary
+>  unneccessary||unnecessary
+>  unnecesary||unnecessary
+> +unneded||unneeded
+>  unneedingly||unnecessarily
+>  unnsupported||unsupported
+> -unmached||unmatched
+>  unregester||unregister
+>  unresgister||unregister
+>  unrgesiter||unregister
+>  unsinged||unsigned
+> -unstabel||unstable
+>  unsolicitied||unsolicited
+> +unstabel||unstable
+>  unsuccessfull||unsuccessful
+>  unsuported||unsupported
+> +unsychronized||unsynchronized
+>  untill||until
+>  unuseful||useless
+>  unvalid||invalid
+> +upadted||updated
+>  upate||update
+>  upsupported||unsupported
+> +uptodate||up-to-date
+>  usefule||useful
+>  usefull||useful
+>  usege||usage
+> @@ -1383,24 +1785,27 @@ vaule||value
+>  verbse||verbose
+>  verisons||versions
+>  verison||version
+> +veriton||version
+>  verson||version
+>  vicefersa||vice-versa
+>  virtal||virtual
+>  virtaul||virtual
+>  virtiual||virtual
+> +virulization||virtualization
+>  visiters||visitors
+>  vitual||virtual
+> +vmext||vmexit
+>  vunerable||vulnerable
+>  wakeus||wakeups
+>  wathdog||watchdog
+>  wating||waiting
+> -wiat||wait
+>  wether||whether
+>  whataver||whatever
+>  whcih||which
+>  whenver||whenever
+>  wheter||whether
+>  whe||when
+> +wiat||wait
+>  wierd||weird
+>  wiil||will
+>  wirte||write
 > 
-> You did not answer this question: is freeing boottime gigantic pages 
-> "forbidden" or just
-> not needed ?
-
-IMHO if we don't allow runtime allocation of gigantic hugepage, we 
-should not allow runtime free of gigantic hugepage. Now w.r.t ppc64, 
-hypervisor pass hints about the gignatic hugepages via device tree 
-nodes. Early in boot we mark these pages as reserved and during hugetlb 
-init we use these reserved pages for backing hugetlb fs.
-
-Now "forbidden" is not the exact reason. We don't have code to put it 
-back in the reserved list. Hence I would say "not supported".
-
--aneesh
-
