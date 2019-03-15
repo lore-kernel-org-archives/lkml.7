@@ -2,178 +2,316 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A158EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FDDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E37A218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552669268;
-	bh=frDmzjvXGHn3RcnAn0HTwqUjFhyYsM34nSwaSa9S03Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XlBl0VSISvuhIKUkCmCFi6N3hD/ZrcSkdyEPsAC+yKX73gYDCEf7Mpnmjl+uQz11p
-	 5fZZSrnOfsKFKa7edujeQdBvh+g4rmO+MQ3qE4487VNphePZi634vzO/UiHyi4BVcE
-	 SkOGEMlrRpDmjAeqER7aIURSvOp4jPGPvbhN9Xvk=
+	by mail.kernel.org (Postfix) with ESMTP id B077B218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:01:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="r2ohOC60"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbfCORBH (ORCPT
+        id S1729759AbfCORBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 13:01:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727651AbfCORBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 13:01:06 -0400
-Received: from localhost (unknown [122.178.218.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4385218A1;
-        Fri, 15 Mar 2019 17:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552669265;
-        bh=frDmzjvXGHn3RcnAn0HTwqUjFhyYsM34nSwaSa9S03Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=en7sKf3MKTcdaGOjRKrvub8nM025WoVRjlYOye4dWxQWV5pU78zw+PHM3WnLGokEi
-         FFvw2kg4oM+p6Y3eZecF0l6u0bFq7poh5tzs9iHxi0NfmECHCoIQv0+fzaiYRYh+iM
-         4oU45+toTg9mst78rg9GBjxOs91xQPsGZYHU2uwI=
-Date:   Fri, 15 Mar 2019 22:30:59 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: pl330: introduce debugfs interface
-Message-ID: <20190315170059.GF5348@vkoul-mobl>
-References: <20190314184953.8129-1-katsuhiro@katsuster.net>
+        Fri, 15 Mar 2019 13:01:18 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53206 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729577AbfCORBS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 13:01:18 -0400
+Received: from localhost.localdomain (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B063631C;
+        Fri, 15 Mar 2019 18:01:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1552669276;
+        bh=D8xv0q8gp9sidobszCS5ywhkfZTJuQ3RUu5U6O4rz2E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r2ohOC60PEIPCZ7KhPk9zH+cydJnPOwXhmlCEPjD6z/9X73lSG9pYpmTRuJNbaK73
+         R2yOiwgsrGZ09V+PWDfvkV+ZTcS6pryzmqfGo/EDgvEaLeTKvFz9K+oAs1DU6yRR9L
+         2w6mSfcgiLrr/hD/AxU222nFDkubhFmMVIUXqzLk=
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/6] drm: rcar-du: Link CRTCs to the DU device
+Date:   Fri, 15 Mar 2019 17:01:05 +0000
+Message-Id: <20190315170110.23280-2-kieran.bingham+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190315170110.23280-1-kieran.bingham+renesas@ideasonboard.com>
+References: <20190315170110.23280-1-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314184953.8129-1-katsuhiro@katsuster.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-03-19, 03:49, Katsuhiro Suzuki wrote:
-> This patch adds debugfs interface to show the relationship between
-> DMA threads (hardware resource for transferring data) and DMA
-> channel ID of DMA slave.
-> 
-> Typically, PL330 has many slaves than number of DMA threads.
-> So sometimes PL330 cannot allocate DMA threads for all slaves even
-> if an user specify DMA channel ID in devicetree. This interface will
+The rcar_du_crtc functions have a heavy reliance on the rcar_du_group
+structure, in many cases just to access the DU device context.
 
-a user :)
+To better separate the groups out of the CRTC handling code, give the
+rcar_du_crtc its own pointer to the device and remove the indirection
+through the group pointers.
 
-> be useful for checking that DMA threads are allocated or not.
-> 
-> Below is an output sample:
-> 
-> $ sudo cat /sys/kernel/debug/ff1f0000.dmac
-> PL330 physical channels:
-> THREAD:         CHANNEL:
-> --------        -----
-> 0               8
-> 1               9
-> 2               11
-> 3               12
-> 4               14
-> 5               15
-> 6               10
-> 7               --
-> 
-> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> ---
->  drivers/dma/pl330.c | 51 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-> index eec79fdf27a5..aab71863757c 100644
-> --- a/drivers/dma/pl330.c
-> +++ b/drivers/dma/pl330.c
-> @@ -11,6 +11,7 @@
->   * (at your option) any later version.
->   */
->  
-> +#include <linux/debugfs.h>
->  #include <linux/kernel.h>
->  #include <linux/io.h>
->  #include <linux/init.h>
-> @@ -2896,6 +2897,55 @@ static irqreturn_t pl330_irq_handler(int irq, void *data)
->  	BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
->  	BIT(DMA_SLAVE_BUSWIDTH_8_BYTES)
->  
-> +#ifdef CONFIG_DEBUG_FS
-> +static int pl330_debugfs_show(struct seq_file *s, void *data)
-> +{
-> +	struct pl330_dmac *pl330 = s->private;
-> +	int chans, pchs, ch, pr, found;
-> +
-> +	chans = pl330->pcfg.num_chan;
-> +	pchs = pl330->num_peripherals;
-> +
-> +	seq_puts(s, "PL330 physical channels:\n");
-> +	seq_puts(s, "THREAD:\t\tCHANNEL:\n");
-> +	seq_puts(s, "--------\t-----\n");
-> +	for (ch = 0; ch < chans; ch++) {
-> +		struct pl330_thread *thrd = &pl330->channels[ch];
-> +
-> +		found = -1;
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+---
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 48 +++++++++++++-------------
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.h |  2 ++
+ drivers/gpu/drm/rcar-du/rcar_du_vsp.c  |  2 +-
+ 3 files changed, 27 insertions(+), 25 deletions(-)
 
-found can be uninitialized if we skip this for, which should not be an
-issue as chans> 0!
-
-> +		for (pr = 0; pr < pchs; pr++) {
-> +			struct dma_pl330_chan *pch = &pl330->peripherals[pr];
-> +
-> +			if (!pch->thread || thrd->id != pch->thread->id)
-> +				continue;
-> +
-> +			found = pr;
-> +		}
-> +
-> +		seq_printf(s, "%d\t\t", thrd->id);
-> +		if (found == -1)
-> +			seq_puts(s, "--\n");
-> +		else
-> +			seq_printf(s, "%d\n", found);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +DEFINE_SHOW_ATTRIBUTE(pl330_debugfs);
-> +
-> +static inline void init_pl330_debugfs(struct pl330_dmac *pl330)
-> +{
-> +	debugfs_create_file(dev_name(pl330->ddma.dev),
-> +			    S_IFREG | S_IRUGO, NULL, pl330,
-
-are we not supposed to use octal permissions?
-
-> +			    &pl330_debugfs_fops);
-> +}
-> +#else
-> +static inline void init_pl330_debugfs(struct pl330_dmac *pl330)
-> +{
-> +}
-> +#endif
-> +
->  /*
->   * Runtime PM callbacks are provided by amba/bus.c driver.
->   *
-> @@ -3082,6 +3132,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
->  		dev_err(&adev->dev, "unable to set the seg size\n");
->  
->  
-> +	init_pl330_debugfs(pl330);
->  	dev_info(&adev->dev,
->  		"Loaded driver for PL330 DMAC-%x\n", adev->periphid);
->  	dev_info(&adev->dev,
-> -- 
-> 2.20.1
-
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+index 57fd5c00494b..471ce464654a 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+@@ -32,21 +32,21 @@
+ 
+ static u32 rcar_du_crtc_read(struct rcar_du_crtc *rcrtc, u32 reg)
+ {
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 
+ 	return rcar_du_read(rcdu, rcrtc->mmio_offset + reg);
+ }
+ 
+ static void rcar_du_crtc_write(struct rcar_du_crtc *rcrtc, u32 reg, u32 data)
+ {
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 
+ 	rcar_du_write(rcdu, rcrtc->mmio_offset + reg, data);
+ }
+ 
+ static void rcar_du_crtc_clr(struct rcar_du_crtc *rcrtc, u32 reg, u32 clr)
+ {
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 
+ 	rcar_du_write(rcdu, rcrtc->mmio_offset + reg,
+ 		      rcar_du_read(rcdu, rcrtc->mmio_offset + reg) & ~clr);
+@@ -54,7 +54,7 @@ static void rcar_du_crtc_clr(struct rcar_du_crtc *rcrtc, u32 reg, u32 clr)
+ 
+ static void rcar_du_crtc_set(struct rcar_du_crtc *rcrtc, u32 reg, u32 set)
+ {
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 
+ 	rcar_du_write(rcdu, rcrtc->mmio_offset + reg,
+ 		      rcar_du_read(rcdu, rcrtc->mmio_offset + reg) | set);
+@@ -62,7 +62,7 @@ static void rcar_du_crtc_set(struct rcar_du_crtc *rcrtc, u32 reg, u32 set)
+ 
+ void rcar_du_crtc_dsysr_clr_set(struct rcar_du_crtc *rcrtc, u32 clr, u32 set)
+ {
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 
+ 	rcrtc->dsysr = (rcrtc->dsysr & ~clr) | set;
+ 	rcar_du_write(rcdu, rcrtc->mmio_offset + DSYSR, rcrtc->dsysr);
+@@ -157,10 +157,9 @@ static void rcar_du_dpll_divider(struct rcar_du_crtc *rcrtc,
+ 	}
+ 
+ done:
+-	dev_dbg(rcrtc->group->dev->dev,
++	dev_dbg(rcrtc->dev->dev,
+ 		"output:%u, fdpll:%u, n:%u, m:%u, diff:%lu\n",
+-		 dpll->output, dpll->fdpll, dpll->n, dpll->m,
+-		 best_diff);
++		 dpll->output, dpll->fdpll, dpll->n, dpll->m, best_diff);
+ }
+ 
+ struct du_clk_params {
+@@ -212,7 +211,7 @@ static const struct soc_device_attribute rcar_du_r8a7795_es1[] = {
+ static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
+ {
+ 	const struct drm_display_mode *mode = &rcrtc->crtc.state->adjusted_mode;
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 	unsigned long mode_clock = mode->clock * 1000;
+ 	u32 dsmr;
+ 	u32 escr;
+@@ -277,7 +276,7 @@ static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
+ 			rcar_du_escr_divider(rcrtc->extclock, mode_clock,
+ 					     ESCR_DCLKSEL_DCLKIN, &params);
+ 
+-		dev_dbg(rcrtc->group->dev->dev,	"mode clock %lu %s rate %lu\n",
++		dev_dbg(rcrtc->dev->dev, "mode clock %lu %s rate %lu\n",
+ 			mode_clock, params.clk == rcrtc->clock ? "cpg" : "ext",
+ 			params.rate);
+ 
+@@ -285,7 +284,7 @@ static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
+ 		escr = params.escr;
+ 	}
+ 
+-	dev_dbg(rcrtc->group->dev->dev, "%s: ESCR 0x%08x\n", __func__, escr);
++	dev_dbg(rcrtc->dev->dev, "%s: ESCR 0x%08x\n", __func__, escr);
+ 
+ 	rcar_du_crtc_write(rcrtc, rcrtc->index % 2 ? ESCR13 : ESCR02, escr);
+ 	rcar_du_crtc_write(rcrtc, rcrtc->index % 2 ? OTAR13 : OTAR02, 0);
+@@ -333,7 +332,7 @@ plane_format(struct rcar_du_plane *plane)
+ static void rcar_du_crtc_update_planes(struct rcar_du_crtc *rcrtc)
+ {
+ 	struct rcar_du_plane *planes[RCAR_DU_NUM_HW_PLANES];
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 	unsigned int num_planes = 0;
+ 	unsigned int dptsr_planes;
+ 	unsigned int hwplanes = 0;
+@@ -463,7 +462,7 @@ static bool rcar_du_crtc_page_flip_pending(struct rcar_du_crtc *rcrtc)
+ 
+ static void rcar_du_crtc_wait_page_flip(struct rcar_du_crtc *rcrtc)
+ {
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 
+ 	if (wait_event_timeout(rcrtc->flip_wait,
+ 			       !rcar_du_crtc_page_flip_pending(rcrtc),
+@@ -493,7 +492,7 @@ static void rcar_du_crtc_setup(struct rcar_du_crtc *rcrtc)
+ 	rcar_du_group_write(rcrtc->group, rcrtc->index % 2 ? DS2PR : DS1PR, 0);
+ 
+ 	/* Enable the VSP compositor. */
+-	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
++	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+ 		rcar_du_vsp_enable(rcrtc);
+ 
+ 	/* Turn vertical blanking interrupt reporting on. */
+@@ -564,7 +563,7 @@ static void rcar_du_crtc_start(struct rcar_du_crtc *rcrtc)
+ 
+ static void rcar_du_crtc_disable_planes(struct rcar_du_crtc *rcrtc)
+ {
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 	struct drm_crtc *crtc = &rcrtc->crtc;
+ 	u32 status;
+ 
+@@ -617,7 +616,7 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+ 	drm_crtc_vblank_off(crtc);
+ 
+ 	/* Disable the VSP compositor. */
+-	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
++	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+ 		rcar_du_vsp_disable(rcrtc);
+ 
+ 	/*
+@@ -627,7 +626,7 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+ 	 * TODO: Find another way to stop the display for DUs that don't support
+ 	 * TVM sync.
+ 	 */
+-	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_TVM_SYNC))
++	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_TVM_SYNC))
+ 		rcar_du_crtc_dsysr_clr_set(rcrtc, DSYSR_TVM_MASK,
+ 					   DSYSR_TVM_SWITCH);
+ 
+@@ -661,7 +660,7 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+ {
+ 	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+ 	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(crtc->state);
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 
+ 	rcar_du_crtc_get(rcrtc);
+ 
+@@ -689,7 +688,7 @@ static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+ {
+ 	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+ 	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(old_state);
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 
+ 	rcar_du_crtc_stop(rcrtc);
+ 	rcar_du_crtc_put(rcrtc);
+@@ -735,7 +734,7 @@ static void rcar_du_crtc_atomic_begin(struct drm_crtc *crtc,
+ 	 */
+ 	rcar_du_crtc_get(rcrtc);
+ 
+-	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
++	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+ 		rcar_du_vsp_atomic_begin(rcrtc);
+ }
+ 
+@@ -757,7 +756,7 @@ static void rcar_du_crtc_atomic_flush(struct drm_crtc *crtc,
+ 		spin_unlock_irqrestore(&dev->event_lock, flags);
+ 	}
+ 
+-	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
++	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+ 		rcar_du_vsp_atomic_flush(rcrtc);
+ }
+ 
+@@ -766,7 +765,7 @@ rcar_du_crtc_mode_valid(struct drm_crtc *crtc,
+ 			const struct drm_display_mode *mode)
+ {
+ 	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 	bool interlaced = mode->flags & DRM_MODE_FLAG_INTERLACE;
+ 	unsigned int vbp;
+ 
+@@ -798,7 +797,7 @@ static const struct drm_crtc_helper_funcs crtc_helper_funcs = {
+ 
+ static void rcar_du_crtc_crc_init(struct rcar_du_crtc *rcrtc)
+ {
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 	const char **sources;
+ 	unsigned int count;
+ 	int i = -1;
+@@ -1080,7 +1079,7 @@ static const struct drm_crtc_funcs crtc_funcs_gen3 = {
+ static irqreturn_t rcar_du_crtc_irq(int irq, void *arg)
+ {
+ 	struct rcar_du_crtc *rcrtc = arg;
+-	struct rcar_du_device *rcdu = rcrtc->group->dev;
++	struct rcar_du_device *rcdu = rcrtc->dev;
+ 	irqreturn_t ret = IRQ_NONE;
+ 	u32 status;
+ 
+@@ -1172,6 +1171,7 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
+ 	init_waitqueue_head(&rcrtc->vblank_wait);
+ 	spin_lock_init(&rcrtc->vblank_lock);
+ 
++	rcrtc->dev = rcdu;
+ 	rcrtc->group = rgrp;
+ 	rcrtc->mmio_offset = mmio_offsets[hwindex];
+ 	rcrtc->index = hwindex;
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+index 3f339a7e8d14..11814eafef77 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
++++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+@@ -24,6 +24,7 @@ struct rcar_du_vsp;
+ /**
+  * struct rcar_du_crtc - the CRTC, representing a DU superposition processor
+  * @crtc: base DRM CRTC
++ * @dev: the DU device
+  * @clock: the CRTC functional clock
+  * @extclock: external pixel dot clock (optional)
+  * @mmio_offset: offset of the CRTC registers in the DU MMIO block
+@@ -43,6 +44,7 @@ struct rcar_du_vsp;
+ struct rcar_du_crtc {
+ 	struct drm_crtc crtc;
+ 
++	struct rcar_du_device *dev;
+ 	struct clk *clock;
+ 	struct clk *extclock;
+ 	unsigned int mmio_offset;
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+index 0878accbd134..f6deea90dcce 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+@@ -43,7 +43,7 @@ static void rcar_du_vsp_complete(void *private, bool completed, u32 crc)
+ void rcar_du_vsp_enable(struct rcar_du_crtc *crtc)
+ {
+ 	const struct drm_display_mode *mode = &crtc->crtc.state->adjusted_mode;
+-	struct rcar_du_device *rcdu = crtc->group->dev;
++	struct rcar_du_device *rcdu = crtc->dev;
+ 	struct vsp1_du_lif_config cfg = {
+ 		.width = mode->hdisplay,
+ 		.height = mode->vdisplay,
 -- 
-~Vinod
+2.19.1
+
