@@ -2,57 +2,204 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5F6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5CAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5A72063F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80F22063F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:53:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="erlzrsrP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfCOTw4 (ORCPT
+        id S1727681AbfCOTxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 15:52:56 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33002 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbfCOTwT (ORCPT
+        Fri, 15 Mar 2019 15:53:05 -0400
+Received: from mail-io1-f74.google.com ([209.85.166.74]:51712 "EHLO
+        mail-io1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727497AbfCOTwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 15:52:19 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C864F123A52F3;
-        Fri, 15 Mar 2019 12:52:18 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 12:52:16 -0700 (PDT)
-Message-Id: <20190315.125216.648893821439252033.davem@davemloft.net>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, doronrk@fb.com, vakul.garg@nxp.com,
-        davejwatson@fb.com, yuehaibing@huawei.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: strparser: fix a missing check for
- create_singlethread_workqueue
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190315041208.32432-1-kjlu@umn.edu>
-References: <20190315041208.32432-1-kjlu@umn.edu>
-X-Mailer: Mew version 6.8 on Emacs 26.1
+        Fri, 15 Mar 2019 15:52:16 -0400
+Received: by mail-io1-f74.google.com with SMTP id k24so7785452ioa.18
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 12:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=xQk3LhthwaCSqxwCcTkNdlxSKZFnDFG1SS+E3EAFA9Q=;
+        b=erlzrsrP8VxBF8HsFBwQbTIFhbizEW/LsVQAb4sB9lxRiyqjhT4uCp2723IUY/w0as
+         JDSkvwBZ2J/k/0Gr8MvYLy9+lPaE5Mbr5BxZqaj+B32fmuQao+20kq6UQFBqlr7iQum4
+         OAinUJ/2Tst5Nnic/IJVxsAPWJiUr5ue6Sg3ulcVoob/1X/OiS7RpGt905f6Qew6MgNY
+         JEYORaq1c6WpaRg5DMZPoFljR7vI3/R+mQc61CKtUt4qxBTghm37TZV9KMnlkevHn6ql
+         TPeg6qjkBgZQMlJkzr6XuOqDJLnou/KO5tmMMN3Tj/QArlELFQfSt7I9wSsT8s02fKRi
+         2vzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=xQk3LhthwaCSqxwCcTkNdlxSKZFnDFG1SS+E3EAFA9Q=;
+        b=ppmDSUmaZf+vZZC6iBD7F4fKzhfKP9gUnCAmUQKPY/SqTJgbWLp59RJhz3/jMNTHho
+         gJYT/D7I+uqnBjTtfND+fF4mk1rXVDNdUN2MG+SWmA4c7mZ0CSf21DF67juvBkrGR7E2
+         YsAO2dYCkeIl73txmi3XL4eO0L0m0L5C3xQOhBYLJ1pi86OY2h5nk5J3fFq2oqUvfUdR
+         9WcXxV1mBcKnzSUkIiHFXCSj4U1rEat/VWRkEZ8y0ODsB3dmmR2jWpkb0zaP/hV2lAxs
+         IgJ+M6cbZHR6QW71BbDRndS2g9aXIv9PybiYChoc0Ntyh1eQ3K4jUBGpR4NFBDgVl9vv
+         bR9w==
+X-Gm-Message-State: APjAAAWepJpQztLdrz/XFryoo8W4txI0s/k1eARID+t6+o1VyDVmTY4i
+        gPBfB7+796kpKWqmvKlyyCqtD10cMkqqNxoB
+X-Google-Smtp-Source: APXvYqz+GmruJTwbh+y6ScEKk8ZO6w3sULpD4k9iq4Qem8c0s9TmhOALFGnTHkcM6tlN06h5Rlqmfno2APVO8t8L
+X-Received: by 2002:a24:2b45:: with SMTP id h66mr677136ita.28.1552679535681;
+ Fri, 15 Mar 2019 12:52:15 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 20:51:34 +0100
+In-Reply-To: <cover.1552679409.git.andreyknvl@google.com>
+Message-Id: <355e7c0dadaa2bb79d22e0b7aac7e4efc1114d49.1552679409.git.andreyknvl@google.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 15 Mar 2019 12:52:19 -0700 (PDT)
+References: <cover.1552679409.git.andreyknvl@google.com>
+X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
+Subject: [PATCH v11 10/14] tracing, arm64: untag user pointers in seq_print_user_ip
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
-Date: Thu, 14 Mar 2019 23:12:06 -0500
+This patch is a part of a series that extends arm64 kernel ABI to allow to
+pass tagged user pointers (with the top byte set to something else other
+than 0x00) as syscall arguments.
 
-> In case create_singlethread_workqueue fails, the check returns
-> an error to callers to avoid potential NULL pointer dereferences.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+seq_print_user_ip() uses provided user pointers for vma lookups, which
+can only by done with untagged pointers.
 
-Applied.
+Untag user pointers in this function.
+
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ kernel/trace/trace_output.c |  5 +++--
+ p                           | 45 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 2 deletions(-)
+ create mode 100644 p
+
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 54373d93e251..6376bee93c84 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -370,6 +370,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
+ {
+ 	struct file *file = NULL;
+ 	unsigned long vmstart = 0;
++	unsigned long untagged_ip = untagged_addr(ip);
+ 	int ret = 1;
+ 
+ 	if (s->full)
+@@ -379,7 +380,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
+ 		const struct vm_area_struct *vma;
+ 
+ 		down_read(&mm->mmap_sem);
+-		vma = find_vma(mm, ip);
++		vma = find_vma(mm, untagged_ip);
+ 		if (vma) {
+ 			file = vma->vm_file;
+ 			vmstart = vma->vm_start;
+@@ -388,7 +389,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
+ 			ret = trace_seq_path(s, &file->f_path);
+ 			if (ret)
+ 				trace_seq_printf(s, "[+0x%lx]",
+-						 ip - vmstart);
++						 untagged_ip - vmstart);
+ 		}
+ 		up_read(&mm->mmap_sem);
+ 	}
+diff --git a/p b/p
+new file mode 100644
+index 000000000000..9d6fa5386e55
+--- /dev/null
++++ b/p
+@@ -0,0 +1,45 @@
++commit 1fa6fadf644859e8a6a8ecce258444b49be8c7ee
++Author: Andrey Konovalov <andreyknvl@google.com>
++Date:   Mon Mar 4 17:20:32 2019 +0100
++
++    kasan: fix coccinelle warnings in kasan_p*_table
++    
++    kasan_p4d_table, kasan_pmd_table and kasan_pud_table are declared as
++    returning bool, but return 0 instead of false, which produces a coccinelle
++    warning. Fix it.
++    
++    Fixes: 0207df4fa1a8 ("kernel/memremap, kasan: make ZONE_DEVICE with work with KASAN")
++    Reported-by: kbuild test robot <lkp@intel.com>
++    Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
++
++diff --git a/mm/kasan/init.c b/mm/kasan/init.c
++index 45a1b5e38e1e..fcaa1ca03175 100644
++--- a/mm/kasan/init.c
+++++ b/mm/kasan/init.c
++@@ -42,7 +42,7 @@ static inline bool kasan_p4d_table(pgd_t pgd)
++ #else
++ static inline bool kasan_p4d_table(pgd_t pgd)
++ {
++-	return 0;
+++	return false;
++ }
++ #endif
++ #if CONFIG_PGTABLE_LEVELS > 3
++@@ -54,7 +54,7 @@ static inline bool kasan_pud_table(p4d_t p4d)
++ #else
++ static inline bool kasan_pud_table(p4d_t p4d)
++ {
++-	return 0;
+++	return false;
++ }
++ #endif
++ #if CONFIG_PGTABLE_LEVELS > 2
++@@ -66,7 +66,7 @@ static inline bool kasan_pmd_table(pud_t pud)
++ #else
++ static inline bool kasan_pmd_table(pud_t pud)
++ {
++-	return 0;
+++	return false;
++ }
++ #endif
++ pte_t kasan_early_shadow_pte[PTRS_PER_PTE] __page_aligned_bss;
+-- 
+2.21.0.360.g471c308f928-goog
+
