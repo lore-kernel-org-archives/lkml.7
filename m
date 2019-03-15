@@ -2,128 +2,132 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D675BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A167C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CEB2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 031432186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="HaGtERc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbfCONFI (ORCPT
+        id S1729069AbfCONIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 09:05:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34238 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbfCONFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 09:05:08 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 88ECB7D7BB;
-        Fri, 15 Mar 2019 13:05:07 +0000 (UTC)
-Received: from [10.36.117.12] (ovpn-117-12.ams2.redhat.com [10.36.117.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E130601AE;
-        Fri, 15 Mar 2019 13:05:00 +0000 (UTC)
-Subject: Re: [RFC v3] sched/topology: fix kernel crash when a CPU is
- hotplugged in a memoryless node
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Borislav Petkov <bp@suse.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>
-References: <20190304195952.16879-1-lvivier@redhat.com>
- <77b142fe-0886-1510-28bd-d432ea2c796a@redhat.com>
- <20190315122556.GE6058@hirez.programming.kicks-ass.net>
-From:   Laurent Vivier <lvivier@redhat.com>
-Message-ID: <18d517b6-0554-f241-abf8-ed085998c6d8@redhat.com>
-Date:   Fri, 15 Mar 2019 14:05:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Fri, 15 Mar 2019 09:08:38 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39804 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfCONIi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 09:08:38 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h8so6446511pgp.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 06:08:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MCAsq1unmy/u9MR2Tb3vIzLidQD5Rpkalik1aaNmBV0=;
+        b=HaGtERc1qVWgovorqE6ioBRI86D7lQLQcVJpD3+rJ8FQbYA553LlqrpYID5XU6L4PG
+         FIK6PefcXGw6bZ8jxROK/vJ2lDrlvTdUMqWuqdslYymLbGx2XtsGd2AC/uhfZsUkQpLc
+         oZ4UpPONsz/EEfB97X1fGuMMfz18zVgLL3MtQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MCAsq1unmy/u9MR2Tb3vIzLidQD5Rpkalik1aaNmBV0=;
+        b=EZxlRCMZM9XdmtWU0e4BYEO2xu9DaRKbAAKWAa3AwlgXfjoRfsvpEotAavTTw1Y68C
+         eSwmOAtqc/OaY0mO9N1bvtVgPgqQGvj8tn5oLYRbSmW7Ww+v0csCAmVLnf2k9+xfxbOj
+         XCz/ngoJIxkGclJ4oa1H9xiGjh3ldvC7Z5n/Y3gJIGF1hlmDH+3/4GScI57J17o0MDeo
+         KKCsSdPU3vLIXHhchGUGJNw6O3mz0mu8KLHkpIL3QZdxE4JNE6INpLzJZbuEKwsoQLUi
+         7kzLNrrETm0UlhSzBzZa6b/+5zZ3tWz9o+I7z8hQ2KummlEm4fbxqKjPK+zFzkY7tp/p
+         Ak1A==
+X-Gm-Message-State: APjAAAUhkCRsrGKYR4BGH4vlzgDvxkeCvYe+D4BS/PMGeIiMso0OVjsb
+        pcbNyvhzDdF7u0XOHOV1vdFb5g==
+X-Google-Smtp-Source: APXvYqzasR/PuWyWi8ODkyuiPoNON4uV0lo0p9u87IZi9Xzt1VgyHjvVgOXXgGqKc3Yep6QEOGVkiA==
+X-Received: by 2002:a17:902:2e01:: with SMTP id q1mr4234447plb.253.1552655317200;
+        Fri, 15 Mar 2019 06:08:37 -0700 (PDT)
+Received: from localhost.localdomain ([183.82.230.185])
+        by smtp.gmail.com with ESMTPSA id e2sm854008pfa.64.2019.03.15.06.08.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Mar 2019 06:08:36 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 0/6] drm/bridge: Add ICN6211 MIPI-DSI/RGB bridge
+Date:   Fri, 15 Mar 2019 18:38:19 +0530
+Message-Id: <20190315130825.9005-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-In-Reply-To: <20190315122556.GE6058@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 15 Mar 2019 13:05:08 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/03/2019 13:25, Peter Zijlstra wrote:
-> On Fri, Mar 15, 2019 at 12:12:45PM +0100, Laurent Vivier wrote:
-> 
->> Another way to avoid the nodes overlapping for the offline nodes at
->> startup is to ensure the default values don't define a distance that
->> merge all offline nodes into node 0.
->>
->> A powerpc specific patch can workaround the kernel crash by doing this:
->>
->> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
->> index 87f0dd0..3ba29bb 100644
->> --- a/arch/powerpc/mm/numa.c
->> +++ b/arch/powerpc/mm/numa.c
->> @@ -623,6 +623,7 @@ static int __init parse_numa_properties(void)
->>         struct device_node *memory;
->>         int default_nid = 0;
->>         unsigned long i;
->> +       int nid, dist;
->>
->>         if (numa_enabled == 0) {
->>                 printk(KERN_WARNING "NUMA disabled by user\n");
->> @@ -636,6 +637,10 @@ static int __init parse_numa_properties(void)
->>
->>         dbg("NUMA associativity depth for CPU/Memory: %d\n",
->> min_common_depth);
->>
->> +       for (nid = 0; nid < MAX_NUMNODES; nid ++)
->> +               for (dist = 0; dist < MAX_DISTANCE_REF_POINTS; dist++)
->> +                       distance_lookup_table[nid][dist] = nid;
->> +
->>         /*
->>          * Even though we connect cpus to numa domains later in SMP
->>          * init, we need to know the node ids now. This is because
-> 
-> What does that actually do? That is, what does it make the distance
-> table look like before and after you bring up the CPUs?
+This series support Chipone ICN6211 DSI/RGB bridge support.
 
-By default the table is full of 0. When a CPU is brought up the value is
-read from the device-tree and the table is updated. What I've seen is
-this value is common for 2 nodes at a given level if they share the level.
-So as the table is initialized with 0, all offline nodes (no memory no
-cpu) are merged with node 0.
-My fix initializes the table with unique values for each node, so by
-default no nodes are mixed.
+This ICN6211 bridge is taking flexible configuration of MIPI DSI
+signal input and produce RGB565, RGB666, RGB888 output format 
+and it is present in the Bananapi s070wv20-ct16 panel.
 
-> 
->> Any comment?
-> 
-> Well, I had a few questions here:
-> 
->   20190305115952.GH32477@hirez.programming.kicks-ass.net
-> 
-> that I've not yet seen answers to.
+Initially similar support is written as dsi panel driver, but 
+based on the discussion from this thread [1] and input from 
+"Andrzej Hajda" I would ended-up writing bridge driver.
 
-I didn't answer because:
+patch 1, 2: export drm_bridge_detach
 
-- I thought this was not the good way to fix the problem as you said "it
-seems very fragile and unfortunate",
+patch 3: bridge support on Allwinner DSI controller
 
-- I don't have the answers, I'd really like someone from IBM that knows
-well the NUMA part of powerpc answers to these questions... and perhaps
-find a better solution.
+patch 4: ICN6211 dt-bindings
 
-Thanks,
-Laurent
+patch 5: ICN6211 bridge driver
 
+patch 6: overlay to enable bridge and panel on BPI-M64, this would
+eventually depends on 'Allwinner A64 MIPI-DSI" support [2]
 
+[2] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=90117
+[1] https://patchwork.kernel.org/patch/10657579/
+
+Any inputs?
+Jagan.
+
+Jagan Teki (6):
+  drm/bridge: Export drm_bridge_detach
+  drm/exynos: dsi: Use drm_bridge_detach
+  drm/sun4i: dsi: Add bridge support
+  dt-bindings: display: bridge: Add ICN6211 MIPI-DSI to RGB convertor
+    bridge
+  drm/bridge: Add Chipone ICN6211 MIPI-DSI/RGB convertor bridge
+  [DO NOT MERGE] arm64: dts: allwinner: bananapi-m64: Enable S070WV20-CT16 DSI panel
+
+ .../display/bridge/chipone,icn6211.txt        |  36 +++
+ MAINTAINERS                                   |   6 +
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts |  63 ++++
+ drivers/gpu/drm/bridge/Kconfig                |  10 +
+ drivers/gpu/drm/bridge/Makefile               |   1 +
+ drivers/gpu/drm/bridge/chipone-icn6211.c      | 275 ++++++++++++++++++
+ drivers/gpu/drm/drm_bridge.c                  |   1 +
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c       |   3 +-
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        |  65 +++--
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h        |   1 +
+ include/drm/drm_bridge.h                      |   1 +
+ 11 files changed, 443 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+ create mode 100644 drivers/gpu/drm/bridge/chipone-icn6211.c
+
+-- 
+2.18.0.321.gffc6fa0e3
 
