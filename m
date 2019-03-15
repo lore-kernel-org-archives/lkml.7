@@ -2,119 +2,83 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0A5C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E99C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5A321872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BDF621872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VL2GRuup"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="A263IK5J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbfCOJmH (ORCPT
+        id S1728741AbfCOJnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:42:07 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49164 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbfCOJmH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:42:07 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2F9dLFG060322;
-        Fri, 15 Mar 2019 09:41:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=urU9MH5R9fQKmuCqhBHeuTRXRXND67dLKRNtbX53Rlo=;
- b=VL2GRuupZZ46ek0pVGD0Z2sjM8wnfrRYluza6xTFTp/WOe6k2xFDERWNfOUMrgtcusE7
- 06y3FKcrC1ibVczcMOtY7k2JRwkxDdfZhee8MOsg+qtUwG71IKSundErAjU6CvUwMs4s
- PEtwu8+4kbURrI6KIC6AwK85wFiOD5pOPNEeUXbsJDK1+GYkNhNcYRV5QjEZ+orxxSUs
- OKCkzkGtv2o1GHVrNMGnp23vDzs9R6zuBYUZFOgV19km4lAmi9lTbwtDZbW3BXi/gzrm
- ICVlljsi89nnM2T0r3YIjtKm4BL1/9lpkc8ylXv4Sche65w8k2vzQ/WKsUo8TQzXdNOq zw== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2120.oracle.com with ESMTP id 2r464rwp9g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Mar 2019 09:41:40 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2F9fdxt019268
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Mar 2019 09:41:40 GMT
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2F9fc6R002943;
-        Fri, 15 Mar 2019 09:41:38 GMT
-Received: from [10.182.69.118] (/10.182.69.118)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 15 Mar 2019 09:41:37 +0000
-Subject: Re: [PATCH 0/8]: blk-mq: use static_rqs to iterate busy tags
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, jsmart2021@gmail.com,
-        bvanassche@acm.org, josef@toxicpanda.com,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        keith.busch@intel.com, hare@suse.de, jthumshirn@suse.de,
-        sagi@grimberg.me
-References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
- <20190315092020.GA2405@lst.de>
-From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
-Message-ID: <a36be8bd-bb9c-745e-cfdb-018cf0a96d42@oracle.com>
-Date:   Fri, 15 Mar 2019 17:44:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 15 Mar 2019 05:43:46 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55222 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726886AbfCOJnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 05:43:46 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 10EB41EC05A1;
+        Fri, 15 Mar 2019 10:43:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1552643025;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bGXmHGVR8irXRYK4gq9aXb658OFG1F618HVyMOHe9sU=;
+        b=A263IK5J7l5yH0N5h2CF4tWLWjkmdFThre93VlPONoPlq7/mcs3MsgFIkAQjtpWUHdeaqb
+        k7H/We38Qy3ttg13zpfUS6pJSxftfrUS9jDznfZLWgCkLCG3eKosdFRKh88lJqBlLbIKur
+        AiffshEzwG0n8PfBQZL3q+V1pcl9fvg=
+Date:   Fri, 15 Mar 2019 10:43:42 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>, linux-edac@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
+Message-ID: <20190315094341.GA12523@zn.tnic>
+References: <20190305132147.3739133-1-arnd@arndb.de>
+ <20190305143453.GC8256@zn.tnic>
+ <CAK8P3a2kSrTkTespcBGr6oYi8nvriS9pwtM2nQ7gCxVB+TzLog@mail.gmail.com>
+ <20190306175808.GA30016@agluck-desk>
+ <CAK8P3a3MV=0BbOpjwM+2q+7Oehc=4B+u0hka1YdBnJmikfqCig@mail.gmail.com>
+ <20190313230137.GA12529@agluck-desk>
+ <CAK8P3a0aDdEt323i=z4BGuh71ntPqm-L33U4q+FiQOdMUin6wg@mail.gmail.com>
+ <20190314110413.GA32277@zn.tnic>
+ <20190314215952.GA303@agluck-desk>
 MIME-Version: 1.0
-In-Reply-To: <20190315092020.GA2405@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9195 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903150071
+Content-Disposition: inline
+In-Reply-To: <20190314215952.GA303@agluck-desk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/15/19 5:20 PM, Christoph Hellwig wrote:
-> On Fri, Mar 15, 2019 at 04:57:36PM +0800, Jianchao Wang wrote:
->> Hi Jens
->>
->> As we know, there is a risk of accesing stale requests when iterate
->> in-flight requests with tags->rqs[] and this has been talked in following
->> thread,
->> [1] https://urldefense.proofpoint.com/v2/url?u=https-3A__marc.info_-3Fl-3Dlinux-2Dscsi-26m-3D154511693912752-26w-3D2&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=7WdAxUBeiTUTCy8v-7zXyr4qk7sx26ATvfo6QSTvZyQ&m=CydqJPTf4FUrfs7ipUc2chm2jGuNuDVn_onIetKEehM&s=ZQ7RfO6-737-t5kQv7SFlXMhIdpwn_AxJI93d6c-nj0&e=
->> [2] https://urldefense.proofpoint.com/v2/url?u=https-3A__marc.info_-3Fl-3Dlinux-2Dblock-26m-3D154526189023236-26w-3D2&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=7WdAxUBeiTUTCy8v-7zXyr4qk7sx26ATvfo6QSTvZyQ&m=CydqJPTf4FUrfs7ipUc2chm2jGuNuDVn_onIetKEehM&s=EBV1M5p4mE8jZ5ZD1ecU5kMbJ9EtbpVJoc7Tqolrsc8&e=
+On Thu, Mar 14, 2019 at 02:59:52PM -0700, Luck, Tony wrote:
+> I made a patch based on option #3. Rough steps were:
 > 
-> I'd rather take one step back and figure out why we are iterating
-> the busy requests.  There really shouldn't be any reason why a driver
-> is even doings that (vs some error handling helpers in the core
-> block code that can properly synchronize).
-> 
+> $ cat skx_common.c >> skx_common.h
 
-A typical scene is blk_mq_in_flight,
-                          
-blk_mq_get_request         blk_mq_in_flight
-  -> blk_mq_get_tag        -> blk_mq_queue_tag_busy_iter
-                             -> bt_for_each
-                               -> bt_iter
-                                 -> rq = taags->rqs[]
-                                 -> rq->q       //---> get a stale request
-  -> blk_mq_rq_ctx_init
-    -> data->hctx->tags->rqs[rq->tag] = rq
+That doesn't look real clean to me. So we have fsl_ddr_edac.c which
+gets linked in in two drivers and I think you could librarize that
+skx_common.c the same way and have the function exports in the wrapper
+drivers skx_edac and i10nm_edac calling those "library" functions in
+skx_common.c. IMNSVHO.
 
-This stale request maybe something that has been freed due to io scheduler
-is detached or a q using a shared tagset is gone.
+Thx.
 
-And also the blk_mq_timeout_work could use it to pick up the expired request.
-The driver would also use it to requeue the in-flight requests when the device is dead.
+-- 
+Regards/Gruss,
+    Boris.
 
-Compared with adding more synchronization, using static_rqs[] directly maybe simpler :)
-
-Thanks
-Jianchao
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
