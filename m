@@ -6,37 +6,38 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E84AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D59C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A72A218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0BC218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfCOSpi (ORCPT
+        id S1727126AbfCOSpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:45:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
+        Fri, 15 Mar 2019 14:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726431AbfCOSph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:45:37 -0400
+        id S1726527AbfCOSpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 14:45:38 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3948A218D3;
+        by mail.kernel.org (Postfix) with ESMTPSA id 73871218D9;
         Fri, 15 Mar 2019 18:45:37 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1h4rpo-00008R-EQ; Fri, 15 Mar 2019 14:45:36 -0400
-Message-Id: <20190315184536.337893671@goodmis.org>
+        id 1h4rpo-00009R-NS; Fri, 15 Mar 2019 14:45:36 -0400
+Message-Id: <20190315184536.618293169@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 15 Mar 2019 14:45:06 -0400
+Date:   Fri, 15 Mar 2019 14:45:08 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Subject: [PATCH 1/8] tracing/probes: Make reserved_field_names static
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 3/8] tracing: kdb: Fix ftdump to not sleep
 References: <20190315184505.655928086@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -45,35 +46,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+From: Douglas Anderson <dianders@chromium.org>
 
-sparse complains:
-  CHECK   kernel/trace/trace_probe.c
-kernel/trace/trace_probe.c:16:12: warning: symbol 'reserved_field_names' was not declared. Should it be static?
+As reported back in 2016-11 [1], the "ftdump" kdb command triggers a
+BUG for "sleeping function called from invalid context".
 
-Yes, it should be static.
+kdb's "ftdump" command wants to call ring_buffer_read_prepare() in
+atomic context.  A very simple solution for this is to add allocation
+flags to ring_buffer_read_prepare() so kdb can call it without
+triggering the allocation error.  This patch does that.
 
-Link: http://lkml.kernel.org/r/2478.1552380778@turing-police
+Note that in the original email thread about this, it was suggested
+that perhaps the solution for kdb was to either preallocate the buffer
+ahead of time or create our own iterator.  I'm hoping that this
+alternative of adding allocation flags to ring_buffer_read_prepare()
+can be considered since it means I don't need to duplicate more of the
+core trace code into "trace_kdb.c" (for either creating my own
+iterator or re-preparing a ring allocator whose memory was already
+allocated).
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+NOTE: another option for kdb is to actually figure out how to make it
+reuse the existing ftrace_dump() function and totally eliminate the
+duplication.  This sounds very appealing and actually works (the "sr
+z" command can be seen to properly dump the ftrace buffer).  The
+downside here is that ftrace_dump() fully consumes the trace buffer.
+Unless that is changed I'd rather not use it because it means "ftdump
+| grep xyz" won't be very useful to search the ftrace buffer since it
+will throw away the whole trace on the first grep.  A future patch to
+dump only the last few lines of the buffer will also be hard to
+implement.
+
+[1] https://lkml.kernel.org/r/20161117191605.GA21459@google.com
+
+Link: http://lkml.kernel.org/r/20190308193205.213659-1-dianders@chromium.org
+
+Reported-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/ring_buffer.h | 2 +-
+ kernel/trace/ring_buffer.c  | 5 +++--
+ kernel/trace/trace.c        | 6 ++++--
+ kernel/trace/trace_kdb.c    | 6 ++++--
+ 4 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 89da34b326e3..cfcf77e6fb19 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -13,7 +13,7 @@
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index f1429675f252..1a40277b512c 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -128,7 +128,7 @@ ring_buffer_consume(struct ring_buffer *buffer, int cpu, u64 *ts,
+ 		    unsigned long *lost_events);
  
- #include "trace_probe.h"
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu);
++ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags);
+ void ring_buffer_read_prepare_sync(void);
+ void ring_buffer_read_start(struct ring_buffer_iter *iter);
+ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 9a91479bbbfe..41b6f96e5366 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4191,6 +4191,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+  * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
+  * @buffer: The ring buffer to read from
+  * @cpu: The cpu buffer to iterate over
++ * @flags: gfp flags to use for memory allocation
+  *
+  * This performs the initial preparations necessary to iterate
+  * through the buffer.  Memory is allocated, buffer recording
+@@ -4208,7 +4209,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+  * This overall must be paired with ring_buffer_read_finish.
+  */
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
++ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_iter *iter;
+@@ -4216,7 +4217,7 @@ ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return NULL;
  
--const char *reserved_field_names[] = {
-+static const char *reserved_field_names[] = {
- 	"common_type",
- 	"common_flags",
- 	"common_preempt_count",
+-	iter = kmalloc(sizeof(*iter), GFP_KERNEL);
++	iter = kmalloc(sizeof(*iter), flags);
+ 	if (!iter)
+ 		return NULL;
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index e9cc47e59d25..ccd759eaad79 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4077,7 +4077,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter->buffer_iter[cpu] =
+-				ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
++				ring_buffer_read_prepare(iter->trace_buffer->buffer,
++							 cpu, GFP_KERNEL);
+ 		}
+ 		ring_buffer_read_prepare_sync();
+ 		for_each_tracing_cpu(cpu) {
+@@ -4087,7 +4088,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	} else {
+ 		cpu = iter->cpu_file;
+ 		iter->buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
++			ring_buffer_read_prepare(iter->trace_buffer->buffer,
++						 cpu, GFP_KERNEL);
+ 		ring_buffer_read_prepare_sync();
+ 		ring_buffer_read_start(iter->buffer_iter[cpu]);
+ 		tracing_iter_reset(iter, cpu);
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index d953c163a079..810d78a8d14c 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -51,14 +51,16 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter.buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu);
++			ring_buffer_read_prepare(iter.trace_buffer->buffer,
++						 cpu, GFP_ATOMIC);
+ 			ring_buffer_read_start(iter.buffer_iter[cpu]);
+ 			tracing_iter_reset(&iter, cpu);
+ 		}
+ 	} else {
+ 		iter.cpu_file = cpu_file;
+ 		iter.buffer_iter[cpu_file] =
+-			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu_file);
++			ring_buffer_read_prepare(iter.trace_buffer->buffer,
++						 cpu_file, GFP_ATOMIC);
+ 		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
+ 		tracing_iter_reset(&iter, cpu_file);
+ 	}
 -- 
 2.20.1
 
