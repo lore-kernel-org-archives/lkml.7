@@ -2,85 +2,75 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DD1C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA1AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AAD218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3C1218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfCOSSs (ORCPT
+        id S1726349AbfCOSW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:18:48 -0400
-Received: from mail.ahsoftware.de ([88.99.227.106]:50676 "EHLO
-        mail.ahsoftware.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfCOSSs (ORCPT
+        Fri, 15 Mar 2019 14:22:57 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34604 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfCOSW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:18:48 -0400
-X-Greylist: delayed 407 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 Mar 2019 14:18:47 EDT
-Received: by mail.ahsoftware.de (Postfix, from userid 115)
-        id 18FC4101EEB; Fri, 15 Mar 2019 19:11:59 +0100 (CET)
-Received: from xu4q.ahsoftware (unknown [IPv6:2a02:810c:280:31aa:6ad4:5651:15f3:92d4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mail.ahsoftware.de (Postfix) with ESMTPSA id 6A3F4101E7B;
-        Fri, 15 Mar 2019 19:11:57 +0100 (CET)
-Received: by xu4q.ahsoftware (Postfix, from userid 65534)
-        id 1983483451; Fri, 15 Mar 2019 19:11:57 +0100 (CET)
-Received: from krabat.ahsoftware (unknown [IPv6:feee::5246:5dff:fe8b:95f8])
-        by xu4q.ahsoftware (Postfix) with ESMTP id 10AAC83450;
-        Fri, 15 Mar 2019 18:11:54 +0000 (UTC)
-From:   Alexander Holler <holler@ahsoftware.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Holler <holler@ahsoftware.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org
-Subject: [PATCH] perf/x86/intel: fix 2 typos
-Date:   Fri, 15 Mar 2019 19:25:42 +0100
-Message-Id: <20190315182542.1700-1-holler@ahsoftware.de>
-X-Mailer: git-send-email 2.9.5
+        Fri, 15 Mar 2019 14:22:57 -0400
+Received: by mail-qk1-f193.google.com with SMTP id n6so6073901qkf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 11:22:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=c3rlewspvBx4mFf+c2GnzCnBBrTGkVE0TbuZDNPQe4Q=;
+        b=Ggw3CyOXEWu1BJ1BFjsaXQvzUwo6yJjM/nvZ+zmZzuIosUNxGQYFGiJoDIMEdvvevy
+         QFIm8vP+6Ti7tGXbxn7dqcpeh8KnqzggZitfm8EhwKVyI22QPCArWbvcyYB9UbA8OoIw
+         N8/DP9f8xOZvwoXye4+a4YmU8cq+6b5eEcPQAHOPX0e2+kdCmc6HUuLOU8BgFQHhdqfR
+         2c65zIL8qbrX/d0heDtzuzG7vn5YvhdGBjNRt5DD5+NMWEoC94wThkbf/p54kZL9zdsK
+         9u14gYdTDaHKfImfGrtsaxjH3N4sV2vXnRUtfbQ7n48drbYXYtPiYJjKY+0Z7HZWvL2l
+         aHTg==
+X-Gm-Message-State: APjAAAWbO8pPxT3fdr9bBSN4WDULaQs2cWJEpGRF2p0vg5gKWx0nAET0
+        go9l3OfQrR8RDymv2NIQZQPbluUb4sM=
+X-Google-Smtp-Source: APXvYqyQvEerUS2JN9kCTfZ3KjvZyzlagIBgZ8Yovt/4PMqrh754294Pb/t4Rjcnlf6bJnQuhSDGcA==
+X-Received: by 2002:a37:8b87:: with SMTP id n129mr3842567qkd.5.1552674176141;
+        Fri, 15 Mar 2019 11:22:56 -0700 (PDT)
+Received: from ?IPv6:2601:602:9800:dae6::362? ([2601:602:9800:dae6::362])
+        by smtp.gmail.com with ESMTPSA id u18sm1855352qka.25.2019.03.15.11.22.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Mar 2019 11:22:55 -0700 (PDT)
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Laura Abbott <labbott@redhat.com>
+Subject: Participation in Distro kernel microconference at Plumbers?
+Message-ID: <d951ec7e-7ac1-5ad8-3172-91e8e451aa9f@redhat.com>
+Date:   Fri, 15 Mar 2019 11:22:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I don't know if fix is functional correct, but at least it compiles now.
-It failed before with a config for an AMD CPU.
+Hi,
 
-Bug was introduced with commit d01b1f96a82e5dd7841a1d39db3abfdaf95f70ab
-"perf/x86/intel: Make cpuc allocations consistent" which was merged
-with 004cc08675b761fd82288bab1b5ba5e1ca746eca.
+I'm working on organizing a microconference for Linux Plumbers 2019
+focused on distribution kernels. The focus is on collaboration on
+common problems for maintaining and distributing a kernel for any
+kind of distribution (embedded, enterprise, community, internal, extrnal).
+Ideally, this would be a topic that could be presented and discussed in 20-30
+minutes (we can be flexible depending on the number of topics though).
 
-Signed-off-by: Alexander Holler <holler@ahsoftware.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <stable@vger.kernel.org>
----
- arch/x86/events/perf_event.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If you have something that might be a good fit for this, please
+reach out to me off list. Feel free to pass this around to anyone
+who might be interested.
 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index b04ae6c..a759557 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1033,12 +1033,12 @@ static inline int intel_pmu_init(void)
- 	return 0;
- }
- 
--static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
-+static inline int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
- {
- 	return 0;
- }
- 
--static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
-+static inline void intel_cpuc_finish(struct cpu_hw_events *cpuc)
- {
- }
- 
--- 
-2.9.5
+Thanks,
+Laura
 
