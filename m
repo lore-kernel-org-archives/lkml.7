@@ -4,141 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0342C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB0FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC47218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79197218CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 06:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P+byZbyC"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="EJvR+z+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfCOGRs (ORCPT
+        id S1728357AbfCOGU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 02:17:48 -0400
-Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:19599
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728050AbfCOGRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 02:17:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cqFoZsQIKsDfdiJAXh1Jg3tUzHU6kQ8ML8CV0FXm2Ps=;
- b=P+byZbyCt9GCZfcCuGhH8qOilzSXwOYeXjQTWEatEHmt1wyueDmCRbbke3sK1Z+D9EaW3MSzvzayGnl8N6yj0e/Ku9YJwlNrWtmydaNpHZ4ruuPkDMaEWBcWmKyhVyowYr3TiTCb+g2tUA968OYMcg9dCf6utyOOwlbWLBlmXiI=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Fri, 15 Mar 2019 06:17:43 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%6]) with mapi id 15.20.1709.011; Fri, 15 Mar 2019
- 06:17:43 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        Andy Gross <andy.gross@linaro.org>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "ezequiel@collabora.com" <ezequiel@collabora.com>,
-        "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH V8 4/4] arm64: dts: imx8qxp: add system controller watchdog
- support
-Thread-Topic: [PATCH V8 4/4] arm64: dts: imx8qxp: add system controller
- watchdog support
-Thread-Index: AQHU2vbMElbJYOVD/kOr7R5ht0we7Q==
-Date:   Fri, 15 Mar 2019 06:17:42 +0000
-Message-ID: <1552630331-32068-5-git-send-email-Anson.Huang@nxp.com>
-References: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1552630331-32068-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0PR01CA0002.apcprd01.prod.exchangelabs.com
- (2603:1096:203:92::14) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2188133c-2857-49a7-6c35-08d6a90deeb8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3916;
-x-ms-traffictypediagnostic: DB3PR0402MB3916:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <DB3PR0402MB3916255794BC950D09F53ED4F5440@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09778E995A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(346002)(39860400002)(366004)(199004)(189003)(8936002)(2501003)(102836004)(2906002)(6436002)(68736007)(5660300002)(7416002)(6116002)(66066001)(36756003)(446003)(71190400001)(486006)(4744005)(71200400001)(76176011)(6346003)(2616005)(476003)(186003)(386003)(11346002)(3846002)(26005)(52116002)(6506007)(6486002)(305945005)(6512007)(256004)(478600001)(2201001)(86362001)(4326008)(25786009)(106356001)(105586002)(7736002)(316002)(110136005)(50226002)(14454004)(99286004)(8676002)(97736004)(81156014)(81166006)(53936002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3916;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UmXwLbKuFSq9CFSbegp3ZIB6Pi0UHI6Gy6sKodTNYkCF3UJ4XkBonSci6Cv0/2Tnfk/UyFByGDWh55ccsoIENGlH90hrW/9wGgWqDRX7dqzTIIdwN+RHCfWMlDhq9qyIjClv5JGI4tk7zxOLu1MAx53bAXPgCc0bPnAcM95TLA2IYj1ZSFEob+FS9Rd8LdfSr2Iujtm571TuiTfZ9NWsypNtylgmXKfS0LbcdIQlO7HccVPpdRaKzKHgOmGXOQXaEH5zXPGZ/fgYjjCFKFGXAafJo2KOq96r75Lysj/ppStSUuVpJ5Kq6Zrt0B96XypCqw+yJlrzcGXgfb2StmSpkL5v2pSy7PdJSRUqhjUZZlaO6yKY+m10GSmkDSExNe55/z1vUtkecT3/lOkLHVGhCaZeUbVAgcqD6ogFdnUq/+k=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2188133c-2857-49a7-6c35-08d6a90deeb8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 06:17:42.9370
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3916
+        Fri, 15 Mar 2019 02:20:58 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:44584 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbfCOGU5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 02:20:57 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 154ABD4C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 06:20:56 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id hjSeTNwG6iDQ for <linux-kernel@vger.kernel.org>;
+        Fri, 15 Mar 2019 01:20:55 -0500 (CDT)
+Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id DB325D16
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 01:20:55 -0500 (CDT)
+Received: by mail-it1-f197.google.com with SMTP id a184so6507719itc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 23:20:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Br3/U0mf/R/jQwiIltWwAExumrY4nZjRkWM2M0apZa8=;
+        b=EJvR+z+HXKYN9bnEr7CKAv9UkVhR3jM67CJYW7G/gklZEDYExMUrvVSqw4kxOaOiGb
+         PyvPuMQWbfTsqn9iDAYgckLtuX2Q2lpcsxTsX7gaXd/CvB7N8DGeQIobAhqd5v6NaZ2e
+         FYYQkvkl8/d+U6D+8wySPfKk6No0gH7ThZT+cHy2topxZkKkTwQpliir9kJmfT8IFjhN
+         DoW3+daElxaJtCbGsX3B6k1inJRZ8eTHM/UP9PtG4Lzxsl2TCTxlLh/Se9k/0F24PeLX
+         fzXvMP0rDgADOqt6ynI8zxq9CbS5k/BnpSn0ENTcC7b5mm762lCWe0pkLZmSQ7/0khfj
+         PnAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Br3/U0mf/R/jQwiIltWwAExumrY4nZjRkWM2M0apZa8=;
+        b=W6DCGndBcl8ui9PKSyCH/S956vbstPR+J+dlhIjoQZWFqjTZOudXy4ZPuEIQwrDhFd
+         IELmJ9DjMFKOclPiuxhN7t7mdP86wKwbnu5BAiFsc3WCtOptFF3GLhfYO8uPvc+QKeEN
+         g4Xx+n5ZoTLFb5kMq3sQGZsljeFbpPkM0wjHxRsKlvUtLMStVuC715275gwVWkoCE8bv
+         UuX6c1UaMWbXByMwIt5Qjile6MwtqUsnaGfrAUQl3u/6ZitE0b9jF1ghzsyoajn+rTrk
+         HYofcy4KS9WfPH2+5Wi4VOdUbyq5DzHclENxHvnOZcU9WYup1MMIGWnn9gtbmAAGO2yY
+         0dZQ==
+X-Gm-Message-State: APjAAAV02RLYz5OyPJTD/9frbFNvEMrdVKMa7tNHMS91UM7apyJIHudB
+        JmUj+Lg3b/48R2InFhRhpG4wAN1npFbRVJSHitMyGbS+W1r7esF937GHDepeRr4xOZ03ddXNFGt
+        oseRPK8d3rfTMHYhCUh2YD+x4yPGq
+X-Received: by 2002:a02:8a4a:: with SMTP id e10mr1457812jal.120.1552630854721;
+        Thu, 14 Mar 2019 23:20:54 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy5AbrXvR3MYaIsOrtbaEE3epm5jjU38uitbYmdpb9Bs0Ds2f/TKZMmNYU1UQbz2VJyPns+Tg==
+X-Received: by 2002:a02:8a4a:: with SMTP id e10mr1457803jal.120.1552630854477;
+        Thu, 14 Mar 2019 23:20:54 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id u13sm495570iog.80.2019.03.14.23.20.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2019 23:20:53 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] slimbus: fix a NULL pointer dereference in of_qcom_slim_ngd_register
+Date:   Fri, 15 Mar 2019 01:20:48 -0500
+Message-Id: <20190315062048.16642-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add i.MX8QXP system controller watchdog support.
+In case platform_device_alloc fails, the fix returns an error
+code to avoid the NULL pointer dereference.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
-Changes since previous version:
-	- remove label as we ONLY have one watchdog.
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
+ drivers/slimbus/qcom-ngd-ctrl.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 4c3dd95..279482d 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -443,4 +443,8 @@
- 			power-domains =3D <&pd IMX_SC_R_GPIO_7>;
- 		};
- 	};
-+
-+	watchdog {
-+		compatible =3D "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
-+	};
- };
---=20
-2.7.4
+diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
+index 71f094c9ec68..f3585777324c 100644
+--- a/drivers/slimbus/qcom-ngd-ctrl.c
++++ b/drivers/slimbus/qcom-ngd-ctrl.c
+@@ -1342,6 +1342,10 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+ 			return -ENOMEM;
+ 
+ 		ngd->pdev = platform_device_alloc(QCOM_SLIM_NGD_DRV_NAME, id);
++		if (!ngd->pdev) {
++			kfree(ngd);
++			return -ENOMEM;
++		}
+ 		ngd->id = id;
+ 		ngd->pdev->dev.parent = parent;
+ 		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
+-- 
+2.17.1
 
