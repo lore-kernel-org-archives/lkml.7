@@ -2,112 +2,97 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE994C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C66C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C964218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552655658;
-	bh=IEpUyL36q8/726NLraqLaGuCSWvp+z1d0IVNkmrGaZc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BKhTNU+WPSUyf+8XmapAXapEJE6kwKWnPmh6ES3DIFl6r1qQ23+32SSqf20Ee4zbG
-	 LpnnDTekkGv5WAh14aKwtJteRuSWIJppbT3C404ZDpv58tqCupUdjb2MZgmAp7AdLf
-	 6ysWUCedRgA+iGKA+aNlkela04QPGa2s/hnyt/Es=
+	by mail.kernel.org (Postfix) with ESMTP id 6A0F821871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbfCONOR (ORCPT
+        id S1729107AbfCONOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 09:14:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47594 "EHLO mail.kernel.org"
+        Fri, 15 Mar 2019 09:14:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:24672 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbfCONOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 09:14:16 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1DD021871;
-        Fri, 15 Mar 2019 13:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552655656;
-        bh=IEpUyL36q8/726NLraqLaGuCSWvp+z1d0IVNkmrGaZc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JD/Y36s/ANTZMHwjoVQs98Vc/TdnjKZpxOrd3o8Q5CWbWoEO2OrnHTYQNWf61qD70
-         QGkzLqvrc9wQunN+3VCCesWkBmuthUsgfLPj2uR4SvrSk38oQPGArH4KmmwgVYePyi
-         bk3S668CcIIgN1QzQLPPn/u+ZkKOY+u2e2b3YWAU=
-Date:   Fri, 15 Mar 2019 22:14:07 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Colascione <dancol@google.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-Id: <20190315221407.790154f634fc5fc084d7bf15@kernel.org>
-In-Reply-To: <20190314122748.GA101545@google.com>
-References: <20190309121141.GA30173@kroah.com>
-        <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
-        <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
-        <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
-        <20190311193612.4f09bf11@oasis.local.home>
-        <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
-        <20190312003912.GA170478@google.com>
-        <20190311212823.60684182@oasis.local.home>
-        <CAJWu+oqsD_wHGWfzj6POFowiY2qcu04auVzkA6Lu9R+LR4gkrQ@mail.gmail.com>
-        <20190313101843.800dd8d6a9babb635580ebdc@kernel.org>
-        <20190314122748.GA101545@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1729031AbfCONOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 09:14:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 06:14:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,482,1544515200"; 
+   d="scan'208";a="134323309"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga003.jf.intel.com with ESMTP; 15 Mar 2019 06:14:37 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h4mfT-0000Uh-Vz; Fri, 15 Mar 2019 15:14:35 +0200
+Date:   Fri, 15 Mar 2019 15:14:35 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Simon Horman <horms@verge.net.au>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Keerthy <j-keerthy@ti.com>, Peter Rosin <peda@axentia.se>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Phil Reid <preid@electromag.com.au>,
+        Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [RFC PATCH v2 5/7] i2c: busses: omap: Add the
+ master_xfer_irqless hook
+Message-ID: <20190315131435.GE9224@smile.fi.intel.com>
+References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
+ <20190302134735.4393-6-wsa+renesas@sang-engineering.com>
+ <20190315124717.x3do5evok5syipo7@verge.net.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190315124717.x3do5evok5syipo7@verge.net.au>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019 08:27:48 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
+On Fri, Mar 15, 2019 at 01:47:18PM +0100, Simon Horman wrote:
+> On Sat, Mar 02, 2019 at 02:47:33PM +0100, Wolfram Sang wrote:
 
-> > But the eBPF is based on kprobe-events. What kind of usage would you
-> > expected? (with macros??)
+> > +	if (!polling) {
+> > +		timeout = wait_for_completion_timeout(&omap->cmd_complete,
+> > +						      OMAP_I2C_TIMEOUT);
+> > +	} else {
+> > +		do {
+> > +			omap_i2c_wait(omap);
+> > +			ret = omap_i2c_xfer_data(omap);
+> > +		} while (ret == -EAGAIN);
+> > +
+> > +		if (!ret)
+> > +			timeout = 1;
+> > +		else
+> > +			timeout = 0;
 > 
-> eBPF C programs are compiled with kernel headers. They can execute inline
-> functions or refer to macros in the kernel headers. They are similar to
-> kernel modules where you build a C program that then later is executed in
-> kernel context. It goes through the whole compiler pipeline. This is slightly
-> different usage from pure kprobe-events.  Also eBPF kprobe programs need
-> LINUX_VERSION_CODE (or similarly named) macro which it provides to the bpf(2)
-> syscall when loading kprobe programs. This is because eBPF implementation in
-> the kernel checks if the eBPF programs that use kprobes are being loaded
-> against the right kernel.
+> 
+> nit: the following might be cleaner
+> 
+> 		ret = !!timeout;
+> 
 
-Ah, I got it. It's similar to SystemTap. :)
+Other way around, perhaps,
 
-Thank you,
+      timeout = !ret;
+
+> > +	}
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+With Best Regards,
+Andy Shevchenko
+
+
