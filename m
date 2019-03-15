@@ -2,119 +2,278 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B16CC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C06C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFAB21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:48:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="bsx8eHj3"
+	by mail.kernel.org (Postfix) with ESMTP id 5336721871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbfCOKsT (ORCPT
+        id S1728927AbfCOKtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 06:48:19 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38715 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbfCOKsS (ORCPT
+        Fri, 15 Mar 2019 06:49:46 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:46126 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbfCOKtp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 06:48:18 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e10so3295080edy.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 03:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KuZv0S1tjaJAsiqq7PjT7EfO6XTWwwtL1h2LSortnxw=;
-        b=bsx8eHj3Gig6PPM0vBCI2pOLG9aSNoSrJGr9JC+Ln8AnmzzS0alpR6FirCwPb7w4hh
-         G1LZCAjm59Judza/i2vZcGgD8CKG/nEz/y8ufTmNlFRB3pTFRbb8OvLU30/4Lw07ki04
-         yoQMDSLiRHnACEC7gEv//j2z5QWRx+gLelDTY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=KuZv0S1tjaJAsiqq7PjT7EfO6XTWwwtL1h2LSortnxw=;
-        b=d+mws+Ytyx+5cBj0yNtPCeCJR5VfYbbHDAYDAWS3urWZ0ntdjiX0iH6I25wCcHEtjz
-         DOhUs9/YhSCJp9cYvjgxK9BMcSNMQP7zsgrkLNd+O8HF1YkZ2qa31GlUXJyl4gMdTJzM
-         9CVDZG2SOwhcc9Tx/GpWzh0dfeZbuwfzDJuy6LrGC77CPNZgJwBZolWXyjrHcN+vbdY5
-         EudqFp0SQAxhjNcSJ8ks8iB5JBU8dfQZcfofqiW5GEeJ5Wcx2Ot1sP5l2AmJDYX2zUIu
-         8Tuo0BNUIqa1aXOoArIXnJ+BzmlMMVrEtfJJTrcNVGX1K+SIi0evL6lW0dkB0X8SIskj
-         IwWg==
-X-Gm-Message-State: APjAAAUXYz6U6K/Hm1f+TBFqbRWleaXwzn4kLd7Wgx/a2/2bSwapbOlJ
-        O/eqo12Jw7HgWmW9bD5rLKBCYQ==
-X-Google-Smtp-Source: APXvYqy2TUaPKeC+JB4jyYCjEdZxgIzSE+HwlgPv6i4+Na2CHGUhGnYtbIpOC3i7RyVkgcfgAukAKg==
-X-Received: by 2002:a17:906:6991:: with SMTP id i17mr1826610ejr.96.1552646896740;
-        Fri, 15 Mar 2019 03:48:16 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id c8sm335077ejb.9.2019.03.15.03.48.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 03:48:15 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 11:48:13 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/3] drm: fix subtle spelling error in drm_crtc_state
-Message-ID: <20190315104813.GT2665@phenom.ffwll.local>
-Mail-Followup-To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>
-References: <20190314220420.32487-1-kieran.bingham+renesas@ideasonboard.com>
- <20190314220420.32487-2-kieran.bingham+renesas@ideasonboard.com>
+        Fri, 15 Mar 2019 06:49:45 -0400
+Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2FAnh2W068575;
+        Fri, 15 Mar 2019 19:49:43 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav109.sakura.ne.jp);
+ Fri, 15 Mar 2019 19:49:43 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav109.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2FAnXmx068402
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 15 Mar 2019 19:49:43 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [RFC PATCH] printk: Introduce "store now but print later" prefix.
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Calvin Owens <calvinowens@fb.com>
+References: <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
+ <20190304142339.mfno5mmjxxsrf47q@pathway.suse.cz>
+ <201903050123.x251N312025685@www262.sakura.ne.jp>
+ <20190306100404.jzfk7oqsh3turqth@pathway.suse.cz>
+ <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
+Message-ID: <87e0aa0e-b30a-c373-8682-c920e1df7275@i-love.sakura.ne.jp>
+Date:   Fri, 15 Mar 2019 19:49:35 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314220420.32487-2-kieran.bingham+renesas@ideasonboard.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 10:04:18PM +0000, Kieran Bingham wrote:
-> The drm_crtc_state documentation contains a subtle misspelling of the
-> word subtle. Correct it.
-> 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+On 2019/03/07 3:24, Tetsuo Handa wrote:
+> On 2019/03/06 19:04, Petr Mladek wrote:
+> I'm planning to allow any shared functions which can be called from e.g.
+> warn_alloc(), out_of_memory(), SysRq-t by allowing such shared functions
+> to accept loglevel argument.
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Calvin Owens is proposing "printk: Introduce per-console loglevel setting"
+which will allow reducing overall sequential call_console_drivers() delay.
 
-> ---
->  include/drm/drm_crtc.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
-> index 85abd3fe9e83..f2b3762636df 100644
-> --- a/include/drm/drm_crtc.h
-> +++ b/include/drm/drm_crtc.h
-> @@ -78,7 +78,7 @@ struct drm_plane_helper_funcs;
->  /**
->   * struct drm_crtc_state - mutable CRTC state
->   *
-> - * Note that the distinction between @enable and @active is rather subtile:
-> + * Note that the distinction between @enable and @active is rather subtle:
->   * Flipping @active while @enable is set without changing anything else may
->   * never return in a failure from the &drm_mode_config_funcs.atomic_check
->   * callback. Userspace assumes that a DPMS On will always succeed. In other
-> -- 
-> 2.19.1
+>>
+>> For this reason, this API is a "no no no" from my side.
+>>
 > 
+> There are two types of printk() data. One is "small/short messages but
+> partial/incomplete line (even if a few bytes) might be helpful" and
+> the other is "large/long messages but partial/incomplete line is hardly
+> helpful". The former uses "sync printk()s" and the latter uses "async
+> printk()s followed by a sync printk()". And this API is powerful for the
+> latter type which are called by for_each_*() pattern (e.g. dump_tasks()).
 
+I am proposing "printk: Introduce "store now but print later" prefix."
+which will allow deferring call_console_drivers() until the caller leaves
+critical sections.
+
+> 
+>>
+>> I am open to bring back discussions about a forced offload when
+>> a single task is blocked in console_unlock() for too long.
+> 
+> This is a matter of adding hints for judging which thread
+> (console_owner or console_waiter) should continue printing.
+
+And the patch shown bottom is an example of
+
+  we could add hints for judging which thread (console_owner or
+  console_waiter) should continue printing
+
+tuning. It is "mostly offload" rather than "forced offload".
+
+>>     + They might improve situation in one workload and make it
+>>       worse in another one.
+> 
+> Avoiding e.g. RCU stall / OOM stall by deferring write to consoles is
+> an improvement. Reducing the side effect of accumulated pending logs
+> is matters of "how we can try to offload to an idle thread (or utilize
+> idle CPUs) for writing to consoles" and "how we can try to ratelimit
+> appropriately".
+> 
+> To me, none of these concerns is a valid reason to keep "store now but
+> print later" prefix away.
+
+In "Re: [PATCH v10 1/2] printk: Make printk() completely async" at
+https://lkml.kernel.org/r/20160404155149.a3e3307def2d1315e2099c63@linux-foundation.org ,
+Andrew Morton said
+
+  The whole idea remains worrisome.
+
+but I couldn't find the reason which still holds true. We already have
+"printk: Console owner and waiter logic cleanup" which allows us to put
+some limit on the number of characters which the printing task will print.
+
+Worrying memory corruption sounds strange. What if memory parity error
+inverted one bit of the address stored in log_buf, or inverted one bit of
+the records stored in log_buf region? There are inevitable cases where
+printk() can't survive memory corruption.
+
+Forcing all messages to be offloaded might be bad. But I think that
+allowing caller specified messages (i.e. "large/long messages but
+partial/incomplete line is hardly helpful" case) to be offloaded
+when possible is fine.
+
+With these patches, apart from the console driver's locking dependency
+problem remains, I think that we can reasonably avoid stalls caused by
+flood of printk() from critical sections.
+
+---
+ kernel/printk/printk.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 81 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 6b7654b..e1591dd 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -47,6 +47,7 @@
+ #include <linux/sched/clock.h>
+ #include <linux/sched/debug.h>
+ #include <linux/sched/task_stack.h>
++#include <linux/kthread.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/sections.h>
+@@ -1616,6 +1617,12 @@ int do_syslog(int type, char __user *buf, int len, int source)
+ static DEFINE_RAW_SPINLOCK(console_owner_lock);
+ static struct task_struct *console_owner;
+ static bool console_waiter;
++static struct task_struct *console_writer;
++
++static void console_writer_work_func(struct irq_work *irq_work)
++{
++	wake_up_process(console_writer);
++}
+ 
+ /**
+  * console_lock_spinning_enable - mark beginning of code where another
+@@ -1703,7 +1710,7 @@ static int console_trylock_spinning(void)
+ 	raw_spin_lock(&console_owner_lock);
+ 	owner = READ_ONCE(console_owner);
+ 	waiter = READ_ONCE(console_waiter);
+-	if (!waiter && owner && owner != current) {
++	if (!waiter && owner && owner != current && owner != console_writer) {
+ 		WRITE_ONCE(console_waiter, true);
+ 		spin = true;
+ 	}
+@@ -1960,6 +1967,33 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 	/* If called from the scheduler, we can not call up(). */
+ 	if (!in_sched && pending_output) {
+ 		/*
++		 * Try to wake up the console printing intercepting kernel
++		 * thread which tries to hand over from process context.
++		 *
++		 * If current thread can call wake_up_process(), we can wake up
++		 * the thread on any CPU which is ready to execute process
++		 * context. Otherwise, we will need to wake up the thread via
++		 * IRQ work. I wish we can wake up the thread from some CPU
++		 * which is ready to flush IRQ works so that this IRQ work can
++		 * wake up the thread as soon as possible...
++		 *
++		 * This attempt will fail if the thread cannot run for some
++		 * reason (e.g. all CPUs are busy executing interrupt handlers
++		 * or high priority threads). But this attempt is allowed to
++		 * remain best-effort, for current thread will try to hand over
++		 * from current context, by finding that
++		 * console_owner != console_writer when this attempt failed,
++		 */
++		if (console_writer && console_owner != console_writer) {
++			static DEFINE_IRQ_WORK(console_writer_work,
++					       console_writer_work_func);
++
++			if (in_task())
++				wake_up_process(console_writer);
++			else
++				irq_work_queue(&console_writer_work);
++		}
++		/*
+ 		 * Disable preemption to avoid being preempted while holding
+ 		 * console_sem which would prevent anyone from printing to
+ 		 * console
+@@ -1981,6 +2015,43 @@ asmlinkage int vprintk_emit(int facility, int level,
+ }
+ EXPORT_SYMBOL(vprintk_emit);
+ 
++static int console_writer_thread(void *unused)
++{
++	unsigned long last_woken_up = jiffies;
++
++	console_writer = current;
++	while (true) {
++		/*
++		 * Since printk() is synchronous, it is possible that a thread
++		 * which called printk() already incremented the console_seq
++		 * and console_seq == log_next_seq became true by the moment
++		 * this kernel thread got woken up.
++		 * Therefore, speculatively keep trying to become the console
++		 * waiter thread for a while, in case a series of printk() is
++		 * called within that period.
++		 */
++		if (console_seq == log_next_seq &&
++		    time_after(jiffies, last_woken_up + HZ)) {
++			schedule_timeout_idle(MAX_SCHEDULE_TIMEOUT);
++			last_woken_up = jiffies;
++		} else {
++			schedule_timeout_idle(1);
++		}
++		preempt_disable();
++		if (console_trylock_spinning())
++			console_unlock();
++		preempt_enable();
++	}
++	return 0;
++}
++
++static int __init console_writer_init(void)
++{
++	kthread_run(console_writer_thread, NULL, "console_writer");
++	return 0;
++}
++subsys_initcall(console_writer_init)
++
+ asmlinkage int vprintk(const char *fmt, va_list args)
+ {
+ 	return vprintk_func(fmt, args);
+@@ -2458,8 +2529,16 @@ void console_unlock(void)
+ 
+ 		printk_safe_exit_irqrestore(flags);
+ 
+-		if (do_cond_resched)
++		if (do_cond_resched) {
++			/*
++			 * Try to wake up the console printing intercepting
++			 * kernel thread if current thread is about to complete
++			 * console_lock()/console_unlock() section.
++			 */
++			if (console_writer)
++				wake_up_process(console_writer);
+ 			cond_resched();
++		}
+ 	}
+ 
+ 	console_locked = 0;
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+1.8.3.1
+
