@@ -2,110 +2,171 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67646C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B5CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5AE217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 08:59:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="UGptGFx0"
+	by mail.kernel.org (Postfix) with ESMTP id ECBC3218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfCOI7G (ORCPT
+        id S1728572AbfCOJDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 04:59:06 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42415 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbfCOI7F (ORCPT
+        Fri, 15 Mar 2019 05:03:06 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:36989 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbfCOJDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 04:59:05 -0400
-Received: by mail-lf1-f67.google.com with SMTP id p1so6257508lfk.9
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 01:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EMNHFuyeYx0aGdLZZBXVol/A9ho56AwJaCkjKbZhx3Y=;
-        b=UGptGFx0OUPqvWR71K9CwB1T4/968zWKNpSeekoM2LPhVVyV02r8N2zGSagxBNZpNn
-         AzohkpfDvaHxe1liGg67s6jkNZtAozl8UaZwh1UbXfilhBmfkRyD5M38hWAIjsph9Pvh
-         iXi3UsWamCM6x0i6xMbQggASUEsP7t7HR+fPd2g+7FRpvJwJy+qQsNCLqwhAn7aHFvGv
-         GYrEGkp6m4FOZgiaptsbXBe+sQRJZ6iKudEn8UzYIGlS0ayhOX9omX2hhqqOxGtKx8zP
-         Uc6Z3YOP2YcjH5pim7gOdJ8CEP0SR+Gr2gF0VR7rcVBUL5Jyi6DDd6LMkNQT5hgRRxFo
-         JVpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EMNHFuyeYx0aGdLZZBXVol/A9ho56AwJaCkjKbZhx3Y=;
-        b=nglMRE9yQtDThEb0iJdaY+vaE8GzuxOqx2qQ0ThJ/GrYtbljcgfz/uZT1ElIvUCWhD
-         5TIWpuU8QCNc+UDyrpbAzLACVusCaBSjmcfAZ/oQxol1+hmp5/0Eln5Xjh811cckxv+3
-         rW/BSpjND7cZRzyrLsVpjiE22aR3Le0BJUZZdWBUqRpozwC1AvuNbIqgQpYkWyoe3Ly1
-         04TwD/6GplPydPEJPNLUyMxn/grcK1b8WZRKU6VgcRsB5uHd3qHX7EH70uEMSevMhoMU
-         EwELQesjyryPbCpkVQ0laODiopTQWYxv3AOGF/icboGizCZSQMxP2cq8/9RAOQlv+1ge
-         D+gQ==
-X-Gm-Message-State: APjAAAXuB+sAcelVhDRWKLPRoGbksTHjF4Qr1jFPIFMYVDDGB+jMDoKE
-        y95JDKAXVjlOgexCanC5jST7vGhfVP4=
-X-Google-Smtp-Source: APXvYqz/Gi3sqP1+RWgAjs4/KQiY6DKXMAZpOrp0vlYfToFG1DPAvnmBb1XqSlxuzmU47Ker29sNMg==
-X-Received: by 2002:a19:598f:: with SMTP id n137mr1587576lfb.140.1552640343148;
-        Fri, 15 Mar 2019 01:59:03 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.80.66])
-        by smtp.gmail.com with ESMTPSA id d5sm310297lfi.95.2019.03.15.01.59.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 01:59:02 -0700 (PDT)
-Subject: Re: [PATCH] net: tipc: fix a missing check of nla_nest_start
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Jon Maloy <jon.maloy@ericsson.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <20190315060740.13920-1-kjlu@umn.edu>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <1d97622a-6404-6600-c06b-9450b225742b@cogentembedded.com>
-Date:   Fri, 15 Mar 2019 11:58:50 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Fri, 15 Mar 2019 05:03:06 -0400
+Received: from bootlin.com (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 3046420001C;
+        Fri, 15 Mar 2019 09:03:02 +0000 (UTC)
+Date:   Fri, 15 Mar 2019 10:03:01 +0100
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Willem de Bruijn <willemb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [RFC PATCH net] packets: Always register packet sk in the same
+ order
+Message-ID: <20190315100301.249cb671@bootlin.com>
+In-Reply-To: <CAF=yD-+e3f1VED3+6J7rQYac9A3w=CDQhrLq+eRLA88+vLOzDA@mail.gmail.com>
+References: <20190314122450.5242-1-maxime.chevallier@bootlin.com>
+        <CAF=yD-+e3f1VED3+6J7rQYac9A3w=CDQhrLq+eRLA88+vLOzDA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190315060740.13920-1-kjlu@umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi Willem,
 
-On 15.03.2019 9:07, Kangjie Lu wrote:
+On Thu, 14 Mar 2019 11:24:54 -0400
+Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
 
-> nla_nest_start could fail and requires a check. The fix returns
-> -EMSGSIZE if it fails.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->   net/tipc/group.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/tipc/group.c b/net/tipc/group.c
-> index 06fee142f09f..117867e480ba 100644
-> --- a/net/tipc/group.c
-> +++ b/net/tipc/group.c
-> @@ -918,6 +918,8 @@ void tipc_group_member_evt(struct tipc_group *grp,
->   int tipc_group_fill_sock_diag(struct tipc_group *grp, struct sk_buff *skb)
->   {
->   	struct nlattr *group = nla_nest_start(skb, TIPC_NLA_SOCK_GROUP);
+>On Thu, Mar 14, 2019 at 8:27 AM Maxime Chevallier
+><maxime.chevallier@bootlin.com> wrote:
+>>
+>> When using fanouts with AF_PACKET, the demux functions such as
+>> fanout_demux_cpu will return an index in the fanout socket array, which
+>> corresponds to the selected socket.
+>>
+>> The ordering of this array depends on the order the sockets were added
+>> to a given fanout group, so for FANOUT_CPU this means sockets are bound
+>> to cpus in the order they are configured, which is OK.
+>>
+>> However, when stopping then restarting the interface these sockets are
+>> bound to, the sockets are reassigned to the fanout group in the reverse
+>> order, due to the fact that they were inserted at the head of the
+>> interface's AF_PACKET socket list.
+>>
+>> This means that traffic that was directed to the first socket in the
+>> fanout group is now directed to the last one after an interface restart.
+>>
+>> In the case of FANOUT_CPU, traffic from CPU0 will be directed to the
+>> socket that used to receive traffic from the last CPU after an interface
+>> restart.  
+>
+>The above assumes that sockets are added to a fanout group in the
+>order in which they are created. That is a reasonable assumption,
+>though not strictly required. This can be worked around in userspace
+>by inserting in the inverse order. Still, good to fix.
+>
+>It does change the order of output of proc and diag, which is an
+>unfortunately side effect. But insertion order is less surprising and
+>I don't see a simple option to only traverse the sklist in inverse
+>order on packet_notifier NETDEV_UP (which would avoid this).
 
-    Please keep the empty line after the declarations.
+Thanks for the review ! Clearly the solution proposed by this patch has
+side-effects, and as you said I don't see an easy way to do that in
+another manner.
 
-> +	if (!group)
-> +		return -EMSGSIZE;
->   
->   	if (nla_put_u32(skb, TIPC_NLA_SOCK_GROUP_ID,
->   			grp->type) ||
+>> This commit introduces a helper to add a socket at the tail of a list,
+>> then uses it to register AF_PACKET sockets.
+>>
+>> Fixes: 808f5114a920 ("packet: convert socket list to RCU (v3)")  
+>
+>Before this patch, insertion with sk_add_node is also at the head.
+>This does not seem like the right commit? This behavior has probably
+>existed as long as fanout.
 
-MBR, Sergei
+Yes I agree, I'm not even sure if this patch should be targeted to -net
+or -net-next. If this is OK after reviews, I can resend it without RFC
+and without this misleading Fixes tag.
+
+Thanks,
+
+Maxime
+
+>
+>> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+>> ---
+>>
+>> Hi All,
+>>
+>> I stumbled upon this issue when using FANOUT_CPU and came-up with this
+>> patch, but I'm not sure that (a) this is really a bug (although this
+>> behaviour is at least misleading) and (b) this is the correct fix,
+>> so any input on this is welcome.
+>>
+>> Also David, I'm not sure about the Fixes tag, from what I see, this
+>> behaviour has always been there.
+>>
+>> Thanks,
+>>
+>> Maxime
+>>
+>>  include/net/sock.h     | 6 ++++++
+>>  net/packet/af_packet.c | 2 +-
+>>  2 files changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/net/sock.h b/include/net/sock.h
+>> index 328cb7cb7b0b..8de5ee258b93 100644
+>> --- a/include/net/sock.h
+>> +++ b/include/net/sock.h
+>> @@ -710,6 +710,12 @@ static inline void sk_add_node_rcu(struct sock *sk, struct hlist_head *list)
+>>                 hlist_add_head_rcu(&sk->sk_node, list);
+>>  }
+>>
+>> +static inline void sk_add_node_tail_rcu(struct sock *sk, struct hlist_head *list)
+>> +{
+>> +       sock_hold(sk);
+>> +       hlist_add_tail_rcu(&sk->sk_node, list);
+>> +}
+>> +
+>>  static inline void __sk_nulls_add_node_rcu(struct sock *sk, struct hlist_nulls_head *list)
+>>  {
+>>         hlist_nulls_add_head_rcu(&sk->sk_nulls_node, list);
+>> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+>> index 8376bc1c1508..8754d7c93b84 100644
+>> --- a/net/packet/af_packet.c
+>> +++ b/net/packet/af_packet.c
+>> @@ -3243,7 +3243,7 @@ static int packet_create(struct net *net, struct socket *sock, int protocol,
+>>         }
+>>
+>>         mutex_lock(&net->packet.sklist_lock);
+>> -       sk_add_node_rcu(sk, &net->packet.sklist);
+>> +       sk_add_node_tail_rcu(sk, &net->packet.sklist);
+>>         mutex_unlock(&net->packet.sklist_lock);
+>>
+>>         preempt_disable();
+>> --
+>> 2.20.1
+>>  
+
+
+
+-- 
+Maxime Chevallier, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
