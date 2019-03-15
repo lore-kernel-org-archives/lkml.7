@@ -2,869 +2,234 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537CCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C62C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F152186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:11:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVP4+LOY"
+	by mail.kernel.org (Postfix) with ESMTP id 466662186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfCOKL0 (ORCPT
+        id S1728828AbfCOKLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 06:11:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41346 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbfCOKLZ (ORCPT
+        Fri, 15 Mar 2019 06:11:45 -0400
+Received: from mail.netline.ch ([148.251.143.178]:53303 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbfCOKLp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 06:11:25 -0400
-Received: by mail-pf1-f194.google.com with SMTP id d25so5997298pfn.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 03:11:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rIzisLLE4ZfeDq5xnPM58Dcf6flCGRSLuG8h9ZfPOtM=;
-        b=WVP4+LOYxnIPrRo6Z/hj5/p+vkTndecOctYH40iwEoP6txXkU+/vgc0tFd0EjVwT38
-         72Iv0rQxDjQaC4hzE9BqY67yrW0qjjmi/DL4MytwGssOhcwX3ymSolIxplkM+mimWRQQ
-         382gM2vHfD4j0K0KLp0FpTc+CF1wSgZdUt+xdP0W5dmgnb3flyFpBDaNcCYXa5Hw4H03
-         3BO37DaGCNb+w6/S9BLuMWho+OhijsWslNrSj0O03/0LoulanXWL8eQlGGfscnHtv5++
-         XZ5deX032VYSrQRe4Pz4hYAve5ft+UqmjGZ3sB2oM9/+NxE6U5uJ7CAgMkCj5TqGtvwa
-         85GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rIzisLLE4ZfeDq5xnPM58Dcf6flCGRSLuG8h9ZfPOtM=;
-        b=UVLlXb3A7IQe9i5fdFxj8vEDzaxYpJ46s9MRt2jLf8fGX6t6nlfKQKh9p2ktChaI7/
-         lPO0lI5m7+pqqXLwnI+2W3+zhL8qO8Qhh4jloS1PTbkKQzZ55b5S72TD+/7OxsXFSA+A
-         uxXWk03DgHYgZUeVYDD9MxekeqL0Wd4LP3yP3vDJWaz7Cijn5WdCsP48+TYWF5TAgumh
-         qMXdOVlPgVdtbqoIKj93XXgO6OGIGZuRgHyL5MoGl5RDSdGxjLEGMwB6hgQgoJm5QWDm
-         nJsbY01o0VQGMB5J5i+uvJugM7UrIUx5RyWlVsMaA7cS3Fee/gfYrkbcIGMi9tO+VSuU
-         qlEw==
-X-Gm-Message-State: APjAAAUCp/jXwHluKUhGn+xYdB9wHUMlvoxIJvF1VRWydWbj7TKUSaUt
-        N1sS+PkXFP4zo/rmn5ABPvtBnunNLv0=
-X-Google-Smtp-Source: APXvYqzpVcUUDfH/eQq/vG/PkOEYDY06KFmQ1+vOUz+4Zu+j2Q+yDDETNQLxKCo56pyi0fjzv0/Bvg==
-X-Received: by 2002:a65:6483:: with SMTP id e3mr2571907pgv.273.1552644684344;
-        Fri, 15 Mar 2019 03:11:24 -0700 (PDT)
-Received: from test-System-Product-Name.sunix.com.tw (114-36-225-238.dynamic-ip.hinet.net. [114.36.225.238])
-        by smtp.gmail.com with ESMTPSA id i3sm3724548pfo.149.2019.03.15.03.11.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 03:11:23 -0700 (PDT)
-From:   Morris Ku <saumah@gmail.com>
-To:     lkml@metux.net
-Cc:     gregkh@linuxfoundation.org, morris_ku@sunix.com,
-        linux-kernel@vger.kernel.org, arnd@arndb.de,
-        Morris Ku <saumah@gmail.com>
-Subject: [PATCH] Respond:add support for SUNIX Multi-I/O board
-Date:   Fri, 15 Mar 2019 18:10:59 +0800
-Message-Id: <20190315101059.25096-1-saumah@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 15 Mar 2019 06:11:45 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id 391BE2A6054;
+        Fri, 15 Mar 2019 11:11:41 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id 8JFjP8d7FJys; Fri, 15 Mar 2019 11:11:40 +0100 (CET)
+Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 3874E2A6053;
+        Fri, 15 Mar 2019 11:11:40 +0100 (CET)
+Received: from [::1]
+        by thor with esmtp (Exim 4.92)
+        (envelope-from <michel@daenzer.net>)
+        id 1h4joO-0007MC-GK; Fri, 15 Mar 2019 11:11:36 +0100
+Subject: Re: [PATCH v2 1/5] drm/rockchip: fix fb references in async update
+To:     Helen Koike <helen.koike@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     =?UTF-8?Q?St=c3=a9phane_Marchesin?= <marcheu@google.com>,
+        Sean Paul <seanpaul@google.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        kernel@collabora.com, nicholas.kazlauskas@amd.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190312022204.2775-1-helen.koike@collabora.com>
+ <20190312022204.2775-2-helen.koike@collabora.com>
+ <20190312073438.05ad8173@collabora.com>
+ <f888a2d0-c6b1-8995-7254-ba2923dd22f9@collabora.com>
+ <20190312165243.5b771e4a@collabora.com>
+ <CAAFQd5CCEDaxLbw0E9NJJ-tEcHd8-Lidvcvt8qfPAnKu7uuj8w@mail.gmail.com>
+ <05750143-708b-b84e-af67-82ec6815bd89@daenzer.net>
+ <ed44e1f4-07da-b1cb-b5cb-d34d29758502@collabora.com>
+ <d91d5582-3ccf-2249-21ee-9ccf115096b2@daenzer.net>
+ <dd7de9ff-0ac8-80fd-b88b-250bdf988921@collabora.com>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
+ mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
+ LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
+ 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
+ /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
+ WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
+ Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
+ V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
+ AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
+ ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
+ AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
+ jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
+ qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
+ bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
+ CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
+ GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
+ YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
+ Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
+Message-ID: <61b8420e-9b63-b67f-e9a8-fb8a0cb7d219@daenzer.net>
+Date:   Fri, 15 Mar 2019 11:11:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <dd7de9ff-0ac8-80fd-b88b-250bdf988921@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enrico,
-Thanks for review, my replies are inline:
+On 2019-03-14 6:51 p.m., Helen Koike wrote:
+> On 3/14/19 6:15 AM, Michel Dänzer wrote:
+>> On 2019-03-13 7:08 p.m., Helen Koike wrote:
+>>> On 3/13/19 6:58 AM, Michel Dänzer wrote:
+>>>> On 2019-03-13 4:42 a.m., Tomasz Figa wrote:
+>>>>> On Wed, Mar 13, 2019 at 12:52 AM Boris Brezillon
+>>>>> <boris.brezillon@collabora.com> wrote:
+>>>>>> On Tue, 12 Mar 2019 12:34:45 -0300
+>>>>>> Helen Koike <helen.koike@collabora.com> wrote:
+>>>>>>> On 3/12/19 3:34 AM, Boris Brezillon wrote:
+>>>>>>>> On Mon, 11 Mar 2019 23:21:59 -0300
+>>>>>>>> Helen Koike <helen.koike@collabora.com> wrote:
+>>>>>>>>
+>>>>>>>>> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+>>>>>>>>> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+>>>>>>>>> @@ -912,30 +912,31 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
+>>>>>>>>>                                      struct drm_plane_state *new_state)
+>>>>>>>>>  {
+>>>>>>>>>    struct vop *vop = to_vop(plane->state->crtc);
+>>>>>>>>> -  struct drm_plane_state *plane_state;
+>>>>>>>>> +  struct drm_framebuffer *old_fb = plane->state->fb;
+>>>>>>>>>
+>>>>>>>>> -  plane_state = plane->funcs->atomic_duplicate_state(plane);
+>>>>>>>>> -  plane_state->crtc_x = new_state->crtc_x;
+>>>>>>>>> -  plane_state->crtc_y = new_state->crtc_y;
+>>>>>>>>> -  plane_state->crtc_h = new_state->crtc_h;
+>>>>>>>>> -  plane_state->crtc_w = new_state->crtc_w;
+>>>>>>>>> -  plane_state->src_x = new_state->src_x;
+>>>>>>>>> -  plane_state->src_y = new_state->src_y;
+>>>>>>>>> -  plane_state->src_h = new_state->src_h;
+>>>>>>>>> -  plane_state->src_w = new_state->src_w;
+>>>>>>>>> -
+>>>>>>>>> -  if (plane_state->fb != new_state->fb)
+>>>>>>>>> -          drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
+>>>>>>>>> -
+>>>>>>>>> -  swap(plane_state, plane->state);
+>>>>>>>>> -
+>>>>>>>>> -  if (plane->state->fb && plane->state->fb != new_state->fb) {
+>>>>>>>>> +  /*
+>>>>>>>>> +   * A scanout can still be occurring, so we can't drop the reference to
+>>>>>>>>> +   * the old framebuffer. To solve this we get a reference to old_fb and
+>>>>>>>>> +   * set a worker to release it later.
+>>>>>>>>
+>>>>>>>> Hm, doesn't look like an async update to me if we have to wait for the
+>>>>>>>> next VBLANK to happen to get the new content on the screen. Maybe we
+>>>>>>>> should reject async updates when old_fb != new_fb in the rk
+>>>>>>>> ->async_check() hook.
+>>>>>>>
+>>>>>>> Unless I am misunderstanding this, we don't wait here, we just grab a
+>>>>>>> reference to the fb in case it is being still used by the hw, so it
+>>>>>>> doesn't get released prematurely.
+>>>>>>
+>>>>>> I was just reacting to the comment that says the new FB should stay
+>>>>>> around until the next VBLANK event happens. If the FB must stay around
+>>>>>> that probably means the HW is still using, which made me wonder if this
+>>>>>> HW actually supports async update (where async means "update now and
+>>>>>> don't care about about tearing"). Or maybe it takes some time to switch
+>>>>>> to the new FB and waiting for the next VBLANK to release the old FB was
+>>>>>> an easy solution to not wait for the flip to actually happen in
+>>>>>> ->async_update() (which is kind of a combination of async+non-blocking).
+>>>>>
+>>>>> The hardware switches framebuffers on vblank, so whatever framebuffer
+>>>>> is currently being scanned out from needs to stay there until the
+>>>>> hardware switches to the new one in shadow registers. If that doesn't
+>>>>> happen, you get IOMMU faults and the display controller stops working
+>>>>> since we don't have any fault handling currently, just printing a
+>>>>> message.
+>>>>
+>>>> Sounds like your hardware doesn't actually support async flips. It's
+>>>> probably better for the driver not to pretend otherwise.
+>>>
+>>> I think wee need to clarify the meaning of the async_update callback
+>>> (and we should clarify it in the docs).
+>>>
+>>> The way I understand what the async_update callback should do is: don't
+>>> block (i.e. don't wait for the next vblank),
+>>
+>> Note that those are two separate things. "Async flips" are about "don't
+>> wait for vblank", not about "don't block".
+>>
+>>
+>>> and update the hw state at some point with the latest state from the
+>>> last call to async_update.
+>>>
+>>> Which means that: any driver can implement the async_update callback,
+>>> independently if it supports changing its state right away or not.
+>>> If hw supports, async_update can change the hw state right away, if not,
+>>> then changes will be applied in the next vblank (it can even amend the
+>>> pending commit if there is one).
+>>> With this, we can remove all the legacy cursor code to use the
+>>> async_update callback, since async_update can be called 100 times before
+>>> the next vblank, and the latest state will be set to the hw without
+>>> waiting 100 vblanks.
+>>>
+>>> Please, let me know if this is your understanding as well. If not, then
+>>> we need to remodel things.
+>>
+>> While this may make sense for cursor updates, I don't think it does for
+>> async flips. If the flip only actually takes effect during the next
+>> vblank, it doesn't really fit the definition and userspace expectation
+>> of an async flip. It's better to clearly communicate to userspace that
+>> the hardware cannot do async flips, than to pretend it can and fake
+>> them. Userspace has to deal with this anyway, since async flips weren't
+>> always supported in general.
+> 
+> What do you think if we separate two concepts here:
+> 
+> - amend mode: works like cursor updates, i.e, update the hw state at
+> some point with the latest state from the last call to async_update. No
+> special hardware support is required.
+> 
+> - async update: update hw state immediately. This depends if the hw
+> supports it or not.
+> 
+> Every async update is an amend, but the opposite is not necessarily true.
+> 
+> What do you think if we rename the current async_update to amend_update,
+> and we add a parameter "force_async" to it? (or maybe
+> force_immediate_update?)
+> Then amend_check with force_async=1 would fail if the hardware doesn't
+> support it (we could also add flags in the capabilities to inform
+> userspace the expected behaviour of things and if the hw supports
+> force_sync).
+> 
+> Like this, we can implement the cursors using the amend_update (which is
+> now called async_update), and async_flips with amend_update with
+> force_async=1.
 
-Signed-off-by: Morris Ku <saumah@gmail.com>
----
+Might force_async make sense for cursor updates as well? I thought some
+hardware supported HW cursor updates outside of vblank, but I'm not sure.
 
-+From 5b1c4c8f7d91661a27c88b980c42b768e4cb7606 Mon Sep 17 00:00:00 2001
-+From: Morris Ku <saumah@gmail.com>
-+Date: Tue, 26 Feb 2019 17:11:48 +0800
-+Subject: [PATCH 6/6] add support for SUNIX Multi-I/O board
-+
-+
-+<snip>
-+
-+> diff --git a/char/snx/snx_main.c b/char/snx/snx_main.c
-+
-+if it's a serial card, shouldn't it go to drivers/tty/serial/snx/ ?
-+
-i will move to drivers/mfd (multi function devices)
-+
-+
-+<snip>
-+
-+> +char
-+[SNX_SER_PORT_MAX_UART][10] = {
-+> +     {"UNKNOWN"},
-+> +     {"SUN1889"},
-+> +     {"SUN1699"},
-+> +     {"SUNMATX"},
-+> +     {"SUN1999"}
-+> +};
-+> +
-+> +char snx_par_ic_table[SNX_PAR_PORT_MAX_UART][10] = {
-+> +     {"UNKNOWN"},
-+> +     {"SUN1888"},
-+> +     {"SUN1689"},
-+> +     {"SUNMATX"},
-+> +     {"SUN1999"}
-+> +};
-+> +
-+> +char snx_port_remap[2][10] = {
-+> +     {"NON-REMAP"},
-+> +     {"REMAP"}
-+> +};
-+
-+can't these be const static ?
-+
-i will fix it.
-+
-+can we have a bit more consistent formatting (eg. all those comments
-+w/ same indention) ?
-+
-i prefer to keep it in current format.
-+
-+> +     SUN1999_BOARD_5008A,
-+> +
-+
-+<snip>
-+
-+> +static  struct pci_device_id sunix_pci_board_id[] = {
-+> +// golden-serial
-+
-+can't this be const ?
-+
-i will fix it.
-+
-+(maybe even __initconst)
-+I'd really prefer separate port types - that go into separate
-+subsystems, in separate modules (those can share code in a common
-+module, if desired)
-+
-+Oh, is there really a hard restriction on the max number of boards ?
-+
-+driver support maximum 4 boards can be installed incombination
-+(up to 32 serial port and 2 parallel port)
-+
-+And do we really need a global list of them ? (instead of just having
-+all per-board / per-port data in a per-board / per-port driver instance)
-+
-+
-i prefer to keep current format.
-+
-+
-+> +static int snx_ser_port_total_cnt;
-+> +static int snx_par_port_total_cnt;
-+> +
-+> +int snx_board_count;
-+> +
-+> +static struct snx_ser_driver sunix_ser_reg = {
-+> +     .dev_name = "ttySNX",
-+> +     .major = 0,
-+> +     .minor = 0,
-+> +     .nr = (SNX_SER_TOTAL_MAX + 1),
-+> +};
-+
-+can't this be const ?
-+
-i prefer keep it in current format.
-+
-+> +static irqreturn_t sunix_interrupt(int irq, void *dev_id)
-+> +{
-+> +     struct sunix_ser_port *sp = NULL;
-+> +     struct sunix_par_port *pp = NULL;
-+> +     struct sunix_board *sb = NULL;
-+> +     int i;
-+
-+> +     int status = 0;
-+> +
-+> +     int handled = IRQ_NONE;
-+> +
-+> +     for (i = 0; i < SNX_BOARDS_MAX; i++) {
-+> +
-+> +             if (dev_id == &(sunix_board_table[i])) {
-+> +                     sb = dev_id;
-+> +                     break;
-+> +             }
-+> +     }
-+
-+maybe put this index into the board data, so the loop on the global
-+array isn't needed ?
-+
-i prefer keep it in current format.
-+
-+<snip>
-+
-+> +     if ((sb->ser_port > 0) && (sb->ser_isr != NULL)) {
-+> +             sp = &sunix_ser_table[sb->ser_port_index];
-+
-+maybe put this pointer struct sunix_board so the lookup in the
-+global array isn't necessary ?
-+
-i prefer keep it in current format.
-+
-+<snip>
-+
-+> +     if ((sb->par_port > 0) && (sb->par_isr != NULL)) {
-+> +             pp = &sunix_par_table[sb->par_port_index];
-+> +
-+> +             if (!pp)
-+> +                     status = 1;
-+> +
-+> +             status = sb->par_isr(sb, pp);
-+> +     }
-+> +
-+> +     if (status != 0)
-+> +             return handled;
-+> +
-+> +     handled = IRQ_HANDLED;
-+> +     return handled;
-+> +}
-+
-+btw: is there only one irq per board or one per port ?
-+
-only one irq per board.
-+
-+> +static int snx_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-+> +{
-+> +     return 0;
-+
-+shouldn't probe check whether the device is actually there and then do
-+the initialization ?
-+
-i will fix it.
-+
-+<snip>
-+
-+> +static int snx_resume_port_termios(struct snx_ser_info *info)
-+> +{
-+> +     struct snx_ser_state *state = NULL;
-+> +     struct tty_struct *tty = info->tty;
-+> +
-+> +     state = tty->driver_data;
-+> +     snx_set_port_termios(state);
-+> +
-+> +     return 0;
-+> +}
-+> +
-+> +
-+
-+do we need multiple newlines here ?
-+
-i will fix it.
-+
-+<snip>
-+
-+> +static int snx_resume_one(struct pci_dev *pdev)
-+> +{
-+> +     struct sunix_board *sb = pci_get_drvdata(pdev);
-+> +     struct sunix_ser_port *sp = NULL;
-+> +     int j;
-+> +
-+> +     if (sb == NULL)
-+> +             return 0;
-+> +
-+> +     for (j = 0; j < sb->ser_port; j++) {
-+> +             sp = &sunix_ser_table[j];
-+
-+can't the pointers to the serial ports be in struct sunix_board instead
-+of an global array ?
-+
-+if it already is a global, why not statically initialized ?
-+Why not doing this in snx_pci_probe() on per-board basis, and let device
-+registration be done by pci subsystem ?
-+
-i prefer keep it in current format.
-+
-+> +     // search sun1999 muti I/O board
-+> +     pdev = NULL;
-+> +     tablecnt = 0;
-+> +     sub_device_id = 0;
-+> +     status = 0;
-+> +     device_part_number = 0;
-+> +     bar3_base_add = 0;
-+> +     bar3_Byte5 = 0;
-+> +     bar3_Byte6 = 0;
-+> +     bar3_Byte7 = 0;
-+> +     oem_id = 0;
-+> +     uart_type = 0;
-+> +     gpio_type = 0;
-+> +     gpio_card_type = 0;
-+> +     gpio_ch_cnt = 0;
-+
-+completely different boards handled by one big driver ?
-+why not splitting it up into multiple drivers ?
-+
-SUNIX has many differing cards,serail,parallel and
-multi-i/o(serial + parellel), therefore, we combaine to one driver.
-+
-+<snip>
-+
-+> +             if ((gpio_ch_cnt == 0x00) && (gpio_card_type == 0x01))
-+> +                     gpio_ch_cnt = 6;
-+> +             else if ((gpio_ch_cnt == 0x00) && (gpio_card_type == 0x02))
-+> +                     gpio_ch_cnt = 8;
-+> +             else if (gpio_ch_cnt == 0x01)
-+> +                     gpio_ch_cnt = 16;
-+> +             else if (gpio_ch_cnt == 0x02)
-+> +                     gpio_ch_cnt = 32;
-+> +
-+
-+gpio devices have their own subsystem -> therefore: write a separate
-+gpio driver for that.
-+
-ioctl functions support for SUNIX specific serial,parellel and cash drawer
-interface.
-+
-+<snip>
-+why that limitation ? why does this have to be a global array at all ?
-+
-driver support maximum 4 boards can be installed incombination
-(up to 32 serial port and 2 parallel port)
-+
-+> +static int sunix_assign_resource(void)
-+> +{
-+> +     struct sunix_board *sb = NULL;
-+> +     struct sunix_ser_port *sp = NULL;
-+> +     struct sunix_par_port *pp = NULL;
-+> +
-+> +     int status = 0;
-+> +     int i;
-+> +     int j;
-+> +     int k;
-+> +     int ser_n;
-+> +     int ser_port_index = 0;
-+> +
-+> +     memset(sunix_ser_table, 0, (SNX_SER_TOTAL_MAX + 1) *
-+> +     sizeof(struct sunix_ser_port));
-+> +
-+> +     memset(sunix_par_table, 0, (SNX_PAR_TOTAL_MAX) *
-+> +     sizeof(struct sunix_par_port));
-+
-+why this w/ global variables, instead of on per-device basis on device-
-+private data ?
-+
-i prefer keep it in current format.
-+
-+<snip>
-+
-+> +static int sunix_ser_port_table_init(void)
-+> +{
-+
-+same here.
-+
-+<snip>
-+
-+> +static int sunix_par_port_table_init(void)
-+> +{
-+
-+same here
-+
-+> +int sunix_register_irq(void)
-+> +{
-+
-+same here.
-+
-+<snip>
-+why not doing those initializations on per-device basis, in the
-+corresponding probe() function ?
-+use devm_*() functions, which automatically releases resource when a
-+device is deleted, so explicit release isn't needed anymore.
-+
-i will fix it.
-+
-+> +static void __exit snx_exit(void)
-+> +{
-+> +     if (snx_par_port_total_cnt > 0) {
-+> +             sunix_par_lp_exit();
-+> +             sunix_par_ppdev_exit();
-+> +             sunix_par_parport_exit();
-+> +     }
-+
-+Let the cleanup be done by the individual driver's release functions,
-+and down forget to set .owner correctly - that way, the kernel won't
-+even allow unloading the module, as long as it's in use. then, you'd
-+probably don't need much more than just removing unregistering the
-+drivers here.
-+
-i prefer keep it in current format.
-+
-+> diff --git a/char/snx/snx_serial.c b/char/snx/snx_serial.c
-+> new file mode 100644
-+> index 00000000..fdac4c90
-+> --- /dev/null
-+> +++ b/char/snx/snx_serial.c
-+> @@ -0,0 +1,4263 @@
-+> +// SPDX-License-Identifier: GPL-2.0
-+> +#include "snx_common.h"
-+> +#include "driver_extd.h"
-+> +
-+> +#define SNX_ioctl_DBG        0
-+
-+what exactly is that ioctl for ?
-+or more to the point: why are you introducing a driver specific iotctl ?
-+
-i will drop it.
-+
-+> +#define      EEPROM_ACCESS_DELAY_COUNT                       100000
-+> +
-+> +static DEFINE_SEMAPHORE(ser_port_sem);
-+> +
-+> +#define SNX_HIGH_BITS_OFFSET ((sizeof(long)-sizeof(int))*8)
-+> +#define sunix_ser_users(state) \
-+> +((state)->count + ((state)->info ? (state)->info->blocked_open : 0))
-+> +
-+> +static struct tty_port snx_service_port;
-+
-+why has this to be global, instead of in per-device private data ?
-+
-I am not sure what you mean ?
-+
-+<snip>
-+
-+> +static _INLINE_ void snx_ser_handle_cts_change(
-+> +     struct snx_ser_port *, unsigned int);
-+
-+Where's this strange "_INLINE_" coming from ?
-+
-i will fix it.
-+
-+<snip>
-+
-+> +//extern void                snx_ser_change_speed(
-+> +     //struct snx_ser_state *state, struct SNXTERMIOS *old_termios);
-+
-+please no dead/commented-out code.
-+
-i will drop it.
-+
-+> +//extern int sunix_ser_interrupt(
-+> +     //struct sunix_board *, struct sunix_ser_port *first_sp);
-+
-+same here
-+
-i will drop it.
-+
-+> +//extern int      sunix_ser_register_ports(struct snx_ser_driver *drv);
-+> +//extern void     sunix_ser_unregister_ports(struct snx_ser_driver *drv);
-+> +//extern int      sunix_ser_register_driver(struct snx_ser_driver *drv);
-+> +//extern void     sunix_ser_unregister_driver(struct snx_ser_driver *drv);
-+
-+same here
-+
-i will drop it.
-+
-+> +static unsigned char READ_INTERRUPT_VECTOR_BYTE(struct sunix_ser_port *sp)
-+
-+i'd recommend no caps in function names.
-+
-i will fix it.
-+
-+> +             if (var == 0x04) {
-+> +                     vet4 = inb(local_vector + 0xb0);
-+> +                     vet4 <<= 12;
-+> +             }
-+> +
-+> +             data = (vet1 | vet2 | vet3 | vet4);
-+> +
-+> +             return data;
-+> +     }
-+> +     return 0;
-+> +}
-+> +
-+> +
-+> +
-+
-+remove excess newlines
-+
-i will fix it.
-+
-+<snip>
-+
-+> +static int EEPROMWriteData(int targetConfigAddress, int address, int data)
-+
-+why do you use int instead of void* for addresses ?
-+oh, and shouldn't it be __iomem ?
-+
-+targetConfigAddress for PCI (bar)base address register.
-+
-+<snip>
-+
-+> +             Error = inb(targetConfigAddress + 0x08) & 0x04;
-+
-+<snip>
-+
-+> +static void snx_ser_start(struct tty_struct *tty)
-+> +{
-+> +     int line = SNX_SER_DEVNUM(tty);
-+> +
-+> +     if (line >= SNX_SER_TOTAL_MAX)
-+> +             return;
-+> +
-+> +     //spin_lock_irqsave(&port->lock, flags);
-+> +     __snx_ser_start(tty);
-+> +     //spin_unlock_irqrestore(&port->lock, flags);
-+
-+why are the spinlock calls commented out ?
-+
-i wiil fix it.
-+
-+<nsip>
-+
-+> +     tasklet_kill(&info->tlet);
-+
-+what exactly is the tasklet needed for ?
-+
-i will fix it.
-+
-+> +     if (!capable(CAP_SYS_ADMIN)) {
-+> +             retval = -EPERM;
-+
-+why this explicit check for CAP_SYS_ADMIN ?
-+
-check users with admin rights
-+
-+> +             if (change_irq ||
-+
-+indention mismatch.
-+
-i will fix it.
-+
-+> +                     change_port ||
-+
-+why is userland allowed to change irq, port, etc, if that's probed
-+from pci anyways ?
-+
-+
-Since changing the 'type' of the port changes its resource
-allocations, we should treat type changes the same as
-IO port changes.
-+
-+>
-+
-+                    (new_serial.baud_base != port->uartclk / 16) ||
-+> +                     (close_delay != state->close_delay) ||
-+> +                     (closing_wait != state->closing_wait) ||
-+> +                     (new_serial.xmit_fifo_size != port->fifosize) ||
-+> +                     (((new_flags ^ old_flags) & ~SNX_UPF_USR_MASK) != 0)) {
-+> +                     goto exit;
-+> +             }
-+> +
-+> +             port->flags = ((port->flags & ~SNX_UPF_USR_MASK) |
-+> +                     (new_flags & SNX_UPF_USR_MASK));
-+> +             port->custom_divisor = new_serial.custom_divisor;
-+> +             goto check_and_exit;
-+> +     }
-+
-+<snip>
-+
-+> +static int snx_ser_ioctl(struct tty_struct *tty,
-+> +unsigned int cmd, unsigned long arg)
-+> +{
-+<snip>
-+> +     case TIOCSSERIAL:
-+> +     {
-+> +             if (line < SNX_SER_TOTAL_MAX) {
-+> +                     state->port->setserial_flag = SNX_SER_BAUD_SETSERIAL;
-+> +                     ret = snx_ser_set_info(state,
-+> +                             (struct serial_struct *)arg);
-+> +             }
-+> +             break;
-+> +     }
-+> +
-+> +
-+> +     case TCSETS:
-+> +     {
-+> +             if (line < SNX_SER_TOTAL_MAX) {
-+> +                     state->port->flags &= ~(SNX_UPF_SPD_HI |
-+> +                             SNX_UPF_SPD_VHI |
-+> +                             SNX_UPF_SPD_SHI |
-+> +                             SNX_UPF_SPD_WARP);
-+> +                     state->port->setserial_flag = SNX_SER_BAUD_NOTSETSER;
-+> +                     snx_ser_update_termios(state);
-+> +             }
-+> +             break;
-+> +     }
-+> +
-+
-+Why do you need your own implementation of these tty ioctl()'s ?
-+The tty subsystem handles them on its own (using the callbacks for hw-
-+specific operations)
-+
-ioctl functions support for SUNIX specific serial,parellel and cash drawer interface.
-+
-+> +     case SNX_SER_DUMP_PORT_INFO:
-+<snip>
-+> +     case SNX_SER_DUMP_DRIVER_VER:
-+<snip>
-+> +     case SNX_COMM_GET_BOARD_CNT:
-+<snip>
-+> +     case SNX_COMM_GET_BOARD_INFO:
-+
-+is it really necessary to introduce your own driver-specific ioctl() ?
-+why not putting these things into debugfs or sysfs ?
-+
-ioctl functions support for SUNIX specific serial,
-parellel and cash drawer interface.
-+
-+> +     case SNX_GPIO_GET:
-+<snip>
-+> +     case SNX_GPIO_SET:
-+<snip>
-+> +     case SNX_GPIO_READ:
-+<snip>
-+> +     case SNX_GPIO_WRITE:
-+<snip>
-+> +     case SNX_GPIO_SET_DEFAULT:
-+<snip>
-+> +     case SNX_GPIO_WRITE_DEFAULT:
-+<snip>
-+> +     case SNX_GPIO_GET_INPUT_INVERT:
-+<snip>
-+> +     case SNX_GPIO_SET_INPUT_INVERT:
-+
-+
-+gpio stuff clearly doesn't belong into tty ioctl()s.
-+
-+that's what the gpio subsystem is there for - this provides the linux
-+standard api for gpio access.
-+
-+> +     case SNX_UART_GET_TYPE:
-+
-+what exactly is this for ?
-+
-+<snip>
-+> +             } else {
-+> +                     //pr_err(CE_NOTE, "WARNING : incorrect port
-+> +                     //number (port = %d)!",gb.uart_num);
-+> +                     break;
-+> +             }
-+> +
-+> +                     switch (uart_type) {
-+> +                     case 0: // RS-232
-+
-+yet another indention mismatch.
-+and please remove dead code.
-+
-i will fix it.
-+
-+<snip>
-+
-+> +     case SNX_UART_SET_TYPE: {
-+
-+what is this for ?
-+
-+<snip>
-+
-+> +     case SNX_UART_SET_ACS:
-+
-+what is "ACS" ?
-+
-RS485 ACS Enable,Enable SUNIX UART Controller waiting transmit
-data when receive data is going.
-+
-+> +     {
-+> +             SNX_DRVR_UART_SET_ACS gb;
-+> +             struct sunix_board      *sb = NULL;
-+> +             int ACSstate = 0;
-+> +             int targetConfigAddress = 0;
-+> +
-+> +             memset(&gb, 0, sizeof(SNX_DRVR_UART_SET_ACS));
-+> +
-+> +             if (copy_from_user(&gb, (void *)arg,
-+> +                     (sizeof(SNX_DRVR_UART_SET_ACS))))
-+> +                     ret = -EFAULT;
-+> +             else
-+> +                     ret = 0;
-+> +
-+> +             sb = &sunix_board_table[gb.board_id - 1];
-+
-+do we really need to access global variables here ?
-+
-i prefer to keep current format.
-+
-+<snip>
-+
-+> +     if (tty->flags & (1 << TTY_IO_ERROR)) {
-+> +             ret = -EIO;
-+> +             goto out;
-+> +     }
-+> +
-+> +             switch (cmd) {
-+> +             case TIOCMIWAIT:
-+
-+yet another idention mismatch.
-+
-i will fix it.
-+
-+<snip>
-+
-+> +     if (line < SNX_SER_TOTAL_MAX) {
-+> +             down(&state->sem);
-+> +
-+> +                     switch (cmd) {
-+> +                     case TIOCSERGETLSR:
-+> +                     ret = snx_ser_get_lsr_info(state, (unsigned int *)arg);
-+> +                     break;
-+> +
-+> +                     default:
-+> +                     {
-+> +                             break;
-+> +                     }
-+> +                     }
-+> +
-+> +             up(&state->sem);
-+> +     }
-+
-+even more indention mismatches.
-+
-i will fix it.
-+
-+<snip>
-+
-+> +static void snx_ser_set_termios(struct tty_struct *tty,
-+> +struct SNXTERMIOS *old_termios)
-+> +{
-+> +     struct snx_ser_state *state = NULL;
-+> +     unsigned long flags;
-+> +     unsigned int cflag = tty->termios.c_cflag;
-+> +     int line = SNX_SER_DEVNUM(tty);
-+> +
-+> +     if (line >= SNX_SER_TOTAL_MAX)
-+> +             return;
-+> +
-+> +     state = tty->driver_data;
-+> +
-+> +#define RELEVANT_IFLAG(iflag)        ((iflag) & (IGNBRK|BRKINT|IGNPAR|PARMRK|INPCK))
-+
-+please no #define's in the middle of a function.
-+
-i will fix it.
-+
-+<snip>
-+
-+> +static void snx_ser_update_timeout(struct snx_ser_port *port,
-+> +unsigned int cflag, unsigned int baud)
-+> +{
-+> +     unsigned int bits;
-+> +
-+> +     switch (cflag & CSIZE) {
-+> +     case CS5:
-+> +     bits = 7;
-+> +     break;
-+> +
-+
-+more indention mismatches.
-+
-i will fix it.
-+
-+<snip>
-+
-+> +static int snx_ser_open(struct tty_struct *tty, struct file *filp)
-+> +{
-+> +     struct snx_ser_driver *drv =
-+> +     (struct snx_ser_driver *)tty->driver->driver_state;
-+> +
-+> +     struct snx_ser_state *state = NULL;
-+> +     struct tty_port *tport = NULL;
-+> +
-+> +     int retval = 0;
-+> +     int line = SNX_SER_DEVNUM(tty);
-+> +
-+> +     if (line < SNX_SER_TOTAL_MAX) {
-+> +             retval = -ENODEV;
-+> +
-+> +             if (line >= SNX_SER_TOTAL_MAX)
-+> +                     goto fail;
-+> +
-+> +             state = snx_ser_get(drv, line);
-+> +
-+> +             tport = &state->tport;
-+> +
-+> +             if (IS_ERR(state)) {
-+> +                     retval = PTR_ERR(state);
-+> +                     goto fail;
-+> +             }
-+> +
-+> +             if (!state)
-+> +                     goto fail;
-+> +
-+> +
-+> +             state->port->suspended = 1;
-+> +             tty->driver_data = state;
-+> +
-+> +             tport->low_latency = (state->port->flags &
-+> +             SNX_UPF_LOW_LATENCY) ? 1 : 0;
-+> +
-+> +             state->info->tty = tty;
-+> +
-+> +             tty_port_tty_set(tport, tty);
-+> +
-+> +             if (tty_hung_up_p(filp)) {
-+> +                     retval = -EAGAIN;
-+> +                     state->count--;
-+> +                     up(&state->sem);
-+> +                     goto fail;
-+> +             }
-+> +
-+> +             retval = snx_ser_startup(state, 0);
-+> +
-+> +             if (retval == 0)
-+> +                     retval = snx_ser_block_til_ready(filp, state);
-+> +
-+> +             up(&state->sem);
-+> +
-+> +             if (retval == 0 && !(state->info->flags &
-+> +                     SNX_UIF_NORMAL_ACTIVE)) {
-+> +                     state->info->flags |= SNX_UIF_NORMAL_ACTIVE;
-+> +
-+> +                     snx_ser_update_termios(state);
-+> +             }
-+> +
-+> +             try_module_get(THIS_MODULE);
-+
-+why this ?
-+
-i will fix it.
-+
-+<snip>
-+
-+> +extern int sunix_ser_register_driver(struct snx_ser_driver *drv)
-+> +{
-+> +     struct tty_driver *normal = NULL;
-+> +     int i;
-+> +     int ret = 0;
-+> +
-+> +     drv->state = kmalloc(sizeof(struct snx_ser_state) * drv->nr,
-+> +             GFP_KERNEL);
-+> +
-+> +     ret = -ENOMEM;
-+> +
-+> +     if (!drv->state) {
-+> +             pr_err("SNX Error: Allocate memory fail !\n\n");
-+> +             goto out;
-+> +     }
-+> +
-+> +     memset(drv->state, 0, sizeof(struct snx_ser_state) * drv->nr);
-+> +
-+> +     for (i = 0; i < drv->nr; i++) {
-+> +             struct snx_ser_state *state = drv->state + i;
-+> +             struct tty_port *tport = &state->tport;
-+> +
-+> +             tty_port_init(tport);
-+
-+does that really need to be globally in driver init, instead of in per
-+port device->open (and use device's private data) ?
-+
-i prefer to keep current format.
-+
-+<snip>
-+
-+> +extern void sunix_ser_unregister_ports(struct snx_ser_driver *drv)
-+
-+why are these 'extern' ?!
-+
-functions definition in multiple .c files.
+Without force_async, are cursor updates always applied to the hardware
+on the next vblank, even if the pending commit is delayed further (e.g.
+because a fence it depends on doesn't signal before vblank)? If cursor
+updates can be delayed beyond the next vblank, that can result in bad
+user experience.
 
-\ No newline at end of file
---
-2.17.1
 
+-- 
+Earthling Michel Dänzer               |              https://www.amd.com
+Libre software enthusiast             |             Mesa and X developer
