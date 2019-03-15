@@ -2,38 +2,36 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D55C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC92DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4322C206DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19DC218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfCOSEQ (ORCPT
+        id S1726868AbfCOSHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:04:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46784 "EHLO mx1.redhat.com"
+        Fri, 15 Mar 2019 14:07:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40646 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbfCOSEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:04:15 -0400
+        id S1725956AbfCOSHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 14:07:49 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2BB5D8AE4A;
-        Fri, 15 Mar 2019 18:04:15 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id D3D8C7AE93;
+        Fri, 15 Mar 2019 18:07:48 +0000 (UTC)
 Received: from [10.36.112.50] (ovpn-112-50.ams2.redhat.com [10.36.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DCB535BBB6;
-        Fri, 15 Mar 2019 18:04:08 +0000 (UTC)
-Subject: Re: [PATCH] x86/kvm/hyper-v: avoid spurious pending stimer on vCPU
- init
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        linux-kernel@vger.kernel.org
-References: <20190313171342.12814-1-vkuznets@redhat.com>
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1968B5D9C8;
+        Fri, 15 Mar 2019 18:07:46 +0000 (UTC)
+Subject: Re: [PATCH] MAINTAINERS: Add KVM selftests to existing KVM entry
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190313195555.6198-1-sean.j.christopherson@intel.com>
+ <20190313201633.GE4409@linux.intel.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
@@ -91,86 +89,32 @@ Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
  DduC0U3xYkfbGAUvbxeepjgzp0uEnBXfPTy09JGpgWbg0w91GyfT/ujKaGd4vxG2Ei+MMNDm
  S1SMx7wu0evvQ5kT9NPzyq8R2GIhVSiAd2jioGuTjX6AZCFv3ToO53DliFMkVTecLptsXaes
  uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <3ed7015c-753e-98bf-fafb-53c48a308765@redhat.com>
-Date:   Fri, 15 Mar 2019 19:04:04 +0100
+Message-ID: <3bbaa29f-e70d-45a7-b93e-24ecc006bcb7@redhat.com>
+Date:   Fri, 15 Mar 2019 19:07:45 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190313171342.12814-1-vkuznets@redhat.com>
+In-Reply-To: <20190313201633.GE4409@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 15 Mar 2019 18:04:15 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 15 Mar 2019 18:07:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/03/19 18:13, Vitaly Kuznetsov wrote:
-> When userspace initializes guest vCPUs it may want to zero all supported
-> MSRs including Hyper-V related ones including HV_X64_MSR_STIMERn_CONFIG/
-> HV_X64_MSR_STIMERn_COUNT. With commit f3b138c5d89a ("kvm/x86: Update SynIC
-> timers on guest entry only") we began doing stimer_mark_pending()
-> unconditionally on every config change.
-> 
-> The issue I'm observing manifests itself as following:
-> - Qemu writes 0 to STIMERn_{CONFIG,COUNT} MSRs and marks all stimers as
->   pending in stimer_pending_bitmap, arms KVM_REQ_HV_STIMER;
-> - kvm_hv_has_stimer_pending() starts returning true;
-> - kvm_vcpu_has_events() starts returning true;
-> - kvm_arch_vcpu_runnable() starts returning true;
-> - when kvm_arch_vcpu_ioctl_run() gets into
->   (vcpu->arch.mp_state == KVM_MP_STATE_UNINITIALIZED) case:
->   - kvm_vcpu_block() gets in 'kvm_vcpu_check_block(vcpu) < 0' and returns
->     immediately, avoiding normal wait path;
->   - -EAGAIN is returned from kvm_arch_vcpu_ioctl_run() immediately forcing
->     userspace to retry.
-> 
-> So instead of normal wait path we get a busy loop on all secondary vCPUs
-> before they get INIT signal. This seems to be undesirable, especially given
-> that this happens even when Hyper-V extensions are not used.
-> 
-> Generally, it seems to be pointless to mark an stimer as pending in
-> stimer_pending_bitmap and arm KVM_REQ_HV_STIMER as the only thing
-> kvm_hv_process_stimers() will do is clear the corresponding bit. We may
-> just not mark disabled timers as pending instead.
-> 
-> Fixes: f3b138c5d89a ("kvm/x86: Update SynIC timers on guest entry only")
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/hyperv.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index 89d20ed1d2e8..371c669696d7 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -526,7 +526,9 @@ static int stimer_set_config(struct kvm_vcpu_hv_stimer *stimer, u64 config,
->  		new_config.enable = 0;
->  	stimer->config.as_uint64 = new_config.as_uint64;
->  
-> -	stimer_mark_pending(stimer, false);
-> +	if (stimer->config.enable)
-> +		stimer_mark_pending(stimer, false);
-> +
->  	return 0;
->  }
->  
-> @@ -542,7 +544,10 @@ static int stimer_set_count(struct kvm_vcpu_hv_stimer *stimer, u64 count,
->  		stimer->config.enable = 0;
->  	else if (stimer->config.auto_enable)
->  		stimer->config.enable = 1;
-> -	stimer_mark_pending(stimer, false);
-> +
-> +	if (stimer->config.enable)
-> +		stimer_mark_pending(stimer, false);
-> +
->  	return 0;
->  }
->  
+On 13/03/19 21:16, Sean Christopherson wrote:
+> Gah, this also needs: tools/testing/selftests/kvm/*/
 > 
 
-Queued for after the merge window.
+No, it doesn't.
+
+$ scripts/get_maintainer.pl tools/testing/selftests/kvm/x86_64/state_test.c
+Paolo Bonzini <pbonzini@redhat.com> (supporter:KERNEL VIRTUAL MACHINE (KVM),commit_signer:8/9=89%,authored:3/9=33%)
+"Radim Krčmář" <rkrcmar@redhat.com> (supporter:KERNEL VIRTUAL MACHINE (KVM),commit_signer:1/9=11%)
+
+Queued, thanks.
 
 Paolo
