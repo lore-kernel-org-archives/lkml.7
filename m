@@ -2,47 +2,139 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868D0C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EF7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE78218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56838218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbfCOQtZ (ORCPT
+        id S1729623AbfCOQyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:49:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47876 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729192AbfCOQtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:49:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DF151AE6E;
-        Fri, 15 Mar 2019 16:49:23 +0000 (UTC)
-Subject: Re: [PATCH 7/8] nvme: use blk_mq_queue_tag_busy_iter
-To:     James Smart <james.smart@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        Jianchao Wang <jianchao.w.wang@oracle.com>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, sagi@grimberg.me,
-        josef@toxicpanda.com, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, keith.busch@intel.com,
-        jthumshirn@suse.de, hch@lst.de, bvanassche@acm.org
-References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
- <1552640264-26101-8-git-send-email-jianchao.w.wang@oracle.com>
- <62de99e8-0d8d-910a-bfdc-649f734b152c@gmail.com>
- <f284663c-ad13-65ea-5ce0-9b305ca91d3c@broadcom.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <5def1025-a48b-f2a4-d58c-d37135177b0f@suse.de>
-Date:   Fri, 15 Mar 2019 17:49:20 +0100
+        Fri, 15 Mar 2019 12:54:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49180 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729444AbfCOQyn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:54:43 -0400
+Received: from [IPv6:2804:431:9718:4c54:5b9b:61a:a071:48bc] (unknown [IPv6:2804:431:9718:4c54:5b9b:61a:a071:48bc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 636F7281581;
+        Fri, 15 Mar 2019 16:54:36 +0000 (GMT)
+Subject: Re: [PATCH v2 1/5] drm/rockchip: fix fb references in async update
+To:     =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     =?UTF-8?Q?St=c3=a9phane_Marchesin?= <marcheu@google.com>,
+        Sean Paul <seanpaul@google.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        kernel@collabora.com, nicholas.kazlauskas@amd.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190312022204.2775-1-helen.koike@collabora.com>
+ <20190312022204.2775-2-helen.koike@collabora.com>
+ <20190312073438.05ad8173@collabora.com>
+ <f888a2d0-c6b1-8995-7254-ba2923dd22f9@collabora.com>
+ <20190312165243.5b771e4a@collabora.com>
+ <CAAFQd5CCEDaxLbw0E9NJJ-tEcHd8-Lidvcvt8qfPAnKu7uuj8w@mail.gmail.com>
+ <05750143-708b-b84e-af67-82ec6815bd89@daenzer.net>
+ <ed44e1f4-07da-b1cb-b5cb-d34d29758502@collabora.com>
+ <d91d5582-3ccf-2249-21ee-9ccf115096b2@daenzer.net>
+ <dd7de9ff-0ac8-80fd-b88b-250bdf988921@collabora.com>
+ <61b8420e-9b63-b67f-e9a8-fb8a0cb7d219@daenzer.net>
+ <20190315112519.0af4fdc0@collabora.com>
+ <e51a154f-ff4c-b4bc-4075-1a662ae89364@daenzer.net>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <db673e6a-7dbb-f529-69b8-afff68dc91db@collabora.com>
+Date:   Fri, 15 Mar 2019 13:54:31 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <f284663c-ad13-65ea-5ce0-9b305ca91d3c@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <e51a154f-ff4c-b4bc-4075-1a662ae89364@daenzer.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,59 +142,196 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/15/19 5:39 PM, James Smart wrote:
-> 
-> 
-> On 3/15/2019 9:33 AM, James Smart wrote:
->> On 3/15/2019 1:57 AM, Jianchao Wang wrote:
->>> blk_mq_tagset_busy_iter is not safe that it could get stale request
->>> in tags->rqs[]. Use blk_mq_queue_tag_busy_iter here. A new helper
->>> interface nvme_iterate_inflight_rqs is introduced to iterate
->>> all of the ns under a ctrl.
->>>
->>> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
->>> ---
->>>   drivers/nvme/host/core.c   | 12 ++++++++++++
->>>   drivers/nvme/host/fc.c     | 12 ++++++------
->>>   drivers/nvme/host/nvme.h   |  2 ++
->>>   drivers/nvme/host/pci.c    |  5 +++--
->>>   drivers/nvme/host/rdma.c   |  6 +++---
->>>   drivers/nvme/host/tcp.c    |  5 +++--
->>>   drivers/nvme/target/loop.c |  6 +++---
->>>   7 files changed, 32 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
->>> index 6a9dd68..5760fad 100644
->>> --- a/drivers/nvme/host/core.c
->>> +++ b/drivers/nvme/host/core.c
->>> @@ -3816,6 +3816,18 @@ void nvme_start_queues(struct nvme_ctrl *ctrl)
->>>   }
->>>   EXPORT_SYMBOL_GPL(nvme_start_queues);
->>>   +void nvme_iterate_inflight_rqs(struct nvme_ctrl *ctrl,
->>> +        busy_iter_fn *fn, void *data)
->>> +{
->>> +    struct nvme_ns *ns;
->>> +
->>> +    down_read(&ctrl->namespaces_rwsem);
->>> +    list_for_each_entry(ns, &ctrl->namespaces, list)
->>> +        blk_mq_queue_tag_busy_iter(ns->queue, fn, data, true);
->>> +    up_read(&ctrl->namespaces_rwsem);
->>> +}
->>> +EXPORT_SYMBOL_GPL(nvme_iterate_inflight_rqs);
+
+
+On 3/15/19 8:29 AM, Michel Dänzer wrote:
+> On 2019-03-15 11:25 a.m., Boris Brezillon wrote:
+>> On Fri, 15 Mar 2019 11:11:36 +0100
+>> Michel Dänzer <michel@daenzer.net> wrote:
 >>
->> Hmm... so this aborts ios for namespaces. How about ios that aren't 
->> for a namespace but rather for the controller itself.  For example, 
->> anything on the admin queue ?   Rather critical for those ios be 
->> terminated as well.
-> NVM - didn't look at which tag set.  but it does highlight - doesn't 
-> cover anything issued by core/transport on the io queues.
+>>> On 2019-03-14 6:51 p.m., Helen Koike wrote:
+>>>> On 3/14/19 6:15 AM, Michel Dänzer wrote:  
+>>>>> On 2019-03-13 7:08 p.m., Helen Koike wrote:  
+>>>>>> On 3/13/19 6:58 AM, Michel Dänzer wrote:  
+>>>>>>> On 2019-03-13 4:42 a.m., Tomasz Figa wrote:  
+>>>>>>>> On Wed, Mar 13, 2019 at 12:52 AM Boris Brezillon
+>>>>>>>> <boris.brezillon@collabora.com> wrote:  
+>>>>>>>>> On Tue, 12 Mar 2019 12:34:45 -0300
+>>>>>>>>> Helen Koike <helen.koike@collabora.com> wrote:  
+>>>>>>>>>> On 3/12/19 3:34 AM, Boris Brezillon wrote:  
+>>>>>>>>>>> On Mon, 11 Mar 2019 23:21:59 -0300
+>>>>>>>>>>> Helen Koike <helen.koike@collabora.com> wrote:
+>>>>>>>>>>>  
+>>>>>>>>>>>> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+>>>>>>>>>>>> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+>>>>>>>>>>>> @@ -912,30 +912,31 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
+>>>>>>>>>>>>                                      struct drm_plane_state *new_state)
+>>>>>>>>>>>>  {
+>>>>>>>>>>>>    struct vop *vop = to_vop(plane->state->crtc);
+>>>>>>>>>>>> -  struct drm_plane_state *plane_state;
+>>>>>>>>>>>> +  struct drm_framebuffer *old_fb = plane->state->fb;
+>>>>>>>>>>>>
+>>>>>>>>>>>> -  plane_state = plane->funcs->atomic_duplicate_state(plane);
+>>>>>>>>>>>> -  plane_state->crtc_x = new_state->crtc_x;
+>>>>>>>>>>>> -  plane_state->crtc_y = new_state->crtc_y;
+>>>>>>>>>>>> -  plane_state->crtc_h = new_state->crtc_h;
+>>>>>>>>>>>> -  plane_state->crtc_w = new_state->crtc_w;
+>>>>>>>>>>>> -  plane_state->src_x = new_state->src_x;
+>>>>>>>>>>>> -  plane_state->src_y = new_state->src_y;
+>>>>>>>>>>>> -  plane_state->src_h = new_state->src_h;
+>>>>>>>>>>>> -  plane_state->src_w = new_state->src_w;
+>>>>>>>>>>>> -
+>>>>>>>>>>>> -  if (plane_state->fb != new_state->fb)
+>>>>>>>>>>>> -          drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
+>>>>>>>>>>>> -
+>>>>>>>>>>>> -  swap(plane_state, plane->state);
+>>>>>>>>>>>> -
+>>>>>>>>>>>> -  if (plane->state->fb && plane->state->fb != new_state->fb) {
+>>>>>>>>>>>> +  /*
+>>>>>>>>>>>> +   * A scanout can still be occurring, so we can't drop the reference to
+>>>>>>>>>>>> +   * the old framebuffer. To solve this we get a reference to old_fb and
+>>>>>>>>>>>> +   * set a worker to release it later.  
+>>>>>>>>>>>
+>>>>>>>>>>> Hm, doesn't look like an async update to me if we have to wait for the
+>>>>>>>>>>> next VBLANK to happen to get the new content on the screen. Maybe we
+>>>>>>>>>>> should reject async updates when old_fb != new_fb in the rk  
+>>>>>>>>>>> ->async_check() hook.  
+>>>>>>>>>>
+>>>>>>>>>> Unless I am misunderstanding this, we don't wait here, we just grab a
+>>>>>>>>>> reference to the fb in case it is being still used by the hw, so it
+>>>>>>>>>> doesn't get released prematurely.  
+>>>>>>>>>
+>>>>>>>>> I was just reacting to the comment that says the new FB should stay
+>>>>>>>>> around until the next VBLANK event happens. If the FB must stay around
+>>>>>>>>> that probably means the HW is still using, which made me wonder if this
+>>>>>>>>> HW actually supports async update (where async means "update now and
+>>>>>>>>> don't care about about tearing"). Or maybe it takes some time to switch
+>>>>>>>>> to the new FB and waiting for the next VBLANK to release the old FB was
+>>>>>>>>> an easy solution to not wait for the flip to actually happen in  
+>>>>>>>>> ->async_update() (which is kind of a combination of async+non-blocking).  
+>>>>>>>>
+>>>>>>>> The hardware switches framebuffers on vblank, so whatever framebuffer
+>>>>>>>> is currently being scanned out from needs to stay there until the
+>>>>>>>> hardware switches to the new one in shadow registers. If that doesn't
+>>>>>>>> happen, you get IOMMU faults and the display controller stops working
+>>>>>>>> since we don't have any fault handling currently, just printing a
+>>>>>>>> message.  
+>>>>>>>
+>>>>>>> Sounds like your hardware doesn't actually support async flips. It's
+>>>>>>> probably better for the driver not to pretend otherwise.  
+>>>>>>
+>>>>>> I think wee need to clarify the meaning of the async_update callback
+>>>>>> (and we should clarify it in the docs).
+>>>>>>
+>>>>>> The way I understand what the async_update callback should do is: don't
+>>>>>> block (i.e. don't wait for the next vblank),  
+>>>>>
+>>>>> Note that those are two separate things. "Async flips" are about "don't
+>>>>> wait for vblank", not about "don't block".
+>>>>>
+>>>>>  
+>>>>>> and update the hw state at some point with the latest state from the
+>>>>>> last call to async_update.
+>>>>>>
+>>>>>> Which means that: any driver can implement the async_update callback,
+>>>>>> independently if it supports changing its state right away or not.
+>>>>>> If hw supports, async_update can change the hw state right away, if not,
+>>>>>> then changes will be applied in the next vblank (it can even amend the
+>>>>>> pending commit if there is one).
+>>>>>> With this, we can remove all the legacy cursor code to use the
+>>>>>> async_update callback, since async_update can be called 100 times before
+>>>>>> the next vblank, and the latest state will be set to the hw without
+>>>>>> waiting 100 vblanks.
+>>>>>>
+>>>>>> Please, let me know if this is your understanding as well. If not, then
+>>>>>> we need to remodel things.  
+>>>>>
+>>>>> While this may make sense for cursor updates, I don't think it does for
+>>>>> async flips. If the flip only actually takes effect during the next
+>>>>> vblank, it doesn't really fit the definition and userspace expectation
+>>>>> of an async flip. It's better to clearly communicate to userspace that
+>>>>> the hardware cannot do async flips, than to pretend it can and fake
+>>>>> them. Userspace has to deal with this anyway, since async flips weren't
+>>>>> always supported in general.  
+>>>>
+>>>> What do you think if we separate two concepts here:
+>>>>
+>>>> - amend mode: works like cursor updates, i.e, update the hw state at
+>>>> some point with the latest state from the last call to async_update. No
+>>>> special hardware support is required.
+>>>>
+>>>> - async update: update hw state immediately. This depends if the hw
+>>>> supports it or not.
+>>>>
+>>>> Every async update is an amend, but the opposite is not necessarily true.
+>>>>
+>>>> What do you think if we rename the current async_update to amend_update,
+>>>> and we add a parameter "force_async" to it? (or maybe
+>>>> force_immediate_update?)
+>>>> Then amend_check with force_async=1 would fail if the hardware doesn't
+>>>> support it (we could also add flags in the capabilities to inform
+>>>> userspace the expected behaviour of things and if the hw supports
+>>>> force_sync).
+>>>>
+>>>> Like this, we can implement the cursors using the amend_update (which is
+>>>> now called async_update), and async_flips with amend_update with
+>>>> force_async=1.  
+>>>
+>>> Might force_async make sense for cursor updates as well? I thought some
+>>> hardware supported HW cursor updates outside of vblank, but I'm not sure.
+
+What I had in mind was actually:
+amend_update() -> could do a real async or not depending on the hw
+force_async=1 -> it means amend_update will fail if the hw doesn't
+support it.
+
+>>>
+>>> Without force_async, are cursor updates always applied to the hardware
+>>> on the next vblank, even if the pending commit is delayed further (e.g.
+>>> because a fence it depends on doesn't signal before vblank)? If cursor
+>>> updates can be delayed beyond the next vblank, that can result in bad
+>>> user experience.
+>>
+>> You mean you have
+>>
+>> 1. sync/regular update pending (waiting on a fence)
+>> 2. async update on top of #1
+>>
+>> ?
 > 
-Actually, I would consider that an error.
-_All_ commands on io queues (internal or block-layer generated) whould 
-be tracked sbitmap and hence the tag iterator.
-That's what we have the 'private' tags for, and why the iter callback 
-has this ominous 'bool' argument...
+> Yeah.
+> 
+> 
 
-Cheers,
+Actually I was thinking in another solution (without this force_async flag).
 
-Hannes
+Instead of having this force_async, we can have two capabilities:
+
+CAP_ASYNC: means the hw supports real async
+CAP_AMEND: means that the driver supports amend the in-flight update so
+that the new one will take its place in the queue (i.e. the current
+legacy cursor behavior).
+
+If (!CAP_AMEND && !CAP_ASYNC)
+	* use a sync update or update the FB content in place without flipping
+buffers.
+	* legacy cursor update will fallback to sync update.
+	* async flip is not supported.
+
+If (CAP_AMEND && !CAP_ASYNC)
+	* legacy cursor update will amend in-flight pending updates (like how
+rockchip does now) or it will fallback to a sync update if not possible.
+	* async flip is not supported.
+
+If (!CAP_AMEND && CAP_ASYNC)
+	* not sure yet what this would mean.
+
+If (CAP_AMEND && CAP_ASYNC)
+	* legacy cursor update will perform real async update.
+	* async flip is supported.
+
+
+What do you think?
+
+Regards
+Helen
