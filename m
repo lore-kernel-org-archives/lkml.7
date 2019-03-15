@@ -2,141 +2,298 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12DEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4502AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A026E21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nCEIs6JQ"
+	by mail.kernel.org (Postfix) with ESMTP id 12A60218CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:09:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbfCOQJf (ORCPT
+        id S1729514AbfCOQJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:09:35 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:16451 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729396AbfCOQJe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:09:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33486 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729471AbfCOQJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 Mar 2019 12:09:34 -0400
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x2FG9PIQ007691;
-        Sat, 16 Mar 2019 01:09:26 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x2FG9PIQ007691
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552666166;
-        bh=ciSNWk4zmFAeEwhNhN+vmqFGz1WJYZ75xB8KRrQZeVg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nCEIs6JQ7LDIoyvejSXX5lDXJ9bMz2H6E65C7PkfoBz5UBhbegdV+zM30fVNu2SzF
-         Om1tNmbzC4hTTHqsy/1uNwKtKtOG9c5VTlGFnZ7SQfw8JRONf5IAP2SBqD1QhK0tW8
-         pAP+NeDOe1ITDVzIyqyxndyocochJkW3U1929eJkHN4XFwg7zrUvZAts08xGsO1LF2
-         i/m8TlDMb7xkInQoIPsserWCHdO1VBVZuzfDR0baFNFH2cicKHTu+FgmraVOfbXmmx
-         ZVm8OdRgtvRdo0Uo8GcxkeAGa3ZGp7y6B185q9UChLQCTrzoiA64lmBBfwZibFO3Gd
-         lYB9usz6ZxCQw==
-X-Nifty-SrcIP: [209.85.222.47]
-Received: by mail-ua1-f47.google.com with SMTP id g1so3271195uae.10;
-        Fri, 15 Mar 2019 09:09:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAVY5hceVnmX2E5VznBaKgAvE1SyzEr38cRDCAr7N2tg2bi+6B/Z
-        N5Yu8vsWZ/QrNd1WVqxnEt/XTNJ+Hr6TOdc0xik=
-X-Google-Smtp-Source: APXvYqzoGHElriZYWk064q6kNnxFPv8CK7KH/qWDiKhTd4J4mIIx2SA5LfL+mJsVK5JQ010ybMYPfC//Y+l+lg30ZcY=
-X-Received: by 2002:ab0:73d3:: with SMTP id m19mr115203uaq.46.1552666165202;
- Fri, 15 Mar 2019 09:09:25 -0700 (PDT)
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F2F27C130717;
+        Fri, 15 Mar 2019 16:09:33 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-102.ams2.redhat.com [10.36.116.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D8E2360BE6;
+        Fri, 15 Mar 2019 16:09:25 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@linux.intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, robin.murphy@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+Subject: [PATCH v5 02/22] iommu: introduce device fault data
+Date:   Fri, 15 Mar 2019 17:08:46 +0100
+Message-Id: <20190315160906.12900-3-eric.auger@redhat.com>
+In-Reply-To: <20190315160906.12900-1-eric.auger@redhat.com>
+References: <20190315160906.12900-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-References: <20190314234159.191745-1-dianders@chromium.org>
- <CAK7LNATa+TnXb+a6on-sx2mjNoAiORe-WeZ8UusETHdSrXowuw@mail.gmail.com>
- <CAK7LNAT=04WAMEfN7u5N_oO2RwT9bYALMN3SZ3WFQo-=3vEjsQ@mail.gmail.com> <CAD=FV=XqH7knZwK+a+bsACwc-j2NgH914mLTc_POR_GAipVf7w@mail.gmail.com>
-In-Reply-To: <CAD=FV=XqH7knZwK+a+bsACwc-j2NgH914mLTc_POR_GAipVf7w@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 16 Mar 2019 01:08:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQff3c9zUMSyj37WT_hgPQ9x7Vf-Hxnm_u0LxNwEMJ+7w@mail.gmail.com>
-Message-ID: <CAK7LNAQff3c9zUMSyj37WT_hgPQ9x7Vf-Hxnm_u0LxNwEMJ+7w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Make NOSTDINC_FLAGS a simply expanded variable
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 15 Mar 2019 16:09:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-On Sat, Mar 16, 2019 at 12:41 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Fri, Mar 15, 2019 at 8:37 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > On Sat, Mar 16, 2019 at 12:27 AM Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> > >
-> > > On Fri, Mar 15, 2019 at 8:42 AM Douglas Anderson <dianders@chromium.org> wrote:
-> > > >
-> > > > During a simple no-op (nothing changed) build I saw 39 invocations of
-> > > > the C compiler with the argument "-print-file-name=include".  We don't
-> > > > need to call the C compiler 39 times for this--one time will suffice.
-> > > >
-> > > > Let's change NOSTDINC_FLAGS to a simply expanded variable to avoid
-> > > > this since there doesn't appear to be any reason it should be
-> > > > recursively expanded.
-> > > >
-> > > > On my build this shaved ~400 ms off my "no-op" build.
-> > > >
-> > > > Note that the recursive expansion seems to date back to the (really
-> > > > old) commit e8f5bdb02ce0 ("[PATCH] Makefile include path ordering").
-> > > > It's a little unclear to me if the point of that patch was to switch
-> > > > the variable to be recursively expanded (which it did) or to avoid
-> > > > directly assigning to NOSTDINC_FLAGS (AKA to switch to +=) because
-> > > > someone else (out of tree?) was setting it.  I presume later since if
-> > > > the only goal was to switch to recursive expansion the patch would
-> > > > have just removed the ":".
-> > > >
-> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > >
-> > > Applied to linux-kbuild.
-> > > Thanks.
-> >
-> >
-> > BTW, I noticed no one else
-> > appends NOSTDINC_FLAGS.
-> >
-> >
-> > So, does it make more sense to do as follows?
-> >
-> >
-> > NOSTDINC_FLAGS := -nostdinc -isystem $(shell $(CC) -print-file-name=include)
->
-> It might.  ...but go back to look at commit e8f5bdb02ce0 ("[PATCH]
-> Makefile include path ordering").  Why did they do a += there since
-> even then nobody was setting it.  Try:
->
-> $ git grep NOSTDINC_FLAGS e8f5bdb02ce0~
->
->
-> Do you understand what was going on in that commit?
+Device faults detected by IOMMU can be reported outside the IOMMU
+subsystem for further processing. This patch introduces
+a generic device fault data structure.
 
+The fault can be either an unrecoverable fault or a page request,
+also referred to as a recoverable fault.
 
-No, I do not understand.
+We only care about non internal faults that are likely to be reported
+to an external subsystem.
 
-Maybe, it fixed a problem in downstream code
-since there was no directory like include/asm-xen.
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
+---
+v4 -> v5:
+- simplified struct iommu_fault_event comment
+- Moved IOMMU_FAULT_PERM outside of the struct
+- Removed IOMMU_FAULT_PERM_INST
+- s/IOMMU_FAULT_PAGE_REQUEST_PASID_PRESENT/
+  IOMMU_FAULT_PAGE_REQUEST_PASID_VALID
 
-If you do not want to take risk,
-I am fine with this patch, though.
+v3 -> v4:
+- use a union containing aither an unrecoverable fault or a page
+  request message. Move the device private data in the page request
+  structure. Reshuffle the fields and use flags.
+- move fault perm attributes to the uapi
+- remove a bunch of iommu_fault_reason enum values that were related
+  to internal errors
+---
+ include/linux/iommu.h      |  44 ++++++++++++++
+ include/uapi/linux/iommu.h | 115 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 159 insertions(+)
+ create mode 100644 include/uapi/linux/iommu.h
 
-
-
-> -Doug
-
-
-
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index ffbbc7e39cee..c6f398f7e6e0 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -25,6 +25,7 @@
+ #include <linux/errno.h>
+ #include <linux/err.h>
+ #include <linux/of.h>
++#include <uapi/linux/iommu.h>
+ 
+ #define IOMMU_READ	(1 << 0)
+ #define IOMMU_WRITE	(1 << 1)
+@@ -48,6 +49,7 @@ struct bus_type;
+ struct device;
+ struct iommu_domain;
+ struct notifier_block;
++struct iommu_fault_event;
+ 
+ /* iommu fault flags */
+ #define IOMMU_FAULT_READ	0x0
+@@ -55,6 +57,7 @@ struct notifier_block;
+ 
+ typedef int (*iommu_fault_handler_t)(struct iommu_domain *,
+ 			struct device *, unsigned long, int, void *);
++typedef int (*iommu_dev_fault_handler_t)(struct iommu_fault_event *, void *);
+ 
+ struct iommu_domain_geometry {
+ 	dma_addr_t aperture_start; /* First address that can be mapped    */
+@@ -247,6 +250,46 @@ struct iommu_device {
+ 	struct device *dev;
+ };
+ 
++/**
++ * struct iommu_fault_event - Generic fault event
++ *
++ * Can represent recoverable faults such as a page requests or
++ * unrecoverable faults such as DMA or IRQ remapping faults.
++ *
++ * @fault: fault descriptor
++ * @iommu_private: used by the IOMMU driver for storing fault-specific
++ *                 data. Users should not modify this field before
++ *                 sending the fault response.
++ */
++struct iommu_fault_event {
++	struct iommu_fault fault;
++	u64 iommu_private;
++};
++
++/**
++ * struct iommu_fault_param - per-device IOMMU fault data
++ * @dev_fault_handler: Callback function to handle IOMMU faults at device level
++ * @data: handler private data
++ *
++ */
++struct iommu_fault_param {
++	iommu_dev_fault_handler_t handler;
++	void *data;
++};
++
++/**
++ * struct iommu_param - collection of per-device IOMMU data
++ *
++ * @fault_param: IOMMU detected device fault reporting data
++ *
++ * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
++ *	struct iommu_group	*iommu_group;
++ *	struct iommu_fwspec	*iommu_fwspec;
++ */
++struct iommu_param {
++	struct iommu_fault_param *fault_param;
++};
++
+ int  iommu_device_register(struct iommu_device *iommu);
+ void iommu_device_unregister(struct iommu_device *iommu);
+ int  iommu_device_sysfs_add(struct iommu_device *iommu,
+@@ -422,6 +465,7 @@ struct iommu_ops {};
+ struct iommu_group {};
+ struct iommu_fwspec {};
+ struct iommu_device {};
++struct iommu_fault_param {};
+ 
+ static inline bool iommu_present(struct bus_type *bus)
+ {
+diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+new file mode 100644
+index 000000000000..edcc0dda7993
+--- /dev/null
++++ b/include/uapi/linux/iommu.h
+@@ -0,0 +1,115 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * IOMMU user API definitions
++ */
++
++#ifndef _UAPI_IOMMU_H
++#define _UAPI_IOMMU_H
++
++#include <linux/types.h>
++
++#define IOMMU_FAULT_PERM_WRITE	(1 << 0) /* write */
++#define IOMMU_FAULT_PERM_EXEC	(1 << 1) /* exec */
++#define IOMMU_FAULT_PERM_PRIV	(1 << 2) /* privileged */
++
++/*  Generic fault types, can be expanded IRQ remapping fault */
++enum iommu_fault_type {
++	IOMMU_FAULT_DMA_UNRECOV = 1,	/* unrecoverable fault */
++	IOMMU_FAULT_PAGE_REQ,		/* page request fault */
++};
++
++enum iommu_fault_reason {
++	IOMMU_FAULT_REASON_UNKNOWN = 0,
++
++	/* Could not access the PASID table (fetch caused external abort) */
++	IOMMU_FAULT_REASON_PASID_FETCH,
++
++	/* pasid entry is invalid or has configuration errors */
++	IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
++
++	/*
++	 * PASID is out of range (e.g. exceeds the maximum PASID
++	 * supported by the IOMMU) or disabled.
++	 */
++	IOMMU_FAULT_REASON_PASID_INVALID,
++
++	/*
++	 * An external abort occurred fetching (or updating) a translation
++	 * table descriptor
++	 */
++	IOMMU_FAULT_REASON_WALK_EABT,
++
++	/*
++	 * Could not access the page table entry (Bad address),
++	 * actual translation fault
++	 */
++	IOMMU_FAULT_REASON_PTE_FETCH,
++
++	/* Protection flag check failed */
++	IOMMU_FAULT_REASON_PERMISSION,
++
++	/* access flag check failed */
++	IOMMU_FAULT_REASON_ACCESS,
++
++	/* Output address of a translation stage caused Address Size fault */
++	IOMMU_FAULT_REASON_OOR_ADDRESS,
++};
++
++/**
++ * Unrecoverable fault data
++ * @reason: reason of the fault
++ * @addr: offending page address
++ * @fetch_addr: address that caused a fetch abort, if any
++ * @pasid: contains process address space ID, used in shared virtual memory
++ * @perm: Requested permission access using by the incoming transaction
++ * (IOMMU_FAULT_PERM_* values)
++ */
++struct iommu_fault_unrecoverable {
++	__u32	reason; /* enum iommu_fault_reason */
++#define IOMMU_FAULT_UNRECOV_PASID_VALID		(1 << 0)
++#define IOMMU_FAULT_UNRECOV_PERM_VALID		(1 << 1)
++#define IOMMU_FAULT_UNRECOV_ADDR_VALID		(1 << 2)
++#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID	(1 << 3)
++	__u32	flags;
++	__u32	pasid;
++	__u32	perm;
++	__u64	addr;
++	__u64	fetch_addr;
++};
++
++/*
++ * Page Request data (aka. recoverable fault data)
++ * @flags : encodes whether the pasid is valid and whether this
++ * is the last page in group
++ * @pasid: pasid
++ * @grpid: page request group index
++ * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
++ * @addr: page address
++ */
++struct iommu_fault_page_request {
++#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
++#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
++#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
++	__u32   flags;
++	__u32	pasid;
++	__u32	grpid;
++	__u32	perm;
++	__u64	addr;
++	__u64	private_data[2];
++};
++
++/**
++ * struct iommu_fault - Generic fault data
++ *
++ * @type contains fault type
++ */
++
++struct iommu_fault {
++	__u32	type;   /* enum iommu_fault_type */
++	__u32	reserved;
++	union {
++		struct iommu_fault_unrecoverable event;
++		struct iommu_fault_page_request prm;
++	};
++};
++#endif /* _UAPI_IOMMU_H */
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
