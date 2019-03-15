@@ -2,184 +2,139 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6431C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0BFC10F06
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B4D218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B0E21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:26:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SbHXOP3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfCOCYd (ORCPT
+        id S1728253AbfCOC0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 22:24:33 -0400
-Received: from mga03.intel.com ([134.134.136.65]:59580 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbfCOCYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 22:24:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 19:24:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,480,1544515200"; 
-   d="scan'208";a="127108468"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga006.jf.intel.com with ESMTP; 14 Mar 2019 19:24:30 -0700
-Cc:     baolu.lu@linux.intel.com, Tom Murphy <tmurphy@arista.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
- iommu_get_resv_regions
-To:     James Sewart <jamessewart@arista.com>,
-        iommu@lists.linux-foundation.org
-References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
- <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
- <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
-Date:   Fri, 15 Mar 2019 10:19:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 14 Mar 2019 22:26:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39614 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727284AbfCOC0b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 22:26:31 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p8so7947282wrq.6;
+        Thu, 14 Mar 2019 19:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ptlz0Z5uqx11HivWwUhAT0xhoM6MDZEYWnSilM25v3w=;
+        b=SbHXOP3RuBdBxbxYE9V97n3nJlWr2WCF18PHip1j/CFpCNrxcEnAuYOLXpS7YO8IZA
+         UrA0rBNlR1MGwLsyMneTV71f4n59rEDuPzvoPeUWBpYnqwHXBGBc79hTj16kGHzm/WaO
+         NkovufVewmDHjH+plTlO8hK2hhbap08ACH5shErJ6kMyOHA2ICVPurr4MIwtTzNB16QC
+         oUlSuL4XefustMzuH1ZyseUWMFs9k2gcaFHdipKbU9UhGogAbS5rBvyGtUQJWopV+ZoT
+         CpKxx0FPzXi77waUxw7yr2vdR+lQNK8pblTSlE2WE9SdtyXTt5pkkrqDy62F5ScIkCRX
+         0Sdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ptlz0Z5uqx11HivWwUhAT0xhoM6MDZEYWnSilM25v3w=;
+        b=n/Vki1RCUpmbC2LG3ei1vNMric1BLFL67hUNOUpG3652z8gdimNHq5RynKiopsjvI0
+         EluWT7HqcslXWZxiHBRWuTnWFGu2eV2JquGIDHBk8CbqAdRn5ONdjPjKq87D4KtG2AL3
+         xVJkj9LrAW3IT8A2b33pJ26/5AoR+eFEp+ONmWGHnqOUjEWETPuhjSHrwIsK8w2jnXGX
+         7Ze021xc34c/Iwt+5GzgzwVq0kMwpQxw994dcrn04EGJGnWJHyjlCvUcqBUMV9mSfEcW
+         khUs1ohLpUKUkI5wcoWb4cH4u0NihOqmbE0iNaHQzUdrMk4wMO7ta1IdhYnz1NAIKRb2
+         uupQ==
+X-Gm-Message-State: APjAAAVFbDhiWEoBiRS49uuv2e46utQCMHEF3uQuMSp5UjG5yZ+A/EqD
+        zWcF8c6ercykoktanw8Pq2hZJZtg3Wc62aCCjE8=
+X-Google-Smtp-Source: APXvYqz40YxIMCaN+vTpwftFbBPztiZBKEwBt+VEEFQFpPNjT0wNr3EO0wCSWUmuBTseHWrD7dZpWq38QdHRK0tydpY=
+X-Received: by 2002:adf:a147:: with SMTP id r7mr571038wrr.5.1552616789596;
+ Thu, 14 Mar 2019 19:26:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1552467452-538-1-git-send-email-hongxing.zhu@nxp.com>
+In-Reply-To: <1552467452-538-1-git-send-email-hongxing.zhu@nxp.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Thu, 14 Mar 2019 19:26:18 -0700
+Message-ID: <CAHQ1cqFK36Qh8BW-0Nd+rZra2m1=et7aAWBwD-GkLU4VwvOAWg@mail.gmail.com>
+Subject: Re: [RFC 1/2] dt-bindings: imx6q-pcie: Add support for i.MX8QM/QXP PCIe
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
-
-On 3/14/19 7:58 PM, James Sewart wrote:
-> To support mapping ISA region via iommu_group_create_direct_mappings,
-> make sure its exposed by iommu_get_resv_regions. This allows
-> deduplication of reserved region mappings
-> 
-> Signed-off-by: James Sewart <jamessewart@arista.com>
+On Wed, Mar 13, 2019 at 2:15 AM Richard Zhu <hongxing.zhu@nxp.com> wrote:
+>
+> Add codes needed to support i.MX8QM/QXP PCIe.
+> - HSIO(High Speed IO) subsystem is new defined on i.MX8QM/QXP.
+>   The PCIe and SATA modules are contained in the HSIO subsystem. There
+>   are two PCIe, one SATA controllers and three mixed lane PHYs on
+>   i.MX8QM. There are three use cases of the HSIO subsystem on i.MX8QM.
+>   1. PCIea 2 lanes and one SATA AHCI port.
+>   2. PCIea 1 lane, PCIeb 1 lane and one SATA AHCI port.
+>   3. PCIea 2 lanes, PCIeb 1 lane.
+>   i.MX8QXP only has PCIeb controller and one lane PHY.
+>   Use the hsio-cfg property to specify the different modes.
+> - The HSIO address map as viewed from system level is as shown below.
+>   address [31:24]    Local address    Target    Address Size
+>   5F                 0                HSIO      16MB
+>   60-6F              40-4F            HSIO      256MB
+>   70-7F              80-8F            HSIO      256MB
+>   The property local-addr is required to specify it.
+> - Both external OSC and internal PLL can be used as PCIe reference
+>   clock, use the ext_osc property to distinguish them.
+> - clock request GPIO for controlling the PCI reference clock request
+>   signal. And should be configure OD when L1SS maybe enabled later.
+> - One more power domain HSIO_GPIO and clock PCIE_PER are required by
+>   i.MX8QM/QXP PCIe.
+>   Add these specific properties to enable i.MX8QM/QXP PCIe.
+>
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 > ---
->   drivers/iommu/intel-iommu.c | 42 +++++++++++++++++++++++++++++--------
->   1 file changed, 33 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 8e0a4e2ff77f..2e00e8708f06 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -337,6 +337,8 @@ static LIST_HEAD(dmar_rmrr_units);
->   #define for_each_rmrr_units(rmrr) \
->   	list_for_each_entry(rmrr, &dmar_rmrr_units, list)
->   
-> +static struct iommu_resv_region *isa_resv_region;
-> +
->   /* bitmap for indexing intel_iommus */
->   static int g_num_of_iommus;
->   
-> @@ -2780,26 +2782,34 @@ static inline int iommu_prepare_rmrr_dev(struct dmar_rmrr_unit *rmrr,
->   					  rmrr->end_address);
->   }
->   
-> +static inline struct iommu_resv_region *iommu_get_isa_resv_region(void)
-> +{
-> +	if (!isa_resv_region)
-> +		isa_resv_region = iommu_alloc_resv_region(0,
-> +				16*1024*1024,
-> +				0, IOMMU_RESV_DIRECT);
-> +
-> +	return isa_resv_region;
-> +}
-> +
->   #ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
-> -static inline void iommu_prepare_isa(void)
-> +static inline void iommu_prepare_isa(struct pci_dev *pdev)
->   {
-> -	struct pci_dev *pdev;
->   	int ret;
-> +	struct iommu_resv_region *reg = iommu_get_isa_resv_region();
->   
-> -	pdev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
-> -	if (!pdev)
-> +	if (!reg)
->   		return;
->   
->   	pr_info("Prepare 0-16MiB unity mapping for LPC\n");
-> -	ret = iommu_prepare_identity_map(&pdev->dev, 0, 16*1024*1024 - 1);
-> +	ret = iommu_prepare_identity_map(&pdev->dev, reg->start,
-> +			reg->start + reg->length - 1);
->   
->   	if (ret)
->   		pr_err("Failed to create 0-16MiB identity map - floppy might not work\n");
-> -
-> -	pci_dev_put(pdev);
->   }
->   #else
-> -static inline void iommu_prepare_isa(void)
-> +static inline void iommu_prepare_isa(struct pci_dev *pdev)
->   {
->   	return;
->   }
-> @@ -3289,6 +3299,7 @@ static int __init init_dmars(void)
->   	struct dmar_rmrr_unit *rmrr;
->   	bool copied_tables = false;
->   	struct device *dev;
-> +	struct pci_dev *pdev;
->   	struct intel_iommu *iommu;
->   	int i, ret;
->   
-> @@ -3469,7 +3480,11 @@ static int __init init_dmars(void)
->   		}
->   	}
->   
-> -	iommu_prepare_isa();
-> +	pdev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
-> +	if (pdev) {
-> +		iommu_prepare_isa(pdev);
-> +		pci_dev_put(pdev);
-> +	}
->   
->   domains_done:
->   
-> @@ -5266,6 +5281,7 @@ static void intel_iommu_get_resv_regions(struct device *device,
->   	struct iommu_resv_region *reg;
->   	struct dmar_rmrr_unit *rmrr;
->   	struct device *i_dev;
-> +	struct pci_dev *pdev;
->   	int i;
->   
->   	rcu_read_lock();
-> @@ -5280,6 +5296,14 @@ static void intel_iommu_get_resv_regions(struct device *device,
->   	}
->   	rcu_read_unlock();
->   
-> +	if (dev_is_pci(device)) {
-> +		pdev = to_pci_dev(device);
-> +		if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
-> +			reg = iommu_get_isa_resv_region();
-> +			list_add_tail(&reg->list, head);
-> +		}
-> +	}
-> +
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt      | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index a7f5f5a..f7586c9 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -10,6 +10,8 @@ Required properties:
+>         - "fsl,imx6qp-pcie"
+>         - "fsl,imx7d-pcie"
+>         - "fsl,imx8mq-pcie"
+> +       - "fsl,imx8qm-pcie"
+> +       - "fsl,imx8qxp-pcie"
+>  - reg: base address and length of the PCIe controller
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> @@ -38,6 +40,10 @@ Optional properties:
+>    The regulator will be enabled when initializing the PCIe host and
+>    disabled either as part of the init process or when shutting down the
+>    host.
+> +- clkreq-gpio: Should specify the GPIO for controlling the PCI reference clock
+> +  request signal.
+> +- ext_osc: External OSC is used as PCIe reference clock or not. 0: Internal
+> +  PLL. 1: External OSC.
 
-Just wondering why not just
+Forgot to mention one thing in my very first reply, so I'll mention it
+here. I think figuring out the way to add support for external vs
+internal reference bus clock (that "ext_osc" binding above) is going
+to be a whole other discussion. It might be easier/more expedient to
+focus on just one particular use-case first (say external oscillator
+only), get it all done and accepted and then return to this particular
+feature in a separate series/discussion. However, that's just how I'd
+approach this, so, please don't feel compelled to do it that way just
+because I suggested it.
 
-+#ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
-+	if (dev_is_pci(device)) {
-+		pdev = to_pci_dev(device);
-+		if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
-+			reg = iommu_alloc_resv_region(0,
-+				16*1024*1024,
-+				0, IOMMU_RESV_DIRECT);
-+			if (reg)
-+				list_add_tail(&reg->list, head);
-+		}
-+	}
-+#endif
-
-and, remove all other related code?
-
-Best regards,
-Lu Baolu
+Thanks,
+Andrey Smirnov
