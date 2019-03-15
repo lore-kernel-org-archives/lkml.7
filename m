@@ -2,185 +2,118 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EF9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A307C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C97B0218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:16:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DKqVF8Sv"
+	by mail.kernel.org (Postfix) with ESMTP id D1B8A218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 10:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfCOKQ6 (ORCPT
+        id S1728829AbfCOKSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 06:16:58 -0400
-Received: from mail-eopbgr70054.outbound.protection.outlook.com ([40.107.7.54]:24260
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727354AbfCOKQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 06:16:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3v4qii8dDlGHBUm/L+SwUNZgRikUjbCJ9/VLTjjp974=;
- b=DKqVF8SvomiPKtVRdeG+K8FErQI3VdbFhzDX4UOQJAyZfUcX5/mIZwfizE4YwVQC3U6Ilt9dD541C4yKpe5M4U4nVX2xA29E/PKvtMURB5z9E61ENxu+ZXq3N4Re61gL/qFuO3NG2tRn/BscqY9fYwAo5OECabsDnNAylbW+9IQ=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB5361.eurprd04.prod.outlook.com (20.178.113.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Fri, 15 Mar 2019 10:16:54 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::50ed:d1b5:c043:3b79]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::50ed:d1b5:c043:3b79%2]) with mapi id 15.20.1709.011; Fri, 15 Mar 2019
- 10:16:53 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "van.freenix@gmail.com" <van.freenix@gmail.com>
-Subject: RE: [PATCH 1/2] ARM: imx: drop uneccessary
- of_platform_default_populate
-Thread-Topic: [PATCH 1/2] ARM: imx: drop uneccessary
- of_platform_default_populate
-Thread-Index: AQHU2Xv1SFnRc4p0SkOOn59vTkEkO6YMepnA
-Date:   Fri, 15 Mar 2019 10:16:53 +0000
-Message-ID: <AM0PR04MB4211DC74D7E72F886A4333D680440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190313091757.16410-1-peng.fan@nxp.com>
-In-Reply-To: <20190313091757.16410-1-peng.fan@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [92.121.36.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f91148f2-a0dd-49e7-975a-08d6a92f58ec
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5361;
-x-ms-traffictypediagnostic: AM0PR04MB5361:
-x-microsoft-antispam-prvs: <AM0PR04MB536188E7B6103251D511591880440@AM0PR04MB5361.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09778E995A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(366004)(376002)(39860400002)(199004)(189003)(81156014)(81166006)(105586002)(229853002)(53936002)(106356001)(25786009)(8676002)(6436002)(2501003)(14454004)(3846002)(2906002)(66066001)(6116002)(305945005)(7736002)(26005)(55016002)(102836004)(68736007)(256004)(14444005)(8936002)(99286004)(7696005)(4326008)(6506007)(76176011)(71200400001)(71190400001)(2201001)(86362001)(9686003)(316002)(74316002)(486006)(11346002)(476003)(97736004)(446003)(478600001)(110136005)(52536014)(6246003)(5660300002)(33656002)(44832011)(186003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5361;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: N0D8tKh4hxGkbLoJ+ArMLRVrFokozWv4LGWn77EE01qVQwtPmcM+3sHLgM1IggH1ZavKVi+gb3y4r/WigZrRzVPpRhf/7nqJFrTt2kJaA8vZNjL3m3myudyOLRZIAGJ9cSwAXZQWU6gHQkm126UC5y4AK3E/wwE3ifJmSiLb3S/iGC4jdmP4SHcH0HLrJebtgQdpdSLE1zrdIOhMoMt2R+iJbCHVfA01BgNi4hmKymibeGO90+t9n2K1rlJC1eVOjQIO+e1J4iDjJgrcCFJEhHAZ5+9tYgonjo8VH3a2+U5kAlYaO2eSpdBzXLWzOKVCf4j8j0A4x3Vdqeq20WnB4TDI7dH8em3Zb9A+7WTkmFGjB7dKOG3jqVoj0IbC5waplPP1KVMzujP61ImFg9+G7SGewORPNpFjeI1gUVFJDgI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 15 Mar 2019 06:18:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59942 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727354AbfCOKSd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 06:18:33 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2FA9epx057693
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 06:18:32 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r894k3j9n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 06:18:31 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ubraun@linux.ibm.com>;
+        Fri, 15 Mar 2019 10:18:30 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 15 Mar 2019 10:18:26 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2FAIPdV51183642
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 Mar 2019 10:18:25 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A601842042;
+        Fri, 15 Mar 2019 10:18:25 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A41C4204B;
+        Fri, 15 Mar 2019 10:18:25 +0000 (GMT)
+Received: from oc5311105230.ibm.com (unknown [9.145.23.208])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 15 Mar 2019 10:18:25 +0000 (GMT)
+Subject: Re: [PATCH] net: smc: fix a NULL pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190315041555.1801-1-kjlu@umn.edu>
+From:   Ursula Braun <ubraun@linux.ibm.com>
+Openpgp: preference=signencrypt
+Date:   Fri, 15 Mar 2019 11:18:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f91148f2-a0dd-49e7-975a-08d6a92f58ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 10:16:53.8730
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5361
+In-Reply-To: <20190315041555.1801-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031510-0012-0000-0000-0000030336F0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031510-0013-0000-0000-0000213A3892
+Message-Id: <9887da6d-fc29-eedb-e172-a28edc3d1c4d@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-15_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903150075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Peng Fan
->=20
-> "arch_initcall_sync(of_platform_default_populate_init);" could be used to
-> populate the device tree, there is no need to call of_platform_default_po=
-pulate
-> in machine code.
->=20
-> Tested on i.MX6Q-SDB i.MX6SL-EVK i.MX6UL-EVK board.
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+
+
+On 3/15/19 5:15 AM, Kangjie Lu wrote:
+> In case alloc_ordered_workqueue fails, the fix returns NULL
+> to avoid NULL pointer dereference.
+> 
+
+Thanks, looks good. Your patch will be part of our next patch
+submission for the net-tree.
+
+Regards, Ursula
+
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 > ---
->  arch/arm/mach-imx/mach-imx6q.c  | 2 --
->  arch/arm/mach-imx/mach-imx6sl.c | 2 --
->  arch/arm/mach-imx/mach-imx6sx.c | 2 --
->  arch/arm/mach-imx/mach-imx6ul.c | 1 -
->  4 files changed, 7 deletions(-)
->=20
-> diff --git a/arch/arm/mach-imx/mach-imx6q.c
-> b/arch/arm/mach-imx/mach-imx6q.c index 7d80a0ae723c..655398c20256
-> 100644
-> --- a/arch/arm/mach-imx/mach-imx6q.c
-> +++ b/arch/arm/mach-imx/mach-imx6q.c
-> @@ -278,8 +278,6 @@ static void __init imx6q_init_machine(void)
->=20
->  	imx6q_enet_phy_init();
->=20
-> -	of_platform_default_populate(NULL, NULL, parent);
-> -
-
-This slightly change the device register sequence as well as possible drive=
-r probe
-sequence as a consequence.
-
-Originally devices are registered in arch_initcall. Now it will be a bit la=
-ter
-in arch_initcall_sync and this may cause a bit risk if the code under the
-default_populate want to access the device service provided by early probe.
-
-Probably it's more safe to leave as it is unless you can double confirm=20
-there're no such code depends on accessing early probed devices as follows
-before we can make the change.
-
->  	imx_anatop_init();
->  	cpu_is_imx6q() ?  imx6q_pm_init() : imx6dl_pm_init();
->  	imx6q_1588_init();
-
-Regards
-Dong Aisheng
-
-> diff --git a/arch/arm/mach-imx/mach-imx6sl.c
-> b/arch/arm/mach-imx/mach-imx6sl.c index 99be4225297a..9743bdbb68fa
-> 100644
-> --- a/arch/arm/mach-imx/mach-imx6sl.c
-> +++ b/arch/arm/mach-imx/mach-imx6sl.c
-> @@ -56,8 +56,6 @@ static void __init imx6sl_init_machine(void)
->  	if (parent =3D=3D NULL)
->  		pr_warn("failed to initialize soc device\n");
->=20
-> -	of_platform_default_populate(NULL, NULL, parent);
-> -
->  	if (cpu_is_imx6sl())
->  		imx6sl_fec_init();
->  	imx_anatop_init();
-> diff --git a/arch/arm/mach-imx/mach-imx6sx.c
-> b/arch/arm/mach-imx/mach-imx6sx.c index 7f52d9b1e8a4..19b9f2dd309e
-> 100644
-> --- a/arch/arm/mach-imx/mach-imx6sx.c
-> +++ b/arch/arm/mach-imx/mach-imx6sx.c
-> @@ -72,8 +72,6 @@ static void __init imx6sx_init_machine(void)
->  	if (parent =3D=3D NULL)
->  		pr_warn("failed to initialize soc device\n");
->=20
-> -	of_platform_default_populate(NULL, NULL, parent);
-> -
->  	imx6sx_enet_init();
->  	imx_anatop_init();
->  	imx6sx_pm_init();
-> diff --git a/arch/arm/mach-imx/mach-imx6ul.c
-> b/arch/arm/mach-imx/mach-imx6ul.c index 6cb8a22b617d..c57b9df791b1
-> 100644
-> --- a/arch/arm/mach-imx/mach-imx6ul.c
-> +++ b/arch/arm/mach-imx/mach-imx6ul.c
-> @@ -65,7 +65,6 @@ static void __init imx6ul_init_machine(void)
->  	if (parent =3D=3D NULL)
->  		pr_warn("failed to initialize soc device\n");
->=20
-> -	of_platform_default_populate(NULL, NULL, parent);
->  	imx6ul_enet_init();
->  	imx_anatop_init();
->  	imx6ul_pm_init();
-> --
-> 2.16.4
+>  net/smc/smc_ism.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
+> index 2fff79db1a59..e89e918b88e0 100644
+> --- a/net/smc/smc_ism.c
+> +++ b/net/smc/smc_ism.c
+> @@ -289,6 +289,11 @@ struct smcd_dev *smcd_alloc_dev(struct device *parent, const char *name,
+>  	INIT_LIST_HEAD(&smcd->vlan);
+>  	smcd->event_wq = alloc_ordered_workqueue("ism_evt_wq-%s)",
+>  						 WQ_MEM_RECLAIM, name);
+> +	if (!smcd->event_wq) {
+> +		kfree(smcd->conn);
+> +		kfree(smcd);
+> +		return NULL;
+> +	}
+>  	return smcd;
+>  }
+>  EXPORT_SYMBOL_GPL(smcd_alloc_dev);
+> 
 
