@@ -2,210 +2,143 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B073DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED16C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76CFA218D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753F121019
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:17:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e5PIqvZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbfCORRR (ORCPT
+        id S1729794AbfCORR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 13:17:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39616 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbfCORRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 13:17:16 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C33DF307EAA3;
-        Fri, 15 Mar 2019 17:17:15 +0000 (UTC)
-Received: from [10.36.112.50] (ovpn-112-50.ams2.redhat.com [10.36.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 40F155D6A6;
-        Fri, 15 Mar 2019 17:17:08 +0000 (UTC)
-Subject: Re: [PATCH v5 03/18] wlcore: simplify/fix/optimize
- reg_ch_conf_pending operations
-To:     Fenghua Yu <fenghua.yu@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org
-References: <1552431636-31511-1-git-send-email-fenghua.yu@intel.com>
- <1552431636-31511-4-git-send-email-fenghua.yu@intel.com>
- <87a7hxzjda.fsf@purkki.adurom.net>
- <20190314231614.GA41447@romley-ivt3.sc.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <02f06de8-ebb2-24ff-27e1-f697cadc02c4@redhat.com>
-Date:   Fri, 15 Mar 2019 18:17:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190314231614.GA41447@romley-ivt3.sc.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 15 Mar 2019 13:17:58 -0400
+Received: from mail-eopbgr30056.outbound.protection.outlook.com ([40.107.3.56]:32686
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727001AbfCORR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 13:17:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HidqdyFH1ygEq07AATVX49xsWYUJ5c10bv68RPSirjw=;
+ b=e5PIqvZaHuijU+KDUQERm7tSgfpEoCFyvEAVAF9aazmqmnbrMkpa8UzKvhSwBJQ7Fv4i9LBZSqVvppQZ7iAUjVxgXXPPfrkLh9Aq7cwLXblIuNg7EWmMML+5hhMDpJ7p1hg6UNrXWcSD4mQFcySWJhbekuIToPy6feSEuM2Wfug=
+Received: from VI1PR04MB5533.eurprd04.prod.outlook.com (20.178.122.159) by
+ VI1PR04MB5293.eurprd04.prod.outlook.com (20.177.51.222) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Fri, 15 Mar 2019 17:17:54 +0000
+Received: from VI1PR04MB5533.eurprd04.prod.outlook.com
+ ([fe80::35aa:e13a:52ea:e5e6]) by VI1PR04MB5533.eurprd04.prod.outlook.com
+ ([fe80::35aa:e13a:52ea:e5e6%4]) with mapi id 15.20.1709.011; Fri, 15 Mar 2019
+ 17:17:54 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Alexandre Bailon <abailon@baylibre.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "georgi.djakov@linaro.org" <georgi.djakov@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "ptitiano@baylibre.com" <ptitiano@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Zening Wang <zening.wang@nxp.com>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        Jacky Bai <ping.bai@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
+        Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC PATCH 0/3] Add support of busfreq
+Thread-Topic: [RFC PATCH 0/3] Add support of busfreq
+Thread-Index: AQHU2dO+g7FtRU5+MUaLzLMJn01eLA==
+Date:   Fri, 15 Mar 2019 17:17:53 +0000
+Message-ID: <VI1PR04MB55334013173D78F365CA5E19EE440@VI1PR04MB5533.eurprd04.prod.outlook.com>
+References: <20190313193408.23740-1-abailon@baylibre.com>
+ <AM0PR04MB421150DF12C869161E7ED4C180440@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <56e96a3a-4901-c79c-e91d-6b6a0690e5b7@baylibre.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 15 Mar 2019 17:17:16 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [2a04:241e:504:3000:72c9:4eff:fe9d:241b]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f8efbf92-0692-45f5-acc0-08d6a96a291e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB5293;
+x-ms-traffictypediagnostic: VI1PR04MB5293:
+x-microsoft-antispam-prvs: <VI1PR04MB5293D18E5D2C03BC8077AECBEE440@VI1PR04MB5293.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09778E995A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(136003)(346002)(39860400002)(366004)(189003)(199004)(5660300002)(33656002)(86362001)(81156014)(6436002)(81166006)(8676002)(46003)(2201001)(186003)(97736004)(71200400001)(71190400001)(102836004)(486006)(44832011)(52536014)(2501003)(25786009)(4326008)(476003)(446003)(14454004)(74316002)(76176011)(478600001)(105586002)(7696005)(9686003)(7416002)(106356001)(68736007)(229853002)(305945005)(8936002)(53546011)(2906002)(6506007)(256004)(53936002)(6116002)(14444005)(99286004)(316002)(55016002)(110136005)(54906003)(6246003)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5293;H:VI1PR04MB5533.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1FBhiF+hOY3dadjiOgwPkWrSHP5k+i5xbIXrHk/JlcJNnSnZtBxKHUuEMTIKTar97Loc/znX3CBqVWy6lWsFIdx7o1xlplVKKG03/5o56lXfZblIlCWNmKmIEw4OZQ5bFURLhIam6/BirUykCHLrSBcihDTy7125IVi+FhTlD7B3BVXd7JwoxeElQe0HwN2KLcsN/W0lnGdVO596Sl15FGLY1Ae+A7HZUESWdQD2ZP3Dkwhq+QKM8F8K0ZAmKAF48+cimN5me10QwnIskxfGlsOCcIB4vSjZ4ZGuOQZRDZOstoBpmAIOG4fHDOQ6odC8GSvZCRk9VS/8VK8AQbeJcLDcnbOXJKzeiTphEtusfcAZc55zejchWzu70YqJVQvRPwiOCbU+MFQBfkcn+PaFfJtrgF/uj8J1vWZfc/DCEHs=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8efbf92-0692-45f5-acc0-08d6a96a291e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2019 17:17:53.9546
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5293
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/03/19 00:16, Fenghua Yu wrote:
-> Hi, Valo,
-> 
-> On Thu, Mar 14, 2019 at 03:16:33PM +0200, Kalle Valo wrote:
->> Fenghua Yu <fenghua.yu@intel.com> writes:
->>
->>> From: Paolo Bonzini <pbonzini@redhat.com>
->>>
->>> Bitmaps are defined on unsigned longs, so the usage of u32[2] in the
->>> wlcore driver is incorrect.  As noted by Peter Zijlstra, casting arrays
->>> to a bitmap is incorrect for big-endian architectures.
->>>
->>> When looking at it I observed that:
->>>
->>> - operations on reg_ch_conf_pending is always under the wl_lock mutex,
->>> so set_bit is overkill
->>>
->>> - the only case where reg_ch_conf_pending is accessed a u32 at a time is
->>> unnecessary too.
->>>
->>> This patch cleans up everything in this area, and changes tmp_ch_bitmap
->>> to have the proper alignment.
->>>
->>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->>> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
->>
->> [...]
->>
->>>  int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
->>>  {
->>>  	struct wl12xx_cmd_regdomain_dfs_config *cmd = NULL;
->>>  	int ret = 0, i, b, ch_bit_idx;
->>> -	u32 tmp_ch_bitmap[2];
->>> +	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
->>>  	struct wiphy *wiphy = wl->hw->wiphy;
->>>  	struct ieee80211_supported_band *band;
->>>  	bool timeout = false;
->>
->> [...]
->>
->>> @@ -1754,8 +1751,8 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
->>>  		goto out;
->>>  	}
->>>  
->>> -	cmd->ch_bit_map1 = cpu_to_le32(tmp_ch_bitmap[0]);
->>> -	cmd->ch_bit_map2 = cpu_to_le32(tmp_ch_bitmap[1]);
->>> +	cmd->ch_bit_map1 = tmp_ch_bitmap[0];
->>> +	cmd->ch_bit_map2 = tmp_ch_bitmap[1];
->>
->> Will sparse still be happy? AFAICS you are now assigning u32 to __le32:
->>
->> struct wl12xx_cmd_regdomain_dfs_config {
->>        struct wl1271_cmd_header header;
->>
->>        __le32 ch_bit_map1;
->>        __le32 ch_bit_map2;
-> 
-> Discussion between Peter and Paolo (https://lkml.org/lkml/2019/3/4/521)
-> may answer your question.
-
-No, Kalle is right.  You do need to change
-
--	u32 tmp_ch_bitmap[2];
-+	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
-
-into
-
--	u32 tmp_ch_bitmap[2];
-+	__le32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
-
-The assignment from wl->reg_ch_conf_pending to tmp_ch_bitmap is fine
-because it goes through memcpy.
-
-Paolo
-
-> (Sorry I didn't send to you v4 patch set)
-> 
->>
->> Also this doesn't depend on anything else from this patchset, right? So
->> I could apply this directly?
-> 
-> You are right. This patch doesn't rely on other patches from this patchset.
-> This patch just fixes a split lock issue. You could apply this directly
-> without other patches.
-> 
-> Thanks.
-> 
-> -Fenghua
-> 
-
+On 3/15/19 11:31 AM, Alexandre Bailon wrote:=0A=
+>>> This series is sent as RFC mostly because the current support of i.MX S=
+oC won't=0A=
+>>> benefit of busfreq framework, because the clocks' driver don't support=
+=0A=
+>>> interconnect / dram frequency scaling.=0A=
+>>> As exemple, this series implements busfreq for i.MX8MM whose upstreamin=
+g=0A=
+>>> is in progress. Because this relies on ATF to do the frequency scaling,=
+ it won't=0A=
+>>> be hard make it work.=0A=
+=0A=
+>> How can I test this patch series?=0A=
+>> Any additional patches you can share with us?=0A=
+>> Or what else we need to do to test it? We can help with it.=0A=
+=0A=
+> Many other patches will be required to test the series.=0A=
+> There are a couple of patches that updates i.MX device drivers to=0A=
+> request for bandwidth (does similar thing as bus_freq_request and=0A=
+> bus_freq_release).=0A=
+=0A=
+The interconnect framework asks for bandwidth in bytes/second but in NXP =
+=0A=
+tree most requests are of the form "request_bus_freq(BUS_FREQ_HIGH);". =0A=
+In many cases (ethernet) it doesn't seem you can calculate a specific =0A=
+bandwidth usefully.=0A=
+=0A=
+Instead of asking for "infinite bandwidth zero latency" to force =0A=
+everything to "high" it would be nicer to "request an opp".=0A=
+=0A=
+Power-domain bindings mentioned that consumer-devices can specify a =0A=
+"required-opps" property but I've found zero users in tree. Maybe some =0A=
+helpers could be written to parse that property and automatically =0A=
+request ICC opp on device suspend/resume via device-links?=0A=
+=0A=
+I know that stuff was written for genpd but it looks like a very good =0A=
+fit to me.=0A=
+=0A=
+> In addition, a patch to that allow to scale the DRAM=0A=
+> frequency using CCF is required. I'm still working on this patch.=0A=
+=0A=
+I'm not sure what you mean here, do you want a clk set_rate to change =0A=
+the DRAM freq? It makes sense for DDRC to be a node in the interconnect =0A=
+framework and switch OPP inside icc implementation via an ATF call.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
