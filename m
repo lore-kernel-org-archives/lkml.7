@@ -2,97 +2,111 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A06C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04837C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C572186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D328921872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfCODgo (ORCPT
+        id S1727265AbfCODne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 23:36:44 -0400
-Received: from mx.sdf.org ([205.166.94.20]:51241 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbfCODgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 23:36:43 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2F3ZVwU004274
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Fri, 15 Mar 2019 03:35:31 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x2F3ZUgS024157;
-        Fri, 15 Mar 2019 03:35:30 GMT
-Date:   Fri, 15 Mar 2019 03:35:30 GMT
-From:   George Spelvin <lkml@sdf.org>
-Message-Id: <201903150335.x2F3ZUgS024157@sdf.org>
-To:     andriy.shevchenko@linux.intel.com, lkml@sdf.org, st5pub@yandex.ru
-Subject: Re: [PATCH 1/5] lib/sort: Make swap functions more generic
-Cc:     akpm@linux-foundation.org, daniel.wagner@siemens.com,
-        dchinner@redhat.com, don.mullis@gmail.com, geert@linux-m68k.org,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk
-In-Reply-To: <1145741552593595@sas2-2074c606c35d.qloud-c.yandex.net>
-References: <cover.1552097842.git.lkml@sdf.org>,
-    <dc6cc09e71f8687ff2ef4cbfc2b11accc9aba8aa.1552097842.git.lkml@sdf.org>,
-    <20190309140653.GO9224@smile.fi.intel.com>,
-    <201903091553.x29FrfMR018600@sdf.org>,
-    <20190314092958.GV9224@smile.fi.intel.com>,
-    <201903141009.x2EA9q1Z025888@sdf.org>,
-    <CAMuHMdW0jd-oNtgBf=aHfzVoBbVh0OJYC6ELhDv3VrcGwUECwA@mail.gmail.com>,
-    <201903141153.x2EBrtKi000133@sdf.org>,
-    <20190314121811.GY9224@smile.fi.intel.com>,
-    <1145741552593595@sas2-2074c606c35d.qloud-c.yandex.net>
+        Thu, 14 Mar 2019 23:43:34 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46935 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfCODne (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 23:43:34 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c18so7163971otl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 20:43:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m1cM0hD0iaSSll7TNk9VjvZsrohSkbKY0TH6w+tjBEk=;
+        b=QhrFV5jrZQj/09bQV/juO8BV3ElPFGbwUUvBG3h+1JT4iq9EgX15+aij9zXYmWryOS
+         cYCwgRZ8rIX5eelQlZVs+Imj++0x3fS8zUSXJi1Zr3xdqBozGPukybHIeA2ntAnBboR/
+         2eq2/GII3e6j/huDzdXzgIxGEdD88PLZ0h4DeM7AcTwMcSWZDwMrkeo/sZj5nVOgcl1W
+         9/ho5lL9u5FaTVXnHe1JQdT2XsBNNytR6+1qAbzq5CXiG9vE6HqrKXs6zVoS4yQ7ISK/
+         OG5mhSyeQ6BukBtWf1QcVUMFi78VqHPM2o+OeztVrEascMZmhegIlO/GPMc63bvSY0Oo
+         2jdw==
+X-Gm-Message-State: APjAAAUQ+JUsWhXOfstsXbGze9RU3T/1KoRa0uh1eYxOhI4xIKj/Bj81
+        7BZsZZ7ujEp2NF77NHIQXcI=
+X-Google-Smtp-Source: APXvYqxvFJBHD9s4I0eNbzqgQHsFbu7W9iolo8f3gFUJWFxlYyIzoe68S2SHXmshZ12diLwPvICVOA==
+X-Received: by 2002:a9d:64d0:: with SMTP id n16mr846588otl.268.1552621413062;
+        Thu, 14 Mar 2019 20:43:33 -0700 (PDT)
+Received: from sultan-box.localdomain ([107.193.118.89])
+        by smtp.gmail.com with ESMTPSA id i9sm336461otl.43.2019.03.14.20.43.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Mar 2019 20:43:32 -0700 (PDT)
+Date:   Thu, 14 Mar 2019 20:43:28 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190315034328.GA3171@sultan-box.localdomain>
+References: <20190311175800.GA5522@sultan-box.localdomain>
+ <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
+ <20190311204626.GA3119@sultan-box.localdomain>
+ <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
+ <20190312080532.GE5721@dhcp22.suse.cz>
+ <20190312163741.GA2762@sultan-box.localdomain>
+ <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
+ <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
+ <20190314204911.GA875@sultan-box.localdomain>
+ <20190315025448.GA3378@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190315025448.GA3378@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> swap_bytes / swap_4byte_words / swap_8byte_words
->> swap_bytes / swap_ints / swap_longs
->> swap_1 / swap_4 / swap_8
->> Pistols at dawn?
+On Thu, Mar 14, 2019 at 10:54:48PM -0400, Joel Fernandes wrote:
+> I'm not sure if that makes much semantic sense for how the signal handling is
+> supposed to work. Imagine a parent sends SIGKILL to its child, and then does
+> a wait(2). Because the SIGKILL blocks in your idea, then the wait cannot
+> execute, and because the wait cannot execute, the zombie task will not get
+> reaped and so the SIGKILL senders never gets unblocked and the whole thing
+> just gets locked up. No? I don't know it just feels incorrect.
 
-On Thu, 14 Mar 2019 at 22:59:55 +0300, Andrey Abramov wrote:
-> Yes, in my opinion, swap_bytes / swap_ints / swap_longs are the
-> most readable because we have both swap_ints and swap_longs functions
-> (in one file near each other), so I don't think that there will be
-> any confusion about size.
+Block until the victim becomes a zombie instead.
 
-Yes, that's what I thought.  They're three related but different
-functions, suffixed _bytes, _ints, and _longs.  What could the
-difference possibly be?  And if anyone has any lingering doubts,
-the functions are right there, with exquisitely clear comments.
+> Further, in your idea adding stuff to task_struct will simply bloat it - when
+> this task can easily be handled using eBPF without making any kernel changes.
+> Either by probing sched_process_free or sched_process_exit tracepoints.
+> Scheduler maintainers generally frown on adding stuff to task_struct
+> pointlessly there's a good reason since bloating it effects the performance
+> etc, and something like this would probably never be ifdef'd out behind a
+> CONFIG.
 
-No to mention where they're used.  Is "is_aligned(base, size, 8)"
-remotely obscure?  Especially in context:
+Adding something to task_struct is just the easiest way to test things for
+experimentation. This can be avoided in my suggestion by passing the pointer to
+a completion via the relevant functions, and then completing it at the time the
+victim transitions to a zombie state. I understand it's possible to use eBPF for
+this, but it seems kind of messy since this functionality is something that I
+think others would want provided by the kernel (i.e., anyone using PSI to
+implement their own OOM killer daemon similar to LMKD).
 
-		if (is_aligned(base, size, 8))
-			swap_func = swap_longs;
-		else if (is_aligned(base, size, 4))
-			swap_func = swap_ints;
-		else
-			swap_func = swap_bytes;
-
-What subtle and mysterious code.
-
-> But actually, it doesn't matter which name will you take, because
-> the meaning of each, in my opinion, is obvious enough, so I don't
-> mind about any of these options.
-
-I'm just amazed that this piece of bikeshedding is the most
-contentious thing about the patch series.
-
-I mean, if I'd named them:
-	llanfairpwllgwyngyll()
-	shravanabelagola()
-	zheleznodorozhny()
-or
-	peckish()
-	esuriant()
-	hungry()
-then yes, those would be bad names.
-
-I prefer the shorter _ints and _longs names, but this is just
-not a hill I want to die on.
+Thanks,
+Sultan
