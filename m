@@ -2,184 +2,206 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E7CC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851ADC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B80A218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:18:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gxhQwXAO"
+	by mail.kernel.org (Postfix) with ESMTP id 5420521019
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 17:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552670370;
+	bh=TJyOOtLh9MZWJV6BcKQyBEeoGqsqjad7T2A2hZ2CB0k=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=EG875u/ONcOwHF69lN4UTAf5Ay3DWfaOgPqO8yOyI5nIosn1hfnPB+wdpA/QQEQnN
+	 gTIyBSHoNlSgyNiLuc+6AOwGZWRSkdte4DxbgLehkORJK1v0GUuAakzKmVYnVy8wfF
+	 EDTMeWJAqln6Y3W7kUQEPFaY9sSZ3ie747/Hg1xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbfCORSD (ORCPT
+        id S1729834AbfCORT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 13:18:03 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:44857 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbfCORSC (ORCPT
+        Fri, 15 Mar 2019 13:19:29 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54158 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbfCORT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 13:18:02 -0400
-Received: by mail-vk1-f193.google.com with SMTP id q189so2371057vkq.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 10:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rnoznC+t5dzyGLgzfOQVo2l5wURP9NE8DM3DcfltKV4=;
-        b=gxhQwXAOoftHpXlUgejl7DE+58vlxEnTn2okDInr44WrKPy2T30fSxzRoS0ZLhfu2K
-         RZH4Qo2nRyNMfhapCPsjmz9MLiLkAaI63UrapdCTtXtsQXyOs0mVu2eAhFCv/tbh12p/
-         kJK1p5d7nqDtXmHIOVNBB148pTsCizZTW2O2pop8/3cJe6ExN1RyG2CGM2UsPQ+caeqV
-         CDUqwA/RpdRqNVSd3bR4wMWv4/jbaEWOd1ATWzqUTvWPyULNhbV2f+yHmkjUkl+rYYzo
-         HbeOv2CxytoRfrpqFpsjCr/TYWPvjAdAGOLdGwfEQZP6EQRKo0eSFOGF9jf6DeFlm05Q
-         lRug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rnoznC+t5dzyGLgzfOQVo2l5wURP9NE8DM3DcfltKV4=;
-        b=d7MPxg7gSmielsTJY73fmc+EbzjjKfGeb4oJH5kCObwWP/SvU5+QZxSpt6uvvEdx0F
-         Se9MmPwqBELossw23i6Wa0PbDsDSc3zfeBBMzqtognzsIfMgS3zt268Vzy3zZrgf8q1I
-         aqdXvwQNkaNPvZuR0iR1TbbToQTgA/9A2eIhwpGvKOTavWiVQcGySknx2/SiplERWFUw
-         +c3AtV3ufShtLUahyhMtNvf8jogjYsNWGjtowVIeFshW9Voz+d+V/lzXN7NOOYRyansV
-         zF7DeXL4JX6ORUFuHYtxtDuGhT8+N7wa3REVFToxiN2u1/teZ4/8pEhcf/iAugDDvPTo
-         8TKQ==
-X-Gm-Message-State: APjAAAUnz1vW1lPuPGt9NtPMLvw+dT7AkzDJP4a2PQHnt6fFCIWoUfwg
-        gxif37RYS1S/zxsYKwOxhFb9NgX64GV+btr6rB6zAg==
-X-Google-Smtp-Source: APXvYqwDKhgiky+EFFXeweQWiRnEf661Q5jhY8blZ4geRrTDkZbB8mTHxm8poc7SFzPii5oxSTnH8NYgPBTTX5IIPQo=
-X-Received: by 2002:a1f:2dc7:: with SMTP id t190mr2543104vkt.55.1552670281373;
- Fri, 15 Mar 2019 10:18:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190310203403.27915-1-sultan@kerneltoast.com>
- <20190311174320.GC5721@dhcp22.suse.cz> <20190311175800.GA5522@sultan-box.localdomain>
- <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
- <20190311204626.GA3119@sultan-box.localdomain> <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
- <20190312080532.GE5721@dhcp22.suse.cz> <20190312163741.GA2762@sultan-box.localdomain>
- <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
- <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
- <20190314204911.GA875@sultan-box.localdomain> <20190314231641.5a37932b@oasis.local.home>
- <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com> <20190315124348.528ecd87@gandalf.local.home>
-In-Reply-To: <20190315124348.528ecd87@gandalf.local.home>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Fri, 15 Mar 2019 10:17:49 -0700
-Message-ID: <CAKOZuevt5aLc70Tmk6j8Ej5BKpP3hKtZ1y233kz5t5qVTw6zig@mail.gmail.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Mar 2019 13:19:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=fQ2TjBorWdWJotCOH4RIGOuDsSNQ7VBh/rhXMF+il/k=; b=Mr7GEYWTRGvS
+        pMlRbdaL8Y+FUiTCWyAxNfM5jeT+ViLwwWHB3OvIjIUwsJkNDmBwJ5jJhOhTuoKl+or22VDSUevWU
+        6Lraj9h30zkHFX8WLs2nwEhjT+RLqrBWs011YP5/LGF8vm3ZVFAmkrx8VGJGg38Fx2u7iM2J+IQEI
+        Esix0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h4qUO-0002et-Ha; Fri, 15 Mar 2019 17:19:24 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id CB8DD1126E81; Fri, 15 Mar 2019 17:19:23 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: da9055: Convert to regulator core's simplified DT parsing code" to the regulator tree
+In-Reply-To: 
+X-Patchwork-Hint: ignore
+Message-Id: <20190315171923.CB8DD1126E81@debutante.sirena.org.uk>
+Date:   Fri, 15 Mar 2019 17:19:23 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 9:43 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Thu, 14 Mar 2019 21:36:43 -0700
-> Daniel Colascione <dancol@google.com> wrote:
->
-> > On Thu, Mar 14, 2019 at 8:16 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > >
-> > > On Thu, 14 Mar 2019 13:49:11 -0700
-> > > Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> > >
-> > > > Perhaps I'm missing something, but if you want to know when a process has died
-> > > > after sending a SIGKILL to it, then why not just make the SIGKILL optionally
-> > > > block until the process has died completely? It'd be rather trivial to just
-> > > > store a pointer to an onstack completion inside the victim process' task_struct,
-> > > > and then complete it in free_task().
-> > >
-> > > How would you implement such a method in userspace? kill() doesn't take
-> > > any parameters but the pid of the process you want to send a signal to,
-> > > and the signal to send. This would require a new system call, and be
-> > > quite a bit of work.
-> >
-> > That's what the pidfd work is for. Please read the original threads
-> > about the motivation and design of that facility.
->
-> I wasn't Cc'd on the original work, so I haven't read them.
->
-> >
-> > > If you can solve this with an ebpf program, I
-> > > strongly suggest you do that instead.
-> >
->
->
->
-> > We do want killed processes to die promptly. That's why I support
-> > boosting a process's priority somehow when lmkd is about to kill it.
-> > The precise way in which we do that --- involving not only actual
-> > priority, but scheduler knobs, cgroup assignment, core affinity, and
-> > so on --- is a complex topic best left to userspace. lmkd already has
-> > all the knobs it needs to implement whatever priority boosting policy
-> > it wants.
-> >
-> > Hell, once we add a pidfd_wait --- which I plan to work on, assuming
-> > nobody beats me to it, after pidfd_send_signal lands --- you can
-> > imagine a general-purpose priority inheritance mechanism expediting
-> > process death when a high-priority process waits on a pidfd_wait
-> > handle for a condemned process. You know you're on the right track
-> > design-wise when you start seeing this kind of elegant constructive
-> > interference between seemingly-unrelated features. What we don't need
-> > is some kind of blocking SIGKILL alternative or backdoor event
-> > delivery system.
-> >
-> > We definitely don't want to have to wait for a process's parent to
-> > reap it. Instead, we want to wait for it to become a zombie. That's
-> > why I designed my original exithand patch to fire death notification
-> > upon transition to the zombie state, not upon process table removal,
-> > and I expect pidfd_wait (or whatever we call it) to act the same way.
-> >
-> > In any case, there's a clear path forward here --- general-purpose,
-> > cheap, and elegant --- and we should just focus on doing that instead
-> > of more complex proposals with few advantages.
->
-> If you add new pidfd systemcalls then making a new way to send a signal
-> and block till it does die or whatever is
+The patch
 
-Right. And we shouldn't couple the killing and the waiting: while we
-now have a good race-free way to kill processes using
-pidfd_send_signal, but we still have no good facility for waiting for
-the death of a process that isn't a child of the waiter. Any kind of
-unified "kill and wait for death" primitive precludes the killing
-thread waiting for things other than death at the same time! Instead,
-if we allow waiting for an arbitrary process's death using
-general-purpose wait primitives like select/poll/epoll/io_submit/etc.,
-then synchronous killing becomes just another sleep that composes in
-useful and predictable ways.
+   regulator: da9055: Convert to regulator core's simplified DT parsing code
 
-> more acceptable than adding a
-> new signal that changes the semantics of sending signals, which is what
-> I was against.
+has been applied to the regulator tree at
 
-Agreed. Even if it were possible to easily add signals without
-breaking everyone, a special kind of signal with delivery semantics
-different from those of existing signals is a bad idea, and not really
-a signal at all, but just a new system call in disguise.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-> I do agree with Joel about bloating task_struct too. If anything, have
-> a wait queue you add, where you can allocate a descriptor with the task
-> dieing and task killing, and just search this queue on dying. We could
-> add a TIF flag to the task as well to let the exiting of this task know
-> it should do such an operation.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-That's my basic plan. I think we need one link from struct signal or
-something so we don't end up doing some kind of *global* search on
-process death, but let's see how it goes.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From db7ecb493cab3f27da72c6460991e1de9969f9b8 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Tue, 12 Mar 2019 23:47:59 +0800
+Subject: [PATCH] regulator: da9055: Convert to regulator core's simplified DT
+ parsing code
+
+Use regulator core's simplified DT parsing code to simply the driver
+implementation.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/da9055-regulator.c | 67 +++-------------------------
+ 1 file changed, 6 insertions(+), 61 deletions(-)
+
+diff --git a/drivers/regulator/da9055-regulator.c b/drivers/regulator/da9055-regulator.c
+index 3ade4b8d204e..bcbc2fbd7fea 100644
+--- a/drivers/regulator/da9055-regulator.c
++++ b/drivers/regulator/da9055-regulator.c
+@@ -338,6 +338,8 @@ static const struct regulator_ops da9055_ldo_ops = {
+ {\
+ 	.reg_desc = {\
+ 		.name = #_id,\
++		.of_match = of_match_ptr(#_id),\
++		.regulators_node = of_match_ptr("regulators"),\
+ 		.ops = &da9055_ldo_ops,\
+ 		.type = REGULATOR_VOLTAGE,\
+ 		.id = DA9055_ID_##_id,\
+@@ -366,6 +368,8 @@ static const struct regulator_ops da9055_ldo_ops = {
+ {\
+ 	.reg_desc = {\
+ 		.name = #_id,\
++		.of_match = of_match_ptr(#_id),\
++		.regulators_node = of_match_ptr("regulators"),\
+ 		.ops = &da9055_buck_ops,\
+ 		.type = REGULATOR_VOLTAGE,\
+ 		.id = DA9055_ID_##_id,\
+@@ -509,59 +513,6 @@ static inline struct da9055_regulator_info *find_regulator_info(int id)
+ 	return NULL;
+ }
+ 
+-#ifdef CONFIG_OF
+-static struct of_regulator_match da9055_reg_matches[] = {
+-	{ .name = "BUCK1", },
+-	{ .name = "BUCK2", },
+-	{ .name = "LDO1", },
+-	{ .name = "LDO2", },
+-	{ .name = "LDO3", },
+-	{ .name = "LDO4", },
+-	{ .name = "LDO5", },
+-	{ .name = "LDO6", },
+-};
+-
+-static int da9055_regulator_dt_init(struct platform_device *pdev,
+-				    struct da9055_regulator *regulator,
+-				    struct regulator_config *config,
+-				    int regid)
+-{
+-	struct device_node *nproot, *np;
+-	int ret;
+-
+-	nproot = of_node_get(pdev->dev.parent->of_node);
+-	if (!nproot)
+-		return -ENODEV;
+-
+-	np = of_get_child_by_name(nproot, "regulators");
+-	if (!np)
+-		return -ENODEV;
+-
+-	ret = of_regulator_match(&pdev->dev, np, &da9055_reg_matches[regid], 1);
+-	of_node_put(nproot);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "Error matching regulator: %d\n", ret);
+-		return ret;
+-	}
+-
+-	config->init_data = da9055_reg_matches[regid].init_data;
+-	config->of_node = da9055_reg_matches[regid].of_node;
+-
+-	if (!config->of_node)
+-		return -ENODEV;
+-
+-	return 0;
+-}
+-#else
+-static inline int da9055_regulator_dt_init(struct platform_device *pdev,
+-				       struct da9055_regulator *regulator,
+-				       struct regulator_config *config,
+-				       int regid)
+-{
+-	return -ENODEV;
+-}
+-#endif /* CONFIG_OF */
+-
+ static int da9055_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct regulator_config config = { };
+@@ -582,18 +533,12 @@ static int da9055_regulator_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	regulator->da9055 = da9055;
+-	config.dev = &pdev->dev;
++	config.dev = da9055->dev;
+ 	config.driver_data = regulator;
+ 	config.regmap = da9055->regmap;
+ 
+-	if (pdata) {
++	if (pdata)
+ 		config.init_data = pdata->regulators[pdev->id];
+-	} else {
+-		ret = da9055_regulator_dt_init(pdev, regulator, &config,
+-					       pdev->id);
+-		if (ret < 0)
+-			return ret;
+-	}
+ 
+ 	ret = da9055_gpio_init(regulator, &config, pdata, pdev->id);
+ 	if (ret < 0)
+-- 
+2.20.1
+
