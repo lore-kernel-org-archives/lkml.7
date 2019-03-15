@@ -2,201 +2,212 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B429C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3652C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDF1218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0431218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 20:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gh7ioiER"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GVf2d9dO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfCOUy0 (ORCPT
+        id S1726860AbfCOUyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 16:54:26 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:37885 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfCOUy0 (ORCPT
+        Fri, 15 Mar 2019 16:54:53 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:36473 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfCOUyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 16:54:26 -0400
-Received: by mail-vs1-f68.google.com with SMTP id w13so176765vsc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 13:54:25 -0700 (PDT)
+        Fri, 15 Mar 2019 16:54:52 -0400
+Received: by mail-yw1-f66.google.com with SMTP id 189so8354875ywi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 13:54:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aaDgNqwrMtkd1jZdYBYWdnJcXl5sG/sCtLVTTyqj4TY=;
-        b=Gh7ioiERruWDR6RwylEqZnL6aH1UZsmQ05tDgJI6vgflJcasruflnYtDk4lOZM6wXN
-         +VQtT9vPFXvy+LzfS5pxqQ3zRKbbRCb40t2tHvcCw+hFTsNOLg0u62DZfXb6XA751rVY
-         iv4TzgzmrXH5YUGJvSc4qcLb2X98B2yp4ucvI=
+        h=from:mime-version:date:message-id:subject:to:cc;
+        bh=RrMRJ6eH/hjzKu3LR3gIVFNgcuO2FP49mrXuRHGUiak=;
+        b=GVf2d9dO3nefq4cMFR+0ytUIwdUdB0qS96eysTUaOBft3WkZrDUyJd0rCZQ4joMSj5
+         hX/C/xOJfkduIcHFW4H+dpqBl/jEaaINWQfSTCfmRXp1UPLhE3De0hkEFwWkH5ksmADS
+         zIpNPOvl7I4PHQzfnZoiDQe0tcLIp1z7qtdT4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aaDgNqwrMtkd1jZdYBYWdnJcXl5sG/sCtLVTTyqj4TY=;
-        b=CK76SwT0aH6vZ94+7snIwpKQVb5LHNvYynexWGIdjfGojzZGLv8yX3CC3YMuweELtH
-         gAViuGZXAKTrnEsd1cDEnJ0VkyLn+8Yf/ElI9nXazgMwa6Gjxk+GBecLx4kcnp+akU7N
-         bN3NcxJ+9hdZo3fT8Fxpg1f1zTAK3sCNMgfkwygiI4FEsxyxXS+ov+M+as8tUCx4jOZW
-         mm4dOzFa2Yu9p/gaYCLgn2gXHCD04bhmYdI1fOR/j8UuiyRT+A6Zz/gx8nR+k9OjGWnJ
-         KGHu8eW3i+Jc3LJjbTSDqVLwhVBQTikkPsaJv5n8Z7kq+BSYXeFRb7ked9VU62XdRbI4
-         5Q4A==
-X-Gm-Message-State: APjAAAXqFqtHt4Y4ovWsFyZbTqoErPTiPrbGAzrDL2pq1wKqC2JX0343
-        DsxqQmeyLYzymCJ5S5W0jTMVDTYmqhw=
-X-Google-Smtp-Source: APXvYqw4lxOXwDWUwy0D4Zde7ESWVNGI/kI4avNFKKINPG09yUXvDIF21l7lQllPC92kyFO0O3JIDQ==
-X-Received: by 2002:a67:ecc2:: with SMTP id i2mr3100489vsp.12.1552683264676;
-        Fri, 15 Mar 2019 13:54:24 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id z9sm877852vkd.22.2019.03.15.13.54.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 13:54:23 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id z25so4890806vsk.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 13:54:23 -0700 (PDT)
-X-Received: by 2002:a67:b60c:: with SMTP id d12mr1947437vsm.149.1552683262678;
- Fri, 15 Mar 2019 13:54:22 -0700 (PDT)
+        h=x-gm-message-state:from:mime-version:date:message-id:subject:to:cc;
+        bh=RrMRJ6eH/hjzKu3LR3gIVFNgcuO2FP49mrXuRHGUiak=;
+        b=ZaYMgKdCzuZqouVNPrOsPNwTtTPoSscRkOoLF9WoneF2g8p+KUGmlKtiILRkA5T+Ke
+         ABR6kK9SmjkRbTBarZH8+VmJl7D0/gH/lBTjFIW78NQx/Z+KJafKsg+gkDi0asBXSDsO
+         qUKYu4IUPKrXEfcwtkKsdPd0pEVB2jzSGuAEQIl2lswTxgbIqc71jS/Fm1RbQB/OYy7N
+         gDRpT4vRx6IstEcSOPz63tJTXLn+OfkZIF10syRiMbqJUOY/W9172ahgBSEZUzbMZV8G
+         TdKd5OgB5AD8K3uAEL0fzVOsfWATw5wKMNPV4zYkOH972n1Mp+3VZydMfxT7Zht5KENW
+         +i/g==
+X-Gm-Message-State: APjAAAXz57DupCM6+x4lsTKxB9JR5pbwAO8PhulUFM+Xtfp1EkwiAup0
+        c29EPwMjBQpdZBZFp4Js8Opzk95fx7GgxdVf3Jv91A==
+X-Google-Smtp-Source: APXvYqwoLYWwNokX5rTE69qOq/XHHC2zaF8rnRXfVQCD+iZFA9rtNYWrL6xXo0G9i8AaCdp1nICl5pYlNH3aOdqnCtw=
+X-Received: by 2002:a25:e68d:: with SMTP id d135mr4764890ybh.334.1552683291744;
+ Fri, 15 Mar 2019 13:54:51 -0700 (PDT)
+Received: from 764776645087 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 15 Mar 2019 13:54:50 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
 MIME-Version: 1.0
-References: <20190315174528.16531-1-dianders@chromium.org> <20190315144130.1aa36931@gandalf.local.home>
- <CAD=FV=WUnmMxKZrH-Jfz-VocieOu-Cfsi1aLpB8G5FnLM+_W_w@mail.gmail.com> <20190315161203.25dc2a0c@gandalf.local.home>
-In-Reply-To: <20190315161203.25dc2a0c@gandalf.local.home>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 15 Mar 2019 13:54:11 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VcpVYjwYq3zo6ODKzRBtDkjgEM2sXC-KMUa0ObskfTnw@mail.gmail.com>
-Message-ID: <CAD=FV=VcpVYjwYq3zo6ODKzRBtDkjgEM2sXC-KMUa0ObskfTnw@mail.gmail.com>
-Subject: Re: [PATCH v3] tracing: kdb: Allow ftdump to skip all but the last
- few lines
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Brian Norris <briannorris@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 15 Mar 2019 13:54:50 -0700
+Message-ID: <CAG5bF+S6OvBnsaR6UpMCqjDR9_hMo6qRMHGiW+iCaRYQW4C3YA@mail.gmail.com>
+Subject: [PATCH] lib: Add shared copy of __lshrti3 from libgcc
+To:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Manoj Gupta <manojgupta@chromium.org>,
+        Tiancong Wang <tcwang@chromium.org>,
+        Stephen Hines <srhines@google.com>,
+        clang-built-linux@googlegroups.com,
+        Matthias Kaehlcke <mka@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The compiler may emit calls to __lshrti3 from the compiler runtime
+library, which results in undefined references:
 
-On Fri, Mar 15, 2019 at 1:12 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 15 Mar 2019 12:55:31 -0700
-> Doug Anderson <dianders@chromium.org> wrote:
->
-> > >
-> > > Actually, you can add a function in trace.c that exposes
-> > > get_total_entries:
-> > >
-> > > unsigned long trace_total_entries(struct trace_array *tr)
-> > > {
-> > >         unsigned long total, entries;
-> > >
-> > >         if (!tr)
-> > >                 tr = &global_trace;
-> > >
-> > >         get_total_entries(tr->trace_buffer, &total, &entries);
-> > >
-> > >         return entries;
-> > > }
-> > >
-> > > and then do:
-> > >                 cnt = trace_total_entries(NULL);
-> >
-> > OK.  I guess I'll need to figure out how to add an argument to limit
-> > it to just one CPU too since the kdb command allows you to specify a
-> > single CPU or all CPUs.  I think the best way would mean adding an
-> > argument to get_total_entries().  ...or I can just change the kdb
-> > command to not allow specifying a CPU?  Which do you prefer?  I
-> > personally haven't ever used the feature to just print the ftrace
-> > buffer for a certain CPU so I'd be OK removing it.
->
-> I would make a get_total_entries_cpu() that contains the guts of
-> get_total_entries() which then calls get_total_entries_cpu()
->
-> static void
-> get_total_entries(struct trace_buffer *buf,
->                   unsigned long *total, unsigned long *entries)
-> {
->         unsigned long t, e;
->         int cpu;
->
->         *total = 0;
->         *entries = 0;
->
->         for_each_tracing_cpu(cpu)
->                 get_total_entries_cpu(buf, &t, &e, cpu);
->                 *total += t;
->                 *entries += e;
->         }
-> }
->
-> >
-> >
-> > > Don't modify ftrace_dump_buf()
-> >
-> > I still kinda prefer modifying ftrace_dump_buf() just because it's
-> > pretty important that the "count" we come up with match pretty exactly
-> > the count that ftrace_dump_buf() will come up with.  My worry probably
-> > comes from my lack of experience with the internals of ftrace but, for
-> > instance, I see things like "tr->trace_flags &=
-> > ~TRACE_ITER_SYM_USEROBJ" in ftrace_dump_buf() and I worry that it will
-> > affect the count.  ...but if you tell me that I need not worry about
-> > things like that then I won't.  :-)
->
-> Hmm, actually your method still wont work, because you are only
-> counting entries not lines. The stack dumps are considered a single
-> line but will print multiple lines.
+arch/x86/kvm/x86.o: In function `mul_u64_u64_shr':
+  include/linux/math64.h:186: undefined reference to `__lshrti3'
 
-LOL.  Back to v1 then?  v1 of the patch [1] was definitely consistent
-even if it was very slow.  Specifically whatever was being counted by
-ftrace_dump_buf() (entries or lines or something in between) was
-definitely used to figure out how many to skip.
+Add a copy of the __lshrti3 libgcc routine (from gcc v4.9.2).
 
+Include the function for x86 builds with clang, which is the
+environment where the above error was observed.
 
-> Not only that, perhaps you should break apart ftrace_dump_buf(),
-> because calling it twice (or doing what I suggested), wont stop tracing
-> in between, and the size of the buffer might change between the two
-> calls.
->
-> You need to move out:
->
->         for_each_tracing_cpu(cpu) {
->                 atomic_inc(&per_cpu_ptr(iter.trace_buffer->data, cpu)->disabled);
->         }
->
->
-> and
->
->         for_each_tracing_cpu(cpu) {
->                 atomic_dec(&per_cpu_ptr(iter.trace_buffer->data, cpu)->disabled);
->         }
->
-> to disable tracing while you do this.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ arch/x86/Kconfig       |  1 +
+ include/linux/libgcc.h | 16 ++++++++++++++++
+ lib/Kconfig            |  3 +++
+ lib/Makefile           |  1 +
+ lib/lshrti3.c          | 31 +++++++++++++++++++++++++++++++
+ 5 files changed, 52 insertions(+)
+ create mode 100644 lib/lshrti3.c
 
-Happy to do this in a v4.  I think it's very unlikely to matter
-because we're in kdb and thus all the other CPUs are stopped and
-interrupts are disabled.  ...so unless an NMI adds something to the
-trace buffer in between the two calls the counts will be the same.
-...but it certainly is cleaner.
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index c1f9b3cf437c..a5e0d923845d 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -105,6 +105,7 @@ config X86
+ 	select GENERIC_IRQ_PROBE
+ 	select GENERIC_IRQ_RESERVATION_MODE
+ 	select GENERIC_IRQ_SHOW
++	select GENERIC_LIB_LSHRTI3		if CC_IS_CLANG
+ 	select GENERIC_PENDING_IRQ		if SMP
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_STRNCPY_FROM_USER
+diff --git a/include/linux/libgcc.h b/include/linux/libgcc.h
+index 32e1e0f4b2d0..a71036471838 100644
+--- a/include/linux/libgcc.h
++++ b/include/linux/libgcc.h
+@@ -22,15 +22,26 @@
+ #include <asm/byteorder.h>
 
+ typedef int word_type __attribute__ ((mode (__word__)));
++typedef int TItype __attribute__ ((mode (TI)));
 
-> The get_total_entries() is the faster approach to get the count, but in
-> either case, the count should end up the same.
+ #ifdef __BIG_ENDIAN
+ struct DWstruct {
+ 	int high, low;
+ };
++
++struct DWstruct128 {
++	long long high, low;
++};
++
+ #elif defined(__LITTLE_ENDIAN)
+ struct DWstruct {
+ 	int low, high;
+ };
++
++struct DWstruct128 {
++	long long low, high;
++};
++
+ #else
+ #error I feel sick.
+ #endif
+@@ -40,4 +51,9 @@ typedef union {
+ 	long long ll;
+ } DWunion;
 
-If you're OK with going back to the super slow mechanism in v1 I can
-do that and we can be guaranteed we're consistent.  Presumably it
-can't be _that_ slow because we're going to use the same mechanism to
-skip the lines later.
++typedef union {
++	struct DWstruct128 s;
++	TItype ll;
++} DWunion128;
++
+ #endif /* __ASM_LIBGCC_H */
+diff --git a/lib/Kconfig b/lib/Kconfig
+index a9e56539bd11..369e10259ea6 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -624,6 +624,9 @@ config GENERIC_LIB_ASHRDI3
+ config GENERIC_LIB_LSHRDI3
+ 	bool
 
-So, if you agree, I'll send out a v4 that looks like v1 except that it
-disables / enables tracing directly in kdb_ftdump() so it stays
-disabled for both calls.
++config GENERIC_LIB_LSHRTI3
++	bool
++
+ config GENERIC_LIB_MULDI3
+ 	bool
 
-
-[1] https://lkml.kernel.org/r/20190305233150.159633-1-dianders@chromium.org
-
--Doug
+diff --git a/lib/Makefile b/lib/Makefile
+index 4e066120a0d6..42648411f451 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -277,6 +277,7 @@ obj-$(CONFIG_PARMAN) += parman.o
+ obj-$(CONFIG_GENERIC_LIB_ASHLDI3) += ashldi3.o
+ obj-$(CONFIG_GENERIC_LIB_ASHRDI3) += ashrdi3.o
+ obj-$(CONFIG_GENERIC_LIB_LSHRDI3) += lshrdi3.o
++obj-$(CONFIG_GENERIC_LIB_LSHRTI3) += lshrti3.o
+ obj-$(CONFIG_GENERIC_LIB_MULDI3) += muldi3.o
+ obj-$(CONFIG_GENERIC_LIB_CMPDI2) += cmpdi2.o
+ obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
+diff --git a/lib/lshrti3.c b/lib/lshrti3.c
+new file mode 100644
+index 000000000000..2d2123bb3030
+--- /dev/null
++++ b/lib/lshrti3.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/export.h>
++#include <linux/libgcc.h>
++
++long long __lshrti3(long long u, word_type b)
++{
++	DWunion128 uu, w;
++	word_type bm;
++
++	if (b == 0)
++		return u;
++
++	uu.ll = u;
++	bm = 64 - b;
++
++	if (bm <= 0) {
++		w.s.high = 0;
++		w.s.low = (unsigned long long) uu.s.high >> -bm;
++	} else {
++		const unsigned long long carries =
++			(unsigned long long) uu.s.high << bm;
++		w.s.high = (unsigned long long) uu.s.high >> b;
++		w.s.low = ((unsigned long long) uu.s.low >> b) | carries;
++	}
++
++	return w.ll;
++}
++#ifndef BUILD_VDSO
++EXPORT_SYMBOL(__lshrti3);
++#endif
+-- 
+2.21.0.360.g471c308f928-goog
