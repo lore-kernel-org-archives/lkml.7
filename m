@@ -2,108 +2,208 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F060C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0953EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6C921872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB15D21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfCOHpD (ORCPT
+        id S1728485AbfCOHpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 03:45:03 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:32916 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727476AbfCOHpD (ORCPT
+        Fri, 15 Mar 2019 03:45:24 -0400
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:52677 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727476AbfCOHpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 03:45:03 -0400
-Received: from light.dominikbrodowski.net (isilmar.linta [10.0.0.1])
-        by isilmar-4.linta.de (Postfix) with ESMTPS id A8D05200939;
-        Fri, 15 Mar 2019 07:45:00 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 4561A209BF; Fri, 15 Mar 2019 08:43:07 +0100 (CET)
-Date:   Fri, 15 Mar 2019 08:43:07 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        fenghua.yu@intel.com, linux-kernel@vger.kernel.org
-Subject: fs_context-related oops in mainline
-Message-ID: <20190315074307.GA31430@light.dominikbrodowski.net>
+        Fri, 15 Mar 2019 03:45:24 -0400
+X-Greylist: delayed 794 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 Mar 2019 03:45:23 EDT
+Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
+        by 156.147.23.51 with ESMTP; 15 Mar 2019 16:45:21 +0900
+X-Original-SENDERIP: 156.147.1.126
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO ?10.177.222.33?) (10.177.222.33)
+        by 156.147.1.126 with ESMTP; 15 Mar 2019 16:45:20 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
+ half-interrupts
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        rostedt@goodmis.org, luto@kernel.org, kernel-team@lge.com
+References: <20180829222021.GA29944@linux.vnet.ibm.com>
+ <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
+ <20190311133939.GA29747@google.com> <20190315073138.GB15148@X58A-UD3R>
+Message-ID: <eea72fb5-c25d-746a-fa48-6d04c8d5d1af@lge.com>
+Date:   Fri, 15 Mar 2019 16:44:52 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190315073138.GB15148@X58A-UD3R>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David, Al,
+On 03/15/2019 04:31 PM, Byungchul Park wrote:
+> On Mon, Mar 11, 2019 at 09:39:39AM -0400, Joel Fernandes wrote:
+>> On Wed, Aug 29, 2018 at 03:20:34PM -0700, Paul E. McKenney wrote:
+>>> RCU's dyntick-idle code is written to tolerate half-interrupts, that it,
+>>> either an interrupt that invokes rcu_irq_enter() but never invokes the
+>>> corresponding rcu_irq_exit() on the one hand, or an interrupt that never
+>>> invokes rcu_irq_enter() but does invoke the "corresponding" rcu_irq_exit()
+>>> on the other.  These things really did happen at one time, as evidenced
+>>> by this ca-2011 LKML post:
+>>>
+>>> http://lkml.kernel.org/r/20111014170019.GE2428@linux.vnet.ibm.com
+>>>
+>>> The reason why RCU tolerates half-interrupts is that usermode helpers
+>>> used exceptions to invoke a system call from within the kernel such that
+>>> the system call did a normal return (not a return from exception) to
+>>> the calling context.  This caused rcu_irq_enter() to be invoked without
+>>> a matching rcu_irq_exit().  However, usermode helpers have since been
+>>> rewritten to make much more housebroken use of workqueues, kernel threads,
+>>> and do_execve(), and therefore should no longer produce half-interrupts.
+>>> No one knows of any other source of half-interrupts, but then again,
+>>> no one seems insane enough to go audit the entire kernel to verify that
+>>> half-interrupts really are a relic of the past.
+>>>
+>>> This commit therefore adds a pair of WARN_ON_ONCE() calls that will
+>>> trigger in the presence of half interrupts, which the code will continue
+>>> to handle correctly.  If neither of these WARN_ON_ONCE() trigger by
+>>> mid-2021, then perhaps RCU can stop handling half-interrupts, which
+>>> would be a considerable simplification.
+>> Hi Paul and everyone,
+>> I was thinking some more about this patch and whether we can simplify this code
+>> much in 2021. Since 2021 is a bit far away, I thought working on it in again to
+>> keep it fresh in memory is a good idea ;-)
+>>
+>> To me it seems we cannot easily combine the counters (dynticks_nesting and
+>> dynticks_nmi_nesting) even if we confirmed that there is no possibility of a
+>> half-interrupt scenario (assuming simplication means counter combining like
+>> Byungchul tried to do in https://goo.gl/X1U77X). The reason is because these
+>> 2 counters need to be tracked separately as they are used differently in the
+>> following function:
+> Hi Joel and Paul,
+>
+> I always love the way to logically approach problems so I'm a fan of
+> all your works :) But I'm JUST curious about something here. Why can't
+> we combine them the way I tried even if we confirm no possibility of
+> half-interrupt? IMHO, the only thing we want to know through calling
+> rcu_is_cpu_rrupt_from_idle() is whether the interrupt comes from
+> RCU-idle or not - of course assuming the caller context always be an
+> well-defined interrupt context like e.g. the tick handler.
+>
+> So the function can return true if the caller is within a RCU-idle
+> region except a well-known single interrupt nested.
+>
+> Of course, now that we cannot confirm it yet, the crowbar is necessary.
+> But does it still have a problem even after confirming it? Why? What am
+> I missing? Could you explain why for me? :(
 
-commit 23bf1b6be9c2 ("kernfs, sysfs, cgroup, intel_rdt: Support fs_context")
-seems to have introduced a bug; at least that's the commit I bisected the
-following oops down to:
 
-[    0.827317] BUG: unable to handle kernel NULL pointer dereference at 0000000000000220
-[    0.829771] #PF error: [normal kernel read fault]
-[    0.831141] PGD 800000007f927067 P4D 800000007f927067 PUD 7f928067 PMD 0 
-[    0.833116] Oops: 0000 [#1] PREEMPT SMP PTI
-[    0.834330] CPU: 1 PID: 46 Comm: mount Tainted: G                T 5.0.0-rc2+ #38
-[    0.836478] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-[    0.839322] RIP: 0010:sysfs_init_fs_context+0x82/0xd0
-[    0.840777] Code: 15 fb ef af 01 48 89 45 08 48 c7 45 10 72 65 65 62 48 c7 03 60 66 22 8f 48 85 ff 48 89 55 00 74 09 f0 ff 8f 5
-[    0.846170] RSP: 0018:ffffa55e8041bdb8 EFLAGS: 00010202
-[    0.847693] RAX: 0000000000000000 RBX: ffff949bbc0fee00 RCX: 0000000000000000
-[    0.850013] RDX: ffff949bbc878d00 RSI: 0000000000000000 RDI: ffffffff8f645c40
-[    0.852134] RBP: ffff949bbc0ff400 R08: 0000000000000001 R09: 00000000001ef140
-[    0.854211] R10: 0000000136a1068e R11: 0000000000000001 R12: 0000000000000000
-[    0.856225] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000008000
-[    0.858350] FS:  000000000050b558(0000) GS:ffff949bbce00000(0000) knlGS:0000000000000000
-[    0.860738] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.862391] CR2: 0000000000000220 CR3: 000000007c1f0004 CR4: 00000000003606e0
-[    0.864463] Call Trace:
-[    0.865200]  alloc_fs_context+0xfa/0x170
-[    0.866349]  do_mount+0x8fa/0xf50
-[    0.867310]  ? memdup_user+0x4b/0x70
-[    0.868350]  ksys_mount+0xba/0xd0
-[    0.869291]  __x64_sys_mount+0x21/0x30
-[    0.870390]  do_syscall_64+0x6a/0x3f4
-[    0.871465]  ? lockdep_hardirqs_off+0x79/0xd0
-[    0.872744]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[    0.874106]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[    0.875584] RIP: 0033:0x4bf02f
-[    0.876496] Code: e8 06 21 f4 ff 5a c3 48 63 ff 50 48 63 d2 b8 67 00 00 00 0f 05 48 89 c7 e8 ee 20 f4 ff 5a c3 49 89 ca 50 b8 8
-[    0.882329] RSP: 002b:00007ffc1befbd80 EFLAGS: 00000212 ORIG_RAX: 00000000000000a5
-[    0.884110] RAX: ffffffffffffffda RBX: 00007ffc1befc058 RCX: 00000000004bf02f
-[    0.885871] RDX: 00007ffc1befdf84 RSI: 00007ffc1befdf90 RDI: 00007ffc1befdf8a
-[    0.888102] RBP: 00007ffc1befdf8a R08: 0000000000000000 R09: 8080808080808080
-[    0.890154] R10: 0000000000008000 R11: 0000000000000212 R12: 00007ffc1befdf90
-[    0.892107] R13: 00007ffc1befdf84 R14: 0000000000008000 R15: 0000000000000000
-[    0.893537] CR2: 0000000000000220
-[    0.894467] ---[ end trace 0a9affd2a96301a9 ]---
-[    0.896230] RIP: 0010:sysfs_init_fs_context+0x82/0xd0
-[    0.897494] Code: 15 fb ef af 01 48 89 45 08 48 c7 45 10 72 65 65 62 48 c7 03 60 66 22 8f 48 85 ff 48 89 55 00 74 09 f0 ff 8f 5
-[    0.903017] RSP: 0018:ffffa55e8041bdb8 EFLAGS: 00010202
-[    0.904315] RAX: 0000000000000000 RBX: ffff949bbc0fee00 RCX: 0000000000000000
-[    0.905857] RDX: ffff949bbc878d00 RSI: 0000000000000000 RDI: ffffffff8f645c40
-[    0.907444] RBP: ffff949bbc0ff400 R08: 0000000000000001 R09: 00000000001ef140
-[    0.909973] R10: 0000000136a1068e R11: 0000000000000001 R12: 0000000000000000
-[    0.911415] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000008000
-[    0.913726] FS:  000000000050b558(0000) GS:ffff949bbce00000(0000) knlGS:0000000000000000
-[    0.916710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.918129] CR2: 0000000000000220 CR3: 000000007c1f0004 CR4: 00000000003606e0
+Did you also want to consider the case the function is called from 
+others than
+well-known interrupt contexts? If yes, then I agree with you, there doesn't
+seem to be the kind of code and it's not a good idea to let the function be
+called generally though.
 
-This occurs while trying to mount sysfs in initramfs
 
-	mount -n -t sysfs sysfs /sys
+> Thanks,
+> Byungchul
+>
+>> static int rcu_is_cpu_rrupt_from_idle(void)
+>> {
+>>          return __this_cpu_read(rcu_data.dynticks_nesting) <= 0 &&
+>>                 __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
+>> }
+>>
+>> dynticks_nesting actually tracks if we entered/exited idle or user mode.
+>>
+>> dynticks_nmi_nesting tracks if we entered/exited interrupts.
+>>
+>> We have to do the "dynticks_nmi_nesting <= 1" check because
+>> rcu_is_cpu_rrupt_from_idle() can possibly be called from an interrupt itself
+>> (like timer) so we discount 1 interrupt, and, the "dynticks_nesting <= 0"
+>> check is because the CPU MUST be in user or idle for the check to return
+>> true. We can't really combine these two into one counter then I think because
+>> they both convey different messages.
+>>
+>> The only simplication we can do, is probably the "crowbar" updates to
+>> dynticks_nmi_nesting can be removed from rcu_eqs_enter/exit once we confirm
+>> no more half-interrupts are possible. Which might still be a worthwhile thing
+>> to do (while still keeping both counters separate).
+>>
+>> However, I think we could combine the counters and lead to simplying the code
+>> in case we implement rcu_is_cpu_rrupt_from_idle differently such that it does
+>> not need the counters but NOHZ_FULL may take issue with that since it needs
+>> rcu_user_enter->rcu_eqs_enter to convey that the CPU is "RCU"-idle.
+>>
+>> Actually, I had another question... rcu_user_enter() is a NOOP in !NOHZ_FULL config.
+>> In this case I was wondering if the the warning Paul added (in the patch I'm replying to)
+>> will really get fired for half-interrupts. The vast majority of the systems I believe are
+>> NOHZ_IDLE not NOHZ_FULL.
+>> This is what a half-interrupt really looks like right? Please correct me if I'm wrong:
+>> rcu_irq_enter()   [half interrupt causes an exception and thus rcu_irq_enter]
+>> rcu_user_enter()  [due to usermode upcall]
+>> rcu_user_exit()
+>> (no more rcu_irq_exit() - hence half an interrupt)
+>>
+>> But the rcu_user_enter()/exit is a NOOP in some configs, so will the warning in
+>> rcu_eqs_e{xit,nter} really do anything?
+>>
+>> Or was the idea with adding the new warnings, that they would fire the next
+>> time rcu_idle_enter/exit is called? Like for example:
+>>
+>> rcu_irq_enter()   [This is due to half-interrupt]
+>> rcu_idle_enter()  [Eventually we enter the idle loop at some point
+>> 		   after the half-interrupt and the rcu_eqs_enter()
+>> 		   would "crowbar" the dynticks_nmi_nesting counter to 0].
+>>
+>> thanks!
+>>
+>>   - Joel
+>>
+>>> Reported-by: Steven Rostedt <rostedt@goodmis.org>
+>>> Reported-by: Joel Fernandes <joel@joelfernandes.org>
+>>> Reported-by: Andy Lutomirski <luto@kernel.org>
+>>> Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+>>> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>>> ---
+>>>   kernel/rcu/tree.c | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+>>> index dc041c2afbcc..d2b6ade692c9 100644
+>>> --- a/kernel/rcu/tree.c
+>>> +++ b/kernel/rcu/tree.c
+>>> @@ -714,6 +714,7 @@ static void rcu_eqs_enter(bool user)
+>>>   	struct rcu_dynticks *rdtp;
+>>>   
+>>>   	rdtp = this_cpu_ptr(&rcu_dynticks);
+>>> +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting != DYNTICK_IRQ_NONIDLE);
+>>>   	WRITE_ONCE(rdtp->dynticks_nmi_nesting, 0);
+>>>   	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+>>>   		     rdtp->dynticks_nesting == 0);
+>>> @@ -895,6 +896,7 @@ static void rcu_eqs_exit(bool user)
+>>>   	trace_rcu_dyntick(TPS("End"), rdtp->dynticks_nesting, 1, rdtp->dynticks);
+>>>   	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>>>   	WRITE_ONCE(rdtp->dynticks_nesting, 1);
+>>> +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting);
+>>>   	WRITE_ONCE(rdtp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
+>>>   }
+>>>   
+>>> -- 
+>>> 2.17.1
+>>>
 
-All this obviously runs in qemu; config and further information are available upon request.
-
-Thanks,
-	Dominik
