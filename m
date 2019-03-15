@@ -2,109 +2,144 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83491C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 14:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFB6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 14:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BABD21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 14:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54E3218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 14:29:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="l3voeamv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnbkgcBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbfCOO3g (ORCPT
+        id S1729295AbfCOO3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 10:29:36 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33629 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbfCOO3f (ORCPT
+        Fri, 15 Mar 2019 10:29:45 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46223 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729241AbfCOO3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 10:29:35 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i19so6494348pfd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 07:29:35 -0700 (PDT)
+        Fri, 15 Mar 2019 10:29:44 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a22so6567969pgg.13;
+        Fri, 15 Mar 2019 07:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GhZ6JEqM6OGPlOqUafs+5RJ8MCNfu/6ROv/YnY68g88=;
-        b=l3voeamv6jZGeOAGko8E4Eje0cjk9b7t/1+dPYeHM/aHRf3+aAu8dujyEp4/C08XTW
-         D9ykaaQzm84JoVzJvzn416WhF9zux+sxDyWyxRNHMX7K1dZj3uV7JOjmSLqS8d9DDVaF
-         gkLRUjB41GkDdsomUWXZVHoZ5KbFS9n6SZye6IIfqAUydQYR+ZI9f0t6t43NiKwwep8i
-         KUWZ6qBBtMLGFACzx8LP2qUGkg7grxwl+fbqzDpHRcpmpPqJLuQCQb3FcjtyxHIxg61h
-         Zb1CSDeRdFg3kKX6ZG8ZeUR87nu1Qu0PrmQqpT8siYDJrz+pohTI9CpiEfRwDWXgTDN1
-         tJhQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4jF0JNP0GEqFOCSeN3PTMsB/S2NPfTdpmeL7nyzg8d8=;
+        b=jnbkgcBx5qjzYQYNsGJD9AfeYBhtS8woMivA6lfEb9oJoIsH2B0Vuhzz+uhKwsXqFK
+         pCIDGoXueOhzRXMdbmY7YWaCxGBTb4+6aBtjoQyWb8XLLDAOsbRXfyQKBh+ZArI3bN+T
+         HRaaBWmR17SnPSOvmYRxtv7r8R3CKPSEFcJq0uM/PNlsILDQD9RxDGj0lEpUId0LqcT6
+         RjaQxxFAkjZN7+lW2oQEBLEBL8SXb7zsPO1/Y2IrJoNu55qQGTgzDDKpe5gvc4pCOW3H
+         GxewOdt95fVQHdqAhUO2eMt1tuTRDhJo6y3PsiyYVBLzTOsaRFQessz0AsdPi4bmGGPz
+         gJ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GhZ6JEqM6OGPlOqUafs+5RJ8MCNfu/6ROv/YnY68g88=;
-        b=f9GqF+UvrFZu0jclk/WNLbcv8NDEEaOLaznu6AkefpO86haBBYStCBkRsHHoj2FcyU
-         QQ7fbMskcKmU6x7xdTAhrtG58Dt8VMVOlMmtvfppQ6ulJMqrmG6DEKTgo+9SEaObIJFM
-         DQDhfKMCsXMaF7UE3fFp1rvqDkM1lktkLR+3jzUnOIthRfJr6fksEtJrc4knM5G5yQZL
-         7QtPtanaCDtMGQ5schse0i4AjJUkygaVTdEHMQ+h1P87G4ZDo9HR14XlQlP/JmGiaedl
-         OlHa6FCmPo4dl1/CgkT4GXqehQNxvbRYbSUK/pbhTZGxBXkZYFmx8JI2V3zbdB2HlJsc
-         1mag==
-X-Gm-Message-State: APjAAAWbrcNNnFz+J4Zc4BlpYgdDe03TrTy50mjq1z7yp/eno/ifCvhu
-        9gLLeupPmCzrvDhLscTFd3uh+Fic5A8Seg==
-X-Google-Smtp-Source: APXvYqyU4jUhYK9pYl664Tk5wLKreFCTSie4+jQ6+syEDDg8614DQxZ9qdrPxY1C0lxzoD7IVXAzMQ==
-X-Received: by 2002:aa7:818e:: with SMTP id g14mr4305675pfi.245.1552660174267;
-        Fri, 15 Mar 2019 07:29:34 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id v1sm4036969pff.9.2019.03.15.07.29.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 07:29:33 -0700 (PDT)
-Subject: Re: [PATCH 15/18] blktrace: change strncpy+truncation to strlcpy
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1531444483-17338-1-git-send-email-asmadeus@codewreck.org>
- <1531445162-19771-1-git-send-email-asmadeus@codewreck.org>
- <20190314213721.339979f0@oasis.local.home>
- <80ab6751-cd34-1da6-91c7-7558d3a17943@kernel.dk>
- <20190315063022.GA12910@nautica>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <85f295e5-d338-100b-16a6-45e28d292388@kernel.dk>
-Date:   Fri, 15 Mar 2019 08:29:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4jF0JNP0GEqFOCSeN3PTMsB/S2NPfTdpmeL7nyzg8d8=;
+        b=Ii99lzNmB6zqUpyesxF2uj8udsAfEMnJk/882//+oWdFUum2UQxIqfTqZCY7Blvggb
+         uwgHLtthYEtnQwGAmRVNinajUXqD9QxGkqKfguWglI8SPQJzrZVanUaE9s6yYVMTTKPD
+         Pz5/2Mnr/bkcblZECu5kRG2SUZ/vvnmFmChePgksoATLNYG/aZXm0902S3KKvGvVC0HN
+         vzYn2mdWsh6LLJ312ewWBLaQXcmVvGR5tZAkNJkWIurBNKQmEhwGc+8I/zLpqYv2slkz
+         RNIeFB5REXv6zs9br9lVnvpqBPIIL3Hj9boZp0+yrlzZtQGSLtF5hRZwXdqlLP+ORWDy
+         Fuaw==
+X-Gm-Message-State: APjAAAXM8cNi5am70fFNbKGm5d1dkSVa+hAyW41ILuYR1YerSbaVTd4Y
+        i/UigJ11FzX6MrZToPXygJA=
+X-Google-Smtp-Source: APXvYqzgF09sr9Zx7QYz3ctV43TClDZ//0dgxZz4aYiRBzeNEM7oxmeRAvXtAxMdPw16yK1yQcxv5Q==
+X-Received: by 2002:a65:424d:: with SMTP id d13mr3720798pgq.203.1552660183557;
+        Fri, 15 Mar 2019 07:29:43 -0700 (PDT)
+Received: from localhost ([121.137.63.184])
+        by smtp.gmail.com with ESMTPSA id m3sm2639905pgp.85.2019.03.15.07.29.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 07:29:41 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Fri, 15 Mar 2019 23:29:38 +0900
+To:     David Laight <David.Laight@aculab.com>
+Cc:     'Sergey Senozhatsky' <sergey.senozhatsky.work@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH 2/2] cifs: don't use __constant_cpu_to_le32()
+Message-ID: <20190315142938.GA32256@tigerII.localdomain>
+References: <20190314061716.19892-1-sergey.senozhatsky@gmail.com>
+ <20190314061716.19892-2-sergey.senozhatsky@gmail.com>
+ <757dbafbdadb45f6a3de728ecfd05c5d@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <20190315063022.GA12910@nautica>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <757dbafbdadb45f6a3de728ecfd05c5d@AcuMS.aculab.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/15/19 12:30 AM, Dominique Martinet wrote:
-> Jens, Steven,
+On (03/15/19 12:31), David Laight wrote:
+> From: Sergey Senozhatsky
+> > 
+> > cpu_to_le32() is capable enough to detect __builtin_constant_p()
+> > and to use an appropriate compile time ___constant_swahb32()
+> > function.
+> > 
+> > So we can use cpu_to_le32() instead of __constant_cpu_to_le32().
 > 
-> Jens Axboe wrote on Thu, Mar 14, 2019:
->> On 3/14/19 7:37 PM, Steven Rostedt wrote:
->>> I noticed this old patch in my inbox. It looks like a legit cleanup.
->>> Want to take it?
->>
->> Indeed, I've applied it. Thanks!
-> 
-> Thanks. I am terribly sorry about this patch series to be honest, I did
-> not prepare it properly and sent too many generic patches at once but
-> more importantly some were unsafe (strlcpy expects the input string to
-> be validly formatted, because it basically does strlen() on it to check
-> how much hasn't been copied for its return value)
-> I was pointed out strscpy instead as a safer alternative.
-> 
-> In this case `name` comes from bdevname() which is disk_name() in
-> block/partition-generic.c which is a snprintf, so we are guaranted
-> null truncation from there and it should be OK, but I wanted to check
-> and point it out.
+> Unless any code tries to use them as case statement labels.
 
-Dropped.
+What is the problem?
 
--- 
-Jens Axboe
+For compile time constants cpu_to_le32() should do the same thing
+as __constant_cpu_to_le32().
 
+There seems a whole bunch of cpu_to_XX compile time constants which
+are used in case statement labels
+
+include/linux/sunrpc/xdr.h:#define      rpc_msg_accepted        cpu_to_be32(RPC_MSG_ACCEPTED)
+include/linux/sunrpc/xdr.h:#define      rpc_success             cpu_to_be32(RPC_SUCCESS)
+include/linux/sunrpc/xdr.h:#define      rpc_prog_unavail        cpu_to_be32(RPC_PROG_UNAVAIL)
+include/linux/sunrpc/xdr.h:#define      rpc_prog_mismatch       cpu_to_be32(RPC_PROG_MISMATCH)
+include/linux/sunrpc/xdr.h:#define      rpc_proc_unavail        cpu_to_be32(RPC_PROC_UNAVAIL)
+include/linux/sunrpc/xdr.h:#define      rpc_garbage_args        cpu_to_be32(RPC_GARBAGE_ARGS)
+include/linux/sunrpc/xdr.h:#define      rpc_system_err          cpu_to_be32(RPC_SYSTEM_ERR)
+include/linux/sunrpc/xdr.h:#define      rpc_drop_reply          cpu_to_be32(RPC_DROP_REPLY)
+include/linux/sunrpc/xdr.h:#define      rpc_mismatch            cpu_to_be32(RPC_MISMATCH)
+include/linux/sunrpc/xdr.h:#define      rpc_auth_error          cpu_to_be32(RPC_AUTH_ERROR)
+include/linux/sunrpc/xdr.h:#define      rpc_auth_ok             cpu_to_be32(RPC_AUTH_OK)
+include/linux/sunrpc/xdr.h:#define      rpc_autherr_badcred     cpu_to_be32(RPC_AUTH_BADCRED)
+include/linux/sunrpc/xdr.h:#define      rpc_autherr_rejectedcred cpu_to_be32(RPC_AUTH_REJECTEDCRED)
+include/linux/sunrpc/xdr.h:#define      rpc_autherr_badverf     cpu_to_be32(RPC_AUTH_BADVERF)
+include/linux/sunrpc/xdr.h:#define      rpc_autherr_rejectedverf cpu_to_be32(RPC_AUTH_REJECTEDVERF)
+include/linux/sunrpc/xdr.h:#define      rpc_autherr_tooweak     cpu_to_be32(RPC_AUTH_TOOWEAK)
+
+
+net/sunrpc/clnt.c
+
+2479         switch (*p) {
+2480         case rpc_success:
+2481                 return 0;
+2482         case rpc_prog_unavail:
+2483                 trace_rpc__prog_unavail(task);
+2484                 error = -EPFNOSUPPORT;
+2485                 goto out_err;
+2486         case rpc_prog_mismatch:
+2487                 trace_rpc__prog_mismatch(task);
+2488                 error = -EPROTONOSUPPORT;
+2489                 goto out_err;
+2490         case rpc_proc_unavail:
+2491                 trace_rpc__proc_unavail(task);
+2492                 error = -EOPNOTSUPP;
+2493                 goto out_err;
+2494         case rpc_garbage_args:
+2495                 trace_rpc__garbage_args(task);
+2496                 break;
+2497         default:
+2498                 trace_rpc__unparsable(task);
+2499         }
+
+	-ss
