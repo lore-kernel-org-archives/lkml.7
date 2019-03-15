@@ -2,96 +2,135 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B65C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93720C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEAA521872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599A021872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iDoMYGmJ"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="d5SswaQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbfCOJuV (ORCPT
+        id S1728804AbfCOJuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:50:21 -0400
-Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:32804 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbfCOJuV (ORCPT
+        Fri, 15 Mar 2019 05:50:50 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:45510 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728718AbfCOJuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:50:21 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id 5968310C25AB;
-        Fri, 15 Mar 2019 02:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1552643420; bh=c+Qr1Ias9dKk1NS/aXZYKW+l14PZkCpHCox4/2k3HfY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=iDoMYGmJZnkvzl2kfBijvGZ5FPOFwJOuu+vUQQ47AxrEuycmzzdRB7vEFzVJRk2tR
-         ao/QQN4Nyxnt9Vl3wffClQo5XBiTbO3PnHhWQmoxtY5WZG4Gtd3rApeUP1QoM+vM5v
-         77lu8F7j6dGWbwcwl8VytXtCYfeldGFtjh7v9huOecRh9r6X/RSl3KNyJN24V91nOE
-         xF0ZVhG6vphGVopGtEZLf43qhIpga2Dfgy4+la84Bq0PsKBb4tbv1pp1x//dHD7/Sm
-         ng6xyHjJShyqIOi0Zxf6iube+7zqvOK+sT9CCqgwBoktRPRVdcGQYiWtO1msQv9ZPB
-         k6+zyfYppuU5A==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 06960A0071;
-        Fri, 15 Mar 2019 09:50:18 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 15 Mar 2019 02:50:18 -0700
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- DE02WEHTCB.internal.synopsys.com (10.225.19.94) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 15 Mar 2019 10:50:16 +0100
-Received: from [10.107.19.176] (10.107.19.176) by
- DE02WEHTCA.internal.synopsys.com (10.225.19.80) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 15 Mar 2019 10:50:16 +0100
-Subject: Re: [PATCH 2/2] net: stmmac: fix jumbo frame sending with non-linear
- skbs
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Fri, 15 Mar 2019 05:50:50 -0400
+Received: by mail-yw1-f66.google.com with SMTP id r188so6729376ywb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 02:50:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=N2TmsKXbvDGU0X42ituryieWnNgh/sDH4QOuRfO6NR0=;
+        b=d5SswaQi/ccEEQTezLipe2b1d2URO5vZOCV8pJJJsqT3bZtdYN/FRum9RFXp87a5Eh
+         SK8iZYsqQ6G7UFz9M5ztwVeQZyLYb28LIekch3hRvgZjkppLtVL9dDIcBGHRFFXtlKjh
+         uE/m9tl6XqOmGnxJOddeNYhfsfKT8o/702AI8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N2TmsKXbvDGU0X42ituryieWnNgh/sDH4QOuRfO6NR0=;
+        b=qiRVTmk/+kzSkZ9g2rSmQZCvp8GSXLQG3qq/fwz7DSzAkMR+tf67r+SJbnuqsRAPtD
+         6MRhwgMqTHLw+rknmallaa8umrTnz1MJjhKGBzn43Q9O4EYD7XmsY11Z51mONj+PaWeZ
+         y/6baKjc+jEMCCWIbo99VkyULH8j5gBtZ39WCc+53d20jghEDUwujqzSLhbGBhLgHueO
+         jNFkfq6QCC5Wi0c3wwqdz4hwzet9gSpm5yKWzh9sCarNzUSZdeemphkAvKLNhR0IRpUD
+         LAOqJGutPZmDHFk+Pr4mN3u7HZ37UAjkbALVEHV6RktGtG0r8VzFU2gu+OPbJTgv+Xuh
+         fATw==
+X-Gm-Message-State: APjAAAWukKX7lBf290BXwww2taM09XPukQecNmOKKEXAxgrqpBT7unO+
+        EbiU3kiwR/FHeJTMBffvAOEyNj1LpbXx77IdILvJA/y2qdj9gN1EsfrlAQpwR61dD4a7V7oJe/O
+        abm8rAK0uQV1qtUZ4Dxat8ildmMYx5JJQCdjpGMYHsU80OSXRmj8GdjIj19wwhWLp34EesOAK95
+        7Nq5cC6+at+V0=
+X-Google-Smtp-Source: APXvYqxXTTLXkkGYTzAMZPXWcHhMTd6xiM1CdWUp/U2NElcRvn7Im1Lm0v3nHkG0CaAw9x2dbZ1Kng==
+X-Received: by 2002:a0d:c5c3:: with SMTP id h186mr1946124ywd.462.1552643448591;
+        Fri, 15 Mar 2019 02:50:48 -0700 (PDT)
+Received: from [10.176.68.125] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id 81sm652526ywr.21.2019.03.15.02.50.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Mar 2019 02:50:48 -0700 (PDT)
+Subject: Re: [PATCH v2] net: brcm80211: fix missing checks for kmemdup
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <jose.abreu@synopsys.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Aaro Koskinen <aaro.koskinen@nokia.com>
-References: <20190314194320.25566-1-aaro.koskinen@iki.fi>
- <20190314194320.25566-2-aaro.koskinen@iki.fi>
-From:   Jose Abreu <jose.abreu@synopsys.com>
-Message-ID: <08a089e6-16a7-1f6c-e356-a5bcea360078@synopsys.com>
-Date:   Fri, 15 Mar 2019 09:50:15 +0000
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190312043929.727-1-kjlu@umn.edu>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <d712dd26-8b51-143a-b3ff-ad44f2774944@broadcom.com>
+Date:   Fri, 15 Mar 2019 10:50:44 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <20190314194320.25566-2-aaro.koskinen@iki.fi>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190312043929.727-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.107.19.176]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/14/2019 7:43 PM, Aaro Koskinen wrote:
-> From: Aaro Koskinen <aaro.koskinen@nokia.com>
-> 
-> When sending non-linear skbs with jumbo frames, we set up the non-paged
-> data and mark that as a last segment, although the paged fragments are
-> also prepared. This will stall the TX queue and trigger a watchdog warning
-> (a simple reproducer is to run an iperf client mode TCP test with a large
-> MTU - networking fails instantly).
-> 
-> Fix by checking if the skb is non-linear.
-> 
-> Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+On 3/12/2019 5:39 AM, Kangjie Lu wrote:
+> In case kmemdup fails, the fix sets conn_info->req_ie_len to zero
+> to avoid buffer overflows.
 
-Acked-by: Jose Abreu <joabreu@synopsys.com>
+Hi Kangjie,
 
-Thanks,
-Jose Miguel Abreu
+See comment below. Also for v3 change prefix 'net:brcm80211:' to 
+'brcmfmac:' instead.
+
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>   drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+> index e92f6351bd22..5d9a3c35fef5 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+> @@ -5464,6 +5464,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
+>   		conn_info->req_ie =
+>   		    kmemdup(cfg->extra_buf, conn_info->req_ie_len,
+>   			    GFP_KERNEL);
+> +		if (!conn_info->req_ie)
+> +			conn_info->req_ie_len = 0;
+
+good.
+
+>   	} else {
+>   		conn_info->req_ie_len = 0;
+>   		conn_info->req_ie = NULL;
+> @@ -5480,6 +5482,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
+>   		conn_info->resp_ie =
+>   		    kmemdup(cfg->extra_buf, conn_info->resp_ie_len,
+>   			    GFP_KERNEL);
+> +		if (!conn_info->resp_ie)
+> +			conn_info->req_ie_len = 0;
+
+bad! I think you took my comment too literal. Here it should set 
+conn_info->resp_ie_len to zero.
+
+Regards,
+Arend
+
+>   	} else {
+>   		conn_info->resp_ie_len = 0;
+>   		conn_info->resp_ie = NULL;
+> 
