@@ -2,86 +2,112 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC99C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14159C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FAD218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:27:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="DOm3k7xY"
+	by mail.kernel.org (Postfix) with ESMTP id E0FF6218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 13:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbfCON1o (ORCPT
+        id S1729118AbfCON2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 09:27:44 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]:34898 "EHLO
-        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbfCON1o (ORCPT
+        Fri, 15 Mar 2019 09:28:06 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56263 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfCON2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 09:27:44 -0400
-Received: by mail-qt1-f170.google.com with SMTP id h39so10039520qte.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 06:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=No1HWm0EsCJCKhgJLbb3/U/NHO8sMm1k/TSYX8LGc6Q=;
-        b=DOm3k7xYFoHXos1RvdmIdXhpBQAYPDHy9rp4+wXKTEfosJSu0x0usHOezzegKlg5lh
-         Ske6dLEJgMQKVQFaW8LHTxi3i5eVwP++jO/HwV/CrcQ33PGMm/GQq7rAsQaSc5o+fO8j
-         2G4U77ocq1EW+UXUBlVKzqC++Mo/UEIai9wlgPwumMOAnnYuKt+KYDdvJ4srvty/z94H
-         AjBwnrDbO/NhfPKs+Rtpwv9fKSYRadkgrLLyZakDUssdgdUV76+HvwXQTldCAjVTrYR0
-         Vjk3qQIq2ezdv7ZO+QwAJhwLJIjLE2SvFyTyTz4iqjzmAzvW+oeRBs/4BF9BsJ0klKTO
-         TgUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=No1HWm0EsCJCKhgJLbb3/U/NHO8sMm1k/TSYX8LGc6Q=;
-        b=IIVjnWh8ukeubeXaKH+L5GoJ5Sd8rwf9Wa/8L3tkas0jGiDuozxXbdGzFI7FgqMfBi
-         2/hIS2+j6cJdeOx3OMVuDnYCGBcUz8M7X6gGNosz3kBTKIMLuK8dZ2Q06y/5W1kPwIaa
-         uLqUSTm8Pym1yV4+42MS3pt4m4iDhPwJwX7RmXVaBfJY9XCBtN+dG2IBPx9pf8Dus+ZX
-         Ys3oJ/Z653SxgF6LlPWw9LnQzYxRU5w+zSbjm8BW897O3uERfZZV0v1tdNLDsKJAHWAE
-         EDyjJpsgyma+K5Wf+BHEt+CKHQVbuzx84Eb1V0Jx7Ut0Zpfxv/RwH2ehByvTJt3gGbyD
-         v3fA==
-X-Gm-Message-State: APjAAAVtSaLMdX61wmrmjY7p3RMoTmY0cDdGuhqG+/tsZteaHUtdEJcf
-        3t5vqNMl6tr/AhjPl82Bztjhmg==
-X-Google-Smtp-Source: APXvYqz7HLKof8j3jGEoMoEfytO3lSQQVR/S/SdZ6syIQqabjFNdZDG/SL5NGoFYK8OFMQW7jmvsLQ==
-X-Received: by 2002:a0c:b89e:: with SMTP id y30mr2557406qvf.52.1552656463123;
-        Fri, 15 Mar 2019 06:27:43 -0700 (PDT)
-Received: from localhost ([107.15.81.208])
-        by smtp.gmail.com with ESMTPSA id w33sm1438382qth.34.2019.03.15.06.27.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 06:27:42 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 09:27:40 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        nbd@other.debian.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: nbd: fix a missing check for nla_nest_start
-Message-ID: <20190315132739.mfnbkp5vdjx2uhko@MacBook-Pro-91.local>
-References: <20190315063138.17666-1-kjlu@umn.edu>
+        Fri, 15 Mar 2019 09:28:06 -0400
+X-Originating-IP: 90.88.22.102
+Received: from aptenodytes (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 924E4C0016;
+        Fri, 15 Mar 2019 13:27:57 +0000 (UTC)
+Message-ID: <c52be751ac1bc7b1ee21e3e2a30d5b494bf95faa.camel@bootlin.com>
+Subject: Re: [linux-sunxi] [PATCH 1/6] drm/bridge: Export drm_bridge_detach
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     jagan@amarulasolutions.com, Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
+Date:   Fri, 15 Mar 2019 14:27:57 +0100
+In-Reply-To: <20190315130825.9005-2-jagan@amarulasolutions.com>
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+         <20190315130825.9005-2-jagan@amarulasolutions.com>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315063138.17666-1-kjlu@umn.edu>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 01:31:38AM -0500, Kangjie Lu wrote:
-> nla_nest_start may fail and thus deserves a check.
-> 
-> The fix inserts such a check and exits gracefully in case it
-> fails.
-> 
+Hi Jakan,
 
-Except it won't because we pre-reserve enough space for that attr.  Subsequent
-calls could fail, and those are checked properly, but this one won't.  Thanks,
+On Fri, 2019-03-15 at 18:38 +0530, Jagan Teki wrote:
+> Export drm_bridge_detach from drm bridge core so-that it
+> can use on respective interface or bridge driver while
+> detaching the bridge.
 
-Josef
+I don't see why this change is required based on the commit log. The
+DRM bridge code clearly indicates that drm_bridge_attach should *not*
+be balanced with a drm_bridge_detach call in the driver, so this seems
+quite wrong.
+
+The DRM core itself should handle detaching the bridge, not the driver.
+Is there any reason why you need to do things differently for DSI?
+
+Cheers,
+
+Paul
+
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  drivers/gpu/drm/drm_bridge.c | 1 +
+>  include/drm/drm_bridge.h     | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index 138b2711d389..569d4f345429 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -159,6 +159,7 @@ void drm_bridge_detach(struct drm_bridge *bridge)
+>  
+>  	bridge->dev = NULL;
+>  }
+> +EXPORT_SYMBOL(drm_bridge_detach);
+>  
+>  /**
+>   * DOC: bridge callbacks
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index 9da8c93f7976..4955e3e50fa4 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -301,6 +301,7 @@ void drm_bridge_remove(struct drm_bridge *bridge);
+>  struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+>  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+>  		      struct drm_bridge *previous);
+> +void drm_bridge_detach(struct drm_bridge *bridge);
+>  
+>  bool drm_bridge_mode_fixup(struct drm_bridge *bridge,
+>  			   const struct drm_display_mode *mode,
+> -- 
+> 2.18.0.321.gffc6fa0e3
+> 
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
