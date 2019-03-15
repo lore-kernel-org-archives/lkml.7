@@ -2,196 +2,263 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF06C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53696C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC9E205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:26:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hbTamDUY"
+	by mail.kernel.org (Postfix) with ESMTP id 1DA902186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfCOD04 (ORCPT
+        id S1727177AbfCODc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 23:26:56 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42451 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfCOD04 (ORCPT
+        Thu, 14 Mar 2019 23:32:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34928 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726708AbfCODc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 23:26:56 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u7so8608796qtg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 20:26:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SRJqCGLIo4RoPRhiFp/mqVyAUAcIvJyT2LykbvdJkd8=;
-        b=hbTamDUYDBevOmpIZNJ8Ch8S7azRHb4ih+TdV4jiT6l/6EABBaNemD8UlV63g0ujMq
-         t3aXM1qjd+UOuJWjH+P+QSDeN2surfN2ZZp5DtY/R4bKdzPGvEpd87mgktgiM0FJ57Xx
-         2wpdlHHu2Kd5rDUd46K4WlzB0SOaCebLT3VkE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SRJqCGLIo4RoPRhiFp/mqVyAUAcIvJyT2LykbvdJkd8=;
-        b=h2wDlbJ+Wb0EAqdp8L05OfJkaeNb2f6zYsd9vu2hlLf/BAzLXNckDvbp4tEOq55Q5v
-         NYtoqit94t1RO5bcAo7Rhru8fWEvlQ65LvGKMGLBAgXMMS9gIP4HaaKYiO/5/+TJhLHG
-         2NWB565waXAoCnhcGX9fXRd+8JeAzAakQJK4mmDcKQIy5rEJPVZnhzPQHYRqNvnglOno
-         +9/+/HsHKWfkUaaEDUfrkpbFjLo5GSJ+kM5tCxnDfj0a3k7GeP9NIQSQHlzzRnxUkSzD
-         O18TgiF3mI+FiuY/M51DYnVatmwE7Omw6BtR32f4DKanw2i62L8zW+r0+70/dp/K/K/6
-         RE1Q==
-X-Gm-Message-State: APjAAAWZTuGxo2ER1ODl5bGFpDdrWGknsHKPAs8Uj60pW4QP91nlJMIy
-        6mdM9wMQtQHi2T4LvpCl8lqhaOEf2viDeDM+htfbjw==
-X-Google-Smtp-Source: APXvYqwRkOrzCNHuRFQg6jIow5bpWNXTuEQjfGVppHpckc2g/B1ruzm9OB938Y7OZI/PSKRG9F1ESMa+ZV4I3v54veo=
-X-Received: by 2002:a0c:8733:: with SMTP id 48mr935729qvh.101.1552620414584;
- Thu, 14 Mar 2019 20:26:54 -0700 (PDT)
+        Thu, 14 Mar 2019 23:32:57 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2F3U4vI186942
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 23:32:55 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r846pr2fu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 23:32:55 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
+        Fri, 15 Mar 2019 03:32:53 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 15 Mar 2019 03:32:50 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2F3Wns655705794
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Mar 2019 03:32:49 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 483E24C040;
+        Fri, 15 Mar 2019 03:32:49 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A85194C050;
+        Fri, 15 Mar 2019 03:32:48 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 15 Mar 2019 03:32:48 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5ADA4A00E2;
+        Fri, 15 Mar 2019 14:32:47 +1100 (AEDT)
+Subject: Re: [PATCH 4/7] ocxl: Don't pass pci_dev around
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20190313041524.14644-1-alastair@au1.ibm.com>
+ <20190313041524.14644-5-alastair@au1.ibm.com>
+From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Date:   Fri, 15 Mar 2019 14:32:47 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
- <1545638931-24938-11-git-send-email-yongqiang.niu@mediatek.com>
- <CANMq1KC_JwVfvFd46_gP_wK_QNO0LTZOcwRAbotF6MghYivJYw@mail.gmail.com> <1552617252.31200.24.camel@mhfsdcap03>
-In-Reply-To: <1552617252.31200.24.camel@mhfsdcap03>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 15 Mar 2019 11:26:43 +0800
-Message-ID: <CANMq1KCh5rf6My5yeRgxf0mZaOy=A3d2ag6TEPFKz+EPsVDzJg@mail.gmail.com>
-Subject: Re: [PATCH 10/18] drm/mediatek: add gmc_bits for ovl private data
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190313041524.14644-5-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031503-4275-0000-0000-0000031B2E5A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031503-4276-0000-0000-00003829A282
+Message-Id: <f7f9741d-dacb-3dad-5a92-84e43c28f697@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-15_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903150023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 10:34 AM Yongqiang Niu
-<yongqiang.niu@mediatek.com> wrote:
->
-> On Tue, 2018-12-25 at 12:15 +0800, Nicolas Boichat wrote:
-> > On Mon, Dec 24, 2018 at 6:53 PM Yongqiang Niu
-> > <yongqiang.niu@mediatek.com> wrote:
-> > >
-> > > This patch add gmc_bits for ovl private data
-> > >
-> > > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > > ---
-> > >  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 23 +++++++++++++++++++++--
-> > >  1 file changed, 21 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> > > index 28d1911..afb313c 100644
-> > > --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> > > +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> > > @@ -39,7 +39,9 @@
-> > >  #define DISP_REG_OVL_ADDR_MT8173               0x0f40
-> > >  #define DISP_REG_OVL_ADDR(ovl, n)              ((ovl)->data->addr + 0x20 * (n))
-> > >
-> > > -#define        OVL_RDMA_MEM_GMC        0x40402020
-> > > +#define GMC_THRESHOLD_BITS     16
-> > > +#define GMC_THRESHOLD_HIGH     ((1 << GMC_THRESHOLD_BITS) / 4)
-> > > +#define GMC_THRESHOLD_LOW      ((1 << GMC_THRESHOLD_BITS) / 8)
-> > >
-> > >  #define OVL_CON_BYTE_SWAP      BIT(24)
-> > >  #define OVL_CON_MTX_YUV_TO_RGB (6 << 16)
-> > > @@ -57,6 +59,7 @@
-> > >
-> > >  struct mtk_disp_ovl_data {
-> > >         unsigned int addr;
-> > > +       unsigned int gmc_bits;
-> > >         bool fmt_rgb565_is_0;
-> > >  };
-> > >
-> > > @@ -140,9 +143,23 @@ static unsigned int mtk_ovl_layer_nr(struct mtk_ddp_comp *comp)
-> > >  static void mtk_ovl_layer_on(struct mtk_ddp_comp *comp, unsigned int idx)
-> > >  {
-> > >         unsigned int reg;
-> > > +       unsigned int gmc_thrshd_l;
-> > > +       unsigned int gmc_thrshd_h;
-> > > +       unsigned int gmc_value;
-> > > +       struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
-> > >
-> > >         writel(0x1, comp->regs + DISP_REG_OVL_RDMA_CTRL(idx));
-> > > -       writel(OVL_RDMA_MEM_GMC, comp->regs + DISP_REG_OVL_RDMA_GMC(idx));
-> > > +
-> > > +       gmc_thrshd_l = GMC_THRESHOLD_LOW >>
-> > > +                     (GMC_THRESHOLD_BITS - ovl->data->gmc_bits);
-> > > +       gmc_thrshd_h = GMC_THRESHOLD_HIGH >>
-> > > +                     (GMC_THRESHOLD_BITS - ovl->data->gmc_bits);
-> > > +       if (ovl->data->gmc_bits == 10)
-> > > +               gmc_value = gmc_thrshd_h | gmc_thrshd_h << 16;
-> >
-> > I don't really get what this does, but is it intentional that you
-> > don't use gmc_thrshd_l here?
-> >
-> GMC register was set RDMA ultra and pre-ultra threshold.
-> MT8183 GMC register define is different with other SOC, gmc_thrshd_l not
-> used here.
+On 13/3/19 3:15 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> This data is already available in a struct
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-Ok cool. My issue is that this really appears to be like a mistake, so
-maybe it's better to only compute gmc_thrshd_l in the else branch?
+This is a good idea.
 
-gmc_thrshd_h = GMC_THRESHOLD_HIGH >>
-                     (GMC_THRESHOLD_BITS - ovl->data->gmc_bits);
-if (ovl->data->gmc_bits == 10) {
-     gmc_value = gmc_thrshd_h | gmc_thrshd_h << 16;
-} else {
-     gmc_thrshd_l = GMC_THRESHOLD_LOW >>
-                     (GMC_THRESHOLD_BITS - ovl->data->gmc_bits);
-     gmc_value = gmc_thrshd_l | gmc_thrshd_l << 8 |
-                          gmc_thrshd_h << 16 | gmc_thrshd_h << 24;
-}
+Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 
-> > Also, if you only ever use 8 or 10 bits gmc, maybe it's easier to
-> > hard-code the 2 values?
-> > if (ovl->data->gmc_bits == 10)
-> >   gmc_value = OVL_RDMA_MEM_GMC_10BIT;
-> > else
-> >   gmc_value = OVL_RDMA_MEM_GMC_8BIT; //0x40402020
-> >
->
-> our internal maintainer prefer calculate GMC setting with private data
-> gmc bit instead of hard-core.
-> and with calculation function that will be more flexible
+> ---
+>   drivers/misc/ocxl/core.c | 38 +++++++++++++++++++++-----------------
+>   1 file changed, 21 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+> index b47cfda83e46..2fd0c700e8a0 100644
+> --- a/drivers/misc/ocxl/core.c
+> +++ b/drivers/misc/ocxl/core.c
+> @@ -66,10 +66,11 @@ static int set_afu_device(struct ocxl_afu *afu, const char *location)
+>   	return rc;
+>   }
+>   
+> -static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
+> +static int assign_afu_actag(struct ocxl_afu *afu)
+>   {
+>   	struct ocxl_fn *fn = afu->fn;
+>   	int actag_count, actag_offset;
+> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+>   
+>   	/*
+>   	 * if there were not enough actags for the function, each afu
+> @@ -79,16 +80,16 @@ static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
+>   		fn->actag_enabled / fn->actag_supported;
+>   	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
+>   	if (actag_offset < 0) {
+> -		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
+> +		dev_err(&pci_dev->dev, "Can't allocate %d actags for AFU: %d\n",
+>   			actag_count, actag_offset);
+>   		return actag_offset;
+>   	}
+>   	afu->actag_base = fn->actag_base + actag_offset;
+>   	afu->actag_enabled = actag_count;
+>   
+> -	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
+> +	ocxl_config_set_afu_actag(pci_dev, afu->config.dvsec_afu_control_pos,
+>   				afu->actag_base, afu->actag_enabled);
+> -	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
+> +	dev_dbg(&pci_dev->dev, "actag base=%d enabled=%d\n",
+>   		afu->actag_base, afu->actag_enabled);
+>   	return 0;
+>   }
+> @@ -103,10 +104,11 @@ static void reclaim_afu_actag(struct ocxl_afu *afu)
+>   	ocxl_actag_afu_free(afu->fn, start_offset, size);
+>   }
+>   
+> -static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+> +static int assign_afu_pasid(struct ocxl_afu *afu)
+>   {
+>   	struct ocxl_fn *fn = afu->fn;
+>   	int pasid_count, pasid_offset;
+> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+>   
+>   	/*
+>   	 * We only support the case where the function configuration
+> @@ -115,7 +117,7 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	pasid_count = 1 << afu->config.pasid_supported_log;
+>   	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
+>   	if (pasid_offset < 0) {
+> -		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
+> +		dev_err(&pci_dev->dev, "Can't allocate %d PASIDs for AFU: %d\n",
+>   			pasid_count, pasid_offset);
+>   		return pasid_offset;
+>   	}
+> @@ -123,10 +125,10 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	afu->pasid_count = 0;
+>   	afu->pasid_max = pasid_count;
+>   
+> -	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
+> +	ocxl_config_set_afu_pasid(pci_dev, afu->config.dvsec_afu_control_pos,
+>   				afu->pasid_base,
+>   				afu->config.pasid_supported_log);
+> -	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
+> +	dev_dbg(&pci_dev->dev, "PASID base=%d, enabled=%d\n",
+>   		afu->pasid_base, pasid_count);
+>   	return 0;
+>   }
+> @@ -172,9 +174,10 @@ static void release_fn_bar(struct ocxl_fn *fn, int bar)
+>   	WARN_ON(fn->bar_used[idx] < 0);
+>   }
+>   
+> -static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+> +static int map_mmio_areas(struct ocxl_afu *afu)
+>   {
+>   	int rc;
+> +	struct pci_dev *pci_dev = to_pci_dev(afu->fn->dev.parent);
+>   
+>   	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
+>   	if (rc)
+> @@ -187,10 +190,10 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	}
+>   
+>   	afu->global_mmio_start =
+> -		pci_resource_start(dev, afu->config.global_mmio_bar) +
+> +		pci_resource_start(pci_dev, afu->config.global_mmio_bar) +
+>   		afu->config.global_mmio_offset;
+>   	afu->pp_mmio_start =
+> -		pci_resource_start(dev, afu->config.pp_mmio_bar) +
+> +		pci_resource_start(pci_dev, afu->config.pp_mmio_bar) +
+>   		afu->config.pp_mmio_offset;
+>   
+>   	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
+> @@ -198,7 +201,7 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	if (!afu->global_mmio_ptr) {
+>   		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
+>   		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
+> -		dev_err(&dev->dev, "Error mapping global mmio area\n");
+> +		dev_err(&pci_dev->dev, "Error mapping global mmio area\n");
+>   		return -ENOMEM;
+>   	}
+>   
+> @@ -234,17 +237,17 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+>   	if (rc)
+>   		return rc;
+>   
+> -	rc = assign_afu_actag(afu, dev);
+> +	rc = assign_afu_actag(afu);
+>   	if (rc)
+>   		return rc;
+>   
+> -	rc = assign_afu_pasid(afu, dev);
+> +	rc = assign_afu_pasid(afu);
+>   	if (rc) {
+>   		reclaim_afu_actag(afu);
+>   		return rc;
+>   	}
+>   
+> -	rc = map_mmio_areas(afu, dev);
+> +	rc = map_mmio_areas(afu);
+>   	if (rc) {
+>   		reclaim_afu_pasid(afu);
+>   		reclaim_afu_actag(afu);
+> @@ -331,7 +334,7 @@ void remove_afu(struct ocxl_afu *afu)
+>   	device_unregister(&afu->dev);
+>   }
+>   
+> -static struct ocxl_fn *alloc_function(struct pci_dev *dev)
+> +static struct ocxl_fn *alloc_function(void)
+>   {
+>   	struct ocxl_fn *fn;
+>   
+> @@ -342,6 +345,7 @@ static struct ocxl_fn *alloc_function(struct pci_dev *dev)
+>   	INIT_LIST_HEAD(&fn->afu_list);
+>   	INIT_LIST_HEAD(&fn->pasid_list);
+>   	INIT_LIST_HEAD(&fn->actag_list);
+> +
+>   	return fn;
+>   }
+>   
+> @@ -491,7 +495,7 @@ struct ocxl_fn *init_function(struct pci_dev *dev)
+>   	struct ocxl_fn *fn;
+>   	int rc;
+>   
+> -	fn = alloc_function(dev);
+> +	fn = alloc_function();
+>   	if (!fn)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> 
 
-Sounds ok.
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+andrew.donnellan@au1.ibm.com  IBM Australia Limited
 
-> > > +       else
-> > > +               gmc_value = gmc_thrshd_l | gmc_thrshd_l << 8 |
-> > > +                           gmc_thrshd_h << 16 | gmc_thrshd_h << 24;
-> > > +       writel(gmc_value, comp->regs + DISP_REG_OVL_RDMA_GMC(idx));
-> > >
-> > >         reg = readl(comp->regs + DISP_REG_OVL_SRC_CON);
-> > >         reg = reg | BIT(idx);
-> > > @@ -324,11 +341,13 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
-> > >
-> > >  static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
-> > >         .addr = DISP_REG_OVL_ADDR_MT2701,
-> > > +       .gmc_bits = 8,
-> > >         .fmt_rgb565_is_0 = false,
-> > >  };
-> > >
-> > >  static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
-> > >         .addr = DISP_REG_OVL_ADDR_MT8173,
-> > > +       .gmc_bits = 8,
-> > >         .fmt_rgb565_is_0 = true,
-> > >  };
-> > >
-> > > --
-> > > 1.8.1.1.dirty
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
->
