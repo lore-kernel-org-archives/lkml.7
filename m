@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6EFC10F06
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C47C43381
 	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C14421873
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FF82085A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 01:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="eTuzDzp8"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="weOxgf26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfCOA77 (ORCPT
+        id S1728216AbfCOA77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 14 Mar 2019 20:59:59 -0400
-Received: from mail.nic.cz ([217.31.204.67]:46481 "EHLO mail.nic.cz"
+Received: from mail.nic.cz ([217.31.204.67]:46444 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727004AbfCOA75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727438AbfCOA75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Mar 2019 20:59:57 -0400
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id C0EDB6349F;
+        by mail.nic.cz (Postfix) with ESMTP id 4898562365;
         Fri, 15 Mar 2019 01:59:53 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1552611593; bh=7nwYubPVyHO1QTa8B2zena5P4Yk2SHX083yXXVFMOBY=;
+        t=1552611593; bh=5kkpjnBjxaOqqI3nkrnccpIwE/GNvwdWoWxceCbhj70=;
         h=From:To:Date;
-        b=eTuzDzp8Jqbii54Ck8napAC8vcMpYr88EqYxwewibFZiv2ZtzRN84jcOj7d4fYZM4
-         +dDNwqQK7YWXSNYvLZImkp9o3k5fJvTtR2cUUzycG5mOpRqSONVzdYzMfIbiDB/jkw
-         t4G3J47O15OTVaY35JSfNL2pw2qdCLaI8WCMuCno=
+        b=weOxgf26oQZrU6mtWaqp/af1G+SdsFC8c8Gntq4VmFO64UlH2bkr9yqgc2Bjt1q1m
+         4IRv+q8jJFGELPsZVMhuQRnEvnjQ0bBu4A29bKcr9zs5rh/JarsGH23+ZoZ3bEDDGl
+         hjqdUsVZ/T3HPtyQMd+rvYNOWK/oey/n3eZVvN0Q=
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 To:     Jassi Brar <jassisinghbrar@gmail.com>
 Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
@@ -39,11 +39,10 @@ Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-arm-kernel@lists.infradead.org, arm@kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v3 mailbox+firmware 6/6] dt-bindings: firmware: Document cznic,turris-mox-rwtm binding
-Date:   Fri, 15 Mar 2019 01:59:26 +0100
-Message-Id: <20190315005926.5994-7-marek.behun@nic.cz>
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v3 mailbox+firmware 1/6] mailbox: Add support for Armada 37xx rWTM mailbox
+Date:   Fri, 15 Mar 2019 01:59:21 +0100
+Message-Id: <20190315005926.5994-2-marek.behun@nic.cz>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190315005926.5994-1-marek.behun@nic.cz>
 References: <20190315005926.5994-1-marek.behun@nic.cz>
@@ -57,42 +56,318 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds device tree binding documentation for the driver communicating
-with the rWTM firmware on Turris Mox.
+This adds support for the mailbox via which the kernel can communicate
+with the firmware running on the secure processor of the Armada 37xx
+SOC.
+
+The rWTM secure processor has access to internal eFuses and
+cryptographic circuits, such as the Entropy Bit Generator to generate
+true random numbers.
 
 Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
 ---
- .../firmware/cznic,turris-mox-rwtm.txt        | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt
+ drivers/mailbox/Kconfig                    |  10 +
+ drivers/mailbox/Makefile                   |   2 +
+ drivers/mailbox/armada-37xx-rwtm-mailbox.c | 225 +++++++++++++++++++++
+ include/linux/armada-37xx-rwtm-mailbox.h   |  23 +++
+ 4 files changed, 260 insertions(+)
+ create mode 100644 drivers/mailbox/armada-37xx-rwtm-mailbox.c
+ create mode 100644 include/linux/armada-37xx-rwtm-mailbox.h
 
-diff --git a/Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt b/Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt
+diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+index 3eeb12e93e98..939927290ac6 100644
+--- a/drivers/mailbox/Kconfig
++++ b/drivers/mailbox/Kconfig
+@@ -41,6 +41,16 @@ config PL320_MBOX
+ 	  Management Engine, primarily for cpufreq. Say Y here if you want
+ 	  to use the PL320 IPCM support.
+ 
++config ARMADA_37XX_RWTM_MBOX
++	tristate "Armada 37xx rWTM BIU Mailbox"
++	depends on ARCH_MVEBU || COMPILE_TEST
++	depends on OF
++	help
++	  Mailbox implementation for communication with the the firmware
++	  running on the Cortex-M3 rWTM secure processor of the Armada 37xx
++	  SOC. Say Y here if you are building for such a device (for example
++	  the Turris Mox router).
++
+ config OMAP2PLUS_MBOX
+ 	tristate "OMAP2+ Mailbox framework support"
+ 	depends on ARCH_OMAP2PLUS
+diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+index c818b5d011ae..792894db6b43 100644
+--- a/drivers/mailbox/Makefile
++++ b/drivers/mailbox/Makefile
+@@ -9,6 +9,8 @@ obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o
+ 
+ obj-$(CONFIG_IMX_MBOX)	+= imx-mailbox.o
+ 
++obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+= armada-37xx-rwtm-mailbox.o
++
+ obj-$(CONFIG_PLATFORM_MHU)	+= platform_mhu.o
+ 
+ obj-$(CONFIG_PL320_MBOX)	+= pl320-ipc.o
+diff --git a/drivers/mailbox/armada-37xx-rwtm-mailbox.c b/drivers/mailbox/armada-37xx-rwtm-mailbox.c
 new file mode 100644
-index 000000000000..338169dea7bb
+index 000000000000..97f90e97a83c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt
-@@ -0,0 +1,19 @@
-+Turris Mox rWTM firmware driver
++++ b/drivers/mailbox/armada-37xx-rwtm-mailbox.c
+@@ -0,0 +1,225 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * rWTM BIU Mailbox driver for Armada 37xx
++ *
++ * Author: Marek Behun <marek.behun@nic.cz>
++ */
 +
-+Required properties:
-+ - compatible		: Should be "cznic,turris-mox-rwtm"
-+ - mboxes		: Must contain a reference to associated mailbox
++#include <linux/device.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/mailbox_controller.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/armada-37xx-rwtm-mailbox.h>
 +
-+This device tree node should be used on Turris Mox, or potentially another A3700
-+compatible device running the Mox's rWTM firmware in the secure processor (for
-+example it is possible to flash this firmware into EspressoBin).
++#define DRIVER_NAME	"armada-37xx-rwtm-mailbox"
 +
-+Example:
++/* relative to rWTM BIU Mailbox Registers */
++#define RWTM_MBOX_PARAM(i)		(0x0 + ((i) << 2))
++#define RWTM_MBOX_COMMAND		0x40
++#define RWTM_MBOX_RETURN_STATUS		0x80
++#define RWTM_MBOX_STATUS(i)		(0x84 + ((i) << 2))
++#define RWTM_MBOX_FIFO_STATUS		0xc4
++#define FIFO_STS_RDY			0x100
++#define FIFO_STS_CNTR_MASK		0x7
++#define FIFO_STS_CNTR_MAX		4
 +
-+	firmware {
-+		turris-mox-rwtm {
-+			compatible = "cznic,turris-mox-rwtm";
-+			mboxes = <&rwtm 0>;
-+			status = "okay";
-+		};
-+	};
++#define RWTM_HOST_INT_RESET		0xc8
++#define RWTM_HOST_INT_MASK		0xcc
++#define SP_CMD_COMPLETE			BIT(0)
++#define SP_CMD_QUEUE_FULL_ACCESS	BIT(17)
++#define SP_CMD_QUEUE_FULL		BIT(18)
++
++struct a37xx_mbox {
++	struct device *dev;
++	struct mbox_controller controller;
++	void __iomem *base;
++	int irq;
++};
++
++static void a37xx_mbox_receive(struct mbox_chan *chan)
++{
++	struct a37xx_mbox *mbox = chan->con_priv;
++	struct armada_37xx_rwtm_rx_msg rx_msg;
++	int i;
++
++	rx_msg.retval = readl(mbox->base + RWTM_MBOX_RETURN_STATUS);
++	for (i = 0; i < 16; ++i)
++		rx_msg.status[i] = readl(mbox->base + RWTM_MBOX_STATUS(i));
++
++	mbox_chan_received_data(chan, &rx_msg);
++}
++
++static irqreturn_t a37xx_mbox_irq_handler(int irq, void *data)
++{
++	struct mbox_chan *chan = data;
++	struct a37xx_mbox *mbox = chan->con_priv;
++	u32 reg;
++
++	reg = readl(mbox->base + RWTM_HOST_INT_RESET);
++
++	if (reg & SP_CMD_COMPLETE)
++		a37xx_mbox_receive(chan);
++
++	if (reg & (SP_CMD_QUEUE_FULL_ACCESS | SP_CMD_QUEUE_FULL))
++		dev_err(mbox->dev, "Secure processor command queue full\n");
++
++	writel(reg, mbox->base + RWTM_HOST_INT_RESET);
++	if (reg)
++		mbox_chan_txdone(chan, 0);
++
++	return reg ? IRQ_HANDLED : IRQ_NONE;
++}
++
++static int a37xx_mbox_send_data(struct mbox_chan *chan, void *data)
++{
++	struct a37xx_mbox *mbox = chan->con_priv;
++	struct armada_37xx_rwtm_tx_msg *msg = data;
++	int i;
++	u32 reg;
++
++	if (!data)
++		return -EINVAL;
++
++	reg = readl(mbox->base + RWTM_MBOX_FIFO_STATUS);
++	if (!(reg & FIFO_STS_RDY))
++		dev_warn(mbox->dev, "Secure processor not ready\n");
++
++	if ((reg & FIFO_STS_CNTR_MASK) >= FIFO_STS_CNTR_MAX) {
++		dev_err(mbox->dev, "Secure processor command queue full\n");
++		return -EBUSY;
++	}
++
++	for (i = 0; i < 16; ++i)
++		writel(msg->args[i], mbox->base + RWTM_MBOX_PARAM(i));
++	writel(msg->command, mbox->base + RWTM_MBOX_COMMAND);
++
++	return 0;
++}
++
++static int a37xx_mbox_startup(struct mbox_chan *chan)
++{
++	struct a37xx_mbox *mbox = chan->con_priv;
++	u32 reg;
++	int ret;
++
++	ret = devm_request_irq(mbox->dev, mbox->irq, a37xx_mbox_irq_handler, 0,
++			       DRIVER_NAME, chan);
++	if (ret < 0) {
++		dev_err(mbox->dev, "Cannot request irq\n");
++		return ret;
++	}
++
++	/* enable IRQ generation */
++	reg = readl(mbox->base + RWTM_HOST_INT_MASK);
++	reg &= ~(SP_CMD_COMPLETE | SP_CMD_QUEUE_FULL_ACCESS | SP_CMD_QUEUE_FULL);
++	writel(reg, mbox->base + RWTM_HOST_INT_MASK);
++
++	return 0;
++}
++
++static void a37xx_mbox_shutdown(struct mbox_chan *chan)
++{
++	u32 reg;
++	struct a37xx_mbox *mbox = chan->con_priv;
++
++	/* disable interrupt generation */
++	reg = readl(mbox->base + RWTM_HOST_INT_MASK);
++	reg |= SP_CMD_COMPLETE | SP_CMD_QUEUE_FULL_ACCESS | SP_CMD_QUEUE_FULL;
++	writel(reg, mbox->base + RWTM_HOST_INT_MASK);
++
++	devm_free_irq(mbox->dev, mbox->irq, chan);
++}
++
++static const struct mbox_chan_ops a37xx_mbox_ops = {
++	.send_data	= a37xx_mbox_send_data,
++	.startup	= a37xx_mbox_startup,
++	.shutdown	= a37xx_mbox_shutdown,
++};
++
++static int armada_37xx_mbox_probe(struct platform_device *pdev)
++{
++	struct a37xx_mbox *mbox;
++	struct resource *regs;
++	struct mbox_chan *chans;
++	int ret;
++
++	mbox = devm_kzalloc(&pdev->dev, sizeof(*mbox), GFP_KERNEL);
++	if (!mbox)
++		return -ENOMEM;
++
++	/* Allocated one channel */
++	chans = devm_kzalloc(&pdev->dev, sizeof(*chans), GFP_KERNEL);
++	if (!chans)
++		return -ENOMEM;
++
++	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++
++	mbox->base = devm_ioremap_resource(&pdev->dev, regs);
++	if (IS_ERR(mbox->base)) {
++		dev_err(&pdev->dev, "ioremap failed\n");
++		return PTR_ERR(mbox->base);
++	}
++
++	mbox->irq = platform_get_irq(pdev, 0);
++	if (mbox->irq < 0) {
++		dev_err(&pdev->dev, "Cannot get irq\n");
++		return mbox->irq;
++	}
++
++	mbox->dev = &pdev->dev;
++
++	/* Hardware supports only one channel. */
++	chans[0].con_priv = mbox;
++	mbox->controller.dev = mbox->dev;
++	mbox->controller.num_chans = 1;
++	mbox->controller.chans = chans;
++	mbox->controller.ops = &a37xx_mbox_ops;
++	mbox->controller.txdone_irq = true;
++
++	ret = mbox_controller_register(&mbox->controller);
++	if (ret) {
++		dev_err(&pdev->dev, "Could not register mailbox controller\n");
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, mbox);
++	return ret;
++}
++
++static int armada_37xx_mbox_remove(struct platform_device *pdev)
++{
++	struct a37xx_mbox *mbox = platform_get_drvdata(pdev);
++
++	if (!mbox)
++		return -EINVAL;
++
++	mbox_controller_unregister(&mbox->controller);
++
++	return 0;
++}
++
++static const struct of_device_id armada_37xx_mbox_match[] = {
++	{ .compatible = "marvell,armada-3700-rwtm-mailbox" },
++	{ },
++};
++
++MODULE_DEVICE_TABLE(of, armada_37xx_mbox_match);
++
++static struct platform_driver armada_37xx_mbox_driver = {
++	.probe	= armada_37xx_mbox_probe,
++	.remove	= armada_37xx_mbox_remove,
++	.driver	= {
++		.name		= DRIVER_NAME,
++		.of_match_table	= armada_37xx_mbox_match,
++	},
++};
++
++module_platform_driver(armada_37xx_mbox_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("rWTM BIU Mailbox driver for Armada 37xx");
++MODULE_AUTHOR("Marek Behun <marek.behun@nic.cz>");
+diff --git a/include/linux/armada-37xx-rwtm-mailbox.h b/include/linux/armada-37xx-rwtm-mailbox.h
+new file mode 100644
+index 000000000000..57bb54f6767a
+--- /dev/null
++++ b/include/linux/armada-37xx-rwtm-mailbox.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * rWTM BIU Mailbox driver for Armada 37xx
++ *
++ * Author: Marek Behun <marek.behun@nic.cz>
++ */
++
++#ifndef _LINUX_ARMADA_37XX_RWTM_MAILBOX_H_
++#define _LINUX_ARMADA_37XX_RWTM_MAILBOX_H_
++
++#include <linux/types.h>
++
++struct armada_37xx_rwtm_tx_msg {
++	u16 command;
++	u32 args[16];
++};
++
++struct armada_37xx_rwtm_rx_msg {
++	u32 retval;
++	u32 status[16];
++};
++
++#endif /* _LINUX_ARMADA_37XX_RWTM_MAILBOX_H_ */
 -- 
 2.19.2
 
