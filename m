@@ -2,112 +2,108 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4B4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F060C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0423D21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:42:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="lqTAy0ms"
+	by mail.kernel.org (Postfix) with ESMTP id 1F6C921872
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 07:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfCOHmz (ORCPT
+        id S1728464AbfCOHpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 03:42:55 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:32894 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727476AbfCOHmy (ORCPT
+        Fri, 15 Mar 2019 03:45:03 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:32916 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727476AbfCOHpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 03:42:54 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 53A80D3D
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 07:42:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MF_tLOxjzHpA for <linux-kernel@vger.kernel.org>;
-        Fri, 15 Mar 2019 02:42:53 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 26F82D10
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 02:42:53 -0500 (CDT)
-Received: by mail-io1-f72.google.com with SMTP id c2so6286551ioh.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 00:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=o2ADGufCuxIAT4soQw3JMLB7pYqNLiLeR85PAz0yM0E=;
-        b=lqTAy0mscZgZFcHHHMJwTfpsWitHRTru4MSKjRTaiSa3NoDq9+/J7vSv7vG5UBLFI1
-         0pzryCtiE2imLPydQuQnZRK8/nxaGYAqPZLeklHABquDHodYff5CWPoJiiKHHHU/bvZ8
-         q4xglO3g8zCimPz5rj7gIiQ0zpgnuNAc7Bp2vPWynP+arOW4WhtzEQBVp9aW7u4YtByL
-         HElbYs/wlF++k1V4qRLrgFLvnLoaDWbwJHI4peB9BWBzCQ/3+iPHukBPwd33TlpMpC1Y
-         s71Jirwb6OZR2gOVEhNVcEs0DfA0xiNlnDjT3k1SGTNFpuB5MnCjclFE1s+ZnX2PYNIt
-         2ImA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=o2ADGufCuxIAT4soQw3JMLB7pYqNLiLeR85PAz0yM0E=;
-        b=caVVwFxVg0Q0VlQaPxW3Ud0qp4uVJpsEVQubTZwPUCEXxg4TmrTSNgex5gsajzE9YP
-         U0nauMvdagJNxHJndpWnNyK1E6EDNx/NuApFlfGRiCotr3oJAgjUbcobS5axyfENIdaU
-         CmURL/dkozXsHI/LWf86Ghh9M6HRlYLhTPvTauyuG5f52UKYKKFAUlL8YasBJ1Td2qRi
-         7X5La+M9+46Pu5b2gLtztxDvpEyX2b2+pRf2t+2Ie35TfogzkU+ssO69uBesXOWzZ+WU
-         Rx3R4LtTuwFhfplFWTrKkvr7m7/bZFSyauM2OaaSXUILu3F0/KCzdfqa5zA6VgPTepXO
-         dPFA==
-X-Gm-Message-State: APjAAAXRIRVioeB97YwP2cao1T2bYV7lQ+95BOybEhjGgd4YSLI+oKM4
-        QZl/kgmR+GbCzAAOa79QC6q9axjaMgQHtpQQliiQQHmMB1qrKkA4oYtDqcmyoYgYn1hvmR/vlvI
-        wHhPDVDA+VqHwWOh0q5KWIyfd/Hwh
-X-Received: by 2002:a24:2812:: with SMTP id h18mr1127900ith.173.1552635772770;
-        Fri, 15 Mar 2019 00:42:52 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyarjbyBKYUS2hIjS3/9z24WEo/774xS56yER24rLMu6sBbl09xZ0G6kaDGenWb06nXXMCiog==
-X-Received: by 2002:a24:2812:: with SMTP id h18mr1127883ith.173.1552635772454;
-        Fri, 15 Mar 2019 00:42:52 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id w19sm650791ita.33.2019.03.15.00.42.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Mar 2019 00:42:51 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, David Sterba <dsterba@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: affs: fix a NULL pointer dereference
-Date:   Fri, 15 Mar 2019 02:42:44 -0500
-Message-Id: <20190315074246.26426-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Fri, 15 Mar 2019 03:45:03 -0400
+Received: from light.dominikbrodowski.net (isilmar.linta [10.0.0.1])
+        by isilmar-4.linta.de (Postfix) with ESMTPS id A8D05200939;
+        Fri, 15 Mar 2019 07:45:00 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 4561A209BF; Fri, 15 Mar 2019 08:43:07 +0100 (CET)
+Date:   Fri, 15 Mar 2019 08:43:07 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        fenghua.yu@intel.com, linux-kernel@vger.kernel.org
+Subject: fs_context-related oops in mainline
+Message-ID: <20190315074307.GA31430@light.dominikbrodowski.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If affs_bread fails, do not use ext_bh to avoid NULL pointer
- dereference
+David, Al,
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- fs/affs/file.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+commit 23bf1b6be9c2 ("kernfs, sysfs, cgroup, intel_rdt: Support fs_context")
+seems to have introduced a bug; at least that's the commit I bisected the
+following oops down to:
 
-diff --git a/fs/affs/file.c b/fs/affs/file.c
-index a85817f54483..29cbc8eda085 100644
---- a/fs/affs/file.c
-+++ b/fs/affs/file.c
-@@ -941,8 +941,10 @@ affs_truncate(struct inode *inode)
- 		size = AFFS_SB(sb)->s_hashsize;
- 		if (size > blkcnt - blk)
- 			size = blkcnt - blk;
--		for (i = 0; i < size; i++, blk++)
--			affs_free_block(sb, be32_to_cpu(AFFS_BLOCK(sb, ext_bh, i)));
-+		if (ext_bh) {
-+			for (i = 0; i < size; i++, blk++)
-+				affs_free_block(sb, be32_to_cpu(AFFS_BLOCK(sb, ext_bh, i)));
-+		}
- 		affs_free_block(sb, ext_key);
- 		ext_key = be32_to_cpu(AFFS_TAIL(sb, ext_bh)->extension);
- 		affs_brelse(ext_bh);
--- 
-2.17.1
+[    0.827317] BUG: unable to handle kernel NULL pointer dereference at 0000000000000220
+[    0.829771] #PF error: [normal kernel read fault]
+[    0.831141] PGD 800000007f927067 P4D 800000007f927067 PUD 7f928067 PMD 0 
+[    0.833116] Oops: 0000 [#1] PREEMPT SMP PTI
+[    0.834330] CPU: 1 PID: 46 Comm: mount Tainted: G                T 5.0.0-rc2+ #38
+[    0.836478] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+[    0.839322] RIP: 0010:sysfs_init_fs_context+0x82/0xd0
+[    0.840777] Code: 15 fb ef af 01 48 89 45 08 48 c7 45 10 72 65 65 62 48 c7 03 60 66 22 8f 48 85 ff 48 89 55 00 74 09 f0 ff 8f 5
+[    0.846170] RSP: 0018:ffffa55e8041bdb8 EFLAGS: 00010202
+[    0.847693] RAX: 0000000000000000 RBX: ffff949bbc0fee00 RCX: 0000000000000000
+[    0.850013] RDX: ffff949bbc878d00 RSI: 0000000000000000 RDI: ffffffff8f645c40
+[    0.852134] RBP: ffff949bbc0ff400 R08: 0000000000000001 R09: 00000000001ef140
+[    0.854211] R10: 0000000136a1068e R11: 0000000000000001 R12: 0000000000000000
+[    0.856225] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000008000
+[    0.858350] FS:  000000000050b558(0000) GS:ffff949bbce00000(0000) knlGS:0000000000000000
+[    0.860738] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.862391] CR2: 0000000000000220 CR3: 000000007c1f0004 CR4: 00000000003606e0
+[    0.864463] Call Trace:
+[    0.865200]  alloc_fs_context+0xfa/0x170
+[    0.866349]  do_mount+0x8fa/0xf50
+[    0.867310]  ? memdup_user+0x4b/0x70
+[    0.868350]  ksys_mount+0xba/0xd0
+[    0.869291]  __x64_sys_mount+0x21/0x30
+[    0.870390]  do_syscall_64+0x6a/0x3f4
+[    0.871465]  ? lockdep_hardirqs_off+0x79/0xd0
+[    0.872744]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[    0.874106]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[    0.875584] RIP: 0033:0x4bf02f
+[    0.876496] Code: e8 06 21 f4 ff 5a c3 48 63 ff 50 48 63 d2 b8 67 00 00 00 0f 05 48 89 c7 e8 ee 20 f4 ff 5a c3 49 89 ca 50 b8 8
+[    0.882329] RSP: 002b:00007ffc1befbd80 EFLAGS: 00000212 ORIG_RAX: 00000000000000a5
+[    0.884110] RAX: ffffffffffffffda RBX: 00007ffc1befc058 RCX: 00000000004bf02f
+[    0.885871] RDX: 00007ffc1befdf84 RSI: 00007ffc1befdf90 RDI: 00007ffc1befdf8a
+[    0.888102] RBP: 00007ffc1befdf8a R08: 0000000000000000 R09: 8080808080808080
+[    0.890154] R10: 0000000000008000 R11: 0000000000000212 R12: 00007ffc1befdf90
+[    0.892107] R13: 00007ffc1befdf84 R14: 0000000000008000 R15: 0000000000000000
+[    0.893537] CR2: 0000000000000220
+[    0.894467] ---[ end trace 0a9affd2a96301a9 ]---
+[    0.896230] RIP: 0010:sysfs_init_fs_context+0x82/0xd0
+[    0.897494] Code: 15 fb ef af 01 48 89 45 08 48 c7 45 10 72 65 65 62 48 c7 03 60 66 22 8f 48 85 ff 48 89 55 00 74 09 f0 ff 8f 5
+[    0.903017] RSP: 0018:ffffa55e8041bdb8 EFLAGS: 00010202
+[    0.904315] RAX: 0000000000000000 RBX: ffff949bbc0fee00 RCX: 0000000000000000
+[    0.905857] RDX: ffff949bbc878d00 RSI: 0000000000000000 RDI: ffffffff8f645c40
+[    0.907444] RBP: ffff949bbc0ff400 R08: 0000000000000001 R09: 00000000001ef140
+[    0.909973] R10: 0000000136a1068e R11: 0000000000000001 R12: 0000000000000000
+[    0.911415] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000008000
+[    0.913726] FS:  000000000050b558(0000) GS:ffff949bbce00000(0000) knlGS:0000000000000000
+[    0.916710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.918129] CR2: 0000000000000220 CR3: 000000007c1f0004 CR4: 00000000003606e0
 
+This occurs while trying to mount sysfs in initramfs
+
+	mount -n -t sysfs sysfs /sys
+
+All this obviously runs in qemu; config and further information are available upon request.
+
+Thanks,
+	Dominik
