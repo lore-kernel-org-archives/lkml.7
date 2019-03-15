@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B207C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A515C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E072218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549D4218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbfCOQ7E (ORCPT
+        id S1729926AbfCOQ7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:59:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:39359 "EHLO mga17.intel.com"
+        Fri, 15 Mar 2019 12:59:12 -0400
+Received: from mga17.intel.com ([192.55.52.151]:39358 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729687AbfCOQ6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:58:11 -0400
+        id S1729633AbfCOQ6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:58:07 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 09:58:10 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Mar 2019 09:58:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,482,1544515200"; 
-   d="scan'208";a="155397203"
+   d="scan'208";a="155397179"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2019 09:58:09 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2019 09:58:05 -0700
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 04/12] software node: Implement .get_reference_args fwnode operation
-Date:   Fri, 15 Mar 2019 19:57:52 +0300
-Message-Id: <20190315165800.5058-5-heikki.krogerus@linux.intel.com>
+Subject: [PATCH 02/12] software node: Increment parent node's ref count
+Date:   Fri, 15 Mar 2019 19:57:50 +0300
+Message-Id: <20190315165800.5058-3-heikki.krogerus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
 References: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
@@ -46,88 +46,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes it possible to support drivers that use
-fwnode_property_get_reference_args() function.
+If the parent node is removed before its children, release()
+may be called first for the parent instead of the last child
+when the child's ref count reaches zero. Since the nodes
+release their parent's resources in the release callback,
+that would cause NULL pointer dereference to happen. To
+prevent that from ever happening, incrementing the parent
+node's reference count when creating a new child node and
+decrementing it when the child node is "released".
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/base/swnode.c | 56 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ drivers/base/swnode.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 591f290d25be..b1320a55351d 100644
+index 3a50a8edd3d3..8d4485d8d0f8 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -534,6 +534,61 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
- 	return NULL;
- }
+@@ -560,6 +560,7 @@ static void software_node_release(struct kobject *kobj)
+ 	if (swnode->parent) {
+ 		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
+ 		list_del(&swnode->entry);
++		kobject_put(&swnode->parent->kobj);
+ 	} else {
+ 		ida_simple_remove(&swnode_root_ids, swnode->id);
+ 	}
+@@ -610,8 +611,10 @@ fwnode_create_software_node(const struct property_entry *properties,
+ 	INIT_LIST_HEAD(&swnode->children);
+ 	swnode->parent = p;
  
-+static int
-+software_node_get_reference_args(const struct fwnode_handle *fwnode,
-+				 const char *propname, const char *nargs_prop,
-+				 unsigned int nargs, unsigned int index,
-+				 struct fwnode_reference_args *args)
-+{
-+	struct software_node *swnode = to_software_node(fwnode);
-+	struct software_node_reference *ref;
-+	const struct property_entry *prop;
-+	int ret = -ENOENT;
-+	int i;
-+
-+	mutex_lock(&swnode->lock);
-+
-+	if (!swnode || list_empty(&swnode->references))
-+		goto err_unlock;
-+
-+	if (nargs_prop) {
-+		prop = property_entry_get(swnode->properties, nargs_prop);
-+		if (!prop) {
-+			ret = -EINVAL;
-+			goto err_unlock;
-+		}
-+
-+		nargs = prop->value.u32_data;
+-	if (p)
++	if (p) {
++		kobject_get(&p->kobj);
+ 		list_add_tail(&swnode->entry, &p->children);
 +	}
-+
-+	if (nargs > NR_FWNODE_REFERENCE_ARGS) {
-+		ret = -EINVAL;
-+		goto err_unlock;
-+	}
-+
-+	list_for_each_entry(ref, &swnode->references, list) {
-+		if (strcmp(ref->name, propname))
-+			continue;
-+
-+		if (index > (ref->nrefs - 1))
-+			break;
-+
-+		args->nargs = nargs;
-+		args->fwnode = software_node_get(ref->args[index].fwnode);
-+
-+		for (i = 0; i < nargs; i++)
-+			args->args[i] = ref->args[index].args[i];
-+
-+		ret = 0;
-+		break;
-+	}
-+
-+err_unlock:
-+	mutex_unlock(&swnode->lock);
-+
-+	return ret;
-+}
-+
- static const struct fwnode_operations software_node_ops = {
- 	.get = software_node_get,
- 	.put = software_node_put,
-@@ -543,6 +598,7 @@ static const struct fwnode_operations software_node_ops = {
- 	.get_parent = software_node_get_parent,
- 	.get_next_child_node = software_node_get_next_child,
- 	.get_named_child_node = software_node_get_named_child_node,
-+	.get_reference_args = software_node_get_reference_args,
- };
  
- /* -------------------------------------------------------------------------- */
+ 	ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
+ 				   p ? &p->kobj : NULL, "node%d", swnode->id);
 -- 
 2.20.1
 
