@@ -2,150 +2,96 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0039C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8465C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6B32186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDSdxxB4"
+	by mail.kernel.org (Postfix) with ESMTP id 8411D218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfCOSnf (ORCPT
+        id S1727059AbfCOSpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:43:35 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39392 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfCOSnf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:43:35 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i20so6941675pfo.6;
-        Fri, 15 Mar 2019 11:43:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UzIvI6hUKtM345OPRMvag+o1k0P7RZYP6J+h26B8ay8=;
-        b=iDSdxxB4k9x/hn52pJyNyYzdxVs7rBxwoNAFGvN0B9Cw0fswiZK57LfeNwRh1+wQy5
-         iLtCe6URXqD3yuJPsbqjHRW0t4bQvJ8cAdJ6Q/Ms3cByLM81B/d2qZZXUwkfI4Xf3c+1
-         3vk3U7wfIAmYkKW0OPt5tYHdcOMnICqk51G7ReDp9gfnl7YhFcn9BRX5EQFsNsE5pBEV
-         be/6hKDpecBViOLZse0vUIbNC/a3AuIQuLvYZ4o8ts8tGW+HycUl3Z7cI+4ztYG1gzMz
-         q14sNQytzkxf03zSoZUjuwGHRrHRdGnUjFP7QnutGItSoYCCtHnDwvC+fCTjkN/a7tAc
-         jzTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UzIvI6hUKtM345OPRMvag+o1k0P7RZYP6J+h26B8ay8=;
-        b=ppb0yqakfhbQE8wKKefXgbPtrelA1sqff7cIuL2NnxUpAKWUHOxFM+wbXtyHM040hv
-         xAayP37ANdrZzp630NRSQFN2hStq5FnPYpll5Qh4mzGlYMXNmoF7wl99rVE7j3jgYmB6
-         Z3V+EALUfwEg66bbBs+OI/oU+LOssZKAfGiaIXCQY7pioIs9wwJCSuif4uJy0au2zBde
-         63RGvzaDVlnuSICUen7N8u5VnQ5lcpYmPS5lKLNNd1N8cZT9swmzxYdanNvlHqjIKQL9
-         +TY9F3+wBDybU38lZetqWyKv57egfT7ZNXjcFpJNd0KZON5kJk8uqVlogCdUYYKRWjZR
-         8MZA==
-X-Gm-Message-State: APjAAAWO/N8M6vOJAI4ghWU8otrG/maaYmFTA1tSMOiIiW8C0XO5+6ta
-        yI6kWFmYwaVOkHb+YcX8D+2p85vVKyiuO/X4dBU=
-X-Google-Smtp-Source: APXvYqyS0+ZkigTGbGwd3UfYEmZKJPsT/bAX2aS1P3a2hiucMk4RjcizVwL8obeASZT10vxxXE8IzAMT8it/l8LCNBI=
-X-Received: by 2002:a63:b902:: with SMTP id z2mr4958179pge.428.1552675414054;
- Fri, 15 Mar 2019 11:43:34 -0700 (PDT)
+        Fri, 15 Mar 2019 14:45:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbfCOSpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 14:45:38 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D59E218FD;
+        Fri, 15 Mar 2019 18:45:38 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1h4rpp-0000Bw-Fk; Fri, 15 Mar 2019 14:45:37 -0400
+Message-Id: <20190315184537.377765601@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Fri, 15 Mar 2019 14:45:13 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 8/8] tracing/probe: Verify alloc_trace_*probe() result
+References: <20190315184505.655928086@goodmis.org>
 MIME-Version: 1.0
-References: <20190315133113.21215-1-gabriel.lazar@com.utcluj.ro> <12a67eb2-18ff-dd9f-4c48-4d01a01a2aa7@redhat.com>
-In-Reply-To: <12a67eb2-18ff-dd9f-4c48-4d01a01a2aa7@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 15 Mar 2019 20:43:21 +0200
-Message-ID: <CAHp75VeAdFdHWWRXe-Jr=kvufCrQzq5dOCj9rW3tBvtzHEcEYA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for Myria MY8307 2-in-1
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Gabriel Lazar <gabriel.lazar@com.utcluj.ro>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 7:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 3/15/19 2:31 PM, Gabriel Lazar wrote:
-> > Add touchscreen platform data for the Myrya MY8307 2-in-1 laptop.
-> >
-> > Signed-off-by: Gabriel Lazar <gabriel.lazar@com.utcluj.ro>
->
-> Patch looks good to me:
->
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-OK, thanks for explanation.
-I'll take it after merge window will be closed.
+Since alloc_trace_*probe() returns -EINVAL only if !event && !group,
+it should not happen in trace_*probe_create(). If we catch that case
+there is a bug. So use WARN_ON_ONCE() instead of pr_info().
 
-> Regards,
->
-> Hans
->
->
->
-> > ---
-> >   drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
-> >   1 file changed, 25 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> > index 2d56ff7c8230..3319f0cbb558 100644
-> > --- a/drivers/platform/x86/touchscreen_dmi.c
-> > +++ b/drivers/platform/x86/touchscreen_dmi.c
-> > @@ -265,6 +265,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_data = {
-> >       .properties     = jumper_ezpad_mini3_props,
-> >   };
-> >
-> > +static const struct property_entry myria_my8307_props[] = {
-> > +     PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
-> > +     PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
-> > +     PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
-> > +     PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-> > +     PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-> > +     PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-myria-my8307.fw"),
-> > +     PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> > +     PROPERTY_ENTRY_BOOL("silead,home-button"),
-> > +     { }
-> > +};
-> > +
-> > +static const struct ts_dmi_data myria_my8307_data = {
-> > +     .acpi_name      = "MSSL1680:00",
-> > +     .properties     = myria_my8307_props,
-> > +};
-> > +
-> >   static const struct property_entry onda_obook_20_plus_props[] = {
-> >       PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
-> >       PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
-> > @@ -690,6 +707,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
-> >                       DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
-> >               },
-> >       },
-> > +     {
-> > +             /* Myria MY8307 */
-> > +             .driver_data = (void *)&myria_my8307_data,
-> > +             .matches = {
-> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Complet Electro Serv"),
-> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "MY8307"),
-> > +             },
-> > +     },
-> >       {
-> >               /* Onda oBook 20 Plus */
-> >               .driver_data = (void *)&onda_obook_20_plus_data,
-> >
+Link: http://lkml.kernel.org/r/155253785078.14922.16902223633734601469.stgit@devnote2
 
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_kprobe.c | 4 ++--
+ kernel/trace/trace_uprobe.c | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 5265117ad7e8..63aa0ab56051 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -693,9 +693,9 @@ static int trace_kprobe_create(int argc, const char *argv[])
+ 	tk = alloc_trace_kprobe(group, event, addr, symbol, offset, maxactive,
+ 			       argc, is_return);
+ 	if (IS_ERR(tk)) {
+-		pr_info("Failed to allocate trace_probe.(%d)\n",
+-			(int)PTR_ERR(tk));
+ 		ret = PTR_ERR(tk);
++		/* This must return -ENOMEM otherwise there is a bug */
++		WARN_ON_ONCE(ret != -ENOMEM);
+ 		goto out;
+ 	}
+ 
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 52f033489377..b54137ec7810 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -514,8 +514,9 @@ static int trace_uprobe_create(int argc, const char **argv)
+ 
+ 	tu = alloc_trace_uprobe(group, event, argc, is_return);
+ 	if (IS_ERR(tu)) {
+-		pr_info("Failed to allocate trace_uprobe.(%d)\n", (int)PTR_ERR(tu));
+ 		ret = PTR_ERR(tu);
++		/* This must return -ENOMEM otherwise there is a bug */
++		WARN_ON_ONCE(ret != -ENOMEM);
+ 		goto fail_address_parse;
+ 	}
+ 	tu->offset = offset;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
+
