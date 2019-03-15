@@ -2,109 +2,129 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8817CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1140BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7FC21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A9E21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:30:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Et69gAI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfCOM2O (ORCPT
+        id S1729003AbfCOMaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 08:28:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53786 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbfCOM2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 08:28:14 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2E1A430AA389;
-        Fri, 15 Mar 2019 12:28:14 +0000 (UTC)
-Received: from krava (unknown [10.43.17.124])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 84C625D6A6;
-        Fri, 15 Mar 2019 12:28:12 +0000 (UTC)
-Date:   Fri, 15 Mar 2019 13:28:11 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 00/12] perf: enable compression of record mode trace
- to save storage space
-Message-ID: <20190315122811.GC1400@krava>
-References: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
+        Fri, 15 Mar 2019 08:30:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36848 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727671AbfCOMaF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 08:30:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/Ckel4zvjLrhxvyqm3MFEjjHJgoBIPigW3uv5xckhjE=; b=Et69gAI1ytf+ehROyT4f/n7Ca
+        TaZiomf07G4wk7y8LSQcY5hY7cH/tuVuC4kKEptJfXxFFPurIDzKaVkYpJxy9Wshb1qU3w5BsLi+V
+        JrDXK5wfRPYYY/qlEJV426RG4HzZQOtPDezYgC/IAW+CUI/ch7UykyZfqjYX0yrkJcMo4zB/DOCv6
+        xdvC9/TNcGDjWtezXQHc0pSkuwhXUuaN4HTSGRKdAV3XxjAm/1zC9wwq/b5p+apvPTwB768WdBClO
+        3HuEmfXX1xQnw0/H5SM12jMTmtgejJfEI62uFjFCoKzdpxoReLXmFY0rdBBT7nYXia+AFNP35lNWW
+        ppwQUTLrA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4lyD-0006bW-Uy; Fri, 15 Mar 2019 12:29:54 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7693F21419E57; Fri, 15 Mar 2019 13:29:52 +0100 (CET)
+Date:   Fri, 15 Mar 2019 13:29:52 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sparclinux@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH V2] cpufreq: Call transition notifier only once for each
+ policy
+Message-ID: <20190315122952.GF6058@hirez.programming.kicks-ass.net>
+References: <e2b56be446eeb67f1905d2ac6f8d82dd4389d0c5.1552640968.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c037bbd-1cc9-90f2-b9cd-0e0839c83b73@linux.intel.com>
+In-Reply-To: <e2b56be446eeb67f1905d2ac6f8d82dd4389d0c5.1552640968.git.viresh.kumar@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 15 Mar 2019 12:28:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 02:26:23PM +0300, Alexey Budankov wrote:
-> 
-> The patch set implements runtime trace compression (-z option) in 
-> record mode and trace auto decompression in report and inject modes. 
-> Streaming Zstd API [1] is used for compression and decompression of
-> data that come from kernel mmaped data buffers.
-> 
-> Usage of implemented -z,--compression_level=n option provides ~3-5x 
-> avg. trace file size reduction on variety of tested workloads what 
-> saves storage space on larger server systems where trace file size 
-> can easily reach several tens or even hundreds of GiBs, especially 
-> when profiling with dwarf-based stacks and tracing of context switches.
-> Default option value is 1 (fastest compression).
-> 
-> Implemented --mmap-flush option can be used to specify minimal size 
-> of data chunk that is extracted from mmaped kernel buffer to store
-> into a trace. The option is independent from -z setting and doesn't 
-> vary with compression level. The default option value is 1 byte what 
-> means every time trace writing thread finds some new data in the 
-> mmaped buffer the data is extracted, possibly compressed and written 
-> to a trace. The option serves two purposes the first one is to increase 
-> the compression ratio of trace data and the second one is to avoid 
-> live-lock self tool process monitoring in system wide (-a) profiling
-> mode. Profiling in system wide mode with compression (-a -z) can 
-> additionally induce data into the kernel buffers along with the data 
-> from monitored processes. If performance data rate and volume from 
-> the monitored processes is high then trace streaming and compression 
-> activity in the tool is also high. It can lead to subtle live-lock 
-> effect of endless activity when compression of single new byte from 
-> some of mmaped kernel buffer induces the next single byte at some 
-> mmaped buffer. So perf tool thread never stops on polling event file 
-> descriptors. Varying data chunk size to be extracted from mmap buffers 
-> allows avoiding live-locking self monitoring in system wide mode and
-> makes mmap buffers polling loop configurable.
-> 
->   $ tools/perf/perf record -z -e cycles -- matrix.gcc
->   $ tools/perf/perf record --aio -z -e cycles -- matrix.gcc
->   $ tools/perf/perf record -z --mmap-flush 1024 -e cycles -- matrix.gcc
->   $ tools/perf/perf record --aio -z --mmap-flush 1K -e cycles -- matrix.gcc
+On Fri, Mar 15, 2019 at 02:43:07PM +0530, Viresh Kumar wrote:
+> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> index 3fae23834069..cff8779fc0d2 100644
+> --- a/arch/x86/kernel/tsc.c
+> +++ b/arch/x86/kernel/tsc.c
+> @@ -956,28 +956,38 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+>  				void *data)
+>  {
+>  	struct cpufreq_freqs *freq = data;
+> -	unsigned long *lpj;
+> -
+> -	lpj = &boot_cpu_data.loops_per_jiffy;
+> -#ifdef CONFIG_SMP
+> -	if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+> -		lpj = &cpu_data(freq->cpu).loops_per_jiffy;
+> -#endif
+> +	struct cpumask *cpus = freq->policy->cpus;
+> +	bool boot_cpu = !IS_ENABLED(CONFIG_SMP) || freq->flags & CPUFREQ_CONST_LOOPS;
+> +	unsigned long lpj;
+> +	int cpu;
+>  
+>  	if (!ref_freq) {
+>  		ref_freq = freq->old;
+> -		loops_per_jiffy_ref = *lpj;
+>  		tsc_khz_ref = tsc_khz;
+> +
+> +		if (boot_cpu)
+> +			loops_per_jiffy_ref = boot_cpu_data.loops_per_jiffy;
+> +		else
+> +			loops_per_jiffy_ref = cpu_data(cpumask_first(cpus)).loops_per_jiffy;
+>  	}
+> +
+>  	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
+>  			(val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
+> -		*lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+> -
+> +		lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+>  		tsc_khz = cpufreq_scale(tsc_khz_ref, ref_freq, freq->new);
+> +
+>  		if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+>  			mark_tsc_unstable("cpufreq changes");
+>  
+> -		set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
+> +		if (boot_cpu) {
+> +			boot_cpu_data.loops_per_jiffy = lpj;
+> +		} else {
+> +			for_each_cpu(cpu, cpus)
+> +				cpu_data(cpu).loops_per_jiffy = lpj;
+> +		}
+> +
+> +		for_each_cpu(cpu, cpus)
+> +			set_cyc2ns_scale(tsc_khz, cpu, rdtsc());
 
-hi,
-I'm getting error with -z:
+This code doesn't make sense, the rdtsc() _must_ be called on the CPU in
+question. That's part of the whole problem here, TSC isn't sync'ed when
+it's subject to CPUFREQ.
 
-[root@krava perf]# ./perf record -z ./perf bench sched messaging -l 10000
-# Running 'sched/messaging' benchmark:
-# 20 sender and receiver processes per group
-# 10 groups == 400 processes run
-
-     Total time: 18.775 [sec]
-[ perf record: Woken up 57 times to write data ]
-0x5228 [0]: failed to process type: 81
-[ perf record: Captured and wrote 6.453 MB perf.data, compressed (original 21.486 MB, ratio is 3.340) ]
-
-
-jirka
+>  	}
+>  
+>  	return 0;
