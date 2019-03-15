@@ -2,131 +2,184 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0A9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6431C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E0421872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B4D218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 02:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbfCOCY2 (ORCPT
+        id S1728260AbfCOCYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 22:24:28 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:23546 "EHLO mxhk.zte.com.cn"
+        Thu, 14 Mar 2019 22:24:33 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59580 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727331AbfCOCY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 22:24:28 -0400
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id CE52A2E56648D56CFF59;
-        Fri, 15 Mar 2019 10:24:24 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x2F2OG0C097582;
-        Fri, 15 Mar 2019 10:24:16 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019031510245239-4956102 ;
-          Fri, 15 Mar 2019 10:24:52 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     Julia.Lawall@lip6.fr
-Cc:     wang.yi59@zte.com.cn, Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
-        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>
-Subject: [PATCH] coccinelle: semantic patch for missing of_node_put
-Date:   Fri, 15 Mar 2019 10:24:41 +0800
-Message-Id: <1552616681-17985-1-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-15 10:24:52,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-15 10:24:01,
-        Serialize complete at 2019-03-15 10:24:01
-X-MAIL: mse01.zte.com.cn x2F2OG0C097582
+        id S1728230AbfCOCYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 22:24:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 19:24:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,480,1544515200"; 
+   d="scan'208";a="127108468"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga006.jf.intel.com with ESMTP; 14 Mar 2019 19:24:30 -0700
+Cc:     baolu.lu@linux.intel.com, Tom Murphy <tmurphy@arista.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
+ iommu_get_resv_regions
+To:     James Sewart <jamessewart@arista.com>,
+        iommu@lists.linux-foundation.org
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+ <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
+Date:   Fri, 15 Mar 2019 10:19:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looking for places where there is an of_node_put on some paths
-but not on others. This SmPL checks that there is a put of the
-same data elsewhere in the function, so perhaps that will
-alleviate the concern about puts where they are not needed,
-while still making it possible to find the ones that are needed.
+Hi James,
 
-Suggested-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Reviewed-by: Julia Lawall <Julia.Lawall@lip6.fr>
----
- scripts/coccinelle/free/of_node_put.cocci | 57 +++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 scripts/coccinelle/free/of_node_put.cocci
+On 3/14/19 7:58 PM, James Sewart wrote:
+> To support mapping ISA region via iommu_group_create_direct_mappings,
+> make sure its exposed by iommu_get_resv_regions. This allows
+> deduplication of reserved region mappings
+> 
+> Signed-off-by: James Sewart <jamessewart@arista.com>
+> ---
+>   drivers/iommu/intel-iommu.c | 42 +++++++++++++++++++++++++++++--------
+>   1 file changed, 33 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 8e0a4e2ff77f..2e00e8708f06 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -337,6 +337,8 @@ static LIST_HEAD(dmar_rmrr_units);
+>   #define for_each_rmrr_units(rmrr) \
+>   	list_for_each_entry(rmrr, &dmar_rmrr_units, list)
+>   
+> +static struct iommu_resv_region *isa_resv_region;
+> +
+>   /* bitmap for indexing intel_iommus */
+>   static int g_num_of_iommus;
+>   
+> @@ -2780,26 +2782,34 @@ static inline int iommu_prepare_rmrr_dev(struct dmar_rmrr_unit *rmrr,
+>   					  rmrr->end_address);
+>   }
+>   
+> +static inline struct iommu_resv_region *iommu_get_isa_resv_region(void)
+> +{
+> +	if (!isa_resv_region)
+> +		isa_resv_region = iommu_alloc_resv_region(0,
+> +				16*1024*1024,
+> +				0, IOMMU_RESV_DIRECT);
+> +
+> +	return isa_resv_region;
+> +}
+> +
+>   #ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
+> -static inline void iommu_prepare_isa(void)
+> +static inline void iommu_prepare_isa(struct pci_dev *pdev)
+>   {
+> -	struct pci_dev *pdev;
+>   	int ret;
+> +	struct iommu_resv_region *reg = iommu_get_isa_resv_region();
+>   
+> -	pdev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
+> -	if (!pdev)
+> +	if (!reg)
+>   		return;
+>   
+>   	pr_info("Prepare 0-16MiB unity mapping for LPC\n");
+> -	ret = iommu_prepare_identity_map(&pdev->dev, 0, 16*1024*1024 - 1);
+> +	ret = iommu_prepare_identity_map(&pdev->dev, reg->start,
+> +			reg->start + reg->length - 1);
+>   
+>   	if (ret)
+>   		pr_err("Failed to create 0-16MiB identity map - floppy might not work\n");
+> -
+> -	pci_dev_put(pdev);
+>   }
+>   #else
+> -static inline void iommu_prepare_isa(void)
+> +static inline void iommu_prepare_isa(struct pci_dev *pdev)
+>   {
+>   	return;
+>   }
+> @@ -3289,6 +3299,7 @@ static int __init init_dmars(void)
+>   	struct dmar_rmrr_unit *rmrr;
+>   	bool copied_tables = false;
+>   	struct device *dev;
+> +	struct pci_dev *pdev;
+>   	struct intel_iommu *iommu;
+>   	int i, ret;
+>   
+> @@ -3469,7 +3480,11 @@ static int __init init_dmars(void)
+>   		}
+>   	}
+>   
+> -	iommu_prepare_isa();
+> +	pdev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
+> +	if (pdev) {
+> +		iommu_prepare_isa(pdev);
+> +		pci_dev_put(pdev);
+> +	}
+>   
+>   domains_done:
+>   
+> @@ -5266,6 +5281,7 @@ static void intel_iommu_get_resv_regions(struct device *device,
+>   	struct iommu_resv_region *reg;
+>   	struct dmar_rmrr_unit *rmrr;
+>   	struct device *i_dev;
+> +	struct pci_dev *pdev;
+>   	int i;
+>   
+>   	rcu_read_lock();
+> @@ -5280,6 +5296,14 @@ static void intel_iommu_get_resv_regions(struct device *device,
+>   	}
+>   	rcu_read_unlock();
+>   
+> +	if (dev_is_pci(device)) {
+> +		pdev = to_pci_dev(device);
+> +		if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
+> +			reg = iommu_get_isa_resv_region();
+> +			list_add_tail(&reg->list, head);
+> +		}
+> +	}
+> +
 
-diff --git a/scripts/coccinelle/free/of_node_put.cocci b/scripts/coccinelle/free/of_node_put.cocci
-new file mode 100644
-index 0000000..6a29830
---- /dev/null
-+++ b/scripts/coccinelle/free/of_node_put.cocci
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/// Find missing of_node_put
-+///
-+// Confidence: Moderate
-+// Comments:
-+// Options: --no-includes --include-headers
-+
-+virtual report
-+virtual org
-+
-+@r exists@
-+local idexpression struct device_node *x;
-+identifier f;
-+statement S,S1,S2;
-+expression e,e1;
-+position p1,p2;
-+type T,T1;
-+@@
-+
-+(
-+x = f@p1(...);
-+... when != e = (T)x
-+if (x == NULL || ...) S1
-+else S2
-+... when != of_node_put(x)
-+ when != if (x) { ... of_node_put(x) ... }
-+ when != e1 = (T1)x
-+(
-+return x;
-+|
-+return@p2 ...;
-+)
-+&
-+x = f(...)
-+...
-+if (<+...x...+>) S
-+...
-+of_node_put(x);
-+)
-+
-+@script:python depends on report@
-+p1 << r.p1;
-+p2 << r.p2;
-+@@
-+
-+coccilib.report.print_report(p2[0],
-+			     "ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line "
-+			     + p1[0].line
-+			     + ", but without a corresponding object release within this function.")
-+
-+@script:python depends on org@
-+p1 << r.p1;
-+p2 << r.p2;
-+@@
-+
-+cocci.print_main("acquired a node pointer with refcount incremented", p1)
-+cocci.print_secs("needed of_node_put", p2)
--- 
-2.9.5
+Just wondering why not just
 
++#ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
++	if (dev_is_pci(device)) {
++		pdev = to_pci_dev(device);
++		if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
++			reg = iommu_alloc_resv_region(0,
++				16*1024*1024,
++				0, IOMMU_RESV_DIRECT);
++			if (reg)
++				list_add_tail(&reg->list, head);
++		}
++	}
++#endif
+
+and, remove all other related code?
+
+Best regards,
+Lu Baolu
