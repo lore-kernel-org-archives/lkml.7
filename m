@@ -2,114 +2,226 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F2EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031F8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF4421873
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8EB621873
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 03:22:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RHrkuORF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfCODSu (ORCPT
+        id S1726571AbfCODWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Mar 2019 23:18:50 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15673 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbfCODSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Mar 2019 23:18:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Mar 2019 20:18:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,480,1544515200"; 
-   d="scan'208";a="127118324"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga006.jf.intel.com with ESMTP; 14 Mar 2019 20:18:47 -0700
-Cc:     baolu.lu@linux.intel.com, Tom Murphy <tmurphy@arista.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] iommu/vt-d: Fix-up device-domain relationship by
- refactoring to use iommu group default domain.
-To:     James Sewart <jamessewart@arista.com>,
-        iommu@lists.linux-foundation.org
-References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
- <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <0e74cc54-bb90-a620-5763-466cb11aaef7@linux.intel.com>
-Date:   Fri, 15 Mar 2019 11:13:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 14 Mar 2019 23:22:23 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41210 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfCODWW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Mar 2019 23:22:22 -0400
+Received: by mail-qk1-f193.google.com with SMTP id o129so4698180qke.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 20:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D//235HFkNRLwill9zqq/U/iBoMHwlkuX82hhdgpT/I=;
+        b=RHrkuORFlhEEdiA4KVogw849asICy/i3zdF4gHBbXXCcq6JehCB7fy40RIUajhihGD
+         MfprgCk/tPtZ27JwZRPnp12CySepMewjHnrahYDCc3fHtkCp0zFkV6ORavHGZQduHPoH
+         nS9bir2xlssZoD1/+/hHB12bULPDeaSvmQghQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D//235HFkNRLwill9zqq/U/iBoMHwlkuX82hhdgpT/I=;
+        b=pmh8Xyf+s1BZ0YKSV/2U5CGldhpmbp4fHBg2GkViJvPbUa0gLWD3g6HB0Ahc3chsbP
+         XdxTe38M/nRmOZJPCG6SpF8h98Nmu+bbBMbW9OX2RmJX3kKEN/2xZOMRUq2yLtmNt+Pd
+         j6bm0pVCkYqRkRuCD+/IEnfsjslr1twsMyeAX8KVi3gEtNXTMkfI+/1Nn9CvzouQoZas
+         wxisqysQQIGms3HF9KO+MLDJhD2QS/AnfvJvHzGyZfvPlqYNmMBGsUtZ6MzIJg1cYK0N
+         UNd07Qo5171CeTa4SBNK6skoZpi7jY9kBtv/7Yoqia+4wUhKI/v6kiKas4Gh/cKydf+R
+         ZJtg==
+X-Gm-Message-State: APjAAAXuyzBDM2HVnL/7ofbX6WieEomd1O5vIWyMGgSXspPtFMvrQHjI
+        8WWwKqUoAHtG6Ou3DOMxpBeYuVqTdrR2GbqQ3zfqvQ==
+X-Google-Smtp-Source: APXvYqzATtfpS/Hpo4SmPuzZSIj3VVO2Gr1UM/EbQG6CuLv9xGwq6NjoAo5Gp135+PWWzm/iEqWmrnYY4P0r54v4t50=
+X-Received: by 2002:a05:620a:1428:: with SMTP id k8mr1125672qkj.185.1552620141315;
+ Thu, 14 Mar 2019 20:22:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1545638931-24938-4-git-send-email-yongqiang.niu@mediatek.com>
+ <CANMq1KBTN61hmWy2K+rrx3NL0eR7AXhFQBkCpcHu5nhUw_6xjw@mail.gmail.com> <1552615576.31200.19.camel@mhfsdcap03>
+In-Reply-To: <1552615576.31200.19.camel@mhfsdcap03>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 15 Mar 2019 11:22:10 +0800
+Message-ID: <CANMq1KBSw=Xsw_QX7=ci3dCWqHXVhceHv6H+v_C_uSvVeraDeQ@mail.gmail.com>
+Subject: Re: [PATCH 03/18] drm/mediatek: redefine mtk_ddp_sout_sel
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Fri, Mar 15, 2019 at 10:06 AM Yongqiang Niu
+<yongqiang.niu@mediatek.com> wrote:
+>
+> On Tue, 2018-12-25 at 11:57 +0800, Nicolas Boichat wrote:
+> > On Mon, Dec 24, 2018 at 6:52 PM Yongqiang Niu
+> > <yongqiang.niu@mediatek.com> wrote:
+> > >
+> > > This patch redefine mtk_ddp_sout_sel
+> >
+> > Can you describe a bit more why you are making this change?
+>
+> the format of "mtk_ddp_sout_sel"was not flexible, after we add more
+> mediatek SOC support, that will be redundant
+>
+> set this function format like mtk_ddp_mout_en and mtk_ddp_sel_in
 
-On 3/14/19 7:56 PM, James Sewart wrote:
-> Patches 1 and 2 are the same as v1.
-> 
-> v1-v2:
->    Refactored ISA direct mappings to be returned by iommu_get_resv_regions.
->    Integrated patch by Lu to defer turning on DMAR until iommu.c has mapped
-> reserved regions.
->    Integrated patches by Lu to remove more unused code in cleanup.
-> 
-> Lu: I didn't integrate your patch to set the default domain type as it
-> isn't directly related to the aim of this patchset. Instead patch 4
+This needs to be 2 patches:
+ 1. Make the change to "cur == DDP_COMPONENT_BLS && next ==
+DDP_COMPONENT_DPI0", along with an explanation of why this is
+reasonable.
+ 2. Change the format to look like mtk_ddp_mout_en and mtk_ddp_sel_in
 
-Without those patches, user experience will be affected and some devices
-will not work on Intel platforms anymore.
+> >
+> > > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > > ---
+> > >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 32 ++++++++++++++++++++------------
+> > >  1 file changed, 20 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > > index adb37e4..592f852 100644
+> > > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > > @@ -405,21 +405,27 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
+> > >         return value;
+> > >  }
+> > >
+> > > -static void mtk_ddp_sout_sel(void __iomem *config_regs,
+> > > -                            enum mtk_ddp_comp_id cur,
+> > > -                            enum mtk_ddp_comp_id next)
+> > > +static unsigned int mtk_ddp_sout_sel(void __iomem *config_regs,
+> >
+> > You don't use config_regs anymore, drop it.
+>
+> ok, will drop it in next version
+>
+> >
+> > > +                                    enum mtk_ddp_comp_id cur,
+> > > +                                    enum mtk_ddp_comp_id next,
+> > > +                                    unsigned int *addr)
+> > >  {
+> > > +       unsigned int value;
+> > > +
+> > >         if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
+> > > -               writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
+> > > -                              config_regs + DISP_REG_CONFIG_OUT_SEL);
+> > > +               *addr = DISP_REG_CONFIG_OUT_SEL;
+> > > +               value = BLS_TO_DSI_RDMA1_TO_DPI1;
+> >
+> > You can directly return BLS_TO_DSI_RDMA1_TO_DPI1.
+>
+> just format this like mtk_ddp_mout_en and mtk_ddp_sel_in
 
-For a long time, Intel IOMMU driver has its own logic to determine
-whether a device requires an identity domain. For example, when user
-specifies "iommu=pt" in kernel parameter, all device will be attached
-with the identity domain. Further more, some quirky devices require
-an identity domain to be used before enabling DMA remapping, otherwise,
-it will not work. This was done by adding quirk bits in Intel IOMMU
-driver.
+Since there is precedent, sounds ok.
 
-So from my point of view, one way is porting all those quirks and kernel
-parameters into IOMMU generic layer, or opening a door for vendor IOMMU
-driver to determine the default domain type by their own. I prefer the
-latter option since it will not impact any behaviors on other
-architectures.
+> >
+> > >         } else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+> > > -               writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+> > > -                              config_regs + DISP_REG_CONFIG_OUT_SEL);
+> > > -               writel_relaxed(DSI_SEL_IN_RDMA,
+> > > -                              config_regs + DISP_REG_CONFIG_DSI_SEL);
+> > > -               writel_relaxed(DPI_SEL_IN_BLS,
+> > > -                              config_regs + DISP_REG_CONFIG_DPI_SEL);
+> > > +               *addr = DISP_REG_CONFIG_OUT_SEL;
+> > > +               value = BLS_TO_DPI_RDMA1_TO_DSI;
+> >
+> > I (kind of) understand the change above, as you still end up writing
+> > BLS_TO_DSI_RDMA1_TO_DPI1 in DISP_REG_CONFIG_OUT_SEL.
+> >
+> > This changes the behaviour, as now you only write
+> > BLS_TO_DPI_RDMA1_TO_DSI to DISP_REG_CONFIG_OUT_SEL, but the previous
+> > revision of the code would also write to DISP_REG_CONFIG_DSI_SEL and
+> > DISP_REG_CONFIG_DPI_SEL. Why?
+> >
+>
+> DISP_REG_CONFIG_DSI_SEL set in the next lines.
 
-> addresses the issue of a device requiring an identity domain by ignoring
-> the domain param in attach_device and printing a warning.
+Ok, but where is mtk_ddp_sout_sel(DDP_COMPONENT_RDMA1,
+DDP_COMPONENT_DSI0) called from?
 
-This will not work as I commented in that thread.
+Before this change, we just needed to call:
+mtk_ddp_sout_sel(DDP_COMPONENT_BLS, DDP_COMPONENT_DSI0)
+and the following 3 registers would be modified:
+BLS_TO_DPI_RDMA1_TO_DSI, DSI_SEL_IN_RDMA, DPI_SEL_IN_BLS.
 
-> 
-> I booted some of our devices with this patchset and haven't seen any
-> issues. It doesn't look like we have any devices with RMRR's though so
-> those codepaths aren't tested.
-> 
-> James Sewart (7):
->    iommu: Move iommu_group_create_direct_mappings to after device_attach
->    iommu/vt-d: Implement apply_resv_region for reserving IOVA ranges
->    iommu/vt-d: Expose ISA direct mapping region via
->      iommu_get_resv_regions
->    iommu/vt-d: Ignore domain parameter in attach_device if device
->      requires identity map
->    iommu/vt-d: Allow IOMMU_DOMAIN_DMA to be allocated by iommu_ops
->    iommu/vt-d: Remove lazy allocation of domains
-> 
-> Lu Baolu (1):
->    iommu/vt-d: Enable DMA remapping after rmrr mapped
-> 
->   drivers/iommu/intel-iommu.c | 444 +++++++++++-------------------------
->   drivers/iommu/iommu.c       |   4 +-
->   2 files changed, 131 insertions(+), 317 deletions(-)
-> 
+Now, to get similar behaviour, we need to call:
+mtk_ddp_sout_sel(DDP_COMPONENT_BLS, DDP_COMPONENT_DSI0)
+mtk_ddp_sout_sel(DDP_COMPONENT_RDMA1, DDP_COMPONENT_DSI0)
 
-Best regards,
-Lu Baolu
+Maybe that's ok, but you really need to explain the reason for this
+change in the commit message.
+
+> DPI_SEL_IN_BLS is 0 for DISP_REG_CONFIG_DPI_SEL set, and hardware
+> default setting is also 0, so this one is no need anymore
+
+That's somewhat reasonable, but this needs to be at the very least
+described in the commit message.
+
+> > > +       } else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+> > > +               *addr = DISP_REG_CONFIG_DSI_SEL;
+> > > +               value = DSI_SEL_IN_RDMA;
+> > > +       } else {
+> > > +               value = 0;
+> > >         }
+> > > +
+> > > +       return value;
+> > >  }
+> > >
+> > >  void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+> > > @@ -434,7 +440,9 @@ void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+> > >                 writel_relaxed(reg, config_regs + addr);
+> > >         }
+> > >
+> > > -       mtk_ddp_sout_sel(config_regs, cur, next);
+> > > +       value = mtk_ddp_sout_sel(cur, next, &addr);
+> > > +       if (value)
+> > > +               writel_relaxed(value, config_regs + addr);
+> >
+> > Why this change? I don't see mtk_ddp_sout_sel being used later in the
+> > series, so I'm not sure why we don't directly write the value into the
+> > register.
+> >
+> in the patch "[PATCH 04/18] drm/mediatek: move rdma sout from
+> mtk_ddp_mout_en into mtk_ddp_sout_sel", i moved all rdma out to here,
+> rdma only have single out, no multi out.
+> if keep this format, there will many writel_relaxed in mtk_ddp_sout_sel.
+> and modify this format like mtk_ddp_mout_en and mtk_ddp_sel_in looks
+> better.
+>
+> >
+> >
+> > >         value = mtk_ddp_sel_in(cur, next, &addr);
+> > >         if (value) {
+> > > --
+> > > 1.8.1.1.dirty
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+>
