@@ -7,149 +7,110 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2226FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE855C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 05:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A5221872
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 04:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA0AB2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 05:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Pz3tTBZd"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="hGk3uUZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfCOE42 (ORCPT
+        id S1727429AbfCOFHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 00:56:28 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:55446 "EHLO
+        Fri, 15 Mar 2019 01:07:22 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:58318 "EHLO
         mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbfCOE41 (ORCPT
+        with ESMTP id S1727101AbfCOFHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 00:56:27 -0400
+        Fri, 15 Mar 2019 01:07:22 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 5C795D44
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 04:56:26 +0000 (UTC)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id C078CD42
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 05:07:20 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
 Received: from mta-p6.oit.umn.edu ([127.0.0.1])
         by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XWGsiv5OoKBc for <linux-kernel@vger.kernel.org>;
-        Thu, 14 Mar 2019 23:56:26 -0500 (CDT)
+        with ESMTP id BLgxiUrHvNIq for <linux-kernel@vger.kernel.org>;
+        Fri, 15 Mar 2019 00:07:20 -0500 (CDT)
 Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 3542ACFB
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 23:56:26 -0500 (CDT)
-Received: by mail-io1-f72.google.com with SMTP id i1so6179876ioq.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 21:56:26 -0700 (PDT)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 9395ED1D
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 00:07:20 -0500 (CDT)
+Received: by mail-io1-f72.google.com with SMTP id s24so2332289ioe.17
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2019 22:07:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=u2gwbnbzIDO4/Mhaw6yBDXOhq6ZssVWg8uPknOAfdGg=;
-        b=Pz3tTBZdvKJTqJX8emjQ7DSdkSVc3UVy0k7OeIVNwagwDGo8m8U+RMNzWNGWijQgLY
-         nQeSHDdvta3LME8pUOx+HxsuG6+c+IGXeFV5bnD1SH+nUJJGkQ2jhE8fzNAFwu61fHza
-         SyyHLBred9jpj54QRDwGNqYaSvzt9uiBEDvPGY/C4LoXTatdXHAFwHE0nkzAO3JBOwzB
-         3BO6PKH2Prlf1y1MR4caFUEehc482NSK7jBJ/W0TU15CzKIFb+gZ77fgGF7DTRFvHnvm
-         exsy/kVpC5hrH93+KTaTzggr6TB31Q9MXoALdpJkuQfIQL408WVZQIZ2po19maMF94zI
-         eEVQ==
+        bh=MH76t9kyzCAYqgMIcgO6OuxcOMmte5MRyPGol0wrWyk=;
+        b=hGk3uUZ+BAEgvh3z3ErlGCyL5arnj25cJRzutdAe5oCIrX/d95usy4n8P57QB8Slbc
+         T7iT944cmOSrUtpNbrIgJKw7iCLgUBkJDbR0IV6DXVKYa8lILJodRlLJEDcYjwzyDirV
+         XODVDwAs17tnPX0PvyAVuuoeLJLtjM5TDaZ45lvdlpAducAfW9cP90ZKosUPlfbYwuBZ
+         Tn87bGj6Vzp6QBeJdBysrPEiW5TZJfT93/5TWn9LhfCcjSHITxxHRNMnlY1FYBwJmToo
+         shs4p0ojbYBF+VZL9szEkyv1ZZurV6UJPHAPDcfxWWyRuSHHpA7S83f8a+nLqa9s5awR
+         KQmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=u2gwbnbzIDO4/Mhaw6yBDXOhq6ZssVWg8uPknOAfdGg=;
-        b=U/ciZ86v18787cWIjidFFGLKKbop5XYTMQFbl4OOOCeg2FhWxphRQfiNHzmwZRt3XZ
-         5uG0vOCmRSc6QcZlvhBi2gFQqZS91SW51A+aa24iSTldZB2kGQmwLnTHfaPMHgAcMtSV
-         A/6rkl5KlAsjWntrZcAezP9fZBhqqj+TV/RV/gG789l1bIyzeMv6YfnwfGdETo4fFEww
-         TlqDpRJwgh3d0V8YU2fmdu2YRqynn4gG8agYEpza3X0i+zv00qMTG2cRfHEEYmw2jqo+
-         MpcvhU/hmu60QBo5O95MdxxtxMlGbZb6GpChc9Xdk2vqXs5cVZLFEDi5YvzQvxt4M6Ru
-         2FqQ==
-X-Gm-Message-State: APjAAAWLx7hbJfSE8hVxn6cUAEkkMyFdmDxE068/MQEZwAc8onaLd3Kf
-        8HH29ABXFT2IZeJOjxnYQH4dAEdiph5G70F2WH5MLcUBlafsHhhYCoAI7xUVkuPtVXRPrumgGLi
-        s4uvPnKoKAwKFsOuMxw2OAApVNH65
-X-Received: by 2002:a02:94a1:: with SMTP id x30mr1218875jah.82.1552625784975;
-        Thu, 14 Mar 2019 21:56:24 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxcChBtGfAgnOgmaALv4bJXuSjSntQvbcyQZ40WX7RMxYEKbXe7wpCzV7rzLxfy7ThjBptfiA==
-X-Received: by 2002:a02:94a1:: with SMTP id x30mr1218864jah.82.1552625784645;
-        Thu, 14 Mar 2019 21:56:24 -0700 (PDT)
+        bh=MH76t9kyzCAYqgMIcgO6OuxcOMmte5MRyPGol0wrWyk=;
+        b=WFB0mNjkhkz9+kL82BEJpmEehoLjz5ymBfjwHuFxstN/FBC7dJd0nZk6PBfjUfaDz3
+         /I1M8pSQ0OmbTHCAdMzEBwRyT5kE3EXByfeRypIxGUlI4H7WkrDdGYbnmpGp9aw4BNZB
+         yp/ENO57OO8YXh/PsTlIdlLSc1pYBmqQaH28sjcMq8eew3hrPNgwfob6YrAoreJ5f+4+
+         zUQ2zmZnYvqxuRB3nto3s1WQK3yauHSddtx1decj5mj7FXN6jNySfEXDaVVtAU32dpaG
+         MI0NQjEsaqmsV4bpLn1z8f39gsReGmjZ66FXy3ph+/tucVgvRthQA7l5W2jyEiG8kS+w
+         GGew==
+X-Gm-Message-State: APjAAAUclIlAfbSqzo5oxWjFvpLr2NIHsiQmsr0AJM3XX2rnDSJhovH8
+        Qre7WiBLq3BDdbCvRUIQLeWIK1DVHeC3FH5zftJgFBEOggGfLk/fpnO61SnE4+12XODkXqgTqk6
+        4lcf00b8ZO2CvgUdSqdEnhkfeA2KO
+X-Received: by 2002:a24:2546:: with SMTP id g67mr794200itg.18.1552626440222;
+        Thu, 14 Mar 2019 22:07:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyKTt5B0MhdRiezIvucSKFXhY46yQaUIp6UuZi+YyVa6ogQQRUNHWrjaZSoDvbJWsA0ZUiIJg==
+X-Received: by 2002:a24:2546:: with SMTP id g67mr794191itg.18.1552626439984;
+        Thu, 14 Mar 2019 22:07:19 -0700 (PDT)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id i5sm568131itb.3.2019.03.14.21.56.23
+        by smtp.gmail.com with ESMTPSA id 22sm489974ioc.28.2019.03.14.22.07.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Mar 2019 21:56:23 -0700 (PDT)
+        Thu, 14 Mar 2019 22:07:19 -0700 (PDT)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+Cc:     pakki001@umn.edu, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Niklas Cassel <niklas.cassel@axis.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] tty: 8250: fix a missing check for pci_ioremap_bar
-Date:   Thu, 14 Mar 2019 23:56:16 -0500
-Message-Id: <20190315045617.7616-1-kjlu@umn.edu>
+Subject: [PATCH] pci: endpoint: fix a potential NULL pointer dereference
+Date:   Fri, 15 Mar 2019 00:07:10 -0500
+Message-Id: <20190315050711.8652-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pci_ioremap_bar could fail. The fix captures the failure and
-pass an error code upstream. This can avoid potential NULL
-pointer dereferences in the future.
+In case alloc_workqueue, the fix returns -ENOMEM to avoid
+potential NULL pointer dereferences.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/tty/serial/8250/8250_lpss.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
-index 98dbc796353f..e95332d8b35e 100644
---- a/drivers/tty/serial/8250/8250_lpss.c
-+++ b/drivers/tty/serial/8250/8250_lpss.c
-@@ -162,7 +162,7 @@ static const struct dw_dma_platform_data qrk_serial_dma_pdata = {
- 	.multi_block = {0},
- };
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 3e86fa3c7da3..dc610eb1543a 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -570,6 +570,10 @@ static int __init pci_epf_test_init(void)
  
--static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
-+static int qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
- {
- 	struct uart_8250_dma *dma = &lpss->dma;
- 	struct dw_dma_chip *chip = &lpss->dma_chip;
-@@ -173,12 +173,14 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
- 	chip->dev = &pdev->dev;
- 	chip->irq = pci_irq_vector(pdev, 0);
- 	chip->regs = pci_ioremap_bar(pdev, 1);
-+	if (!chip->regs)
-+		return -EIO;
- 	chip->pdata = &qrk_serial_dma_pdata;
- 
- 	/* Falling back to PIO mode if DMA probing fails */
- 	ret = dw_dma_probe(chip);
- 	if (ret)
--		return;
-+		return ret;
- 
- 	pci_try_set_mwi(pdev);
- 
-@@ -192,6 +194,8 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
- 	param->hs_polarity = true;
- 
- 	lpss->dma_maxburst = 8;
-+
-+	return 0;
- }
- 
- static void qrk_serial_exit_dma(struct lpss8250 *lpss)
-@@ -203,7 +207,7 @@ static void qrk_serial_exit_dma(struct lpss8250 *lpss)
- 	dw_dma_remove(&lpss->dma_chip);
- }
- #else	/* CONFIG_SERIAL_8250_DMA */
--static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port) {}
-+static int qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port) {}
- static void qrk_serial_exit_dma(struct lpss8250 *lpss) {}
- #endif	/* !CONFIG_SERIAL_8250_DMA */
- 
-@@ -220,8 +224,7 @@ static int qrk_serial_setup(struct lpss8250 *lpss, struct uart_port *port)
- 
- 	port->irq = pci_irq_vector(pdev, 0);
- 
--	qrk_serial_setup_dma(lpss, port);
--	return 0;
-+	return qrk_serial_setup_dma(lpss, port);
- }
- 
- static void qrk_serial_exit(struct lpss8250 *lpss)
+ 	kpcitest_workqueue = alloc_workqueue("kpcitest",
+ 					     WQ_MEM_RECLAIM | WQ_HIGHPRI, 0);
++	if (unlikely(!kpcitest_workqueue)) {
++		pr_err("Failed to allocate the kpcitest work queue\n");
++		return -ENOMEM;
++	}
+ 	ret = pci_epf_register_driver(&test_driver);
+ 	if (ret) {
+ 		pr_err("Failed to register pci epf test driver --> %d\n", ret);
 -- 
 2.17.1
 
