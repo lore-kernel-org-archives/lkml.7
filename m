@@ -2,185 +2,112 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D59C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88625C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0BC218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD43218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 18:45:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYIpj78U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfCOSpz (ORCPT
+        id S1727167AbfCOSp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 14:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbfCOSpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 14:45:38 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73871218D9;
-        Fri, 15 Mar 2019 18:45:37 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1h4rpo-00009R-NS; Fri, 15 Mar 2019 14:45:36 -0400
-Message-Id: <20190315184536.618293169@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Fri, 15 Mar 2019 14:45:08 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 3/8] tracing: kdb: Fix ftdump to not sleep
-References: <20190315184505.655928086@goodmis.org>
+        Fri, 15 Mar 2019 14:45:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35278 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfCOSp5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 14:45:57 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j5so6962451pfa.2;
+        Fri, 15 Mar 2019 11:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VK+LR0HkVqg+g+PEO6ILwoTxff4AKvWaTBsfdr3of4I=;
+        b=iYIpj78Uow+epfVI2I4/DzbxPYJo+kPm8shi/mF9THDc2mHwDQ7+QfdOkqwWuWszJN
+         5n6ZW891Z5JP0F38trCOPPevhIl38tHasEC+R5Om/hD0xMO7WfPKzBnoouFxgHySeD8a
+         b2go/a1LrpojG1Jtjs23b4Z7jDVWNz/UXDobDx8CaIeU1C7xpawuRrHHfNNeXQK3EdAT
+         KBAQytW9RdyH23f9LFb2QtaIEywM8onAMO5JsDPt5hLmWBexeKeyIWXNSwGt+UOUfsU7
+         kDaPfOoUUpi9Os0AgqukbTED8SLsBS+Q8G39Qgh7tqgjLcaY8dJPw73fpWlu1Zbm8RVY
+         lL7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VK+LR0HkVqg+g+PEO6ILwoTxff4AKvWaTBsfdr3of4I=;
+        b=N/sXrYj6aMS8K86X/KGuHSO5FJz3YhcDnEpCAZ5H8WKtsbysgdBD4O+A+s0B2QfpZw
+         CZjLU1t6A5ncur2R4inT8ljK6cLKjBdpWPDBjF3pNzMlld6uKcxQOeu4KAVgDExZXMsF
+         lrImxbov+jHJ8QCPvbsvf3ilLvnLhe7Lxyy52FSuw28l1UMgJYF0Lg0xIcpp/KXYzQeW
+         LFYOQqwD3IzQ21g2c25Fte+ICpkt6d7+MDIAp0u8Pv+4TgdF+34ObNcbQlKERipMY0sr
+         Nh7UK90QdFvrDMG6rOEWGzxqhERw8GKa7pO5lPJmLjT4ipyWuhpxYb87JTqU4W6BRvh/
+         gA4Q==
+X-Gm-Message-State: APjAAAU3XBr78NBvfX0AqaHVnufKYApTb4xas/vK0CRZNAK3RimFo1JR
+        7XmQeyO9jOpNCXagnHmUlj0qz8H4EHJXIzyLtHY=
+X-Google-Smtp-Source: APXvYqw3TaxggeBqtyecfcMSQvxbFW+vbW2qdzwAX7pBaJpkFDvdlCJlVOt04//Li6XBATgSfVeNl6ARjOea5LrZAvY=
+X-Received: by 2002:a63:2907:: with SMTP id p7mr4803411pgp.161.1552675556399;
+ Fri, 15 Mar 2019 11:45:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+References: <1552602855-26086-1-git-send-email-info@metux.net>
+ <CAHp75VeH9isvFkp+AECgsN8du__8tBBp_4zZEVXJ083BdFweeg@mail.gmail.com>
+ <afc51d27-3312-cdf4-68a5-4486db1d006b@metux.net> <20190315181118.GF9224@smile.fi.intel.com>
+ <d9ac8446-c7ff-6e57-5eaa-f1a09d549081@metux.net>
+In-Reply-To: <d9ac8446-c7ff-6e57-5eaa-f1a09d549081@metux.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 15 Mar 2019 20:45:45 +0200
+Message-ID: <CAHp75VdCy0vtk0wYKrCKFKzdGQXaXQkgL_zWfCZGKas5JO9HtA@mail.gmail.com>
+Subject: Re: serial driver cleanups v2
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tobias Klauser <tklauser@distanz.ch>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        macro@linux-mips.org,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>, slemieux.tyco@gmail.com,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, baohua@kernel.org,
+        Peter Korsgaard <jacmet@sunsite.dk>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+On Fri, Mar 15, 2019 at 8:44 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+> On 15.03.19 19:11, Andy Shevchenko wrote:
 
-As reported back in 2016-11 [1], the "ftdump" kdb command triggers a
-BUG for "sleeping function called from invalid context".
 
-kdb's "ftdump" command wants to call ring_buffer_read_prepare() in
-atomic context.  A very simple solution for this is to add allocation
-flags to ring_buffer_read_prepare() so kdb can call it without
-triggering the allocation error.  This patch does that.
+> OTOH, the name, IMHO, is a bit misleading. Any chance of ever changing
+> it to a more clear name (eg. devm_request_and_ioremap_resource()) ?
 
-Note that in the original email thread about this, it was suggested
-that perhaps the solution for kdb was to either preallocate the buffer
-ahead of time or create our own iterator.  I'm hoping that this
-alternative of adding allocation flags to ring_buffer_read_prepare()
-can be considered since it means I don't need to duplicate more of the
-core trace code into "trace_kdb.c" (for either creating my own
-iterator or re-preparing a ring allocator whose memory was already
-allocated).
+Compare  iomap vs. ioREmap.
 
-NOTE: another option for kdb is to actually figure out how to make it
-reuse the existing ftrace_dump() function and totally eliminate the
-duplication.  This sounds very appealing and actually works (the "sr
-z" command can be seen to properly dump the ftrace buffer).  The
-downside here is that ftrace_dump() fully consumes the trace buffer.
-Unless that is changed I'd rather not use it because it means "ftdump
-| grep xyz" won't be very useful to search the ftrace buffer since it
-will throw away the whole trace on the first grep.  A future patch to
-dump only the last few lines of the buffer will also be hard to
-implement.
-
-[1] https://lkml.kernel.org/r/20161117191605.GA21459@google.com
-
-Link: http://lkml.kernel.org/r/20190308193205.213659-1-dianders@chromium.org
-
-Reported-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- include/linux/ring_buffer.h | 2 +-
- kernel/trace/ring_buffer.c  | 5 +++--
- kernel/trace/trace.c        | 6 ++++--
- kernel/trace/trace_kdb.c    | 6 ++++--
- 4 files changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index f1429675f252..1a40277b512c 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -128,7 +128,7 @@ ring_buffer_consume(struct ring_buffer *buffer, int cpu, u64 *ts,
- 		    unsigned long *lost_events);
- 
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu);
-+ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags);
- void ring_buffer_read_prepare_sync(void);
- void ring_buffer_read_start(struct ring_buffer_iter *iter);
- void ring_buffer_read_finish(struct ring_buffer_iter *iter);
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 9a91479bbbfe..41b6f96e5366 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4191,6 +4191,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
-  * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
-  * @buffer: The ring buffer to read from
-  * @cpu: The cpu buffer to iterate over
-+ * @flags: gfp flags to use for memory allocation
-  *
-  * This performs the initial preparations necessary to iterate
-  * through the buffer.  Memory is allocated, buffer recording
-@@ -4208,7 +4209,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
-  * This overall must be paired with ring_buffer_read_finish.
-  */
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
-+ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_iter *iter;
-@@ -4216,7 +4217,7 @@ ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 		return NULL;
- 
--	iter = kmalloc(sizeof(*iter), GFP_KERNEL);
-+	iter = kmalloc(sizeof(*iter), flags);
- 	if (!iter)
- 		return NULL;
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index e9cc47e59d25..ccd759eaad79 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4077,7 +4077,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter->buffer_iter[cpu] =
--				ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
-+				ring_buffer_read_prepare(iter->trace_buffer->buffer,
-+							 cpu, GFP_KERNEL);
- 		}
- 		ring_buffer_read_prepare_sync();
- 		for_each_tracing_cpu(cpu) {
-@@ -4087,7 +4088,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	} else {
- 		cpu = iter->cpu_file;
- 		iter->buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
-+			ring_buffer_read_prepare(iter->trace_buffer->buffer,
-+						 cpu, GFP_KERNEL);
- 		ring_buffer_read_prepare_sync();
- 		ring_buffer_read_start(iter->buffer_iter[cpu]);
- 		tracing_iter_reset(iter, cpu);
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index d953c163a079..810d78a8d14c 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -51,14 +51,16 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter.buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu);
-+			ring_buffer_read_prepare(iter.trace_buffer->buffer,
-+						 cpu, GFP_ATOMIC);
- 			ring_buffer_read_start(iter.buffer_iter[cpu]);
- 			tracing_iter_reset(&iter, cpu);
- 		}
- 	} else {
- 		iter.cpu_file = cpu_file;
- 		iter.buffer_iter[cpu_file] =
--			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu_file);
-+			ring_buffer_read_prepare(iter.trace_buffer->buffer,
-+						 cpu_file, GFP_ATOMIC);
- 		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
- 		tracing_iter_reset(&iter, cpu_file);
- 	}
 -- 
-2.20.1
-
-
+With Best Regards,
+Andy Shevchenko
