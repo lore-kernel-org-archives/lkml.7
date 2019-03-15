@@ -2,190 +2,182 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C266C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8A8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19099218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EBAE2184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:42:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBkLteBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfCOTct (ORCPT
+        id S1727151AbfCOTmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 15:32:49 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49676 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfCOTcs (ORCPT
+        Fri, 15 Mar 2019 15:42:13 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36225 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfCOTmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 15:32:48 -0400
-Received: from [IPv6:2804:431:9718:4c54:5b9b:61a:a071:48bc] (unknown [IPv6:2804:431:9718:4c54:5b9b:61a:a071:48bc])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0178228143A;
-        Fri, 15 Mar 2019 19:32:43 +0000 (GMT)
-Subject: Re: [PATCH 00/16] media: vimc: Add support for multiplanar formats
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, lucmaga@gmail.com,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-References: <20190315164359.626-1-andrealmeid@collabora.com>
- <b0c03df5-ae1b-3123-1737-a37b4911f10d@collabora.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <9662ca30-2fcb-a4b6-c79f-237f6d8e9339@collabora.com>
-Date:   Fri, 15 Mar 2019 16:32:40 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 15 Mar 2019 15:42:13 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y36so1655390qtb.3;
+        Fri, 15 Mar 2019 12:42:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+9HyiyauWUeAchfMfptz4sKxCIyLca0DY24Pz3M+TJc=;
+        b=rBkLteBth6lD2UVpUCmIOe3njhECrdn3b0BETbIgothLa9I3x/to/tBof4cUhQ5NRA
+         oJ5dtUzXGHgmFINkGRUwj4U9F0KbJl7RHul6TIWtKHVuVi8rpyYOkVJ1iYQPjKFRMPqd
+         YoZXpexeCIB0FyINRKGbPkGdbe+LlubxoC244x3usVK2JEubA/WApzIe0kXAqGBH0RSb
+         OUvRqBd4Nh+e2UGTHOr2ZuUyX2ajViyAHyBIDD7L84bSVgtvtMjzB7YZIejsxP9ZW4IW
+         iJIm4eiy7Lqk4OLXzRLnTZElaYe/UqGsOXDG3C8ifDzX/nkh2zfd4QICWj36cUNdVVAA
+         9UJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+9HyiyauWUeAchfMfptz4sKxCIyLca0DY24Pz3M+TJc=;
+        b=Qe6N7g+nEeJMtqWdBEoYfZJMA0X/bpEi150Ju1iO4f6g8xsI632MqNvxSpDbrOm+rz
+         gFe4zczUkQxdIPGcaNnUL2UsgtD0SGQ6uWRkVqNfL79dzAaG7Mf5pAngn3SrTH3/msH/
+         E/Ud3rhjIEy+1gWutVfaijE26cMne6U7PliD0FbvrpIW1sbYtahi0VARIkkR3StJqLLd
+         +TDu3QjwnWaWmlzuRUaCPuLzYokuTC87+3Ln3kmhnCRkFYOhDBQWyknvNLisM4G00EBP
+         G1Z/0CJYn4jGaAQl/gAswhoRMCSOzGjc9QK2VXTjAwMvJvojGIMyMIdxg6TrDJFDsHRu
+         QNkw==
+X-Gm-Message-State: APjAAAVUnluu1jNqoEt6W/IhajnzWrn5dqgY0yf6r5TagyEm/8rRX3WQ
+        a4mvMAyHOXvLrDw6GCG0XZM=
+X-Google-Smtp-Source: APXvYqycKIcChaOAzNfiS0TvVtRxI9LaVadCbhAOEbx5fFukO4L4v+kZ8wwWFsqurvcTkSjpSH949w==
+X-Received: by 2002:ac8:67cb:: with SMTP id r11mr4239097qtp.388.1552678931918;
+        Fri, 15 Mar 2019 12:42:11 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id y2sm2231466qty.63.2019.03.15.12.42.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 12:42:10 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id ED2BA4039C; Fri, 15 Mar 2019 16:42:07 -0300 (-03)
+Date:   Fri, 15 Mar 2019 16:42:07 -0300
+To:     Song Liu <songliubraving@fb.com>
+Cc:     bpf@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, sdf@fomichev.me
+Subject: Re: [PATCH v9 perf,bpf 09/15] perf, bpf: save btf information as
+ headers to perf.data
+Message-ID: <20190315194207.GE14938@kernel.org>
+References: <20190312053051.2690567-1-songliubraving@fb.com>
+ <20190312053051.2690567-10-songliubraving@fb.com>
+ <20190312151405.GG4939@kernel.org>
+ <20190312151608.GH4939@kernel.org>
+ <61901DA6-47B4-44E0-A0C9-9F2DBD6C34C1@fb.com>
+ <20190312170556.GJ4939@kernel.org>
+ <97D0A2F1-1F82-4CF0-ACE3-A276784DF7EA@fb.com>
+ <20190315190651.GA14938@kernel.org>
+ <20190315192610.GB14938@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <b0c03df5-ae1b-3123-1737-a37b4911f10d@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190315192610.GB14938@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andre,
+Em Fri, Mar 15, 2019 at 04:26:10PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Mar 15, 2019 at 04:06:51PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > And yes, there are BPF programs with BTF information associated:
+>  
+> > [root@quaco perf]# bpftool map dump pids_filtered
+> > [{
+> >         "key": 2592,
+> >         "value": true
+> >     },{
+> >         "key": 20511,
+> >         "value": true
+> >     }
+> > ]
+> > [root@quaco perf]#
+>  
+> > I.e. bpftool can find the BTF info and thus is able to show the
+> > 'pids_filtered' map keys and values pretty printed, not just as hex raw
+> > data.
+>  
+> > I'm trying to find out why 'bpftool map dump' finds the BTF info while
+> > perf_event__synthesize_one_bpf_prog() doesn't.
+> 
+> Humm, the BTF info above is for BPF _maps_ not for _programs_, I think
+> you haven't added BTF info for maps in the perf.data header, right?
 
-Thanks for you patch. I didn't do a full review, but I did some minor
-comments, please check.
+And then the BPF program I was using to test this had BTF encoded from
+DWARF by pahole, so only associated to BPF maps, not to BPF programs, as
+soon as I regenerated that BPF .o with clang 9.0, I got the BTF info for
+the BPF programs and all works as expected:
 
-Thanks
-Helen
+[root@quaco perf]# clang --version
+clang version 9.0.0 (https://git.llvm.org/git/clang.git/ 7906282d3afec5dfdc2b27943fd6c0309086c507) (https://git.llvm.org/git/llvm.git/ a1b5de1ff8ae8bc79dc8e86e1f82565229bd0500)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /opt/llvm/bin
+[root@quaco perf]# perf record -e /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c sleep 1
+LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.023 MB perf.data ]
+[root@quaco perf]# file /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
+/home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o: ELF 64-bit LSB relocatable, eBPF, version 1 (SYSV), with debug_info, not stripped
+[root@quaco perf]# readelf -SW /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o | grep BTF
+  [22] .BTF              PROGBITS        0000000000000000 000ede 000b0e 00      0   0  1
+  [23] .BTF.ext          PROGBITS        0000000000000000 0019ec 0002a0 00      0   0  1
+  [24] .rel.BTF.ext      REL             0000000000000000 002fa8 000270 10     30  23  8
+[root@quaco perf]# grep examples ~/.perfconfig
+	add_events = /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
+[root@quaco perf]# 
+[root@quaco perf]# perf trace -e recvmmsg
 
-On 3/15/19 2:29 PM, André Almeida wrote:
-> 
-> 
-> On 3/15/19 1:43 PM, André Almeida wrote:
->> Hello,
->>
->> This series implements support for multiplane pixel formats at vimc.
->> A lot of changes were required since vimc support for singleplane
->> was "hardcoded". The code has been adapted in order to support both
->> formats. When was possible, the functions were written generically,
->> avoiding functions for just one type of pixel format (single/multi)
->> and favoring code reuse.
->>
->> The debayer subdevice is the only one that currently doesn't supports
->> multiplanar formats. Documentation to each device will be made in a
->> future patch.
->>
-> 
-> Forgot to mention that this patch series depends on this one:
-> 
-> "[PATCH] media: vimc: propagate pixel format in the stream"
-> 
->> Thanks,
->>     André
->>
->> André Almeida (16):
->>    media: Move sp2mp functions to v4l2-common
->>    media: vimc: Remove unnecessary stream check
->>    media: vimc: Check if the stream is on using ved.stream
->>    media: vimc: cap: Change vimc_cap_device.format type
->>    media: vimc: Create multiplanar parameter
->>    media: vimc: cap: Dynamically define stream pixelformat
->>    media: vimc: cap: Add handler for singleplanar fmt ioctls
->>    media: vimc: cap: Add handler for multiplanar fmt ioctls
->>    media: vimc: cap: Add multiplanar formats
->>    media: vimc: cap: Add multiplanar default format
->>    media: vimc: cap: Allocate and verify mplanar buffers
->>    media: vimc: Add and use new struct vimc_frame
->>    media: vimc: sen: Add support for multiplanar formats
->>    media: vimc: sca: Add support for multiplanar formats
->>    media: vimc: cap: Add support for multiplanar formats
->>    media: vimc: cap: Dynamically define device caps
->>
->>   drivers/media/platform/vimc/vimc-capture.c    | 310 +++++++++++++++---
->>   drivers/media/platform/vimc/vimc-common.c     |  37 +++
->>   drivers/media/platform/vimc/vimc-common.h     |  50 ++-
->>   drivers/media/platform/vimc/vimc-core.c       |   8 +
->>   drivers/media/platform/vimc/vimc-debayer.c    |  38 +--
->>   drivers/media/platform/vimc/vimc-scaler.c     | 125 ++++---
->>   drivers/media/platform/vimc/vimc-sensor.c     |  62 ++--
->>   drivers/media/platform/vimc/vimc-streamer.c   |   2 +-
->>   drivers/media/platform/vivid/vivid-vid-cap.c  |   6 +-
->>   .../media/platform/vivid/vivid-vid-common.c   |  59 ----
->>   .../media/platform/vivid/vivid-vid-common.h   |   9 -
->>   drivers/media/platform/vivid/vivid-vid-out.c  |   6 +-
->>   drivers/media/v4l2-core/v4l2-common.c         |  62 ++++
->>   include/media/v4l2-common.h                   |  31 ++
->>   14 files changed, 580 insertions(+), 225 deletions(-)
->>
+Then, while this runs, using that augmented_raw_syscalls.o BPF program
+generated with clang 9.0 and with proper BTF for BPF programs and not
+just for BPF maps:
+
+[root@quaco ~]# bpftool map dump pids_filtered
+[{
+        "key": 22459,
+        "value": true
+    },{
+        "key": 2592,
+        "value": true
+    }
+]
+[root@quaco ~]#
+
+[root@quaco ~]# perf record sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.020 MB perf.data (7 samples) ]
+[root@quaco ~]# perf report --header-only | grep b[pt]f
+# event : name = cycles:ppp, , id = { 1116204, 1116205, 1116206, 1116207, 1116208, 1116209, 1116210, 1116211 }, size = 112, { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|PERIOD, read_format = ID, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, enable_on_exec = 1, task = 1, precise_ip = 3, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1
+# bpf_prog_info of id 13
+# bpf_prog_info of id 14
+# bpf_prog_info of id 15
+# bpf_prog_info of id 16
+# bpf_prog_info of id 17
+# bpf_prog_info of id 18
+# bpf_prog_info of id 21
+# bpf_prog_info of id 22
+# bpf_prog_info of id 51
+# bpf_prog_info of id 52
+# btf info of id 8
+[root@quaco ~]#
+
+Moving along the patch queue...
+
+- Arnaldo
