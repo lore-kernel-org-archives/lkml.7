@@ -2,36 +2,35 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1FBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCFBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65172218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1E0218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbfCOQpx (ORCPT
+        id S1729898AbfCOQp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:45:53 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49086 "EHLO
+        Fri, 15 Mar 2019 12:45:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49094 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729859AbfCOQpt (ORCPT
+        with ESMTP id S1729878AbfCOQpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:45:49 -0400
+        Fri, 15 Mar 2019 12:45:52 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: tonyk)
-        with ESMTPSA id 8820328157F
+        with ESMTPSA id E13E0281586
 From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
 To:     linux-media@vger.kernel.org
 Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
         lucmaga@gmail.com, linux-kernel@vger.kernel.org,
         kernel@collabora.com
-Subject: [PATCH 15/16] media: vimc: cap: Add support for multiplanar formats
-Date:   Fri, 15 Mar 2019 13:43:58 -0300
-Message-Id: <20190315164359.626-16-andrealmeid@collabora.com>
+Subject: [PATCH 16/16] media: vimc: cap: Dynamically define device caps
+Date:   Fri, 15 Mar 2019 13:43:59 -0300
+Message-Id: <20190315164359.626-17-andrealmeid@collabora.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190315164359.626-1-andrealmeid@collabora.com>
 References: <20190315164359.626-1-andrealmeid@collabora.com>
@@ -43,50 +42,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adapt vimc-capture to support multiplanar formats, copying
-each plane to the correct buffer.
+The device capabilities are defined according to the
+multiplanar kernel parameter. A device can't support
+both CAP_VIDEO_CAPTURE and CAP_VIDEO_CAPTURE_MPLANAR
+at the same time.
 
 Signed-off-by: André Almeida <andrealmeid@collabora.com>
 ---
- drivers/media/platform/vimc/vimc-capture.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/media/platform/vimc/vimc-capture.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-index bb982761562e..50f7e71f23cd 100644
+index 50f7e71f23cd..c30a2887db33 100644
 --- a/drivers/media/platform/vimc/vimc-capture.c
 +++ b/drivers/media/platform/vimc/vimc-capture.c
-@@ -577,6 +577,8 @@ static struct vimc_frame *vimc_cap_process_frame(struct vimc_ent_device *ved,
- 	struct vimc_cap_device *vcap = container_of(ved, struct vimc_cap_device,
- 						    ved);
- 	struct vimc_cap_buffer *vimc_buf;
-+	unsigned long plane_size;
-+	unsigned int i;
- 	void *vbuf;
+@@ -652,7 +652,9 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
  
- 	spin_lock(&vcap->qlock);
-@@ -599,13 +601,17 @@ static struct vimc_frame *vimc_cap_process_frame(struct vimc_ent_device *ved,
- 	vimc_buf->vb2.sequence = vcap->sequence++;
- 	vimc_buf->vb2.field = vcap->format.fmt.pix.field;
+ 	/* Initialize the vb2 queue */
+ 	q = &vcap->queue;
+-	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
++	q->type = multiplanar ?
++		V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE :
++		V4L2_BUF_TYPE_VIDEO_CAPTURE;
+ 	q->io_modes = VB2_MMAP | VB2_DMABUF | VB2_USERPTR;
+ 	q->drv_priv = vcap;
+ 	q->buf_struct_size = sizeof(struct vimc_cap_buffer);
+@@ -697,7 +699,9 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
  
--	vbuf = vb2_plane_vaddr(&vimc_buf->vb2.vb2_buf, 0);
-+	/* For each plane, copy the pixels */
-+	for (i = 0; i < vimc_buf->vb2.vb2_buf.num_planes; i++) {
-+		vbuf = vb2_plane_vaddr(&vimc_buf->vb2.vb2_buf, i);
-+		plane_size = frame->sizeimage[i];
-+
-+		memcpy(vbuf, frame->plane_addr[i], plane_size);
- 
--	memcpy(vbuf, frame->plane_addr[0], vcap->format.fmt.pix.sizeimage);
-+		/* Set it as ready */
-+		vb2_set_plane_payload(&vimc_buf->vb2.vb2_buf, i, plane_size);
-+	}
- 
--	/* Set it as ready */
--	vb2_set_plane_payload(&vimc_buf->vb2.vb2_buf, 0,
--			      vcap->format.fmt.pix.sizeimage);
- 	vb2_buffer_done(&vimc_buf->vb2.vb2_buf, VB2_BUF_STATE_DONE);
- 	return NULL;
- }
+ 	/* Initialize the video_device struct */
+ 	vdev = &vcap->vdev;
+-	vdev->device_caps = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING;
++	vdev->device_caps = (multiplanar ?
++			V4L2_CAP_VIDEO_CAPTURE_MPLANE :
++			V4L2_BUF_TYPE_VIDEO_CAPTURE) | V4L2_CAP_STREAMING;
+ 	vdev->entity.ops = &vimc_cap_mops;
+ 	vdev->release = video_device_release_empty;
+ 	vdev->fops = &vimc_cap_fops;
 -- 
 2.21.0
 
