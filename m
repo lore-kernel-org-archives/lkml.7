@@ -2,74 +2,87 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3B5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B642BC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A918720645
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:29:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MZ0cvBhk"
+	by mail.kernel.org (Postfix) with ESMTP id 8F37720645
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 16:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbfCOQ3T (ORCPT
+        id S1728514AbfCOQcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 12:29:19 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:40990 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727951AbfCOQ3S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 12:29:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6NCNx+aXeeCLMExDDZ5FoIOlHmU2VL9ClcIKwb1QWLU=; b=MZ0cvBhkjEPFQ8x0Fn9vXJHTP
-        lFBza9x4qU4VczcR4YkIROT68WD+5r5Tdh7sbYFaalR/0C8eTyhkDVIrYN7uNjwBbRaOs87T1TSvu
-        toz2ZSeu5TtjksF8YctY3OaLbbOhRWay6FPJAbnGfMBJy7OM6RiP256a+JdGkOnxO/GSz6moI/9lI
-        w78NJ7EXbuuZKs72R75RjO/0O6vkgSdWPU9Pr1ueeRvkRmYAsfr1i0q/SiFBNvsoyHPxHfR3AoxAH
-        czr6WJonpANeZmQZvaEJSGpi+SIWBO/qlBuOOMjcuTX4Ml1dXf4kdOSGj/oMnsOAVvc5dc8v4vnUb
-        mNXlYUPaw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4phq-00073j-02; Fri, 15 Mar 2019 16:29:14 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 73057239158BA; Fri, 15 Mar 2019 17:29:11 +0100 (CET)
-Date:   Fri, 15 Mar 2019 17:29:11 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Ben Segall <bsegall@google.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] sched/fair: Limit sched_cfs_period_timer loop to avoid
- hard lockup
-Message-ID: <20190315162911.GA5996@hirez.programming.kicks-ass.net>
-References: <20190313150826.16862-1-pauld@redhat.com>
- <20190315101150.GV5996@hirez.programming.kicks-ass.net>
- <20190315133042.GB27131@pauld.bos.csb>
+        Fri, 15 Mar 2019 12:32:11 -0400
+Received: from foss.arm.com ([217.140.101.70]:33510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728171AbfCOQcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 12:32:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C00E15AB;
+        Fri, 15 Mar 2019 09:32:10 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1F5583F71D;
+        Fri, 15 Mar 2019 09:32:08 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH v2] MIPS: entry: Remove unneeded need_resched() loop
+Date:   Fri, 15 Mar 2019 16:31:33 +0000
+Message-Id: <20190315163133.31632-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190311224752.8337-7-valentin.schneider@arm.com>
+References: <20190311224752.8337-7-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315133042.GB27131@pauld.bos.csb>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 09:30:42AM -0400, Phil Auld wrote:
-> On Fri, Mar 15, 2019 at 11:11:50AM +0100 Peter Zijlstra wrote:
+Since the enabling and disabling of IRQs within preempt_schedule_irq()
+is contained in a need_resched() loop, we don't need the outer arch
+code loop.
 
-> > Computers _suck_ at /100. And since you're free to pick the constant,
-> > pick a power of two, computers love those.
-> > 
-> 
-> Fair enough, I was thinking percents. And also that once we get in
-> here it's not a really hot path.
+Note that commit a18815abcdfd ("Use preempt_schedule_irq.") initially
+removed the existing loop, but missed the final branch to restore_all.
+Commit cdaed73afb61 ("Fix preemption bug.") missed that and reintroduced
+the loop.
 
-I've seen people say that before; but that's not something I can relate
-to. The basic idea is fractions.
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+---
+ arch/mips/kernel/entry.S | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/mips/kernel/entry.S b/arch/mips/kernel/entry.S
+index d7de8adcfcc8..5469d43b6966 100644
+--- a/arch/mips/kernel/entry.S
++++ b/arch/mips/kernel/entry.S
+@@ -58,15 +58,14 @@ resume_kernel:
+ 	local_irq_disable
+ 	lw	t0, TI_PRE_COUNT($28)
+ 	bnez	t0, restore_all
+-need_resched:
+ 	LONG_L	t0, TI_FLAGS($28)
+ 	andi	t1, t0, _TIF_NEED_RESCHED
+ 	beqz	t1, restore_all
+ 	LONG_L	t0, PT_STATUS(sp)		# Interrupts off?
+ 	andi	t0, 1
+ 	beqz	t0, restore_all
+-	jal	preempt_schedule_irq
+-	b	need_resched
++	PTR_LA	ra, restore_all
++	j	preempt_schedule_irq
+ #endif
+ 
+ FEXPORT(ret_from_kernel_thread)
+--
+2.20.1
 
