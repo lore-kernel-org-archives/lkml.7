@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6552C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F95C10F0B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF052063F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54202218D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 19:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RV+qphgR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bMyL6O7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfCOTxN (ORCPT
+        id S1726676AbfCOTyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 15:53:13 -0400
-Received: from mail-it1-f201.google.com ([209.85.166.201]:39436 "EHLO
-        mail-it1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727472AbfCOTwN (ORCPT
+        Fri, 15 Mar 2019 15:54:00 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:33091 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfCOTvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 15:52:13 -0400
-Received: by mail-it1-f201.google.com with SMTP id h3so8722142itb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 12:52:13 -0700 (PDT)
+        Fri, 15 Mar 2019 15:51:51 -0400
+Received: by mail-pf1-f202.google.com with SMTP id x23so11481000pfm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 12:51:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=qCZblj86ukutCUgaNEezPPnSo6jFx7c0S/27D3+g5SQ=;
-        b=RV+qphgRwIM0BlYxCZg0JlfEjDx5G2b5L8ZyFpBg6xhggSYfsl1Fqr2nkYw/1uo2gs
-         3X2mnJn0InykZb95Oc3LklEnd5abQO0mxyfCWv4ktefYvvvkA3igSCrt3kfSvFnDcJd2
-         yiTPCyZxoNT8Y3VZrTwxne1jWphT3yMFgfIrreIXZfWc85uza+QqmGRI+KRoFp3SruIJ
-         AoO+ZWZNEwD/TFL+4c5NovYe7UTZj9KfYqP4IK256g8ihlekEEHLF6pJB9120lvwCNGI
-         YKyN4okwCGSEeBvRd5Hm2UUrZHroN4fPZmCKFLzy7try938Sv18vPjuWwinYuq9JIjNh
-         YyTA==
+        bh=HBqdcrrZbnaUQvnw2SuV9xpSHs4pKIOHqIC9BZ3VFKg=;
+        b=bMyL6O7mL3v0PpvhcraOwU0+T0KPIFPV/p7nmVTvmipE51X/RVpxp6XgCeUgtieP7G
+         ixioELJzjz0dEoQWCYr0YK3/FbXsJYHqdPSXpUIsBdn1yDDXj6QnCZ35FOYA8i9HT63C
+         4NxOaja1Vj1CohRqNK5BDjm+Ej2ZsDeLIYnjGIPj/aDrjQ9HbzCW01i4AWSy9c6BCqBH
+         VOneIHkae9V1wBY19FpITt5gyzE2kQ3GzB4IuuJ9g8/ByewueOS2EyupEZ9Fn2xI7TMs
+         eSLl2rv00PucX+Qh3Q1GWwU/1iBbczPrTond0HrvoOUHVc5VY5X1umF2QYAhZzj9B3zd
+         L8hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=qCZblj86ukutCUgaNEezPPnSo6jFx7c0S/27D3+g5SQ=;
-        b=qtZ+PKVQHgmneTmGpQu95Z0iNfF5RB1q6yGEEYbsIv8/3B93t6ngAe9ceo/JU0PuBw
-         22ixwctmHW8BMKfrBX/Lq6/ldOs6Vhi2qwnHieO3a5gwt0d+pbhDq7FJDY2NinWSLugi
-         MzOXVIQ7QYOZGYa1DhE92Xy/EGCAcHsfrigLytPNmAK/GlcENccbKrtxoph9RlCP27nj
-         R42+6j22HLrAYZsBvHswQkXCSGSnhrtSFJsQ7C1wP/JD3/gGI/IKXvTrqmeJh5gJoHxh
-         x2rOni3XszPhUTVpnOAlHnzgoq8a+sK59dqs9XRx55bbkpyRPhKv2EM06VHrZTcAHaz7
-         n9JA==
-X-Gm-Message-State: APjAAAWpnVE0xs08okDONgQapS+gq3eO9SGnirT8Bc/No+95VBtuxWgA
-        B2w1sRfmsEm6SqT3mI7FQGAqTCxKvvdN10Sy
-X-Google-Smtp-Source: APXvYqzF9kP75AZrtaf7n0FWkgnfxl6FIrePx6iNETztWTIe/Q/kL5cqZ/6EOdqOX8uD9nyrlgZxURKjMjdTQ+yZ
-X-Received: by 2002:a24:508e:: with SMTP id m136mr2945070itb.34.1552679532548;
- Fri, 15 Mar 2019 12:52:12 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 20:51:33 +0100
+        bh=HBqdcrrZbnaUQvnw2SuV9xpSHs4pKIOHqIC9BZ3VFKg=;
+        b=nh9sO2Ub8uDZ2yo+nUkgAqpP39kVEJ18ddVo9rEQPG5Wja7pPWkGS0cD4AalsJRaEY
+         77wAh6ntFtWejf80XYrA8c4pOTnhyKLsv6TFkysGxygcu8npl9ANmZVAIwTwlOPmiuc9
+         OpM6CkvmGpO8WXK/Cl6JCw4RqK7+qTz+r43FyExoK35SY/71j7HYDwUlOldexSxJGyOp
+         z5rWnj2vl4+lTOFEreWdKAI9TGjJwYjrQV1hWxHhbCrqGjrtDP7znDc8qpabKiI9eCHq
+         UNMVvcbZb2JpZ7c9v6SeNylk79pF86ekRWAwaDvfIAVjysvmU6TjoBluohcSHRDyAx9o
+         4Kyg==
+X-Gm-Message-State: APjAAAXkL809TrnuND7vLwMuE1D3sPNdIACG2/NsGAqeGtZLaSPzkj9l
+        dY38wRLJyevgrk6bPIMHu5JSna5SIkjsVjxY
+X-Google-Smtp-Source: APXvYqwlT5i1jX7khcwaLfGY9H0rl+oWt5KckuYgCZmSJDPuy2OzcL+WBdRis5ZekWALtZsnFbHnM5bpC2RyyAOF
+X-Received: by 2002:a65:52c5:: with SMTP id z5mr2165417pgp.71.1552679510299;
+ Fri, 15 Mar 2019 12:51:50 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 20:51:26 +0100
 In-Reply-To: <cover.1552679409.git.andreyknvl@google.com>
-Message-Id: <c4d65de9867cb3349af6800242da0de751260c6c.1552679409.git.andreyknvl@google.com>
+Message-Id: <f7b263a20223da2b8b26f6a5b0d84a575af28010.1552679409.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1552679409.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
-Subject: [PATCH v11 09/14] kernel, arm64: untag user pointers in prctl_set_mm*
+Subject: [PATCH v11 02/14] arm64: untag user pointers in access_ok and __uaccess_mask_ptr
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -107,48 +107,60 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-prctl_set_mm() and prctl_set_mm_map() use provided user pointers for vma
-lookups, which can only by done with untagged pointers.
+copy_from_user (and a few other similar functions) are used to copy data
+from user memory into the kernel memory or vice versa. Since a user can
+provided a tagged pointer to one of the syscalls that use copy_from_user,
+we need to correctly handle such pointers.
 
-Untag user pointers in these functions.
+Do this by untagging user pointers in access_ok and in __uaccess_mask_ptr,
+before performing access validity checks.
 
+Note, that this patch only temporarily untags the pointers to perform the
+checks, but then passes them as is into the kernel internals.
+
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- kernel/sys.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/include/asm/uaccess.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sys.c b/kernel/sys.c
-index 12df0e5434b8..8e56d87cc6db 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -1993,6 +1993,18 @@ static int prctl_set_mm_map(int opt, const void __user *addr, unsigned long data
- 	if (copy_from_user(&prctl_map, addr, sizeof(prctl_map)))
- 		return -EFAULT;
+diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
+index e5d5f31c6d36..9164ecb5feca 100644
+--- a/arch/arm64/include/asm/uaccess.h
++++ b/arch/arm64/include/asm/uaccess.h
+@@ -94,7 +94,7 @@ static inline unsigned long __range_ok(const void __user *addr, unsigned long si
+ 	return ret;
+ }
  
-+	prctl_map->start_code	= untagged_addr(prctl_map.start_code);
-+	prctl_map->end_code	= untagged_addr(prctl_map.end_code);
-+	prctl_map->start_data	= untagged_addr(prctl_map.start_data);
-+	prctl_map->end_data	= untagged_addr(prctl_map.end_data);
-+	prctl_map->start_brk	= untagged_addr(prctl_map.start_brk);
-+	prctl_map->brk		= untagged_addr(prctl_map.brk);
-+	prctl_map->start_stack	= untagged_addr(prctl_map.start_stack);
-+	prctl_map->arg_start	= untagged_addr(prctl_map.arg_start);
-+	prctl_map->arg_end	= untagged_addr(prctl_map.arg_end);
-+	prctl_map->env_start	= untagged_addr(prctl_map.env_start);
-+	prctl_map->env_end	= untagged_addr(prctl_map.env_end);
-+
- 	error = validate_prctl_map(&prctl_map);
- 	if (error)
- 		return error;
-@@ -2106,6 +2118,8 @@ static int prctl_set_mm(int opt, unsigned long addr,
- 			      opt != PR_SET_MM_MAP_SIZE)))
- 		return -EINVAL;
+-#define access_ok(addr, size)	__range_ok(addr, size)
++#define access_ok(addr, size)	__range_ok(untagged_addr(addr), size)
+ #define user_addr_max			get_fs
  
-+	addr = untagged_addr(addr);
-+
- #ifdef CONFIG_CHECKPOINT_RESTORE
- 	if (opt == PR_SET_MM_MAP || opt == PR_SET_MM_MAP_SIZE)
- 		return prctl_set_mm_map(opt, (const void __user *)addr, arg4);
+ #define _ASM_EXTABLE(from, to)						\
+@@ -226,7 +226,8 @@ static inline void uaccess_enable_not_uao(void)
+ 
+ /*
+  * Sanitise a uaccess pointer such that it becomes NULL if above the
+- * current addr_limit.
++ * current addr_limit. In case the pointer is tagged (has the top byte set),
++ * untag the pointer before checking.
+  */
+ #define uaccess_mask_ptr(ptr) (__typeof__(ptr))__uaccess_mask_ptr(ptr)
+ static inline void __user *__uaccess_mask_ptr(const void __user *ptr)
+@@ -234,10 +235,11 @@ static inline void __user *__uaccess_mask_ptr(const void __user *ptr)
+ 	void __user *safe_ptr;
+ 
+ 	asm volatile(
+-	"	bics	xzr, %1, %2\n"
++	"	bics	xzr, %3, %2\n"
+ 	"	csel	%0, %1, xzr, eq\n"
+ 	: "=&r" (safe_ptr)
+-	: "r" (ptr), "r" (current_thread_info()->addr_limit)
++	: "r" (ptr), "r" (current_thread_info()->addr_limit),
++	  "r" (untagged_addr(ptr))
+ 	: "cc");
+ 
+ 	csdb();
 -- 
 2.21.0.360.g471c308f928-goog
 
