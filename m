@@ -2,105 +2,154 @@ Return-Path: <SRS0=8sqo=RS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4645C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BDDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9387B218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63902184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 09:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xqP793vY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNFMk+gL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfCOJHc (ORCPT
+        id S1728641AbfCOJIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 05:07:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50544 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728644AbfCOJGt (ORCPT
+        Fri, 15 Mar 2019 05:08:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39425 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728569AbfCOJIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 05:06:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2F8xImn020939;
-        Fri, 15 Mar 2019 09:06:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=hodO79sVdUVbs8R2wgveaoHWI6y3it+JXm1fmyjQDVk=;
- b=xqP793vYQW7JOCT2ovXf0NeKSjjV6Sk1vbWBMc5KCIqFzaaWcWjxPhN64zTOSSVBd2V+
- KypriZ9GXCMVv1PmuqpDuA+wBvsUbajU/FDam8RBe8pUXDW6jCQL7MayLe/La3L4T219
- /48pkhDmxnU7ch2QlJDXhd4H73t1SpTVWwehhNTuLzeraQPltvG+eBfPnb6hYfunlmkI
- tvQKJXre8anR0Bn8g35omJdWXe7PNLs8nqU7LvtVn4DLJ8tOeuvDtHDrRGQ8xrwT8EBD
- EMvifZ/1sIAz2RvmC1E+KgJHqCwLaNzG7QPEP+7ylKKjx85axOlrFvNjoM1m4RlQXrZU dA== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2r44wunjte-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Mar 2019 09:06:28 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2F96RjV006011
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Mar 2019 09:06:27 GMT
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2F96Rit017635;
-        Fri, 15 Mar 2019 09:06:27 GMT
-Received: from will-ThinkCentre-M93p.cn.oracle.com (/10.182.71.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 15 Mar 2019 09:06:27 +0000
-From:   Jianchao Wang <jianchao.w.wang@oracle.com>
-To:     axboe@kernel.dk
-Cc:     hch@lst.de, jthumshirn@suse.de, hare@suse.de, josef@toxicpanda.com,
-        bvanassche@acm.org, sagi@grimberg.me, keith.busch@intel.com,
-        jsmart2021@gmail.com, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/8] skd: use blk_mq_queue_tag_busy_iter
-Date:   Fri, 15 Mar 2019 16:57:42 +0800
-Message-Id: <1552640264-26101-7-git-send-email-jianchao.w.wang@oracle.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
-References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9195 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903150067
+        Fri, 15 Mar 2019 05:08:13 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i20so5891673pfo.6;
+        Fri, 15 Mar 2019 02:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FQuWJiaahoVGruZwKY+4GHvBiDxUpo5ZETYkLiKhcXY=;
+        b=hNFMk+gLWKwV7otyRME333Rh0w4aXpbdIli9zhjpDTnxgPt6aHIoYS8YtLGgvrDHc3
+         DYQD7mjl+MRE11GWoHQws0xx4vQhLH6N/pZuRHNnWZWE8yf+E3CQL0PF7XUJ9PHaDW1m
+         nijqSt6w4U3rGkqWyVRK+cM2qa/n9Xx9D35w3453EXaEEKRD1rCC6Is/oMkaFcVtYVOd
+         RxZGP6hGuzNJAlsCoKgpkr5dtEIQAQ05mZYj96g87+wyHcM2mVCWdvJmoLWPA0Rp5glh
+         C0A7O/mVBb8t2sKmekMaAKswAWq492zzoHCzZf8XuE6/M2EwKGABpJPzXgJUOu7vUxU2
+         Ex9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FQuWJiaahoVGruZwKY+4GHvBiDxUpo5ZETYkLiKhcXY=;
+        b=pDZ/R/1R49p8CjAsEEyol2X9O6t+7hNvHoBbGVeEKzI2Rx+Lbs4hxlfynjyDysVQsH
+         y4Bk8q1Iyef/jLIJ1rneu3f0WyLGW2TSvZSMPxbfnh7gQq+pPQ24H+aSLF1gfYOpwKsf
+         pt5g5i4Vp8QF/z4qC6SpYIIGjYUnCvMo3NQx2rjloXI9GxfECj28WAAe9aKs/3MDr+01
+         8+/NgVCDEsPj1PFS8AfGW/gkAx8iYS2DkyJXuIwsUV/BgYK+L4M74LIwAcXFqMo+A4JD
+         ncd+DNcqnMCIvG1Hq23xcE9KpvzE0rZwC4Ojtp6WMYI+a3boMSCh5BlNwyQ8I8tuyetP
+         hmNA==
+X-Gm-Message-State: APjAAAX9Yg0DdHo+dxDf758jNr4YM5daEUb1mXD0tY1wnm18qONuuAwh
+        fsjenCeyd1V8jkXLT2CYf/jeH4y9o/Roa1VPAZ8=
+X-Google-Smtp-Source: APXvYqyqmh4mImfByZPHBrLJaiK+jU2dsJ9f8DkNpWlgA9COO6KNpGptzJ78do0+5C9IVfr8HhX+40bnccX+xKcIde0=
+X-Received: by 2002:aa7:930b:: with SMTP id 11mr2926855pfj.49.1552640892802;
+ Fri, 15 Mar 2019 02:08:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <1552602855-26086-1-git-send-email-info@metux.net> <1552602855-26086-46-git-send-email-info@metux.net>
+In-Reply-To: <1552602855-26086-46-git-send-email-info@metux.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 15 Mar 2019 11:08:01 +0200
+Message-ID: <CAHp75Vf1F_WQxNRiya=aTqFTEGWDVrD9JTr1VB4pOW0RayDmoA@mail.gmail.com>
+Subject: Re: [PATCH v2 45/45] drivers: tty: serial: mux: use devm_* functions
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tobias Klauser <tklauser@distanz.ch>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        macro@linux-mips.org,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>, slemieux.tyco@gmail.com,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, baohua@kernel.org,
+        Peter Korsgaard <jacmet@sunsite.dk>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blk_mq_tagset_busy_iter is not safe that it could get stale request
-in tags->rqs[]. Use blk_mq_queue_tag_busy_iter here.
+On Fri, Mar 15, 2019 at 12:37 AM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
+>
+> Use the safer devm versions of memory mapping functions.
 
-Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
----
- drivers/block/skd_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If you are going to use devm_*_free(), what's the point to have this
+change from the beginning?
 
-diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
-index ab893a7..60c34ff 100644
---- a/drivers/block/skd_main.c
-+++ b/drivers/block/skd_main.c
-@@ -395,7 +395,7 @@ static int skd_in_flight(struct skd_device *skdev)
- {
- 	int count = 0;
- 
--	blk_mq_tagset_busy_iter(&skdev->tag_set, skd_inc_in_flight, &count);
-+	blk_mq_queue_tag_busy_iter(skdev->queue, skd_inc_in_flight, &count, true);
- 
- 	return count;
- }
-@@ -1916,7 +1916,7 @@ static bool skd_recover_request(struct request *req, void *data, bool reserved)
- 
- static void skd_recover_requests(struct skd_device *skdev)
- {
--	blk_mq_tagset_busy_iter(&skdev->tag_set, skd_recover_request, skdev);
-+	blk_mq_queue_tag_busy_iter(skdev->queue, skd_recover_request, skdev, true);
- }
- 
- static void skd_isr_msg_from_dev(struct skd_device *skdev)
+P.S. Disregard that this is untested series...
+
+> --- a/drivers/tty/serial/mux.c
+> +++ b/drivers/tty/serial/mux.c
+> @@ -456,8 +456,9 @@ static int __init mux_probe(struct parisc_device *dev)
+>         printk(KERN_INFO "Serial mux driver (%d ports) Revision: 0.6\n", port_count);
+>
+>         dev_set_drvdata(&dev->dev, (void *)(long)port_count);
+> -       request_mem_region(dev->hpa.start + MUX_OFFSET,
+> -                           port_count * MUX_LINE_OFFSET, "Mux");
+
+> +       devm_request_mem_region(&dev->dev,
+> +                               dev->hpa.start + MUX_OFFSET,
+> +                               port_count * MUX_LINE_OFFSET, "Mux");
+
+...and on top of this where is error checking?
+
+>
+>         if(!port_cnt) {
+>                 mux_driver.cons = MUX_CONSOLE;
+> @@ -474,7 +475,9 @@ static int __init mux_probe(struct parisc_device *dev)
+>                 port->iobase    = 0;
+>                 port->mapbase   = dev->hpa.start + MUX_OFFSET +
+>                                                 (i * MUX_LINE_OFFSET);
+> -               port->membase   = ioremap_nocache(port->mapbase, MUX_LINE_OFFSET);
+> +               port->membase   = devm_ioremap_nocache(port->dev,
+> +                                                      port->mapbase,
+> +                                                      MUX_LINE_OFFSET);
+>                 port->iotype    = UPIO_MEM;
+>                 port->type      = PORT_MUX;
+>                 port->irq       = 0;
+> @@ -517,10 +520,12 @@ static int __exit mux_remove(struct parisc_device *dev)
+>
+>                 uart_remove_one_port(&mux_driver, port);
+>                 if(port->membase)
+> -                       iounmap(port->membase);
+> +                       devm_iounmap(port->dev, port->membase);
+>         }
+>
+> -       release_mem_region(dev->hpa.start + MUX_OFFSET, port_count * MUX_LINE_OFFSET);
+> +       devm_release_mem_region(&dev->dev,
+> +                               dev->hpa.start + MUX_OFFSET,
+> +                               port_count * MUX_LINE_OFFSET);
+>         return 0;
+>  }
+
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
