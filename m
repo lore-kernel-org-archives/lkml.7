@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FFAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4522C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB2A21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AF721871
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Mar 2019 12:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbfCOMgN (ORCPT
+        id S1729022AbfCOMi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 08:36:13 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:43601 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbfCOMgM (ORCPT
+        Fri, 15 Mar 2019 08:38:57 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:33561 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728157AbfCOMi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 08:36:12 -0400
+        Fri, 15 Mar 2019 08:38:57 -0400
 X-Originating-IP: 90.88.22.102
 Received: from localhost.localdomain (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 1E9D0FF805;
-        Fri, 15 Mar 2019 12:36:08 +0000 (UTC)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id D3A24E0017;
+        Fri, 15 Mar 2019 12:38:52 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
@@ -34,9 +34,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v2] ARM: dts: sun8i-h3: Add support for the RerVision H3-DVK board
-Date:   Fri, 15 Mar 2019 13:35:49 +0100
-Message-Id: <20190315123549.8022-1-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v3] ARM: dts: sun8i-h3: Add support for the RerVision H3-DVK board
+Date:   Fri, 15 Mar 2019 13:38:28 +0100
+Message-Id: <20190315123828.3224-1-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -59,13 +59,16 @@ Supported features:
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
+Changes since v2:
+* Actually made the changes instead of sending the same patch again.
+
 Changes since v1:
 * Removed unneeded changes to mmc2_8bit_pins node;
 * Renamed HDMI connector nodes to match other boards.
 
  arch/arm/boot/dts/Makefile                   |   1 +
- arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts | 119 +++++++++++++++++++
- 2 files changed, 120 insertions(+)
+ arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts | 114 +++++++++++++++++++
+ 2 files changed, 115 insertions(+)
  create mode 100644 arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
@@ -82,10 +85,10 @@ index bd40148a15b2..8db275b75214 100644
  	sun8i-r16-nintendo-super-nes-classic.dtb \
 diff --git a/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
 new file mode 100644
-index 000000000000..94b71e064eb6
+index 000000000000..51bd2c00bbae
 --- /dev/null
 +++ b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-@@ -0,0 +1,119 @@
+@@ -0,0 +1,114 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (C) 2019 Bootlin
@@ -117,8 +120,8 @@ index 000000000000..94b71e064eb6
 +		type = "a";
 +
 +		port {
-+			hdmi_connector_input: endpoint {
-+				remote-endpoint = <&hdmi_connector_output>;
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
 +			};
 +		};
 +	};
@@ -152,8 +155,8 @@ index 000000000000..94b71e064eb6
 +};
 +
 +&hdmi_out {
-+	hdmi_connector_output: endpoint {
-+		remote-endpoint = <&hdmi_connector_input>;
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
 +	};
 +};
 +
@@ -172,11 +175,6 @@ index 000000000000..94b71e064eb6
 +	non-removable;
 +	cap-mmc-hw-reset;
 +	status = "okay";
-+};
-+
-+&mmc2_8bit_pins {
-+	drive-strength = <40>;
-+	bias-pull-up;
 +};
 +
 +&ohci1 {
