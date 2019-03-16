@@ -2,228 +2,112 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F951C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4E4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4F221900
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2977C21903
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:14:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sEwSdhqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbfCPONz (ORCPT
+        id S1727063AbfCPOOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:13:55 -0400
-Received: from mga14.intel.com ([192.55.52.115]:31036 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbfCPONz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:13:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Mar 2019 07:13:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,486,1544515200"; 
-   d="scan'208";a="214756265"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 16 Mar 2019 07:13:54 -0700
-Received: from [10.252.10.233] (abudanko-mobl.ccr.corp.intel.com [10.252.10.233])
-        by linux.intel.com (Postfix) with ESMTP id 3D143580310;
-        Sat, 16 Mar 2019 07:13:52 -0700 (PDT)
-Subject: [PATCH v9 06/12] perf util: introduce Zstd streaming based
- compression API
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <4e4433a6-250e-651a-bb1c-243e3cbbf4af@linux.intel.com>
-Date:   Sat, 16 Mar 2019 17:13:50 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sat, 16 Mar 2019 10:14:16 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37315 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbfCPOOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 10:14:16 -0400
+Received: by mail-pg1-f196.google.com with SMTP id q206so8387632pgq.4
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iqSv3VwnLzmUHJiY0agWx/Nu4MIVi/KllnQytijL1sA=;
+        b=sEwSdhqcWBnBdue9yoCAG8iy9LoqbGzhrJZyOXZDEyL0dCzFBPk51I5xld/wKLMvNU
+         DuY6RKuhnwcnhjQWpKODUN8paX1O+xp8OavRy8X20VMA8b1Q+egEM5IogkOSY/9GrdC0
+         ltrBJOG0eSVYb7arN9NxMfa9QQNQbxgQF8wQ7p/OVVrdbW/5X28bxlQoDofn5Yk0Pf/T
+         CoevqKMI8hDO5XxEAuBuyTiAjLElk0S8xno84AOg/9psHHK/0h50bZDUUACIMTzlUB06
+         F45M9uquIiEg5hMOEYZbdcTfiKPkmSGi4+576zLzCmqNEVRURLj7Ska40y8ksUsPur06
+         DwvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iqSv3VwnLzmUHJiY0agWx/Nu4MIVi/KllnQytijL1sA=;
+        b=VMYkVyP56sRqnaUqc1z3Gle774WY0jinQOCDOaUrEIaNb1keYwLXElu4duKh0Cvfy1
+         cmvu6UWg2kyGe9vKqbkNjF8JJYuIPfXHmABSvfLmctHtBv2BivK1Js4L/blEUC9Ed9lX
+         PJk3C/y6FXklV/2Sz5jEgh1A37kmeBoApSCdim9MkaSfnd9Cds98pMOX0Xr30SxcWhOz
+         26sWPfoRPMPawx7guknT/JeezxGTJ4rzm1cWtFCuYAr86pOMyQ6enAx3HyV9spI0cLT7
+         A7OCE+TTv7XENscvBLQBebpvGcMrEHxEobyC2lXiA3u5FzgnXTrk0GBcom5uMrdluFR+
+         b1Cw==
+X-Gm-Message-State: APjAAAWBO8u46ruGw1ZaIQWV45+sOmF0QZzNwdf6Gdqz+TU7rYk7tMVm
+        jbRXcw9Y+NC8h6yofGDOksA=
+X-Google-Smtp-Source: APXvYqyrcR+RSB9zCTyOO8OTYON9M50iwxPHDr0JXvaRH54yTiVL7/JTqbsu3wCJYCSvavJrEnzGcw==
+X-Received: by 2002:aa7:885a:: with SMTP id k26mr9622649pfo.70.1552745655023;
+        Sat, 16 Mar 2019 07:14:15 -0700 (PDT)
+Received: from localhost ([121.137.63.184])
+        by smtp.gmail.com with ESMTPSA id z6sm6147159pgp.8.2019.03.16.07.14.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Mar 2019 07:14:13 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Sat, 16 Mar 2019 23:14:10 +0900
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Dmitry Vyukov <dvyukov@google.com>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [syzbot? printk?] no WARN_ON() messages printed before "Kernel
+ panic - not syncing: panic_on_warn set ..."
+Message-ID: <20190316141410.GA18654@tigerII.localdomain>
+References: <0a0d282b-6757-5f42-b888-ef52b040aaa1@i-love.sakura.ne.jp>
+ <CACT4Y+ZBpfLpk0FRp7O8Ut=mmf-uddK_fLMDHtPkf6FnMGMqPA@mail.gmail.com>
+ <f015f007-2402-27a0-1694-93b1bcffe84b@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-In-Reply-To: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f015f007-2402-27a0-1694-93b1bcffe84b@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (03/16/19 19:18), Tetsuo Handa wrote:
+> On 2019/03/16 18:11, Dmitry Vyukov wrote:
+> > Such reports showed up always with low frequency. For all that I
+> > looked at we also always had a normal  non-truncated version, so I was
+> > never too worried.
+> > 
+> > If something would write from userspace, that would show up in the
+> > output, or not?
+> > 
+> > Perhaps syzkaller somehow manages to lower console output level?
+> 
+> panic() calls console_verbose() before calling
+> 
+>   pr_emerg("Kernel panic - not syncing: %s\n", buf);
+> 
+> line. Then, someone might have changed console_loglevel enough to
+> suppress printk() output.
 
-Implemented functions are based on Zstd streaming compression API.
-The functions are used in runtime to compress data that come from
-mmaped kernel buffer. zstd_init(), zstd_fini() are used for
-initialization and finalization to allocate and deallocate internal
-zstd objects. zstd_compress_stream_to_records() is used to convert
-parts of mmaped kernel buffer into an array of PERF_RECORD_COMPRESSED
-records.
+Hmm... sysctl, may be?
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/util/Build      |  2 ++
- tools/perf/util/compress.h | 43 +++++++++++++++++++++++
- tools/perf/util/zstd.c     | 71 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 116 insertions(+)
- create mode 100644 tools/perf/util/zstd.c
+> > I figured out that we should restrict it from doing
+> > syslog(SYSLOG_ACTION_CONSOLE_OFF). And I also restricted its access o
+> > /dev/console. But maybe there is something else? It _should_ not be
+> > able to write to random sysctl's.
+> 
+> Maybe try running with "ignore_loglevel" kernel command line option added?
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8dd3102301ea..6d5bbc8b589b 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -145,6 +145,8 @@ perf-y += scripting-engines/
- 
- perf-$(CONFIG_ZLIB) += zlib.o
- perf-$(CONFIG_LZMA) += lzma.o
-+perf-$(CONFIG_ZSTD) += zstd.o
-+
- perf-y += demangle-java.o
- perf-y += demangle-rust.o
- 
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index 892e92e7e7fc..d00d7cb095aa 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -2,6 +2,11 @@
- #ifndef PERF_COMPRESS_H
- #define PERF_COMPRESS_H
- 
-+#include <stdbool.h>
-+#ifdef HAVE_ZSTD_SUPPORT
-+#include <zstd.h>
-+#endif
-+
- #ifdef HAVE_ZLIB_SUPPORT
- int gzip_decompress_to_file(const char *input, int output_fd);
- bool gzip_is_compressed(const char *input);
-@@ -12,4 +17,42 @@ int lzma_decompress_to_file(const char *input, int output_fd);
- bool lzma_is_compressed(const char *input);
- #endif
- 
-+struct zstd_data {
-+#ifdef HAVE_ZSTD_SUPPORT
-+	ZSTD_CStream	*cstream;
-+#endif
-+};
-+
-+#ifdef HAVE_ZSTD_SUPPORT
-+
-+int zstd_init(struct zstd_data *data, int level);
-+int zstd_fini(struct zstd_data *data);
-+
-+size_t zstd_compress_stream_to_records(struct zstd_data *data,
-+	void *dst, size_t dst_size, void *src, size_t src_size,	size_t max_record_size,
-+	size_t process_header(void *record, size_t increment));
-+
-+#else /* !HAVE_ZSTD_SUPPORT */
-+
-+static inline int zstd_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static inline int zstd_fini(struct zstd_data *data __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static inline size_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
-+		void *dst __maybe_unused, size_t dst_size __maybe_unused,
-+		void *src __maybe_unused, size_t src_size __maybe_unused,
-+		size_t max_record_size __maybe_unused,
-+		size_t process_header(void *record, size_t increment) __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+#endif
-+
- #endif /* PERF_COMPRESS_H */
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-new file mode 100644
-index 000000000000..6d4f69d57567
---- /dev/null
-+++ b/tools/perf/util/zstd.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <string.h>
-+
-+#include "util/compress.h"
-+#include "util/debug.h"
-+
-+int zstd_init(struct zstd_data *data, int level)
-+{
-+	size_t ret;
-+
-+	data->cstream = ZSTD_createCStream();
-+	if (data->cstream == NULL) {
-+		pr_err("Couldn't create compression stream.\n");
-+		return -1;
-+	}
-+
-+	ret = ZSTD_initCStream(data->cstream, level);
-+	if (ZSTD_isError(ret)) {
-+		pr_err("Failed to initialize compression stream: %s\n", ZSTD_getErrorName(ret));
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+int zstd_fini(struct zstd_data *data)
-+{
-+	if (data->cstream) {
-+		ZSTD_freeCStream(data->cstream);
-+		data->cstream = NULL;
-+	}
-+
-+	return 0;
-+}
-+
-+size_t zstd_compress_stream_to_records(struct zstd_data *data,
-+	void *dst, size_t dst_size, void *src, size_t src_size,	size_t max_record_size,
-+	size_t process_header(void *record, size_t increment))
-+{
-+	size_t ret, size, compressed = 0;
-+	ZSTD_inBuffer input = { src, src_size, 0 };
-+	ZSTD_outBuffer output;
-+	void *record;
-+
-+	while (input.pos < input.size) {
-+		record = dst;
-+		size = process_header(record, 0);
-+		compressed += size;
-+		dst += size;
-+		dst_size -= size;
-+		output = (ZSTD_outBuffer){ dst, (dst_size > max_record_size) ?
-+						max_record_size : dst_size, 0 };
-+		ret = ZSTD_compressStream(data->cstream, &output, &input);
-+		ZSTD_flushStream(data->cstream, &output);
-+		if (ZSTD_isError(ret)) {
-+			pr_err("failed to compress %ld bytes: %s\n",
-+				(long)src_size, ZSTD_getErrorName(ret));
-+			memcpy(dst, src, src_size);
-+			return src_size;
-+		}
-+		size = output.pos;
-+		size = process_header(record, size);
-+		compressed += size;
-+		dst += size;
-+		dst_size -= size;
-+	}
-+
-+	return compressed;
-+}
-+
--- 
-2.20.1
+Right, that's something I would expect 0-day and syzkaller to do.
 
+	-ss
