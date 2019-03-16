@@ -2,111 +2,492 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D0AC10F03
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45202C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E01218E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:02:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="upzMdkBn"
+	by mail.kernel.org (Postfix) with ESMTP id 063F9218D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbfCPRCw (ORCPT
+        id S1727112AbfCPRMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 13:02:52 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42070 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfCPRCv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 13:02:51 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so8580392wrr.9
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 10:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=5sBiQxs7mw52OinugVuABSDctfMF/antra9v6/jEZWU=;
-        b=upzMdkBngZcSKdu0T9u3vHgRJEjrCde762PELuScejpV77aaF8FubYThBix/2ejR2d
-         KartoA+ezftB8zoz0deXdyXBNjJUeusgO0MkUxkNF/xVzkmxK3EG9fqfIF5XJjz0SQbq
-         1uAKQuIOhGai7yFnGw3RqxTICOW8HQct/t7zmjv3t/xYmXQ/1PdNQjt1Nlnr4uIEqZHq
-         YQR+UcQcOKbYdoxnL16Db0xh4PSIgDIStZPcCxE7IzFHfSHEfKMPoKvpHZ7Wz2nXmns8
-         S8eZv/HBMltGfcUgSBikpk3dc74kPjOehJvKeSNwAVlKp63gTENhjRW/nSeXC1PgUpaQ
-         Ysog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=5sBiQxs7mw52OinugVuABSDctfMF/antra9v6/jEZWU=;
-        b=kPemcVU6DtUutP0OvCOwnPOlTNKqBV5OmS4nbZuXL3ZsSxmC9zho0DG4PT4ljEqZrd
-         11aG/F7LlZdxCdOS6PSfW4SrAsc0G5C8ACLeaYC1CxGYe7Sw1Ji32sNPDsnEJISctWBK
-         RBRp9LGEkoaqe6pKW4pcbL2Eozb+97DhDdRryKlJqk4KbUtZpZX6DmXg9eP4nT0aorzq
-         FLZbjvXVK77FwPLr3MnDZ7qGHNeFTKxoUWjZfH2P+GX5xuI9K/K9ZxjVVlbQ7QDEyokz
-         UL4aSROLCC2UUM7Jv+UQ1cZmLiieso0VSsXdLE2Gg7HUnTgBwE9QipxEqmBZSKJVmm5r
-         KmTQ==
-X-Gm-Message-State: APjAAAVUWFMXbJvxuXglbPRwmSV7549PszTI1R1bw5GlPl6LZi+ZO5Lt
-        2lYDpae6KRTqYjIKORqyX1TGqQ==
-X-Google-Smtp-Source: APXvYqzbA7SPteuQxvyGj163oQuyEF7+9MIsEAkEDX03l3XEOiUpGGjjowZZgLGZpdUe+hoEo4I/xQ==
-X-Received: by 2002:a5d:4e46:: with SMTP id r6mr6100928wrt.210.1552755769978;
-        Sat, 16 Mar 2019 10:02:49 -0700 (PDT)
-Received: from boomer.baylibre.com (uluru.liltaz.com. [163.172.81.188])
-        by smtp.gmail.com with ESMTPSA id d10sm14038501wrh.83.2019.03.16.10.02.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 16 Mar 2019 10:02:49 -0700 (PDT)
-Message-ID: <13432d537f671c8065693b7e53348f812e8bbc04.camel@baylibre.com>
-Subject: Re: [PATCH net-next 2/3] net: phy: add amlogic g12a mdio mux support
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
+        Sat, 16 Mar 2019 13:12:17 -0400
+Received: from ja.ssi.bg ([178.16.129.10]:54100 "EHLO ja.ssi.bg"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726376AbfCPRMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 13:12:17 -0400
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x2GHB78n010591;
+        Sat, 16 Mar 2019 19:11:07 +0200
+Date:   Sat, 16 Mar 2019 19:11:07 +0200 (EET)
+From:   Julian Anastasov <ja@ssi.bg>
+To:     Jacky Hu <hengqing.hu@gmail.com>
+cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
         "David S. Miller" <davem@davemloft.net>,
-        Kevin Hilman <khilman@baylibre.com>, netdev@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Date:   Sat, 16 Mar 2019 18:02:45 +0100
-In-Reply-To: <20190316025448.GD29548@lunn.ch>
-References: <20190314140135.19184-1-jbrunet@baylibre.com>
-         <20190314140135.19184-3-jbrunet@baylibre.com>
-         <20190316025448.GD29548@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH v3] ipvs: allow tunneling with gue encapsulation
+In-Reply-To: <20190316072009.2247-1-hengqing.hu@gmail.com>
+Message-ID: <alpine.LFD.2.21.1903161832520.4891@ja.home.ssi.bg>
+References: <20190316072009.2247-1-hengqing.hu@gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-03-16 at 03:54 +0100, Andrew Lunn wrote:
-> On Thu, Mar 14, 2019 at 03:01:34PM +0100, Jerome Brunet wrote:
-> > > +static int _g12a_enable_internal_mdio(struct g12a_mdio_mux *priv)
+
+	Hello,
+
+On Sat, 16 Mar 2019, Jacky Hu wrote:
+
+> ipip packets are blocked in some public cloud environments, this patch
+> allows gue encapsulation with the tunneling method, which would make
+> tunneling working in those environments.
 > 
-> You would generally use the _ prefix when you have a locked and an
-> unlocked version. I don't see anything like this here. So please drop
-> the _ .
+> Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+> ---
+>  include/net/ip_vs.h             |  5 ++
+>  include/uapi/linux/ip_vs.h      | 17 ++++++
+>  net/netfilter/ipvs/ip_vs_ctl.c  | 20 ++++++-
+>  net/netfilter/ipvs/ip_vs_xmit.c | 93 +++++++++++++++++++++++++++++++--
+>  4 files changed, 130 insertions(+), 5 deletions(-)
 > 
+> diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+> index a0d2e0bb9a94..56c1770b00fe 100644
+> --- a/include/net/ip_vs.h
+> +++ b/include/net/ip_vs.h
+> @@ -603,6 +603,9 @@ struct ip_vs_dest_user_kern {
+>  
+>  	/* Address family of addr */
+>  	u16			af;
+> +
+> +	u16			tun_type;	/* tunnel type */
+> +	__be16			tun_port;	/* tunnel port */
+>  };
+>  
+>  
+> @@ -663,6 +666,8 @@ struct ip_vs_dest {
+>  	atomic_t		conn_flags;	/* flags to copy to conn */
+>  	atomic_t		weight;		/* server weight */
+>  	atomic_t		last_weight;	/* server latest weight */
+> +	atomic_t		tun_type;	/* tunnel type */
+> +	atomic_t		tun_port;	/* tunnel port */
+>  
+>  	refcount_t		refcnt;		/* reference counter */
+>  	struct ip_vs_stats      stats;          /* statistics */
+> diff --git a/include/uapi/linux/ip_vs.h b/include/uapi/linux/ip_vs.h
+> index 1c916b2f89dc..b43297691337 100644
+> --- a/include/uapi/linux/ip_vs.h
+> +++ b/include/uapi/linux/ip_vs.h
+> @@ -124,6 +124,13 @@
+>  
+>  #define IP_VS_PEDATA_MAXLEN     255
+>  
+> +/* Tunnel types */
+> +enum {
+> +	IP_VS_CONN_F_TUNNEL_TYPE_IPIP = 0,	/* IPIP */
+> +	IP_VS_CONN_F_TUNNEL_TYPE_GUE,		/* GUE */
+> +	IP_VS_CONN_F_TUNNEL_TYPE_MAX,
+> +};
+> +
+>  /*
+>   *	The struct ip_vs_service_user and struct ip_vs_dest_user are
+>   *	used to set IPVS rules through setsockopt.
+> @@ -155,6 +162,9 @@ struct ip_vs_dest_user {
+>  	/* thresholds for active connections */
+>  	__u32		u_threshold;	/* upper threshold */
+>  	__u32		l_threshold;	/* lower threshold */
+> +
+> +	__u16		tun_type;	/* tunnel type */
+> +	__be16		tun_port;	/* tunnel port */
 
-will do
+	The struct ip_vs_dest_user can not be changed anymore, it is
+for the old setsockopt interface, for the new netlink interface we
+extend only struct ip_vs_dest_user_kern which is not visible to
+user space.
 
-> Nice to see the generic clock framework being used. I just wonder if
-> this is the correct place to have this clock code. Can it be made part
-> of the SoC clock code?
+>  };
+>  
+>  
+> @@ -220,6 +230,9 @@ struct ip_vs_dest_entry {
+>  	__u32		u_threshold;	/* upper threshold */
+>  	__u32		l_threshold;	/* lower threshold */
+>  
+> +	__u16		tun_type;	/* tunnel type */
+> +	__be16		tun_port;	/* tunnel port */
+> +
 
-the PLL is local to this particular device.
+	Same for struct ip_vs_dest_entry, we can not change it
 
-In 'Soc clock code' (driver/clk/meson in this case) we usually put clock
-controllers. Those controllers feeds the different devices of the SoC but we
-tends some more clock elements in the consumer device
+>  	__u32		activeconns;	/* active connections */
+>  	__u32		inactconns;	/* inactive connections */
+>  	__u32		persistconns;	/* persistent connections */
+> @@ -392,6 +405,10 @@ enum {
+>  
+>  	IPVS_DEST_ATTR_STATS64,		/* nested attribute for dest stats */
+>  
+> +	IPVS_DEST_ATTR_TUN_TYPE,	/* tunnel type */
+> +
+> +	IPVS_DEST_ATTR_TUN_PORT,	/* tunnel port */
+> +
+>  	__IPVS_DEST_ATTR_MAX,
+>  };
+>  
+> diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+> index 432141f04af3..48509b03a5ea 100644
+> --- a/net/netfilter/ipvs/ip_vs_ctl.c
+> +++ b/net/netfilter/ipvs/ip_vs_ctl.c
+> @@ -830,6 +830,10 @@ __ip_vs_update_dest(struct ip_vs_service *svc, struct ip_vs_dest *dest,
+>  	conn_flags = udest->conn_flags & IP_VS_CONN_F_DEST_MASK;
+>  	conn_flags |= IP_VS_CONN_F_INACTIVE;
+>  
+> +	/* set the tunnel info */
+> +	atomic_set(&dest->tun_type, udest->tun_type);
+> +	atomic_set(&dest->tun_port, udest->tun_port);
+> +
+>  	/* set the IP_VS_CONN_F_NOOUTPUT flag if not masquerading/NAT */
+>  	if ((conn_flags & IP_VS_CONN_F_FWD_MASK) != IP_VS_CONN_F_MASQ) {
+>  		conn_flags |= IP_VS_CONN_F_NOOUTPUT;
+> @@ -2869,6 +2873,8 @@ static const struct nla_policy ip_vs_dest_policy[IPVS_DEST_ATTR_MAX + 1] = {
+>  	[IPVS_DEST_ATTR_PERSIST_CONNS]	= { .type = NLA_U32 },
+>  	[IPVS_DEST_ATTR_STATS]		= { .type = NLA_NESTED },
+>  	[IPVS_DEST_ATTR_ADDR_FAMILY]	= { .type = NLA_U16 },
+> +	[IPVS_DEST_ATTR_TUN_TYPE]	= { .type = NLA_U8 },
+> +	[IPVS_DEST_ATTR_TUN_PORT]	= { .type = NLA_U16 },
+>  };
+>  
+>  static int ip_vs_genl_fill_stats(struct sk_buff *skb, int container_type,
+> @@ -3172,6 +3178,10 @@ static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
+>  			 IP_VS_CONN_F_FWD_MASK)) ||
+>  	    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
+>  			atomic_read(&dest->weight)) ||
+> +	    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
+> +		       atomic_read(&dest->tun_type)) ||
+> +	    nla_put_u16(skb, IPVS_DEST_ATTR_TUN_PORT,
+> +			atomic_read(&dest->tun_port)) ||
 
-Usually, it is just a few mux, dividers and gates (like in
-drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c) but in this case, we have
-a PLL. IMO, it belongs here. Do you see a problem with this ?
+	nla_put_be16 for port
 
-Jerome
+>  	    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
+>  	    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
+>  	    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
+> @@ -3294,12 +3304,14 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
+>  	/* If a full entry was requested, check for the additional fields */
+>  	if (full_entry) {
+>  		struct nlattr *nla_fwd, *nla_weight, *nla_u_thresh,
+> -			      *nla_l_thresh;
+> +			      *nla_l_thresh, *nla_tun_type, *nla_tun_port;
+>  
+>  		nla_fwd		= attrs[IPVS_DEST_ATTR_FWD_METHOD];
+>  		nla_weight	= attrs[IPVS_DEST_ATTR_WEIGHT];
+>  		nla_u_thresh	= attrs[IPVS_DEST_ATTR_U_THRESH];
+>  		nla_l_thresh	= attrs[IPVS_DEST_ATTR_L_THRESH];
+> +		nla_tun_type	= attrs[IPVS_DEST_ATTR_TUN_TYPE];
+> +		nla_tun_port	= attrs[IPVS_DEST_ATTR_TUN_PORT];
+>  
+>  		if (!(nla_fwd && nla_weight && nla_u_thresh && nla_l_thresh))
+>  			return -EINVAL;
+> @@ -3309,6 +3321,12 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
+>  		udest->weight = nla_get_u32(nla_weight);
+>  		udest->u_threshold = nla_get_u32(nla_u_thresh);
+>  		udest->l_threshold = nla_get_u32(nla_l_thresh);
+> +
+> +		if (nla_tun_type)
+> +			udest->tun_type = nla_get_u8(nla_tun_type);
+> +
+> +		if (nla_tun_port)
+> +			udest->tun_port = nla_get_u16(nla_tun_port);
 
-> 
->     Andrew
+	nla_get_be16 for port
 
+>  	}
+>  
+>  	return 0;
+> diff --git a/net/netfilter/ipvs/ip_vs_xmit.c b/net/netfilter/ipvs/ip_vs_xmit.c
+> index 473cce2a5231..e748c5605b04 100644
+> --- a/net/netfilter/ipvs/ip_vs_xmit.c
+> +++ b/net/netfilter/ipvs/ip_vs_xmit.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/tcp.h>                  /* for tcphdr */
+>  #include <net/ip.h>
+> +#include <net/gue.h>
+>  #include <net/tcp.h>                    /* for csum_tcpudp_magic */
+>  #include <net/udp.h>
+>  #include <net/icmp.h>                   /* for icmp_send */
+> @@ -989,6 +990,42 @@ static inline int __tun_gso_type_mask(int encaps_af, int orig_af)
+>  	}
+>  }
+>  
+> +static int
+> +__build_gue_header(struct net *net, struct sk_buff *skb,
+> +		   struct ip_vs_conn *cp, __u8 *next_protocol)
+> +{
+> +	__be16 dport;
+> +	__be16 sport;
+> +	struct udphdr  *udph;	/* Our new UDP header */
+> +	struct guehdr  *gueh;	/* Our new GUE header */
+> +
+> +	skb_push(skb, sizeof(struct guehdr));
+> +
+> +	gueh = (struct guehdr *)skb->data;
+> +
+> +	gueh->control = 0;
+> +	gueh->version = 0;
+> +	gueh->hlen = 0;
+> +	gueh->flags = 0;
+> +	gueh->proto_ctype = *next_protocol;
+> +
+> +	skb_push(skb, sizeof(struct udphdr));
+> +	skb_reset_transport_header(skb);
+> +
+> +	udph = udp_hdr(skb);
+> +
+> +	dport = htons(atomic_read(&cp->dest->tun_port));
+> +	sport = udp_flow_src_port(net, skb, 0, 0, false);
 
+	udp_flow_src_port should be called before pushing new headers,
+eg. move it above:
+
+	__be16 sport = udp_flow_src_port(net, skb, 0, 0, false);
+
+> +	udph->dest = dport;
+> +	udph->source = sport;
+> +	udph->len = htons(skb->len);
+> +	udph->check = 0;
+
+	For udph->check there can be an additional patch/feature:
+
+- we can add options for checksums, for example:
+
+	--tun-nocsum: uh->check = 0, SKB_GSO_UDP_TUNNEL
+		No checksum
+		default
+
+	--tun-csum:
+		Checksum
+		SKB_GSO_UDP_TUNNEL_CSUM
+		udp_set_csum/udp6_set_csum as in fou_build_udp() and
+		fou6_build_udp()
+
+	--tun-remcsum:
+		Remote Checksum Offload
+		SKB_GSO_UDP_TUNNEL_CSUM | SKB_GSO_TUNNEL_REMCSUM
+		udp_set_csum/udp6_set_csum
+		like net/ipv4/fou.c:__gue_build_header() REMCSUM handling
+
+	But for now check = 0 should be fine.
+
+> +
+> +	*next_protocol = IPPROTO_UDP;
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   *   IP Tunneling transmitter
+>   *
+> @@ -1025,6 +1062,7 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	struct iphdr  *iph;			/* Our new IP header */
+>  	unsigned int max_headroom;		/* The extra header space needed */
+>  	int ret, local;
+> +	int tun_type, gso_type;
+>  
+>  	EnterFunction(10);
+>  
+> @@ -1033,7 +1071,7 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  				   IP_VS_RT_MODE_NON_LOCAL |
+>  				   IP_VS_RT_MODE_CONNECT |
+>  				   IP_VS_RT_MODE_TUNNEL, &saddr, ipvsh);
+> -	if (local < 0)
+> +	if (!cp->dest || local < 0)
+
+	May be this cp->dest check can be moved to  __ip_vs_get_out_rt()
+and __ip_vs_get_out_rt_v6() because we need to account the added header 
+when calculating mtu and also because it should not stop the traffic when
+local = true:
+
+	mtu = dst_mtu(&rt->dst) - sizeof(struct iphdr);
+
+	add:
+	if (!dest)
+		goto err_put;
+	switch (atomic_read(&dest->tun_type)) {
+	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
+		mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
+		break;
+	default:
+		break;
+	}
+
+>  		goto tx_error;
+>  	if (local)
+>  		return ip_vs_send_or_cont(NFPROTO_IPV4, skb, cp, 1);
+> @@ -1046,6 +1084,14 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	 */
+>  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct iphdr);
+>  
+> +	tun_type = atomic_read(&cp->dest->tun_type);
+> +
+> +	switch (tun_type) {
+> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
+> +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
+> +		break;
+> +	}
+> +
+>  	/* We only care about the df field if sysctl_pmtu_disc(ipvs) is set */
+>  	dfp = sysctl_pmtu_disc(ipvs) ? &df : NULL;
+>  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
+> @@ -1054,11 +1100,26 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	if (IS_ERR(skb))
+>  		goto tx_error;
+>  
+> -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET, cp->af)))
+> +	switch (tun_type) {
+> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
+> +		gso_type = SKB_GSO_UDP_TUNNEL;
+> +		break;
+> +	default:
+> +		gso_type = __tun_gso_type_mask(AF_INET, cp->af);
+> +		break;
+> +	}
+> +
+> +	if (iptunnel_handle_offloads(skb, gso_type))
+>  		goto tx_error;
+>  
+>  	skb->transport_header = skb->network_header;
+>  
+
+	We should call skb_set_inner_ipproto(skb, next_protocol) to
+properly segment the skb in skb_udp_tunnel_segment(), after
+iptunnel_handle_offloads and before it is changed by __build_gue_header
+from IPPROTO_IPIP/IPPROTO_IPV6 to UDP.
+
+> +	switch (tun_type) {
+> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
+> +		__build_gue_header(dev_net(tdev), skb, cp, &next_protocol);
+
+	Use net instead of dev_net(tdev)
+
+> +		break;
+> +	}
+> +
+>  	skb_push(skb, sizeof(struct iphdr));
+>  	skb_reset_network_header(skb);
+>  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
+> @@ -1112,6 +1173,7 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	struct ipv6hdr  *iph;		/* Our new IP header */
+>  	unsigned int max_headroom;	/* The extra header space needed */
+>  	int ret, local;
+> +	int tun_type, gso_type;
+>  
+>  	EnterFunction(10);
+>  
+> @@ -1121,7 +1183,7 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  				      IP_VS_RT_MODE_LOCAL |
+>  				      IP_VS_RT_MODE_NON_LOCAL |
+>  				      IP_VS_RT_MODE_TUNNEL);
+> -	if (local < 0)
+> +	if (!cp->dest || local < 0)
+
+	Above dest check will be moved before the mtu check
+
+>  		goto tx_error;
+>  	if (local)
+>  		return ip_vs_send_or_cont(NFPROTO_IPV6, skb, cp, 1);
+> @@ -1134,17 +1196,40 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	 */
+>  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct ipv6hdr);
+>  
+> +	tun_type = atomic_read(&cp->dest->tun_type);
+> +
+> +	switch (tun_type) {
+> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
+> +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
+> +		break;
+> +	}
+> +
+>  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
+>  					 &next_protocol, &payload_len,
+>  					 &dsfield, &ttl, NULL);
+>  	if (IS_ERR(skb))
+>  		goto tx_error;
+>  
+> -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET6, cp->af)))
+> +	switch (tun_type) {
+> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
+> +		gso_type = SKB_GSO_UDP_TUNNEL;
+> +		break;
+> +	default:
+> +		gso_type = __tun_gso_type_mask(AF_INET, cp->af);
+
+	For IPv6 use AF_INET6
+
+> +		break;
+> +	}
+> +
+> +	if (iptunnel_handle_offloads(skb, gso_type))
+>  		goto tx_error;
+>  
+>  	skb->transport_header = skb->network_header;
+>  
+
+	skb_set_inner_ipproto(skb, next_protocol);
+
+> +	switch (tun_type) {
+> +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
+> +		__build_gue_header(dev_net(tdev), skb, cp, &next_protocol);
+
+	Use net instead of dev_net(tdev)
+
+> +		break;
+> +	}
+> +
+>  	skb_push(skb, sizeof(struct ipv6hdr));
+>  	skb_reset_network_header(skb);
+>  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
+> -- 
+
+	Also:
+
+- just for correctness we can set udest->tun_type to
+	IP_VS_CONN_F_TUNNEL_TYPE_IPIP in ip_vs_copy_udest_compat()
+
+- __build_gue_header: can be named ipvs_gue_encap because we add 2 headers
+
+- ip_vs_add_dest() and ip_vs_edit_dest() can return EINVAL when
+GUE comes with port 0.
+
+	As for ipvsadm v2 patch, I'll comment it again when we stabilize
+the kernel patch but for now few comments:
+
+- there are missing switch-case breaks
+
+- for FMT_TUN_INFO in print_title it would be enough to show only this:
+-> RemoteAddress:Port Forward TunnelInfo":
+
+- in print_service_entry() better to use func to print 
+tunnames[e->tun_type] in case the kernel returns something ipvsadm
+does not support yet
+
+- libipvs/ip_vs.h: struct ip_vs_dest_kern: can not be changed
+
+- libipvs/ip_vs.h: struct ip_vs_dest_entry_kern: can not be changed
+
+Regards
+
+--
+Julian Anastasov <ja@ssi.bg>
