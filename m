@@ -2,114 +2,221 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8821C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012E3C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6A72087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552725278;
-	bh=jN5SbvzDRPlYKMurUXtI72O3MA59kys2b7QF9paRTds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qZsRTZQt1tu5WKIQzRKOuWNwJdOtMHHs/UadXi/hjqg6ab92P+2Xa2iBuc/RszXix
-	 oBKd0lZIVa91dIi7ZlnLL0PvY2JETV1aRIbfbTqBbqNNKVi2TzqkZ72pQj6m7GTtCW
-	 SkO3VL2yFmQjmZGl43px9WLXBe1M9w+OoxBrhEOs=
+	by mail.kernel.org (Postfix) with ESMTP id CBE19218E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfCPIeh (ORCPT
+        id S1726626AbfCPInA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 04:34:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34920 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725970AbfCPIeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 04:34:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B8205ACD7;
-        Sat, 16 Mar 2019 08:34:35 +0000 (UTC)
-Date:   Sat, 16 Mar 2019 09:34:34 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org,
-        anshuman.khandual@arm.com, william.kucharski@oracle.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] mm: Fix __dump_page when mapping->host is not set
-Message-ID: <20190316083434.GI15672@dhcp22.suse.cz>
-References: <20190315121826.23609-1-osalvador@suse.de>
- <20190315124733.GE15672@dhcp22.suse.cz>
- <20190315143304.pkuvj4qwtlzgm7iq@d104.suse.de>
- <alpine.LSU.2.11.1903150952270.2934@eggly.anvils>
+        Sat, 16 Mar 2019 04:43:00 -0400
+Received: from mga07.intel.com ([134.134.136.100]:54353 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbfCPInA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 04:43:00 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Mar 2019 01:42:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,485,1544515200"; 
+   d="scan'208";a="283189520"
+Received: from raj-desk2.iind.intel.com ([10.223.107.30])
+  by orsmga004.jf.intel.com with ESMTP; 16 Mar 2019 01:42:55 -0700
+Date:   Sat, 16 Mar 2019 14:00:24 +0530
+From:   Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        furquan@google.com, evgreen@google.com, rajatxjain@gmail.com,
+        rajneesh.bhardwaj@linux.intel.com,
+        srinivas.pandruvada@linux.intel.com, david.e.box@intel.com
+Subject: Re: [PATCH 2/2] platform/x86: intel_pmc_core: Allow to dump debug
+ registers on S0ix failure
+Message-ID: <20190316083024.GB21812@raj-desk2.iind.intel.com>
+References: <20190313222124.229371-1-rajatja@google.com>
+ <20190313222124.229371-2-rajatja@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.1903150952270.2934@eggly.anvils>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190313222124.229371-2-rajatja@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[my mbox didn't get synced completely so our emails "crossed"]
+On Wed, Mar 13, 2019 at 03:21:24PM -0700, Rajat Jain wrote:
+> Add a module parameter which when enabled, will check on resume, if the
+> last S0ix attempt was successful. If not, the driver would provide
+> helpful debug information (which gets latched during the failed suspend
+> attempt) to debug the S0ix failure.
 
-On Fri 15-03-19 10:21:18, Hugh Dickins wrote:
-> On Fri, 15 Mar 2019, Oscar Salvador wrote:
-> > On Fri, Mar 15, 2019 at 01:47:33PM +0100, Michal Hocko wrote:
-> > > diff --git a/mm/debug.c b/mm/debug.c
-> > > index 1611cf00a137..499c26d5ebe5 100644
-> > > --- a/mm/debug.c
-> > > +++ b/mm/debug.c
-> > > @@ -78,6 +78,9 @@ void __dump_page(struct page *page, const char *reason)
-> > >  	else if (PageKsm(page))
-> > >  		pr_warn("ksm ");
-> > >  	else if (mapping) {
-> > > +		if (PageSwapCache(page))
-> > > +			mapping = page_swap_info(page)->swap_file->f_mapping;
-> > > +
-> > >  		pr_warn("%ps ", mapping->a_ops);
-> > >  		if (mapping->host->i_dentry.first) {
-> > >  			struct dentry *dentry;
-> > 
-> > This looks like a much nicer fix, indeed.
-> > I gave it a spin and it works.
-> > 
-> > Since the mapping is set during the swapon, I would assume that this should
-> > always work for swap.
-> > Although I am not sure if once you start playing with e.g zswap the picture can
-> > change.
-> > 
-> > Let us wait for Hugh and Jan.
-> > 
-> > Thanks Michal
-> 
-> Sorry, I don't agree that Michal's more sophisticated patch is nicer:
-> the appropriate patch was your original, just checking for NULL.
-> 
-> Though, would I be too snarky to suggest that your patch description
-> would be better at 2 lines than 90?  Swap mapping->host is NULL,
-> so of course __dump_page() needs to be careful about that.
-> 
-> I was a little disturbed to see __dump_page() now getting into dentries,
-> but admit that it can sometimes be very helpful to see the name of the
-> file involved; so if that is not in danger of breaking anything, okay.
-> 
-> It is very often useful to see if a page is PageSwapCache (typically
-> because that should account for 1 of its refcount); I cannot think of
-> a time when it's been useful to know the name of the underlying swap
-> device (if that's indeed what f_mapping leads to: it's new to me).
-> And if you need swp_type and swp_offset, they're in the raw output.
-> 
-> The cleverer __dump_page() tries to get, the more likely that it will
-> itself crash just when you need it most. Please just keep it simple.
++ Srinivas and David.
 
-OK, fair enough. If we ever have anybody suggesting to follow the swap
-lead then we can add it. I do not have a good use case for that right
-now. Let's go with Oscar's original patch. Thanks!
+> 
+> This information is very useful to debug S0ix failures. Specially since
+> the latched debug information will be lost (over-written) if the system
+> attempts to go into runtime (or imminent) S0ix again after that failed
+> suspend attempt.
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+>  drivers/platform/x86/intel_pmc_core.c | 86 +++++++++++++++++++++++++++
+>  drivers/platform/x86/intel_pmc_core.h |  7 +++
+>  2 files changed, 93 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index 55578d07610c..b1f4405a27ce 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/suspend.h>
+>  #include <linux/uaccess.h>
+>  
+>  #include <asm/cpu_device_id.h>
+> @@ -890,9 +891,94 @@ static int pmc_core_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +
+> +static bool warn_on_s0ix_failures;
+> +module_param(warn_on_s0ix_failures, bool, 0644);
+> +MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
+> +
+> +static int pmc_core_suspend(struct device *dev)
+> +{
+> +	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> +
+> +	/* Save PC10 and S0ix residency for checking later */
+> +	if (warn_on_s0ix_failures &&
+> +	    !rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter) &&
+> +	    !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
+> +		pmcdev->check_counters = true;
+> +	else
+> +		pmcdev->check_counters = false;
+> +
+> +	return 0;
+> +}
+> +
+> +static inline bool pc10_failed(struct pmc_dev *pmcdev)
+> +{
+> +	u64 pc10_counter;
+> +
+> +	if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
+> +	    pc10_counter == pmcdev->pc10_counter)
+> +		return true;
+> +	else
+> +		return false;
+> +}
+> +
+> +static inline bool s0ix_failed(struct pmc_dev *pmcdev)
+> +{
+> +	u64 s0ix_counter;
+> +
+> +	if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
+> +	    s0ix_counter == pmcdev->s0ix_counter)
+> +		return true;
+> +	else
+> +		return false;
+> +}
+> +
+> +static int pmc_core_resume(struct device *dev)
+> +{
+> +	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> +
+> +	if (!pmcdev->check_counters)
+> +		return 0;
+> +
+> +	if (pc10_failed(pmcdev)) {
+> +		dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
+> +			 pmcdev->pc10_counter);
+> +	} else if (s0ix_failed(pmcdev)) {
+> +
+> +		const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+slps0_dbg feature is not available on Skylake and Kabylake. PCH IP power
+gating status is available on all.
+
+> +		const struct pmc_bit_map *map;
+> +		int offset = pmcdev->map->slps0_dbg_offset;
+> +		u32 data;
+> +
+> +		dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
+> +			 pmcdev->s0ix_counter);
+
+I feel this dev_warn may be frowned upon and should be possible kept behind
+something like pm_debug_messages_on though module param helps mitigate it.
+
+> +		while (*maps) {
+> +			map = *maps;
+> +			data = pmc_core_reg_read(pmcdev, offset);
+> +			offset += 4;
+> +			while (map->name) {
+> +				dev_warn(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
+> +					 map->name,
+> +					 data & map->bit_mask ? "Yes" : "No");
+> +				++map;
+> +			}
+> +			++maps;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +#endif
+> +
+> +const struct dev_pm_ops pmc_core_pm_ops = {
+> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
+> +};
+> +
+>  static struct platform_driver pmc_core_driver = {
+>  	.driver = {
+>  		.name = "pmc_core",
+> +		.pm = &pmc_core_pm_ops
+>  	},
+>  	.probe = pmc_core_probe,
+>  	.remove = pmc_core_remove,
+> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+> index 88d9c0653a5f..fdee5772e532 100644
+> --- a/drivers/platform/x86/intel_pmc_core.h
+> +++ b/drivers/platform/x86/intel_pmc_core.h
+> @@ -241,6 +241,9 @@ struct pmc_reg_map {
+>   * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
+>   *			used to read MPHY PG and PLL status are available
+>   * @mutex_lock:		mutex to complete one transcation
+> + * @check_counters:	On resume, check if counters are getting incremented
+> + * @pc10_counter:	PC10 residency counter
+> + * @s0ix_counter:	S0ix residency (step adjusted)
+>   *
+>   * pmc_dev contains info about power management controller device.
+>   */
+> @@ -253,6 +256,10 @@ struct pmc_dev {
+>  #endif /* CONFIG_DEBUG_FS */
+>  	int pmc_xram_read_bit;
+>  	struct mutex lock; /* generic mutex lock for PMC Core */
+> +
+> +	bool check_counters; /* Check for counter increments on resume */
+> +	u64 pc10_counter;
+> +	u64 s0ix_counter;
+>  };
+>  
+>  #endif /* PMC_CORE_H */
+> -- 
+> 2.21.0.360.g471c308f928-goog
+> 
+
 -- 
-Michal Hocko
-SUSE Labs
+Best Regards,
+Rajneesh
