@@ -6,132 +6,122 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E97C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFB7C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B83218E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A966B218E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552706803;
-	bh=vcPbxEEyBQ+XwDpCFMpuUDkKFHHj0dFnmtzNBgEksKI=;
+	s=default; t=1552706813;
+	bh=rFc07SgWIY+at7jFYp58MgUUkKl4HKJDuOFNWa+v5oo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bLDPq2JmojOKkOlriz0+OYxQb0ZQlDqCacyu3A5KnekQBid4OyvUa6fD0DPogHtbW
-	 9UPuLNTPPFzECQ6JWmlYIJoIIu1sp29yH8IHbGX/9aTcy4HgJa0I8JQMhT6vVmugKC
-	 4fFSPGTaJesZFyqc6cGntellbRmkDq3Do//WYdKg=
+	b=uaxfRotR7pYFkAJwGqpGWq21mLuKONth6dAhlUGkj7KuXA47pYzBUwlXKpeXZmZQx
+	 09GOu4h8BXIxa1P10SAORtuZdUbXlNUuUaI2xvB4EFxbRGBrIUlwU9fLA23a06l25G
+	 b/zs7gRy1ZSRr7E1+009gcvvjzFS5eyNu3/LvF/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfCPD0l (ORCPT
+        id S1726881AbfCPD0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 23:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
+        Fri, 15 Mar 2019 23:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbfCPD0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 23:26:41 -0400
+        id S1726479AbfCPD0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 23:26:52 -0400
 Received: from localhost (unknown [104.153.224.167])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3B2221872;
-        Sat, 16 Mar 2019 03:26:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D5FF218E0;
+        Sat, 16 Mar 2019 03:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552706800;
-        bh=vcPbxEEyBQ+XwDpCFMpuUDkKFHHj0dFnmtzNBgEksKI=;
+        s=default; t=1552706810;
+        bh=rFc07SgWIY+at7jFYp58MgUUkKl4HKJDuOFNWa+v5oo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PdMUkM4qi3tR/Oa/oKAmyhq86vFXnCl99BhmoZZ8eY9gfKvFinEpn7Dy7ou6D9z0d
-         IW+0kEMTshBf2ZkvXzvfIbWrmj1J1H4ZLsyU29EgoCK/x+dqGcGJpNWDsOR0ZqOKEj
-         mqzxRdYoJvNauYjdWrM+9UjFTWzkGauvmjK5Jwss=
-Date:   Fri, 15 Mar 2019 20:18:31 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Okash Khawaja <okash.khawaja@gmail.com>
-Cc:     speakup@linux-speakup.org, devel@driverdev.osuosl.org,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        William Hubbs <w.d.hubbs@gmail.com>,
-        Christopher Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>, linux-kernel@vger.kernel.org
-Subject: Re: Staging status of speakup
-Message-ID: <20190316031831.GA2499@kroah.com>
-References: <20190315130035.6a8f16e9@narunkot>
+        b=fr/rVkHn8OBenFn56AGp+zPQng1jkCj3hdF1pfmPg9DN+deIPUgZLV2Zh+NciyzwQ
+         D7mQPqEXkk4wFxKV7YWJvS8vZAan5e02fZfHEqt5wpd7Lb5R37WJfGRzW+7lBFAi7g
+         dWy7j+UBW3d92ecyCO+wsvWqFeAvlgwV6aspR+3s=
+Date:   Fri, 15 Mar 2019 20:26:30 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, eric@anholt.net,
+        stefan.wahren@i2se.com, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        andriy.shevchenko@linux.intel.com, vz@mleia.com,
+        matthias.bgg@gmail.com, yamada.masahiro@socionext.com,
+        tklauser@distanz.ch, richard.genoud@gmail.com,
+        macro@linux-mips.org, u.kleine-koenig@pengutronix.de,
+        kernel@pengutronix.de, slemieux.tyco@gmail.com,
+        andy.gross@linaro.org, david.brown@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 10/45] drivers: tty: serial: zs: use devm_* functions
+Message-ID: <20190316032630.GB2499@kroah.com>
+References: <1552602855-26086-1-git-send-email-info@metux.net>
+ <1552602855-26086-11-git-send-email-info@metux.net>
+ <20190314225204.GB1795@kroah.com>
+ <3734d588-6b9c-29e2-45b6-82e778f47602@metux.net>
+ <20190315142628.GA30650@kroah.com>
+ <d81364fc-c5da-c1b2-f38a-3a23c701c50d@metux.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190315130035.6a8f16e9@narunkot>
+In-Reply-To: <d81364fc-c5da-c1b2-f38a-3a23c701c50d@metux.net>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 01:01:27PM +0000, Okash Khawaja wrote:
-> Hi,
+On Fri, Mar 15, 2019 at 08:12:47PM +0100, Enrico Weigelt, metux IT consult wrote:
+> On 15.03.19 15:26, Greg KH wrote:
+> > Yes, there are lots of drivers for devices that are never unloaded or
+> > removed from the system.  The fact that no one has reported any problems
+> > with them means that they are never used in situations like this.
 > 
-> We have made progress on the items in TODO file of speakup driver in
-> staging directory and wanted to get some clarity on the remaining
-> items. Below is a summary of status of each item along with the quotes
-> from TODO file.
+> So, never touch a running system ?
+
+No, it's just that those systems do not allow those devices to be
+removed because they are probably not on a removable bus.
+
+> > No, you need to have a good reason why it needs to be changed, when you
+> > can not verify that this actually resolves a problem.  As this patch
+> > shows, you just replaced one api call with another, so nothing changed
+> > at all, except you actually took up more memory and logic to do the same
+> > thing :(
 > 
-> 1. "The first issue has to do with the way speakup communicates
-> with serial ports.  Currently, we communicate directly with the hardware
-> ports. This however conflicts with the standard serial port drivers,
-> which poses various problems. This is also not working for modern
-> hardware such as PCI-based serial ports.  Also, there is not a way we
-> can communicate with USB devices.  The current serial port handling
-> code is in serialio.c in this directory."
+> Okay, I was on a wrong track here - I had the silly idea that it would
+> make things easier if we'd do it the same way everywhere.
+
+"Consistent" is good, and valid, but touching old drivers that have few
+users is always risky, and you need a solid reason to do so.
+
+> >> IMHO, we should have a closer look at those and check whether that's
+> >> really okay (just adding request/release blindly could cause trouble)
+> > 
+> > I agree, please feel free to audit these to verify they are all correct.
+> > But that's not what you did here, so that's not a valid justification
+> > for these patches to be accepted.
 > 
-> Drivers for all external synths now use TTY to communcate with the
-> devices. Only ones still using direct communication with hardware ports
-> are internal synths: acntpc, decpc, dtlk and keypc. These are typically
-> ISA cards and generally hardware which is difficult to make work. We
-> can leave these in staging.
+> Understood. Assuming I've found some of these cases, shall I use devm
+> oder just add the missing release ?
 
-Ok, that's fine.
+If it actually makes the code "simpler" or "more obvious", sure, that's
+fine.  But churn for churns sake is not ok.
 
-> 2. "Some places are currently using in_atomic() because speakup
-> functions are called in various contexts, and a couple of things can't
-> happen in these cases. Pushing work to some worker thread would
-> probably help, as was already done for the serial port driving part."
+> >> By the way: do you have some public branch where you're collecting
+> >> accepted patches, which I could base mine on ? (tty.git/tty-next ?)
+> > 
+> > Yes, that is the tree and branch, but remember that none of my trees can
+> > open up until after -rc1 is out.
 > 
-> There aren't any uses of in_atomic anymore. Commit d7500135802c
-> "Staging: speakup: Move pasting into a work item" was the last one that
-> removed such uses.
+> So, within a merge window, you put everything else on hold ?
 
-Great, let's remove that todo item then.
+I put the review of new patch submissions on hold, yes.  Almost all
+maintainers do that as we can not add new patches to our trees at that
+point in time.
 
-> 3. "There is a duplication of the selection functions in selections.c.
-> These functions should get exported from drivers/char/selection.c
-> (clear_selection notably) and used from there instead."
-> 
-> This is yet to be done. I guess drivers/char/selection.c is now under
-> drivers/tty/vt/selection.c.
-
-Yes, someone should update the todo item :)
-
-> 4. "The kobjects may have to move to a more proper place in /sys.The
-> discussion on lkml resulted to putting speech synthesizers in the
-> "speech" class, and the speakup screen reader itself
-> into /sys/class/vtconsole/vtcon0/speakup, the nasty path being handled
-> by userland tools."
-> 
-> Although this makes logical sense, the change will mean changing
-> interface with userspace and hence the user space tools. I tried to
-> search the lkml discussion but couldn't find it. It will be good to
-> know your thoughts on this.
-
-I don't remember, sorry.  I can review the kobject/sysfs usage if you
-think it is "good enough" now and see if I find anything objectionable.
-
-> Finally there is an issue where text in output buffer sometimes gets
-> garbled on SMP systems, but we can continue working on it after the
-> driver is moved out of staging, if that's okay. Basically we need a
-> reproducer of this issue.
-> 
-> In addition to above, there are likely code style issues which will
-> need to be fixed.
-> 
-> We are very keen to get speakup out of staging both, for settling the
-> driver but also for getting included in distros which build only the
-> mainline drivers.
-
-That's great, I am glad to see this happen.  How about work on the
-selection thing and then I can review the kobject stuff in a few weeks,
-and then we can start moving things for 5.2?
+And I do have other things I do during that period so it's not like I'm
+just sitting around doing nothing :)
 
 thanks,
 
