@@ -2,103 +2,84 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801B3C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96444C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 04:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 575CD218D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B10D2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 04:59:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8YraHX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfCPDxz (ORCPT
+        id S1726204AbfCPE7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 23:53:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36340 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726735AbfCPDxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 23:53:54 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0F86AC91D753ACA82E4E;
-        Sat, 16 Mar 2019 11:53:52 +0800 (CST)
-Received: from vm100-107-113-134.huawei.com (100.107.113.134) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 16 Mar 2019 11:53:44 +0800
-From:   Yu Chen <chenyu56@huawei.com>
-To:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
-        <kongfei@hisilicon.com>, <liuyu712@hisilicon.com>,
-        <wanghu17@hisilicon.com>, <butao@hisilicon.com>,
-        <chenyao11@huawei.com>, <fangshengzhou@hisilicon.com>,
-        <lipengcheng8@huawei.com>, <songxiaowei@hisilicon.com>,
-        <xuyiping@hisilicon.com>, <xuyoujun4@huawei.com>,
-        <yudongbin@hisilicon.com>, <zangleigang@hisilicon.com>,
-        Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v4 00/12] Add support for usb on Hikey960
-Date:   Sat, 16 Mar 2019 11:53:30 +0800
-Message-ID: <20190316035342.77998-1-chenyu56@huawei.com>
-X-Mailer: git-send-email 2.15.0-rc2
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [100.107.113.134]
-X-CFilter-Loop: Reflected
+        Sat, 16 Mar 2019 00:59:37 -0400
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:33469 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfCPE7g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 00:59:36 -0400
+Received: by mail-pf1-f181.google.com with SMTP id i19so7729099pfd.0;
+        Fri, 15 Mar 2019 21:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xZT0VQZdUPtziTV/AiaYj8BbSQ+25h1ljNukwj0CyDg=;
+        b=S8YraHX8fVFL/dJ03F61c0KJnyWUZRaJ8cBQOM3WgDVqpfbyT4LOsKPPcxZpgD5DCg
+         +FMAcflYRYdfSs56tWcqfmwtAFbnwe/AOAf8bRSDPvAyTb/gwdffSm4aWtvSdmllcbco
+         E0TDCCMWHl+ikfciR51KfwlwJJvt081AQg1QZErlLzE59SrTYKQbxahbxnpTZkROIwmO
+         snrPm6mZ9XOibL4olHfZDxy/e14ZrkvBE4fY90WkxIpoRFOnFoZxUYYw1Vd4b1HmtH0i
+         dJV5bYQ53iyWvqN2J7FvmpPDoYqqNZ2A4m+Wp+OGIPyopeTLQDmddPwpsFT9FpCuAEII
+         Z7tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xZT0VQZdUPtziTV/AiaYj8BbSQ+25h1ljNukwj0CyDg=;
+        b=ciVMJtd7as9G7OgsWmQfeMLvlCBLP/a1j3peBxLXY+NqYBmyx573BxnF0tTRBIm8rx
+         FS5pgf1HWaQ5keJua5FSLVLqi0VVLk3Kxh2gqagZhDz/Js8VEYKMSaz6hTbAQfagSC8/
+         G5PMV3tQAIphUmqzLuQ41f9KBuQ85GKsPgWkOPcdgK+iTJfO1tmy/JrJDVx1PcVn+02C
+         w7KYiuYV5G4mWcCH1+BPjEcyU8cL0xj47Q89nSOh9wUdebtUMW8qnevIktQZbsG0XeYy
+         yxBW8Ey6EiGF9b3kzunngbYO8f3ShKSlrkTWfaeiZAb56TVMU4qfXgmgodcH2bvo4Ti8
+         p2Ww==
+X-Gm-Message-State: APjAAAWyjoQLt9JeGZKD1ffWh0JJuWELx0YEXC+4KHCan8p+Bvwu4KzM
+        qZ74q9o3/tiPnibxZFLD7Ro=
+X-Google-Smtp-Source: APXvYqxgdEm70Dg0Jj67gmXd7sCiy+G+edv5BSt8YdQsdmUaZu7futOJS18zhZ2ce+jzYP/Xuq8UfA==
+X-Received: by 2002:a63:ef05:: with SMTP id u5mr6982354pgh.177.1552712375765;
+        Fri, 15 Mar 2019 21:59:35 -0700 (PDT)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id j71sm7396801pfc.6.2019.03.15.21.59.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 21:59:34 -0700 (PDT)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        gregkh@linuxfoundation.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 0/4] PM / core: Introduce some helper for better Code reuse
+Date:   Sat, 16 Mar 2019 00:59:24 -0400
+Message-Id: <20190316045928.31934-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patchset adds support for usb functionality of Hikey960, includes:
-- usb phy driver for Hisilicon Kirin Soc hi3660
-- usb driver for HiKey960 board
-- some adjustment in dwc3 and usb role driver
-- dts for support usb of HiKey960
+This patch set introduces some functions and macros that help reduce
+code duplication.
 
-Yu Chen (12):
-  dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
-  dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
-    switch functionality on HiKey960
-  usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc
-    Platform
-  usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
-  usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for
-    Hisilicon Kirin Soc
-  usb: dwc3: Increase timeout for CmdAct cleared by device controller
-  phy: Add usb phy support for hi3660 Soc of Hisilicon
-  usb: roles: Add usb role switch notifier.
-  usb: dwc3: Registering a role switch in the DRD code.
-  hikey960: Support usb functionality of Hikey960
-  usb: gadget: Add configfs attribuite for controling
-    match_existing_only
-  dts: hi3660: Add support for usb on Hikey960
+Yangtao Li (4):
+  PM / core: Introduce dpm_async_fn() helper
+  PM / core: Introduce DEVICE_SUSPEND_FUNC() helper macro
+  PM / core: Introduce ASYNC_RESUME_FUNC() helper macro
+  PM / core: Introduce ASYNC_SUSPEND_FUNC() helper macro
 
- .../bindings/misc/hisilicon-hikey-usb.txt          |  52 +++++
- .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  26 +++
- MAINTAINERS                                        |   8 +
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  53 +++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  74 +++++++
- drivers/misc/Kconfig                               |   6 +
- drivers/misc/Makefile                              |   1 +
- drivers/misc/hisi_hikey_usb.c                      | 162 ++++++++++++++
- drivers/phy/hisilicon/Kconfig                      |  10 +
- drivers/phy/hisilicon/Makefile                     |   1 +
- drivers/phy/hisilicon/phy-hi3660-usb3.c            | 233 +++++++++++++++++++++
- drivers/usb/dwc3/Kconfig                           |   1 +
- drivers/usb/dwc3/core.c                            |  45 ++++
- drivers/usb/dwc3/core.h                            |  15 ++
- drivers/usb/dwc3/drd.c                             |  58 ++++-
- drivers/usb/dwc3/dwc3-of-simple.c                  |   4 +-
- drivers/usb/dwc3/gadget.c                          |   2 +-
- drivers/usb/gadget/configfs.c                      |  32 +++
- drivers/usb/roles/class.c                          |  20 +-
- include/linux/usb/role.h                           |  46 ++++
- 20 files changed, 845 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
- create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
- create mode 100644 drivers/misc/hisi_hikey_usb.c
- create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
+ drivers/base/power/main.c | 182 ++++++++++++--------------------------
+ 1 file changed, 59 insertions(+), 123 deletions(-)
 
 -- 
-2.15.0-rc2
+2.17.0
 
