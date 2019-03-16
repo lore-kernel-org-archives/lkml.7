@@ -2,149 +2,146 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAACBC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CF6C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954E821900
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28996218D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsajtgcF"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="h9uX+Bdx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfCPO0v (ORCPT
+        id S1726851AbfCPOcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:26:51 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38182 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfCPO0v (ORCPT
+        Sat, 16 Mar 2019 10:32:02 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54521 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfCPOcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:26:51 -0400
-Received: by mail-pf1-f196.google.com with SMTP id n125so8297112pfn.5;
-        Sat, 16 Mar 2019 07:26:50 -0700 (PDT)
+        Sat, 16 Mar 2019 10:32:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f3so9172836wmj.4
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:32:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KEOD+8UtXijC+wP4hR1bvlZBLv6r5WmiqskVo3P9LGA=;
-        b=DsajtgcFqZbs79z0c2qsZBmHcz8kj+3hCAa3BHD/yxx2vtqAJtG36VC9nEORM7yQ/s
-         aVvA5poO82aRNuH9hgwqLhighBJKJ+z927cePbEu7/XoLKAhgQzSM6ruY2Gh97C2bGqw
-         Dt0XgcL3ZUcNFhaR4yakbMjZC4a6wTyQFtRe0qKQ71Q/mvKnqWfQzGZL6JymkGBelzLk
-         U5zE5CRxV8LywFO0Wf15kosWsalCOdOiebYuJAd9u7VeweBpDrM94kFMqXhN7+xfT2w4
-         0y5pGhDMd+0OtsI8+cZ36DJ7V+hV5ZgRen+7xuUMA7/Zhwu+eqC3Apk+f/cIi+i4pVi/
-         homA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:from:user-agent:mime-version:to:cc:subject
+         :references:in-reply-to:content-transfer-encoding;
+        bh=uM5tAop2OPme9hYP9yOk1ThL7VG9jv/gw/8ehbY3v+0=;
+        b=h9uX+BdxjoBkxFziaWqySYh6fRZsJlA852PPY82irYq7hzjQnIyK9wWa+Qj2krbUa+
+         HZ4lTCsBaSFRUdZYj8LUArrvAVMEgIEjWnwJWsXiWUMFlSg8H3qZHQhfrpddO8kzpGWn
+         poh/6KjTH2rQEFJguqhkvQLSDQWt3sBda14JdIJPOS/cQI6fIe1YadTf4MaiiUuWAcRf
+         9CQbJ/ZRZ/bD7f+rwtXe1mXKfBJE7alzAm4nChIL9UEvSK4mT7V0bkFBRiETMWJ+racq
+         P+GhBSIB52rHENgQv7bSpizHjLF8gOAORk2MnkAfB4Vu8DOO4jSR6VcPoiT4fQJheJOq
+         lncA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KEOD+8UtXijC+wP4hR1bvlZBLv6r5WmiqskVo3P9LGA=;
-        b=GcDrb6+6b4QDMFxlGS/I1hfQ+voze66K5B1FhxkCIjN3KOK2fwicok9lKSx3BR+y+U
-         Pu1sfaLFzCBJYDaDdLYb5T7U7EHhOaY4BUQqA5yqwWvX+4kHbPYt05YYZUDXvNPuoNrj
-         x9dam5iwbtIY6+uiFeGt6TxvVJGU1LhobwckOs+sa/f9WIfnL95nmbjGFm/GeVWRuTsN
-         fItzEwiJZRnZbWtw05LAeJL6I8J4dAv03VdpJU9bciFJP+h8VCb9gJht0B5BE4O2kqUj
-         UF2NBYffXVtZpWL0dl4vrOq2T5JdW83NOn1Ujj4pLwMTgk/2lcJUJf8c9rzS+dupSOHJ
-         tEXQ==
-X-Gm-Message-State: APjAAAWBwEhKaiGM5mVN52wFoTwQou0WGBPrUHc9FjWVPyhUTnbt5rHE
-        ZEKQdO+/2La3e5QqEP9RuYGpgg3D
-X-Google-Smtp-Source: APXvYqyWghDPmi2cFUS5BvhGBftb+juekWFZBWoeYAJfsahfFwxtfny4LHkeumEQVGqRR9X8xqMwJg==
-X-Received: by 2002:a63:cc03:: with SMTP id x3mr8712573pgf.121.1552746409750;
-        Sat, 16 Mar 2019 07:26:49 -0700 (PDT)
-Received: from localhost ([121.137.63.184])
-        by smtp.gmail.com with ESMTPSA id v15sm10765132pfa.75.2019.03.16.07.26.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 Mar 2019 07:26:48 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Sat, 16 Mar 2019 23:26:46 +0900
-To:     Stanislav Fomichev <sdf@fomichev.me>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH] tcp: don't use __constant_cpu_to_be32
-Message-ID: <20190316142646.GA10815@tigerII.localdomain>
-References: <20190314061514.19586-1-sergey.senozhatsky@gmail.com>
- <CANn89iJMFfh1Pkvk9LOn3FwgAfpVjwS7q5x_8Y9zo2rzpy7w9g@mail.gmail.com>
- <20190315012012.GA748@jagdpanzerIV>
- <20190315172428.GB5481@mini-arch.hsd1.ca.comcast.net>
- <20190316051902.GA27630@tigerII.localdomain>
+        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
+         :cc:subject:references:in-reply-to:content-transfer-encoding;
+        bh=uM5tAop2OPme9hYP9yOk1ThL7VG9jv/gw/8ehbY3v+0=;
+        b=GE8f5ODub+7Umb1iGTTMVa8WD2iMAi8HIq9Fd+xQYH9rFbCBc3RDNFKhug9u3Rp0L+
+         WYVHmp0KRdgNLzAbqU+DJfjqLkFxSsuilhxjN6PQl3/2Tvq4z5RPHREKNCuRpWanvfBL
+         Q2wsYoM/o+YhSJwshE1i9NuouGn5MADTKWYYJaw39zkPkWk48+i0cs5tz3uQZV+UiXBO
+         I46MHdA27dTw6UVl8k8xUPqUVT5y/GMnGFciKdhyAiOuK+AutosY2JAgaLQVcZeV2k7V
+         h5qGt86HiglvukTxyJZ9ZGTfx6MLgwp4AT5dF9MWx90iJCVhN05VLG975ILXchUQfhT0
+         +i8Q==
+X-Gm-Message-State: APjAAAWwQP8H38jIXmUNyNRdvVpWHwZFmu9sf9Pg+bDa9qWbMJBi3/11
+        kKBgUf9CuAX5f0Ahv40xNhgDSA==
+X-Google-Smtp-Source: APXvYqwugntDU0EKeDzg2jT28P8NnpFuKq84eqFRZtXH3UBU07CUE71aHZrqRywZIttnXkpvk3AVqA==
+X-Received: by 2002:a1c:7a1a:: with SMTP id v26mr5261549wmc.129.1552746719636;
+        Sat, 16 Mar 2019 07:31:59 -0700 (PDT)
+Received: from [192.168.1.77] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id f10sm3245827wml.23.2019.03.16.07.31.58
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 16 Mar 2019 07:31:58 -0700 (PDT)
+Message-ID: <5C8D08DE.7070203@baylibre.com>
+Date:   Sat, 16 Mar 2019 15:31:58 +0100
+From:   Neil Armstrong <narmstrong@baylibre.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:24.0) Gecko/20100101 Thunderbird/24.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190316051902.GA27630@tigerII.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+CC:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 5/9] arm64: dts: meson: g12a: add reset controller
+References: <20190307151342.7381-1-narmstrong@baylibre.com> <20190307151342.7381-6-narmstrong@baylibre.com> <CAFBinCBt290Qabw98SpiON3xG0ihMEDNzwDDTrBo6QYbA5QjMQ@mail.gmail.com>
+In-Reply-To: <CAFBinCBt290Qabw98SpiON3xG0ihMEDNzwDDTrBo6QYbA5QjMQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (03/16/19 14:19), Sergey Senozhatsky wrote:
-> # define __bpf_ntohs(x)                 __builtin_bswap16(x)
-> # define __bpf_htons(x)                 __builtin_bswap16(x)
+
+
+Le 15/03/2019 22:31, Martin Blumenstingl a écrit :
+> Hi Neil and Jerome,
 > 
-> So I sort of suspect that what should have been done was that
-> __HAVE_BUILTIN_BSWAP16__ ifdef, just like what include/uapi/linux/swab.h
-> does.
+> On Thu, Mar 7, 2019 at 4:14 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> From: Jerome Brunet <jbrunet@baylibre.com>
+>>
+>> Add the reset controller device of g12a SoC family
+>>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>> index f8f055c49f9a..2a700bb45d04 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>> @@ -245,6 +245,13 @@
+>>                         #size-cells = <2>;
+>>                         ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x100000>;
+>>
+>> +                       reset: reset-controller@1004 {
+>> +                               compatible = "amlogic,meson-g12a-reset",
+>> +                                            "amlogic,meson-axg-reset";
+>> +                               reg = <0x0 0x1004 0x0 0x9c>;
+>> +                               #reset-cells = <1>;
+>> +                       };
+> I tried to compare this with what is publicly available in
+> buildroot_openlinux_kernel_4.9_fbdev_20180706 - unfortunately this is
+> harder than I thought:
+> the buildroot kernel doesn't define the reset controller in mesong12a.dtsi
+> 
+> so I tried to follow the code in the HDMITX driver instead:
+> kernel/aml-4.9/drivers/amlogic/media/vout/hdmitx/hdmi_tx_20/hw/hw_txlx.c
+> uses P_RESET0_REGISTER and P_RESET2_REGISTER
+> these are defined in
+> kernel/aml-4.9/drivers/amlogic/media/vout/hdmitx/hdmi_tx_20/hw/txlx_reg.h
+> using:
+>> #define RESET_CBUS_REG_IDX 5
+>> #define BASE_REG_OFFSET 24
+>> #define RESET_CBUS_REG_ADDR(reg) \
+>>    ((RESET_CBUS_REG_IDX << BASE_REG_OFFSET) + (reg << 2))
+>>
+>> #define RESET0_REGISTER 0x01
+>> #define P_RESET0_REGISTER RESET_CBUS_REG_ADDR(RESET0_REGISTER)
+> 
+> when I do the maths:
+> (5 << 24) + (0x01 << 2) = 0x5000004
+> 
+> The GX SoCs have the reset controller at cbus + 0x4404
+> however, the offset may have changed in G12A because the SAR ADC
+> offset also changed (just one example).
+> 
+> Do you have any hint how to verify the CBUS offset (0x1004) of the
+> reset controller?
 
-E.g. use uapi __swab16/__swab32 in selftests/bpf/bpf_endian.h?
+You can find base the address found in the G12A DT for the usb2 phy :
+https://github.com/hardkernel/linux/blob/odroidn2-4.9.y/arch/arm64/boot/dts/amlogic/mesong12a.dtsi#L379
 
--=-=-=-=-=-
+Neil
 
- tools/testing/selftests/bpf/bpf_endian.h | 32 ++++++++------------------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/bpf_endian.h b/tools/testing/selftests/bpf/bpf_endian.h
-index b25595ea4a78..68789b4c7ef0 100644
---- a/tools/testing/selftests/bpf/bpf_endian.h
-+++ b/tools/testing/selftests/bpf/bpf_endian.h
-@@ -20,38 +20,22 @@
-  * use different targets.
-  */
- #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
--# define __bpf_ntohs(x)			__builtin_bswap16(x)
--# define __bpf_htons(x)			__builtin_bswap16(x)
--# define __bpf_constant_ntohs(x)	___constant_swab16(x)
--# define __bpf_constant_htons(x)	___constant_swab16(x)
--# define __bpf_ntohl(x)			__builtin_bswap32(x)
--# define __bpf_htonl(x)			__builtin_bswap32(x)
--# define __bpf_constant_ntohl(x)	___constant_swab32(x)
--# define __bpf_constant_htonl(x)	___constant_swab32(x)
-+# define __bpf_ntohs(x)			__swab16(x)
-+# define __bpf_htons(x)			__swab16(x)
-+# define __bpf_ntohl(x)			__swab32(x)
-+# define __bpf_htonl(x)			__swab32(x)
- #elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
- # define __bpf_ntohs(x)			(x)
- # define __bpf_htons(x)			(x)
--# define __bpf_constant_ntohs(x)	(x)
--# define __bpf_constant_htons(x)	(x)
- # define __bpf_ntohl(x)			(x)
- # define __bpf_htonl(x)			(x)
--# define __bpf_constant_ntohl(x)	(x)
--# define __bpf_constant_htonl(x)	(x)
- #else
- # error "Fix your compiler's __BYTE_ORDER__?!"
- #endif
- 
--#define bpf_htons(x)				\
--	(__builtin_constant_p(x) ?		\
--	 __bpf_constant_htons(x) : __bpf_htons(x))
--#define bpf_ntohs(x)				\
--	(__builtin_constant_p(x) ?		\
--	 __bpf_constant_ntohs(x) : __bpf_ntohs(x))
--#define bpf_htonl(x)				\
--	(__builtin_constant_p(x) ?		\
--	 __bpf_constant_htonl(x) : __bpf_htonl(x))
--#define bpf_ntohl(x)				\
--	(__builtin_constant_p(x) ?		\
--	 __bpf_constant_ntohl(x) : __bpf_ntohl(x))
-+#define bpf_htons(x)	__bpf_htons((x))
-+#define bpf_ntohs(x)	__bpf_ntohs((x))
-+#define bpf_htonl(x)	__bpf_htonl((x))
-+#define bpf_ntohl(x)	__bpf_ntohl((x))
- 
- #endif /* __BPF_ENDIAN__ */
+> 
+> 
+> Regards
+> Martin
+> 
