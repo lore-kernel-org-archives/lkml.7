@@ -5,59 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47175C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBCCC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156E4218D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2181A218D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cet6jNR+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJSk46+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfCPCPT (ORCPT
+        id S1727130AbfCPCPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 22:15:19 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:37612 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfCPCPS (ORCPT
+        Fri, 15 Mar 2019 22:15:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40827 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfCPCPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 22:15:18 -0400
-Received: by mail-yw1-f67.google.com with SMTP id w66so8793620ywd.4;
-        Fri, 15 Mar 2019 19:15:18 -0700 (PDT)
+        Fri, 15 Mar 2019 22:15:33 -0400
+Received: by mail-qt1-f194.google.com with SMTP id f11so12265441qti.7;
+        Fri, 15 Mar 2019 19:15:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=YABxWF8N5gKqZyrr+QQvSqXEL3zrKIE1jEQuPoWCy1Q=;
-        b=cet6jNR+ipeGlcnATcbW0MeDv4xaNeXSalsdWVj9sf2YnfbkEFLZdRY+rNss7G+pt0
-         Mz91Xeb6+yQor28767Ghc5jM02rkxsEGQmH2oBh+1ws/0xSkvzp+NhJgzfWMCpxasfXR
-         JKDayQHrNrv4BNeRlL7c7ZrGMb2ZJdX02v9jTjswXK5Epa1nBSm+zgjoSH16GNEhm8Iq
-         K+TAoXJSEAViWHBdAXaR7RP5+q264tVVS3/3ftzjXmkAh/zZZR/JfqRgEiae3u4PJORb
-         3MsObXw+E1v1HUfsUuM/8oYJ5cc9PRbegD2O2aLY6/U6p0RaeiTXaYOMMQwfcLigWp4L
-         iazg==
+        bh=Eh+Z/o9WjtJXIcms4JIRAPXm9p+hCYRVJC9mwEl1kVc=;
+        b=WJSk46+S5D4zyDQ5RTYjae2QI0kYg1/uuuZFVXkOzunF9IF5201ZyPcGSgtIdk7KO8
+         fql3T7kvasotBuhALC/Bv9fLx4aob9VgUuzXI0S7zd+4GYcvQgT+S05HiH7K/5vHT4Eb
+         LMJcUlO2y4i6DoUbs53+uojDn88u2Vbz2pZtbhb2IuMruqZayP/GLTHcbIp76WIlGOfS
+         xJjjhxs86gRau7H4xd3KHdItQfKFKdCXSC2/juRjQ8Z23kPDQ4jAPS4o3fktJhUsjgDY
+         xK9+S51hB8kePuZM39NHnDntNV9Skrc6rCtDWrbej9WPFhSIgX9iiGoGLHlW1tYb+DJ0
+         3ohg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YABxWF8N5gKqZyrr+QQvSqXEL3zrKIE1jEQuPoWCy1Q=;
-        b=Ve32Migz+N/v/MUFU/i8czYjdq5gHh7RO0caW5hyCbfhvE00t2eWC8+7PZbVQN9Rk9
-         yjDFMUyYjI6v20ZgbJ9V59hro2Jr8qtEU/q+IyM87uu0K9YVvPWtcExSuJmBIbAqCXa8
-         qJwQMDIOjewt9vh6Wwn5ZynMxrCNh26B+sfLJxGda6Mt9hQV/YxGtiF2mY1roMAj7VsN
-         rRjfwwLhXj5PNJn+XeZI+iceyBUL6omssdyoLE0k2/eBxb99MScHShyMDbn2dOVXZAyE
-         5lu0D5fGiOlyarkrIYjgJiWD8GdyjtpB1H0zr/hmYg4kmk7o8ufgFC/zSe/NlK40COKY
-         TQmg==
-X-Gm-Message-State: APjAAAV/YTpuMLDkl7yZzaeN4tO/3AJpbqpeabWYo9tv6SZqLk0lA5q1
-        dsfrvs2TqLc+tyZailF54p8=
-X-Google-Smtp-Source: APXvYqz7yVcv04KxXw6i/E21J7YxLbo6ulOycTUIK6nr82TVf26O7FeInGiLG9lmXMlVS726PvB0yA==
-X-Received: by 2002:a81:47c1:: with SMTP id u184mr5582507ywa.406.1552702517766;
-        Fri, 15 Mar 2019 19:15:17 -0700 (PDT)
+        bh=Eh+Z/o9WjtJXIcms4JIRAPXm9p+hCYRVJC9mwEl1kVc=;
+        b=qmG6uYesRdB+8KIaPf3jdjb5c4tbd4SegOqAoDkczYAby8mkfYF+x2zSRCPpJo1eZs
+         C6K+njYMIKMAe0Xh9f1X5t/9d2xbxraWHNsrecC5jviwBXiVpPBmNyJrjW7A4QauR1bx
+         z8iFoyVQRCS7Eozf3+y6yvt90OBIaTxwEmulZmOB2sfCi+i6xTnoU/hHhs9YljmS0H8s
+         SfLiqLXZlRPZtZHmEc6AAEFAIji3zyeQGieSiI8b4gOAdBeEOpJH8YiKz02BSRr3Zcm0
+         JQJ46SqVKinN1x4UsaLLO2VW4OYpLno6Mhp/yADh1uR0BVB6hLeHmFHHso86SPJUvkfo
+         saxQ==
+X-Gm-Message-State: APjAAAXAbctm1jogYqTTujd60gplYsFf1PZW4dyZrUIRtVOQccf0woxH
+        5U9AlPGE8Ey77StZHI90yY4=
+X-Google-Smtp-Source: APXvYqwBsBlG9dItbWdejfNVxwT63Ih7nGAZs5uYnC6MyJttlG5SsgmETsoc29jAX39mCqZ5/23eSQ==
+X-Received: by 2002:a0c:f681:: with SMTP id p1mr4786101qvn.177.1552702531982;
+        Fri, 15 Mar 2019 19:15:31 -0700 (PDT)
 Received: from renatolg ([186.220.21.102])
-        by smtp.gmail.com with ESMTPSA id 136sm1323995ywl.109.2019.03.15.19.15.14
+        by smtp.gmail.com with ESMTPSA id l22sm1699994qkk.83.2019.03.15.19.15.28
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 19:15:17 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 23:15:13 -0300
+        Fri, 15 Mar 2019 19:15:31 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 23:15:26 -0300
 From:   Renato Lui Geh <renatogeh@gmail.com>
 To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
         knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
@@ -66,8 +65,8 @@ To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
 Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
         devicetree@vger.kernel.org
-Subject: [PATCH v5 08/11] staging: iio: ad7780: add SPDX identifier
-Message-ID: <4344b002e730538b737e576b7d262687ab62473c.1552700652.git.renatogeh@gmail.com>
+Subject: [PATCH v5 09/11] staging: iio: ad7780: add new copyright holder
+Message-ID: <7cfb577d4e07b00a820b35dc56c58809120f8f39.1552700652.git.renatogeh@gmail.com>
 References: <cover.1552700652.git.renatogeh@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
@@ -79,25 +78,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SPDX identifier (GPL-2.0) to the AD7780 driver.
+This patch adds a new copyright holder to the ad7780 driver.
 
 Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
 ---
- drivers/staging/iio/adc/ad7780.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/staging/iio/adc/ad7780.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
-index 568c5b4472ff..ff61ffa0da9f 100644
+index ff61ffa0da9f..23b731a92e32 100644
 --- a/drivers/staging/iio/adc/ad7780.c
 +++ b/drivers/staging/iio/adc/ad7780.c
-@@ -1,9 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
+@@ -3,6 +3,7 @@
   * AD7170/AD7171 and AD7780/AD7781 SPI ADC driver
   *
   * Copyright 2011 Analog Devices Inc.
-- *
-- * Licensed under the GPL-2.
++ * Copyright 2019 Renato Lui Geh
   */
  
  #include <linux/interrupt.h>
