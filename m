@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6679CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4B9C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D9B21019
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839BE21019
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SE3r3geE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeJ5IkT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfCPULJ (ORCPT
+        id S1727219AbfCPULM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 16:11:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38146 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfCPULH (ORCPT
+        Sat, 16 Mar 2019 16:11:12 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51916 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727106AbfCPULJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 16:11:07 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g12so12948027wrm.5
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 13:11:06 -0700 (PDT)
+        Sat, 16 Mar 2019 16:11:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n19so9491531wmi.1
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 13:11:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Eh1SUabWgl71c5qGL/tJnP6qT1vCB267CU/qf5b9RSM=;
-        b=SE3r3geEHz3eXwDd937jokH+yI/qC7SyIV1Yq34dQAtX4zPQtRF5gcGiLRpUkot16l
-         TzM0Pi4S1ogITU+AUE+xTvKz0oN3CUsejyiF1oNdRbofMnH7hk6xIis5/EeZJtswVRkJ
-         uh8YNDBabkZ0Xa4DIVSb8lTeGwtzpkBMyx0l5ptTCBOwoKAJLIFTCKTnCb255dO860cq
-         6RSTGyAf0TALXC2vHPZx0AGgx3AqRepkXHCCqRBBhJqR7Uy06gwY7gm9cvD55ki64QAL
-         NI3a1/hDzE0qGI1/nA5qkIQgtb2atFuv4pCtNXb9pve9zAtUGqNan/6HiKgJNrHDYeIu
-         icRw==
+        bh=GBTtd9QPqHk7yBLOGjinUWZDBh5MgI9dKM9ken14BGE=;
+        b=QeJ5IkT/SlBHoi07Aoc/9QmDOQe7brpizfJ6jVp7y8fMgVJFuXFUjha4Cn+Zy0LuwG
+         +dYbxaM+wSTqy6xviGd/xbSz3LyO23BMVxkgKcSYp3Pgv1qMXBv7dHT9zFufvmw1kAd7
+         km0WD15Q7vAyj1WKqIol4feR2kadHo8Ac2wFiEbeGsvLUo6cCM9gwlZjfRwxaIOh456W
+         2fTCHPVFrvOmjet72bWDpXCjhrH0eNJ5SftGQvbRmTQMfK+Qc2cCf9u6sOZBWiy1T7G/
+         6fnaHuEvC1MnAh1qBaWs0tEI3EaeYcEnJ/SJSJl6Gq41zsSp+rODnJ6bXrrh5v/z9YzX
+         fZaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Eh1SUabWgl71c5qGL/tJnP6qT1vCB267CU/qf5b9RSM=;
-        b=BFsYBM7XM6qSjfx7j5MBQc3a8MFHEJDnNkVpD0df4uHRhZd1j+Jyo2bArP1s0nle8V
-         ZQgAmf65ST/FsrRGqsiGa5gA9v7rATQBLJCq8SV/n3JtFAJVa9r6oqDIosXQHWIF9x+U
-         z3k9ZPeJGPkV1XaDkkw1RPec+EJfKrrUBPe2xnknKcFQrdoxyWuGWijBywJUZe8gFC3D
-         8iJHhpHqn5ByKMN8V5d2Xe9rvoXVjkH/xpTgtJvGw4ZyAKXNo4r+i2dCCxiyuL0CrDfx
-         LSzpOWkkwvSWRO0Qr/gd3mw1gaZcpKj9FFZIlVddLAGEf6NOyT6hhlPpu0Ew8xJ8b5nB
-         OjAQ==
-X-Gm-Message-State: APjAAAXStDfdAI9UqLFbHJcCsTRN7JLgjEgQ4Kl1NqpxeGvAH5JMLUf2
-        oc4Nv0HftEGikXKmn0ATMHrrTNNP
-X-Google-Smtp-Source: APXvYqwAZ+ny99SbTbr+toul3G2yw8QTcCWVT5epnbPrtVp/qf/2RMu/8ZQb6ToSdCrRQ8M4P5SixQ==
-X-Received: by 2002:a5d:4f82:: with SMTP id d2mr7012419wru.262.1552767065263;
-        Sat, 16 Mar 2019 13:11:05 -0700 (PDT)
+        bh=GBTtd9QPqHk7yBLOGjinUWZDBh5MgI9dKM9ken14BGE=;
+        b=TZ0x3gasxEW+JKi9ZHXNvOIJmvsqgY6Zif/ZIqHmRovmUAYxB5RIpvJ0pM1vUJRpqB
+         vUFdbGnR5jHTZiMbydyXZKnSaap8B46E9cKxMkSFhZv/rpnWYahVMyF+wWNX2B8MPOK9
+         0GxzMG9uVO1PSoOEL6BwYq5yQRGxdf25vjimqwihJgNqjKrsZnH6bDeNSd+y4GtxLDGt
+         vN2lGWu7y3eAUjAJvAtD7XwmCYyDMKbbEPtQorIDMZenQWcIEDBNwb5i5IabfpMGV9ng
+         PTdyFU3XACUMILN/GQCS6mC7WkbPtn+V9KgYMfWBK3JipEThhjn0Hk4X5+IOTLsi6nta
+         vwkw==
+X-Gm-Message-State: APjAAAXOnuEBGlc2cQPyty2yhE6dXBxAC8XIoz5XH24TT2L5Eda1p+vN
+        K8FpneXiLPTzJ4OIRTnlelwKwqYL
+X-Google-Smtp-Source: APXvYqygUW1CGyw0MSgOAggmJ1cMcq39zCRk0T+k0LCbrLvqdrs1T1e3HzYEgM2XothY7Up4M4WhnA==
+X-Received: by 2002:a7b:cd0c:: with SMTP id f12mr6127254wmj.27.1552767067783;
+        Sat, 16 Mar 2019 13:11:07 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id h10sm8722221wmf.2.2019.03.16.13.11.04
+        by smtp.gmail.com with ESMTPSA id h10sm8722221wmf.2.2019.03.16.13.11.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 16 Mar 2019 13:11:04 -0700 (PDT)
+        Sat, 16 Mar 2019 13:11:07 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
-Subject: [PATCH 2/4] habanalabs: fix bug when mapping very large memory area
-Date:   Sat, 16 Mar 2019 22:10:45 +0200
-Message-Id: <20190316201047.22516-2-oded.gabbay@gmail.com>
+Subject: [PATCH 3/4] habanalabs: complete user context cleanup before hard reset
+Date:   Sat, 16 Mar 2019 22:10:46 +0200
+Message-Id: <20190316201047.22516-3-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190316201047.22516-1-oded.gabbay@gmail.com>
 References: <20190316201047.22516-1-oded.gabbay@gmail.com>
@@ -72,59 +72,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Omer Shpigelman <oshpigelman@habana.ai>
 
-This patch fixes a bug of allocating a too big memory size with kmalloc,
-which causes a failure.
-In case of mapping a large memory block, an array of the relevant physical
-page addresses is allocated. If there are many pages the array might be
-too big to allocate with kmalloc, hence changing to kvmalloc.
+This patch fixes a bug which led to a crash during hard reset flow.
+Before a hard reset is executed, we wait a few seconds for the user
+context cleanup to complete.
+If it wasn't completed, we kill the user process and move on to the reset
+flow.
+Upon killing the user process, the context cleanup flow begins and may
+take a while due to MMU unmaps.
+Meanwhile, in the driver reset flow, we change the PCI DRAM bar location
+which can interfere with the MMU that uses the bar.
+If the context cleanup flow didn't finish quickly, a crash may occur due
+to PCI DRAM bar mislocation during the MMU unmap.
+Hence adding a wait between killing the user process and the start of the
+reset flow.
 
 Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/memory.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/misc/habanalabs/device.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
-index 4f8c968e441a..ce1fda40a8b8 100644
---- a/drivers/misc/habanalabs/memory.c
-+++ b/drivers/misc/habanalabs/memory.c
-@@ -93,7 +93,7 @@ static int alloc_device_memory(struct hl_ctx *ctx, struct hl_mem_in *args,
- 	phys_pg_pack->flags = args->flags;
- 	phys_pg_pack->contiguous = contiguous;
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index de46aa6ed154..93d67983ddba 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -11,6 +11,8 @@
+ #include <linux/sched/signal.h>
+ #include <linux/hwmon.h>
  
--	phys_pg_pack->pages = kcalloc(num_pgs, sizeof(u64), GFP_KERNEL);
-+	phys_pg_pack->pages = kvmalloc_array(num_pgs, sizeof(u64), GFP_KERNEL);
- 	if (!phys_pg_pack->pages) {
- 		rc = -ENOMEM;
- 		goto pages_arr_err;
-@@ -148,7 +148,7 @@ static int alloc_device_memory(struct hl_ctx *ctx, struct hl_mem_in *args,
- 			gen_pool_free(vm->dram_pg_pool, phys_pg_pack->pages[i],
- 					page_size);
++#define HL_PLDM_PENDING_RESET_PER_SEC	(HL_PENDING_RESET_PER_SEC * 10)
++
+ bool hl_device_disabled_or_in_reset(struct hl_device *hdev)
+ {
+ 	if ((hdev->disabled) || (atomic_read(&hdev->in_reset)))
+@@ -462,9 +464,16 @@ static void hl_device_hard_reset_pending(struct work_struct *work)
+ 	struct hl_device_reset_work *device_reset_work =
+ 		container_of(work, struct hl_device_reset_work, reset_work);
+ 	struct hl_device *hdev = device_reset_work->hdev;
+-	u16 pending_cnt = HL_PENDING_RESET_PER_SEC;
++	u16 pending_total, pending_cnt;
+ 	struct task_struct *task = NULL;
  
--	kfree(phys_pg_pack->pages);
-+	kvfree(phys_pg_pack->pages);
- pages_arr_err:
- 	kfree(phys_pg_pack);
- pages_pack_err:
-@@ -288,7 +288,7 @@ static void free_phys_pg_pack(struct hl_device *hdev,
++	if (hdev->pldm)
++		pending_total = HL_PLDM_PENDING_RESET_PER_SEC;
++	else
++		pending_total = HL_PENDING_RESET_PER_SEC;
++
++	pending_cnt = pending_total;
++
+ 	/* Flush all processes that are inside hl_open */
+ 	mutex_lock(&hdev->fd_open_cnt_lock);
+ 
+@@ -489,6 +498,19 @@ static void hl_device_hard_reset_pending(struct work_struct *work)
  		}
  	}
  
--	kfree(phys_pg_pack->pages);
-+	kvfree(phys_pg_pack->pages);
- 	kfree(phys_pg_pack);
- }
++	pending_cnt = pending_total;
++
++	while ((atomic_read(&hdev->fd_open_cnt)) && (pending_cnt)) {
++
++		pending_cnt--;
++
++		ssleep(1);
++	}
++
++	if (atomic_read(&hdev->fd_open_cnt))
++		dev_crit(hdev->dev,
++			"Going to hard reset with open user contexts\n");
++
+ 	mutex_unlock(&hdev->fd_open_cnt_lock);
  
-@@ -692,7 +692,8 @@ static int init_phys_pg_pack_from_userptr(struct hl_ctx *ctx,
- 
- 	page_mask = ~(((u64) page_size) - 1);
- 
--	phys_pg_pack->pages = kcalloc(total_npages, sizeof(u64), GFP_KERNEL);
-+	phys_pg_pack->pages = kvmalloc_array(total_npages, sizeof(u64),
-+						GFP_KERNEL);
- 	if (!phys_pg_pack->pages) {
- 		rc = -ENOMEM;
- 		goto page_pack_arr_mem_err;
+ 	hl_device_reset(hdev, true, true);
 -- 
 2.17.1
 
