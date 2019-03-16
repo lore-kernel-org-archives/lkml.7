@@ -2,199 +2,105 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCB9C10F03
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E211DC10F03
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241C3218D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Coq92k1U"
+	by mail.kernel.org (Postfix) with ESMTP id B1F0A21904
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552759251;
+	bh=EIRRMJOSKE2TTGtwsZWi5d00hSsrcDSmfBo9LBUbjrM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=c/NspI1U6qqV9XYCfdbak8ee3c07s2WIa0hc50eQ5lndOTAVLnq3X8OPinEipW+15
+	 E2qRt6cOwnQw2kpwNfPmB2EBEYM5SL868402k1cI2I/2q3BlUZfxoCYt17saHft0CE
+	 LWm8zRuvzIEQkAluxKY9hQg+hSi7txVLCbfQgJqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfCPSAY (ORCPT
+        id S1727244AbfCPSAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 14:00:24 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44819 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfCPSAY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 14:00:24 -0400
-Received: by mail-vs1-f65.google.com with SMTP id b8so7226700vsq.11
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 11:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y1KWqgI146pcCdR1U2CQh3JRG48myF0xT/kFf++SZRs=;
-        b=Coq92k1UdoV5Q253tI8ums9wCkyCqFEN3X7Ant4Okl6f1FVMmVeLNyT88lpfOsYYHp
-         m7boY9BdRcNA6TztSAc3SmEjZOU3cqBGizSS6dFShpFvBCHj9QfGc0sudpXraek+kf5u
-         0Dm+BnzXD2PF8fPHQUp315YZfEQZr6knDW6OkHhX8csU/feRgnhSICEQ9NkWv8QWW5iy
-         vGAMW5gWcAIRu+8G1q6V7PD2XLM1UxU+DXc1yK4ATZ6qrmgldBu1sIOFRWvt30FBBeTs
-         A8B+gCMYc75LlARyp9pV+JmiKDg+qig+y1WImaBSKJIGrhtklGqoOL+AlDxEizsFxX4V
-         gcHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y1KWqgI146pcCdR1U2CQh3JRG48myF0xT/kFf++SZRs=;
-        b=Fn2txHD6j48Dkoz2Sqso4YR2FcdsjZ9WqPa+iIBYUfwmPoJNUV//rKiVfzWSRiVex6
-         qK5acN6N5Yp4NfVAloLMuYUiuYNerTtO6zM0Jms2iz13Ue20tmDhpOvwGwZpq/zdPz/p
-         gqpwutvrcMATEuwP9gqMNZr5YKyR2XH2kERZ7W6CiC7QiM0Qq1NJP8WIh44bmX02DJjn
-         GZAI/99cGJjWzrhLqECfVhKlcjpweiYtGa61ipruODtSsUagwm8mw+4IMgiISewLkTRc
-         gKHgk14rHLuvg68IfiAkztowVQaQ0JU07NPSwEY91miIpHhvbByWURHPD4fwhufoFPqI
-         A9Fw==
-X-Gm-Message-State: APjAAAWP5knw1yUnxeQ77z8TOtiAj1XDAcqTATWGUT12xEosjcbhoMyH
-        tDtUoVGUCKJmoVeFrIBK5ueD3MaiptFn9UYsAPF18g==
-X-Google-Smtp-Source: APXvYqwNNvDDR6l5GKlr6n6DeDJQfVTBZUQu2nFEDyH/YbP5PqOPzwp8wG6UT3Pi6Z4ruCHRrzVBG57zi0T9tKyMSkM=
-X-Received: by 2002:a67:cc2:: with SMTP id 185mr136686vsm.77.1552759222160;
- Sat, 16 Mar 2019 11:00:22 -0700 (PDT)
+        Sat, 16 Mar 2019 14:00:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbfCPSAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 14:00:50 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A7C4218D0;
+        Sat, 16 Mar 2019 18:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552759249;
+        bh=EIRRMJOSKE2TTGtwsZWi5d00hSsrcDSmfBo9LBUbjrM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nVhc5TxviBhM/XmfDhRR3jhgF+xtHAQQqCT5VvwFzZM+IIDmPYMvpBAXk0HHdHhK2
+         0S553AnHjQxeveZcs8B4BeLMAHOdkVSM42Vrm9xKddfPfCv4g1zsKWQoY0/+LGcEU/
+         JoSUQwaOueyeY77pW6b3Pns0gHojCwHnQIcNZrB0=
+Date:   Sat, 16 Mar 2019 18:00:42 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Renato Lui Geh <renatogeh@gmail.com>
+Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
+        pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
+        giuliano.belinassi@usp.br, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-iio@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 06/11] staging:iio:ad7780: add chip ID values and
+ mask
+Message-ID: <20190316180042.369d55e6@archlinux>
+In-Reply-To: <8154410f6c1b6cdde21cfb781dbc2088f5c91d21.1552700652.git.renatogeh@gmail.com>
+References: <cover.1552700652.git.renatogeh@gmail.com>
+        <8154410f6c1b6cdde21cfb781dbc2088f5c91d21.1552700652.git.renatogeh@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190312080532.GE5721@dhcp22.suse.cz> <20190312163741.GA2762@sultan-box.localdomain>
- <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
- <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
- <20190314204911.GA875@sultan-box.localdomain> <20190314231641.5a37932b@oasis.local.home>
- <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com>
- <20190315180306.sq3z645p3hygrmt2@brauner.io> <20190315181324.GA248160@google.com>
- <20190315182426.sujcqbzhzw4llmsa@brauner.io> <20190315184903.GB248160@google.com>
- <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
-In-Reply-To: <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Sat, 16 Mar 2019 11:00:10 -0700
-Message-ID: <CAKOZueuauUXRyrvhzBD0op6W4TAnydSx92bvrPN2VRWERX8iQg@mail.gmail.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 10:31 AM Suren Baghdasaryan <surenb@google.com> wrote:
->
-> On Fri, Mar 15, 2019 at 11:49 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Fri, Mar 15, 2019 at 07:24:28PM +0100, Christian Brauner wrote:
-> > [..]
-> > > > why do we want to add a new syscall (pidfd_wait) though? Why not just use
-> > > > standard poll/epoll interface on the proc fd like Daniel was suggesting.
-> > > > AFAIK, once the proc file is opened, the struct pid is essentially pinned
-> > > > even though the proc number may be reused. Then the caller can just poll.
-> > > > We can add a waitqueue to struct pid, and wake up any waiters on process
-> > > > death (A quick look shows task_struct can be mapped to its struct pid) and
-> > > > also possibly optimize it using Steve's TIF flag idea. No new syscall is
-> > > > needed then, let me know if I missed something?
-> > >
-> > > Huh, I thought that Daniel was against the poll/epoll solution?
-> >
-> > Hmm, going through earlier threads, I believe so now. Here was Daniel's
-> > reasoning about avoiding a notification about process death through proc
-> > directory fd: http://lkml.iu.edu/hypermail/linux/kernel/1811.0/00232.html
-> >
-> > May be a dedicated syscall for this would be cleaner after all.
->
-> Ah, I wish I've seen that discussion before...
-> syscall makes sense and it can be non-blocking and we can use
-> select/poll/epoll if we use eventfd.
+On Fri, 15 Mar 2019 23:14:27 -0300
+Renato Lui Geh <renatogeh@gmail.com> wrote:
 
-Thanks for taking a look.
+> The ad7780 supports both the ad778x and ad717x families. Each chip has
+> a corresponding ID. This patch provides a mask for extracting ID values
+> from the status bits and also macros for the correct values for the
+> ad7170, ad7171, ad7780 and ad7781.
+> 
+> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+I'll admit I find it hard to summon an enthusiasm for this patch, but
+it does no harm and I don't want to delay the following ones.
 
-> I would strongly advocate for
-> non-blocking version or at least to have a non-blocking option.
+Hence applied anyway.
 
-Waiting for FD readiness is *already* blocking or non-blocking
-according to the caller's desire --- users can pass options they want
-to poll(2) or whatever. There's no need for any kind of special
-configuration knob or non-blocking option. We already *have* a
-non-blocking option that works universally for everything.
+Jonathan
 
-As I mentioned in the linked thread, waiting for process exit should
-work just like waiting for bytes to appear on a pipe. Process exit
-status is just another blob of bytes that a process might receive. A
-process exit handle ought to be just another information source. The
-reason the unix process API is so awful is that for whatever reason
-the original designers treated processes as some kind of special kind
-of resource instead of fitting them into the otherwise general-purpose
-unix data-handling API. Let's not repeat that mistake.
+> ---
+> Changes in v5:
+>  - Put AD7780_ID{0,1} back
+> 
+>  drivers/staging/iio/adc/ad7780.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
+> index 94cb60c327d0..977b381c1260 100644
+> --- a/drivers/staging/iio/adc/ad7780.c
+> +++ b/drivers/staging/iio/adc/ad7780.c
+> @@ -30,6 +30,12 @@
+>  #define AD7780_ID0		BIT(3)
+>  #define AD7780_GAIN		BIT(2)
+>  
+> +#define AD7170_ID		0
+> +#define AD7171_ID		1
+> +#define AD7780_ID		1
+> +#define AD7781_ID		0
+> +
+> +#define AD7780_ID_MASK		(AD7780_ID0 | AD7780_ID1)
+>  
+>  #define AD7780_PATTERN_GOOD	1
+>  #define AD7780_PATTERN_MASK	GENMASK(1, 0)
 
-> Something like this:
->
-> evfd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
-> // register eventfd to receive death notification
-> pidfd_wait(pid_to_kill, evfd);
-> // kill the process
-> pidfd_send_signal(pid_to_kill, ...)
-> // tend to other things
-
-Now you've lost me. pidfd_wait should return a *new* FD, not wire up
-an eventfd.
-
-Why? Because the new type FD can report process exit *status*
-information (via read(2) after readability signal) as well as this
-binary yes-or-no signal *that* a process exited, and this capability
-is useful if you want to the pidfd interface to be a good
-general-purpose process management facility to replace the awful
-wait() family of functions. You can't get an exit status from an
-eventfd. Wiring up an eventfd the way you've proposed also complicates
-wait-causality information, complicating both tracing and any priority
-inheritance we might want in the future (because all the wakeups gets
-mixed into the eventfd and you can't unscramble an egg). And for what?
-What do we gain by using an eventfd? Is the reason that exit.c would
-be able to use eventfd_signal instead of poking a waitqueue directly?
-How is that better? With an eventfd, you've increased path length on
-process exit *and* complicated the API for no reason.
-
-> ...
-> // wait for the process to die
-> poll_wait(evfd, ...);
->
-> This simplifies userspace
-
-Not relative to an exit handle it doesn't.
-
->, allows it to wait for multiple events using
-> epoll
-
-So does a process exit status handle.
-
-> and I think kernel implementation will be also quite simple
-> because it already implements eventfd_signal() that takes care of
-> waitqueue handling.
-
-What if there are multiple eventfds registered for the death of a
-process? In any case, you need some mechanism to find, upon process
-death, a list of waiters, then wake each of them up. That's either a
-global search or a search in some list rooted in a task-related
-structure (either struct task or one of its friends). Using an eventfd
-here adds nothing, since upon death, you need this list search
-regardless, and as I mentioned above, eventfd-wiring just makes the
-API worse.
-
-> If pidfd_send_signal could be extended to have an optional eventfd
-> parameter then we would not even have to add a new syscall.
-
-There is nothing wrong with adding a new system call. I don't know why
-there's this idea circulating that adding system calls is something we
-should bend over backwards to avoid. It's cheap, and support-wise,
-kernel interface is kernel interface. Sending a signal has *nothing*
-to do with wiring up some kind of notification and there's no reason
-to mingle it with some kind of event registration.
