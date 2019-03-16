@@ -2,113 +2,149 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A30ADC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D40C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BC4218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D90218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jmrYFc2t"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="qF6XXrT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfCPWHO (ORCPT
+        id S1726904AbfCPWIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 18:07:14 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41821 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbfCPWHN (ORCPT
+        Sat, 16 Mar 2019 18:08:48 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:47240 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfCPWIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 18:07:13 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v7so413127oie.8
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 15:07:13 -0700 (PDT)
+        Sat, 16 Mar 2019 18:08:47 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 203A7839
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 22:08:46 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id sgwG3Zee416T for <linux-kernel@vger.kernel.org>;
+        Sat, 16 Mar 2019 17:08:45 -0500 (CDT)
+Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id CFE7D70E
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 17:08:45 -0500 (CDT)
+Received: by mail-it1-f198.google.com with SMTP id q184so11289882itd.6
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 15:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tXsxzgOzwviiw4AI4/JgeuPKkrzL6ZPUgu2mPVy+R+0=;
-        b=jmrYFc2twfhtugmBZiBKqT2lnFEZhHB6hAxGf9HZBAtXvOE/0dcuspf2Xovr6LEda5
-         a76kDDUts2lrmXdGKNqd9QibMUx+ctmGlGkS8QWYyfPq5IuORLoT839vHT08tvt1Xld+
-         LdmF9udyXSJX1PNAc/h9ePp3ULfbSNqjnMl5gX391Lwhtug7nNXmfb3awucXS5g7HITQ
-         USH34NmV3KA/d0oJJjAwQv8Qo0wiYan/PmQf/KADOD+kww8vHN+JaeLXtTl+ZcCAx8ZZ
-         CUjdw6FT2XHgwztRgRYyGuxm1Bsq/lEsvrS9pg4gPR+IrPe3z+FNaqkU9oqAuz2UO9C+
-         JaWQ==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=cSFq9gi/n+o1aAJXKdC2m4mpRxXnRFu9Q4meSx6wM4M=;
+        b=qF6XXrT8MXGLism1ur8qpXLILExLf7bGeWE2YTeG7FeRdzWHyclXIrs3ToaPZMbqI1
+         RdzMVjcD83k3ivMeODxyMmjldvl5W0Kjqw29O6Od23Gd9Wg1Ip8r294lk3JJUx2mMHAo
+         TRaxd+TCRiL3pvU4ZTzPHHYgv1uI+ecYlWrd1PAeJ18/xCO/nFtVYrtsq7vvWfk5ejhU
+         NcTQx71mq0WQdlTnO2A4rChC5hmvgtMxQsB1/vZgvrsn3pdnhZuTGqzG+Nzoqo1BgyHy
+         n3CsshZiSyLM2IYhcXCrB3WJFV5yddLzhYM7WytZcf9XbOYS7WXp/aHP3tX2DboR6G/q
+         B+eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tXsxzgOzwviiw4AI4/JgeuPKkrzL6ZPUgu2mPVy+R+0=;
-        b=NSJjYMOIzG97jBc5Hr8reuTEY56lv0yUCc7+tWofFdtLO9DiA7FCIdtUbTn4pcwOQu
-         JOaLPr5IV5C8Ei4+HAgVz0kJyeHfamn5P8gTVm/dSx/NBcJuYFHgbady58MBV3Sz8Faf
-         pL5qgo6pUqxdeUCfk/CMZrDa/3fTwexp0H12bYtjbadn2Vno+LYdP2yjfg5GfUk5FKVQ
-         kHop49NKB2fHvf19u3HCpo3H+jIZHAGljJUdR2+hOWaaGsS0ruovqaPBiGvyvfcwcBeM
-         16p6ueseJlis6pwY1BGAHNrH8S7/8lDz7Um4JVF/oXH0QK+w2FL6WV7wwCvprAl6iuDQ
-         XdWA==
-X-Gm-Message-State: APjAAAULffsllSGUqvufx1MmG5udWwLo/9ASto12MpJllL8GnRBbwGMD
-        1ciyTRJX2IPiGcTxGoAjfISNNmzDJF9Std2ouf647g==
-X-Google-Smtp-Source: APXvYqz2qdKtizHFrUWgbw9SI74hQFePNHOcYi7eqSq+Mb1r10fY1LjN2DiRVxT7kSLzXrz9oJuFfnuXEiGsB4EQAtM=
-X-Received: by 2002:aca:4205:: with SMTP id p5mr5798922oia.15.1552774032538;
- Sat, 16 Mar 2019 15:07:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190311095613.11371-1-narmstrong@baylibre.com>
- <20190311095613.11371-12-narmstrong@baylibre.com> <CAFBinCDU_6JEJJS8yZkq0rjbqKcy2eBKFaYqgX3txGMiO5U9Fg@mail.gmail.com>
- <5C8D0C2B.2010605@baylibre.com>
-In-Reply-To: <5C8D0C2B.2010605@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 16 Mar 2019 23:07:01 +0100
-Message-ID: <CAFBinCDyTPLr+fNptpHa664pMqvp4X3Tv6166h_C+b0gHBJ-ZA@mail.gmail.com>
-Subject: Re: [PATCH 11/11] arm64: dts: meson-g12a-x96-max: Enable USB
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=cSFq9gi/n+o1aAJXKdC2m4mpRxXnRFu9Q4meSx6wM4M=;
+        b=jXYmxlHu3+4iVqNJMcjsXhwDmkhqEtUcT9yFq0iayhluAOjEE4hYTMcYOq4s00II10
+         7B5+5X2H1Y8zi1Vo5tuwl8rs08wue+2zcw5G1BXcS0BtFASrW308sQTPEhLbH6TAZ73R
+         VcDKpEEW7e7Di2FQddSd0cIh+mC4VnQ5dx8fPFmQVfiRo6hDkjGTZec+Fo070atfeTaE
+         ABLxVYsz61xAP2M3Q+vTkX+wMBDSJLEQYBk6hYRiN71P2qPp2Dx8E6RjQ3BNcGwpYy2V
+         hxxDZwNLjrZJo+GLBixypOcWYnRijY4nCTs/NCsZ+64jNUcYouJDpN3z7YtCm/uGoTjz
+         hxUA==
+X-Gm-Message-State: APjAAAXryK4A5Z+7NWlabed7X3A9lJFry0649UISvmKY+4zw2AXJDVPb
+        NN2yQPmNr9OChIIsGZmTZ1YLwA4OfAgAFvL9+nicVGGJSfwUYZFV+mKOa05o0IAirfD3qbpmcOE
+        jqd5K1TLzHNXVOuLg3mIJ+ktS2EPB
+X-Received: by 2002:a05:660c:185:: with SMTP id v5mr6543041itj.34.1552774124098;
+        Sat, 16 Mar 2019 15:08:44 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyRsOT/r0to0mKwwjc3BTUyUPNDoWDmjKJ94EJ0/l1TxEJC5kf5fvYREwaqde98Oxy6Z2Hm9w==
+X-Received: by 2002:a05:660c:185:: with SMTP id v5mr6543028itj.34.1552774123897;
+        Sat, 16 Mar 2019 15:08:43 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id s142sm3070512itb.37.2019.03.16.15.08.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 16 Mar 2019 15:08:42 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iio: hmc5843: fix potential NULL pointer dereferences
+Date:   Sat, 16 Mar 2019 17:08:33 -0500
+Message-Id: <20190316220836.25092-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190316151912.4a7ea87d@archlinux>
+References: <20190316151912.4a7ea87d@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+devm_regmap_init_i2c may fail and return NULL. The fix returns
+the error when it fails.
 
-On Sat, Mar 16, 2019 at 3:46 PM Neil Armstrong <narmstrong@baylibre.com> wr=
-ote:
->
->
->
-> Le 15/03/2019 22:50, Martin Blumenstingl a =C3=A9crit :
-> > Hi Neil,
-> >
-> > On Mon, Mar 11, 2019 at 10:58 AM Neil Armstrong <narmstrong@baylibre.co=
-m> wrote:
-> > [...]
-> >> +&dwc2 {
-> >> +       status =3D "okay";
-> >> +};
-> > your patch description states that this enables the "USB host ports"
-> > but dwc2 is only used for peripheral mode (meaning: dr_mode =3D
-> > "peripheral" or dr_mode =3D "otg").
-> > do we still need to enable dwc2 in a host-only configuration?
->
-> DWC2 is peripheral-only, but we can still manually switch one of the
-> ports and use it as peripheral with a Type-A to Type-A cable, thus
-> enabling dwc2.
-thank you for the explanation!
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+V2: fix the two together
+---
+ drivers/iio/magnetometer/hmc5843_i2c.c | 7 ++++++-
+ drivers/iio/magnetometer/hmc5843_spi.c | 7 ++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-> If the OTG capable PHYs was behind an USB Hub or directly connected to
-> a device, we could disable dwc2, but for now this port is always tied
-> to a physical Type-A or micro-USB connector.
->
-> Maybe it would be sane to always enable dwc2, and disable it for specific
-> boards only.
-In case the port is connected to an USB hub we can add a comment to
-the .dts to explain why dwc2 is being disabled. that way we don't need
-a comment in each board.dts that it's enabled to support forced mode
-switching.
-in other words: I like this idea!
+diff --git a/drivers/iio/magnetometer/hmc5843_i2c.c b/drivers/iio/magnetometer/hmc5843_i2c.c
+index 3de7f4426ac4..86abba5827a2 100644
+--- a/drivers/iio/magnetometer/hmc5843_i2c.c
++++ b/drivers/iio/magnetometer/hmc5843_i2c.c
+@@ -58,8 +58,13 @@ static const struct regmap_config hmc5843_i2c_regmap_config = {
+ static int hmc5843_i2c_probe(struct i2c_client *cli,
+ 			     const struct i2c_device_id *id)
+ {
++	struct regmap *regmap = devm_regmap_init_i2c(cli,
++			&hmc5843_i2c_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
+ 	return hmc5843_common_probe(&cli->dev,
+-			devm_regmap_init_i2c(cli, &hmc5843_i2c_regmap_config),
++			regmap,
+ 			id->driver_data, id->name);
+ }
+ 
+diff --git a/drivers/iio/magnetometer/hmc5843_spi.c b/drivers/iio/magnetometer/hmc5843_spi.c
+index 535f03a70d63..8355713651d4 100644
+--- a/drivers/iio/magnetometer/hmc5843_spi.c
++++ b/drivers/iio/magnetometer/hmc5843_spi.c
+@@ -58,6 +58,7 @@ static const struct regmap_config hmc5843_spi_regmap_config = {
+ static int hmc5843_spi_probe(struct spi_device *spi)
+ {
+ 	int ret;
++	struct regmap *regmap;
+ 	const struct spi_device_id *id = spi_get_device_id(spi);
+ 
+ 	spi->mode = SPI_MODE_3;
+@@ -67,8 +68,12 @@ static int hmc5843_spi_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
++	regmap = devm_regmap_init(spi, &hmc5843_spi_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(devm_regmap);
++
+ 	return hmc5843_common_probe(&spi->dev,
+-			devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config),
++			regmap,
+ 			id->driver_data, id->name);
+ }
+ 
+-- 
+2.17.1
 
-
-Regards
-Martin
