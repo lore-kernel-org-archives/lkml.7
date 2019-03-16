@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E134C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13E2C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBE1218FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6C2218FC
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5zBP7eP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiI80oTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfCPIGh (ORCPT
+        id S1726915AbfCPIGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 04:06:37 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43920 "EHLO
+        Sat, 16 Mar 2019 04:06:45 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38501 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfCPIGf (ORCPT
+        with ESMTP id S1725940AbfCPIGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 04:06:35 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l11so7997599pgq.10;
-        Sat, 16 Mar 2019 01:06:35 -0700 (PDT)
+        Sat, 16 Mar 2019 04:06:43 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v1so3300262pgi.5;
+        Sat, 16 Mar 2019 01:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XgzEfOgCr8vqVuMIo/FFofdpmPOyzi7oCw3Jm8x3KtE=;
-        b=C5zBP7ePwtlYPJqO1Jk5YeMrp4ENlY5Z6BUTygKhVD74gGV2valvOaJcUBGcU9AjM0
-         /oE7r79Kq8bZ3mo7BrmlHDwEr3gQflh3zhwexu51xOQNFJulJbEgp4KQ/Kp1Ep5LaGWw
-         vht+JsOWRDXzKV190ypLU3pNaBW/zMGJfR3x5cDPxcdtr3sw081/uEc81Ntk1xs6Gjda
-         vw3usQBhq/cbWaxRCU3BQ2IvEpLsrCLDo+dzN5bcr1vbggnrgeMroeOBU+FXdnI0jQf2
-         SrOyY0bzdKzNFuRkECN/WfxPny6B/dkKMpBcrHXMXNgZaFGVetwsWfH/yWjcildr2DOi
-         +6iw==
+        bh=1BatEiN8TSrqKTiuAG+kfnJ6RuvMPntciT2BLT6L9U0=;
+        b=NiI80oTxugyn8Gzkke8Q+wHZzqSsJFlBbzbF+s0tzWXPCfO4T1ePk9MKIIfeY7O+ax
+         wnUB9iCKMMUC930SpeZIIsgTR9G8rflHnU3CWxt1KDFf1kvVIm4KOAHS2TO1BnLcXxSo
+         uVS45utCizDVyAUlNnhSRcbL5yodwtgCERI86SZJBXv8cNSFCtMYpEemG31gbiNuXgtZ
+         scypJaejQl7sGky+FEMLYcjfOC8mRIYEZXgYuorVoJlKgemSd6hns2uAr/PBeA7sePjK
+         eora+7AEIsZ1Ou7FdPYITt288PPykM8pXLi8U+aGyCFxj3WoXPcbFk2gxGcvy1OC8cAZ
+         O2Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XgzEfOgCr8vqVuMIo/FFofdpmPOyzi7oCw3Jm8x3KtE=;
-        b=uRkUzyIAwb7f3XVBCdQz+fpsk150W81W1s29Gxyihg8s16ZWmq8mG06dVLCjbQmltU
-         2K+sAYF90vkE1qmNfvzgzTl9vHwk2jwoDJSZK4WdutnssxB8vb3zBAMYDPgDQ30VEU6F
-         HEkFPtJU38wpRg/myf7aplSmiThEo/gd+MkTHwjwgxtqJbUVrskXJAdNIa915oSHolGf
-         p2eMfI/hOX1DwyB6ZpWsTqh67IJW6jiArvBQget/rQ5Zd/NHqnqgdaMvNJWjoQJoIS/2
-         MkxLGCQH/RMucFUWcmmRsXBjoECyxUViWgP7u9P9eOPAd5nZN2VPQdPXfYpvBuqPVGtY
-         xD6w==
-X-Gm-Message-State: APjAAAWlPtJQEzS8iely/0KKHvYefLlu+0+Ub68LvpU5Tn2u/6ZjBnsQ
-        m1vA/8FlgwBUG/IViFvDvx4=
-X-Google-Smtp-Source: APXvYqy/CEmclWXHp+N1rdEw50IJ1fiLXRHH0nrAHL9D+2lKTWPi89qW73qG2DRmIaiWqXRbGrRR0Q==
-X-Received: by 2002:a63:35ce:: with SMTP id c197mr7430635pga.281.1552723594985;
-        Sat, 16 Mar 2019 01:06:34 -0700 (PDT)
+        bh=1BatEiN8TSrqKTiuAG+kfnJ6RuvMPntciT2BLT6L9U0=;
+        b=MzmNT76HfsFhtlarDWM2CJkmsX7T7H4apZJX2zhf5EsQ18qTqGkM3KQuiJePQ+EaZm
+         nPVwQM7zntmnv6UMRJvbmd0Re9uElO3uACNT6yeDWWstv7XB9vlj6zovVGPQOn1dVFLp
+         NuexZLbcZ0IL90lkSERpWURj73VSafKIYqjBdwsa9B36sz/vErAYiCRrURwKUDDo/mzC
+         lKfZhL7/mRESVRl08s9CdaPNxvaHmWOnNgndG3q/U1aH3tX63PP7YYARi84gFajo//dd
+         FzcIxsnGtgTfiyByqYuzJFbb2/jkDpZppwg0sueYu2eNznOL/ak98mMaVkTfxjUfwB3N
+         ktNQ==
+X-Gm-Message-State: APjAAAVEhtM03zJHN3M1PFtiV8ahmIEofJ88OV4vuvNcfWGfa86zarlS
+        OfUS9MoqazViJivKq8Xq04Y=
+X-Google-Smtp-Source: APXvYqxQWKTx+YhBBG6y+CifqGRzwRj4YRJXdeStDZ4LYNFw+a3tbhOB3MZ7DCfzmbKByL72bfY1UA==
+X-Received: by 2002:a63:e101:: with SMTP id z1mr7546298pgh.190.1552723602542;
+        Sat, 16 Mar 2019 01:06:42 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id y14sm10690975pgs.47.2019.03.16.01.06.29
+        by smtp.gmail.com with ESMTPSA id y14sm10690975pgs.47.2019.03.16.01.06.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 16 Mar 2019 01:06:34 -0700 (PDT)
+        Sat, 16 Mar 2019 01:06:41 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>
@@ -65,52 +65,91 @@ Cc:     namhyung@kernel.org, Ingo Molnar <mingo@redhat.com>,
         Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 02/16] perf: list: fix memory leak in function is_event_supported
-Date:   Sat, 16 Mar 2019 16:05:42 +0800
-Message-Id: <20190316080556.3075-3-changbin.du@gmail.com>
+Subject: [PATCH 03/16] perf: fix errors under optimization level '-Og'
+Date:   Sat, 16 Mar 2019 16:05:43 +0800
+Message-Id: <20190316080556.3075-4-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190316080556.3075-1-changbin.du@gmail.com>
 References: <20190316080556.3075-1-changbin.du@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't forget to put the allocated thread_map.
+Optimization level '-Og' offers a reasonable level of optimization while
+maintaining fast compilation and a good debugging experience. This patch
+tries to make it work.
 
-Direct leak of 2048 byte(s) in 64 object(s) allocated from:
-  6     #0 0x7f606512e370 in __interceptor_realloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee370)
-  7     #1 0x556b0f1d7ddd in thread_map__realloc util/thread_map.c:43
-  8     #2 0x556b0f1d84c7 in thread_map__new_by_tid util/thread_map.c:85
-  9     #3 0x556b0f0e045e in is_event_supported util/parse-events.c:2250
- 10     #4 0x556b0f0e1aa1 in print_hwcache_events util/parse-events.c:2382
- 11     #5 0x556b0f0e3231 in print_events util/parse-events.c:2514
- 12     #6 0x556b0ee0a66e in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
- 13     #7 0x556b0f01e0ae in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
- 14     #8 0x556b0f01e859 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
- 15     #9 0x556b0f01edc8 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
- 16     #10 0x556b0f01f71f in main /home/changbin/work/linux/tools/perf/perf.c:520
- 17     #11 0x7f6062ccf09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+$ make DEBUG=1 EXTRA_CFLAGS='-Og'
+bench/epoll-ctl.c: In function ‘do_threads’:
+bench/epoll-ctl.c:274:9: error: ‘ret’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  return ret;
+         ^~~
+...
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- tools/perf/util/parse-events.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/bpf/libbpf.c                  | 2 +-
+ tools/perf/bench/epoll-ctl.c            | 2 +-
+ tools/perf/bench/epoll-wait.c           | 2 +-
+ tools/perf/tests/backward-ring-buffer.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 4dcc01b2532c..2e9035c4c252 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2271,6 +2271,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 		perf_evsel__delete(evsel);
- 	}
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index d5b830d60601..a37dac0a016e 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -622,7 +622,7 @@ bpf_object__init_maps(struct bpf_object *obj, int flags)
+ 	bool strict = !(flags & MAPS_RELAX_COMPAT);
+ 	int i, map_idx, map_def_sz, nr_maps = 0;
+ 	Elf_Scn *scn;
+-	Elf_Data *data;
++	Elf_Data *data = NULL;
+ 	Elf_Data *symbols = obj->efile.symbols;
  
-+	thread_map__put(tmap);
- 	return ret;
- }
+ 	if (obj->efile.maps_shndx < 0)
+diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
+index 0c0a6e824934..2af067859966 100644
+--- a/tools/perf/bench/epoll-ctl.c
++++ b/tools/perf/bench/epoll-ctl.c
+@@ -224,7 +224,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
+ 	pthread_attr_t thread_attr, *attrp = NULL;
+ 	cpu_set_t cpuset;
+ 	unsigned int i, j;
+-	int ret;
++	int ret = 0;
  
+ 	if (!noaffinity)
+ 		pthread_attr_init(&thread_attr);
+diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+index 5a11534e96a0..fe85448abd45 100644
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -293,7 +293,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
+ 	pthread_attr_t thread_attr, *attrp = NULL;
+ 	cpu_set_t cpuset;
+ 	unsigned int i, j;
+-	int ret, events = EPOLLIN;
++	int ret = 0, events = EPOLLIN;
+ 
+ 	if (oneshot)
+ 		events |= EPOLLONESHOT;
+diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
+index 6d598cc071ae..1a9c3becf5ff 100644
+--- a/tools/perf/tests/backward-ring-buffer.c
++++ b/tools/perf/tests/backward-ring-buffer.c
+@@ -18,7 +18,7 @@ static void testcase(void)
+ 	int i;
+ 
+ 	for (i = 0; i < NR_ITERS; i++) {
+-		char proc_name[10];
++		char proc_name[15];
+ 
+ 		snprintf(proc_name, sizeof(proc_name), "p:%d\n", i);
+ 		prctl(PR_SET_NAME, proc_name);
 -- 
 2.19.1
 
