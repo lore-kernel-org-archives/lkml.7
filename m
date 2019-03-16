@@ -2,145 +2,118 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24F1C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 16:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB4AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 16:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33D621903
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 16:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552752292;
-	bh=5avZoldc/VBWuRfMH3d1vTyehdbIwFRq6i5kyyDhAaQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TE5eNBYJNMAzBBvFmn9icYF2aZdQL7QpTwxEGIh3cSfExZRAjV4mvbyiDXXQUJ7AF
-	 2L1fmLQ8UPFvzogrAY2AU6IxduTw4n75OHfkxNQD2fo5QBRGA4Sl4L82PxrVUMvsbL
-	 RPUV79P+KQ+9nn3HeHD4MXeMMdNKzNUotCYE4zFU=
+	by mail.kernel.org (Postfix) with ESMTP id B7F4E21900
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 16:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NvrwuZ+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfCPQEv (ORCPT
+        id S1726982AbfCPQH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 12:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbfCPQEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 12:04:50 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2146521900;
-        Sat, 16 Mar 2019 16:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552752289;
-        bh=5avZoldc/VBWuRfMH3d1vTyehdbIwFRq6i5kyyDhAaQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nBYdRYXzQvVORXfaw0odMpB8+8jxy1ApWcPzecawPGZs6VMqFsqGHczdQCsIXQjyc
-         91l9iCz8FXCCPB9ptB6MVLZUdxK5a2a1JPRBRGSGPvscJD6wdR09PLlJWdRvAxvo2f
-         MfEYoTtSJO2hBsNmSsXB1GfhpbL9zA0nF1fOiu/4=
-Date:   Sat, 16 Mar 2019 16:04:43 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Stefan Popa <stefan.popa@analog.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <Michael.Hennerich@analog.com>, <gregkh@linuxfoundation.org>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: imu: adis16480: Document
- external clock
-Message-ID: <20190316160443.4252ae30@archlinux>
-In-Reply-To: <1552297597-26640-1-git-send-email-stefan.popa@analog.com>
-References: <1552297597-26640-1-git-send-email-stefan.popa@analog.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 Mar 2019 12:07:26 -0400
+Received: from mail-io1-f46.google.com ([209.85.166.46]:44855 "EHLO
+        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfCPQH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 12:07:26 -0400
+Received: by mail-io1-f46.google.com with SMTP id u12so10848680iop.11
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 09:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dqevfmxoyMI/aj2Yk4IbEfN3VVA7deEP+msqdb6wo2k=;
+        b=NvrwuZ+YW87KZCtOcGAg6k1hS8a4qx1ohitFOUIRfqMF1w8/xA0JIfJA7Vq19tsQUr
+         hjLElj0VG4LB1Do3i6fFaXpTZBM0UkfJ3z2A+BcYJMB7Cr8k6vWHIS/Ma/ecPq3CUc0V
+         NAA3zuiGyxepUoVZNaaYtcm6vqZCstysP4ROE82+siB4oEIHCU93Roh4zerTkNfR9THK
+         Fdu66b0E/H4Zi2C/9Cw/vke4ABiW4KmwJhht2ePrEY/WoX6L9VfyLfy6FWwLq+A4OPpl
+         qA1jfD8zEqcm3ouww9FNt+HLdjHcBq8ghyHLi8vmqmifdYtxQC4/RsE32kgJ5kb17pGs
+         PqVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dqevfmxoyMI/aj2Yk4IbEfN3VVA7deEP+msqdb6wo2k=;
+        b=qiK9NXtQvMcUqC9+N5HafQL8584qxz6+lSM/wBq5uoqtBnItV3+ZSiHss4N5aMW19I
+         y7OYVSWZl0ixV+o2cos4dsR9vEFmrGudwYZhefXyvcnL9BexRS1HBSxSeqEk6n4dcfyE
+         JMBslpv/tXhDIwrnohlAOHjKFj1eLG9oCgi6uZWhIzBY2sAzjeXDbK3fwqeI0GLT+fOP
+         wb/dUOT+HUZr2nk9YCQO2qNYFy8uvr1weaebAfaMxIYSLgMaLmOdMuRGqJ6Jt49PGkZQ
+         3wf529ibNZGm88e/nJbFDsrDZryunnAO2GEDLh3sGZXDvQbtZ9FxI5K5Jk9TgTuL7kAT
+         bA/A==
+X-Gm-Message-State: APjAAAU3rUgK7PednqZ3XRLWkFdvN2LU0seKdd6QNDrwwWDo67v+fjXz
+        LBOM0ldQ/cQU9ik9fIVhn1TaVDOLXuS7GKMDzEZ3sQb48i656Q==
+X-Google-Smtp-Source: APXvYqy7E69c8xSFC++LpXd4h5BNSKlWUOwEiIkL1XFF94Vmqk0HShkUOeoBdbuKD+0aiIU1z0KwuETBdwpyZzLAHu0=
+X-Received: by 2002:a6b:c3cc:: with SMTP id t195mr5932067iof.11.1552752445496;
+ Sat, 16 Mar 2019 09:07:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <000000000000551b80057d31a5f7@google.com> <00000000000093e58e0584374110@google.com>
+ <20190316165241.2855f966@elisabeth>
+In-Reply-To: <20190316165241.2855f966@elisabeth>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sat, 16 Mar 2019 17:07:13 +0100
+Message-ID: <CACT4Y+ZCc70MNC+BVhXjE7BX=CavZxYPduzz+9imz7FBfQ586Q@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in tick_sched_handle
+To:     Stefano Brivio <sbrivio@redhat.com>
+Cc:     syzbot <syzbot+09d51a30df9fe76edb2a@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 11:46:37 +0200
-Stefan Popa <stefan.popa@analog.com> wrote:
+On Sat, Mar 16, 2019 at 4:53 PM Stefano Brivio <sbrivio@redhat.com> wrote:
+>
+> On Sat, 16 Mar 2019 07:49:01 -0700
+> syzbot <syzbot+09d51a30df9fe76edb2a@syzkaller.appspotmail.com> wrote:
+>
+> > syzbot has bisected this bug to:
+> >
+> > commit b8a51b38e4d4dec3e379d52c0fe1a66827f7cf1e
+> > Author: Stefano Brivio <sbrivio@redhat.com>
+> > Date:   Thu Nov 8 11:19:23 2018 +0000
+> >
+> >      fou, fou6: ICMP error handlers for FoU and GUE
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16f943e7200000
+> > start commit:   b8a51b38 fou, fou6: ICMP error handlers for FoU and GUE
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=15f943e7200000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=11f943e7200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b05cfdb4ee8ab9b2
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=09d51a30df9fe76edb2a
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17359fab400000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=154a2a37400000
+> >
+> > Reported-by: syzbot+09d51a30df9fe76edb2a@syzkaller.appspotmail.com
+> > Fixes: b8a51b38 ("fou, fou6: ICMP error handlers for FoU and GUE")
+>
+> Might be fixed by bc6e019b6ee6 ("fou: Prevent unbounded recursion in GUE
+> error handler also with UDP-Lite"), testing/checking now.
 
-> Add documentation for optional use of external clock. All devices
-> supported by this driver can work with an external clock in sync mode.
-> Another mode, called Pulse Per Second (PPS) is supported only by adis1649x
-> devices. The mode is selected by using the "clock-names" property.
-> 
-> The pin which is used as external clock input is selected by using a
-> custom optional property called "adi,ext-clk-pin". If this field is left
-> empty, DIO2 is assigned as default external clock input pin.
-> 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-This seems standard enough, but if Rob or anyone else wants to comment
-I won't be pushing this out as non-rebaseing for a few more days at least.
+Yes, most likely it is. The bug was just never closed as fixed. But
+the last crash happened 2 months ago.
+So I would say we just mark this as fixed:
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+#syz fix:
+fou: Prevent unbounded recursion in GUE error handler also with UDP-Lite
 
-Thanks,
-
-Jonathan
-
-> ---
-> Changes in v2:
-> 	- Mentioned that both "clocks" and "clock-names" fields should be left
-> 	  empty for internal clock to be used.
-> 
->  .../devicetree/bindings/iio/imu/adi,adis16480.txt  | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> index 39ab016..ed7783f 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> @@ -34,6 +34,39 @@ Optional properties:
->  	signal.
->  - reset-gpios: must be the device tree identifier of the RESET pin. As the line
->  	is active low, it should be marked GPIO_ACTIVE_LOW.
-> +- clocks: phandle to the external clock. Should be set according to
-> +	"clock-names".
-> +	If this field is left empty together with the "clock-names" field, then
-> +	the internal clock is used.
-> +- clock-names: The name of the external clock to be used. Valid values are:
-> +	* sync: In sync mode, the internal clock is disabled and the frequency
-> +		of the external clock signal establishes therate of data
-> +		collection and processing. See Fig 14 and 15 in the datasheet.
-> +		The clock-frequency must be:
-> +		* 3000 to 4500 Hz for adis1649x devices.
-> +		* 700 to 2400 Hz for adis1648x devices.
-> +	* pps: In Pulse Per Second (PPS) Mode, the rate of data collection and
-> +	       production is equal to the product of the external clock
-> +	       frequency and the scale factor in the SYNC_SCALE register, see
-> +	       Table 154 in the datasheet.
-> +	       The clock-frequency must be:
-> +	       * 1 to 128 Hz for adis1649x devices.
-> +	       * This mode is not supported by adis1648x devices.
-> +	If this field is left empty together with the "clocks" field, then the
-> +	internal clock is used.
-> +- adi,ext-clk-pin: The DIOx line to be used as an external clock input.
-> +	Valid values are:
-> +	* DIO1
-> +	* DIO2
-> +	* DIO3
-> +	* DIO4
-> +	Each DIOx pin supports only one function at a time (data ready line
-> +	selection or external clock input). When a single pin has two
-> +	two assignments, the enable bit for the lower priority function
-> +	automatically resets to zero (disabling the lower priority function).
-> +	Data ready has highest priority.
-> +	If this field is left empty, DIO2 is assigned as default external clock
-> +	input pin.
->  
->  Example:
->  
-> @@ -46,4 +79,7 @@ Example:
->  		interrupts = <25 IRQF_TRIGGER_FALLING>;
->  		interrupt-parent = <&gpio>;
->  		interrupt-names = "DIO2";
-> +		clocks = <&adis16495_sync>;
-> +		clock-names = "sync";
-> +		adi,ext-clk-pin = "DIO1";
->  	};
-
+Next after root cause bisection is fix bisection, so this part will be
+automated to some degree as well.
