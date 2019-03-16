@@ -2,79 +2,243 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD5C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94724C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255E1218FE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61CF0218FE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfCPOJB (ORCPT
+        id S1726937AbfCPOJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:09:01 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:32782 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbfCPOJB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:09:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id n15so9503756ioc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:09:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=mdx1Tr+U8/cTvqNjg2L8RR0jt1fW4ZLI1VGMJj9BJoc=;
-        b=k8/uUaWktRk0Obus+GM0ukri3LILIzCll4i69uO1twk8Ac0JZKTZHVzDp1eL5eIWec
-         SqKYpe56GeAWdcFBqDs9RrX2Rl2TySO8ZsFUxwrQL+8uwDXnx4fX1i7/opyEGH09pvma
-         IdYsQdQbSKSc4JZjPhEfZepQXptKurE382DmlhBC/uGO4KtAHuiveJni4smlW7IjCrzR
-         Ngeh9bAQenSgO6AQRLRpL5lonbGTJ28aa+IqMVjsy/hL6yCRoWkN+86VyvaNBp6OuBh8
-         ZRQnkawCJilKuklylOFQ7NTfAbulSrQ8by4iIpRmWfY/b135duDt39vopLiGXGQG19Wf
-         XP3w==
-X-Gm-Message-State: APjAAAXQM3T6JR9fj79DUDyvzDq3G8EHEMVo58vdA/4BWgxXqNpfMFtW
-        baRB1rrjUXOO1mD3GLo3bqeqlZEsJN36fszNJLaCwfiVQ4Iz
-X-Google-Smtp-Source: APXvYqyGskTuuP2wuKMBNWZqi/D+82hTeHNUomXy4EELlpwj/7C+9rJTSQancETC6/DB5WYp2xtbwtERA2a8AqyfoQes5qUJtGyq
+        Sat, 16 Mar 2019 10:09:54 -0400
+Received: from mga17.intel.com ([192.55.52.151]:17296 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbfCPOJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 10:09:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Mar 2019 07:09:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,486,1544515200"; 
+   d="scan'208";a="327867353"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Mar 2019 07:09:53 -0700
+Received: from [10.252.10.233] (abudanko-mobl.ccr.corp.intel.com [10.252.10.233])
+        by linux.intel.com (Postfix) with ESMTP id 1D78758028E;
+        Sat, 16 Mar 2019 07:09:50 -0700 (PDT)
+Subject: [PATCH v9 01/12] feature: implement libzstd check, LIBZSTD_DIR and
+ NO_LIBZSTD defines
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <b8fb6401-3340-16b3-c870-de2cd742b8bc@linux.intel.com>
+Date:   Sat, 16 Mar 2019 17:09:49 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-Received: by 2002:a6b:ec0d:: with SMTP id c13mr5710117ioh.23.1552745340692;
- Sat, 16 Mar 2019 07:09:00 -0700 (PDT)
-Date:   Sat, 16 Mar 2019 07:09:00 -0700
-In-Reply-To: <00000000000089bb100583e5fe7a@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000757009058436b23f@google.com>
-Subject: Re: general protection fault in sctp_assoc_rwnd_increase
-From:   syzbot <syzbot+85e0b422ff140b03672a@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-        lucien.xin@gmail.com, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
 
-commit 89664c623617b1d34447a927ac7871ddf3db29d3
-Author: Xin Long <lucien.xin@gmail.com>
-Date:   Sun Mar 3 09:54:53 2019 +0000
+Implement libzstd feature check, NO_LIBZSTD and LIBZSTD_DIR defines
+to override Zstd library sources or disable the feature from the
+command line:
 
-     sctp: sctp_sock_migrate() returns error if sctp_bind_addr_dup() fails
+  $ make -C tools/perf LIBZSTD_DIR=/path/to/zstd/sources/ clean all
+  $ make -C tools/perf NO_LIBZSTD=1 clean all
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17b17777200000
-start commit:   89664c62 sctp: sctp_sock_migrate() returns error if sctp_b..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14717777200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10717777200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b613f0327d980b6b
-dashboard link: https://syzkaller.appspot.com/bug?extid=85e0b422ff140b03672a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12613b13200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f1884d200000
+Auto detection feature status is reported just before compilation starts.
+If your system has some version of the zstd library preinstalled then
+the build system finds and uses it during the build.
 
-Reported-by: syzbot+85e0b422ff140b03672a@syzkaller.appspotmail.com
-Fixes: 89664c62 ("sctp: sctp_sock_migrate() returns error if  
-sctp_bind_addr_dup() fails")
+If you still prefer to compile with some other version of zstd library
+you have capability to refer the compilation to that version using
+LIBZSTD_DIR define.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/build/Makefile.feature       |  6 ++++--
+ tools/build/feature/Makefile       |  6 +++++-
+ tools/build/feature/test-all.c     |  5 +++++
+ tools/build/feature/test-libzstd.c | 12 ++++++++++++
+ tools/perf/Makefile.config         | 20 ++++++++++++++++++++
+ tools/perf/Makefile.perf           |  3 +++
+ tools/perf/builtin-version.c       |  2 ++
+ 7 files changed, 51 insertions(+), 3 deletions(-)
+ create mode 100644 tools/build/feature/test-libzstd.c
+
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 61e46d54a67c..adf791cbd726 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -66,7 +66,8 @@ FEATURE_TESTS_BASIC :=                  \
+         sched_getcpu			\
+         sdt				\
+         setns				\
+-        libaio
++        libaio				\
++        libzstd
+ 
+ # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+ # of all feature tests
+@@ -118,7 +119,8 @@ FEATURE_DISPLAY ?=              \
+          lzma                   \
+          get_cpuid              \
+          bpf			\
+-         libaio
++         libaio			\
++         libzstd
+ 
+ # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
+ # If in the future we need per-feature checks/flags for features not
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 7ceb4441b627..4b8244ee65ce 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -62,7 +62,8 @@ FILES=                                          \
+          test-clang.bin				\
+          test-llvm.bin				\
+          test-llvm-version.bin			\
+-         test-libaio.bin
++         test-libaio.bin			\
++         test-libzstd.bin
+ 
+ FILES := $(addprefix $(OUTPUT),$(FILES))
+ 
+@@ -301,6 +302,9 @@ $(OUTPUT)test-clang.bin:
+ $(OUTPUT)test-libaio.bin:
+ 	$(BUILD) -lrt
+ 
++$(OUTPUT)test-libzstd.bin:
++	$(BUILD) -lzstd
++
+ ###############################
+ 
+ clean:
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index e903b86b742f..b0dda7db2a17 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -178,6 +178,10 @@
+ # include "test-reallocarray.c"
+ #undef main
+ 
++#define main main_test_zstd
++# include "test-libzstd.c"
++#undef main
++
+ int main(int argc, char *argv[])
+ {
+ 	main_test_libpython();
+@@ -219,6 +223,7 @@ int main(int argc, char *argv[])
+ 	main_test_setns();
+ 	main_test_libaio();
+ 	main_test_reallocarray();
++	main_test_libzstd();
+ 
+ 	return 0;
+ }
+diff --git a/tools/build/feature/test-libzstd.c b/tools/build/feature/test-libzstd.c
+new file mode 100644
+index 000000000000..55268c01b84d
+--- /dev/null
++++ b/tools/build/feature/test-libzstd.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <zstd.h>
++
++int main(void)
++{
++	ZSTD_CStream	*cstream;
++
++	cstream = ZSTD_createCStream();
++	ZSTD_freeCStream(cstream);
++
++	return 0;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 0f11d5891301..4949bdb16a66 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -152,6 +152,13 @@ endif
+ FEATURE_CHECK_CFLAGS-libbabeltrace := $(LIBBABELTRACE_CFLAGS)
+ FEATURE_CHECK_LDFLAGS-libbabeltrace := $(LIBBABELTRACE_LDFLAGS) -lbabeltrace-ctf
+ 
++ifdef LIBZSTD_DIR
++  LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
++  LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
++endif
++FEATURE_CHECK_CFLAGS-libzstd := $(LIBZSTD_CFLAGS)
++FEATURE_CHECK_LDFLAGS-libzstd := $(LIBZSTD_LDFLAGS)
++
+ FEATURE_CHECK_CFLAGS-bpf = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
+ # include ARCH specific config
+ -include $(src-perf)/arch/$(SRCARCH)/Makefile
+@@ -782,6 +789,19 @@ ifndef NO_LZMA
+   endif
+ endif
+ 
++ifndef NO_LIBZSTD
++  ifeq ($(feature-libzstd), 1)
++    CFLAGS += -DHAVE_ZSTD_SUPPORT
++    CFLAGS += $(LIBZSTD_CFLAGS)
++    LDFLAGS += $(LIBZSTD_LDFLAGS)
++    EXTLIBS += -lzstd
++    $(call detected,CONFIG_ZSTD)
++  else
++    msg := $(warning No libzstd found, disables trace compression, please install libzstd-dev[el] and/or set LIBZSTD_DIR);
++    NO_LIBZSTD := 1
++  endif
++endif
++
+ ifndef NO_BACKTRACE
+   ifeq ($(feature-backtrace), 1)
+     CFLAGS += -DHAVE_BACKTRACE_SUPPORT
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 01f7555fd933..06b927ee6ee3 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -108,6 +108,9 @@ include ../scripts/utilities.mak
+ # streaming for record mode. Currently Posix AIO trace streaming is
+ # supported only when linking with glibc.
+ #
++# Define NO_LIBZSTD if you do not want support of Zstandard based runtime
++# trace compression in record mode.
++#
+ 
+ # As per kernel Makefile, avoid funny character set dependencies
+ unexport LC_ALL
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index 50df168be326..f470144d1a70 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -78,6 +78,8 @@ static void library_status(void)
+ 	STATUS(HAVE_LZMA_SUPPORT, lzma);
+ 	STATUS(HAVE_AUXTRACE_SUPPORT, get_cpuid);
+ 	STATUS(HAVE_LIBBPF_SUPPORT, bpf);
++	STATUS(HAVE_AIO_SUPPORT, aio);
++	STATUS(HAVE_ZSTD_SUPPORT, zstd);
+ }
+ 
+ int cmd_version(int argc, const char **argv)
+-- 
+2.20.1
+
