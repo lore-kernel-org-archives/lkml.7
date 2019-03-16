@@ -2,407 +2,267 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541C8C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 07:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C29FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 07:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2F4218FE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 07:20:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ab4B0HYN"
+	by mail.kernel.org (Postfix) with ESMTP id 1E03D21909
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 07:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfCPHUS (ORCPT
+        id S1726547AbfCPHbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 03:20:18 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34550 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfCPHUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 03:20:17 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v64so7872121pfb.1;
-        Sat, 16 Mar 2019 00:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KX48vGF/vUvl6LQsjst8ZJ5JsYca9JC37bwXx5bNbuY=;
-        b=ab4B0HYN/+fAly/O0CFC3K6lmSGejxwD5PSZEDss6q5TuWrk+om5Hz5+FaEPU6ozEl
-         pHudZn51axcCSIo1W8rUVpUmQXGeh9lH9JMcKMmMZ7MAefHGRRvas1OEvij4v6fT/LCU
-         lfFqNvVfctVniRXWRFROnjAaNgn/qyg72Wr/+pr7/nnPjqRHu2JVcPCPwW3/YiiTdInI
-         tEKO0THwHe6rnRKV6vuWaQmcQUNih7Lfjf76cqRM35Ohr/b81OsmjvisRzeSJxOXiTDI
-         lzUz9jaErUw28i26t6DBwOruExhzsQXlP3ErOeYEKbEuYO4hFGMiy5urfrQGU98PoXk1
-         sqZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KX48vGF/vUvl6LQsjst8ZJ5JsYca9JC37bwXx5bNbuY=;
-        b=lHCfWtW5N+zYnhLJtlgg2NQiOuii5+xggY0YD3+YHj0/etS6RpTiq5hgeQD22+tzRo
-         xY93jdgCycM9tjLRg8FNQ1lIAWtHRBIOaLiqk8XqiUEtosmAtxHTq4B5lLRBbMj5Dgs6
-         HfwEsBWefa1oGnN1ty6p8LBPEgJdyjfNCaNdm0NnahGTIWPC+Bn4he/shf9SNNiDEi/P
-         iqRoMGNUTDp7cUYdo2iRKfsLJ1Bl2XcnxgPXENOgf8/9Ik3A1tzf92uPf6pJ9F6ybm40
-         +vSHK9RR6/EKIsz60yEQGpmxw/HvG+8vXOvoNzpJnP/BkF3BDanGBewNsnjCtRuVTlyP
-         nLXw==
-X-Gm-Message-State: APjAAAVXZ29NJ5+s+Ixdrm6uorxU9nygU+UeEJ+W7v3ZafMhsKPB0FTt
-        GiUfd+Tgn4bgyDhkR0/G4g==
-X-Google-Smtp-Source: APXvYqw/YxGTVwnNKlpuA3uD9sM6flGAHi8+d83Le3CISyPzirIutMdC8fAuRT8CXKIIhzZ+j6oavQ==
-X-Received: by 2002:a17:902:112c:: with SMTP id d41mr8479044pla.177.1552720816243;
-        Sat, 16 Mar 2019 00:20:16 -0700 (PDT)
-Received: from localhost ([2001:19f0:7001:54c5:5400:1ff:fec8:7fc2])
-        by smtp.gmail.com with ESMTPSA id 195sm5197643pfc.50.2019.03.16.00.20.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 Mar 2019 00:20:14 -0700 (PDT)
-From:   Jacky Hu <hengqing.hu@gmail.com>
-To:     hengqing.hu@gmail.com
-Cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Julian Anastasov <ja@ssi.bg>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: [PATCH v3] ipvs: allow tunneling with gue encapsulation
-Date:   Sat, 16 Mar 2019 15:20:07 +0800
-Message-Id: <20190316072009.2247-1-hengqing.hu@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sat, 16 Mar 2019 03:31:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59212 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbfCPHbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 03:31:21 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 852113082E0F;
+        Sat, 16 Mar 2019 07:31:20 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-223.pek2.redhat.com [10.72.12.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3631C60BE6;
+        Sat, 16 Mar 2019 07:31:04 +0000 (UTC)
+Subject: Re: [PATCH 1/2 v8] resource: add the new I/O resource descriptor
+ 'IORES_DESC_RESERVED'
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "bhe@redhat.com" <bhe@redhat.com>, Toshi Kani <toshi.kani@hp.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20181129080956.20776-1-lijiang@redhat.com>
+ <20181129080956.20776-2-lijiang@redhat.com>
+ <20181130033703.GA23624@dhcp-128-65.nay.redhat.com>
+ <b8936194-01ef-8b8f-254e-039fc951855d@amd.com>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <95661569-d9c9-af13-11c4-c0d752710a1f@redhat.com>
+Date:   Sat, 16 Mar 2019 15:31:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <b8936194-01ef-8b8f-254e-039fc951855d@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sat, 16 Mar 2019 07:31:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ipip packets are blocked in some public cloud environments, this patch
-allows gue encapsulation with the tunneling method, which would make
-tunneling working in those environments.
 
-Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
----
- include/net/ip_vs.h             |  5 ++
- include/uapi/linux/ip_vs.h      | 17 ++++++
- net/netfilter/ipvs/ip_vs_ctl.c  | 20 ++++++-
- net/netfilter/ipvs/ip_vs_xmit.c | 93 +++++++++++++++++++++++++++++++--
- 4 files changed, 130 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index a0d2e0bb9a94..56c1770b00fe 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -603,6 +603,9 @@ struct ip_vs_dest_user_kern {
+在 2018年12月05日 05:33, Lendacky, Thomas 写道:
+> On 11/29/2018 09:37 PM, Dave Young wrote:
+>> + more people
+>>
+>> On 11/29/18 at 04:09pm, Lianbo Jiang wrote:
+>>> When doing kexec_file_load, the first kernel needs to pass the e820
+>>> reserved ranges to the second kernel. But kernel can not exactly
+>>> match the e820 reserved ranges when walking through the iomem resources
+>>> with the descriptor 'IORES_DESC_NONE', because several e820 types(
+>>> e.g. E820_TYPE_RESERVED_KERN/E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820
+>>> _TYPE_RESERVED) are converted to the descriptor 'IORES_DESC_NONE'. It
+>>> may pass these four types to the kdump kernel, that is not desired result.
+>>>
+>>> So, this patch adds a new I/O resource descriptor 'IORES_DESC_RESERVED'
+>>> for the iomem resources search interfaces. It is helpful to exactly
+>>> match the reserved resource ranges when walking through iomem resources.
+>>>
+>>> In addition, since the new descriptor 'IORES_DESC_RESERVED' is introduced,
+>>> these code originally related to the descriptor 'IORES_DESC_NONE' need to
+>>> be updated. Otherwise, it will be easily confused and also cause some
+>>> errors. Because the 'E820_TYPE_RESERVED' type is converted to the new
+>>> descriptor 'IORES_DESC_RESERVED' instead of 'IORES_DESC_NONE', it has been
+>>> changed.
+>>>
+>>> Suggested-by: Dave Young <dyoung@redhat.com>
+>>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>>> ---
+>>>  arch/ia64/kernel/efi.c |  4 ++++
+>>>  arch/x86/kernel/e820.c |  2 +-
+>>>  arch/x86/mm/ioremap.c  | 13 ++++++++++++-
+>>>  include/linux/ioport.h |  1 +
+>>>  kernel/resource.c      |  6 +++---
+>>>  5 files changed, 21 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+>>> index 8f106638913c..1841e9b4db30 100644
+>>> --- a/arch/ia64/kernel/efi.c
+>>> +++ b/arch/ia64/kernel/efi.c
+>>> @@ -1231,6 +1231,10 @@ efi_initialize_iomem_resources(struct resource *code_resource,
+>>>  				break;
+>>>  
+>>>  			case EFI_RESERVED_TYPE:
+>>> +				name = "reserved";
+>>
+>> Ingo updated X86 code to use "Reserved",  I think it would be good to do
+>> same for this case as well
+>>
+>>> +				desc = IORES_DESC_RESERVED;
+>>> +				break;
+>>> +
+>>>  			case EFI_RUNTIME_SERVICES_CODE:
+>>>  			case EFI_RUNTIME_SERVICES_DATA:
+>>>  			case EFI_ACPI_RECLAIM_MEMORY:
+>>
+>> Originally, above 3 are all "reserved", so probably they all should be
+>> IORES_DESC_RESERVED.
+>>
+>> Can any IA64 people to review this?
+>>
+>>> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+>>> index 50895c2f937d..57fafdafb860 100644
+>>> --- a/arch/x86/kernel/e820.c
+>>> +++ b/arch/x86/kernel/e820.c
+>>> @@ -1048,10 +1048,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
+>>>  	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
+>>>  	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
+>>>  	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
+>>> +	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
+>>>  	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
+>>>  	case E820_TYPE_RAM:		/* Fall-through: */
+>>>  	case E820_TYPE_UNUSABLE:	/* Fall-through: */
+>>> -	case E820_TYPE_RESERVED:	/* Fall-through: */
+>>>  	default:			return IORES_DESC_NONE;
+>>>  	}
+>>>  }
+>>> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+>>> index 5378d10f1d31..fea2ef99415d 100644
+>>> --- a/arch/x86/mm/ioremap.c
+>>> +++ b/arch/x86/mm/ioremap.c
+>>> @@ -83,7 +83,18 @@ static bool __ioremap_check_ram(struct resource *res)
+>>>  
+>>>  static int __ioremap_check_desc_other(struct resource *res)
+>>>  {
+>>> -	return (res->desc != IORES_DESC_NONE);
+>>> +	/*
+>>> +	 * But now, the 'E820_TYPE_RESERVED' type is converted to the new
+>>> +	 * descriptor 'IORES_DESC_RESERVED' instead of 'IORES_DESC_NONE',
+>>> +	 * it has been changed. And the value of 'mem_flags.desc_other'
+>>> +	 * is equal to 'true' if we don't strengthen the condition in this
+>>> +	 * function, that is wrong. Because originally it is equal to
+>>> +	 * 'false' for the same reserved type.
+>>> +	 *
+>>> +	 * So, that would be nice to keep it the same as before.
+>>> +	 */
+>>> +	return ((res->desc != IORES_DESC_NONE) &&
+>>> +		(res->desc != IORES_DESC_RESERVED));
+>>>  }
+>>
+>> Added Tom since he added the check function.  Is it possible to only
+>> check explict valid desc types instead of exclude IORES_DESC_NONE?
+> 
+> Sorry for the delay...
+> 
+> The original intent of the check was to map most memory as encrypted under
+> SEV if it was marked with a specific descriptor, since it was likely to
+> not be MMIO. I tried converting most things that mapped memory to memremap
+> vs ioremap, but ACPI was one area that I left alone and this check catches
+> the mapping of the ACPI tables. I suppose it's possible to change this to
+> check just for IORES_DESC_ACPI_* values, but I would have to do some
+> testing.
+
+Recently, i tested it according to your advice, here it is really checking for the
+'IORES_DESC_ACPI_*' values.  If you agree to this change, i would add the following
+patch into this patch set and post them again.
+
+[root@localhost linux]# git diff arch/x86/mm/ioremap.c
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 0029604af8a4..0e3ba620612d 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -83,7 +83,8 @@ static bool __ioremap_check_ram(struct resource *res)
  
- 	/* Address family of addr */
- 	u16			af;
-+
-+	u16			tun_type;	/* tunnel type */
-+	__be16			tun_port;	/* tunnel port */
- };
- 
- 
-@@ -663,6 +666,8 @@ struct ip_vs_dest {
- 	atomic_t		conn_flags;	/* flags to copy to conn */
- 	atomic_t		weight;		/* server weight */
- 	atomic_t		last_weight;	/* server latest weight */
-+	atomic_t		tun_type;	/* tunnel type */
-+	atomic_t		tun_port;	/* tunnel port */
- 
- 	refcount_t		refcnt;		/* reference counter */
- 	struct ip_vs_stats      stats;          /* statistics */
-diff --git a/include/uapi/linux/ip_vs.h b/include/uapi/linux/ip_vs.h
-index 1c916b2f89dc..b43297691337 100644
---- a/include/uapi/linux/ip_vs.h
-+++ b/include/uapi/linux/ip_vs.h
-@@ -124,6 +124,13 @@
- 
- #define IP_VS_PEDATA_MAXLEN     255
- 
-+/* Tunnel types */
-+enum {
-+	IP_VS_CONN_F_TUNNEL_TYPE_IPIP = 0,	/* IPIP */
-+	IP_VS_CONN_F_TUNNEL_TYPE_GUE,		/* GUE */
-+	IP_VS_CONN_F_TUNNEL_TYPE_MAX,
-+};
-+
- /*
-  *	The struct ip_vs_service_user and struct ip_vs_dest_user are
-  *	used to set IPVS rules through setsockopt.
-@@ -155,6 +162,9 @@ struct ip_vs_dest_user {
- 	/* thresholds for active connections */
- 	__u32		u_threshold;	/* upper threshold */
- 	__u32		l_threshold;	/* lower threshold */
-+
-+	__u16		tun_type;	/* tunnel type */
-+	__be16		tun_port;	/* tunnel port */
- };
- 
- 
-@@ -220,6 +230,9 @@ struct ip_vs_dest_entry {
- 	__u32		u_threshold;	/* upper threshold */
- 	__u32		l_threshold;	/* lower threshold */
- 
-+	__u16		tun_type;	/* tunnel type */
-+	__be16		tun_port;	/* tunnel port */
-+
- 	__u32		activeconns;	/* active connections */
- 	__u32		inactconns;	/* inactive connections */
- 	__u32		persistconns;	/* persistent connections */
-@@ -392,6 +405,10 @@ enum {
- 
- 	IPVS_DEST_ATTR_STATS64,		/* nested attribute for dest stats */
- 
-+	IPVS_DEST_ATTR_TUN_TYPE,	/* tunnel type */
-+
-+	IPVS_DEST_ATTR_TUN_PORT,	/* tunnel port */
-+
- 	__IPVS_DEST_ATTR_MAX,
- };
- 
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 432141f04af3..48509b03a5ea 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -830,6 +830,10 @@ __ip_vs_update_dest(struct ip_vs_service *svc, struct ip_vs_dest *dest,
- 	conn_flags = udest->conn_flags & IP_VS_CONN_F_DEST_MASK;
- 	conn_flags |= IP_VS_CONN_F_INACTIVE;
- 
-+	/* set the tunnel info */
-+	atomic_set(&dest->tun_type, udest->tun_type);
-+	atomic_set(&dest->tun_port, udest->tun_port);
-+
- 	/* set the IP_VS_CONN_F_NOOUTPUT flag if not masquerading/NAT */
- 	if ((conn_flags & IP_VS_CONN_F_FWD_MASK) != IP_VS_CONN_F_MASQ) {
- 		conn_flags |= IP_VS_CONN_F_NOOUTPUT;
-@@ -2869,6 +2873,8 @@ static const struct nla_policy ip_vs_dest_policy[IPVS_DEST_ATTR_MAX + 1] = {
- 	[IPVS_DEST_ATTR_PERSIST_CONNS]	= { .type = NLA_U32 },
- 	[IPVS_DEST_ATTR_STATS]		= { .type = NLA_NESTED },
- 	[IPVS_DEST_ATTR_ADDR_FAMILY]	= { .type = NLA_U16 },
-+	[IPVS_DEST_ATTR_TUN_TYPE]	= { .type = NLA_U8 },
-+	[IPVS_DEST_ATTR_TUN_PORT]	= { .type = NLA_U16 },
- };
- 
- static int ip_vs_genl_fill_stats(struct sk_buff *skb, int container_type,
-@@ -3172,6 +3178,10 @@ static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
- 			 IP_VS_CONN_F_FWD_MASK)) ||
- 	    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
- 			atomic_read(&dest->weight)) ||
-+	    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
-+		       atomic_read(&dest->tun_type)) ||
-+	    nla_put_u16(skb, IPVS_DEST_ATTR_TUN_PORT,
-+			atomic_read(&dest->tun_port)) ||
- 	    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
- 	    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
- 	    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
-@@ -3294,12 +3304,14 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
- 	/* If a full entry was requested, check for the additional fields */
- 	if (full_entry) {
- 		struct nlattr *nla_fwd, *nla_weight, *nla_u_thresh,
--			      *nla_l_thresh;
-+			      *nla_l_thresh, *nla_tun_type, *nla_tun_port;
- 
- 		nla_fwd		= attrs[IPVS_DEST_ATTR_FWD_METHOD];
- 		nla_weight	= attrs[IPVS_DEST_ATTR_WEIGHT];
- 		nla_u_thresh	= attrs[IPVS_DEST_ATTR_U_THRESH];
- 		nla_l_thresh	= attrs[IPVS_DEST_ATTR_L_THRESH];
-+		nla_tun_type	= attrs[IPVS_DEST_ATTR_TUN_TYPE];
-+		nla_tun_port	= attrs[IPVS_DEST_ATTR_TUN_PORT];
- 
- 		if (!(nla_fwd && nla_weight && nla_u_thresh && nla_l_thresh))
- 			return -EINVAL;
-@@ -3309,6 +3321,12 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
- 		udest->weight = nla_get_u32(nla_weight);
- 		udest->u_threshold = nla_get_u32(nla_u_thresh);
- 		udest->l_threshold = nla_get_u32(nla_l_thresh);
-+
-+		if (nla_tun_type)
-+			udest->tun_type = nla_get_u8(nla_tun_type);
-+
-+		if (nla_tun_port)
-+			udest->tun_port = nla_get_u16(nla_tun_port);
- 	}
- 
- 	return 0;
-diff --git a/net/netfilter/ipvs/ip_vs_xmit.c b/net/netfilter/ipvs/ip_vs_xmit.c
-index 473cce2a5231..e748c5605b04 100644
---- a/net/netfilter/ipvs/ip_vs_xmit.c
-+++ b/net/netfilter/ipvs/ip_vs_xmit.c
-@@ -32,6 +32,7 @@
- #include <linux/slab.h>
- #include <linux/tcp.h>                  /* for tcphdr */
- #include <net/ip.h>
-+#include <net/gue.h>
- #include <net/tcp.h>                    /* for csum_tcpudp_magic */
- #include <net/udp.h>
- #include <net/icmp.h>                   /* for icmp_send */
-@@ -989,6 +990,42 @@ static inline int __tun_gso_type_mask(int encaps_af, int orig_af)
- 	}
+ static int __ioremap_check_desc_other(struct resource *res)
+ {
+-       return (res->desc != IORES_DESC_NONE);
++       return ((res->desc == IORES_DESC_ACPI_TABLES) ||
++               (res->desc == IORES_DESC_ACPI_NV_STORAGE));
  }
- 
-+static int
-+__build_gue_header(struct net *net, struct sk_buff *skb,
-+		   struct ip_vs_conn *cp, __u8 *next_protocol)
-+{
-+	__be16 dport;
-+	__be16 sport;
-+	struct udphdr  *udph;	/* Our new UDP header */
-+	struct guehdr  *gueh;	/* Our new GUE header */
-+
-+	skb_push(skb, sizeof(struct guehdr));
-+
-+	gueh = (struct guehdr *)skb->data;
-+
-+	gueh->control = 0;
-+	gueh->version = 0;
-+	gueh->hlen = 0;
-+	gueh->flags = 0;
-+	gueh->proto_ctype = *next_protocol;
-+
-+	skb_push(skb, sizeof(struct udphdr));
-+	skb_reset_transport_header(skb);
-+
-+	udph = udp_hdr(skb);
-+
-+	dport = htons(atomic_read(&cp->dest->tun_port));
-+	sport = udp_flow_src_port(net, skb, 0, 0, false);
-+	udph->dest = dport;
-+	udph->source = sport;
-+	udph->len = htons(skb->len);
-+	udph->check = 0;
-+
-+	*next_protocol = IPPROTO_UDP;
-+
-+	return 0;
-+}
-+
- /*
-  *   IP Tunneling transmitter
-  *
-@@ -1025,6 +1062,7 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	struct iphdr  *iph;			/* Our new IP header */
- 	unsigned int max_headroom;		/* The extra header space needed */
- 	int ret, local;
-+	int tun_type, gso_type;
- 
- 	EnterFunction(10);
- 
-@@ -1033,7 +1071,7 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
- 				   IP_VS_RT_MODE_NON_LOCAL |
- 				   IP_VS_RT_MODE_CONNECT |
- 				   IP_VS_RT_MODE_TUNNEL, &saddr, ipvsh);
--	if (local < 0)
-+	if (!cp->dest || local < 0)
- 		goto tx_error;
- 	if (local)
- 		return ip_vs_send_or_cont(NFPROTO_IPV4, skb, cp, 1);
-@@ -1046,6 +1084,14 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	 */
- 	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct iphdr);
- 
-+	tun_type = atomic_read(&cp->dest->tun_type);
-+
-+	switch (tun_type) {
-+	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-+		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-+		break;
-+	}
-+
- 	/* We only care about the df field if sysctl_pmtu_disc(ipvs) is set */
- 	dfp = sysctl_pmtu_disc(ipvs) ? &df : NULL;
- 	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
-@@ -1054,11 +1100,26 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	if (IS_ERR(skb))
- 		goto tx_error;
- 
--	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET, cp->af)))
-+	switch (tun_type) {
-+	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-+		gso_type = SKB_GSO_UDP_TUNNEL;
-+		break;
-+	default:
-+		gso_type = __tun_gso_type_mask(AF_INET, cp->af);
-+		break;
-+	}
-+
-+	if (iptunnel_handle_offloads(skb, gso_type))
- 		goto tx_error;
- 
- 	skb->transport_header = skb->network_header;
- 
-+	switch (tun_type) {
-+	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-+		__build_gue_header(dev_net(tdev), skb, cp, &next_protocol);
-+		break;
-+	}
-+
- 	skb_push(skb, sizeof(struct iphdr));
- 	skb_reset_network_header(skb);
- 	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-@@ -1112,6 +1173,7 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	struct ipv6hdr  *iph;		/* Our new IP header */
- 	unsigned int max_headroom;	/* The extra header space needed */
- 	int ret, local;
-+	int tun_type, gso_type;
- 
- 	EnterFunction(10);
- 
-@@ -1121,7 +1183,7 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
- 				      IP_VS_RT_MODE_LOCAL |
- 				      IP_VS_RT_MODE_NON_LOCAL |
- 				      IP_VS_RT_MODE_TUNNEL);
--	if (local < 0)
-+	if (!cp->dest || local < 0)
- 		goto tx_error;
- 	if (local)
- 		return ip_vs_send_or_cont(NFPROTO_IPV6, skb, cp, 1);
-@@ -1134,17 +1196,40 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	 */
- 	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct ipv6hdr);
- 
-+	tun_type = atomic_read(&cp->dest->tun_type);
-+
-+	switch (tun_type) {
-+	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-+		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-+		break;
-+	}
-+
- 	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
- 					 &next_protocol, &payload_len,
- 					 &dsfield, &ttl, NULL);
- 	if (IS_ERR(skb))
- 		goto tx_error;
- 
--	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET6, cp->af)))
-+	switch (tun_type) {
-+	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-+		gso_type = SKB_GSO_UDP_TUNNEL;
-+		break;
-+	default:
-+		gso_type = __tun_gso_type_mask(AF_INET, cp->af);
-+		break;
-+	}
-+
-+	if (iptunnel_handle_offloads(skb, gso_type))
- 		goto tx_error;
- 
- 	skb->transport_header = skb->network_header;
- 
-+	switch (tun_type) {
-+	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-+		__build_gue_header(dev_net(tdev), skb, cp, &next_protocol);
-+		break;
-+	}
-+
- 	skb_push(skb, sizeof(struct ipv6hdr));
- 	skb_reset_network_header(skb);
- 	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
--- 
-2.21.0
 
+
+Thanks.
+Lianbo
+
+> 
+> Thanks,
+> Tom
+> 
+>>
+>>>  
+>>>  static int __ioremap_res_check(struct resource *res, void *arg)
+>>> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>>> index da0ebaec25f0..6ed59de48bd5 100644
+>>> --- a/include/linux/ioport.h
+>>> +++ b/include/linux/ioport.h
+>>> @@ -133,6 +133,7 @@ enum {
+>>>  	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
+>>>  	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
+>>>  	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
+>>> +	IORES_DESC_RESERVED			= 8,
+>>>  };
+>>>  
+>>>  /* helpers to define resources */
+>>> diff --git a/kernel/resource.c b/kernel/resource.c
+>>> index b0fbf685c77a..f34a632c4169 100644
+>>> --- a/kernel/resource.c
+>>> +++ b/kernel/resource.c
+>>> @@ -994,7 +994,7 @@ __reserve_region_with_split(struct resource *root, resource_size_t start,
+>>>  	res->start = start;
+>>>  	res->end = end;
+>>>  	res->flags = type | IORESOURCE_BUSY;
+>>> -	res->desc = IORES_DESC_NONE;
+>>> +	res->desc = IORES_DESC_RESERVED;
+>>>  
+>>>  	while (1) {
+>>>  
+>>> @@ -1029,7 +1029,7 @@ __reserve_region_with_split(struct resource *root, resource_size_t start,
+>>>  				next_res->start = conflict->end + 1;
+>>>  				next_res->end = end;
+>>>  				next_res->flags = type | IORESOURCE_BUSY;
+>>> -				next_res->desc = IORES_DESC_NONE;
+>>> +				next_res->desc = IORES_DESC_RESERVED;
+>>>  			}
+>>>  		} else {
+>>>  			res->start = conflict->end + 1;
+>>> @@ -1477,7 +1477,7 @@ static int __init reserve_setup(char *str)
+>>>  			res->start = io_start;
+>>>  			res->end = io_start + io_num - 1;
+>>>  			res->flags |= IORESOURCE_BUSY;
+>>> -			res->desc = IORES_DESC_NONE;
+>>> +			res->desc = IORES_DESC_RESERVED;
+>>>  			res->child = NULL;
+>>>  			if (request_resource(parent, res) == 0)
+>>>  				reserved = x+1;
+>>> -- 
+>>> 2.17.1
+>>>
+>>
+>>
+>> There are a lot of places call region_intersects which use DESC_NONE,
+>> I'm not sure if needed changes accordingly.  Cced Dan and Toshi.
+>>
+>>
+>> Thanks
+>> Dave
+>>
