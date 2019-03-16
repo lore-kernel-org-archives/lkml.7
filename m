@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2CDC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB668C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB8A218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C300B218EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbfCPDyj (ORCPT
+        id S1727167AbfCPDyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 23:54:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5260 "EHLO huawei.com"
+        Fri, 15 Mar 2019 23:54:01 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36510 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727186AbfCPDyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 23:54:06 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 28AEAF314CCB52E14302;
-        Sat, 16 Mar 2019 11:54:02 +0800 (CST)
+        id S1727118AbfCPDx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 23:53:59 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 24DACF5A90D6009A9D70;
+        Sat, 16 Mar 2019 11:53:57 +0800 (CST)
 Received: from vm100-107-113-134.huawei.com (100.107.113.134) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 16 Mar 2019 11:53:53 +0800
+ 14.3.408.0; Sat, 16 Mar 2019 11:53:47 +0800
 From:   Yu Chen <chenyu56@huawei.com>
 To:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -35,14 +35,11 @@ CC:     <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
         <lipengcheng8@huawei.com>, <songxiaowei@hisilicon.com>,
         <xuyiping@hisilicon.com>, <xuyoujun4@huawei.com>,
         <yudongbin@hisilicon.com>, <zangleigang@hisilicon.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Andy Shevchenko" <andy.shevchenko@gmail.com>
-Subject: [PATCH v4 08/12] usb: roles: Add usb role switch notifier.
-Date:   Sat, 16 Mar 2019 11:53:38 +0800
-Message-ID: <20190316035342.77998-9-chenyu56@huawei.com>
+        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v4 03/12] usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc Platform
+Date:   Sat, 16 Mar 2019 11:53:33 +0800
+Message-ID: <20190316035342.77998-4-chenyu56@huawei.com>
 X-Mailer: git-send-email 2.15.0-rc2
 In-Reply-To: <20190316035342.77998-1-chenyu56@huawei.com>
 References: <20190316035342.77998-1-chenyu56@huawei.com>
@@ -55,136 +52,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds notifier for drivers want to be informed of the usb role switch.
+This patch adds support for the poweron and shutdown of dwc3 core
+on Hisilicon Soc Platform.
 
+Cc: Felipe Balbi <balbi@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: John Stultz <john.stultz@linaro.org>
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
- drivers/usb/roles/class.c | 20 +++++++++++++++++++-
- include/linux/usb/role.h  | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/dwc3-of-simple.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index f45d8df5cfb8..e2caaa665d6e 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -20,6 +20,7 @@ struct usb_role_switch {
- 	struct device dev;
- 	struct mutex lock; /* device lock*/
- 	enum usb_role role;
-+	struct blocking_notifier_head nh;
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+index 4c2771c5e727..0ed09d876542 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -98,7 +98,8 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
+ 	 * Some controllers need to toggle the usb3-otg reset before trying to
+ 	 * initialize the PHY, otherwise the PHY times out.
+ 	 */
+-	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
++	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3") ||
++			of_device_is_compatible(np, "hisilicon,hi3660-dwc3"))
+ 		simple->need_reset = true;
  
- 	/* From descriptor */
- 	struct device *usb2_port;
-@@ -49,8 +50,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
- 	mutex_lock(&sw->lock);
- 
- 	ret = sw->set(sw->dev.parent, role);
--	if (!ret)
-+	if (!ret) {
- 		sw->role = role;
-+		blocking_notifier_call_chain(&sw->nh, role, NULL);
-+	}
- 
- 	mutex_unlock(&sw->lock);
- 
-@@ -58,6 +61,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
- }
- EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
- 
-+int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&sw->nh, nb);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
-+
-+int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&sw->nh, nb);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
-+
- /**
-  * usb_role_switch_get_role - Get the USB role for a switch
-  * @sw: USB role switch
-@@ -271,6 +288,7 @@ usb_role_switch_register(struct device *parent,
- 		return ERR_PTR(-ENOMEM);
- 
- 	mutex_init(&sw->lock);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
- 
- 	sw->allow_userspace_control = desc->allow_userspace_control;
- 	sw->usb2_port = desc->usb2_port;
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index c05ffa6abda9..99d8b8e4fe61 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -42,6 +42,8 @@ struct usb_role_switch_desc {
- 	bool allow_userspace_control;
+ 	if (of_device_is_compatible(np, "amlogic,meson-axg-dwc3") ||
+@@ -243,6 +244,7 @@ static const struct of_device_id of_dwc3_simple_match[] = {
+ 	{ .compatible = "amlogic,meson-axg-dwc3" },
+ 	{ .compatible = "amlogic,meson-gxl-dwc3" },
+ 	{ .compatible = "allwinner,sun50i-h6-dwc3" },
++	{ .compatible = "hisilicon,hi3660-dwc3" },
+ 	{ /* Sentinel */ }
  };
- 
-+
-+#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
- int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
- enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
- struct usb_role_switch *usb_role_switch_get(struct device *dev);
-@@ -51,5 +53,49 @@ struct usb_role_switch *
- usb_role_switch_register(struct device *parent,
- 			 const struct usb_role_switch_desc *desc);
- void usb_role_switch_unregister(struct usb_role_switch *sw);
-+int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb);
-+int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb);
-+#else
-+static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
-+		enum usb_role role)
-+{
-+	return 0;
-+}
-+
-+static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
-+{
-+	return USB_ROLE_NONE;
-+}
-+
-+static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
-+
-+static inline struct usb_role_switch *
-+usb_role_switch_register(struct device *parent,
-+			 const struct usb_role_switch_desc *desc)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
-+
-+static int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
-+
-+static int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
-+#endif
- 
- #endif /* __LINUX_USB_ROLE_H */
+ MODULE_DEVICE_TABLE(of, of_dwc3_simple_match);
 -- 
 2.15.0-rc2
 
