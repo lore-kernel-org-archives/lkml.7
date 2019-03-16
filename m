@@ -2,119 +2,109 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F95C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 11:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7628CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 11:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07AEF21871
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 11:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC1921871
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 11:30:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSyzwzUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfCPL3I (ORCPT
+        id S1726972AbfCPLaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 07:29:08 -0400
-Received: from ozlabs.org ([203.11.71.1]:33959 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbfCPL3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 07:29:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44M0Zk1Lqkz9ryj;
-        Sat, 16 Mar 2019 22:29:02 +1100 (AEDT)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     aik@ozlabs.ru, andrew.donnellan@au1.ibm.com,
-        aneesh.kumar@linux.ibm.com, joel@jms.id.au,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        mahesh@linux.vnet.ibm.com, malat@debian.org, yanaijie@huawei.com
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.1-2 tag
-Date:   Sat, 16 Mar 2019 22:28:48 +1100
-Message-ID: <87y35f6osv.fsf@concordia.ellerman.id.au>
+        Sat, 16 Mar 2019 07:30:11 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40708 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfCPLaL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 07:30:11 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u9so8214495pgo.7
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 04:30:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=0wH5Xjkjg/F0FX4qAlxeFssX7bZx2g7hSqnx2ks9qiw=;
+        b=PSyzwzUl/sxQMCNjA7lE16hKlrZzZxXRqyJ8rdtTbq1x7zkl0FFLuNN0OpoUQiDxOx
+         0ITs16PiZv2kSQSpLMB6aDstGhIGUIzwXw3W1ULKKxdZpClc7Jki5t/RjyQkwmeMXYAU
+         kXkCKj1HTIBOsbEUbAwI9o75keq7KrVIfES3TLqU10PLRuo33LLnBYy+kjfmu2MkwqHj
+         Dp7sh8paN+aSQrFgUnEaDERz4vQuTaMhqXyIjSboS4xYW10wkhE3r3CIQv6p7RTDmYGR
+         un6ACD6GfKQgRWzfx3BwswjFycLxKBh0LIXgWZqfqnhDkhhqX6BSL7gRCC9/6E+5y+9p
+         VBXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=0wH5Xjkjg/F0FX4qAlxeFssX7bZx2g7hSqnx2ks9qiw=;
+        b=PA44diDACj3Gv8JOOpmeh5ri/R0EvZaJFQ51drO/FSgVcdihVKTFBX70amXxkflk/v
+         HLzPS7OxDHmJ41VtTzOKPZvAg8fzaKh72UU6MGPTLRXKF7s3xVx2zjmXnXDqP/CfJgIa
+         q0xlIsZYPzAORn5DUsbZEHOWwuZrd/S6JIYBl7LShQDWwzttLPmAxJ0foiBRMcnkO4RB
+         fivIEVM1hnwBGHzPBxPU561yTM7NfOgFD4CLB2ap4WwbBgHp+7LawQ/+UHAOSb+pbExh
+         p/a/dlkwWoA8gwntKgJNBysOeHq8txg/uptDw6885ma+gbGD4CyfpP/sNVmeBh7sMV2e
+         nJ4w==
+X-Gm-Message-State: APjAAAXNqp5kqHYXk2uu5GwZqX78/03Onl3ZNa1bID6e6zr0ANZ6Gv5b
+        nVKwnOCoRF+L2SzR/iV98ko=
+X-Google-Smtp-Source: APXvYqykxMCHdYWXddFj/cYArKXjTzqTQT4+Xdz2VVUC9t9ifKifs8ONln8Czc/d0zYEZPUXQP+PCQ==
+X-Received: by 2002:a63:9dc1:: with SMTP id i184mr8199718pgd.244.1552735810882;
+        Sat, 16 Mar 2019 04:30:10 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.35])
+        by smtp.gmail.com with ESMTPSA id b7sm8598997pff.136.2019.03.16.04.30.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 16 Mar 2019 04:30:10 -0700 (PDT)
+Date:   Sat, 16 Mar 2019 16:59:58 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     gaoxiang25@huawei.com, yuchao0@huawei.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: erofs: Add whitespace after declaration
+Message-ID: <20190316112958.GA29023@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Fix the checkpatch.pl warning to add a whitespace after declaration
+statements.
 
-Hi Linus,
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+---
+Changes since v2
+	- Mutt was giving me a few problems. I apologise for the
+	  previous poor patches.
+---
+ drivers/staging/erofs/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Please pull a few small powerpc updates for 5.1:
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index 924b8df..9a36a1f 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -270,8 +270,8 @@ struct inode *erofs_iget(struct super_block *sb,
+ 	if (inode->i_state & I_NEW) {
+ 		int err;
+ 		struct erofs_vnode *vi = EROFS_V(inode);
+-		vi->nid = nid;
+ 
++		vi->nid = nid;
+ 		err = fill_inode(inode, isdir);
+ 		if (likely(!err))
+ 			unlock_new_inode(inode);
+@@ -305,4 +305,3 @@ const struct inode_operations erofs_fast_symlink_iops = {
+ #endif
+ 	.get_acl = erofs_get_acl,
+ };
+-
+-- 
+2.7.4
 
-The following changes since commit 9580b71b5a7863c24a9bd18bcd2ad759b86b1eff:
-
-  powerpc/32: Clear on-stack exception marker upon exception return (2019-03-04 00:37:23 +1100)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.1-2
-
-for you to fetch changes up to de3c83c2fd2b87cf68214eda76dfa66989d78cb6:
-
-  powerpc/64s: Include <asm/nmi.h> header file to fix a warning (2019-03-13 15:03:13 +1100)
-
-- ------------------------------------------------------------------
-powerpc fixes for 5.1 #2
-
-One fix to prevent runtime allocation of 16GB pages when running in a VM (as
-opposed to bare metal), because it doesn't work.
-
-A small fix to our recently added KCOV support to exempt some more code from
-being instrumented.
-
-Plus a few minor build fixes, a small dead code removal and a defconfig update.
-
-Thanks to:
-  Alexey Kardashevskiy, Aneesh Kumar K.V, Christophe Leroy, Jason Yan, Joel
-  Stanley, Mahesh Salgaonkar, Mathieu Malaterre.
-
-- ------------------------------------------------------------------
-Alexey Kardashevskiy (1):
-      powerpc/powernv: Fix compile without CONFIG_TRACEPOINTS
-
-Aneesh Kumar K.V (1):
-      powerpc/hugetlb: Don't do runtime allocation of 16G pages in LPAR configuration
-
-Jason Yan (1):
-      powerpc: remove dead code in head_fsl_booke.S
-
-Joel Stanley (1):
-      powerpc/configs: Sync skiroot defconfig
-
-Mahesh Salgaonkar (1):
-      powerpc/mm: Disable kcov for SLB routines
-
-Mathieu Malaterre (1):
-      powerpc/64s: Include <asm/nmi.h> header file to fix a warning
-
-
- arch/powerpc/configs/skiroot_defconfig       | 12 +++++++++---
- arch/powerpc/include/asm/book3s/64/hugetlb.h |  8 ++++++++
- arch/powerpc/kernel/head_fsl_booke.S         |  7 -------
- arch/powerpc/kernel/traps.c                  |  1 +
- arch/powerpc/mm/Makefile                     |  3 +++
- arch/powerpc/platforms/powernv/opal-call.c   |  1 +
- 6 files changed, 22 insertions(+), 10 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcjN2tAAoJEFHr6jzI4aWA/jIQAK4J2VQD8Sw+2kSm3h7wW18U
-+BDyc7fbbigQyBHFkMAdybRKsXMSCbco7jK12yUbh5xqYlo8Hc40DbKI32f0D3WE
-7rRotjalxR9tF+u0+m8Pdge42bPmEyt6p/7w5Ys+wVj/KXqlwTJinqSvp5Qmrilk
-19qOTaTCXEMJ7dFTXqlFNpBW+0kaahCZ6f767dPPKkiYSm/qMZjKG/KCejLDAGQL
-x5ouTpPos8sOjts7dwJuBGCxTfU7usKpy1EbguIklzYjedk1MSh5sg6STTQsH8Y4
-kAgd8T12Wo4cQPaBmjwTkD7BrCdWbjNcK5U61kKAByshM3ZyPo+xARyQMdIWVZJQ
-pX51tjmKwzGk3nf1UiMP/jdx55Cj6rhr3EsfQepjocMa9t6IWNVpasAvFRPlw8ca
-Xmhbqsjwy9wKroAYgITq1L+VfeDe+dXBgK7yrChpqSdU89iOYgjoUbnwI+OeSCbk
-Hm8w1p5+7CNxRxNzBieqBCtYUIlEwjP3rOwuNEpb0dJ4USD4jEr/8Mk0YXWJj4yg
-mplyFwUXBrWVQHlKRI2tabO8rY7KN8H+SC/EczvERxpLRc3m7dH3DIlMi8A4a9Lk
-QyvoQY7n9fZw1lm+/6ORMCNSc8lkIrsDu44rgn7WpaZDbN1woia0q5AtsNDU9jr2
-HwUoI/HIHq5FWRu4m6LN
-=TNMo
------END PGP SIGNATURE-----
