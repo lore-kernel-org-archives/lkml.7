@@ -2,78 +2,80 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA08CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DD9C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF8D217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F55220693
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfCPOt3 (ORCPT
+        id S1727106AbfCPOyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:49:29 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:38858 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfCPOtC (ORCPT
+        Sat, 16 Mar 2019 10:54:00 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:21343 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbfCPOyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:49:02 -0400
-Received: by mail-it1-f198.google.com with SMTP id r136so10561741ith.3
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:49:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=tKdFMkPQdgTBq0mw82dj+i9hybL5R21t7YUT6EeK8B8=;
-        b=QqNwDUWu/S0fRCLNxUyru6vsSMmmzYmlt/EZxym92HrWgq6R8MGKA7Nw/oaWba7ihl
-         INLkouJf5KlbbZtokMaga7Q13Vg5q4rZXviNQfuY5PQPKuWymdz7Hp6bzk2qsUXRLJ63
-         qd4L/gSL0AkBOSJv9OHuPpY60JbincjsOrHMQ4a0jBmhDP+lQPNMBPljxWDDKqi/yqRu
-         MDlrMkVcajb7hXMHxf4z1nkHM/Fj8sKtU2rfSWx5/xWWk4SCvJK9qsmI4haKJ0syAFmv
-         1+3B/x9Zx7ih3Zr1IIGenvBmkEszgpMMkvrbJ2zMiIgpnK0RywYJ2w7pUKaqwS4r23to
-         kddg==
-X-Gm-Message-State: APjAAAV4RPC1QUfZBa2Lj8w18rrBYzdx77glUYmk3vEzsIWL5SP/IkFh
-        BmaXvQTbK6W2YxscZ3ADnRGNNzF7RUt4xjSmZ4NmQDKI+jI0
-X-Google-Smtp-Source: APXvYqzb0BISZrVvuixbyEcNUXcri+eqiTp3LxPN1PHjzd87oq2IQENWpcnVwAM4ReH5NCtT5GtcjxU1bhHCh8L0lApaYOu6bSuQ
+        Sat, 16 Mar 2019 10:54:00 -0400
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2GErkU7099884;
+        Sat, 16 Mar 2019 23:53:46 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
+ Sat, 16 Mar 2019 23:53:46 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2GEreJc099686
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sat, 16 Mar 2019 23:53:46 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [syzbot? printk?] no WARN_ON() messages printed before "Kernel
+ panic - not syncing: panic_on_warn set ..."
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+References: <0a0d282b-6757-5f42-b888-ef52b040aaa1@i-love.sakura.ne.jp>
+ <CACT4Y+ZBpfLpk0FRp7O8Ut=mmf-uddK_fLMDHtPkf6FnMGMqPA@mail.gmail.com>
+ <f015f007-2402-27a0-1694-93b1bcffe84b@i-love.sakura.ne.jp>
+ <20190316141410.GA18654@tigerII.localdomain>
+ <CACT4Y+YEx5PF7QqaLdYpkyBCr_eBgp1n2yuY2LyrN9iZANXgzQ@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <647012f4-c221-addf-51ab-586014e8f435@i-love.sakura.ne.jp>
+Date:   Sat, 16 Mar 2019 23:53:35 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-X-Received: by 2002:a24:4503:: with SMTP id y3mr4809853ita.32.1552747741653;
- Sat, 16 Mar 2019 07:49:01 -0700 (PDT)
-Date:   Sat, 16 Mar 2019 07:49:01 -0700
-In-Reply-To: <000000000000675cea057e201cbb@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000091355e0584374181@google.com>
-Subject: Re: BUG: unable to handle kernel paging request in slhc_free
-From:   syzbot <syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com>
-To:     akinobu.mita@gmail.com, akpm@linux-foundation.org,
-        davem@davemloft.net, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, mhocko@kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tejaswit@codeaurora.org, torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <CACT4Y+YEx5PF7QqaLdYpkyBCr_eBgp1n2yuY2LyrN9iZANXgzQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 2019/03/16 23:16, Dmitry Vyukov wrote:
+>>> Maybe try running with "ignore_loglevel" kernel command line option added?
+>>
+>> Right, that's something I would expect 0-day and syzkaller to do.
+> 
+> to double-check: enabling this won't lead to verbose/debug level of logging?
+> 
 
-commit e41d58185f1444368873d4d7422f7664a68be61d
-Author: Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed Jul 12 21:34:35 2017 +0000
+I don't know what "verbose/debug level" means. But enabling this option causes
+KERN_{EMERG,ALERT,CRIT,ERR,WARNING,NOTICE,INFO,DEBUG} be printed equally.
 
-     fault-inject: support systematic fault injection
+  "ignore loglevel setting (prints all kernel messages to the console)"
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1415a8a3200000
-start commit:   e41d5818 fault-inject: support systematic fault injection
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1615a8a3200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1215a8a3200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7d581260bae0899a
-dashboard link: https://syzkaller.appspot.com/bug?extid=6c5d567447bfa30f78e2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136130fd400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1607c563400000
+static bool suppress_message_printing(int level)
+{
+	return (level >= console_loglevel && !ignore_loglevel);
+}
 
-Reported-by: syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com
-Fixes: e41d5818 ("fault-inject: support systematic fault injection")
