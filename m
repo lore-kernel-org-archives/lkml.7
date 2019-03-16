@@ -2,90 +2,111 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2773C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D3FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A81218D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552759488;
-	bh=gaTEheMCIDSd7k3aq63ketAro3iax0eCVhVpnxcbYnw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rEUxa0JxFWFCkbJgOj956Pn70ZyZGWWZlHjAqKpXlxzgx7i97ywVHhyNVrvkVHsDT
-	 nk/Xj5cznjgf/dPUFKycrqePfWjEBbtALv5Qgx7BJgCLRfBMN+5xpjF5ZwrauUZqr+
-	 Cuq+dJNG2rRSjccECzRVKiT0Sa1Frp4WUv5SVgnw=
+	by mail.kernel.org (Postfix) with ESMTP id 02F6D218D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:10:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pCVMHWqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfCPSEr (ORCPT
+        id S1727062AbfCPSKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 14:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726376AbfCPSEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 14:04:47 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A8AF218D0;
-        Sat, 16 Mar 2019 18:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552759486;
-        bh=gaTEheMCIDSd7k3aq63ketAro3iax0eCVhVpnxcbYnw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=a9KsrvnaSecocDSsYucr/qIfigpLAiuCveqScE+uiHnJOc0S93Mb0uk9KbgYpOFVf
-         gQx5EVY7d7oSkPqkpmiBpqfe/Ra8GY5z/D/AajP8bECFv9lSPu1jrXJouQ7lKWBrMp
-         CiK6y6z85wtvv6/EJcUiJ+OjIFgBjvM/QeG5VkYo=
-Date:   Sat, 16 Mar 2019 18:04:39 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Renato Lui Geh <renatogeh@gmail.com>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
-        giuliano.belinassi@usp.br, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 09/11] staging: iio: ad7780: add new copyright holder
-Message-ID: <20190316180439.5cb0740c@archlinux>
-In-Reply-To: <7cfb577d4e07b00a820b35dc56c58809120f8f39.1552700652.git.renatogeh@gmail.com>
-References: <cover.1552700652.git.renatogeh@gmail.com>
-        <7cfb577d4e07b00a820b35dc56c58809120f8f39.1552700652.git.renatogeh@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 Mar 2019 14:10:12 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44787 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfCPSKL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 14:10:11 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x10so7072710edh.11;
+        Sat, 16 Mar 2019 11:10:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=znzyF0XYlGQOaoqfzgdLDLzxgBCOwtEUBvUvaGLYBRc=;
+        b=pCVMHWqgNO1/SXbwRvnuPXGgd5p6u1rH3kuRd+/zCz6Yo+/FBtqayK3paMSQ0MogL2
+         xeoV4/75aqeklCAdotloOSythA9DATe2VflAvdjgZ0WQwUPZueJ/5z7jP9xEP4Ziheif
+         2O/WM9f7+Xq/Pez81ik379WbYuJw8wNgIv/++pKGkzN4Q7/WX6tuitauySGsD5GgGkTa
+         +DI+P9E7k6zGILeBYCPATuOcgJQaKO16N+qHiPnbUys56r6VvcQuF0d1++DsZ6ul5yw6
+         CFKzcX/y25N2mJCPKAqT33/pbehpnRBMN3t+0ENjsFfLgulOzRVDaqAo8vx8RUQerIn+
+         HICQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=znzyF0XYlGQOaoqfzgdLDLzxgBCOwtEUBvUvaGLYBRc=;
+        b=AQcnzk+mBovTPlWBKhNN2CgQkAQ5WCPTeBUCafxZR+A12mpn6JVfO/hM6T+kyHMQao
+         x2hVbV/MLVkBfAwwRJozCzHCfzbST2hfl3XpKaeGU7yXAPUyEVknHoJ/JIzakR2BoB8q
+         Cpt6EXlxsMaDY/f1dO6HdlDAKRe39XvdHR9mUPlCxCWzrcavhrC7Sm1yqp0QDHKxRCJ0
+         HSWRN/rOleiMax8irSrXjSCif9C5Mthn+2XQ6ITkZqwMhhpp/XL0n/a/PMxAqo7hJwn7
+         aIV6DIJFNnRD4aQAFHfQertFgtYMRAS4rZVO5c9aLL/6BlDRHxwdvG9OYCXbdisE303P
+         tm+A==
+X-Gm-Message-State: APjAAAWGo83rAENq0qlGUAXkiuO0Qd+fLpFXW/+p35xcH7xdgOYqljRC
+        eWUPqY3w6cUxicM/v5hgMK1hhjxDtcKqItOGuhU=
+X-Google-Smtp-Source: APXvYqwjH95dg/5UJPTwyl062TaTmAtg6rjNEJkR7lmX5NTn+329lQZCnSb5D7vskERBP5xmFuwmEtrG9ta/y+8vMrE=
+X-Received: by 2002:a17:906:4688:: with SMTP id a8mr5918566ejr.246.1552759809906;
+ Sat, 16 Mar 2019 11:10:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190316134130.28065-1-maxime.chevallier@bootlin.com>
+In-Reply-To: <20190316134130.28065-1-maxime.chevallier@bootlin.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Sat, 16 Mar 2019 14:09:33 -0400
+Message-ID: <CAF=yD-K1imzDHm2K8bvrtYu5j-MNrN_4xH2h2je6ornuqmi_QA@mail.gmail.com>
+Subject: Re: [PATCH net] packets: Always register packet sk in the same order
+To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Willem de Bruijn <willemb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Mar 2019 23:15:26 -0300
-Renato Lui Geh <renatogeh@gmail.com> wrote:
+On Sat, Mar 16, 2019 at 9:43 AM Maxime Chevallier
+<maxime.chevallier@bootlin.com> wrote:
+>
+> When using fanouts with AF_PACKET, the demux functions such as
+> fanout_demux_cpu will return an index in the fanout socket array, which
+> corresponds to the selected socket.
+>
+> The ordering of this array depends on the order the sockets were added
+> to a given fanout group, so for FANOUT_CPU this means sockets are bound
+> to cpus in the order they are configured, which is OK.
+>
+> However, when stopping then restarting the interface these sockets are
+> bound to, the sockets are reassigned to the fanout group in the reverse
+> order, due to the fact that they were inserted at the head of the
+> interface's AF_PACKET socket list.
+>
+> This means that traffic that was directed to the first socket in the
+> fanout group is now directed to the last one after an interface restart.
+>
+> In the case of FANOUT_CPU, traffic from CPU0 will be directed to the
+> socket that used to receive traffic from the last CPU after an interface
+> restart.
+>
+> This commit introduces a helper to add a socket at the tail of a list,
+> then uses it to register AF_PACKET sockets.
+>
+> Note that this changes the order in which sockets are listed in /proc and
+> with sock_diag.
+>
+> Fixes: dc99f600698d ("packet: Add fanout support")
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-> This patch adds a new copyright holder to the ad7780 driver.
-> 
-> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-Applied thanks
+Acked-by: Willem de Bruijn <willemb@google.com>
 
-Jonathan
-
-> ---
->  drivers/staging/iio/adc/ad7780.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
-> index ff61ffa0da9f..23b731a92e32 100644
-> --- a/drivers/staging/iio/adc/ad7780.c
-> +++ b/drivers/staging/iio/adc/ad7780.c
-> @@ -3,6 +3,7 @@
->   * AD7170/AD7171 and AD7780/AD7781 SPI ADC driver
->   *
->   * Copyright 2011 Analog Devices Inc.
-> + * Copyright 2019 Renato Lui Geh
->   */
->  
->  #include <linux/interrupt.h>
-
+Note that another consequence of this patch is that insertion on
+packet create is now O(N) with the number of active packet sockets,
+due to sklist being an hlist.
