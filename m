@@ -2,181 +2,124 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EF0C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 04:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3931CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 05:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 242262087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 04:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F193D21019
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 05:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EY2TecXG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKNE/4n5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfCPE7z (ORCPT
+        id S1726487AbfCPFTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 00:59:55 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43797 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfCPE7t (ORCPT
+        Sat, 16 Mar 2019 01:19:21 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36074 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfCPFTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 00:59:49 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l11so7798810pgq.10;
-        Fri, 15 Mar 2019 21:59:49 -0700 (PDT)
+        Sat, 16 Mar 2019 01:19:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id r124so7849554pgr.3;
+        Fri, 15 Mar 2019 22:19:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=38kWfbj8KCkTqbawPa9kq0A6n7fsMSJ+4LYh0RvsAFY=;
-        b=EY2TecXG4mochJwBdz6rmVWpBqGhDmoy8DhoUgtQJSs3C6Qfod13HPhuit2xVR/dNK
-         9u5sSAtOGm6Vr+gsaIhr7tFLZh4hRa91B1q5qVfyxwJPTs1Kyt+kgvuhq4GDeaSjG5Gm
-         CAWdTS30mFeqFw7u0Agw5EoxFxZvzuZToQir4T0F6FgTiPkTRMJxuOzk5/+K/ZP+MqK/
-         /UZng3r8/OaAyGpF2RALoKM5wDwVk3+CPbgJJtBm4njp7WVudS3nnlhciQKQZJbDJs5/
-         1+pF+9lrONv/f2E37HyWqSX4BH7lDBFpRMEgxp4OuVYzTSPPIAJ0JVl2rST+icmkrtkQ
-         82gQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wo1Qc+0+P4jKPHD/LFYya9z4OyeMRrQ0z1ytOoJ5gZ4=;
+        b=kKNE/4n5rIuJ/Zi5YihHdhpe3I01iwqoy9FxGlklicywglGxgONEUfLjO9ATfL37P0
+         8hiTPEi9YpBaa2coYXzhSFieRkQQClTnEA9i/Mgs4raOXS3apehE8AxiZYbMeAE5/Xp8
+         tTkupH9UN+00UW5DFZMiMV/XBLiPWJlbqIO5GWYfVJ8cO5ltA7pfEyLA1TdzLLwqqPQN
+         /f5NRVnkmxsOlmI3uLaDuL8AwJ1S/Rj62ErWGT0PsRCC2I4sgDTSAYy+mDEprUyPGXHt
+         H6/mUMqoTMKk9+eqBG9+v5jBOkLe3QBhznOSIPteYDkIbe4NlwsZMyjEKSB9CT6Fs4ne
+         DooQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=38kWfbj8KCkTqbawPa9kq0A6n7fsMSJ+4LYh0RvsAFY=;
-        b=dVyk8D6iXCpCB9u8OEFItQZ+IXvPDAm1DgNB5GnJnc3LBk9HO+cAVlKuyZpUkzL78U
-         OM837lRA8kDf7ps8DkUOInS0skCv5pTgfoC0B+mv2EGPF90/K1RYs1rGySeNvJSHjKT+
-         1Awd4wS8IAKzHwXo8//zvhcfes0DSCnEiDhZhKODh5b27fW1FlcT96xTSSjYfCfMQpmF
-         4mlMMoYxp0dsaBrfB0ugZ42RPZq9SRBLEKZ3RAUOgfQQC5kqx9DX/Zh4shCEfI+cymT/
-         mN8G6VPE9H7ZS8KTdOnE7H9QONdpvtq+2ZxrNgYLIKokhjodCeT83qHRddyllwQ3sdWH
-         /oUA==
-X-Gm-Message-State: APjAAAXOnFncdaL3u9izHb54tnvvIDjYW6ZO6xv9PZ4mOVbE7RpS+pSY
-        E2WN7hLR3FglpjEyTB4UdcE=
-X-Google-Smtp-Source: APXvYqznrzcqNHAr0PuvnXMcJmLDZB+9KzY4TFBlK1foaB5Hbiahta1ibcYTzVmdNebXJk+jvPp+Sg==
-X-Received: by 2002:a63:6c43:: with SMTP id h64mr6696375pgc.22.1552712388740;
-        Fri, 15 Mar 2019 21:59:48 -0700 (PDT)
-Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id y13sm4922279pfn.31.2019.03.15.21.59.47
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wo1Qc+0+P4jKPHD/LFYya9z4OyeMRrQ0z1ytOoJ5gZ4=;
+        b=swlsclfVCdLEZ4ZaY0SUlpubd/wyHN2SK87PlGWmnyzcVnDUEUdGvkzSTAtGVQcgNm
+         YLKZa3/vJ1WiHzjM0ObdI7OtIEG/VimSQHFhgAMi/S4MdfxuGrVdZMoNYe5eeQ6IiqfM
+         ABYUXtuU7+ka28BBUppA65xmy+OO8eNHRAXkZF0gFVQfTyCTFduZj8+wZuk1y0U4BcyW
+         Y1VzVcxn0SLIo1wNfLzcDg2jAeYVjKGFT2I5/2fGj6x5DGzcorYU+ZlEUzdZIfHdXfm1
+         8Y0Nm52ykRqyJqptjAWjYuMSJw+c5Cx7c1u5rhe/yvYM2Cs//uMgGGxQxK+GMLnGCnw5
+         w3VA==
+X-Gm-Message-State: APjAAAXT5GLnn9hHsHqp+d76da1H9CpoXuh02s4d0k6zsjevii7kvjnT
+        tb53N+Br0TI4FvKd6Q64fAg=
+X-Google-Smtp-Source: APXvYqycDQ3ozam+4deQmJWoYurHP7El7C5D2DofqSzCbSDx8BBeWnzUr79PEUjOw1PxnIwAab9bIw==
+X-Received: by 2002:a63:fe58:: with SMTP id x24mr6992352pgj.255.1552713559786;
+        Fri, 15 Mar 2019 22:19:19 -0700 (PDT)
+Received: from localhost ([121.137.63.184])
+        by smtp.gmail.com with ESMTPSA id u13sm5477130pfa.169.2019.03.15.22.19.17
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 21:59:48 -0700 (PDT)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 4/4] PM / core: Introduce ASYNC_SUSPEND_FUNC() helper macro
-Date:   Sat, 16 Mar 2019 00:59:28 -0400
-Message-Id: <20190316045928.31934-5-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190316045928.31934-1-tiny.windzz@gmail.com>
-References: <20190316045928.31934-1-tiny.windzz@gmail.com>
+        Fri, 15 Mar 2019 22:19:18 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Sat, 16 Mar 2019 14:19:02 +0900
+To:     Stanislav Fomichev <sdf@fomichev.me>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH] tcp: don't use __constant_cpu_to_be32
+Message-ID: <20190316051902.GA27630@tigerII.localdomain>
+References: <20190314061514.19586-1-sergey.senozhatsky@gmail.com>
+ <CANn89iJMFfh1Pkvk9LOn3FwgAfpVjwS7q5x_8Y9zo2rzpy7w9g@mail.gmail.com>
+ <20190315012012.GA748@jagdpanzerIV>
+ <20190315172428.GB5481@mini-arch.hsd1.ca.comcast.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190315172428.GB5481@mini-arch.hsd1.ca.comcast.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The async_suspend_noirq, async_suspend_late, async_suspend functions
-are basically the same. As we have seen:
+On (03/15/19 10:24), Stanislav Fomichev wrote:
+> On 03/15, Sergey Senozhatsky wrote:
+> > On (03/14/19 05:42), Eric Dumazet wrote:
+> > > > cpu_to_be32() is capable enough to detect __builtin_constant_p()
+> > > > and to use an appropriate compile time ___constant_swahb32()
+> > > > function.
+> See my recent commit a0517a0f7ef23 ("selftests/bpf: use
+> __bpf_constant_htons in test_prog.c") where compiler was not smart
+> enough to figure it out (you can google similar issues for GCC < 4.8).
 
-static void async_xxx(void *data, async_cookie_t cookie)
-{
-	struct device *dev = (struct device *)data;
-	int error;
+Allow me to disagree.
 
-	error = __device_xxx(dev, pm_transition, true);
-	if (error) {
-		dpm_save_failed_dev(dev_name(dev));
-		pm_dev_err(dev, pm_transition, " async", error);
-	}
+The error in a0517a0f7ef23 says
 
-	put_device(dev);
-}
+	error: implicit declaration of function '__builtin_bswap16'
 
-The ASYNC_SUSPEND_FUNC() helper macro can decrease code duplication.
+which doesn't sound like "the compiler was not smart".
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- drivers/base/power/main.c | 55 ++++++++++++---------------------------
- 1 file changed, 16 insertions(+), 39 deletions(-)
+Let's look at __swab16
 
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index d512bee9d9ca..3882dc5fee9f 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1348,20 +1348,22 @@ static int __device_suspend_noirq(struct device *dev, pm_message_t state, bool a
- 	return error;
- }
- 
--static void async_suspend_noirq(void *data, async_cookie_t cookie)
--{
--	struct device *dev = (struct device *)data;
--	int error;
--
--	error = __device_suspend_noirq(dev, pm_transition, true);
--	if (error) {
--		dpm_save_failed_dev(dev_name(dev));
--		pm_dev_err(dev, pm_transition, " async", error);
--	}
--
--	put_device(dev);
-+#define ASYNC_SUSPEND_FUNC(__func, __name)				\
-+static void __func(void *data, async_cookie_t cookie)			\
-+{									\
-+	struct device *dev = (struct device *)data;			\
-+	int error;							\
-+									\
-+	error = __device_ ## __name(dev, pm_transition, true);		\
-+	if (error) {							\
-+		dpm_save_failed_dev(dev_name(dev));			\
-+		pm_dev_err(dev, pm_transition, " async", error);	\
-+	}								\
-+									\
-+	put_device(dev);						\
- }
- 
-+ASYNC_SUSPEND_FUNC(async_suspend_noirq, suspend_noirq);
- DEVICE_SUSPEND_FUNC(device_suspend_noirq, suspend_noirq);
- 
- void dpm_noirq_begin(void)
-@@ -1542,19 +1544,7 @@ static int __device_suspend_late(struct device *dev, pm_message_t state, bool as
- 	return error;
- }
- 
--static void async_suspend_late(void *data, async_cookie_t cookie)
--{
--	struct device *dev = (struct device *)data;
--	int error;
--
--	error = __device_suspend_late(dev, pm_transition, true);
--	if (error) {
--		dpm_save_failed_dev(dev_name(dev));
--		pm_dev_err(dev, pm_transition, " async", error);
--	}
--	put_device(dev);
--}
--
-+ASYNC_SUSPEND_FUNC(async_suspend_late, suspend_late);
- DEVICE_SUSPEND_FUNC(device_suspend_late, suspend_late);
- 
- /**
-@@ -1796,20 +1786,7 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
- 	return error;
- }
- 
--static void async_suspend(void *data, async_cookie_t cookie)
--{
--	struct device *dev = (struct device *)data;
--	int error;
--
--	error = __device_suspend(dev, pm_transition, true);
--	if (error) {
--		dpm_save_failed_dev(dev_name(dev));
--		pm_dev_err(dev, pm_transition, " async", error);
--	}
--
--	put_device(dev);
--}
--
-+ASYNC_SUSPEND_FUNC(async_suspend, suspend);
- DEVICE_SUSPEND_FUNC(device_suspend, suspend);
- 
- /**
--- 
-2.17.0
+100 #ifdef __HAVE_BUILTIN_BSWAP16__
+101 #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+102 #else
+103 #define __swab16(x)                             \
+104         (__builtin_constant_p((__u16)(x)) ?     \
+105         ___constant_swab16(x) :                 \
+106         __fswab16(x))
+107 #endif
 
+We can call __builtin_bswap16() only when the compiler has that builtin,
+which is what #ifdef __HAVE_BUILTIN_BSWAP16__ for.
+
+But this is not what tools/testing/selftests/bpf/bpf_endian.h does
+
+# define __bpf_ntohs(x)                 __builtin_bswap16(x)
+# define __bpf_htons(x)                 __builtin_bswap16(x)
+
+So I sort of suspect that what should have been done was that
+__HAVE_BUILTIN_BSWAP16__ ifdef, just like what include/uapi/linux/swab.h
+does.
+
+	-ss
