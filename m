@@ -2,127 +2,160 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39375C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 00:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEE3C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 00:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1714218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 00:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8B5218D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 00:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EBa+wUxh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="snGhzOjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfCPAQt (ORCPT
+        id S1726832AbfCPAXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 20:16:49 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34976 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfCPAQt (ORCPT
+        Fri, 15 Mar 2019 20:23:22 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:45436 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726513AbfCPAXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 20:16:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w1so5331469wrp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2019 17:16:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AoD+knAlz3bws5yL5P/ADP0iS5uhqJVppDIkBdID5rw=;
-        b=EBa+wUxhUnTUdUcl3ZVnnTRnbjXoeefaWc66vS05b1V7JyKeL687V8ffCFM9/RbIkH
-         v66wjYx8PMnoL/2mpIQ04jOobfatxnC+a+xiCauS5U9eg1DQnIqPJmgeS+vsYwNWGBVR
-         JP3OuNikMXRXSq76ZdkUBDbJYyem1/ouqswtGM04sv9alC3ZkNf46w5iFMnUA9Bvy1A/
-         KTXrfCt6pDtHOrch1ys4qBTdacKN4/lKqmvF/1LzlguOjlTy1Ybyl3K4Kckh5XLyeZQ8
-         ko/hpg01WUyIPeaRbsbezfFPFFB8xTfaz3F0cWh4mLgHMzZz48N+ug+/doFupov8OTm4
-         WAgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AoD+knAlz3bws5yL5P/ADP0iS5uhqJVppDIkBdID5rw=;
-        b=eWA1ONOl6nE4Sk2rVWfCcpZiAkb/HG49KMtWNpAJS3jbttibCf58tWCn9kX0QQw/g7
-         wX3qo2z28tKniHRY2T2W84P4axD8+6Q+/PPn841DZ49P12yO1ErMTsrnZujY2lRctaCT
-         ogx/P0X7xmuycAo2BtfvijQ/4pUoT8EPOrakqkI4bvk9dkPQhslwszUtvMPAepMWL1T6
-         ld4t0dQUHtow+FJLG6cALziLyYcrW7lTavGN2XSgDcNetdrHlmvZN80yxOvoUM45bsH+
-         gwOfWS601H7Ervqt+r0/M/ZEpFO9ZaBJTK1CleX20XD8u6e4GGSu8A/umQs5OwqQHJe3
-         Vz0w==
-X-Gm-Message-State: APjAAAUY6kWe8QigBdwLNjDXqwXQJEVNGMNz/N0QQ+ZiSF8/WAs6x3b+
-        JnIsPPHxdqBMj9VI2FgMl0HjTG+UnIMT9QRx1kh8foy1
-X-Google-Smtp-Source: APXvYqxVmJMUiaryFXwZo/FDGUu5a3Cq3dtja+UTANs6iT3Lo1JpsdeFqspq6z5TABkNWvZrDJ+fEjpffDYZk3XM8qA=
-X-Received: by 2002:adf:fa51:: with SMTP id y17mr4342564wrr.233.1552695407561;
- Fri, 15 Mar 2019 17:16:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org> <20190315231547.GB3242@redhat.com>
-In-Reply-To: <20190315231547.GB3242@redhat.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 15 Mar 2019 17:16:36 -0700
-Message-ID: <CALAqxLW3A+n7U3Kjt1qyR593_JO-MB-2abDD2fYbCX2MZ2KvEA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 0/5 v2] DMA-BUF Heaps (destaging ION)
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Andrew F . Davis" <afd@ti.com>
+        Fri, 15 Mar 2019 20:23:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 33FF68EE287;
+        Fri, 15 Mar 2019 17:23:21 -0700 (PDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9-H0WJ5iPQNF; Fri, 15 Mar 2019 17:23:21 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id A7BB18EE12F;
+        Fri, 15 Mar 2019 17:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1552695800;
+        bh=+EFxB7AMfPK2/eyCESoKwN1Bn+ScQXKRzDCau8uVCnk=;
+        h=Subject:From:To:Cc:Date:From;
+        b=snGhzOjlam1AIvV7Wevq7qmKwA5xoGxs749hoZvbFbki1Uhdt5x5rRL7Su60v7KGd
+         U//QmlMP5UeiVnloPPPKDuu7d7y/OzeRZfIceNxF3JXZHMVQtUdjm2hTtn1/6nvubh
+         D16jyCCynUqLzRDJeh88nMdFmIzavYwlnXa8TJkE=
+Message-ID: <1552695799.24933.24.camel@HansenPartnership.com>
+Subject: [GIT PULL] final round of SCSI updates for the 5.0+ merge window
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 15 Mar 2019 17:23:19 -0700
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 4:15 PM Jerome Glisse <jglisse@redhat.com> wrote:
-> On Tue, Mar 05, 2019 at 12:54:28PM -0800, John Stultz wrote:
-> > Here is a initial RFC of the dma-buf heaps patchset Andrew and I
-> > have been working on which tries to destage a fair chunk of ION
-> > functionality.
-> >
-> > The patchset implements per-heap devices which can be opened
-> > directly and then an ioctl is used to allocate a dmabuf from the
-> > heap.
-> >
-> > The interface is similar, but much simpler then IONs, only
-> > providing an ALLOC ioctl.
-> >
-> > Also, I've provided simple system and cma heaps. The system
-> > heap in particular is missing the page-pool optimizations ION
-> > had, but works well enough to validate the interface.
-> >
-> > I've booted and tested these patches with AOSP on the HiKey960
-> > using the kernel tree here:
-> >   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
-> >
-> > And the userspace changes here:
-> >   https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
->
-> What upstream driver will use this eventualy ? And why is it
-> needed ?
+This is the final round of mostly small fixes and performance
+improvements to our initial submit.  The main regression fix is the
+ia64 simscsi build failure which was missed in the serial number
+elimination conversion.
 
-So, its sort of a complicated answer, as we don't have a fully open
-pipeline just yet.  The HiKey board's upstream kirin drm driver uses
-this, as it needs contiguous buffers for its framebuffers. So in
-Android the HiKey gralloc (opensource userspace) allocates the HW_FB
-buffers from the CMA heap.  Other graphics buffers are then allocated
-by gralloc out of the system heap and SurfaceFlinger and  drm_hwc
-(both also opensource userspace) coordinate squashing those other
-buffers down through the mali utgard gpu (proprietary GL blob) onto
-the target HW_FB buffer.  (All of the above is the same for the
-HiKey960, but we're still working the drm driver into shape for
-upstreaming).
+You will find the topmost patch has been rebased.  Apparently one of
+our number can't spell scsi: and, since it is the oneliner of the
+patch, I felt it had to be fixed.  There are no code changes from what
+was in linux-next.  The original commit is here for you to verify:
 
-That said, I know the Lima driver is starting to shape up, and I'm
-hoping to give it a whirl to replace the proprietary utgard driver.
-Everything else would stay the same, which would give us a fully open
-pipeline.
+https://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git/log/?h=cockup
 
-I know for other dev boards like the db410c w/ freedreno, the Android
-pipeline gets away with using the gbmgralloc implementation, but my
-understanding in that case is the rendering/display pipeline doesn't
-require contiguous buffers, so the allocation logic can be simpler,
-and doesn't use ION heaps. But its possible a gralloc could be
-implemented to use the system heap for allocations on that device.
+The patch is available here:
 
-thanks
--john
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+
+The short changelog is:
+
+Andy Shevchenko (1):
+      scsi: target: tcmu: Switch to bitmap_zalloc()
+
+Arnd Bergmann (4):
+      scsi: lpfc: fix 32-bit format string warning
+      scsi: lpfc: fix unused variable warning
+      scsi: qla2xxx: avoid printf format warning
+      scsi: ufs: hisi: fix ufs_hba_variant_ops passing
+
+Bill Kuzeja (1):
+      scsi: qla2xxx: Fix panic in qla_dfs_tgt_counters_show
+
+Cathy Avery (1):
+      scsi: target: tcmu: wait for nl reply only if there are listeners or during an add
+
+Dan Carpenter (2):
+      scsi: lpfc: Fix error codes in lpfc_sli4_pci_mem_setup()
+      scsi: qla2xxx: check for kstrtol() failure
+
+Erwan Velu (1):
+      scsi: smartpqi: Reporting 'logical unit failure'
+
+Felipe Franciosi (1):
+      scsi: virtio_scsi: don't send sc payload with tmfs
+
+Hannes Reinecke (1):
+      scsi: ia64: simscsi: use request tag instead of serial_number
+
+James Smart (2):
+      scsi: lpfc: resolve static checker warning in lpfc_sli4_hba_unset
+      scsi: lpfc: Correct __lpfc_sli_issue_iocb_s4 lockdep check
+
+John Garry (1):
+      scsi: hisi_sas: Set PHY linkrate when disconnected
+
+Lee Duncan (1):
+      scsi: libiscsi: Hold back_lock when calling iscsi_complete_task
+
+Sagar Biradar (1):
+      scsi: aacraid: Fix performance issue on logical drives
+
+Steve Sistare (1):
+      scsi: megaraid_sas: reduce module load time
+
+Vasily Averin (1):
+      scsi: libiscsi: fall back to sendmsg for slab pages
+
+Xiang Chen (4):
+      scsi: hisi_sas: Change SERDES_CFG init value to increase reliability of HiLink
+      scsi: hisi_sas: Send HARD RESET to clear the previous affiliation of STP target port
+      scsi: hisi_sas: Fix a timeout race of driver internal and SMP IO
+      scsi: hisi_sas: Change return variable type in phy_up_v3_hw()
+
+Xiaofei Tan (1):
+      scsi: hisi_sas: print PHY RX errors count for later revision of v3 hw
+
+And the diffstat:
+
+ arch/ia64/hp/sim/simscsi.c                |  7 +--
+ drivers/scsi/aacraid/linit.c              | 13 +++--
+ drivers/scsi/hisi_sas/hisi_sas.h          |  8 +++
+ drivers/scsi/hisi_sas/hisi_sas_main.c     | 57 ++++++++++++++++++--
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c    |  1 +
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c    | 89 ++++++++++++++++++++++---------
+ drivers/scsi/libiscsi.c                   | 22 +++++++-
+ drivers/scsi/libiscsi_tcp.c               | 11 ++--
+ drivers/scsi/lpfc/lpfc_init.c             | 21 ++++----
+ drivers/scsi/lpfc/lpfc_nvme.c             |  3 +-
+ drivers/scsi/lpfc/lpfc_sli.c              |  2 +-
+ drivers/scsi/megaraid/megaraid_sas_base.c |  4 +-
+ drivers/scsi/qla2xxx/qla_attr.c           |  2 +
+ drivers/scsi/qla2xxx/qla_dfs.c            |  2 +
+ drivers/scsi/qla2xxx/qla_iocb.c           |  4 +-
+ drivers/scsi/smartpqi/smartpqi_init.c     |  6 +++
+ drivers/scsi/ufs/ufs-hisi.c               | 11 ++--
+ drivers/scsi/ufs/ufshcd-pltfrm.c          |  2 +-
+ drivers/scsi/ufs/ufshcd-pltfrm.h          |  2 +-
+ drivers/scsi/ufs/ufshcd.h                 |  2 +-
+ drivers/scsi/virtio_scsi.c                |  2 -
+ drivers/target/target_core_user.c         | 19 ++++---
+ 22 files changed, 210 insertions(+), 80 deletions(-)
+
+James
+
