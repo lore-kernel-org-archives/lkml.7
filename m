@@ -4,69 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8E2C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E50C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C92421903
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1027621903
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HShqtnHb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JPJ9XkWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfCPOk5 (ORCPT
+        id S1727087AbfCPOlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:40:57 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36989 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfCPOk4 (ORCPT
+        Sat, 16 Mar 2019 10:41:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34787 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbfCPOlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:40:56 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y15so12460609wro.4
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:40:55 -0700 (PDT)
+        Sat, 16 Mar 2019 10:41:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k1so11975291wre.1
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:41:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:from:user-agent:mime-version:to:cc:subject
          :references:in-reply-to:content-transfer-encoding;
-        bh=kZtPyGv3piHGTEPU4vYi+v8Hf0ZG/pFYCfiuoXCBihw=;
-        b=HShqtnHbGuCCgCo1puPdNXB8SXviGvSVKIfiLn/yuO9Q6hv/33Opfgf+WQ9vSp9gQL
-         FzpyV4X8k3sKIgL1HRNiYdMGxOluEhfDI5d9JIJwCz946vaV56RH/fprWKH/a9oZ9mE2
-         WfAs4CUVzgKsUOKPHe1NHe04t1dJH8ym66NIRoat6XmFcMrlfWM//ivDpHig8OjOIC8r
-         mBt5bP+ezFPRImnDOH9U8hI2WzcxeesSFieWsLOK+G/yy8ACqhfoLUwOXZnSGd2LhoY0
-         STKbogJiHoxj7uOg3DDJYKYI4yEhY/tGv/PU0dMGU5ErDE/u7k781OlEZk1JbFaQyRC4
-         2/ng==
+        bh=3JRLm6aE8nn8AvGA5lUY5WZdl5snm2+VkOvlXdbMgtI=;
+        b=JPJ9XkWIO8HUDvxFf+kq39rqA4rHHGIIFiEcw67Q7gKsJq0mcMInQ+A6zyjIcEBy2l
+         BgLOYZPerTuO0DKcGe9vq9E5RvrH2BpS6omPPX2rav1bIgy+KdgXvJ+MNkx7UKI38q+X
+         jvJdrcyr3fhhFU9EyNGZ3MTDH4QbDXhI89t6FNjxBj087O+2ETozMRqN1uQXJJ5m3xNI
+         HzI3/Oi0Bral0ihWSAWRFa/R5OcgkZr8Ykmvrtvo1pzV/rIdyqGOBDaqUE6QYYJAlMh2
+         Xs3pue3fqjuy95eVMpmPchiMq9TTWb4spc3H6wFW6yfevoj8MKRzJyHl77k8eWHbXpSv
+         96Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
          :cc:subject:references:in-reply-to:content-transfer-encoding;
-        bh=kZtPyGv3piHGTEPU4vYi+v8Hf0ZG/pFYCfiuoXCBihw=;
-        b=JmonWw+N5H11zdYf1cHYCSYhpAmqSnUpRcNWFPp7fcIPvzInWv54WlFqG5A6AzncM7
-         lLlz4C7pR0cyTQ7ar2FEWbnQSnGv6mzQT6ZzHYQkxhGXkxZJxJc575BFXc8c/hp0/eYK
-         cxI9LZG6ZFEsgmBIEZirA+XigvotbVQr3lBlg4J8XcLQq4OzLAvM+OFJUEmal62FYJNW
-         ZKsHm4btpCTYt1oTCpVc/KQcTq/y9IAC8jv3nvTWZNJ8M1SBIIoonG2DMbMSonWJUmP6
-         +Run3Cw7Upo8jQRfAailqgrTSHGcUDTyn3LZhbovN5baH7uyK6HPXu7D3LCCNuiRJSLQ
-         i/UQ==
-X-Gm-Message-State: APjAAAVOg83sDUU+g88GvkNQW8CSlcDais5cFdgtpuAbeYnGN1WB4nqW
-        4GojtoayAeMa/0RRXC+OPOMTCA==
-X-Google-Smtp-Source: APXvYqyRHd8f8YmeeSJEpz5UzV8ASz+zBVO0fsnhCoYAu4liDXxG4fdTvxZHzkJUs/BT7SWuQ7ecgw==
-X-Received: by 2002:a5d:6252:: with SMTP id m18mr5795078wrv.199.1552747254481;
-        Sat, 16 Mar 2019 07:40:54 -0700 (PDT)
+        bh=3JRLm6aE8nn8AvGA5lUY5WZdl5snm2+VkOvlXdbMgtI=;
+        b=oAdB20YSpvWhnAQQeP75hmhr/jzl+5W1F5c/1BJ9EBDr8B4ZnILpi8Nq3qeT0IWGki
+         xEuZjBoSd9WZt+Ljkzhw8ocikT5RzRMCMw3vXUWta/1bxMhwZB8Z7cga9qUyItQ+fZVr
+         GKih8ykJNeY4CduuK4lmissoZzpFmQNuv75Hox4/walAxXjb9a9PNXdATnaQM9h4rY0o
+         JcK834Jb6A+AIa4H+6J6PL4X4gi0dHYIFXiRF+5634Q1c+tTcJmXZV5LPuMzdgJHrTuU
+         K6G9VaDPB2YHYphoIogItjMBXiWkoMT9xGN12tVYOvQRbgtWuUaGPyTCDrGKjCTwWeEl
+         28Sg==
+X-Gm-Message-State: APjAAAXbMChJ9jDS5TX9R29cbrq0Afv8EcnTgNiG/VKsRPCkaqSIhy93
+        S7C9abgIj18YEMXv1izfP6YYt+RFpZeyXA==
+X-Google-Smtp-Source: APXvYqxJTlTq+VQ5O/KmnNSLpkSECzgV79OMiHzEa8PG0yPJOhl4AaBhfbjnFDbTV8Zx+wTNYtb/CA==
+X-Received: by 2002:adf:efc8:: with SMTP id i8mr6360395wrp.164.1552747289844;
+        Sat, 16 Mar 2019 07:41:29 -0700 (PDT)
 Received: from [192.168.1.77] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id z12sm4388781wrt.10.2019.03.16.07.40.53
+        by smtp.gmail.com with ESMTPSA id r6sm4955723wrx.48.2019.03.16.07.41.28
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 16 Mar 2019 07:40:53 -0700 (PDT)
-Message-ID: <5C8D0AF5.5040101@baylibre.com>
-Date:   Sat, 16 Mar 2019 15:40:53 +0100
+        Sat, 16 Mar 2019 07:41:29 -0700 (PDT)
+Message-ID: <5C8D0B18.1070001@baylibre.com>
+Date:   Sat, 16 Mar 2019 15:41:28 +0100
 From:   Neil Armstrong <narmstrong@baylibre.com>
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:24.0) Gecko/20100101 Thunderbird/24.6.0
 MIME-Version: 1.0
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Guillaume La Roque <glaroque@baylibre.com>
 CC:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 04/11] arm64: dts: meson-g12a-u200: add regulators
-References: <20190311095613.11371-1-narmstrong@baylibre.com> <20190311095613.11371-5-narmstrong@baylibre.com> <CAFBinCCiV21kB38SXqVYMmQ5YkK2MxXKhiTJrVP3jOCLDtuBBg@mail.gmail.com>
-In-Reply-To: <CAFBinCCiV21kB38SXqVYMmQ5YkK2MxXKhiTJrVP3jOCLDtuBBg@mail.gmail.com>
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 06/11] arm64: dts: meson-g12a-x96-max: add regulators
+References: <20190311095613.11371-1-narmstrong@baylibre.com> <20190311095613.11371-7-narmstrong@baylibre.com> <CAFBinCBEeCAKuzOztT5wU1t9UvY=ocVVrdHB6PNG7pp+gXq1=A@mail.gmail.com>
+In-Reply-To: <CAFBinCBEeCAKuzOztT5wU1t9UvY=ocVVrdHB6PNG7pp+gXq1=A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,67 +75,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI,
 
-Le 15/03/2019 23:01, Martin Blumenstingl a écrit :
-> Hi Neil,
+
+Le 15/03/2019 23:05, Martin Blumenstingl a écrit :
+> Hi Neil and Guillaume,
 > 
-> On Mon, Mar 11, 2019 at 10:57 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On Mon, Mar 11, 2019 at 11:04 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> From: Jerome Brunet <jbrunet@baylibre.com>
+>> From: Guillaume La Roque <glaroque@baylibre.com>
 >>
->> Add system regulators for the S905D2 U200 reference design.
-> I find the hint in the meson-g12a-sei510 regulators patch very good:
+>> Add system regulators for the X96 Max Set-Top-Box.
+> the hint from the "meson-g12a-sei510: add regulators" patch would be
+> great here as well:
 >   Still missing
 >   * VDD_EE (0.8V - PWM controlled)
 >   * VDD_CPU(PWM controlled)
 >   * VDDQ1_5
 
-I will add the same comment here
+Will add the comment
 
 > 
-> VDD_EE and VDD_CPU are *probably* going to be very similar across all
-> boards (Meson8b uses two slightly different PWM regulators on all
-> boards supported by mainline, but the basic concept is always the
-> same)
+> I'm not sure whether this board also has VDDQ1_5 though, but VDD_EE
+> and VDD_CPU should be very similar (or even identical)
 
-Not necessarily, it can change, it used to change across GXBB boards, but
-seems to be more coherent across GXL/GXM/G12A ref designs and derivative
-boards, but it can still change if the HW designer decides to be creative !
-
-> I'm not sure if VDDQ1_5 is specific to the SEI510 board though.
-
-I think VDDQ1_5 is specific to SEI510, will check on the schematics
+It's bases on a ref design, we can assume it's the same yes
 
 > 
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>>
+>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 >> ---
->>  .../boot/dts/amlogic/meson-g12a-u200.dts      | 79 +++++++++++++++++++
->>  1 file changed, 79 insertions(+)
+>>  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 65 +++++++++++++++++++
+>>  1 file changed, 65 insertions(+)
 >>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
->> index f2afd0bf3e28..17696f356ff2 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
->> @@ -14,13 +14,92 @@
->>         aliases {
->>                 serial0 = &uart_AO;
->>         };
->> +
->>         chosen {
->>                 stdout-path = "serial0:115200n8";
->>         };
->> +
->>         memory@0 {
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+>> index 0edbd00b358f..21e5de48613e 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+>> @@ -21,6 +21,71 @@
 >>                 device_type = "memory";
 >>                 reg = <0x0 0x0 0x0 0x40000000>;
 >>         };
-> there are two unrelated whitespace changes above.
-> please clean them up if you have to re-send this for whatever reason
-
-Yep, will cleanup
-
+>> +
+>> +       flash_1v8: regulator-flash_1v8 {
+>> +               compatible = "regulator-fixed";
+>> +               regulator-name = "FLASH_1V8";
+>> +               regulator-min-microvolt = <1800000>;
+>> +               regulator-max-microvolt = <1800000>;
+>> +               vin-supply = <&vcc_3v3>;
+>> +               regulator-always-on;
+>> +       };
+>> +
+>> +       main_12v: regulator-main_12v {
+>> +               compatible = "regulator-fixed";
+>> +               regulator-name = "12V";
+>> +               regulator-min-microvolt = <12000000>;
+>> +               regulator-max-microvolt = <12000000>;
+>> +               regulator-always-on;
+>> +       };
+> mine has a 5V DC in. can you please check this on your board?
 > 
 > 
 > Regards
