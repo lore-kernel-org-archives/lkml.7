@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23BBC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA08CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7184E217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF8D217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfCPOtC (ORCPT
+        id S1727213AbfCPOt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:49:02 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:48441 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfCPOtC (ORCPT
+        Sat, 16 Mar 2019 10:49:29 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:38858 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfCPOtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Mar 2019 10:49:02 -0400
-Received: by mail-io1-f72.google.com with SMTP id w19so9492609ioa.15
+Received: by mail-it1-f198.google.com with SMTP id r136so10561741ith.3
         for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:49:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
-        bh=/FFaWZSA2YfhUyEx8nHr3wlA+vNq8J4vZ6bnwl4n+5Q=;
-        b=LNnYH3kN0oGZNfbS0vuXQb95Vf5dKLVhKV+5tJSUfp9UNoNNy1H1/Jv+D8/XwJiWlG
-         24QqpmGPjPH9nl/GrdDJ5D4/VzkXAQpn/Zx0J3uq5TiQXNz5K9tuZrp114m3EwZhgdRA
-         RFtU6wBGrEaJNsjQwRAuMvq8No91+JuvYObNwXSeW2kGY6WushV7AeGRwhuVlXhTlwiX
-         ynBIXXOXKQLNtwbzALQ4wu3m/AsTsUxhJ9/+Se7Af+cxOobFFEDQK7/VZdW9R1gU2SWi
-         /hLxHqA8IRxa5SKJ5AxziNcRhmUvLP3I+rIJLLD9gZ/YPHHaHDMMkMQ9wLaA6lgsBGRB
-         oC/w==
-X-Gm-Message-State: APjAAAXVD0e8xv5jiHsG+5dkej1Jff+5IH0kZPnSnqIdJnYz+CGTP/lR
-        u0Q7KmtvGmVE3s7Jta0U/kvNrug4je0uTAzBH3axmNYgYdgi
-X-Google-Smtp-Source: APXvYqzZSxxCbczTFfnFWh/AGNXppAXdTZUNLfOmpwHI/Q1FLc2y6tADXfO/CbpMJtelbR0Zwlju2MeUiXQOgFQ0DFJJ7YUvTrhD
+        bh=tKdFMkPQdgTBq0mw82dj+i9hybL5R21t7YUT6EeK8B8=;
+        b=QqNwDUWu/S0fRCLNxUyru6vsSMmmzYmlt/EZxym92HrWgq6R8MGKA7Nw/oaWba7ihl
+         INLkouJf5KlbbZtokMaga7Q13Vg5q4rZXviNQfuY5PQPKuWymdz7Hp6bzk2qsUXRLJ63
+         qd4L/gSL0AkBOSJv9OHuPpY60JbincjsOrHMQ4a0jBmhDP+lQPNMBPljxWDDKqi/yqRu
+         MDlrMkVcajb7hXMHxf4z1nkHM/Fj8sKtU2rfSWx5/xWWk4SCvJK9qsmI4haKJ0syAFmv
+         1+3B/x9Zx7ih3Zr1IIGenvBmkEszgpMMkvrbJ2zMiIgpnK0RywYJ2w7pUKaqwS4r23to
+         kddg==
+X-Gm-Message-State: APjAAAV4RPC1QUfZBa2Lj8w18rrBYzdx77glUYmk3vEzsIWL5SP/IkFh
+        BmaXvQTbK6W2YxscZ3ADnRGNNzF7RUt4xjSmZ4NmQDKI+jI0
+X-Google-Smtp-Source: APXvYqzb0BISZrVvuixbyEcNUXcri+eqiTp3LxPN1PHjzd87oq2IQENWpcnVwAM4ReH5NCtT5GtcjxU1bhHCh8L0lApaYOu6bSuQ
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9b95:: with SMTP id r21mr5870876iom.38.1552747741521;
+X-Received: by 2002:a24:4503:: with SMTP id y3mr4809853ita.32.1552747741653;
  Sat, 16 Mar 2019 07:49:01 -0700 (PDT)
 Date:   Sat, 16 Mar 2019 07:49:01 -0700
-In-Reply-To: <00000000000016f7d40583d79bd9@google.com>
+In-Reply-To: <000000000000675cea057e201cbb@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008f302105843741ad@google.com>
-Subject: Re: WARNING: bad usercopy in fanotify_read
-From:   syzbot <syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, amir73il@gmail.com, cai@lca.pw,
-        crecklin@redhat.com, jack@suse.cz, keescook@chromium.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000091355e0584374181@google.com>
+Subject: Re: BUG: unable to handle kernel paging request in slhc_free
+From:   syzbot <syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com>
+To:     akinobu.mita@gmail.com, akpm@linux-foundation.org,
+        davem@davemloft.net, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, mhocko@kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tejaswit@codeaurora.org, torvalds@linux-foundation.org
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,21 +59,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 syzbot has bisected this bug to:
 
-commit a8b13aa20afb69161b5123b4f1acc7ea0a03d360
-Author: Amir Goldstein <amir73il@gmail.com>
-Date:   Thu Jan 10 17:04:36 2019 +0000
+commit e41d58185f1444368873d4d7422f7664a68be61d
+Author: Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed Jul 12 21:34:35 2017 +0000
 
-     fanotify: enable FAN_REPORT_FID init flag
+     fault-inject: support systematic fault injection
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11e78d6f200000
-start commit:   a8b13aa2 fanotify: enable FAN_REPORT_FID init flag
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1415a8a3200000
+start commit:   e41d5818 fault-inject: support systematic fault injection
 git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13e78d6f200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15e78d6f200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e9d91b7192a5e96e
-dashboard link: https://syzkaller.appspot.com/bug?extid=2c49971e251e36216d1f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1287516f200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ee410b200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1615a8a3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1215a8a3200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7d581260bae0899a
+dashboard link: https://syzkaller.appspot.com/bug?extid=6c5d567447bfa30f78e2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136130fd400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1607c563400000
 
-Reported-by: syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com
-Fixes: a8b13aa2 ("fanotify: enable FAN_REPORT_FID init flag")
+Reported-by: syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com
+Fixes: e41d5818 ("fault-inject: support systematic fault injection")
