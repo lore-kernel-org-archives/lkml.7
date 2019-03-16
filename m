@@ -2,149 +2,89 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D40C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A300C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D90218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C7A218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="qF6XXrT8"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="vgO9/x05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbfCPWIs (ORCPT
+        id S1727040AbfCPWJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 18:08:48 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:47240 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfCPWIr (ORCPT
+        Sat, 16 Mar 2019 18:09:18 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38852 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfCPWJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 18:08:47 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 203A7839
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 22:08:46 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sgwG3Zee416T for <linux-kernel@vger.kernel.org>;
-        Sat, 16 Mar 2019 17:08:45 -0500 (CDT)
-Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id CFE7D70E
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 17:08:45 -0500 (CDT)
-Received: by mail-it1-f198.google.com with SMTP id q184so11289882itd.6
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 15:08:45 -0700 (PDT)
+        Sat, 16 Mar 2019 18:09:17 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e80so6292238ote.5
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 15:09:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cSFq9gi/n+o1aAJXKdC2m4mpRxXnRFu9Q4meSx6wM4M=;
-        b=qF6XXrT8MXGLism1ur8qpXLILExLf7bGeWE2YTeG7FeRdzWHyclXIrs3ToaPZMbqI1
-         RdzMVjcD83k3ivMeODxyMmjldvl5W0Kjqw29O6Od23Gd9Wg1Ip8r294lk3JJUx2mMHAo
-         TRaxd+TCRiL3pvU4ZTzPHHYgv1uI+ecYlWrd1PAeJ18/xCO/nFtVYrtsq7vvWfk5ejhU
-         NcTQx71mq0WQdlTnO2A4rChC5hmvgtMxQsB1/vZgvrsn3pdnhZuTGqzG+Nzoqo1BgyHy
-         n3CsshZiSyLM2IYhcXCrB3WJFV5yddLzhYM7WytZcf9XbOYS7WXp/aHP3tX2DboR6G/q
-         B+eg==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o528ymosn+dxRi3OgITbR69+jmWqSJKfAI21OdIVJnc=;
+        b=vgO9/x05lFRtnPHRyy2BZdw3GS3NxUCQbEwaiUrytHncfrVc8epJnPIGigvt1Exlze
+         axGuALHYzcJOVy4pSAHxmNHjVqrb9QL7nGZP6MOBQIvoE4Zi4xeusv3kU+3shU404ohe
+         CWGlIIRJVxGAT+39o99EAc59Vjd+bsRIwpjPjND6+KMXktjJvqSOUVye2wo/lSgdxFJC
+         cjiRBxcAjezRAu5SuUQ/i3E0hWs3837EUVif32JRcqBayFZG0SdLYDQQlDV+6fvLrHF4
+         rlEPypyzez3oxzPwYzITihAQwaqn7jb4pL4N+se4JMmUuKdQP1PjeD6qie1/89/KEINU
+         ch7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=cSFq9gi/n+o1aAJXKdC2m4mpRxXnRFu9Q4meSx6wM4M=;
-        b=jXYmxlHu3+4iVqNJMcjsXhwDmkhqEtUcT9yFq0iayhluAOjEE4hYTMcYOq4s00II10
-         7B5+5X2H1Y8zi1Vo5tuwl8rs08wue+2zcw5G1BXcS0BtFASrW308sQTPEhLbH6TAZ73R
-         VcDKpEEW7e7Di2FQddSd0cIh+mC4VnQ5dx8fPFmQVfiRo6hDkjGTZec+Fo070atfeTaE
-         ABLxVYsz61xAP2M3Q+vTkX+wMBDSJLEQYBk6hYRiN71P2qPp2Dx8E6RjQ3BNcGwpYy2V
-         hxxDZwNLjrZJo+GLBixypOcWYnRijY4nCTs/NCsZ+64jNUcYouJDpN3z7YtCm/uGoTjz
-         hxUA==
-X-Gm-Message-State: APjAAAXryK4A5Z+7NWlabed7X3A9lJFry0649UISvmKY+4zw2AXJDVPb
-        NN2yQPmNr9OChIIsGZmTZ1YLwA4OfAgAFvL9+nicVGGJSfwUYZFV+mKOa05o0IAirfD3qbpmcOE
-        jqd5K1TLzHNXVOuLg3mIJ+ktS2EPB
-X-Received: by 2002:a05:660c:185:: with SMTP id v5mr6543041itj.34.1552774124098;
-        Sat, 16 Mar 2019 15:08:44 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyRsOT/r0to0mKwwjc3BTUyUPNDoWDmjKJ94EJ0/l1TxEJC5kf5fvYREwaqde98Oxy6Z2Hm9w==
-X-Received: by 2002:a05:660c:185:: with SMTP id v5mr6543028itj.34.1552774123897;
-        Sat, 16 Mar 2019 15:08:43 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id s142sm3070512itb.37.2019.03.16.15.08.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 16 Mar 2019 15:08:42 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] iio: hmc5843: fix potential NULL pointer dereferences
-Date:   Sat, 16 Mar 2019 17:08:33 -0500
-Message-Id: <20190316220836.25092-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190316151912.4a7ea87d@archlinux>
-References: <20190316151912.4a7ea87d@archlinux>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o528ymosn+dxRi3OgITbR69+jmWqSJKfAI21OdIVJnc=;
+        b=p/+Guyc54jnW0L1uPfZ0Z3zo74q0gmbFXIPxtgSrClZrO/yeUYMMx0MiMRJeC4r+ml
+         KkvSyZ29/XFKMgRFjZOB3l7mSbtSxYmDxTF/M3V5B8DUgIfJFCwfYo+mdr2dnbzjmrMA
+         NJXQNhbRwgLHbXpaS01z5p3b81H5PEb0t0w5u3sY2YR/eicfyabi/gwHPh9UxN891EiV
+         dVCZz5741rfrRZNVrEGM0sthkHptISmk/pVeUl7zVA/alu2CybEdHKph5zWPpHYUaeiA
+         lF9+mD3BSFz854M8nE7K/jtoW6Js3sQUhftJfT0Dkz5ozF18h1vqpKylZWp1llEbqjVV
+         nbOw==
+X-Gm-Message-State: APjAAAXJ/FcAc8zQma0yBYXKTPs86cktYqrEKvsyPZxjgRzxqlqZOAi3
+        ee/g66sxfk+tdFExnD+qRwNeN5728KApmQs03QWokkJG
+X-Google-Smtp-Source: APXvYqwDbX5sYzypTMpAr4TZJ/pQpHChrM/OyDQGrO1BvCX/JH/ZqEou70Ws8PrexNCKPegl91cgqJDZLpEmJmVWS2Y=
+X-Received: by 2002:a9d:5906:: with SMTP id t6mr6455841oth.308.1552774156883;
+ Sat, 16 Mar 2019 15:09:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190307151342.7381-1-narmstrong@baylibre.com>
+ <20190307151342.7381-6-narmstrong@baylibre.com> <CAFBinCBt290Qabw98SpiON3xG0ihMEDNzwDDTrBo6QYbA5QjMQ@mail.gmail.com>
+ <5C8D08DE.7070203@baylibre.com>
+In-Reply-To: <5C8D08DE.7070203@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 16 Mar 2019 23:09:06 +0100
+Message-ID: <CAFBinCAZt75BxJD6P=HRF4tqvJd_QmrpqKQu_GbKzv6cLhnLew@mail.gmail.com>
+Subject: Re: [PATCH 5/9] arm64: dts: meson: g12a: add reset controller
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_regmap_init_i2c may fail and return NULL. The fix returns
-the error when it fails.
+Hi Neil,
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
-V2: fix the two together
----
- drivers/iio/magnetometer/hmc5843_i2c.c | 7 ++++++-
- drivers/iio/magnetometer/hmc5843_spi.c | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+On Sat, Mar 16, 2019 at 3:32 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+[...]
+> > Do you have any hint how to verify the CBUS offset (0x1004) of the
+> > reset controller?
+>
+> You can find base the address found in the G12A DT for the usb2 phy :
+> https://github.com/hardkernel/linux/blob/odroidn2-4.9.y/arch/arm64/boot/dts/amlogic/mesong12a.dtsi#L379
+perfect, thank you!
 
-diff --git a/drivers/iio/magnetometer/hmc5843_i2c.c b/drivers/iio/magnetometer/hmc5843_i2c.c
-index 3de7f4426ac4..86abba5827a2 100644
---- a/drivers/iio/magnetometer/hmc5843_i2c.c
-+++ b/drivers/iio/magnetometer/hmc5843_i2c.c
-@@ -58,8 +58,13 @@ static const struct regmap_config hmc5843_i2c_regmap_config = {
- static int hmc5843_i2c_probe(struct i2c_client *cli,
- 			     const struct i2c_device_id *id)
- {
-+	struct regmap *regmap = devm_regmap_init_i2c(cli,
-+			&hmc5843_i2c_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
- 	return hmc5843_common_probe(&cli->dev,
--			devm_regmap_init_i2c(cli, &hmc5843_i2c_regmap_config),
-+			regmap,
- 			id->driver_data, id->name);
- }
- 
-diff --git a/drivers/iio/magnetometer/hmc5843_spi.c b/drivers/iio/magnetometer/hmc5843_spi.c
-index 535f03a70d63..8355713651d4 100644
---- a/drivers/iio/magnetometer/hmc5843_spi.c
-+++ b/drivers/iio/magnetometer/hmc5843_spi.c
-@@ -58,6 +58,7 @@ static const struct regmap_config hmc5843_spi_regmap_config = {
- static int hmc5843_spi_probe(struct spi_device *spi)
- {
- 	int ret;
-+	struct regmap *regmap;
- 	const struct spi_device_id *id = spi_get_device_id(spi);
- 
- 	spi->mode = SPI_MODE_3;
-@@ -67,8 +68,12 @@ static int hmc5843_spi_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
-+	regmap = devm_regmap_init(spi, &hmc5843_spi_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(devm_regmap);
-+
- 	return hmc5843_common_probe(&spi->dev,
--			devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config),
-+			regmap,
- 			id->driver_data, id->name);
- }
- 
--- 
-2.17.1
+feel free to add my:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
+
+Regards
+Martin
