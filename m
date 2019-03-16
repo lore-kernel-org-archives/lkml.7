@@ -2,327 +2,249 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7CFC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA52EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB37421019
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA1221019
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kjd7y7jI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfCPUAm (ORCPT
+        id S1727057AbfCPULF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 16:00:42 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:43428 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfCPUAm (ORCPT
+        Sat, 16 Mar 2019 16:11:05 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34995 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfCPULE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 16:00:42 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h5FTp-0005Td-5H; Sat, 16 Mar 2019 16:00:35 -0400
-Date:   Sat, 16 Mar 2019 16:00:00 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V5 02/10] audit: add container id
-Message-ID: <20190316200000.GB4828@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <19917968bb133ff644258b95dcbff522a83a2af1.1552665316.git.rgb@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19917968bb133ff644258b95dcbff522a83a2af1.1552665316.git.rgb@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Sat, 16 Mar 2019 16:11:04 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w1so6987114wrp.2
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 13:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8hhTrP2mkZ4OAwduXCx98X8ht157RsKf8rcJUZr7fSo=;
+        b=Kjd7y7jIn7Y4Ydmaz6kFZF0YAb30YctngXKOYVgV++MJL5X1a1sCC71bKJgtT5OgiU
+         a3fQArLcJiP+XYpPfGxgvo6/qaKXMtPVR7O22UPgIyMZeqQkkZ8MGqbM4RMcxMWI7mG4
+         2pe9to/uSOIhMDX7kuOdUdmkLnm6FhnUMmpsAnTkJk4F6CTbhLlhmkk0tS8aYxyyT2Xc
+         eTeCd1Y5iV/b4EkFoenB6zFwtDOFT58nqps+mMo1oO+nwdctgOyB2IywOJEeeG6d2tkF
+         AB5Aa6pEZsN4Tnn65JM1V7K6xmRwN6WDjU27StpqBGRPLeoMsxT5Kz9lvzttCvKE8qT0
+         Xpsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8hhTrP2mkZ4OAwduXCx98X8ht157RsKf8rcJUZr7fSo=;
+        b=f5dncEDCBuXTBpVlbYDZODO0MlbfX1/7FIVU9Wpc1tZ46Isybxb0fa4wBu5jpRcMN0
+         zSdWS03jaJCI8M4it1ojQx86ixyjZBwxCcWPowSZb+c2NpOEr0VuUp7f5mIic6GOezPY
+         phvQLaMbf/y7jqt3sI1txbOr292nME4BfokSV4oTJfqdyybsXrqKzIrYShnlUfWF+pJX
+         tAm3dwokZcrRx9wcFsk0LvPa6GJCWBZr+ZEG851B1NwYWpnhPkAC+049n5hARbpl5z5P
+         kBbBIb3k/N8I2xU6WNyd2Ibp5CfkfpWswNeyHtZuO8K4lJiAwSUqTYTOeQokXK6NN3Zl
+         XgvA==
+X-Gm-Message-State: APjAAAWRw3EEcZsvoVoZwtap4zifdnzKEbIFcHu79+pXO0hAjuj/I81H
+        qXMpmoO8onVUjywTxV29L71HuMPu
+X-Google-Smtp-Source: APXvYqz5WLBxMCrjFUVUiuPQ6fegS5TjZ6gOrkdkpsQQCm1wEV9zYq24YURUp38NWOAxhJgc6vl2Tw==
+X-Received: by 2002:a5d:428b:: with SMTP id k11mr7040476wrq.17.1552767062329;
+        Sat, 16 Mar 2019 13:11:02 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id h10sm8722221wmf.2.2019.03.16.13.11.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 16 Mar 2019 13:11:01 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
+Subject: [PATCH 1/4] habanalabs: fix MMU number of pages calculation
+Date:   Sat, 16 Mar 2019 22:10:44 +0200
+Message-Id: <20190316201047.22516-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 02:29:50PM -0400, Richard Guy Briggs wrote:
-> Implement the proc fs write to set the audit container identifier of a
-> process, emitting an AUDIT_CONTAINER_OP record to document the event.
-> 
-> This is a write from the container orchestrator task to a proc entry of
-> the form /proc/PID/audit_containerid where PID is the process ID of the
-> newly created task that is to become the first task in a container, or
-> an additional task added to a container.
-> 
-> The write expects up to a u64 value (unset: 18446744073709551615).
-> 
-> The writer must have capability CAP_AUDIT_CONTROL.
-> 
-> This will produce a record such as this:
->   type=CONTAINER_OP msg=audit(2018-06-06 12:39:29.636:26949) : op=set opid=2209 old-contid=18446744073709551615 contid=123456 pid=628 auid=root uid=root tty=ttyS0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=bash exe=/usr/bin/bash res=yes
-> 
-> The "op" field indicates an initial set.  The "pid" to "ses" fields are
-> the orchestrator while the "opid" field is the object's PID, the process
-> being "contained".  Old and new audit container identifier values are
-> given in the "contid" fields, while res indicates its success.
-> 
-> It is not permitted to unset the audit container identifier.
-> A child inherits its parent's audit container identifier.
-> 
-> See: https://github.com/linux-audit/audit-kernel/issues/90
-> See: https://github.com/linux-audit/audit-userspace/issues/51
-> See: https://github.com/linux-audit/audit-testsuite/issues/64
-> See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> 
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> Acked-by: Steve Grubb <sgrubb@redhat.com>
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  fs/proc/base.c             | 36 ++++++++++++++++++++++++
->  include/linux/audit.h      | 25 +++++++++++++++++
->  include/uapi/linux/audit.h |  2 ++
->  kernel/audit.c             | 68 ++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 131 insertions(+)
-> 
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index a23651ce6960..2505c46c8701 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -1294,6 +1294,40 @@ static ssize_t proc_sessionid_read(struct file * file, char __user * buf,
->  	.read		= proc_sessionid_read,
->  	.llseek		= generic_file_llseek,
->  };
-> +
-> +static ssize_t proc_contid_write(struct file *file, const char __user *buf,
-> +				   size_t count, loff_t *ppos)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +	u64 contid;
-> +	int rv;
-> +	struct task_struct *task = get_proc_task(inode);
-> +
-> +	if (!task)
-> +		return -ESRCH;
-> +	if (*ppos != 0) {
-> +		/* No partial writes. */
-> +		put_task_struct(task);
-> +		return -EINVAL;
-> +	}
-> +
-> +	rv = kstrtou64_from_user(buf, count, 10, &contid);
-> +	if (rv < 0) {
-> +		put_task_struct(task);
-> +		return rv;
-> +	}
-> +
-> +	rv = audit_set_contid(task, contid);
-> +	put_task_struct(task);
-> +	if (rv < 0)
-> +		return rv;
-> +	return count;
-> +}
-> +
-> +static const struct file_operations proc_contid_operations = {
-> +	.write		= proc_contid_write,
-> +	.llseek		= generic_file_llseek,
-> +};
->  #endif
->  
->  #ifdef CONFIG_FAULT_INJECTION
-> @@ -3005,6 +3039,7 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
->  #ifdef CONFIG_AUDIT
->  	REG("loginuid",   S_IWUSR|S_IRUGO, proc_loginuid_operations),
->  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
-> +	REG("audit_containerid", S_IWUSR, proc_contid_operations),
->  #endif
->  #ifdef CONFIG_FAULT_INJECTION
->  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
-> @@ -3393,6 +3428,7 @@ static int proc_tid_comm_permission(struct inode *inode, int mask)
->  #ifdef CONFIG_AUDIT
->  	REG("loginuid",  S_IWUSR|S_IRUGO, proc_loginuid_operations),
->  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
-> +	REG("audit_containerid", S_IWUSR, proc_contid_operations),
->  #endif
->  #ifdef CONFIG_FAULT_INJECTION
->  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index bde346e73f0c..301337776193 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -89,6 +89,7 @@ struct audit_field {
->  struct audit_task_info {
->  	kuid_t			loginuid;
->  	unsigned int		sessionid;
-> +	u64			contid;
->  #ifdef CONFIG_AUDITSYSCALL
->  	struct audit_context	*ctx;
->  #endif
-> @@ -189,6 +190,15 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
->  	return tsk->audit->sessionid;
->  }
->  
-> +extern int audit_set_contid(struct task_struct *tsk, u64 contid);
-> +
-> +static inline u64 audit_get_contid(struct task_struct *tsk)
-> +{
-> +	if (!tsk->audit)
-> +		return AUDIT_CID_UNSET;
-> +	return tsk->audit->contid;
-> +}
-> +
->  extern u32 audit_enabled;
->  #else /* CONFIG_AUDIT */
->  static inline int audit_alloc(struct task_struct *task)
-> @@ -250,6 +260,11 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
->  	return AUDIT_SID_UNSET;
->  }
->  
-> +static inline u64 audit_get_contid(struct task_struct *tsk)
-> +{
-> +	return AUDIT_CID_UNSET;
-> +}
-> +
->  #define audit_enabled AUDIT_OFF
->  #endif /* CONFIG_AUDIT */
->  
-> @@ -606,6 +621,16 @@ static inline bool audit_loginuid_set(struct task_struct *tsk)
->  	return uid_valid(audit_get_loginuid(tsk));
->  }
->  
-> +static inline bool audit_contid_valid(u64 contid)
-> +{
-> +	return contid != AUDIT_CID_UNSET;
-> +}
-> +
-> +static inline bool audit_contid_set(struct task_struct *tsk)
-> +{
-> +	return audit_contid_valid(audit_get_contid(tsk));
-> +}
-> +
->  static inline void audit_log_string(struct audit_buffer *ab, const char *buf)
->  {
->  	audit_log_n_string(ab, buf, strlen(buf));
-> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> index 36a7e3f18e69..d475cf3b4d7f 100644
-> --- a/include/uapi/linux/audit.h
-> +++ b/include/uapi/linux/audit.h
-> @@ -71,6 +71,7 @@
->  #define AUDIT_TTY_SET		1017	/* Set TTY auditing status */
->  #define AUDIT_SET_FEATURE	1018	/* Turn an audit feature on or off */
->  #define AUDIT_GET_FEATURE	1019	/* Get which features are enabled */
-> +#define AUDIT_CONTAINER_OP	1020	/* Define the container id and information */
->  
->  #define AUDIT_FIRST_USER_MSG	1100	/* Userspace messages mostly uninteresting to kernel */
->  #define AUDIT_USER_AVC		1107	/* We filter this differently */
-> @@ -471,6 +472,7 @@ struct audit_tty_status {
->  
->  #define AUDIT_UID_UNSET (unsigned int)-1
->  #define AUDIT_SID_UNSET ((unsigned int)-1)
-> +#define AUDIT_CID_UNSET ((u64)-1)
->  
->  /* audit_rule_data supports filter rules with both integer and string
->   * fields.  It corresponds with AUDIT_ADD_RULE, AUDIT_DEL_RULE and
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index 67498c5690bb..b5c702abeb42 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -244,6 +244,7 @@ int audit_alloc(struct task_struct *tsk)
->  	}
->  	info->loginuid = audit_get_loginuid(current);
->  	info->sessionid = audit_get_sessionid(current);
-> +	info->contid = audit_get_contid(current);
->  	tsk->audit = info;
->  
->  	ret = audit_alloc_syscall(tsk);
-> @@ -258,6 +259,7 @@ int audit_alloc(struct task_struct *tsk)
->  struct audit_task_info init_struct_audit = {
->  	.loginuid = INVALID_UID,
->  	.sessionid = AUDIT_SID_UNSET,
-> +	.contid = AUDIT_CID_UNSET,
->  #ifdef CONFIG_AUDITSYSCALL
->  	.ctx = NULL,
->  #endif
-> @@ -2341,6 +2343,72 @@ int audit_set_loginuid(kuid_t loginuid)
->  }
->  
->  /**
-> + * audit_set_contid - set current task's audit contid
-> + * @contid: contid value
-> + *
-> + * Returns 0 on success, -EPERM on permission failure.
-> + *
-> + * Called (set) from fs/proc/base.c::proc_contid_write().
-> + */
-> +int audit_set_contid(struct task_struct *task, u64 contid)
-> +{
-> +	u64 oldcontid;
-> +	int rc = 0;
-> +	struct audit_buffer *ab;
-> +	uid_t uid;
-> +	struct tty_struct *tty;
-> +	char comm[sizeof(current->comm)];
-> +
-> +	task_lock(task);
-> +	/* Can't set if audit disabled */
-> +	if (!task->audit) {
-> +		task_unlock(task);
-> +		return -ENOPROTOOPT;
-> +	}
-> +	oldcontid = audit_get_contid(task);
-> +	read_lock(&tasklist_lock);
-> +	/* Don't allow the audit containerid to be unset */
-> +	if (!audit_contid_valid(contid))
-> +		rc = -EINVAL;
-> +	/* if we don't have caps, reject */
-> +	else if (!capable(CAP_AUDIT_CONTROL))
-> +		rc = -EPERM;
-> +	/* if task has children or is not single-threaded, deny */
-> +	else if (!list_empty(&task->children))
-> +		rc = -EBUSY;
-> +	else if (!(thread_group_leader(task) && thread_group_empty(task)))
-> +		rc = -EALREADY;
-> +	read_unlock(&tasklist_lock);
-> +	if (!rc)
-> +		task->audit->contid = contid;
-> +	task_unlock(task);
-> +
-> +	if (!audit_enabled)
-> +		return rc;
-> +
-> +	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_CONTAINER_OP);
-> +	if (!ab)
-> +		return rc;
-> +
-> +	uid = from_kuid(&init_user_ns, task_uid(current));
-> +	tty = audit_get_tty();
-> +	audit_log_format(ab, "op=set opid=%d old-contid=%llu contid=%llu pid=%d uid=%u auid=%u tty=%s ses=%u",
-> +			 task_tgid_nr(task), oldcontid, contid,
-> +			 task_tgid_nr(current), uid,
-> +			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
-> +			 tty ? tty_name(tty) : "(none)",
-> +			 audit_get_sessionid(current));
-> +	audit_put_tty(tty);
-> +	audit_log_task_context(ab);
-> +	audit_log_format(ab, " comm=");
-> +	audit_log_untrustedstring(ab, get_task_comm(comm, current));
-> +	audit_log_d_path_exe(ab, current->mm);
-> +	audit_log_format(ab, " res=%d", !rc);
-> +	audit_log_end(ab);
-> +	return rc;
-> +}
-> +
-> +/**
->   * audit_log_end - end one audit record
->   * @ab: the audit_buffer
->   *
-> -- 
-> 1.8.3.1
-> 
-> 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+From: Omer Shpigelman <oshpigelman@habana.ai>
+
+The requested allocation size is 64bit, hence the number of requested
+pages and the total requested size should 64bit as well.
+This patch fixes all places where these are treated as 32bit.
+
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/debugfs.c    |  7 ++++---
+ drivers/misc/habanalabs/habanalabs.h |  8 ++++----
+ drivers/misc/habanalabs/memory.c     | 29 ++++++++++++++--------------
+ 3 files changed, 23 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/misc/habanalabs/debugfs.c b/drivers/misc/habanalabs/debugfs.c
+index a53c12aff6ad..974a87789bd8 100644
+--- a/drivers/misc/habanalabs/debugfs.c
++++ b/drivers/misc/habanalabs/debugfs.c
+@@ -232,6 +232,7 @@ static int vm_show(struct seq_file *s, void *data)
+ 	struct hl_vm_phys_pg_pack *phys_pg_pack = NULL;
+ 	enum vm_type_t *vm_type;
+ 	bool once = true;
++	u64 j;
+ 	int i;
+ 
+ 	if (!dev_entry->hdev->mmu_enable)
+@@ -260,7 +261,7 @@ static int vm_show(struct seq_file *s, void *data)
+ 			} else {
+ 				phys_pg_pack = hnode->ptr;
+ 				seq_printf(s,
+-					"    0x%-14llx      %-10u       %-4u\n",
++					"    0x%-14llx      %-10llu       %-4u\n",
+ 					hnode->vaddr, phys_pg_pack->total_size,
+ 					phys_pg_pack->handle);
+ 			}
+@@ -282,9 +283,9 @@ static int vm_show(struct seq_file *s, void *data)
+ 						phys_pg_pack->page_size);
+ 			seq_puts(s, "   physical address\n");
+ 			seq_puts(s, "---------------------\n");
+-			for (i = 0 ; i < phys_pg_pack->npages ; i++) {
++			for (j = 0 ; j < phys_pg_pack->npages ; j++) {
+ 				seq_printf(s, "    0x%-14llx\n",
+-						phys_pg_pack->pages[i]);
++						phys_pg_pack->pages[j]);
+ 			}
+ 		}
+ 		spin_unlock(&vm->idr_lock);
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index a7c95e9f9b9a..806f0a5ee4d8 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -793,11 +793,11 @@ struct hl_vm_hash_node {
+  * struct hl_vm_phys_pg_pack - physical page pack.
+  * @vm_type: describes the type of the virtual area descriptor.
+  * @pages: the physical page array.
++ * @npages: num physical pages in the pack.
++ * @total_size: total size of all the pages in this list.
+  * @mapping_cnt: number of shared mappings.
+  * @asid: the context related to this list.
+- * @npages: num physical pages in the pack.
+  * @page_size: size of each page in the pack.
+- * @total_size: total size of all the pages in this list.
+  * @flags: HL_MEM_* flags related to this list.
+  * @handle: the provided handle related to this list.
+  * @offset: offset from the first page.
+@@ -807,11 +807,11 @@ struct hl_vm_hash_node {
+ struct hl_vm_phys_pg_pack {
+ 	enum vm_type_t		vm_type; /* must be first */
+ 	u64			*pages;
++	u64			npages;
++	u64			total_size;
+ 	atomic_t		mapping_cnt;
+ 	u32			asid;
+-	u32			npages;
+ 	u32			page_size;
+-	u32			total_size;
+ 	u32			flags;
+ 	u32			handle;
+ 	u32			offset;
+diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+index 3a12fd1a5274..4f8c968e441a 100644
+--- a/drivers/misc/habanalabs/memory.c
++++ b/drivers/misc/habanalabs/memory.c
+@@ -56,9 +56,9 @@ static int alloc_device_memory(struct hl_ctx *ctx, struct hl_mem_in *args,
+ 	struct hl_device *hdev = ctx->hdev;
+ 	struct hl_vm *vm = &hdev->vm;
+ 	struct hl_vm_phys_pg_pack *phys_pg_pack;
+-	u64 paddr = 0;
+-	u32 total_size, num_pgs, num_curr_pgs, page_size, page_shift;
+-	int handle, rc, i;
++	u64 paddr = 0, total_size, num_pgs, i;
++	u32 num_curr_pgs, page_size, page_shift;
++	int handle, rc;
+ 	bool contiguous;
+ 
+ 	num_curr_pgs = 0;
+@@ -73,7 +73,7 @@ static int alloc_device_memory(struct hl_ctx *ctx, struct hl_mem_in *args,
+ 		paddr = (u64) gen_pool_alloc(vm->dram_pg_pool, total_size);
+ 		if (!paddr) {
+ 			dev_err(hdev->dev,
+-				"failed to allocate %u huge contiguous pages\n",
++				"failed to allocate %llu huge contiguous pages\n",
+ 				num_pgs);
+ 			return -ENOMEM;
+ 		}
+@@ -267,7 +267,7 @@ static void free_phys_pg_pack(struct hl_device *hdev,
+ 		struct hl_vm_phys_pg_pack *phys_pg_pack)
+ {
+ 	struct hl_vm *vm = &hdev->vm;
+-	int i;
++	u64 i;
+ 
+ 	if (!phys_pg_pack->created_from_userptr) {
+ 		if (phys_pg_pack->contiguous) {
+@@ -519,7 +519,7 @@ static inline int add_va_block(struct hl_device *hdev,
+  * - Return the start address of the virtual block
+  */
+ static u64 get_va_block(struct hl_device *hdev,
+-		struct hl_va_range *va_range, u32 size, u64 hint_addr,
++		struct hl_va_range *va_range, u64 size, u64 hint_addr,
+ 		bool is_userptr)
+ {
+ 	struct hl_vm_va_block *va_block, *new_va_block = NULL;
+@@ -577,7 +577,8 @@ static u64 get_va_block(struct hl_device *hdev,
+ 	}
+ 
+ 	if (!new_va_block) {
+-		dev_err(hdev->dev, "no available va block for size %u\n", size);
++		dev_err(hdev->dev, "no available va block for size %llu\n",
++				size);
+ 		goto out;
+ 	}
+ 
+@@ -648,8 +649,8 @@ static int init_phys_pg_pack_from_userptr(struct hl_ctx *ctx,
+ 	struct hl_vm_phys_pg_pack *phys_pg_pack;
+ 	struct scatterlist *sg;
+ 	dma_addr_t dma_addr;
+-	u64 page_mask;
+-	u32 npages, total_npages, page_size = PAGE_SIZE;
++	u64 page_mask, total_npages;
++	u32 npages, page_size = PAGE_SIZE;
+ 	bool first = true, is_huge_page_opt = true;
+ 	int rc, i, j;
+ 
+@@ -750,9 +751,9 @@ static int map_phys_page_pack(struct hl_ctx *ctx, u64 vaddr,
+ 		struct hl_vm_phys_pg_pack *phys_pg_pack)
+ {
+ 	struct hl_device *hdev = ctx->hdev;
+-	u64 next_vaddr = vaddr, paddr;
++	u64 next_vaddr = vaddr, paddr, mapped_pg_cnt = 0, i;
+ 	u32 page_size = phys_pg_pack->page_size;
+-	int i, rc = 0, mapped_pg_cnt = 0;
++	int rc = 0;
+ 
+ 	for (i = 0 ; i < phys_pg_pack->npages ; i++) {
+ 		paddr = phys_pg_pack->pages[i];
+@@ -764,7 +765,7 @@ static int map_phys_page_pack(struct hl_ctx *ctx, u64 vaddr,
+ 		rc = hl_mmu_map(ctx, next_vaddr, paddr, page_size);
+ 		if (rc) {
+ 			dev_err(hdev->dev,
+-				"map failed for handle %u, npages: %d, mapped: %d",
++				"map failed for handle %u, npages: %llu, mapped: %llu",
+ 				phys_pg_pack->handle, phys_pg_pack->npages,
+ 				mapped_pg_cnt);
+ 			goto err;
+@@ -985,10 +986,10 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
+ 	struct hl_vm_hash_node *hnode = NULL;
+ 	struct hl_userptr *userptr = NULL;
+ 	enum vm_type_t *vm_type;
+-	u64 next_vaddr;
++	u64 next_vaddr, i;
+ 	u32 page_size;
+ 	bool is_userptr;
+-	int i, rc;
++	int rc;
+ 
+ 	/* protect from double entrance */
+ 	mutex_lock(&ctx->mem_hash_lock);
+-- 
+2.17.1
+
