@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BE9C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C28C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24300218FE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB4D21903
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="lSlmxo1F"
+	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="sYOAu6rg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfCPWZj (ORCPT
+        id S1727286AbfCPWZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 18:25:39 -0400
+        Sat, 16 Mar 2019 18:25:46 -0400
 Received: from tomli.me ([153.92.126.73]:56126 "EHLO tomli.me"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfCPWZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 18:25:37 -0400
+        id S1726418AbfCPWZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 18:25:44 -0400
 Received: from tomli.me (localhost [127.0.0.1])
-        by tomli.me (OpenSMTPD) with ESMTP id c24c834c;
-        Sat, 16 Mar 2019 22:25:34 +0000 (UTC)
+        by tomli.me (OpenSMTPD) with ESMTP id be91f9e6;
+        Sat, 16 Mar 2019 22:25:39 +0000 (UTC)
 X-HELO: localhost.lan
 Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
 Received: from Unknown (HELO localhost.lan) (2402:f000:1:1501:200:5efe:6fc7:8b2c)
- by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Sat, 16 Mar 2019 22:25:33 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=from:to:cc:subject:date:message-id:in-reply-to:references:mime-version:content-transfer-encoding; s=1490979754; bh=a+rMub2vZtwc96/4+FBQHgZRTvW7Soc2ak2NjAW/PSs=; b=lSlmxo1FqbI+njadjF/NB8Tbtd3LWiIE+F8ldjDURTNZyAX/DrXPmCHSJuP438FCAJvQyhJBWbkUWr8okxWghwqs9vHz1AT0lNbovLdSR54IjH5HghofXSL+E4EDTiHueGpqczstxTtSkbgOmQY+ruwZUnPIvfCiTdE/m3PXvb7zlJthzHQaNJhUPWaXWiyDWpaSn1EDNrulFqFOCdSPNxq4A/WG4E3JU+yC4jR/8Gi3ga0fJgaqXe3e/9clB+JWyVslPsLL4+XZFngkLJyo3me6nXTgurZYp7COpddaAyH77GsdxCI8AGpxeYljEW+h5yCNgvioPHJOQP12ydo5Vw==
+ by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Sat, 16 Mar 2019 22:25:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=from:to:cc:subject:date:message-id:in-reply-to:references:mime-version:content-transfer-encoding; s=1490979754; bh=PMJ+rdWJQfYe0dsTyz91vF1rIPimrnOvLFSJSmzoj64=; b=sYOAu6rgQjDCkQIjmrGyX8Az3Fo9dNueHazpVSdshRH2ruPondVOszsR5m/eU65vTGZx9AittI5zOCk1SB0rURh2WVS9KFHdigxF1jfXtblRk5d/CT1CEQR93xjlo7xHzrxUwYnVWgk636W56ZB43xQoW3BERbmbf9++JhlIi96wDFY9wOs9S8kSuRKEk7c/aMjUfXRuVMVxVJtN7J5f9fuJRycfuk2a/0A2CEqyzleABSgQsuu/gst8DjMh9RO1HnznUC5dxMaNmij0/t5fKDBVZa+C+JTgeEJwpY5/P1SCujUI1GWg4l9CGikn6SAisfs4HkoulRNO2WpG3W2F1g==
 From:   Yifeng Li <tomli@tomli.me>
 To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Teddy Wang <teddy.wang@siliconmotion.com>
@@ -37,9 +37,9 @@ Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
         stable@vger.kernel.org
-Subject: [PATCH 4/8] fbdev: sm712fb: fix boot screen glitch when sm712fb replaces VGA.
-Date:   Sun, 17 Mar 2019 06:25:00 +0800
-Message-Id: <20190316222504.27170-5-tomli@tomli.me>
+Subject: [PATCH 5/8] fbdev: sm712fb: fix crashes during framebuffer writes by correctly mapping VRAM.
+Date:   Sun, 17 Mar 2019 06:25:01 +0800
+Message-Id: <20190316222504.27170-6-tomli@tomli.me>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190316222504.27170-1-tomli@tomli.me>
 References: <20190316222504.27170-1-tomli@tomli.me>
@@ -50,35 +50,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the machine is booted in VGA mode, loading sm712fb would cause
-a glitch of random pixels shown on the screen. To prevent it from
-happening, we first clear the entire framebuffer, and we also need
-to stop calling smtcfb_setmode() during initialization, the fbdev
-layer will call it for us later when it's ready.
+On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), running fbtest or X
+will crash the machine instantly, because the VRAM/framebuffer is not
+mapped correctly.
+
+On SM712, the framebuffer starts at the beginning of address space, but
+SM720's framebuffer starts at the 1 MiB offset from the beginning. However,
+sm712fb fails to take this into account, as a result, writing to the
+framebuffer will destroy all the registers and kill the system immediately.
+Another problem is the driver assumes 8 MiB of VRAM for SM720, but some
+SM720 system, such as this IBM Thinkpad, only has 4 MiB of VRAM.
+
+Fix this problem by removing the hardcoded VRAM size, adding a function to
+query the amount of VRAM from register MCR76 on SM720, and adding proper
+framebuffer offset.
+
+Please note that the memory map may have additional problems on Big-Endian
+system, which is not available for testing by myself. But I highly suspect
+that the original code is also broken on Big-Endian machines for SM720, so
+at least we are not making the problem worse. More, the driver also assumed
+SM710/SM712 has 4 MiB of VRAM, but it has a 2 MiB version as well, and used
+in earlier laptops, such as IBM Thinkpad 240X, the driver would probably
+crash on them. I've never seen one of those machines and cannot fix it, but
+I have documented these problems in the comments.
 
 Signed-off-by: Yifeng Li <tomli@tomli.me>
 Cc: stable@vger.kernel.org  # v4.4+
 ---
- drivers/video/fbdev/sm712fb.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/video/fbdev/sm712.h   |  5 ----
+ drivers/video/fbdev/sm712fb.c | 48 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 44 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/video/fbdev/sm712.h b/drivers/video/fbdev/sm712.h
+index aad1cc4be34a..2cba1e73ed24 100644
+--- a/drivers/video/fbdev/sm712.h
++++ b/drivers/video/fbdev/sm712.h
+@@ -19,11 +19,6 @@
+ #define SCREEN_Y_RES      600
+ #define SCREEN_BPP        16
+ 
+-/*Assume SM712 graphics chip has 4MB VRAM */
+-#define SM712_VIDEOMEMORYSIZE	  0x00400000
+-/*Assume SM722 graphics chip has 8MB VRAM */
+-#define SM722_VIDEOMEMORYSIZE	  0x00800000
+-
+ #define dac_reg	(0x3c8)
+ #define dac_val	(0x3c9)
+ 
 diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-index 1a3d232c2916..e8149f0f47d5 100644
+index e8149f0f47d5..52234c57be02 100644
 --- a/drivers/video/fbdev/sm712fb.c
 +++ b/drivers/video/fbdev/sm712fb.c
-@@ -1493,7 +1493,11 @@ static int smtcfb_pci_probe(struct pci_dev *pdev,
- 	if (err)
- 		goto failed;
+@@ -1329,6 +1329,11 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
+ {
+ 	sfb->fb->fix.smem_start = pci_resource_start(pdev, 0);
  
--	smtcfb_setmode(sfb);
-+	/*
-+	 * The screen would be temporarily garbled when sm712fb takes over
-+	 * vesafb or VGA text mode. Zero the framebuffer.
-+	 */
-+	memset_io(sfb->lfb, 0, sfb->fb->fix.smem_len);
++	if (sfb->chip_id == 0x720)
++		/* on SM720, the framebuffer starts at the 1 MB offset */
++		sfb->fb->fix.smem_start += 0x00200000;
++
++	/* XXX: is it safe for SM720 on Big-Endian? */
+ 	if (sfb->fb->var.bits_per_pixel == 32)
+ 		sfb->fb->fix.smem_start += big_addr;
  
- 	err = register_framebuffer(info);
- 	if (err < 0)
+@@ -1366,12 +1371,45 @@ static inline void sm7xx_init_hw(void)
+ 	outb_p(0x11, 0x3c5);
+ }
+ 
++static u_long sm7xx_vram_probe(struct smtcfb_info *sfb)
++{
++	u8 vram;
++
++	switch (sfb->chip_id) {
++	case 0x710:
++	case 0x712:
++		/*
++		 * Assume SM712 graphics chip has 4MB VRAM.
++		 *
++		 * FIXME: SM712 can have 2MB VRAM, which is used on earlier
++		 * laptops, such as IBM Thinkpad 240X. This driver would
++		 * probably crash on those machines. If anyone gets one of
++		 * those and is willing to help, run "git blame" and send me
++		 * an E-mail.
++		 */
++		return 0x00400000;
++	case 0x720:
++		outb_p(0x76, 0x3c4);
++		vram = inb_p(0x3c5) >> 6;
++
++		if (vram == 0x00)
++			return 0x00800000;  /* 8 MB */
++		else if (vram == 0x01)
++			return 0x01000000;  /* 16 MB */
++		else if (vram == 0x02)
++			return 0x00400000;  /* illegal, fallback to 4 MB */
++		else if (vram == 0x03)
++			return 0x00400000;  /* 4 MB */
++	}
++	return 0;  /* unknown hardware */
++}
++
+ static int smtcfb_pci_probe(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
+ 	struct smtcfb_info *sfb;
+ 	struct fb_info *info;
+-	u_long smem_size = 0x00800000;	/* default 8MB */
++	u_long smem_size;
+ 	int err;
+ 	unsigned long mmio_base;
+ 
+@@ -1428,12 +1466,15 @@ static int smtcfb_pci_probe(struct pci_dev *pdev,
+ 	mmio_base = pci_resource_start(pdev, 0);
+ 	pci_read_config_byte(pdev, PCI_REVISION_ID, &sfb->chip_rev_id);
+ 
++	smem_size = sm7xx_vram_probe(sfb);
++	dev_info(&pdev->dev, "%lu MiB of VRAM detected.\n",
++					smem_size / 1048576);
++
+ 	switch (sfb->chip_id) {
+ 	case 0x710:
+ 	case 0x712:
+ 		sfb->fb->fix.mmio_start = mmio_base + 0x00400000;
+ 		sfb->fb->fix.mmio_len = 0x00400000;
+-		smem_size = SM712_VIDEOMEMORYSIZE;
+ 		sfb->lfb = ioremap(mmio_base, mmio_addr);
+ 		if (!sfb->lfb) {
+ 			dev_err(&pdev->dev,
+@@ -1465,8 +1506,7 @@ static int smtcfb_pci_probe(struct pci_dev *pdev,
+ 	case 0x720:
+ 		sfb->fb->fix.mmio_start = mmio_base;
+ 		sfb->fb->fix.mmio_len = 0x00200000;
+-		smem_size = SM722_VIDEOMEMORYSIZE;
+-		sfb->dp_regs = ioremap(mmio_base, 0x00a00000);
++		sfb->dp_regs = ioremap(mmio_base, 0x00200000 + smem_size);
+ 		sfb->lfb = sfb->dp_regs + 0x00200000;
+ 		sfb->mmio = (smtc_regbaseaddress =
+ 		    sfb->dp_regs + 0x000c0000);
 -- 
 2.20.1
 
