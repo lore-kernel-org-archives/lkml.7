@@ -2,127 +2,92 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFB7C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2280C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A966B218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552706813;
-	bh=rFc07SgWIY+at7jFYp58MgUUkKl4HKJDuOFNWa+v5oo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uaxfRotR7pYFkAJwGqpGWq21mLuKONth6dAhlUGkj7KuXA47pYzBUwlXKpeXZmZQx
-	 09GOu4h8BXIxa1P10SAORtuZdUbXlNUuUaI2xvB4EFxbRGBrIUlwU9fLA23a06l25G
-	 b/zs7gRy1ZSRr7E1+009gcvvjzFS5eyNu3/LvF/w=
+	by mail.kernel.org (Postfix) with ESMTP id 8FCC2206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 03:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+V31o50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfCPD0w (ORCPT
+        id S1726691AbfCPDh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 23:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbfCPD0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 23:26:52 -0400
-Received: from localhost (unknown [104.153.224.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D5FF218E0;
-        Sat, 16 Mar 2019 03:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552706810;
-        bh=rFc07SgWIY+at7jFYp58MgUUkKl4HKJDuOFNWa+v5oo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fr/rVkHn8OBenFn56AGp+zPQng1jkCj3hdF1pfmPg9DN+deIPUgZLV2Zh+NciyzwQ
-         D7mQPqEXkk4wFxKV7YWJvS8vZAan5e02fZfHEqt5wpd7Lb5R37WJfGRzW+7lBFAi7g
-         dWy7j+UBW3d92ecyCO+wsvWqFeAvlgwV6aspR+3s=
-Date:   Fri, 15 Mar 2019 20:26:30 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, eric@anholt.net,
-        stefan.wahren@i2se.com, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        andriy.shevchenko@linux.intel.com, vz@mleia.com,
-        matthias.bgg@gmail.com, yamada.masahiro@socionext.com,
-        tklauser@distanz.ch, richard.genoud@gmail.com,
-        macro@linux-mips.org, u.kleine-koenig@pengutronix.de,
-        kernel@pengutronix.de, slemieux.tyco@gmail.com,
-        andy.gross@linaro.org, david.brown@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 10/45] drivers: tty: serial: zs: use devm_* functions
-Message-ID: <20190316032630.GB2499@kroah.com>
-References: <1552602855-26086-1-git-send-email-info@metux.net>
- <1552602855-26086-11-git-send-email-info@metux.net>
- <20190314225204.GB1795@kroah.com>
- <3734d588-6b9c-29e2-45b6-82e778f47602@metux.net>
- <20190315142628.GA30650@kroah.com>
- <d81364fc-c5da-c1b2-f38a-3a23c701c50d@metux.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d81364fc-c5da-c1b2-f38a-3a23c701c50d@metux.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Fri, 15 Mar 2019 23:37:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42366 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfCPDh4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 23:37:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b2so7704729pgl.9;
+        Fri, 15 Mar 2019 20:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=u6CRvQfZpKD/LZe1IqtqRPm6EaOEDluBBG5Jl9SDETo=;
+        b=P+V31o50nKMO34cVyeTmN0TZk2vO9X3qQl1iEdnWMGcCQySAFOnRoVmhycS8mKLMJw
+         KBzCeWVN1BzSwhFYiFEm82S4MOyIxoHvQD2jXlbe/8RxViBqerzso9QocJC8oO37KKuG
+         JLwynfhcMm1DqsZ8H5nvCdd5RDAOC9r06C8/W32fnXrv0yO1FVxHA73Rt0lxL9/0iSs0
+         m6x9JEzSfSbOGsFWD/kpcTc/0YkiOgEIH4EzRXJ/y6wrhfai2uRoZ8YB+L/McVEjJkdA
+         0EAR5qA9o03alChFzy7s2kY6+PKlqWn4PH1bpsqP/6ynW6SLH5YMFfNARPk1ZQJd1Ta3
+         A6gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=u6CRvQfZpKD/LZe1IqtqRPm6EaOEDluBBG5Jl9SDETo=;
+        b=lGwCzqwRHogUsWJBUrFQi1FKIxfvzHwyqL5HRPmalFOI+hyNsD3D9ueIXJWAzHBYjJ
+         2iHwhbpaAezG4nY6Els6PhHn2WdLUd+aajTnKhJjwsjOXSF8fyZYLzUpGv8wgJ2xoW18
+         WRdnA5eb6wKpnf5egvU0xXdy1OcizWGNOmdPzXwm/gseW8IWQQUme68lAGcjGD2Gt64j
+         qMXeNNwtIkQaePDfluGkXBeghPKqvPWi4npzMNubZDPDNpGYUwKCtv5pyhMhnTdakeIK
+         kM5ZtNpm0pGBvzJ+N1Jr3CI0gVSrs9Y0AGIK0sgnuKMgGNOcHofN7ADcszlG3dPrZQEn
+         cf0A==
+X-Gm-Message-State: APjAAAW0s76xKY3/XMwl2ivGOPfQFltC/Ela7wZerOoVvxlntuqyBHkB
+        PdU6bxUUBMyVHDY3pbbxeKk=
+X-Google-Smtp-Source: APXvYqzHq73XjJliOQDF8rIRlxlppJ6IfQKW7w4nNefeB9D0GtwUqOQ6ERL3z9mHX3ASJ2SK+Mzasg==
+X-Received: by 2002:a17:902:9008:: with SMTP id a8mr7862590plp.38.1552707475804;
+        Fri, 15 Mar 2019 20:37:55 -0700 (PDT)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id p6sm5235540pfn.63.2019.03.15.20.37.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Mar 2019 20:37:54 -0700 (PDT)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        gregkh@linuxfoundation.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH] PM / core: fix kerneldoc comment for dpm_watchdog_handler()
+Date:   Fri, 15 Mar 2019 23:37:51 -0400
+Message-Id: <20190316033751.31323-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 08:12:47PM +0100, Enrico Weigelt, metux IT consult wrote:
-> On 15.03.19 15:26, Greg KH wrote:
-> > Yes, there are lots of drivers for devices that are never unloaded or
-> > removed from the system.  The fact that no one has reported any problems
-> > with them means that they are never used in situations like this.
-> 
-> So, never touch a running system ?
+This brings the kernel doc in line with the function signature.
 
-No, it's just that those systems do not allow those devices to be
-removed because they are probably not on a removable bus.
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/base/power/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > No, you need to have a good reason why it needs to be changed, when you
-> > can not verify that this actually resolves a problem.  As this patch
-> > shows, you just replaced one api call with another, so nothing changed
-> > at all, except you actually took up more memory and logic to do the same
-> > thing :(
-> 
-> Okay, I was on a wrong track here - I had the silly idea that it would
-> make things easier if we'd do it the same way everywhere.
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index f80d298de3fa..0cff68bd7b4b 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -478,7 +478,7 @@ struct dpm_watchdog {
+ 
+ /**
+  * dpm_watchdog_handler - Driver suspend / resume watchdog handler.
+- * @data: Watchdog object address.
++ * @t: The timer that pm watchdog depends on.
+  *
+  * Called when a driver has timed out suspending or resuming.
+  * There's not much we can do here to recover so panic() to
+-- 
+2.17.0
 
-"Consistent" is good, and valid, but touching old drivers that have few
-users is always risky, and you need a solid reason to do so.
-
-> >> IMHO, we should have a closer look at those and check whether that's
-> >> really okay (just adding request/release blindly could cause trouble)
-> > 
-> > I agree, please feel free to audit these to verify they are all correct.
-> > But that's not what you did here, so that's not a valid justification
-> > for these patches to be accepted.
-> 
-> Understood. Assuming I've found some of these cases, shall I use devm
-> oder just add the missing release ?
-
-If it actually makes the code "simpler" or "more obvious", sure, that's
-fine.  But churn for churns sake is not ok.
-
-> >> By the way: do you have some public branch where you're collecting
-> >> accepted patches, which I could base mine on ? (tty.git/tty-next ?)
-> > 
-> > Yes, that is the tree and branch, but remember that none of my trees can
-> > open up until after -rc1 is out.
-> 
-> So, within a merge window, you put everything else on hold ?
-
-I put the review of new patch submissions on hold, yes.  Almost all
-maintainers do that as we can not add new patches to our trees at that
-point in time.
-
-And I do have other things I do during that period so it's not like I'm
-just sitting around doing nothing :)
-
-thanks,
-
-greg k-h
