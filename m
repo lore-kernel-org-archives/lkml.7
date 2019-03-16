@@ -5,58 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90784C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47175C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6C621871
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156E4218D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0D+aQ2J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cet6jNR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfCPCPG (ORCPT
+        id S1727109AbfCPCPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 22:15:06 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35978 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfCPCPF (ORCPT
+        Fri, 15 Mar 2019 22:15:19 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:37612 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfCPCPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 22:15:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k130so6705074qke.3;
-        Fri, 15 Mar 2019 19:15:05 -0700 (PDT)
+        Fri, 15 Mar 2019 22:15:18 -0400
+Received: by mail-yw1-f67.google.com with SMTP id w66so8793620ywd.4;
+        Fri, 15 Mar 2019 19:15:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=E79KXUnhP4o02hGiR6DT9/4NVN8LNyEneSndXO0JIsw=;
-        b=h0D+aQ2Ju6xSelONwMt6gNSu83Ys9FhLReo4hICCKjL+UQ9ydsWlbygDpNdGSOfC0U
-         VKAt9sU/H9olMbyHo3NGXjr0c5oEOOdLLO8NFhh4x3Gftc58BSZWZg5WXUe7uJPL+Xbm
-         rx03bL92k1Csc96suTMEWzMt/CXiz9Cxyycp2oXOstvHXKM9NmtK+KF5v9EVHPPRLZLa
-         e/oNHZkhygqNsP4Pn86IvzLvsI19tc/+gyeVrW1ZevdRwr3cxJiAa2sx4QGS3dltMKCF
-         dFp0NsERGarU7YQJgR5S7GryVrkC0EzUqUSSB5AnqV29taGlpcvrDOikNgaYiKNx2BOv
-         XMUg==
+        bh=YABxWF8N5gKqZyrr+QQvSqXEL3zrKIE1jEQuPoWCy1Q=;
+        b=cet6jNR+ipeGlcnATcbW0MeDv4xaNeXSalsdWVj9sf2YnfbkEFLZdRY+rNss7G+pt0
+         Mz91Xeb6+yQor28767Ghc5jM02rkxsEGQmH2oBh+1ws/0xSkvzp+NhJgzfWMCpxasfXR
+         JKDayQHrNrv4BNeRlL7c7ZrGMb2ZJdX02v9jTjswXK5Epa1nBSm+zgjoSH16GNEhm8Iq
+         K+TAoXJSEAViWHBdAXaR7RP5+q264tVVS3/3ftzjXmkAh/zZZR/JfqRgEiae3u4PJORb
+         3MsObXw+E1v1HUfsUuM/8oYJ5cc9PRbegD2O2aLY6/U6p0RaeiTXaYOMMQwfcLigWp4L
+         iazg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E79KXUnhP4o02hGiR6DT9/4NVN8LNyEneSndXO0JIsw=;
-        b=UOS9JXCpywBk3jzo4cXBghTs5z9H8bPi6IRZ5iuYz6/nk3LUXrxp+ukp82UMA7erwQ
-         Vdt1Y1jEFTpKIC6CKTNWXdwbaN8TeCcWZFZmtUOCFgqWHm1lv8cEoxU5v/b8fykt656F
-         /WINF7wtLAhniRu2RBfTlThFrZ5mlerclmkgSE3f8Ts3uMBsHUIhupE+bPNMm+VHKIIR
-         pOLOxbTVqhvO+qpynRgMirmIpYeb0KKB4etScvZYDP0DSnL0qOJ4Ij6DUgTmpa+WpQrb
-         Mu0xGCAnv1PN2R4qHBYLdM2bShDBWhMvyxyMeelyL7bOLrQfr+dZ1rR7+nodnLYy81Ox
-         oZiw==
-X-Gm-Message-State: APjAAAUWaP3PkyQkv6921iy8VNq0XmOdO/sGJs4RgSdYKwPD4xtYREWI
-        NCM8fH7heqUEVSRCvvQdzJI=
-X-Google-Smtp-Source: APXvYqxP6ldzgL1QfU4MzvsvoDUfkPWls0uA7OzJnTDyjpcEKIlMLkYnA8jYowvHpih9+KfFCc2cyQ==
-X-Received: by 2002:a37:d6ce:: with SMTP id p75mr5100559qkl.286.1552702504574;
-        Fri, 15 Mar 2019 19:15:04 -0700 (PDT)
+        bh=YABxWF8N5gKqZyrr+QQvSqXEL3zrKIE1jEQuPoWCy1Q=;
+        b=Ve32Migz+N/v/MUFU/i8czYjdq5gHh7RO0caW5hyCbfhvE00t2eWC8+7PZbVQN9Rk9
+         yjDFMUyYjI6v20ZgbJ9V59hro2Jr8qtEU/q+IyM87uu0K9YVvPWtcExSuJmBIbAqCXa8
+         qJwQMDIOjewt9vh6Wwn5ZynMxrCNh26B+sfLJxGda6Mt9hQV/YxGtiF2mY1roMAj7VsN
+         rRjfwwLhXj5PNJn+XeZI+iceyBUL6omssdyoLE0k2/eBxb99MScHShyMDbn2dOVXZAyE
+         5lu0D5fGiOlyarkrIYjgJiWD8GdyjtpB1H0zr/hmYg4kmk7o8ufgFC/zSe/NlK40COKY
+         TQmg==
+X-Gm-Message-State: APjAAAV/YTpuMLDkl7yZzaeN4tO/3AJpbqpeabWYo9tv6SZqLk0lA5q1
+        dsfrvs2TqLc+tyZailF54p8=
+X-Google-Smtp-Source: APXvYqz7yVcv04KxXw6i/E21J7YxLbo6ulOycTUIK6nr82TVf26O7FeInGiLG9lmXMlVS726PvB0yA==
+X-Received: by 2002:a81:47c1:: with SMTP id u184mr5582507ywa.406.1552702517766;
+        Fri, 15 Mar 2019 19:15:17 -0700 (PDT)
 Received: from renatolg ([186.220.21.102])
-        by smtp.gmail.com with ESMTPSA id v131sm2132489qka.95.2019.03.15.19.15.00
+        by smtp.gmail.com with ESMTPSA id 136sm1323995ywl.109.2019.03.15.19.15.14
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 19:15:04 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 23:14:59 -0300
+        Fri, 15 Mar 2019 19:15:17 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 23:15:13 -0300
 From:   Renato Lui Geh <renatogeh@gmail.com>
 To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
         knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
@@ -65,9 +66,8 @@ To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
 Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
         devicetree@vger.kernel.org
-Subject: [PATCH v5 07/11] staging: iio: ad7780: move regulator to after GPIO
- init
-Message-ID: <c018f41a8f21c0b2b25fe264cb58ba4bd2239505.1552700652.git.renatogeh@gmail.com>
+Subject: [PATCH v5 08/11] staging: iio: ad7780: add SPDX identifier
+Message-ID: <4344b002e730538b737e576b7d262687ab62473c.1552700652.git.renatogeh@gmail.com>
 References: <cover.1552700652.git.renatogeh@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
@@ -79,52 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To maintain consistency between ad7780_probe and ad7780_remove orders,
-regulator initialization has been moved to after GPIO initializations.
+Add SPDX identifier (GPL-2.0) to the AD7780 driver.
 
 Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
 ---
- drivers/staging/iio/adc/ad7780.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/staging/iio/adc/ad7780.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
-index 977b381c1260..568c5b4472ff 100644
+index 568c5b4472ff..ff61ffa0da9f 100644
 --- a/drivers/staging/iio/adc/ad7780.c
 +++ b/drivers/staging/iio/adc/ad7780.c
-@@ -295,16 +295,6 @@ static int ad7780_probe(struct spi_device *spi)
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AD7170/AD7171 and AD7780/AD7781 SPI ADC driver
+  *
+  * Copyright 2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2.
+  */
  
- 	ad_sd_init(&st->sd, indio_dev, spi, &ad7780_sigma_delta_info);
- 
--	st->reg = devm_regulator_get(&spi->dev, "avdd");
--	if (IS_ERR(st->reg))
--		return PTR_ERR(st->reg);
--
--	ret = regulator_enable(st->reg);
--	if (ret) {
--		dev_err(&spi->dev, "Failed to enable specified AVdd supply\n");
--		return ret;
--	}
--
- 	st->chip_info =
- 		&ad7780_chip_info_tbl[spi_get_device_id(spi)->driver_data];
- 
-@@ -321,6 +311,16 @@ static int ad7780_probe(struct spi_device *spi)
- 	if (ret)
- 		goto error_cleanup_buffer_and_trigger;
- 
-+	st->reg = devm_regulator_get(&spi->dev, "avdd");
-+	if (IS_ERR(st->reg))
-+		return PTR_ERR(st->reg);
-+
-+	ret = regulator_enable(st->reg);
-+	if (ret) {
-+		dev_err(&spi->dev, "Failed to enable specified AVdd supply\n");
-+		return ret;
-+	}
-+
- 	ret = ad_sd_setup_buffer_and_trigger(indio_dev);
- 	if (ret)
- 		goto error_disable_reg;
+ #include <linux/interrupt.h>
 -- 
 2.21.0
 
