@@ -2,90 +2,90 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AEEC10F03
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 12:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99FCC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 12:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C89218D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 12:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9C0218E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 12:15:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ouwox/aC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfCPMK6 (ORCPT
+        id S1726936AbfCPMPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 08:10:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59274 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfCPMK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 08:10:58 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8FACFC049D67;
-        Sat, 16 Mar 2019 12:10:57 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-22.phx2.redhat.com [10.3.112.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B8255D6B3;
-        Sat, 16 Mar 2019 12:10:50 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, eparis@parisplace.org, serge@hallyn.com,
-        zohar@linux.ibm.com, mjg59@google.com,
-        Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak109 V1] audit: link integrity evm_write_xattrs record to syscall event
-Date:   Sat, 16 Mar 2019 08:10:08 -0400
-Message-Id: <81d0122d14c4fbb3a2ad33d25fdf2dd001c7dcc7.1552737854.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Sat, 16 Mar 2019 12:10:57 +0000 (UTC)
+        Sat, 16 Mar 2019 08:15:13 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33240 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfCPMPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 08:15:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i19so8186404pfd.0;
+        Sat, 16 Mar 2019 05:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wX0+RhRVXnGfkIonRB0TJgpOIjfOJjR0TKpZGa+6gsk=;
+        b=Ouwox/aCVl3nDyIay7jRKjIR4F2pNVyTM0Du021bc0OhKkid9AHNWeExDxDhiOvyil
+         Mc6VwlVKDj3yZ5SBcaq9HLQXG7yjJjXo0oclsESvmm5ZMRlvmNe+SSAbq7IXytZtiGhA
+         YFTnPFlnA4j9kklFczVeKc4adBhhpSR7cYNCi4D9Ikb4NsG5Bm7zCfeVF4DsfPbDPgSP
+         pf7d/2uNfwdA5NNktrOnz6cigWAtnFdk8CTdaJGaCnshRDKjG3tEd0m86+5l2FupZ6Es
+         bw6r1S62jI2WacTxwrP5QlfvQBl4DxSsztq1QSIOMexQ+3aH6qoBOm3NF4h47dxjF1wF
+         qjiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wX0+RhRVXnGfkIonRB0TJgpOIjfOJjR0TKpZGa+6gsk=;
+        b=X/tozSgn+L/F6XEbSJn0nRkLFMT5cmbChz+WX/NhFL+h7JkMfK3iAEBI8EQpvrkfr/
+         XauZTD9Sbkazq8ju1yh1q76rAiUivWjmFjovlZFFjWWw35ooEt886H7biG6nrj5q3d3M
+         O8W5Kb3/TyQteDuGJhq3UKhmiF1UX1ottLGIULEeP+hOIqs94N9+hlCEbjq6gWJCj/os
+         U0BOKS1nbXFeyNZO/ViApPLEnuqUVuddlDRg75rMRUeNow8xxxgm4RbwAw2X214yRDQK
+         MfL2LSuspUdQ4AG+sf66M10nh75ppEXWtxuKYaBVfW+IWJs05cYWFP7kMf+xvbOh9b0L
+         MIwg==
+X-Gm-Message-State: APjAAAUdwP8m0jUaIv67i7iiqL/8pXR8Cm6FH68cyQxe0dp7zc4g7fIg
+        j0Nv7fF1hFpdGiVf+HJGNQ==
+X-Google-Smtp-Source: APXvYqxtnR9ERVBkq1Ia2JNW7psVeUTV02A4nNzYVHAoAk1DB2aGBy60a2/CJxuZDEVcLk333c+vqw==
+X-Received: by 2002:a17:902:9a01:: with SMTP id v1mr9659473plp.34.1552738512196;
+        Sat, 16 Mar 2019 05:15:12 -0700 (PDT)
+Received: from localhost ([2001:19f0:7001:54c5:5400:1ff:fec8:7fc2])
+        by smtp.gmail.com with ESMTPSA id b65sm7949264pfm.127.2019.03.16.05.15.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Mar 2019 05:15:11 -0700 (PDT)
+Date:   Sat, 16 Mar 2019 20:15:07 +0800
+From:   Jacky Hu <hengqing.hu@gmail.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH v3] ipvs: allow tunneling with gue encapsulation
+Message-ID: <20190316121507.GA32042@i716>
+References: <20190316072009.2247-1-hengqing.hu@gmail.com>
+ <20190316090649.mm7fskvzx5hzp672@salvia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190316090649.mm7fskvzx5hzp672@salvia>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit fa516b66a1bf ("EVM: Allow runtime modification of the set of
-verified xattrs"), the call to audit_log_start() is missing a context to
-link it to an audit event. Since this event is in user context, add
-the process' syscall context to the record.
+Here is the report:
+Added break statements for switch cases to avoid fall through.
+It makes iptunnel_handle_offloads gets proper gso_type_mask.
 
-In addition, the orphaned keyword "locked" appears in the record.
-Normalize this by changing it to "xattr=(locked)".
-
-Please see the github issue
-https://github.com/linux-audit/audit-kernel/issues/109
-
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
----
- security/integrity/evm/evm_secfs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
-index 015aea8fdf1e..4171d174e9da 100644
---- a/security/integrity/evm/evm_secfs.c
-+++ b/security/integrity/evm/evm_secfs.c
-@@ -192,7 +192,8 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
- 	if (count > XATTR_NAME_MAX)
- 		return -E2BIG;
- 
--	ab = audit_log_start(NULL, GFP_KERNEL, AUDIT_INTEGRITY_EVM_XATTR);
-+	ab = audit_log_start(audit_context(), GFP_KERNEL,
-+			     AUDIT_INTEGRITY_EVM_XATTR);
- 	if (!ab)
- 		return -ENOMEM;
- 
-@@ -222,7 +223,7 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
- 		inode_lock(inode);
- 		err = simple_setattr(evm_xattrs, &newattrs);
- 		inode_unlock(inode);
--		audit_log_format(ab, "locked");
-+		audit_log_format(ab, "xattr=(locked)");
- 		if (!err)
- 			err = count;
- 		goto out;
--- 
-1.8.3.1
-
+Thanks!
