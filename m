@@ -2,94 +2,71 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFC4C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E6EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C60218FE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B155218FE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552758520;
-	bh=zfqvj9JtB7otT6UyUIVwQiBiy9Z2CzQtb6MaUrFW2Gc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tywB8e97Cu6LxZmtQRbrEUnunlMRAhywhxvS2VHOs4JM0FdVYjRJcHUT9DFi8kEGK
-	 7Q5NoqDd0VASrj34ctXkzsq19M3xLK2Ykx2P5XTwWer4tJTsfnVg7KFHOqv7kD8aLY
-	 eR+vB4Svr4822NW7HWvS7VzGP3cwpE+Oz7XvuG1k=
+	s=default; t=1552758618;
+	bh=Z/lvWcfUpxFt8Lfiovyw4C4Z/EpMYt5KSHuA7LJsOpw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Z9ZDp1qLE42CJVN6pl13Bh1NwqlGV1hCIPxXRhpgVR7+Kqs1t6osynVhsbMJF9kiX
+	 sbaVH88WftP47tgWVsvIcFJGkjPPVrHDYaE6b5syn0QSKJm9Qfm3F+GGiwlojYZmgn
+	 Ed+26wUEG+mwhKV5CCcTrTsjBjVRq62CZoI0twF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfCPRsj (ORCPT
+        id S1727017AbfCPRuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 13:48:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60084 "EHLO mail.kernel.org"
+        Sat, 16 Mar 2019 13:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfCPRsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 13:48:38 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B770A218D0;
-        Sat, 16 Mar 2019 17:48:34 +0000 (UTC)
+        id S1726376AbfCPRuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 13:50:16 -0400
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.1-2 tag
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552758518;
-        bh=zfqvj9JtB7otT6UyUIVwQiBiy9Z2CzQtb6MaUrFW2Gc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=r2NjMQWxQt2vn10NVzP288IzgW3+ZVOHh+960kz6PBXkD8F7lNjXEz+rY0ddHpldj
-         FdFIWjVHTfIIrLmy28xYkG43MELF3roTaMJ+TxuEBdXg4nqjIe98ICINtcLPNer9po
-         fNPvJFF7M0QVsB5JnziVGmbeWbG68YIHL3BuLhRk=
-Date:   Sat, 16 Mar 2019 17:48:31 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Renato Lui Geh <renatogeh@gmail.com>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
-        giuliano.belinassi@usp.br, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 02/11] staging: iio: ad7780: add missing switch
- default case
-Message-ID: <20190316174831.04bd818a@archlinux>
-In-Reply-To: <84375be9b21a30dde736e47a7e2f72c1aedf7e92.1552700652.git.renatogeh@gmail.com>
-References: <cover.1552700652.git.renatogeh@gmail.com>
-        <84375be9b21a30dde736e47a7e2f72c1aedf7e92.1552700652.git.renatogeh@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1552758615;
+        bh=Z/lvWcfUpxFt8Lfiovyw4C4Z/EpMYt5KSHuA7LJsOpw=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=F6IipztyHyVbXvLhqrtROSHP4z67TMAy9kgwZB+vP/xt6bxElVf27FEhwmMq5cu49
+         wZ7JX4RYSyKgQs93Jd7VvJtSd89evXM9NpPAUTo5+abek2wlu6tNcXS5FHlw/0A+zj
+         jyfu7IOikjddyf2M/4XfZcoCJ/WVSis/njpDRE0M=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <87y35f6osv.fsf@concordia.ellerman.id.au>
+References: <87y35f6osv.fsf@concordia.ellerman.id.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <87y35f6osv.fsf@concordia.ellerman.id.au>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
+ tags/powerpc-5.1-2
+X-PR-Tracked-Commit-Id: de3c83c2fd2b87cf68214eda76dfa66989d78cb6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a9c55d58bc36b5a0ef7021772fc2508e693ed534
+Message-Id: <155275861590.4422.2038912118529779484.pr-tracker-bot@kernel.org>
+Date:   Sat, 16 Mar 2019 17:50:15 +0000
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, aik@ozlabs.ru,
+        andrew.donnellan@au1.ibm.com, aneesh.kumar@linux.ibm.com,
+        joel@jms.id.au, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mahesh@linux.vnet.ibm.com,
+        malat@debian.org, yanaijie@huawei.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Mar 2019 23:12:53 -0300
-Renato Lui Geh <renatogeh@gmail.com> wrote:
+The pull request you sent on Sat, 16 Mar 2019 22:28:48 +1100:
 
-> This patch simply adds a missing switch default case in read_raw.
-> 
-> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-Applied,
+> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.1-2
 
-Thanks,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a9c55d58bc36b5a0ef7021772fc2508e693ed534
 
-Jonathan
+Thank you!
 
-> ---
->  drivers/staging/iio/adc/ad7780.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
-> index 07e5e35c92a3..f4cd7bc3e02f 100644
-> --- a/drivers/staging/iio/adc/ad7780.c
-> +++ b/drivers/staging/iio/adc/ad7780.c
-> @@ -118,6 +118,8 @@ static int ad7780_read_raw(struct iio_dev *indio_dev,
->  	case IIO_CHAN_INFO_OFFSET:
->  		*val = -(1 << (chan->scan_type.realbits - 1));
->  		return IIO_VAL_INT;
-> +	default:
-> +		break;
->  	}
->  
->  	return -EINVAL;
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
