@@ -2,166 +2,116 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15890C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85677C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEFCF218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4453C218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:47:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNHMhyXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfCPWpV (ORCPT
+        id S1727185AbfCPWrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 18:45:21 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:44045 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfCPWpV (ORCPT
+        Sat, 16 Mar 2019 18:47:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44677 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfCPWrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 18:45:21 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h5I39-0006Wx-41; Sat, 16 Mar 2019 18:45:12 -0400
-Date:   Sat, 16 Mar 2019 18:44:37 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V5 04/10] audit: log container info of syscalls
-Message-ID: <20190316224437.GA4119@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <85fcd0a81adef25cb60b2e479bbb380e76dbf999.1552665316.git.rgb@redhat.com>
+        Sat, 16 Mar 2019 18:47:25 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a3so8722276pff.11
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 15:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Vh9QpzVJ1GnogVWkgaXISddHjcJKCi1xFYlnKtK9wOE=;
+        b=MNHMhyXvftpQW8gv5WoQbgRbKVm1TayLyZziA2ArrhZflHNcY438MGg/vRNDuJQ7Dq
+         STfudT7sgRJZZlV03hoDE2m6MaLL1E3VTXDd1ha2OPmfWGESbSmPuhQ6ONZcGVptwkVm
+         Krnv1y8DRl4aCSgHlCvTmZEcQN95GTiPRZ7lglJlVw+McD5q0XEx6CG4DG2C0fH0Yz/3
+         EafB1GR41nAeUs5HLH9d8qrX9j90MuPJxXuTDIT62I0+jRtoe5p7qHgPnpYlS7eQlmIu
+         sS40RVIb9IVlz0MtQFOltLgOwO6VlMpDoWV5Ll9RuJXPoS5x/+v6Qih+0ySfqigsQcj9
+         Ph7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Vh9QpzVJ1GnogVWkgaXISddHjcJKCi1xFYlnKtK9wOE=;
+        b=UW1q6W0CrRGZ3diahTQZhAVwve76FQQ3crKMtDDkiZvcHh0g7Hz6o4cTznRc7fGLVS
+         7q+bTXgSfQ1iDcIOFjPcdmjC6sG0hSOKV0Ar4o3DkiuATCPr3wlcSIYJ9oFOCPjti9Jh
+         RKXzCso8eIQMktfI/bAd+vRePkYmVc/wWHtncV7M2l6o7I2nvLB8oe0g5c4gvn4F1EeS
+         T2T8GmU/SyGdckQKvmAng7rz9DL1jcuYMq2CwJZR4zI5A8h7czmDbsIH51MCIPFPuyvJ
+         2Tav9RiZpLAb6Bm8peWGNUPZhU7IDO1FGylZadjKFquKhEd3OWtgb6f9LZDCrULwbMrt
+         Lw4Q==
+X-Gm-Message-State: APjAAAVudNUO6BNHgSxxvkdxUPV2EMYuDqabW2obPZToxLlV7lHELRLO
+        yHbthqPCD+91SSJTM8ULO6JuOg1t
+X-Google-Smtp-Source: APXvYqzQUedoP/ERtt4XvHLELuGClnVTPF0/WGUV+n9Zl63CLpk/PLpneR5GudEPKKfUx+ELXPRcjg==
+X-Received: by 2002:a17:902:6b48:: with SMTP id g8mr11929887plt.21.1552776444362;
+        Sat, 16 Mar 2019 15:47:24 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g2sm15479420pfm.144.2019.03.16.15.47.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 16 Mar 2019 15:47:23 -0700 (PDT)
+Subject: Re: [PATCH] powerpc/6xx: fix setup and use of SPRN_PGDIR for hash32
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <7e45ca3f0283fb24c2642e5b91bd75c55f2ba96f.1552028583.git.christophe.leroy@c-s.fr>
+ <20190308160334.GZ3969@gate.crashing.org>
+ <7681ad2b-35d4-6e43-f727-21545e3bb223@c-s.fr>
+ <72bac00c-d2e3-515e-3ab1-99f20c058ea1@c-s.fr>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <fac535c2-af61-1a1b-ebed-82ca0bd2e4a4@roeck-us.net>
+Date:   Sat, 16 Mar 2019 15:47:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85fcd0a81adef25cb60b2e479bbb380e76dbf999.1552665316.git.rgb@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <72bac00c-d2e3-515e-3ab1-99f20c058ea1@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 02:29:52PM -0400, Richard Guy Briggs wrote:
-> Create a new audit record AUDIT_CONTAINER_ID to document the audit
-> container identifier of a process if it is present.
+On 3/15/19 6:20 AM, Christophe Leroy wrote:
+> Michael,
 > 
-> Called from audit_log_exit(), syscalls are covered.
+> Are you able to get this merged before 5.1-rc1 comes out ?
 > 
-> A sample raw event:
-> type=SYSCALL msg=audit(1519924845.499:257): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=56374e1cef30 a2=241 a3=1b6 items=2 ppid=606 pid=635 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=3 comm="bash" exe="/usr/bin/bash" subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key="tmpcontainerid"
-> type=CWD msg=audit(1519924845.499:257): cwd="/root"
-> type=PATH msg=audit(1519924845.499:257): item=0 name="/tmp/" inode=13863 dev=00:27 mode=041777 ouid=0 ogid=0 rdev=00:00 obj=system_u:object_r:tmp_t:s0 nametype= PARENT cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0
-> type=PATH msg=audit(1519924845.499:257): item=1 name="/tmp/tmpcontainerid" inode=17729 dev=00:27 mode=0100644 ouid=0 ogid=0 rdev=00:00 obj=unconfined_u:object_r:user_tmp_t:s0 nametype=CREATE cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0
-> type=PROCTITLE msg=audit(1519924845.499:257): proctitle=62617368002D6300736C65657020313B206563686F2074657374203E202F746D702F746D70636F6E7461696E65726964
-> type=CONTAINER_ID msg=audit(1519924845.499:257): contid=123458
+
+Looks like this patch got lost. I don't see it in Michael's most recent
+pull request, the one that got merged today.
+
+Guenter
+
+> Thanks
+> Christophe
 > 
-> See: https://github.com/linux-audit/audit-kernel/issues/90
-> See: https://github.com/linux-audit/audit-userspace/issues/51
-> See: https://github.com/linux-audit/audit-testsuite/issues/64
-> See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> Acked-by: Steve Grubb <sgrubb@redhat.com>
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  include/linux/audit.h      |  5 +++++
->  include/uapi/linux/audit.h |  1 +
->  kernel/audit.c             | 21 +++++++++++++++++++++
->  kernel/auditsc.c           |  2 ++
->  4 files changed, 29 insertions(+)
-> 
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index 301337776193..43438192ca2a 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -199,6 +199,8 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
->  	return tsk->audit->contid;
->  }
->  
-> +extern void audit_log_contid(struct audit_context *context, u64 contid);
-> +
->  extern u32 audit_enabled;
->  #else /* CONFIG_AUDIT */
->  static inline int audit_alloc(struct task_struct *task)
-> @@ -265,6 +267,9 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
->  	return AUDIT_CID_UNSET;
->  }
->  
-> +static inline void audit_log_contid(struct audit_context *context, u64 contid)
-> +{ }
-> +
->  #define audit_enabled AUDIT_OFF
->  #endif /* CONFIG_AUDIT */
->  
-> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> index d475cf3b4d7f..a6383e28b2c8 100644
-> --- a/include/uapi/linux/audit.h
-> +++ b/include/uapi/linux/audit.h
-> @@ -115,6 +115,7 @@
->  #define AUDIT_REPLACE		1329	/* Replace auditd if this packet unanswerd */
->  #define AUDIT_KERN_MODULE	1330	/* Kernel Module events */
->  #define AUDIT_FANOTIFY		1331	/* Fanotify access decision */
-> +#define AUDIT_CONTAINER_ID	1332	/* Container ID */
->  
->  #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
->  #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index b5c702abeb42..8cc0e88d7f2a 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -2127,6 +2127,27 @@ void audit_log_session_info(struct audit_buffer *ab)
->  	audit_log_format(ab, "auid=%u ses=%u", auid, sessionid);
->  }
->  
-> +/*
-> + * audit_log_contid - report container info
-> + * @context: task or local context for record
-> + * @contid: container ID to report
-> + */
-> +void audit_log_contid(struct audit_context *context, u64 contid)
-> +{
-> +	struct audit_buffer *ab;
-> +
-> +	if (!audit_contid_valid(contid))
-> +		return;
-> +	/* Generate AUDIT_CONTAINER_ID record with container ID */
-> +	ab = audit_log_start(context, GFP_KERNEL, AUDIT_CONTAINER_ID);
-> +	if (!ab)
-> +		return;
-> +	audit_log_format(ab, "contid=%llu", contid);
-> +	audit_log_end(ab);
-> +	return;
-> +}
-> +EXPORT_SYMBOL(audit_log_contid);
-> +
->  void audit_log_key(struct audit_buffer *ab, char *key)
->  {
->  	audit_log_format(ab, " key=");
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index 8090eff7868d..a8c8b44b954d 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -1548,6 +1548,8 @@ static void audit_log_exit(void)
->  
->  	audit_log_proctitle();
->  
-> +	audit_log_contid(context, audit_get_contid(current));
-> +
->  	/* Send end of event record to help user space know we are finished */
->  	ab = audit_log_start(context, GFP_KERNEL, AUDIT_EOE);
->  	if (ab)
-> -- 
-> 1.8.3.1
+> Le 08/03/2019 à 17:06, Christophe Leroy a écrit :
+>>
+>>
+>> Le 08/03/2019 à 17:03, Segher Boessenkool a écrit :
+>>> On Fri, Mar 08, 2019 at 07:05:22AM +0000, Christophe Leroy wrote:
+>>>> Not only the 603 but all 6xx need SPRN_PGDIR to be initialised at
+>>>> startup. This patch move it from __setup_cpu_603() to start_here()
+>>>> and __secondary_start(), close to the initialisation of SPRN_THREAD.
+>>>
+>>> I thought you meant an SPR I did not know about.  But you just misspelled
+>>> SPRN_SPRG_PGDIR :-)
+>>>
+>>
+>> Oops.
+>>
+>> Michael, can you fix the commit text (and subject) when applying ?
+>>
 > 
 > 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> 
 
