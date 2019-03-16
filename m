@@ -2,175 +2,224 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81526C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 19:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9703C10F03
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 19:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48126218D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 19:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86AB3218FE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 19:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xgwTkrjo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F9vNt+ox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfCPTb7 (ORCPT
+        id S1727018AbfCPThc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 15:31:59 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42010 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfCPTb6 (ORCPT
+        Sat, 16 Mar 2019 15:37:32 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44073 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfCPThc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 15:31:58 -0400
-Received: by mail-pg1-f194.google.com with SMTP id b2so8650997pgl.9
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 12:31:58 -0700 (PDT)
+        Sat, 16 Mar 2019 15:37:32 -0400
+Received: by mail-io1-f65.google.com with SMTP id u12so11094637iop.11
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 12:37:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pH13QGMiwC7caCYd6kzrRRa3696y6Muo7dRzjjpeRoY=;
-        b=xgwTkrjoID3ivuyavFQG3aGXHxzMGb/LTpI5xxaHa+nmNsVmFnO8jSv0c5u1a4dTR6
-         4UziJZHAwUHBuPceNKVWpkHwZr0O2UwBvN1un9DvrErvEbbUeBz/7zMbsrtCSt5lU+hf
-         K4yYrv5dRlQ3/DKt5SP9gb0f4uYWfNG2e/vAiVpdFisUHFddx58AIW6rf0YPqUAxjkEP
-         L8x006/V91cFz4+Y2ps64Udq4PsxLOODVwa7/tQqXnwF+AGrI819Q/7tjTD3z/+ys26j
-         2joKSdBBPUnrAkRG50a0dGf1SoG0t+3+BWwAaZ9oeeYwqXw8WuHroeHF2af9z+XAvj4H
-         r7kQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=roFVcsGaN00PW1oT7om/Ux/WLpjkxYlnnHm7GR3L4fs=;
+        b=F9vNt+oxgki07eeTTkB3cFCrbRJ9jHI3hXR5jaXpnD1+eqRAmVfuPZhZQsqdL3ZYOZ
+         Esv/CVk4A97aNvRlZk6Vln8zrIo9pi3+K98uA88GKeDxQO4gkYxpYRrw4/t2u447PTA2
+         WTDBfZyLJzOCDucFvinzMORvPCPl8cFR8eja58ztsV8VrWUZETJfnGHY3Y8yvdwsSXOk
+         NK7NOYyfza7UrWPZvbHJsxaObHp8Ze8rs1xoAb6eFYQb0+Y3jYhJrL3JmdxxZx/SHn1J
+         pN5Ljj96gmETjwexz26zWahoKoouIgbDSgselZNDgUSta1uBcD4Ywu4IyiyJPDXHuar1
+         9mdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pH13QGMiwC7caCYd6kzrRRa3696y6Muo7dRzjjpeRoY=;
-        b=pmNSViONFsoCSz8Ok0ToJ9NHjTlZN/bVP/shGb39RrV8AWL/5NpIIpWnoZlCB0fzIZ
-         8eosKiUxdVlvx5GqstQfNwV6F5yY7VZKA3jLhMfUrUIp43Y/X6tnfASVxOmKNkCzSNhq
-         2cNyWchXo/P+ucfOD48uIyC9KPnbN5zI5aI7iczRLauC0JmwjSbLDWIsqWZHYLhwg7Eu
-         PzRHo7k/vjXRqRbIzECgq/aeJy7QnBgc2gBis1F+QSd6j2oDRS0yoqqHQjxG+N8rV2nu
-         cnchX71bmnPiRR50Yj4jcpvS8bRzFuI7BlpxP9W0f4qoIdu+C2dI/guqq60giCPzT1hK
-         Cd4A==
-X-Gm-Message-State: APjAAAU15J70rikctQHLPFIqA2i34zCfMH042aIwmG0sDH5LthtDl6Cr
-        Ojd4XPrX2ox697T2lJUbYgpi6g==
-X-Google-Smtp-Source: APXvYqzMLxwt+aULLijMsiC36tFGqG+bJiNqHIv8HaZ5Opf0wIbcYloMoQ0lfcz6Yw9KUUDiHxp3Bw==
-X-Received: by 2002:a65:47cb:: with SMTP id f11mr9876515pgs.18.1552764717586;
-        Sat, 16 Mar 2019 12:31:57 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id e2sm6159325pfa.64.2019.03.16.12.31.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 16 Mar 2019 12:31:56 -0700 (PDT)
-Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        linux-block <linux-block@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
-        linux-parport@lists.infradead.org
-References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
- <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
- <e2a66da2-5433-5b42-1ebe-9f1c135b5471@infradead.org>
- <59cb035e-6880-de5a-33c5-d4db6ed910f4@kernel.dk>
- <4a2adc33-ef38-6a5f-65ee-8fcfaa0948a9@infradead.org>
- <d22bf156-06df-ec67-121d-7dce65088b1a@kernel.dk>
- <55743981-da8f-3211-0650-b143c8fec084@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <23f48266-0d12-1891-1373-711b63f4f589@kernel.dk>
-Date:   Sat, 16 Mar 2019 13:31:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=roFVcsGaN00PW1oT7om/Ux/WLpjkxYlnnHm7GR3L4fs=;
+        b=GuTfHSaVRgFv9TUYfCnshSvd4d4RgtuJSEhOcHLL+kFM4haQbhlzxldgEgc9QLFZs4
+         U3oGhLyFhuYmyen6O9SCUWxa6EK+apwI0E6NZkbELfAIopBALE2vIuO3Ja+nKVR2vwTp
+         6hj1x9Fz9TWn0Ueht1rJTgnj5ek4d0e4QPD3tTO/41y2u+otx/FH33CQkjfEiuvUMYOY
+         JswVv/YGHuPauIZolFoYcnkezTNH4orboBHBrZdWGSUT2sxuHxoJ5Fnzxk8RGr4QRtux
+         cRA3ZQbMZDPxXcPYf1PAa8DKlte/lBbGZGITzdWbw74NE5xEIBLa9AwS49T4LchvBZ1o
+         Uabw==
+X-Gm-Message-State: APjAAAVgM01LZ+M9bpk3tbAvJgs2sjYKDBt3TSoMVF7uMCfBMJ+9zusv
+        cqHDgq0cA85zXATLTFKhzfI2lqzSsfBhkUVWb7wlrw==
+X-Google-Smtp-Source: APXvYqy5LdYjujwPG/GNIDMO7QbqBavPdokKpFKKOT0T9N5h6/PLHHuFvolyXiha0nYiMpVo6ooeYiDsZ9jT6+c0Il4=
+X-Received: by 2002:a5d:968a:: with SMTP id m10mr2444564ion.134.1552765050651;
+ Sat, 16 Mar 2019 12:37:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <55743981-da8f-3211-0650-b143c8fec084@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
+ <20190314204911.GA875@sultan-box.localdomain> <20190314231641.5a37932b@oasis.local.home>
+ <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com>
+ <20190315180306.sq3z645p3hygrmt2@brauner.io> <20190315181324.GA248160@google.com>
+ <20190315182426.sujcqbzhzw4llmsa@brauner.io> <20190315184903.GB248160@google.com>
+ <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
+ <CAKOZueuauUXRyrvhzBD0op6W4TAnydSx92bvrPN2VRWERX8iQg@mail.gmail.com> <20190316185726.jc53aqq5ph65ojpk@brauner.io>
+In-Reply-To: <20190316185726.jc53aqq5ph65ojpk@brauner.io>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Sat, 16 Mar 2019 12:37:18 -0700
+Message-ID: <CAJuCfpF-uYpUZ1RO99i2qEw5Ou4nSimSkiQvnNQ_rv8ogHKRfw@mail.gmail.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/15/19 6:32 PM, Randy Dunlap wrote:
-> On 3/15/19 9:33 AM, Jens Axboe wrote:
->> On 3/14/19 5:49 PM, Randy Dunlap wrote:
->>> On 3/14/19 4:43 PM, Jens Axboe wrote:
->>>> On 3/13/19 5:09 PM, Randy Dunlap wrote:
->>>>> On 3/11/19 6:34 PM, Randy Dunlap wrote:
->>>>>> On 3/11/19 6:25 PM, Randy Dunlap wrote:
->>>>>>> [Has this already been addressed/fixed?]>>
->>>>>>
->>>>>> Same bug occurs with paride/pcd.c driver.
->>>>>
->>>>> This still happens (in blk-mq) in v5.0-11053-gebc551f2b8f9 of Mar. 12, 2019,
->>>>> around 4pm PT.  [caused by paride: pf.c and pcd.c)
->>>>
->>>> I'll take a look at this, been busy with other stuff. How are you
->>>> reproducing this? I'm assuming you don't actually have any hardware :-)
->>>
->>> Right.  I just load the module (pf or pcd), unload it, and
->>> then load it again.
->>
->> Does this work?
->>
-> 
-> No.  Just loading the pf module gives this:
+On Sat, Mar 16, 2019 at 11:57 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> On Sat, Mar 16, 2019 at 11:00:10AM -0700, Daniel Colascione wrote:
+> > On Sat, Mar 16, 2019 at 10:31 AM Suren Baghdasaryan <surenb@google.com> wrote:
+> > >
+> > > On Fri, Mar 15, 2019 at 11:49 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > >
+> > > > On Fri, Mar 15, 2019 at 07:24:28PM +0100, Christian Brauner wrote:
+> > > > [..]
+> > > > > > why do we want to add a new syscall (pidfd_wait) though? Why not just use
+> > > > > > standard poll/epoll interface on the proc fd like Daniel was suggesting.
+> > > > > > AFAIK, once the proc file is opened, the struct pid is essentially pinned
+> > > > > > even though the proc number may be reused. Then the caller can just poll.
+> > > > > > We can add a waitqueue to struct pid, and wake up any waiters on process
+> > > > > > death (A quick look shows task_struct can be mapped to its struct pid) and
+> > > > > > also possibly optimize it using Steve's TIF flag idea. No new syscall is
+> > > > > > needed then, let me know if I missed something?
+> > > > >
+> > > > > Huh, I thought that Daniel was against the poll/epoll solution?
+> > > >
+> > > > Hmm, going through earlier threads, I believe so now. Here was Daniel's
+> > > > reasoning about avoiding a notification about process death through proc
+> > > > directory fd: http://lkml.iu.edu/hypermail/linux/kernel/1811.0/00232.html
+> > > >
+> > > > May be a dedicated syscall for this would be cleaner after all.
+> > >
+> > > Ah, I wish I've seen that discussion before...
+> > > syscall makes sense and it can be non-blocking and we can use
+> > > select/poll/epoll if we use eventfd.
+> >
+> > Thanks for taking a look.
+> >
+> > > I would strongly advocate for
+> > > non-blocking version or at least to have a non-blocking option.
+> >
+> > Waiting for FD readiness is *already* blocking or non-blocking
+> > according to the caller's desire --- users can pass options they want
+> > to poll(2) or whatever. There's no need for any kind of special
+> > configuration knob or non-blocking option. We already *have* a
+> > non-blocking option that works universally for everything.
+> >
+> > As I mentioned in the linked thread, waiting for process exit should
+> > work just like waiting for bytes to appear on a pipe. Process exit
+> > status is just another blob of bytes that a process might receive. A
+> > process exit handle ought to be just another information source. The
+> > reason the unix process API is so awful is that for whatever reason
+> > the original designers treated processes as some kind of special kind
+> > of resource instead of fitting them into the otherwise general-purpose
+> > unix data-handling API. Let's not repeat that mistake.
+> >
+> > > Something like this:
+> > >
+> > > evfd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+> > > // register eventfd to receive death notification
+> > > pidfd_wait(pid_to_kill, evfd);
+> > > // kill the process
+> > > pidfd_send_signal(pid_to_kill, ...)
+> > > // tend to other things
+> >
+> > Now you've lost me. pidfd_wait should return a *new* FD, not wire up
+> > an eventfd.
+> >
 
-Missing clear of the queue. This one should be more complete.
+Ok, I probably misunderstood your post linked by Joel. I though your
+original proposal was based on being able to poll a file under
+/proc/pid and then you changed your mind to have a separate syscall
+which I assumed would be a blocking one to wait for process exit.
+Maybe you can describe the new interface you are thinking about in
+terms of userspace usage like I did above? Several lines of code would
+explain more than paragraphs of text.
 
-To be fair, this was utterly broken since forever. It's just now apparent
-since we complain about it. But pf/pcd was one big leak fest.
+> > Why? Because the new type FD can report process exit *status*
+> > information (via read(2) after readability signal) as well as this
+> > binary yes-or-no signal *that* a process exited, and this capability
+> > is useful if you want to the pidfd interface to be a good
+> > general-purpose process management facility to replace the awful
+> > wait() family of functions. You can't get an exit status from an
+> > eventfd. Wiring up an eventfd the way you've proposed also complicates
+> > wait-causality information, complicating both tracing and any priority
+> > inheritance we might want in the future (because all the wakeups gets
+> > mixed into the eventfd and you can't unscramble an egg). And for what?
+> > What do we gain by using an eventfd? Is the reason that exit.c would
+> > be able to use eventfd_signal instead of poking a waitqueue directly?
+> > How is that better? With an eventfd, you've increased path length on
+> > process exit *and* complicated the API for no reason.
+> >
+> > > ...
+> > > // wait for the process to die
+> > > poll_wait(evfd, ...);
+> > >
+> > > This simplifies userspace
+> >
+> > Not relative to an exit handle it doesn't.
+> >
+> > >, allows it to wait for multiple events using
+> > > epoll
+> >
+> > So does a process exit status handle.
+> >
+> > > and I think kernel implementation will be also quite simple
+> > > because it already implements eventfd_signal() that takes care of
+> > > waitqueue handling.
+> >
+> > What if there are multiple eventfds registered for the death of a
+> > process? In any case, you need some mechanism to find, upon process
+> > death, a list of waiters, then wake each of them up. That's either a
+> > global search or a search in some list rooted in a task-related
+> > structure (either struct task or one of its friends). Using an eventfd
+> > here adds nothing, since upon death, you need this list search
+> > regardless, and as I mentioned above, eventfd-wiring just makes the
+> > API worse.
+> >
+> > > If pidfd_send_signal could be extended to have an optional eventfd
+> > > parameter then we would not even have to add a new syscall.
+> >
+> > There is nothing wrong with adding a new system call. I don't know why
+> > there's this idea circulating that adding system calls is something we
+> > should bend over backwards to avoid. It's cheap, and support-wise,
+> > kernel interface is kernel interface. Sending a signal has *nothing*
+> > to do with wiring up some kind of notification and there's no reason
+> > to mingle it with some kind of event registration.
+>
+>
+> I agree with Daniel.
+> One design goal is to not stuff clearly delinated tasks related to
+> process management into the same syscall. That will just leave us with a
+> confusing api. Sending signals is part of managing a process while it is
+> running. Waiting on a process to end is clearly separate from that.
+> It's important to keep in mind that the goal of the pidfd work is to end
+> up with an api that is of use to all of user space concerned with
+> process management not just a specific project.
 
-
-diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
-index 96670eefaeb2..377a694dc228 100644
---- a/drivers/block/paride/pcd.c
-+++ b/drivers/block/paride/pcd.c
-@@ -749,8 +749,12 @@ static int pcd_detect(void)
- 		return 0;
- 
- 	printk("%s: No CD-ROM drive found\n", name);
--	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++)
-+	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++) {
-+		blk_cleanup_queue(cd->disk->queue);
-+		cd->disk->queue = NULL;
-+		blk_mq_free_tag_set(&cd->tag_set);
- 		put_disk(cd->disk);
-+	}
- 	pi_unregister_driver(par_drv);
- 	return -1;
- }
-diff --git a/drivers/block/paride/pf.c b/drivers/block/paride/pf.c
-index e92e7a8eeeb2..103b617cdc31 100644
---- a/drivers/block/paride/pf.c
-+++ b/drivers/block/paride/pf.c
-@@ -761,8 +761,12 @@ static int pf_detect(void)
- 		return 0;
- 
- 	printk("%s: No ATAPI disk detected\n", name);
--	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++)
-+	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
-+		blk_cleanup_queue(pf->disk->queue);
-+		pf->disk->queue = NULL;
-+		blk_mq_free_tag_set(&pf->tag_set);
- 		put_disk(pf->disk);
-+	}
- 	pi_unregister_driver(par_drv);
- 	return -1;
- }
-@@ -1047,13 +1051,15 @@ static void __exit pf_exit(void)
- 	int unit;
- 	unregister_blkdev(major, name);
- 	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
--		if (!pf->present)
--			continue;
--		del_gendisk(pf->disk);
-+		if (pf->present)
-+			del_gendisk(pf->disk);
-+
- 		blk_cleanup_queue(pf->disk->queue);
- 		blk_mq_free_tag_set(&pf->tag_set);
- 		put_disk(pf->disk);
--		pi_release(pf->pi);
-+
-+		if (pf->present)
-+			pi_release(pf->pi);
- 	}
- }
- 
-
--- 
-Jens Axboe
-
+I'm not bent on adding or not adding a new syscall as long as
+functionality is there.
+Thanks!
