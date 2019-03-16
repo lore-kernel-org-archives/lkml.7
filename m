@@ -2,680 +2,393 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52848C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A5CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0295921904
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552745423;
-	bh=B2Yr4FWWESstzpMtFRZZ1ZnuQ3zRlvGn5AuWSakD/iQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pB2ziBY2wWcvg/Vk1V2QAbB0noQ16BvbCrhDpr+O75pxNEM3qN2VrdqyRu0ybpBV2
-	 Pr1s3mW1tQ70pPa3fxOuGED+fvchrwSel9AsmA+SPwqrQavpZk4F48QA37UwQWC3zQ
-	 2KbYPLuVE7IxsGlPHqmxUOXFTEHH7xg46gFWcJkc=
+	by mail.kernel.org (Postfix) with ESMTP id EC44D218FE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfCPOKV (ORCPT
+        id S1727040AbfCPOKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:10:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51278 "EHLO mail.kernel.org"
+        Sat, 16 Mar 2019 10:10:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:7109 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbfCPOKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:10:21 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58494218FE;
-        Sat, 16 Mar 2019 14:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552745419;
-        bh=B2Yr4FWWESstzpMtFRZZ1ZnuQ3zRlvGn5AuWSakD/iQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UwctefPR9xXv2JmU82+N1tEtmjjsv9q46QiwWvF82w19SZ30lwtUpY+aGuaKuWPxk
-         TkFWwBdEJrbxV6yvq+3rpqDE/h7Pkos6OJY87yQUW/+87KNscLZVrOUGfY6yL47JaT
-         af0534YC5qxqluFQTbrt66DO+VwcarE0WrNxpoc8=
-Date:   Sat, 16 Mar 2019 14:10:12 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
-Subject: Re: [PATCH 7/8] iio: adc: stm32-dfsdm: add support for buffer modes
-Message-ID: <20190316141012.01ae0f77@archlinux>
-In-Reply-To: <d2463873-fd8c-7c74-80d5-b7685772d84c@st.com>
-References: <1551862524-25098-1-git-send-email-fabrice.gasnier@st.com>
-        <1551862524-25098-8-git-send-email-fabrice.gasnier@st.com>
-        <20190310102114.0c1e7bd8@archlinux>
-        <d2463873-fd8c-7c74-80d5-b7685772d84c@st.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726064AbfCPOKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 10:10:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Mar 2019 07:10:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,486,1544515200"; 
+   d="scan'208";a="327867578"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Mar 2019 07:10:47 -0700
+Received: from [10.252.10.233] (abudanko-mobl.ccr.corp.intel.com [10.252.10.233])
+        by linux.intel.com (Postfix) with ESMTP id 3C23D58028E;
+        Sat, 16 Mar 2019 07:10:43 -0700 (PDT)
+Subject: [PATCH v9 02/12] perf record: implement --mmap-flush=<number> option
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <9b596e56-636b-8d47-8a9d-8c26cf5d500e@linux.intel.com>
+Date:   Sat, 16 Mar 2019 17:10:42 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Mar 2019 19:01:47 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-> On 3/10/19 11:21 AM, Jonathan Cameron wrote:
-> > On Wed, 6 Mar 2019 09:55:23 +0100
-> > Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
-> >   
-> >> DFSDM can operate using these buffer modes:
-> >> - INDIO_BUFFER_SOFTWARE: regular continuous conversions (no trigger)
-> >>   but limited to 1 channel. User can set sampling frequency in this case.
-> >> - INDIO_BUFFER_TRIGGERED: triggered conversions (injected with or without
-> >>   scan mode, resp for one or more channels).
-> >>
-> >> DFSDM can use hardware triggers (e.g. STM32 timer/lptimer), add
-> >> INDIO_HARDWARE_TRIGGERED to supported modes.
-> >>
-> >> Only support DMA-based buffer modes. In case no DMA is available, only
-> >> support INDIO_DIRECT_MODE.
-> >>
-> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>  
-> > 
-> > Hi Fabrice,
-> > 
-> > I'll confess to being thoroughly confused by the many options this hardware
-> > supports!  If you wouldn't mind, could you enumerate all the possible trigger
-> > and mode combinations.  Even better if it includes the userspace
-> > configuration that would be needed to get into a given mode.
-> >   
-> 
-> Hi Jonathan,
-> 
-> Many thanks for reviewing.
-> I understand... I hope I can clarify it, and give an overview.
+Implemented --mmap-flush option that specifies minimal number of bytes
+that is extracted from mmaped kernel buffer to store into a trace. The
+default option value is 1 byte what means every time trace writing
+thread finds some new data in the mmaped buffer the data is extracted,
+possibly compressed and written to a trace.
 
-Thanks! Definitely pointing me in the right direction.
+  $ tools/perf/perf record --mmap-flush 1024 -e cycles -- matrix.gcc
+  $ tools/perf/perf record --aio --mmap-flush 1K -e cycles -- matrix.gcc
 
-> Basically, conversions can be launched continuously, or using various
-> triggers:
-> - by software
-> - hardware triggers (e.g. like in stm32-adc: TIM, LPTIM, EXTI)
-> - synchronously with DFSDM filter 0. e.g. for filters 1, 2... (Maybe
-> DFSDM filter 0 should be represented as trigger as well ?) I think it's
-> been originally added as dt property for the audio needs.
+The option is independent from -z setting, doesn't vary with compression
+level and can serve two purposes.
 
-I wonder the same question.  It might be clearer if it was explicitly set.
-The only time we have done similar to here with "" as the current trigger
-being valid is when we have been selecting between an internal
-mode, which looks like any of your hardware triggers and
-one where we are driving from an interrupt (effectively software triggered)
-Here we have a whole set of different hardware triggers (which are never
-exposed as interrupts as they are entirely internal) so that
-"nothing" vs "explicit" switch doesn't make as much sense.
-A user doesn't care about the distinction of the triggers coming from
-different units on the chip and that this particular one is effectively
-internal to the dfsdm.
+The first purpose is to increase the compression ratio of a trace data.
+Larger data chunks are compressed more effectively so the implemented
+option allows specifying data chunk size to compress. Also at some cases
+executing more write syscalls with smaller data size can take longer
+than executing less write syscalls with bigger data size due to syscall
+overhead so extracting bigger data chunks specified by the option value
+could additionally decrease runtime overhead.
 
-> 
-> Launching conversions can be done using two methods:
-> a - injected
->   - scan mode can be used to convert several channels each time a
->     trigger occurs.
->     When not is scan mode, channels are converted in sequence, one upon
->     each trigger.
+The second purpose is to avoid self monitoring live-lock issue in system
+wide (-a) profiling mode. Profiling in system wide mode with compression
+(-a -z) can additionally induce data into the kernel buffers along with
+the data from monitored processes. If performance data rate and volume
+from the monitored processes is high then trace streaming and compression
+activity in the tool is also high. High tool process activity can lead
+to subtle live-lock effect when compression of single new byte from some
+of mmaped kernel buffer leads to generation of the next single byte at
+some mmaped buffer. So perf tool process ends up in endless self
+monitoring.
 
-Do we support this mode at all?  The one trigger one channel one that
-is.  That is the one case I can see here that really doesn't map to
-IIO concepts.  If it's all wrapped up with a hardware provided trigger
-and we make sure we have exclusive use fo that trigger then of course
-we can internally have anything happen.
+Implemented sync parameter is the mean to force data move independently
+from the specified flush threshold value. Despite the provided flush
+value the tool needs capability to unconditionally drain memory buffers,
+at least in the end of the collection.
 
->   - supports all triggers (software, hardware or synchronously...)
->   - no continuous conversions
-> 
-> b - regular
->   - supports: software triggers or synchronous with filter 0
->   - single or continuous conversions
-> 
-> If you like to go further in details on theses modes, there are details
-> in several STM32 Ref manual (like RM0433 or RM0436 resp for STM32H743 or
-> STM32MP157). This is documented under DFSDM section "Launching conversions".
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-record.txt | 12 +++++
+ tools/perf/builtin-record.c              | 65 +++++++++++++++++++++---
+ tools/perf/perf.h                        |  1 +
+ tools/perf/util/evlist.c                 |  6 +--
+ tools/perf/util/evlist.h                 |  3 +-
+ tools/perf/util/mmap.c                   |  4 +-
+ tools/perf/util/mmap.h                   |  3 +-
+ 7 files changed, 82 insertions(+), 12 deletions(-)
 
-Thanks for the references.  Definitely useful!  I hadn't understood for instance
-that injected samples will interrupt any regular sequence - effectively
-they are the higher priority option.
-
-> 
-> > There is some info in the previous patch, but I'm looking for more detail,
-> > particularly around available triggers.  
-> 
-> From userland perspective, I'll try to summarize the various
-> possibilities, that matches the array documented in previous patch:
-> 
-> 1 - single conversion:
-> $ cd iio:deviceX # go to any filter
-> $ cat in_voltageY_raw
-> This uses regular conversion (not continuous)
-> 
-> 2 - Using sampling frequency (single channel, buffer)
-> $ echo 100 > sampling_frequency
-
-So in this case the trigger is not set to anything?
-If documenting, explicitly echo "" > current_trigger
-to make that clear.
-
-> $ echo 1 > scan_elements/in_voltageY_en
-> $ echo 1 > buffer/enable
-> This uses regular conversion in continuous mode (Frequency is achieved
-> by tuning filter parameters)
-> 
-> 3 - sync mode with filter 0 (for filter 1..5):
-> Basically, filter 0 is configured as in 2 above.
-
-You talk about configuring filters here, but I'm not totally sure what
-you mean?  Is that effectively setting the sampling frequency?
-
-> Then other filters (e.g. 1 to 5 on stm32mp157) can be converted
-> synchronously. This currently uses st,filter0-sync dt property.
-> $ cd iio:deviceX # go to any filter 1..5
-> $ echo 1 > scan_elements/in_voltageY_en
-> $ echo 1 > buffer/enable
-> This uses regular conversion, in sync with filter 0.
-> 
-> 4 - Using a hardware trigger (with one channel):
-> # check trigger, configure it
-> $ cat /sys/bus/iio/devices/trigger1/name
-> tim6_trgo
-> $ echo 100 > /sys/bus/iio/devices/trigger1/sampling_frequency
-> $ cd iio:deviceX                         # go to any filter
-> $ echo 1 > scan_elements/in_voltageY_en
-> $ echo tim6_trgo > trigger/current_trigger
-> $ echo 1 > buffer/enable
-> This basically uses injected conversion as it uses a hardware trigger
-> (without scan)
-
-Just curious, is there a benefit in doing this over setting up a 1 channel
-scan?
-
-> 
-> 5 - Using a hardware trigger (with 2+ channel):
-> Same as in 4/ above, but enable two or more channels in scan_elements.
-> This basically uses injected conversion as it uses a hardware trigger
-> (with scan mode)
-> 
-> 6 - In use case 4/ and 5/ above, it could be conversions on filter 1..5
-> in sync with filter 0. In this case, dt property must be set currently.
-> No need to set trigger.
-Ah. That answers my query above. Great.
-> 
-> I hope it answers some of your questions,
-> Please let me know if/how I should improve the documented modes in
-> previous patch ?
-I think this text here is very useful, so perhaps just put it in
-the patch description.
-
-> 
-> Best regards,
-> Fabrice
-> 
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> >> ---
-> >>  drivers/iio/adc/stm32-dfsdm-adc.c | 218 +++++++++++++++++++++++++++++++++-----
-> >>  1 file changed, 194 insertions(+), 24 deletions(-)
-> >>
-> >> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> >> index 4ead6bf..51688eb 100644
-> >> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> >> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> >> @@ -12,6 +12,11 @@
-> >>  #include <linux/iio/buffer.h>
-> >>  #include <linux/iio/hw-consumer.h>
-> >>  #include <linux/iio/sysfs.h>
-> >> +#include <linux/iio/timer/stm32-lptim-trigger.h>
-> >> +#include <linux/iio/timer/stm32-timer-trigger.h>
-> >> +#include <linux/iio/trigger.h>
-> >> +#include <linux/iio/trigger_consumer.h>
-> >> +#include <linux/iio/triggered_buffer.h>
-> >>  #include <linux/interrupt.h>
-> >>  #include <linux/module.h>
-> >>  #include <linux/of_device.h>
-> >> @@ -121,6 +126,61 @@ static int stm32_dfsdm_str2val(const char *str,
-> >>  	return -EINVAL;
-> >>  }
-> >>  
-> >> +/**
-> >> + * struct stm32_dfsdm_trig_info - DFSDM trigger info
-> >> + * @name:		name of the trigger, corresponding to its source
-> >> + * @jextsel:		trigger signal selection
-> >> + */
-> >> +struct stm32_dfsdm_trig_info {
-> >> +	const char *name;
-> >> +	unsigned int jextsel;
-> >> +};
-> >> +
-> >> +/* hardware injected trigger enable, edge selection */
-> >> +enum stm32_dfsdm_jexten {
-> >> +	STM32_DFSDM_JEXTEN_DISABLED,
-> >> +	STM32_DFSDM_JEXTEN_RISING_EDGE,
-> >> +	STM32_DFSDM_JEXTEN_FALLING_EDGE,
-> >> +	STM32_DFSDM_EXTEN_BOTH_EDGES,
-> >> +};
-> >> +
-> >> +static const struct stm32_dfsdm_trig_info stm32_dfsdm_trigs[] = {
-> >> +	{ TIM1_TRGO, 0 },
-> >> +	{ TIM1_TRGO2, 1 },
-> >> +	{ TIM8_TRGO, 2 },
-> >> +	{ TIM8_TRGO2, 3 },
-> >> +	{ TIM3_TRGO, 4 },
-> >> +	{ TIM4_TRGO, 5 },
-> >> +	{ TIM16_OC1, 6 },
-> >> +	{ TIM6_TRGO, 7 },
-> >> +	{ TIM7_TRGO, 8 },
-> >> +	{ LPTIM1_OUT, 26 },
-> >> +	{ LPTIM2_OUT, 27 },
-> >> +	{ LPTIM3_OUT, 28 },
-> >> +	{},
-> >> +};
-> >> +
-> >> +static int stm32_dfsdm_get_jextsel(struct iio_dev *indio_dev,
-> >> +				   struct iio_trigger *trig)
-> >> +{
-> >> +	int i;
-> >> +
-> >> +	/* lookup triggers registered by stm32 timer trigger driver */
-> >> +	for (i = 0; stm32_dfsdm_trigs[i].name; i++) {
-> >> +		/**
-> >> +		 * Checking both stm32 timer trigger type and trig name
-> >> +		 * should be safe against arbitrary trigger names.
-> >> +		 */
-> >> +		if ((is_stm32_timer_trigger(trig) ||
-> >> +		     is_stm32_lptim_trigger(trig)) &&
-> >> +		    !strcmp(stm32_dfsdm_trigs[i].name, trig->name)) {
-> >> +			return stm32_dfsdm_trigs[i].jextsel;
-> >> +		}
-> >> +	}
-> >> +
-> >> +	return -EINVAL;
-> >> +}
-> >> +
-> >>  static int stm32_dfsdm_set_osrs(struct stm32_dfsdm_filter *fl,
-> >>  				unsigned int fast, unsigned int oversamp)
-> >>  {
-> >> @@ -265,7 +325,8 @@ static int stm32_dfsdm_chan_configure(struct stm32_dfsdm *dfsdm,
-> >>  }
-> >>  
-> >>  static int stm32_dfsdm_start_filter(struct stm32_dfsdm_adc *adc,
-> >> -				    unsigned int fl_id)
-> >> +				    unsigned int fl_id,
-> >> +				    struct iio_trigger *trig)
-> >>  {
-> >>  	struct stm32_dfsdm *dfsdm = adc->dfsdm;
-> >>  	int ret;
-> >> @@ -277,7 +338,7 @@ static int stm32_dfsdm_start_filter(struct stm32_dfsdm_adc *adc,
-> >>  		return ret;
-> >>  
-> >>  	/* Nothing more to do for injected (scan mode/triggered) conversions */
-> >> -	if (adc->nconv > 1)
-> >> +	if (adc->nconv > 1 || trig)
-> >>  		return 0;
-> >>  
-> >>  	/* Software start (single or continuous) regular conversion */
-> >> @@ -294,8 +355,38 @@ static void stm32_dfsdm_stop_filter(struct stm32_dfsdm *dfsdm,
-> >>  			   DFSDM_CR1_DFEN_MASK, DFSDM_CR1_DFEN(0));
-> >>  }
-> >>  
-> >> +static int stm32_dfsdm_filter_set_trig(struct stm32_dfsdm_adc *adc,
-> >> +				       unsigned int fl_id,
-> >> +				       struct iio_trigger *trig)
-> >> +{
-> >> +	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> >> +	struct regmap *regmap = adc->dfsdm->regmap;
-> >> +	u32 jextsel = 0, jexten = STM32_DFSDM_JEXTEN_DISABLED;
-> >> +	int ret;
-> >> +
-> >> +	if (trig) {
-> >> +		ret = stm32_dfsdm_get_jextsel(indio_dev, trig);
-> >> +		if (ret < 0)
-> >> +			return ret;
-> >> +
-> >> +		/* set trigger source and polarity (default to rising edge) */
-> >> +		jextsel = ret;
-> >> +		jexten = STM32_DFSDM_JEXTEN_RISING_EDGE;
-> >> +	}
-> >> +
-> >> +	ret = regmap_update_bits(regmap, DFSDM_CR1(fl_id),
-> >> +				 DFSDM_CR1_JEXTSEL_MASK | DFSDM_CR1_JEXTEN_MASK,
-> >> +				 DFSDM_CR1_JEXTSEL(jextsel) |
-> >> +				 DFSDM_CR1_JEXTEN(jexten));
-> >> +	if (ret < 0)
-> >> +		return ret;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >>  static int stm32_dfsdm_filter_configure(struct stm32_dfsdm_adc *adc,
-> >> -					unsigned int fl_id)
-> >> +					unsigned int fl_id,
-> >> +					struct iio_trigger *trig)
-> >>  {
-> >>  	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> >>  	struct regmap *regmap = adc->dfsdm->regmap;
-> >> @@ -322,6 +413,10 @@ static int stm32_dfsdm_filter_configure(struct stm32_dfsdm_adc *adc,
-> >>  	if (ret)
-> >>  		return ret;
-> >>  
-> >> +	ret = stm32_dfsdm_filter_set_trig(adc, fl_id, trig);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >>  	/*
-> >>  	 * DFSDM modes configuration W.R.T audio/iio type modes
-> >>  	 * ----------------------------------------------------------------
-> >> @@ -341,7 +436,7 @@ static int stm32_dfsdm_filter_configure(struct stm32_dfsdm_adc *adc,
-> >>  	 *               |         |              |          | sync_mode  |
-> >>  	 * ----------------------------------------------------------------
-> >>  	 */
-> >> -	if (adc->nconv == 1) {
-> >> +	if (adc->nconv == 1 && !trig) {
-> >>  		bit = __ffs(adc->smask);
-> >>  		chan = indio_dev->channels + bit;
-> >>  
-> >> @@ -365,13 +460,15 @@ static int stm32_dfsdm_filter_configure(struct stm32_dfsdm_adc *adc,
-> >>  			return ret;
-> >>  
-> >>  		/* Use scan mode for multiple channels */
-> >> -		cr1 = DFSDM_CR1_JSCAN(1);
-> >> +		cr1 = DFSDM_CR1_JSCAN(!!(adc->nconv > 1));
-> >>  
-> >>  		/*
-> >> -		 * Continuous conversions not supported in injected mode:
-> >> -		 * - use conversions in sync with filter 0
-> >> +		 * Continuous conversions not supported in injected mode,
-> >> +		 * either use:
-> >> +		 * - conversions in sync with filter 0
-> >> +		 * - triggered conversions
-> >>  		 */
-> >> -		if (!fl->sync_mode)
-> >> +		if (!fl->sync_mode && !trig)
-> >>  			return -EINVAL;
-> >>  		cr1 |= DFSDM_CR1_JSYNC(fl->sync_mode);
-> >>  	}
-> >> @@ -503,7 +600,8 @@ static ssize_t dfsdm_adc_audio_set_spiclk(struct iio_dev *indio_dev,
-> >>  	return len;
-> >>  }
-> >>  
-> >> -static int stm32_dfsdm_start_conv(struct stm32_dfsdm_adc *adc)
-> >> +static int stm32_dfsdm_start_conv(struct stm32_dfsdm_adc *adc,
-> >> +				  struct iio_trigger *trig)
-> >>  {
-> >>  	struct regmap *regmap = adc->dfsdm->regmap;
-> >>  	int ret;
-> >> @@ -512,11 +610,11 @@ static int stm32_dfsdm_start_conv(struct stm32_dfsdm_adc *adc)
-> >>  	if (ret < 0)
-> >>  		return ret;
-> >>  
-> >> -	ret = stm32_dfsdm_filter_configure(adc, adc->fl_id);
-> >> +	ret = stm32_dfsdm_filter_configure(adc, adc->fl_id, trig);
-> >>  	if (ret < 0)
-> >>  		goto stop_channels;
-> >>  
-> >> -	ret = stm32_dfsdm_start_filter(adc, adc->fl_id);
-> >> +	ret = stm32_dfsdm_start_filter(adc, adc->fl_id, trig);
-> >>  	if (ret < 0)
-> >>  		goto filter_unconfigure;
-> >>  
-> >> @@ -548,6 +646,7 @@ static int stm32_dfsdm_set_watermark(struct iio_dev *indio_dev,
-> >>  {
-> >>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> >>  	unsigned int watermark = DFSDM_DMA_BUFFER_SIZE / 2;
-> >> +	unsigned int rx_buf_sz = DFSDM_DMA_BUFFER_SIZE;
-> >>  
-> >>  	/*
-> >>  	 * DMA cyclic transfers are used, buffer is split into two periods.
-> >> @@ -556,7 +655,7 @@ static int stm32_dfsdm_set_watermark(struct iio_dev *indio_dev,
-> >>  	 * - one buffer (period) driver pushed to ASoC side.
-> >>  	 */
-> >>  	watermark = min(watermark, val * (unsigned int)(sizeof(u32)));
-> >> -	adc->buf_sz = watermark * 2;
-> >> +	adc->buf_sz = min(rx_buf_sz, watermark * 2 * adc->nconv);
-> >>  
-> >>  	return 0;
-> >>  }
-> >> @@ -586,13 +685,41 @@ static unsigned int stm32_dfsdm_adc_dma_residue(struct stm32_dfsdm_adc *adc)
-> >>  	return 0;
-> >>  }
-> >>  
-> >> -static void stm32_dfsdm_audio_dma_buffer_done(void *data)
-> >> +static irqreturn_t stm32_dfsdm_adc_trigger_handler(int irq, void *p)
-> >> +{
-> >> +	struct iio_poll_func *pf = p;
-> >> +	struct iio_dev *indio_dev = pf->indio_dev;
-> >> +	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> >> +	int available = stm32_dfsdm_adc_dma_residue(adc);
-> >> +
-> >> +	while (available >= indio_dev->scan_bytes) {
-> >> +		u32 *buffer = (u32 *)&adc->rx_buf[adc->bufi];
-> >> +
-> >> +		iio_push_to_buffers_with_timestamp(indio_dev, buffer,
-> >> +						   pf->timestamp);
-> >> +		available -= indio_dev->scan_bytes;
-> >> +		adc->bufi += indio_dev->scan_bytes;
-> >> +		if (adc->bufi >= adc->buf_sz)
-> >> +			adc->bufi = 0;
-> >> +	}
-> >> +
-> >> +	iio_trigger_notify_done(indio_dev->trig);
-> >> +
-> >> +	return IRQ_HANDLED;
-> >> +}
-> >> +
-> >> +static void stm32_dfsdm_dma_buffer_done(void *data)
-> >>  {
-> >>  	struct iio_dev *indio_dev = data;
-> >>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> >>  	int available = stm32_dfsdm_adc_dma_residue(adc);
-> >>  	size_t old_pos;
-> >>  
-> >> +	if (indio_dev->currentmode & INDIO_BUFFER_TRIGGERED) {
-> >> +		iio_trigger_poll_chained(indio_dev->trig);
-> >> +		return;
-> >> +	}
-> >> +
-> >>  	/*
-> >>  	 * FIXME: In Kernel interface does not support cyclic DMA buffer,and
-> >>  	 * offers only an interface to push data samples per samples.
-> >> @@ -620,6 +747,9 @@ static void stm32_dfsdm_audio_dma_buffer_done(void *data)
-> >>  			adc->bufi = 0;
-> >>  			old_pos = 0;
-> >>  		}
-> >> +		/* regular iio buffer without trigger */
-> >> +		if (adc->dev_data->type == DFSDM_IIO)
-> >> +			iio_push_to_buffers(indio_dev, buffer);
-> >>  	}
-> >>  	if (adc->cb)
-> >>  		adc->cb(&adc->rx_buf[old_pos], adc->bufi - old_pos,
-> >> @@ -643,7 +773,7 @@ static int stm32_dfsdm_adc_dma_start(struct iio_dev *indio_dev)
-> >>  	dev_dbg(&indio_dev->dev, "%s size=%d watermark=%d\n", __func__,
-> >>  		adc->buf_sz, adc->buf_sz / 2);
-> >>  
-> >> -	if (adc->nconv == 1)
-> >> +	if (adc->nconv == 1 && !indio_dev->trig)
-> >>  		config.src_addr += DFSDM_RDATAR(adc->fl_id);
-> >>  	else
-> >>  		config.src_addr += DFSDM_JDATAR(adc->fl_id);
-> >> @@ -660,7 +790,7 @@ static int stm32_dfsdm_adc_dma_start(struct iio_dev *indio_dev)
-> >>  	if (!desc)
-> >>  		return -EBUSY;
-> >>  
-> >> -	desc->callback = stm32_dfsdm_audio_dma_buffer_done;
-> >> +	desc->callback = stm32_dfsdm_dma_buffer_done;
-> >>  	desc->callback_param = indio_dev;
-> >>  
-> >>  	cookie = dmaengine_submit(desc);
-> >> @@ -671,7 +801,7 @@ static int stm32_dfsdm_adc_dma_start(struct iio_dev *indio_dev)
-> >>  	/* Issue pending DMA requests */
-> >>  	dma_async_issue_pending(adc->dma_chan);
-> >>  
-> >> -	if (adc->nconv == 1) {
-> >> +	if (adc->nconv == 1 && !indio_dev->trig) {
-> >>  		/* Enable regular DMA transfer*/
-> >>  		ret = regmap_update_bits(adc->dfsdm->regmap,
-> >>  					 DFSDM_CR1(adc->fl_id),
-> >> @@ -726,13 +856,19 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
-> >>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> >>  	int ret;
-> >>  
-> >> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-> >> +		ret = iio_triggered_buffer_postenable(indio_dev);
-> >> +		if (ret < 0)
-> >> +			return ret;
-> >> +	}
-> >> +
-> >>  	/* Reset adc buffer index */
-> >>  	adc->bufi = 0;
-> >>  
-> >>  	if (adc->hwc) {
-> >>  		ret = iio_hw_consumer_enable(adc->hwc);
-> >>  		if (ret < 0)
-> >> -			return ret;
-> >> +			goto err_predisable;
-> >>  	}
-> >>  
-> >>  	ret = stm32_dfsdm_start_dfsdm(adc->dfsdm);
-> >> @@ -745,7 +881,7 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
-> >>  		goto stop_dfsdm;
-> >>  	}
-> >>  
-> >> -	ret = stm32_dfsdm_start_conv(adc);
-> >> +	ret = stm32_dfsdm_start_conv(adc, indio_dev->trig);
-> >>  	if (ret) {
-> >>  		dev_err(&indio_dev->dev, "Can't start conversion\n");
-> >>  		goto err_stop_dma;
-> >> @@ -760,6 +896,9 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
-> >>  err_stop_hwc:
-> >>  	if (adc->hwc)
-> >>  		iio_hw_consumer_disable(adc->hwc);
-> >> +err_predisable:
-> >> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED)
-> >> +		iio_triggered_buffer_predisable(indio_dev);
-> >>  
-> >>  	return ret;
-> >>  }
-> >> @@ -777,6 +916,9 @@ static int stm32_dfsdm_predisable(struct iio_dev *indio_dev)
-> >>  	if (adc->hwc)
-> >>  		iio_hw_consumer_disable(adc->hwc);
-> >>  
-> >> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED)
-> >> +		iio_triggered_buffer_predisable(indio_dev);
-> >> +
-> >>  	return 0;
-> >>  }
-> >>  
-> >> @@ -856,7 +998,7 @@ static int stm32_dfsdm_single_conv(struct iio_dev *indio_dev,
-> >>  
-> >>  	adc->nconv = 1;
-> >>  	adc->smask = BIT(chan->scan_index);
-> >> -	ret = stm32_dfsdm_start_conv(adc);
-> >> +	ret = stm32_dfsdm_start_conv(adc, NULL);
-> >>  	if (ret < 0) {
-> >>  		regmap_update_bits(adc->dfsdm->regmap, DFSDM_CR2(adc->fl_id),
-> >>  				   DFSDM_CR2_REOCIE_MASK, DFSDM_CR2_REOCIE(0));
-> >> @@ -978,6 +1120,12 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
-> >>  	return -EINVAL;
-> >>  }
-> >>  
-> >> +static int stm32_dfsdm_validate_trigger(struct iio_dev *indio_dev,
-> >> +					struct iio_trigger *trig)
-> >> +{
-> >> +	return stm32_dfsdm_get_jextsel(indio_dev, trig) < 0 ? -EINVAL : 0;
-> >> +}
-> >> +
-> >>  static const struct iio_info stm32_dfsdm_info_audio = {
-> >>  	.hwfifo_set_watermark = stm32_dfsdm_set_watermark,
-> >>  	.read_raw = stm32_dfsdm_read_raw,
-> >> @@ -986,9 +1134,11 @@ static const struct iio_info stm32_dfsdm_info_audio = {
-> >>  };
-> >>  
-> >>  static const struct iio_info stm32_dfsdm_info_adc = {
-> >> +	.hwfifo_set_watermark = stm32_dfsdm_set_watermark,
-> >>  	.read_raw = stm32_dfsdm_read_raw,
-> >>  	.write_raw = stm32_dfsdm_write_raw,
-> >>  	.update_scan_mode = stm32_dfsdm_update_scan_mode,
-> >> +	.validate_trigger = stm32_dfsdm_validate_trigger,
-> >>  };
-> >>  
-> >>  static irqreturn_t stm32_dfsdm_irq(int irq, void *arg)
-> >> @@ -1061,6 +1211,9 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
-> >>  		return -ENOMEM;
-> >>  	}
-> >>  
-> >> +	indio_dev->modes |= INDIO_BUFFER_SOFTWARE;
-> >> +	indio_dev->setup_ops = &stm32_dfsdm_buffer_setup_ops;
-> >> +
-> >>  	return 0;
-> >>  }
-> >>  
-> >> @@ -1082,7 +1235,8 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
-> >>  	 * IIO_CHAN_INFO_OVERSAMPLING_RATIO: used to set oversampling
-> >>  	 */
-> >>  	ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-> >> -	ch->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO);
-> >> +	ch->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
-> >> +					BIT(IIO_CHAN_INFO_SAMP_FREQ);
-> >>  
-> >>  	if (adc->dev_data->type == DFSDM_AUDIO) {
-> >>  		ch->scan_type.sign = 's';
-> >> @@ -1104,9 +1258,6 @@ static int stm32_dfsdm_audio_init(struct iio_dev *indio_dev)
-> >>  	struct stm32_dfsdm_channel *d_ch;
-> >>  	int ret;
-> >>  
-> >> -	indio_dev->modes |= INDIO_BUFFER_SOFTWARE;
-> >> -	indio_dev->setup_ops = &stm32_dfsdm_buffer_setup_ops;
-> >> -
-> >>  	ch = devm_kzalloc(&indio_dev->dev, sizeof(*ch), GFP_KERNEL);
-> >>  	if (!ch)
-> >>  		return -ENOMEM;
-> >> @@ -1174,6 +1325,25 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
-> >>  
-> >>  	init_completion(&adc->completion);
-> >>  
-> >> +	/* Optionally request DMA */
-> >> +	if (stm32_dfsdm_dma_request(indio_dev)) {
-> >> +		dev_dbg(&indio_dev->dev, "No DMA support\n");
-> >> +		return 0;
-> >> +	}
-> >> +
-> >> +	ret = iio_triggered_buffer_setup(indio_dev,
-> >> +					 &iio_pollfunc_store_time,
-> >> +					 &stm32_dfsdm_adc_trigger_handler,
-> >> +					 &stm32_dfsdm_buffer_setup_ops);
-> >> +	if (ret) {
-> >> +		stm32_dfsdm_dma_release(indio_dev);
-> >> +		dev_err(&indio_dev->dev, "buffer setup failed\n");
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	/* lptimer/timer hardware triggers */
-> >> +	indio_dev->modes |= INDIO_HARDWARE_TRIGGERED;
-> >> +
-> >>  	return 0;
-> >>  }
-> >>  
-> >> @@ -1221,7 +1391,7 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
-> >>  
-> >>  	iio->dev.parent = dev;
-> >>  	iio->dev.of_node = np;
-> >> -	iio->modes = INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
-> >> +	iio->modes = INDIO_DIRECT_MODE;
-> >>  
-> >>  	platform_set_drvdata(pdev, adc);
-> >>    
-> >   
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 8f0c2be34848..18fceb49434e 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -459,6 +459,18 @@ Set affinity mask of trace reading thread according to the policy defined by 'mo
+   node - thread affinity mask is set to NUMA node cpu mask of the processed mmap buffer
+   cpu  - thread affinity mask is set to cpu of the processed mmap buffer
+ 
++--mmap-flush=number::
++Specify minimal number of bytes that is extracted from mmap data pages and stored
++into a trace. The number specification is possible using B/K/M/G suffixes. Maximal allowed
++value is a quarter of the size of mmaped data pages. The default option value is 1 byte
++what means that every time trace writing thread finds some new data in the mmaped buffer
++the data is extracted, possibly compressed (-z) and written to a trace. Larger data chunks
++are compressed more effectively in comparison to smaller chunks so extraction of larger
++chunks from the mmap data pages is preferable from perspective of trace size reduction.
++Also at some cases executing less trace write syscalls with bigger data size can take
++shorter than executing more trace write syscalls with smaller data size thus lowering
++runtime profiling overhead.
++
+ --all-kernel::
+ Configure all used events to run in kernel space.
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index a468d882e74f..f55302dec440 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -334,6 +334,41 @@ static int record__aio_enabled(struct record *rec)
+ 	return rec->opts.nr_cblocks > 0;
+ }
+ 
++#define MMAP_FLUSH_DEFAULT 1
++static int record__mmap_flush_parse(const struct option *opt,
++				    const char *str,
++				    int unset)
++{
++	int flush_max;
++	struct record_opts *opts = (struct record_opts *)opt->value;
++	static struct parse_tag tags[] = {
++			{ .tag  = 'B', .mult = 1       },
++			{ .tag  = 'K', .mult = 1 << 10 },
++			{ .tag  = 'M', .mult = 1 << 20 },
++			{ .tag  = 'G', .mult = 1 << 30 },
++			{ .tag  = 0 },
++	};
++
++	if (unset)
++		return 0;
++
++	if (str) {
++		opts->mmap_flush = parse_tag_value(str, tags);
++		if (opts->mmap_flush == (int)-1)
++			opts->mmap_flush = strtol(str, NULL, 0);
++	}
++
++	if (!opts->mmap_flush)
++		opts->mmap_flush = MMAP_FLUSH_DEFAULT;
++
++	flush_max = perf_evlist__mmap_size(opts->mmap_pages);
++	flush_max /= 4;
++	if (opts->mmap_flush > flush_max)
++		opts->mmap_flush = flush_max;
++
++	return 0;
++}
++
+ static int process_synthesized_event(struct perf_tool *tool,
+ 				     union perf_event *event,
+ 				     struct perf_sample *sample __maybe_unused,
+@@ -543,7 +578,8 @@ static int record__mmap_evlist(struct record *rec,
+ 	if (perf_evlist__mmap_ex(evlist, opts->mmap_pages,
+ 				 opts->auxtrace_mmap_pages,
+ 				 opts->auxtrace_snapshot_mode,
+-				 opts->nr_cblocks, opts->affinity) < 0) {
++				 opts->nr_cblocks, opts->affinity,
++				 opts->mmap_flush) < 0) {
+ 		if (errno == EPERM) {
+ 			pr_err("Permission error mapping pages.\n"
+ 			       "Consider increasing "
+@@ -733,7 +769,7 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
+ }
+ 
+ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+-				    bool overwrite)
++				    bool overwrite, bool sync)
+ {
+ 	u64 bytes_written = rec->bytes_written;
+ 	int i;
+@@ -756,12 +792,19 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 		off = record__aio_get_pos(trace_fd);
+ 
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
++		u64 flush = 0;
+ 		struct perf_mmap *map = &maps[i];
+ 
+ 		if (map->base) {
+ 			record__adjust_affinity(rec, map);
++			if (sync) {
++				flush = map->flush;
++				map->flush = 1;
++			}
+ 			if (!record__aio_enabled(rec)) {
+ 				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
++					if (sync)
++						map->flush = flush;
+ 					rc = -1;
+ 					goto out;
+ 				}
+@@ -774,10 +817,14 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				idx = record__aio_sync(map, false);
+ 				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
+ 					record__aio_set_pos(trace_fd, off);
++					if (sync)
++						map->flush = flush;
+ 					rc = -1;
+ 					goto out;
+ 				}
+ 			}
++			if (sync)
++				map->flush = flush;
+ 		}
+ 
+ 		if (map->auxtrace_mmap.base && !rec->opts.auxtrace_snapshot_mode &&
+@@ -803,15 +850,15 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	return rc;
+ }
+ 
+-static int record__mmap_read_all(struct record *rec)
++static int record__mmap_read_all(struct record *rec, bool sync)
+ {
+ 	int err;
+ 
+-	err = record__mmap_read_evlist(rec, rec->evlist, false);
++	err = record__mmap_read_evlist(rec, rec->evlist, false, sync);
+ 	if (err)
+ 		return err;
+ 
+-	return record__mmap_read_evlist(rec, rec->evlist, true);
++	return record__mmap_read_evlist(rec, rec->evlist, true, sync);
+ }
+ 
+ static void record__init_features(struct record *rec)
+@@ -1312,7 +1359,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		if (trigger_is_hit(&switch_output_trigger) || done || draining)
+ 			perf_evlist__toggle_bkw_mmap(rec->evlist, BKW_MMAP_DATA_PENDING);
+ 
+-		if (record__mmap_read_all(rec) < 0) {
++		if (record__mmap_read_all(rec, false) < 0) {
+ 			trigger_error(&auxtrace_snapshot_trigger);
+ 			trigger_error(&switch_output_trigger);
+ 			err = -1;
+@@ -1413,6 +1460,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		record__synthesize_workload(rec, true);
+ 
+ out_child:
++	record__mmap_read_all(rec, true);
+ 	record__aio_mmap_read_sync(rec);
+ 
+ 	if (forks) {
+@@ -1815,6 +1863,7 @@ static struct record record = {
+ 			.uses_mmap   = true,
+ 			.default_per_cpu = true,
+ 		},
++		.mmap_flush          = MMAP_FLUSH_DEFAULT,
+ 	},
+ 	.tool = {
+ 		.sample		= process_sample_event,
+@@ -1881,6 +1930,9 @@ static struct option __record_options[] = {
+ 	OPT_CALLBACK('m', "mmap-pages", &record.opts, "pages[,pages]",
+ 		     "number of mmap data pages and AUX area tracing mmap pages",
+ 		     record__parse_mmap_pages),
++	OPT_CALLBACK(0, "mmap-flush", &record.opts, "number",
++		     "Minimal number of bytes that is extracted from mmap data pages (default: 1)",
++		     record__mmap_flush_parse),
+ 	OPT_BOOLEAN(0, "group", &record.opts.group,
+ 		    "put the counters into a counter group"),
+ 	OPT_CALLBACK_NOOPT('g', NULL, &callchain_param,
+@@ -2184,6 +2236,7 @@ int cmd_record(int argc, const char **argv)
+ 		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
+ 
+ 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
++	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
+ 
+ 	err = __cmd_record(&record, argc, argv);
+ out:
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index b120e547ddc7..7886cc9771cf 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -85,6 +85,7 @@ struct record_opts {
+ 	u64          clockid_res_ns;
+ 	int	     nr_cblocks;
+ 	int	     affinity;
++	int	     mmap_flush;
+ };
+ 
+ enum perf_affinity {
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index ed20f4379956..8858d829983b 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1037,7 +1037,7 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
+  */
+ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+-			 bool auxtrace_overwrite, int nr_cblocks, int affinity)
++			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush)
+ {
+ 	struct perf_evsel *evsel;
+ 	const struct cpu_map *cpus = evlist->cpus;
+@@ -1047,7 +1047,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 	 * Its value is decided by evsel's write_backward.
+ 	 * So &mp should not be passed through const pointer.
+ 	 */
+-	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity };
++	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush };
+ 
+ 	if (!evlist->mmap)
+ 		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
+@@ -1079,7 +1079,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 
+ int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages)
+ {
+-	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS);
++	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1);
+ }
+ 
+ int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 744906dd4887..edf18811e39f 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -165,7 +165,8 @@ unsigned long perf_event_mlock_kb_in_pages(void);
+ 
+ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+-			 bool auxtrace_overwrite, int nr_cblocks, int affinity);
++			 bool auxtrace_overwrite, int nr_cblocks,
++			 int affinity, int flush);
+ int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages);
+ void perf_evlist__munmap(struct perf_evlist *evlist);
+ 
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index cdc7740fc181..ef3d79b2c90b 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -440,6 +440,8 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd, int c
+ 
+ 	perf_mmap__setup_affinity_mask(map, mp);
+ 
++	map->flush = mp->flush;
++
+ 	if (auxtrace_mmap__mmap(&map->auxtrace_mmap,
+ 				&mp->auxtrace_mp, map->base, fd))
+ 		return -1;
+@@ -492,7 +494,7 @@ static int __perf_mmap__read_init(struct perf_mmap *md)
+ 	md->start = md->overwrite ? head : old;
+ 	md->end = md->overwrite ? old : head;
+ 
+-	if (md->start == md->end)
++	if ((md->end - md->start) < md->flush)
+ 		return -EAGAIN;
+ 
+ 	size = md->end - md->start;
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index e566c19b242b..b82f8c2d55c4 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -39,6 +39,7 @@ struct perf_mmap {
+ 	} aio;
+ #endif
+ 	cpu_set_t	affinity_mask;
++	u64		flush;
+ };
+ 
+ /*
+@@ -70,7 +71,7 @@ enum bkw_mmap_state {
+ };
+ 
+ struct mmap_params {
+-	int			    prot, mask, nr_cblocks, affinity;
++	int			    prot, mask, nr_cblocks, affinity, flush;
+ 	struct auxtrace_mmap_params auxtrace_mp;
+ };
+ 
+-- 
+2.20.1
 
