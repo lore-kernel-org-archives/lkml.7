@@ -2,94 +2,91 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFB3C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD16C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5396D218E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72CD218D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:23:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552724638;
+	bh=83SpK4MyhZG/v57MFRJVaWHAEvI5uHjzqvt4kq+Daz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1FIKEzBJMWkDsmiHUwLiI0oFapsTguTPNT4BBnHWWoDmJwdmIQuQ0sHPd+h89hHms
+	 kxWD9sT7WFWhd+vsrQKYsKDCleGrcSwkBnv61i6v5bPnN9eNCGYjIyOENweAwSoTfo
+	 ALv7iTwwDU126rLhVQ3F3Z5OGNFP9/C7zElfj7rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfCPIIS (ORCPT
+        id S1726618AbfCPIX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 04:08:18 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:13984 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfCPIIR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 04:08:17 -0400
-Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2G885FB073439;
-        Sat, 16 Mar 2019 17:08:05 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp);
- Sat, 16 Mar 2019 17:08:05 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2G87xdd073418
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 16 Mar 2019 17:08:05 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: mount.nfs: Protocol error after upgrade to linux/master
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190315110555.0807d015@cakuba.netronome.com>
- <20190315120105.5541ad46@cakuba.netronome.com>
- <20190315165440.53b9db3c@cakuba.netronome.com>
- <CAGXu5jKHRPuaALQcPXvpDeuVgZR+EeRqo9Qj4j3kYatb3HUSSA@mail.gmail.com>
- <CAGXu5jL-e7bDEXfpUuT-HyFarR-8T0djXChR0cuzTwFQPQ0tOw@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <f23d0fad-dc72-0e53-cac6-31abfd12a050@I-love.SAKURA.ne.jp>
-Date:   Sat, 16 Mar 2019 17:08:02 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Sat, 16 Mar 2019 04:23:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33438 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726048AbfCPIX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 04:23:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A4B91AD3B;
+        Sat, 16 Mar 2019 08:23:55 +0000 (UTC)
+Date:   Sat, 16 Mar 2019 09:23:54 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     akpm@linux-foundation.org, anshuman.khandual@arm.com,
+        william.kucharski@oracle.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH] mm: Fix __dump_page when mapping->host is not set
+Message-ID: <20190316082354.GF15672@dhcp22.suse.cz>
+References: <20190315121826.23609-1-osalvador@suse.de>
+ <20190315124733.GE15672@dhcp22.suse.cz>
+ <20190315143304.pkuvj4qwtlzgm7iq@d104.suse.de>
 MIME-Version: 1.0
-In-Reply-To: <CAGXu5jL-e7bDEXfpUuT-HyFarR-8T0djXChR0cuzTwFQPQ0tOw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190315143304.pkuvj4qwtlzgm7iq@d104.suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/03/16 14:38, Kees Cook wrote:
->  config LSM
->         string "Ordered list of enabled LSMs"
-> +       default "yama,loadpin,safesetid,integrity,smack,selinux,tomoyo,apparmor" if DEFAULT_SECURITY_SMACK
-> +       default "yama,loadpin,safesetid,integrity,tomoyo,selinux,smack,apparmor" if DEFAULT_SECURITY_TOMOYO
-> +       default "yama,loadpin,safesetid,integrity,apparmor,selinux,smack,tomoyo" if DEFAULT_SECURITY_APPARMOR
->         default "yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
->         help
->           A comma-separated list of LSMs, in initialization order.
+On Fri 15-03-19 15:33:07, Oscar Salvador wrote:
+> On Fri, Mar 15, 2019 at 01:47:33PM +0100, Michal Hocko wrote:
+> > diff --git a/mm/debug.c b/mm/debug.c
+> > index 1611cf00a137..499c26d5ebe5 100644
+> > --- a/mm/debug.c
+> > +++ b/mm/debug.c
+> > @@ -78,6 +78,9 @@ void __dump_page(struct page *page, const char *reason)
+> >  	else if (PageKsm(page))
+> >  		pr_warn("ksm ");
+> >  	else if (mapping) {
+> > +		if (PageSwapCache(page))
+> > +			mapping = page_swap_info(page)->swap_file->f_mapping;
+> > +
+> >  		pr_warn("%ps ", mapping->a_ops);
+> >  		if (mapping->host->i_dentry.first) {
+> >  			struct dentry *dentry;
 > 
-> (I don't see a way to include an earlier config string in a new
-> default.) Thoughts?
->
+> This looks like a much nicer fix, indeed.
 
-Hmm, DEFAULT_SECURITY_TOMOYO no longer works because TOMOYO will be
-always enabled as long as CONFIG_SECURITY_TOMOYO=y. Maybe
+If we go this way then we should swap the order and print the mapping
+before we alter it.
 
- config LSM
-        string "Ordered list of enabled LSMs"
--       default "yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
-+       default "yama,loadpin,safesetid,integrity,selinux" if DEFAULT_SECURITY_SELINUX
-+       default "yama,loadpin,safesetid,integrity,smack" if DEFAULT_SECURITY_SMACK
-+       default "yama,loadpin,safesetid,integrity,tomoyo" if DEFAULT_SECURITY_TOMOYO
-+       default "yama,loadpin,safesetid,integrity,apparmor" if DEFAULT_SECURITY_APPARMOR
-+       default "yama,loadpin,safesetid,integrity" if DEFAULT_SECURITY_DAC
-        help
-          A comma-separated list of LSMs, in initialization order.
+> I gave it a spin and it works.
 
-(i.e. include only up to one major LSM as default choice, and allow manually including
-multiple major LSMs at both kernel build time and kernel boot time) is better?
+Thanks for testing!
 
+> Since the mapping is set during the swapon, I would assume that this should
+> always work for swap.
+> Although I am not sure if once you start playing with e.g zswap the picture can
+> change.
+> 
+> Let us wait for Hugh and Jan.
+
+Yes, I really cannot tell this is really safe. Maybe we want to do the
+check for host anyway. Just to be sure.
+-- 
+Michal Hocko
+SUSE Labs
