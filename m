@@ -2,114 +2,144 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CE1C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC095C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140CE21904
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC4C21871
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552756527;
-	bh=yaBuVQHY5hPsXZmrW0saq5dB6OZCZYvsjwhlKw2zVpQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=w8elksduj1mZtemkNuiqjgKytQpjlVRkGYQnT57JUAl6zDWS+CNfYOQ4i4xnHKRgR
-	 R5TWGI+K6VF6vt/FUlCDqV97vCVnrwHCVDhZGigTkalajGNnR2V5JphaZGkKvVZcCI
-	 ELUj0/FY5AIFWVO9BxxQrny1Q/CAiriVeuZZsdDo=
+	s=default; t=1552757072;
+	bh=8to/P3PsLhQReCP0d6TVof3iBe/fXTx0wSvTMdC9WQk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U0mwPDvqzEOh79TdD0rmCaQyjBmCWuFrJBQUsZuyw5UamPnoFr2bjmtRM4Vvf714I
+	 nIPjNBNoXMPuBfQL5ghgR4TgpiPS4r1EkClxdqNIXTvpMcguxk5yNGoVR2mDNzKIko
+	 QnM1plq0m0Ky/xXbj9/2uDg0/8ykdie6J3KY3Pd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfCPRPZ (ORCPT
+        id S1727137AbfCPRYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 13:15:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726629AbfCPRPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 13:15:25 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE60F218E0;
-        Sat, 16 Mar 2019 17:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552756524;
-        bh=yaBuVQHY5hPsXZmrW0saq5dB6OZCZYvsjwhlKw2zVpQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ke0KlMeSEfAm1zkXhK9QId6xDS1MtMltiNjV6nMoDyp/VpjE4H35d7ZZD+NQFImL6
-         gSKIHmL1PvPkMhvZhhxnG+HY7su3gUfARpptEXkUC5UjjAVZ+Q4rjUDkybc3+eexV/
-         g78W7hCjQRxFTrOUpVsS9q1zRHLWbtFHZ2YrNN2A=
-Date:   Sat, 16 Mar 2019 17:15:17 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tomas Novotny <tomas@novotny.cz>,
-        Brian Masney <masneyb@onstation.org>,
-        Robert Eshleman <bobbyeshleman@gmail.com>,
-        Mathieu Othacehe <m.othacehe@gmail.com>,
-        Parthiban Nallathambi <pn@denx.de>, ryang <decatf@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: iio: light: Document the VCNL4xx0
- device tree bindings
-Message-ID: <20190316171517.4c783134@archlinux>
-In-Reply-To: <20190315215425.24140-3-angus@akkea.ca>
-References: <20190315215425.24140-1-angus@akkea.ca>
-        <20190315215425.24140-3-angus@akkea.ca>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 Mar 2019 13:24:30 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34460 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfCPRYa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 13:24:30 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j25so4141462lji.1
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 10:24:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HU0TPlqyFJBx/remsyCVpTwJHhHOt/JtHhUjMDUl0gw=;
+        b=QweJcVpa5lsLq/Nlg1EtR6DOyxjGM5yXX89kuGbH/xTxvLp499X39O8h0cEPqLoY20
+         2fwd0St3HzYk0p2QBb/RLNedSsz9USvZr9qj1JdlHcIjWh1VW4fIGyXr0H5ML52lVmCt
+         e6sYw/U1qb59OOiqbML4W+uI6/9fIk8T+9Bqw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HU0TPlqyFJBx/remsyCVpTwJHhHOt/JtHhUjMDUl0gw=;
+        b=pVegybilptxRacdiOA41wAn0KDpFVpgAgIoCJCRneQes7T5KLLJ3CFwdBD7WH1/lVA
+         IhXDFxjQXz8srIhgquLIQY1B0sQrGa8mpWWBIHcDTQzq84CYCVBgunN+rLxw5dxnCknZ
+         hbbGcFDLD8h8kpvuUfIN8pFBTyUQCcrgTSG3NZPxhIZlrdSMjLep8Y30Au+n7MbBKOk4
+         UEiG4DSJvDeatdwpy1wHS9plh4xWJVBB+PyCLk1Rp/H41iw9G95PuwKjkrhFpFtTjQ+M
+         KerDvLW/DcVCtgeAoZrP42/81Yl00RQVHLpEeSy/gRMMx5exbwj8QWdgr9TARGcOC2/Z
+         XnSQ==
+X-Gm-Message-State: APjAAAXseSYhH2y2QHbUdQUC/P05HtcH99/pFa8xNQdeM7dYoVMl7HyF
+        J8m5yi2foJZ1YE8yGbytE38ABgLnaoI=
+X-Google-Smtp-Source: APXvYqx/1iTTEkyHIaF+JQH9A7ulA/NS/rYLfUnx8uB8+FZYqAv97XNgEtD8MAfihYk0a1+siC7qqQ==
+X-Received: by 2002:a2e:6e0f:: with SMTP id j15mr5333247ljc.120.1552757067517;
+        Sat, 16 Mar 2019 10:24:27 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id k21sm1123951lfg.90.2019.03.16.10.24.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 16 Mar 2019 10:24:26 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id z20so10566270ljj.10
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 10:24:26 -0700 (PDT)
+X-Received: by 2002:a2e:94ca:: with SMTP id r10mr4780377ljh.118.1552757065934;
+ Sat, 16 Mar 2019 10:24:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <000000000000675cea057e201cbb@google.com>
+In-Reply-To: <000000000000675cea057e201cbb@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 16 Mar 2019 10:24:10 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjAD7oaENrHCcFQ5=h4xd6zMbMmLb2=TKMDxWEA_7XrjA@mail.gmail.com>
+Message-ID: <CAHk-=wjAD7oaENrHCcFQ5=h4xd6zMbMmLb2=TKMDxWEA_7XrjA@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel paging request in slhc_free
+To:     syzbot <syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, syzkaller-bugs@googlegroups.com,
+        tejaswit@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Mar 2019 14:54:25 -0700
-"Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
+On Fri, Dec 28, 2018 at 6:41 PM syzbot
+<syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com> wrote:
+>
+> Reported-by: syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com
+>
+> BUG: unable to handle kernel paging request at fffffffffffffff4
+> RIP: slhc_free+0x30/0xb0 drivers/net/slip/slhc.c:159
+> Call Trace:
+>   sl_alloc_bufs drivers/net/slip/slip.c:196 [inline]
+>   slip_open+0xdee/0x1107 drivers/net/slip/slip.c:821
 
-> devicetree hooks where added to the VCNL4xx0 light and proximity
-> sensor driver.
-> 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Please avoid wild cards in naming. It goes wrong too often.  People can grep
-if they want to see if their device is supported by any drivers rather
-than try to figure out wildcards.
+The error handling in sl_alloc_bufs() is broken.
 
-> ---
->  .../devicetree/bindings/iio/light/vcnl4xx0.txt    | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4xx0.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4xx0.txt b/Documentation/devicetree/bindings/iio/light/vcnl4xx0.txt
-> new file mode 100644
-> index 000000000000..d61cf3c121c3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4xx0.txt
-> @@ -0,0 +1,15 @@
-> +VISHAY VCNL4xx0 -  Ambient Light and proximity sensor
-> +
-> +This driver supports the VCNL4000/10/20/40 and VCNL4200
-> +
-> +Required properties:
-> +
-> +	-compatible: should be "vishay,vcnl4000" or "vishay,vcnl4040"
-One per line.
+It does
 
-I'd also like to see all the options in the list.  We already seem
-to have an undocumented difference between your new part and some
-of the older ones.  It's always better for people to use the 'most
-correct' part name the can.
+        slcomp = slhc_init(16, 16);
+        if (IS_ERR(slcomp))
+                goto err_exit;
 
-> +	-reg: I2C address of the sensor, should be 0x60
-> +
-> +Example:
-> +
-> +light-sensor@60 {
-> +	compatible = "vishay,vcnl4040";
-> +	reg = <0x60>;
-> +};
+and knows that the error case returns an error pointer, but then the
+'err_exit:' code just does
 
+        slhc_free(slcomp);
+
+which doesn't handle error pointers.
+
+The slhc code in general is pretty odd, presumably for some legacy
+reason. It does things like
+
+        if ( comp == NULLSLCOMPR )
+                return;
+
+to compare against NULL. That's some crazy stuff.
+
+I don't think anybody really wants to bother with slip any more, and
+the simplest fix seems to just be to let slhc_free() handle all the
+error pointers that slhc_init() can return, and do something  like
+this:
+
+   drivers/net/slip/slhc.c | 2 +-
+   1 file changed, 1 insertion(+), 1 deletion(-)
+
+  diff --git a/drivers/net/slip/slhc.c b/drivers/net/slip/slhc.c
+  index f4e93f5fc204..3ee19a5b03a1 100644
+  --- a/drivers/net/slip/slhc.c
+  +++ b/drivers/net/slip/slhc.c
+  @@ -153,7 +153,7 @@ slhc_init(int rslots, int tslots)
+   void
+   slhc_free(struct slcompress *comp)
+   {
+  -       if ( comp == NULLSLCOMPR )
+  +       if (IS_ERR_OR_NULL(comp))
+                  return;
+
+          if ( comp->tstate != NULLSLSTATE )
+
+which is obviously and intentionally whitespace-damaged, but you get the idea.
+
+David?
+
+                  Linus
