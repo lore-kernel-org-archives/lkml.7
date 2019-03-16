@@ -2,111 +2,55 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3076C10F03
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EE7C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D64218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552761306;
-	bh=t6hm1KPkxQqeBOBR+vbbTNI2Ybsx4e0YryVvGAJx0uU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PxekBR1g9cxECXL5joALQ3SRtTxTqow3t50c72oluiUKvKok3bISXU/9F3k9FxB/Q
-	 CI8Ls22aFhcHZbsvnwqbUX59Eb1dS2F9qG/zEddA59SKxgn1RWshvT4KobuNyPOIqH
-	 Mgupuz17mMQ6s5WdI6BcN9ILhP9xteNh90HxE9U4=
+	by mail.kernel.org (Postfix) with ESMTP id 4B5A9218A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfCPSfF (ORCPT
+        id S1727233AbfCPSg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 14:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfCPSfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 14:35:04 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07FE0218A1;
-        Sat, 16 Mar 2019 18:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552761303;
-        bh=t6hm1KPkxQqeBOBR+vbbTNI2Ybsx4e0YryVvGAJx0uU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hHoGViqXDmCEwUrzZ2VESpgNktNV85eVvu+8tFqaUO7KkVJyrQ/lDNFOinf5xwL8B
-         gOW0PS0FNdvJs0fu6ewaJhMGzLb87Jblwz+ipQzZCIZehD7x+HXeggpvFJy8Sc3E+m
-         jU+dHuYGqk5UvtEz7Qo52Yh2MwUCdA3XfZhN8dnM=
-Date:   Sat, 16 Mar 2019 18:34:58 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH v4 1/7] staging: iio: ad5933: change multi-line comment
- style
-Message-ID: <20190316183458.1cdddb28@archlinux>
-In-Reply-To: <20190316150618.7g6hxbmadvxe623o@smtp.gmail.com>
-References: <20190316150618.7g6hxbmadvxe623o@smtp.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sat, 16 Mar 2019 14:36:28 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:43142 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfCPSg1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 14:36:27 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B986C10856AE0;
+        Sat, 16 Mar 2019 11:36:24 -0700 (PDT)
+Date:   Sat, 16 Mar 2019 11:36:22 -0700 (PDT)
+Message-Id: <20190316.113622.900917714010854876.davem@davemloft.net>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, pshelar@ovn.org, netdev@vger.kernel.org,
+        dev@openvswitch.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: openvswitch: fix a NULL pointer dereference
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190315042016.3137-1-kjlu@umn.edu>
+References: <20190315042016.3137-1-kjlu@umn.edu>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 16 Mar 2019 11:36:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 16 Mar 2019 12:06:18 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+From: Kangjie Lu <kjlu@umn.edu>
+Date: Thu, 14 Mar 2019 23:20:16 -0500
 
-> Make multi-line comments compliant with the preferred code style.
+> upcall is dereferenced even when genlmsg_put fails. The fix
+> goto out to avoid the NULL pointer dereference in this case.
 > 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to hopefully ignore.
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/staging/iio/impedance-analyzer/ad5933.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
-> index 3134295f014f..05e2185bfdae 100644
-> --- a/drivers/staging/iio/impedance-analyzer/ad5933.c
-> +++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
-> @@ -474,7 +474,8 @@ static IIO_DEVICE_ATTR(out_voltage0_settling_cycles, 0644,
->  			ad5933_store,
->  			AD5933_OUT_SETTLING_CYCLES);
->  
-> -/* note:
-> +/*
-> + * note:
->   * ideally we would handle the scale attributes via the iio_info
->   * (read|write)_raw methods, however this part is a untypical since we
->   * don't create dedicated sysfs channel attributes for out0 and in0.
-> @@ -572,7 +573,8 @@ static int ad5933_ring_postenable(struct iio_dev *indio_dev)
->  {
->  	struct ad5933_state *st = iio_priv(indio_dev);
->  
-> -	/* AD5933_CTRL_INIT_START_FREQ:
-> +	/*
-> +	 * AD5933_CTRL_INIT_START_FREQ:
->  	 * High Q complex circuits require a long time to reach steady state.
->  	 * To facilitate the measurement of such impedances, this mode allows
->  	 * the user full control of the settling time requirement before
-> @@ -663,7 +665,8 @@ static void ad5933_work(struct work_struct *work)
->  	}
->  
->  	if (status & AD5933_STAT_SWEEP_DONE) {
-> -		/* last sample received - power down do
-> +		/*
-> +		 * last sample received - power down do
->  		 * nothing until the ring enable is toggled
->  		 */
->  		ad5933_cmd(st, AD5933_CTRL_POWER_DOWN);
-
+Applied.
