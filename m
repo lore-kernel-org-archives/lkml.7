@@ -2,177 +2,199 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D6EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCB9C10F03
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33639218D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241C3218D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:00:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdkLG8w2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Coq92k1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfCPR7F (ORCPT
+        id S1727203AbfCPSAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 13:59:05 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44715 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbfCPR6V (ORCPT
+        Sat, 16 Mar 2019 14:00:24 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:44819 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfCPSAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 13:58:21 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a3so8486210pff.11;
-        Sat, 16 Mar 2019 10:58:20 -0700 (PDT)
+        Sat, 16 Mar 2019 14:00:24 -0400
+Received: by mail-vs1-f65.google.com with SMTP id b8so7226700vsq.11
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 11:00:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UJ4P00vx6U5PVt2qTIPEjoDmQITn36JjYHqlVjlSqjo=;
-        b=kdkLG8w2jLU2Q+wYZHK4jJVemS6eEurY7WT5V+pbp3DY3kO+9NesXJQhACj5QFf+ay
-         uwAO6/lNJdsPUTgG5tRbh5K7owEceI+mtDKwLOBVcv8aUDLre2eZcWtGIi92ksgJp/W/
-         wdkJguUgI+fqAhL+DlzXJqglM1R2bWlUGQnkeBpgH8ThaM1BnIP1C8hM+RVIGKjZaPv/
-         ckg2uK0E2iB2B8rW1IQJJVSzdd/53okARBrrmtvq8TBEWBCgI1C+om3KKui/Yk5/z6uf
-         2beRIdboU2slOvukfpo/S9QKkuqDAO0fDNnmDcTPSxrWSPRqiPfYEwu4BXOMQCeoIEVK
-         w4FQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y1KWqgI146pcCdR1U2CQh3JRG48myF0xT/kFf++SZRs=;
+        b=Coq92k1UdoV5Q253tI8ums9wCkyCqFEN3X7Ant4Okl6f1FVMmVeLNyT88lpfOsYYHp
+         m7boY9BdRcNA6TztSAc3SmEjZOU3cqBGizSS6dFShpFvBCHj9QfGc0sudpXraek+kf5u
+         0Dm+BnzXD2PF8fPHQUp315YZfEQZr6knDW6OkHhX8csU/feRgnhSICEQ9NkWv8QWW5iy
+         vGAMW5gWcAIRu+8G1q6V7PD2XLM1UxU+DXc1yK4ATZ6qrmgldBu1sIOFRWvt30FBBeTs
+         A8B+gCMYc75LlARyp9pV+JmiKDg+qig+y1WImaBSKJIGrhtklGqoOL+AlDxEizsFxX4V
+         gcHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UJ4P00vx6U5PVt2qTIPEjoDmQITn36JjYHqlVjlSqjo=;
-        b=Vr7//RE6jFf4++Wrd9VkPr/vzlA4W4vnDIDJ5Q0Na8aT88Ds02vu5X6TVoLLXNEhJ0
-         bNxqiDRs5fwmuLaflwV2DTbkEkti/gBjm90hr/JrhD810RkeHVhJ/4pJ8hYA/HhXKdto
-         EfYW6jjEMgAzsnJyzkIvMjuMTEr6+YIjMMGMftOhYyjPJGz3/eMTVgzYQU1S7ziJfHQq
-         yN6QDjaftWvaJqgT2mIcjOMEqqABSdRyPo4u7WH91047PHnW7ciMF06ipPcUMUiOvpKO
-         GIk3Ds6fFGIoyb/t4QdjxjLdiLGmSaZnpV9tO5XcOu4tSSWJ/CQTx3FpYIxYVHEgkh+4
-         QTrA==
-X-Gm-Message-State: APjAAAWteofz3wVm7GFEBprlkyeAOgKQbKHW6UJy/8sH3USv/kaRiP/w
-        CfdknOfypTpSnMJWdulg7yA=
-X-Google-Smtp-Source: APXvYqzv5Cz+STzl4Z6Eiqvr9+LryqjV2g5yZsEOZLIgT96r+P7K4IPdhzLMLTllYrbfjxsa84xzlQ==
-X-Received: by 2002:a17:902:9a01:: with SMTP id v1mr10956439plp.34.1552759100425;
-        Sat, 16 Mar 2019 10:58:20 -0700 (PDT)
-Received: from castle.hsd1.ca.comcast.net ([2603:3024:1704:3e00::d657])
-        by smtp.gmail.com with ESMTPSA id p86sm11025638pfa.104.2019.03.16.10.58.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 Mar 2019 10:58:19 -0700 (PDT)
-From:   Roman Gushchin <guroan@gmail.com>
-X-Google-Original-From: Roman Gushchin <guro@fb.com>
-To:     Tejun Heo <tj@kernel.org>, Oleg Nesterov <oleg@redhat.com>
-Cc:     Roman Gushchin <guro@fb.com>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 2/9] cgroup: implement __cgroup_task_count() helper
-Date:   Sat, 16 Mar 2019 10:58:05 -0700
-Message-Id: <20190316175812.6787-3-guro@fb.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190316175812.6787-1-guro@fb.com>
-References: <20190316175812.6787-1-guro@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y1KWqgI146pcCdR1U2CQh3JRG48myF0xT/kFf++SZRs=;
+        b=Fn2txHD6j48Dkoz2Sqso4YR2FcdsjZ9WqPa+iIBYUfwmPoJNUV//rKiVfzWSRiVex6
+         qK5acN6N5Yp4NfVAloLMuYUiuYNerTtO6zM0Jms2iz13Ue20tmDhpOvwGwZpq/zdPz/p
+         gqpwutvrcMATEuwP9gqMNZr5YKyR2XH2kERZ7W6CiC7QiM0Qq1NJP8WIh44bmX02DJjn
+         GZAI/99cGJjWzrhLqECfVhKlcjpweiYtGa61ipruODtSsUagwm8mw+4IMgiISewLkTRc
+         gKHgk14rHLuvg68IfiAkztowVQaQ0JU07NPSwEY91miIpHhvbByWURHPD4fwhufoFPqI
+         A9Fw==
+X-Gm-Message-State: APjAAAWP5knw1yUnxeQ77z8TOtiAj1XDAcqTATWGUT12xEosjcbhoMyH
+        tDtUoVGUCKJmoVeFrIBK5ueD3MaiptFn9UYsAPF18g==
+X-Google-Smtp-Source: APXvYqwNNvDDR6l5GKlr6n6DeDJQfVTBZUQu2nFEDyH/YbP5PqOPzwp8wG6UT3Pi6Z4ruCHRrzVBG57zi0T9tKyMSkM=
+X-Received: by 2002:a67:cc2:: with SMTP id 185mr136686vsm.77.1552759222160;
+ Sat, 16 Mar 2019 11:00:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190312080532.GE5721@dhcp22.suse.cz> <20190312163741.GA2762@sultan-box.localdomain>
+ <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
+ <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
+ <20190314204911.GA875@sultan-box.localdomain> <20190314231641.5a37932b@oasis.local.home>
+ <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com>
+ <20190315180306.sq3z645p3hygrmt2@brauner.io> <20190315181324.GA248160@google.com>
+ <20190315182426.sujcqbzhzw4llmsa@brauner.io> <20190315184903.GB248160@google.com>
+ <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
+In-Reply-To: <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Sat, 16 Mar 2019 11:00:10 -0700
+Message-ID: <CAKOZueuauUXRyrvhzBD0op6W4TAnydSx92bvrPN2VRWERX8iQg@mail.gmail.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The helper is identical to the existing cgroup_task_count()
-except it doesn't take the css_set_lock by itself, assuming
-that the caller does.
+On Sat, Mar 16, 2019 at 10:31 AM Suren Baghdasaryan <surenb@google.com> wrote:
+>
+> On Fri, Mar 15, 2019 at 11:49 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > On Fri, Mar 15, 2019 at 07:24:28PM +0100, Christian Brauner wrote:
+> > [..]
+> > > > why do we want to add a new syscall (pidfd_wait) though? Why not just use
+> > > > standard poll/epoll interface on the proc fd like Daniel was suggesting.
+> > > > AFAIK, once the proc file is opened, the struct pid is essentially pinned
+> > > > even though the proc number may be reused. Then the caller can just poll.
+> > > > We can add a waitqueue to struct pid, and wake up any waiters on process
+> > > > death (A quick look shows task_struct can be mapped to its struct pid) and
+> > > > also possibly optimize it using Steve's TIF flag idea. No new syscall is
+> > > > needed then, let me know if I missed something?
+> > >
+> > > Huh, I thought that Daniel was against the poll/epoll solution?
+> >
+> > Hmm, going through earlier threads, I believe so now. Here was Daniel's
+> > reasoning about avoiding a notification about process death through proc
+> > directory fd: http://lkml.iu.edu/hypermail/linux/kernel/1811.0/00232.html
+> >
+> > May be a dedicated syscall for this would be cleaner after all.
+>
+> Ah, I wish I've seen that discussion before...
+> syscall makes sense and it can be non-blocking and we can use
+> select/poll/epoll if we use eventfd.
 
-Also, move cgroup_task_count() implementation into
-kernel/cgroup/cgroup.c, as there is nothing specific to cgroup v1.
+Thanks for taking a look.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: kernel-team@fb.com
----
- kernel/cgroup/cgroup-internal.h |  1 +
- kernel/cgroup/cgroup-v1.c       | 16 ----------------
- kernel/cgroup/cgroup.c          | 33 +++++++++++++++++++++++++++++++++
- 3 files changed, 34 insertions(+), 16 deletions(-)
+> I would strongly advocate for
+> non-blocking version or at least to have a non-blocking option.
 
-diff --git a/kernel/cgroup/cgroup-internal.h b/kernel/cgroup/cgroup-internal.h
-index c950864016e2..a195328431ce 100644
---- a/kernel/cgroup/cgroup-internal.h
-+++ b/kernel/cgroup/cgroup-internal.h
-@@ -226,6 +226,7 @@ int cgroup_rmdir(struct kernfs_node *kn);
- int cgroup_show_path(struct seq_file *sf, struct kernfs_node *kf_node,
- 		     struct kernfs_root *kf_root);
- 
-+int __cgroup_task_count(const struct cgroup *cgrp);
- int cgroup_task_count(const struct cgroup *cgrp);
- 
- /*
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index 583b969b0c0e..29c0ca8f76cf 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -339,22 +339,6 @@ static struct cgroup_pidlist *cgroup_pidlist_find_create(struct cgroup *cgrp,
- 	return l;
- }
- 
--/**
-- * cgroup_task_count - count the number of tasks in a cgroup.
-- * @cgrp: the cgroup in question
-- */
--int cgroup_task_count(const struct cgroup *cgrp)
--{
--	int count = 0;
--	struct cgrp_cset_link *link;
--
--	spin_lock_irq(&css_set_lock);
--	list_for_each_entry(link, &cgrp->cset_links, cset_link)
--		count += link->cset->nr_tasks;
--	spin_unlock_irq(&css_set_lock);
--	return count;
--}
--
- /*
-  * Load a cgroup's pidarray with either procs' tgids or tasks' pids
-  */
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index f4418371c83b..b230afccf635 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -592,6 +592,39 @@ static void cgroup_get_live(struct cgroup *cgrp)
- 	css_get(&cgrp->self);
- }
- 
-+/**
-+ * __cgroup_task_count - count the number of tasks in a cgroup. The caller
-+ * is responsible for taking the css_set_lock.
-+ * @cgrp: the cgroup in question
-+ */
-+int __cgroup_task_count(const struct cgroup *cgrp)
-+{
-+	int count = 0;
-+	struct cgrp_cset_link *link;
-+
-+	lockdep_assert_held(&css_set_lock);
-+
-+	list_for_each_entry(link, &cgrp->cset_links, cset_link)
-+		count += link->cset->nr_tasks;
-+
-+	return count;
-+}
-+
-+/**
-+ * cgroup_task_count - count the number of tasks in a cgroup.
-+ * @cgrp: the cgroup in question
-+ */
-+int cgroup_task_count(const struct cgroup *cgrp)
-+{
-+	int count;
-+
-+	spin_lock_irq(&css_set_lock);
-+	count = __cgroup_task_count(cgrp);
-+	spin_unlock_irq(&css_set_lock);
-+
-+	return count;
-+}
-+
- struct cgroup_subsys_state *of_css(struct kernfs_open_file *of)
- {
- 	struct cgroup *cgrp = of->kn->parent->priv;
--- 
-2.20.1
+Waiting for FD readiness is *already* blocking or non-blocking
+according to the caller's desire --- users can pass options they want
+to poll(2) or whatever. There's no need for any kind of special
+configuration knob or non-blocking option. We already *have* a
+non-blocking option that works universally for everything.
 
+As I mentioned in the linked thread, waiting for process exit should
+work just like waiting for bytes to appear on a pipe. Process exit
+status is just another blob of bytes that a process might receive. A
+process exit handle ought to be just another information source. The
+reason the unix process API is so awful is that for whatever reason
+the original designers treated processes as some kind of special kind
+of resource instead of fitting them into the otherwise general-purpose
+unix data-handling API. Let's not repeat that mistake.
+
+> Something like this:
+>
+> evfd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+> // register eventfd to receive death notification
+> pidfd_wait(pid_to_kill, evfd);
+> // kill the process
+> pidfd_send_signal(pid_to_kill, ...)
+> // tend to other things
+
+Now you've lost me. pidfd_wait should return a *new* FD, not wire up
+an eventfd.
+
+Why? Because the new type FD can report process exit *status*
+information (via read(2) after readability signal) as well as this
+binary yes-or-no signal *that* a process exited, and this capability
+is useful if you want to the pidfd interface to be a good
+general-purpose process management facility to replace the awful
+wait() family of functions. You can't get an exit status from an
+eventfd. Wiring up an eventfd the way you've proposed also complicates
+wait-causality information, complicating both tracing and any priority
+inheritance we might want in the future (because all the wakeups gets
+mixed into the eventfd and you can't unscramble an egg). And for what?
+What do we gain by using an eventfd? Is the reason that exit.c would
+be able to use eventfd_signal instead of poking a waitqueue directly?
+How is that better? With an eventfd, you've increased path length on
+process exit *and* complicated the API for no reason.
+
+> ...
+> // wait for the process to die
+> poll_wait(evfd, ...);
+>
+> This simplifies userspace
+
+Not relative to an exit handle it doesn't.
+
+>, allows it to wait for multiple events using
+> epoll
+
+So does a process exit status handle.
+
+> and I think kernel implementation will be also quite simple
+> because it already implements eventfd_signal() that takes care of
+> waitqueue handling.
+
+What if there are multiple eventfds registered for the death of a
+process? In any case, you need some mechanism to find, upon process
+death, a list of waiters, then wake each of them up. That's either a
+global search or a search in some list rooted in a task-related
+structure (either struct task or one of its friends). Using an eventfd
+here adds nothing, since upon death, you need this list search
+regardless, and as I mentioned above, eventfd-wiring just makes the
+API worse.
+
+> If pidfd_send_signal could be extended to have an optional eventfd
+> parameter then we would not even have to add a new syscall.
+
+There is nothing wrong with adding a new system call. I don't know why
+there's this idea circulating that adding system calls is something we
+should bend over backwards to avoid. It's cheap, and support-wise,
+kernel interface is kernel interface. Sending a signal has *nothing*
+to do with wiring up some kind of notification and there's no reason
+to mingle it with some kind of event registration.
