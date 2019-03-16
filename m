@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC629C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 04:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E50AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 04:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB382087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 04:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454B02087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 04:59:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qF3lZmPm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4dKctg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfCPE7m (ORCPT
+        id S1726647AbfCPE7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 00:59:42 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40739 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbfCPE7l (ORCPT
+        Sat, 16 Mar 2019 00:59:47 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36757 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfCPE7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 00:59:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u9so7803701pgo.7;
-        Fri, 15 Mar 2019 21:59:40 -0700 (PDT)
+        Sat, 16 Mar 2019 00:59:45 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p10so895257pff.3;
+        Fri, 15 Mar 2019 21:59:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=W4Q7ZutFc9u+NUmudNHsjjkbbUE884gFYUqTtrYwTQc=;
-        b=qF3lZmPm9q/Ow3aGxOZnoUXn+qVXQLOxUh17pt6uAMgJncocN7L1MjukyvgP4Ff2ZZ
-         QWRLPa4sPbmbCDrnnpDhG2PFOUZRm7UYtTPX7VYhefjr4zy1tnBa0WDAUWvQ0oTSCOlR
-         7aiSgFH9v6NlT4EbsJ307GuF4485H2eY3Lr/6yreF8w3DdfVQG3ivpHAiTJf5zc5WFdU
-         OxiMiZc62aTv8nVS9rSPOgAM4JasXf3e1TJZcifXqBGCIVsFboN43UHQhfjhiJuclXvo
-         aeNtRmWDEXXSqyH6yRjo0QCoV/9LYTYicOV35e/Mgw5bx55YTXFOdq67sJQZo+5F+rr5
-         xzPQ==
+        bh=ZgISnnBGFvMeW9jgtuox6c5E1qbTOU3Wfp7BqZXVGSw=;
+        b=c4dKctg8QX/HuENMqXwVCqpJ9wcYu7YAH3EnaUuFfCLrIdK/Qv/ajnOgYB0IEayhX3
+         5L1PRCagOOitP8w7eKrPEIwvEFh3x52/si6DrKnpoVSXHDOXnXDbirw/3BVfv2RprKqj
+         j2FAsjSGf4JKdSq4RCNhR0DcV4zvuBIKxW+S2TAlrBJpchPmPNix1YkVunl2xvss6r2U
+         MGtFngVtZy5maLvlOV+sB4eUEAqFzkbzXkEaihrqPA/1gZ/O/f8HQmOPdoy9rCXY/k82
+         dNMShxY14blN5LfopJefJGhfjvfe8YsTcdpBvJmDJwpJJyLa9R3WkenB1/z/SvAzHEBp
+         AQ6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=W4Q7ZutFc9u+NUmudNHsjjkbbUE884gFYUqTtrYwTQc=;
-        b=j7Cd3RcsgHdcgmO9qUDPZIYFye2M8wuZ7tuPefTVdufYxsZAEMK+cJ3CqMUB/a6O8/
-         W+1Pd3PoXm7i5Xg2XedNKLwAq3gBdAWY362JtZk7F9TG6jER/q11RWeqrC+kPJ2+ZoFt
-         RYw43B15H6X+FMYCTT4+DDrf9RG3Xo9idhZeQq45hZyiz7wWiTtufaqbQhzDZvV1odG0
-         BJgz+UzBS+8I0teDsKy69xfZwgPwte29D2Q0a5A0nWHJ7LrMmAJ3Y0Mz/VCK6ykfAg/+
-         yAEAZCq1Jv8Cgycntk7N3z5Sh/mzb6thr5yMIMuLQJyTOmANgQRTb6UAHLKubxlzvHds
-         eQJQ==
-X-Gm-Message-State: APjAAAVhwHPdc1byaFXX5ezOQyxommpADONhTr+3kgSVYSBwbxe59Ixu
-        NBgAxKNExePv7tZb8zBm1uw=
-X-Google-Smtp-Source: APXvYqx5h6EsvVD3cyuRDAVBFfRcQyRmkV2bz95IBjZSW8qy2uhioUpx3rEHl35wWpeGNOs+W4vsrg==
-X-Received: by 2002:a63:ea52:: with SMTP id l18mr6977524pgk.317.1552712380301;
-        Fri, 15 Mar 2019 21:59:40 -0700 (PDT)
+        bh=ZgISnnBGFvMeW9jgtuox6c5E1qbTOU3Wfp7BqZXVGSw=;
+        b=awSoA2VmVT+86i1+1qLfCvlevrRzuPAhiIvE6y1QDRibRYv7A4BJtb0pjzOpHcS4Ke
+         VJaJDhaRirILYyT+bDqa9v2zv1jc5b/svR9xx+IQzLjChi4ValI2keXPuOs+VqBKbcQW
+         1KMhlFhaba3UYQkOxc7onKQcKpU9aAVlEhMvRTziozFGwr/mDgXMgkjNKzdnFi1Y/rZI
+         jr5G5VxHlrCw3pCruocCeCkeZukBZxgiMSNgtbrModDp8XNCgTZmyIEuoKe2Tz5GVCEu
+         N0RQ7wWeQr8816tDVvrT8xMHe85TJRXDfGezUQzuj6IjayI1mWi3H3f+6lNwDX/am830
+         Ea2A==
+X-Gm-Message-State: APjAAAWQTX2WmZBeRZ1XftPtlfPnUSXFsukOirYWBDYsmDgWVAy6rO+N
+        dG6QpxwmOBV2+UZaAoe4S9Q=
+X-Google-Smtp-Source: APXvYqzc/XWBcHSZBEqrz0KW41uWQ2wgpsp1acAc9qYkzpVlsbSkyoVOm4MkqKA8FsK+0m94p1aJTw==
+X-Received: by 2002:aa7:928d:: with SMTP id j13mr7858221pfa.112.1552712384344;
+        Fri, 15 Mar 2019 21:59:44 -0700 (PDT)
 Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id g2sm6792004pfm.144.2019.03.15.21.59.39
+        by smtp.gmail.com with ESMTPSA id r198sm1773595pfr.168.2019.03.15.21.59.43
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 21:59:39 -0700 (PDT)
+        Fri, 15 Mar 2019 21:59:43 -0700 (PDT)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
         gregkh@linuxfoundation.org
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 1/4] PM / core: Introduce dpm_async_fn() helper
-Date:   Sat, 16 Mar 2019 00:59:25 -0400
-Message-Id: <20190316045928.31934-2-tiny.windzz@gmail.com>
+Subject: [PATCH 2/4] PM / core: Introduce DEVICE_SUSPEND_FUNC() helper macro
+Date:   Sat, 16 Mar 2019 00:59:26 -0400
+Message-Id: <20190316045928.31934-3-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190316045928.31934-1-tiny.windzz@gmail.com>
 References: <20190316045928.31934-1-tiny.windzz@gmail.com>
@@ -71,142 +71,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we want to execute device pm functions asynchronously, we'll
-do the following for the device:
+The devices_suspend_noirq, device_suspend_late, device_suspen functions
+are basically the same. As we have seen:
 
-  1) reinit_completion(&dev->power.completion);
-  2) Check if the device enables asynchronous suspend.
-  3) If necessary, execute the corresponding function asynchronously.
+static int device_xxx(struct device *dev)
+{
+       if (dpm_async_fn(dev, async_xxx))
+               return 0;
 
-There are a lot of such repeated operations here, in fact we can avoid
-this. So introduce dpm_async_fn() to have better code readability and
-reuse.
+       return __device_xxx(dev, pm_transition, false);
+}
 
-And use this function to do some cleanup.
+The DEVICE_SUSPEND_FUNC() helper macro can decrease
+code duplication.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/base/power/main.c | 62 +++++++++++++++------------------------
- 1 file changed, 23 insertions(+), 39 deletions(-)
+ drivers/base/power/main.c | 33 ++++++++++++---------------------
+ 1 file changed, 12 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index eddb54057ed6..cb44bb6b2b66 100644
+index cb44bb6b2b66..6026bda5e787 100644
 --- a/drivers/base/power/main.c
 +++ b/drivers/base/power/main.c
-@@ -706,6 +706,19 @@ static bool is_async(struct device *dev)
- 		&& !pm_trace_is_enabled();
+@@ -719,6 +719,15 @@ static bool dpm_async_fn(struct device *dev, async_func_t func)
+ 	return false;
  }
  
-+static bool dpm_async_fn(struct device *dev, async_func_t func)
-+{
-+	reinit_completion(&dev->power.completion);
-+
-+	if (is_async(dev)) {
-+		get_device(dev);
-+		async_schedule(func, dev);
-+		return true;
-+	}
-+
-+	return false;
++#define DEVICE_SUSPEND_FUNC(__func, __name)				\
++static int __func(struct device *dev)					\
++{									\
++	if (dpm_async_fn(dev, async_ ## __name))			\
++		return 0;						\
++									\
++	return __device_ ## __name(dev, pm_transition, false);		\
 +}
 +
  static void async_resume_noirq(void *data, async_cookie_t cookie)
  {
  	struct device *dev = (struct device *)data;
-@@ -732,13 +745,8 @@ void dpm_noirq_resume_devices(pm_message_t state)
- 	 * in case the starting of async threads is
- 	 * delayed by non-async resuming devices.
- 	 */
--	list_for_each_entry(dev, &dpm_noirq_list, power.entry) {
--		reinit_completion(&dev->power.completion);
--		if (is_async(dev)) {
--			get_device(dev);
--			async_schedule_dev(async_resume_noirq, dev);
--		}
--	}
-+	list_for_each_entry(dev, &dpm_noirq_list, power.entry)
-+		dpm_async_fn(dev, async_resume_noirq);
- 
- 	while (!list_empty(&dpm_noirq_list)) {
- 		dev = to_device(dpm_noirq_list.next);
-@@ -889,13 +897,8 @@ void dpm_resume_early(pm_message_t state)
- 	 * in case the starting of async threads is
- 	 * delayed by non-async resuming devices.
- 	 */
--	list_for_each_entry(dev, &dpm_late_early_list, power.entry) {
--		reinit_completion(&dev->power.completion);
--		if (is_async(dev)) {
--			get_device(dev);
--			async_schedule_dev(async_resume_early, dev);
--		}
--	}
-+	list_for_each_entry(dev, &dpm_late_early_list, power.entry)
-+		dpm_async_fn(dev, async_resume_early);
- 
- 	while (!list_empty(&dpm_late_early_list)) {
- 		dev = to_device(dpm_late_early_list.next);
-@@ -1053,13 +1056,8 @@ void dpm_resume(pm_message_t state)
- 	pm_transition = state;
- 	async_error = 0;
- 
--	list_for_each_entry(dev, &dpm_suspended_list, power.entry) {
--		reinit_completion(&dev->power.completion);
--		if (is_async(dev)) {
--			get_device(dev);
--			async_schedule_dev(async_resume, dev);
--		}
--	}
-+	list_for_each_entry(dev, &dpm_suspended_list, power.entry)
-+		dpm_async_fn(dev, async_resume);
- 
- 	while (!list_empty(&dpm_suspended_list)) {
- 		dev = to_device(dpm_suspended_list.next);
-@@ -1373,13 +1371,9 @@ static void async_suspend_noirq(void *data, async_cookie_t cookie)
- 
- static int device_suspend_noirq(struct device *dev)
- {
--	reinit_completion(&dev->power.completion);
--
--	if (is_async(dev)) {
--		get_device(dev);
--		async_schedule_dev(async_suspend_noirq, dev);
-+	if (dpm_async_fn(dev, async_suspend_noirq))
- 		return 0;
--	}
-+
- 	return __device_suspend_noirq(dev, pm_transition, false);
+@@ -1369,13 +1378,7 @@ static void async_suspend_noirq(void *data, async_cookie_t cookie)
+ 	put_device(dev);
  }
  
-@@ -1576,13 +1570,8 @@ static void async_suspend_late(void *data, async_cookie_t cookie)
- 
- static int device_suspend_late(struct device *dev)
- {
--	reinit_completion(&dev->power.completion);
+-static int device_suspend_noirq(struct device *dev)
+-{
+-	if (dpm_async_fn(dev, async_suspend_noirq))
+-		return 0;
 -
--	if (is_async(dev)) {
--		get_device(dev);
--		async_schedule_dev(async_suspend_late, dev);
-+	if (dpm_async_fn(dev, async_suspend_late))
- 		return 0;
--	}
+-	return __device_suspend_noirq(dev, pm_transition, false);
+-}
++DEVICE_SUSPEND_FUNC(device_suspend_noirq, suspend_noirq);
  
- 	return __device_suspend_late(dev, pm_transition, false);
- }
-@@ -1842,13 +1831,8 @@ static void async_suspend(void *data, async_cookie_t cookie)
- 
- static int device_suspend(struct device *dev)
+ void dpm_noirq_begin(void)
  {
--	reinit_completion(&dev->power.completion);
--
--	if (is_async(dev)) {
--		get_device(dev);
--		async_schedule_dev(async_suspend, dev);
-+	if (dpm_async_fn(dev, async_suspend))
- 		return 0;
--	}
- 
- 	return __device_suspend(dev, pm_transition, false);
+@@ -1568,13 +1571,7 @@ static void async_suspend_late(void *data, async_cookie_t cookie)
+ 	put_device(dev);
  }
+ 
+-static int device_suspend_late(struct device *dev)
+-{
+-	if (dpm_async_fn(dev, async_suspend_late))
+-		return 0;
+-
+-	return __device_suspend_late(dev, pm_transition, false);
+-}
++DEVICE_SUSPEND_FUNC(device_suspend_late, suspend_late);
+ 
+ /**
+  * dpm_suspend_late - Execute "late suspend" callbacks for all devices.
+@@ -1829,13 +1826,7 @@ static void async_suspend(void *data, async_cookie_t cookie)
+ 	put_device(dev);
+ }
+ 
+-static int device_suspend(struct device *dev)
+-{
+-	if (dpm_async_fn(dev, async_suspend))
+-		return 0;
+-
+-	return __device_suspend(dev, pm_transition, false);
+-}
++DEVICE_SUSPEND_FUNC(device_suspend, suspend);
+ 
+ /**
+  * dpm_suspend - Execute "suspend" callbacks for all non-sysdev devices.
 -- 
 2.17.0
 
