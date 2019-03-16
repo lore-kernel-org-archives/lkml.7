@@ -7,167 +7,254 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D41C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2E7C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0271218D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E58218D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 20:43:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKGI4wPE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWUthL+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfCPUnX (ORCPT
+        id S1727219AbfCPUn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 16:43:23 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34765 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfCPUnW (ORCPT
+        Sat, 16 Mar 2019 16:43:27 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34617 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfCPUnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 16:43:22 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o10so11559825wmc.1
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 13:43:20 -0700 (PDT)
+        Sat, 16 Mar 2019 16:43:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k1so12501293wre.1
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 13:43:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=idG1/cY0XLoPpmCgEb5uVgBKDvUOMac2Yl6W5iCiK8M=;
-        b=EKGI4wPE1rZNzq6VGYvOIrxVJVpuWC/AYvqb8nk12+w1v4a/LkoNGwSwS8L9/b/jOo
-         vdXdOJ7M2Ms/PcM9ybzxsgCJtxJO1wzP+n3EsCgnHjDjdfLQ6+DJZ10bIjTXyHZCHg/0
-         lmIHnZ0vapzt5vRGqxAjMUqnqO6tb1Y2cWtp2KYbMjaBuiJtWbxWO45JFHqQBomVYUJW
-         WdZZnYpxpcP8YaHkOkx8ADSABOh8EuHrdRmc5mDjCFiGcoE28WFyAl0G58YR5u3SzC3Y
-         oUAQbEUVyOy0ODERP0ce/kA1c/xku1/YXb6KGG6qi4VlKZNyU2pW2YuU9TFV5nRVg7A7
-         Q0XA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bM3J1aRwQpaVX7yZhoyNmxrEPMCvNp+DZxyeXWWUsd4=;
+        b=XWUthL+d+/tlInSG4Xl3G12g56VOWMiPYfCasMQ6lyj6F3ISvIamyUGExmcIc//xQZ
+         Om+SBPU3Nyb+rvgVi9XWtdJSgxfe3KXU1NgEJZUd9hES1VaRY+fEWkJSajLhIVBju5sk
+         9Nv+KP6YbUny/zhS4PBOMsaqb/UmAxjVn7MPxMOn/d5rkSQKYGmYy4qvVH9etW0BQ4Pi
+         7YhMALvmESnHwsKXbGxEodgOyux5W65QNoayG1HGB38radmbYeLxT575y+YmvLXxfQzn
+         lzycGKFlhQhBt4ZwCmpKqIuwh1j0oRvnWGgy7KPnQsNl2I2vFlxx6ZizaRPsUx0Vrg1a
+         Qbtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=idG1/cY0XLoPpmCgEb5uVgBKDvUOMac2Yl6W5iCiK8M=;
-        b=bXk6X7IWA5KDaKCO5CINXInva36x7sOErNOCFIYVyPj2Qzr6RXatNT18K0OhYFMGsx
-         kKEgjMkezdewiPJLhL87CiwloDWoNlQkcgamHnNriQ4wcZJlQJCaFN0H6ykly2tI5UtV
-         oL5ZdHUlCaJ0pE94OCxK6lmaBckJc9cev9QqYKm9SCPcbUirLng2dUrlFLhoGy1HSkYa
-         wJ7FyEbcYkGOlDLFlmqYpfEizVybMQrtAT6FR96dAA2eaBRCP31uRHGx1jxdN5x3c/dk
-         X1J9wSBNDs6ldwvi2snMG0oTze8y95gUNQfczvqcbs96h0T8voUt3He+FqOakO/JwH1f
-         jKqQ==
-X-Gm-Message-State: APjAAAUnk99m46o1aVGfsf8lI/MyJV24aM2PZoW+Ig3BOMDuKdCXLuK0
-        qEFL9OiXg/MrGSXIyfvUxLVTm3Xo
-X-Google-Smtp-Source: APXvYqwLZu0JYuxyaqcOeFw9yn1SsWV5HRwUa4umHdX4r4nOo+V1kYuPqsNz7ysz4bMhs1U8NJUvYA==
-X-Received: by 2002:a7b:c115:: with SMTP id w21mr6404291wmi.104.1552769000008;
-        Sat, 16 Mar 2019 13:43:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bM3J1aRwQpaVX7yZhoyNmxrEPMCvNp+DZxyeXWWUsd4=;
+        b=UAz/2XfWpJbQtdzArEN40qHBt6dYfHDK2ji233CE18i8Z4wJwZ2G75HafbtmRALHoo
+         Vxv6U/XTku2kNdfWuyzNvxjWf7DEIVO0EAeWJjD4pNyWXSODtHf2Vrp++NKWjHr+m2b1
+         ooNeTqxPzurk8h/8rb1IP7AVfPADY8G5bJ1ef0gRgYOuzjktN9O+CnnuS+8b0/uUso5o
+         jSUkmu8MuuS1mMjvkfPbukh78vSRDKv4vmwkD0Nv31H9S6MGVxgSQhwGge8lzPjm5JNP
+         OX4ev3HnVuqkKjgh1Aq/ngtVL0QdUzKSd3m5l0iGmkckNDN67elLpJyRVJnFC7aYXHdo
+         VdNg==
+X-Gm-Message-State: APjAAAUoqzuSgz3IMmbTZpYWCjFDeKtwOXHJm81fw52aUiw3R7cC+m4T
+        b7FkvJSxcI7yN9nI4qGuXEGrKxxV
+X-Google-Smtp-Source: APXvYqzNL7VFS6dRksUAglGHc6KIoWNQrkDkSqqheRxwsiMvcOvDkoJuxnwP6EBjJ9cdJE8gzDHQug==
+X-Received: by 2002:adf:f543:: with SMTP id j3mr6480344wrp.220.1552769001232;
+        Sat, 16 Mar 2019 13:43:21 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id y7sm8684315wmi.34.2019.03.16.13.43.18
+        by smtp.gmail.com with ESMTPSA id y7sm8684315wmi.34.2019.03.16.13.43.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 16 Mar 2019 13:43:19 -0700 (PDT)
+        Sat, 16 Mar 2019 13:43:20 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 1/3] habanalabs: perform accounting for active CS
-Date:   Sat, 16 Mar 2019 22:43:15 +0200
-Message-Id: <20190316204317.28279-1-oded.gabbay@gmail.com>
+Subject: [PATCH 2/3] habanalabs: prevent host crash during suspend/resume
+Date:   Sat, 16 Mar 2019 22:43:16 +0200
+Message-Id: <20190316204317.28279-2-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190316204317.28279-1-oded.gabbay@gmail.com>
+References: <20190316204317.28279-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds accounting for active CS. Active means that the CS was
-submitted to the H/W queues and was not completed yet.
+This patch fixes the implementation of suspend/resume of the device so that
+upon resume of the device, the host won't crash due to PCI completion
+timeout.
 
-This is necessary to support suspend operation. Because the device will be
-reset upon suspend, we can only suspend after all active CS have been
-completed. Hence, we need to perform accounting on their number.
+Upon suspend, the device is being reset due to PERST. Therefore, upon
+resume, the driver must initialize the PCI controller as if the driver was
+loaded. If the controller is not initialized and the device tries to
+access the device through the PCI bars, the host will crash with PCI
+completion timeout error.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/command_submission.c |  6 ++++++
- drivers/misc/habanalabs/device.c             |  1 +
- drivers/misc/habanalabs/habanalabs.h         | 13 ++++++++-----
- drivers/misc/habanalabs/hw_queue.c           |  5 +++--
- 4 files changed, 18 insertions(+), 7 deletions(-)
+ drivers/misc/habanalabs/device.c    | 46 +++++++++++++++++++--
+ drivers/misc/habanalabs/goya/goya.c | 63 +----------------------------
+ 2 files changed, 43 insertions(+), 66 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-index 3525236ed8d9..19c84214a7ea 100644
---- a/drivers/misc/habanalabs/command_submission.c
-+++ b/drivers/misc/habanalabs/command_submission.c
-@@ -179,6 +179,12 @@ static void cs_do_release(struct kref *ref)
- 
- 	/* We also need to update CI for internal queues */
- 	if (cs->submitted) {
-+		int cs_cnt = atomic_dec_return(&hdev->cs_active_cnt);
-+
-+		WARN_ONCE((cs_cnt < 0),
-+			"hl%d: error in CS active cnt %d\n",
-+			hdev->id, cs_cnt);
-+
- 		hl_int_hw_queue_update_ci(cs);
- 
- 		spin_lock(&hdev->hw_queues_mirror_lock);
 diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index 93d67983ddba..470d8005b50e 100644
+index 470d8005b50e..77d51be66c7e 100644
 --- a/drivers/misc/habanalabs/device.c
 +++ b/drivers/misc/habanalabs/device.c
-@@ -218,6 +218,7 @@ static int device_early_init(struct hl_device *hdev)
- 	spin_lock_init(&hdev->hw_queues_mirror_lock);
- 	atomic_set(&hdev->in_reset, 0);
- 	atomic_set(&hdev->fd_open_cnt, 0);
-+	atomic_set(&hdev->cs_active_cnt, 0);
+@@ -416,6 +416,27 @@ int hl_device_suspend(struct hl_device *hdev)
  
- 	return 0;
+ 	pci_save_state(hdev->pdev);
  
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 806f0a5ee4d8..a8ee52c880cd 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -1056,13 +1056,15 @@ struct hl_device_reset_work {
-  * @cb_pool_lock: protects the CB pool.
-  * @user_ctx: current user context executing.
-  * @dram_used_mem: current DRAM memory consumption.
-- * @in_reset: is device in reset flow.
-- * @curr_pll_profile: current PLL profile.
-- * @fd_open_cnt: number of open user processes.
-  * @timeout_jiffies: device CS timeout value.
-  * @max_power: the max power of the device, as configured by the sysadmin. This
-  *             value is saved so in case of hard-reset, KMD will restore this
-  *             value and update the F/W after the re-initialization
-+ * @in_reset: is device in reset flow.
-+ * @curr_pll_profile: current PLL profile.
-+ * @fd_open_cnt: number of open user processes.
-+ * @cs_active_cnt: number of active command submissions on this device (active
-+ *                 means already in H/W queues)
-  * @major: habanalabs KMD major.
-  * @high_pll: high PLL profile frequency.
-  * @soft_reset_cnt: number of soft reset since KMD loading.
-@@ -1128,11 +1130,12 @@ struct hl_device {
- 	struct hl_ctx			*user_ctx;
++	/* Block future CS/VM/JOB completion operations */
++	rc = atomic_cmpxchg(&hdev->in_reset, 0, 1);
++	if (rc) {
++		dev_err(hdev->dev, "Can't suspend while in reset\n");
++		return -EIO;
++	}
++
++	/* This blocks all other stuff that is not blocked by in_reset */
++	hdev->disabled = true;
++
++	/*
++	 * Flush anyone that is inside the critical section of enqueue
++	 * jobs to the H/W
++	 */
++	hdev->asic_funcs->hw_queues_lock(hdev);
++	hdev->asic_funcs->hw_queues_unlock(hdev);
++
++	/* Flush processes that are sending message to CPU */
++	mutex_lock(&hdev->send_cpu_message_lock);
++	mutex_unlock(&hdev->send_cpu_message_lock);
++
+ 	rc = hdev->asic_funcs->suspend(hdev);
+ 	if (rc)
+ 		dev_err(hdev->dev,
+@@ -443,21 +464,38 @@ int hl_device_resume(struct hl_device *hdev)
  
- 	atomic64_t			dram_used_mem;
-+	u64				timeout_jiffies;
-+	u64				max_power;
- 	atomic_t			in_reset;
- 	atomic_t			curr_pll_profile;
- 	atomic_t			fd_open_cnt;
--	u64				timeout_jiffies;
--	u64				max_power;
-+	atomic_t			cs_active_cnt;
- 	u32				major;
- 	u32				high_pll;
- 	u32				soft_reset_cnt;
-diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
-index 67bece26417c..ef3bb6951360 100644
---- a/drivers/misc/habanalabs/hw_queue.c
-+++ b/drivers/misc/habanalabs/hw_queue.c
-@@ -370,12 +370,13 @@ int hl_hw_queue_schedule_cs(struct hl_cs *cs)
- 		spin_unlock(&hdev->hw_queues_mirror_lock);
+ 	pci_set_power_state(hdev->pdev, PCI_D0);
+ 	pci_restore_state(hdev->pdev);
+-	rc = pci_enable_device(hdev->pdev);
++	rc = pci_enable_device_mem(hdev->pdev);
+ 	if (rc) {
+ 		dev_err(hdev->dev,
+ 			"Failed to enable PCI device in resume\n");
+ 		return rc;
  	}
  
--	list_for_each_entry_safe(job, tmp, &cs->job_list, cs_node) {
-+	atomic_inc(&hdev->cs_active_cnt);
++	pci_set_master(hdev->pdev);
 +
-+	list_for_each_entry_safe(job, tmp, &cs->job_list, cs_node)
- 		if (job->ext_queue)
- 			ext_hw_queue_schedule_job(job);
- 		else
- 			int_hw_queue_schedule_job(job);
+ 	rc = hdev->asic_funcs->resume(hdev);
+ 	if (rc) {
+-		dev_err(hdev->dev,
+-			"Failed to enable PCI access from device CPU\n");
+-		return rc;
++		dev_err(hdev->dev, "Failed to resume device after suspend\n");
++		goto disable_device;
++	}
++
++
++	hdev->disabled = false;
++	atomic_set(&hdev->in_reset, 0);
++
++	rc = hl_device_reset(hdev, true, false);
++	if (rc) {
++		dev_err(hdev->dev, "Failed to reset device during resume\n");
++		goto disable_device;
+ 	}
+ 
+ 	return 0;
++
++disable_device:
++	pci_clear_master(hdev->pdev);
++	pci_disable_device(hdev->pdev);
++
++	return rc;
+ }
+ 
+ static void hl_device_hard_reset_pending(struct work_struct *work)
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 238dd57c541b..538d8d59d9dc 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -1201,15 +1201,6 @@ static int goya_stop_external_queues(struct hl_device *hdev)
+ 	return retval;
+ }
+ 
+-static void goya_resume_external_queues(struct hl_device *hdev)
+-{
+-	WREG32(mmDMA_QM_0_GLBL_CFG1, 0);
+-	WREG32(mmDMA_QM_1_GLBL_CFG1, 0);
+-	WREG32(mmDMA_QM_2_GLBL_CFG1, 0);
+-	WREG32(mmDMA_QM_3_GLBL_CFG1, 0);
+-	WREG32(mmDMA_QM_4_GLBL_CFG1, 0);
+-}
+-
+ /*
+  * goya_init_cpu_queues - Initialize PQ/CQ/EQ of CPU
+  *
+@@ -2178,36 +2169,6 @@ static int goya_stop_internal_queues(struct hl_device *hdev)
+ 	return retval;
+ }
+ 
+-static void goya_resume_internal_queues(struct hl_device *hdev)
+-{
+-	WREG32(mmMME_QM_GLBL_CFG1, 0);
+-	WREG32(mmMME_CMDQ_GLBL_CFG1, 0);
+-
+-	WREG32(mmTPC0_QM_GLBL_CFG1, 0);
+-	WREG32(mmTPC0_CMDQ_GLBL_CFG1, 0);
+-
+-	WREG32(mmTPC1_QM_GLBL_CFG1, 0);
+-	WREG32(mmTPC1_CMDQ_GLBL_CFG1, 0);
+-
+-	WREG32(mmTPC2_QM_GLBL_CFG1, 0);
+-	WREG32(mmTPC2_CMDQ_GLBL_CFG1, 0);
+-
+-	WREG32(mmTPC3_QM_GLBL_CFG1, 0);
+-	WREG32(mmTPC3_CMDQ_GLBL_CFG1, 0);
+-
+-	WREG32(mmTPC4_QM_GLBL_CFG1, 0);
+-	WREG32(mmTPC4_CMDQ_GLBL_CFG1, 0);
+-
+-	WREG32(mmTPC5_QM_GLBL_CFG1, 0);
+-	WREG32(mmTPC5_CMDQ_GLBL_CFG1, 0);
+-
+-	WREG32(mmTPC6_QM_GLBL_CFG1, 0);
+-	WREG32(mmTPC6_CMDQ_GLBL_CFG1, 0);
+-
+-	WREG32(mmTPC7_QM_GLBL_CFG1, 0);
+-	WREG32(mmTPC7_CMDQ_GLBL_CFG1, 0);
+-}
+-
+ static void goya_dma_stall(struct hl_device *hdev)
+ {
+ 	WREG32(mmDMA_QM_0_GLBL_CFG1, 1 << DMA_QM_0_GLBL_CFG1_DMA_STOP_SHIFT);
+@@ -2905,20 +2866,6 @@ int goya_suspend(struct hl_device *hdev)
+ {
+ 	int rc;
+ 
+-	rc = goya_stop_internal_queues(hdev);
+-
+-	if (rc) {
+-		dev_err(hdev->dev, "failed to stop internal queues\n");
+-		return rc;
 -	}
+-
+-	rc = goya_stop_external_queues(hdev);
+-
+-	if (rc) {
+-		dev_err(hdev->dev, "failed to stop external queues\n");
+-		return rc;
+-	}
+-
+ 	rc = goya_send_pci_access_msg(hdev, ARMCP_PACKET_DISABLE_PCI_ACCESS);
+ 	if (rc)
+ 		dev_err(hdev->dev, "Failed to disable PCI access from CPU\n");
+@@ -2928,15 +2875,7 @@ int goya_suspend(struct hl_device *hdev)
  
- 	cs->submitted = true;
+ int goya_resume(struct hl_device *hdev)
+ {
+-	int rc;
+-
+-	goya_resume_external_queues(hdev);
+-	goya_resume_internal_queues(hdev);
+-
+-	rc = goya_send_pci_access_msg(hdev, ARMCP_PACKET_ENABLE_PCI_ACCESS);
+-	if (rc)
+-		dev_err(hdev->dev, "Failed to enable PCI access from CPU\n");
+-	return rc;
++	return goya_init_iatu(hdev);
+ }
  
+ static int goya_cb_mmap(struct hl_device *hdev, struct vm_area_struct *vma,
 -- 
 2.17.1
 
