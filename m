@@ -2,61 +2,62 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8FCC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 23:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1458C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 23:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81984218D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 23:40:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552779618;
-	bh=Me36TdrBigGAiq2BwUvE7lAFhhvBMzkOwanTiXoh0D0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=H8xUJzGNzBUfEtSZaklrB9WmtlMHWHNJ1RWBRws32LUbaLkd6sjXrKC+I7f/YwVup
-	 4TlRmR0u6LjCeRJ1rB6vEBTxAlhfWV4p4480O9l2eaKdroJHK4BBVs1gsznupL+yMe
-	 KZygtPNMNfFyN2bC49ygEh60ubPFBxaqF05JSS5E=
+	by mail.kernel.org (Postfix) with ESMTP id 97F792186A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 23:49:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xTFYEdLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfCPXkJ (ORCPT
+        id S1727127AbfCPXtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 19:40:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbfCPXkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 19:40:09 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BD3D218D0;
-        Sat, 16 Mar 2019 23:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552779608;
-        bh=Me36TdrBigGAiq2BwUvE7lAFhhvBMzkOwanTiXoh0D0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GswxlH0iNI785tl9fGyvMWAuHO2c5zuH+QpAqtmXnUKIrztOOX/+v8OAbnwqIokY1
-         gJ7llq+xYsKw7pgsQx09uxfYZZ5EBeOe69YMhT+1WfV42RhtyktItoDiFJvLf7TYJO
-         Zdod8usN7bsis6Grg1Suja3rPeX0qdly7PNsIyxg=
-Subject: Re: [PATCH] tools: usb: usbip: adding support for older kernel
- versions
-To:     David Valleau <valleau@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     briannorris@chromium.org, linux-usb@vger.kernel.org,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        shuah <shuah@kernel.org>
-References: <20190306214730.6545-1-valleau@chromium.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <44e151af-b6c4-d0af-3ef1-a5632d079915@kernel.org>
-Date:   Sat, 16 Mar 2019 17:39:50 -0600
+        Sat, 16 Mar 2019 19:49:00 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48226 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfCPXtA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 19:49:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=y+DXStj5c2Xqr9WzdcP1wEOJyGpE6jq16MXzR2t7nyI=; b=xTFYEdLZu+raIcDfqv3/w2TgQi
+        91zi/6li1kaAIFv2FUkSWCU/NsLPKetfUMZb2Hoy1UzXgyxzz9IoxtGewQtxJAnPu97Pt2Xu9ioYu
+        xuDxt85CnYzow6DO6ZXPoMSKh/dihFMRlOaatwHeXfHaFoONTGpHlMnsIsETREBuY0B6ahoKLy5PR
+        Q+G150Sj/e5Pm0WfTSG/P/rcMvEEliYcjuUk9TIzyRl0hB37wcJVKOLWvDyaxI4JiWEGxHVOXTg5C
+        Gm8EXv3HNVjvKcj3xQNF2jMxgArl8j/LJBkbs+cvM/yBsTfx5xC8YxwrmLTEbdysjTB8/K2MvTBIO
+        pRbW1oSw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h5J2s-0000Tk-WE; Sat, 16 Mar 2019 23:48:55 +0000
+Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
+To:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
+        linux-parport@lists.infradead.org
+References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
+ <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
+ <e2a66da2-5433-5b42-1ebe-9f1c135b5471@infradead.org>
+ <59cb035e-6880-de5a-33c5-d4db6ed910f4@kernel.dk>
+ <4a2adc33-ef38-6a5f-65ee-8fcfaa0948a9@infradead.org>
+ <d22bf156-06df-ec67-121d-7dce65088b1a@kernel.dk>
+ <55743981-da8f-3211-0650-b143c8fec084@infradead.org>
+ <23f48266-0d12-1891-1373-711b63f4f589@kernel.dk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <21e5a575-8f28-5a14-3916-ab41b4d37734@infradead.org>
+Date:   Sat, 16 Mar 2019 16:48:37 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190306214730.6545-1-valleau@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <23f48266-0d12-1891-1373-711b63f4f589@kernel.dk>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,20 +65,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On 3/16/19 12:31 PM, Jens Axboe wrote:
+> On 3/15/19 6:32 PM, Randy Dunlap wrote:
+>> On 3/15/19 9:33 AM, Jens Axboe wrote:
+>>> On 3/14/19 5:49 PM, Randy Dunlap wrote:
+>>>> On 3/14/19 4:43 PM, Jens Axboe wrote:
+>>>>> On 3/13/19 5:09 PM, Randy Dunlap wrote:
+>>>>>> On 3/11/19 6:34 PM, Randy Dunlap wrote:
+>>>>>>> On 3/11/19 6:25 PM, Randy Dunlap wrote:
+>>>>>>>> [Has this already been addressed/fixed?]>>
+>>>>>>>
+>>>>>>> Same bug occurs with paride/pcd.c driver.
+>>>>>>
+>>>>>> This still happens (in blk-mq) in v5.0-11053-gebc551f2b8f9 of Mar. 12, 2019,
+>>>>>> around 4pm PT.  [caused by paride: pf.c and pcd.c)
+>>>>>
+>>>>> I'll take a look at this, been busy with other stuff. How are you
+>>>>> reproducing this? I'm assuming you don't actually have any hardware :-)
+>>>>
+>>>> Right.  I just load the module (pf or pcd), unload it, and
+>>>> then load it again.
+>>>
+>>> Does this work?
+>>>
+>>
+>> No.  Just loading the pf module gives this:
+> 
+> Missing clear of the queue. This one should be more complete.
+> 
+> To be fair, this was utterly broken since forever. It's just now apparent
+> since we complain about it. But pf/pcd was one big leak fest.
+> 
 
-On 3/6/19 2:47 PM, David Valleau wrote:
-> The current usbip tool relies on the behavior of the vhci-hcd driver in
-> order to work correctly. In instances where a newer version of the tool
-> is used with an older version of the kernel, there are incompatibilities
-> that can sometimes result in failure.
+OK, this one works for both pf and pcd.
+By "works" I mean that the driver init function runs and exits without
+causing a BUG or GP fault etc.
+Not that I have any such hardware.
 
-usbip tool is tied to the kernel version. This is reason why it is
-co-located with the usbip driver in the kernel sources. This is not
-a typical tool scenario to be able to use new tool on old kernels.
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
-I would like to understand the reasons for wanting to run new tool on
-old kernels.
+Thanks.
 
-thanks,
--- Shuah
+> 
+> diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
+> index 96670eefaeb2..377a694dc228 100644
+> --- a/drivers/block/paride/pcd.c
+> +++ b/drivers/block/paride/pcd.c
+> @@ -749,8 +749,12 @@ static int pcd_detect(void)
+>  		return 0;
+>  
+>  	printk("%s: No CD-ROM drive found\n", name);
+> -	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++)
+> +	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++) {
+> +		blk_cleanup_queue(cd->disk->queue);
+> +		cd->disk->queue = NULL;
+> +		blk_mq_free_tag_set(&cd->tag_set);
+>  		put_disk(cd->disk);
+> +	}
+>  	pi_unregister_driver(par_drv);
+>  	return -1;
+>  }
+> diff --git a/drivers/block/paride/pf.c b/drivers/block/paride/pf.c
+> index e92e7a8eeeb2..103b617cdc31 100644
+> --- a/drivers/block/paride/pf.c
+> +++ b/drivers/block/paride/pf.c
+> @@ -761,8 +761,12 @@ static int pf_detect(void)
+>  		return 0;
+>  
+>  	printk("%s: No ATAPI disk detected\n", name);
+> -	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++)
+> +	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
+> +		blk_cleanup_queue(pf->disk->queue);
+> +		pf->disk->queue = NULL;
+> +		blk_mq_free_tag_set(&pf->tag_set);
+>  		put_disk(pf->disk);
+> +	}
+>  	pi_unregister_driver(par_drv);
+>  	return -1;
+>  }
+> @@ -1047,13 +1051,15 @@ static void __exit pf_exit(void)
+>  	int unit;
+>  	unregister_blkdev(major, name);
+>  	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
+> -		if (!pf->present)
+> -			continue;
+> -		del_gendisk(pf->disk);
+> +		if (pf->present)
+> +			del_gendisk(pf->disk);
+> +
+>  		blk_cleanup_queue(pf->disk->queue);
+>  		blk_mq_free_tag_set(&pf->tag_set);
+>  		put_disk(pf->disk);
+> -		pi_release(pf->pi);
+> +
+> +		if (pf->present)
+> +			pi_release(pf->pi);
+>  	}
+>  }
+>  
+> 
+
+
+-- 
+~Randy
