@@ -2,145 +2,278 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E78CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6542BC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F2D21904
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:32:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KO4HUFda"
+	by mail.kernel.org (Postfix) with ESMTP id 2DD38218FE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 17:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552758414;
+	bh=8bKY8bsLTtWJisw33GxiKu8Dt+rzOAU1WVunmkGji/Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qZyOfrT4OnsS0ID5+moNtlkBOcLUIOtN0nYDy7ieWfhouadeGgfN4kewpJsCENqob
+	 29IPHMQ4Lm/yqTiY6RhpvWZfSZEbOcn1xSVLw+5HZJCtbtCLELIQJY+hc2FRUk3ay/
+	 gC/CzZgsi5h/K9L0+G7KQqau01ecy8i1BEfEEolE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfCPRb6 (ORCPT
+        id S1726828AbfCPRqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 13:31:58 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:55362 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfCPRb6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 13:31:58 -0400
-Received: by mail-it1-f195.google.com with SMTP id z126so12080655itd.5
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 10:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KYThlM/qCXw00qK9OcGbl490CqSKkPBQ60AjUWblE34=;
-        b=KO4HUFdasxYjpZit8xzAdrzX3PBnIR59Q8mfN2yqzNNLtwCv/B5sGYk0aGAR40yauC
-         o5DLvJL3OhvMW0yc6b1wcUs/qLwDFmNo8ROLYmtVRe4PDzCHn99q1IIUJTXtMBq39Y3K
-         tGIu8ho1JVwOxhj1encTIOw6Uwoxtvw4q+fmnyPQQwdr5rxKsdiYP/8EQZ6cRn3ULUhU
-         9FhpDsMPK2zlUeYao+qRvuPaXk0Y+ZUREdrvseBmAW6esd7lObxe9Uh5PkY4enhNE1R5
-         1phbsPrW1YxF0wRNt7YgFU8HwgakmxfGxyCGxWs+zsl32RLVeJUV4EBQ8//+H3CiF9vR
-         JkkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KYThlM/qCXw00qK9OcGbl490CqSKkPBQ60AjUWblE34=;
-        b=XwV5o5k/vzEfaQJJqF7C25xC0Zy32AEgbR1WXS91++2sksRsnq94NSxlwFn23zOw/Q
-         u8ceIu1TPkKOu/FNMIszxJikqVwiwj5mvea8qKv48WEoMVzUCh9hHFvi0NNRbAfNsINT
-         BZgbmkkIi4Cfqp2UNybr83+z60vnbNHmhdF39NCrZEjiSUPhHATXpaRP9g5uV78h+Rjf
-         H1BQhLkhrk2SJGVW1RDXOY/9ud4uBHbkz+gfgFO4cx+1vm/pgydgCmIzRd8taO10t8x0
-         gV38vcKejsy8aflLt45wgb1Uwl0PbB1NmEVgysizasPFuW4a2Wd/68pGAbZLvy7UQ7eZ
-         eaAA==
-X-Gm-Message-State: APjAAAWh7oYcvTWmAhU8lZz2M7yM4UErcbArGHRpqy4yyDZwo/2wbYfa
-        ENCkw0reWQ/bfFwBtA0eVgHXDjVr+0z+5nZFiAC0Mw==
-X-Google-Smtp-Source: APXvYqwt3/NtY1q8kvFlPOBO8aAygdzNFbwruR4bWzyFB6EZq2v0Sr+JUDk4Sb3kyGisVrDfsJmtDtwpE8MdHJCY52o=
-X-Received: by 2002:a24:3c53:: with SMTP id m80mr1087932ita.102.1552757516935;
- Sat, 16 Mar 2019 10:31:56 -0700 (PDT)
+        Sat, 16 Mar 2019 13:46:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726376AbfCPRqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 13:46:48 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACAFD218D0;
+        Sat, 16 Mar 2019 17:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552758406;
+        bh=8bKY8bsLTtWJisw33GxiKu8Dt+rzOAU1WVunmkGji/Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LMNRAEEr4I9vPy2Oh6XUhRZXxK7xVYazGU8gxy896JvhDflGPUE6HhVJTpEv8DrSF
+         c3Doul+s3j5eohjbGrnsOfrhelZDFUv7RJn5j8NH/vNlvze1Smc8nHjpykYasuxUsZ
+         E7ckM5976fBFBEEh60O/79ft+aQHEIG0+2GAbbTI=
+Date:   Sat, 16 Mar 2019 17:46:40 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Renato Lui Geh <renatogeh@gmail.com>
+Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
+        pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
+        giuliano.belinassi@usp.br, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-iio@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 01/11] staging: iio: ad7780: add gain & filter gpio
+ support
+Message-ID: <20190316174640.12810916@archlinux>
+In-Reply-To: <2687836c5b442990ee50d4efe787a3927c750bbc.1552700652.git.renatogeh@gmail.com>
+References: <cover.1552700652.git.renatogeh@gmail.com>
+        <2687836c5b442990ee50d4efe787a3927c750bbc.1552700652.git.renatogeh@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190312080532.GE5721@dhcp22.suse.cz> <20190312163741.GA2762@sultan-box.localdomain>
- <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
- <CAEXW_YQMnbN+e-janGbZc5MH6MwdUdXNfonpLUu5O2nsSkJyeg@mail.gmail.com>
- <20190314204911.GA875@sultan-box.localdomain> <20190314231641.5a37932b@oasis.local.home>
- <CAKOZuetZHJzmQy3n001x4+rmWoWHEgUv2Zvow9W5+xvukxp1JQ@mail.gmail.com>
- <20190315180306.sq3z645p3hygrmt2@brauner.io> <20190315181324.GA248160@google.com>
- <20190315182426.sujcqbzhzw4llmsa@brauner.io> <20190315184903.GB248160@google.com>
-In-Reply-To: <20190315184903.GB248160@google.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Sat, 16 Mar 2019 10:31:45 -0700
-Message-ID: <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 11:49 AM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> On Fri, Mar 15, 2019 at 07:24:28PM +0100, Christian Brauner wrote:
-> [..]
-> > > why do we want to add a new syscall (pidfd_wait) though? Why not just use
-> > > standard poll/epoll interface on the proc fd like Daniel was suggesting.
-> > > AFAIK, once the proc file is opened, the struct pid is essentially pinned
-> > > even though the proc number may be reused. Then the caller can just poll.
-> > > We can add a waitqueue to struct pid, and wake up any waiters on process
-> > > death (A quick look shows task_struct can be mapped to its struct pid) and
-> > > also possibly optimize it using Steve's TIF flag idea. No new syscall is
-> > > needed then, let me know if I missed something?
-> >
-> > Huh, I thought that Daniel was against the poll/epoll solution?
->
-> Hmm, going through earlier threads, I believe so now. Here was Daniel's
-> reasoning about avoiding a notification about process death through proc
-> directory fd: http://lkml.iu.edu/hypermail/linux/kernel/1811.0/00232.html
->
-> May be a dedicated syscall for this would be cleaner after all.
+On Fri, 15 Mar 2019 23:12:27 -0300
+Renato Lui Geh <renatogeh@gmail.com> wrote:
 
-Ah, I wish I've seen that discussion before...
-syscall makes sense and it can be non-blocking and we can use
-select/poll/epoll if we use eventfd. I would strongly advocate for
-non-blocking version or at least to have a non-blocking option.
-Something like this:
+> Previously, the AD7780 driver only supported gpio for the 'powerdown'
+> pin. This commit adds suppport for the 'gain' and 'filter' pin.
+> 
+> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+> Signed-off-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
+> Co-developed-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
+Something a little odd happened when trying to use git am on this,
+but patch was happy so I did it that way. Please give it a quick
+sanity check once I push the tree out incase we have a real problem.
 
-evfd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
-// register eventfd to receive death notification
-pidfd_wait(pid_to_kill, evfd);
-// kill the process
-pidfd_send_signal(pid_to_kill, ...)
-// tend to other things
-...
-// wait for the process to die
-poll_wait(evfd, ...);
+Applied to the togreg branch of iio.git to be shortly pushed out
+as testing for the autobuilders to play with it.
 
-This simplifies userspace, allows it to wait for multiple events using
-epoll and I think kernel implementation will be also quite simple
-because it already implements eventfd_signal() that takes care of
-waitqueue handling.
+Thanks,
 
-If pidfd_send_signal could be extended to have an optional eventfd
-parameter then we would not even have to add a new syscall.
+Jonathan
 
-> > I have no clear opinion on what is better at the moment since I have
-> > been mostly concerned with getting pidfd_send_signal() into shape and
-> > was reluctant to put more ideas/work into this if it gets shutdown.
-> > Once we have pidfd_send_signal() the wait discussion makes sense.
->
-> Ok. It looks like that is almost in though (fingers crossed :)).
->
-> thanks,
->
->  - Joel
->
+> ---
+> Changes in v3:
+>  - Renamed ad7780_chip_info's filter to odr
+>  - Renamed ad778x_filter to ad778x_odr_avail
+>  - Changed vref variable from unsigned int to unsigned long long to avoid
+>    overflow
+>  - Removed unnecessary AD_SD_CHANNEL macro
+> Changes in v4:
+>  - Removed useless macro
+>  - Added default case for switch to suppress warning
+>  - Removed chunks belonging to filter reading, adding these as a
+>    patch for itself
+> Changes in v5:
+>  - ad778x_odr_avail moved to filter patch
+>  - Split gain reading to its own patch
+>  - Init GPIOs in a separate function
+> 
+>  drivers/staging/iio/adc/ad7780.c | 114 ++++++++++++++++++++++++++-----
+>  1 file changed, 96 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
+> index c4a85789c2db..07e5e35c92a3 100644
+> --- a/drivers/staging/iio/adc/ad7780.c
+> +++ b/drivers/staging/iio/adc/ad7780.c
+> @@ -39,6 +39,9 @@
+>  #define AD7170_PATTERN		(AD7780_PAT0 | AD7170_PAT2)
+>  #define AD7170_PATTERN_MASK	(AD7780_PAT0 | AD7780_PAT1 | AD7170_PAT2)
+>  
+> +#define AD7780_GAIN_MIDPOINT	64
+> +#define AD7780_FILTER_MIDPOINT	13350
+> +
+>  struct ad7780_chip_info {
+>  	struct iio_chan_spec	channel;
+>  	unsigned int		pattern_mask;
+> @@ -50,7 +53,10 @@ struct ad7780_state {
+>  	const struct ad7780_chip_info	*chip_info;
+>  	struct regulator		*reg;
+>  	struct gpio_desc		*powerdown_gpio;
+> -	unsigned int	gain;
+> +	struct gpio_desc		*gain_gpio;
+> +	struct gpio_desc		*filter_gpio;
+> +	unsigned int			gain;
+> +	unsigned int			int_vref_mv;
+>  
+>  	struct ad_sigma_delta sd;
+>  };
+> @@ -104,8 +110,10 @@ static int ad7780_read_raw(struct iio_dev *indio_dev,
+>  		voltage_uv = regulator_get_voltage(st->reg);
+>  		if (voltage_uv < 0)
+>  			return voltage_uv;
+> -		*val = (voltage_uv / 1000) * st->gain;
+> +		voltage_uv /= 1000;
+> +		*val = voltage_uv * st->gain;
+>  		*val2 = chan->scan_type.realbits - 1;
+> +		st->int_vref_mv = voltage_uv;
+>  		return IIO_VAL_FRACTIONAL_LOG2;
+>  	case IIO_CHAN_INFO_OFFSET:
+>  		*val = -(1 << (chan->scan_type.realbits - 1));
+> @@ -115,6 +123,50 @@ static int ad7780_read_raw(struct iio_dev *indio_dev,
+>  	return -EINVAL;
+>  }
+>  
+> +static int ad7780_write_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int val,
+> +			    int val2,
+> +			    long m)
+> +{
+> +	struct ad7780_state *st = iio_priv(indio_dev);
+> +	const struct ad7780_chip_info *chip_info = st->chip_info;
+> +	unsigned long long vref;
+> +	unsigned int full_scale, gain;
+> +
+> +	if (!chip_info->is_ad778x)
+> +		return -EINVAL;
+> +
+> +	switch (m) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		if (val != 0)
+> +			return -EINVAL;
+> +
+> +		vref = st->int_vref_mv * 1000000LL;
+> +		full_scale = 1 << (chip_info->channel.scan_type.realbits - 1);
+> +		gain = DIV_ROUND_CLOSEST(vref, full_scale);
+> +		gain = DIV_ROUND_CLOSEST(gain, val2);
+> +		st->gain = gain;
+> +		if (gain < AD7780_GAIN_MIDPOINT)
+> +			gain = 0;
+> +		else
+> +			gain = 1;
+> +		gpiod_set_value(st->gain_gpio, gain);
+> +		break;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		if (1000*val + val2/1000 < AD7780_FILTER_MIDPOINT)
+> +			val = 0;
+> +		else
+> +			val = 1;
+> +		gpiod_set_value(st->filter_gpio, val);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int ad7780_postprocess_sample(struct ad_sigma_delta *sigma_delta,
+>  				     unsigned int raw_sample)
+>  {
+> @@ -125,13 +177,6 @@ static int ad7780_postprocess_sample(struct ad_sigma_delta *sigma_delta,
+>  	    ((raw_sample & chip_info->pattern_mask) != chip_info->pattern))
+>  		return -EIO;
+>  
+> -	if (chip_info->is_ad778x) {
+> -		if (raw_sample & AD7780_GAIN)
+> -			st->gain = 1;
+> -		else
+> -			st->gain = 128;
+> -	}
+> -
+>  	return 0;
+>  }
+>  
+> @@ -173,8 +218,47 @@ static const struct ad7780_chip_info ad7780_chip_info_tbl[] = {
+>  
+>  static const struct iio_info ad7780_info = {
+>  	.read_raw = ad7780_read_raw,
+> +	.write_raw = ad7780_write_raw,
+>  };
+>  
+> +static int ad7780_init_gpios(struct device *dev, struct ad7780_state *st)
+> +{
+> +	int ret;
+> +
+> +	st->powerdown_gpio = devm_gpiod_get_optional(dev,
+> +						     "powerdown",
+> +						     GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->powerdown_gpio)) {
+> +		ret = PTR_ERR(st->powerdown_gpio);
+> +		dev_err(dev, "Failed to request powerdown GPIO: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	if (!st->chip_info->is_ad778x)
+> +		return 0;
+> +
+nitpick: One blank line is always enough. More just reduces the amount of
+code that can be seen at a time.
+
+> +
+> +	st->gain_gpio = devm_gpiod_get_optional(dev,
+> +						"adi,gain",
+> +						GPIOD_OUT_HIGH);
+> +	if (IS_ERR(st->gain_gpio)) {
+> +		ret = PTR_ERR(st->gain_gpio);
+> +		dev_err(dev, "Failed to request gain GPIO: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	st->filter_gpio = devm_gpiod_get_optional(dev,
+> +						  "adi,filter",
+> +						  GPIOD_OUT_HIGH);
+> +	if (IS_ERR(st->filter_gpio)) {
+> +		ret = PTR_ERR(st->filter_gpio);
+> +		dev_err(dev, "Failed to request filter GPIO: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int ad7780_probe(struct spi_device *spi)
+>  {
+>  	struct ad7780_state *st;
+> @@ -212,15 +296,9 @@ static int ad7780_probe(struct spi_device *spi)
+>  	indio_dev->num_channels = 1;
+>  	indio_dev->info = &ad7780_info;
+>  
+> -	st->powerdown_gpio = devm_gpiod_get_optional(&spi->dev,
+> -						     "powerdown",
+> -						     GPIOD_OUT_LOW);
+> -	if (IS_ERR(st->powerdown_gpio)) {
+> -		ret = PTR_ERR(st->powerdown_gpio);
+> -		dev_err(&spi->dev, "Failed to request powerdown GPIO: %d\n",
+> -			ret);
+> -		goto error_disable_reg;
+> -	}
+> +	ret = ad7780_init_gpios(&spi->dev, st);
+> +	if (ret)
+> +		goto error_cleanup_buffer_and_trigger;
+>  
+>  	ret = ad_sd_setup_buffer_and_trigger(indio_dev);
+>  	if (ret)
+
