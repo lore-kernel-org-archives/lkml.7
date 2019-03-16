@@ -3,35 +3,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13361C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0601AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C3421900
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC9721900
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbfCPOOh (ORCPT
+        id S1726980AbfCPOPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:14:37 -0400
-Received: from mga12.intel.com ([192.55.52.136]:65203 "EHLO mga12.intel.com"
+        Sat, 16 Mar 2019 10:15:17 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31178 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbfCPOOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:14:37 -0400
+        id S1726064AbfCPOPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 10:15:16 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Mar 2019 07:14:36 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Mar 2019 07:15:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,486,1544515200"; 
-   d="scan'208";a="123224212"
+   d="scan'208";a="134597171"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 16 Mar 2019 07:14:36 -0700
+  by orsmga003.jf.intel.com with ESMTP; 16 Mar 2019 07:15:15 -0700
 Received: from [10.252.10.233] (abudanko-mobl.ccr.corp.intel.com [10.252.10.233])
-        by linux.intel.com (Postfix) with ESMTP id 1BE7958028E;
-        Sat, 16 Mar 2019 07:14:33 -0700 (PDT)
-Subject: [PATCH v9 07/12] perf record: implement compression for serial trace
+        by linux.intel.com (Postfix) with ESMTP id 1B6B558028E;
+        Sat, 16 Mar 2019 07:15:12 -0700 (PDT)
+Subject: [PATCH v9 08/12] perf record: implement compression for AIO trace
  streaming
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -43,8 +43,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <68a8175b-577f-97a4-932e-8b0e4df4d4ad@linux.intel.com>
-Date:   Sat, 16 Mar 2019 17:14:32 +0300
+Message-ID: <af3d0151-3a3e-f80a-d2ee-fa13704df71e@linux.intel.com>
+Date:   Sat, 16 Mar 2019 17:15:11 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
@@ -59,140 +59,323 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 Compression is implemented using the functions from zstd.c. As the memory
-to operate on the compression uses mmap->data buffer. If Zstd streaming
-compression API fails for some reason the data to be compressed are just
-copied into the memory buffers using plain memcpy().
+to operate on the compression uses mmap->aio.data[] buffers. If Zstd
+streaming compression API fails for some reason the data to be compressed
+are just copied into the memory buffers using plain memcpy().
 
 Compressed trace frame consists of an array of PERF_RECORD_COMPRESSED
 records. Each element of the array is not longer that PERF_SAMPLE_MAX_SIZE
 and consists of perf_event_header followed by the compressed chunk
 that is decompressed on the loading stage.
 
+perf_mmap__aio_push() is replaced by perf_mmap__push() which is now used
+in the both serial and AIO streaming cases. perf_mmap__push() is extended
+with positive return values to signify absence of data ready for
+processing.
+
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/builtin-record.c | 53 +++++++++++++++++++++++++++++++++++--
- tools/perf/util/session.h   |  2 ++
- 2 files changed, 53 insertions(+), 2 deletions(-)
+ tools/perf/builtin-record.c | 114 ++++++++++++++++++++++++++++--------
+ tools/perf/util/mmap.c      |  76 +-----------------------
+ tools/perf/util/mmap.h      |  12 ----
+ 3 files changed, 89 insertions(+), 113 deletions(-)
 
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 948489cb6ff0..c22e65f6b8e6 100644
+index c22e65f6b8e6..2e083891affa 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -130,6 +130,9 @@ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unuse
+@@ -130,6 +130,8 @@ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unuse
  	return 0;
  }
  
-+static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
-+			    void *src, size_t src_size);
++static int record__aio_enabled(struct record *rec);
++static int record__comp_enabled(struct record *rec);
+ static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
+ 			    void *src, size_t src_size);
+ 
+@@ -183,9 +185,9 @@ static int record__aio_complete(struct perf_mmap *md, struct aiocb *cblock)
+ 	if (rem_size == 0) {
+ 		cblock->aio_fildes = -1;
+ 		/*
+-		 * md->refcount is incremented in perf_mmap__push() for
+-		 * every enqueued aio write request so decrement it because
+-		 * the request is now complete.
++		 * md->refcount is incremented in record__aio_pushfn() for
++		 * every aio write request started in record__aio_push() so
++		 * decrement it because the request is now complete.
+ 		 */
+ 		perf_mmap__put(md);
+ 		rc = 1;
+@@ -240,18 +242,89 @@ static int record__aio_sync(struct perf_mmap *md, bool sync_all)
+ 	} while (1);
+ }
+ 
+-static int record__aio_pushfn(void *to, struct aiocb *cblock, void *bf, size_t size, off_t off)
++struct record_aio {
++	struct record	*rec;
++	void		*data;
++	size_t		size;
++};
 +
- #ifdef HAVE_AIO_SUPPORT
- static int record__aio_write(struct aiocb *cblock, int trace_fd,
- 		void *buf, size_t size, off_t off)
-@@ -389,6 +392,12 @@ static int record__pushfn(struct perf_mmap *map, void *to, void *bf, size_t size
++static int record__aio_pushfn(struct perf_mmap *map, void *to, void *buf, size_t size)
  {
- 	struct record *rec = to;
+-	struct record *rec = to;
+-	int ret, trace_fd = rec->session->data->file.fd;
++	struct record_aio *aio = to;
  
-+	if (record__comp_enabled(rec)) {
-+		size = zstd_compress(rec->session, map->data,
-+				     perf_mmap__mmap_len(map), bf, size);
-+		bf = map->data;
+-	rec->samples++;
++	/*
++	 * map->base data pointed by buf is copied into free map->aio.data[] buffer
++	 * to release space in the kernel buffer as fast as possible, calling
++	 * perf_mmap__consume() from perf_mmap__push() function.
++	 *
++	 * That lets the kernel to proceed with storing more profiling data into
++	 * the kernel buffer earlier than other per-cpu kernel buffers are handled.
++	 *
++	 * Coping can be done in two steps in case the chunk of profiling data
++	 * crosses the upper bound of the kernel buffer. In this case we first move
++	 * part of data from map->start till the upper bound and then the reminder
++	 * from the beginning of the kernel buffer till the end of the data chunk.
++	 */
+ 
+-	ret = record__aio_write(cblock, trace_fd, bf, size, off);
++	if (record__comp_enabled(aio->rec)) {
++		size = zstd_compress(aio->rec->session, aio->data + aio->size,
++				     perf_mmap__mmap_len(map) - aio->size,
++				     buf, size);
++	} else {
++		memcpy(aio->data + aio->size, buf, size);
 +	}
 +
- 	rec->samples++;
- 	return record__write(rec, map, bf, size);
- }
-@@ -775,6 +784,38 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
- 	}
- }
- 
-+static size_t process_comp_header(void *record, size_t increment)
-+{
-+	struct compressed_event *event = record;
-+	size_t size = sizeof(struct compressed_event);
-+
-+	if (increment) {
-+		event->header.size += increment;
-+		return increment;
++	if (!aio->size) {
++		/*
++		 * Increment map->refcount to guard map->aio.data[] buffer
++		 * from premature deallocation because map object can be
++		 * released earlier than aio write request started on
++		 * map->aio.data[] buffer is complete.
++		 *
++		 * perf_mmap__put() is done at record__aio_complete()
++		 * after started aio request completion or at record__aio_push()
++		 * if the request failed to start.
++		 */
++		perf_mmap__get(map);
 +	}
 +
-+	event->header.type = PERF_RECORD_COMPRESSED;
-+	event->header.size = size;
++	aio->size += size;
 +
 +	return size;
 +}
 +
-+static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
-+			    void *src, size_t src_size)
++static int record__aio_push(struct record *rec, struct perf_mmap *map, off_t *off)
 +{
-+	size_t compressed;
-+	size_t max_record_size = PERF_SAMPLE_MAX_SIZE - sizeof(struct compressed_event) - 1;
++	int ret, idx;
++	int trace_fd = rec->session->data->file.fd;
++	struct record_aio aio = { .rec = rec, .size = 0 };
 +
-+	compressed = zstd_compress_stream_to_records(&(session->zstd_data),
-+				dst, dst_size, src, src_size, max_record_size,
-+				process_comp_header);
++	/*
++	 * Call record__aio_sync() to wait till map->aio.data[] buffer
++	 * becomes available after previous aio write operation.
++	 */
 +
-+	session->bytes_transferred += src_size;
-+	session->bytes_compressed  += compressed;
++	idx = record__aio_sync(map, false);
++	aio.data = map->aio.data[idx];
++	ret = perf_mmap__push(map, &aio, record__aio_pushfn);
++	if (ret != 0) /* ret > 0 - no data, ret < 0 - error */
++		return ret;
 +
-+	return compressed;
-+}
-+
- static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
- 				    bool overwrite, bool sync)
- {
-@@ -1205,6 +1246,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	fd = perf_data__fd(data);
- 	rec->session = session;
- 
-+	if (zstd_init(&(session->zstd_data), rec->opts.comp_level) < 0) {
-+		pr_err("Compression initialization failed.\n");
-+		return -1;
-+	}
-+
-+	session->header.env.comp_type  = PERF_COMP_ZSTD;
-+	session->header.env.comp_level = rec->opts.comp_level;
-+
- 	record__init_features(rec);
- 
- 	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
-@@ -1537,6 +1586,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
++	rec->samples++;
++	ret = record__aio_write(&(map->aio.cblocks[idx]), trace_fd, aio.data, aio.size, *off);
+ 	if (!ret) {
+-		rec->bytes_written += size;
++		*off += aio.size;
++		rec->bytes_written += aio.size;
+ 		if (switch_output_size(rec))
+ 			trigger_hit(&switch_output_trigger);
++	} else {
++		/*
++		 * Decrement map->refcount incremented in record__aio_pushfn()
++		 * back if record__aio_write() operation failed to start, otherwise
++		 * map->refcount is decremented in record__aio_complete() after
++		 * aio write operation finishes successfully.
++		 */
++		perf_mmap__put(map);
  	}
  
- out_delete_session:
-+	zstd_fini(&(session->zstd_data));
- 	perf_session__delete(session);
- 	return status;
+ 	return ret;
+@@ -273,7 +346,7 @@ static void record__aio_mmap_read_sync(struct record *rec)
+ 	struct perf_evlist *evlist = rec->evlist;
+ 	struct perf_mmap *maps = evlist->mmap;
+ 
+-	if (!rec->opts.nr_cblocks)
++	if (!record__aio_enabled(rec))
+ 		return;
+ 
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
+@@ -307,13 +380,8 @@ static int record__aio_parse(const struct option *opt,
+ #else /* HAVE_AIO_SUPPORT */
+ static int nr_cblocks_max = 0;
+ 
+-static int record__aio_sync(struct perf_mmap *md __maybe_unused, bool sync_all __maybe_unused)
+-{
+-	return -1;
+-}
+-
+-static int record__aio_pushfn(void *to __maybe_unused, struct aiocb *cblock __maybe_unused,
+-		void *bf __maybe_unused, size_t size __maybe_unused, off_t off __maybe_unused)
++static int record__aio_push(struct record *rec __maybe_unused, struct perf_mmap *map __maybe_unused,
++			    off_t *off __maybe_unused)
+ {
+ 	return -1;
  }
-@@ -2254,8 +2304,7 @@ int cmd_record(int argc, const char **argv)
+@@ -824,7 +892,7 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	int rc = 0;
+ 	struct perf_mmap *maps;
+ 	int trace_fd = rec->data.file.fd;
+-	off_t off;
++	off_t off = 0;
  
- 	if (rec->opts.nr_cblocks > nr_cblocks_max)
- 		rec->opts.nr_cblocks = nr_cblocks_max;
--	if (verbose > 0)
--		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
-+	pr_debug("nr_cblocks: %d\n", rec->opts.nr_cblocks);
+ 	if (!evlist)
+ 		return 0;
+@@ -850,20 +918,14 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				map->flush = 1;
+ 			}
+ 			if (!record__aio_enabled(rec)) {
+-				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
++				if (perf_mmap__push(map, rec, record__pushfn) < 0) {
+ 					if (sync)
+ 						map->flush = flush;
+ 					rc = -1;
+ 					goto out;
+ 				}
+ 			} else {
+-				int idx;
+-				/*
+-				 * Call record__aio_sync() to wait till map->data buffer
+-				 * becomes available after previous aio write request.
+-				 */
+-				idx = record__aio_sync(map, false);
+-				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
++				if (record__aio_push(rec, map, &off) < 0) {
+ 					record__aio_set_pos(trace_fd, off);
+ 					if (sync)
+ 						map->flush = flush;
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index d85e73fc82e2..868c0b0e909c 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -289,80 +289,6 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map)
+ 	zfree(&map->aio.cblocks);
+ 	zfree(&map->aio.aiocb);
+ }
+-
+-int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off)
+-{
+-	u64 head = perf_mmap__read_head(md);
+-	unsigned char *data = md->base + page_size;
+-	unsigned long size, size0 = 0;
+-	void *buf;
+-	int rc = 0;
+-
+-	rc = perf_mmap__read_init(md);
+-	if (rc < 0)
+-		return (rc == -EAGAIN) ? 0 : -1;
+-
+-	/*
+-	 * md->base data is copied into md->data[idx] buffer to
+-	 * release space in the kernel buffer as fast as possible,
+-	 * thru perf_mmap__consume() below.
+-	 *
+-	 * That lets the kernel to proceed with storing more
+-	 * profiling data into the kernel buffer earlier than other
+-	 * per-cpu kernel buffers are handled.
+-	 *
+-	 * Coping can be done in two steps in case the chunk of
+-	 * profiling data crosses the upper bound of the kernel buffer.
+-	 * In this case we first move part of data from md->start
+-	 * till the upper bound and then the reminder from the
+-	 * beginning of the kernel buffer till the end of
+-	 * the data chunk.
+-	 */
+-
+-	size = md->end - md->start;
+-
+-	if ((md->start & md->mask) + size != (md->end & md->mask)) {
+-		buf = &data[md->start & md->mask];
+-		size = md->mask + 1 - (md->start & md->mask);
+-		md->start += size;
+-		memcpy(md->aio.data[idx], buf, size);
+-		size0 = size;
+-	}
+-
+-	buf = &data[md->start & md->mask];
+-	size = md->end - md->start;
+-	md->start += size;
+-	memcpy(md->aio.data[idx] + size0, buf, size);
+-
+-	/*
+-	 * Increment md->refcount to guard md->data[idx] buffer
+-	 * from premature deallocation because md object can be
+-	 * released earlier than aio write request started
+-	 * on mmap->data[idx] is complete.
+-	 *
+-	 * perf_mmap__put() is done at record__aio_complete()
+-	 * after started request completion.
+-	 */
+-	perf_mmap__get(md);
+-
+-	md->prev = head;
+-	perf_mmap__consume(md);
+-
+-	rc = push(to, &md->aio.cblocks[idx], md->aio.data[idx], size0 + size, *off);
+-	if (!rc) {
+-		*off += size0 + size;
+-	} else {
+-		/*
+-		 * Decrement md->refcount back if aio write
+-		 * operation failed to start.
+-		 */
+-		perf_mmap__put(md);
+-	}
+-
+-	return rc;
+-}
+ #else /* !HAVE_AIO_SUPPORT */
+ static int perf_mmap__aio_enabled(struct perf_mmap *map __maybe_unused)
+ {
+@@ -566,7 +492,7 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
  
- 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
- 	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 0e14884f28b2..6c984c895924 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -8,6 +8,7 @@
- #include "machine.h"
- #include "data.h"
- #include "ordered-events.h"
-+#include "util/compress.h"
- #include <linux/kernel.h>
- #include <linux/rbtree.h>
- #include <linux/perf_event.h>
-@@ -37,6 +38,7 @@ struct perf_session {
- 	struct perf_tool	*tool;
- 	u64			bytes_transferred;
- 	u64			bytes_compressed;
-+	struct zstd_data	zstd_data;
- };
+ 	rc = perf_mmap__read_init(md);
+ 	if (rc < 0)
+-		return (rc == -EAGAIN) ? 0 : -1;
++		return (rc == -EAGAIN) ? 1 : -1;
  
- struct perf_tool;
+ 	size = md->end - md->start;
+ 
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index 4e2f58d95c1f..274ce389cd84 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -101,18 +101,6 @@ union perf_event *perf_mmap__read_event(struct perf_mmap *map);
+ 
+ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 		    int push(struct perf_mmap *map, void *to, void *buf, size_t size));
+-#ifdef HAVE_AIO_SUPPORT
+-int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off);
+-#else
+-static inline int perf_mmap__aio_push(struct perf_mmap *md __maybe_unused, void *to __maybe_unused, int idx __maybe_unused,
+-	int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off) __maybe_unused,
+-	off_t *off __maybe_unused)
+-{
+-	return 0;
+-}
+-#endif
+ 
+ size_t perf_mmap__mmap_len(struct perf_mmap *map);
+ 
 -- 
 2.20.1
 
