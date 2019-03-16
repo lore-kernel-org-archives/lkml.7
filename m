@@ -2,142 +2,185 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B302CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8ECC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C17B218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVnaeziy"
+	by mail.kernel.org (Postfix) with ESMTP id 67B65218D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfCPCLF (ORCPT
+        id S1727004AbfCPCLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 22:11:05 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42089 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfCPCLF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 22:11:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id b74so6682523qkg.9;
-        Fri, 15 Mar 2019 19:11:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=tjeKEKBJwHhgYiPZjRw0Blr1fFyox223oRj9UfoRK4o=;
-        b=SVnaeziyQUGhvqQdfiK9ldbscvraUd1tQliL2XSHpCIMgpNbwMIRJIHgYY9/5r+5Ep
-         eYDBX6rvRSUU9+uPBt6A0ujh4kWcm0unhYxUpuLXVe+cczXs0JJiaqEmJnCPEf+K9sAd
-         +T5nk1ZJz9GcnxLEqbOyK67H7aY+Yllv9E/H8Q5v3cbRnrnhYkvYqVxUux6ClnHRfDAG
-         2I1NBZ+pprPHPo06QxFRCd022RBSWShDU8ZhSzB81AwZZbMxFfDGalcgKBYzO9FImQ8u
-         HkQwOUUqPf2SmWM7sE+yCSKE6rFcnTkhcoqxVrLXpzdNztyHasqw4r+Wh4kVQ0x7Ud9y
-         roXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=tjeKEKBJwHhgYiPZjRw0Blr1fFyox223oRj9UfoRK4o=;
-        b=EUOt+5N2sMEQMrVCDkeDtejRM3OZMugidjsdgT/Zm+6LEdgvBTB61OL5/rRz4xP9xn
-         69wumAx73Eyi9x+rIhRljaPfH5tHgFQKkYBDJtqPL8uwLSl2JVlD75wZBOz4wNm3+lcK
-         Xs5/Le8GzMzvp56AVECYXqWa/ZUibBkJf/rNGIBAnoiBDN4jM94wAOu4ZS6Ez3v+e2FE
-         cJis57wOwFe8bIrl1W+0tP8m0203N5wQB9thC8bvYIHCzhB5oJ3tqNsC+wn1vqApvdtO
-         dmBFYRHnWRUj6eL8CdB5Sy/kOYEfkS9mCW3DTMEotarJvDed/XxYZBEZaF3t63LtTXcd
-         eH3w==
-X-Gm-Message-State: APjAAAWoZBFdtKD8L9x/GoAJje/ygxYyndyFlw/ctYqMfboF9gPiDVlj
-        4+RCtA1f+GnRGBWdLa0pTmE=
-X-Google-Smtp-Source: APXvYqwc0/zQGnxPieREzl+efoSqVj/pgPkyarlvn8iV39BQnUywKn1w1SV+31/u4zUyzqatHnW01Q==
-X-Received: by 2002:a37:a246:: with SMTP id l67mr4882876qke.237.1552702264410;
-        Fri, 15 Mar 2019 19:11:04 -0700 (PDT)
-Received: from renatolg ([186.220.21.102])
-        by smtp.gmail.com with ESMTPSA id j64sm2800919qkf.13.2019.03.15.19.11.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 19:11:03 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 23:10:58 -0300
-From:   Renato Lui Geh <renatogeh@gmail.com>
-To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
-        giuliano.belinassi@usp.br, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
-        devicetree@vger.kernel.org
-Subject: [PATCH v5 00/11] staging: iio: ad7780: move out of staging
-Message-ID: <cover.1552700652.git.renatogeh@gmail.com>
+        Fri, 15 Mar 2019 22:11:10 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51910 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726218AbfCPCLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Mar 2019 22:11:09 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 87BA2242CEC94DA9710F;
+        Sat, 16 Mar 2019 10:11:05 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.408.0; Sat, 16 Mar 2019
+ 10:10:59 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <martin.petersen@oracle.com>, <jejb@linux.vnet.ibm.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, <hch@lst.de>, <bvanassche@acm.org>,
+        <tom.leiming@gmail.com>, Jason Yan <yanaijie@huawei.com>
+Subject: [RFC PATCH v2] scsi: fix oops in scsi_uninit_cmd()
+Date:   Sat, 16 Mar 2019 10:09:05 +0800
+Message-ID: <20190316020905.14962-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.14.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series of patches contains the following:
- - Adds user input for the 'gain' and 'filter' GPIO pins for the ad778x
-   family chips;
- - Missing switch default case tidy up;
- - Gain reading for the ad778x;
- - Filter reading for the ad778x;
- - Sets pattern macro values and mask for PATTERN status bits;
- - Adds ID values for the ad7170, ad7171, ad7780 and ad7781 for ID
-   status bits checking;
- - Moves regulator initialization to after GPIO init to maintain
-   consistency between probe and remove;
- - Copyright edits, adding SPDX identifier and new copyright holder;
- - Moves the ad7780 driver out of staging to the mainline;
- - Adds device tree binding for the ad7780 driver.
+If we remove the scsi disk when running io with fio, oops occured with
+the following condition.
 
-Renato Lui Geh (11):
-  staging: iio: ad7780: add gain & filter gpio support
-  staging: iio: ad7780: add missing switch default case
-  staging: iio: ad7780: add gain reading to ad778x
-  staging: iio: ad7780: add filter reading to ad778x
-  staging: iio: ad7780: set pattern values and masks directly
-  staging:iio:ad7780: add chip ID values and mask
-  staging: iio: ad7780: move regulator to after GPIO init
-  staging: iio: ad7780: add SPDX identifier
-  staging: iio: ad7780: add new copyright holder
-  staging: iio: ad7780: moving ad7780 out of staging
-  staging: iio: ad7780: add device tree binding
+[scsi_eh_0]                              [fio]
+scsi_end_request
+  ->blk_update_request
+    ->end_bio(io returned to userspace)
+                                         close
+                                           ->sd_release
+                                              ->scsi_disk_put
+                                                 ->scsi_disk_release
+                                                     ->disk->private_data = NULL;
 
-Changelog:
-*v3
- - SPDX and regulator init as patches
- - Renamed filter to odr and ad778x_filter to ad778x_odr_avail
- - Removed unnecessary regulator disabling
- - Removed unnecessary AD_SD_CHANNEL macro
- - Changed unsigned int to unsigned long long to avoid overflow
-*v4
- - Split gain & filter patch into two, with the new commit adding only
-   filter reading
- - Changed pattern values to direct values, and added pattern mask
- - Added ID values and mask
- - Added new copyright holder
- - Added device tree binding to the ad7780 driver
-*v5
- - Tidy ups
- - Gain reading split from "gain & filter gpio support" commit to its
-   own separate patch
- - ad778x_odr_avail moved to more appropriate patch
- - Init GPIOs in a separate function
- - Raise error when ad717x tries to perform a write operation
+  ->scsi_mq_uninit_cmd
+    ->scsi_uninit_cmd
+      ->scsi_cmd_to_driver
+    ->drv is NULL, Oops
 
- .../bindings/iio/adc/adi,ad7780.txt           |  48 +++
- drivers/iio/adc/Kconfig                       |  12 +
- drivers/iio/adc/Makefile                      |   1 +
- drivers/iio/adc/ad7780.c                      | 376 ++++++++++++++++++
- drivers/staging/iio/adc/Kconfig               |  13 -
- drivers/staging/iio/adc/Makefile              |   1 -
- drivers/staging/iio/adc/ad7780.c              | 277 -------------
- 7 files changed, 437 insertions(+), 291 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
- create mode 100644 drivers/iio/adc/ad7780.c
- delete mode 100644 drivers/staging/iio/adc/ad7780.c
+There is a small window between blk_update_request() and
+scsi_mq_uninit_cmd() that scsi disk may have been released. This will
+cause a oops like below:
 
+Unable to handle kernel NULL pointer dereference at virtual address
+0000000000000000
+s/sync.c:67, func=xfer, error=In[11347.116050] Mem abort info:
+put/output error
+[11347.121598]   ESR = 0x96000006
+[11347.126200]   Exception class = DABT (current EL), IL = 32 bits
+[11347.132117]   SET = 0, FnV = 0
+[11347.135170]   EA = 0, S1PTW = 0
+[11347.138308] Data abort info:
+[11347.141186]   ISV = 0, ISS = 0x00000006
+[11347.145019]   CM = 0, WnR = 0
+[11347.147977] user pgtable: 4k pages, 48-bit VAs, pgdp =
+00000000a67aece2
+[11347.154591] [0000000000000000] pgd=0000002f90774003,
+pud=0000002fab098003, pmd=0000000000000000
+[11347.163304] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+[11347.168870] Modules linked in: hisi_sas_v3_hw hisi_sas_main libsas
+[11347.175044] CPU: 56 PID: 4294 Comm: scsi_eh_2 Not tainted
+4.19.0-g8052059-dirty #2
+[11347.182600] Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
+RC0 - B601 (V6.01) 11/08/2018
+[11347.191370] pstate: a0c00009 (NzCv daif +PAN +UAO)
+[11347.196155] pc : scsi_uninit_cmd+0x24/0x3c
+[11347.200240] lr : scsi_mq_uninit_cmd+0x1c/0x30
+[11347.204583] sp : ffff000024dabb60
+[11347.207884] x29: ffff000024dabb60 x28: ffff000024dabd38
+[11347.213184] x27: ffff000000f5b3a8 x26: ffff7df3b0181600
+[11347.218484] x25: 0000000000000000 x24: ffff803bc5d36778
+[11347.223783] x23: 000000000000000a x22: 0000000000000000
+[11347.229082] x21: ffff803bc7397000 x20: ffff802f9148e530
+[11347.234381] x19: ffff802f9148e530 x18: ffff7e0000000000
+[11347.239679] x17: 0000000000000000 x16: 0000002f9e37d000
+[11347.244979] x15: ffff7e0000000000 x14: 3863206336203839
+[11347.250278] x13: 2036302030302038 x12: a46fac3d0d363d00
+[11347.255578] x11: ffffffffffffffff x10: a46fac3d0d363d00
+[11347.260877] x9 : 0000000040040000 x8 : 000000000000eb4b
+[11347.266177] x7 : ffff000009771000 x6 : 0000000000210d00
+[11347.271476] x5 : ffff803bc9f50000 x4 : 0000000000000000
+[11347.276775] x3 : ffff802fb02b4380 x2 : ffff802f9148e400
+[11347.282075] x1 : 0000000000000000 x0 : ffff802f9148e530
+[11347.287375] Process scsi_eh_2 (pid: 4294, stack limit =
+0x000000007d2257f8)
+[11347.294323] Call trace:
+Jobs: 6 (f=6): [R[RRR1XXX1XRR3] 47.296758]  scsi_uninit_cmd+0x24/0x3c
+[22.7% done] [1516MB/0KB/0KB /s] [754/0/0 iops] [eta 08m:39s]
+[11347.308390]  scsi_mq_uninit_cmd+0x1c/0x30
+[11347.312387]  scsi_end_request+0x7c/0x1b8
+[11347.316297]  scsi_io_completion+0x464/0x668
+[11347.320467]  scsi_finish_command+0xbc/0x160
+[11347.324636]  scsi_eh_flush_done_q+0x10c/0x170
+[11347.328990]  sas_scsi_recover_host+0x84c/0xa98 [libsas]
+[11347.334202]  scsi_error_handler+0x140/0x5b0
+[11347.338374]  kthread+0x100/0x12c
+[11347.341590]  ret_from_fork+0x10/0x18
+[11347.345153] Code: 71000c3f 540000e9 f9404c41 f941f421 (f9400021)
+[11347.351234] ---[ end trace f496aacdaa1dcc51 ]---
+
+To fix this, move the bio_endio() action from blk_update_request() to
+__blk_mq_end_request().
+
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ block/blk-core.c       | 6 ++++--
+ block/blk-mq.c         | 7 +++++++
+ include/linux/blkdev.h | 1 +
+ 3 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 4673ebe42255..f39ea78c0535 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -192,8 +192,10 @@ static void req_bio_endio(struct request *rq, struct bio *bio,
+ 	bio_advance(bio, nbytes);
+ 
+ 	/* don't actually finish bio if it's part of flush sequence */
+-	if (bio->bi_iter.bi_size == 0 && !(rq->rq_flags & RQF_FLUSH_SEQ))
+-		bio_endio(bio);
++	if (bio->bi_iter.bi_size == 0 && !(rq->rq_flags & RQF_FLUSH_SEQ)) {
++		bio->bi_next = rq->bio_to_release;
++		rq->bio_to_release = bio;
++	}
+ }
+ 
+ void blk_dump_rq_flags(struct request *rq, char *msg)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index a9c181603cbd..5ad595ebc198 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -529,8 +529,15 @@ EXPORT_SYMBOL_GPL(blk_mq_free_request);
+ 
+ inline void __blk_mq_end_request(struct request *rq, blk_status_t error)
+ {
++	struct bio *bio;
+ 	u64 now = 0;
+ 
++	while (rq->bio_to_release) {
++		bio = rq->bio_to_release->bi_next;
++		bio_endio(rq->bio_to_release);
++		rq->bio_to_release = bio;
++	}
++
+ 	if (blk_mq_need_time_stamp(rq))
+ 		now = ktime_get_ns();
+ 
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 0de92b29f589..74fe561d5a49 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -143,6 +143,7 @@ struct request {
+ 
+ 	struct bio *bio;
+ 	struct bio *biotail;
++	struct bio *bio_to_release;
+ 
+ 	struct list_head queuelist;
+ 
 -- 
-2.21.0
+2.14.5
 
