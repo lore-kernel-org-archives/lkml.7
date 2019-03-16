@@ -2,307 +2,113 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E030C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30ADC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D00218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BC4218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 22:07:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jmrYFc2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfCPV7w (ORCPT
+        id S1726728AbfCPWHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 17:59:52 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:41328 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfCPV7w (ORCPT
+        Sat, 16 Mar 2019 18:07:14 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41821 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbfCPWHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 17:59:52 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 14057200C3;
-        Sat, 16 Mar 2019 22:59:46 +0100 (CET)
-Date:   Sat, 16 Mar 2019 22:59:44 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 3/3] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
-Message-ID: <20190316215944.GB11309@ravnborg.org>
-References: <20190315170701.29670-1-paul@crapouillou.net>
- <20190315170701.29670-3-paul@crapouillou.net>
+        Sat, 16 Mar 2019 18:07:13 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v7so413127oie.8
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 15:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tXsxzgOzwviiw4AI4/JgeuPKkrzL6ZPUgu2mPVy+R+0=;
+        b=jmrYFc2twfhtugmBZiBKqT2lnFEZhHB6hAxGf9HZBAtXvOE/0dcuspf2Xovr6LEda5
+         a76kDDUts2lrmXdGKNqd9QibMUx+ctmGlGkS8QWYyfPq5IuORLoT839vHT08tvt1Xld+
+         LdmF9udyXSJX1PNAc/h9ePp3ULfbSNqjnMl5gX391Lwhtug7nNXmfb3awucXS5g7HITQ
+         USH34NmV3KA/d0oJJjAwQv8Qo0wiYan/PmQf/KADOD+kww8vHN+JaeLXtTl+ZcCAx8ZZ
+         CUjdw6FT2XHgwztRgRYyGuxm1Bsq/lEsvrS9pg4gPR+IrPe3z+FNaqkU9oqAuz2UO9C+
+         JaWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tXsxzgOzwviiw4AI4/JgeuPKkrzL6ZPUgu2mPVy+R+0=;
+        b=NSJjYMOIzG97jBc5Hr8reuTEY56lv0yUCc7+tWofFdtLO9DiA7FCIdtUbTn4pcwOQu
+         JOaLPr5IV5C8Ei4+HAgVz0kJyeHfamn5P8gTVm/dSx/NBcJuYFHgbady58MBV3Sz8Faf
+         pL5qgo6pUqxdeUCfk/CMZrDa/3fTwexp0H12bYtjbadn2Vno+LYdP2yjfg5GfUk5FKVQ
+         kHop49NKB2fHvf19u3HCpo3H+jIZHAGljJUdR2+hOWaaGsS0ruovqaPBiGvyvfcwcBeM
+         16p6ueseJlis6pwY1BGAHNrH8S7/8lDz7Um4JVF/oXH0QK+w2FL6WV7wwCvprAl6iuDQ
+         XdWA==
+X-Gm-Message-State: APjAAAULffsllSGUqvufx1MmG5udWwLo/9ASto12MpJllL8GnRBbwGMD
+        1ciyTRJX2IPiGcTxGoAjfISNNmzDJF9Std2ouf647g==
+X-Google-Smtp-Source: APXvYqz2qdKtizHFrUWgbw9SI74hQFePNHOcYi7eqSq+Mb1r10fY1LjN2DiRVxT7kSLzXrz9oJuFfnuXEiGsB4EQAtM=
+X-Received: by 2002:aca:4205:: with SMTP id p5mr5798922oia.15.1552774032538;
+ Sat, 16 Mar 2019 15:07:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315170701.29670-3-paul@crapouillou.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
-        a=p6pI0oa4AAAA:8 a=3iZPsmZ1dwio5CCrdjoA:9 a=CjuIK1q_8ugA:10
-        a=9LHmKk7ezEChjTCyhBa9:22 a=9cw2y2bKwytFd151gpuR:22
+References: <20190311095613.11371-1-narmstrong@baylibre.com>
+ <20190311095613.11371-12-narmstrong@baylibre.com> <CAFBinCDU_6JEJJS8yZkq0rjbqKcy2eBKFaYqgX3txGMiO5U9Fg@mail.gmail.com>
+ <5C8D0C2B.2010605@baylibre.com>
+In-Reply-To: <5C8D0C2B.2010605@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 16 Mar 2019 23:07:01 +0100
+Message-ID: <CAFBinCDyTPLr+fNptpHa664pMqvp4X3Tv6166h_C+b0gHBJ-ZA@mail.gmail.com>
+Subject: Re: [PATCH 11/11] arm64: dts: meson-g12a-x96-max: Enable USB
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+Hi Neil,
 
-Thanks for the v2 submission.
+On Sat, Mar 16, 2019 at 3:46 PM Neil Armstrong <narmstrong@baylibre.com> wr=
+ote:
+>
+>
+>
+> Le 15/03/2019 22:50, Martin Blumenstingl a =C3=A9crit :
+> > Hi Neil,
+> >
+> > On Mon, Mar 11, 2019 at 10:58 AM Neil Armstrong <narmstrong@baylibre.co=
+m> wrote:
+> > [...]
+> >> +&dwc2 {
+> >> +       status =3D "okay";
+> >> +};
+> > your patch description states that this enables the "USB host ports"
+> > but dwc2 is only used for peripheral mode (meaning: dr_mode =3D
+> > "peripheral" or dr_mode =3D "otg").
+> > do we still need to enable dwc2 in a host-only configuration?
+>
+> DWC2 is peripheral-only, but we can still manually switch one of the
+> ports and use it as peripheral with a Type-A to Type-A cable, thus
+> enabling dwc2.
+thank you for the explanation!
 
-Did you analyze the possibility to utilize drm_simple_display_pipe_init()
-and the related infrastructure?
-If this fits it should simplify the driver.
-If it does not fit please let us know why.
-As this is a one crtc / one connector / one panel the drm_simple_*
-infrastructure is supposed to be a good fit.
-
-Some smaller comments in the following.
-Most are suggestion, do not follow these blindly.
-
-	Sam
-
-> Add a KMS driver for the Ingenic JZ47xx family of SoCs.
-> This driver is meant to replace the aging jz4740-fb driver.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
-
-> +struct ingenic_drm {
-> +	struct device *dev;
-> +	void __iomem *base;
-> +	struct regmap *map;
-> +	struct clk *lcd_clk, *pix_clk;
-> +
-> +	u32 lcd_mode;
-> +
-> +	struct ingenic_dma_hwdesc *framedesc;
-
-Consider the name "dma_hwdesc" for this.
-The struct is named so, which give a good indication
-this is a more descriptive name.
-
-That said, the current solution looks much cleaner than the
-previous one.
-
-> +	dma_addr_t framedesc_phys;
-Likewise.
+> If the OTG capable PHYs was behind an USB Hub or directly connected to
+> a device, we could disable dwc2, but for now this port is always tied
+> to a physical Type-A or micro-USB connector.
+>
+> Maybe it would be sane to always enable dwc2, and disable it for specific
+> boards only.
+In case the port is connected to an USB hub we can add a comment to
+the .dts to explain why dwc2 is being disabled. that way we don't need
+a comment in each board.dts that it's enabled to support forced mode
+switching.
+in other words: I like this idea!
 
 
-> +
-> +	struct drm_device *drm;
-If drm is embedded you can use devm_drm_dev_init()
-recently added to drm-misc.
-
-See the very nice example in drivers/gu/drm/drm_drv.c
-(only in drm-misc-next for now)
-
-> +	struct drm_plane primary;
-> +	struct drm_crtc crtc;
-> +	struct drm_encoder encoder;
-> +};
-> +
-> +
-> +static int ingenic_drm_probe(struct platform_device *pdev)
-> +{
-> +	const struct jz_soc_info *soc_info;
-> +	struct device *dev = &pdev->dev;
-> +	struct ingenic_drm *priv;
-> +	struct clk *parent_clk;
-> +	struct drm_bridge *bridge;
-> +	struct drm_panel *panel;
-> +	struct drm_device *drm;
-> +	struct resource *mem;
-> +	void __iomem *base;
-> +	long parent_rate;
-> +	int ret, irq;
-> +
-> +	soc_info = device_get_match_data(dev);
-Everyone else uses of_device_... here. You should most
-likely do the same.
-
-> +	if (!soc_info)
-> +		return -EINVAL;
-Also, consider to print an error here.
-
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-Use of devm_kzalloc() here is not good. See driver example in drm_drv.c
-
-> +
-> +	priv->dev = dev;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = base = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "Failed to get platform irq\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	priv->map = devm_regmap_init_mmio(dev, base,
-> +					  &ingenic_drm_regmap_config);
-> +	if (IS_ERR(priv->map)) {
-> +		dev_err(dev, "Failed to create regmap\n");
-> +		return PTR_ERR(priv->map);
-> +	}
-> +
-> +	if (soc_info->needs_dev_clk) {
-> +		priv->lcd_clk = devm_clk_get(dev, "lcd");
-> +		if (IS_ERR(priv->lcd_clk)) {
-> +			dev_err(dev, "Failed to get lcd clock\n");
-> +			return PTR_ERR(priv->lcd_clk);
-> +		}
-> +	}
-> +
-> +	priv->pix_clk = devm_clk_get(dev, "lcd_pclk");
-> +	if (IS_ERR(priv->pix_clk)) {
-> +		dev_err(dev, "Failed to get pixel clock\n");
-> +		return PTR_ERR(priv->pix_clk);
-> +	}
-> +
-> +	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0, &panel, &bridge);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get panel handle\n");
-> +		return ret;
-> +	}
-> +
-> +	if (panel) {
-> +		bridge = devm_drm_panel_bridge_add(dev, panel,
-> +						   DRM_MODE_CONNECTOR_Unknown);
-> +	}
-> +
-> +	device_property_read_u32(dev, "ingenic,lcd-mode", &priv->lcd_mode);
-> +
-> +	priv->framedesc = dma_alloc_coherent(dev, sizeof(*priv->framedesc),
-> +					     &priv->framedesc_phys, GFP_KERNEL);
-> +	if (!priv->framedesc)
-> +		return -ENOMEM;
-> +
-> +	priv->framedesc->next = priv->framedesc_phys;
-> +	priv->framedesc->id = 0xdeafbead;
-> +
-> +	drm = drm_dev_alloc(&ingenic_drm_driver_data, dev);
-> +	if (IS_ERR(drm)) {
-> +		ret = PTR_ERR(drm);
-> +		goto err_free_dma;
-> +	}
-> +
-> +	priv->drm = drm;
-> +
-> +	drm_mode_config_init(drm);
-> +	drm->mode_config.min_width = 0;
-> +	drm->mode_config.min_height = 0;
-> +	drm->mode_config.max_width = 800;
-> +	drm->mode_config.max_height = 600;
-> +	drm->mode_config.funcs = &ingenic_drm_mode_config_funcs;
-> +
-> +	drm_plane_helper_add(&priv->primary, &ingenic_drm_plane_helper_funcs);
-> +
-> +	ret = drm_universal_plane_init(drm, &priv->primary,
-> +				       0, &ingenic_drm_primary_plane_funcs,
-> +				       ingenic_drm_primary_formats,
-> +				       ARRAY_SIZE(ingenic_drm_primary_formats),
-> +				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register primary plane: %i\n", ret);
-> +		goto err_unref_drm;
-> +	}
-> +
-> +	drm_crtc_helper_add(&priv->crtc, &ingenic_drm_crtc_helper_funcs);
-> +
-> +	ret = drm_crtc_init_with_planes(drm, &priv->crtc, &priv->primary,
-> +					NULL, &ingenic_drm_crtc_funcs, NULL);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init CRTC: %i\n", ret);
-> +		goto err_cleanup_plane;
-> +	}
-> +
-> +	priv->encoder.possible_crtcs = 1;
-> +
-> +	drm_encoder_helper_add(&priv->encoder,
-> +			       &ingenic_drm_encoder_helper_funcs);
-> +
-> +	ret = drm_encoder_init(drm, &priv->encoder, &ingenic_drm_encoder_funcs,
-> +			       DRM_MODE_ENCODER_DPI, NULL);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init encoder: %i\n", ret);
-> +		goto err_cleanup_crtc;
-> +	}
-> +
-> +	ret = drm_bridge_attach(&priv->encoder, bridge, NULL);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to attach bridge\n");
-> +		goto err_cleanup_encoder;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, drm);
-> +	priv->drm = drm;
-> +	drm->dev_private = priv;
-> +
-> +	ret = drm_irq_install(drm, irq);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to install IRQ handler\n");
-> +		goto err_cleanup_encoder;
-> +	}
-> +
-> +	ret = drm_vblank_init(drm, 1);
-> +	if (ret) {
-> +		dev_err(dev, "Failed calling drm_vblank_init()\n");
-> +		goto err_uninstall_irq;
-> +	}
-> +
-> +	drm_mode_config_reset(drm);
-> +
-> +	ret = clk_prepare_enable(priv->pix_clk);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to start pixel clock\n");
-> +		goto err_uninstall_irq;
-> +	}
-> +
-> +	if (priv->lcd_clk) {
-> +		parent_clk = clk_get_parent(priv->lcd_clk);
-> +		parent_rate = clk_get_rate(parent_clk);
-> +
-> +		/* LCD Device clock must be 3x the pixel clock for STN panels,
-> +		 * or 1.5x the pixel clock for TFT panels. To avoid having to
-> +		 * check for the LCD device clock everytime we do a mode change,
-> +		 * we set the LCD device clock to the highest rate possible.
-> +		 */
-> +		ret = clk_set_rate(priv->lcd_clk, parent_rate);
-> +		if (ret) {
-> +			dev_err(dev, "Unable to set LCD clock rate\n");
-> +			goto err_pixclk_disable;
-> +		}
-> +
-> +		ret = clk_prepare_enable(priv->lcd_clk);
-> +		if (ret) {
-> +			dev_err(dev, "Unable to start lcd clock\n");
-> +			goto err_pixclk_disable;
-> +		}
-> +	}
-> +
-> +	ret = drm_fbdev_generic_setup(drm, 16);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init fbdev\n");
-> +		goto err_devclk_disable;
-> +	}
-fbdev is usually considered an optionl feature that do not prevent
-the display driver from loading.
-Consider what to do in the error case.
-
+Regards
+Martin
