@@ -2,161 +2,307 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C98C10F03
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E030C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C759B218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D00218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:59:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfCPV5T (ORCPT
+        id S1726824AbfCPV7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 17:57:19 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:44342 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726914AbfCPV5S (ORCPT
+        Sat, 16 Mar 2019 17:59:52 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:41328 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfCPV7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 17:57:18 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 16 Mar 2019 17:59:52 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 1ACFE634C7F;
-        Sat, 16 Mar 2019 23:46:49 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1h5H8j-00042C-M7; Sat, 16 Mar 2019 23:46:49 +0200
-Date:   Sat, 16 Mar 2019 23:46:49 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Mickael Guene <mickael.guene@st.com>
-Cc:     linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 14057200C3;
+        Sat, 16 Mar 2019 22:59:46 +0100 (CET)
+Date:   Sat, 16 Mar 2019 22:59:44 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: Document MIPID02 bindings
-Message-ID: <20190316214649.co63p5arhiwbuv3g@valkosipuli.retiisi.org.uk>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1552373045-134493-2-git-send-email-mickael.guene@st.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 3/3] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
+Message-ID: <20190316215944.GB11309@ravnborg.org>
+References: <20190315170701.29670-1-paul@crapouillou.net>
+ <20190315170701.29670-3-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552373045-134493-2-git-send-email-mickael.guene@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190315170701.29670-3-paul@crapouillou.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
+        a=p6pI0oa4AAAA:8 a=3iZPsmZ1dwio5CCrdjoA:9 a=CjuIK1q_8ugA:10
+        a=9LHmKk7ezEChjTCyhBa9:22 a=9cw2y2bKwytFd151gpuR:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mickael,
+Hi Paul.
 
-Thanks for the patchset.
+Thanks for the v2 submission.
 
-On Tue, Mar 12, 2019 at 07:44:03AM +0100, Mickael Guene wrote:
-> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
-> bridge.
+Did you analyze the possibility to utilize drm_simple_display_pipe_init()
+and the related infrastructure?
+If this fits it should simplify the driver.
+If it does not fit please let us know why.
+As this is a one crtc / one connector / one panel the drm_simple_*
+infrastructure is supposed to be a good fit.
+
+Some smaller comments in the following.
+Most are suggestion, do not follow these blindly.
+
+	Sam
+
+> Add a KMS driver for the Ingenic JZ47xx family of SoCs.
+> This driver is meant to replace the aging jz4740-fb driver.
 > 
-> Signed-off-by: Mickael Guene <mickael.guene@st.com>
-> ---
-> 
->  .../bindings/media/i2c/st,st-mipid02.txt           | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
-> new file mode 100644
-> index 0000000..a1855da
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
-> @@ -0,0 +1,69 @@
-> +STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+
+> +struct ingenic_drm {
+> +	struct device *dev;
+> +	void __iomem *base;
+> +	struct regmap *map;
+> +	struct clk *lcd_clk, *pix_clk;
 > +
-> +MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
-> +time. Active port input stream will be de-serialized and its content outputted
-> +through PARALLEL output port.
-> +CSI-2 first input port is a dual lane 800Mbps whereas CSI-2 second input port is
-
-800 Mbps per lane (or total)?
-
-> +a single lane 800Mbps. Both ports support clock and data lane polarity swap.
-> +First port also supports data lane swap.
-> +PARALLEL output port has a maximum width of 12 bits.
-> +Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
-> +YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
+> +	u32 lcd_mode;
 > +
-> +Required Properties:
-> +- compatible: should be "st,st-mipid02"
-> +- clocks: reference to the xclk input clock.
-> +- clock-names: should be "xclk".
-> +- VDDE-supply: sensor digital IO supply. Must be 1.8 volts.
-> +- VDDIN-supply: sensor internal regulator supply. Must be 1.8 volts.
+> +	struct ingenic_dma_hwdesc *framedesc;
 
-Perhaps Rob can confirm, but AFAIR the custom is to use lower case letters.
+Consider the name "dma_hwdesc" for this.
+The struct is named so, which give a good indication
+this is a more descriptive name.
+
+That said, the current solution looks much cleaner than the
+previous one.
+
+> +	dma_addr_t framedesc_phys;
+Likewise.
+
 
 > +
-> +Optional Properties:
-> +- reset-gpios: reference to the GPIO connected to the xsdn pin, if any.
-> +	       This is an active low signal to the mipid02.
-> +
-> +Required subnodes:
-> +  - ports: A ports node with one port child node per device input and output
-> +	   port, in accordance with the video interface bindings defined in
-> +	   Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> +	   port nodes are numbered as follows:
-> +
-> +	   Port Description
-> +	   -----------------------------
-> +	   0    CSI-2 first input port
-> +	   1    CSI-2 second input port
-> +	   2    PARALLEL output
+> +	struct drm_device *drm;
+If drm is embedded you can use devm_drm_dev_init()
+recently added to drm-misc.
 
-Please document which endpoint properties are relevant. From the above
-description I'd presume this to be at least clock-lanes (1st input),
-data-lanes, lane-polarities (for CSI-2) as well as bus-width for the
-parallel bus.
+See the very nice example in drivers/gu/drm/drm_drv.c
+(only in drm-misc-next for now)
 
-> +
-> +Example:
-> +
-> +mipid02: mipid02@14 {
-
-The node should be a generic name. "csi2rx" is used by a few devices now.
-
-> +	compatible = "st,st-mipid02";
-> +	reg = <0x14>;
-> +	status = "okay";
-> +	clocks = <&clk_ext_camera_12>;
-> +	clock-names = "xclk";
-> +	VDDE-supply = <&vdd>;
-> +	VDDIN-supply = <&vdd>;
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +
-> +			ep0: endpoint {
-> +				clock-lanes = <0>;
-> +				data-lanes = <1 2>;
-> +				remote-endpoint = <&mipi_csi2_in>;
-> +			};
-> +		};
-> +		port@2 {
-> +			reg = <2>;
-> +
-> +			ep2: endpoint {
-> +				bus-width = <8>;
-> +				hsync-active = <0>;
-> +				vsync-active = <0>;
-> +				remote-endpoint = <&parallel_out>;
-> +			};
-> +		};
-> +	};
+> +	struct drm_plane primary;
+> +	struct drm_crtc crtc;
+> +	struct drm_encoder encoder;
 > +};
+> +
+> +
+> +static int ingenic_drm_probe(struct platform_device *pdev)
+> +{
+> +	const struct jz_soc_info *soc_info;
+> +	struct device *dev = &pdev->dev;
+> +	struct ingenic_drm *priv;
+> +	struct clk *parent_clk;
+> +	struct drm_bridge *bridge;
+> +	struct drm_panel *panel;
+> +	struct drm_device *drm;
+> +	struct resource *mem;
+> +	void __iomem *base;
+> +	long parent_rate;
+> +	int ret, irq;
+> +
+> +	soc_info = device_get_match_data(dev);
+Everyone else uses of_device_... here. You should most
+likely do the same.
 
--- 
-Kind regards,
+> +	if (!soc_info)
+> +		return -EINVAL;
+Also, consider to print an error here.
 
-Sakari Ailus
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+Use of devm_kzalloc() here is not good. See driver example in drm_drv.c
+
+> +
+> +	priv->dev = dev;
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base = base = devm_ioremap_resource(dev, mem);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(dev, "Failed to get platform irq\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	priv->map = devm_regmap_init_mmio(dev, base,
+> +					  &ingenic_drm_regmap_config);
+> +	if (IS_ERR(priv->map)) {
+> +		dev_err(dev, "Failed to create regmap\n");
+> +		return PTR_ERR(priv->map);
+> +	}
+> +
+> +	if (soc_info->needs_dev_clk) {
+> +		priv->lcd_clk = devm_clk_get(dev, "lcd");
+> +		if (IS_ERR(priv->lcd_clk)) {
+> +			dev_err(dev, "Failed to get lcd clock\n");
+> +			return PTR_ERR(priv->lcd_clk);
+> +		}
+> +	}
+> +
+> +	priv->pix_clk = devm_clk_get(dev, "lcd_pclk");
+> +	if (IS_ERR(priv->pix_clk)) {
+> +		dev_err(dev, "Failed to get pixel clock\n");
+> +		return PTR_ERR(priv->pix_clk);
+> +	}
+> +
+> +	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0, &panel, &bridge);
+> +	if (ret) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "Failed to get panel handle\n");
+> +		return ret;
+> +	}
+> +
+> +	if (panel) {
+> +		bridge = devm_drm_panel_bridge_add(dev, panel,
+> +						   DRM_MODE_CONNECTOR_Unknown);
+> +	}
+> +
+> +	device_property_read_u32(dev, "ingenic,lcd-mode", &priv->lcd_mode);
+> +
+> +	priv->framedesc = dma_alloc_coherent(dev, sizeof(*priv->framedesc),
+> +					     &priv->framedesc_phys, GFP_KERNEL);
+> +	if (!priv->framedesc)
+> +		return -ENOMEM;
+> +
+> +	priv->framedesc->next = priv->framedesc_phys;
+> +	priv->framedesc->id = 0xdeafbead;
+> +
+> +	drm = drm_dev_alloc(&ingenic_drm_driver_data, dev);
+> +	if (IS_ERR(drm)) {
+> +		ret = PTR_ERR(drm);
+> +		goto err_free_dma;
+> +	}
+> +
+> +	priv->drm = drm;
+> +
+> +	drm_mode_config_init(drm);
+> +	drm->mode_config.min_width = 0;
+> +	drm->mode_config.min_height = 0;
+> +	drm->mode_config.max_width = 800;
+> +	drm->mode_config.max_height = 600;
+> +	drm->mode_config.funcs = &ingenic_drm_mode_config_funcs;
+> +
+> +	drm_plane_helper_add(&priv->primary, &ingenic_drm_plane_helper_funcs);
+> +
+> +	ret = drm_universal_plane_init(drm, &priv->primary,
+> +				       0, &ingenic_drm_primary_plane_funcs,
+> +				       ingenic_drm_primary_formats,
+> +				       ARRAY_SIZE(ingenic_drm_primary_formats),
+> +				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to register primary plane: %i\n", ret);
+> +		goto err_unref_drm;
+> +	}
+> +
+> +	drm_crtc_helper_add(&priv->crtc, &ingenic_drm_crtc_helper_funcs);
+> +
+> +	ret = drm_crtc_init_with_planes(drm, &priv->crtc, &priv->primary,
+> +					NULL, &ingenic_drm_crtc_funcs, NULL);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to init CRTC: %i\n", ret);
+> +		goto err_cleanup_plane;
+> +	}
+> +
+> +	priv->encoder.possible_crtcs = 1;
+> +
+> +	drm_encoder_helper_add(&priv->encoder,
+> +			       &ingenic_drm_encoder_helper_funcs);
+> +
+> +	ret = drm_encoder_init(drm, &priv->encoder, &ingenic_drm_encoder_funcs,
+> +			       DRM_MODE_ENCODER_DPI, NULL);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to init encoder: %i\n", ret);
+> +		goto err_cleanup_crtc;
+> +	}
+> +
+> +	ret = drm_bridge_attach(&priv->encoder, bridge, NULL);
+> +	if (ret) {
+> +		dev_err(dev, "Unable to attach bridge\n");
+> +		goto err_cleanup_encoder;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, drm);
+> +	priv->drm = drm;
+> +	drm->dev_private = priv;
+> +
+> +	ret = drm_irq_install(drm, irq);
+> +	if (ret) {
+> +		dev_err(dev, "Unable to install IRQ handler\n");
+> +		goto err_cleanup_encoder;
+> +	}
+> +
+> +	ret = drm_vblank_init(drm, 1);
+> +	if (ret) {
+> +		dev_err(dev, "Failed calling drm_vblank_init()\n");
+> +		goto err_uninstall_irq;
+> +	}
+> +
+> +	drm_mode_config_reset(drm);
+> +
+> +	ret = clk_prepare_enable(priv->pix_clk);
+> +	if (ret) {
+> +		dev_err(dev, "Unable to start pixel clock\n");
+> +		goto err_uninstall_irq;
+> +	}
+> +
+> +	if (priv->lcd_clk) {
+> +		parent_clk = clk_get_parent(priv->lcd_clk);
+> +		parent_rate = clk_get_rate(parent_clk);
+> +
+> +		/* LCD Device clock must be 3x the pixel clock for STN panels,
+> +		 * or 1.5x the pixel clock for TFT panels. To avoid having to
+> +		 * check for the LCD device clock everytime we do a mode change,
+> +		 * we set the LCD device clock to the highest rate possible.
+> +		 */
+> +		ret = clk_set_rate(priv->lcd_clk, parent_rate);
+> +		if (ret) {
+> +			dev_err(dev, "Unable to set LCD clock rate\n");
+> +			goto err_pixclk_disable;
+> +		}
+> +
+> +		ret = clk_prepare_enable(priv->lcd_clk);
+> +		if (ret) {
+> +			dev_err(dev, "Unable to start lcd clock\n");
+> +			goto err_pixclk_disable;
+> +		}
+> +	}
+> +
+> +	ret = drm_fbdev_generic_setup(drm, 16);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to init fbdev\n");
+> +		goto err_devclk_disable;
+> +	}
+fbdev is usually considered an optionl feature that do not prevent
+the display driver from loading.
+Consider what to do in the error case.
+
