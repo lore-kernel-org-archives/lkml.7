@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CF6C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39747C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28996218D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EE921903
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="h9uX+Bdx"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="h/+FCESL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfCPOcC (ORCPT
+        id S1726902AbfCPOfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:32:02 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54521 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfCPOcC (ORCPT
+        Sat, 16 Mar 2019 10:35:14 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54694 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfCPOfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:32:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f3so9172836wmj.4
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:32:00 -0700 (PDT)
+        Sat, 16 Mar 2019 10:35:13 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f3so9176880wmj.4
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:35:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:from:user-agent:mime-version:to:cc:subject
          :references:in-reply-to:content-transfer-encoding;
-        bh=uM5tAop2OPme9hYP9yOk1ThL7VG9jv/gw/8ehbY3v+0=;
-        b=h9uX+BdxjoBkxFziaWqySYh6fRZsJlA852PPY82irYq7hzjQnIyK9wWa+Qj2krbUa+
-         HZ4lTCsBaSFRUdZYj8LUArrvAVMEgIEjWnwJWsXiWUMFlSg8H3qZHQhfrpddO8kzpGWn
-         poh/6KjTH2rQEFJguqhkvQLSDQWt3sBda14JdIJPOS/cQI6fIe1YadTf4MaiiUuWAcRf
-         9CQbJ/ZRZ/bD7f+rwtXe1mXKfBJE7alzAm4nChIL9UEvSK4mT7V0bkFBRiETMWJ+racq
-         P+GhBSIB52rHENgQv7bSpizHjLF8gOAORk2MnkAfB4Vu8DOO4jSR6VcPoiT4fQJheJOq
-         lncA==
+        bh=WloqzDk5QBr/exoYt0fG/wnmKnIxkG14sEVgXfCaA2U=;
+        b=h/+FCESLMYQLtDeMG5i68TXSjeayX/ywB7KM8bWoOk0oqxM8WZgvO5SjckV80OD0UC
+         Erq88lRf5vOiQNZ8eZFdPHHargknyi3RJ17a8B1wannYvw3fD+hKeGzuUraYO3j5h5Y0
+         5++CvtwnyWjwGk6Ft7lbK910XoP/JzLYC7F1WW1wYPyFSxh0LRwbR30/1HzHtF9Sgl8i
+         iTkJ9GyQvOxZaX0YWaCa1VFA+mRRltBv08OX47r2Q0KnjZJmFQ2t7TCB3bVx7EkUCOxH
+         X+5iJXMoMxp/HeouuYiqMe5KN3/VXNjh5hJWN30bsnpsLVa4r8r9XczzmPPVTHv34rmf
+         Oqsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
          :cc:subject:references:in-reply-to:content-transfer-encoding;
-        bh=uM5tAop2OPme9hYP9yOk1ThL7VG9jv/gw/8ehbY3v+0=;
-        b=GE8f5ODub+7Umb1iGTTMVa8WD2iMAi8HIq9Fd+xQYH9rFbCBc3RDNFKhug9u3Rp0L+
-         WYVHmp0KRdgNLzAbqU+DJfjqLkFxSsuilhxjN6PQl3/2Tvq4z5RPHREKNCuRpWanvfBL
-         Q2wsYoM/o+YhSJwshE1i9NuouGn5MADTKWYYJaw39zkPkWk48+i0cs5tz3uQZV+UiXBO
-         I46MHdA27dTw6UVl8k8xUPqUVT5y/GMnGFciKdhyAiOuK+AutosY2JAgaLQVcZeV2k7V
-         h5qGt86HiglvukTxyJZ9ZGTfx6MLgwp4AT5dF9MWx90iJCVhN05VLG975ILXchUQfhT0
-         +i8Q==
-X-Gm-Message-State: APjAAAWwQP8H38jIXmUNyNRdvVpWHwZFmu9sf9Pg+bDa9qWbMJBi3/11
-        kKBgUf9CuAX5f0Ahv40xNhgDSA==
-X-Google-Smtp-Source: APXvYqwugntDU0EKeDzg2jT28P8NnpFuKq84eqFRZtXH3UBU07CUE71aHZrqRywZIttnXkpvk3AVqA==
-X-Received: by 2002:a1c:7a1a:: with SMTP id v26mr5261549wmc.129.1552746719636;
-        Sat, 16 Mar 2019 07:31:59 -0700 (PDT)
+        bh=WloqzDk5QBr/exoYt0fG/wnmKnIxkG14sEVgXfCaA2U=;
+        b=gCGOEcfVbu6o/Hh63DCezxTlfkfd6Dsw3ChMTuQrjYjA72QhGjb8pUCG3IHPRhe2tH
+         hBjwD1dpXWdv/+Hrku3eBryI1X2siAmEke/8r+9CUNmHwQE76paFs3AzBSe7nfBYK2hE
+         r1/aEe8eNx2rredkzkxH3IHix288HOgynVWY4edRHbJbxCoQ1TpjFoBd4nUwGjO37vN0
+         NVZz9Vx9gKQtGMWF7XrtvZKWprMjVGdZecORg0Qizpo5UaIulPWdeRyHDxzNC95BW5Nj
+         yAGpUnlBsz5MXdfOsGyhrO1vlh5Ij/uyPxvoiNW8V1WQMuHQl4TWQnMPYkYAYODi2FJD
+         6G0w==
+X-Gm-Message-State: APjAAAWHBKOn2aQeZPlxUAb0Nzp0DBEOuXbO3Z2y05wIAapgf6BmOkEp
+        vGdcpk+eSBH6gLFryKgAykOHh5EoHOUCeg==
+X-Google-Smtp-Source: APXvYqzBN0lYQVGGuZ/3US6K/t7o1QAOoodGL+SelzbUA3jAKA1ETTZSJIg3ID6HTwtSWqrHmrCz2A==
+X-Received: by 2002:a1c:ed03:: with SMTP id l3mr5596862wmh.28.1552746910763;
+        Sat, 16 Mar 2019 07:35:10 -0700 (PDT)
 Received: from [192.168.1.77] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id f10sm3245827wml.23.2019.03.16.07.31.58
+        by smtp.gmail.com with ESMTPSA id c21sm7058420wre.35.2019.03.16.07.35.09
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 16 Mar 2019 07:31:58 -0700 (PDT)
-Message-ID: <5C8D08DE.7070203@baylibre.com>
-Date:   Sat, 16 Mar 2019 15:31:58 +0100
+        Sat, 16 Mar 2019 07:35:10 -0700 (PDT)
+Message-ID: <5C8D099D.5020206@baylibre.com>
+Date:   Sat, 16 Mar 2019 15:35:09 +0100
 From:   Neil Armstrong <narmstrong@baylibre.com>
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:24.0) Gecko/20100101 Thunderbird/24.6.0
 MIME-Version: 1.0
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 CC:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/9] arm64: dts: meson: g12a: add reset controller
-References: <20190307151342.7381-1-narmstrong@baylibre.com> <20190307151342.7381-6-narmstrong@baylibre.com> <CAFBinCBt290Qabw98SpiON3xG0ihMEDNzwDDTrBo6QYbA5QjMQ@mail.gmail.com>
-In-Reply-To: <CAFBinCBt290Qabw98SpiON3xG0ihMEDNzwDDTrBo6QYbA5QjMQ@mail.gmail.com>
+Subject: Re: [PATCH 6/9] arm64: dts: meson: g12a: Add UART A, B & C nodes
+ and pins
+References: <20190307151342.7381-1-narmstrong@baylibre.com> <20190307151342.7381-7-narmstrong@baylibre.com> <CAFBinCAa+ZjxJi491_dG+kvLFPLFoLXHFZToGP8W1ECeeqOYVQ@mail.gmail.com>
+In-Reply-To: <CAFBinCAa+ZjxJi491_dG+kvLFPLFoLXHFZToGP8W1ECeeqOYVQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,66 +77,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 15/03/2019 22:31, Martin Blumenstingl a écrit :
-> Hi Neil and Jerome,
+Le 15/03/2019 22:24, Martin Blumenstingl a écrit :
+> Hi Neil,
 > 
-> On Thu, Mar 7, 2019 at 4:14 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On Thu, Mar 7, 2019 at 4:15 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> From: Jerome Brunet <jbrunet@baylibre.com>
->>
->> Add the reset controller device of g12a SoC family
->>
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> This patch adds the 2 UART nodes in the EE power domain with the corresponding
+>> pinctrl nodes.
+> there are 3 UART controllers in the EE power domain
+
+Good catch !
+
+> 
 >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 >> ---
->>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 7 +++++++
->>  1 file changed, 7 insertions(+)
+>>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 82 +++++++++++++++++++++
+>>  1 file changed, 82 insertions(+)
 >>
 >> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
->> index f8f055c49f9a..2a700bb45d04 100644
+>> index 2a700bb45d04..50e2cd36e08b 100644
 >> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
 >> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
->> @@ -245,6 +245,13 @@
->>                         #size-cells = <2>;
->>                         ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x100000>;
->>
->> +                       reset: reset-controller@1004 {
->> +                               compatible = "amlogic,meson-g12a-reset",
->> +                                            "amlogic,meson-axg-reset";
->> +                               reg = <0x0 0x1004 0x0 0x9c>;
->> +                               #reset-cells = <1>;
->> +                       };
-> I tried to compare this with what is publicly available in
-> buildroot_openlinux_kernel_4.9_fbdev_20180706 - unfortunately this is
-> harder than I thought:
-> the buildroot kernel doesn't define the reset controller in mesong12a.dtsi
-> 
-> so I tried to follow the code in the HDMITX driver instead:
-> kernel/aml-4.9/drivers/amlogic/media/vout/hdmitx/hdmi_tx_20/hw/hw_txlx.c
-> uses P_RESET0_REGISTER and P_RESET2_REGISTER
-> these are defined in
-> kernel/aml-4.9/drivers/amlogic/media/vout/hdmitx/hdmi_tx_20/hw/txlx_reg.h
-> using:
->> #define RESET_CBUS_REG_IDX 5
->> #define BASE_REG_OFFSET 24
->> #define RESET_CBUS_REG_ADDR(reg) \
->>    ((RESET_CBUS_REG_IDX << BASE_REG_OFFSET) + (reg << 2))
->>
->> #define RESET0_REGISTER 0x01
->> #define P_RESET0_REGISTER RESET_CBUS_REG_ADDR(RESET0_REGISTER)
-> 
-> when I do the maths:
-> (5 << 24) + (0x01 << 2) = 0x5000004
-> 
-> The GX SoCs have the reset controller at cbus + 0x4404
-> however, the offset may have changed in G12A because the SAR ADC
-> offset also changed (just one example).
-> 
-> Do you have any hint how to verify the CBUS offset (0x1004) of the
-> reset controller?
+>> @@ -113,6 +113,61 @@
+>>                                                 #gpio-cells = <2>;
+>>                                                 gpio-ranges = <&periphs_pinctrl 0 0 86>;
+>>                                         };
+>> +
+>> +                                       uart_a_pins: uart_a {
+> (this applies to all new nodes)
+> we started using dashes for the node names for new pin definitions on
+> the GX SoCs.
+> I don't remember where it was discussed exactly but I think this was
+> requested from Rob
 
-You can find base the address found in the G12A DT for the usb2 phy :
-https://github.com/hardkernel/linux/blob/odroidn2-4.9.y/arch/arm64/boot/dts/amlogic/mesong12a.dtsi#L379
+Yes I remember, will fix
+
+> 
+> since G12A is a new SoC we should do it "right" from the beginning
+> 
+> [...]
+>> +                                       uart_ao_a_c_pins: uart_ao_a_c {
+>> +                                               mux {
+>> +                                                       groups = "uart_ao_a_rx_c",
+>> +                                                                "uart_ao_a_tx_c";
+>> +                                                       function = "uart_ao_a_c";
+>> +                                                       bias-disable;
+>> +                                               };
+>> +                                       };
+> I'm fine with this part if you mention it in the subject and/or the description
+> uart_ao_a_c routes two pins from bank C (from the EE domain) to the
+> uart_AO controller (from the AO domain)
+
+Not sure DT is the right place for that, I think I'll remove this until
+we have it actually used somewhere.
+
+> 
+>> +                                       uart_b_pins: uart_b {
+>> +                                               mux {
+>> +                                                       groups = "uart_b_tx",
+>> +                                                                "uart_b_rx";
+>> +                                                       function = "uart_b";
+>> +                                                       bias-disable;
+>> +                                               };
+>> +                                       };
+>> +
+>> +                                       uart_c_pins: uart_c {
+>> +                                               mux {
+>> +                                                       groups = "uart_c_tx",
+>> +                                                                "uart_c_rx";
+>> +                                                       function = "uart_c";
+>> +                                                       bias-disable;
+>> +                                               };
+>> +                                       };
+>> +
+>> +                                       uart_c_cts_rts_pins: uart_c_cts_rts {
+>> +                                               mux {
+>> +                                                       groups = "uart_c_cts",
+>> +                                                                "uart_c_rts";
+>> +                                                       function = "uart_c";
+>> +                                                       bias-disable;
+>> +                                               };
+>> +                                       };
+>> +                               };
+>>                         };
+>>
+>>                         hiu: bus@3c000 {
+>> @@ -256,6 +311,33 @@
+>>                                 compatible = "amlogic,meson-g12a-clk-measure";
+>>                                 reg = <0x0 0x18000 0x0 0x10>;
+>>                         };
+>> +
+>> +                       uart_C: serial@22000 {
+>> +                               compatible = "amlogic,meson-gx-uart";
+>> +                               reg = <0x0 0x22000 0x0 0x18>;
+>> +                               interrupts = <GIC_SPI 93 IRQ_TYPE_EDGE_RISING>;
+>> +                               clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
+> does uart_C really use CLKID_UART1? on GX uart_C uses CLKID_UART2
+
+It seems so :
+https://github.com/hardkernel/linux/blob/odroidn2-4.9.y/arch/arm64/boot/dts/amlogic/mesong12a.dtsi#L1020
 
 Neil
 
