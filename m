@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6194DC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D31C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3184A218FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CFA5218E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 08:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8UfYnxh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+84NVUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfCPIHF (ORCPT
+        id S1727124AbfCPIHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 04:07:05 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38534 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfCPIHE (ORCPT
+        Sat, 16 Mar 2019 04:07:12 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40395 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfCPIHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 04:07:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id v1so3300604pgi.5;
-        Sat, 16 Mar 2019 01:07:03 -0700 (PDT)
+        Sat, 16 Mar 2019 04:07:10 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y124so7904089pfy.7;
+        Sat, 16 Mar 2019 01:07:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fCZjpID9xjv4D6CAOc6jRaR7J2FLx5TBiszJf1ttI7o=;
-        b=n8UfYnxhGWyxnpFCfuA5/m8i9H6q8eENB6Wv41l1U7by9W0trzwJI2sLomJRFre5um
-         1RmR05aJZF/s1MdlEv75TqJg8zKWZa1rmOcJHKeIQ5t6uN/KoEFscS3Z6FUB1+e7C4R7
-         M5hqUsynchcJfIRI7g9ndRR3iZ1jXIxP+l2HOjMJdIuU8HK/KJP0ZCOHNCYQ5fj42gQ9
-         q7anQABOe6Hwu8aPdmCfbGLJNgYdGpbFGLZF3haRK/mJQFKWqI4whsoDKzhnRUYynS5f
-         RZNjZQgKohzpwzFRy1NHU1lDHaA33Hg7BsH8WT/BqkNRFuqd9tWIE3bSqVWoiqmgYAQ4
-         W1fw==
+        bh=A6gvYp1N3jcgSFOabUpRlyP0f9TBpeTrmooFa8GaB1Q=;
+        b=E+84NVUvbWdq2nP8esUw4ENPMHhdrPp1lDhRDDSVMuVG5QnMih4o9PSYKQe37ovQXp
+         t96qouIoKpzti7QKx74lBQcJ6/RoLI4XPgFclxxQzC589/XgU+c8wwu/In6XDg1svZRb
+         pGzZ8jAR64rxPKDy+Wips8GjFeNzhOpq9nR/q2J6N/ulR3BmAADAQbXFXrBsk8fqz5sQ
+         0WFXy/+pXV7X82nGq5lvKo4y0bNdaeNXCl9ezxeN8w9ADVANzyqjMotnyo9PQNPhBPWx
+         rnFsJhl36KnEEt9d3K/uMML8vjRn8NqgV9VmM24RAeO1hifONn/p5wchWq40cZ9BomOx
+         pfvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fCZjpID9xjv4D6CAOc6jRaR7J2FLx5TBiszJf1ttI7o=;
-        b=hGEtMJmF6m4LhWTZYRKN7/Qf4PWN94AeEPPK9RTIeDgsOjMMdK+/6hh3WWXgd/A8oA
-         srJET8zsc1Mf+6txM50qSLdpsWABFPuwX32C2XHG/yliKxehqOn6cghXO5WuWczqg50L
-         GKJFWGggGZGRXqTnp3ndQWZsE0OaNCOK5zoxhjZOon/TH9rhJcg7OSGUKotZPcDb5gOp
-         VbniugEc1ezCIPfVF58NLhJ3UWGI4H6quqOcH6CEIuNkKZru0G48YE2HZWYOOm1hH1wO
-         5AnD9F08XqxhOpOubzYhcWo3jrFxwNM76TCQJt8FV33cNWk6Ojs7Hr19SGn3TvsRpjlb
-         hagw==
-X-Gm-Message-State: APjAAAXh4OeH9zuH6wRfNq+gxIXSkbgJ9/foDgjaBQpfOsDrOgoVTCA3
-        asp5JDldbGWN2Gr6Rb3sIx4=
-X-Google-Smtp-Source: APXvYqzMpE2maRWdi2dyA8KanZWvQJCvJt7yYqMYwYi8jafTZPgTBRn0HRIrSsjjZ4rGviNr9hMBwg==
-X-Received: by 2002:a63:2146:: with SMTP id s6mr6576153pgm.192.1552723623449;
-        Sat, 16 Mar 2019 01:07:03 -0700 (PDT)
+        bh=A6gvYp1N3jcgSFOabUpRlyP0f9TBpeTrmooFa8GaB1Q=;
+        b=i1mXsFjLQbpc8OdohtnLrR7d5wP1kbVTlocKINUZmRCWbPfMGzhjqCwIFPGYz4uc44
+         L0cb7NnULtC56AXfk3WCir7TpTSEsTAwThFDzbU7SfN9H+LVDl7QxkgCyc03QLdzff1k
+         9Q4cC3mv1O0iaUEpPot0QC98CxzheOgvmA1D1lfU8fQBSGzojD5FtA4Hikpw1agIhk/C
+         Q43as6Apkpaj8wadk7XH1nGMkuNGC2iXYCIqFJb/wcgm8c/X+fWCAUgAgvc145QJI+jI
+         JWOMH7/EOf7cf5/UhAELyarnEtw2N3DUf2r7wV8N9fjfPHMfINOnFnGgldDM4aZq7sFv
+         oM5w==
+X-Gm-Message-State: APjAAAUYZsQpEo6lYL9QNZh6B688MOtxJ+Lb5u+JiFS9jss2h6PN/jlG
+        0dcXodjcIb5SpHQAdp5xWPM=
+X-Google-Smtp-Source: APXvYqzPmt9hNJUIJPE94+CuJfHtLj88lQApaWksY1VvyVfkWOKnMQfX0h8uqPIr5x8NHfeS9vMOvw==
+X-Received: by 2002:a17:902:7e0f:: with SMTP id b15mr8268857plm.124.1552723629321;
+        Sat, 16 Mar 2019 01:07:09 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id y14sm10690975pgs.47.2019.03.16.01.06.58
+        by smtp.gmail.com with ESMTPSA id y14sm10690975pgs.47.2019.03.16.01.07.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 16 Mar 2019 01:07:02 -0700 (PDT)
+        Sat, 16 Mar 2019 01:07:08 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>
@@ -65,9 +65,9 @@ Cc:     namhyung@kernel.org, Ingo Molnar <mingo@redhat.com>,
         Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 06/16] perf: fix memory leak in print_sdt_events()
-Date:   Sat, 16 Mar 2019 16:05:46 +0800
-Message-Id: <20190316080556.3075-7-changbin.du@gmail.com>
+Subject: [PATCH 07/16] perf: top: fix heap-use-after-free issue
+Date:   Sat, 16 Mar 2019 16:05:47 +0800
+Message-Id: <20190316080556.3075-8-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190316080556.3075-1-changbin.du@gmail.com>
 References: <20190316080556.3075-1-changbin.du@gmail.com>
@@ -78,48 +78,196 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Direct leak of 4356 byte(s) in 120 object(s) allocated from:
-    #0 0x7ff1a2b5a070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
-    #1 0x55719aef4814 in build_id_cache__origname util/build-id.c:215
-    #2 0x55719af649b6 in print_sdt_events util/parse-events.c:2339
-    #3 0x55719af66272 in print_events util/parse-events.c:2542
-    #4 0x55719ad1ecaa in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-    #5 0x55719aec745d in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-    #6 0x55719aec7d1a in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-    #7 0x55719aec8184 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-    #8 0x55719aeca41a in main /home/changbin/work/linux/tools/perf/perf.c:520
-    #9 0x7ff1a07ae09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+The evlist should be destroyed before the perf session.
+
+=================================================================
+==27350==ERROR: AddressSanitizer: heap-use-after-free on address 0x62b000002e38 at pc 0x5611da276999 bp 0x7ffce8f1d1a0 sp 0x7ffce8f1d190
+WRITE of size 8 at 0x62b000002e38 thread T0
+    #0 0x5611da276998 in __list_del /home/work/linux/tools/include/linux/list.h:89
+    #1 0x5611da276d4a in __list_del_entry /home/work/linux/tools/include/linux/list.h:102
+    #2 0x5611da276e77 in list_del_init /home/work/linux/tools/include/linux/list.h:145
+    #3 0x5611da2781cd in thread__put util/thread.c:130
+    #4 0x5611da2cc0a8 in __thread__zput util/thread.h:68
+    #5 0x5611da2d2dcb in hist_entry__delete util/hist.c:1148
+    #6 0x5611da2cdf91 in hists__delete_entry util/hist.c:337
+    #7 0x5611da2ce19e in hists__delete_entries util/hist.c:365
+    #8 0x5611da2db2ab in hists__delete_all_entries util/hist.c:2639
+    #9 0x5611da2db325 in hists_evsel__exit util/hist.c:2651
+    #10 0x5611da1c5352 in perf_evsel__exit util/evsel.c:1304
+    #11 0x5611da1c5390 in perf_evsel__delete util/evsel.c:1309
+    #12 0x5611da1b35f0 in perf_evlist__purge util/evlist.c:124
+    #13 0x5611da1b38e2 in perf_evlist__delete util/evlist.c:148
+    #14 0x5611da069781 in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1645
+    #15 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+    #16 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+    #17 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+    #18 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+    #19 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+    #20 0x5611d9ff35c9 in _start (/home/work/linux/tools/perf/perf+0x3e95c9)
+
+0x62b000002e38 is located 11320 bytes inside of 27448-byte region [0x62b000000200,0x62b000006d38)
+freed by thread T0 here:
+    #0 0x7fdccb04ab70 in free (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedb70)
+    #1 0x5611da260df4 in perf_session__delete util/session.c:201
+    #2 0x5611da063de5 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1300
+    #3 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
+    #4 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+    #5 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+    #6 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+    #7 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+    #8 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+
+previously allocated by thread T0 here:
+    #0 0x7fdccb04b138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+    #1 0x5611da26010c in zalloc util/util.h:23
+    #2 0x5611da260824 in perf_session__new util/session.c:118
+    #3 0x5611da0633a6 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1192
+    #4 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
+    #5 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+    #6 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+    #7 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+    #8 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+    #9 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+
+SUMMARY: AddressSanitizer: heap-use-after-free /home/work/linux/tools/include/linux/list.h:89 in __list_del
+Shadow bytes around the buggy address:
+  0x0c567fff8570: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c567fff8580: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c567fff8590: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c567fff85a0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c567fff85b0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+=>0x0c567fff85c0: fd fd fd fd fd fd fd[fd]fd fd fd fd fd fd fd fd
+  0x0c567fff85d0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c567fff85e0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c567fff85f0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c567fff8600: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c567fff8610: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==27350==ABORTING
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- tools/perf/util/build-id.c     | 1 +
- tools/perf/util/parse-events.c | 1 +
- 2 files changed, 2 insertions(+)
+ tools/perf/builtin-top.c | 42 ++++++++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index bff0d17920ed..0c5517a8d0b7 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -185,6 +185,7 @@ char *build_id_cache__linkname(const char *sbuild_id, char *bf, size_t size)
- 	return bf;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 231a90daa958..614f278235fa 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1189,23 +1189,19 @@ static int __cmd_top(struct perf_top *top)
+ 	pthread_t thread, thread_process;
+ 	int ret;
+ 
+-	top->session = perf_session__new(NULL, false, NULL);
+-	if (top->session == NULL)
+-		return -1;
+-
+ 	if (!top->annotation_opts.objdump_path) {
+ 		ret = perf_env__lookup_objdump(&top->session->header.env,
+ 					       &top->annotation_opts.objdump_path);
+ 		if (ret)
+-			goto out_delete;
++			return ret;
+ 	}
+ 
+ 	ret = callchain_param__setup_sample_type(&callchain_param);
+ 	if (ret)
+-		goto out_delete;
++		return ret;
+ 
+ 	if (perf_session__register_idle_thread(top->session) < 0)
+-		goto out_delete;
++		return ret;
+ 
+ 	if (top->nr_threads_synthesize > 1)
+ 		perf_set_multithreaded();
+@@ -1227,13 +1223,18 @@ static int __cmd_top(struct perf_top *top)
+ 
+ 	if (perf_hpp_list.socket) {
+ 		ret = perf_env__read_cpu_topology_map(&perf_env);
+-		if (ret < 0)
+-			goto out_err_cpu_topo;
++		if (ret < 0) {
++			char errbuf[BUFSIZ];
++			const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
++
++			ui__error("Could not read the CPU topology map: %s\n", err);
++			return ret;
++		}
+ 	}
+ 
+ 	ret = perf_top__start_counters(top);
+ 	if (ret)
+-		goto out_delete;
++		return ret;
+ 
+ 	top->session->evlist = top->evlist;
+ 	perf_session__set_id_hdr_size(top->session);
+@@ -1252,7 +1253,7 @@ static int __cmd_top(struct perf_top *top)
+ 	ret = -1;
+ 	if (pthread_create(&thread_process, NULL, process_thread, top)) {
+ 		ui__error("Could not create process thread.\n");
+-		goto out_delete;
++		return ret;
+ 	}
+ 
+ 	if (pthread_create(&thread, NULL, (use_browser > 0 ? display_thread_tui :
+@@ -1296,19 +1297,7 @@ static int __cmd_top(struct perf_top *top)
+ out_join_thread:
+ 	pthread_cond_signal(&top->qe.cond);
+ 	pthread_join(thread_process, NULL);
+-out_delete:
+-	perf_session__delete(top->session);
+-	top->session = NULL;
+-
+ 	return ret;
+-
+-out_err_cpu_topo: {
+-	char errbuf[BUFSIZ];
+-	const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
+-
+-	ui__error("Could not read the CPU topology map: %s\n", err);
+-	goto out_delete;
+-}
  }
  
-+/* The caller is responsible to free the returned buffer. */
- char *build_id_cache__origname(const char *sbuild_id)
- {
- 	char *linkname;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 2e9035c4c252..5ef4939408f2 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2342,6 +2342,7 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
- 				printf("  %-50s [%s]\n", buf, "SDT event");
- 				free(buf);
- 			}
-+			free(path);
- 		} else
- 			printf("  %-50s [%s]\n", nd->s, "SDT event");
- 		if (nd2) {
+ static int
+@@ -1639,10 +1628,17 @@ int cmd_top(int argc, const char **argv)
+ 		signal(SIGWINCH, winch_sig);
+ 	}
+ 
++	top.session = perf_session__new(NULL, false, NULL);
++	if (top.session == NULL) {
++		status = -1;
++		goto out_delete_evlist;
++	}
++
+ 	status = __cmd_top(&top);
+ 
+ out_delete_evlist:
+ 	perf_evlist__delete(top.evlist);
++	perf_session__delete(top.session);
+ 
+ 	return status;
+ }
 -- 
 2.19.1
 
