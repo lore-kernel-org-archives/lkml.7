@@ -2,132 +2,121 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77577C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B5AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A9621905
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552746107;
-	bh=TLmhwtGQN4VfA785J1wHBRYladJMghsxUN/gvs2WAtQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Fn3RrX9LkyfxInfep5o+LU9kME9sttAAILK5o4PV4HpW3Sj42xAcKNRvsW770dvEG
-	 vGtE72cBTgnlKMF/Zqc23kLSBEDCyCkRbsLDOpxJgYmGnnMCBCzA13y9Rw3qm1TC9N
-	 qwbluQa+r9QsObxlOHkINUWmy0eW4xP8kOYOK56U=
+	by mail.kernel.org (Postfix) with ESMTP id 934CE21900
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:26:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="T2sBBrDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfCPOVq (ORCPT
+        id S1726809AbfCPO0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:21:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfCPOVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:21:45 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1BB821900;
-        Sat, 16 Mar 2019 14:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552746105;
-        bh=TLmhwtGQN4VfA785J1wHBRYladJMghsxUN/gvs2WAtQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Fe6PdOGDhGUycaeQPVznagNh/h87ljYHfugz3ota5Azqa76QT8/MPpDUfjhpDQgAJ
-         vGRKSXM/rlzMxmMBBMI1KapR7Ls9+wdihG5JPj85l7VG9Oe+RfoudoEgtydpB3oiiH
-         an0VU2n8chVwD8TI3MM+GqQvpaij9B1WbhcNKUI4=
-Date:   Sat, 16 Mar 2019 14:21:38 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Patrick Havelange <patrick.havelange@essensium.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Esben Haabendal <esben@haabendal.dk>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 4/7] dt-bindings: counter: ftm-quaddec
-Message-ID: <20190316142138.65860d88@archlinux>
-In-Reply-To: <20190312190952.GA18547@bogus>
-References: <20190306111208.7454-1-patrick.havelange@essensium.com>
-        <20190306111208.7454-5-patrick.havelange@essensium.com>
-        <20190312190952.GA18547@bogus>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 Mar 2019 10:26:39 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35092 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfCPO0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 10:26:39 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w1so6477341wrp.2
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:from:user-agent:mime-version:to:cc:subject
+         :references:in-reply-to:content-transfer-encoding;
+        bh=ltoa3Upv+P0qAZWyzwpPOOef5iHNrRysFUSATTIsPTM=;
+        b=T2sBBrDzk53ESyl8fhj407/QWiHF7+tN1dVMh0+MPfSGoiMNG0Bt3N7B4/DJtcZ5SO
+         VccBV6ZafHkTfQqMtFCte6RAua4W2GZ82viM8nJ1XedAqeL33iA2xJEEQ1iGKdBtfwAh
+         LMrlmsCPoL79i6/8IEWyVbe70zBPtR82v4ieE7ArYUngICuOMRJb+IWJR/XA3UfJv+wf
+         iyzrGkNGLHrlmKvbSv4iXW5znBnsHSSVw/UxEVDEjKiHwGoHSLp2/J77r15iBsliF5Ad
+         Th/ktG9ohJxQctdHYvRX9mryJplLY7Yy9MwdpWHi1HfL7hYYbY6vJmxxckAR4DP0IrIe
+         Fysw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
+         :cc:subject:references:in-reply-to:content-transfer-encoding;
+        bh=ltoa3Upv+P0qAZWyzwpPOOef5iHNrRysFUSATTIsPTM=;
+        b=jp8IHYHQg8zzbQ/VhhB1yZHCKbAy62UyS0EOsxPo0xKWub0h4+/MAS9hXG632/YQNZ
+         T7F5sQ1t5nrictDDJ8FHTXYRfsocdQ9E4BiIIxF/ZQ2jhlsdXOW6wHfINq3Bxn1Atzls
+         ljS+7t8JvtVSTYPD0J6fx3Wo0WJTken1En8Wio/a2Jlv21xku1YVdFChv8YUMG5aLjij
+         /TiwOJaZ8ODdH+P8l7854ytreF0T29OKDU27sUQmqcM5vIfzxAyxy4I1BXWNg18Cgo98
+         D35BsQ/JE6g2YtqLw6QMmxdLU/Bc5IEKD+oclv57ycc/jqGW/9UoiNQOHngLlzm8sFnz
+         K5fA==
+X-Gm-Message-State: APjAAAXQfybCg7mCEXMPr835R1Gm6d2Azgj/OlQErWYB0GhdixER67qQ
+        te+4/7c1X21c75FAGS3t84teHw==
+X-Google-Smtp-Source: APXvYqxJyd8JDPQX+cmqgIRxJ2EMiZxWvPTWmtR8krzWrbe90k4wG5XmLH33lAwo/lo9BfLuF8jS7Q==
+X-Received: by 2002:adf:cd87:: with SMTP id q7mr6434159wrj.92.1552746397157;
+        Sat, 16 Mar 2019 07:26:37 -0700 (PDT)
+Received: from [192.168.1.77] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id e5sm2922034wrh.71.2019.03.16.07.26.36
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 16 Mar 2019 07:26:36 -0700 (PDT)
+Message-ID: <5C8D079B.5020803@baylibre.com>
+Date:   Sat, 16 Mar 2019 15:26:35 +0100
+From:   Neil Armstrong <narmstrong@baylibre.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:24.0) Gecko/20100101 Thunderbird/24.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/9] arm64: dts: meson: g12a: Add AO Clock + Reset Controller
+ support
+References: <20190307151342.7381-1-narmstrong@baylibre.com> <20190307151342.7381-2-narmstrong@baylibre.com> <CAFBinCCF81Af=5F19NT337Tfx+oQzx7-zFu2063z7wSfU3qfjQ@mail.gmail.com>
+In-Reply-To: <CAFBinCCF81Af=5F19NT337Tfx+oQzx7-zFu2063z7wSfU3qfjQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Mar 2019 14:09:52 -0500
-Rob Herring <robh@kernel.org> wrote:
+Hi,
 
-> On Wed, Mar 06, 2019 at 12:12:05PM +0100, Patrick Havelange wrote:
-> > FlexTimer quadrature decoder driver.
-> > 
-> > Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> > Reviewed-by: Esben Haabendal <esben@haabendal.dk>
-> > ---
-> > Changes v2
-> >      - None
-> > ---
-> >  .../bindings/counter/ftm-quaddec.txt           | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/counter/ftm-quaddec.txt b/Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> > new file mode 100644
-> > index 000000000000..4d18cd722074
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> > @@ -0,0 +1,18 @@
-> > +FlexTimer Quadrature decoder counter
-> > +
-> > +This driver exposes a simple counter for the quadrature decoder mode.  
+Le 15/03/2019 22:07, Martin Blumenstingl a écrit :
+> Hi Neil,
 > 
-> Seems like this is more a mode of a h/w block than describing a h/w 
-> block. Bindings should do the latter.
-The snag is that we need to dig ourselves out of the hole set by:
-fsl,vf610-ftm-pwm etc.
+> On Thu, Mar 7, 2019 at 4:14 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Add nodes and properties for the AO Clocks and Resets.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>> index 191d31db9853..0eb5220da82c 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>> @@ -122,6 +122,23 @@
+>>                         #size-cells = <2>;
+>>                         ranges = <0x0 0x0 0x0 0xff800000 0x0 0x100000>;
+>>
+>> +                       rti: sys-ctrl@0 {
+>> +                               compatible = "amlogic,meson-gx-ao-sysctrl",
+>> +                                            "simple-mfd", "syscon";
+>> +                               reg = <0x0 0x0 0x0 0x1000>;
+>> +                               #address-cells = <2>;
+>> +                               #size-cells = <2>;
+>> +                               ranges = <0x0 0x0 0x0 0x0 0x0 0x1000>;
+> is this supposed to be 0x1000 (GX uses 0x100 here)?
+> my understanding is that G12A has the AO CEC at aobus + 0x100, so
+> using a size of 0x1000 would make it overlap
 
-Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-(I'm assuming these are the same IP block).
 
-Can probably be sorted out though.  One core driver binds against the
-ftm and deals with instantiating the others depending on the configuration
-(note that this mode for instance does make sense in DT as it's
-really reflecting the fact there is a quadrature encoder
-connected to the ftm).
+Hmm, Let me check
 
-Fiddly though :)
+Neil
 
-J
 > 
-> > +
-> > +Required properties:
-> > +- compatible:		Must be "fsl,ftm-quaddec".
-> > +- reg:			Must be set to the memory region of the flextimer.
-> > +
-> > +Optional property:
-> > +- big-endian:		Access the device registers in big-endian mode.
-> > +
-> > +Example:
-> > +		counter0: counter@29d0000 {
-> > +			compatible = "fsl,ftm-quaddec";
-> > +			reg = <0x0 0x29d0000 0x0 0x10000>;
-> > +			big-endian;
-> > +			status = "disabled";
-> > +		};
-> > -- 
-> > 2.19.1
-> >   
-
+> 
+> Regards
+> Martin
+> 
