@@ -2,136 +2,138 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40359C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 09:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACC2C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 09:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5A42087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 09:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DE02087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 09:18:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qe9wcRSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfCPJRo (ORCPT
+        id S1726855AbfCPJSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 05:17:44 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:47217 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfCPJRo (ORCPT
+        Sat, 16 Mar 2019 05:18:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55550 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfCPJSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 05:17:44 -0400
-Received: from [192.168.1.110] ([95.117.13.126]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MMFdY-1hMCLq1ldW-00JGKe; Sat, 16 Mar 2019 10:17:16 +0100
-Subject: Re: [PATCH v2 10/45] drivers: tty: serial: zs: use devm_* functions
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, eric@anholt.net,
-        stefan.wahren@i2se.com, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        andriy.shevchenko@linux.intel.com, vz@mleia.com,
-        matthias.bgg@gmail.com, yamada.masahiro@socionext.com,
-        tklauser@distanz.ch, richard.genoud@gmail.com,
-        macro@linux-mips.org, u.kleine-koenig@pengutronix.de,
-        kernel@pengutronix.de, slemieux.tyco@gmail.com,
-        andy.gross@linaro.org, david.brown@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        baohua@kernel.org, jacmet@sunsite.dk, linux-serial@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <1552602855-26086-1-git-send-email-info@metux.net>
- <1552602855-26086-11-git-send-email-info@metux.net>
- <20190314225204.GB1795@kroah.com>
- <3734d588-6b9c-29e2-45b6-82e778f47602@metux.net>
- <20190315142628.GA30650@kroah.com>
- <d81364fc-c5da-c1b2-f38a-3a23c701c50d@metux.net>
- <20190316032630.GB2499@kroah.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <fd8d6a9b-3e85-9904-2195-1f1bbc42bd2d@metux.net>
-Date:   Sat, 16 Mar 2019 10:17:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Sat, 16 Mar 2019 05:18:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 4so8591345wmf.5;
+        Sat, 16 Mar 2019 02:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zKKKz3nMBTcSbKsh0WhgYuN18v3yLB9eD3tOHXzds4g=;
+        b=qe9wcRSZixmGkIZYd/JsOmh8CEBkFJNU+VelBqpOlgahLxP/lLfbl1YWykwTBUOA9D
+         9L/8QPX7VP+tDVSQuS0jOmBlj369sA1DvocJoAb2hw3SmFOrR7jH8r3vtbJvBUJi+k2d
+         ptpGFWXclKoImpKKUw6jSZmi9yKwMZmxxgm6irXYWvJjM6Pq2u3OoRp2mcWF0+RSNpNF
+         4uhUNRtk4egXSyC4XgVvc5cCD+fS/3Z/22XIyyHOm89zOpDXuy/NjDU7VIUk7VhCSv3J
+         c525d2xzK82s+q+hx8PXopC6Oib0ayhUkkXQTESyu/xNfvFGPtS5chhKhetla1bN7FY5
+         uPOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zKKKz3nMBTcSbKsh0WhgYuN18v3yLB9eD3tOHXzds4g=;
+        b=dOBXvo1exO2KK7fl+OSHbOU5W/lip1s+JHnV6fz+qeNez7jltMsaGChfBFhuSeuCwl
+         v4RbHTVlYenaE19zYexuv2A51LQjVQm6Zb4561f3wlkSTaDb7jYD5PWoxesPtjoKn979
+         mCij+YQF8X2U1TEkyK+XP/x0NZb7NQMlbjn5giTHDWxKu6EihkWjD49MhQPfmV/dXnYJ
+         JimkJNGnieakq8f5zF7I8sTyOj86alZRHMImU7jqe4RCykns8hK3MS/9TTVqktt8z4/o
+         mJCoJQbHbZdXPhUknykSgGFMhCMBelBjiQNL2EruDVgJzDn6wQg0bmK2v/9ucxtxtJ8s
+         HEHA==
+X-Gm-Message-State: APjAAAX8ccuPJyFg41jxsCUYznntXbe2RQ0+eh0tJbiLKUlRGZnIzrLI
+        NxhzlTZea1n8Tto+4LFQTqzVvpwF
+X-Google-Smtp-Source: APXvYqwIRzeBTIYKt58y5KtCN8RZFHzYwj/ebEXW5qtaOrefGTwTNFi8A4VYns0htcRnr0GtJAD2Ag==
+X-Received: by 2002:a1c:4044:: with SMTP id n65mr4939148wma.85.1552727879746;
+        Sat, 16 Mar 2019 02:17:59 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id f20sm8297862wrg.91.2019.03.16.02.17.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Mar 2019 02:17:57 -0700 (PDT)
+Date:   Sat, 16 Mar 2019 10:17:56 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Renato Soma <renatoys08@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: Re: [PATCH 0/1] platform/x86: dell-wmi: Uncomment events that were
+Message-ID: <20190316091756.2zfccpnhfnjogktp@pali>
+References: <20190316010942.6448-1-renatoys08@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190316032630.GB2499@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:EeDIdx/ZofCsDCjDCqDBdwJVn2vFx/eYFegD5Ya7VFYNybfet1J
- 3wxuCJlxu9QfJi1PtUMeEtTgSfAdwo4QO+us5aMtiqM63gXLmhu7Y9FeqCw0/ZHUNjQmemp
- C+M1lQ4UgmbcYBlv1Ft+qZ1DiSjF0yDMNnl6HfdPyGE2GSeQvnFmC3+EH51ObeMhGujIb8v
- q2aiqoqoSmDh9MGiT+XQQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:P9NI7bTY56M=:R3xN1Mqy2RRkBDf8qpUd8m
- 6/ilptxmqeSdfhOojd3Oahqhbhc6SzWzY+i5d/zfWYaHMc0zfdkJ7XCF7+V49T6NOtZt0BOmP
- DBYLB+kfLWYDq6RaMeQYMvpo6ZsMqCWb/dRz70YPAHQ4LdA26tPwF/2vWX+jUm/2QV4yihzU4
- M1nXjxZwuXO9RPRolDYhQARZzV8L5N4zj6ZFO+IjbAH5iR3K9eoXjRCF7PS+fK7rhyBpFuucq
- tA3wk6A7Ljl08ltvGopfnrVI20CbziAEybIxtH/yD/S6M6DhJB5KPKSbT8AS1yTcOGMcIxCdU
- HNh/bz2+K17NsPZVOf5wPXq52T26etgaXDr6KoXxdavqPWuPIgtwVmtRro6hF+9nfvpbrtvc2
- n/ICtcs7yzPa7/UwM4ZDrkKLtOdsjTluh6XrUOxvtZ9h2ZHXxtxg3BO7BigBSgKBBDQBRTOyN
- No9uFS95NCNrGnU0o/k7a0s9JTse+R+qlbXwUnCVSPGc25SiHjrVaGt7+X42Nlp3nBGbBpI5I
- mkfEfBoOQtY6EynGZ8qS9leCGqtmJHNDMHZG3cyMuaYiB13F7btHRSVXGhIexVpOap2ZJmxMr
- PMiCx/93wXhGGerfju0CVrSizsycdc0Hi9pL/dQxIX2HpIn0aaRnPjm1ZBAWLn6omBEbCYzqH
- Di/UUQpmP+VFA90CmDyBFGKVeXyclpBWmNtCOivhu8hLgPc/2f7x7bXINYrXZzgZXnuojlhcO
- B6Bu7sxkRzPEcQxerG1ThvTnKgVxBfmRL8DOzXh6volzOn88FG5DaEHFq5g=
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="6w46kk2sexf7xswx"
+Content-Disposition: inline
+In-Reply-To: <20190316010942.6448-1-renatoys08@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.03.19 04:26, Greg KH wrote:
 
-> No, it's just that those systems do not allow those devices to be
-> removed because they are probably not on a removable bus.
+--6w46kk2sexf7xswx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok, devices (hw) might not be removable - that also the case for uarts
-builtin some SoCs, or the good old PC w/ 8250. But does that also mean
-that the driver should not be removable ?
+On Friday 15 March 2019 22:09:41 Renato Soma wrote:
+> Hello,
+>=20
+> I noted that by pressing the "Dell Audio with Preset Switch" on my Dell
+> 5420, notification messages are displayed at dmesg.
+> That is happening because the keys are commented out and marked as
+> untested.
+> Since the logs purpose are there only for notification and considering
+> the history of cases similar to this one, this patch aims to ignore
+> those logs. Furthermore, this patch fixes the comments related to the
+> keys, since they are marked as "Windows Mobility Center" button, which
+> is incorrect.
+>=20
+> Do note that the event 0xe02a is generated when pushing the button and
+> the event 0xe02b is generated when releasing the button, hence the
+> comment on the code.
+>=20
+> Finally, as explained earlier, this was tested on an Inspiron 5420, but
+> this model shares the specifications of the Inspiron 7520.
+>=20
+> Thanks,
+> Renato
+>=20
+> Renato Soma (1):
+>   platform/x86: dell-wmi: Uncomment events that were untested
+>=20
+>  drivers/platform/x86/dell-wmi.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 
-IMHO, even if that's the case, it's still inconsistent. The driver then
-shouldn't support a remove at all (or even builtin only), not just
-incomplete remove.
+Hello!
 
->> Okay, I was on a wrong track here - I had the silly idea that it would
->> make things easier if we'd do it the same way everywhere.
-> 
-> "Consistent" is good, and valid, but touching old drivers that have few
-> users is always risky, and you need a solid reason to do so.
+Looks like that those keys are not as obvious as you wrote. Look at my
+email with some investigation about Dell Audio With Preset Switch key:
+https://www.spinics.net/lists/platform-driver-x86/msg15593.html
 
-Understood.
+Also there is another user who wrote about 0xe02c key generated by
+Inspirion 7520: https://ubuntuforum-br.org/index.php?topic=3D105434.0
 
-By the way: do we have some people who have those old hw and could test?
-Should we (try to) create some ? Perhaps some "tester" entry in
-MAINTAINERS file ? (I could ask around several people who might have
-lots of old / rare hardware.)
+You can a testing machine 5420, can you prove that behavior described in
+my previous email match also your machine?
 
->> Understood. Assuming I've found some of these cases, shall I use devm
->> oder just add the missing release ?
-> 
-> If it actually makes the code "simpler" or "more obvious", sure, that's
-> fine.  But churn for churns sake is not ok.
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-Ok.
+--6w46kk2sexf7xswx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> I put the review of new patch submissions on hold, yes.  Almost all
-> maintainers do that as we can not add new patches to our trees at that
-> point in time.
+-----BEGIN PGP SIGNATURE-----
 
-hmm, looks like a pipeline stall ;-)
-why not collecting in a separate branch, which later gets rebased to
-mainline when rc is out ?
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXIy/QgAKCRCL8Mk9A+RD
+Us11AJ444ojAGASjhjxkOWqx2zPN/PfFLgCaAsZAG7JyVs2JiLhWC71qfhcqZgk=
+=7+LT
+-----END PGP SIGNATURE-----
 
-> And I do have other things I do during that period so it's not like I'm
-> just sitting around doing nothing :)
-
-So it's also a fixed schedule for your other work. Understood.
-
-It seems that this workflow can confuse people. Few days ago, somebody
-became nervous about missing reactions on patches. Your autoresponder
-worked for me, but maybe not for everybody.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+--6w46kk2sexf7xswx--
