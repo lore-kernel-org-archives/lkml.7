@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA86C10F03
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E890C10F03
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC132218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CEA218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552761522;
-	bh=uU95wIzDSWeCSMx+FkXnOS+9LYCv/+/sspT/KY1cr/A=;
+	s=default; t=1552761641;
+	bh=zePg1cL2hR453Cb0JSH6OkW92+wEpS8wFii8ylP5UEw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DnB7Ke1bBmIdcuAOKP/sI/sLWV1rDOo8HGVHRQz8pZp4zcUAaNqn85KM9+utasoqT
-	 gAUtYky6PRJPRO5NH17Lo0JQkWSHI2aaGVFJf0AQ+zH9nernYceHeCaKvndiHMCYap
-	 Jk2IOwRM5nj2nfufvaFOYyNuFOcd6QzVdXDA65Kc=
+	b=juClKSdteTPM+DdksoQsvw0KEjT+PYCw1Ip0iitDmk9lcXVWPMYd1lUtpjWic9ih4
+	 46jR6bmKN8yypxc6MAfy60IwQ/NnbHfSp424tnCoXWB8GDjeJbthRnLWllx3znzEJ9
+	 dUUcs/AEPuMHnmOmWhf/+ZGlnCSgnGYu6ojJny0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfCPSil (ORCPT
+        id S1727191AbfCPSkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 14:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47080 "EHLO mail.kernel.org"
+        Sat, 16 Mar 2019 14:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726376AbfCPSik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 14:38:40 -0400
+        id S1726376AbfCPSkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 14:40:40 -0400
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31982218A1;
-        Sat, 16 Mar 2019 18:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E51218A1;
+        Sat, 16 Mar 2019 18:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552761520;
-        bh=uU95wIzDSWeCSMx+FkXnOS+9LYCv/+/sspT/KY1cr/A=;
+        s=default; t=1552761639;
+        bh=zePg1cL2hR453Cb0JSH6OkW92+wEpS8wFii8ylP5UEw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QhaYRu7qcrHrmcNhEqptSgHTsgJ3MiljD0LI7if6DskieJGUxFKQZfSCuvNq2VW9g
-         FZoEoeMtGcUl6SBlN0rDExjJIRo7b3qOzpmVPYMR/p6CapAeuKrntp7GSx9i/saN6I
-         gqf5PA/x1YUvy42eWAStn4AJ/IMIWTlSMgYBzuqo=
-Date:   Sat, 16 Mar 2019 18:38:34 +0000
+        b=T6sQglm695sOlpIvWsw3OJqDxW+ka4rZg0o/ITrf+8CTaquRYTHEOynX3nmwHWM6n
+         1PUgl5beOvlwdmVhG31alUEP5PoN34J7yum1UqprlrvZUtSqGd1r8sqKslNPCEJZxr
+         2kdiLOAhWeE1C6vGXsg557EADd+wMGuyKZutNxgU=
+Date:   Sat, 16 Mar 2019 18:40:34 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
         pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH v4 4/7] staging: iio: ad5933: change help rule message
-Message-ID: <20190316183834.0e6ae2e4@archlinux>
-In-Reply-To: <20190316150718.kl27r5vqendxj3mw@smtp.gmail.com>
-References: <20190316150718.kl27r5vqendxj3mw@smtp.gmail.com>
+Subject: Re: [PATCH v4 5/7] staging: iio: ad5933: add ABI documentation
+Message-ID: <20190316184034.7ad29cf6@archlinux>
+In-Reply-To: <20190316150732.umr64uwhi2j4qi7k@smtp.gmail.com>
+References: <20190316150732.umr64uwhi2j4qi7k@smtp.gmail.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -57,34 +57,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 16 Mar 2019 12:07:18 -0300
+On Sat, 16 Mar 2019 12:07:32 -0300
 Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-> Remove the previous comment about direct access via sysfs which would
-> lead one think ad5933 driver has limitations it actually doesn't.
+> Add an ABI documentation for the ad5933 driver.
 > 
 > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Applied.
+Some stray whitespace in here. I cleaned it up.
 
 Thanks,
 
 Jonathan
 
 > ---
->  drivers/staging/iio/impedance-analyzer/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../sysfs-bus-iio-impedance-analyzer-ad5933   | 35 +++++++++++++++++++
+>  .../sysfs-bus-iio-impedance-analyzer-ad5933   | 30 ----------------
+>  2 files changed, 35 insertions(+), 30 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-impedance-analyzer-ad5933
+>  delete mode 100644 drivers/staging/iio/Documentation/sysfs-bus-iio-impedance-analyzer-ad5933
 > 
-> diff --git a/drivers/staging/iio/impedance-analyzer/Kconfig b/drivers/staging/iio/impedance-analyzer/Kconfig
-> index dd97b6bb3fd0..b9a679cdd146 100644
-> --- a/drivers/staging/iio/impedance-analyzer/Kconfig
-> +++ b/drivers/staging/iio/impedance-analyzer/Kconfig
-> @@ -10,7 +10,7 @@ config AD5933
->  	select IIO_KFIFO_BUF
->  	help
->  	  Say yes here to build support for Analog Devices Impedance Converter,
-> -	  Network Analyzer, AD5933/4, provides direct access via sysfs.
-> +	  Network Analyzer, AD5933/4.
->  
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ad5933.
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-impedance-analyzer-ad5933 b/Documentation/ABI/testing/sysfs-bus-iio-impedance-analyzer-ad5933
+> new file mode 100644
+> index 000000000000..a50aada68e1e
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-impedance-analyzer-ad5933
+> @@ -0,0 +1,35 @@
+> +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_frequency_start
+> +Date:		March 2019
+> +KernelVersion:	3.1.0
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Frequency sweep start frequency in Hz.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_frequency_increment
+> +Date:		March 2019
+> +KernelVersion:	3.1.0
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Frequency increment in Hz (step size) between consecutive
+> +		frequency points along the sweep.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_frequency_points
+> +Date:		March 2019
+> +KernelVersion:	3.1.0
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Number of frequency points (steps) in the frequency sweep.
+> +		This value, in conjunction with the
+> +		out_altvoltageY_frequency_start and the	
+> +		out_altvoltageY_frequency_increment, determines the frequency 
+> +		sweep range for the sweep operation.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_settling_cycles
+> +Date:		March 2019
+> +KernelVersion:	3.1.0
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Number of output excitation cycles (settling time cycles)
+> +		that are allowed to pass through the unknown impedance,
+> +		after each frequency increment, and before the ADC is triggered
+> +		to perform a conversion sequence of the response signal.
+> diff --git a/drivers/staging/iio/Documentation/sysfs-bus-iio-impedance-analyzer-ad5933 b/drivers/staging/iio/Documentation/sysfs-bus-iio-impedance-analyzer-ad5933
+> deleted file mode 100644
+> index 79c7e88c64cd..000000000000
+> --- a/drivers/staging/iio/Documentation/sysfs-bus-iio-impedance-analyzer-ad5933
+> +++ /dev/null
+> @@ -1,30 +0,0 @@
+> -What:		/sys/bus/iio/devices/iio:deviceX/outY_freq_start
+> -KernelVersion:	3.1.0
+> -Contact:	linux-iio@vger.kernel.org
+> -Description:
+> -		Frequency sweep start frequency in Hz.
+> -
+> -What:		/sys/bus/iio/devices/iio:deviceX/outY_freq_increment
+> -KernelVersion:	3.1.0
+> -Contact:	linux-iio@vger.kernel.org
+> -Description:
+> -		Frequency increment in Hz (step size) between consecutive
+> -		frequency points along the sweep.
+> -
+> -What:		/sys/bus/iio/devices/iio:deviceX/outY_freq_points
+> -KernelVersion:	3.1.0
+> -Contact:	linux-iio@vger.kernel.org
+> -Description:
+> -		Number of frequency points (steps) in the frequency sweep.
+> -		This value, in conjunction with the outY_freq_start and the
+> -		outY_freq_increment, determines the frequency sweep range
+> -		for the sweep operation.
+> -
+> -What:		/sys/bus/iio/devices/iio:deviceX/outY_settling_cycles
+> -KernelVersion:	3.1.0
+> -Contact:	linux-iio@vger.kernel.org
+> -Description:
+> -		Number of output excitation cycles (settling time cycles)
+> -		that are allowed to pass through the unknown impedance,
+> -		after each frequency increment, and before the ADC is triggered
+> -		to perform a conversion sequence of the response signal.
 
