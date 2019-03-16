@@ -6,34 +6,32 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF6EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 09:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5DFC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 09:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1CA218E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 09:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944A9218E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 09:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfCPJcP (ORCPT
+        id S1726809AbfCPJcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 05:32:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40292 "EHLO mx1.suse.de"
+        Sat, 16 Mar 2019 05:32:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40318 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726360AbfCPJcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 05:32:14 -0400
+        id S1726720AbfCPJcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 05:32:24 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6ED0CAC86;
-        Sat, 16 Mar 2019 09:32:13 +0000 (UTC)
-Date:   Sat, 16 Mar 2019 10:32:12 +0100
-Message-ID: <s5hy35fyxk3.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id AF7C5ACD8;
+        Sat, 16 Mar 2019 09:32:23 +0000 (UTC)
+Date:   Sat, 16 Mar 2019 10:32:23 +0100
+Message-ID: <s5hwokzyxjs.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     "Kangjie Lu" <kjlu@umn.edu>
-Cc:     <alsa-devel@alsa-project.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Jaroslav Kysela" <perex@perex.cz>, <pakki001@umn.edu>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sound: echoaudio: add a check for ioremap_nocache
-In-Reply-To: <20190315035830.29557-1-kjlu@umn.edu>
-References: <20190315035830.29557-1-kjlu@umn.edu>
+Cc:     <alsa-devel@alsa-project.org>, "Jaroslav Kysela" <perex@perex.cz>,
+        <pakki001@umn.edu>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sound: sb8: add a check for request_region
+In-Reply-To: <20190315040415.30631-1-kjlu@umn.edu>
+References: <20190315040415.30631-1-kjlu@umn.edu>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -44,11 +42,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Mar 2019 04:58:29 +0100,
+On Fri, 15 Mar 2019 05:04:14 +0100,
 Kangjie Lu wrote:
 > 
-> In case ioremap_nocache fails, the fix releases chip and returns
-> an error code upstream to avoid NULL pointer dereference.
+> In case request_region fails, the fix returns an error code to
+> avoid NULL pointer dereference.
 > 
 > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
