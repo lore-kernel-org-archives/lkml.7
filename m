@@ -2,105 +2,216 @@ Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E211DC10F03
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA17C10F03
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F0A21904
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552759251;
-	bh=EIRRMJOSKE2TTGtwsZWi5d00hSsrcDSmfBo9LBUbjrM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=c/NspI1U6qqV9XYCfdbak8ee3c07s2WIa0hc50eQ5lndOTAVLnq3X8OPinEipW+15
-	 E2qRt6cOwnQw2kpwNfPmB2EBEYM5SL868402k1cI2I/2q3BlUZfxoCYt17saHft0CE
-	 LWm8zRuvzIEQkAluxKY9hQg+hSi7txVLCbfQgJqc=
+	by mail.kernel.org (Postfix) with ESMTP id 96479218D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 18:01:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4HLseLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfCPSAu (ORCPT
+        id S1727248AbfCPSBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 14:00:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbfCPSAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 14:00:50 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A7C4218D0;
-        Sat, 16 Mar 2019 18:00:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552759249;
-        bh=EIRRMJOSKE2TTGtwsZWi5d00hSsrcDSmfBo9LBUbjrM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nVhc5TxviBhM/XmfDhRR3jhgF+xtHAQQqCT5VvwFzZM+IIDmPYMvpBAXk0HHdHhK2
-         0S553AnHjQxeveZcs8B4BeLMAHOdkVSM42Vrm9xKddfPfCv4g1zsKWQoY0/+LGcEU/
-         JoSUQwaOueyeY77pW6b3Pns0gHojCwHnQIcNZrB0=
-Date:   Sat, 16 Mar 2019 18:00:42 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Renato Lui Geh <renatogeh@gmail.com>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
-        giuliano.belinassi@usp.br, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 06/11] staging:iio:ad7780: add chip ID values and
- mask
-Message-ID: <20190316180042.369d55e6@archlinux>
-In-Reply-To: <8154410f6c1b6cdde21cfb781dbc2088f5c91d21.1552700652.git.renatogeh@gmail.com>
-References: <cover.1552700652.git.renatogeh@gmail.com>
-        <8154410f6c1b6cdde21cfb781dbc2088f5c91d21.1552700652.git.renatogeh@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 Mar 2019 14:01:18 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36647 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfCPSBR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 14:01:17 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v10so10623563lji.3;
+        Sat, 16 Mar 2019 11:01:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FMDAOxM9QQ0EYxd6HiahnzIt/N/S3BFKKNfFRRGyRIM=;
+        b=b4HLseLSJ0dkhHUdpobqJx4ntmT1SIAPBI/e+VOI7ySRS0qL4ui0R3oOSqYEEB6kbE
+         tFfEbsAWcmmVN2g266DrfktFka1hKYQsWyr95PTTAKEwZqgXZn75H8VOkuXl6N0jwwgI
+         j5K3fiklqnp8cjRSJ5gHfdV0ZEYLLTQqlZhNujVeCNq9GTmAwzLdYKmLn4Kj8ujr2nL9
+         LiCMZZnW6PWyNN8N/ZA16iR4JoJdn3y7KeI3R4Vt9AqLpjvlAwtngzkLAnN+YxIrRDQ3
+         2019RT0He35PrvHTlQ5ftRWnTdX7OVb+jej0/AnbKHQDBy+fTyOR7Y/yxWP2yP9zRgzR
+         Zwdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FMDAOxM9QQ0EYxd6HiahnzIt/N/S3BFKKNfFRRGyRIM=;
+        b=QXipj4yEGRGmwiDDjLNw2UcaRn/b9JEqHzpU5eLn8t5FbOw0X3B/a4vRXxZyB+BVpi
+         c85KErTcMTdyyOMjd/w0b3MM4Zrb8vBJDZWsV902W8EvtSvzFQIfGon2a1seUYQ04EQG
+         IH6qV0taeohPbP5VHlsJpKeXdiLMIwXmbnazmDMUbKxRgU4wSn3C3XQz+EHE0IQO8ytK
+         PU0q/3ukc9sImjn7DKJLs0JgPbAxhczveerfxSjJnv/MszD0KmLJ3tHTUZhOEuHyQ02o
+         XqVtocfqV+60iGb0+/urfeECnMLFfQR0HIwXaH4W7OVUy0UwMK9IpNdelotyB29U3O4c
+         tDUw==
+X-Gm-Message-State: APjAAAXWTMzUZpTSzmOojE+sPvpL6pKHmIoDFRuQTEEKxzV/3U3snR9f
+        4SEr+lE8VHteqiLal/J/UHxIONFjTtPRNwKfdQ==
+X-Google-Smtp-Source: APXvYqzjJ9GqWklX4Q6zQ53uQlg0GlA+Fd8rlnD4exw6c7YBQokQEFJhfGG6gZVtsofIeAsmxLAePL9/ptjCGKrae8g=
+X-Received: by 2002:a2e:9b15:: with SMTP id u21mr5750895lji.82.1552759274778;
+ Sat, 16 Mar 2019 11:01:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190315075500.27747-1-longli@linuxonhyperv.com>
+In-Reply-To: <20190315075500.27747-1-longli@linuxonhyperv.com>
+From:   Pavel Shilovsky <piastryyy@gmail.com>
+Date:   Sat, 16 Mar 2019 11:01:03 -0700
+Message-ID: <CAKywueREsB2gfrOoAiExUQg98MDcUtdjQD2-jd5ET3NqsdmE2A@mail.gmail.com>
+Subject: Re: [Patch v2 1/2] CIFS: Fix an issue with re-sending wdata when
+ transport returning -EAGAIN
+To:     Long Li <longli@microsoft.com>
+Cc:     Steve French <sfrench@samba.org>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Mar 2019 23:14:27 -0300
-Renato Lui Geh <renatogeh@gmail.com> wrote:
-
-> The ad7780 supports both the ad778x and ad717x families. Each chip has
-> a corresponding ID. This patch provides a mask for extracting ID values
-> from the status bits and also macros for the correct values for the
-> ad7170, ad7171, ad7780 and ad7781.
-> 
-> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-I'll admit I find it hard to summon an enthusiasm for this patch, but
-it does no harm and I don't want to delay the following ones.
-
-Hence applied anyway.
-
-Jonathan
-
+=D0=BF=D1=82, 15 =D0=BC=D0=B0=D1=80. 2019 =D0=B3. =D0=B2 00:56, Long Li <lo=
+ngli@linuxonhyperv.com>:
+>
+> From: Long Li <longli@microsoft.com>
+>
+> When sending a wdata, transport may return -EAGAIN. In this case
+> we should re-obtain credits because the session may have been
+> reconnected.
+>
+> Change in v2: adjust_credits before re-sending
+>
+> Signed-off-by: Long Li <longli@microsoft.com>
 > ---
-> Changes in v5:
->  - Put AD7780_ID{0,1} back
-> 
->  drivers/staging/iio/adc/ad7780.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
-> index 94cb60c327d0..977b381c1260 100644
-> --- a/drivers/staging/iio/adc/ad7780.c
-> +++ b/drivers/staging/iio/adc/ad7780.c
-> @@ -30,6 +30,12 @@
->  #define AD7780_ID0		BIT(3)
->  #define AD7780_GAIN		BIT(2)
->  
-> +#define AD7170_ID		0
-> +#define AD7171_ID		1
-> +#define AD7780_ID		1
-> +#define AD7781_ID		0
+>  fs/cifs/file.c | 77 ++++++++++++++++++++++++++++++++++------------------=
+------
+>  1 file changed, 45 insertions(+), 32 deletions(-)
+>
+> diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+> index 9b53f33137b3..321df1d27422 100644
+> --- a/fs/cifs/file.c
+> +++ b/fs/cifs/file.c
+> @@ -2620,43 +2620,56 @@ cifs_resend_wdata(struct cifs_writedata *wdata, s=
+truct list_head *wdata_list,
+>         struct TCP_Server_Info *server =3D
+>                 tlink_tcon(wdata->cfile->tlink)->ses->server;
+>
+> -       /*
+> -        * Wait for credits to resend this wdata.
+> -        * Note: we are attempting to resend the whole wdata not in segme=
+nts
+> -        */
+>         do {
+> -               rc =3D server->ops->wait_mtu_credits(server, wdata->bytes=
+, &wsize,
+> -                                                  &credits);
+> +               if (wdata->cfile->invalidHandle) {
+> +                       rc =3D cifs_reopen_file(wdata->cfile, false);
+> +                       if (rc =3D=3D -EAGAIN)
+> +                               continue;
+> +                       else if (rc)
+> +                               break;
+> +               }
+>
+> -               if (rc)
+> -                       goto out;
+>
+> -               if (wsize < wdata->bytes) {
+> -                       add_credits_and_wake_if(server, &credits, 0);
+> -                       msleep(1000);
+> -               }
+> -       } while (wsize < wdata->bytes);
+> +               /*
+> +                * Wait for credits to resend this wdata.
+> +                * Note: we are attempting to resend the whole wdata not =
+in
+> +                * segments
+> +                */
+> +               do {
+> +                       rc =3D server->ops->wait_mtu_credits(server, wdat=
+a->bytes,
+> +                                               &wsize, &credits);
+> +                       if (rc)
+> +                               goto fail;
 > +
-> +#define AD7780_ID_MASK		(AD7780_ID0 | AD7780_ID1)
->  
->  #define AD7780_PATTERN_GOOD	1
->  #define AD7780_PATTERN_MASK	GENMASK(1, 0)
+> +                       if (wsize < wdata->bytes) {
+> +                               add_credits_and_wake_if(server, &credits,=
+ 0);
+> +                               msleep(1000);
+> +                       }
+> +               } while (wsize < wdata->bytes);
+> +               wdata->credits =3D credits;
+>
+> -       wdata->credits =3D credits;
+> -       rc =3D -EAGAIN;
+> -       while (rc =3D=3D -EAGAIN) {
+> -               rc =3D 0;
+> -               if (wdata->cfile->invalidHandle)
+> -                       rc =3D cifs_reopen_file(wdata->cfile, false);
+> -               if (!rc)
+> -                       rc =3D server->ops->async_writev(wdata,
+> +               rc =3D adjust_credits(server, &wdata->credits, wdata->byt=
+es);
+> +
+> +               if (!rc) {
+> +                       if (wdata->cfile->invalidHandle)
+> +                               rc =3D -EAGAIN;
+> +                       else
+> +                               rc =3D server->ops->async_writev(wdata,
+>                                         cifs_uncached_writedata_release);
+> -       }
+> +               }
+>
+> -       if (!rc) {
+> -               list_add_tail(&wdata->list, wdata_list);
+> -               return 0;
+> -       }
+> +               /* If the write was successfully sent, we are done */
+> +               if (!rc) {
+> +                       list_add_tail(&wdata->list, wdata_list);
+> +                       return 0;
+> +               }
+>
+> -       add_credits_and_wake_if(server, &wdata->credits, 0);
+> -out:
+> -       kref_put(&wdata->refcount, cifs_uncached_writedata_release);
+> +               /* Roll back credits and retry if needed */
+> +               add_credits_and_wake_if(server, &wdata->credits, 0);
+> +       } while (rc =3D=3D -EAGAIN);
+>
+> +fail:
+> +       kref_put(&wdata->refcount, cifs_uncached_writedata_release);
+>         return rc;
+>  }
+>
+> @@ -2884,12 +2897,12 @@ static void collect_uncached_write_data(struct ci=
+fs_aio_ctx *ctx)
+>                                                 wdata->bytes, &tmp_from,
+>                                                 ctx->cfile, cifs_sb, &tmp=
+_list,
+>                                                 ctx);
+> +
+> +                                       kref_put(&wdata->refcount,
+> +                                               cifs_uncached_writedata_r=
+elease);
+>                                 }
+>
+>                                 list_splice(&tmp_list, &ctx->list);
+> -
+> -                               kref_put(&wdata->refcount,
+> -                                        cifs_uncached_writedata_release)=
+;
+>                                 goto restart_loop;
+>                         }
+>                 }
+> --
+> 2.14.1
+>
 
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+
+--
+Best regards,
+Pavel Shilovsky
