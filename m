@@ -5,58 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBCCC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B297C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2181A218D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3285421871
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 02:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJSk46+S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XISrygxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfCPCPd (ORCPT
+        id S1727069AbfCPCQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Mar 2019 22:15:33 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40827 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfCPCPd (ORCPT
+        Fri, 15 Mar 2019 22:16:04 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40875 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfCPCQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Mar 2019 22:15:33 -0400
-Received: by mail-qt1-f194.google.com with SMTP id f11so12265441qti.7;
-        Fri, 15 Mar 2019 19:15:32 -0700 (PDT)
+        Fri, 15 Mar 2019 22:16:03 -0400
+Received: by mail-qt1-f196.google.com with SMTP id f11so12266150qti.7;
+        Fri, 15 Mar 2019 19:16:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Eh+Z/o9WjtJXIcms4JIRAPXm9p+hCYRVJC9mwEl1kVc=;
-        b=WJSk46+S5D4zyDQ5RTYjae2QI0kYg1/uuuZFVXkOzunF9IF5201ZyPcGSgtIdk7KO8
-         fql3T7kvasotBuhALC/Bv9fLx4aob9VgUuzXI0S7zd+4GYcvQgT+S05HiH7K/5vHT4Eb
-         LMJcUlO2y4i6DoUbs53+uojDn88u2Vbz2pZtbhb2IuMruqZayP/GLTHcbIp76WIlGOfS
-         xJjjhxs86gRau7H4xd3KHdItQfKFKdCXSC2/juRjQ8Z23kPDQ4jAPS4o3fktJhUsjgDY
-         xK9+S51hB8kePuZM39NHnDntNV9Skrc6rCtDWrbej9WPFhSIgX9iiGoGLHlW1tYb+DJ0
-         3ohg==
+        bh=dKCEsrSpumTi289jXlihCQLWqMFpZA5S6DOb5XT8GHE=;
+        b=XISrygxY+bi91Q09Uq31I/I4cRCXBUFFX0YO/JrFM+7xgfqu5LKUDJZ1R7RwdLb6/W
+         vSj41GttidBFd/2rO3e/QGT0FQge/l/rK0TeZVZZ90owyztAutSCFajqJlc9l6JNIQGM
+         eLHSia0J9zmmBFvZpHQFzll4soEGW4J1UJZ9aTMFH5ybllMrZBNU+m5KZodOdiPsho5w
+         paN34/0Bt8H3PlCvGDgdeuXATMumP3Yy/DrKZZx6PA4LMpHr2qWFQJJyNueYXSDyviZG
+         WvjTeQqkLZMobzgthYtRPJw4yP58f6pZuBcipfLX6+/HPM2H2jNFERSgnLfS3ehTIMe2
+         Vwuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Eh+Z/o9WjtJXIcms4JIRAPXm9p+hCYRVJC9mwEl1kVc=;
-        b=qmG6uYesRdB+8KIaPf3jdjb5c4tbd4SegOqAoDkczYAby8mkfYF+x2zSRCPpJo1eZs
-         C6K+njYMIKMAe0Xh9f1X5t/9d2xbxraWHNsrecC5jviwBXiVpPBmNyJrjW7A4QauR1bx
-         z8iFoyVQRCS7Eozf3+y6yvt90OBIaTxwEmulZmOB2sfCi+i6xTnoU/hHhs9YljmS0H8s
-         SfLiqLXZlRPZtZHmEc6AAEFAIji3zyeQGieSiI8b4gOAdBeEOpJH8YiKz02BSRr3Zcm0
-         JQJ46SqVKinN1x4UsaLLO2VW4OYpLno6Mhp/yADh1uR0BVB6hLeHmFHHso86SPJUvkfo
-         saxQ==
-X-Gm-Message-State: APjAAAXAbctm1jogYqTTujd60gplYsFf1PZW4dyZrUIRtVOQccf0woxH
-        5U9AlPGE8Ey77StZHI90yY4=
-X-Google-Smtp-Source: APXvYqwBsBlG9dItbWdejfNVxwT63Ih7nGAZs5uYnC6MyJttlG5SsgmETsoc29jAX39mCqZ5/23eSQ==
-X-Received: by 2002:a0c:f681:: with SMTP id p1mr4786101qvn.177.1552702531982;
-        Fri, 15 Mar 2019 19:15:31 -0700 (PDT)
+        bh=dKCEsrSpumTi289jXlihCQLWqMFpZA5S6DOb5XT8GHE=;
+        b=ckDyBaU23kmspF3FHB2lGNoElenpnNjcc+VktRI5ofnnRbV7+2al/K3Oe+GW1bsDlI
+         09Ecgn7qPbthRwXF8Sqvovi04ILVebxBtM4LD/XYmIhdOr/eJDDaBw1A6ODAs8Oy9i29
+         +P8xNdDAc9Kw3jQeFLT5kkEfhDi8Uv4bDN1dECi11F7Si5CHDGTAyoFsI3kOjcLlxqFq
+         WtB1XN7QYficxTEDIHuaSTgLMOmUKK2owJq1BRf5HEXRjic+BTRolp/DXDtJY65jsOQ9
+         gQU7U3CtFLYFe3kSnUm+8i99QxRXzTDTpzIvJUvw8ZD7LprlgitSi16P8rJ1vbkFxX/n
+         xLzw==
+X-Gm-Message-State: APjAAAUW4BfasY7m3+45fwYMFzo4NPziBHMVFLl6fXbIoFvvOV+wuKF9
+        A1R7xfPuRGXbiwzdUTbrkNY=
+X-Google-Smtp-Source: APXvYqwpL2wiYePUZek3ClmSJXTjSde0gQYHSmpZq960Tf7hXuyoV8PQXJOmyL9LaeYgEJBMJZm12Q==
+X-Received: by 2002:a0c:ad90:: with SMTP id w16mr4966855qvc.53.1552702561127;
+        Fri, 15 Mar 2019 19:16:01 -0700 (PDT)
 Received: from renatolg ([186.220.21.102])
-        by smtp.gmail.com with ESMTPSA id l22sm1699994qkk.83.2019.03.15.19.15.28
+        by smtp.gmail.com with ESMTPSA id y2sm2979363qty.63.2019.03.15.19.15.57
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Mar 2019 19:15:31 -0700 (PDT)
-Date:   Fri, 15 Mar 2019 23:15:26 -0300
+        Fri, 15 Mar 2019 19:16:00 -0700 (PDT)
+Date:   Fri, 15 Mar 2019 23:15:55 -0300
 From:   Renato Lui Geh <renatogeh@gmail.com>
 To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
         knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
@@ -65,8 +66,8 @@ To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
 Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
         devicetree@vger.kernel.org
-Subject: [PATCH v5 09/11] staging: iio: ad7780: add new copyright holder
-Message-ID: <7cfb577d4e07b00a820b35dc56c58809120f8f39.1552700652.git.renatogeh@gmail.com>
+Subject: [PATCH v5 10/11] staging: iio: ad7780: moving ad7780 out of staging
+Message-ID: <a745a4984a6aed6d55216156957bb7bd388d6451.1552700652.git.renatogeh@gmail.com>
 References: <cover.1552700652.git.renatogeh@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
@@ -78,25 +79,869 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new copyright holder to the ad7780 driver.
+Move ad7780 ADC driver out of staging and into the mainline.
+
+The ad7780 is a sigma-delta analog to digital converter. This driver provides
+reading voltage values and status bits from both the ad778x and ad717x series.
+Its interface also allows writing on the FILTER and GAIN GPIO pins on the
+ad778x.
 
 Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+Signed-off-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
+Co-developed-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
 ---
- drivers/staging/iio/adc/ad7780.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v3:
+ - Changes unrelated to moving the driver to main tree were resent as
+   individual patches
+Changes in v4:
+ - Removed line warning it was safe to build the ad7780 driver by
+   default
 
-diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
-index ff61ffa0da9f..23b731a92e32 100644
---- a/drivers/staging/iio/adc/ad7780.c
-+++ b/drivers/staging/iio/adc/ad7780.c
-@@ -3,6 +3,7 @@
-  * AD7170/AD7171 and AD7780/AD7781 SPI ADC driver
-  *
-  * Copyright 2011 Analog Devices Inc.
-+ * Copyright 2019 Renato Lui Geh
-  */
+ drivers/iio/adc/Kconfig          |  12 +
+ drivers/iio/adc/Makefile         |   1 +
+ drivers/iio/adc/ad7780.c         | 376 +++++++++++++++++++++++++++++++
+ drivers/staging/iio/adc/Kconfig  |  13 --
+ drivers/staging/iio/adc/Makefile |   1 -
+ drivers/staging/iio/adc/ad7780.c | 376 -------------------------------
+ 6 files changed, 389 insertions(+), 390 deletions(-)
+ create mode 100644 drivers/iio/adc/ad7780.c
+ delete mode 100644 drivers/staging/iio/adc/ad7780.c
+
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index f3cc7a31bce5..6b36a45bd09f 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -108,6 +108,18 @@ config AD7766
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called ad7766.
  
- #include <linux/interrupt.h>
++config AD7780
++	tristate "Analog Devices AD7780 and similar ADCs driver"
++	depends on SPI
++	depends on GPIOLIB || COMPILE_TEST
++	select AD_SIGMA_DELTA
++	help
++	  Say yes here to build support for Analog Devices AD7170, AD7171,
++	  AD7780 and AD7781 SPI analog to digital converters (ADC).
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called ad7780.
++
+ config AD7791
+ 	tristate "Analog Devices AD7791 ADC driver"
+ 	depends on SPI
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index ea5031348052..b48852157115 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_AD7606_IFACE_PARALLEL) += ad7606_par.o
+ obj-$(CONFIG_AD7606_IFACE_SPI) += ad7606_spi.o
+ obj-$(CONFIG_AD7606) += ad7606.o
+ obj-$(CONFIG_AD7766) += ad7766.o
++obj-$(CONFIG_AD7780) += ad7780.o
+ obj-$(CONFIG_AD7791) += ad7791.o
+ obj-$(CONFIG_AD7793) += ad7793.o
+ obj-$(CONFIG_AD7887) += ad7887.o
+diff --git a/drivers/iio/adc/ad7780.c b/drivers/iio/adc/ad7780.c
+new file mode 100644
+index 000000000000..23b731a92e32
+--- /dev/null
++++ b/drivers/iio/adc/ad7780.c
+@@ -0,0 +1,376 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AD7170/AD7171 and AD7780/AD7781 SPI ADC driver
++ *
++ * Copyright 2011 Analog Devices Inc.
++ * Copyright 2019 Renato Lui Geh
++ */
++
++#include <linux/interrupt.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/sysfs.h>
++#include <linux/spi/spi.h>
++#include <linux/regulator/consumer.h>
++#include <linux/err.h>
++#include <linux/sched.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/bits.h>
++
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/iio/adc/ad_sigma_delta.h>
++
++#define AD7780_RDY		BIT(7)
++#define AD7780_FILTER		BIT(6)
++#define AD7780_ERR		BIT(5)
++#define AD7780_ID1		BIT(4)
++#define AD7780_ID0		BIT(3)
++#define AD7780_GAIN		BIT(2)
++
++#define AD7170_ID		0
++#define AD7171_ID		1
++#define AD7780_ID		1
++#define AD7781_ID		0
++
++#define AD7780_ID_MASK		(AD7780_ID0 | AD7780_ID1)
++
++#define AD7780_PATTERN_GOOD	1
++#define AD7780_PATTERN_MASK	GENMASK(1, 0)
++
++#define AD7170_PATTERN_GOOD	5
++#define AD7170_PATTERN_MASK	GENMASK(2, 0)
++
++#define AD7780_GAIN_MIDPOINT	64
++#define AD7780_FILTER_MIDPOINT	13350
++
++static const unsigned int ad778x_gain[2]      = { 1, 128 };
++static const unsigned int ad778x_odr_avail[2] = { 10000, 16700 };
++
++struct ad7780_chip_info {
++	struct iio_chan_spec	channel;
++	unsigned int		pattern_mask;
++	unsigned int		pattern;
++	bool			is_ad778x;
++};
++
++struct ad7780_state {
++	const struct ad7780_chip_info	*chip_info;
++	struct regulator		*reg;
++	struct gpio_desc		*powerdown_gpio;
++	struct gpio_desc		*gain_gpio;
++	struct gpio_desc		*filter_gpio;
++	unsigned int			gain;
++	unsigned int			odr;
++	unsigned int			int_vref_mv;
++
++	struct ad_sigma_delta sd;
++};
++
++enum ad7780_supported_device_ids {
++	ID_AD7170,
++	ID_AD7171,
++	ID_AD7780,
++	ID_AD7781,
++};
++
++static struct ad7780_state *ad_sigma_delta_to_ad7780(struct ad_sigma_delta *sd)
++{
++	return container_of(sd, struct ad7780_state, sd);
++}
++
++static int ad7780_set_mode(struct ad_sigma_delta *sigma_delta,
++			   enum ad_sigma_delta_mode mode)
++{
++	struct ad7780_state *st = ad_sigma_delta_to_ad7780(sigma_delta);
++	unsigned int val;
++
++	switch (mode) {
++	case AD_SD_MODE_SINGLE:
++	case AD_SD_MODE_CONTINUOUS:
++		val = 1;
++		break;
++	default:
++		val = 0;
++		break;
++	}
++
++	gpiod_set_value(st->powerdown_gpio, val);
++
++	return 0;
++}
++
++static int ad7780_read_raw(struct iio_dev *indio_dev,
++			   struct iio_chan_spec const *chan,
++			   int *val,
++			   int *val2,
++			   long m)
++{
++	struct ad7780_state *st = iio_priv(indio_dev);
++	int voltage_uv;
++
++	switch (m) {
++	case IIO_CHAN_INFO_RAW:
++		return ad_sigma_delta_single_conversion(indio_dev, chan, val);
++	case IIO_CHAN_INFO_SCALE:
++		voltage_uv = regulator_get_voltage(st->reg);
++		if (voltage_uv < 0)
++			return voltage_uv;
++		voltage_uv /= 1000;
++		*val = voltage_uv * st->gain;
++		*val2 = chan->scan_type.realbits - 1;
++		st->int_vref_mv = voltage_uv;
++		return IIO_VAL_FRACTIONAL_LOG2;
++	case IIO_CHAN_INFO_OFFSET:
++		*val = -(1 << (chan->scan_type.realbits - 1));
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		*val = st->odr;
++		return IIO_VAL_INT;
++	default:
++		break;
++	}
++
++	return -EINVAL;
++}
++
++static int ad7780_write_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan,
++			    int val,
++			    int val2,
++			    long m)
++{
++	struct ad7780_state *st = iio_priv(indio_dev);
++	const struct ad7780_chip_info *chip_info = st->chip_info;
++	unsigned long long vref;
++	unsigned int full_scale, gain;
++
++	if (!chip_info->is_ad778x)
++		return -EINVAL;
++
++	switch (m) {
++	case IIO_CHAN_INFO_SCALE:
++		if (val != 0)
++			return -EINVAL;
++
++		vref = st->int_vref_mv * 1000000LL;
++		full_scale = 1 << (chip_info->channel.scan_type.realbits - 1);
++		gain = DIV_ROUND_CLOSEST(vref, full_scale);
++		gain = DIV_ROUND_CLOSEST(gain, val2);
++		st->gain = gain;
++		if (gain < AD7780_GAIN_MIDPOINT)
++			gain = 0;
++		else
++			gain = 1;
++		gpiod_set_value(st->gain_gpio, gain);
++		break;
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		if (1000*val + val2/1000 < AD7780_FILTER_MIDPOINT)
++			val = 0;
++		else
++			val = 1;
++		st->odr = ad778x_odr_avail[val];
++		gpiod_set_value(st->filter_gpio, val);
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++static int ad7780_postprocess_sample(struct ad_sigma_delta *sigma_delta,
++				     unsigned int raw_sample)
++{
++	struct ad7780_state *st = ad_sigma_delta_to_ad7780(sigma_delta);
++	const struct ad7780_chip_info *chip_info = st->chip_info;
++
++	if ((raw_sample & AD7780_ERR) ||
++	    ((raw_sample & chip_info->pattern_mask) != chip_info->pattern))
++		return -EIO;
++
++	if (chip_info->is_ad778x) {
++		st->gain = ad778x_gain[raw_sample & AD7780_GAIN];
++		st->odr = ad778x_odr_avail[raw_sample & AD7780_FILTER];
++	}
++
++	return 0;
++}
++
++static const struct ad_sigma_delta_info ad7780_sigma_delta_info = {
++	.set_mode = ad7780_set_mode,
++	.postprocess_sample = ad7780_postprocess_sample,
++	.has_registers = false,
++};
++
++#define AD7780_CHANNEL(bits, wordsize) \
++	AD_SD_CHANNEL(1, 0, 0, bits, 32, wordsize - bits)
++#define AD7170_CHANNEL(bits, wordsize) \
++	AD_SD_CHANNEL_NO_SAMP_FREQ(1, 0, 0, bits, 32, wordsize - bits)
++
++static const struct ad7780_chip_info ad7780_chip_info_tbl[] = {
++	[ID_AD7170] = {
++		.channel = AD7170_CHANNEL(12, 24),
++		.pattern = AD7170_PATTERN_GOOD,
++		.pattern_mask = AD7170_PATTERN_MASK,
++		.is_ad778x = false,
++	},
++	[ID_AD7171] = {
++		.channel = AD7170_CHANNEL(16, 24),
++		.pattern = AD7170_PATTERN_GOOD,
++		.pattern_mask = AD7170_PATTERN_MASK,
++		.is_ad778x = false,
++	},
++	[ID_AD7780] = {
++		.channel = AD7780_CHANNEL(24, 32),
++		.pattern = AD7780_PATTERN_GOOD,
++		.pattern_mask = AD7780_PATTERN_MASK,
++		.is_ad778x = true,
++	},
++	[ID_AD7781] = {
++		.channel = AD7780_CHANNEL(20, 32),
++		.pattern = AD7780_PATTERN_GOOD,
++		.pattern_mask = AD7780_PATTERN_MASK,
++		.is_ad778x = true,
++	},
++};
++
++static const struct iio_info ad7780_info = {
++	.read_raw = ad7780_read_raw,
++	.write_raw = ad7780_write_raw,
++};
++
++static int ad7780_init_gpios(struct device *dev, struct ad7780_state *st)
++{
++	int ret;
++
++	st->powerdown_gpio = devm_gpiod_get_optional(dev,
++						     "powerdown",
++						     GPIOD_OUT_LOW);
++	if (IS_ERR(st->powerdown_gpio)) {
++		ret = PTR_ERR(st->powerdown_gpio);
++		dev_err(dev, "Failed to request powerdown GPIO: %d\n", ret);
++		return ret;
++	}
++
++	if (!st->chip_info->is_ad778x)
++		return 0;
++
++
++	st->gain_gpio = devm_gpiod_get_optional(dev,
++						"adi,gain",
++						GPIOD_OUT_HIGH);
++	if (IS_ERR(st->gain_gpio)) {
++		ret = PTR_ERR(st->gain_gpio);
++		dev_err(dev, "Failed to request gain GPIO: %d\n", ret);
++		return ret;
++	}
++
++	st->filter_gpio = devm_gpiod_get_optional(dev,
++						  "adi,filter",
++						  GPIOD_OUT_HIGH);
++	if (IS_ERR(st->filter_gpio)) {
++		ret = PTR_ERR(st->filter_gpio);
++		dev_err(dev, "Failed to request filter GPIO: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int ad7780_probe(struct spi_device *spi)
++{
++	struct ad7780_state *st;
++	struct iio_dev *indio_dev;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	st = iio_priv(indio_dev);
++	st->gain = 1;
++
++	ad_sd_init(&st->sd, indio_dev, spi, &ad7780_sigma_delta_info);
++
++	st->chip_info =
++		&ad7780_chip_info_tbl[spi_get_device_id(spi)->driver_data];
++
++	spi_set_drvdata(spi, indio_dev);
++
++	indio_dev->dev.parent = &spi->dev;
++	indio_dev->name = spi_get_device_id(spi)->name;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = &st->chip_info->channel;
++	indio_dev->num_channels = 1;
++	indio_dev->info = &ad7780_info;
++
++	ret = ad7780_init_gpios(&spi->dev, st);
++	if (ret)
++		goto error_cleanup_buffer_and_trigger;
++
++	st->reg = devm_regulator_get(&spi->dev, "avdd");
++	if (IS_ERR(st->reg))
++		return PTR_ERR(st->reg);
++
++	ret = regulator_enable(st->reg);
++	if (ret) {
++		dev_err(&spi->dev, "Failed to enable specified AVdd supply\n");
++		return ret;
++	}
++
++	ret = ad_sd_setup_buffer_and_trigger(indio_dev);
++	if (ret)
++		goto error_disable_reg;
++
++	ret = iio_device_register(indio_dev);
++	if (ret)
++		goto error_cleanup_buffer_and_trigger;
++
++	return 0;
++
++error_cleanup_buffer_and_trigger:
++	ad_sd_cleanup_buffer_and_trigger(indio_dev);
++error_disable_reg:
++	regulator_disable(st->reg);
++
++	return ret;
++}
++
++static int ad7780_remove(struct spi_device *spi)
++{
++	struct iio_dev *indio_dev = spi_get_drvdata(spi);
++	struct ad7780_state *st = iio_priv(indio_dev);
++
++	iio_device_unregister(indio_dev);
++	ad_sd_cleanup_buffer_and_trigger(indio_dev);
++
++	regulator_disable(st->reg);
++
++	return 0;
++}
++
++static const struct spi_device_id ad7780_id[] = {
++	{"ad7170", ID_AD7170},
++	{"ad7171", ID_AD7171},
++	{"ad7780", ID_AD7780},
++	{"ad7781", ID_AD7781},
++	{}
++};
++MODULE_DEVICE_TABLE(spi, ad7780_id);
++
++static struct spi_driver ad7780_driver = {
++	.driver = {
++		.name	= "ad7780",
++	},
++	.probe		= ad7780_probe,
++	.remove		= ad7780_remove,
++	.id_table	= ad7780_id,
++};
++module_spi_driver(ad7780_driver);
++
++MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
++MODULE_DESCRIPTION("Analog Devices AD7780 and similar ADCs");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/staging/iio/adc/Kconfig b/drivers/staging/iio/adc/Kconfig
+index 7a93d3a5c113..404a53c743a6 100644
+--- a/drivers/staging/iio/adc/Kconfig
++++ b/drivers/staging/iio/adc/Kconfig
+@@ -3,19 +3,6 @@
+ #
+ menu "Analog to digital converters"
+ 
+-config AD7780
+-	tristate "Analog Devices AD7780 and similar ADCs driver"
+-	depends on SPI
+-	depends on GPIOLIB || COMPILE_TEST
+-	select AD_SIGMA_DELTA
+-	help
+-	  Say yes here to build support for Analog Devices AD7170, AD7171,
+-	  AD7780 and AD7781 SPI analog to digital converters (ADC).
+-	  If unsure, say N (but it's safe to say "Y").
+-
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called ad7780.
+-
+ config AD7816
+ 	tristate "Analog Devices AD7816/7/8 temperature sensor and ADC driver"
+ 	depends on SPI
+diff --git a/drivers/staging/iio/adc/Makefile b/drivers/staging/iio/adc/Makefile
+index 7a421088ff82..4b76769b32bc 100644
+--- a/drivers/staging/iio/adc/Makefile
++++ b/drivers/staging/iio/adc/Makefile
+@@ -3,7 +3,6 @@
+ # Makefile for industrial I/O ADC drivers
+ #
+ 
+-obj-$(CONFIG_AD7780) += ad7780.o
+ obj-$(CONFIG_AD7816) += ad7816.o
+ obj-$(CONFIG_AD7192) += ad7192.o
+ obj-$(CONFIG_AD7280) += ad7280a.o
+diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
+deleted file mode 100644
+index 23b731a92e32..000000000000
+--- a/drivers/staging/iio/adc/ad7780.c
++++ /dev/null
+@@ -1,376 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * AD7170/AD7171 and AD7780/AD7781 SPI ADC driver
+- *
+- * Copyright 2011 Analog Devices Inc.
+- * Copyright 2019 Renato Lui Geh
+- */
+-
+-#include <linux/interrupt.h>
+-#include <linux/device.h>
+-#include <linux/kernel.h>
+-#include <linux/slab.h>
+-#include <linux/sysfs.h>
+-#include <linux/spi/spi.h>
+-#include <linux/regulator/consumer.h>
+-#include <linux/err.h>
+-#include <linux/sched.h>
+-#include <linux/gpio/consumer.h>
+-#include <linux/module.h>
+-#include <linux/bits.h>
+-
+-#include <linux/iio/iio.h>
+-#include <linux/iio/sysfs.h>
+-#include <linux/iio/adc/ad_sigma_delta.h>
+-
+-#define AD7780_RDY		BIT(7)
+-#define AD7780_FILTER		BIT(6)
+-#define AD7780_ERR		BIT(5)
+-#define AD7780_ID1		BIT(4)
+-#define AD7780_ID0		BIT(3)
+-#define AD7780_GAIN		BIT(2)
+-
+-#define AD7170_ID		0
+-#define AD7171_ID		1
+-#define AD7780_ID		1
+-#define AD7781_ID		0
+-
+-#define AD7780_ID_MASK		(AD7780_ID0 | AD7780_ID1)
+-
+-#define AD7780_PATTERN_GOOD	1
+-#define AD7780_PATTERN_MASK	GENMASK(1, 0)
+-
+-#define AD7170_PATTERN_GOOD	5
+-#define AD7170_PATTERN_MASK	GENMASK(2, 0)
+-
+-#define AD7780_GAIN_MIDPOINT	64
+-#define AD7780_FILTER_MIDPOINT	13350
+-
+-static const unsigned int ad778x_gain[2]      = { 1, 128 };
+-static const unsigned int ad778x_odr_avail[2] = { 10000, 16700 };
+-
+-struct ad7780_chip_info {
+-	struct iio_chan_spec	channel;
+-	unsigned int		pattern_mask;
+-	unsigned int		pattern;
+-	bool			is_ad778x;
+-};
+-
+-struct ad7780_state {
+-	const struct ad7780_chip_info	*chip_info;
+-	struct regulator		*reg;
+-	struct gpio_desc		*powerdown_gpio;
+-	struct gpio_desc		*gain_gpio;
+-	struct gpio_desc		*filter_gpio;
+-	unsigned int			gain;
+-	unsigned int			odr;
+-	unsigned int			int_vref_mv;
+-
+-	struct ad_sigma_delta sd;
+-};
+-
+-enum ad7780_supported_device_ids {
+-	ID_AD7170,
+-	ID_AD7171,
+-	ID_AD7780,
+-	ID_AD7781,
+-};
+-
+-static struct ad7780_state *ad_sigma_delta_to_ad7780(struct ad_sigma_delta *sd)
+-{
+-	return container_of(sd, struct ad7780_state, sd);
+-}
+-
+-static int ad7780_set_mode(struct ad_sigma_delta *sigma_delta,
+-			   enum ad_sigma_delta_mode mode)
+-{
+-	struct ad7780_state *st = ad_sigma_delta_to_ad7780(sigma_delta);
+-	unsigned int val;
+-
+-	switch (mode) {
+-	case AD_SD_MODE_SINGLE:
+-	case AD_SD_MODE_CONTINUOUS:
+-		val = 1;
+-		break;
+-	default:
+-		val = 0;
+-		break;
+-	}
+-
+-	gpiod_set_value(st->powerdown_gpio, val);
+-
+-	return 0;
+-}
+-
+-static int ad7780_read_raw(struct iio_dev *indio_dev,
+-			   struct iio_chan_spec const *chan,
+-			   int *val,
+-			   int *val2,
+-			   long m)
+-{
+-	struct ad7780_state *st = iio_priv(indio_dev);
+-	int voltage_uv;
+-
+-	switch (m) {
+-	case IIO_CHAN_INFO_RAW:
+-		return ad_sigma_delta_single_conversion(indio_dev, chan, val);
+-	case IIO_CHAN_INFO_SCALE:
+-		voltage_uv = regulator_get_voltage(st->reg);
+-		if (voltage_uv < 0)
+-			return voltage_uv;
+-		voltage_uv /= 1000;
+-		*val = voltage_uv * st->gain;
+-		*val2 = chan->scan_type.realbits - 1;
+-		st->int_vref_mv = voltage_uv;
+-		return IIO_VAL_FRACTIONAL_LOG2;
+-	case IIO_CHAN_INFO_OFFSET:
+-		*val = -(1 << (chan->scan_type.realbits - 1));
+-		return IIO_VAL_INT;
+-	case IIO_CHAN_INFO_SAMP_FREQ:
+-		*val = st->odr;
+-		return IIO_VAL_INT;
+-	default:
+-		break;
+-	}
+-
+-	return -EINVAL;
+-}
+-
+-static int ad7780_write_raw(struct iio_dev *indio_dev,
+-			    struct iio_chan_spec const *chan,
+-			    int val,
+-			    int val2,
+-			    long m)
+-{
+-	struct ad7780_state *st = iio_priv(indio_dev);
+-	const struct ad7780_chip_info *chip_info = st->chip_info;
+-	unsigned long long vref;
+-	unsigned int full_scale, gain;
+-
+-	if (!chip_info->is_ad778x)
+-		return -EINVAL;
+-
+-	switch (m) {
+-	case IIO_CHAN_INFO_SCALE:
+-		if (val != 0)
+-			return -EINVAL;
+-
+-		vref = st->int_vref_mv * 1000000LL;
+-		full_scale = 1 << (chip_info->channel.scan_type.realbits - 1);
+-		gain = DIV_ROUND_CLOSEST(vref, full_scale);
+-		gain = DIV_ROUND_CLOSEST(gain, val2);
+-		st->gain = gain;
+-		if (gain < AD7780_GAIN_MIDPOINT)
+-			gain = 0;
+-		else
+-			gain = 1;
+-		gpiod_set_value(st->gain_gpio, gain);
+-		break;
+-	case IIO_CHAN_INFO_SAMP_FREQ:
+-		if (1000*val + val2/1000 < AD7780_FILTER_MIDPOINT)
+-			val = 0;
+-		else
+-			val = 1;
+-		st->odr = ad778x_odr_avail[val];
+-		gpiod_set_value(st->filter_gpio, val);
+-		break;
+-	default:
+-		break;
+-	}
+-
+-	return 0;
+-}
+-
+-static int ad7780_postprocess_sample(struct ad_sigma_delta *sigma_delta,
+-				     unsigned int raw_sample)
+-{
+-	struct ad7780_state *st = ad_sigma_delta_to_ad7780(sigma_delta);
+-	const struct ad7780_chip_info *chip_info = st->chip_info;
+-
+-	if ((raw_sample & AD7780_ERR) ||
+-	    ((raw_sample & chip_info->pattern_mask) != chip_info->pattern))
+-		return -EIO;
+-
+-	if (chip_info->is_ad778x) {
+-		st->gain = ad778x_gain[raw_sample & AD7780_GAIN];
+-		st->odr = ad778x_odr_avail[raw_sample & AD7780_FILTER];
+-	}
+-
+-	return 0;
+-}
+-
+-static const struct ad_sigma_delta_info ad7780_sigma_delta_info = {
+-	.set_mode = ad7780_set_mode,
+-	.postprocess_sample = ad7780_postprocess_sample,
+-	.has_registers = false,
+-};
+-
+-#define AD7780_CHANNEL(bits, wordsize) \
+-	AD_SD_CHANNEL(1, 0, 0, bits, 32, wordsize - bits)
+-#define AD7170_CHANNEL(bits, wordsize) \
+-	AD_SD_CHANNEL_NO_SAMP_FREQ(1, 0, 0, bits, 32, wordsize - bits)
+-
+-static const struct ad7780_chip_info ad7780_chip_info_tbl[] = {
+-	[ID_AD7170] = {
+-		.channel = AD7170_CHANNEL(12, 24),
+-		.pattern = AD7170_PATTERN_GOOD,
+-		.pattern_mask = AD7170_PATTERN_MASK,
+-		.is_ad778x = false,
+-	},
+-	[ID_AD7171] = {
+-		.channel = AD7170_CHANNEL(16, 24),
+-		.pattern = AD7170_PATTERN_GOOD,
+-		.pattern_mask = AD7170_PATTERN_MASK,
+-		.is_ad778x = false,
+-	},
+-	[ID_AD7780] = {
+-		.channel = AD7780_CHANNEL(24, 32),
+-		.pattern = AD7780_PATTERN_GOOD,
+-		.pattern_mask = AD7780_PATTERN_MASK,
+-		.is_ad778x = true,
+-	},
+-	[ID_AD7781] = {
+-		.channel = AD7780_CHANNEL(20, 32),
+-		.pattern = AD7780_PATTERN_GOOD,
+-		.pattern_mask = AD7780_PATTERN_MASK,
+-		.is_ad778x = true,
+-	},
+-};
+-
+-static const struct iio_info ad7780_info = {
+-	.read_raw = ad7780_read_raw,
+-	.write_raw = ad7780_write_raw,
+-};
+-
+-static int ad7780_init_gpios(struct device *dev, struct ad7780_state *st)
+-{
+-	int ret;
+-
+-	st->powerdown_gpio = devm_gpiod_get_optional(dev,
+-						     "powerdown",
+-						     GPIOD_OUT_LOW);
+-	if (IS_ERR(st->powerdown_gpio)) {
+-		ret = PTR_ERR(st->powerdown_gpio);
+-		dev_err(dev, "Failed to request powerdown GPIO: %d\n", ret);
+-		return ret;
+-	}
+-
+-	if (!st->chip_info->is_ad778x)
+-		return 0;
+-
+-
+-	st->gain_gpio = devm_gpiod_get_optional(dev,
+-						"adi,gain",
+-						GPIOD_OUT_HIGH);
+-	if (IS_ERR(st->gain_gpio)) {
+-		ret = PTR_ERR(st->gain_gpio);
+-		dev_err(dev, "Failed to request gain GPIO: %d\n", ret);
+-		return ret;
+-	}
+-
+-	st->filter_gpio = devm_gpiod_get_optional(dev,
+-						  "adi,filter",
+-						  GPIOD_OUT_HIGH);
+-	if (IS_ERR(st->filter_gpio)) {
+-		ret = PTR_ERR(st->filter_gpio);
+-		dev_err(dev, "Failed to request filter GPIO: %d\n", ret);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static int ad7780_probe(struct spi_device *spi)
+-{
+-	struct ad7780_state *st;
+-	struct iio_dev *indio_dev;
+-	int ret;
+-
+-	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+-	if (!indio_dev)
+-		return -ENOMEM;
+-
+-	st = iio_priv(indio_dev);
+-	st->gain = 1;
+-
+-	ad_sd_init(&st->sd, indio_dev, spi, &ad7780_sigma_delta_info);
+-
+-	st->chip_info =
+-		&ad7780_chip_info_tbl[spi_get_device_id(spi)->driver_data];
+-
+-	spi_set_drvdata(spi, indio_dev);
+-
+-	indio_dev->dev.parent = &spi->dev;
+-	indio_dev->name = spi_get_device_id(spi)->name;
+-	indio_dev->modes = INDIO_DIRECT_MODE;
+-	indio_dev->channels = &st->chip_info->channel;
+-	indio_dev->num_channels = 1;
+-	indio_dev->info = &ad7780_info;
+-
+-	ret = ad7780_init_gpios(&spi->dev, st);
+-	if (ret)
+-		goto error_cleanup_buffer_and_trigger;
+-
+-	st->reg = devm_regulator_get(&spi->dev, "avdd");
+-	if (IS_ERR(st->reg))
+-		return PTR_ERR(st->reg);
+-
+-	ret = regulator_enable(st->reg);
+-	if (ret) {
+-		dev_err(&spi->dev, "Failed to enable specified AVdd supply\n");
+-		return ret;
+-	}
+-
+-	ret = ad_sd_setup_buffer_and_trigger(indio_dev);
+-	if (ret)
+-		goto error_disable_reg;
+-
+-	ret = iio_device_register(indio_dev);
+-	if (ret)
+-		goto error_cleanup_buffer_and_trigger;
+-
+-	return 0;
+-
+-error_cleanup_buffer_and_trigger:
+-	ad_sd_cleanup_buffer_and_trigger(indio_dev);
+-error_disable_reg:
+-	regulator_disable(st->reg);
+-
+-	return ret;
+-}
+-
+-static int ad7780_remove(struct spi_device *spi)
+-{
+-	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+-	struct ad7780_state *st = iio_priv(indio_dev);
+-
+-	iio_device_unregister(indio_dev);
+-	ad_sd_cleanup_buffer_and_trigger(indio_dev);
+-
+-	regulator_disable(st->reg);
+-
+-	return 0;
+-}
+-
+-static const struct spi_device_id ad7780_id[] = {
+-	{"ad7170", ID_AD7170},
+-	{"ad7171", ID_AD7171},
+-	{"ad7780", ID_AD7780},
+-	{"ad7781", ID_AD7781},
+-	{}
+-};
+-MODULE_DEVICE_TABLE(spi, ad7780_id);
+-
+-static struct spi_driver ad7780_driver = {
+-	.driver = {
+-		.name	= "ad7780",
+-	},
+-	.probe		= ad7780_probe,
+-	.remove		= ad7780_remove,
+-	.id_table	= ad7780_id,
+-};
+-module_spi_driver(ad7780_driver);
+-
+-MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+-MODULE_DESCRIPTION("Analog Devices AD7780 and similar ADCs");
+-MODULE_LICENSE("GPL v2");
 -- 
 2.21.0
 
