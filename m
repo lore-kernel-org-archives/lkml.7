@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0249CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B42C10F03
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C649D21903
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B514821903
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 21:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552771517;
-	bh=BhXsJcKGMhbZiBWDvOWRFV5nlHnS3hScCWy/xkXlG7o=;
+	s=default; t=1552771522;
+	bh=XmshS0jNCiVI1VVru3Sg+L5v/a0Mf/eSuhlQfTr0Udg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=qudn9XH3fzO3mfbZwaPDH7WDe6t0VtjF0cZ5lW9+KZnwFf1oDV1z1McD1/lxN/KLH
-	 yRrx6ODwA2OxXgGUatR7V1WRLIM+gp6ZBvvg2nfSADOGwpYsHaM3eVG0jtI0/3Ezbb
-	 iRTEKE522YdS2i6PVmaNWSvx1Z4k+JHs8+vazxYY=
+	b=q/n+DgjSlzeZHGHj/SxpGbcxVgD02niC0t19IbGPY3TNuz0nWY6G5MLKQ9UmNN5LJ
+	 u58yALuCv53Zgr4U2+7QUTuccQN3pzlmHEqQgu8hTh1TTGnIO11FYKpf6+gkuEkxnA
+	 LFSiMyp90sG8iydq3cbLj+l8nNqtBdFkvUWfWbQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbfCPVZQ (ORCPT
+        id S1727349AbfCPVZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 17:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57652 "EHLO mail.kernel.org"
+        Sat, 16 Mar 2019 17:25:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfCPVZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 17:25:15 -0400
-Subject: Re: [GIT PULL] pidfd patches for v5.1-rc1
+        id S1727315AbfCPVZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Mar 2019 17:25:19 -0400
+Subject: Re: [GIT PULL] final round of SCSI updates for the 5.0+ merge window
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552771515;
-        bh=BhXsJcKGMhbZiBWDvOWRFV5nlHnS3hScCWy/xkXlG7o=;
+        s=default; t=1552771519;
+        bh=XmshS0jNCiVI1VVru3Sg+L5v/a0Mf/eSuhlQfTr0Udg=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=hPHB+jTrVXTugIhrYQuL08PRufiE9RBP2lJoa17e/OTq6mf5P1zO+oAc0Vbp03mDY
-         YMFo+FEWTrAjbC1W6gx8q2PIkkiIYnhHHmEoZNLJbFYA9Rd132sr4bVOXEOuf7E7p1
-         VoORtKv/zQsSCkhF0JeG0oLPIDBUlwdfdmWbvtqQ=
+        b=kLGky8nuc9bn97ib9i2MOlg5wnR2hO6Ubk8qnNjapfjbBU3dSzdwvHOyI2YGRDvyL
+         ghEKFQdEYvNzXDBbsuiFaFUPFqrNCurHP1QK2CxjZ3I4DdsxhJ3OGjsur/CtG5027H
+         iE/PFnjSuPRWWZMzEgQJCyAdkgZ/RjziKgqEsYEA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190305171301.23147-1-christian@brauner.io>
-References: <20190305171301.23147-1-christian@brauner.io>
+In-Reply-To: <1552695799.24933.24.camel@HansenPartnership.com>
+References: <1552695799.24933.24.camel@HansenPartnership.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190305171301.23147-1-christian@brauner.io>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
- tags/pidfd-v5.1-rc1
-X-PR-Tracked-Commit-Id: 575a0ae9744d571f7c6aae4487a05850baae9e1c
+X-PR-Tracked-Message-Id: <1552695799.24933.24.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+X-PR-Tracked-Commit-Id: 52eaa798f4f4e983c711eaa1c13d8859a52946e8
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a9dce6679d736cb3d612af39bab9f31f8db66f9b
-Message-Id: <155277151544.28247.8109419608467526638.pr-tracker-bot@kernel.org>
-Date:   Sat, 16 Mar 2019 21:25:15 +0000
-To:     Christian Brauner <christian@brauner.io>
-Cc:     torvalds@linux-foundation.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org, arnd@arndb.de,
-        Christian Brauner <christian@brauner.io>
+X-PR-Merge-Commit-Id: 477558d7e8d82b59a650e193a5651cf25b794dbc
+Message-Id: <155277151927.28247.7076431904952865577.pr-tracker-bot@kernel.org>
+Date:   Sat, 16 Mar 2019 21:25:19 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue,  5 Mar 2019 18:13:01 +0100:
+The pull request you sent on Fri, 15 Mar 2019 17:23:19 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git tags/pidfd-v5.1-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a9dce6679d736cb3d612af39bab9f31f8db66f9b
+https://git.kernel.org/torvalds/c/477558d7e8d82b59a650e193a5651cf25b794dbc
 
 Thank you!
 
