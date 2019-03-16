@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E50C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A674C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1027621903
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A4A218FE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 14:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JPJ9XkWI"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ii2n3G+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfCPOlb (ORCPT
+        id S1727108AbfCPOmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 10:41:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34787 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbfCPOlb (ORCPT
+        Sat, 16 Mar 2019 10:42:01 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43105 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbfCPOmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 10:41:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k1so11975291wre.1
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:41:30 -0700 (PDT)
+        Sat, 16 Mar 2019 10:42:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d17so12445343wre.10
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 07:42:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:from:user-agent:mime-version:to:cc:subject
          :references:in-reply-to:content-transfer-encoding;
-        bh=3JRLm6aE8nn8AvGA5lUY5WZdl5snm2+VkOvlXdbMgtI=;
-        b=JPJ9XkWIO8HUDvxFf+kq39rqA4rHHGIIFiEcw67Q7gKsJq0mcMInQ+A6zyjIcEBy2l
-         BgLOYZPerTuO0DKcGe9vq9E5RvrH2BpS6omPPX2rav1bIgy+KdgXvJ+MNkx7UKI38q+X
-         jvJdrcyr3fhhFU9EyNGZ3MTDH4QbDXhI89t6FNjxBj087O+2ETozMRqN1uQXJJ5m3xNI
-         HzI3/Oi0Bral0ihWSAWRFa/R5OcgkZr8Ykmvrtvo1pzV/rIdyqGOBDaqUE6QYYJAlMh2
-         Xs3pue3fqjuy95eVMpmPchiMq9TTWb4spc3H6wFW6yfevoj8MKRzJyHl77k8eWHbXpSv
-         96Ow==
+        bh=WzUIHQxCNMlTcr2lcRulVSigdhGj2YLRtdawsHFTcCI=;
+        b=ii2n3G+4PZ7Vl2XnPhHc7ZpUyAC+6b/ORlw6ipUGXinOBebxSLu4xwMl4MQCYwngcK
+         LWVhJg8z8U7/JwFpDHfawWEMlcHepqneuYmvY2u2uHi2FpD5rJRaBXm34/rCZayarwT9
+         ANN3b1peQxhzQk0nZI+BljWKHUrY4OVeddn/eXzO6tkPd4CiMJYlNhiferZ+B2i6dHlt
+         +pLOxArXXF2c5/8koQtDf+snTMNghIYzN9MKR3NRUEG2IJTGO/9BU3FGnYaRA2zQy9ZX
+         ju1Mg0Q3GuI3KgXgFe9fNsXg5TtncTgLGJkID2VRWUrprbVmUHnozb/W1JGXkCOl5JUp
+         shSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
          :cc:subject:references:in-reply-to:content-transfer-encoding;
-        bh=3JRLm6aE8nn8AvGA5lUY5WZdl5snm2+VkOvlXdbMgtI=;
-        b=oAdB20YSpvWhnAQQeP75hmhr/jzl+5W1F5c/1BJ9EBDr8B4ZnILpi8Nq3qeT0IWGki
-         xEuZjBoSd9WZt+Ljkzhw8ocikT5RzRMCMw3vXUWta/1bxMhwZB8Z7cga9qUyItQ+fZVr
-         GKih8ykJNeY4CduuK4lmissoZzpFmQNuv75Hox4/walAxXjb9a9PNXdATnaQM9h4rY0o
-         JcK834Jb6A+AIa4H+6J6PL4X4gi0dHYIFXiRF+5634Q1c+tTcJmXZV5LPuMzdgJHrTuU
-         K6G9VaDPB2YHYphoIogItjMBXiWkoMT9xGN12tVYOvQRbgtWuUaGPyTCDrGKjCTwWeEl
-         28Sg==
-X-Gm-Message-State: APjAAAXbMChJ9jDS5TX9R29cbrq0Afv8EcnTgNiG/VKsRPCkaqSIhy93
-        S7C9abgIj18YEMXv1izfP6YYt+RFpZeyXA==
-X-Google-Smtp-Source: APXvYqxJTlTq+VQ5O/KmnNSLpkSECzgV79OMiHzEa8PG0yPJOhl4AaBhfbjnFDbTV8Zx+wTNYtb/CA==
-X-Received: by 2002:adf:efc8:: with SMTP id i8mr6360395wrp.164.1552747289844;
-        Sat, 16 Mar 2019 07:41:29 -0700 (PDT)
+        bh=WzUIHQxCNMlTcr2lcRulVSigdhGj2YLRtdawsHFTcCI=;
+        b=bq4MV3y+fYm3MWsrmgOcrcx+6oMKK2j1t1YTnvphujN+fslpfQFAXl7jxqzGSynRpo
+         8Sj5OKUJZujgn0bafFP+rSTIjOmHNI12EHc11hiDpdln1OxpAhxhKealJIVwXPohFNA7
+         PrHRI+1p48/REWJX0QZILpjxP4+fDfy8FzJhiXgzUcOIrobctg14n9WSZEYkeakmLWPq
+         YMDnahF8n3wdt9yeWUH+s9/IQ19OIsUCOJHKPQ9HpIru97I+6/gqSkf1aNUTsseuYDOJ
+         YBWlFjR0K4fWhNaD6iyHjBVj4yY+JTz2o409xyAKv+W2BxRjlfjOnLPbEUUFTQGGsBHN
+         UdKA==
+X-Gm-Message-State: APjAAAWO4ZfHbbku/QHBpnMFXi0bndKCSGjOr54uX0scsOXaGTh+W20f
+        pQmha/CKU4UHhl3th/Zbz6z0oQ==
+X-Google-Smtp-Source: APXvYqw5fPmMuJtK2qtAhgGy38HgStocKMVEgmfcER/zf/cKTGGKHt1YbPoLZ11A3Fa1dWR0/rjY0g==
+X-Received: by 2002:a5d:6947:: with SMTP id r7mr2354381wrw.167.1552747319381;
+        Sat, 16 Mar 2019 07:41:59 -0700 (PDT)
 Received: from [192.168.1.77] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id r6sm4955723wrx.48.2019.03.16.07.41.28
+        by smtp.gmail.com with ESMTPSA id s187sm6676833wms.7.2019.03.16.07.41.58
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 16 Mar 2019 07:41:29 -0700 (PDT)
-Message-ID: <5C8D0B18.1070001@baylibre.com>
-Date:   Sat, 16 Mar 2019 15:41:28 +0100
+        Sat, 16 Mar 2019 07:41:58 -0700 (PDT)
+Message-ID: <5C8D0B35.9080704@baylibre.com>
+Date:   Sat, 16 Mar 2019 15:41:57 +0100
 From:   Neil Armstrong <narmstrong@baylibre.com>
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:24.0) Gecko/20100101 Thunderbird/24.6.0
 MIME-Version: 1.0
@@ -91,15 +91,9 @@ Le 15/03/2019 23:05, Martin Blumenstingl a écrit :
 >   * VDD_EE (0.8V - PWM controlled)
 >   * VDD_CPU(PWM controlled)
 >   * VDDQ1_5
-
-Will add the comment
-
 > 
 > I'm not sure whether this board also has VDDQ1_5 though, but VDD_EE
 > and VDD_CPU should be very similar (or even identical)
-
-It's bases on a ref design, we can assume it's the same yes
-
 > 
 >>
 >> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
@@ -134,6 +128,9 @@ It's bases on a ref design, we can assume it's the same yes
 >> +               regulator-always-on;
 >> +       };
 > mine has a 5V DC in. can you please check this on your board?
+
+Indeed it's a bad copy/paste from SEI510
+
 > 
 > 
 > Regards
