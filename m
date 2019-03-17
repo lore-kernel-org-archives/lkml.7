@@ -2,103 +2,206 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7C8C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EDEC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7542721019
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7317B2087F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:00:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nv49+/pd"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fDI45nXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfCQPwU (ORCPT
+        id S1727376AbfCQQAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 11:52:20 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:1332 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfCQPwT (ORCPT
+        Sun, 17 Mar 2019 12:00:36 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:45917 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbfCQQAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 11:52:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1552837939; x=1584373939;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=VzmUeWkQQDo7bTzN1x7A+c/QOoqQvVIwRVM72/Tm9N8=;
-  b=nv49+/pd5uqbgD8CWHVpwXE+S9UJQ1G2+YPMMWgJ3jPAgiqdKHXv9ose
-   SpqVoyANf5GY8WQHomIxhnXApap8MZu17bR6tURMd7DDUSYXREu+Vv8Zd
-   odjlx67WLFkR88MABvPdJ7BZuEtJgesqjJp4/CDt8yg3yIDpvN/z4aMKT
-   M=;
-X-IronPort-AV: E=Sophos;i="5.58,489,1544486400"; 
-   d="scan'208";a="665539149"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 17 Mar 2019 15:52:16 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x2HFqCkd079957
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Sun, 17 Mar 2019 15:52:14 GMT
-Received: from EX13d09UWC002.ant.amazon.com (10.43.162.102) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 17 Mar 2019 15:52:12 +0000
-Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
- EX13d09UWC002.ant.amazon.com (10.43.162.102) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 17 Mar 2019 15:52:12 +0000
-Received: from EX13D02UWC004.ant.amazon.com ([10.43.162.236]) by
- EX13D02UWC004.ant.amazon.com ([10.43.162.236]) with mapi id 15.00.1367.000;
- Sun, 17 Mar 2019 15:52:09 +0000
-From:   "Saidi, Ali" <alisaidi@amazon.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Liguori, Anthony" <aliguori@amazon.com>
-Subject: Re: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in
- mmap_base
-Thread-Topic: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in
- mmap_base
-Thread-Index: AQHU2PmhiRz/TsWOLEOmeVSaHu1ISKYJwNUAgAY/+B8=
-Date:   Sun, 17 Mar 2019 15:52:08 +0000
-Message-ID: <3A8AEAFE-315E-48D2-A246-D7BF1EBB9FF8@amazon.com>
-References: <20190312173248.13490-1-alisaidi@amazon.com>
- <20190312173248.13490-3-alisaidi@amazon.com>,<1bd04037-698f-00c7-aa91-2bfec751bb0e@intel.com>
-In-Reply-To: <1bd04037-698f-00c7-aa91-2bfec751bb0e@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 17 Mar 2019 12:00:35 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x2HG0VtT010517;
+        Mon, 18 Mar 2019 01:00:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x2HG0VtT010517
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1552838432;
+        bh=KjG9rXEVOQv25Mm/De/M0uUFkmhzT/KcC9AZFThcvNc=;
+        h=From:Date:Subject:To:Cc:From;
+        b=fDI45nXL92YEbC+iPVrT6+atn7fAdus0XQ1G6TCdzWHVB9M1yKG3sWvVLzxExb8AN
+         qMBK2pvAca+YMMj0gpCGmrOFlhTnes+er4/915itZcYLtV9Ve5ZYXjZNw15kNL7PoW
+         VjxiSO31uf0yGVej1JNaVvdalUHAye7tFFBBiCb1rGOjlUCKIo/9A3FZ/CHY6QGX9n
+         9JQYxNTryEWHG6aIc/XcfgA6sJuP3rU96vbnqK3sVxHonZ0U5FH1+50qrr5/Dbn24Y
+         BIWfTH/sCqLNV0K0d1oERHQSh8AW7EyU3UXjme9luvBFwBAEGBaRGdVNI8tje6BD7M
+         aJUUk+3WvGsqQ==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id w13so2046389vsc.4;
+        Sun, 17 Mar 2019 09:00:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAUUWiezexfO5chSW3Z0UrsbWp4XQY/I6rPnrPhQ1UeGmQ5O1tYH
+        D0tAX8B3NzS56inRevN/pfwNFQxCasEn8DVG0eE=
+X-Google-Smtp-Source: APXvYqyu7uHOTP7zjlhU9jLoS3SVdi+ZnOWsFqHQdpNzYZE8U9/cMt+gm4dk21xQxnfcL2UPNILZDBJHG9a/6ecHiCU=
+X-Received: by 2002:a67:f90e:: with SMTP id t14mr7142005vsq.181.1552838430860;
+ Sun, 17 Mar 2019 09:00:30 -0700 (PDT)
 MIME-Version: 1.0
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 18 Mar 2019 00:59:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATgAf-xiFFtMHYvOR91iNwQbiWaZxZCN-EKPKRpK57XuA@mail.gmail.com>
+Message-ID: <CAK7LNATgAf-xiFFtMHYvOR91iNwQbiWaZxZCN-EKPKRpK57XuA@mail.gmail.com>
+Subject: [GIT PULL] more Kbuild updates for v5.1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        masahiroy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gTWFyIDEzLCAyMDE5LCBhdCAxMToyNiBBTSwgRGF2ZSBIYW5zZW4gPGRhdmUuaGFu
-c2VuQGludGVsLmNvbT4gd3JvdGU6DQo+IA0KPj4gT24gMy8xMi8xOSAxMDozMiBBTSwgQWxpIFNh
-aWRpIHdyb3RlOg0KPj4gKyAgICAvKiBQcm92aWRlIHNwYWNlIGZvciBicmsgcmFuZG9taXphdGlv
-biAqLw0KPj4gKyAgICBwYWQgKz0gU1pfMzJNOw0KPiANCj4gSnVzdCBjdXJpb3VzOiAgV2h5IGlz
-IHRoZSBwYWRkaW5nIGluIHlvdXIgb3RoZXIgcGF0Y2ggY29uZGl0aW9uYWwgb24gdGhlDQo+IDMy
-LWJpdCB2cy4gNjQtYml0IGFwcHMsIGJ1dCBoZXJlIGl0J3MgYWx3YXlzIDMyTT8NCkFybSBjaGFu
-Z2VzIHRoZSBhbW91bnQgb2YgYnJrIGJhc2VkIG9uIHRoZSBwcm9jZXNzIGJlaW5nIDMyIHZzIDY0
-IGJpdC4gWDg2IGRvZXNu4oCZdCBhcHBlYXIgdG8gZG8gdGhpcy4gDQo+IA0KPiBBbHNvLCBkaWQg
-eW91IGhpdCB0aGlzIHByb2JsZW0gaW4gcHJhY3RpY2Ugc29tZWhvdz8NCg0KSnVzdCBkZWJ1Z2dp
-bmcgYSBjcmFzaCB3aGVuIHRlc3RpbmcgYSB2ZXJzaW9uIG9mIGEgbGlicmFyeSBJIGNvbXBpbGVk
-LiANCg0KQWxp
+Hi Linus,
+
+Here are late Kbuild updates for v5.1-rc1
+Please pull!
+
+
+
+The following changes since commit 5453a3df2a5eb49bc24615d4cf0d66b2aae05e5f:
+
+  Merge tag 'kconfig-v5.1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
+(2019-03-13 10:06:28 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-v5.1-2
+
+for you to fetch changes up to c71bb9f8666602a22aee9df36a2df35e47edd8cc:
+
+  kconfig: remove stale lxdialog/.gitignore (2019-03-17 15:47:02 +0900)
+
+----------------------------------------------------------------
+Kbuild updates for v5.1 (2nd)
+
+ - add more Build-Depends to Debian source package
+
+ - prefix header search paths with $(srctree)/
+
+ - make modpost show verbose section mismatch warnings
+
+ - avoid hard-coded CROSS_COMPILE for h8300
+
+ - fix regression for Debian make-kpkg command
+
+ - add semantic patch to detect missing put_device()
+
+ - fix some warnings of 'make deb-pkg'
+
+ - optimize NOSTDINC_FLAGS evaluation
+
+ - add warnings about redundant generic-y
+
+ - clean up Makefiles and scripts
+
+----------------------------------------------------------------
+Arseny Maslennikov (1):
+      kbuild: deb-pkg: avoid implicit effects
+
+Douglas Anderson (2):
+      kbuild: Make NOSTDINC_FLAGS a simply expanded variable
+      Revert "modsign: Abort modules_install when signing fails"
+
+Masahiro Yamada (14):
+      libfdt: prefix header search paths with $(srctree)/
+      ia64: prefix header search path with $(srctree)/
+      modpost: always show verbose warning for section mismatch
+      kbuild: move archive command to scripts/Makefile.lib
+      h8300: use cc-cross-prefix instead of hardcoding h8300-unknown-linux-
+      unicore32: simplify linker script generation for decompressor
+      kbuild: source include/config/auto.conf instead of ${KCONFIG_CONFIG}
+      kbuild: add workaround for Debian make-kpkg
+      kbuild: deb-pkg: add CONFIG_ prefix to kernel config options
+      kbuild: deb-pkg: introduce is_enabled and if_enabled_echo to builddeb
+      kbuild: pkg: grep include/config/auto.conf instead of $KCONFIG_CONFIG
+      kbuild: warn redundant generic-y
+      kbuild: force all architectures except um to include mandatory-y
+      kconfig: remove stale lxdialog/.gitignore
+
+Riku Voipio (1):
+      deb-pkg: generate correct build dependencies
+
+Wen Yang (1):
+      coccinelle: semantic code search for missing put_device()
+
+ Documentation/kbuild/makefiles.txt                      |  2 +-
+ Makefile                                                | 18 ++++++--
+ arch/alpha/include/uapi/asm/Kbuild                      |  2 -
+ arch/arc/include/uapi/asm/Kbuild                        |  2 -
+ arch/arm/include/asm/Kbuild                             |  1 -
+ arch/arm/include/uapi/asm/Kbuild                        |  1 -
+ arch/arm64/include/uapi/asm/Kbuild                      |  1 -
+ arch/c6x/include/uapi/asm/Kbuild                        |  2 -
+ arch/csky/include/uapi/asm/Kbuild                       |  2 -
+ arch/h8300/Makefile                                     |  2 +-
+ arch/h8300/include/asm/Kbuild                           |  1 -
+ arch/h8300/include/uapi/asm/Kbuild                      |  2 -
+ arch/hexagon/include/uapi/asm/Kbuild                    |  2 -
+ arch/ia64/include/uapi/asm/Kbuild                       |  3 --
+ arch/ia64/sn/kernel/Makefile                            |  2 +-
+ arch/ia64/sn/kernel/sn2/Makefile                        |  2 -
+ arch/ia64/sn/pci/Makefile                               |  2 -
+ arch/ia64/sn/pci/pcibr/Makefile                         |  2 +-
+ arch/m68k/include/uapi/asm/Kbuild                       |  2 -
+ arch/microblaze/include/uapi/asm/Kbuild                 |  2 -
+ arch/mips/include/uapi/asm/Kbuild                       |  2 -
+ arch/nds32/include/uapi/asm/Kbuild                      |  2 -
+ arch/nios2/include/uapi/asm/Kbuild                      |  2 -
+ arch/openrisc/include/asm/Kbuild                        |  2 -
+ arch/openrisc/include/uapi/asm/Kbuild                   |  2 -
+ arch/parisc/include/asm/Kbuild                          |  2 -
+ arch/parisc/include/uapi/asm/Kbuild                     |  2 -
+ arch/powerpc/include/asm/Kbuild                         |  1 -
+ arch/powerpc/include/uapi/asm/Kbuild                    |  2 -
+ arch/riscv/include/uapi/asm/Kbuild                      |  1 -
+ arch/s390/boot/Makefile                                 |  3 --
+ arch/s390/include/asm/Kbuild                            |  1 -
+ arch/s390/include/uapi/asm/Kbuild                       |  2 -
+ arch/sh/include/uapi/asm/Kbuild                         |  1 -
+ arch/sparc/include/uapi/asm/Kbuild                      |  2 -
+ arch/unicore32/boot/compressed/Makefile                 |  5 +--
+ .../boot/compressed/{vmlinux.lds.in => vmlinux.lds.S}   |  0
+ arch/unicore32/include/uapi/asm/Kbuild                  |  2 -
+ arch/x86/include/uapi/asm/Kbuild                        |  3 --
+ arch/xtensa/include/asm/Kbuild                          |  1 -
+ arch/xtensa/include/uapi/asm/Kbuild                     |  3 --
+ include/asm-generic/Kbuild                              |  5 +++
+ include/uapi/asm-generic/{Kbuild.asm => Kbuild}         |  4 +-
+ lib/Makefile                                            |  2 +-
+ scripts/Makefile.asm-generic                            | 11 +++++
+ scripts/Makefile.build                                  |  6 +--
+ scripts/Makefile.lib                                    |  6 +++
+ scripts/Makefile.modinst                                |  2 +-
+ scripts/Makefile.modpost                                |  1 -
+ scripts/adjust_autoksyms.sh                             |  9 +---
+ scripts/coccinelle/free/put_device.cocci                | 56
+++++++++++++++++++++++++
+ scripts/kconfig/lxdialog/.gitignore                     |  4 --
+ scripts/link-vmlinux.sh                                 |  9 +---
+ scripts/mod/modpost.c                                   | 27 +++---------
+ scripts/package/builddeb                                | 32 ++++++++------
+ scripts/package/buildtar                                |  2 +-
+ scripts/package/mkdebian                                | 39 ++++++++++-------
+ 57 files changed, 153 insertions(+), 156 deletions(-)
+ rename arch/unicore32/boot/compressed/{vmlinux.lds.in => vmlinux.lds.S} (100%)
+ create mode 100644 include/asm-generic/Kbuild
+ rename include/uapi/asm-generic/{Kbuild.asm => Kbuild} (87%)
+ create mode 100644 scripts/coccinelle/free/put_device.cocci
+ delete mode 100644 scripts/kconfig/lxdialog/.gitignore
+
+
+-- 
+Best Regards
+Masahiro Yamada
