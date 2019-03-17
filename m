@@ -2,103 +2,86 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AD9C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3560C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B1920896
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35FC20896
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfCQOM3 (ORCPT
+        id S1727253AbfCQOZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 10:12:29 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:49034 "EHLO
-        alexa-out-blr.qualcomm.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726782AbfCQOM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 10:12:28 -0400
-X-IronPort-AV: E=Sophos;i="5.58,489,1544466600"; 
-   d="scan'208";a="382997"
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr.qualcomm.com with ESMTP/TLS/AES256-SHA; 17 Mar 2019 19:42:25 +0530
-X-IronPort-AV: E=McAfee;i="5900,7806,9197"; a="7216260"
-Received: from gkohli-linux.qualcomm.com ([10.204.78.26])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 17 Mar 2019 19:42:25 +0530
-Received: by gkohli-linux.qualcomm.com (Postfix, from userid 427023)
-        id A394E3B22; Sun, 17 Mar 2019 19:42:23 +0530 (IST)
-From:   Gaurav Kohli <gkohli@codeaurora.org>
-To:     srinivas.kandagatla@linaro.org, linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, Gaurav Kohli <gkohli@codeaurora.org>
-Subject: [PATCH v2] nvmem: core: Set no-read-write provider to avoid userspace read/write
-Date:   Sun, 17 Mar 2019 19:42:20 +0530
-Message-Id: <1552831940-7327-1-git-send-email-gkohli@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Sun, 17 Mar 2019 10:25:42 -0400
+Received: from nautica.notk.org ([91.121.71.147]:44165 "EHLO nautica.notk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726855AbfCQOZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 10:25:42 -0400
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id E3D10C009; Sun, 17 Mar 2019 15:25:39 +0100 (CET)
+Date:   Sun, 17 Mar 2019 15:25:24 +0100
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [GIT PULL] 9p updates for 5.1
+Message-ID: <20190317142524.GA5136@nautica>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current nvmem framework allows user space to read all register space
-populated by nvmem binary file, In case we don't want to expose value
-of registers to userspace and only want kernel space to read cell
-value from nvmem_cell_read_u32.
+Hi Linus,
 
-To protect the same, Add no-read-write property to prevent read
-from userspace.
+Here is a 9p update for 5.1; there honestly hasn't been much.
 
-Signed-off-by: Gaurav Kohli <gkohli@codeaurora.org>
----
-v2: Fix build error
-v1: Fix no_read_write update condition
+The memory leak fix has been commited rather recently because it was
+sent fairly late, but it's simple enough that four days in -next should
+be enough (that's why I waited till the last minute to send, sorry for
+that - feel free to pick for rc2 if that makes a difference)
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index f24008b..f1c44fc 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -27,6 +27,7 @@ struct nvmem_device {
- 	struct kref		refcnt;
- 	size_t			size;
- 	bool			read_only;
-+	bool			no_read_write;
- 	int			flags;
- 	enum nvmem_type		type;
- 	struct bin_attribute	eeprom;
-@@ -120,6 +121,10 @@ static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
- 		dev = container_of(kobj, struct device, kobj);
- 	nvmem = to_nvmem_device(dev);
- 
-+	/* if no-read-write, then stop from reading */
-+	if (nvmem->no_read_write)
-+		return -EPERM;
-+
- 	/* Stop the user from reading */
- 	if (pos >= nvmem->size)
- 		return 0;
-@@ -154,6 +159,10 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
- 		dev = container_of(kobj, struct device, kobj);
- 	nvmem = to_nvmem_device(dev);
- 
-+	/* if no-read-write, then stop from writing */
-+	if (nvmem->no_read_write)
-+		return -EPERM;
-+
- 	/* Stop the user from writing */
- 	if (pos >= nvmem->size)
- 		return -EFBIG;
-@@ -651,6 +660,9 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
- 	nvmem->read_only = device_property_present(config->dev, "read-only") ||
- 			   config->read_only || !nvmem->reg_write;
- 
-+	nvmem->no_read_write = device_property_present(config->dev,
-+				"no-read-write");
-+
- 	if (config->root_only)
- 		nvmem->dev.groups = nvmem->read_only ?
- 			nvmem_ro_root_dev_groups :
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
-a Linux Foundation Collaborative Project.
 
+The following changes since commit 49a57857aeea06ca831043acbb0fa5e0f50602fd:
+
+  Linux 5.0-rc3 (2019-01-21 13:14:44 +1300)
+
+are available in the Git repository at:
+
+  git://github.com/martinetd/linux tags/9p-for-5.1
+
+for you to fetch changes up to bb06c388fa20ae24cfe80c52488de718a7e3a53f:
+
+  9p/net: fix memory leak in p9_client_create (2019-03-13 11:50:04
+  +0100)
+
+----------------------------------------------------------------
+Pull request for inlusion in 5.1
+
+Two fixes (leak on invalid mount argument and possible deadlock on
+i_size update on 32bit smp) and a fall-through warning cleanup
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      9p: mark expected switch fall-through
+
+Hou Tao (1):
+      9p: use inode->i_lock to protect i_size_write() under 32-bit
+
+zhengbin (1):
+      9p/net: fix memory leak in p9_client_create
+
+ fs/9p/v9fs_vfs.h       | 23 +++++++++++++++++++++--
+ fs/9p/vfs_file.c       |  6 +++++-
+ fs/9p/vfs_inode.c      | 23 +++++++++++------------
+ fs/9p/vfs_inode_dotl.c | 27 ++++++++++++++-------------
+ fs/9p/vfs_super.c      |  4 ++--
+ net/9p/client.c        |  2 +-
+ net/9p/trans_xen.c     |  2 +-
+ 7 files changed, 55 insertions(+), 32 deletions(-)
