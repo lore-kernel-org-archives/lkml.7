@@ -2,102 +2,78 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4370C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB197C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8822075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:14:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYwAxvST"
+	by mail.kernel.org (Postfix) with ESMTP id A459421019
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfCQPOV (ORCPT
+        id S1727386AbfCQPPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 11:14:21 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44300 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfCQPOU (ORCPT
+        Sun, 17 Mar 2019 11:15:01 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:56439 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727371AbfCQPPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 11:14:20 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a3so9517398pff.11
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 08:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VtxNmDYgIzsDougV/TPlkPTZMWK9ij3bHNvJx9sQQjE=;
-        b=KYwAxvSTEt56P6tJaKe8vjI6xS/qWRtuvhnTLVp0n1SmoSHRw6VmCFJb4oSwdBFWKn
-         Q6ApTdQYJfU+i3l6tFdnfmI1ts1EL6BtrKrsrlMxlLS8VeQoPxqtuoOSAoZqcQOicwk8
-         6A6+tlpzcR3YMchkd0ozcReBu9TpiJLPIwPxFxHpxbZr/WBb6DNle6/TXRori7U2Q9rG
-         LQrd3tjE3gQMin2Q7Ym3mrPiKURsloYiEnD7qPu9Zy6xgF63K5ygoGWMmhzg0NgW99Xu
-         /XsirM9T/qd49NODqs9xObEoFbZIwS/34rpocS/v8sx4CTUak6/RHYNxNgk30sJ1RSLI
-         inng==
+        Sun, 17 Mar 2019 11:15:01 -0400
+Received: by mail-it1-f199.google.com with SMTP id j18so12478267itl.6
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 08:15:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VtxNmDYgIzsDougV/TPlkPTZMWK9ij3bHNvJx9sQQjE=;
-        b=IYlDE9Gd8MD30TkFkyAvU/Mjl3NxES4FWxTrqybbe04Jl+7ifNHcuz3/bV4jYiLmD4
-         XWIFc7qa3Ia0Y0pBZCEQ3tP88wsigytiubDcbDdGAzQYws9N83s8Yhew/4+7Fycdw2Hd
-         +xGtV3QqlOM/CfqsFozr1wNd0kFhg98u72/1WfyCJ2453x0ryb5Hu/HdkrEcyX0fD82y
-         MnfOxijnrogBCd/xk9hMG2urHxl8uoErUMyoi8PqenGCeFPd4mgd4nW6Tv9CUXTeY+fD
-         7OVpCx8F2z+5xqfLz9rTKNMtKMIgD2lr+fz62/CTNezwYBWhWSX31hBvrDh3Q1JOprBE
-         rrAQ==
-X-Gm-Message-State: APjAAAXJGTqmhEpWEBWalap2jzm0ZHHVVE5QLjkwyRj4pn+0/ysV4KgE
-        kEe6m567JzDMC4LVtZPZZw4=
-X-Google-Smtp-Source: APXvYqzC02r0yAnQMpsvne93Q7FVapJYOL27bCBbeOA6qrnLCMVPuSLlTzO4N6O52H7VjNMFLD4bkA==
-X-Received: by 2002:a63:b242:: with SMTP id t2mr13305663pgo.451.1552835660127;
-        Sun, 17 Mar 2019 08:14:20 -0700 (PDT)
-Received: from localhost ([121.137.63.184])
-        by smtp.gmail.com with ESMTPSA id h15sm7886503pgd.12.2019.03.17.08.14.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 Mar 2019 08:14:19 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Mon, 18 Mar 2019 00:14:15 +0900
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: Re: [PATCHv2] staging: rtl8723bs: do not use __constant_cpu_to_le16
-Message-ID: <20190317151415.GA23308@tigerII.localdomain>
-References: <20190317114803.21670-1-sergey.senozhatsky@gmail.com>
- <20190317121621.GA7832@kroah.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=OSrja0yauLqcPAmPXxHNrNjD+8DrlW6XBC25MsZs3A4=;
+        b=BA2f5NkKBBbc2/Mblp77u0k8Bw4k+pdL8P6eeVStQyFu5TJ/puzEXyi1iYVRf3xqyl
+         uvooBzIvQ5s3BRLiQsaZGFP9vV7zxONFmeUG3fFrY8M0wA9dPAUyVFZI4yVsegJwnIS+
+         8jrfOfaAnZMbHsXjw/eK59HA6jJsg9m1azA0t6cTfbKD421mdeJDR28Qg4j2FApWBBw9
+         jYlLAXdmylP6F0Ai1vbmlvFcpnwPQH3uOyArl3TZbZGiBbGim9pGnPzywHtz0AlTlxc2
+         8DTnoCWUWrW3qpKl2o5JvDJHRpy5h0vVnF++5lh88q4yByhIBQAdvUfOBZWg8WjnhC5V
+         ReSw==
+X-Gm-Message-State: APjAAAUjwJ8jFG9KkvQ3Fc/4PJJwMSCJe/VcnBw9aNn/g9fK0muHx++2
+        IycvKE2xnNzzhGZz0uEyPFWQf2yzlHYL793sc7A3H4MJ/6FF
+X-Google-Smtp-Source: APXvYqygpej3AEhAGy2Eau25bvEIPxgcG+JlPdefS7YHo2S7uUP8TFhN8EMqMEjqo0ZBHNjGbc/TGPDVcmTqOwioU8ga4dc2bwM/
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190317121621.GA7832@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Received: by 2002:a24:2b0a:: with SMTP id h10mr199989ita.35.1552835700345;
+ Sun, 17 Mar 2019 08:15:00 -0700 (PDT)
+Date:   Sun, 17 Mar 2019 08:15:00 -0700
+In-Reply-To: <000000000000bcd434057f4eb905@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000050525e05844bbc5b@google.com>
+Subject: Re: WARNING in tty_set_termios
+From:   syzbot <syzbot+a950165cbb86bdd023a4@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, gustavo@padovan.org,
+        johan.hedberg@gmail.com, jslaby@suse.com,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loic.poulain@intel.com, marcel@holtmann.org, mhjungk@gmail.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (03/17/19 13:16), Greg Kroah-Hartman wrote:
-> On Sun, Mar 17, 2019 at 08:48:03PM +0900, Sergey Senozhatsky wrote:
-> > From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-> 
-> Why ".work"?
+syzbot has bisected this bug to:
 
-Aha, good question. There is not so much of a difference between .work and
-!.work. (if any at all).
+commit 162f812f23bab583f5d514ca0e4df67797ac9cdf
+Author: Loic Poulain <loic.poulain@intel.com>
+Date:   Mon Sep 19 14:29:27 2016 +0000
 
-> > cpu_to_le16() is capable enough to detect __builtin_constant_p()
-> > and to use an appropriate compile time ___constant_swahbXX()
-> > function.
-> > 
-> > So we can use cpu_to_le16() instead of __constant_cpu_to_le16().
-> > 
-> > Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> 
-> Email address does not match up to the From: line above :(
+     Bluetooth: hci_uart: Add Marvell support
 
-Greg, sorry about that!
-Either you were the first one to complaint or this was the first time
-I re-rent a patch from a different google account.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12cd5c2b200000
+start commit:   162f812f Bluetooth: hci_uart: Add Marvell support
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11cd5c2b200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16cd5c2b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b05cfdb4ee8ab9b2
+dashboard link: https://syzkaller.appspot.com/bug?extid=a950165cbb86bdd023a4
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=121cee07400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16fdaed8c00000
 
-	-ss
+Reported-by: syzbot+a950165cbb86bdd023a4@syzkaller.appspotmail.com
+Fixes: 162f812f ("Bluetooth: hci_uart: Add Marvell support")
