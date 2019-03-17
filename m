@@ -2,106 +2,85 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEA7C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BD9C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC9D21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="vgQ1Tz99"
+	by mail.kernel.org (Postfix) with ESMTP id 8F1E821019
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfCQKMd (ORCPT
+        id S1727059AbfCQKNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 06:12:33 -0400
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:29189 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbfCQKMc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 06:12:32 -0400
-Date:   Sun, 17 Mar 2019 10:12:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1552817548;
-        bh=/HOpOonRP17c6jrBDi+LbFTYBn4LJCUU34VciwT/vKA=;
-        h=Date:To:From:Reply-To:Subject:In-Reply-To:References:Feedback-ID:
-         From;
-        b=vgQ1Tz99ofwsOBzdzmfAr2MezTcpWYsAFwpYPiMoGZg4bYqxQ2Wm5fWLaKQ+mos0S
-         1gPUjpl+Ep4W4FwFKtiXF8jKAxQCLOdph0iJ+8BW9Jb0/KRHXnSxnkTLlnrdQtka/4
-         yKshQsWQxZ2JSNEdHOBEHRweOzYEe/yMxfKnB1FM=
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Subject: Re: PC-SyS : Let this Fair Labour construct be the standardization and way forward for Available Source.
-Message-ID: <L_FenuPs2R3zP77OazhynNRVTijwdK1PXoqGLKQarIq5olSaaGVzUyWncYRBBTQNJr-DI-CsVG1Rsj_3mFkBcBsjd4vg_EeZuuccwGUFS7g=@protonmail.com>
-In-Reply-To: <c3keckjDv4IldjxkT98ejAh6u2seA_kQ513dQ4NVgHKwCKnNaq5CRqUBPJpTTH1p4AHYXachiXq6Yv0aAWHdqVXv-boL-iSSNvpxtNqnA_E=@protonmail.com>
-References: <GIbpkAFkEWOCoImjLIDCw6orkrCgC8HmiqVhNoj2f0oOtMfJ4iJK6xxFsR4LAu9j0rBipt1RR7u1RMtbac6bV7EiQq1oLcjZl1jwbGnEAuk=@protonmail.com>
- <c3keckjDv4IldjxkT98ejAh6u2seA_kQ513dQ4NVgHKwCKnNaq5CRqUBPJpTTH1p4AHYXachiXq6Yv0aAWHdqVXv-boL-iSSNvpxtNqnA_E=@protonmail.com>
-Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
+        Sun, 17 Mar 2019 06:13:46 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:58304 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbfCQKNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 06:13:46 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id B104B20257;
+        Sun, 17 Mar 2019 11:13:44 +0100 (CET)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CDrnVdk8PZRg; Sun, 17 Mar 2019 11:13:39 +0100 (CET)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id 66817201C1;
+        Sun, 17 Mar 2019 11:13:39 +0100 (CET)
+Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
+ (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Sun, 17 Mar 2019
+ 11:13:39 +0100
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 0B1BE318060C;
+ Sun, 17 Mar 2019 11:13:39 +0100 (CET)
+Date:   Sun, 17 Mar 2019 11:13:39 +0100
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     Su Yanjun <suyj.fnst@cn.fujitsu.com>, <davem@davemloft.net>,
+        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Subject: Re: [PATCH] xfrm6_tunnel: Fix potential panic when unloading
+ xfrm6_tunnel module
+Message-ID: <20190317101338.GQ6035@gauss3.secunet.de>
+References: <1552546782-102587-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+ <20190315062438.id3664ccow5uxgvt@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190315062438.id3664ccow5uxgvt@gondor.apana.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-G-Data-MailSecurity-for-Exchange-State: 0
+X-G-Data-MailSecurity-for-Exchange-Error: 0
+X-G-Data-MailSecurity-for-Exchange-Sender: 23
+X-G-Data-MailSecurity-for-Exchange-Server: d65e63f7-5c15-413f-8f63-c0d707471c93
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+X-G-Data-MailSecurity-for-Exchange-Guid: 881F5785-CE43-43DA-B585-DD0F32861033
+X-G-Data-MailSecurity-for-Exchange-ProcessedOnRouted: True
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apple seems to be inline with much of our philosophy already, having moved =
-to a BSD base, 4K resolution, Itunes, Mac Mini. Microsoft seems to be inter=
-ested in Available Source aswell. And we all could agree on a standard acco=
-rding to my philosophy of a Fair Labour compliant OS, which agreed on by 68=
-erbros, z=C3=ABn, and Islam, and thus popculture at large!
+On Fri, Mar 15, 2019 at 02:24:38PM +0800, Herbert Xu wrote:
+> On Thu, Mar 14, 2019 at 02:59:42PM +0800, Su Yanjun wrote:
+> > When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
+> > frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
+> > xfrm6_tunnel_spi, so need to wait it.
+> > 
+> > Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
+> > Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+> > ---
+> >  net/ipv6/xfrm6_tunnel.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> 
+> This looks good to me.  And it's not just the matter of accessing
+> freed memory.  A worse problem would be trying to execute code
+> from an unloaded module.
+> 
+> Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Peace!
-
-Summary: https://www.youtube.com/watch?v=3DTCw1Nvg8mAU
-
-
-Sent with ProtonMail Secure Email.
-
-=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
-ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
-On Thursday 14. March 2019 kl. 15:56, Ywe C=C3=A6rlyn <ywecrn@protonmail.co=
-m> wrote:
-
-> Little recap also:
->
-> We see a behavioral problem in the Available Source space. And earlier we=
- see ill-management in IT-space, that we can trace to biblical regressions.
-> And we see the psilocybin god, at its greatest with the hippies, that has=
- support for Palestine, and Islam this way.
-> And z=C3=ABn, has a language that we understand Islam by, egolessness and=
- universal transcendence. Therefore we suggest to move to a z=C3=ABn-concep=
-t of the God, where 68'erBros politics is respected, and in line with Pales=
-tine support, and with this also recognize that a Fair Labour compliant OS,=
- may just as well be a 68'erBros cause, and work for launching this, and su=
-pport all main principles of 68'erBros politics, absolute reality of z=
-=C3=ABn, and Islam. With such a harmonization of philosophy, we think we ha=
-ve done the best with the behavioural problems, and also establish a more p=
-rofessional online space, and a good online currency, where means are indee=
-d meant to be used and dynamic.
->
-> Peace!
->
-> Sent with ProtonMail Secure Email.
->
-> =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original =
-Message =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
-> On Wednesday 13. March 2019 kl. 17:16, Ywe C=C3=A6rlyn ywecrn@protonmail.=
-com wrote:
->
-> > I did som more work on my youtube profile, and its getting to be a very=
- coherent concept. As it states: Let this fair labour construct be the stan=
-dardization and way forward for available source.
-> > And we have decided on the name Monys for the online currency this will=
- be about. Where everyone is a digital content creator, with a pure and rea=
-sonable supply and demand matrix.
-> > Peace!
-> > Ywe C=C3=A6rlyn,
-> > initiativetaker, and philosophy groundwork.
-> > https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
-
-
+Applied, thanks everyone!
