@@ -2,97 +2,117 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734F6C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 01:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A85C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 02:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF842184C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 01:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A30020645
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 02:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWFDT9ah"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qDf3+KQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfCQB7g (ORCPT
+        id S1727163AbfCQCeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 21:59:36 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54676 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfCQB7g (ORCPT
+        Sat, 16 Mar 2019 22:34:15 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:54905 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfCQCeP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 21:59:36 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f3so9882556wmj.4
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 18:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:mime-version
-         :content-disposition:user-agent;
-        bh=h2+O2/DVwTzLpIO0SKrcCKjQsKts7sAWIiEcpl6v0/A=;
-        b=ZWFDT9ahClitU18J6oVjkGpd3ALF4reFfROdFWtum1V748CGAQoGq7u2C7uRcTrXJT
-         XLJs05tBXA4lBOUJeh+C1puXNr6dpQ056dtjuLBh/FyartGq48jYNZ8MUBuKFxEbFPdc
-         MUplT5W+VNWSZqaTsjfQ/pFFfqWVIpYWsqdWVvOq4+BRqLGRcyWBiMNg4wiJDiYby2R+
-         fgFWWKJWYXydfRM0tOCHq3trvr76LIV4/EYvlSUl+LEZ1zLq3c0Duk8E14jDA5gFL2BW
-         ujSGJYGRR5T7nF/vIhvGkVfO64hqfc6z81XNMFnjAIiofEqMv7qsVgfUZAWO5QKj3mSz
-         fMAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mime-version:content-disposition:user-agent;
-        bh=h2+O2/DVwTzLpIO0SKrcCKjQsKts7sAWIiEcpl6v0/A=;
-        b=KvwFxx+i3gpAsd4HVhCtrYAnfiooOBfnwpbAU4EiKMdNJFDS6QZ+RMEoxcRZKEpUnZ
-         alBQH/4RcuPUQ0mdR/Q+0xGH5xy9dlOac9LIt7mavRhwNJja0pykMZAiUoewHv61fIiz
-         0GF2lBd7f4CzprdE/sXxBetFGVpRcyak+t40HkWtLtzZgGrc7Bzl99KcysoLDNQRIhvZ
-         GskpqdaAP1w/9fFcW+9VxPjX+6DrPj/w2hENld7DR8Md0OaXOwbnf4uiMTpMZPR8+Qsz
-         T5+rrZRpgi5RWdCEmzFlABUwmp/496xw3GceBfjLVMEllsZW9nX0nlmu+btXoqvOJb08
-         3OzQ==
-X-Gm-Message-State: APjAAAU9oJgBqwahdM6f84i2uBxaYMa7EHvPtUvaHWAOcMC9pz6oWeVZ
-        6D9ZRLskwnlWnWacGhiShbw=
-X-Google-Smtp-Source: APXvYqyC2tLhRsvHNlqV3EhI5w88VxgHVfcgGbtoLDuznzAUeEGxTJAzGNLkzEkNZgws6xP0ANQf6A==
-X-Received: by 2002:a1c:66c2:: with SMTP id a185mr4720142wmc.139.1552787974599;
-        Sat, 16 Mar 2019 18:59:34 -0700 (PDT)
-Received: from p200300EEEE2F.fritz.box (p200300C98705F80045694D516271D164.dip0.t-ipconnect.de. [2003:c9:8705:f800:4569:4d51:6271:d164])
-        by smtp.gmail.com with ESMTPSA id g10sm3885899wrq.61.2019.03.16.18.59.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 Mar 2019 18:59:34 -0700 (PDT)
-Date:   Sun, 17 Mar 2019 02:59:32 +0100
-From:   Emanuel Bennici <benniciemanuel78@gmail.com>
-To:     Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH 2/2] staging: vc04_services: Add blank line after struct
- declaration
-Message-ID: <20190317015930.GA1747@p200300EEEE2F.fritz.box>
-Reply-To: benniciemanuel78@gmail.com
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 16 Mar 2019 22:34:15 -0400
+Received: from grover.tkatk1.zaq.ne.jp (zaqdadce369.zaq.ne.jp [218.220.227.105]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x2H2Wbvd003170;
+        Sun, 17 Mar 2019 11:32:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x2H2Wbvd003170
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1552789958;
+        bh=BVT1LleI9pYQfZ1bdDjM0clFuEOHrUZYy7AWi1Gqi9E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qDf3+KQ2muF+v8sbh/OetE80s1sr8w76QJ8tVSO6BwLEtQTnXfvZd5FrDlLRokLNU
+         b88ZG6zeUwPVs0CcNd0/EsmCL8zGriKA5loE/4mo7HAedzLRWaFIf8DwX255mkVjxF
+         zeTxcNRelLixufYC+WUj4miRlTVZ8vQqW0XOvw5BHvrLceZrN4wKvTkRGunjqzlZia
+         +1UKwNd5euy2las69iI80EKYxVfbTlqezGpjMRU2gIf02BxhaRkEjYE7HJPrRE2JS1
+         iBy0nC6tHAF4b2c3LKxdSB1aBTdUqGELo+rRYzZV5GK532auczky4VhVIMmYNs+yvQ
+         kyfZioOTppJWA==
+X-Nifty-SrcIP: [218.220.227.105]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Felix Fietkau <nbd@nbd.name>, linux-wireless@vger.kernel.org
+Cc:     Ben Hutchings <ben@decadent.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH] mt76: Use the correct hweight8() function again
+Date:   Sun, 17 Mar 2019 11:32:28 +0900
+Message-Id: <1552789948-31564-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
----
- drivers/staging/vc04_services/interface/vchi/vchi.h | 1 +
- 1 file changed, 1 insertion(+)
+Commit d0ff23c1107e ("mt76: Use the correct hweight8() function")
+fixed the wrong use of __sw_hweight8().
 
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
-index 7b13cb04c119..43eaf7703777 100644
---- a/drivers/staging/vc04_services/interface/vchi/vchi.h
-+++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
-@@ -55,6 +55,7 @@ struct vchi_version {
- 	uint32_t version;
- 	uint32_t version_min;
- };
-+
- #define VCHI_VERSION(v_) { v_, v_ }
- #define VCHI_VERSION_EX(v_, m_) { v_, m_ }
+Just a week later, commit c8846e101502 ("mt76: add driver for MT7603E
+and MT7628/7688") was applid, introducing __sw_hweight8() again.
+
+Fixes: c8846e101502 ("mt76: add driver for MT7603E and MT7628/7688")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ drivers/net/wireless/mediatek/mt76/mt7603/beacon.c | 3 +--
+ drivers/net/wireless/mediatek/mt76/mt7603/init.c   | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/mcu.c    | 2 +-
+ 3 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/beacon.c b/drivers/net/wireless/mediatek/mt76/mt7603/beacon.c
+index afcd86f..4dcb465 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/beacon.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/beacon.c
+@@ -135,8 +135,7 @@ void mt7603_pre_tbtt_tasklet(unsigned long arg)
  
+ out:
+ 	mt76_queue_tx_cleanup(dev, MT_TXQ_BEACON, false);
+-	if (dev->mt76.q_tx[MT_TXQ_BEACON].queued >
+-	    __sw_hweight8(dev->beacon_mask))
++	if (dev->mt76.q_tx[MT_TXQ_BEACON].queued > hweight8(dev->beacon_mask))
+ 		dev->beacon_check++;
+ }
+ 
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/init.c b/drivers/net/wireless/mediatek/mt76/mt7603/init.c
+index 15cc8f3..d54dda6 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/init.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/init.c
+@@ -112,7 +112,7 @@ static void
+ mt7603_phy_init(struct mt7603_dev *dev)
+ {
+ 	int rx_chains = dev->mt76.antenna_mask;
+-	int tx_chains = __sw_hweight8(rx_chains) - 1;
++	int tx_chains = hweight8(rx_chains) - 1;
+ 
+ 	mt76_rmw(dev, MT_WF_RMAC_RMCR,
+ 		 (MT_WF_RMAC_RMCR_SMPS_MODE |
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7603/mcu.c
+index 4b0713f..d06905e 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/mcu.c
+@@ -433,7 +433,7 @@ int mt7603_mcu_set_channel(struct mt7603_dev *dev)
+ {
+ 	struct cfg80211_chan_def *chandef = &dev->mt76.chandef;
+ 	struct ieee80211_hw *hw = mt76_hw(dev);
+-	int n_chains = __sw_hweight8(dev->mt76.antenna_mask);
++	int n_chains = hweight8(dev->mt76.antenna_mask);
+ 	struct {
+ 		u8 control_chan;
+ 		u8 center_chan;
 -- 
-2.19.1
+2.7.4
 
