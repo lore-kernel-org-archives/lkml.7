@@ -2,89 +2,101 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C965AC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD29C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A548320857
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F2A2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfCQRr7 (ORCPT
+        id S1726954AbfCQR7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 13:47:59 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:51214 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfCQRr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 13:47:59 -0400
-X-Greylist: delayed 484 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 Mar 2019 13:47:58 EDT
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id E76DDA542E;
-        Sun, 17 Mar 2019 17:39:49 +0000 (UTC)
-Message-ID: <2485e6c52810df376a0df6eb7f749f35b7b19044.camel@aosc.xyz>
-Subject: Re: [PATCH 0/7] Timer & SPI support for Allwinner suniv F1C100s
-From:   Icenowy Zheng <icenowy@aosc.xyz>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mesih Kilinc <mesihkilinc@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 18 Mar 2019 01:39:44 +0800
-In-Reply-To: <cover.1549875778.git.mesihkilinc@gmail.com>
-References: <cover.1549875778.git.mesihkilinc@gmail.com>
-Organization: Anthon Open-Source Community
+        Sun, 17 Mar 2019 13:59:22 -0400
+Received: from authsmtp23.register.it ([81.88.48.46]:48511 "EHLO
+        authsmtp.register.it" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726115AbfCQR7V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 13:59:21 -0400
+X-Greylist: delayed 490 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 Mar 2019 13:59:20 EDT
+Received: from [192.168.1.1] ([93.41.32.9])
+        by cmsmtp with ESMTPSA
+        id 5ZwDhWZDYjSal5ZwDhLYg8; Sun, 17 Mar 2019 18:51:09 +0100
+X-Rid:  guido@trentalancia.com@93.41.32.9
+Message-ID: <1552845068.5940.6.camel@trentalancia.com>
+Subject: [PATCH] scsi: ignore Synchronize Cache command failures to keep
+ using drives not supporting it
+From:   Guido Trentalancia <guido@trentalancia.com>
+To:     linux-kernel@vger.kernel.org
+Date:   Sun, 17 Mar 2019 18:51:08 +0100
+X-Priority: 1
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.2 
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKlZb5edfOVWOran40zjuv9f15oy+xiWfqgl7B/bI6yqvZpHOArq/t56XlJmtER1iQW0Ib0SiP1AH75UDqCX03vlZ/RvsGU9mGNsShRBnnNNn0nwyl5Y
+ rS1mi0CBwG9kq8CKhR579jDbjSqEr54WfUplx9ptL+sqJJ7iHIxT2N3O
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019-02-11一的 12:21 +0300，Mesih Kilinc写道：
-> This is followup series for F1C100s initial support patchset. 
-> All patches merged except patch 1 ~ 2 which is related to timer.
-> I am resending those since they are already have Acked tags.
+Many obsolete hard drives do not support the Synchronize Cache SCSI
+command. Such command is generally issued during fsync() calls which
+at the moment therefore fail with the ILLEGAL_REQUEST sense key.
 
-Ping.
+Since this failure is currently treated as critical in the kernel SCSI
+disk driver, such obsolete hard drives cannot be used anymore (at least
+since kernel 4.10, maybe even earlier): they cannot be formatted,
+mounted and/or checked using tools such as e2fsprogs.
 
-Could you please merge these timer-related patches?
+Because there is nothing which can be done if the drive does not support
+such command, such ILLEGAL_REQUEST should be treated as non-critical so
+that the underlying operation does not fail and the obsolete hard drive
+can be used normally.
 
-Thanks!
-Icenowy
+Of course, using such hard drives which do not feature the Synchronize
+Cache SCSI command implies a very high risk (or maybe even certainty) of
+data loss in case of power cuts, USB cable disconnects and so on -
+SO YOU HAVE BEEN WARNED - IN DOUBT, UPGRADE TO A NEWER HARD DRIVE !!!
 
-> 
-> Our dt-bindings for F1C100s are merged, we can now use them at our 
-> device tree source - patch 3.
-> 
-> Also this series add spi support and enables spi flash at Lichee-pi
-> Nano
-> in patch 4 ~ 7. This patches are based on Icenowy's work.
-> 
-> Thanks!
-> 
-> Mesih Kilinc (7):
->   dt-bindings: timer: Add Allwinner suniv timer
->   clocksource: sun4i: add a compatible for suniv
->   ARM: dts: suniv: Add dt-binding headers for F1C100s
->   dt-bindings: spi: Add Support for Allwinner F1C100s
->   ARM: dts: suniv: Add SPI device-tree nodes
->   ARM: dts: suniv: Add pinmux for SPI0 and SPI1 of F1C100s
->   ARM: dts: f1c100s: Activate SPI flash on Lichee Pi Nano
-> 
->  .../devicetree/bindings/spi/spi-sun6i.txt          |  5 +-
->  .../bindings/timer/allwinner,sun4i-timer.txt       |  4 +-
->  arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts  | 13 ++++++
->  arch/arm/boot/dts/suniv-f1c100s.dtsi               | 53
-> +++++++++++++++++++---
->  drivers/clocksource/timer-sun4i.c                  |  5 +-
->  5 files changed, 70 insertions(+), 10 deletions(-)
-> 
+Signed-off-by: Guido Trentalancia <guido@trentalancia.com>
+---
+ drivers/scsi/sd.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
+--- linux-5.0.2-orig/drivers/scsi/sd.c	2019-03-17 18:22:04.822720851 +0100
++++ linux-5.0.2/drivers/scsi/sd.c	2019-03-17 18:47:06.405881720 +0100
+@@ -1633,6 +1633,16 @@ static int sd_sync_cache(struct scsi_dis
+ 	}
+ 
+ 	if (res) {
++		/*
++		 * sshdr.sense_key == ILLEGAL_REQUEST means this drive
++		 * doesn't support sync. There's not much to do and
++		 * sync shouldn't fail.
++		 */
++		if (sshdr->sense_key == ILLEGAL_REQUEST && sshdr->asc == 0x20) {
++			sd_printk(KERN_NOTICE, sdkp, "Drive does not support Synchronize Cache(10) command: ignoring.\n");
++			return 0;
++		}
++
+ 		sd_print_result(sdkp, "Synchronize Cache(10) failed", res);
+ 
+ 		if (driver_byte(res) == DRIVER_SENSE)
+@@ -2022,6 +2032,13 @@ static int sd_done(struct scsi_cmnd *SCp
+ 					req->rq_flags |= RQF_QUIET;
+ 				}
+ 				break;
++			case SYNCHRONIZE_CACHE:
++				if (sshdr.asc == 0x20) {
++					sd_printk(KERN_NOTICE, sdkp, "Drive does not support Synchronize Cache(10) command: ignoring.\n");
++					SCpnt->result = 0;
++					good_bytes = scsi_bufflen(SCpnt);
++				}
++				break;
+ 			}
+ 		}
+ 		break;
