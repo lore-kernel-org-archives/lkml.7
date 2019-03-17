@@ -1,170 +1,224 @@
-Return-Path: <SRS0=b0IM=RT=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1458C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 23:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6F6C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 00:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F792186A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Mar 2019 23:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D163218D0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 00:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xTFYEdLZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sruHEYzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfCPXtA (ORCPT
+        id S1727127AbfCQAXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 19:49:00 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48226 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfCPXtA (ORCPT
+        Sat, 16 Mar 2019 20:23:54 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40305 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726493AbfCQAXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 19:49:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=y+DXStj5c2Xqr9WzdcP1wEOJyGpE6jq16MXzR2t7nyI=; b=xTFYEdLZu+raIcDfqv3/w2TgQi
-        91zi/6li1kaAIFv2FUkSWCU/NsLPKetfUMZb2Hoy1UzXgyxzz9IoxtGewQtxJAnPu97Pt2Xu9ioYu
-        xuDxt85CnYzow6DO6ZXPoMSKh/dihFMRlOaatwHeXfHaFoONTGpHlMnsIsETREBuY0B6ahoKLy5PR
-        Q+G150Sj/e5Pm0WfTSG/P/rcMvEEliYcjuUk9TIzyRl0hB37wcJVKOLWvDyaxI4JiWEGxHVOXTg5C
-        Gm8EXv3HNVjvKcj3xQNF2jMxgArl8j/LJBkbs+cvM/yBsTfx5xC8YxwrmLTEbdysjTB8/K2MvTBIO
-        pRbW1oSw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5J2s-0000Tk-WE; Sat, 16 Mar 2019 23:48:55 +0000
-Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
-To:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
-        linux-parport@lists.infradead.org
-References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
- <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
- <e2a66da2-5433-5b42-1ebe-9f1c135b5471@infradead.org>
- <59cb035e-6880-de5a-33c5-d4db6ed910f4@kernel.dk>
- <4a2adc33-ef38-6a5f-65ee-8fcfaa0948a9@infradead.org>
- <d22bf156-06df-ec67-121d-7dce65088b1a@kernel.dk>
- <55743981-da8f-3211-0650-b143c8fec084@infradead.org>
- <23f48266-0d12-1891-1373-711b63f4f589@kernel.dk>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <21e5a575-8f28-5a14-3916-ab41b4d37734@infradead.org>
-Date:   Sat, 16 Mar 2019 16:48:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sat, 16 Mar 2019 20:23:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u10so6752758wmj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 17:23:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:mime-version
+         :content-disposition:user-agent;
+        bh=+d/aJAagG5S/Fh0VkUlDOOeXW/rqhQF9KiGLzCYVJIs=;
+        b=sruHEYzI/fbJQAorbTJsz4gx5SnUjaBlUquyi2XH0vg4ymb8M3aXdNvoIWToCxUjZo
+         ph2EKY8v8/83cQghmgbHyu0RosLM+LrINDWDxjSNrmuBYEqLf/sig351dRPU3gjiDrI+
+         ny4e1WudDTWJsSrGO938vcc6E5HI5JIkZa8Pt/nrp1B8G0s58qk7KHP3Q19BqmTvQSLw
+         jBeopVS0hB7hY3OvE1gmksDwuOF4ddMmRd4SV7nLPiPGu20+AtNB6SCFJ5s3+6l7V6mN
+         xJkBUblT4FELe5uB+Tk+qyFE29CQtUyzZaHHSUSZkmMuKFqsekcWvOjSgqeduhKtAJUm
+         1+bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mime-version:content-disposition:user-agent;
+        bh=+d/aJAagG5S/Fh0VkUlDOOeXW/rqhQF9KiGLzCYVJIs=;
+        b=dFgw2/5ydHSUI5nBjmozfdwK6Ei0q96DUlFuCTjkjp3Xi03qBPFv9QjTh3McHqRV7c
+         v1kY7pAfNnHXvZ5pl2BgVva2kez7bU+H8PdREzuAXGm1pbJO2cX+iqp51BHbQ0fwq1TX
+         PTHa5sSN1ICrhu+Nyzg0sx9Zp9bCGSYX00twnIcZ62ZuPpacckKD3dGtAmnMlAk6DTfg
+         MHuJ2GyZMIB+lwgEXEYtphhCujsl4OImZlyRnkvQEk8MjTtGHO6ndYX/Sm+Nr04lvoLJ
+         7m+CXf8CRh5ZeBC+W20ew9mKkhNhA51XJc8KDzlu23bQLQTYvHpBeJh3OhmVTZul7jpn
+         v/6g==
+X-Gm-Message-State: APjAAAVdQE2360F9uZEd8DFJWUpi8dr2/qkjDNwTC6awSsCctBwLXD2U
+        OhdLEIquUkGF8Xfm6I2gneI=
+X-Google-Smtp-Source: APXvYqwE01ikxcZhRNPiQuT0tsg0nYwlCS5006pvWX/t70hcwRIBtCq36z8/3m9WA9jgDSKru+JLug==
+X-Received: by 2002:a1c:f20e:: with SMTP id s14mr6689223wmc.69.1552782230916;
+        Sat, 16 Mar 2019 17:23:50 -0700 (PDT)
+Received: from p200300EEEE2F.fritz.box (p200300C98705F80045694D516271D164.dip0.t-ipconnect.de. [2003:c9:8705:f800:4569:4d51:6271:d164])
+        by smtp.gmail.com with ESMTPSA id v10sm6610934wrn.26.2019.03.16.17.23.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Mar 2019 17:23:50 -0700 (PDT)
+Date:   Sun, 17 Mar 2019 01:23:48 +0100
+From:   Emanuel Bennici <benniciemanuel78@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, NeilBrown <neil@brown.name>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: [PATCH] staging: mt7621-pci-phy: Add Spaces to Macro Definition
+Message-ID: <20190317002345.GA6938@p200300EEEE2F.fritz.box>
+Reply-To: benniciemanuel78@gmail.com
 MIME-Version: 1.0
-In-Reply-To: <23f48266-0d12-1891-1373-711b63f4f589@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/16/19 12:31 PM, Jens Axboe wrote:
-> On 3/15/19 6:32 PM, Randy Dunlap wrote:
->> On 3/15/19 9:33 AM, Jens Axboe wrote:
->>> On 3/14/19 5:49 PM, Randy Dunlap wrote:
->>>> On 3/14/19 4:43 PM, Jens Axboe wrote:
->>>>> On 3/13/19 5:09 PM, Randy Dunlap wrote:
->>>>>> On 3/11/19 6:34 PM, Randy Dunlap wrote:
->>>>>>> On 3/11/19 6:25 PM, Randy Dunlap wrote:
->>>>>>>> [Has this already been addressed/fixed?]>>
->>>>>>>
->>>>>>> Same bug occurs with paride/pcd.c driver.
->>>>>>
->>>>>> This still happens (in blk-mq) in v5.0-11053-gebc551f2b8f9 of Mar. 12, 2019,
->>>>>> around 4pm PT.  [caused by paride: pf.c and pcd.c)
->>>>>
->>>>> I'll take a look at this, been busy with other stuff. How are you
->>>>> reproducing this? I'm assuming you don't actually have any hardware :-)
->>>>
->>>> Right.  I just load the module (pf or pcd), unload it, and
->>>> then load it again.
->>>
->>> Does this work?
->>>
->>
->> No.  Just loading the pf module gives this:
-> 
-> Missing clear of the queue. This one should be more complete.
-> 
-> To be fair, this was utterly broken since forever. It's just now apparent
-> since we complain about it. But pf/pcd was one big leak fest.
-> 
+Improve Code readability by adding Spaces after #define
 
-OK, this one works for both pf and pcd.
-By "works" I mean that the driver init function runs and exits without
-causing a BUG or GP fault etc.
-Not that I have any such hardware.
+Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
+---
+ .../staging/mt7621-pci-phy/pci-mt7621-phy.c   | 126 +++++++++---------
+ 1 file changed, 63 insertions(+), 63 deletions(-)
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> 
-> diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
-> index 96670eefaeb2..377a694dc228 100644
-> --- a/drivers/block/paride/pcd.c
-> +++ b/drivers/block/paride/pcd.c
-> @@ -749,8 +749,12 @@ static int pcd_detect(void)
->  		return 0;
->  
->  	printk("%s: No CD-ROM drive found\n", name);
-> -	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++)
-> +	for (unit = 0, cd = pcd; unit < PCD_UNITS; unit++, cd++) {
-> +		blk_cleanup_queue(cd->disk->queue);
-> +		cd->disk->queue = NULL;
-> +		blk_mq_free_tag_set(&cd->tag_set);
->  		put_disk(cd->disk);
-> +	}
->  	pi_unregister_driver(par_drv);
->  	return -1;
->  }
-> diff --git a/drivers/block/paride/pf.c b/drivers/block/paride/pf.c
-> index e92e7a8eeeb2..103b617cdc31 100644
-> --- a/drivers/block/paride/pf.c
-> +++ b/drivers/block/paride/pf.c
-> @@ -761,8 +761,12 @@ static int pf_detect(void)
->  		return 0;
->  
->  	printk("%s: No ATAPI disk detected\n", name);
-> -	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++)
-> +	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
-> +		blk_cleanup_queue(pf->disk->queue);
-> +		pf->disk->queue = NULL;
-> +		blk_mq_free_tag_set(&pf->tag_set);
->  		put_disk(pf->disk);
-> +	}
->  	pi_unregister_driver(par_drv);
->  	return -1;
->  }
-> @@ -1047,13 +1051,15 @@ static void __exit pf_exit(void)
->  	int unit;
->  	unregister_blkdev(major, name);
->  	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
-> -		if (!pf->present)
-> -			continue;
-> -		del_gendisk(pf->disk);
-> +		if (pf->present)
-> +			del_gendisk(pf->disk);
-> +
->  		blk_cleanup_queue(pf->disk->queue);
->  		blk_mq_free_tag_set(&pf->tag_set);
->  		put_disk(pf->disk);
-> -		pi_release(pf->pi);
-> +
-> +		if (pf->present)
-> +			pi_release(pf->pi);
->  	}
->  }
->  
-> 
-
-
+diff --git a/drivers/staging/mt7621-pci-phy/pci-mt7621-phy.c b/drivers/staging/mt7621-pci-phy/pci-mt7621-phy.c
+index d3ca2f019112..98c06308143c 100644
+--- a/drivers/staging/mt7621-pci-phy/pci-mt7621-phy.c
++++ b/drivers/staging/mt7621-pci-phy/pci-mt7621-phy.c
+@@ -14,69 +14,69 @@
+ #include <mt7621.h>
+ #include <ralink_regs.h>
+ 
+-#define RALINK_CLKCFG1			0x30
+-#define CHIP_REV_MT7621_E2		0x0101
+-
+-#define PCIE_PORT_CLK_EN(x)		BIT(24 + (x))
+-
+-#define RG_PE1_PIPE_REG			0x02c
+-#define RG_PE1_PIPE_RST			BIT(12)
+-#define RG_PE1_PIPE_CMD_FRC		BIT(4)
+-
+-#define RG_P0_TO_P1_WIDTH		0x100
+-#define RG_PE1_H_LCDDS_REG		0x49c
+-#define RG_PE1_H_LCDDS_PCW		GENMASK(30, 0)
+-#define RG_PE1_H_LCDDS_PCW_VAL(x)	((0x7fffffff & (x)) << 0)
+-
+-#define RG_PE1_FRC_H_XTAL_REG		0x400
+-#define RG_PE1_FRC_H_XTAL_TYPE          BIT(8)
+-#define RG_PE1_H_XTAL_TYPE              GENMASK(10, 9)
+-#define RG_PE1_H_XTAL_TYPE_VAL(x)       ((0x3 & (x)) << 9)
+-
+-#define RG_PE1_FRC_PHY_REG		0x000
+-#define RG_PE1_FRC_PHY_EN               BIT(4)
+-#define RG_PE1_PHY_EN                   BIT(5)
+-
+-#define RG_PE1_H_PLL_REG		0x490
+-#define RG_PE1_H_PLL_BC			GENMASK(23, 22)
+-#define RG_PE1_H_PLL_BC_VAL(x)		((0x3 & (x)) << 22)
+-#define RG_PE1_H_PLL_BP			GENMASK(21, 18)
+-#define RG_PE1_H_PLL_BP_VAL(x)		((0xf & (x)) << 18)
+-#define RG_PE1_H_PLL_IR			GENMASK(15, 12)
+-#define RG_PE1_H_PLL_IR_VAL(x)		((0xf & (x)) << 12)
+-#define RG_PE1_H_PLL_IC			GENMASK(11, 8)
+-#define RG_PE1_H_PLL_IC_VAL(x)		((0xf & (x)) << 8)
+-#define RG_PE1_H_PLL_PREDIV             GENMASK(7, 6)
+-#define RG_PE1_H_PLL_PREDIV_VAL(x)      ((0x3 & (x)) << 6)
+-#define RG_PE1_PLL_DIVEN		GENMASK(3, 1)
+-#define RG_PE1_PLL_DIVEN_VAL(x)		((0x7 & (x)) << 1)
+-
+-#define RG_PE1_H_PLL_FBKSEL_REG		0x4bc
+-#define RG_PE1_H_PLL_FBKSEL             GENMASK(5, 4)
+-#define RG_PE1_H_PLL_FBKSEL_VAL(x)      ((0x3 & (x)) << 4)
+-
+-#define	RG_PE1_H_LCDDS_SSC_PRD_REG	0x4a4
+-#define RG_PE1_H_LCDDS_SSC_PRD          GENMASK(15, 0)
+-#define RG_PE1_H_LCDDS_SSC_PRD_VAL(x)   ((0xffff & (x)) << 0)
+-
+-#define RG_PE1_H_LCDDS_SSC_DELTA_REG	0x4a8
+-#define RG_PE1_H_LCDDS_SSC_DELTA        GENMASK(11, 0)
+-#define RG_PE1_H_LCDDS_SSC_DELTA_VAL(x) ((0xfff & (x)) << 0)
+-#define RG_PE1_H_LCDDS_SSC_DELTA1       GENMASK(27, 16)
+-#define RG_PE1_H_LCDDS_SSC_DELTA1_VAL(x) ((0xff & (x)) << 16)
+-
+-#define RG_PE1_LCDDS_CLK_PH_INV_REG	0x4a0
+-#define RG_PE1_LCDDS_CLK_PH_INV		BIT(5)
+-
+-#define RG_PE1_H_PLL_BR_REG		0x4ac
+-#define RG_PE1_H_PLL_BR			GENMASK(18, 16)
+-#define RG_PE1_H_PLL_BR_VAL(x)		((0x7 & (x)) << 16)
+-
+-#define	RG_PE1_MSTCKDIV_REG		0x414
+-#define RG_PE1_MSTCKDIV			GENMASK(7, 6)
+-#define RG_PE1_MSTCKDIV_VAL(x)		((0x3 & (x)) << 6)
+-
+-#define RG_PE1_FRC_MSTCKDIV		BIT(5)
++#define RALINK_CLKCFG1				0x30
++#define CHIP_REV_MT7621_E2			0x0101
++
++#define PCIE_PORT_CLK_EN(x)			BIT(24 + (x))
++
++#define RG_PE1_PIPE_REG				0x02c
++#define RG_PE1_PIPE_RST				BIT(12)
++#define RG_PE1_PIPE_CMD_FRC			BIT(4)
++
++#define RG_P0_TO_P1_WIDTH			0x100
++#define RG_PE1_H_LCDDS_REG			0x49c
++#define RG_PE1_H_LCDDS_PCW			GENMASK(30, 0)
++#define RG_PE1_H_LCDDS_PCW_VAL(x)		((0x7fffffff & (x)) << 0)
++
++#define RG_PE1_FRC_H_XTAL_REG			0x400
++#define RG_PE1_FRC_H_XTAL_TYPE			BIT(8)
++#define RG_PE1_H_XTAL_TYPE			GENMASK(10, 9)
++#define RG_PE1_H_XTAL_TYPE_VAL(x)		((0x3 & (x)) << 9)
++
++#define RG_PE1_FRC_PHY_REG			0x000
++#define RG_PE1_FRC_PHY_EN			BIT(4)
++#define RG_PE1_PHY_EN				BIT(5)
++
++#define RG_PE1_H_PLL_REG			0x490
++#define RG_PE1_H_PLL_BC				GENMASK(23, 22)
++#define RG_PE1_H_PLL_BC_VAL(x)			((0x3 & (x)) << 22)
++#define RG_PE1_H_PLL_BP				GENMASK(21, 18)
++#define RG_PE1_H_PLL_BP_VAL(x)			((0xf & (x)) << 18)
++#define RG_PE1_H_PLL_IR				GENMASK(15, 12)
++#define RG_PE1_H_PLL_IR_VAL(x)			((0xf & (x)) << 12)
++#define RG_PE1_H_PLL_IC				GENMASK(11, 8)
++#define RG_PE1_H_PLL_IC_VAL(x)			((0xf & (x)) << 8)
++#define RG_PE1_H_PLL_PREDIV			GENMASK(7, 6)
++#define RG_PE1_H_PLL_PREDIV_VAL(x)		((0x3 & (x)) << 6)
++#define RG_PE1_PLL_DIVEN			GENMASK(3, 1)
++#define RG_PE1_PLL_DIVEN_VAL(x)			((0x7 & (x)) << 1)
++
++#define RG_PE1_H_PLL_FBKSEL_REG			0x4bc
++#define RG_PE1_H_PLL_FBKSEL			GENMASK(5, 4)
++#define RG_PE1_H_PLL_FBKSEL_VAL(x)		((0x3 & (x)) << 4)
++
++#define	RG_PE1_H_LCDDS_SSC_PRD_REG		0x4a4
++#define RG_PE1_H_LCDDS_SSC_PRD			GENMASK(15, 0)
++#define RG_PE1_H_LCDDS_SSC_PRD_VAL(x)		((0xffff & (x)) << 0)
++
++#define RG_PE1_H_LCDDS_SSC_DELTA_REG		0x4a8
++#define RG_PE1_H_LCDDS_SSC_DELTA		GENMASK(11, 0)
++#define RG_PE1_H_LCDDS_SSC_DELTA_VAL(x)		((0xfff & (x)) << 0)
++#define RG_PE1_H_LCDDS_SSC_DELTA1		GENMASK(27, 16)
++#define RG_PE1_H_LCDDS_SSC_DELTA1_VAL(x)	((0xff & (x)) << 16)
++
++#define RG_PE1_LCDDS_CLK_PH_INV_REG		0x4a0
++#define RG_PE1_LCDDS_CLK_PH_INV			BIT(5)
++
++#define RG_PE1_H_PLL_BR_REG			0x4ac
++#define RG_PE1_H_PLL_BR				GENMASK(18, 16)
++#define RG_PE1_H_PLL_BR_VAL(x)			((0x7 & (x)) << 16)
++
++#define	RG_PE1_MSTCKDIV_REG			0x414
++#define RG_PE1_MSTCKDIV				GENMASK(7, 6)
++#define RG_PE1_MSTCKDIV_VAL(x)			((0x3 & (x)) << 6)
++
++#define RG_PE1_FRC_MSTCKDIV			BIT(5)
+ 
+ /**
+  * struct mt7621_pci_phy_instance - Mt7621 Pcie PHY device
 -- 
-~Randy
+2.19.1
+
