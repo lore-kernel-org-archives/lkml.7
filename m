@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC1BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589CFC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F92120896
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2412D20896
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnS9BA7g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pm2FJzjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727651AbfCQUAE (ORCPT
+        id S1727665AbfCQUAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 16:00:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38021 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbfCQT76 (ORCPT
+        Sun, 17 Mar 2019 16:00:06 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33316 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727632AbfCQUAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 15:59:58 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a188so10611873wmf.3
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 12:59:56 -0700 (PDT)
+        Sun, 17 Mar 2019 16:00:02 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i8so14775038wrm.0
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 13:00:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5k6jzC6rE0OKFBANkxFQnz4b88hZD9ZPqEtH1OIP/LQ=;
-        b=jnS9BA7g+F05yo2R/btW1qFtdWDlOdyrAg2IPT2WmWOI5JJrGx31pzb8wlHZXHUtr6
-         mzxpOIJgtEOJHVMW5RSOPsk1WkUx1BQjEg5wTQe3oYzzz+qotOox3S79YByVyKbkOuOB
-         7GuI8T+n59If3IYZukEroXgRnxS0C8E9gqHJmbsyArLoVrCg9dN+wG4F5eBHdiDnEHEq
-         0/Ps17b8JBUsvnM+bBLm2MUSih3amlpl2CeAhPB3VtLi7LIsMlXvNVj6tln1OVYh9hgP
-         6JuNL4sx65lGseY9xvRHRP0NJYBWg4421kwv1+7Cq0VojHNgPKoeunL4mZtRp2IwvSdt
-         skuw==
+        bh=DeHJpGmgIprkXSbxtuoa2bWxcrU0/AOTAKP+BZJz78w=;
+        b=pm2FJzjnwxLFwG3eSMA32uerskFCHK/cKtAleDcXuA+RD5rrs2Wbt2mBoU4iYCM4Fc
+         OOvj+5UFIbh9/ulbgdJCYcnadCo4X5XNvLZSHrSyLbh2l5I31tDcVBZX6FXiKk4PvTpp
+         iWOu0Aty1UfcI4zdLNV+RrQUUUofvtoCCnPJQ0r7uA1WmAunQDJjFeirXo5RGhfZhK38
+         SkGCYd02w6h8Asdb7BxsqPsoqP3BXV3aZZtO5Ln1f1rp6/ZqCI1Kfpv7V6wxlNkpvGl5
+         rKoVLleiJPlxYX1mLTACAEWyoNPrqAH9NudE//f4/9XGLpm2XZe1BQHjn2kASlPcRzfC
+         N9xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=5k6jzC6rE0OKFBANkxFQnz4b88hZD9ZPqEtH1OIP/LQ=;
-        b=qw6lC+B962qzUw1rZAtuUnpuS3xWxjRPc85d2qtopagAwZfITaoGpM788a1HbGasCY
-         4cV2ZPf+RXQIvLTPXWwJD1nikgBZia0DsTovnnF1AVS9fsgtTiUmk8hSeRZB7NPaQgju
-         0GOQtBRAWxrZ7c1I52ngVcBXZDEUSpjSZJlry+i5h2h4wn0dHyRiBli4PCc+EJ4Qn2d0
-         VjGXdNATlwR6MhtAQuzezvm+pFeJFmM9U+G7QsQIWTTLS9YJZ5/8rvWCUZh+njxVpaOi
-         d0sUNEkKO/YTebrwS+uYoth+RepnhhnqA6mfS20SsU0iIx3fJ15MUX4crgq69BAyUYmW
-         euyg==
-X-Gm-Message-State: APjAAAX6Rws+az78yMfqvTpYIM+pR5dBLzpjHOAAvyD+zjWe4/Q/ZGAM
-        C7v2xT9kl6sikvs9JRs/EAfothpr
-X-Google-Smtp-Source: APXvYqxw8pRlA7p4hVbOkj/U+gRvevN6NNCaxdPmiclyphRuK3oR9sUsKOCvKxXbvG/q0qvnRn0Xbg==
-X-Received: by 2002:a1c:234d:: with SMTP id j74mr8187735wmj.130.1552852795663;
-        Sun, 17 Mar 2019 12:59:55 -0700 (PDT)
+        bh=DeHJpGmgIprkXSbxtuoa2bWxcrU0/AOTAKP+BZJz78w=;
+        b=CjXsdYTQuki1FlmVv81GPsyUPI9Dpi/SFc6DRkHQc36XPvjflNWWYOV7HItKwVltJ/
+         FKvtQY+KBQe1Vy72psdFZTW6kNiNIKhGhL5CbEktA8P8YclJHo+DbIdT0JEsnYZhgVRN
+         VJYAG/6v6POZzR0X+Q5AeiSXHHvqsLfwWw04xrJSAuJdVca4A6uX6FsDhxAPt0bNDybh
+         Rt3SQBwfQsXWJ9ZWNdpZ8F95zSMOqbHrQBgkk9Hkk2kwLzpQDhoIlXkb76BQ/VnORPzM
+         QUu0yGGZGHh5Xk/dzjdklr8OP2r6TzWtCKUfJH0RIsRj/4P53jw5ac2tpw8uffN3uyOR
+         G9KQ==
+X-Gm-Message-State: APjAAAXZZ34pOmX4cHHLyyDY+A5YB5oyM1DtlpjLbrSlDJCUjALd/S1b
+        +0TbD4uDXtgh7NGPzonh2mkWLqAJ
+X-Google-Smtp-Source: APXvYqyCFwtsbA4Admg1j3JB31tMzazAsX29Ho0Lg3jALEPNyKUHfKdWINOGFoN1JQWwAuPsnknCfQ==
+X-Received: by 2002:adf:cd0f:: with SMTP id w15mr9993356wrm.267.1552852800221;
+        Sun, 17 Mar 2019 13:00:00 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id z1sm7039785wrw.28.2019.03.17.12.59.54
+        by smtp.gmail.com with ESMTPSA id z1sm7039785wrw.28.2019.03.17.12.59.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 12:59:55 -0700 (PDT)
+        Sun, 17 Mar 2019 12:59:59 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, Tomer Tayar <ttayar@habana.ai>
-Subject: [PATCH 12/15] habanalabs: Allow accessing DRAM virtual addresses via debugfs
-Date:   Sun, 17 Mar 2019 21:59:24 +0200
-Message-Id: <20190317195927.26238-13-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 15/15] habanalabs: never fail hard reset of device
+Date:   Sun, 17 Mar 2019 21:59:27 +0200
+Message-Id: <20190317195927.26238-16-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190317195927.26238-1-oded.gabbay@gmail.com>
 References: <20190317195927.26238-1-oded.gabbay@gmail.com>
@@ -69,154 +69,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomer Tayar <ttayar@habana.ai>
+Hard-reset of our device should never fail, due to dangers of permanent
+damage to the H/W.
 
-The addr/data32 debugfs nodes currently permit the access to only physical
-addresses of a device. This patch extends it and allows accessing also
-device's DRAM virtual addresses.
+This patch removes the last place in the reset path where the driver might
+exit before doing the actual reset.
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/debugfs.c | 96 +++++++++++++++++++++++++++++--
- 1 file changed, 91 insertions(+), 5 deletions(-)
+ drivers/misc/habanalabs/device.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/debugfs.c b/drivers/misc/habanalabs/debugfs.c
-index 974a87789bd8..a4447699ff4e 100644
---- a/drivers/misc/habanalabs/debugfs.c
-+++ b/drivers/misc/habanalabs/debugfs.c
-@@ -505,22 +505,97 @@ static ssize_t mmu_write(struct file *file, const char __user *buf,
- 	return -EINVAL;
- }
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index 77d51be66c7e..c51d1062d0bc 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -663,17 +663,9 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
+ 	/* Go over all the queues, release all CS and their jobs */
+ 	hl_cs_rollback_all(hdev);
  
-+static int device_va_to_pa(struct hl_device *hdev, u64 virt_addr,
-+				u64 *phys_addr)
-+{
-+	struct hl_ctx *ctx = hdev->user_ctx;
-+	u64 hop_addr, hop_pte_addr, hop_pte;
-+	int rc = 0;
-+
-+	if (!ctx) {
-+		dev_err(hdev->dev, "no ctx available\n");
-+		return -EINVAL;
-+	}
-+
-+	mutex_lock(&ctx->mmu_lock);
-+
-+	/* hop 0 */
-+	hop_addr = get_hop0_addr(ctx);
-+	hop_pte_addr = get_hop0_pte_addr(ctx, hop_addr, virt_addr);
-+	hop_pte = hdev->asic_funcs->read_pte(hdev, hop_pte_addr);
-+
-+	/* hop 1 */
-+	hop_addr = get_next_hop_addr(hop_pte);
-+	if (hop_addr == ULLONG_MAX)
-+		goto not_mapped;
-+	hop_pte_addr = get_hop1_pte_addr(ctx, hop_addr, virt_addr);
-+	hop_pte = hdev->asic_funcs->read_pte(hdev, hop_pte_addr);
-+
-+	/* hop 2 */
-+	hop_addr = get_next_hop_addr(hop_pte);
-+	if (hop_addr == ULLONG_MAX)
-+		goto not_mapped;
-+	hop_pte_addr = get_hop2_pte_addr(ctx, hop_addr, virt_addr);
-+	hop_pte = hdev->asic_funcs->read_pte(hdev, hop_pte_addr);
-+
-+	/* hop 3 */
-+	hop_addr = get_next_hop_addr(hop_pte);
-+	if (hop_addr == ULLONG_MAX)
-+		goto not_mapped;
-+	hop_pte_addr = get_hop3_pte_addr(ctx, hop_addr, virt_addr);
-+	hop_pte = hdev->asic_funcs->read_pte(hdev, hop_pte_addr);
-+
-+	if (!(hop_pte & LAST_MASK)) {
-+		/* hop 4 */
-+		hop_addr = get_next_hop_addr(hop_pte);
-+		if (hop_addr == ULLONG_MAX)
-+			goto not_mapped;
-+		hop_pte_addr = get_hop4_pte_addr(ctx, hop_addr, virt_addr);
-+		hop_pte = hdev->asic_funcs->read_pte(hdev, hop_pte_addr);
-+	}
-+
-+	if (!(hop_pte & PAGE_PRESENT_MASK))
-+		goto not_mapped;
-+
-+	*phys_addr = (hop_pte & PTE_PHYS_ADDR_MASK) | (virt_addr & OFFSET_MASK);
-+
-+	goto out;
-+
-+not_mapped:
-+	dev_err(hdev->dev, "virt addr 0x%llx is not mapped to phys addr\n",
-+			virt_addr);
-+	rc = -EINVAL;
-+out:
-+	mutex_unlock(&ctx->mmu_lock);
-+	return rc;
-+}
-+
- static ssize_t hl_data_read32(struct file *f, char __user *buf,
- 					size_t count, loff_t *ppos)
- {
- 	struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
- 	struct hl_device *hdev = entry->hdev;
-+	struct asic_fixed_properties *prop = &hdev->asic_prop;
- 	char tmp_buf[32];
-+	u64 addr = entry->addr;
- 	u32 val;
- 	ssize_t rc;
+-	if (hard_reset) {
+-		/* Release kernel context */
+-		if (hl_ctx_put(hdev->kernel_ctx) != 1) {
+-			dev_err(hdev->dev,
+-				"kernel ctx is alive during hard reset\n");
+-			rc = -EBUSY;
+-			goto out_err;
+-		}
+-
++	/* Release kernel context */
++	if ((hard_reset) && (hl_ctx_put(hdev->kernel_ctx) == 1))
+ 		hdev->kernel_ctx = NULL;
+-	}
  
- 	if (*ppos)
- 		return 0;
+ 	/* Reset the H/W. It will be in idle state after this returns */
+ 	hdev->asic_funcs->hw_fini(hdev, hard_reset);
+@@ -699,6 +691,13 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
+ 	if (hard_reset) {
+ 		hdev->device_cpu_disabled = false;
  
--	rc = hdev->asic_funcs->debugfs_read32(hdev, entry->addr, &val);
-+	if (addr >= prop->va_space_dram_start_address &&
-+			addr < prop->va_space_dram_end_address &&
-+			hdev->mmu_enable &&
-+			hdev->dram_supports_virtual_memory) {
-+		rc = device_va_to_pa(hdev, entry->addr, &addr);
-+		if (rc)
-+			return rc;
-+	}
++		if (hdev->kernel_ctx) {
++			dev_crit(hdev->dev,
++				"kernel ctx was alive during hard reset, something is terribly wrong\n");
++			rc = -EBUSY;
++			goto out_err;
++		}
 +
-+	rc = hdev->asic_funcs->debugfs_read32(hdev, addr, &val);
- 	if (rc) {
--		dev_err(hdev->dev, "Failed to read from 0x%010llx\n",
--			entry->addr);
-+		dev_err(hdev->dev, "Failed to read from 0x%010llx\n", addr);
- 		return rc;
- 	}
- 
-@@ -536,6 +611,8 @@ static ssize_t hl_data_write32(struct file *f, const char __user *buf,
- {
- 	struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
- 	struct hl_device *hdev = entry->hdev;
-+	struct asic_fixed_properties *prop = &hdev->asic_prop;
-+	u64 addr = entry->addr;
- 	u32 value;
- 	ssize_t rc;
- 
-@@ -543,10 +620,19 @@ static ssize_t hl_data_write32(struct file *f, const char __user *buf,
- 	if (rc)
- 		return rc;
- 
--	rc = hdev->asic_funcs->debugfs_write32(hdev, entry->addr, value);
-+	if (addr >= prop->va_space_dram_start_address &&
-+			addr < prop->va_space_dram_end_address &&
-+			hdev->mmu_enable &&
-+			hdev->dram_supports_virtual_memory) {
-+		rc = device_va_to_pa(hdev, entry->addr, &addr);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	rc = hdev->asic_funcs->debugfs_write32(hdev, addr, value);
- 	if (rc) {
- 		dev_err(hdev->dev, "Failed to write 0x%08x to 0x%010llx\n",
--			value, entry->addr);
-+			value, addr);
- 		return rc;
- 	}
- 
+ 		/* Allocate the kernel context */
+ 		hdev->kernel_ctx = kzalloc(sizeof(*hdev->kernel_ctx),
+ 						GFP_KERNEL);
 -- 
 2.17.1
 
