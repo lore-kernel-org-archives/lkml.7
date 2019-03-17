@@ -4,21 +4,20 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84829C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127F7C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5393C2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFEF420872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfCRCgs (ORCPT
+        id S1727947AbfCRCgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 22:36:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:39312 "EHLO mga12.intel.com"
+        Sun, 17 Mar 2019 22:36:47 -0400
+Received: from mga12.intel.com ([192.55.52.136]:39310 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727782AbfCRCgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727780AbfCRCgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 17 Mar 2019 22:36:06 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -26,7 +25,7 @@ Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Mar 2019 19:36:04 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,491,1544515200"; 
-   d="scan'208";a="155877424"
+   d="scan'208";a="155877421"
 Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
   by fmsmga001.fm.intel.com with ESMTP; 17 Mar 2019 19:36:04 -0700
 From:   ira.weiny@intel.com
@@ -52,9 +51,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
         linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
         linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
         linux-rdma@vger.kernel.org, netdev@vger.kernel.org
-Subject: [RESEND 5/7] IB/hfi1: Use the new FOLL_LONGTERM flag to get_user_pages_fast()
-Date:   Sun, 17 Mar 2019 11:34:36 -0700
-Message-Id: <20190317183438.2057-6-ira.weiny@intel.com>
+Subject: [RESEND 4/7] mm/gup: Add FOLL_LONGTERM capability to GUP fast
+Date:   Sun, 17 Mar 2019 11:34:35 -0700
+Message-Id: <20190317183438.2057-5-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190317183438.2057-1-ira.weiny@intel.com>
 References: <20190317183438.2057-1-ira.weiny@intel.com>
@@ -67,32 +66,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Use the new FOLL_LONGTERM to get_user_pages_fast() to protect against
-FS DAX pages being mapped.
+DAX pages were previously unprotected from longterm pins when users
+called get_user_pages_fast().
+
+Use the new FOLL_LONGTERM flag to check for DEVMAP pages and fall
+back to regular GUP processing if a DEVMAP page is encountered.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- drivers/infiniband/hw/hfi1/user_pages.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ mm/gup.c | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/user_pages.c b/drivers/infiniband/hw/hfi1/user_pages.c
-index 78ccacaf97d0..6a7f9cd5a94e 100644
---- a/drivers/infiniband/hw/hfi1/user_pages.c
-+++ b/drivers/infiniband/hw/hfi1/user_pages.c
-@@ -104,9 +104,11 @@ int hfi1_acquire_user_pages(struct mm_struct *mm, unsigned long vaddr, size_t np
- 			    bool writable, struct page **pages)
- {
- 	int ret;
-+	unsigned int gup_flags = writable ? FOLL_WRITE : 0;
+diff --git a/mm/gup.c b/mm/gup.c
+index 0684a9536207..173db0c44678 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1600,6 +1600,9 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 			goto pte_unmap;
  
--	ret = get_user_pages_fast(vaddr, npages, writable ? FOLL_WRITE : 0,
--				  pages);
-+	gup_flags |= FOLL_LONGTERM;
+ 		if (pte_devmap(pte)) {
++			if (unlikely(flags & FOLL_LONGTERM))
++				goto pte_unmap;
 +
-+	ret = get_user_pages_fast(vaddr, npages, gup_flags, pages);
- 	if (ret < 0)
- 		return ret;
+ 			pgmap = get_dev_pagemap(pte_pfn(pte), pgmap);
+ 			if (unlikely(!pgmap)) {
+ 				undo_dev_pagemap(nr, nr_start, pages);
+@@ -1739,8 +1742,11 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 	if (!pmd_access_permitted(orig, flags & FOLL_WRITE))
+ 		return 0;
  
+-	if (pmd_devmap(orig))
++	if (pmd_devmap(orig)) {
++		if (unlikely(flags & FOLL_LONGTERM))
++			return 0;
+ 		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
++	}
+ 
+ 	refs = 0;
+ 	page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+@@ -1777,8 +1783,11 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+ 	if (!pud_access_permitted(orig, flags & FOLL_WRITE))
+ 		return 0;
+ 
+-	if (pud_devmap(orig))
++	if (pud_devmap(orig)) {
++		if (unlikely(flags & FOLL_LONGTERM))
++			return 0;
+ 		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
++	}
+ 
+ 	refs = 0;
+ 	page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+@@ -2066,8 +2075,20 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+ 		start += nr << PAGE_SHIFT;
+ 		pages += nr;
+ 
+-		ret = get_user_pages_unlocked(start, nr_pages - nr, pages,
+-					      gup_flags);
++		if (gup_flags & FOLL_LONGTERM) {
++			down_read(&current->mm->mmap_sem);
++			ret = __gup_longterm_locked(current, current->mm,
++						    start, nr_pages - nr,
++						    pages, NULL, gup_flags);
++			up_read(&current->mm->mmap_sem);
++		} else {
++			/*
++			 * retain FAULT_FOLL_ALLOW_RETRY optimization if
++			 * possible
++			 */
++			ret = get_user_pages_unlocked(start, nr_pages - nr,
++						      pages, gup_flags);
++		}
+ 
+ 		/* Have to be a bit careful with return values */
+ 		if (nr > 0) {
 -- 
 2.20.1
 
