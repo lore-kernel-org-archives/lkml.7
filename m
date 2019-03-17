@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38594C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DE0C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71CB2184C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F182184C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arrikto-com.20150623.gappssmtp.com header.i=@arrikto-com.20150623.gappssmtp.com header.b="LaTAvkO5"
+	dkim=pass (2048-bit key) header.d=arrikto-com.20150623.gappssmtp.com header.i=@arrikto-com.20150623.gappssmtp.com header.b="L34WvEe3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfCQMXI (ORCPT
+        id S1727305AbfCQMXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 08:23:08 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46007 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbfCQMXG (ORCPT
+        Sun, 17 Mar 2019 08:23:23 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43445 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbfCQMXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 08:23:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h99so13998804wrh.12
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 05:23:05 -0700 (PDT)
+        Sun, 17 Mar 2019 08:23:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d17so14012843wre.10
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 05:23:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arrikto-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uyqI+apM2JxxBmHnyL3ek6dv57ZYo4J43XloC+rdkpI=;
-        b=LaTAvkO5F0dwQ8dJm5prlthxIXCp6/D/dPI//CSsneefbxnjYQDZYXDcLi3L+a2Ftj
-         Tcnda1ebSSlHL0foItjzAJ0DDw8hjezi/cTkjNGuDlcXR1B4EH526GY2AWr3l2idDcTF
-         gM4FxNoTFIu+JQ9MXeNjxFN2/ymvXRM6wFVRd2orMOKMb61ScYXHuQY4oGWIg/XqC7E/
-         vMuXAPkOxLICszdNTJabO3m5Te8Mm3mcv/y1J8visuNb1T5k9tgDKKssJLwablnL/sXQ
-         rJv66DIvyzRoYzdjWRWud+UP47CMcAX0dsWqnOBZGqsxvV+MVGDRlk0hAmiq3MAEkfft
-         /5+A==
+        bh=CpdoALOVEW0/p10Olg9aJ0e2cRGSvGq4LVyy2sp/g/g=;
+        b=L34WvEe3txWEUXCHW6bCWvFe7we99rkUQ+T3VwZdrNqg6p+JiIz53+wgdVuQ6A1eHX
+         MHnZh+iUabntqBw1GNCOT+gYRr93AYXVputuRUqWsn7HNcuoDHEAKout5xQj9xemI3T7
+         oZUZaGx7ozXrFHwh3WmQ9FEdiPWhC/HZJ29vN9TyLnjRYsDih4v1FHX82pHGf7Mj7OeN
+         9TZe76rVug8eFyLk8u6D5ffronEebyUNcXvF63BnfDbUaDWrGXfO8MKwBifrT/ZJ9TGH
+         yj3fxLJwMhMw6dDThVkZOD2u75k2tWS8macoNKQbvx6tWFx0XPCrrFiAXfXEPVnSyRmr
+         Z/gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=uyqI+apM2JxxBmHnyL3ek6dv57ZYo4J43XloC+rdkpI=;
-        b=X3AZ+cEGUZ3EiJWwmRVS+r//9Y4Ko5KrHuZj9k4OcTekbztC77by2RbBcZGclMAIz1
-         5Bqo2q/jSeEX1M3KR4v+gD1IS2yAD3rPhL8x5TVGeQfASyKMZRfVHM1846a8hHkuN9Wu
-         3IjFoEDtS1M8PVsm9AXW09RtBlh/fNxs4EqzmlIz5UvdCOJ/V4Tk26wCM/XDcEFJ/n2H
-         /Z02DDIskHbPksbx+QzCCeDhToKe6Y3iN9LnDE3tHs3YYMMhnzZL2nZno+pZs6+dyi0t
-         PE/P53G8+sXOfjk8FTP7+1QHGYsEDx7YBFBaMvxWFoBz3NLnj5b6pmMpk7apxHRY4uS/
-         AmKg==
-X-Gm-Message-State: APjAAAWWpysnK1FLA3riw1amEicJF/pkiapw0Mp4c3O1txLpMbCjP0x7
-        BYdUv81AV9SUQPsx2XXAprwrRxkyQ5I=
-X-Google-Smtp-Source: APXvYqzWGxQ6ihh3n7IC1Vh3iqQL2H9hyHgBKEloemecYczSCrOfKd8SPUluTe8nUk2KEZPa9vS2Mg==
-X-Received: by 2002:adf:ec41:: with SMTP id w1mr9046026wrn.184.1552825384625;
-        Sun, 17 Mar 2019 05:23:04 -0700 (PDT)
+        bh=CpdoALOVEW0/p10Olg9aJ0e2cRGSvGq4LVyy2sp/g/g=;
+        b=nePZsKx5ohWc6NbchIoj4lD/ibeud1gkNBQqmNrMYek9BlIrqfNK+mmw6VJM4CzZiD
+         VWrjI1cPgmOsRL3S3CAIDiWXI/KKu2m5Nbwv8atAE1BY6EGGlM9gQ9PctzwiARNnp8nS
+         CBFowKDI0ily7rlWRzS/7JgMyGMQBlBuR7r0PEP9Ng2hS6hEaEye9ts21QU+bWfnKHWc
+         C6jpkYdpodxw6Ob4fGkk1uhXYHz8s/py5QFLWzx8bR3rELNvA5an3L5oJZfA6KPQE4OH
+         QncHvL2GOYLRlWkyHeDFzGtGYBLrc9j7jKzQBkmZ2ukkejV7pXec999fuhdoOrLi0Vyw
+         2Lrg==
+X-Gm-Message-State: APjAAAWwlmFGeOp2rsbFoadu0CX8rUMcx0N0/51xkSMhNMtLTW4LsKSM
+        kkmnJs06GcLtC/9F4jZYh6BFzw==
+X-Google-Smtp-Source: APXvYqwzdsgRtjmGNCjQK9mOrmAzetL/58zJ4JgpuNBBsnBlmlALfJkQqb10Ky53cIqWsAIufwwr5g==
+X-Received: by 2002:adf:ebce:: with SMTP id v14mr8398242wrn.69.1552825386982;
+        Sun, 17 Mar 2019 05:23:06 -0700 (PDT)
 Received: from snf-864.vm.snf.arr ([31.177.62.212])
-        by smtp.gmail.com with ESMTPSA id z10sm5453292wrs.11.2019.03.17.05.23.03
+        by smtp.gmail.com with ESMTPSA id z10sm5453292wrs.11.2019.03.17.05.23.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 05:23:04 -0700 (PDT)
+        Sun, 17 Mar 2019 05:23:06 -0700 (PDT)
 From:   Nikos Tsironis <ntsironis@arrikto.com>
 To:     snitzer@redhat.com, agk@redhat.com, dm-devel@redhat.com
 Cc:     mpatocka@redhat.com, paulmck@linux.ibm.com, hch@infradead.org,
         iliastsi@arrikto.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/6] dm snapshot: Don't sleep holding the snapshot lock
-Date:   Sun, 17 Mar 2019 14:22:55 +0200
-Message-Id: <20190317122258.21760-4-ntsironis@arrikto.com>
+Subject: [PATCH v3 5/6] dm snapshot: Make exception tables scalable
+Date:   Sun, 17 Mar 2019 14:22:57 +0200
+Message-Id: <20190317122258.21760-6-ntsironis@arrikto.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190317122258.21760-1-ntsironis@arrikto.com>
 References: <20190317122258.21760-1-ntsironis@arrikto.com>
@@ -70,227 +70,449 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When completing a pending exception, pending_complete() waits for all
-conflicting reads to drain, before inserting the final, completed
-exception. Conflicting reads are snapshot reads redirected to the
-origin, because the relevant chunk is not remapped to the COW device the
-moment we receive the read.
+Use list_bl to implement the exception hash tables' buckets. This change
+permits concurrent access, to distinct buckets, by multiple threads.
 
-The completed exception must be inserted into the exception table after
-all conflicting reads drain to ensure snapshot reads don't return
-corrupted data. This is required because inserting the completed
-exception into the exception table signals that the relevant chunk is
-remapped and both origin writes and snapshot merging will now overwrite
-the chunk in origin.
+Also, implement helper functions to lock and unlock the exception tables
+based on the chunk number of the exception at hand.
 
-This wait is done holding the snapshot lock to ensure that
-pending_complete() doesn't starve if new snapshot reads keep coming for
-this chunk.
+We retain the global locking, by means of down_write(), which is
+replaced by the next commit.
 
-In preparation for the next commit, where we use a spinlock instead of a
-mutex to protect the exception tables, we remove the need for holding
-the lock while waiting for conflicting reads to drain.
-
-We achieve this in two steps:
-
-1. pending_complete() inserts the completed exception before waiting for
-   conflicting reads to drain and removes the pending exception after
-   all conflicting reads drain.
-
-   This ensures that new snapshot reads will be redirected to the COW
-   device, instead of the origin, and thus pending_complete() will not
-   starve. Moreover, we use the existence of both a completed and
-   a pending exception to signify that the COW is done but there are
-   conflicting reads in flight.
-
-2. In __origin_write() we check first if there is a pending exception
-   and then if there is a completed exception. If there is a pending
-   exception any submitted BIO is delayed on the pe->origin_bios list and
-   DM_MAPIO_SUBMITTED is returned. This ensures that neither writes to the
-   origin nor snapshot merging can overwrite the origin chunk, until all
-   conflicting reads drain, and thus snapshot reads will not return
-   corrupted data.
-
-Summarizing, we now have the following possible combinations of pending
-and completed exceptions for a chunk, along with their meaning:
-
-A. No exceptions exist: The chunk has not been remapped yet.
-B. Only a pending exception exists: The chunk is currently being copied
-   to the COW device.
-C. Both a pending and a completed exception exist: COW for this chunk
-   has completed but there are snapshot reads in flight which had been
-   redirected to the origin before the chunk was remapped.
-D. Only the completed exception exists: COW has been completed and there
-   are no conflicting reads in flight.
+Still, we must acquire the per-bucket spinlocks when accessing the hash
+tables, since list_bl does not allow modification on unlocked lists.
 
 Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
 Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
 ---
- drivers/md/dm-snap.c | 102 ++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 65 insertions(+), 37 deletions(-)
+ drivers/md/dm-exception-store.h |   3 +-
+ drivers/md/dm-snap.c            | 137 +++++++++++++++++++++++++++++++++-------
+ 2 files changed, 116 insertions(+), 24 deletions(-)
 
+diff --git a/drivers/md/dm-exception-store.h b/drivers/md/dm-exception-store.h
+index 12b5216c2cfe..5a3c696c057f 100644
+--- a/drivers/md/dm-exception-store.h
++++ b/drivers/md/dm-exception-store.h
+@@ -11,6 +11,7 @@
+ #define _LINUX_DM_EXCEPTION_STORE
+ 
+ #include <linux/blkdev.h>
++#include <linux/list_bl.h>
+ #include <linux/device-mapper.h>
+ 
+ /*
+@@ -27,7 +28,7 @@ typedef sector_t chunk_t;
+  * chunk within the device.
+  */
+ struct dm_exception {
+-	struct list_head hash_list;
++	struct hlist_bl_node hash_list;
+ 
+ 	chunk_t old_chunk;
+ 	chunk_t new_chunk;
 diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
-index 36805b12661e..4b34bfa0900a 100644
+index 209da5dd0ba6..ab75857309aa 100644
 --- a/drivers/md/dm-snap.c
 +++ b/drivers/md/dm-snap.c
-@@ -1501,16 +1501,24 @@ static void pending_complete(void *context, int success)
- 		goto out;
+@@ -13,6 +13,7 @@
+ #include <linux/init.h>
+ #include <linux/kdev_t.h>
+ #include <linux/list.h>
++#include <linux/list_bl.h>
+ #include <linux/mempool.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -44,7 +45,7 @@ static const char dm_snapshot_merge_target_name[] = "snapshot-merge";
+ struct dm_exception_table {
+ 	uint32_t hash_mask;
+ 	unsigned hash_shift;
+-	struct list_head *table;
++	struct hlist_bl_head *table;
+ };
+ 
+ struct dm_snapshot {
+@@ -618,6 +619,36 @@ static void unregister_snapshot(struct dm_snapshot *s)
+  * The lowest hash_shift bits of the chunk number are ignored, allowing
+  * some consecutive chunks to be grouped together.
+  */
++static uint32_t exception_hash(struct dm_exception_table *et, chunk_t chunk);
++
++/* Lock to protect access to the completed and pending exception hash tables. */
++struct dm_exception_table_lock {
++	struct hlist_bl_head *complete_slot;
++	struct hlist_bl_head *pending_slot;
++};
++
++static void dm_exception_table_lock_init(struct dm_snapshot *s, chunk_t chunk,
++					 struct dm_exception_table_lock *lock)
++{
++	struct dm_exception_table *complete = &s->complete;
++	struct dm_exception_table *pending = &s->pending;
++
++	lock->complete_slot = &complete->table[exception_hash(complete, chunk)];
++	lock->pending_slot = &pending->table[exception_hash(pending, chunk)];
++}
++
++static void dm_exception_table_lock(struct dm_exception_table_lock *lock)
++{
++	hlist_bl_lock(lock->complete_slot);
++	hlist_bl_lock(lock->pending_slot);
++}
++
++static void dm_exception_table_unlock(struct dm_exception_table_lock *lock)
++{
++	hlist_bl_unlock(lock->pending_slot);
++	hlist_bl_unlock(lock->complete_slot);
++}
++
+ static int dm_exception_table_init(struct dm_exception_table *et,
+ 				   uint32_t size, unsigned hash_shift)
+ {
+@@ -625,12 +656,12 @@ static int dm_exception_table_init(struct dm_exception_table *et,
+ 
+ 	et->hash_shift = hash_shift;
+ 	et->hash_mask = size - 1;
+-	et->table = dm_vcalloc(size, sizeof(struct list_head));
++	et->table = dm_vcalloc(size, sizeof(struct hlist_bl_head));
+ 	if (!et->table)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < size; i++)
+-		INIT_LIST_HEAD(et->table + i);
++		INIT_HLIST_BL_HEAD(et->table + i);
+ 
+ 	return 0;
+ }
+@@ -638,15 +669,16 @@ static int dm_exception_table_init(struct dm_exception_table *et,
+ static void dm_exception_table_exit(struct dm_exception_table *et,
+ 				    struct kmem_cache *mem)
+ {
+-	struct list_head *slot;
+-	struct dm_exception *ex, *next;
++	struct hlist_bl_head *slot;
++	struct dm_exception *ex;
++	struct hlist_bl_node *pos, *n;
+ 	int i, size;
+ 
+ 	size = et->hash_mask + 1;
+ 	for (i = 0; i < size; i++) {
+ 		slot = et->table + i;
+ 
+-		list_for_each_entry_safe (ex, next, slot, hash_list)
++		hlist_bl_for_each_entry_safe(ex, pos, n, slot, hash_list)
+ 			kmem_cache_free(mem, ex);
  	}
  
--	/* Check for conflicting reads */
--	__check_for_conflicting_io(s, pe->e.old_chunk);
--
- 	/*
--	 * Add a proper exception, and remove the
--	 * in-flight exception from the list.
-+	 * Add a proper exception. After inserting the completed exception all
-+	 * subsequent snapshot reads to this chunk will be redirected to the
-+	 * COW device.  This ensures that we do not starve. Moreover, as long
-+	 * as the pending exception exists, neither origin writes nor snapshot
-+	 * merging can overwrite the chunk in origin.
- 	 */
- 	dm_insert_exception(&s->complete, e);
+@@ -660,7 +692,7 @@ static uint32_t exception_hash(struct dm_exception_table *et, chunk_t chunk)
  
-+	/* Wait for conflicting reads to drain */
-+	if (__chunk_is_tracked(s, pe->e.old_chunk)) {
-+		mutex_unlock(&s->lock);
-+		__check_for_conflicting_io(s, pe->e.old_chunk);
-+		mutex_lock(&s->lock);
-+	}
-+
- out:
-+	/* Remove the in-flight exception from the list */
- 	dm_remove_exception(&pe->e);
- 	snapshot_bios = bio_list_get(&pe->snapshot_bios);
- 	origin_bios = bio_list_get(&pe->origin_bios);
-@@ -1660,25 +1668,15 @@ __lookup_pending_exception(struct dm_snapshot *s, chunk_t chunk)
+ static void dm_remove_exception(struct dm_exception *e)
+ {
+-	list_del(&e->hash_list);
++	hlist_bl_del(&e->hash_list);
  }
  
  /*
-- * Looks to see if this snapshot already has a pending exception
-- * for this chunk, otherwise it allocates a new one and inserts
-- * it into the pending table.
-+ * Inserts a pending exception into the pending table.
-  *
-  * NOTE: a write lock must be held on snap->lock before calling
-  * this.
-  */
- static struct dm_snap_pending_exception *
--__find_pending_exception(struct dm_snapshot *s,
--			 struct dm_snap_pending_exception *pe, chunk_t chunk)
-+__insert_pending_exception(struct dm_snapshot *s,
-+			   struct dm_snap_pending_exception *pe, chunk_t chunk)
+@@ -670,11 +702,12 @@ static void dm_remove_exception(struct dm_exception *e)
+ static struct dm_exception *dm_lookup_exception(struct dm_exception_table *et,
+ 						chunk_t chunk)
  {
--	struct dm_snap_pending_exception *pe2;
--
--	pe2 = __lookup_pending_exception(s, chunk);
--	if (pe2) {
--		free_pending_exception(pe);
--		return pe2;
--	}
--
- 	pe->e.old_chunk = chunk;
- 	bio_list_init(&pe->origin_bios);
- 	bio_list_init(&pe->snapshot_bios);
-@@ -1697,6 +1695,29 @@ __find_pending_exception(struct dm_snapshot *s,
- 	return pe;
+-	struct list_head *slot;
++	struct hlist_bl_head *slot;
++	struct hlist_bl_node *pos;
+ 	struct dm_exception *e;
+ 
+ 	slot = &et->table[exception_hash(et, chunk)];
+-	list_for_each_entry (e, slot, hash_list)
++	hlist_bl_for_each_entry(e, pos, slot, hash_list)
+ 		if (chunk >= e->old_chunk &&
+ 		    chunk <= e->old_chunk + dm_consecutive_chunk_count(e))
+ 			return e;
+@@ -721,7 +754,8 @@ static void free_pending_exception(struct dm_snap_pending_exception *pe)
+ static void dm_insert_exception(struct dm_exception_table *eh,
+ 				struct dm_exception *new_e)
+ {
+-	struct list_head *l;
++	struct hlist_bl_head *l;
++	struct hlist_bl_node *pos;
+ 	struct dm_exception *e = NULL;
+ 
+ 	l = &eh->table[exception_hash(eh, new_e->old_chunk)];
+@@ -731,7 +765,7 @@ static void dm_insert_exception(struct dm_exception_table *eh,
+ 		goto out;
+ 
+ 	/* List is ordered by old_chunk */
+-	list_for_each_entry_reverse(e, l, hash_list) {
++	hlist_bl_for_each_entry(e, pos, l, hash_list) {
+ 		/* Insert after an existing chunk? */
+ 		if (new_e->old_chunk == (e->old_chunk +
+ 					 dm_consecutive_chunk_count(e) + 1) &&
+@@ -752,12 +786,24 @@ static void dm_insert_exception(struct dm_exception_table *eh,
+ 			return;
+ 		}
+ 
+-		if (new_e->old_chunk > e->old_chunk)
++		if (new_e->old_chunk < e->old_chunk)
+ 			break;
+ 	}
+ 
+ out:
+-	list_add(&new_e->hash_list, e ? &e->hash_list : l);
++	if (!e) {
++		/*
++		 * Either the table doesn't support consecutive chunks or slot
++		 * l is empty.
++		 */
++		hlist_bl_add_head(&new_e->hash_list, l);
++	} else if (new_e->old_chunk < e->old_chunk) {
++		/* Add before an existing exception */
++		hlist_bl_add_before(&new_e->hash_list, &e->hash_list);
++	} else {
++		/* Add to l's tail: e is the last exception in this slot */
++		hlist_bl_add_behind(&new_e->hash_list, &e->hash_list);
++	}
  }
  
-+/*
-+ * Looks to see if this snapshot already has a pending exception
-+ * for this chunk, otherwise it allocates a new one and inserts
-+ * it into the pending table.
-+ *
-+ * NOTE: a write lock must be held on snap->lock before calling
-+ * this.
-+ */
-+static struct dm_snap_pending_exception *
-+__find_pending_exception(struct dm_snapshot *s,
-+			 struct dm_snap_pending_exception *pe, chunk_t chunk)
-+{
-+	struct dm_snap_pending_exception *pe2;
-+
-+	pe2 = __lookup_pending_exception(s, chunk);
-+	if (pe2) {
-+		free_pending_exception(pe);
-+		return pe2;
-+	}
-+
-+	return __insert_pending_exception(s, pe, chunk);
-+}
-+
- static void remap_exception(struct dm_snapshot *s, struct dm_exception *e,
- 			    struct bio *bio, chunk_t chunk)
+ /*
+@@ -766,6 +812,7 @@ static void dm_insert_exception(struct dm_exception_table *eh,
+  */
+ static int dm_add_exception(void *context, chunk_t old, chunk_t new)
  {
-@@ -2107,7 +2128,7 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
- 	int r = DM_MAPIO_REMAPPED;
- 	struct dm_snapshot *snap;
++	struct dm_exception_table_lock lock;
+ 	struct dm_snapshot *s = context;
  	struct dm_exception *e;
--	struct dm_snap_pending_exception *pe;
-+	struct dm_snap_pending_exception *pe, *pe2;
- 	struct dm_snap_pending_exception *pe_to_start_now = NULL;
- 	struct dm_snap_pending_exception *pe_to_start_last = NULL;
+ 
+@@ -778,7 +825,17 @@ static int dm_add_exception(void *context, chunk_t old, chunk_t new)
+ 	/* Consecutive_count is implicitly initialised to zero */
+ 	e->new_chunk = new;
+ 
++	/*
++	 * Although there is no need to lock access to the exception tables
++	 * here, if we don't then hlist_bl_add_head(), called by
++	 * dm_insert_exception(), will complain about accessing the
++	 * corresponding list without locking it first.
++	 */
++	dm_exception_table_lock_init(s, old, &lock);
++
++	dm_exception_table_lock(&lock);
+ 	dm_insert_exception(&s->complete, e);
++	dm_exception_table_unlock(&lock);
+ 
+ 	return 0;
+ }
+@@ -807,7 +864,7 @@ static int calc_max_buckets(void)
+ {
+ 	/* use a fixed size of 2MB */
+ 	unsigned long mem = 2 * 1024 * 1024;
+-	mem /= sizeof(struct list_head);
++	mem /= sizeof(struct hlist_bl_head);
+ 
+ 	return mem;
+ }
+@@ -1473,13 +1530,18 @@ static void pending_complete(void *context, int success)
+ 	struct bio *origin_bios = NULL;
+ 	struct bio *snapshot_bios = NULL;
+ 	struct bio *full_bio = NULL;
++	struct dm_exception_table_lock lock;
+ 	int error = 0;
+ 
++	dm_exception_table_lock_init(s, pe->e.old_chunk, &lock);
++
+ 	if (!success) {
+ 		/* Read/write error - snapshot is unusable */
+ 		down_write(&s->lock);
+ 		__invalidate_snapshot(s, -EIO);
+ 		error = 1;
++
++		dm_exception_table_lock(&lock);
+ 		goto out;
+ 	}
+ 
+@@ -1488,11 +1550,14 @@ static void pending_complete(void *context, int success)
+ 		down_write(&s->lock);
+ 		__invalidate_snapshot(s, -ENOMEM);
+ 		error = 1;
++
++		dm_exception_table_lock(&lock);
+ 		goto out;
+ 	}
+ 	*e = pe->e;
+ 
+ 	down_write(&s->lock);
++	dm_exception_table_lock(&lock);
+ 	if (!s->valid) {
+ 		free_completed_exception(e);
+ 		error = 1;
+@@ -1510,14 +1575,19 @@ static void pending_complete(void *context, int success)
+ 
+ 	/* Wait for conflicting reads to drain */
+ 	if (__chunk_is_tracked(s, pe->e.old_chunk)) {
++		dm_exception_table_unlock(&lock);
+ 		up_write(&s->lock);
+ 		__check_for_conflicting_io(s, pe->e.old_chunk);
+ 		down_write(&s->lock);
++		dm_exception_table_lock(&lock);
+ 	}
+ 
+ out:
+ 	/* Remove the in-flight exception from the list */
+ 	dm_remove_exception(&pe->e);
++
++	dm_exception_table_unlock(&lock);
++
+ 	snapshot_bios = bio_list_get(&pe->snapshot_bios);
+ 	origin_bios = bio_list_get(&pe->origin_bios);
+ 	full_bio = pe->full_bio;
+@@ -1733,6 +1803,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 	int r = DM_MAPIO_REMAPPED;
  	chunk_t chunk;
-@@ -2137,17 +2158,17 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
- 		 */
- 		chunk = sector_to_chunk(snap->store, sector);
+ 	struct dm_snap_pending_exception *pe = NULL;
++	struct dm_exception_table_lock lock;
  
--		/*
--		 * Check exception table to see if block
--		 * is already remapped in this snapshot
--		 * and trigger an exception if not.
--		 */
--		e = dm_lookup_exception(&snap->complete, chunk);
--		if (e)
--			goto next_snapshot;
--
- 		pe = __lookup_pending_exception(snap, chunk);
+ 	init_tracked_chunk(bio);
+ 
+@@ -1742,6 +1813,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 	}
+ 
+ 	chunk = sector_to_chunk(s->store, bio->bi_iter.bi_sector);
++	dm_exception_table_lock_init(s, chunk, &lock);
+ 
+ 	/* Full snapshots are not usable */
+ 	/* To get here the table must be live so s->active is always set. */
+@@ -1749,6 +1821,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 		return DM_MAPIO_KILL;
+ 
+ 	down_write(&s->lock);
++	dm_exception_table_lock(&lock);
+ 
+ 	if (!s->valid || (unlikely(s->snapshot_overflowed) &&
+ 	    bio_data_dir(bio) == WRITE)) {
+@@ -1771,9 +1844,11 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 	if (bio_data_dir(bio) == WRITE) {
+ 		pe = __lookup_pending_exception(s, chunk);
  		if (!pe) {
-+			/*
-+			 * Check exception table to see if block is already
-+			 * remapped in this snapshot and trigger an exception
-+			 * if not.
-+			 */
-+			e = dm_lookup_exception(&snap->complete, chunk);
-+			if (e)
-+				goto next_snapshot;
-+
- 			mutex_unlock(&snap->lock);
- 			pe = alloc_pending_exception(snap);
- 			mutex_lock(&snap->lock);
-@@ -2157,16 +2178,23 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
- 				goto next_snapshot;
- 			}
++			dm_exception_table_unlock(&lock);
+ 			up_write(&s->lock);
+ 			pe = alloc_pending_exception(s);
+ 			down_write(&s->lock);
++			dm_exception_table_lock(&lock);
  
--			e = dm_lookup_exception(&snap->complete, chunk);
--			if (e) {
-+			pe2 = __lookup_pending_exception(snap, chunk);
-+
-+			if (!pe2) {
-+				e = dm_lookup_exception(&snap->complete, chunk);
-+				if (e) {
-+					free_pending_exception(pe);
-+					goto next_snapshot;
-+				}
-+
-+				pe = __insert_pending_exception(snap, pe, chunk);
-+				if (!pe) {
-+					__invalidate_snapshot(snap, -ENOMEM);
-+					goto next_snapshot;
-+				}
-+			} else {
+ 			if (!s->valid || s->snapshot_overflowed) {
  				free_pending_exception(pe);
--				goto next_snapshot;
--			}
--
--			pe = __find_pending_exception(snap, pe, chunk);
--			if (!pe) {
--				__invalidate_snapshot(snap, -ENOMEM);
--				goto next_snapshot;
-+				pe = pe2;
+@@ -1790,13 +1865,17 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 
+ 			pe = __find_pending_exception(s, pe, chunk);
+ 			if (!pe) {
++				dm_exception_table_unlock(&lock);
++
+ 				if (s->store->userspace_supports_overflow) {
+ 					s->snapshot_overflowed = 1;
+ 					DMERR("Snapshot overflowed: Unable to allocate exception.");
+ 				} else
+ 					__invalidate_snapshot(s, -ENOMEM);
++				up_write(&s->lock);
++
+ 				r = DM_MAPIO_KILL;
+-				goto out_unlock;
++				goto out;
  			}
  		}
  
+@@ -1808,6 +1887,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 		    bio->bi_iter.bi_size ==
+ 		    (s->store->chunk_size << SECTOR_SHIFT)) {
+ 			pe->started = 1;
++			dm_exception_table_unlock(&lock);
+ 			up_write(&s->lock);
+ 			start_full_bio(pe, bio);
+ 			goto out;
+@@ -1818,6 +1898,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 		if (!pe->started) {
+ 			/* this is protected by snap->lock */
+ 			pe->started = 1;
++			dm_exception_table_unlock(&lock);
+ 			up_write(&s->lock);
+ 			start_copy(pe);
+ 			goto out;
+@@ -1828,6 +1909,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 	}
+ 
+ out_unlock:
++	dm_exception_table_unlock(&lock);
+ 	up_write(&s->lock);
+ out:
+ 	return r;
+@@ -2129,6 +2211,7 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
+ 	struct dm_snap_pending_exception *pe, *pe2;
+ 	struct dm_snap_pending_exception *pe_to_start_now = NULL;
+ 	struct dm_snap_pending_exception *pe_to_start_last = NULL;
++	struct dm_exception_table_lock lock;
+ 	chunk_t chunk;
+ 
+ 	/* Do all the snapshots on this origin */
+@@ -2140,21 +2223,23 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
+ 		if (dm_target_is_snapshot_merge(snap->ti))
+ 			continue;
+ 
+-		down_write(&snap->lock);
+-
+-		/* Only deal with valid and active snapshots */
+-		if (!snap->valid || !snap->active)
+-			goto next_snapshot;
+-
+ 		/* Nothing to do if writing beyond end of snapshot */
+ 		if (sector >= dm_table_get_size(snap->ti->table))
+-			goto next_snapshot;
++			continue;
+ 
+ 		/*
+ 		 * Remember, different snapshots can have
+ 		 * different chunk sizes.
+ 		 */
+ 		chunk = sector_to_chunk(snap->store, sector);
++		dm_exception_table_lock_init(snap, chunk, &lock);
++
++		down_write(&snap->lock);
++		dm_exception_table_lock(&lock);
++
++		/* Only deal with valid and active snapshots */
++		if (!snap->valid || !snap->active)
++			goto next_snapshot;
+ 
+ 		pe = __lookup_pending_exception(snap, chunk);
+ 		if (!pe) {
+@@ -2167,9 +2252,11 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
+ 			if (e)
+ 				goto next_snapshot;
+ 
++			dm_exception_table_unlock(&lock);
+ 			up_write(&snap->lock);
+ 			pe = alloc_pending_exception(snap);
+ 			down_write(&snap->lock);
++			dm_exception_table_lock(&lock);
+ 
+ 			if (!snap->valid) {
+ 				free_pending_exception(pe);
+@@ -2187,8 +2274,11 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
+ 
+ 				pe = __insert_pending_exception(snap, pe, chunk);
+ 				if (!pe) {
++					dm_exception_table_unlock(&lock);
+ 					__invalidate_snapshot(snap, -ENOMEM);
+-					goto next_snapshot;
++					up_write(&snap->lock);
++
++					continue;
+ 				}
+ 			} else {
+ 				free_pending_exception(pe);
+@@ -2219,6 +2309,7 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
+ 		}
+ 
+ next_snapshot:
++		dm_exception_table_unlock(&lock);
+ 		up_write(&snap->lock);
+ 
+ 		if (pe_to_start_now) {
 -- 
 2.11.0
 
