@@ -2,73 +2,128 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AC3C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 23:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F415C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 23:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A935C2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 23:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C3B2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 23:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfCQXVf (ORCPT
+        id S1727469AbfCQX2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 19:21:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55367 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfCQXVe (ORCPT
+        Sun, 17 Mar 2019 19:28:30 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:39560 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfCQX2a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 19:21:34 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1h5f5q-00079p-8e; Sun, 17 Mar 2019 23:21:26 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
-Date:   Sun, 17 Mar 2019 23:21:24 +0000
-Message-Id: <20190317232124.7740-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 17 Mar 2019 19:28:30 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id CD20072CC53;
+        Mon, 18 Mar 2019 02:28:27 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id BD3C77CC74C; Mon, 18 Mar 2019 02:28:27 +0300 (MSK)
+Date:   Mon, 18 Mar 2019 02:28:27 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/13] Prepare syscall_get_arch for PTRACE_GET_SYSCALL_INFO
+Message-ID: <20190317232827.GA16301@altlinux.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+syscall_get_arch() is required to be implemented on all architectures in order
+to extend the generic ptrace API with PTRACE_GET_SYSCALL_INFO request:
+syscall_get_arch() is going to be called from ptrace_request() along with
+syscall_get_nr(), syscall_get_arguments(), syscall_get_error(), and
+syscall_get_return_value() functions with a tracee as their argument.
 
-The function snd_opl3_drum_switch declaration in the header file
-has the order of the two arguments on_off and vel swapped when
-compared to the definition arguments of vel and on_off.  Fix this
-by swapping them around to match the definition.
+The primary intent is that the triple (audit_arch, syscall_nr, arg1..arg6)
+should describe what system call is being called and what its arguments are.
 
-This error predates the git history, so no idea when this error
-was introduced.
+This patchset began as a series called "Prepare for PTRACE_GET_SYSCALL_INFO",
+then I merged it into a series called "ptrace: add PTRACE_GET_SYSCALL_INFO request"
+that also contains ptrace-specific changes.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- sound/drivers/opl3/opl3_voice.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The ptrace-specific part, however, needs more attention to workaround problems
+on niche architectures like alpha, while the syscall_get_arch() part is
+straightforward, so I decided to split it out into a separate patchset that
+just prepares syscall_get_arch() for PTRACE_GET_SYSCALL_INFO: it adds
+syscall_get_arch() to those architectures that haven't implemented it yet,
+and then adds "struct task_struct *" argument to syscall_get_arch()
+on all architectures.
 
-diff --git a/sound/drivers/opl3/opl3_voice.h b/sound/drivers/opl3/opl3_voice.h
-index 5b02bd49fde4..4e4ecc21760b 100644
---- a/sound/drivers/opl3/opl3_voice.h
-+++ b/sound/drivers/opl3/opl3_voice.h
-@@ -41,7 +41,7 @@ void snd_opl3_timer_func(struct timer_list *t);
- 
- /* Prototypes for opl3_drums.c */
- void snd_opl3_load_drums(struct snd_opl3 *opl3);
--void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int on_off, int vel, struct snd_midi_channel *chan);
-+void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int vel, int on_off, struct snd_midi_channel *chan);
- 
- /* Prototypes for opl3_oss.c */
- #if IS_ENABLED(CONFIG_SND_SEQUENCER_OSS)
+All patches from this patchset have been already reviewed, so it's ready
+to be merged without waiting for the ptrace-specific part.  As it's all
+about syscall_get_arch(), it should probably go via audit tree.
+
+Notes:
+    v2: rebased to v5.1-rc1, added Acked-by
+
+Dmitry V. Levin (13):
+  Move EM_ARCOMPACT and EM_ARCV2 to uapi/linux/elf-em.h
+  arc: define syscall_get_arch()
+  c6x: define syscall_get_arch()
+  h8300: define syscall_get_arch()
+  Move EM_HEXAGON to uapi/linux/elf-em.h
+  hexagon: define syscall_get_arch()
+  m68k: define syscall_get_arch()
+  Move EM_NDS32 to uapi/linux/elf-em.h
+  nds32: define syscall_get_arch()
+  nios2: define syscall_get_arch()
+  Move EM_UNICORE to uapi/linux/elf-em.h
+  unicore32: define syscall_get_arch()
+  syscall_get_arch: add "struct task_struct *" argument
+
+ arch/alpha/include/asm/syscall.h      |  2 +-
+ arch/arc/include/asm/elf.h            |  6 +-----
+ arch/arc/include/asm/syscall.h        | 11 +++++++++++
+ arch/arm/include/asm/syscall.h        |  2 +-
+ arch/arm64/include/asm/syscall.h      |  4 ++--
+ arch/c6x/include/asm/syscall.h        |  7 +++++++
+ arch/csky/include/asm/syscall.h       |  2 +-
+ arch/h8300/include/asm/syscall.h      |  6 ++++++
+ arch/hexagon/include/asm/elf.h        |  6 +-----
+ arch/hexagon/include/asm/syscall.h    |  8 ++++++++
+ arch/ia64/include/asm/syscall.h       |  2 +-
+ arch/m68k/include/asm/syscall.h       | 12 ++++++++++++
+ arch/microblaze/include/asm/syscall.h |  2 +-
+ arch/mips/include/asm/syscall.h       |  6 +++---
+ arch/mips/kernel/ptrace.c             |  2 +-
+ arch/nds32/include/asm/elf.h          |  3 +--
+ arch/nds32/include/asm/syscall.h      |  9 +++++++++
+ arch/nios2/include/asm/syscall.h      |  6 ++++++
+ arch/openrisc/include/asm/syscall.h   |  2 +-
+ arch/parisc/include/asm/syscall.h     |  4 ++--
+ arch/powerpc/include/asm/syscall.h    | 10 ++++++++--
+ arch/riscv/include/asm/syscall.h      |  2 +-
+ arch/s390/include/asm/syscall.h       |  4 ++--
+ arch/sh/include/asm/syscall_32.h      |  2 +-
+ arch/sh/include/asm/syscall_64.h      |  2 +-
+ arch/sparc/include/asm/syscall.h      |  5 +++--
+ arch/unicore32/include/asm/elf.h      |  3 +--
+ arch/unicore32/include/asm/syscall.h  | 12 ++++++++++++
+ arch/x86/include/asm/syscall.h        |  8 +++++---
+ arch/x86/um/asm/syscall.h             |  2 +-
+ arch/xtensa/include/asm/syscall.h     |  2 +-
+ include/asm-generic/syscall.h         |  5 +++--
+ include/uapi/linux/audit.h            | 12 ++++++++++++
+ include/uapi/linux/elf-em.h           |  6 ++++++
+ kernel/auditsc.c                      |  4 ++--
+ kernel/seccomp.c                      |  4 ++--
+ 36 files changed, 137 insertions(+), 48 deletions(-)
+ create mode 100644 arch/m68k/include/asm/syscall.h
+ create mode 100644 arch/unicore32/include/asm/syscall.h
+
 -- 
-2.20.1
-
+ldv
