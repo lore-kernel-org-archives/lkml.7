@@ -2,261 +2,125 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B724C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FDEC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86F52087C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030EE2087C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nAff1p/8"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lb3u8a6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfCQWCs (ORCPT
+        id S1727522AbfCQWGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 18:02:48 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36918 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfCQWCs (ORCPT
+        Sun, 17 Mar 2019 18:06:08 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46762 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfCQWGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 18:02:48 -0400
-Received: by mail-io1-f67.google.com with SMTP id x7so12683885ioh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 15:02:47 -0700 (PDT)
+        Sun, 17 Mar 2019 18:06:08 -0400
+Received: by mail-qk1-f193.google.com with SMTP id i5so8545212qkd.13
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 15:06:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zmtbWFurYhH43n2p5GNI3DQ7e38T/cz1DYXzLxyj87A=;
-        b=nAff1p/83XDR7mjZ9jFPA1k+ttO7Bdli0J98NebhJlY0lG8mNmfgXbdOzW2fqBe1GL
-         MR3iqxOS1ibrWHicsh27On740Y15WEMEn9nr2MEPVYGNudgkloNnaDa3oDbw8sP0cos4
-         Hrrqla8HfgVBd800+xJWhtwiYBz5wjE+0hIJQB7LKGWHZsWjNRB7h3Wp5j3enbiU5hoy
-         SI6XHwpzccnnmiFIRK6qIRafe5KXzv/EV9jiOCJUJaKjnErg4fJ+JK6aBCO25XaXrvnF
-         QzkzXKQ+iFow6WoAt7cXf+AUpBf0jemzTa6rzqeP4m6ryQoMqMIeQWNUk1KRMIC82U2t
-         kUQQ==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=IcWacMfHF/AVn0k21ppx7/coY7WOvCyg2dM8iR4NJXs=;
+        b=lb3u8a6pPVm8uoNsiHm5xunrfvg339f1A6zuVExgsvlk9TxKL7iwpSWadBnhT4yEVc
+         j03Y2HrKwWQgLmr6JuGYlkM6jOlHsfwb7UxkXT41uHcrUIoSvjzbZH5UqzS41htO+H50
+         nLrNYFN4oZLh54fQp6k3C72Z4hnvjzKCL/mHmtoB3FvMdzGoC4HM5B/IgEeGRFiWOXR8
+         K18GEfFWmPnQuqI68PhPfc8sCVbYSs43UP03OqdK2DDeeEEQZgKyYm2hH2ThtWOFVPsm
+         XR/pKlUjmJ+bCEdzYSwj8OmNWsI7+2Z27SnG4fChJVR5fPkg3S2xLcS9vj7mK/iDDydj
+         kiXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zmtbWFurYhH43n2p5GNI3DQ7e38T/cz1DYXzLxyj87A=;
-        b=OjlYJHVb9bI6w1QO3TYsyHz7iDMLCusQx7xjFxr2cwb1GVTg6/nAk1+pF1OMyTMJmS
-         yLNDPdqguQX8kv4MVJ9nmskdkfOkQ5M7R5WtEI6V+fqEh9a7VsJFDO5bGZx/+xd+xE0O
-         K0mLclnn1YjNQta9Ainm0VBaBgqDSt36fzFEFag5o3wZJtT/SP8WPkUvXiSLBNPw3lv8
-         gWIhvss1jZ24H1psGs9LdM7nAqMGp3/CeWz7LMKUYtLRSo/x6JasCU1MNk+LVPbqGJ1q
-         cTwvQGo5/i0cYASeWAF+M2xzezLfVUHoPLImBIiuexRkcG4Z3CKx5IcrExCacuawiVs/
-         qWQw==
-X-Gm-Message-State: APjAAAWpIt3M4YRqy5Uhw6iQrxJ47cMBUWJW0y525ty66l75qZ6FlZNF
-        fI0B27/aRHtlRFNBrouwbM2LoI8hXv/ZQXD//zVfiA==
-X-Google-Smtp-Source: APXvYqzelkRjKLoTEnqJF5g7dyKF9X1Y95XqUlgM03xN3JrsA94QJKi/GL1d6zXqBXlyqHbC4dNSeB7vTuVZTPHUyZs=
-X-Received: by 2002:a6b:720c:: with SMTP id n12mr4691658ioc.110.1552860166831;
- Sun, 17 Mar 2019 15:02:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190315182426.sujcqbzhzw4llmsa@brauner.io> <20190315184903.GB248160@google.com>
- <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
- <CAKOZueuauUXRyrvhzBD0op6W4TAnydSx92bvrPN2VRWERX8iQg@mail.gmail.com>
- <20190316185726.jc53aqq5ph65ojpk@brauner.io> <CAJuCfpF-uYpUZ1RO99i2qEw5Ou4nSimSkiQvnNQ_rv8ogHKRfw@mail.gmail.com>
- <20190317015306.GA167393@google.com> <20190317114238.ab6tvvovpkpozld5@brauner.io>
- <20190317163505.GA9904@mail.hallyn.com> <CAKOZuet+HCZoOgJBAUrcm8nxC-bQ00W7w+=k2SOh+dfXffMU4w@mail.gmail.com>
- <20190317171652.GA10567@mail.hallyn.com>
-In-Reply-To: <20190317171652.GA10567@mail.hallyn.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Sun, 17 Mar 2019 15:02:35 -0700
-Message-ID: <CAJuCfpF8m5kTMXu=G4qBcvSbrpFH91GmS43VHuphEa3hDxOq+Q@mail.gmail.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IcWacMfHF/AVn0k21ppx7/coY7WOvCyg2dM8iR4NJXs=;
+        b=o5vg9Q2HwMytIeGFLQRSQH5DB19W0PF4c9tp0lQTrnI7ayt5IDL1fI7z5ujUuF7KXy
+         u1cbII6WLDgkssXd1U5LjSxUhUFxkjYFK56bG9T2DQnsZC2Kl/mpv+0rXOjQsIVEiuwq
+         XaF3/WRhWy9GhDAEFwEbYe8xqKpwKJv2mWd6Y011hb3mfq2RK3v0SlNejYdj9djyA9HV
+         ElJF9rmFE1GO0IhsFRZwNStMvJCjzMa2NTsVjsvGNIQeI8XEqjh3xVvkJPzMH7LHDuZi
+         R4ShazZqjLeGbhIFq8gMvKUCqK460D4mkZOR1+042SDo9w2flREFsw1wCzwRthJrujM6
+         4YYg==
+X-Gm-Message-State: APjAAAXBGh07xs9ZEE/FXafIZUUVXGvBKwy5irip1sCSfdsDDXENnrtl
+        +XBr/WTCq3J91GbrOclx21775g==
+X-Google-Smtp-Source: APXvYqxfYLcIq0OWqTUdqZV1k4PcSOCNVkvQqMCLCRcSu2rH8enduAxIzpi0NgtRFm6Q0+zQWaDN3g==
+X-Received: by 2002:a37:4b4e:: with SMTP id y75mr10734924qka.158.1552860366714;
+        Sun, 17 Mar 2019 15:06:06 -0700 (PDT)
+Received: from ovpn-116-105.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x29sm5339984qtm.74.2019.03.17.15.06.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 17 Mar 2019 15:06:06 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org
+Cc:     christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [RESEND PATCH v2] powerpc: mute unused-but-set-variable warnings
+Date:   Sun, 17 Mar 2019 18:05:16 -0400
+Message-Id: <20190317220516.92654-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 10:16 AM Serge E. Hallyn <serge@hallyn.com> wrote:
->
-> On Sun, Mar 17, 2019 at 10:11:10AM -0700, Daniel Colascione wrote:
-> > On Sun, Mar 17, 2019 at 9:35 AM Serge E. Hallyn <serge@hallyn.com> wrote:
-> > >
-> > > On Sun, Mar 17, 2019 at 12:42:40PM +0100, Christian Brauner wrote:
-> > > > On Sat, Mar 16, 2019 at 09:53:06PM -0400, Joel Fernandes wrote:
-> > > > > On Sat, Mar 16, 2019 at 12:37:18PM -0700, Suren Baghdasaryan wrote:
-> > > > > > On Sat, Mar 16, 2019 at 11:57 AM Christian Brauner <christian@brauner.io> wrote:
-> > > > > > >
-> > > > > > > On Sat, Mar 16, 2019 at 11:00:10AM -0700, Daniel Colascione wrote:
-> > > > > > > > On Sat, Mar 16, 2019 at 10:31 AM Suren Baghdasaryan <surenb@google.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Fri, Mar 15, 2019 at 11:49 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Fri, Mar 15, 2019 at 07:24:28PM +0100, Christian Brauner wrote:
-> > > > > > > > > > [..]
-> > > > > > > > > > > > why do we want to add a new syscall (pidfd_wait) though? Why not just use
-> > > > > > > > > > > > standard poll/epoll interface on the proc fd like Daniel was suggesting.
-> > > > > > > > > > > > AFAIK, once the proc file is opened, the struct pid is essentially pinned
-> > > > > > > > > > > > even though the proc number may be reused. Then the caller can just poll.
-> > > > > > > > > > > > We can add a waitqueue to struct pid, and wake up any waiters on process
-> > > > > > > > > > > > death (A quick look shows task_struct can be mapped to its struct pid) and
-> > > > > > > > > > > > also possibly optimize it using Steve's TIF flag idea. No new syscall is
-> > > > > > > > > > > > needed then, let me know if I missed something?
-> > > > > > > > > > >
-> > > > > > > > > > > Huh, I thought that Daniel was against the poll/epoll solution?
-> > > > > > > > > >
-> > > > > > > > > > Hmm, going through earlier threads, I believe so now. Here was Daniel's
-> > > > > > > > > > reasoning about avoiding a notification about process death through proc
-> > > > > > > > > > directory fd: http://lkml.iu.edu/hypermail/linux/kernel/1811.0/00232.html
-> > > > > > > > > >
-> > > > > > > > > > May be a dedicated syscall for this would be cleaner after all.
-> > > > > > > > >
-> > > > > > > > > Ah, I wish I've seen that discussion before...
-> > > > > > > > > syscall makes sense and it can be non-blocking and we can use
-> > > > > > > > > select/poll/epoll if we use eventfd.
-> > > > > > > >
-> > > > > > > > Thanks for taking a look.
-> > > > > > > >
-> > > > > > > > > I would strongly advocate for
-> > > > > > > > > non-blocking version or at least to have a non-blocking option.
-> > > > > > > >
-> > > > > > > > Waiting for FD readiness is *already* blocking or non-blocking
-> > > > > > > > according to the caller's desire --- users can pass options they want
-> > > > > > > > to poll(2) or whatever. There's no need for any kind of special
-> > > > > > > > configuration knob or non-blocking option. We already *have* a
-> > > > > > > > non-blocking option that works universally for everything.
-> > > > > > > >
-> > > > > > > > As I mentioned in the linked thread, waiting for process exit should
-> > > > > > > > work just like waiting for bytes to appear on a pipe. Process exit
-> > > > > > > > status is just another blob of bytes that a process might receive. A
-> > > > > > > > process exit handle ought to be just another information source. The
-> > > > > > > > reason the unix process API is so awful is that for whatever reason
-> > > > > > > > the original designers treated processes as some kind of special kind
-> > > > > > > > of resource instead of fitting them into the otherwise general-purpose
-> > > > > > > > unix data-handling API. Let's not repeat that mistake.
-> > > > > > > >
-> > > > > > > > > Something like this:
-> > > > > > > > >
-> > > > > > > > > evfd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
-> > > > > > > > > // register eventfd to receive death notification
-> > > > > > > > > pidfd_wait(pid_to_kill, evfd);
-> > > > > > > > > // kill the process
-> > > > > > > > > pidfd_send_signal(pid_to_kill, ...)
-> > > > > > > > > // tend to other things
-> > > > > > > >
-> > > > > > > > Now you've lost me. pidfd_wait should return a *new* FD, not wire up
-> > > > > > > > an eventfd.
-> > > > > > > >
-> > > > > >
-> > > > > > Ok, I probably misunderstood your post linked by Joel. I though your
-> > > > > > original proposal was based on being able to poll a file under
-> > > > > > /proc/pid and then you changed your mind to have a separate syscall
-> > > > > > which I assumed would be a blocking one to wait for process exit.
-> > > > > > Maybe you can describe the new interface you are thinking about in
-> > > > > > terms of userspace usage like I did above? Several lines of code would
-> > > > > > explain more than paragraphs of text.
-> > > > >
-> > > > > Hey, Thanks Suren for the eventfd idea. I agree with Daniel on this. The idea
-> > > > > from Daniel here is to wait for process death and exit events by just
-> > > > > referring to a stable fd, independent of whatever is going on in /proc.
-> > > > >
-> > > > > What is needed is something like this (in highly pseudo-code form):
-> > > > >
-> > > > > pidfd = opendir("/proc/<pid>",..);
-> > > > > wait_fd = pidfd_wait(pidfd);
-> > > > > read or poll wait_fd (non-blocking or blocking whichever)
-> > > > >
+pte_unmap() compiles away on some powerpc platforms, so silence the
+warnings below by making it a static inline function.
 
-Thanks for the explanation Joel. Now I understand the proposal. Will
-think about it some more and looking forward for the implementation
-patch.
+mm/memory.c: In function 'copy_pte_range':
+mm/memory.c:820:24: warning: variable 'orig_dst_pte' set but not used
+[-Wunused-but-set-variable]
+mm/memory.c:820:9: warning: variable 'orig_src_pte' set but not used
+[-Wunused-but-set-variable]
+mm/madvise.c: In function 'madvise_free_pte_range':
+mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
+[-Wunused-but-set-variable]
+mm/swap_state.c: In function 'swap_ra_info':
+mm/swap_state.c:634:15: warning: variable 'orig_pte' set but not used
+[-Wunused-but-set-variable]
 
-> > > > > wait_fd will block until the task has either died or reaped. In both these
-> > > > > cases, it can return a suitable string such as "dead" or "reaped" although an
-> > > > > integer with some predefined meaning is also Ok.
-> > > > >
-> > > > > What that guarantees is, even if the task's PID has been reused, or the task
-> > > > > has already died or already died + reaped, all of these events cannot race
-> > > > > with the code above and the information passed to the user is race-free and
-> > > > > stable / guaranteed.
-> > > > >
-> > > > > An eventfd seems to not fit well, because AFAICS passing the raw PID to
-> > > > > eventfd as in your example would still race since the PID could have been
-> > > > > reused by another process by the time the eventfd is created.
-> > > > > Also Andy's idea in [1] seems to use poll flags to communicate various tihngs
-> > > > > which is still not as explicit about the PID's status so that's a poor API
-> > > > > choice compared to the explicit syscall.
-> > > > >
-> > > > > I am planning to work on a prototype patch based on Daniel's idea and post something
-> > > > > soon (chatted with Daniel about it and will reference him in the posting as
-> > > > > well), during this posting I will also summarize all the previous discussions
-> > > > > and come up with some tests as well.  I hope to have something soon.
-> > > >
-> > > > Having pidfd_wait() return another fd will make the syscall harder to
-> > > > swallow for a lot of people I reckon.
-> > > > What exactly prevents us from making the pidfd itself readable/pollable
-> > > > for the exit staus? They are "special" fds anyway. I would really like
-> > > > to avoid polluting the api with multiple different types of fds if possible.
-> > > >
-> > > > ret = pidfd_wait(pidfd);
-> > > > read or poll pidfd
-> > >
-> > > I'm not quite clear on what the two steps are doing here.  Is pidfd_wait()
-> > > doing a waitpid(2), and the read gets exit status info?
-> >
-> > pidfd_wait on an open pidfd returns a "wait handle" FD. The wait
->
-> That is what you are proposing.  I'm not sure that's what Christian
-> was proposing.  'ret' is ambiguous there.  Christian?
->
-> > handle works just like a pipe: you can select/epoll/whatever for
-> > readability. read(2) on the wait handle (which blocks unless you set
-> > O_NONBLOCK, just like a pipe) completes with a siginfo_t when the
-> > process to which the wait handle is attached exits. Roughly,
-> >
-> > int kill_and_wait_for_exit(int pidfd) {
-> >   int wait_handle = pidfd_wait(pidfd);
-> >   pidfd_send_signal(pidfd, ...);
-> >   siginfo_t exit_info;
-> >   read(wait_handle, &exit_info, sizeof(exit_info)); // Blocks because
-> > we haven't configured non-blocking behavior, just like a pipe.
-> >   close(wait_handle);
-> >   return exit_info.si_status;
-> > }
-> >
-> > >
-> > > > (Note that I'm traveling so my responses might be delayed quite a bit.)
-> > > > (Ccing a few people that might have an opinion here.)
-> > > >
-> > > > Christian
-> > >
-> > > On its own, what you (Christian) show seems nicer.  But think about a main event
-> > > loop (like in lxc), where we just loop over epoll_wait() on various descriptors.
-> > > If we want to wait for any of several types of events - maybe a signalfd, socket
-> > > traffic, or a process death - it would be nice if we can treat them all the same
-> > > way, without having to setup a separate thread to watch the pidfd and send
-> > > data over another fd.  Is there a nice way we can provide that with what you've
-> > > got above?
-> >
-> > Nobody is proposing any kind of mechanism that would require a
-> > separate thread. What I'm proposing works with poll and read and
-> > should be trivial to integrate into any existing event loop: from the
-> > perspective of the event loop, it looks just like a pipe.
->
-> (yes, I understood your proposal)
->
-> -serge
+Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by:: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+v2: make it a static inline function.
+
+ arch/powerpc/include/asm/book3s/64/pgtable.h | 3 ++-
+ arch/powerpc/include/asm/nohash/64/pgtable.h | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+index 868fcaf56f6b..d798e33a0c86 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -1006,7 +1006,8 @@ extern struct page *pgd_page(pgd_t pgd);
+ 	(((pte_t *) pmd_page_vaddr(*(dir))) + pte_index(addr))
+ 
+ #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
+-#define pte_unmap(pte)			do { } while(0)
++
++static inline void pte_unmap(pte_t *pte) { }
+ 
+ /* to find an entry in a kernel page-table-directory */
+ /* This now only contains the vmalloc pages */
+diff --git a/arch/powerpc/include/asm/nohash/64/pgtable.h b/arch/powerpc/include/asm/nohash/64/pgtable.h
+index e77ed9761632..0384a3302fb6 100644
+--- a/arch/powerpc/include/asm/nohash/64/pgtable.h
++++ b/arch/powerpc/include/asm/nohash/64/pgtable.h
+@@ -205,7 +205,8 @@ static inline void pgd_set(pgd_t *pgdp, unsigned long val)
+   (((pte_t *) pmd_page_vaddr(*(dir))) + (((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1)))
+ 
+ #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
+-#define pte_unmap(pte)			do { } while(0)
++
++static inline void pte_unmap(pte_t *pte) { }
+ 
+ /* to find an entry in a kernel page-table-directory */
+ /* This now only contains the vmalloc pages */
+-- 
+2.17.2 (Apple Git-113)
+
