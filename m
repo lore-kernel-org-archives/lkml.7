@@ -2,109 +2,294 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986B4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA76C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635EB20835
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:42:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZnPIsS1"
+	by mail.kernel.org (Postfix) with ESMTP id CA8C920835
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfCQQmj (ORCPT
+        id S1727055AbfCQQnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 12:42:39 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43539 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfCQQmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 12:42:39 -0400
-Received: by mail-ed1-f66.google.com with SMTP id m35so11519919ede.10;
-        Sun, 17 Mar 2019 09:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7dYGdMlG4O2mhPCAnYB8e8EqGThCWRzCuWaRCE6jzm0=;
-        b=KZnPIsS1ut2NlNpxxptuAFW6IAyIv1fRqZOpPoflpVBT9co5iIODo7DRT2Pw6K74iB
-         luTlq7ntFIXj9+hg+MIKpSjb2ZwsZOvCyf5ayA8I0yOqciUGau7cOdXJwJHWchMAKjMJ
-         6LmkCmrFH0rvUqZmMTxOL322mtrGfvSNpPYoIE3shMCVuVWPE1x6KULQ+5ea5V7g3NL0
-         xcWPOU4aXCd0WX5/AQ7ALgrD9wv0UHBtKDmOnhnPnygNGLy3KCACHbenx1uDi1AUv7RH
-         Sp2ZBAXXW6IGbibuGFAmjJkwqf/eTSiMCv8bEkU7qLa80NbmFMCG0lPXgJ0xzC5HfSI9
-         F8oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7dYGdMlG4O2mhPCAnYB8e8EqGThCWRzCuWaRCE6jzm0=;
-        b=FcOs4NY36uLEQxyR5pt1qy6TGfNqJBjNw58lv2WMIyZ1G8VAkf3BC7jHSsgJMfuq7Y
-         +Dexe8f28Iz57ASHfpEReDkpCrgIj72tKHrP36m7baiTeWMNNpl+zIGKQ4J6oe6g3UWu
-         y8dN9NaJT/97ySR7NW1BkPG0YEQNYyJhkcIlF3puRBKWoYaNEVHY4saUja+Y+MC/Kj+j
-         4mxg1BElzd+Sy1sO3AbIpLTMoB/RgO+XMx71XW1avbbhbODIKGWp2WrBjbY35Zd26lA3
-         4GRayanqYCveFR+tqR1hIEsT4Q9+Y2K6rUpfA6m9qYN5aME0+wQwcIJoB/rI7EYoLawx
-         85Uw==
-X-Gm-Message-State: APjAAAWRMwN9qpuPSeO8EGLrwzCRX08gp0Tu9j16pnIJ4zg4wYZgLn8y
-        5v3uAPJA3jxvHY62P8FQG2UNhWDd5bRTJMUGULc=
-X-Google-Smtp-Source: APXvYqz1GlNK9uZ/42382S/PCxG5B9H820dQ6r3R5YncubZTM/ctI49xF1tBTpYkaU3RerKg+dCbH4CQ2REJFO5vzS4=
-X-Received: by 2002:a17:906:1dd7:: with SMTP id v23mr8302511ejh.164.1552840957281;
- Sun, 17 Mar 2019 09:42:37 -0700 (PDT)
+        Sun, 17 Mar 2019 12:43:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39132 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726784AbfCQQnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 12:43:22 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6EAD7308FC5E;
+        Sun, 17 Mar 2019 16:43:21 +0000 (UTC)
+Received: from [10.36.116.102] (ovpn-116-102.ams2.redhat.com [10.36.116.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D01465C28F;
+        Sun, 17 Mar 2019 16:43:14 +0000 (UTC)
+Subject: Re: [PATCH v5 05/22] iommu: Introduce cache_invalidate API
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, yi.l.liu@linux.intel.com,
+        jean-philippe.brucker@arm.com, will.deacon@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
+        marc.zyngier@arm.com, christoffer.dall@arm.com,
+        peter.maydell@linaro.org, vincent.stehle@arm.com
+References: <20190315160906.12900-1-eric.auger@redhat.com>
+ <20190315160906.12900-6-eric.auger@redhat.com>
+ <20190315113702.1184d162@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <281167f1-c046-3077-e954-d1f510c27d61@redhat.com>
+Date:   Sun, 17 Mar 2019 17:43:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190316134130.28065-1-maxime.chevallier@bootlin.com>
- <CAF=yD-K1imzDHm2K8bvrtYu5j-MNrN_4xH2h2je6ornuqmi_QA@mail.gmail.com> <20190316.182119.1641693988840475497.davem@davemloft.net>
-In-Reply-To: <20190316.182119.1641693988840475497.davem@davemloft.net>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Sun, 17 Mar 2019 12:42:01 -0400
-Message-ID: <CAF=yD-LAE+mfs0vkSqmmiCxm9RQNkFBCkjDFN7ScRtfw1kGjtg@mail.gmail.com>
-Subject: Re: [PATCH net] packets: Always register packet sk in the same order
-To:     David Miller <davem@davemloft.net>
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190315113702.1184d162@jacob-builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Sun, 17 Mar 2019 16:43:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 9:21 PM David Miller <davem@davemloft.net> wrote:
->
-> From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> Date: Sat, 16 Mar 2019 14:09:33 -0400
->
-> > Note that another consequence of this patch is that insertion on
-> > packet create is now O(N) with the number of active packet sockets,
-> > due to sklist being an hlist.
->
-> Exploitable...
+Hi Jacob,
 
-With root in userns? The running time is limited by open file rlimit.
-This pattern is already used in a sk_add_node_rcu in some way, so
-important to be sure.
+On 3/15/19 7:37 PM, Jacob Pan wrote:
+> On Fri, 15 Mar 2019 17:08:49 +0100
+> Eric Auger <eric.auger@redhat.com> wrote:
+> 
+>> From: "Liu, Yi L" <yi.l.liu@linux.intel.com>
+>>
+>> In any virtualization use case, when the first translation stage
+>> is "owned" by the guest OS, the host IOMMU driver has no knowledge
+>> of caching structure updates unless the guest invalidation activities
+>> are trapped by the virtualizer and passed down to the host.
+>>
+>> Since the invalidation data are obtained from user space and will be
+>> written into physical IOMMU, we must allow security check at various
+>> layers. Therefore, generic invalidation data format are proposed here,
+>> model specific IOMMU drivers need to convert them into their own
+>> format.
+>>
+>> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+>> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>
+>> ---
+>> v3 -> v4:
+>> - full reshape of the API following Alex' comments
+>>
+>> v1 -> v2:
+>> - add arch_id field
+>> - renamed tlb_invalidate into cache_invalidate as this API allows
+>>   to invalidate context caches on top of IOTLBs
+>>
+>> v1:
+>> renamed sva_invalidate into tlb_invalidate and add iommu_ prefix in
+>> header. Commit message reworded.
+>> ---
+>>  drivers/iommu/iommu.c      | 14 ++++++++
+>>  include/linux/iommu.h      | 21 +++++++++++
+>>  include/uapi/linux/iommu.h | 71
+>> ++++++++++++++++++++++++++++++++++++++ 3 files changed, 106
+>> insertions(+)
+>>
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 7d9285cea100..b72e326ddd41 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -1544,6 +1544,20 @@ void iommu_detach_pasid_table(struct
+>> iommu_domain *domain) }
+>>  EXPORT_SYMBOL_GPL(iommu_detach_pasid_table);
+>>  
+>> +int iommu_cache_invalidate(struct iommu_domain *domain, struct
+>> device *dev,
+>> +			   struct iommu_cache_invalidate_info
+>> *inv_info) +{
+>> +	int ret = 0;
+>> +
+>> +	if (unlikely(!domain->ops->cache_invalidate))
+>> +		return -ENODEV;
+>> +
+>> +	ret = domain->ops->cache_invalidate(domain, dev, inv_info);
+>> +
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
+>> +
+>>  static void __iommu_detach_device(struct iommu_domain *domain,
+>>  				  struct device *dev)
+>>  {
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index fb9b7a8de25f..3d8e48876162 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -191,6 +191,7 @@ struct iommu_resv_region {
+>>   *                      driver init to device driver init (default
+>> no)
+>>   * @attach_pasid_table: attach a pasid table
+>>   * @detach_pasid_table: detach the pasid table
+>> + * @cache_invalidate: invalidate translation caches
+>>   * @pgsize_bitmap: bitmap of all possible supported page sizes
+>>   */
+>>  struct iommu_ops {
+>> @@ -239,6 +240,9 @@ struct iommu_ops {
+>>  				  struct iommu_pasid_table_config
+>> *cfg); void (*detach_pasid_table)(struct iommu_domain *domain);
+>>  
+>> +	int (*cache_invalidate)(struct iommu_domain *domain, struct
+>> device *dev,
+>> +				struct iommu_cache_invalidate_info
+>> *inv_info); +
+>>  	unsigned long pgsize_bitmap;
+>>  };
+>>  
+>> @@ -349,6 +353,9 @@ extern void iommu_detach_device(struct
+>> iommu_domain *domain, extern int iommu_attach_pasid_table(struct
+>> iommu_domain *domain, struct iommu_pasid_table_config *cfg);
+>>  extern void iommu_detach_pasid_table(struct iommu_domain *domain);
+>> +extern int iommu_cache_invalidate(struct iommu_domain *domain,
+>> +				  struct device *dev,
+>> +				  struct iommu_cache_invalidate_info
+>> *inv_info); extern struct iommu_domain
+>> *iommu_get_domain_for_dev(struct device *dev); extern struct
+>> iommu_domain *iommu_get_dma_domain(struct device *dev); extern int
+>> iommu_map(struct iommu_domain *domain, unsigned long iova, @@ -795,7
+>> +802,21 @@ int iommu_attach_pasid_table(struct iommu_domain *domain, }
+>>  
+>>  static inline
+>> +<<<<<<< HEAD
+>>  void iommu_detach_pasid_table(struct iommu_domain *domain) {}
+>> +=======
+>> +void iommu_detach_pasid_table(struct iommu_domain *domain)
+>> +{
+>> +	return -ENODEV;
+>> +}
+>> +static inline int
+>> +iommu_cache_invalidate(struct iommu_domain *domain,
+>> +		       struct device *dev,
+>> +		       struct iommu_cache_invalidate_info *inv_info)
+>> +{
+>> +	return -ENODEV;
+>> +}
+>> +>>>>>>> 56df871916e5... iommu: Introduce cache_invalidate API 
+ouch :-(
 
-In practice I see no significant wall clock time difference when
-inserting to a fairly standard default limit of 16K. Regardless of
-insertion order, running time is dominated by cleanup on process exit
-(synchronize_net barriers?). At higher rlimit it does become
-problematic.
+> forgot to merge :)
+>>  
+>>  #endif /* CONFIG_IOMMU_API */
+>>  
+>> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+>> index 532a64075f23..e4c6a447e85a 100644
+>> --- a/include/uapi/linux/iommu.h
+>> +++ b/include/uapi/linux/iommu.h
+>> @@ -159,4 +159,75 @@ struct iommu_pasid_table_config {
+>>  	};
+>>  };
+>>  
+>> +/* defines the granularity of the invalidation */
+>> +enum iommu_inv_granularity {
+>> +	IOMMU_INV_GRANU_DOMAIN,	/* domain-selective
+>> invalidation */
+>> +	IOMMU_INV_GRANU_PASID,	/* pasid-selective
+>> invalidation */
+>> +	IOMMU_INV_GRANU_ADDR,	/* page-selective invalidation
+>> */ +};
+>> +
+>> +/**
+>> + * Address Selective Invalidation Structure
+>> + *
+>> + * @flags indicates the granularity of the address-selective
+>> invalidation
+>> + * - if PASID bit is set, @pasid field is populated and the
+>> invalidation
+>> + *   relates to cache entries tagged with this PASID and matching the
+>> + *   address range.
+>> + * - if ARCHID bit is set, @archid is populated and the invalidation
+>> relates
+>> + *   to cache entries tagged with this architecture specific id and
+>> matching
+>> + *   the address range.
+>> + * - Both PASID and ARCHID can be set as they may tag different
+>> caches.
+>> + * - if neither PASID or ARCHID is set, global addr invalidation
+>> applies
+>> + * - LEAF flag indicates whether only the leaf PTE caching needs to
+>> be
+>> + *   invalidated and other paging structure caches can be preserved.
+>> + * @pasid: process address space id
+>> + * @archid: architecture-specific id
+>> + * @addr: first stage/level input address
+>> + * @granule_size: page/block size of the mapping in bytes
+>> + * @nb_granules: number of contiguous granules to be invalidated
+>> + */
+>> +struct iommu_inv_addr_info {
+>> +#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
+>> +#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
+>> +#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
+>> +	__u32	flags;
+>> +	__u32	archid;
+>> +	__u64	pasid;
+>> +	__u64	addr;
+>> +	__u64	granule_size;
+>> +	__u64	nb_granules;
+>> +};
+>> +
+>> +/**
+>> + * First level/stage invalidation information
+>> + * @cache: bitfield that allows to select which caches to invalidate
+>> + * @granularity: defines the lowest granularity used for the
+>> invalidation:
+>> + *     domain > pasid > addr
+>> + *
+>> + * Not all the combinations of cache/granularity make sense:
+>> + *
+>> + *         type |   DEV_IOTLB   |     IOTLB     |      PASID    |
+>> + * granularity	|		|		|
+>> cache	|
+>> + * -------------+---------------+---------------+---------------+
+>> + * DOMAIN	|	N/A	|       Y	|
+>> Y	|
+>> + * PASID	|	Y	|       Y	|
+>> Y	|
+>> + * ADDR		|       Y	|       Y	|
+>> N/A	|
+>> + */
+>> +struct iommu_cache_invalidate_info {
+>> +#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+>> +	__u32	version;
+>> +/* IOMMU paging structure cache */
+>> +#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
+>> +#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device
+>> IOTLB */ +#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID
+>> cache */
+>> +	__u8	cache;
+>> +	__u8	granularity;
+>> +	__u8	padding[2];
+>> +	union {
+>> +		__u64	pasid;
+> just realized there is already a pasid field in the addr_info, do we
+> still need this?
+I think so. Either you do a PASID based invalidation and you directly
+use the pasid field or you do an address based invalidation and you use
+the addr_info where the pasid may or not be passed.
 
-The packet socket sklist is not easily converted from hlist to a
-regular list, due to the use of seq_hlist_next_rcu in packet_seq_ops.
-There is no equivalent seq_list_next_rcu. One option might be instead
-to leave insertion order as is, but traverse the list in reverse in
-packet_notifier on NETDEV_DOWN. That would require an
-sk_for_each_reverse_rcu and hlist_for_each_entry_reverse_rcu. These do
-not exist, but since an hlist_pprev_rcu does exist, it is probably
-feasible. Though not a trivial change.
+Thanks
 
-Another more narrow option may be to work around the ordering in
-fanout itself, e.g., record in the socket the initially assigned
-location in the fanout array and try to reclaim this spot on
-re-insertion.
+Eric
+>> +		struct iommu_inv_addr_info addr_info;
+>> +	};
+>> +};
+>> +
+>> +
+>>  #endif /* _UAPI_IOMMU_H */
+> 
+> [Jacob Pan]
+> 
