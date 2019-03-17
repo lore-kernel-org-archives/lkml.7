@@ -2,171 +2,331 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40747C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3983C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8A6206DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6997A206DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0tFaXWh"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="YvwQjpyZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfCQSa4 (ORCPT
+        id S1727382AbfCQSbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 14:30:56 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37441 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfCQSa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 14:30:56 -0400
-Received: by mail-qk1-f195.google.com with SMTP id c1so8419390qkk.4;
-        Sun, 17 Mar 2019 11:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=wcjAgXMxaZ1t4MHbpg/y1kaYaozUNYkr7E15q7Q/JMw=;
-        b=n0tFaXWhsVNA7jtiVcTw55/B9fLz9ogS+ZjQ3WG0UgttDmgcskOAOTl3Fk6lpwGvSE
-         1c3ojNBn8bzowyV+HrxdRgXEMk2sfT0CwVVDBHMRhwYDCAt2EBK7IvgJBO4iSSaaRoKt
-         /w8E+PTy0FACu2czME/KamB2yMJmxKn3pUCSNIl0yFAbuFgxXXX9j43LpA5MMUDBzESB
-         qs9NsSdHJFUQakXiVC72/30OisVcxfIW3SaniCy1BOTMi5dBuebIs4/xlPx7BTDl2UbH
-         gT3FDYqlhU+Z9vnB43toryvIip1isC65TI5aiuWqT37eXh2Y9cB4g+3mcDKfhr0XV+cH
-         821g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=wcjAgXMxaZ1t4MHbpg/y1kaYaozUNYkr7E15q7Q/JMw=;
-        b=hjSXb1UKGhhgR2g4dFOrbvXQvyCwlVqHu57gJYexXoNJsVD8GeC7xC1qg8S5lkebgS
-         aHoGf8A4ZkGOh+nOt4FvriYM82RJyRkV3DCFUtkz9nkncaxEiElQCPgw8AH62cpKDCG+
-         /K5tiK5ndgU4gUaqahV59EU8Z/9nfZ84FX5RijfjXvviK+8em01LaSq0bEDlSuWVy2eh
-         g0qVKILcwMmOkThY0NfQvAvyMvBb5wb5Jdrlu9SRWpVfooml7qT6xdJrVWXu5UzKYX4y
-         umOC6KBnqD1Cl2mjnr3MLMf0oSfJIUs4RUv64K1Zog9okWsdBc5dzuKWD0uWCUb03Skx
-         DkoA==
-X-Gm-Message-State: APjAAAXwKeGLox7nEXDpZDCnnXalWhc2XMe6GsWsJ9HkbX1aTrrqe5CZ
-        uH7eEM4SPtOj6RI1zJwXMuQ=
-X-Google-Smtp-Source: APXvYqwFsPI9SNIAPlWtZI9QbHGIrJYatu0kiiipoc1Iq82LP2I3Sk97S2Bx0F+qFH55z/pUo+0ENw==
-X-Received: by 2002:a05:620a:10b1:: with SMTP id h17mr10552426qkk.69.1552847454723;
-        Sun, 17 Mar 2019 11:30:54 -0700 (PDT)
-Received: from rys-Inspiron-5420 ([201.82.188.175])
-        by smtp.gmail.com with ESMTPSA id a8sm130426qtc.19.2019.03.17.11.30.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 Mar 2019 11:30:53 -0700 (PDT)
-Date:   Sun, 17 Mar 2019 15:30:49 -0300
-From:   Renato Soma <renatoys08@gmail.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>
-Subject: Re: [PATCH 0/1] platform/x86: dell-wmi: Uncomment events that were
-Message-ID: <20190317183049.GA5989@rys-Inspiron-5420>
-References: <20190316010942.6448-1-renatoys08@gmail.com>
- <20190316091756.2zfccpnhfnjogktp@pali>
+        Sun, 17 Mar 2019 14:31:18 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:54385 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726333AbfCQSbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 14:31:18 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44MnvN2V0Qz9vRZS;
+        Sun, 17 Mar 2019 19:31:12 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=YvwQjpyZ; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id JVw08tBD8Gwx; Sun, 17 Mar 2019 19:31:12 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44MnvN15cKz9vRZR;
+        Sun, 17 Mar 2019 19:31:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1552847472; bh=BXWMF2so+GLHhzxMK3cXtfcsNw0MoLzViFfxI4ru5i8=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=YvwQjpyZoMN/ofSSY26zJgdbyA2a0Fdv/idbTQ6ve1SVr0vjTC20l/cgySuLaXF+w
+         sBNsozz5jNWIuUX2VFJFtr1Yme5JnXfQP5Dps3uL2P3CjEpE1UgWNGk+GFVrnalDOv
+         R/eIwZ7KV70PPTrXczk3tfNozRQ8JC357GmuvVsc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A25F58B84D;
+        Sun, 17 Mar 2019 19:31:15 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id mKLCnS-MMo5Y; Sun, 17 Mar 2019 19:31:15 +0100 (CET)
+Received: from [192.168.232.53] (unknown [192.168.232.53])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 213188B750;
+        Sun, 17 Mar 2019 19:31:14 +0100 (CET)
+Subject: Re: [PATCH v7 4/4] hugetlb: allow to free gigantic pages regardless
+ of the configuration
+To:     Alexandre Ghiti <alex@ghiti.fr>, aneesh.kumar@linux.ibm.com,
+        mpe@ellerman.id.au, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20190317162847.14107-1-alex@ghiti.fr>
+ <20190317162847.14107-5-alex@ghiti.fr>
+From:   christophe leroy <christophe.leroy@c-s.fr>
+Message-ID: <f434892d-80b2-f09d-31d6-754a1be0b97a@c-s.fr>
+Date:   Sun, 17 Mar 2019 19:31:13 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190317162847.14107-5-alex@ghiti.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190316091756.2zfccpnhfnjogktp@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Antivirus: Avast (VPS 190317-2, 17/03/2019), Outbound message
+X-Antivirus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-On Sat, Mar 16, 2019 at 10:17:56AM +0100, Pali Roh�r wrote:
+
+Le 17/03/2019 à 17:28, Alexandre Ghiti a écrit :
+> On systems without CONTIG_ALLOC activated but that support gigantic pages,
+> boottime reserved gigantic pages can not be freed at all. This patch
+> simply enables the possibility to hand back those pages to memory
+> allocator.
 > 
-> Looks like that those keys are not as obvious as you wrote. Look at my
-> email with some investigation about Dell Audio With Preset Switch key:
-> https://www.spinics.net/lists/platform-driver-x86/msg15593.html
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> Acked-by: David S. Miller <davem@davemloft.net> [sparc]
+> ---
+>   arch/arm64/Kconfig                           |  2 +-
+>   arch/arm64/include/asm/hugetlb.h             |  4 --
+>   arch/powerpc/include/asm/book3s/64/hugetlb.h |  7 ---
+>   arch/powerpc/platforms/Kconfig.cputype       |  2 +-
+>   arch/s390/Kconfig                            |  2 +-
+>   arch/s390/include/asm/hugetlb.h              |  3 --
+>   arch/sh/Kconfig                              |  2 +-
+>   arch/sparc/Kconfig                           |  2 +-
+>   arch/x86/Kconfig                             |  2 +-
+>   arch/x86/include/asm/hugetlb.h               |  4 --
+>   include/asm-generic/hugetlb.h                | 14 +++++
+>   include/linux/gfp.h                          |  2 +-
+>   mm/hugetlb.c                                 | 54 ++++++++++++++------
+>   mm/page_alloc.c                              |  4 +-
+>   14 files changed, 61 insertions(+), 43 deletions(-)
 > 
-> Also there is another user who wrote about 0xe02c key generated by
-> Inspirion 7520: https://ubuntuforum-br.org/index.php?topic=105434.0
+
+[...]
+
+> diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
+> index 71d7b77eea50..aaf14974ee5f 100644
+> --- a/include/asm-generic/hugetlb.h
+> +++ b/include/asm-generic/hugetlb.h
+> @@ -126,4 +126,18 @@ static inline pte_t huge_ptep_get(pte_t *ptep)
+>   }
+>   #endif
+>   
+> +#ifndef __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED
+> +#ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+> +static inline bool gigantic_page_runtime_supported(void)
+> +{
+> +	return true;
+> +}
+> +#else
+> +static inline bool gigantic_page_runtime_supported(void)
+> +{
+> +	return false;
+> +}
+> +#endif /* CONFIG_ARCH_HAS_GIGANTIC_PAGE */
+
+What about the following instead:
+
+static inline bool gigantic_page_runtime_supported(void)
+{
+	return IS_ENABLED(CONFIG_ARCH_HAS_GIGANTIC_PAGE);
+}
+
+
+> +#endif /* __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED */
+> +
+>   #endif /* _ASM_GENERIC_HUGETLB_H */
+> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+> index 1f1ad9aeebb9..58ea44bf75de 100644
+> --- a/include/linux/gfp.h
+> +++ b/include/linux/gfp.h
+> @@ -589,8 +589,8 @@ static inline bool pm_suspended_storage(void)
+>   /* The below functions must be run on a range from a single zone. */
+>   extern int alloc_contig_range(unsigned long start, unsigned long end,
+>   			      unsigned migratetype, gfp_t gfp_mask);
+> -extern void free_contig_range(unsigned long pfn, unsigned nr_pages);
+>   #endif
+> +extern void free_contig_range(unsigned long pfn, unsigned int nr_pages);
+
+'extern' is unneeded and should be avoided (iaw checkpatch)
+
+Christophe
+
+>   
+>   #ifdef CONFIG_CMA
+>   /* CMA stuff */
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index afef61656c1e..4e55aa38704f 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1058,6 +1058,7 @@ static void free_gigantic_page(struct page *page, unsigned int order)
+>   	free_contig_range(page_to_pfn(page), 1 << order);
+>   }
+>   
+> +#ifdef CONFIG_CONTIG_ALLOC
+>   static int __alloc_gigantic_page(unsigned long start_pfn,
+>   				unsigned long nr_pages, gfp_t gfp_mask)
+>   {
+> @@ -1142,11 +1143,20 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+>   
+>   static void prep_new_huge_page(struct hstate *h, struct page *page, int nid);
+>   static void prep_compound_gigantic_page(struct page *page, unsigned int order);
+> +#else /* !CONFIG_CONTIG_ALLOC */
+> +static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+> +					int nid, nodemask_t *nodemask)
+> +{
+> +	return NULL;
+> +}
+> +#endif /* CONFIG_CONTIG_ALLOC */
+>   
+>   #else /* !CONFIG_ARCH_HAS_GIGANTIC_PAGE */
+> -static inline bool gigantic_page_supported(void) { return false; }
+>   static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+> -		int nid, nodemask_t *nodemask) { return NULL; }
+> +					int nid, nodemask_t *nodemask)
+> +{
+> +	return NULL;
+> +}
+>   static inline void free_gigantic_page(struct page *page, unsigned int order) { }
+>   static inline void destroy_compound_gigantic_page(struct page *page,
+>   						unsigned int order) { }
+> @@ -1156,7 +1166,7 @@ static void update_and_free_page(struct hstate *h, struct page *page)
+>   {
+>   	int i;
+>   
+> -	if (hstate_is_gigantic(h) && !gigantic_page_supported())
+> +	if (hstate_is_gigantic(h) && !gigantic_page_runtime_supported())
+>   		return;
+>   
+>   	h->nr_huge_pages--;
+> @@ -2276,13 +2286,27 @@ static int adjust_pool_surplus(struct hstate *h, nodemask_t *nodes_allowed,
+>   }
+>   
+>   #define persistent_huge_pages(h) (h->nr_huge_pages - h->surplus_huge_pages)
+> -static unsigned long set_max_huge_pages(struct hstate *h, unsigned long count,
+> -						nodemask_t *nodes_allowed)
+> +static int set_max_huge_pages(struct hstate *h, unsigned long count,
+> +			      nodemask_t *nodes_allowed)
+>   {
+>   	unsigned long min_count, ret;
+>   
+> -	if (hstate_is_gigantic(h) && !gigantic_page_supported())
+> -		return h->max_huge_pages;
+> +	spin_lock(&hugetlb_lock);
+> +
+> +	/*
+> +	 * Gigantic pages runtime allocation depend on the capability for large
+> +	 * page range allocation.
+> +	 * If the system does not provide this feature, return an error when
+> +	 * the user tries to allocate gigantic pages but let the user free the
+> +	 * boottime allocated gigantic pages.
+> +	 */
+> +	if (hstate_is_gigantic(h) && !IS_ENABLED(CONFIG_CONTIG_ALLOC)) {
+> +		if (count > persistent_huge_pages(h)) {
+> +			spin_unlock(&hugetlb_lock);
+> +			return -EINVAL;
+> +		}
+> +		/* Fall through to decrease pool */
+> +	}
+>   
+>   	/*
+>   	 * Increase the pool size
+> @@ -2295,7 +2319,6 @@ static unsigned long set_max_huge_pages(struct hstate *h, unsigned long count,
+>   	 * pool might be one hugepage larger than it needs to be, but
+>   	 * within all the constraints specified by the sysctls.
+>   	 */
+> -	spin_lock(&hugetlb_lock);
+>   	while (h->surplus_huge_pages && count > persistent_huge_pages(h)) {
+>   		if (!adjust_pool_surplus(h, nodes_allowed, -1))
+>   			break;
+> @@ -2350,9 +2373,10 @@ static unsigned long set_max_huge_pages(struct hstate *h, unsigned long count,
+>   			break;
+>   	}
+>   out:
+> -	ret = persistent_huge_pages(h);
+> +	h->max_huge_pages = persistent_huge_pages(h);
+>   	spin_unlock(&hugetlb_lock);
+> -	return ret;
+> +
+> +	return 0;
+>   }
+>   
+>   #define HSTATE_ATTR_RO(_name) \
+> @@ -2404,7 +2428,7 @@ static ssize_t __nr_hugepages_store_common(bool obey_mempolicy,
+>   	int err;
+>   	NODEMASK_ALLOC(nodemask_t, nodes_allowed, GFP_KERNEL | __GFP_NORETRY);
+>   
+> -	if (hstate_is_gigantic(h) && !gigantic_page_supported()) {
+> +	if (hstate_is_gigantic(h) && !gigantic_page_runtime_supported()) {
+>   		err = -EINVAL;
+>   		goto out;
+>   	}
+> @@ -2428,15 +2452,13 @@ static ssize_t __nr_hugepages_store_common(bool obey_mempolicy,
+>   	} else
+>   		nodes_allowed = &node_states[N_MEMORY];
+>   
+> -	h->max_huge_pages = set_max_huge_pages(h, count, nodes_allowed);
+> +	err = set_max_huge_pages(h, count, nodes_allowed);
+>   
+> +out:
+>   	if (nodes_allowed != &node_states[N_MEMORY])
+>   		NODEMASK_FREE(nodes_allowed);
+>   
+> -	return len;
+> -out:
+> -	NODEMASK_FREE(nodes_allowed);
+> -	return err;
+> +	return err ? err : len;
+>   }
+>   
+>   static ssize_t nr_hugepages_store_common(bool obey_mempolicy,
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index ac9c45ffb344..a4547d90fa7a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8234,8 +8234,9 @@ int alloc_contig_range(unsigned long start, unsigned long end,
+>   				pfn_max_align_up(end), migratetype);
+>   	return ret;
+>   }
+> +#endif /* CONFIG_CONTIG_ALLOC */
+>   
+> -void free_contig_range(unsigned long pfn, unsigned nr_pages)
+> +void free_contig_range(unsigned long pfn, unsigned int nr_pages)
+>   {
+>   	unsigned int count = 0;
+>   
+> @@ -8247,7 +8248,6 @@ void free_contig_range(unsigned long pfn, unsigned nr_pages)
+>   	}
+>   	WARN(count != 0, "%d pages are still in use!\n", count);
+>   }
+> -#endif
+>   
+>   #ifdef CONFIG_MEMORY_HOTPLUG
+>   /*
 > 
-> You can a testing machine 5420, can you prove that behavior described in
-> my previous email match also your machine?
-> 
 
-Thanks for the feedback, I was unaware of this issue.
-I've performed some tests in my machine and this is what I've found so far:
+---
+L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
+https://www.avast.com/antivirus
 
-=====================================================================
-
-----------------------------------------
-Left WMI key: Windows Mobility Center
-Press:    'x'
-Hold:     -
-Release:  -
-
-In my machine (Inspiron 5420), whenever I press this key, the key
-outputs the character "x". I've seen nothing on dmesg even if I
-keep this key pressed for longer amounts of time. I'm still trying
-to understand why this is hapenning.
-
-
-----------------------------------------
-Middle WMI key: Dell Audio With Preset Switch
-Press:    Key with type 0x0000 and code 0xe02a pressed
-Hold:     -
-Release:  Key with type 0x0000 and code 0xe02b pressed
-
-Differently from what you saw on a Inspiron 7520, I could not
-reproduce the behavior that you reported on the first link above.
-In my case, when I press the key, the code 0xe02a is shown at dmesg
-only once. Also, even though I keep it pressed for longer than ~30
-seconds or so, I could not see the entry 0xe02c apper. More on that
-behavior later on. When releasing the key, I can see the code 0xe02b
-show up at dmesg.
-
-----------------------------------------
-Right WMI key: Dell Instant Launch
-Press:    -
-Hold:     -
-Release:  -
-
-This key is with a really weird behavior on my machine.
-When testing, I would normally press and relase so that the following
-messages would pop-up:
-
-[ 2830.499420] atkbd serio0: Unknown key pressed (translated set 2,
-code 0x60 on isa0060/serio0).
-[ 2830.499422] atkbd serio0: Use 'setkeycodes 60 <keycode>'
-to make it known.
-
-But what I realized was that, if I kept this button pressed for about
-~3 seconds or so (like when your experiment in the link above), dmesg
-would not ouput anything untill those ~3 seconds elapsed. When they
-did, then dmesg log would have the following entries:
-
-[ 3058.494003] atkbd serio0: Unknown key pressed (translated set 2,
-code 0x60 on isa0060/serio0).
-[ 3058.494008] atkbd serio0: Use 'setkeycodes 60 <keycode>'
-to make it known.
-[ 3058.501494] dell_wmi: Unknown key with type 0x0000 and code
-0xe028 pressed
-
-The last message being the weirdest, It would seem that only after
-about 3 seconds or so, the driver is being notified of it.
-
-=====================================================================
-
-Anyway, It's clear now that this patch trully makes no sense since the
-hardwares (Inspiron 7520 x Inspiron 5420) are behaving somewhat
-differently on these keys.
-
-Either way, It seems that at both of them, there are three behaviors
-that are strange. I'm still trying to learn kernel development (I'm a
-newbie) so could you please point out whether this is worth it to
-investigate, or if should I leave this as is?
-
-In the meantime, I'll try to find out why the first button is outputting
-an "x" character on my machine.
-
-Thanks!
-Renato
