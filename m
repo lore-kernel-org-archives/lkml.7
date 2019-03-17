@@ -2,83 +2,89 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BE7C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C965AC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F5A21019
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A548320857
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfCQR1R (ORCPT
+        id S1727268AbfCQRr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 13:27:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52350 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfCQR1R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 13:27:17 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1h5ZYx-0007Dy-6E; Sun, 17 Mar 2019 17:27:07 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] netfilter: nf_tables: remove unused parameter ctx
-Date:   Sun, 17 Mar 2019 17:27:06 +0000
-Message-Id: <20190317172706.26050-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        Sun, 17 Mar 2019 13:47:59 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:51214 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbfCQRr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 13:47:59 -0400
+X-Greylist: delayed 484 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 Mar 2019 13:47:58 EDT
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id E76DDA542E;
+        Sun, 17 Mar 2019 17:39:49 +0000 (UTC)
+Message-ID: <2485e6c52810df376a0df6eb7f749f35b7b19044.camel@aosc.xyz>
+Subject: Re: [PATCH 0/7] Timer & SPI support for Allwinner suniv F1C100s
+From:   Icenowy Zheng <icenowy@aosc.xyz>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mesih Kilinc <mesihkilinc@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 18 Mar 2019 01:39:44 +0800
+In-Reply-To: <cover.1549875778.git.mesihkilinc@gmail.com>
+References: <cover.1549875778.git.mesihkilinc@gmail.com>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+在 2019-02-11一的 12:21 +0300，Mesih Kilinc写道：
+> This is followup series for F1C100s initial support patchset. 
+> All patches merged except patch 1 ~ 2 which is related to timer.
+> I am resending those since they are already have Acked tags.
 
-Function nf_tables_set_desc_parse parameter ctx is not being used
-so remove it as it is redundant.
+Ping.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- net/netfilter/nf_tables_api.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Could you please merge these timer-related patches?
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index faf6bd10a19f..e9d6f4c32a03 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -3434,8 +3434,7 @@ static int nf_tables_getset(struct net *net, struct sock *nlsk,
- 	return err;
- }
- 
--static int nf_tables_set_desc_parse(const struct nft_ctx *ctx,
--				    struct nft_set_desc *desc,
-+static int nf_tables_set_desc_parse(struct nft_set_desc *desc,
- 				    const struct nlattr *nla)
- {
- 	struct nlattr *da[NFTA_SET_DESC_MAX + 1];
-@@ -3561,7 +3560,7 @@ static int nf_tables_newset(struct net *net, struct sock *nlsk,
- 		policy = ntohl(nla_get_be32(nla[NFTA_SET_POLICY]));
- 
- 	if (nla[NFTA_SET_DESC] != NULL) {
--		err = nf_tables_set_desc_parse(&ctx, &desc, nla[NFTA_SET_DESC]);
-+		err = nf_tables_set_desc_parse(&desc, nla[NFTA_SET_DESC]);
- 		if (err < 0)
- 			return err;
- 	}
--- 
-2.20.1
+Thanks!
+Icenowy
+
+> 
+> Our dt-bindings for F1C100s are merged, we can now use them at our 
+> device tree source - patch 3.
+> 
+> Also this series add spi support and enables spi flash at Lichee-pi
+> Nano
+> in patch 4 ~ 7. This patches are based on Icenowy's work.
+> 
+> Thanks!
+> 
+> Mesih Kilinc (7):
+>   dt-bindings: timer: Add Allwinner suniv timer
+>   clocksource: sun4i: add a compatible for suniv
+>   ARM: dts: suniv: Add dt-binding headers for F1C100s
+>   dt-bindings: spi: Add Support for Allwinner F1C100s
+>   ARM: dts: suniv: Add SPI device-tree nodes
+>   ARM: dts: suniv: Add pinmux for SPI0 and SPI1 of F1C100s
+>   ARM: dts: f1c100s: Activate SPI flash on Lichee Pi Nano
+> 
+>  .../devicetree/bindings/spi/spi-sun6i.txt          |  5 +-
+>  .../bindings/timer/allwinner,sun4i-timer.txt       |  4 +-
+>  arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts  | 13 ++++++
+>  arch/arm/boot/dts/suniv-f1c100s.dtsi               | 53
+> +++++++++++++++++++---
+>  drivers/clocksource/timer-sun4i.c                  |  5 +-
+>  5 files changed, 70 insertions(+), 10 deletions(-)
+> 
 
