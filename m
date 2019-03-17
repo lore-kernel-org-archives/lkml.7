@@ -2,86 +2,114 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3560C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EDFC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35FC20896
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B6520896
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfCQOZm (ORCPT
+        id S1727277AbfCQO1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 10:25:42 -0400
-Received: from nautica.notk.org ([91.121.71.147]:44165 "EHLO nautica.notk.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726855AbfCQOZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 10:25:42 -0400
-Received: by nautica.notk.org (Postfix, from userid 1001)
-        id E3D10C009; Sun, 17 Mar 2019 15:25:39 +0100 (CET)
-Date:   Sun, 17 Mar 2019 15:25:24 +0100
-From:   Dominique Martinet <asmadeus@codewreck.org>
+        Sun, 17 Mar 2019 10:27:01 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:56483 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726850AbfCQO1B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 10:27:01 -0400
+Received: from [2a01:598:b88d:24ef:fc90:b8ff:fed0:1fb6] (helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h5Wkc-00066f-K0; Sun, 17 Mar 2019 15:26:58 +0100
+Date:   Sun, 17 Mar 2019 15:26:44 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [GIT PULL] 9p updates for 5.1
-Message-ID: <20190317142524.GA5136@nautica>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
+Subject: [GIT pull] perf fixes for 5.1-rc1
+Message-ID: <alpine.DEB.2.21.1903171523250.9068@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Linus,
 
-Here is a 9p update for 5.1; there honestly hasn't been much.
+please pull the latest perf-urgent-for-linus git tree from:
 
-The memory leak fix has been commited rather recently because it was
-sent fairly late, but it's simple enough that four days in -next should
-be enough (that's why I waited till the last minute to send, sorry for
-that - feel free to pick for rc2 if that makes a difference)
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
+
+Three fixes for the fallout from the TSX errata workaround:
+
+ - Prevent memory corruption caused by a unchecked out of bound array
+   index.
+   
+ - Two trivial fixes to address compiler warnings.
+
+Thanks,
+
+	tglx
+
+------------------>
+Peter Zijlstra (2):
+      perf/x86/intel: Fix memory corruption
+      perf/x86: Fixup typo in stub functions
+
+kbuild test robot (1):
+      perf/x86/intel: Make dev_attr_allow_tsx_force_abort static
 
 
-The following changes since commit 49a57857aeea06ca831043acbb0fa5e0f50602fd:
+ arch/x86/events/intel/core.c | 4 ++--
+ arch/x86/events/perf_event.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-  Linux 5.0-rc3 (2019-01-21 13:14:44 +1300)
-
-are available in the Git repository at:
-
-  git://github.com/martinetd/linux tags/9p-for-5.1
-
-for you to fetch changes up to bb06c388fa20ae24cfe80c52488de718a7e3a53f:
-
-  9p/net: fix memory leak in p9_client_create (2019-03-13 11:50:04
-  +0100)
-
-----------------------------------------------------------------
-Pull request for inlusion in 5.1
-
-Two fixes (leak on invalid mount argument and possible deadlock on
-i_size update on 32bit smp) and a fall-through warning cleanup
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      9p: mark expected switch fall-through
-
-Hou Tao (1):
-      9p: use inode->i_lock to protect i_size_write() under 32-bit
-
-zhengbin (1):
-      9p/net: fix memory leak in p9_client_create
-
- fs/9p/v9fs_vfs.h       | 23 +++++++++++++++++++++--
- fs/9p/vfs_file.c       |  6 +++++-
- fs/9p/vfs_inode.c      | 23 +++++++++++------------
- fs/9p/vfs_inode_dotl.c | 27 ++++++++++++++-------------
- fs/9p/vfs_super.c      |  4 ++--
- net/9p/client.c        |  2 +-
- net/9p/trans_xen.c     |  2 +-
- 7 files changed, 55 insertions(+), 32 deletions(-)
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 35102ecdfc8d..8baa441d8000 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3410,7 +3410,7 @@ tfa_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 	/*
+ 	 * Without TFA we must not use PMC3.
+ 	 */
+-	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk)) {
++	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk) && idx >= 0) {
+ 		c = dyn_constraint(cpuc, c, idx);
+ 		c->idxmsk64 &= ~(1ULL << 3);
+ 		c->weight--;
+@@ -4179,7 +4179,7 @@ static struct attribute *intel_pmu_caps_attrs[] = {
+        NULL
+ };
+ 
+-DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
++static DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
+ 
+ static struct attribute *intel_pmu_attrs[] = {
+ 	&dev_attr_freeze_on_smi.attr,
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index b04ae6c8775e..a75955741c50 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1033,12 +1033,12 @@ static inline int intel_pmu_init(void)
+ 	return 0;
+ }
+ 
+-static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
++static inline int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
+ {
+ 	return 0;
+ }
+ 
+-static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
++static inline void intel_cpuc_finish(struct cpu_hw_events *cpuc)
+ {
+ }
+ 
