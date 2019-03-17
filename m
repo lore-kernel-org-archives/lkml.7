@@ -2,226 +2,231 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E00FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED553C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC972087C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACD12087C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 14:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SoY/jLkK";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GZWjvgPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfCQOCg (ORCPT
+        id S1727248AbfCQOJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 10:02:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5265 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726563AbfCQOCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 10:02:36 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F0911A9936BDD7847668;
-        Sun, 17 Mar 2019 22:02:31 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Sun, 17 Mar 2019
- 22:02:23 +0800
-Subject: Re: [RFC] Question about TLB flush while set Stage-2 huge pages
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>, <zhengxiang9@huawei.com>
-CC:     <marc.zyngier@arm.com>, <christoffer.dall@arm.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <james.morse@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>, <lious.lilei@hisilicon.com>,
-        <lishuo1@hisilicon.com>
-References: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
- <e2a94937-c324-e2d6-7e61-3f998e6e6e22@arm.com>
- <1c0e07b9-73f0-efa4-c1b7-ad81789b42c5@huawei.com>
- <5188e3b9-5b5a-a6a7-7ef0-09b7b4f06af6@arm.com>
- <348d0b3b-c74b-7b39-ec30-85905c077c38@huawei.com>
- <20190314105537.GA15323@en101>
- <368bd218-ac1d-19b2-6e92-960b91afee8b@huawei.com>
- <d322e126-4da2-6dfd-a86d-088dfb3bf0f4@huawei.com>
- <6aea4049-7860-7144-a7be-14f856cdc789@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <0fce42bd-1295-45a4-46b6-81b128ee343e@huawei.com>
-Date:   Sun, 17 Mar 2019 21:55:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Sun, 17 Mar 2019 10:09:36 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51214 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbfCQOJf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 10:09:35 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 50A06602F8; Sun, 17 Mar 2019 14:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552831774;
+        bh=ersVU7AidXSZDjl66toAK8zV2E8W0RjZnrWqyfAc5y4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SoY/jLkKxrdpRW/eOf9apgVvzQzTaOzC/FRjaSLEYnw4OXwCCrxg/C2Xw4LHyjIQi
+         ZoqkA/PGLTzs/ki2fJ72gp2Jv+zL+4JeyBzj4M100ems3f2EOz8EgRp1mveYv/XPBM
+         SNfBSwqR2dt//qC9/NOd8p5tYC3oIAVM6rVD8MLA=
+Received: from [192.168.1.4] (unknown [122.175.126.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gkohli@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 726AC602F8;
+        Sun, 17 Mar 2019 14:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552831773;
+        bh=ersVU7AidXSZDjl66toAK8zV2E8W0RjZnrWqyfAc5y4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GZWjvgPSbPYCf9Y7MOcRQZykSvx3KyGuFi1pwSKw9bcnriMRE+EHqAlZ46vUe3L1H
+         xQa8+VCxorsczH4loNUavFFY7/i4rs5+EM1GmAw5EsXCqxg8mVRk+G2dBh6DxCN6Fh
+         wGHi2DnAWgQmZn2yx8hc1ytMTajz7CxygWE+/7Ho=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 726AC602F8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Re: [PATCH] nvmem: core: Set no-read-write provider to avoid
+ userspace read/write
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, srinivas.kandagatla@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <1552641937-19444-1-git-send-email-gkohli@codeaurora.org>
+ <201903171227.wBkYRH1J%lkp@intel.com>
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+Message-ID: <e9a41f2c-002e-4e56-7cd2-9f514bb82b99@codeaurora.org>
+Date:   Sun, 17 Mar 2019 19:39:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <6aea4049-7860-7144-a7be-14f856cdc789@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <201903171227.wBkYRH1J%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+Oh i was in wrong version, will upload new patch v2, thanks for update.
 
-On 2019/3/15 22:56, Suzuki K Poulose wrote:
-> Hi Zhengui,
-> 
-> On 15/03/2019 08:21, Zheng Xiang wrote:
->> Hi Suzuki,
->>
->> I have tested this patch, VM doesn't hang and we get expected WARNING 
->> log:
-> 
-> Thanks for the quick testing !
-> 
->> However, we also get the following unexpected log:
->>
->> [  908.329900] BUG: Bad page state in process qemu-kvm  pfn:a2fb41cf
->> [  908.339415] page:ffff7e28bed073c0 count:-4 mapcount:0 
->> mapping:0000000000000000 index:0x0
->> [  908.339416] flags: 0x4ffffe0000000000()
->> [  908.339418] raw: 4ffffe0000000000 dead000000000100 dead000000000200 
->> 0000000000000000
->> [  908.339419] raw: 0000000000000000 0000000000000000 fffffffcffffffff 
->> 0000000000000000
->> [  908.339420] page dumped because: nonzero _refcount
->> [  908.339437] CPU: 32 PID: 72599 Comm: qemu-kvm Kdump: loaded 
->> Tainted: G    B  W        5.0.0+ #1
->> [  908.339438] Call trace:
->> [  908.339439]  dump_backtrace+0x0/0x188
->> [  908.339441]  show_stack+0x24/0x30
->> [  908.339442]  dump_stack+0xa8/0xcc
->> [  908.339443]  bad_page+0xf0/0x150
->> [  908.339445]  free_pages_check_bad+0x84/0xa0
->> [  908.339446]  free_pcppages_bulk+0x4b8/0x750
->> [  908.339448]  free_unref_page_commit+0x13c/0x198
->> [  908.339449]  free_unref_page+0x84/0xa0
->> [  908.339451]  __free_pages+0x58/0x68
->> [  908.339452]  zap_huge_pmd+0x290/0x2d8
->> [  908.339454]  unmap_page_range+0x2b4/0x470
->> [  908.339455]  unmap_single_vma+0x94/0xe8
->> [  908.339457]  unmap_vmas+0x8c/0x108
->> [  908.339458]  exit_mmap+0xd4/0x178
->> [  908.339459]  mmput+0x74/0x180
->> [  908.339460]  do_exit+0x2b4/0x5b0
->> [  908.339462]  do_group_exit+0x3c/0xe0
->> [  908.339463]  __arm64_sys_exit_group+0x24/0x28
->> [  908.339465]  el0_svc_common+0xa0/0x180
->> [  908.339466]  el0_svc_handler+0x38/0x78
->> [  908.339467]  el0_svc+0x8/0xc
-> 
-> Thats bad, we seem to be making upto 4 unbalanced put_page().
-> 
->>>> ---
->>>>    virt/kvm/arm/mmu.c | 51 
->>>> +++++++++++++++++++++++++++++++++++----------------
->>>>    1 file changed, 35 insertions(+), 16 deletions(-)
->>>>
->>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->>>> index 66e0fbb5..04b0f9b 100644
->>>> --- a/virt/kvm/arm/mmu.c
->>>> +++ b/virt/kvm/arm/mmu.c
->>>> @@ -1076,24 +1076,38 @@ static int stage2_set_pmd_huge(struct kvm 
->>>> *kvm, struct kvm_mmu_memory_cache
->>>>             * Skip updating the page table if the entry is
->>>>             * unchanged.
->>>>             */
->>>> -        if (pmd_val(old_pmd) == pmd_val(*new_pmd))
->>>> +        if (pmd_val(old_pmd) == pmd_val(*new_pmd)) {
->>>>                return 0;
->>>> -
->>>> +        } else if (WARN_ON_ONCE(!pmd_thp_or_huge(old_pmd))) {
->>>>            /*
->>>> -         * Mapping in huge pages should only happen through a
->>>> -         * fault.  If a page is merged into a transparent huge
->>>> -         * page, the individual subpages of that huge page
->>>> -         * should be unmapped through MMU notifiers before we
->>>> -         * get here.
->>>> -         *
->>>> -         * Merging of CompoundPages is not supported; they
->>>> -         * should become splitting first, unmapped, merged,
->>>> -         * and mapped back in on-demand.
->>>> +         * If we have PTE level mapping for this block,
->>>> +         * we must unmap it to avoid inconsistent TLB
->>>> +         * state. We could end up in this situation if
->>>> +         * the memory slot was marked for dirty logging
->>>> +         * and was reverted, leaving PTE level mappings
->>>> +         * for the pages accessed during the period.
->>>> +         * Normal THP split/merge follows mmu_notifier
->>>> +         * callbacks and do get handled accordingly.
->>>>             */
->>>> -        VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
->>>> +            unmap_stage2_range(kvm, (addr & S2_PMD_MASK), 
->>>> S2_PMD_SIZE);
->>
->> It seems that kvm decreases the _refcount of the page twice in 
->> transparent_hugepage_adjust()
->> and unmap_stage2_range().
-> 
-> But I thought we should be doing that on the head_page already, as this 
-> is THP.
-> I will take a look and get back to you on this. Btw, is it possible for you
-> to turn on CONFIG_DEBUG_VM and re-run with the above patch ?
+Regards
 
-And for detailed debugging info:
+Gaurav
 
-I've turned on CONFIG_DEBUG_VM and re-run with your patch -- Run a guest
-with stage2 PUD hugepage, enable then disable the dirty logging, and
-then shutdown this guest. The result is: Host hit a kernel BUG with the
-below log (when shutdown-ing guest):
+On 3/17/2019 9:51 AM, kbuild test robot wrote:
+> Hi Gaurav,
+>
+> Thank you for the patch! Yet something to improve:
+>
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v5.0 next-20190306]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Gaurav-Kohli/nvmem-core-Set-no-read-write-provider-to-avoid-userspace-read-write/20190317-105219
+> config: i386-randconfig-x010-201911 (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>          # save the attached .config to linux build tree
+>          make ARCH=i386
+>
+> All errors (new ones prefixed by >>):
+>
+>     drivers//nvmem/core.c: In function 'nvmem_register':
+>>> drivers//nvmem/core.c:662:47: error: 'np' undeclared (first use in this function); did you mean 'up'?
+>       nvmem->no_read_write = of_property_read_bool(np, "no-read-write") |
+>                                                    ^~
+>                                                    up
+>     drivers//nvmem/core.c:662:47: note: each undeclared identifier is reported only once for each function it appears in
+>
+> vim +662 drivers//nvmem/core.c
+>
+>     602	
+>     603	/**
+>     604	 * nvmem_register() - Register a nvmem device for given nvmem_config.
+>     605	 * Also creates an binary entry in /sys/bus/nvmem/devices/dev-name/nvmem
+>     606	 *
+>     607	 * @config: nvmem device configuration with which nvmem device is created.
+>     608	 *
+>     609	 * Return: Will be an ERR_PTR() on error or a valid pointer to nvmem_device
+>     610	 * on success.
+>     611	 */
+>     612	
+>     613	struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>     614	{
+>     615		struct nvmem_device *nvmem;
+>     616		int rval;
+>     617	
+>     618		if (!config->dev)
+>     619			return ERR_PTR(-EINVAL);
+>     620	
+>     621		nvmem = kzalloc(sizeof(*nvmem), GFP_KERNEL);
+>     622		if (!nvmem)
+>     623			return ERR_PTR(-ENOMEM);
+>     624	
+>     625		rval  = ida_simple_get(&nvmem_ida, 0, 0, GFP_KERNEL);
+>     626		if (rval < 0) {
+>     627			kfree(nvmem);
+>     628			return ERR_PTR(rval);
+>     629		}
+>     630	
+>     631		kref_init(&nvmem->refcnt);
+>     632		INIT_LIST_HEAD(&nvmem->cells);
+>     633	
+>     634		nvmem->id = rval;
+>     635		nvmem->owner = config->owner;
+>     636		if (!nvmem->owner && config->dev->driver)
+>     637			nvmem->owner = config->dev->driver->owner;
+>     638		nvmem->stride = config->stride ?: 1;
+>     639		nvmem->word_size = config->word_size ?: 1;
+>     640		nvmem->size = config->size;
+>     641		nvmem->dev.type = &nvmem_provider_type;
+>     642		nvmem->dev.bus = &nvmem_bus_type;
+>     643		nvmem->dev.parent = config->dev;
+>     644		nvmem->priv = config->priv;
+>     645		nvmem->type = config->type;
+>     646		nvmem->reg_read = config->reg_read;
+>     647		nvmem->reg_write = config->reg_write;
+>     648		if (!config->no_of_node)
+>     649			nvmem->dev.of_node = config->dev->of_node;
+>     650	
+>     651		if (config->id == -1 && config->name) {
+>     652			dev_set_name(&nvmem->dev, "%s", config->name);
+>     653		} else {
+>     654			dev_set_name(&nvmem->dev, "%s%d",
+>     655				     config->name ? : "nvmem",
+>     656				     config->name ? config->id : nvmem->id);
+>     657		}
+>     658	
+>     659		nvmem->read_only = device_property_present(config->dev, "read-only") ||
+>     660				   config->read_only || !nvmem->reg_write;
+>     661	
+>   > 662		nvmem->no_read_write = of_property_read_bool(np, "no-read-write") |
+>     663				   config->read_only;
+>     664		if (config->root_only)
+>     665			nvmem->dev.groups = nvmem->read_only ?
+>     666				nvmem_ro_root_dev_groups :
+>     667				nvmem_rw_root_dev_groups;
+>     668		else
+>     669			nvmem->dev.groups = nvmem->read_only ?
+>     670				nvmem_ro_dev_groups :
+>     671				nvmem_rw_dev_groups;
+>     672	
+>     673		device_initialize(&nvmem->dev);
+>     674	
+>     675		dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
+>     676	
+>     677		rval = device_add(&nvmem->dev);
+>     678		if (rval)
+>     679			goto err_put_device;
+>     680	
+>     681		if (config->compat) {
+>     682			rval = nvmem_setup_compat(nvmem, config);
+>     683			if (rval)
+>     684				goto err_device_del;
+>     685		}
+>     686	
+>     687		if (config->cells) {
+>     688			rval = nvmem_add_cells(nvmem, config->cells, config->ncells);
+>     689			if (rval)
+>     690				goto err_teardown_compat;
+>     691		}
+>     692	
+>     693		rval = nvmem_add_cells_from_table(nvmem);
+>     694		if (rval)
+>     695			goto err_remove_cells;
+>     696	
+>     697		rval = nvmem_add_cells_from_of(nvmem);
+>     698		if (rval)
+>     699			goto err_remove_cells;
+>     700	
+>     701		blocking_notifier_call_chain(&nvmem_notifier, NVMEM_ADD, nvmem);
+>     702	
+>     703		return nvmem;
+>     704	
+>     705	err_remove_cells:
+>     706		nvmem_device_remove_all_cells(nvmem);
+>     707	err_teardown_compat:
+>     708		if (config->compat)
+>     709			device_remove_bin_file(nvmem->base_dev, &nvmem->eeprom);
+>     710	err_device_del:
+>     711		device_del(&nvmem->dev);
+>     712	err_put_device:
+>     713		put_device(&nvmem->dev);
+>     714	
+>     715		return ERR_PTR(rval);
+>     716	}
+>     717	EXPORT_SYMBOL_GPL(nvmem_register);
+>     718	
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-
-[  486.997640] kernel BUG at ./include/linux/mm.h:547!
-[  487.005524] Internal error: Oops - BUG: 0 [#1] SMP
-[  487.013455] Modules linked in: ...
-[  487.104072] CPU: 14 PID: 60747 Comm: qemu-kvm Kdump: loaded Tainted: 
-G        W         5.0.0+ #2
-[  487.117150] ...
-[  487.135433] pstate: 40400009 (nZcv daif +PAN -UAO)
-[  487.144849] pc : unmap_stage2_puds+0x480/0x6e0
-[  487.153756] lr : unmap_stage2_puds+0x480/0x6e0
-[  487.162507] sp : ffff00002c72bb10
-[  487.179630] x27: 0000000041a00000 x26: ffff8027bbb56060
-[  487.183465] openvswitch: netlink: Tunnel attr 5 has unexpected len 1 
-expected 0
-[  487.189184] x25: ffff802769cbe008 x24: ffff7e0000000000
-[  487.189185] x23: ffff802769cbe008 x22: ffff00004b0af000
-[  487.189186] x21: ffff80279da06060 x20: 00400027332007fd
-[  487.189188] x19: 0000000080000000 x18: 0000000000000010
-[  487.189189] x17: 0000000000000000 x16: 0000000000000000
-[  487.189190] x15: ffff00001182d708 x14: 3030303030303030
-[  487.189191] x13: 3030303030302066 x12: ffff000011857000
-[  487.189192] x11: 0000000000000000 x10: ffff000011a48000
-[  487.189193] x9 : 0000000000000000 x8 : 0000000000000003
-[  487.189194] x7 : 000000000000095b x6 : 0000000212557560
-[  487.189196] x3 : ffff802fc0b08260 x2 : b2513adc3568f800
-[  487.189197] x1 : 0000000000000000 x0 : 000000000000003e
-[  487.189200] Process qemu-kvm (pid: 60747, stack limit = 
-0x000000004342b298)
-[  487.189201] Call trace:
-[  487.189203]  unmap_stage2_puds+0x480/0x6e0
-[  487.189205]  unmap_stage2_range+0xa4/0x190
-[  487.189208]  kvm_free_stage2_pgd+0x64/0x100
-[  487.363897]  kvm_arch_flush_shadow_all+0x20/0x30
-[  487.372095]  kvm_mmu_notifier_release+0x3c/0x80
-[  487.380092]  __mmu_notifier_release+0x50/0x100
-[  487.387914]  exit_mmap+0x170/0x178
-[  487.394567]  mmput+0x70/0x180
-[  487.400653]  do_exit+0x2b4/0x5c8
-[  487.406849]  do_group_exit+0x3c/0xe0
---[ end trace 55c414a329c80b63 ]---
-[  487.454174] Kernel panic - not syncing: Fatal exception
-[  487.461967] SMP: stopping secondary CPUs
-[  487.468473] Kernel Offset: disabled
-[  487.474520] CPU features: 0x002,22208a38
-[  487.481008] Memory Limit: none
-[  487.489095] Starting crashdump kernel...
-[  487.495457] Bye!
-
-
-> 
-> Kind regards
-> Suzuki
-> 
-> 
-> 
-> .
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
