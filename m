@@ -5,63 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDD4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04ADC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB2121741
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5898121741
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QH0U5C36"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pY38NHGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfCQUAT (ORCPT
+        id S1727616AbfCQT77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 16:00:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41350 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727605AbfCQUAB (ORCPT
+        Sun, 17 Mar 2019 15:59:59 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43083 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbfCQT7y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 16:00:01 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p1so14741281wrs.8
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 12:59:58 -0700 (PDT)
+        Sun, 17 Mar 2019 15:59:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d17so14742179wre.10
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 12:59:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=p3bYTzNbcNRbVcnpfKvehWLqSmwZKHawJ/8LnOsjqvg=;
-        b=QH0U5C36+Yz9CudZB+P5YIIkJB4OeJIJAogoHKCfZX3eJek3xkodPpkVuOkKS9eDjK
-         LosjIGpitqXUTwFs6EecJF1hyi0VIzAAa+fe/h+M9uKMZ7MXEjBtjFYk8SibBo3HxkyR
-         ubSDyVm4NYFvIffpmxhoAEScUqRT3KHjMRMb2937nCwr8MDZ7BRBKmHG9ZbA3u+v1RX5
-         oXyUYjHeeZPFx71k4cMD6DxEM6jUadXWrk1jxpB4JtlbWgZoK85T0eap1cnO17FrFlyk
-         228HckfG3pB7WMwiDwawmib4WJWPdG5d2+Er0z/qtZDtdBUO8bAREVlabKC0TDR3x7E6
-         DVQg==
+        bh=q21XSC/5DuvqmH6ABdwDvVQDjo+eoX+7pnvnm3KbSg8=;
+        b=pY38NHGRoVCRp3Pc1BywDYKUaxgRzgbGVG1t+qZXgdA5WlTi0WUqEtdv7CGNoY6owo
+         e13HxDscKu1Y3miqFpJiCPETV6pVGZoAaolJ7BQ0NJ077IlilhlkhoFka0CJkOIiWWG5
+         6rp0czVnUOSzgfv9XFnmf1LcgIBOVqczldck2sGFqg+H4PMG3P+eqS1Ho19OvEwZgvuR
+         FNCo+LsjoFs7z2uC+HEVSStqMz+U7iDPqbMt2bqU9CPcTesBAA8M+1TPNju7WwrjiAE5
+         hWQQLaYSiO/VqUY198DziAZxy7h3CecHNwy5LH8xR2E3feT4Px3mEWYNWAlxrmak2qZV
+         UqMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=p3bYTzNbcNRbVcnpfKvehWLqSmwZKHawJ/8LnOsjqvg=;
-        b=cMmbknUtl/5piiUVA0Ij3XSijkILoZ9MXQwlvfzIWnJtmqEbetmfVbpqcRjvIl5PcD
-         GAWwXyoQeUXIFuNTQOL6FqkNxq/QSBz2a89czVhhKm+AiU87hT737cEOySA6sZiej1Io
-         jSPM2qENtPajL1wuFgoYVWGG5pEtM5IFj3J4e53scJPBHaWWlFBWCuZU2Ysw0ZFwkQK7
-         DiBmxkVuJ5Lx3cTvBWxQ+ZRXFTB8U0noxDlKBTLuyEBbvCD05n4gm2NVB4RSuf/jP3mZ
-         6qqr+TbX6HsdubTfzTC0DIn4j2Ihe8rCqnqXwEQWpv2hD8gZJlBU0A+vItlb37POPdyy
-         HkEw==
-X-Gm-Message-State: APjAAAWzdGbjbwbevf/uFeFqlY0OFAt9SREjleDIWfwM9J4xI2nLyg1b
-        zfjxbpZyS0oRc8bYDu364o5xbo4c
-X-Google-Smtp-Source: APXvYqxaSVuP6zXc+lyJyv7I43lMXFgNEgHHbtnCudJSZTLlJ1pZsb7vCIgyUgag3jaJVlZImoOBWQ==
-X-Received: by 2002:a05:6000:10c9:: with SMTP id b9mr9343904wrx.281.1552852797067;
-        Sun, 17 Mar 2019 12:59:57 -0700 (PDT)
+        bh=q21XSC/5DuvqmH6ABdwDvVQDjo+eoX+7pnvnm3KbSg8=;
+        b=aJAFV88cfFqbFc0/amf3Fv4QhgxbaceHYneXdCMibi7lCCi6m2x5SqOUDW4s7bEv6v
+         3aG6sMApfT8SdL8quOvy3CbzyNPblkg0mo+9shtAivGKmnn7wbxyl6XfUeQWvU48hT1m
+         ZbdgWmeTeX15vmfNB+k8eXM6IjiTfu5v7t6lOt07XyDSxqFPnqb39173GW5YonNI+TY5
+         oI+i0/+JlNZ2XS2tOJeNFuNRGFuZMKOsZ4/fzTWmhOfviaDs1LDle5wS0k9Sc0T7hewK
+         Y7GLWKizAWGj3Sb6SMtiY34LaqFUY7OVyFyGD+3+x3pCrMEu1yZ4FSi2EfH9zKcveRc3
+         4o9w==
+X-Gm-Message-State: APjAAAV2Wbt+NxvOCP5B6w4tCdDH2RM6B3J4DyukCkxrFSgfXqvpPCQk
+        gz2qrEp7eo0Hn/NqizXSvGiNel96
+X-Google-Smtp-Source: APXvYqxaurTx/nVxj3TK+Gslier2wcVvYJ4bKZlOdOv7cNO1FQPiv4K/9G6nXpSM7PwY5ATu/WY+Ug==
+X-Received: by 2002:a5d:4e87:: with SMTP id e7mr3370392wru.161.1552852789453;
+        Sun, 17 Mar 2019 12:59:49 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id z1sm7039785wrw.28.2019.03.17.12.59.55
+        by smtp.gmail.com with ESMTPSA id z1sm7039785wrw.28.2019.03.17.12.59.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 12:59:56 -0700 (PDT)
+        Sun, 17 Mar 2019 12:59:48 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
-Subject: [PATCH 13/15] habanalabs: add MMU shadow mapping
-Date:   Sun, 17 Mar 2019 21:59:25 +0200
-Message-Id: <20190317195927.26238-14-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org, Tomer Tayar <ttayar@habana.ai>
+Subject: [PATCH 08/15] habanalabs: Move PCI code into common file
+Date:   Sun, 17 Mar 2019 21:59:20 +0200
+Message-Id: <20190317195927.26238-9-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190317195927.26238-1-oded.gabbay@gmail.com>
 References: <20190317195927.26238-1-oded.gabbay@gmail.com>
@@ -70,1050 +69,870 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
+From: Tomer Tayar <ttayar@habana.ai>
 
-This patch adds shadow mapping to the MMU module. The shadow mapping
-allows traversing the page table in host memory rather reading each PTE
-from the device memory.
-It brings better performance and avoids reading from invalid device
-address upon PCI errors.
-Only at the end of map/unmap flow, writings to the device are performed in
-order to sync the H/W page tables with the shadow ones.
+Move duplicated PCI-related code from ASIC-specific files into the common
+pci.c file.
 
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/habanalabs.h          |  24 +-
- .../include/hw_ip/mmu/mmu_general.h           |  16 +-
- drivers/misc/habanalabs/mmu.c                 | 597 ++++++++++--------
- 3 files changed, 353 insertions(+), 284 deletions(-)
+ drivers/misc/habanalabs/Makefile              |   2 +-
+ drivers/misc/habanalabs/goya/goya.c           | 272 +------------
+ drivers/misc/habanalabs/habanalabs.h          |  20 +
+ .../include/goya/asic_reg/goya_masks.h        |  12 -
+ .../include/hw_ip/pci/pci_general.h           |  23 ++
+ drivers/misc/habanalabs/pci.c                 | 370 ++++++++++++++++++
+ 6 files changed, 434 insertions(+), 265 deletions(-)
+ create mode 100644 drivers/misc/habanalabs/include/hw_ip/pci/pci_general.h
+ create mode 100644 drivers/misc/habanalabs/pci.c
 
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 9cc841777d81..6991a7f260e8 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -51,8 +51,9 @@
+diff --git a/drivers/misc/habanalabs/Makefile b/drivers/misc/habanalabs/Makefile
+index 598740d235f8..f8e85243d672 100644
+--- a/drivers/misc/habanalabs/Makefile
++++ b/drivers/misc/habanalabs/Makefile
+@@ -6,7 +6,7 @@ obj-m	:= habanalabs.o
  
- /**
-  * struct pgt_info - MMU hop page info.
-- * @node: hash linked-list node for the pgts hash of pgts.
-- * @addr: physical address of the pgt.
-+ * @node: hash linked-list node for the pgts shadow hash of pgts.
-+ * @phys_addr: physical address of the pgt.
-+ * @shadow_addr: shadow hop in the host.
-  * @ctx: pointer to the owner ctx.
-  * @num_of_ptes: indicates how many ptes are used in the pgt.
-  *
-@@ -62,10 +63,11 @@
-  * page, it is freed with its pgt_info structure.
+ habanalabs-y := habanalabs_drv.o device.o context.o asid.o habanalabs_ioctl.o \
+ 		command_buffer.o hw_queue.o irq.o sysfs.o hwmon.o memory.o \
+-		command_submission.o mmu.o firmware_if.o
++		command_submission.o mmu.o firmware_if.o pci.o
+ 
+ habanalabs-$(CONFIG_DEBUG_FS) += debugfs.o
+ 
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 6ba0faa979bd..7e98383ec774 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -364,12 +364,13 @@ static void goya_get_fixed_properties(struct hl_device *hdev)
+ 	prop->cfg_size = CFG_SIZE;
+ 	prop->max_asid = MAX_ASID;
+ 	prop->num_of_events = GOYA_ASYNC_EVENT_ID_SIZE;
++	prop->high_pll = PLL_HIGH_DEFAULT;
+ 	prop->cb_pool_cb_cnt = GOYA_CB_POOL_CB_CNT;
+ 	prop->cb_pool_cb_size = GOYA_CB_POOL_CB_SIZE;
+ 	prop->max_power_default = MAX_POWER_DEFAULT;
+ 	prop->tpc_enabled_mask = TPC_ENABLED_MASK;
+-
+-	prop->high_pll = PLL_HIGH_DEFAULT;
++	prop->pcie_dbi_base_address = mmPCIE_DBI_BASE;
++	prop->pcie_aux_dbi_reg_addr = CFG_BASE + mmPCIE_AUX_DBI;
+ }
+ 
+ /*
+@@ -383,161 +384,20 @@ static void goya_get_fixed_properties(struct hl_device *hdev)
   */
- struct pgt_info {
--	struct hlist_node node;
--	u64 addr;
--	struct hl_ctx *ctx;
--	int num_of_ptes;
-+	struct hlist_node	node;
-+	u64			phys_addr;
-+	u64			shadow_addr;
-+	struct hl_ctx		*ctx;
-+	int			num_of_ptes;
- };
- 
- struct hl_device;
-@@ -595,7 +597,8 @@ struct hl_va_range {
-  * struct hl_ctx - user/kernel context.
-  * @mem_hash: holds mapping from virtual address to virtual memory area
-  *		descriptor (hl_vm_phys_pg_list or hl_userptr).
-- * @mmu_hash: holds a mapping from virtual address to pgt_info structure.
-+ * @mmu_phys_hash: holds a mapping from physical address to pgt_info structure.
-+ * @mmu_shadow_hash: holds a mapping from shadow address to pgt_info structure.
-  * @hpriv: pointer to the private (KMD) data of the process (fd).
-  * @hdev: pointer to the device structure.
-  * @refcount: reference counter for the context. Context is released only when
-@@ -624,7 +627,8 @@ struct hl_va_range {
-  */
- struct hl_ctx {
- 	DECLARE_HASHTABLE(mem_hash, MEM_HASH_TABLE_BITS);
--	DECLARE_HASHTABLE(mmu_hash, MMU_HASH_TABLE_BITS);
-+	DECLARE_HASHTABLE(mmu_phys_hash, MMU_HASH_TABLE_BITS);
-+	DECLARE_HASHTABLE(mmu_shadow_hash, MMU_HASH_TABLE_BITS);
- 	struct hl_fpriv		*hpriv;
- 	struct hl_device	*hdev;
- 	struct kref		refcount;
-@@ -1066,7 +1070,8 @@ struct hl_device_reset_work {
-  * @asic_specific: ASIC specific information to use only from ASIC files.
-  * @mmu_pgt_pool: pool of available MMU hops.
-  * @vm: virtual memory manager for MMU.
-- * @mmu_cache_lock: protects MMU cache invalidation as it can serve one context
-+ * @mmu_cache_lock: protects MMU cache invalidation as it can serve one context.
-+ * @mmu_shadow_hop0: shadow mapping of the MMU hop 0 zone.
-  * @hwmon_dev: H/W monitor device.
-  * @pm_mng_profile: current power management profile.
-  * @hl_chip_info: ASIC's sensors information.
-@@ -1136,6 +1141,7 @@ struct hl_device {
- 	struct gen_pool			*mmu_pgt_pool;
- 	struct hl_vm			vm;
- 	struct mutex			mmu_cache_lock;
-+	void				*mmu_shadow_hop0;
- 	struct device			*hwmon_dev;
- 	enum hl_pm_mng_profile		pm_mng_profile;
- 	struct hwmon_chip_info		*hl_chip_info;
-diff --git a/drivers/misc/habanalabs/include/hw_ip/mmu/mmu_general.h b/drivers/misc/habanalabs/include/hw_ip/mmu/mmu_general.h
-index b680052ee3f0..71ea3c3e8ba3 100644
---- a/drivers/misc/habanalabs/include/hw_ip/mmu/mmu_general.h
-+++ b/drivers/misc/habanalabs/include/hw_ip/mmu/mmu_general.h
-@@ -14,16 +14,16 @@
- #define PAGE_SIZE_4KB			(_AC(1, UL) << PAGE_SHIFT_4KB)
- #define PAGE_MASK_2MB			(~(PAGE_SIZE_2MB - 1))
- 
--#define PAGE_PRESENT_MASK		0x0000000000001
--#define SWAP_OUT_MASK			0x0000000000004
--#define LAST_MASK			0x0000000000800
--#define PHYS_ADDR_MASK			0x3FFFFFFFFF000ull
-+#define PAGE_PRESENT_MASK		0x0000000000001ull
-+#define SWAP_OUT_MASK			0x0000000000004ull
-+#define LAST_MASK			0x0000000000800ull
-+#define PHYS_ADDR_MASK			0xFFFFFFFFFFFFF000ull
- #define HOP0_MASK			0x3000000000000ull
- #define HOP1_MASK			0x0FF8000000000ull
- #define HOP2_MASK			0x0007FC0000000ull
--#define HOP3_MASK			0x000003FE00000
--#define HOP4_MASK			0x00000001FF000
--#define OFFSET_MASK			0x0000000000FFF
-+#define HOP3_MASK			0x000003FE00000ull
-+#define HOP4_MASK			0x00000001FF000ull
-+#define OFFSET_MASK			0x0000000000FFFull
- 
- #define HOP0_SHIFT			48
- #define HOP1_SHIFT			39
-@@ -32,7 +32,7 @@
- #define HOP4_SHIFT			12
- 
- #define PTE_PHYS_ADDR_SHIFT		12
--#define PTE_PHYS_ADDR_MASK		~0xFFF
-+#define PTE_PHYS_ADDR_MASK		~OFFSET_MASK
- 
- #define HL_PTE_SIZE			sizeof(u64)
- #define HOP_TABLE_SIZE			PAGE_SIZE_4KB
-diff --git a/drivers/misc/habanalabs/mmu.c b/drivers/misc/habanalabs/mmu.c
-index 3a5a2cec8305..1ca9508df5f8 100644
---- a/drivers/misc/habanalabs/mmu.c
-+++ b/drivers/misc/habanalabs/mmu.c
-@@ -11,13 +11,15 @@
- #include <linux/genalloc.h>
- #include <linux/slab.h>
- 
--static struct pgt_info *get_pgt_info(struct hl_ctx *ctx, u64 addr)
-+static inline u64 get_phys_addr(struct hl_ctx *ctx, u64 shadow_addr);
-+
-+static struct pgt_info *get_pgt_info(struct hl_ctx *ctx, u64 hop_addr)
+ static int goya_pci_bars_map(struct hl_device *hdev)
  {
- 	struct pgt_info *pgt_info = NULL;
+-	struct pci_dev *pdev = hdev->pdev;
++	static const char * const name[] = {"SRAM_CFG", "MSIX", "DDR"};
++	bool is_wc[3] = {false, false, true};
+ 	int rc;
  
--	hash_for_each_possible(ctx->mmu_hash, pgt_info, node,
--				(unsigned long) addr)
--		if (addr == pgt_info->addr)
-+	hash_for_each_possible(ctx->mmu_shadow_hash, pgt_info, node,
-+				(unsigned long) hop_addr)
-+		if (hop_addr == pgt_info->shadow_addr)
- 			break;
- 
- 	return pgt_info;
-@@ -25,45 +27,108 @@ static struct pgt_info *get_pgt_info(struct hl_ctx *ctx, u64 addr)
- 
- static void free_hop(struct hl_ctx *ctx, u64 hop_addr)
- {
-+	struct hl_device *hdev = ctx->hdev;
- 	struct pgt_info *pgt_info = get_pgt_info(ctx, hop_addr);
- 
--	gen_pool_free(pgt_info->ctx->hdev->mmu_pgt_pool, pgt_info->addr,
--			ctx->hdev->asic_prop.mmu_hop_table_size);
-+	gen_pool_free(hdev->mmu_pgt_pool, pgt_info->phys_addr,
-+			hdev->asic_prop.mmu_hop_table_size);
- 	hash_del(&pgt_info->node);
--
-+	kfree((u64 *) pgt_info->shadow_addr);
- 	kfree(pgt_info);
- }
- 
- static u64 alloc_hop(struct hl_ctx *ctx)
- {
- 	struct hl_device *hdev = ctx->hdev;
-+	struct asic_fixed_properties *prop = &hdev->asic_prop;
- 	struct pgt_info *pgt_info;
--	u64 addr;
-+	u64 phys_addr, shadow_addr;
- 
- 	pgt_info = kmalloc(sizeof(*pgt_info), GFP_KERNEL);
- 	if (!pgt_info)
- 		return ULLONG_MAX;
- 
--	addr = (u64) gen_pool_alloc(hdev->mmu_pgt_pool,
--			hdev->asic_prop.mmu_hop_table_size);
--	if (!addr) {
-+	phys_addr = (u64) gen_pool_alloc(hdev->mmu_pgt_pool,
-+					prop->mmu_hop_table_size);
-+	if (!phys_addr) {
- 		dev_err(hdev->dev, "failed to allocate page\n");
--		kfree(pgt_info);
--		return ULLONG_MAX;
-+		goto pool_add_err;
- 	}
- 
--	pgt_info->addr = addr;
-+	shadow_addr = (u64) kzalloc(prop->mmu_hop_table_size, GFP_KERNEL);
-+	if (!shadow_addr)
-+		goto shadow_err;
-+
-+	pgt_info->phys_addr = phys_addr;
-+	pgt_info->shadow_addr = shadow_addr;
- 	pgt_info->ctx = ctx;
- 	pgt_info->num_of_ptes = 0;
--	hash_add(ctx->mmu_hash, &pgt_info->node, addr);
-+	hash_add(ctx->mmu_shadow_hash, &pgt_info->node, shadow_addr);
-+
-+	return shadow_addr;
-+
-+shadow_err:
-+	gen_pool_free(hdev->mmu_pgt_pool, phys_addr, prop->mmu_hop_table_size);
-+pool_add_err:
-+	kfree(pgt_info);
-+
-+	return ULLONG_MAX;
-+}
-+
-+static inline u64 get_phys_hop0_addr(struct hl_ctx *ctx)
-+{
-+	return ctx->hdev->asic_prop.mmu_pgt_addr +
-+			(ctx->asid * ctx->hdev->asic_prop.mmu_hop_table_size);
-+}
-+
-+static inline u64 get_hop0_addr(struct hl_ctx *ctx)
-+{
-+	return (u64) (uintptr_t) ctx->hdev->mmu_shadow_hop0 +
-+			(ctx->asid * ctx->hdev->asic_prop.mmu_hop_table_size);
-+}
-+
-+static inline void flush(struct hl_ctx *ctx)
-+{
-+	/* flush all writes from all cores to reach PCI */
-+	mb();
-+	ctx->hdev->asic_funcs->read_pte(ctx->hdev, get_phys_hop0_addr(ctx));
-+}
-+
-+/* transform the value to physical address when writing to H/W */
-+static inline void write_pte(struct hl_ctx *ctx, u64 shadow_pte_addr, u64 val)
-+{
-+	/*
-+	 * The value to write is actually the address of the next shadow hop +
-+	 * flags at the 12 LSBs.
-+	 * Hence in order to get the value to write to the physical PTE, we
-+	 * clear the 12 LSBs and translate the shadow hop to its associated
-+	 * physical hop, and add back the original 12 LSBs.
-+	 */
-+	u64 phys_val = get_phys_addr(ctx, val & PTE_PHYS_ADDR_MASK) |
-+				(val & OFFSET_MASK);
-+
-+	ctx->hdev->asic_funcs->write_pte(ctx->hdev,
-+					get_phys_addr(ctx, shadow_pte_addr),
-+					phys_val);
-+
-+	*(u64 *) shadow_pte_addr = val;
-+}
- 
--	return addr;
-+/* do not transform the value to physical address when writing to H/W */
-+static inline void write_final_pte(struct hl_ctx *ctx, u64 shadow_pte_addr,
-+					u64 val)
-+{
-+	ctx->hdev->asic_funcs->write_pte(ctx->hdev,
-+					get_phys_addr(ctx, shadow_pte_addr),
-+					val);
-+	*(u64 *) shadow_pte_addr = val;
- }
- 
--static inline void clear_pte(struct hl_device *hdev, u64 pte_addr)
-+/* clear the last and present bits */
-+static inline void clear_pte(struct hl_ctx *ctx, u64 pte_addr)
- {
--	/* clear the last and present bits */
--	hdev->asic_funcs->write_pte(hdev, pte_addr, 0);
-+	/* no need to transform the value to physical address */
-+	write_final_pte(ctx, pte_addr, 0);
- }
- 
- static inline void get_pte(struct hl_ctx *ctx, u64 hop_addr)
-@@ -98,12 +163,6 @@ static inline int put_pte(struct hl_ctx *ctx, u64 hop_addr)
- 	return num_of_ptes_left;
- }
- 
--static inline u64 get_hop0_addr(struct hl_ctx *ctx)
--{
--	return ctx->hdev->asic_prop.mmu_pgt_addr +
--			(ctx->asid * ctx->hdev->asic_prop.mmu_hop_table_size);
--}
--
- static inline u64 get_hopN_pte_addr(struct hl_ctx *ctx, u64 hop_addr,
- 					u64 virt_addr, u64 mask, u64 shift)
- {
-@@ -136,7 +195,7 @@ static inline u64 get_hop4_pte_addr(struct hl_ctx *ctx, u64 hop_addr, u64 vaddr)
- 	return get_hopN_pte_addr(ctx, hop_addr, vaddr, HOP4_MASK, HOP4_SHIFT);
- }
- 
--static inline u64 get_next_hop_addr(u64 curr_pte)
-+static inline u64 get_next_hop_addr(struct hl_ctx *ctx, u64 curr_pte)
- {
- 	if (curr_pte & PAGE_PRESENT_MASK)
- 		return curr_pte & PHYS_ADDR_MASK;
-@@ -147,7 +206,7 @@ static inline u64 get_next_hop_addr(u64 curr_pte)
- static inline u64 get_alloc_next_hop_addr(struct hl_ctx *ctx, u64 curr_pte,
- 						bool *is_new_hop)
- {
--	u64 hop_addr = get_next_hop_addr(curr_pte);
-+	u64 hop_addr = get_next_hop_addr(ctx, curr_pte);
- 
- 	if (hop_addr == ULLONG_MAX) {
- 		hop_addr = alloc_hop(ctx);
-@@ -157,106 +216,30 @@ static inline u64 get_alloc_next_hop_addr(struct hl_ctx *ctx, u64 curr_pte,
- 	return hop_addr;
- }
- 
--/*
-- * hl_mmu_init - init the mmu module
-- *
-- * @hdev: pointer to the habanalabs device structure
-- *
-- * This function does the following:
-- * - Allocate max_asid zeroed hop0 pgts so no mapping is available
-- * - Enable mmu in hw
-- * - Invalidate the mmu cache
-- * - Create a pool of pages for pgts
-- * - Returns 0 on success
-- *
-- * This function depends on DMA QMAN to be working!
-- */
--int hl_mmu_init(struct hl_device *hdev)
-+/* translates shadow address inside hop to a physical address */
-+static inline u64 get_phys_addr(struct hl_ctx *ctx, u64 shadow_addr)
- {
--	struct asic_fixed_properties *prop = &hdev->asic_prop;
--	int rc;
-+	u64 page_mask = (ctx->hdev->asic_prop.mmu_hop_table_size - 1);
-+	u64 shadow_hop_addr = shadow_addr & ~page_mask;
-+	u64 pte_offset = shadow_addr & page_mask;
-+	u64 phys_hop_addr;
- 
--	if (!hdev->mmu_enable)
--		return 0;
--
--	/* MMU HW init was already done in device hw_init() */
--
--	mutex_init(&hdev->mmu_cache_lock);
--
--	hdev->mmu_pgt_pool =
--			gen_pool_create(__ffs(prop->mmu_hop_table_size), -1);
--
--	if (!hdev->mmu_pgt_pool) {
--		dev_err(hdev->dev, "Failed to create page gen pool\n");
--		rc = -ENOMEM;
--		goto err_pool_create;
--	}
--
--	rc = gen_pool_add(hdev->mmu_pgt_pool, prop->mmu_pgt_addr +
--			prop->mmu_hop0_tables_total_size,
--			prop->mmu_pgt_size - prop->mmu_hop0_tables_total_size,
--			-1);
+-	rc = pci_request_regions(pdev, HL_NAME);
 -	if (rc) {
--		dev_err(hdev->dev, "Failed to add memory to page gen pool\n");
--		goto err_pool_add;
+-		dev_err(hdev->dev, "Cannot obtain PCI resources\n");
++	rc = hl_pci_bars_map(hdev, name, is_wc);
++	if (rc)
+ 		return rc;
 -	}
+-
+-	hdev->pcie_bar[SRAM_CFG_BAR_ID] =
+-			pci_ioremap_bar(pdev, SRAM_CFG_BAR_ID);
+-	if (!hdev->pcie_bar[SRAM_CFG_BAR_ID]) {
+-		dev_err(hdev->dev, "pci_ioremap_bar failed for CFG\n");
+-		rc = -ENODEV;
+-		goto err_release_regions;
+-	}
+-
+-	hdev->pcie_bar[MSIX_BAR_ID] = pci_ioremap_bar(pdev, MSIX_BAR_ID);
+-	if (!hdev->pcie_bar[MSIX_BAR_ID]) {
+-		dev_err(hdev->dev, "pci_ioremap_bar failed for MSIX\n");
+-		rc = -ENODEV;
+-		goto err_unmap_sram_cfg;
+-	}
+-
+-	hdev->pcie_bar[DDR_BAR_ID] = pci_ioremap_wc_bar(pdev, DDR_BAR_ID);
+-	if (!hdev->pcie_bar[DDR_BAR_ID]) {
+-		dev_err(hdev->dev, "pci_ioremap_bar failed for DDR\n");
+-		rc = -ENODEV;
+-		goto err_unmap_msix;
+-	}
+ 
+ 	hdev->rmmio = hdev->pcie_bar[SRAM_CFG_BAR_ID] +
+-				(CFG_BASE - SRAM_BASE_ADDR);
 -
 -	return 0;
 -
--err_pool_add:
--	gen_pool_destroy(hdev->mmu_pgt_pool);
--err_pool_create:
--	mutex_destroy(&hdev->mmu_cache_lock);
-+	if (shadow_hop_addr != get_hop0_addr(ctx))
-+		phys_hop_addr = get_pgt_info(ctx, shadow_hop_addr)->phys_addr;
-+	else
-+		phys_hop_addr = get_phys_hop0_addr(ctx);
- 
+-err_unmap_msix:
+-	iounmap(hdev->pcie_bar[MSIX_BAR_ID]);
+-err_unmap_sram_cfg:
+-	iounmap(hdev->pcie_bar[SRAM_CFG_BAR_ID]);
+-err_release_regions:
+-	pci_release_regions(pdev);
+-
 -	return rc;
-+	return phys_hop_addr + pte_offset;
- }
- 
--/*
-- * hl_mmu_fini - release the mmu module.
-- *
-- * @hdev: pointer to the habanalabs device structure
-- *
-- * This function does the following:
-- * - Disable mmu in hw
-- * - free the pgts pool
-- *
-- * All ctxs should be freed before calling this func
-- */
--void hl_mmu_fini(struct hl_device *hdev)
--{
--	if (!hdev->mmu_enable)
--		return;
--
--	gen_pool_destroy(hdev->mmu_pgt_pool);
--
--	mutex_destroy(&hdev->mmu_cache_lock);
--
--	/* MMU HW fini will be done in device hw_fini() */
 -}
 -
--/**
-- * hl_mmu_ctx_init() - initialize a context for using the MMU module.
-- * @ctx: pointer to the context structure to initialize.
+-/*
+- * goya_pci_bars_unmap - Unmap PCI BARS of Goya device
 - *
-- * Initialize a mutex to protect the concurrent mapping flow, a hash to hold all
-- * page tables hops related to this context and an optional DRAM default page
-- * mapping.
-- * Return: 0 on success, non-zero otherwise.
+- * @hdev: pointer to hl_device structure
+- *
+- * Release all PCI BARS and unmap their virtual addresses
+- *
 - */
--int hl_mmu_ctx_init(struct hl_ctx *ctx)
-+static int dram_default_mapping_init(struct hl_ctx *ctx)
- {
- 	struct hl_device *hdev = ctx->hdev;
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
--	u64 num_of_hop3, total_hops, hop1_addr, hop2_addr, hop2_pte_addr,
--		hop3_pte_addr, pte_val;
-+	u64 num_of_hop3, total_hops, hop0_addr, hop1_addr, hop2_addr,
-+		hop2_pte_addr, hop3_pte_addr, pte_val;
- 	int rc, i, j, hop3_allocated = 0;
- 
--	if (!hdev->mmu_enable)
+-static void goya_pci_bars_unmap(struct hl_device *hdev)
+-{
+-	struct pci_dev *pdev = hdev->pdev;
+-
+-	iounmap(hdev->pcie_bar[DDR_BAR_ID]);
+-	iounmap(hdev->pcie_bar[MSIX_BAR_ID]);
+-	iounmap(hdev->pcie_bar[SRAM_CFG_BAR_ID]);
+-	pci_release_regions(pdev);
+-}
+-
+-/*
+- * goya_elbi_write - Write through the ELBI interface
+- *
+- * @hdev: pointer to hl_device structure
+- *
+- * return 0 on success, -1 on failure
+- *
+- */
+-static int goya_elbi_write(struct hl_device *hdev, u64 addr, u32 data)
+-{
+-	struct pci_dev *pdev = hdev->pdev;
+-	ktime_t timeout;
+-	u32 val;
+-
+-	/* Clear previous status */
+-	pci_write_config_dword(pdev, mmPCI_CONFIG_ELBI_STS, 0);
+-
+-	pci_write_config_dword(pdev, mmPCI_CONFIG_ELBI_ADDR, (u32) addr);
+-	pci_write_config_dword(pdev, mmPCI_CONFIG_ELBI_DATA, data);
+-	pci_write_config_dword(pdev, mmPCI_CONFIG_ELBI_CTRL,
+-				PCI_CONFIG_ELBI_CTRL_WRITE);
+-
+-	timeout = ktime_add_ms(ktime_get(), 10);
+-	for (;;) {
+-		pci_read_config_dword(pdev, mmPCI_CONFIG_ELBI_STS, &val);
+-		if (val & PCI_CONFIG_ELBI_STS_MASK)
+-			break;
+-		if (ktime_compare(ktime_get(), timeout) > 0) {
+-			pci_read_config_dword(pdev, mmPCI_CONFIG_ELBI_STS,
+-						&val);
+-			break;
+-		}
+-		usleep_range(300, 500);
+-	}
+-
+-	if ((val & PCI_CONFIG_ELBI_STS_MASK) == PCI_CONFIG_ELBI_STS_DONE)
 -		return 0;
 -
--	mutex_init(&ctx->mmu_lock);
--	hash_init(ctx->mmu_hash);
--
- 	if (!hdev->dram_supports_virtual_memory ||
- 			!hdev->dram_default_page_mapping)
- 		return 0;
-@@ -269,10 +252,10 @@ int hl_mmu_ctx_init(struct hl_ctx *ctx)
- 	total_hops = num_of_hop3 + 2;
- 
- 	ctx->dram_default_hops = kzalloc(HL_PTE_SIZE * total_hops,  GFP_KERNEL);
--	if (!ctx->dram_default_hops) {
--		rc = -ENOMEM;
--		goto alloc_err;
+-	if (val & PCI_CONFIG_ELBI_STS_ERR) {
+-		dev_err(hdev->dev, "Error writing to ELBI\n");
+-		return -EIO;
 -	}
-+	if (!ctx->dram_default_hops)
-+		return -ENOMEM;
-+
-+	hop0_addr = get_hop0_addr(ctx);
- 
- 	hop1_addr = alloc_hop(ctx);
- 	if (hop1_addr == ULLONG_MAX) {
-@@ -304,17 +287,17 @@ int hl_mmu_ctx_init(struct hl_ctx *ctx)
- 
- 	/* need only pte 0 in hops 0 and 1 */
- 	pte_val = (hop1_addr & PTE_PHYS_ADDR_MASK) | PAGE_PRESENT_MASK;
--	hdev->asic_funcs->write_pte(hdev, get_hop0_addr(ctx), pte_val);
-+	write_pte(ctx, hop0_addr, pte_val);
- 
- 	pte_val = (hop2_addr & PTE_PHYS_ADDR_MASK) | PAGE_PRESENT_MASK;
--	hdev->asic_funcs->write_pte(hdev, hop1_addr, pte_val);
-+	write_pte(ctx, hop1_addr, pte_val);
- 	get_pte(ctx, hop1_addr);
- 
- 	hop2_pte_addr = hop2_addr;
- 	for (i = 0 ; i < num_of_hop3 ; i++) {
- 		pte_val = (ctx->dram_default_hops[i] & PTE_PHYS_ADDR_MASK) |
- 				PAGE_PRESENT_MASK;
--		hdev->asic_funcs->write_pte(hdev, hop2_pte_addr, pte_val);
-+		write_pte(ctx, hop2_pte_addr, pte_val);
- 		get_pte(ctx, hop2_addr);
- 		hop2_pte_addr += HL_PTE_SIZE;
- 	}
-@@ -325,33 +308,182 @@ int hl_mmu_ctx_init(struct hl_ctx *ctx)
- 	for (i = 0 ; i < num_of_hop3 ; i++) {
- 		hop3_pte_addr = ctx->dram_default_hops[i];
- 		for (j = 0 ; j < PTE_ENTRIES_IN_HOP ; j++) {
--			hdev->asic_funcs->write_pte(hdev, hop3_pte_addr,
--					pte_val);
-+			write_final_pte(ctx, hop3_pte_addr, pte_val);
- 			get_pte(ctx, ctx->dram_default_hops[i]);
- 			hop3_pte_addr += HL_PTE_SIZE;
- 		}
- 	}
- 
--	/* flush all writes to reach PCI */
--	mb();
--	hdev->asic_funcs->read_pte(hdev, hop2_addr);
-+	flush(ctx);
+-
+-	if (!(val & PCI_CONFIG_ELBI_STS_MASK)) {
+-		dev_err(hdev->dev, "ELBI write didn't finish in time\n");
+-		return -EIO;
+-	}
+-
+-	dev_err(hdev->dev, "ELBI write has undefined bits in status\n");
+-	return -EIO;
+-}
+-
+-/*
+- * goya_iatu_write - iatu write routine
+- *
+- * @hdev: pointer to hl_device structure
+- *
+- */
+-static int goya_iatu_write(struct hl_device *hdev, u32 addr, u32 data)
+-{
+-	u32 dbi_offset;
+-	int rc;
+-
+-	dbi_offset = addr & 0xFFF;
+-
+-	rc = goya_elbi_write(hdev, CFG_BASE + mmPCIE_AUX_DBI, 0x00300000);
+-	rc |= goya_elbi_write(hdev, mmPCIE_DBI_BASE + dbi_offset, data);
+-
+-	if (rc)
+-		return -EIO;
++			(CFG_BASE - SRAM_BASE_ADDR);
  
  	return 0;
- 
- hop3_err:
- 	for (i = 0 ; i < hop3_allocated ; i++)
- 		free_hop(ctx, ctx->dram_default_hops[i]);
-+
- 	free_hop(ctx, hop2_addr);
- hop2_err:
- 	free_hop(ctx, hop1_addr);
- hop1_err:
- 	kfree(ctx->dram_default_hops);
--alloc_err:
--	mutex_destroy(&ctx->mmu_lock);
- 
- 	return rc;
  }
  
-+static void dram_default_mapping_fini(struct hl_ctx *ctx)
-+{
-+	struct hl_device *hdev = ctx->hdev;
-+	struct asic_fixed_properties *prop = &hdev->asic_prop;
-+	u64 num_of_hop3, total_hops, hop0_addr, hop1_addr, hop2_addr,
-+		hop2_pte_addr, hop3_pte_addr;
-+	int i, j;
+-static void goya_reset_link_through_bridge(struct hl_device *hdev)
+-{
+-	struct pci_dev *pdev = hdev->pdev;
+-	struct pci_dev *parent_port;
+-	u16 val;
+-
+-	parent_port = pdev->bus->self;
+-	pci_read_config_word(parent_port, PCI_BRIDGE_CONTROL, &val);
+-	val |= PCI_BRIDGE_CTL_BUS_RESET;
+-	pci_write_config_word(parent_port, PCI_BRIDGE_CONTROL, val);
+-	ssleep(1);
+-
+-	val &= ~(PCI_BRIDGE_CTL_BUS_RESET);
+-	pci_write_config_word(parent_port, PCI_BRIDGE_CONTROL, val);
+-	ssleep(3);
+-}
+-
+ /*
+  * goya_set_ddr_bar_base - set DDR bar to map specific device address
+  *
+@@ -557,20 +417,9 @@ static int goya_set_ddr_bar_base(struct hl_device *hdev, u64 addr)
+ 		return 0;
+ 
+ 	/* Inbound Region 1 - Bar 4 - Point to DDR */
+-	rc = goya_iatu_write(hdev, 0x314, lower_32_bits(addr));
+-	rc |= goya_iatu_write(hdev, 0x318, upper_32_bits(addr));
+-	rc |= goya_iatu_write(hdev, 0x300, 0);
+-	/* Enable + Bar match + match enable + Bar 4 */
+-	rc |= goya_iatu_write(hdev, 0x304, 0xC0080400);
+-
+-	/* Return the DBI window to the default location */
+-	rc |= goya_elbi_write(hdev, CFG_BASE + mmPCIE_AUX_DBI, 0);
+-	rc |= goya_elbi_write(hdev, CFG_BASE + mmPCIE_AUX_DBI_32, 0);
+-
+-	if (rc) {
+-		dev_err(hdev->dev, "failed to map DDR bar to 0x%08llx\n", addr);
+-		return -EIO;
+-	}
++	rc = hl_pci_set_dram_bar_base(hdev, 1, 4, addr);
++	if (rc)
++		return rc;
+ 
+ 	if (goya)
+ 		goya->ddr_bar_cur_addr = addr;
+@@ -588,40 +437,8 @@ static int goya_set_ddr_bar_base(struct hl_device *hdev, u64 addr)
+  */
+ static int goya_init_iatu(struct hl_device *hdev)
+ {
+-	int rc;
+-
+-	/* Inbound Region 0 - Bar 0 - Point to SRAM_BASE_ADDR */
+-	rc  = goya_iatu_write(hdev, 0x114, lower_32_bits(SRAM_BASE_ADDR));
+-	rc |= goya_iatu_write(hdev, 0x118, upper_32_bits(SRAM_BASE_ADDR));
+-	rc |= goya_iatu_write(hdev, 0x100, 0);
+-	/* Enable + Bar match + match enable */
+-	rc |= goya_iatu_write(hdev, 0x104, 0xC0080000);
+-
+-	/* Inbound Region 1 - Bar 4 - Point to DDR */
+-	rc |= goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE);
+-
+-	/* Outbound Region 0 - Point to Host */
+-	rc |= goya_iatu_write(hdev, 0x008, lower_32_bits(HOST_PHYS_BASE));
+-	rc |= goya_iatu_write(hdev, 0x00C, upper_32_bits(HOST_PHYS_BASE));
+-	rc |= goya_iatu_write(hdev, 0x010,
+-		lower_32_bits(HOST_PHYS_BASE + HOST_PHYS_SIZE - 1));
+-	rc |= goya_iatu_write(hdev, 0x014, 0);
+-	rc |= goya_iatu_write(hdev, 0x018, 0);
+-	rc |= goya_iatu_write(hdev, 0x020,
+-		upper_32_bits(HOST_PHYS_BASE + HOST_PHYS_SIZE - 1));
+-	/* Increase region size */
+-	rc |= goya_iatu_write(hdev, 0x000, 0x00002000);
+-	/* Enable */
+-	rc |= goya_iatu_write(hdev, 0x004, 0x80000000);
+-
+-	/* Return the DBI window to the default location */
+-	rc |= goya_elbi_write(hdev, CFG_BASE + mmPCIE_AUX_DBI, 0);
+-	rc |= goya_elbi_write(hdev, CFG_BASE + mmPCIE_AUX_DBI_32, 0);
+-
+-	if (rc)
+-		return -EIO;
+-
+-	return 0;
++	return hl_pci_init_iatu(hdev, SRAM_BASE_ADDR, DRAM_PHYS_BASE,
++				HOST_PHYS_SIZE);
+ }
+ 
+ /*
+@@ -667,52 +484,9 @@ static int goya_early_init(struct hl_device *hdev)
+ 
+ 	prop->dram_pci_bar_size = pci_resource_len(pdev, DDR_BAR_ID);
+ 
+-	/* set DMA mask for GOYA */
+-	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(39));
+-	if (rc) {
+-		dev_warn(hdev->dev, "Unable to set pci dma mask to 39 bits\n");
+-		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
+-		if (rc) {
+-			dev_err(hdev->dev,
+-				"Unable to set pci dma mask to 32 bits\n");
+-			return rc;
+-		}
+-	}
+-
+-	rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(39));
+-	if (rc) {
+-		dev_warn(hdev->dev,
+-			"Unable to set pci consistent dma mask to 39 bits\n");
+-		rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
+-		if (rc) {
+-			dev_err(hdev->dev,
+-				"Unable to set pci consistent dma mask to 32 bits\n");
+-			return rc;
+-		}
+-	}
+-
+-	if (hdev->reset_pcilink)
+-		goya_reset_link_through_bridge(hdev);
+-
+-	rc = pci_enable_device_mem(pdev);
+-	if (rc) {
+-		dev_err(hdev->dev, "can't enable PCI device\n");
++	rc = hl_pci_init(hdev);
++	if (rc)
+ 		return rc;
+-	}
+-
+-	pci_set_master(pdev);
+-
+-	rc = goya_init_iatu(hdev);
+-	if (rc) {
+-		dev_err(hdev->dev, "Failed to initialize iATU\n");
+-		goto disable_device;
+-	}
+-
+-	rc = goya_pci_bars_map(hdev);
+-	if (rc) {
+-		dev_err(hdev->dev, "Failed to initialize PCI BARS\n");
+-		goto disable_device;
+-	}
+ 
+ 	if (!hdev->pldm) {
+ 		val = RREG32(mmPSOC_GLOBAL_CONF_BOOT_STRAP_PINS);
+@@ -722,12 +496,6 @@ static int goya_early_init(struct hl_device *hdev)
+ 	}
+ 
+ 	return 0;
+-
+-disable_device:
+-	pci_clear_master(pdev);
+-	pci_disable_device(pdev);
+-
+-	return rc;
+ }
+ 
+ /*
+@@ -740,10 +508,7 @@ static int goya_early_init(struct hl_device *hdev)
+  */
+ static int goya_early_fini(struct hl_device *hdev)
+ {
+-	goya_pci_bars_unmap(hdev);
+-
+-	pci_clear_master(hdev->pdev);
+-	pci_disable_device(hdev->pdev);
++	hl_pci_fini(hdev);
+ 
+ 	return 0;
+ }
+@@ -5072,7 +4837,10 @@ static const struct hl_asic_funcs goya_funcs = {
+ 	.get_pci_id = goya_get_pci_id,
+ 	.get_eeprom_data = goya_get_eeprom_data,
+ 	.send_cpu_message = goya_send_cpu_message,
+-	.get_hw_state = goya_get_hw_state
++	.get_hw_state = goya_get_hw_state,
++	.pci_bars_map = goya_pci_bars_map,
++	.set_dram_bar_base = goya_set_ddr_bar_base,
++	.init_iatu = goya_init_iatu
+ };
+ 
+ /*
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 1445ba1cafd4..ed3649d38ff8 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -148,6 +148,8 @@ enum hl_device_hw_state {
+  *                             mapping DRAM memory.
+  * @dram_size_for_default_page_mapping: DRAM size needed to map to avoid page
+  *                                      fault.
++ * @pcie_dbi_base_address: Base address of the PCIE_DBI block.
++ * @pcie_aux_dbi_reg_addr: Address of the PCIE_AUX DBI register.
+  * @mmu_pgt_addr: base physical address in DRAM of MMU page tables.
+  * @mmu_dram_default_page_addr: DRAM default page physical address.
+  * @mmu_pgt_size: MMU page tables total size.
+@@ -189,6 +191,8 @@ struct asic_fixed_properties {
+ 	u64			va_space_dram_start_address;
+ 	u64			va_space_dram_end_address;
+ 	u64			dram_size_for_default_page_mapping;
++	u64			pcie_dbi_base_address;
++	u64			pcie_aux_dbi_reg_addr;
+ 	u64			mmu_pgt_addr;
+ 	u64			mmu_dram_default_page_addr;
+ 	u32			mmu_pgt_size;
+@@ -485,6 +489,9 @@ enum hl_pll_frequency {
+  * @get_eeprom_data: retrieve EEPROM data from F/W.
+  * @send_cpu_message: send buffer to ArmCP.
+  * @get_hw_state: retrieve the H/W state
++ * @pci_bars_map: Map PCI BARs.
++ * @set_dram_bar_base: Set DRAM BAR to map specific device address.
++ * @init_iatu: Initialize the iATU unit inside the PCI controller.
+  */
+ struct hl_asic_funcs {
+ 	int (*early_init)(struct hl_device *hdev);
+@@ -558,6 +565,9 @@ struct hl_asic_funcs {
+ 	int (*send_cpu_message)(struct hl_device *hdev, u32 *msg,
+ 				u16 len, u32 timeout, long *result);
+ 	enum hl_device_hw_state (*get_hw_state)(struct hl_device *hdev);
++	int (*pci_bars_map)(struct hl_device *hdev);
++	int (*set_dram_bar_base)(struct hl_device *hdev, u64 addr);
++	int (*init_iatu)(struct hl_device *hdev);
+ };
+ 
+ 
+@@ -1368,6 +1378,16 @@ int hl_fw_send_heartbeat(struct hl_device *hdev);
+ int hl_fw_armcp_info_get(struct hl_device *hdev);
+ int hl_fw_get_eeprom_data(struct hl_device *hdev, void *data, size_t max_size);
+ 
++int hl_pci_bars_map(struct hl_device *hdev, const char * const name[3],
++			bool is_wc[3]);
++int hl_pci_iatu_write(struct hl_device *hdev, u32 addr, u32 data);
++int hl_pci_set_dram_bar_base(struct hl_device *hdev, u8 inbound_region, u8 bar,
++				u64 addr);
++int hl_pci_init_iatu(struct hl_device *hdev, u64 sram_base_address,
++			u64 dram_base_address, u64 host_phys_size);
++int hl_pci_init(struct hl_device *hdev);
++void hl_pci_fini(struct hl_device *hdev);
 +
-+	if (!hdev->dram_supports_virtual_memory ||
-+			!hdev->dram_default_page_mapping)
-+		return;
+ long hl_get_frequency(struct hl_device *hdev, u32 pll_index, bool curr);
+ void hl_set_frequency(struct hl_device *hdev, u32 pll_index, u64 freq);
+ long hl_get_temperature(struct hl_device *hdev, int sensor_index, u32 attr);
+diff --git a/drivers/misc/habanalabs/include/goya/asic_reg/goya_masks.h b/drivers/misc/habanalabs/include/goya/asic_reg/goya_masks.h
+index a161ecfe74de..8618891d5afa 100644
+--- a/drivers/misc/habanalabs/include/goya/asic_reg/goya_masks.h
++++ b/drivers/misc/habanalabs/include/goya/asic_reg/goya_masks.h
+@@ -189,18 +189,6 @@
+ 			1 << CPU_CA53_CFG_ARM_RST_CONTROL_NL2RESET_SHIFT |\
+ 			1 << CPU_CA53_CFG_ARM_RST_CONTROL_NMBISTRESET_SHIFT)
+ 
+-/* PCI CONFIGURATION SPACE */
+-#define mmPCI_CONFIG_ELBI_ADDR		0xFF0
+-#define mmPCI_CONFIG_ELBI_DATA		0xFF4
+-#define mmPCI_CONFIG_ELBI_CTRL		0xFF8
+-#define PCI_CONFIG_ELBI_CTRL_WRITE	(1 << 31)
+-
+-#define mmPCI_CONFIG_ELBI_STS		0xFFC
+-#define PCI_CONFIG_ELBI_STS_ERR		(1 << 30)
+-#define PCI_CONFIG_ELBI_STS_DONE	(1 << 31)
+-#define PCI_CONFIG_ELBI_STS_MASK	(PCI_CONFIG_ELBI_STS_ERR | \
+-					PCI_CONFIG_ELBI_STS_DONE)
+-
+ #define GOYA_IRQ_HBW_ID_MASK			0x1FFF
+ #define GOYA_IRQ_HBW_ID_SHIFT			0
+ #define GOYA_IRQ_HBW_INTERNAL_ID_MASK		0xE000
+diff --git a/drivers/misc/habanalabs/include/hw_ip/pci/pci_general.h b/drivers/misc/habanalabs/include/hw_ip/pci/pci_general.h
+new file mode 100644
+index 000000000000..d232081d4e0f
+--- /dev/null
++++ b/drivers/misc/habanalabs/include/hw_ip/pci/pci_general.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright 2016-2019 HabanaLabs, Ltd.
++ * All Rights Reserved.
++ *
++ */
 +
-+	num_of_hop3 = prop->dram_size_for_default_page_mapping;
-+	do_div(num_of_hop3, prop->dram_page_size);
-+	do_div(num_of_hop3, PTE_ENTRIES_IN_HOP);
++#ifndef INCLUDE_PCI_GENERAL_H_
++#define INCLUDE_PCI_GENERAL_H_
 +
-+	hop0_addr = get_hop0_addr(ctx);
-+	/* add hop1 and hop2 */
-+	total_hops = num_of_hop3 + 2;
-+	hop1_addr = ctx->dram_default_hops[total_hops - 1];
-+	hop2_addr = ctx->dram_default_hops[total_hops - 2];
++/* PCI CONFIGURATION SPACE */
++#define mmPCI_CONFIG_ELBI_ADDR		0xFF0
++#define mmPCI_CONFIG_ELBI_DATA		0xFF4
++#define mmPCI_CONFIG_ELBI_CTRL		0xFF8
++#define PCI_CONFIG_ELBI_CTRL_WRITE	(1 << 31)
 +
-+	for (i = 0 ; i < num_of_hop3 ; i++) {
-+		hop3_pte_addr = ctx->dram_default_hops[i];
-+		for (j = 0 ; j < PTE_ENTRIES_IN_HOP ; j++) {
-+			clear_pte(ctx, hop3_pte_addr);
-+			put_pte(ctx, ctx->dram_default_hops[i]);
-+			hop3_pte_addr += HL_PTE_SIZE;
-+		}
-+	}
++#define mmPCI_CONFIG_ELBI_STS		0xFFC
++#define PCI_CONFIG_ELBI_STS_ERR		(1 << 30)
++#define PCI_CONFIG_ELBI_STS_DONE	(1 << 31)
++#define PCI_CONFIG_ELBI_STS_MASK	(PCI_CONFIG_ELBI_STS_ERR | \
++					PCI_CONFIG_ELBI_STS_DONE)
 +
-+	hop2_pte_addr = hop2_addr;
-+	hop2_pte_addr = hop2_addr;
-+	for (i = 0 ; i < num_of_hop3 ; i++) {
-+		clear_pte(ctx, hop2_pte_addr);
-+		put_pte(ctx, hop2_addr);
-+		hop2_pte_addr += HL_PTE_SIZE;
-+	}
++#endif /* INCLUDE_PCI_GENERAL_H_ */
+diff --git a/drivers/misc/habanalabs/pci.c b/drivers/misc/habanalabs/pci.c
+new file mode 100644
+index 000000000000..822ac110b997
+--- /dev/null
++++ b/drivers/misc/habanalabs/pci.c
+@@ -0,0 +1,370 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+	clear_pte(ctx, hop1_addr);
-+	put_pte(ctx, hop1_addr);
-+	clear_pte(ctx, hop0_addr);
++/*
++ * Copyright 2016-2019 HabanaLabs, Ltd.
++ * All Rights Reserved.
++ */
 +
-+	kfree(ctx->dram_default_hops);
++#include "habanalabs.h"
++#include "include/hw_ip/pci/pci_general.h"
 +
-+	flush(ctx);
-+}
++#include <linux/pci.h>
 +
 +/**
-+ * hl_mmu_init() - initialize the MMU module.
-+ * @hdev: habanalabs device structure.
++ * hl_pci_bars_map() - Map PCI BARs.
++ * @hdev: Pointer to hl_device structure.
++ * @bar_name: Array of BAR names.
++ * @is_wc: Array with flag per BAR whether a write-combined mapping is needed.
 + *
-+ * This function does the following:
-+ * - Allocate max_asid zeroed hop0 pgts so no mapping is available.
-+ * - Enable MMU in H/W.
-+ * - Invalidate the MMU cache.
-+ * - Create a pool of pages for pgt_infos.
++ * Request PCI regions and map them to kernel virtual addresses.
 + *
-+ * This function depends on DMA QMAN to be working!
-+ *
-+ * Return: 0 for success, non-zero for failure.
++ * Return: 0 on success, non-zero for failure.
 + */
-+int hl_mmu_init(struct hl_device *hdev)
++int hl_pci_bars_map(struct hl_device *hdev, const char * const name[3],
++			bool is_wc[3])
 +{
-+	struct asic_fixed_properties *prop = &hdev->asic_prop;
-+	int rc;
++	struct pci_dev *pdev = hdev->pdev;
++	int rc, i, bar;
 +
-+	if (!hdev->mmu_enable)
-+		return 0;
-+
-+	/* MMU H/W init was already done in device hw_init() */
-+
-+	mutex_init(&hdev->mmu_cache_lock);
-+
-+	hdev->mmu_pgt_pool =
-+			gen_pool_create(__ffs(prop->mmu_hop_table_size), -1);
-+
-+	if (!hdev->mmu_pgt_pool) {
-+		dev_err(hdev->dev, "Failed to create page gen pool\n");
-+		rc = -ENOMEM;
-+		goto err_pool_create;
-+	}
-+
-+	rc = gen_pool_add(hdev->mmu_pgt_pool, prop->mmu_pgt_addr +
-+			prop->mmu_hop0_tables_total_size,
-+			prop->mmu_pgt_size - prop->mmu_hop0_tables_total_size,
-+			-1);
++	rc = pci_request_regions(pdev, HL_NAME);
 +	if (rc) {
-+		dev_err(hdev->dev, "Failed to add memory to page gen pool\n");
-+		goto err_pool_add;
++		dev_err(hdev->dev, "Cannot obtain PCI resources\n");
++		return rc;
 +	}
 +
-+	hdev->mmu_shadow_hop0 = kcalloc(prop->max_asid,
-+					prop->mmu_hop_table_size, GFP_KERNEL);
-+	if (!hdev->mmu_shadow_hop0) {
-+		rc = -ENOMEM;
-+		goto err_pool_add;
++	for (i = 0 ; i < 3 ; i++) {
++		bar = i * 2; /* 64-bit BARs */
++		hdev->pcie_bar[bar] = is_wc[i] ?
++				pci_ioremap_wc_bar(pdev, bar) :
++				pci_ioremap_bar(pdev, bar);
++		if (!hdev->pcie_bar[bar]) {
++			dev_err(hdev->dev, "pci_ioremap%s_bar failed for %s\n",
++					is_wc[i] ? "_wc" : "", name[i]);
++			rc = -ENODEV;
++			goto err;
++		}
 +	}
 +
 +	return 0;
 +
-+err_pool_add:
-+	gen_pool_destroy(hdev->mmu_pgt_pool);
-+err_pool_create:
-+	mutex_destroy(&hdev->mmu_cache_lock);
++err:
++	for (i = 2 ; i >= 0 ; i--) {
++		bar = i * 2; /* 64-bit BARs */
++		if (hdev->pcie_bar[bar])
++			iounmap(hdev->pcie_bar[bar]);
++	}
++
++	pci_release_regions(pdev);
++
++	return rc;
++}
++
++/*
++ * hl_pci_bars_unmap() - Unmap PCI BARS.
++ * @hdev: Pointer to hl_device structure.
++ *
++ * Release all PCI BARs and unmap their virtual addresses.
++ */
++static void hl_pci_bars_unmap(struct hl_device *hdev)
++{
++	struct pci_dev *pdev = hdev->pdev;
++	int i, bar;
++
++	for (i = 2 ; i >= 0 ; i--) {
++		bar = i * 2; /* 64-bit BARs */
++		iounmap(hdev->pcie_bar[bar]);
++	}
++
++	pci_release_regions(pdev);
++}
++
++/*
++ * hl_pci_elbi_write() - Write through the ELBI interface.
++ * @hdev: Pointer to hl_device structure.
++ *
++ * Return: 0 on success, negative value for failure.
++ */
++static int hl_pci_elbi_write(struct hl_device *hdev, u64 addr, u32 data)
++{
++	struct pci_dev *pdev = hdev->pdev;
++	ktime_t timeout;
++	u32 val;
++
++	/* Clear previous status */
++	pci_write_config_dword(pdev, mmPCI_CONFIG_ELBI_STS, 0);
++
++	pci_write_config_dword(pdev, mmPCI_CONFIG_ELBI_ADDR, (u32) addr);
++	pci_write_config_dword(pdev, mmPCI_CONFIG_ELBI_DATA, data);
++	pci_write_config_dword(pdev, mmPCI_CONFIG_ELBI_CTRL,
++				PCI_CONFIG_ELBI_CTRL_WRITE);
++
++	timeout = ktime_add_ms(ktime_get(), 10);
++	for (;;) {
++		pci_read_config_dword(pdev, mmPCI_CONFIG_ELBI_STS, &val);
++		if (val & PCI_CONFIG_ELBI_STS_MASK)
++			break;
++		if (ktime_compare(ktime_get(), timeout) > 0) {
++			pci_read_config_dword(pdev, mmPCI_CONFIG_ELBI_STS,
++						&val);
++			break;
++		}
++
++		usleep_range(300, 500);
++	}
++
++	if ((val & PCI_CONFIG_ELBI_STS_MASK) == PCI_CONFIG_ELBI_STS_DONE)
++		return 0;
++
++	if (val & PCI_CONFIG_ELBI_STS_ERR) {
++		dev_err(hdev->dev, "Error writing to ELBI\n");
++		return -EIO;
++	}
++
++	if (!(val & PCI_CONFIG_ELBI_STS_MASK)) {
++		dev_err(hdev->dev, "ELBI write didn't finish in time\n");
++		return -EIO;
++	}
++
++	dev_err(hdev->dev, "ELBI write has undefined bits in status\n");
++	return -EIO;
++}
++
++/**
++ * hl_pci_iatu_write() - iatu write routine.
++ * @hdev: Pointer to hl_device structure.
++ *
++ * Return: 0 on success, negative value for failure.
++ */
++int hl_pci_iatu_write(struct hl_device *hdev, u32 addr, u32 data)
++{
++	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	u32 dbi_offset;
++	int rc;
++
++	dbi_offset = addr & 0xFFF;
++
++	rc = hl_pci_elbi_write(hdev, prop->pcie_aux_dbi_reg_addr, 0x00300000);
++	rc |= hl_pci_elbi_write(hdev, prop->pcie_dbi_base_address + dbi_offset,
++				data);
++
++	if (rc)
++		return -EIO;
++
++	return 0;
++}
++
++/*
++ * hl_pci_reset_link_through_bridge() - Reset PCI link.
++ * @hdev: Pointer to hl_device structure.
++ */
++static void hl_pci_reset_link_through_bridge(struct hl_device *hdev)
++{
++	struct pci_dev *pdev = hdev->pdev;
++	struct pci_dev *parent_port;
++	u16 val;
++
++	parent_port = pdev->bus->self;
++	pci_read_config_word(parent_port, PCI_BRIDGE_CONTROL, &val);
++	val |= PCI_BRIDGE_CTL_BUS_RESET;
++	pci_write_config_word(parent_port, PCI_BRIDGE_CONTROL, val);
++	ssleep(1);
++
++	val &= ~(PCI_BRIDGE_CTL_BUS_RESET);
++	pci_write_config_word(parent_port, PCI_BRIDGE_CONTROL, val);
++	ssleep(3);
++}
++
++/**
++ * hl_pci_set_dram_bar_base() - Set DDR BAR to map specific device address.
++ * @hdev: Pointer to hl_device structure.
++ * @inbound_region: Inbound region number.
++ * @bar: PCI BAR number.
++ * @addr: Address in DRAM. Must be aligned to DRAM bar size.
++ *
++ * Configure the iATU so that the DRAM bar will start at the specified address.
++ *
++ * Return: 0 on success, negative value for failure.
++ */
++int hl_pci_set_dram_bar_base(struct hl_device *hdev, u8 inbound_region, u8 bar,
++				u64 addr)
++{
++	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	u32 offset;
++	int rc;
++
++	switch (inbound_region) {
++	case 0:
++		offset = 0x100;
++		break;
++	case 1:
++		offset = 0x300;
++		break;
++	case 2:
++		offset = 0x500;
++		break;
++	default:
++		dev_err(hdev->dev, "Invalid inbound region %d\n",
++			inbound_region);
++		return -EINVAL;
++	}
++
++	if (bar != 0 && bar != 2 && bar != 4) {
++		dev_err(hdev->dev, "Invalid PCI BAR %d\n", bar);
++		return -EINVAL;
++	}
++
++	/* Point to the specified address */
++	rc = hl_pci_iatu_write(hdev, offset + 0x14, lower_32_bits(addr));
++	rc |= hl_pci_iatu_write(hdev, offset + 0x18, upper_32_bits(addr));
++	rc |= hl_pci_iatu_write(hdev, offset + 0x0, 0);
++	/* Enable + BAR match + match enable + BAR number */
++	rc |= hl_pci_iatu_write(hdev, offset + 0x4, 0xC0080000 | (bar << 8));
++
++	/* Return the DBI window to the default location */
++	rc |= hl_pci_elbi_write(hdev, prop->pcie_aux_dbi_reg_addr, 0);
++	rc |= hl_pci_elbi_write(hdev, prop->pcie_aux_dbi_reg_addr + 4, 0);
++
++	if (rc)
++		dev_err(hdev->dev, "failed to map DRAM bar to 0x%08llx\n",
++			addr);
 +
 +	return rc;
 +}
 +
 +/**
-+ * hl_mmu_fini() - release the MMU module.
-+ * @hdev: habanalabs device structure.
++ * hl_pci_init_iatu() - Initialize the iATU unit inside the PCI controller.
++ * @hdev: Pointer to hl_device structure.
++ * @sram_base_address: SRAM base address.
++ * @dram_base_address: DRAM base address.
++ * @host_phys_size: Size of host memory for device transactions.
 + *
-+ * This function does the following:
-+ * - Disable MMU in H/W.
-+ * - Free the pgt_infos pool.
++ * This is needed in case the firmware doesn't initialize the iATU.
 + *
-+ * All contexts should be freed before calling this function.
++ * Return: 0 on success, negative value for failure.
 + */
-+void hl_mmu_fini(struct hl_device *hdev)
++int hl_pci_init_iatu(struct hl_device *hdev, u64 sram_base_address,
++			u64 dram_base_address, u64 host_phys_size)
 +{
-+	if (!hdev->mmu_enable)
-+		return;
++	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	u64 host_phys_end_addr;
++	int rc = 0;
 +
-+	kfree(hdev->mmu_shadow_hop0);
-+	gen_pool_destroy(hdev->mmu_pgt_pool);
-+	mutex_destroy(&hdev->mmu_cache_lock);
++	/* Inbound Region 0 - Bar 0 - Point to SRAM base address */
++	rc  = hl_pci_iatu_write(hdev, 0x114, lower_32_bits(sram_base_address));
++	rc |= hl_pci_iatu_write(hdev, 0x118, upper_32_bits(sram_base_address));
++	rc |= hl_pci_iatu_write(hdev, 0x100, 0);
++	/* Enable + Bar match + match enable */
++	rc |= hl_pci_iatu_write(hdev, 0x104, 0xC0080000);
 +
-+	/* MMU H/W fini will be done in device hw_fini() */
++	/* Point to DRAM */
++	if (!hdev->asic_funcs->set_dram_bar_base)
++		return -EINVAL;
++	rc |= hdev->asic_funcs->set_dram_bar_base(hdev, dram_base_address);
++
++	/* Outbound Region 0 - Point to Host */
++	host_phys_end_addr = prop->host_phys_base_address + host_phys_size - 1;
++	rc |= hl_pci_iatu_write(hdev, 0x008,
++				lower_32_bits(prop->host_phys_base_address));
++	rc |= hl_pci_iatu_write(hdev, 0x00C,
++				upper_32_bits(prop->host_phys_base_address));
++	rc |= hl_pci_iatu_write(hdev, 0x010, lower_32_bits(host_phys_end_addr));
++	rc |= hl_pci_iatu_write(hdev, 0x014, 0);
++	rc |= hl_pci_iatu_write(hdev, 0x018, 0);
++	rc |= hl_pci_iatu_write(hdev, 0x020, upper_32_bits(host_phys_end_addr));
++	/* Increase region size */
++	rc |= hl_pci_iatu_write(hdev, 0x000, 0x00002000);
++	/* Enable */
++	rc |= hl_pci_iatu_write(hdev, 0x004, 0x80000000);
++
++	/* Return the DBI window to the default location */
++	rc |= hl_pci_elbi_write(hdev, prop->pcie_aux_dbi_reg_addr, 0);
++	rc |= hl_pci_elbi_write(hdev, prop->pcie_aux_dbi_reg_addr + 4, 0);
++
++	if (rc)
++		return -EIO;
++
++	return 0;
 +}
 +
 +/**
-+ * hl_mmu_ctx_init() - initialize a context for using the MMU module.
-+ * @ctx: pointer to the context structure to initialize.
++ * hl_pci_init() - PCI initialization code.
++ * @hdev: Pointer to hl_device structure.
 + *
-+ * Initialize a mutex to protect the concurrent mapping flow, a hash to hold all
-+ * page tables hops related to this context.
-+ * Return: 0 on success, non-zero otherwise.
++ * Set DMA masks, initialize the PCI controller and map the PCI BARs.
++ *
++ * Return: 0 on success, non-zero for failure.
 + */
-+int hl_mmu_ctx_init(struct hl_ctx *ctx)
++int hl_pci_init(struct hl_device *hdev)
 +{
-+	struct hl_device *hdev = ctx->hdev;
++	struct pci_dev *pdev = hdev->pdev;
++	int rc;
 +
-+	if (!hdev->mmu_enable)
-+		return 0;
++	/* set DMA mask */
++	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(39));
++	if (rc) {
++		dev_warn(hdev->dev, "Unable to set pci dma mask to 39 bits\n");
++		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
++		if (rc) {
++			dev_err(hdev->dev,
++				"Unable to set pci dma mask to 32 bits\n");
++			return rc;
++		}
++	}
 +
-+	mutex_init(&ctx->mmu_lock);
-+	hash_init(ctx->mmu_phys_hash);
-+	hash_init(ctx->mmu_shadow_hash);
++	rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(39));
++	if (rc) {
++		dev_warn(hdev->dev,
++			"Unable to set pci consistent dma mask to 39 bits\n");
++		rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
++		if (rc) {
++			dev_err(hdev->dev,
++				"Unable to set pci consistent dma mask to 32 bits\n");
++			return rc;
++		}
++	}
 +
-+	return dram_default_mapping_init(ctx);
++	if (hdev->reset_pcilink)
++		hl_pci_reset_link_through_bridge(hdev);
++
++	rc = pci_enable_device_mem(pdev);
++	if (rc) {
++		dev_err(hdev->dev, "can't enable PCI device\n");
++		return rc;
++	}
++
++	pci_set_master(pdev);
++
++	rc = hdev->asic_funcs->init_iatu(hdev);
++	if (rc) {
++		dev_err(hdev->dev, "Failed to initialize iATU\n");
++		goto disable_device;
++	}
++
++	rc = hdev->asic_funcs->pci_bars_map(hdev);
++	if (rc) {
++		dev_err(hdev->dev, "Failed to initialize PCI BARs\n");
++		goto disable_device;
++	}
++
++	return 0;
++
++disable_device:
++	pci_clear_master(pdev);
++	pci_disable_device(pdev);
++
++	return rc;
 +}
 +
- /*
-  * hl_mmu_ctx_fini - disable a ctx from using the mmu module
-  *
-@@ -365,63 +497,23 @@ int hl_mmu_ctx_init(struct hl_ctx *ctx)
- void hl_mmu_ctx_fini(struct hl_ctx *ctx)
- {
- 	struct hl_device *hdev = ctx->hdev;
--	struct asic_fixed_properties *prop = &hdev->asic_prop;
- 	struct pgt_info *pgt_info;
- 	struct hlist_node *tmp;
--	u64 num_of_hop3, total_hops, hop1_addr, hop2_addr, hop2_pte_addr,
--		hop3_pte_addr;
--	int i, j;
-+	int i;
- 
--	if (!ctx->hdev->mmu_enable)
-+	if (!hdev->mmu_enable)
- 		return;
- 
--	if (hdev->dram_supports_virtual_memory &&
--			hdev->dram_default_page_mapping) {
--
--		num_of_hop3 = prop->dram_size_for_default_page_mapping;
--		do_div(num_of_hop3, prop->dram_page_size);
--		do_div(num_of_hop3, PTE_ENTRIES_IN_HOP);
--
--		/* add hop1 and hop2 */
--		total_hops = num_of_hop3 + 2;
--		hop1_addr = ctx->dram_default_hops[total_hops - 1];
--		hop2_addr = ctx->dram_default_hops[total_hops - 2];
--
--		for (i = 0 ; i < num_of_hop3 ; i++) {
--			hop3_pte_addr = ctx->dram_default_hops[i];
--			for (j = 0 ; j < PTE_ENTRIES_IN_HOP ; j++) {
--				clear_pte(hdev, hop3_pte_addr);
--				put_pte(ctx, ctx->dram_default_hops[i]);
--				hop3_pte_addr += HL_PTE_SIZE;
--			}
--		}
-+	dram_default_mapping_fini(ctx);
- 
--		hop2_pte_addr = hop2_addr;
--		for (i = 0 ; i < num_of_hop3 ; i++) {
--			clear_pte(hdev, hop2_pte_addr);
--			put_pte(ctx, hop2_addr);
--			hop2_pte_addr += HL_PTE_SIZE;
--		}
--
--		clear_pte(hdev, hop1_addr);
--		put_pte(ctx, hop1_addr);
--		clear_pte(hdev, get_hop0_addr(ctx));
--
--		kfree(ctx->dram_default_hops);
--
--		/* flush all writes to reach PCI */
--		mb();
--		hdev->asic_funcs->read_pte(hdev, hop2_addr);
--	}
--
--	if (!hash_empty(ctx->mmu_hash))
-+	if (!hash_empty(ctx->mmu_shadow_hash))
- 		dev_err(hdev->dev, "ctx is freed while it has pgts in use\n");
- 
--	hash_for_each_safe(ctx->mmu_hash, i, tmp, pgt_info, node) {
-+	hash_for_each_safe(ctx->mmu_shadow_hash, i, tmp, pgt_info, node) {
- 		dev_err(hdev->dev,
- 			"pgt_info of addr 0x%llx of asid %d was not destroyed, num_ptes: %d\n",
--			pgt_info->addr, ctx->asid, pgt_info->num_of_ptes);
--		free_hop(ctx, pgt_info->addr);
-+			pgt_info->phys_addr, ctx->asid, pgt_info->num_of_ptes);
-+		free_hop(ctx, pgt_info->shadow_addr);
- 	}
- 
- 	mutex_destroy(&ctx->mmu_lock);
-@@ -437,45 +529,43 @@ static int _hl_mmu_unmap(struct hl_ctx *ctx, u64 virt_addr)
- 		hop3_addr = 0, hop3_pte_addr = 0,
- 		hop4_addr = 0, hop4_pte_addr = 0,
- 		curr_pte;
--	int clear_hop3 = 1;
--	bool is_dram_addr, is_huge, is_dram_default_page_mapping;
-+	bool is_dram_addr, is_huge, clear_hop3 = true;
- 
- 	is_dram_addr = hl_mem_area_inside_range(virt_addr, PAGE_SIZE_2MB,
- 				prop->va_space_dram_start_address,
- 				prop->va_space_dram_end_address);
- 
- 	hop0_addr = get_hop0_addr(ctx);
--
- 	hop0_pte_addr = get_hop0_pte_addr(ctx, hop0_addr, virt_addr);
- 
--	curr_pte = hdev->asic_funcs->read_pte(hdev, hop0_pte_addr);
-+	curr_pte = *(u64 *) hop0_pte_addr;
- 
--	hop1_addr = get_next_hop_addr(curr_pte);
-+	hop1_addr = get_next_hop_addr(ctx, curr_pte);
- 
- 	if (hop1_addr == ULLONG_MAX)
- 		goto not_mapped;
- 
- 	hop1_pte_addr = get_hop1_pte_addr(ctx, hop1_addr, virt_addr);
- 
--	curr_pte = hdev->asic_funcs->read_pte(hdev, hop1_pte_addr);
-+	curr_pte = *(u64 *) hop1_pte_addr;
- 
--	hop2_addr = get_next_hop_addr(curr_pte);
-+	hop2_addr = get_next_hop_addr(ctx, curr_pte);
- 
- 	if (hop2_addr == ULLONG_MAX)
- 		goto not_mapped;
- 
- 	hop2_pte_addr = get_hop2_pte_addr(ctx, hop2_addr, virt_addr);
- 
--	curr_pte = hdev->asic_funcs->read_pte(hdev, hop2_pte_addr);
-+	curr_pte = *(u64 *) hop2_pte_addr;
- 
--	hop3_addr = get_next_hop_addr(curr_pte);
-+	hop3_addr = get_next_hop_addr(ctx, curr_pte);
- 
- 	if (hop3_addr == ULLONG_MAX)
- 		goto not_mapped;
- 
- 	hop3_pte_addr = get_hop3_pte_addr(ctx, hop3_addr, virt_addr);
- 
--	curr_pte = hdev->asic_funcs->read_pte(hdev, hop3_pte_addr);
-+	curr_pte = *(u64 *) hop3_pte_addr;
- 
- 	is_huge = curr_pte & LAST_MASK;
- 
-@@ -485,27 +575,24 @@ static int _hl_mmu_unmap(struct hl_ctx *ctx, u64 virt_addr)
- 		return -EFAULT;
- 	}
- 
--	is_dram_default_page_mapping =
--			hdev->dram_default_page_mapping && is_dram_addr;
--
- 	if (!is_huge) {
--		hop4_addr = get_next_hop_addr(curr_pte);
-+		hop4_addr = get_next_hop_addr(ctx, curr_pte);
- 
- 		if (hop4_addr == ULLONG_MAX)
- 			goto not_mapped;
- 
- 		hop4_pte_addr = get_hop4_pte_addr(ctx, hop4_addr, virt_addr);
- 
--		curr_pte = hdev->asic_funcs->read_pte(hdev, hop4_pte_addr);
-+		curr_pte = *(u64 *) hop4_pte_addr;
- 
--		clear_hop3 = 0;
-+		clear_hop3 = false;
- 	}
- 
--	if (is_dram_default_page_mapping) {
--		u64 zero_pte = (prop->mmu_dram_default_page_addr &
-+	if (hdev->dram_default_page_mapping && is_dram_addr) {
-+		u64 default_pte = (prop->mmu_dram_default_page_addr &
- 				PTE_PHYS_ADDR_MASK) | LAST_MASK |
- 					PAGE_PRESENT_MASK;
--		if (curr_pte == zero_pte) {
-+		if (curr_pte == default_pte) {
- 			dev_err(hdev->dev,
- 				"DRAM: hop3 PTE points to zero page, can't unmap, va: 0x%llx\n",
- 					virt_addr);
-@@ -519,40 +606,43 @@ static int _hl_mmu_unmap(struct hl_ctx *ctx, u64 virt_addr)
- 			goto not_mapped;
- 		}
- 
--		hdev->asic_funcs->write_pte(hdev, hop3_pte_addr, zero_pte);
-+		write_final_pte(ctx, hop3_pte_addr, default_pte);
- 		put_pte(ctx, hop3_addr);
- 	} else {
- 		if (!(curr_pte & PAGE_PRESENT_MASK))
- 			goto not_mapped;
- 
--		clear_pte(hdev, hop4_addr ? hop4_pte_addr : hop3_pte_addr);
-+		if (hop4_addr)
-+			clear_pte(ctx, hop4_pte_addr);
-+		else
-+			clear_pte(ctx, hop3_pte_addr);
- 
- 		if (hop4_addr && !put_pte(ctx, hop4_addr))
--			clear_hop3 = 1;
-+			clear_hop3 = true;
- 
- 		if (!clear_hop3)
- 			goto flush;
--		clear_pte(hdev, hop3_pte_addr);
++/**
++ * hl_fw_fini() - PCI finalization code.
++ * @hdev: Pointer to hl_device structure
++ *
++ * Unmap PCI bars and disable PCI device.
++ */
++void hl_pci_fini(struct hl_device *hdev)
++{
++	hl_pci_bars_unmap(hdev);
 +
-+		clear_pte(ctx, hop3_pte_addr);
- 
- 		if (put_pte(ctx, hop3_addr))
- 			goto flush;
--		clear_pte(hdev, hop2_pte_addr);
-+
-+		clear_pte(ctx, hop2_pte_addr);
- 
- 		if (put_pte(ctx, hop2_addr))
- 			goto flush;
--		clear_pte(hdev, hop1_pte_addr);
-+
-+		clear_pte(ctx, hop1_pte_addr);
- 
- 		if (put_pte(ctx, hop1_addr))
- 			goto flush;
--		clear_pte(hdev, hop0_pte_addr);
-+
-+		clear_pte(ctx, hop0_pte_addr);
- 	}
- 
- flush:
--	/* flush all writes from all cores to reach PCI */
--	mb();
--
--	hdev->asic_funcs->read_pte(hdev,
--				hop4_addr ? hop4_pte_addr : hop3_pte_addr);
-+	flush(ctx);
- 
- 	return 0;
- 
-@@ -632,8 +722,7 @@ static int _hl_mmu_map(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr,
- 		hop4_addr = 0, hop4_pte_addr = 0,
- 		curr_pte = 0;
- 	bool hop1_new = false, hop2_new = false, hop3_new = false,
--		hop4_new = false, is_huge, is_dram_addr,
--		is_dram_default_page_mapping;
-+		hop4_new = false, is_huge, is_dram_addr;
- 	int rc = -ENOMEM;
- 
- 	/*
-@@ -654,59 +743,46 @@ static int _hl_mmu_map(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr,
- 		return -EFAULT;
- 	}
- 
--	is_dram_default_page_mapping =
--			hdev->dram_default_page_mapping && is_dram_addr;
--
- 	hop0_addr = get_hop0_addr(ctx);
--
- 	hop0_pte_addr = get_hop0_pte_addr(ctx, hop0_addr, virt_addr);
--
--	curr_pte = hdev->asic_funcs->read_pte(hdev, hop0_pte_addr);
-+	curr_pte = *(u64 *) hop0_pte_addr;
- 
- 	hop1_addr = get_alloc_next_hop_addr(ctx, curr_pte, &hop1_new);
--
- 	if (hop1_addr == ULLONG_MAX)
- 		goto err;
- 
- 	hop1_pte_addr = get_hop1_pte_addr(ctx, hop1_addr, virt_addr);
--
--	curr_pte = hdev->asic_funcs->read_pte(hdev, hop1_pte_addr);
-+	curr_pte = *(u64 *) hop1_pte_addr;
- 
- 	hop2_addr = get_alloc_next_hop_addr(ctx, curr_pte, &hop2_new);
--
- 	if (hop2_addr == ULLONG_MAX)
- 		goto err;
- 
- 	hop2_pte_addr = get_hop2_pte_addr(ctx, hop2_addr, virt_addr);
--
--	curr_pte = hdev->asic_funcs->read_pte(hdev, hop2_pte_addr);
-+	curr_pte = *(u64 *) hop2_pte_addr;
- 
- 	hop3_addr = get_alloc_next_hop_addr(ctx, curr_pte, &hop3_new);
--
- 	if (hop3_addr == ULLONG_MAX)
- 		goto err;
- 
- 	hop3_pte_addr = get_hop3_pte_addr(ctx, hop3_addr, virt_addr);
--
--	curr_pte = hdev->asic_funcs->read_pte(hdev, hop3_pte_addr);
-+	curr_pte = *(u64 *) hop3_pte_addr;
- 
- 	if (!is_huge) {
- 		hop4_addr = get_alloc_next_hop_addr(ctx, curr_pte, &hop4_new);
--
- 		if (hop4_addr == ULLONG_MAX)
- 			goto err;
- 
- 		hop4_pte_addr = get_hop4_pte_addr(ctx, hop4_addr, virt_addr);
--
--		curr_pte = hdev->asic_funcs->read_pte(hdev, hop4_pte_addr);
-+		curr_pte = *(u64 *) hop4_pte_addr;
- 	}
- 
--	if (is_dram_default_page_mapping) {
--		u64 zero_pte = (prop->mmu_dram_default_page_addr &
-+	if (hdev->dram_default_page_mapping && is_dram_addr) {
-+		u64 default_pte = (prop->mmu_dram_default_page_addr &
- 					PTE_PHYS_ADDR_MASK) | LAST_MASK |
- 						PAGE_PRESENT_MASK;
- 
--		if (curr_pte != zero_pte) {
-+		if (curr_pte != default_pte) {
- 			dev_err(hdev->dev,
- 				"DRAM: mapping already exists for virt_addr 0x%llx\n",
- 					virt_addr);
-@@ -722,27 +798,21 @@ static int _hl_mmu_map(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr,
- 		}
- 	} else if (curr_pte & PAGE_PRESENT_MASK) {
- 		dev_err(hdev->dev,
--				"mapping already exists for virt_addr 0x%llx\n",
--					virt_addr);
-+			"mapping already exists for virt_addr 0x%llx\n",
-+				virt_addr);
- 
- 		dev_dbg(hdev->dev, "hop0 pte: 0x%llx (0x%llx)\n",
--				hdev->asic_funcs->read_pte(hdev, hop0_pte_addr),
--				hop0_pte_addr);
-+			*(u64 *) hop0_pte_addr, hop0_pte_addr);
- 		dev_dbg(hdev->dev, "hop1 pte: 0x%llx (0x%llx)\n",
--				hdev->asic_funcs->read_pte(hdev, hop1_pte_addr),
--				hop1_pte_addr);
-+			*(u64 *) hop1_pte_addr, hop1_pte_addr);
- 		dev_dbg(hdev->dev, "hop2 pte: 0x%llx (0x%llx)\n",
--				hdev->asic_funcs->read_pte(hdev, hop2_pte_addr),
--				hop2_pte_addr);
-+			*(u64 *) hop2_pte_addr, hop2_pte_addr);
- 		dev_dbg(hdev->dev, "hop3 pte: 0x%llx (0x%llx)\n",
--				hdev->asic_funcs->read_pte(hdev, hop3_pte_addr),
--				hop3_pte_addr);
-+			*(u64 *) hop3_pte_addr, hop3_pte_addr);
- 
- 		if (!is_huge)
- 			dev_dbg(hdev->dev, "hop4 pte: 0x%llx (0x%llx)\n",
--				hdev->asic_funcs->read_pte(hdev,
--							hop4_pte_addr),
--							hop4_pte_addr);
-+				*(u64 *) hop4_pte_addr, hop4_pte_addr);
- 
- 		rc = -EINVAL;
- 		goto err;
-@@ -751,28 +821,26 @@ static int _hl_mmu_map(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr,
- 	curr_pte = (phys_addr & PTE_PHYS_ADDR_MASK) | LAST_MASK
- 			| PAGE_PRESENT_MASK;
- 
--	hdev->asic_funcs->write_pte(hdev,
--				is_huge ? hop3_pte_addr : hop4_pte_addr,
--				curr_pte);
-+	if (is_huge)
-+		write_final_pte(ctx, hop3_pte_addr, curr_pte);
-+	else
-+		write_final_pte(ctx, hop4_pte_addr, curr_pte);
- 
- 	if (hop1_new) {
--		curr_pte = (hop1_addr & PTE_PHYS_ADDR_MASK) |
--				PAGE_PRESENT_MASK;
--		ctx->hdev->asic_funcs->write_pte(ctx->hdev, hop0_pte_addr,
--				curr_pte);
-+		curr_pte =
-+			(hop1_addr & PTE_PHYS_ADDR_MASK) | PAGE_PRESENT_MASK;
-+		write_pte(ctx, hop0_pte_addr, curr_pte);
- 	}
- 	if (hop2_new) {
--		curr_pte = (hop2_addr & PTE_PHYS_ADDR_MASK) |
--				PAGE_PRESENT_MASK;
--		ctx->hdev->asic_funcs->write_pte(ctx->hdev, hop1_pte_addr,
--				curr_pte);
-+		curr_pte =
-+			(hop2_addr & PTE_PHYS_ADDR_MASK) | PAGE_PRESENT_MASK;
-+		write_pte(ctx, hop1_pte_addr, curr_pte);
- 		get_pte(ctx, hop1_addr);
- 	}
- 	if (hop3_new) {
--		curr_pte = (hop3_addr & PTE_PHYS_ADDR_MASK) |
--				PAGE_PRESENT_MASK;
--		ctx->hdev->asic_funcs->write_pte(ctx->hdev, hop2_pte_addr,
--				curr_pte);
-+		curr_pte =
-+			(hop3_addr & PTE_PHYS_ADDR_MASK) | PAGE_PRESENT_MASK;
-+		write_pte(ctx, hop2_pte_addr, curr_pte);
- 		get_pte(ctx, hop2_addr);
- 	}
- 
-@@ -780,8 +848,7 @@ static int _hl_mmu_map(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr,
- 		if (hop4_new) {
- 			curr_pte = (hop4_addr & PTE_PHYS_ADDR_MASK) |
- 					PAGE_PRESENT_MASK;
--			ctx->hdev->asic_funcs->write_pte(ctx->hdev,
--					hop3_pte_addr, curr_pte);
-+			write_pte(ctx, hop3_pte_addr, curr_pte);
- 			get_pte(ctx, hop3_addr);
- 		}
- 
-@@ -790,11 +857,7 @@ static int _hl_mmu_map(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr,
- 		get_pte(ctx, hop3_addr);
- 	}
- 
--	/* flush all writes from all cores to reach PCI */
--	mb();
--
--	hdev->asic_funcs->read_pte(hdev,
--				is_huge ? hop3_pte_addr : hop4_pte_addr);
-+	flush(ctx);
- 
- 	return 0;
- 
++	pci_clear_master(hdev->pdev);
++	pci_disable_device(hdev->pdev);
++}
 -- 
 2.17.1
 
