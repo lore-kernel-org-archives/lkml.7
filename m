@@ -2,66 +2,211 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5833BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 09:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0E5C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 09:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CA321738
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 09:55:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552816507;
-	bh=OCNn2EmkvhvpiigKamu0ZgE4qk9PH5OHugO+Wgry3O8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F4jhmalgcnNKsRw9iN+D9XhW6aZfagQfc7pLMcGmIp/MO7v0fh1R62uJ/pWyMOyid
-	 QsZiQDZkHGecygvJ1rILOuEFVroaatCJTKTM+DdKCHSFXPdMxq61BDcnhxAWl2+aGG
-	 tdAJDz1Pyed3hlMtaY2yahVvPBCeS4eAzn3S0PZI=
+	by mail.kernel.org (Postfix) with ESMTP id 9BBC82148D
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 09:55:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfCQJzG (ORCPT
+        id S1726944AbfCQJzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 05:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfCQJzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 05:55:05 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9251E2148D;
-        Sun, 17 Mar 2019 09:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552816505;
-        bh=OCNn2EmkvhvpiigKamu0ZgE4qk9PH5OHugO+Wgry3O8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tIKW66LQhX3qDkAJPdydw6u/7pTNofQneGq+Yc7LnsMP1Cr5Z0PiMyJA9LUi/VHjE
-         wII5wurNKngKfDzDuPuwMHT36pbN49CifexO3RGpEyZXEn8zZwyR0BLC3KPA+Igcv8
-         tyNWRUW2YOOSjvoPLRv56gThXXbODEBbkxRoLsXI=
-Date:   Sun, 17 Mar 2019 10:55:02 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Emanuel Bennici <benniciemanuel78@gmail.com>
-Cc:     Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] staging: vc04_services: Add blank line after struct
- declaration
-Message-ID: <20190317095502.GC6906@kroah.com>
-References: <20190317015930.GA1747@p200300EEEE2F.fritz.box>
+        Sun, 17 Mar 2019 05:55:14 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:25347 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfCQJzN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 05:55:13 -0400
+Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2H9slpd080571;
+        Sun, 17 Mar 2019 18:54:47 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp);
+ Sun, 17 Mar 2019 18:54:47 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp)
+Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2H9sk2w080567
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sun, 17 Mar 2019 18:54:47 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: add HDMI sound node for
+ rk3328-rock64
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Jonas Karlman <jonas@kwiboo.se>, Heiko Stuebner <heiko@sntech.de>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190217173407.29189-1-katsuhiro@katsuster.net>
+ <20190217173407.29189-2-katsuhiro@katsuster.net>
+ <d42dd768-d6c1-098d-759f-e3576d0edcc2@katsuster.net>
+ <AM3PR03MB0966F2308C6003C192A68F4DAC770@AM3PR03MB0966.eurprd03.prod.outlook.com>
+ <fb36eddb-ef3b-df4a-5e1a-6f8866726ae9@katsuster.net>
+Message-ID: <b855ff66-19e5-4ea5-3337-23d5ada1bf1c@katsuster.net>
+Date:   Sun, 17 Mar 2019 18:54:46 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190317015930.GA1747@p200300EEEE2F.fritz.box>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <fb36eddb-ef3b-df4a-5e1a-6f8866726ae9@katsuster.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 02:59:32AM +0100, Emanuel Bennici wrote:
-> Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
-> ---
->  drivers/staging/vc04_services/interface/vchi/vchi.h | 1 +
->  1 file changed, 1 insertion(+)
+Hello Jonas,
 
-I can not take patches without any changelog information, sorry.
+How about this topic?
+
+I think this patch does not have bad effect for multi channel
+sound of HDMI. If you don't think so, please tell me.
+I wait your sound patch and after re-check this patch.
+
+Best Regards,
+Katsuhiro Suzuki
+
+On 2019/03/03 4:26, Katsuhiro Suzuki wrote:
+> Hello Jonas,
+> 
+> Thanks for your comments.
+> 
+> On 2019/03/03 2:20, Jonas Karlman wrote:
+>> On 2019-03-02 15:19, Katsuhiro Suzuki wrote:
+>>> Ping...
+>>>
+>>> On 2019/02/18 2:34, Katsuhiro Suzuki wrote:
+>>>> This patch adds HDMI sound (I2S0) node for rock64.
+>>>>
+>>>> After apply this patch, UART2 will fail to allocate DMA resources
+>>>> but UART driver can work fine without DMA.
+>>>>
+>>>> This error is related to the DMAC of rk3328 (pl330 or compatible).
+>>>> DMAC connected to 16 DMA sources. Each sources have ID number that is
+>>>> called 'Req number' in rk3328 TRM. Currently total 7 sources has been
+>>>> activated as follows:
+>>>>
+>>>> | Req number | Source | Required  |
+>>>> |            |        | channels  |
+>>>> |------------+--------+-----------|
+>>>> | 14, 15     | I2S1   | 2ch       |
+>>>> |  6,  7     | UART2  | 2ch       |
+>>>> |     10     | SPDIF  | 1ch       |
+>>>> |  8,  9     | SPI0   | 2ch       |
+>>>> |------------+--------+-----------|
+>>>> |            | Total  | 7ch       |
+>>>>
+>>>> HDMI audio needs to activate new source I2S0 (Req number 11 and 12).
+>>>> I2S0 can work concurrently with other sources, but rk3328 DMAC can
+>>>> use max 8 channels at same time. If I2S0 is simply activated by this
+>>>> patch, required DMAC channels will be 9. So last one (UART2) cannot
+>>>> allocate the DMA resources.
+>>>>
+>>>> Virt-dma mechanism for pl0330 DMAC driver is needed to fix this
+>>>> problem.
+>>>>
+>>>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>>>> ---
+>>>>    .../arm64/boot/dts/rockchip/rk3328-rock64.dts | 21 
+>>>> ++++++++++++++++++-
+>>>>    1 file changed, 20 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts 
+>>>> b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+>>>> index 2157a528276b..bfc0930d245c 100644
+>>>> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+>>>> @@ -68,7 +68,8 @@
+>>>>        sound {
+>>>>            compatible = "audio-graph-card";
+>>>>            label = "rockchip,rk3328";
+>>>> -        dais = <&i2s1_p0
+>>>> +        dais = <&i2s0_p0
+>>>> +            &i2s1_p0
+>>>>                &spdif_p0>;
+>>
+>> I am working on multi-channel hdmi audio support for dw-hdmi at [1] 
+>> and are wondering if having multiple dais on one graph card
+>> instead of a separate hdmi sound card will affect the ability to 
+>> define a proper alsa config for multi channel hdmi sound.
+>>
+>> [1] 
+>> https://github.com/Kwiboo/linux-rockchip/compare/8874c206d613dc575f5cb6e385e7a866020138d0...92b20eaa6b6dd2cf3418a428f905d10bbc62724f 
+>>
+>>
+> 
+> It seems a part of multi channel (5.1 ch) has already been supported
+> by rockchip-i2s and dw-hdmi. So I applied this patch and tried below
+> command.
+>    speaker-test -D hw:0,0 -f 48000 -c 6
+> It does not return errors.
+> 
+> Would you tell me more details you worried about if something wrong?
+> 
+> 
+> FYI: Rock64 PCM devices are as follows after applied this patch.
+> ~~~~~
+> $ cat /proc/asound/pcm
+> 00-00: ff000000.i2s-i2s-hifi i2s-hifi-0 :  : playback 1
+> 00-01: ff010000.i2s-rk3328-hifi ff410000.codec-1 :  : playback 1 : 
+> capture 1
+> 00-02: ff030000.spdif-dit-hifi dit-hifi-2 :  : playback 1
+> ~~~~~
+> 
+> Best Regards,
+> Katsuhiro Suzuki
+> 
+> 
+>> Regards,
+>> Jonas
+>>
+>>>>        };
+>>>> @@ -141,6 +142,12 @@
+>>>>    &hdmi {
+>>>>        status = "okay";
+>>>> +
+>>>> +    port@0 {
+>>>> +        hdmi_p0_0: endpoint {
+>>>> +            remote-endpoint = <&i2s0_p0_0>;
+>>>> +        };
+>>>> +    };
+>>>>    };
+>>>>    &hdmiphy {
+>>>> @@ -256,6 +263,18 @@
+>>>>        };
+>>>>    };
+>>>> +&i2s0 {
+>>>> +    status = "okay";
+>>>> +
+>>>> +    i2s0_p0: port {
+>>>> +        i2s0_p0_0: endpoint {
+>>>> +            dai-format = "i2s";
+>>>> +            mclk-fs = <256>;
+>>>> +            remote-endpoint = <&hdmi_p0_0>;
+>>>> +        };
+>>>> +    };
+>>>> +};
+>>>> +
+>>>>    &i2s1 {
+>>>>        status = "okay";
+>>>>
+>>>
+>>> _______________________________________________
+>>> Linux-rockchip mailing list
+>>> Linux-rockchip@lists.infradead.org
+>>> https://nam03.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists.infradead.org%2Fmailman%2Flistinfo%2Flinux-rockchip&amp;data=02%7C01%7C%7Cfcb0d6c43ded4d5e7d4c08d69f1a226d%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C636871331922090426&amp;sdata=ABb%2Fo%2FMAGvFBH%2B37uQr6rzn%2B%2FXBAXyiGfv2%2BMO0RQoQ%3D&amp;reserved=0 
+>>>
+>>
+>>
+>>
+> 
+> 
+
