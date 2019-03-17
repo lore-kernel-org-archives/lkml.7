@@ -2,94 +2,119 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E15C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19D3C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E612087C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B046D20657
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552855284;
+	bh=64YO2k1ILxmBV1ysSiRPzA847cIs5p+6I7oU1yJDEyA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=atdwk+JQY52xdHd4ToAZCole1qUHj7p8QQD2hJDRuaETWfKV21+pQv56S5TvaKC/x
+	 zhlvmWoOuP5Lixobfxv0cI68cSo0OF1tVcJfE4PLIYPGftc9F0zWaYPWiQMoZzfLrJ
+	 idl1UmGviQyx2HFY3oAG10yirjo+hBVMp0HUMBiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfCQUjI (ORCPT
+        id S1727496AbfCQUlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 16:39:08 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:33085 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfCQUjI (ORCPT
+        Sun, 17 Mar 2019 16:41:23 -0400
+Received: from mail-lj1-f180.google.com ([209.85.208.180]:37882 "EHLO
+        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbfCQUlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 16:39:08 -0400
-Received: from localhost ([46.189.28.64]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M2fM1-1h23ui0Ypj-004CDZ; Sun, 17 Mar 2019 21:38:31 +0100
-Date:   Sun, 17 Mar 2019 21:38:29 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org
-Cc:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        afaerber@suse.de, arnd@arndb.de, davem@davemloft.net,
-        gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com,
-        knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org,
-        martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org,
-        m.othacehe@gmail.com, nicolas.ferre@microchip.com,
-        pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com,
-        treding@nvidia.com, techsupport@maxbotix.com
-Subject: [PATCH v3 4/4] MAINTAINERS: add maintainer for maxbotix ultrasonic
- driver
-Message-ID: <20190317203827.ocgsj24itlqzqjvc@arbad>
+        Sun, 17 Mar 2019 16:41:23 -0400
+Received: by mail-lj1-f180.google.com with SMTP id a17so12201177ljd.4
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 13:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PO3jNqZCfjilE8Yx097aTy6Y8RYNf8t+1W3KEZZVyYE=;
+        b=e7zUY0UpSQxwGKLa4sa5QMjSPAD3/r1emUajPMXKEKjI4NMMqd7Zc08L/0bifzLXn+
+         EnZssEos21WcIgfluUwJWlaUn6gtjqT2/QWcqQnSLm5V679pP9MyaAWylI2ImDot0enm
+         hSCmICIbaPLnKz8+Qz5gLWzTviTJXqlqd/Das=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PO3jNqZCfjilE8Yx097aTy6Y8RYNf8t+1W3KEZZVyYE=;
+        b=GE0HbslwgMTdrcg9CQ9wxABJLgp4oZEPxXA19cttbZwbcNqMVvIuxd5TdZQj5EX2V4
+         3chDPoHICK62SWJU0w1J80UCs6YTYbqkW8Aav/vPrG70TwRkrAXbk5U+UvKDRA9PwbuD
+         RLdHYdB2MLpMfFYmd6ikMBOWiP04D5II1C0EXBZMo0FFDsW/g7ze6JIGzhJZsubX55ap
+         lZJjmHXaeBaiNxZxq+CuD4YSeYohPK/s3b1kKqPdMouAE1dAyJYIuNDIik/k+8291jxu
+         DgclzWQJJcksako36svRzfkiRTzueLQNSlzhIMNpxodI9HnODDTjC2+tkQwZe+P0q/ci
+         Iu7A==
+X-Gm-Message-State: APjAAAVXhrhPFtld7SWPKOTDwPuRYs4zf2Ht6VmVfvBLEZm4ThFNihU9
+        VFAASyn0WsDhBedeXEeS3mmkcHwDzfo=
+X-Google-Smtp-Source: APXvYqytUfVKCPiVQOdk6dE4oo1Ak1Nlr9CTuB5PFqI4EsA2+37OgcY/3rm1zZkTXrWaCTgT8ePihw==
+X-Received: by 2002:a2e:8585:: with SMTP id b5mr8500434lji.125.1552855280361;
+        Sun, 17 Mar 2019 13:41:20 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id u18sm1654705lfd.15.2019.03.17.13.41.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 17 Mar 2019 13:41:17 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id u21so267440lfu.2
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 13:41:17 -0700 (PDT)
+X-Received: by 2002:ac2:4203:: with SMTP id y3mr7709582lfh.11.1552855277033;
+ Sun, 17 Mar 2019 13:41:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:qPNL7kc4ifmmZvoWQ1c7Q0xrViiHLGYKe4xdT643yPVyEPmTonq
- OGfvCOxVUMJaKI/vpimJr7l5tPKVy5xP/C+7udw5VGRI+Mv7eXr24iYAKe2ccY7KTo5xfTa
- sx94EMhpLvJIskwsROn9HUJ2uOxEXVVdIXN97TZwUvC+gOxxIA9QlgMVdqBOGKlT/RoWvtx
- ixGeAn3k8O9De+M4ZlHPQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:31Xcbi7fnYw=:gTJHj9gWotClFEx0uc7VNk
- j4Hi8yaDqPOG7cOYDUbDukyPU/jhCXxhsrhNYvr5gCpdTMWodloSOs8FwR0+HCO/86ugQZokw
- TSnsnpzkh2dzX7/NSS/llmx1qC0wj5IxlEDg1ZOAQlLIh2jepc+lHVM1KLZ2QEyk5jmbANwQ5
- OioSa/67jUesM2jo8PLu8jwqxzSeFP3cTMXkpgUVekRsvlIGH9kllKAzYXscOYC3OrLPypVUJ
- umbZcpYq+nTfqeSh+FbP6U51NhSdlVpE2wxyP2X2DhE3evzSNQdBi5HjEQA6lBimNwNCStvHl
- ixpCZYNvRAbYZTCL5fLtayVgOzPJcYT+pJ6T1+tYt+y+k4/YYs0zh1eh2kvJF2NTQDQu3x292
- +6te1+f6lh8KnLUI6lGRZ8B5U0QGdZiF8Oz7IE8Te8dsvqoRCSObf5HWPNS4dE4hnSFueFtJI
- qdnBPhlrbOn/O0UUVhxb+xpnY9Qxkv1mNTna/hKVjJRB78gqWy1ojD8KIgX3u3oOn3ZuplYEx
- k0La4ZnMxnreZzNspJ9BGaSXPdFxi+IClSoUhvDMo8vWW8oxRfPBHryxbLm3gSu55hLvpHShk
- B5wKQShco7P3bTf+mQN1SfntIsSVcL45c5x2hGP7I3/unafgBffxaxyU7sJOQqK7dtsbKIRBh
- Ea7DHZecg0XDsM/F2YArF/4b5HjDZRa3E4yBy4wgduiuPPlgLJ7WPGFLO3DIaPwmt26Ikg88A
- 7YQY8XYITL+bry4+1gWRAD7E1sfJwjZXHKWCTQ6bx632/5eFJG+yp6O2NewDTVUqTLy2aupaz
- yKOsM7Op6AHluECfOCMaU/HI42wPEnkDaUQTKCmfMDP2VYx1XkTwvxMqE3PfsflA4piO0h1Bn
- 7qi4fk2nYv4iv92WbPhhHSvQ0D2UiTyCwRdwrAQQThVp06cddc6xaDY6uJYwuPC7QVwOwFqxo
- 7jOro3khI4w==
+References: <0000000000008a1bce057ede3d13@google.com> <0000000000009950e1058447ef43@google.com>
+ <CAHk-=wjUrznUSUKN1AXQA9kCStQ3MHFY95ZmeTZ5zYDcvMhBiQ@mail.gmail.com> <CACT4Y+YOWaU8s90joeGB4G1oc-GxrQSDnjpuFOuE4eJd5FHK3g@mail.gmail.com>
+In-Reply-To: <CACT4Y+YOWaU8s90joeGB4G1oc-GxrQSDnjpuFOuE4eJd5FHK3g@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 17 Mar 2019 13:41:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj_+ObTogs75N++EigJ5RPpu8GL2ma0jasgJxG+t3oPPQ@mail.gmail.com>
+Message-ID: <CAHk-=wj_+ObTogs75N++EigJ5RPpu8GL2ma0jasgJxG+t3oPPQ@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in bacpy
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+660883c56e2fa65d4497@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Michal Marek <mmarek@suse.com>,
+        Netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add a maintainer for the newly created ultrasonic driver family of maxbotix
+On Sun, Mar 17, 2019 at 10:12 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> Please see https://github.com/google/syzkaller/blob/master/docs/syzbot.md#bisection
+> it should answer all of your questions. It does 2 and more.
+> And in this case it seems to be working as intended bisecting it to a
+> release tag.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+No, it's definitely not working as intended.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dce5c099f43c..fa054f8cc7fb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9234,6 +9234,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/sound/max9860.txt
- F:	sound/soc/codecs/max9860.*
- 
-+MAXBOTIX ULTRASONIC RANGER IIO DRIVER
-+M:	Andreas Klinger <ak@it-klinger.de>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-+F:	drivers/iio/proximity/mb1232.c
-+
- MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
- M:	Javier Martinez Canillas <javier@dowhile0.org>
- L:	linux-kernel@vger.kernel.org
--- 
-2.11.0
+You can see it in the bisect log - you don't actually have a single
+"git bisect bad" outside of the initial one that you start bisecting
+with. That's a pretty good sign of bisection being completely broken.
+Yes, it can happen in theory, but in general with a good bisection,
+you should see about as many "good" results as "bad".
+
+I bet that what's going on is that your initial "let's test every
+release" uses a _different_ process than the actual bisection itself
+does.
+
+So if I were you, I'd look at what syzbot does differently during
+bisection vs what it does for that initial "test each release". For
+example, does it do "make clean" in between each build in one case,
+but not the other? Does it do "make oldconfig" vs a fixed config
+generated from scratch every time? Because the fact that you first
+tested 4.10 bad using the "test each release", and then when you do
+bisection, the very commit *before* 4.10 is good (the only difference
+being the EXTRAVERSION and the tag) shows that something went wrong.
+
+                      Linus
