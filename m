@@ -2,165 +2,132 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5422FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1426CC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6C8206DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D660120896
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="neWTKteH"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="r8fcLsAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfCQSb4 (ORCPT
+        id S1727585AbfCQScO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 14:31:56 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35618 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbfCQSbz (ORCPT
+        Sun, 17 Mar 2019 14:32:14 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42072 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727470AbfCQScO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 14:31:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 81so3235610wme.0
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 11:31:54 -0700 (PDT)
+        Sun, 17 Mar 2019 14:32:14 -0400
+Received: by mail-io1-f66.google.com with SMTP id c4so12423488ioh.9
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 11:32:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references:reply-to
-         :mime-version:content-transfer-encoding;
-        bh=tOpOKBKHJJ0wFO54WQ8Dh4eqDCPLR/zymW7IUVlHAO4=;
-        b=neWTKteH9bbHtC89qhsfX327rL+upavau/XItMQmBPGrgAdO9Xj8Xy6HpqKsDJ2pGr
-         Eii2iaTZ6fwctdAwRUTBiQh3astWlYtiJBm064NoGiOS/znRzrGZhT+i8wTFq3hHaorg
-         nHDOLqgOifXESK9Pe5frIKySP3FL7F9vjJrg+XO/T3/LcTibpo+4VTBErd9vZvAuZd7k
-         bpNxqfaTLpcZfQula701+ps3Qrymdzc0FD3+Znws4wtXJwkpExljJnK7Q/jXsovkIeEW
-         nySzSclfDWpV314Q+BkooM9ZQgkUvqU7dqfl3un9jE3DFI3txt5D62nYA8nHiFkJl0VW
-         lHVQ==
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9V+YnJh9rTN+260by+mrhkQTpD7NBsUYhOyprVNDZoQ=;
+        b=r8fcLsARb45/A/NqisExhykKD38ZT8GFoIMjzV/SoAxMmycffiL036LMvLdBe7ZHQp
+         c2Wm3iUXixtiWs1p1T7LaV9qJ+SbV/XSoutv6yhDBOKouMFQgh6UtzJwRSUCz6gAeHEQ
+         syiW+myVfZUu+bQQrJmLKtWNCGMPfoev75Ka4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:reply-to:mime-version:content-transfer-encoding;
-        bh=tOpOKBKHJJ0wFO54WQ8Dh4eqDCPLR/zymW7IUVlHAO4=;
-        b=gJgIddIrXdnQ8zQbDKKb+bZGMAndf21qyopLAaAPEvGVsxKPMaJkpmIAqYRAjGBkuz
-         jXlg2nc/aLJgkyajeQXFnrzhk3e6t/vqePx7kNZXxzKpn97WYw19tPix1MwKJgA5jP1o
-         EeXxQIgD4zZnE2E5lZhdGJkqPw0XpkzSvOkfRadgoAYuR6c/Wlc1X4JkIvqFaQINE/8J
-         xYXiKrNq86CIC7UDtZYNOD4zHaQvqXgi+9UlKyRQA2+L6lVVYZR/u2oyLEGWBRXVSLS7
-         rZ6a2fupVQp/QnSEo1625FTs6Jds1BMhrxzZFlkpnaPWz8Sex1lTlD69EgfkhDGw2NVe
-         WASw==
-X-Gm-Message-State: APjAAAVznBque3qe9eGu89JXwO4JZPi0geaze4F2sH45UKIwQYgxJHsu
-        opnGtu1hRA1kJ2HIwgxkEJPNux8gL28=
-X-Google-Smtp-Source: APXvYqzR8xdczwC4LmtzQB7TGoQDAJnw803vrcQn+0BKR84uuMNh1U01r6mwUylQVtBskd9gvSU1HA==
-X-Received: by 2002:a1c:234d:: with SMTP id j74mr8051351wmj.130.1552847513552;
-        Sun, 17 Mar 2019 11:31:53 -0700 (PDT)
-Received: from p200300EEEE2F.fritz.box (p200300C9871AF900B43796A8F69485B6.dip0.t-ipconnect.de. [2003:c9:871a:f900:b437:96a8:f694:85b6])
-        by smtp.gmail.com with ESMTPSA id q5sm8415358wrn.43.2019.03.17.11.31.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 11:31:53 -0700 (PDT)
-From:   Emanuel Bennici <benniciemanuel78@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>
-Subject: [PATCH 10/10] staging: rtl8723bs: Remove Dead Code in core/rtw_mlme.c
-Date:   Sun, 17 Mar 2019 19:31:13 +0100
-Message-Id: <20190317183115.32393-10-benniciemanuel78@gmail.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190317183115.32393-1-benniciemanuel78@gmail.com>
-References: <20190317183115.32393-1-benniciemanuel78@gmail.com>
-Reply-To: benniciemanuel78@gmail.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9V+YnJh9rTN+260by+mrhkQTpD7NBsUYhOyprVNDZoQ=;
+        b=Q7TVGMnXPyt+/xxnGbxhfb6TZb5ZvCGELD2NlDgYwoJ99u/oZUWT+94bE7w967sjmw
+         5Eq1PrRr8NH/Mv+57B1eE6N5hplcXr+BlNlPO4oVo4jDkk8dqsg+6mzmAmnCfPM+0Knf
+         tTUdPjjLVJsUn2dCwfef2PEtN3lftNRSq2KrNePK1Kt5E9Y9hlmw+3EawDiunQ6sqG4R
+         P/SfZ6tQ0m5/imMqPgGaG+R95Jl12aYd++X+pIASRV8mXPQ9oFBf1L8t/kbrzDlzsnvC
+         yEM2ag83A7/Y5HzP9XPqy+9Qdhm/myU1XJr4vcFWSQB6zfE2imc1qaOKjE2ydlsJdssV
+         okEA==
+X-Gm-Message-State: APjAAAUvN45cleQzwn9JApvtfZxZ59KrCBqFL/CFxmQRMy4ZWdULL1PS
+        rciUJw0rerqrB1WXmS5xZ9IUp7JE9VQaY+KB3S6Inw==
+X-Google-Smtp-Source: APXvYqzyQ9FTzzV5UGyMtO6jSpyRD9ZmujJvBSzkO5W1eegCKGJgJEzcrY2MIsz5o85rfYmlpT6v7gZH8vKidh9PkZk=
+X-Received: by 2002:a6b:d80a:: with SMTP id y10mr8415646iob.114.1552847533391;
+ Sun, 17 Mar 2019 11:32:13 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20190219101629.15977-1-jagan@amarulasolutions.com>
+ <CAMty3ZDpy5YX3V+6e=UtY=a9Lgiw-NEP1JPQn4_LKL3mYFtrvQ@mail.gmail.com>
+ <CAMty3ZB3o1Np7_H7rmCgpUWPk7BRqHRm7gxRpgAq_YyeCUKgaw@mail.gmail.com> <CAMty3ZAmPzXvM+xS3+ULorGuQ-rKfMRNi-HvQdr7hjaFYfMZrg@mail.gmail.com>
+In-Reply-To: <CAMty3ZAmPzXvM+xS3+ULorGuQ-rKfMRNi-HvQdr7hjaFYfMZrg@mail.gmail.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 18 Mar 2019 00:02:02 +0530
+Message-ID: <CAMty3ZAn-7BSr_Bd3hOqEK2pvyBpuLX2McuFBf6Krsk1BKPP8g@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] input: touchscreen: Add goodix GT5553 CTP support
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Functions `void rtw_surveydone_event_callback`, `void rtw_indicate_connect`,
-`void rtw_stadel_event_callback` and `void _rtw_join_timeout_handler`
-are using the Macro CONFIG_INTEL_WIDI which doesn't exists anymore.
+Hi Dmitry,
 
-Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_mlme.c | 32 -----------------------
- 1 file changed, 32 deletions(-)
+On Mon, Mar 11, 2019 at 7:08 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> On Wed, Mar 6, 2019 at 10:47 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> >
+> > Hi Dmitry,
+> >
+> > On Tue, Feb 26, 2019 at 11:43 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > >
+> > > Hi Dmitry,
+> > >
+> > > On Tue, Feb 19, 2019 at 3:46 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > >
+> > > > This is v6 patchset for supporting goodix GT5553 CTP. Here is the
+> > > > previous version[1]
+> > > >
+> > > > Changes for v5:
+> > > > - document bindings for required regulators, which are need during
+> > > >   power-on sequence
+> > > > - enable, disable required regulators as described in power-on sequence
+> > > >   using normal regulator calls
+> > > > - update the proper commi messages
+> > > > Changes for v4:
+> > > > - document AVDD22, DVDD12, VDDIO as optional properties
+> > > > - use regulator bulk calls, for get, enable and disable functionalities
+> > > > Changes for v4:
+> > > > - devm_add_action_or_reset for disabling regulator
+> > > > Changes for v3:
+> > > > - add cover-letter
+> > > > - s/ADVV28/AVDD28 on commit head
+> > > > - fix few typo
+> > > > Changes for v2:
+> > > > - Rename vcc-supply with AVDD28-supply
+> > > > - disable regulator in remove
+> > > > - fix to setup regulator in probe code
+> > > > - add chipdata
+> > > > - drop example node in dt-bindings
+> > > >
+> > > > [1] https://patchwork.kernel.org/cover/10816901/
+> > > >
+> > > > Jagan Teki (4):
+> > > >   dt-bindings: input: touchscreen: goodix: Document regulator properties
+> > > >   Input: goodix - Add regulators suppot
+> > > >   dt-bindings: input: touchscreen: goodix: Add GT5663 compatible
+> > > >   Input: goodix - Add GT5663 CTP support
+> > > >
+> > > >  .../bindings/input/touchscreen/goodix.txt     |  3 +
+> > > >  drivers/input/touchscreen/goodix.c            | 60 +++++++++++++++++++
+> > > >  2 files changed, 63 insertions(+)
+> > >
+> > > Let me know if you have any further comments on regulator patch, fyi
+> > > Rob reviewed it already.
+> >
+> > Would you comment on this? few dts changes are pending for this to support.
+>
+> Gentle remainder.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-index 406e313477aa..79adc6f1e53a 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-@@ -943,13 +943,6 @@ void rtw_surveydone_event_callback(struct adapter	*adapter, u8 *pbuf)
- 						|| _SUCCESS != rtw_sitesurvey_cmd(adapter, &pmlmepriv->assoc_ssid, 1, NULL, 0)
- 					) {
- 						rtw_set_to_roam(adapter, 0);
--#ifdef CONFIG_INTEL_WIDI
--						if (adapter->mlmepriv.widi_state == INTEL_WIDI_STATE_ROAMING) {
--							memset(pmlmepriv->sa_ext, 0x00, L2SDTA_SERVICE_VE_LEN);
--							intel_widi_wk_cmd(adapter, INTEL_WIDI_LISTEN_WK, NULL, 0);
--							DBG_871X("change to widi listen\n");
--						}
--#endif /*  CONFIG_INTEL_WIDI */
- 						rtw_free_assoc_resources(adapter, 1);
- 						rtw_indicate_disconnect(adapter);
- 					} else {
-@@ -1108,14 +1101,6 @@ void rtw_indicate_connect(struct adapter *padapter)
- 	}
- 
- 	rtw_set_to_roam(padapter, 0);
--#ifdef CONFIG_INTEL_WIDI
--	if (padapter->mlmepriv.widi_state == INTEL_WIDI_STATE_ROAMING) {
--		memset(pmlmepriv->sa_ext, 0x00, L2SDTA_SERVICE_VE_LEN);
--		intel_widi_wk_cmd(padapter, INTEL_WIDI_LISTEN_WK, NULL, 0);
--		DBG_871X("change to widi listen\n");
--	}
--#endif /*  CONFIG_INTEL_WIDI */
--
- 	rtw_set_scan_deny(padapter, 3000);
- 
- 	RT_TRACE(_module_rtl871x_mlme_c_, _drv_err_, ("-rtw_indicate_connect: fw_state = 0x%08x\n", get_fwstate(pmlmepriv)));
-@@ -1703,11 +1688,6 @@ void rtw_stadel_event_callback(struct adapter *adapter, u8 *pbuf)
- 			roam = true;
- 			roam_target = pmlmepriv->roam_network;
- 		}
--#ifdef CONFIG_INTEL_WIDI
--		else if (adapter->mlmepriv.widi_state == INTEL_WIDI_STATE_CONNECTED) {
--			roam = true;
--		}
--#endif /*  CONFIG_INTEL_WIDI */
- 
- 		if (roam == true) {
- 			if (rtw_to_roam(adapter) > 0)
-@@ -1732,11 +1712,6 @@ void rtw_stadel_event_callback(struct adapter *adapter, u8 *pbuf)
- 		}
- 		spin_unlock_bh(&(pmlmepriv->scanned_queue.lock));
- 
--#ifdef CONFIG_INTEL_WIDI
--		if (!rtw_to_roam(adapter))
--			process_intel_widi_disconnect(adapter, 1);
--#endif /*  CONFIG_INTEL_WIDI */
--
- 		_rtw_roaming(adapter, roam_target);
- 	}
- 
-@@ -1833,13 +1808,6 @@ void _rtw_join_timeout_handler(struct timer_list *t)
- 				}
- 				break;
- 			} else {
--#ifdef CONFIG_INTEL_WIDI
--				if (adapter->mlmepriv.widi_state == INTEL_WIDI_STATE_ROAMING) {
--					memset(pmlmepriv->sa_ext, 0x00, L2SDTA_SERVICE_VE_LEN);
--					intel_widi_wk_cmd(adapter, INTEL_WIDI_LISTEN_WK, NULL, 0);
--					DBG_871X("change to widi listen\n");
--				}
--#endif /*  CONFIG_INTEL_WIDI */
- 				DBG_871X("%s We've try roaming but fail\n", __func__);
- 				rtw_indicate_disconnect(adapter);
- 				break;
--- 
-2.19.1
-
+It's been several weeks, any further comments?
