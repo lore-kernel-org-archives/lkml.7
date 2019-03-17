@@ -2,95 +2,145 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A31C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51B9C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E33222087C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552839368;
-	bh=9xm26lN7j61ybOwdbTGDbCqqWbwl2O/J4LEZcwbq3dc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=axDBd1tsnT/Suxkclp9a3E09/iOqwBjPuDtdvwV4XsvQrHXn311I+AVTnsk2DIoyn
-	 cyOiKHLnYEzVf8nhz/1KubrxqIzhCVQTpFAbZrHwlhDaKjmz+7ycGIAt5I9Q75tOHr
-	 RXPymY0NBNWjNHiWKovY4v/RGbi7rpxO79DAKldI=
+	by mail.kernel.org (Postfix) with ESMTP id 9E7AD2087C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 16:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfCQQQG (ORCPT
+        id S1726916AbfCQQ3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 12:16:06 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37473 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfCQQQG (ORCPT
+        Sun, 17 Mar 2019 12:29:04 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:48273 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfCQQ3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 12:16:06 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a17so11888608ljd.4
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 09:16:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hVWCM4XlHrgljHuZtZzee602hukWkcIq3WXBY5efN7Y=;
-        b=TSvua1UH/VP2d2I4CCyp2DQBlRr6krZjyWbeis9jGcxoQjMjpz1shEz0cP1bf9rzvP
-         Sr1aoNOiRp0NkC/dxC1T+zpeNFwB1r16F/Xo6CbYLmF13sK0DFymviNA8+8WKcm4ZKYq
-         fRIDe/U8mDQMwexqDoafWkFXaetsiMGsLABjw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hVWCM4XlHrgljHuZtZzee602hukWkcIq3WXBY5efN7Y=;
-        b=fIEu2FJ+G0riR+XY75ZjCC/AZcrlNMP0GjbIQx8Z7mJz0Lh7NFBmEO74bD/MQQeU+S
-         aKd67MMsqEVy3yc0szGDyUSVtUbtowxhDWJmLEa6djKvBHaro0IpUZboW11958zd7uOV
-         +rWgGiAA7dg3hMGnGfE5m9wfxHSUjhmQVlIoNAuYj5n6/KdhA6PctoPR656M+9Mlg52/
-         sCI11mJyyYZraukwO48BA00tTgpkiqLYiLGRAz+JkeqNorv0IwPG9NUMmpVI+lYv8lpz
-         jSezfNK1U0HyhSJup+l4fRls8GUqHsRL2a83vEP6CldmcRmvocRlHzRGp4kLA2PQf3EQ
-         zN3Q==
-X-Gm-Message-State: APjAAAWGn6FbSxnpQG/BMDP50tohESyl65mNZBdb1H5bQGRR8Ofn4s/2
-        H0rMkHMow7qjEWnyxgzzDGxO7gyfFrA=
-X-Google-Smtp-Source: APXvYqzGhX+ZSLkuO1CEjNczoFYDdR+9JHwdpB+Uf8Q5qIihCPGoW+YqWgxTEluJjrxUaXHjoa87iA==
-X-Received: by 2002:a2e:5b44:: with SMTP id p65mr8095178ljb.182.1552839363310;
-        Sun, 17 Mar 2019 09:16:03 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id n11sm1524956lfk.59.2019.03.17.09.16.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 09:16:02 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id a6so7618374lfl.5
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 09:16:02 -0700 (PDT)
-X-Received: by 2002:a19:2548:: with SMTP id l69mr5201932lfl.136.1552839361844;
- Sun, 17 Mar 2019 09:16:01 -0700 (PDT)
+        Sun, 17 Mar 2019 12:29:03 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 811461C0004;
+        Sun, 17 Mar 2019 16:28:50 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     aneesh.kumar@linux.ibm.com, mpe@ellerman.id.au,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v7 0/4] Fix free/allocation of runtime gigantic pages
+Date:   Sun, 17 Mar 2019 12:28:43 -0400
+Message-Id: <20190317162847.14107-1-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190317142524.GA5136@nautica>
-In-Reply-To: <20190317142524.GA5136@nautica>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 17 Mar 2019 09:15:45 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgywWzGP-UszbL4csXpk4_h0w5PbkZYdaTpBzue82btfQ@mail.gmail.com>
-Message-ID: <CAHk-=wgywWzGP-UszbL4csXpk4_h0w5PbkZYdaTpBzue82btfQ@mail.gmail.com>
-Subject: Re: [GIT PULL] 9p updates for 5.1
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     v9fs-developer@lists.sourceforge.net,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 7:25 AM Dominique Martinet
-<asmadeus@codewreck.org> wrote:
->
-> Two fixes (leak on invalid mount argument and possible deadlock on
-> i_size update on 32bit smp) and a fall-through warning cleanup
+his series fixes sh and sparc that did not advertise their gigantic page
+support and then were not able to allocate and free those pages at runtime.
+It renames MEMORY_ISOLATION && COMPACTION || CMA condition into the more
+accurate CONTIG_ALLOC, since it allows the definition of alloc_contig_range
+function.
+Finally, it then fixes the wrong definition of ARCH_HAS_GIGANTIC_PAGE config
+that, without MEMORY_ISOLATION && COMPACTION || CMA defined, did not allow
+architectures to free boottime allocated gigantic pages although unrelated.
 
-Hmm. I wonder what makes it valid to have concurrent updates to
-i_size? Yes, yes, you added that spinlock to make the update itself
-atomic on 32-bit, but it sounds a bit odd in the first place to have
-two things possibly changing the size of a file at the same time...
+Changes in v7:
+  I thought gigantic page support was settled at compile time, but Aneesh
+  and Michael have just come up with a patch proving me wrong for
+  powerpc: https://patchwork.ozlabs.org/patch/1047003/. So this version:
+  - reintroduces gigantic_page_supported renamed into
+    gigantic_page_runtime_supported
+  - reintroduces gigantic page page support corresponding checks (not
+    everywhere though: set_max_huge_pages check was redundant with
+    __nr_hugepages_store_common)
+  - introduces the possibility for arch to override this function
+    by using asm-generic/hugetlb.h current semantics although Aneesh
+    proposed something else.
 
-Anyway, pulled, but just surprised...
+Changes in v6:
+- Remove unnecessary goto since the fallthrough path does the same and is
+  the 'normal' behaviour, as suggested by Dave Hensen
+- Be more explicit in comment in set_max_huge_page: we return an error
+  if alloc_contig_range is not defined and the user tries to allocate a
+  gigantic page (we keep the same behaviour as before this patch), but we
+  now let her free boottime gigantic page, as suggested by Dave Hensen
+- Add Acked-by, thanks. 
 
-            Linus
+Changes in v5:
+- Fix bug in previous version thanks to Mike Kravetz
+- Fix block comments that did not respect coding style thanks to Dave Hensen
+- Define ARCH_HAS_GIGANTIC_PAGE only for sparc64 as advised by David Miller
+- Factorize "def_bool" and "depends on" thanks to Vlastimil Babka
+
+Changes in v4 as suggested by Dave Hensen:
+- Split previous version into small patches
+- Do not compile alloc_gigantic** functions for architectures that do not
+  support those pages
+- Define correct ARCH_HAS_GIGANTIC_PAGE in all arch that support them to avoid
+  useless runtime check
+- Add comment in set_max_huge_pages to explain that freeing is possible even
+  without CONTIG_ALLOC defined
+- Remove gigantic_page_supported function across all archs
+
+Changes in v3 as suggested by Vlastimil Babka and Dave Hansen:
+- config definition was wrong and is now in mm/Kconfig
+- COMPACTION_CORE was renamed in CONTIG_ALLOC
+
+Changes in v2 as suggested by Vlastimil Babka:
+- Get rid of ARCH_HAS_GIGANTIC_PAGE
+- Get rid of architecture specific gigantic_page_supported
+- Factorize CMA or (MEMORY_ISOLATION && COMPACTION) into COMPACTION_CORE 
+
+Alexandre Ghiti (4):
+  sh: Advertise gigantic page support
+  sparc: Advertise gigantic page support
+  mm: Simplify MEMORY_ISOLATION && COMPACTION || CMA into CONTIG_ALLOC
+  hugetlb: allow to free gigantic pages regardless of the configuration
+
+ arch/arm64/Kconfig                           |  2 +-
+ arch/arm64/include/asm/hugetlb.h             |  4 --
+ arch/powerpc/include/asm/book3s/64/hugetlb.h |  7 ---
+ arch/powerpc/platforms/Kconfig.cputype       |  2 +-
+ arch/s390/Kconfig                            |  2 +-
+ arch/s390/include/asm/hugetlb.h              |  3 --
+ arch/sh/Kconfig                              |  1 +
+ arch/sparc/Kconfig                           |  1 +
+ arch/x86/Kconfig                             |  2 +-
+ arch/x86/include/asm/hugetlb.h               |  4 --
+ arch/x86/mm/hugetlbpage.c                    |  2 +-
+ include/asm-generic/hugetlb.h                | 14 +++++
+ include/linux/gfp.h                          |  4 +-
+ mm/Kconfig                                   |  3 ++
+ mm/hugetlb.c                                 | 54 ++++++++++++++------
+ mm/page_alloc.c                              |  7 ++-
+ 16 files changed, 67 insertions(+), 45 deletions(-)
+
+-- 
+2.20.1
+
