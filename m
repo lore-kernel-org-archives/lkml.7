@@ -2,85 +2,99 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA02C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 07:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121C5C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 07:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073A621738
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 07:44:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3N0rFL8"
+	by mail.kernel.org (Postfix) with ESMTP id D93EB21738
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 07:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfCQHoE (ORCPT
+        id S1726842AbfCQHom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 03:44:04 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45829 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfCQHoE (ORCPT
+        Sun, 17 Mar 2019 03:44:42 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50435 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbfCQHom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 03:44:04 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y6so3056222ljd.12
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 00:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qBlieml8JV5qXCvbnd2yHyjLyj5GfAx2T1af6JZYS4A=;
-        b=O3N0rFL8vK+kPO8sqaolbYCCp2nG8348hMeHe3LEYlbQ2w5/dAe1lnHmKeXL6S6jVF
-         1DQw1sw6192noKpm+jYlVdgO9yNnR19Fe9E/SSoqqduD2f9tQPx1mJ6iqnDoOe50TIya
-         M2I7Nk451/hMkg2svR7zcqeANFED8FPvBc5rlhm/0D0ajseTFkUaH9lxCHFRwDFGdzbO
-         teshJCUnfsRyFctEKOmgjS5KKdoxDfr6ClcA0VwAlbNGrEtIZXgnsE3oxPFm0k8xlQzW
-         fbRoqRkQKR0RPIrUyTWEeVqsQPgNrOY3J6VSbeLF8A8osdS3O0XI5rkrP4HbnYd/uugG
-         ve0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qBlieml8JV5qXCvbnd2yHyjLyj5GfAx2T1af6JZYS4A=;
-        b=FeRTidujxaB5f9rNBYSYpm7b2d9cPcwbeakTqufLwiX9K4sLQ4qBbL0DzTD2ZwvlEN
-         WZdWzmSIpPZhzCeMDVxbFjUfBlJK6TcGm844x1kLy4vy8Y3pV4UPicxOsvu1rzx3Si8e
-         K8FZT33TIqm6y8WEjE7L1G305mgnAS4ITj+KSo9BmjtuDaqIjSGHgx60jRoja2JhPYnr
-         O8YKpZ4BZ6PNPPpncmHi7postsD4Rt/30GsnWtw56lg1eR/y18V4pZVNLlM5sGWoI9gD
-         de8ESdT/9i/WcTc59OO2Ok7D5Qo4UesmYSKinDQu1Z4r7w5Cj8KOape0kox01WZ/+/y+
-         cN/A==
-X-Gm-Message-State: APjAAAXKTSexv6Y4N7CWZvIftsREtMKYEfbpnyML/J2SgWa6h3fbcrop
-        eCYW/MufMAnNVJrwVxCWaD1UoEY8M1kwO6Dsn78=
-X-Google-Smtp-Source: APXvYqwu/oIAtp7zgDF8LKKfgwrdE2ZJg/6GFc8Ma3AAeCD93dRc10RFLlJ5eEK+2Px5+RO1Qee1F8e7ipb2U7gtUGA=
-X-Received: by 2002:a2e:731a:: with SMTP id o26mr1815344ljc.69.1552808642231;
- Sun, 17 Mar 2019 00:44:02 -0700 (PDT)
+        Sun, 17 Mar 2019 03:44:42 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2H7h3Ie2403737
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 17 Mar 2019 00:43:03 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2H7h07N2403734;
+        Sun, 17 Mar 2019 00:43:00 -0700
+Date:   Sun, 17 Mar 2019 00:43:00 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for kbuild test robot <tipbot@zytor.com>
+Message-ID: <tip-c634dc6bdedeb0b2c750fc611612618a85639ab2@git.kernel.org>
+Cc:     jolsa@redhat.com, ak@linux.intel.com, lkp@intel.com,
+        peterz@infradead.org, hpa@zytor.com, kan.liang@linux.intel.com,
+        bp@alien8.de, tglx@linutronix.de, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Reply-To: bp@alien8.de, kan.liang@linux.intel.com, tglx@linutronix.de,
+          mingo@kernel.org, linux-kernel@vger.kernel.org,
+          ak@linux.intel.com, lkp@intel.com, hpa@zytor.com,
+          peterz@infradead.org, jolsa@redhat.com
+In-Reply-To: <20190313184243.GA10820@lkp-sb-ep06>
+References: <20190313184243.GA10820@lkp-sb-ep06>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf/x86/intel: Make
+ dev_attr_allow_tsx_force_abort static
+Git-Commit-ID: c634dc6bdedeb0b2c750fc611612618a85639ab2
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190301184816.784-1-mans@mansr.com> <20190301184816.784-3-mans@mansr.com>
- <CAHp75VfZUN0PVwveB9FM6QvyJicVE5WjCX3b5rfCGZOQs9hO8A@mail.gmail.com> <yw1xo96g2ix5.fsf@mansr.com>
-In-Reply-To: <yw1xo96g2ix5.fsf@mansr.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sun, 17 Mar 2019 08:43:51 +0100
-Message-ID: <CANiq72mjLo94nK9i927FDgv3YzTQVBowMhb0EcDXKYKFh5tbkA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] auxdisplay: charlcd: make backlight initial state configurable
-To:     =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 4:48 PM M=C3=A5ns Rullg=C3=A5rd <mans@mansr.com> wr=
-ote:
->
-> The current code unconditionally flashes the light once.  I though it
-> best to keep that behaviour as default, even if it's not seen as ideal.
+Commit-ID:  c634dc6bdedeb0b2c750fc611612618a85639ab2
+Gitweb:     https://git.kernel.org/tip/c634dc6bdedeb0b2c750fc611612618a85639ab2
+Author:     kbuild test robot <lkp@intel.com>
+AuthorDate: Thu, 14 Mar 2019 02:42:43 +0800
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Sun, 17 Mar 2019 08:40:18 +0100
 
-Sent into -next. If no one else says anything after a few days, I will
-send the series for -rc2.
+perf/x86/intel: Make dev_attr_allow_tsx_force_abort static
 
-By the way, what about the other comment Andy mentioned? i.e.
-"defined(_OFF)" (in case you missed to answer it).
+Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: kbuild-all@01.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190313184243.GA10820@lkp-sb-ep06
 
-Cheers,
-Miguel
+---
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 92dfeb343a6a..8baa441d8000 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4179,7 +4179,7 @@ static struct attribute *intel_pmu_caps_attrs[] = {
+        NULL
+ };
+ 
+-DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
++static DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
+ 
+ static struct attribute *intel_pmu_attrs[] = {
+ 	&dev_attr_freeze_on_smi.attr,
