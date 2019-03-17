@@ -4,108 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE6BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 02:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6D2C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 03:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2494F21871
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 02:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FE0218D0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 03:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="M3slvbGQ"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OhphDw5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfCQCvf (ORCPT
+        id S1727018AbfCQDDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 22:51:35 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:27322 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfCQCve (ORCPT
+        Sat, 16 Mar 2019 23:03:44 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:53742 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726493AbfCQDDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 22:51:34 -0400
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x2H2p6DM004982;
-        Sun, 17 Mar 2019 11:51:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x2H2p6DM004982
+        Sat, 16 Mar 2019 23:03:43 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x2H33YBl018547;
+        Sun, 17 Mar 2019 12:03:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x2H33YBl018547
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552791067;
-        bh=DKPamK0hoaqhNy/DV4SeLx87SPhPHDMMcdWgh8BWLd8=;
+        s=dec2015msa; t=1552791814;
+        bh=PLgMZ2viq+2YOOfeXUK8Nf3DRZR23j2SxjeCLaT0Mcg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M3slvbGQVOWApOUZM1NZ7kO9tYg6X4G37axoC/qCHUMA+oWiXvI/MwfON6GQOJiaa
-         WEXOcJZ8I33T51hPI2M56a13ZRPyFJ3WMLTXFtqP1l2hBbO66HB7EQhg+BNWp0kkFF
-         zy6RUi0p4U3zJjUO+NC2qipYGFBi51A6Wa/sGFLGxscN7QYKYzBoELCnmAXpcPFO+j
-         JeXHUDowoQeXzRu3t41XtGPEzYh67GBltseqREjGIRs7gJCNPEBXro7BB9I/0CQNt2
-         KOVpGfOuPYTA0E3l9F1kRkgXi9fKqRqRwXOo+GWn6uIsWWymz+tjSEnldzLZ0HAVL2
-         Z0Un7T6gfMUQQ==
-X-Nifty-SrcIP: [209.85.221.174]
-Received: by mail-vk1-f174.google.com with SMTP id e131so3041134vkf.10;
-        Sat, 16 Mar 2019 19:51:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAVAoO0KRb9hF1x1fNahyf6KjA8hu/5RGAUpx8Ru+Yfms8mxm0hj
-        h5eAXkGJII/D0RoodclmgHuLe8JXas8T/kE/47o=
-X-Google-Smtp-Source: APXvYqzE2NYJ2vdzzGVDiSBKOY1K6d+7uyupfDgrG24+rwX+J7RqPfcQ4BnZO3r8LhcJsCDrMGoQFjd+w/c1EIr7n1M=
-X-Received: by 2002:a1f:9350:: with SMTP id v77mr5841019vkd.84.1552791066020;
- Sat, 16 Mar 2019 19:51:06 -0700 (PDT)
+        b=OhphDw5zlnrnB7wAvU6Oe2vpF+dg2jrNVi2peQCM4rizh5BWBmWO5jOnUubmmyM/Y
+         EAI3q0aiPI0FKhXShd1UokL8OJ63+HqbTfhxslfTRRr9bmbEiEo0bs5xdPo2qha/PP
+         RHUeYrsF1z3a3Lu17dc6WfhcvN6t7/bhQCrAMkItwe0qXg7U4E9Em1UnnAAJ2VSCQD
+         1q+PxHOWT6Y+dUxgzinQmmQ4cvERYHTN9GtK79nAwO6n5DJGTiCcxRLGMnaF7qzZEX
+         kddgQqbOXRnm6RA9nHheXVtDJ0XJauJBVzAMawiOBBwmw8q5hk1ZMyMWHHJYPZfPSQ
+         +JThBC8iIhBQw==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id w13so1559715vsc.4;
+        Sat, 16 Mar 2019 20:03:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAW1XvnshnRs5VK5cU6B6GfF+io1DjcT40Y1I606LTAwPTJddgap
+        60cZhUEAcW+WYRIx/6xhW4GejXOKa+8obYiKyGI=
+X-Google-Smtp-Source: APXvYqxuDNj7UAXvk9pVhmFBwDOZ1tdyT2BEjxN/WA2QganCB0yHw73zBWZNt/bIcQ22di1H06n8OsiwBIf4zZRyQLk=
+X-Received: by 2002:a67:ea05:: with SMTP id g5mr5902158vso.179.1552791813401;
+ Sat, 16 Mar 2019 20:03:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190315162503.131510-1-dianders@chromium.org>
-In-Reply-To: <20190315162503.131510-1-dianders@chromium.org>
+References: <20190309154307.23039-1-ar@cs.msu.ru> <20190309154307.23039-2-ar@cs.msu.ru>
+In-Reply-To: <20190309154307.23039-2-ar@cs.msu.ru>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 17 Mar 2019 11:50:29 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQUfyoUSaAVLhrT+N9w7AH81y6-gqkUcTYOeFJM8Dv1AQ@mail.gmail.com>
-Message-ID: <CAK7LNAQUfyoUSaAVLhrT+N9w7AH81y6-gqkUcTYOeFJM8Dv1AQ@mail.gmail.com>
-Subject: Re: [PATCH] Revert "modsign: Abort modules_install when signing fails"
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
+Date:   Sun, 17 Mar 2019 12:02:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASRctWUMXG5PSUSG2FMGkQV7jNNcUieUKzxho9r81TU1A@mail.gmail.com>
+Message-ID: <CAK7LNASRctWUMXG5PSUSG2FMGkQV7jNNcUieUKzxho9r81TU1A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] scripts/package/mkdebian: avoid implicit effects
+To:     Arseny Maslennikov <ar@cs.msu.ru>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+        Ben Hutchings <ben@decadent.org.uk>,
+        Riku Voipio <riku.voipio@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 1:25 AM Douglas Anderson <dianders@chromium.org> wrote:
+On Sun, Mar 10, 2019 at 12:44 AM Arseny Maslennikov <ar@cs.msu.ru> wrote:
 >
-> This reverts commit caf6fe91ddf62a96401e21e9b7a07227440f4185.
+> * The man page for dpkg-source(1) notes:
 >
-> The commit was fine but is no longer needed as of commit 3a2429e1faf4
-> ("kbuild: change if_changed_rule for multi-line recipe").  Let's go
-> back to using ";" to be consistent.
+> >      -b, --build directory [format-specific-parameters]
+> >             Build  a  source  package  (--build since dpkg 1.17.14).
+> >             <...>
+> >
+> >             dpkg-source will build the source package with the first
+> >             format found in this ordered list: the format  indicated
+> >             with  the  --format  command  line  option,  the  format
+> >             indicated in debian/source/format, =E2=80=9C1.0=E2=80=9D.  =
+The  fallback
+> >             to =E2=80=9C1.0=E2=80=9D is deprecated and will be removed =
+at some point
+> >             in the future, you should always  document  the  desired
+> >             source   format  in  debian/source/format.  See  section
+> >             SOURCE PACKAGE FORMATS for an extensive  description  of
+> >             the various source package formats.
 >
-> For some discussion, see:
+>   Thus it would be more foolproof to explicitly use 1.0 (as we always
+>   did) than to rely on dpkg-source's defaults.
 >
-> https://lkml.kernel.org/r/CAK7LNASde0Q9S5GKeQiWhArfER4S4wL1=R_FW8q0++_X3T5=hQ@mail.gmail.com
+> * In a similar vein, debian/rules is not made executable by mkdebian,
+>   and dpkg-source warns about that but still silently fixes the file.
+>   Let's be explicit once again.
 >
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
 > ---
 
 
 Applied to linux-kbuild. Thanks.
 
 
-
-
->  scripts/Makefile.modinst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  scripts/package/mkdebian | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
-> diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
-> index ff5ca9817a85..0dae402661f3 100644
-> --- a/scripts/Makefile.modinst
-> +++ b/scripts/Makefile.modinst
-> @@ -23,7 +23,7 @@ quiet_cmd_modules_install = INSTALL $@
->      mkdir -p $(2) ; \
->      cp $@ $(2) ; \
->      $(mod_strip_cmd) $(2)/$(notdir $@) ; \
-> -    $(mod_sign_cmd) $(2)/$(notdir $@) $(patsubst %,|| true,$(KBUILD_EXTMOD)) && \
-> +    $(mod_sign_cmd) $(2)/$(notdir $@) $(patsubst %,|| true,$(KBUILD_EXTMOD)) ; \
->      $(mod_compress_cmd) $(2)/$(notdir $@)
+> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+> index f030961c5165..d276eb671a27 100755
+> --- a/scripts/package/mkdebian
+> +++ b/scripts/package/mkdebian
+> @@ -132,7 +132,9 @@ else
+>          echo >&2 "Install lsb-release or set \$KDEB_CHANGELOG_DIST expli=
+citly"
+>  fi
 >
->  # Modules built outside the kernel source tree go into extra by default
+> -mkdir -p debian/
+> +mkdir -p debian/source/
+> +echo "1.0" > debian/source/format
+> +
+>  echo $debarch > debian/arch
+>
+>  # Generate a simple changelog template
+> @@ -221,5 +223,6 @@ clean:
+>
+>  binary: binary-arch
+>  EOF
+> +chmod +x debian/rules
+>
+>  exit 0
 > --
-> 2.21.0.360.g471c308f928-goog
+> 2.20.1
 >
 
 
--- 
+--=20
 Best Regards
 Masahiro Yamada
