@@ -2,211 +2,188 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0E5C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 09:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF58C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 09:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBC82148D
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 09:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380C020811
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 09:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfCQJzO (ORCPT
+        id S1726733AbfCQJ67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 05:55:14 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:25347 "EHLO
+        Sun, 17 Mar 2019 05:58:59 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:24902 "EHLO
         www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfCQJzN (ORCPT
+        with ESMTP id S1726058AbfCQJ67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 05:55:13 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2H9slpd080571;
-        Sun, 17 Mar 2019 18:54:47 +0900 (JST)
+        Sun, 17 Mar 2019 05:58:59 -0400
+Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2H9wtNW081750;
+        Sun, 17 Mar 2019 18:58:55 +0900 (JST)
         (envelope-from katsuhiro@katsuster.net)
 Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp);
- Sun, 17 Mar 2019 18:54:47 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp)
+ by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp);
+ Sun, 17 Mar 2019 18:58:55 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp)
 Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
         (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2H9sk2w080567
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2H9wsRK081746
         (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sun, 17 Mar 2019 18:54:47 +0900 (JST)
+        Sun, 17 Mar 2019 18:58:55 +0900 (JST)
         (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: add HDMI sound node for
- rk3328-rock64
+Subject: Re: [PATCH] dmaengine: pl330: introduce debugfs interface
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190314184953.8129-1-katsuhiro@katsuster.net>
+ <20190315170059.GF5348@vkoul-mobl>
 From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Jonas Karlman <jonas@kwiboo.se>, Heiko Stuebner <heiko@sntech.de>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190217173407.29189-1-katsuhiro@katsuster.net>
- <20190217173407.29189-2-katsuhiro@katsuster.net>
- <d42dd768-d6c1-098d-759f-e3576d0edcc2@katsuster.net>
- <AM3PR03MB0966F2308C6003C192A68F4DAC770@AM3PR03MB0966.eurprd03.prod.outlook.com>
- <fb36eddb-ef3b-df4a-5e1a-6f8866726ae9@katsuster.net>
-Message-ID: <b855ff66-19e5-4ea5-3337-23d5ada1bf1c@katsuster.net>
-Date:   Sun, 17 Mar 2019 18:54:46 +0900
+Message-ID: <38787dd0-0999-adab-6a7d-88792fb7ad61@katsuster.net>
+Date:   Sun, 17 Mar 2019 18:58:54 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <fb36eddb-ef3b-df4a-5e1a-6f8866726ae9@katsuster.net>
+In-Reply-To: <20190315170059.GF5348@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jonas,
+Hello Vinod,
 
-How about this topic?
+Thank you for your comment.
+I fix it all and re-post v2 patch.
 
-I think this patch does not have bad effect for multi channel
-sound of HDMI. If you don't think so, please tell me.
-I wait your sound patch and after re-check this patch.
+
+On 2019/03/16 2:00, Vinod Koul wrote:
+> On 15-03-19, 03:49, Katsuhiro Suzuki wrote:
+>> This patch adds debugfs interface to show the relationship between
+>> DMA threads (hardware resource for transferring data) and DMA
+>> channel ID of DMA slave.
+>>
+>> Typically, PL330 has many slaves than number of DMA threads.
+>> So sometimes PL330 cannot allocate DMA threads for all slaves even
+>> if an user specify DMA channel ID in devicetree. This interface will
+> 
+> a user :)
+> 
+>> be useful for checking that DMA threads are allocated or not.
+>>
+>> Below is an output sample:
+>>
+>> $ sudo cat /sys/kernel/debug/ff1f0000.dmac
+>> PL330 physical channels:
+>> THREAD:         CHANNEL:
+>> --------        -----
+>> 0               8
+>> 1               9
+>> 2               11
+>> 3               12
+>> 4               14
+>> 5               15
+>> 6               10
+>> 7               --
+>>
+>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>> ---
+>>   drivers/dma/pl330.c | 51 +++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 51 insertions(+)
+>>
+>> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+>> index eec79fdf27a5..aab71863757c 100644
+>> --- a/drivers/dma/pl330.c
+>> +++ b/drivers/dma/pl330.c
+>> @@ -11,6 +11,7 @@
+>>    * (at your option) any later version.
+>>    */
+>>   
+>> +#include <linux/debugfs.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/io.h>
+>>   #include <linux/init.h>
+>> @@ -2896,6 +2897,55 @@ static irqreturn_t pl330_irq_handler(int irq, void *data)
+>>   	BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
+>>   	BIT(DMA_SLAVE_BUSWIDTH_8_BYTES)
+>>   
+>> +#ifdef CONFIG_DEBUG_FS
+>> +static int pl330_debugfs_show(struct seq_file *s, void *data)
+>> +{
+>> +	struct pl330_dmac *pl330 = s->private;
+>> +	int chans, pchs, ch, pr, found;
+>> +
+>> +	chans = pl330->pcfg.num_chan;
+>> +	pchs = pl330->num_peripherals;
+>> +
+>> +	seq_puts(s, "PL330 physical channels:\n");
+>> +	seq_puts(s, "THREAD:\t\tCHANNEL:\n");
+>> +	seq_puts(s, "--------\t-----\n");
+>> +	for (ch = 0; ch < chans; ch++) {
+>> +		struct pl330_thread *thrd = &pl330->channels[ch];
+>> +
+>> +		found = -1;
+> 
+> found can be uninitialized if we skip this for, which should not be an
+> issue as chans> 0!
+> 
+
+Exactly. Thanks, 'found' should be changed to for-loop local variable.
+
+
+>> +		for (pr = 0; pr < pchs; pr++) {
+>> +			struct dma_pl330_chan *pch = &pl330->peripherals[pr];
+>> +
+>> +			if (!pch->thread || thrd->id != pch->thread->id)
+>> +				continue;
+>> +
+>> +			found = pr;
+>> +		}
+>> +
+>> +		seq_printf(s, "%d\t\t", thrd->id);
+>> +		if (found == -1)
+>> +			seq_puts(s, "--\n");
+>> +		else
+>> +			seq_printf(s, "%d\n", found);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +DEFINE_SHOW_ATTRIBUTE(pl330_debugfs);
+>> +
+>> +static inline void init_pl330_debugfs(struct pl330_dmac *pl330)
+>> +{
+>> +	debugfs_create_file(dev_name(pl330->ddma.dev),
+>> +			    S_IFREG | S_IRUGO, NULL, pl330,
+> 
+> are we not supposed to use octal permissions?
+> 
+>> +			    &pl330_debugfs_fops);
+>> +}
+>> +#else
+>> +static inline void init_pl330_debugfs(struct pl330_dmac *pl330)
+>> +{
+>> +}
+>> +#endif
+>> +
+>>   /*
+>>    * Runtime PM callbacks are provided by amba/bus.c driver.
+>>    *
+>> @@ -3082,6 +3132,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>>   		dev_err(&adev->dev, "unable to set the seg size\n");
+>>   
+>>   
+>> +	init_pl330_debugfs(pl330);
+>>   	dev_info(&adev->dev,
+>>   		"Loaded driver for PL330 DMAC-%x\n", adev->periphid);
+>>   	dev_info(&adev->dev,
+>> -- 
+>> 2.20.1
+> 
 
 Best Regards,
 Katsuhiro Suzuki
-
-On 2019/03/03 4:26, Katsuhiro Suzuki wrote:
-> Hello Jonas,
-> 
-> Thanks for your comments.
-> 
-> On 2019/03/03 2:20, Jonas Karlman wrote:
->> On 2019-03-02 15:19, Katsuhiro Suzuki wrote:
->>> Ping...
->>>
->>> On 2019/02/18 2:34, Katsuhiro Suzuki wrote:
->>>> This patch adds HDMI sound (I2S0) node for rock64.
->>>>
->>>> After apply this patch, UART2 will fail to allocate DMA resources
->>>> but UART driver can work fine without DMA.
->>>>
->>>> This error is related to the DMAC of rk3328 (pl330 or compatible).
->>>> DMAC connected to 16 DMA sources. Each sources have ID number that is
->>>> called 'Req number' in rk3328 TRM. Currently total 7 sources has been
->>>> activated as follows:
->>>>
->>>> | Req number | Source | Required  |
->>>> |            |        | channels  |
->>>> |------------+--------+-----------|
->>>> | 14, 15     | I2S1   | 2ch       |
->>>> |  6,  7     | UART2  | 2ch       |
->>>> |     10     | SPDIF  | 1ch       |
->>>> |  8,  9     | SPI0   | 2ch       |
->>>> |------------+--------+-----------|
->>>> |            | Total  | 7ch       |
->>>>
->>>> HDMI audio needs to activate new source I2S0 (Req number 11 and 12).
->>>> I2S0 can work concurrently with other sources, but rk3328 DMAC can
->>>> use max 8 channels at same time. If I2S0 is simply activated by this
->>>> patch, required DMAC channels will be 9. So last one (UART2) cannot
->>>> allocate the DMA resources.
->>>>
->>>> Virt-dma mechanism for pl0330 DMAC driver is needed to fix this
->>>> problem.
->>>>
->>>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
->>>> ---
->>>>    .../arm64/boot/dts/rockchip/rk3328-rock64.dts | 21 
->>>> ++++++++++++++++++-
->>>>    1 file changed, 20 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts 
->>>> b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
->>>> index 2157a528276b..bfc0930d245c 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
->>>> @@ -68,7 +68,8 @@
->>>>        sound {
->>>>            compatible = "audio-graph-card";
->>>>            label = "rockchip,rk3328";
->>>> -        dais = <&i2s1_p0
->>>> +        dais = <&i2s0_p0
->>>> +            &i2s1_p0
->>>>                &spdif_p0>;
->>
->> I am working on multi-channel hdmi audio support for dw-hdmi at [1] 
->> and are wondering if having multiple dais on one graph card
->> instead of a separate hdmi sound card will affect the ability to 
->> define a proper alsa config for multi channel hdmi sound.
->>
->> [1] 
->> https://github.com/Kwiboo/linux-rockchip/compare/8874c206d613dc575f5cb6e385e7a866020138d0...92b20eaa6b6dd2cf3418a428f905d10bbc62724f 
->>
->>
-> 
-> It seems a part of multi channel (5.1 ch) has already been supported
-> by rockchip-i2s and dw-hdmi. So I applied this patch and tried below
-> command.
->    speaker-test -D hw:0,0 -f 48000 -c 6
-> It does not return errors.
-> 
-> Would you tell me more details you worried about if something wrong?
-> 
-> 
-> FYI: Rock64 PCM devices are as follows after applied this patch.
-> ~~~~~
-> $ cat /proc/asound/pcm
-> 00-00: ff000000.i2s-i2s-hifi i2s-hifi-0 :  : playback 1
-> 00-01: ff010000.i2s-rk3328-hifi ff410000.codec-1 :  : playback 1 : 
-> capture 1
-> 00-02: ff030000.spdif-dit-hifi dit-hifi-2 :  : playback 1
-> ~~~~~
-> 
-> Best Regards,
-> Katsuhiro Suzuki
-> 
-> 
->> Regards,
->> Jonas
->>
->>>>        };
->>>> @@ -141,6 +142,12 @@
->>>>    &hdmi {
->>>>        status = "okay";
->>>> +
->>>> +    port@0 {
->>>> +        hdmi_p0_0: endpoint {
->>>> +            remote-endpoint = <&i2s0_p0_0>;
->>>> +        };
->>>> +    };
->>>>    };
->>>>    &hdmiphy {
->>>> @@ -256,6 +263,18 @@
->>>>        };
->>>>    };
->>>> +&i2s0 {
->>>> +    status = "okay";
->>>> +
->>>> +    i2s0_p0: port {
->>>> +        i2s0_p0_0: endpoint {
->>>> +            dai-format = "i2s";
->>>> +            mclk-fs = <256>;
->>>> +            remote-endpoint = <&hdmi_p0_0>;
->>>> +        };
->>>> +    };
->>>> +};
->>>> +
->>>>    &i2s1 {
->>>>        status = "okay";
->>>>
->>>
->>> _______________________________________________
->>> Linux-rockchip mailing list
->>> Linux-rockchip@lists.infradead.org
->>> https://nam03.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists.infradead.org%2Fmailman%2Flistinfo%2Flinux-rockchip&amp;data=02%7C01%7C%7Cfcb0d6c43ded4d5e7d4c08d69f1a226d%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C636871331922090426&amp;sdata=ABb%2Fo%2FMAGvFBH%2B37uQr6rzn%2B%2FXBAXyiGfv2%2BMO0RQoQ%3D&amp;reserved=0 
->>>
->>
->>
->>
-> 
-> 
-
