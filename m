@@ -2,134 +2,102 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6D2C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 03:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DC2C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 03:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29FE0218D0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 03:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34B7218D0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 03:43:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OhphDw5z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4Q+ivyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfCQDDo (ORCPT
+        id S1726884AbfCQDnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Mar 2019 23:03:44 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:53742 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726493AbfCQDDn (ORCPT
+        Sat, 16 Mar 2019 23:43:07 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:36928 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfCQDnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Mar 2019 23:03:43 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x2H33YBl018547;
-        Sun, 17 Mar 2019 12:03:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x2H33YBl018547
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552791814;
-        bh=PLgMZ2viq+2YOOfeXUK8Nf3DRZR23j2SxjeCLaT0Mcg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OhphDw5zlnrnB7wAvU6Oe2vpF+dg2jrNVi2peQCM4rizh5BWBmWO5jOnUubmmyM/Y
-         EAI3q0aiPI0FKhXShd1UokL8OJ63+HqbTfhxslfTRRr9bmbEiEo0bs5xdPo2qha/PP
-         RHUeYrsF1z3a3Lu17dc6WfhcvN6t7/bhQCrAMkItwe0qXg7U4E9Em1UnnAAJ2VSCQD
-         1q+PxHOWT6Y+dUxgzinQmmQ4cvERYHTN9GtK79nAwO6n5DJGTiCcxRLGMnaF7qzZEX
-         kddgQqbOXRnm6RA9nHheXVtDJ0XJauJBVzAMawiOBBwmw8q5hk1ZMyMWHHJYPZfPSQ
-         +JThBC8iIhBQw==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id w13so1559715vsc.4;
-        Sat, 16 Mar 2019 20:03:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAW1XvnshnRs5VK5cU6B6GfF+io1DjcT40Y1I606LTAwPTJddgap
-        60cZhUEAcW+WYRIx/6xhW4GejXOKa+8obYiKyGI=
-X-Google-Smtp-Source: APXvYqxuDNj7UAXvk9pVhmFBwDOZ1tdyT2BEjxN/WA2QganCB0yHw73zBWZNt/bIcQ22di1H06n8OsiwBIf4zZRyQLk=
-X-Received: by 2002:a67:ea05:: with SMTP id g5mr5902158vso.179.1552791813401;
- Sat, 16 Mar 2019 20:03:33 -0700 (PDT)
+        Sat, 16 Mar 2019 23:43:07 -0400
+Received: by mail-wm1-f41.google.com with SMTP id v14so890180wmf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 20:43:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zCFeCo9jfyzbFu9on12SSuPHmbccO4YKVoxxZUjoebM=;
+        b=e4Q+ivyFEjJYWH3r0ODhhHSb/tzXyMdCrNlayCevlkr7VFUK0vvc1hoctdhpIKDJDs
+         XDqC3ImI5sMlLVpLoPAzGnqaJd4QXzw0uXc/e5VgXz3McyKE0t/PWZ1oGMJfsSXjP1nb
+         iR5aWvWPbzFJcFwf4SD2m+vFw11DdjKkm7lDgPjFAUqGBrVuvEKnrzY64xJoc90jg4wR
+         EiWJ5XtSpp2z4azepzL69EzcIJE9rwhkS7ZQ7gMq0BXl7iRmr8fxf1TYGXNNjPPGT0eQ
+         mV0h9nAlTYogk1M1yK3yNWRzPDAvSMUNJ6JRmyuiHNbqrIk9eAHNpzzXlVDIWjYHDkBv
+         J5CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zCFeCo9jfyzbFu9on12SSuPHmbccO4YKVoxxZUjoebM=;
+        b=eNgRGqS3KKjWwRq1MtWH6bVOVw1/k+nOFqsp9YzEDOWK2S9xlOZllHrjN2RUCh44fR
+         6khtWKt77EYQK82DMDHxj/frvbyKjiCoEtwaG2FCNq4+nB6QJtRd57qzWiHqHMs65MIJ
+         8Dedyhs0c3c3Vo1CVwYVr2SDqSjiWNQT6cf+SM2UHo7umICZdhtHLEW32AuqbUKLr8lD
+         Q5M4KdEhOY71cjPv7uZjufSL0iQuwbBnlIsYT7oOn/L4WRhITl2N7/0Lk1Nxt2N7M/8g
+         ts47FT2uxhALeRMZbsxX3jPzI6N9dqkaLMlKHQwk1EPYZyM2nwIiBRnDR3w8uz5BHBIV
+         Un2g==
+X-Gm-Message-State: APjAAAX2su0gSnDfmpEcT2aHt2sTlTy7P009+H2xvadl8eBbJCPLswWy
+        zsxDQBPprnN1COumzvHzdZJFxSE=
+X-Google-Smtp-Source: APXvYqzpAnulDh0s2VIYNKwL4BfGfTyi5UVNRHR1fZuh13e7abg2gyCeNtk5etd3p1Jn7UlXSHT1+w==
+X-Received: by 2002:a7b:cd82:: with SMTP id y2mr6363962wmj.121.1552794184839;
+        Sat, 16 Mar 2019 20:43:04 -0700 (PDT)
+Received: from localhost.localdomain (cpc102034-bagu16-2-0-cust471.1-3.cable.virginm.net. [81.97.71.216])
+        by smtp.gmail.com with ESMTPSA id w10sm6398386wrn.32.2019.03.16.20.43.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Mar 2019 20:43:04 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org
+Subject: [PATCH] staging: speakup: fix line over 80 characters.
+Date:   Sun, 17 Mar 2019 03:39:46 +0000
+Message-Id: <20190317033946.12585-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190309154307.23039-1-ar@cs.msu.ru> <20190309154307.23039-2-ar@cs.msu.ru>
-In-Reply-To: <20190309154307.23039-2-ar@cs.msu.ru>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 17 Mar 2019 12:02:57 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASRctWUMXG5PSUSG2FMGkQV7jNNcUieUKzxho9r81TU1A@mail.gmail.com>
-Message-ID: <CAK7LNASRctWUMXG5PSUSG2FMGkQV7jNNcUieUKzxho9r81TU1A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] scripts/package/mkdebian: avoid implicit effects
-To:     Arseny Maslennikov <ar@cs.msu.ru>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 12:44 AM Arseny Maslennikov <ar@cs.msu.ru> wrote:
->
-> * The man page for dpkg-source(1) notes:
->
-> >      -b, --build directory [format-specific-parameters]
-> >             Build  a  source  package  (--build since dpkg 1.17.14).
-> >             <...>
-> >
-> >             dpkg-source will build the source package with the first
-> >             format found in this ordered list: the format  indicated
-> >             with  the  --format  command  line  option,  the  format
-> >             indicated in debian/source/format, =E2=80=9C1.0=E2=80=9D.  =
-The  fallback
-> >             to =E2=80=9C1.0=E2=80=9D is deprecated and will be removed =
-at some point
-> >             in the future, you should always  document  the  desired
-> >             source   format  in  debian/source/format.  See  section
-> >             SOURCE PACKAGE FORMATS for an extensive  description  of
-> >             the various source package formats.
->
->   Thus it would be more foolproof to explicitly use 1.0 (as we always
->   did) than to rely on dpkg-source's defaults.
->
-> * In a similar vein, debian/rules is not made executable by mkdebian,
->   and dpkg-source warns about that but still silently fixes the file.
->   Let's be explicit once again.
->
-> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
-> ---
+Fix coding style issues, which solves checkpatch.pl warning:
+    "WARNING: line over 80 characters".
+---
+ drivers/staging/speakup/kobjects.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/staging/speakup/kobjects.c b/drivers/staging/speakup/kobjects.c
+index 2eb5af3debb3..abeab64899db 100644
+--- a/drivers/staging/speakup/kobjects.c
++++ b/drivers/staging/speakup/kobjects.c
+@@ -154,7 +154,7 @@ static ssize_t chars_chartab_store(struct kobject *kobj,
+ 			continue;
+ 		}
+ 
+-		/* Do not replace with kstrtoul: here we need temp to be updated */
++/* Do not replace with kstrtoul: here we need temp to be updated */
+ 		index = simple_strtoul(cp, &temp, 10);
+ 		if (index > 255) {
+ 			rejected++;
+@@ -788,7 +788,7 @@ static ssize_t message_store_helper(const char *buf, size_t count,
+ 			continue;
+ 		}
+ 
+-		/* Do not replace with kstrtoul: here we need temp to be updated */
++/* Do not replace with kstrtoul: here we need temp to be updated */
+ 		index = simple_strtoul(cp, &temp, 10);
+ 
+ 		while ((temp < linefeed) && (*temp == ' ' || *temp == '\t'))
+-- 
+2.20.1
 
-Applied to linux-kbuild. Thanks.
-
-
->  scripts/package/mkdebian | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-> index f030961c5165..d276eb671a27 100755
-> --- a/scripts/package/mkdebian
-> +++ b/scripts/package/mkdebian
-> @@ -132,7 +132,9 @@ else
->          echo >&2 "Install lsb-release or set \$KDEB_CHANGELOG_DIST expli=
-citly"
->  fi
->
-> -mkdir -p debian/
-> +mkdir -p debian/source/
-> +echo "1.0" > debian/source/format
-> +
->  echo $debarch > debian/arch
->
->  # Generate a simple changelog template
-> @@ -221,5 +223,6 @@ clean:
->
->  binary: binary-arch
->  EOF
-> +chmod +x debian/rules
->
->  exit 0
-> --
-> 2.20.1
->
-
-
---=20
-Best Regards
-Masahiro Yamada
