@@ -2,255 +2,119 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25486C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 13:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F96CC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 13:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E277020896
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 13:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209602087F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 13:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfCQNiE (ORCPT
+        id S1727129AbfCQNr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 09:38:04 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46430 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726927AbfCQNiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 09:38:04 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 33C0F348BBF1B99C3B46;
-        Sun, 17 Mar 2019 21:37:59 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Sun, 17 Mar 2019
- 21:37:50 +0800
-Subject: Re: [RFC] Question about TLB flush while set Stage-2 huge pages
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>, <zhengxiang9@huawei.com>
-CC:     <marc.zyngier@arm.com>, <christoffer.dall@arm.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <james.morse@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>, <lious.lilei@hisilicon.com>,
-        <lishuo1@hisilicon.com>
-References: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
- <e2a94937-c324-e2d6-7e61-3f998e6e6e22@arm.com>
- <1c0e07b9-73f0-efa4-c1b7-ad81789b42c5@huawei.com>
- <5188e3b9-5b5a-a6a7-7ef0-09b7b4f06af6@arm.com>
- <348d0b3b-c74b-7b39-ec30-85905c077c38@huawei.com>
- <20190314105537.GA15323@en101>
- <368bd218-ac1d-19b2-6e92-960b91afee8b@huawei.com>
- <d322e126-4da2-6dfd-a86d-088dfb3bf0f4@huawei.com>
- <6aea4049-7860-7144-a7be-14f856cdc789@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <f6639daa-cfba-c65a-7320-c9dcc1ef8377@huawei.com>
-Date:   Sun, 17 Mar 2019 21:34:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Sun, 17 Mar 2019 09:47:26 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36807 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfCQNr0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 09:47:26 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h18so1678489wml.1
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 06:47:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R8wLuZVbRgRDLrB9NjHoNttBS7CXMpzCE02UZmbtXvk=;
+        b=Hkv0t5mAAiw9XheWlxe5jXXOxwNN/gRV1MzZ51FX0n7sFdPodyL3y8+dvVQnnPH597
+         K/1ErEXA1AAKvjh0P0np3W2VdsfnRFB0S1kartGlznSVvLIhR4LI/tVEBTLm9MgSVAaa
+         RR/W78gj1fKMdG4sJMEK9iOeBgfJVxENwkKJnlWux1vWD6OCyuH8O20DswWwxglwsVSU
+         nEg6rf4jNUMzpsQg6hZ5IH7UrhpUec+kadg6bjKOoT8coGSKxcc60J0SMyrjOeZt5nbN
+         UJlA2orSI9jHxAP7d+ZOJMW2mD6iT3IcF3gih23RgxroklB9FhO0XZnqDQBrr90liKpA
+         CFEA==
+X-Gm-Message-State: APjAAAXE884bsUQBIK8aCecCdXP8pVRpY3o0c9kP7YXErbQLe36pAzua
+        mP14oiwmz76NNxnp4OtuniVgVg==
+X-Google-Smtp-Source: APXvYqxoCNUDvVFN9R+9ALdK8WLtRdxFUnWVWWqVLIviDgZjzV8ZtxPVr0BFns5rc615fbK0eby+LA==
+X-Received: by 2002:a1c:f014:: with SMTP id a20mr7824469wmb.122.1552830444185;
+        Sun, 17 Mar 2019 06:47:24 -0700 (PDT)
+Received: from localhost.localdomain (bband-dyn196.178-41-14.t-com.sk. [178.41.14.196])
+        by smtp.gmail.com with ESMTPSA id 132sm13224790wmd.30.2019.03.17.06.47.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 17 Mar 2019 06:47:23 -0700 (PDT)
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+To:     selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        syzbot+a57b2aff60832666fc28@syzkaller.appspotmail.com
+Subject: [PATCH] selinux: fix NULL dereference in policydb_destroy()
+Date:   Sun, 17 Mar 2019 14:46:53 +0100
+Message-Id: <20190317134653.26824-1-omosnace@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <6aea4049-7860-7144-a7be-14f856cdc789@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+The conversion to kvmalloc() forgot to account for the possibility that
+p->type_attr_map_array might be null in policydb_destroy().
 
-On 2019/3/15 22:56, Suzuki K Poulose wrote:
-> Hi Zhengui,
+Fix this by destroying its contents only if it is not NULL.
 
-s/Zhengui/Zheng/
+Also make sure ebitmap_init() is called on all entries before
+policydb_destroy() can be called. Right now this is a no-op, because
+both kvcalloc() and ebitmap_init() just zero out the whole struct, but
+let's rather not rely on a specific implementation.
 
-(I think you must wanted to say "Hi" to Zheng :-) )
-
-
-I have looked into your patch and the kernel log, and I believe that
-your patch had already addressed this issue. But I think we can do it
-a little better - two more points need to be handled with caution.
-
-Take PMD hugepage (PMD_SIZE == 2M) for example:
-
-> 
-> On 15/03/2019 08:21, Zheng Xiang wrote:
->> Hi Suzuki,
->>
->> I have tested this patch, VM doesn't hang and we get expected WARNING 
->> log:
-> 
-> Thanks for the quick testing !
-> 
->> However, we also get the following unexpected log:
->>
->> [  908.329900] BUG: Bad page state in process qemu-kvm  pfn:a2fb41cf
->> [  908.339415] page:ffff7e28bed073c0 count:-4 mapcount:0 
->> mapping:0000000000000000 index:0x0
->> [  908.339416] flags: 0x4ffffe0000000000()
->> [  908.339418] raw: 4ffffe0000000000 dead000000000100 dead000000000200 
->> 0000000000000000
->> [  908.339419] raw: 0000000000000000 0000000000000000 fffffffcffffffff 
->> 0000000000000000
->> [  908.339420] page dumped because: nonzero _refcount
->> [  908.339437] CPU: 32 PID: 72599 Comm: qemu-kvm Kdump: loaded 
->> Tainted: G    B  W        5.0.0+ #1
->> [  908.339438] Call trace:
->> [  908.339439]  dump_backtrace+0x0/0x188
->> [  908.339441]  show_stack+0x24/0x30
->> [  908.339442]  dump_stack+0xa8/0xcc
->> [  908.339443]  bad_page+0xf0/0x150
->> [  908.339445]  free_pages_check_bad+0x84/0xa0
->> [  908.339446]  free_pcppages_bulk+0x4b8/0x750
->> [  908.339448]  free_unref_page_commit+0x13c/0x198
->> [  908.339449]  free_unref_page+0x84/0xa0
->> [  908.339451]  __free_pages+0x58/0x68
->> [  908.339452]  zap_huge_pmd+0x290/0x2d8
->> [  908.339454]  unmap_page_range+0x2b4/0x470
->> [  908.339455]  unmap_single_vma+0x94/0xe8
->> [  908.339457]  unmap_vmas+0x8c/0x108
->> [  908.339458]  exit_mmap+0xd4/0x178
->> [  908.339459]  mmput+0x74/0x180
->> [  908.339460]  do_exit+0x2b4/0x5b0
->> [  908.339462]  do_group_exit+0x3c/0xe0
->> [  908.339463]  __arm64_sys_exit_group+0x24/0x28
->> [  908.339465]  el0_svc_common+0xa0/0x180
->> [  908.339466]  el0_svc_handler+0x38/0x78
->> [  908.339467]  el0_svc+0x8/0xc
-> 
-> Thats bad, we seem to be making upto 4 unbalanced put_page().
-> 
->>>> ---
->>>>    virt/kvm/arm/mmu.c | 51 
->>>> +++++++++++++++++++++++++++++++++++----------------
->>>>    1 file changed, 35 insertions(+), 16 deletions(-)
->>>>
->>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->>>> index 66e0fbb5..04b0f9b 100644
->>>> --- a/virt/kvm/arm/mmu.c
->>>> +++ b/virt/kvm/arm/mmu.c
->>>> @@ -1076,24 +1076,38 @@ static int stage2_set_pmd_huge(struct kvm 
->>>> *kvm, struct kvm_mmu_memory_cache
->>>>             * Skip updating the page table if the entry is
->>>>             * unchanged.
->>>>             */
->>>> -        if (pmd_val(old_pmd) == pmd_val(*new_pmd))
->>>> +        if (pmd_val(old_pmd) == pmd_val(*new_pmd)) {
->>>>                return 0;
->>>> -
->>>> +        } else if (WARN_ON_ONCE(!pmd_thp_or_huge(old_pmd))) {
->>>>            /*
->>>> -         * Mapping in huge pages should only happen through a
->>>> -         * fault.  If a page is merged into a transparent huge
->>>> -         * page, the individual subpages of that huge page
->>>> -         * should be unmapped through MMU notifiers before we
->>>> -         * get here.
->>>> -         *
->>>> -         * Merging of CompoundPages is not supported; they
->>>> -         * should become splitting first, unmapped, merged,
->>>> -         * and mapped back in on-demand.
->>>> +         * If we have PTE level mapping for this block,
->>>> +         * we must unmap it to avoid inconsistent TLB
->>>> +         * state. We could end up in this situation if
->>>> +         * the memory slot was marked for dirty logging
->>>> +         * and was reverted, leaving PTE level mappings
->>>> +         * for the pages accessed during the period.
->>>> +         * Normal THP split/merge follows mmu_notifier
->>>> +         * callbacks and do get handled accordingly.
->>>>             */
->>>> -        VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
->>>> +            unmap_stage2_range(kvm, (addr & S2_PMD_MASK), 
->>>> S2_PMD_SIZE);
-
-First, using unmap_stage2_range() here is not quite appropriate. Suppose
-we've only accessed one 2M page in HPA [x, x+1]Gib range, with other
-pages unaccessed.  What will happen if unmap_stage2_range(this_2M_page)?
-We'll unexpectedly reach clear_stage2_pud_entry(), and things are going
-to get really bad.  So we'd better use unmap_stage2_ptes() here since we
-only want to unmap a 2M range.
-
-
-Second, consider below function stack:
-
-   unmap_stage2_ptes()
-     clear_stage2_pmd_entry()
-       put_page(virt_to_page(pmd))
-
-It seems that we have one "redundant" put_page() here, (thus comes the
-bad kernel log ... ,) but actually we do not.  By stage2_set_pmd_huge(),
-the PMD table entry will then point to a 2M block (originally pointed
-to a PTE table), the _refcount of this PMD-level table page should _not_
-change after unmap_stage2_ptes().  So what we really should do is adding
-a get_page() after unmapping to keep the _refcount a balance!
-
-
-thoughts ? A simple patch below (based on yours) for details.
-
-
-thanks,
-
-zenghui
-
-
->>
->> It seems that kvm decreases the _refcount of the page twice in 
->> transparent_hugepage_adjust()
->> and unmap_stage2_range().
-> 
-> But I thought we should be doing that on the head_page already, as this 
-> is THP.
-> I will take a look and get back to you on this. Btw, is it possible for you
-> to turn on CONFIG_DEBUG_VM and re-run with the above patch ?
-> 
-> Kind regards
-> Suzuki
-> 
-
----8<---
-
-test: kvm: arm: Maybe two more fixes
-
-Applied based on Suzuki's patch.
-
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Reported-by: syzbot+a57b2aff60832666fc28@syzkaller.appspotmail.com
+Fixes: acdf52d97f82 ("selinux: convert to kvmalloc")
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
 ---
-  virt/kvm/arm/mmu.c | 8 ++++++--
-  1 file changed, 6 insertions(+), 2 deletions(-)
+ security/selinux/ss/policydb.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 05765df..ccd5d5d 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1089,7 +1089,9 @@ static int stage2_set_pmd_huge(struct kvm *kvm, 
-struct kvm_mmu_memory_cache
-  		 * Normal THP split/merge follows mmu_notifier
-  		 * callbacks and do get handled accordingly.
-  		 */
--			unmap_stage2_range(kvm, (addr & S2_PMD_MASK), S2_PMD_SIZE);
-+			addr &= S2_PMD_MASK;
-+			unmap_stage2_ptes(kvm, pmd, addr, addr + S2_PMD_SIZE);
-+			get_page(virt_to_page(pmd));
-  		} else {
+NOTE: This applies directly on top of current Linus' tree, since the
+problematic commit is not present in the selinux/stable-5.1 branch.
 
-  			/*
-@@ -1138,7 +1140,9 @@ static int stage2_set_pud_huge(struct kvm *kvm, 
-struct kvm_mmu_memory_cache *cac
-  	if (stage2_pud_present(kvm, old_pud)) {
-  		/* If we have PTE level mapping, unmap the entire range */
-  		if (WARN_ON_ONCE(!stage2_pud_huge(kvm, old_pud))) {
--			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
-+			addr &= S2_PUD_MASK;
-+			unmap_stage2_pmds(kvm, pudp, addr, addr + S2_PUD_SIZE);
-+			get_page(virt_to_page(pudp));
-  		} else {
-  			stage2_pud_clear(kvm, pudp);
-  			kvm_tlb_flush_vmid_ipa(kvm, addr);
+diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policydb.c
+index 6b576e588725..daecdfb15a9c 100644
+--- a/security/selinux/ss/policydb.c
++++ b/security/selinux/ss/policydb.c
+@@ -828,9 +828,11 @@ void policydb_destroy(struct policydb *p)
+ 	hashtab_map(p->range_tr, range_tr_destroy, NULL);
+ 	hashtab_destroy(p->range_tr);
+ 
+-	for (i = 0; i < p->p_types.nprim; i++)
+-		ebitmap_destroy(&p->type_attr_map_array[i]);
+-	kvfree(p->type_attr_map_array);
++	if (p->type_attr_map_array) {
++		for (i = 0; i < p->p_types.nprim; i++)
++			ebitmap_destroy(&p->type_attr_map_array[i]);
++		kvfree(p->type_attr_map_array);
++	}
+ 
+ 	ebitmap_destroy(&p->filename_trans_ttypes);
+ 	ebitmap_destroy(&p->policycaps);
+@@ -2496,10 +2498,13 @@ int policydb_read(struct policydb *p, void *fp)
+ 	if (!p->type_attr_map_array)
+ 		goto bad;
+ 
++	/* just in case ebitmap_init() becomes more than just a memset(0): */
++	for (i = 0; i < p->p_types.nprim; i++)
++		ebitmap_init(&p->type_attr_map_array[i]);
++
+ 	for (i = 0; i < p->p_types.nprim; i++) {
+ 		struct ebitmap *e = &p->type_attr_map_array[i];
+ 
+-		ebitmap_init(e);
+ 		if (p->policyvers >= POLICYDB_VERSION_AVTAB) {
+ 			rc = ebitmap_read(e, fp);
+ 			if (rc)
 -- 
-1.8.3.1
-
-
-
-
+2.20.1
 
