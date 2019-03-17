@@ -2,466 +2,261 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F57C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 21:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B724C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937E020835
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 21:39:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552858766;
-	bh=bW+frnf/VWP79Eh+ut4oQ805yYDNWGKsK7R2JTA2bvQ=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=mZHxgCFIDG8gs1+0Wx2EH85cjX52pe9Feua16YPdVyi2m/ebAWRBnoRlNfXU1h58u
-	 jSVoUYkqgGGfdsHVLa0H5x2RRpeFa10C/jmWjD+xz/iXoZfmkX9eSNIxBt8fnPMrc0
-	 KTJ0MKvcAvjLnGNKd3umzNxmv3cbqVRcCMu2WtL8=
+	by mail.kernel.org (Postfix) with ESMTP id E86F52087C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:02:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nAff1p/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfCQVjZ (ORCPT
+        id S1727481AbfCQWCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 17:39:25 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43522 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbfCQVjZ (ORCPT
+        Sun, 17 Mar 2019 18:02:48 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36918 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfCQWCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 17:39:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z20so12251811ljj.10
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 14:39:22 -0700 (PDT)
+        Sun, 17 Mar 2019 18:02:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id x7so12683885ioh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 15:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=bp4LFtqgAjxiwi8Sa3F/ysO8CMmytrtN1VL7eItbVkc=;
-        b=fwjPuhjjlaEeLiX0EVLEHUEm65nIQxhN7+ityFMYufmN3va0/3n2FpG+WW06NQyUdK
-         AMRDbiD0Tpi55/n2J/tzGQpa/c8BqFwG0N9NCpaIlf2Vg/MLqebwr+EQ1s/fq5Sm5O7J
-         sLVgeF8T6ymUaJrulBSQ4sxc7rPnVfTSFqOP4=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zmtbWFurYhH43n2p5GNI3DQ7e38T/cz1DYXzLxyj87A=;
+        b=nAff1p/83XDR7mjZ9jFPA1k+ttO7Bdli0J98NebhJlY0lG8mNmfgXbdOzW2fqBe1GL
+         MR3iqxOS1ibrWHicsh27On740Y15WEMEn9nr2MEPVYGNudgkloNnaDa3oDbw8sP0cos4
+         Hrrqla8HfgVBd800+xJWhtwiYBz5wjE+0hIJQB7LKGWHZsWjNRB7h3Wp5j3enbiU5hoy
+         SI6XHwpzccnnmiFIRK6qIRafe5KXzv/EV9jiOCJUJaKjnErg4fJ+JK6aBCO25XaXrvnF
+         QzkzXKQ+iFow6WoAt7cXf+AUpBf0jemzTa6rzqeP4m6ryQoMqMIeQWNUk1KRMIC82U2t
+         kUQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=bp4LFtqgAjxiwi8Sa3F/ysO8CMmytrtN1VL7eItbVkc=;
-        b=ME6QZVhXEoqkUEcoLTz5DaxnoWdcKASp9P6un5ffgV6dVFrFbANNXXnNDjfvB30d23
-         EFPeYCfEq5x3M3QrPN59bguWRSKJPgLIg9mPF7KgbfMcjxfBa4udap+R99dX7sh7CXzC
-         WXc0AW9Pyp5vAQk0X14YU5jbSxHTOStu9QaD3b/6Q3KMEkXljxHGHIOQakfaLNzlzlc4
-         EZKgJRv1r/bDyqJ2DdvPIXOOLRJBToTPRhizjGp/vAO8cEAB67dvYDK3Z69VCC6QdHx7
-         GbRNY/lIrGRt/x+QZa1uZjKfhIgS4Z0pjhliisI+Vw1iEqYSKxzKqhl5DQrC7nf70ZYo
-         xKjA==
-X-Gm-Message-State: APjAAAXunK4y4AqFpiTeArjJxSFDobotIefYKPThvjFC6Opkxo96jomE
-        LDeYkFFtBlwEGkfUwuc1jmnq0aeZ+94=
-X-Google-Smtp-Source: APXvYqxiZ6FVOWswetG4+6/cjDHx+C0Tj5ghnbjZoNlbzHmt+osvs3WUS2Xb8XdfxUNn30hDK6PSHg==
-X-Received: by 2002:a2e:4b02:: with SMTP id y2mr8677892lja.179.1552858760723;
-        Sun, 17 Mar 2019 14:39:20 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id s3sm1752455lji.94.2019.03.17.14.39.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 14:39:19 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id z20so12251772ljj.10
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 14:39:19 -0700 (PDT)
-X-Received: by 2002:a2e:8585:: with SMTP id b5mr8587377lji.125.1552858759241;
- Sun, 17 Mar 2019 14:39:19 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zmtbWFurYhH43n2p5GNI3DQ7e38T/cz1DYXzLxyj87A=;
+        b=OjlYJHVb9bI6w1QO3TYsyHz7iDMLCusQx7xjFxr2cwb1GVTg6/nAk1+pF1OMyTMJmS
+         yLNDPdqguQX8kv4MVJ9nmskdkfOkQ5M7R5WtEI6V+fqEh9a7VsJFDO5bGZx/+xd+xE0O
+         K0mLclnn1YjNQta9Ainm0VBaBgqDSt36fzFEFag5o3wZJtT/SP8WPkUvXiSLBNPw3lv8
+         gWIhvss1jZ24H1psGs9LdM7nAqMGp3/CeWz7LMKUYtLRSo/x6JasCU1MNk+LVPbqGJ1q
+         cTwvQGo5/i0cYASeWAF+M2xzezLfVUHoPLImBIiuexRkcG4Z3CKx5IcrExCacuawiVs/
+         qWQw==
+X-Gm-Message-State: APjAAAWpIt3M4YRqy5Uhw6iQrxJ47cMBUWJW0y525ty66l75qZ6FlZNF
+        fI0B27/aRHtlRFNBrouwbM2LoI8hXv/ZQXD//zVfiA==
+X-Google-Smtp-Source: APXvYqzelkRjKLoTEnqJF5g7dyKF9X1Y95XqUlgM03xN3JrsA94QJKi/GL1d6zXqBXlyqHbC4dNSeB7vTuVZTPHUyZs=
+X-Received: by 2002:a6b:720c:: with SMTP id n12mr4691658ioc.110.1552860166831;
+ Sun, 17 Mar 2019 15:02:46 -0700 (PDT)
 MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 17 Mar 2019 14:39:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj1c_Tb-wwM6qaPLdggXtW3rOh1JzYUOs+O7PsHt-=+jg@mail.gmail.com>
-Message-ID: <CAHk-=wj1c_Tb-wwM6qaPLdggXtW3rOh1JzYUOs+O7PsHt-=+jg@mail.gmail.com>
-Subject: Linux 5.1-rc1
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <20190315182426.sujcqbzhzw4llmsa@brauner.io> <20190315184903.GB248160@google.com>
+ <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
+ <CAKOZueuauUXRyrvhzBD0op6W4TAnydSx92bvrPN2VRWERX8iQg@mail.gmail.com>
+ <20190316185726.jc53aqq5ph65ojpk@brauner.io> <CAJuCfpF-uYpUZ1RO99i2qEw5Ou4nSimSkiQvnNQ_rv8ogHKRfw@mail.gmail.com>
+ <20190317015306.GA167393@google.com> <20190317114238.ab6tvvovpkpozld5@brauner.io>
+ <20190317163505.GA9904@mail.hallyn.com> <CAKOZuet+HCZoOgJBAUrcm8nxC-bQ00W7w+=k2SOh+dfXffMU4w@mail.gmail.com>
+ <20190317171652.GA10567@mail.hallyn.com>
+In-Reply-To: <20190317171652.GA10567@mail.hallyn.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Sun, 17 Mar 2019 15:02:35 -0700
+Message-ID: <CAJuCfpF8m5kTMXu=G4qBcvSbrpFH91GmS43VHuphEa3hDxOq+Q@mail.gmail.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+To:     "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's Sunday, and two weeks have passed, and everything is normal. You
-all know the drill by now - the merge window is closed, and things are
-supposed to calm down.
-
-The merge window felt fairly normal to me. And looking at the stats,
-nothing really odd stands out either. It's a regular sized release
-(which obviously means "big" - , but it's not bigger than usual) and
-the bulk of it (just over 60%) is drivers. All kinds of drivers, the
-one that stands out for being different is the habanalabs AI
-accelerator chip driver, but I suspect we'll be starting to see more
-of that kind of stuff. But there are all the usual suspects too - gpu,
-networking, block devices etc etc.
-
-A somewhat recent development is how the tools/testing/ updates have
-been quite noticeable lately. That's not new to the 5.1 merge window,
-it's been going on for a while, but it's maybe just worth a mention
-that we have more new selftest changes than we have architecture
-updates, for example. The documentation subdirectory is also quite
-noticeable.
-
-But on the whole, there's really stuff all over, including core VFS
-updates (in addition to all the usual low-level filesystem updates
-too, of course).
-
-And as always, the shortlog is much too big to post with 11k+ commits
-(12k+ if counting merges). So below is my usual "mergelog" listing
-submaintainers and a summary of the git pulls I've done from them..
-
-Go forth and test,
-
-                  Linus
-
----
-
-Al Viro (5):
-    vfs fixes
-    misc vfs updates
-    iov_iter updates
-    vfs mount infrastructure updates
-    vfs mount infrastructure fix
-
-Alex Williamson (1):
-    VFIO updates
-
-Alexandre Belloni (1):
-    RTC updates
-
-Andrew Morton (5):
-    misc updates x3
-    more updates
-    the left-over patches
-
-Arnd Bergmann (8):
-    y2038 build fix for compat mode
-    asm-generic updates
-    ARM SoC platform updates
-    ARM SoC device tree updates
-    ARM SoC driver updates
-    ARM SoC defconfig updates
-    ARM new SoC family support
-    ARM SoC late updates
-
-Bartlomiej Zolnierkiewicz (1):
-    fbdev updates
-
-Benson Leung (1):
-    chrome platform updates
-
-Bjorn Andersson (1):
-    remoteproc updates
-
-Bjorn Helgaas (1):
-    PCI updates
-
-Bob Peterson (1):
-    gfs2 updates
-
-Boris Brezillon (2):
-    MTD updates
-    i3c updates
-
-Borislav Petkov (2):
-    EDAC updates
-    RAS updates
-
-Bruce Fields (1):
-    NFS server updates
-
-Catalin Marinas (1):
-    arm64 updates
-
-Christian Brauner (1):
-    pidfd system call
-
-Christoph Hellwig (1):
-    DMA mapping updates
-
-Corey Minyard (1):
-    IPMI updates
-
-Dan Williams (3):
-    filesystem-dax updates
-    libnvdimm updates
-    device-dax updates
-
-Darren Hart (1):
-    x86 platform driver updates
-
-Darrick Wong (2):
-    xfs updates
-    xfs cleanups
-
-Dave Airlie (2):
-    drm updates
-    drm fixes and updates
-
-David Miller (4):
-    networking updates
-    networking fixes
-    IDE updates
-    networking fixes
-
-David Sterba (2):
-    btrfs updates
-    btrfs fixes
-
-Dennis Zhou (1):
-    percpu updates
-
-Dmitry Torokhov (1):
-    input updates
-
-Dominique Martinet (1):
-    9p updates
-
-Eduardo Valentin (1):
-    thermal soc updates
-
-Eric Biggers (1):
-    fscrypt updates
-
-Geert Uytterhoeven (1):
-    m68k updates
-
-Greg KH (5):
-    char/misc driver updates
-    driver core updates
-    staging/IIO updates
-    tty/serial updates
-    USB/PHY updates
-
-Greg Ungerer (1):
-    m68knommu update
-
-Guenter Roeck (1):
-    hwmon updates
-
-Helge Deller (1):
-    parisc updates
-
-Herbert Xu (2):
-    crypto update
-    crypto fixes
-
-Ilya Dryomov (1):
-    ceph updates
-
-Ingo Molnar (14):
-    RCU updates
-    EFI updates
-    locking updates
-    perf updates
-    scheduler updates
-    x86 alternative instruction updates
-    x86 boot updates
-    x86 build updates
-    x86 cleanups
-    x86 fpu updates
-    x86 kdump update
-    x86 mm cleanup
-    x86 platform update
-    x86 UV updates
-
-Jacek Anaszewski (1):
-    LED updates
-
-Jaegeuk Kim (1):
-    f2fs updates
-
-James Bottomley (2):
-    SCSI updates
-    more SCSI updates
-
-James Morris (3):
-    security subsystem updates
-    integrity updates
-    tpm updates
-
-Jan Kara (3):
-    dtype handling cleanups
-    ext2 and udf fixes
-    fanotify updates
-
-Jason Gunthorpe (1):
-    rdma updates
-
-Jassi Brar (1):
-    mailbox updates
-
-Jens Axboe (4):
-    libata updates
-    block layer updates
-    io_uring IO interface
-    more block layer changes
-
-Jiri Kosina (2):
-    livepatching updates
-    HID updates
-
-Joerg Roedel (2):
-    IOMMU updates
-    IOMMU fix
-
-John Johansen (1):
-    apparmor fixes
-
-Jon Mason (1):
-    NTB updates
-
-Jonathan Corbet (1):
-    documentation updates
-
-Juergen Gross (2):
-    xen updates
-    xen fix
-
-Kees Cook (2):
-    pstore cleanups
-    gcc-plugins updates
-
-Konrad Rzeszutek Wilk (2):
-    swiotlb updates
-    ibft updates
-
-Lee Jones (2):
-    backlight fixlet
-    MFD updates
-
-Ley Foon Tan (1):
-    nios2 updates
-
-Linus Walleij (2):
-    GPIO updates
-    pin control updates
-
-Mark Brown (3):
-    regmap updates
-    regulator updates
-    spi updates
-
-Martin Schwidefsky (1):
-    s390 updates
-
-Masahiro Yamada (3):
-    Kbuild updates
-    Kconfig updates
-    more Kbuild updates
-
-Matthew Wilcox (1):
-    XArray updates
-
-Mauro Carvalho Chehab (1):
-    media updates
-
-Max Filippov (1):
-    xtensa updates
-
-Michael Ellerman (2):
-    powerpc updates
-    powerpc fixes
-
-Michael Tsirkin (1):
-    virtio updates
-
-Michal Simek (1):
-    Microblaze update
-
-Mike Snitzer (1):
-    device mapper updates
-
-Miklos Szeredi (2):
-    fuse updates
-    overlayfs updates
-
-Palmer Dabbelt (1):
-    RISC-V updates
-
-Paolo Bonzini (1):
-    KVM updates
-
-Paul Burton (1):
-    MIPS updates
-
-Paul Moore (3):
-    SELinux updates
-    audit updates
-    selinux fixes
-
-Petr Mladek (1):
-    printk updates
-
-Rafael Wysocki (5):
-    power management updates
-    ACPI updates
-    device properties framework updates
-    more power management updates
-    more ACPI updates
-
-Richard Weinberger (2):
-    UBI and UBIFS updates
-    UML updates
-
-Rob Herring (1):
-    Devicetree updates
-
-Russell King (1):
-    ARM updates
-
-Sebastian Reichel (2):
-    HIS update
-    power supply and reset updates
-
-Stephen Boyd (1):
-    clk subsystem updates
-
-Steve French (2):
-    smb3 updates
-    more smb3 updates
-
-Steven Rostedt (3):
-    tracing fix/cleanup
-    tracing updates
-    tracing fixes and cleanups
-
-Takashi Iwai (2):
-    sound updates
-    sound fixes
-
-Ted Ts'o (1):
-    ext4 updates
-
-Tejun Heo (2):
-    workqueue updates
-    cgroup updates
-
-Thierry Reding (1):
-    pwm updates
-
-Thomas Gleixner (13):
-    timer and clockevent updates
-    irq updates
-    x86/pti update
-    year 2038 updates
-    watchdog core update
-    locking fixes
-    timer fix
-    x86 boot fix
-    x86 fixes
-    perf updates
-    x86 tsx fixes
-    perf fixes
-    x86 asm updates
-
-Tobin Harding (1):
-    leaking_addresses updates
-
-Trond Myklebust (2):
-    NFS client updates
-    NFS client bugfixes
-
-Ulf Hansson (1):
-    MMC updates
-
-Vinod Koul (1):
-    dmaengine updates
-
-Wim Van Sebroeck (1):
-    watchdog updates
-
-Wolfram Sang (2):
-    i2c updates
-    i2c fixes
+On Sun, Mar 17, 2019 at 10:16 AM Serge E. Hallyn <serge@hallyn.com> wrote:
+>
+> On Sun, Mar 17, 2019 at 10:11:10AM -0700, Daniel Colascione wrote:
+> > On Sun, Mar 17, 2019 at 9:35 AM Serge E. Hallyn <serge@hallyn.com> wrote:
+> > >
+> > > On Sun, Mar 17, 2019 at 12:42:40PM +0100, Christian Brauner wrote:
+> > > > On Sat, Mar 16, 2019 at 09:53:06PM -0400, Joel Fernandes wrote:
+> > > > > On Sat, Mar 16, 2019 at 12:37:18PM -0700, Suren Baghdasaryan wrote:
+> > > > > > On Sat, Mar 16, 2019 at 11:57 AM Christian Brauner <christian@brauner.io> wrote:
+> > > > > > >
+> > > > > > > On Sat, Mar 16, 2019 at 11:00:10AM -0700, Daniel Colascione wrote:
+> > > > > > > > On Sat, Mar 16, 2019 at 10:31 AM Suren Baghdasaryan <surenb@google.com> wrote:
+> > > > > > > > >
+> > > > > > > > > On Fri, Mar 15, 2019 at 11:49 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On Fri, Mar 15, 2019 at 07:24:28PM +0100, Christian Brauner wrote:
+> > > > > > > > > > [..]
+> > > > > > > > > > > > why do we want to add a new syscall (pidfd_wait) though? Why not just use
+> > > > > > > > > > > > standard poll/epoll interface on the proc fd like Daniel was suggesting.
+> > > > > > > > > > > > AFAIK, once the proc file is opened, the struct pid is essentially pinned
+> > > > > > > > > > > > even though the proc number may be reused. Then the caller can just poll.
+> > > > > > > > > > > > We can add a waitqueue to struct pid, and wake up any waiters on process
+> > > > > > > > > > > > death (A quick look shows task_struct can be mapped to its struct pid) and
+> > > > > > > > > > > > also possibly optimize it using Steve's TIF flag idea. No new syscall is
+> > > > > > > > > > > > needed then, let me know if I missed something?
+> > > > > > > > > > >
+> > > > > > > > > > > Huh, I thought that Daniel was against the poll/epoll solution?
+> > > > > > > > > >
+> > > > > > > > > > Hmm, going through earlier threads, I believe so now. Here was Daniel's
+> > > > > > > > > > reasoning about avoiding a notification about process death through proc
+> > > > > > > > > > directory fd: http://lkml.iu.edu/hypermail/linux/kernel/1811.0/00232.html
+> > > > > > > > > >
+> > > > > > > > > > May be a dedicated syscall for this would be cleaner after all.
+> > > > > > > > >
+> > > > > > > > > Ah, I wish I've seen that discussion before...
+> > > > > > > > > syscall makes sense and it can be non-blocking and we can use
+> > > > > > > > > select/poll/epoll if we use eventfd.
+> > > > > > > >
+> > > > > > > > Thanks for taking a look.
+> > > > > > > >
+> > > > > > > > > I would strongly advocate for
+> > > > > > > > > non-blocking version or at least to have a non-blocking option.
+> > > > > > > >
+> > > > > > > > Waiting for FD readiness is *already* blocking or non-blocking
+> > > > > > > > according to the caller's desire --- users can pass options they want
+> > > > > > > > to poll(2) or whatever. There's no need for any kind of special
+> > > > > > > > configuration knob or non-blocking option. We already *have* a
+> > > > > > > > non-blocking option that works universally for everything.
+> > > > > > > >
+> > > > > > > > As I mentioned in the linked thread, waiting for process exit should
+> > > > > > > > work just like waiting for bytes to appear on a pipe. Process exit
+> > > > > > > > status is just another blob of bytes that a process might receive. A
+> > > > > > > > process exit handle ought to be just another information source. The
+> > > > > > > > reason the unix process API is so awful is that for whatever reason
+> > > > > > > > the original designers treated processes as some kind of special kind
+> > > > > > > > of resource instead of fitting them into the otherwise general-purpose
+> > > > > > > > unix data-handling API. Let's not repeat that mistake.
+> > > > > > > >
+> > > > > > > > > Something like this:
+> > > > > > > > >
+> > > > > > > > > evfd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+> > > > > > > > > // register eventfd to receive death notification
+> > > > > > > > > pidfd_wait(pid_to_kill, evfd);
+> > > > > > > > > // kill the process
+> > > > > > > > > pidfd_send_signal(pid_to_kill, ...)
+> > > > > > > > > // tend to other things
+> > > > > > > >
+> > > > > > > > Now you've lost me. pidfd_wait should return a *new* FD, not wire up
+> > > > > > > > an eventfd.
+> > > > > > > >
+> > > > > >
+> > > > > > Ok, I probably misunderstood your post linked by Joel. I though your
+> > > > > > original proposal was based on being able to poll a file under
+> > > > > > /proc/pid and then you changed your mind to have a separate syscall
+> > > > > > which I assumed would be a blocking one to wait for process exit.
+> > > > > > Maybe you can describe the new interface you are thinking about in
+> > > > > > terms of userspace usage like I did above? Several lines of code would
+> > > > > > explain more than paragraphs of text.
+> > > > >
+> > > > > Hey, Thanks Suren for the eventfd idea. I agree with Daniel on this. The idea
+> > > > > from Daniel here is to wait for process death and exit events by just
+> > > > > referring to a stable fd, independent of whatever is going on in /proc.
+> > > > >
+> > > > > What is needed is something like this (in highly pseudo-code form):
+> > > > >
+> > > > > pidfd = opendir("/proc/<pid>",..);
+> > > > > wait_fd = pidfd_wait(pidfd);
+> > > > > read or poll wait_fd (non-blocking or blocking whichever)
+> > > > >
+
+Thanks for the explanation Joel. Now I understand the proposal. Will
+think about it some more and looking forward for the implementation
+patch.
+
+> > > > > wait_fd will block until the task has either died or reaped. In both these
+> > > > > cases, it can return a suitable string such as "dead" or "reaped" although an
+> > > > > integer with some predefined meaning is also Ok.
+> > > > >
+> > > > > What that guarantees is, even if the task's PID has been reused, or the task
+> > > > > has already died or already died + reaped, all of these events cannot race
+> > > > > with the code above and the information passed to the user is race-free and
+> > > > > stable / guaranteed.
+> > > > >
+> > > > > An eventfd seems to not fit well, because AFAICS passing the raw PID to
+> > > > > eventfd as in your example would still race since the PID could have been
+> > > > > reused by another process by the time the eventfd is created.
+> > > > > Also Andy's idea in [1] seems to use poll flags to communicate various tihngs
+> > > > > which is still not as explicit about the PID's status so that's a poor API
+> > > > > choice compared to the explicit syscall.
+> > > > >
+> > > > > I am planning to work on a prototype patch based on Daniel's idea and post something
+> > > > > soon (chatted with Daniel about it and will reference him in the posting as
+> > > > > well), during this posting I will also summarize all the previous discussions
+> > > > > and come up with some tests as well.  I hope to have something soon.
+> > > >
+> > > > Having pidfd_wait() return another fd will make the syscall harder to
+> > > > swallow for a lot of people I reckon.
+> > > > What exactly prevents us from making the pidfd itself readable/pollable
+> > > > for the exit staus? They are "special" fds anyway. I would really like
+> > > > to avoid polluting the api with multiple different types of fds if possible.
+> > > >
+> > > > ret = pidfd_wait(pidfd);
+> > > > read or poll pidfd
+> > >
+> > > I'm not quite clear on what the two steps are doing here.  Is pidfd_wait()
+> > > doing a waitpid(2), and the read gets exit status info?
+> >
+> > pidfd_wait on an open pidfd returns a "wait handle" FD. The wait
+>
+> That is what you are proposing.  I'm not sure that's what Christian
+> was proposing.  'ret' is ambiguous there.  Christian?
+>
+> > handle works just like a pipe: you can select/epoll/whatever for
+> > readability. read(2) on the wait handle (which blocks unless you set
+> > O_NONBLOCK, just like a pipe) completes with a siginfo_t when the
+> > process to which the wait handle is attached exits. Roughly,
+> >
+> > int kill_and_wait_for_exit(int pidfd) {
+> >   int wait_handle = pidfd_wait(pidfd);
+> >   pidfd_send_signal(pidfd, ...);
+> >   siginfo_t exit_info;
+> >   read(wait_handle, &exit_info, sizeof(exit_info)); // Blocks because
+> > we haven't configured non-blocking behavior, just like a pipe.
+> >   close(wait_handle);
+> >   return exit_info.si_status;
+> > }
+> >
+> > >
+> > > > (Note that I'm traveling so my responses might be delayed quite a bit.)
+> > > > (Ccing a few people that might have an opinion here.)
+> > > >
+> > > > Christian
+> > >
+> > > On its own, what you (Christian) show seems nicer.  But think about a main event
+> > > loop (like in lxc), where we just loop over epoll_wait() on various descriptors.
+> > > If we want to wait for any of several types of events - maybe a signalfd, socket
+> > > traffic, or a process death - it would be nice if we can treat them all the same
+> > > way, without having to setup a separate thread to watch the pidfd and send
+> > > data over another fd.  Is there a nice way we can provide that with what you've
+> > > got above?
+> >
+> > Nobody is proposing any kind of mechanism that would require a
+> > separate thread. What I'm proposing works with poll and read and
+> > should be trivial to integrate into any existing event loop: from the
+> > perspective of the event loop, it looks just like a pipe.
+>
+> (yes, I understood your proposal)
+>
+> -serge
