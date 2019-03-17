@@ -2,77 +2,101 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CD6C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 06:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9AAC10F05
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 06:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA402148D
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 06:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6AE217F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 06:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Q/YKtGyA"
+	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="CfuMZL96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfCQGFN (ORCPT
+        id S1726702AbfCQGG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 02:05:13 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:16980 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfCQGFM (ORCPT
+        Sun, 17 Mar 2019 02:06:58 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:45378 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfCQGG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 02:05:12 -0400
-Received: from grover.tkatk1.zaq.ne.jp (zaqdadce369.zaq.ne.jp [218.220.227.105]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x2H655wt020813;
-        Sun, 17 Mar 2019 15:05:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x2H655wt020813
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552802705;
-        bh=spO50XJ3cGHkPRkcsA4KfqSzD2I9Ahp5fnr0GBgHZp8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Q/YKtGyA+AyCaGeYYZmZvrpxWj6xaM9qDU0fI8RdNcSGBYHZJDtSaQxZLIRY1+YyI
-         ljagFBxZFlBm/SQ9RAGKGesULEgWCvWyXIZQty6VK8oK2xA8YLV4AZ4I5E9ZLmmKWz
-         UKvRM5wZNGie4J0Ey6dWdJaKbrNW8xaypeMZzGG4fHVP089KgrQPFajmxaO5UAxG5n
-         Vz2Y6vy7M+AK3FVhbVmMNP7KwFHO8HmRcOCHKxJeZZcJhchhKWHPGTRDuoarhHbuVt
-         IUK8VVuJ4mw3SxYE6vr95VsCEet91FBEdK25gQrPZ+vLUOl6azC2OOrJgHb6GVe6E6
-         CnPr1Q6Tna7zg==
-X-Nifty-SrcIP: [218.220.227.105]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kconfig: remove stale lxdialog/.gitignore
-Date:   Sun, 17 Mar 2019 15:05:03 +0900
-Message-Id: <1552802703-14203-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 17 Mar 2019 02:06:58 -0400
+Received: by mail-vs1-f67.google.com with SMTP id n14so7648701vsp.12
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2019 23:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HfE+rjyzdDhxR0cAYbGu1CqFpdkP6z604SA1D/opXnY=;
+        b=CfuMZL96GHOtg+wbLz3K6Be5Zm+2FSvuJpbkbn3lZjQWOwfxT3xatqRBP9BcxZr10w
+         m0DpZuCf2mTCcZzpUxOYhFMjErDkRWRNlHRShjwadkbRsTeMY3uw4+A9TiWUpzRxl2Jx
+         Uzr5j2kXdKLPmNAS9u+YXEdCaph8xyPkkUkmNSMvg4TX09kfgwR1DZUUCTNeMChBaOlw
+         0nlBHTS+rtcycpbgQOEdJqMITjUWMIva1Qnj0ma2fmw9R7OvUEohku4O3tLACDUkKWpd
+         JgV3VLUSB4Gj712xcQcqLRtK2EKLMD41lNQkNxcNhQ4a3HNovdXfc+deo/D33Gi/DlVW
+         tN0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HfE+rjyzdDhxR0cAYbGu1CqFpdkP6z604SA1D/opXnY=;
+        b=l7xFikk87dbrPiNoWFb+S080m95uQ1c8wW1f1UnN3wT5ltjP+xb0kCvnj+bjZPT+mo
+         wJ3wmdKAEvJd640DXJVya/nLhoUyqaXsMlPXqm5woC3LF73pdRW6R1ZaFPOFSMYD8Uom
+         jRsPnAAsn7bycT+3JzouriVToq2Z8Q5fq2lD7w/IpmsMx1vMHRVxQDoCJ7tlqh7uIcPM
+         WrVyWcSdihNXfMHZ8gsPgTPLqFc7PJjgzYcbgMaYEoEgQag1DVFmAn/X1NhK0u3JLEno
+         RhxKwFDDYwhwJTalFZ3wevWm7AFcRSdZmyH8JmDfX4FF58/Xj1eW62S/IGcjLCXmEBve
+         ZLsQ==
+X-Gm-Message-State: APjAAAWBokM4QE/A9rybAy93bcG0Tsl9g28gfeu6dmepwVxXmkzBHNTE
+        xXslsP2T2aLUVIMNNXpAVYg6LTFfEjvvYJb/T3B4OQ==
+X-Google-Smtp-Source: APXvYqxPvLTF/mJd1znrWaUmxv4Mlj3gAdNw+tDEQf2SSi+wJhpSbjZ7MshLDe2/0gqGX3GFCdZ5bvFuHh2B4kMaCWo=
+X-Received: by 2002:a67:f8cc:: with SMTP id c12mr5983786vsp.136.1552802816812;
+ Sat, 16 Mar 2019 23:06:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190314090951.840339-1-arnd@arndb.de>
+In-Reply-To: <20190314090951.840339-1-arnd@arndb.de>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Sun, 17 Mar 2019 08:06:44 +0200
+Message-ID: <CAOtvUMeGsk8zuX_0QP7G_JXP_iuWh=ytKPDmaPvdhUKQDqTLRw@mail.gmail.com>
+Subject: Re: [PATCH] crypto: ccree - reduce kernel stack usage with clang
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When this .gitignore was added, lxdialog was an independent hostprogs-y.
+On Thu, Mar 14, 2019 at 11:10 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Building with clang for a 32-bit architecture runs over the stack
+> frame limit in the setkey function:
+>
+> drivers/crypto/ccree/cc_cipher.c:318:12: error: stack frame size of 1152 =
+bytes in function 'cc_cipher_setkey' [-Werror,-Wframe-larger-than=3D]
+>
+> The problem is that there are two large variables: the temporary
+> 'tmp' array and the SHASH_DESC_ON_STACK() declaration. Moving
+> the first into the block in which it is used reduces the
+> total frame size to 768 bytes, which seems more reasonable
+> and is under the warning limit.
+>
 
-Now that all objects in lxdialog/ are directly linked to mconf, the
-lxdialog is no longer generated.
+Thank you , Ard.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+I will also revisit splitting that function to further reduce stack
+usage after I finish tackling the fallout of the new testmgr... :-)
 
- scripts/kconfig/lxdialog/.gitignore | 4 ----
- 1 file changed, 4 deletions(-)
- delete mode 100644 scripts/kconfig/lxdialog/.gitignore
+Acked-By: Gilad Ben-Yossef <gilad@benyossef.com>
 
-diff --git a/scripts/kconfig/lxdialog/.gitignore b/scripts/kconfig/lxdialog/.gitignore
-deleted file mode 100644
-index 90b08ff..0000000
---- a/scripts/kconfig/lxdialog/.gitignore
-+++ /dev/null
-@@ -1,4 +0,0 @@
--#
--# Generated files
--#
--lxdialog
--- 
-2.7.4
+Gilad
+--=20
+Gilad Ben-Yossef
+Chief Coffee Drinker
 
+values of =CE=B2 will give rise to dom!
