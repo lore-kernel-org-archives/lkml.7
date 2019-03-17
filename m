@@ -5,57 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A4DC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27446C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251362087F
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17D0214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:56:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDq82OY4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhLTcFHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfCQWz5 (ORCPT
+        id S1727667AbfCQW4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 18:55:57 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40790 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfCQWzz (ORCPT
+        Sun, 17 Mar 2019 18:56:03 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:47034 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfCQW4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 18:55:55 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u9so10023054pgo.7;
-        Sun, 17 Mar 2019 15:55:55 -0700 (PDT)
+        Sun, 17 Mar 2019 18:56:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a22so10000234pgg.13;
+        Sun, 17 Mar 2019 15:56:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yq5wxwSzSOiQKae/Fl8cjis8j+TFJgO/dAYMPjapJ44=;
-        b=sDq82OY4NHq+gWmXsU0zF/TyBXvRvQE89Ccg1fWIqHxltD2U5zgX3D/IsdwogTJfLc
-         atB3UZ5TJCF9933+Ha1vhBfqCOVnZoXFRUx0TvQcHKs/kyX00Tdlppp4+8S24CCf2RG1
-         S+7KdclKfsd11lWm8z1slHNYGNuREULU5JTB4foy2DLZ0oDDqZ9Oib/uzuyw4avux8JE
-         r6hJhVF2Ewicj2ta5O2W7kWIgspV7mdOSOD7aKBPHGpaT4WHLyLVynRisteAcHh4SaBp
-         Rx7yr82DceGTD4eVlQTLe4n6DP/nTE5Ve5FvB1bBQgtlGekRtRpFNa1hYp8bsnkwhz0o
-         nXzQ==
+        bh=buciGHsipdLQFuQo4BFBFhcyxYei+3vIbC+6BJ6jYFQ=;
+        b=KhLTcFHxt1/bq8V2UlkofdYbF5vQFNo0O8inSDasT1QHmwNR9+DSzMmltjjKnXgxqp
+         +cGnPMJpgPCz0c0hZ/YMLNfGF2gXPbtsryoZccYo7s74LYLZk9PsYiYkOJbVqaDedQDJ
+         UVcnSeBFm8I/ZQIl00MYOpZ5XQdp5vzPtRKGyYQV0J8U3a/vlib/sgOhRTVJXGCvy3mJ
+         RaG9UNv2EmBUo5N+Xdr4sPp5dj4VG0UmH3FMYcyhZaapjx/LAGT/y5vYVzTHdNU9huCZ
+         D9/O0KnIoSCqFW9wq15vhOKdXNvHwtE9MynpNbdioDHrhEledf0fXEIFVY4zCE/Ady1C
+         gm4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yq5wxwSzSOiQKae/Fl8cjis8j+TFJgO/dAYMPjapJ44=;
-        b=AohM6dgQx65uIyvYW3diG5an3gciaOpegy0POWm24EUy/Pb/pXtxtlNNntb/X0N2l5
-         lp7HrxRnw1qSnYT+NJT06wdeqsnyg+PUZTjWfuTxX9r8gyBj+ZxsP6IuGCXqeb48kXOY
-         wNq4ojGNPL20rJvgilpJgiIxvk/H6/EZ616fbylvccdZAR0sRu3ybzz5vC5eK2OCVoz3
-         BZiW2vIj63bSsgMdrBF850ypDTCKYqvVfSxCnAMI7szIPcKN05B9Taf8cggov+roiU5u
-         kZP8nXpcL/CLgNUG60g6CQMRq1ytyHbraiCxa9T+8zJqOM9HNFOTDcK4qT1EM1cTCiRp
-         WN6g==
-X-Gm-Message-State: APjAAAV02VLwGnFtVjdGiphw53xhAPGkqu6A6w3y3bF9tJ7SJfQSISYm
-        rcYS0x1R8OKzu5kP6yfW1FU=
-X-Google-Smtp-Source: APXvYqxFiScNA8yf0lov+46e0AgC7VJxPldRn92Ro7qqB4qo5NE1wtdvXtzl7YI3ipSWiz2LwD0rUg==
-X-Received: by 2002:a65:47cb:: with SMTP id f11mr14875231pgs.18.1552863355027;
-        Sun, 17 Mar 2019 15:55:55 -0700 (PDT)
+        bh=buciGHsipdLQFuQo4BFBFhcyxYei+3vIbC+6BJ6jYFQ=;
+        b=Svg9E+pmEUAAkz8tW1aLwtZa8bEkgN3JAzUuXS4RbXftCj3LYS2G0Bwr5eYt7nTx+g
+         QM2WqP1uV+dgEtfJ56bckuV3fQmVm7QxboghSAUPnyUno0jXaoUZsMut/2sMHUjT425E
+         5wqd/y2XWgUvTtNtYRMJK5Esa6vaps79gBv8Ss4+lCnZbJ6MoOoZL9KqAhZmPKDqLg5C
+         m5ndJWnnclG88KJHJf8y0XJFgeLoOrmekibPeF+H9A0fJrhxjKjgg+Xc11WZ2HOrZaI7
+         /1oucwFPiGn3ZLy8cZwJ0jJ5ohubpjfLxwRWsPpffjXDSn7mUfYJ0yK0mY3/q/ch234s
+         n5+g==
+X-Gm-Message-State: APjAAAVq56B7O0c6zyTvHzMWtLbZV1yoZoZaKn8s3ad7EeRBn4Vr2bvp
+        IHJ+cbEp4vuloDLvktOJO7c=
+X-Google-Smtp-Source: APXvYqw3JVSRYsUquhaC3kKn7dRl8p1UxF3fFIAevB/w7fPz518wLH4e4bn9R3ENsTEBZFEPTMJykQ==
+X-Received: by 2002:a17:902:b618:: with SMTP id b24mr16016681pls.73.1552863361273;
+        Sun, 17 Mar 2019 15:56:01 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-37-86.pppoe.spdop.ru. [94.29.37.86])
-        by smtp.gmail.com with ESMTPSA id v2sm13738838pfg.118.2019.03.17.15.55.49
+        by smtp.gmail.com with ESMTPSA id v2sm13738838pfg.118.2019.03.17.15.55.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 15:55:54 -0700 (PDT)
+        Sun, 17 Mar 2019 15:56:00 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Russell King <linux@armlinux.org.uk>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -64,9 +65,9 @@ To:     Russell King <linux@armlinux.org.uk>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v10 4/7] ARM: tegra: Set up L2 cache using Trusted Foundations firmware
-Date:   Mon, 18 Mar 2019 01:52:07 +0300
-Message-Id: <20190317225211.23091-5-digetx@gmail.com>
+Subject: [PATCH v10 5/7] ARM: tegra: Don't apply CPU erratas in insecure mode
+Date:   Mon, 18 Mar 2019 01:52:08 +0300
+Message-Id: <20190317225211.23091-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190317225211.23091-1-digetx@gmail.com>
 References: <20190317225211.23091-1-digetx@gmail.com>
@@ -78,39 +79,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tegra30 L2 cache should be initialized using firmware call if CPU
-is running in insecure mode. Set up the required outer-cache write_sec()
-callback early during boot using the firmware API, it is always a NO-OP
-on T114+ and is NO-OP on T20/30 if Trusted Foundations firmware node
-isn't present in device-tree.
+CPU isn't allowed to touch secure registers while running under secure
+monitor. Hence skip applying of CPU erratas in the reset handler if
+Trusted Foundations firmware presents.
+
+Partially based on work done by Michał Mirosław [1].
+
+[1] https://www.spinics.net/lists/arm-kernel/msg594768.html
 
 Tested-by: Robert Yang <decatf@gmail.com>
 Tested-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/mach-tegra/tegra.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mach-tegra/reset-handler.S | 23 ++++++++++++-----------
+ arch/arm/mach-tegra/reset.c         |  3 +++
+ arch/arm/mach-tegra/reset.h         |  9 +++++++--
+ arch/arm/mach-tegra/sleep-tegra20.S |  4 ++++
+ 4 files changed, 26 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
-index f9587be48235..1e89cfefbf68 100644
---- a/arch/arm/mach-tegra/tegra.c
-+++ b/arch/arm/mach-tegra/tegra.c
-@@ -38,6 +38,7 @@
- #include <soc/tegra/fuse.h>
- #include <soc/tegra/pmc.h>
+diff --git a/arch/arm/mach-tegra/reset-handler.S b/arch/arm/mach-tegra/reset-handler.S
+index e22ccf87eded..809fbc200cef 100644
+--- a/arch/arm/mach-tegra/reset-handler.S
++++ b/arch/arm/mach-tegra/reset-handler.S
+@@ -29,8 +29,6 @@
  
-+#include <asm/firmware.h>
+ #define PMC_SCRATCH41	0x140
+ 
+-#define RESET_DATA(x)	((TEGRA_RESET_##x)*4)
+-
+ #ifdef CONFIG_PM_SLEEP
+ /*
+  *	tegra_resume
+@@ -121,6 +119,12 @@ ENTRY(__tegra_cpu_reset_handler)
+ 	cpsid	aif, 0x13			@ SVC mode, interrupts disabled
+ 
+ 	tegra_get_soc_id TEGRA_APB_MISC_BASE, r6
++
++	adr	r12, __tegra_cpu_reset_handler_data
++	ldr	r5, [r12, #RESET_DATA(TF_PRESENT)]
++	cmp	r5, #0
++	bne	after_errata
++
+ #ifdef CONFIG_ARCH_TEGRA_2x_SOC
+ t20_check:
+ 	cmp	r6, #TEGRA20
+@@ -155,7 +159,6 @@ after_errata:
+ 	and	r10, r10, #0x3			@ R10 = CPU number
+ 	mov	r11, #1
+ 	mov	r11, r11, lsl r10  		@ R11 = CPU mask
+-	adr	r12, __tegra_cpu_reset_handler_data
+ 
+ #ifdef CONFIG_SMP
+ 	/* Does the OS know about this CPU? */
+@@ -169,10 +172,9 @@ after_errata:
+ 	cmp	r6, #TEGRA20
+ 	bne	1f
+ 	/* If not CPU0, don't let CPU0 reset CPU1 now that CPU1 is coming up. */
+-	mov32	r5, TEGRA_IRAM_BASE + TEGRA_IRAM_RESET_HANDLER_OFFSET
+ 	mov	r0, #CPU_NOT_RESETTABLE
+ 	cmp	r10, #0
+-	strbne	r0, [r5, #__tegra20_cpu1_resettable_status_offset]
++	strbne	r0, [r12, #RESET_DATA(RESETTABLE_STATUS)]
+ 1:
+ #endif
+ 
+@@ -277,14 +279,13 @@ ENDPROC(__tegra_cpu_reset_handler)
+ 	.align L1_CACHE_SHIFT
+ 	.type	__tegra_cpu_reset_handler_data, %object
+ 	.globl	__tegra_cpu_reset_handler_data
++	.globl	__tegra_cpu_reset_handler_data_offset
++	.equ	__tegra_cpu_reset_handler_data_offset, \
++					. - __tegra_cpu_reset_handler_start
+ __tegra_cpu_reset_handler_data:
+-	.rept	TEGRA_RESET_DATA_SIZE
+-	.long	0
++	.rept   TEGRA_RESET_DATA_SIZE
++	.long   0
+ 	.endr
+-	.globl	__tegra20_cpu1_resettable_status_offset
+-	.equ	__tegra20_cpu1_resettable_status_offset, \
+-					. - __tegra_cpu_reset_handler_start
+-	.byte	0
+ 	.align L1_CACHE_SHIFT
+ 
+ ENTRY(__tegra_cpu_reset_handler_end)
+diff --git a/arch/arm/mach-tegra/reset.c b/arch/arm/mach-tegra/reset.c
+index dc558892753c..b02ae7699842 100644
+--- a/arch/arm/mach-tegra/reset.c
++++ b/arch/arm/mach-tegra/reset.c
+@@ -24,6 +24,7 @@
+ #include <asm/cacheflush.h>
+ #include <asm/firmware.h>
  #include <asm/hardware/cache-l2x0.h>
- #include <asm/mach/arch.h>
- #include <asm/mach/time.h>
-@@ -74,6 +75,7 @@ static void __init tegra_init_early(void)
- {
- 	of_register_trusted_foundations();
- 	tegra_cpu_reset_handler_init();
-+	call_firmware_op(l2x0_init);
- }
++#include <asm/trusted_foundations.h>
  
- static void __init tegra_dt_init_irq(void)
+ #include "iomap.h"
+ #include "irammap.h"
+@@ -89,6 +90,8 @@ static void __init tegra_cpu_reset_handler_enable(void)
+ 
+ void __init tegra_cpu_reset_handler_init(void)
+ {
++	__tegra_cpu_reset_handler_data[TEGRA_RESET_TF_PRESENT] =
++		trusted_foundations_registered();
+ 
+ #ifdef CONFIG_SMP
+ 	__tegra_cpu_reset_handler_data[TEGRA_RESET_MASK_PRESENT] =
+diff --git a/arch/arm/mach-tegra/reset.h b/arch/arm/mach-tegra/reset.h
+index 9c479c7925b8..db0e6b3097ab 100644
+--- a/arch/arm/mach-tegra/reset.h
++++ b/arch/arm/mach-tegra/reset.h
+@@ -25,7 +25,11 @@
+ #define TEGRA_RESET_STARTUP_SECONDARY	3
+ #define TEGRA_RESET_STARTUP_LP2		4
+ #define TEGRA_RESET_STARTUP_LP1		5
+-#define TEGRA_RESET_DATA_SIZE		6
++#define TEGRA_RESET_RESETTABLE_STATUS	6
++#define TEGRA_RESET_TF_PRESENT		7
++#define TEGRA_RESET_DATA_SIZE		8
++
++#define RESET_DATA(x)	((TEGRA_RESET_##x)*4)
+ 
+ #ifndef __ASSEMBLY__
+ 
+@@ -49,7 +53,8 @@ void __tegra_cpu_reset_handler_end(void);
+ 	 (u32)__tegra_cpu_reset_handler_start)))
+ #define tegra20_cpu1_resettable_status \
+ 	(IO_ADDRESS(TEGRA_IRAM_BASE + TEGRA_IRAM_RESET_HANDLER_OFFSET + \
+-	 (u32)__tegra20_cpu1_resettable_status_offset))
++	((u32)&__tegra_cpu_reset_handler_data[TEGRA_RESET_RESETTABLE_STATUS] - \
++	 (u32)__tegra_cpu_reset_handler_start)))
+ #endif
+ 
+ #define tegra_cpu_reset_handler_offset \
+diff --git a/arch/arm/mach-tegra/sleep-tegra20.S b/arch/arm/mach-tegra/sleep-tegra20.S
+index dedeebfccc55..50d51d3465f6 100644
+--- a/arch/arm/mach-tegra/sleep-tegra20.S
++++ b/arch/arm/mach-tegra/sleep-tegra20.S
+@@ -28,6 +28,7 @@
+ #include <asm/cache.h>
+ 
+ #include "irammap.h"
++#include "reset.h"
+ #include "sleep.h"
+ 
+ #define EMC_CFG				0xc
+@@ -53,6 +54,9 @@
+ #define APB_MISC_XM2CFGCPADCTRL2	0x8e4
+ #define APB_MISC_XM2CFGDPADCTRL2	0x8e8
+ 
++#define __tegra20_cpu1_resettable_status_offset \
++	(__tegra_cpu_reset_handler_data_offset + RESET_DATA(RESETTABLE_STATUS))
++
+ .macro pll_enable, rd, r_car_base, pll_base
+ 	ldr	\rd, [\r_car_base, #\pll_base]
+ 	tst	\rd, #(1 << 30)
 -- 
 2.20.1
 
