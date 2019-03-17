@@ -7,85 +7,114 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB68C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 11:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EEBC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 11:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C652184C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 11:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C52B821738
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 11:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552822012;
-	bh=HSrT56cU8BsYxZKYsTXMNClA9He2xkCvH556nQsu/S8=;
+	s=default; t=1552822075;
+	bh=XmvAVos9MEK52yYxKa9EM7zIyyB5UDwPJRxUxCJdfj8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zdTStZByFM6b9Um8pVw4FGOXKbvpHqA/4YWxomfPOP/66Ewn+Dl85EsmOMLOB4w6L
-	 GaSWsnXflbUR0rTyik1rZBNPUtSUIoD9NH7lsgDNPSXnBRrhY70R0MpGEdBD6p4i9j
-	 HgyapwTfFPyq4I38zniWWm3WnX76DgyQaPWcg+ow=
+	b=dTHWGF/L1WTgbahKVaCV1oEWg2q9qyiCVnUi2HZ9a/bRLLoaegmMjhfEcq894vPrE
+	 KBRaZevwDxeH+3ge2lSumAcO6wm3hIAf8XSc2rU4DjPv7fddzMYgneMYQHfTPHjynp
+	 NGWMpFQGWx9bhvywgUO0nnNuD/2ZVxDpXNrtKkIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfCQL0u (ORCPT
+        id S1726962AbfCQL1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 07:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60116 "EHLO mail.kernel.org"
+        Sun, 17 Mar 2019 07:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbfCQL0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 07:26:50 -0400
+        id S1726092AbfCQL1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 07:27:54 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F7DF21738;
-        Sun, 17 Mar 2019 11:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5B0F2085A;
+        Sun, 17 Mar 2019 11:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552822009;
-        bh=HSrT56cU8BsYxZKYsTXMNClA9He2xkCvH556nQsu/S8=;
+        s=default; t=1552822073;
+        bh=XmvAVos9MEK52yYxKa9EM7zIyyB5UDwPJRxUxCJdfj8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YpepTi+I53fm/7xFQ2p3bGo/38MuHPuWPktZUoHVREEPguF9pfIOSeB5ME5wXBocf
-         uV6q6SKzUz2cT91PILt761IKnw0c4SF8pEEEQegnHsTOT+eS0P0M9O4f85jvfryj85
-         2I6q1KHrMjIob9iFnnkrdXktZM2txhYBPRArA8jY=
-Date:   Sun, 17 Mar 2019 12:26:47 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     Larry.Finger@lwfinger.net, straube.linux@gmail.com,
-        jananis37@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        davem@davemloft.net
-Subject: Re: [PATCH net] staging: rtl8188eu: use is_zero_ether_addr() instead
- of memcmp()
-Message-ID: <20190317112647.GG4614@kroah.com>
-References: <20190309032600.98732-1-maowenan@huawei.com>
+        b=KaFFExy0EB/N+eMhQjJZqCBU3J5gGMHWZ+gqCGLmxS9UGfJt7akHMDNIQvLpu0vC+
+         TIluAvaSjWNsH56QBB3u/kLDni07kRrTMeTSTV9rpu6HU04Y8swGhpvUaGVUGKaGxU
+         qXD/D78Bj7s9tbeAFf2T8Hq0M+ZXWexLgqeeGPAQ=
+Date:   Sun, 17 Mar 2019 12:27:50 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Manuel.Rambow@protonmail.com
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Staging: greybus: pwm: fixed a coding style issue
+Message-ID: <20190317112750.GH4614@kroah.com>
+References: <yX1rv4IPxvoQeTsr41ohU4bFOShgOXC6gB4KpD6hrnzr3YU3ZWXzsyY7s-o_Qrese52Axxd1xxOQfpMrmfDq3sN9lJ8N9owNedzmRhU4aK8=@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190309032600.98732-1-maowenan@huawei.com>
+In-Reply-To: <yX1rv4IPxvoQeTsr41ohU4bFOShgOXC6gB4KpD6hrnzr3YU3ZWXzsyY7s-o_Qrese52Axxd1xxOQfpMrmfDq3sN9lJ8N9owNedzmRhU4aK8=@protonmail.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 09, 2019 at 11:26:00AM +0800, Mao Wenan wrote:
-> Using is_zero_ether_addr() instead of directly use
-> memcmp() to determine if the ethernet address is all
-> zeros.
+On Wed, Mar 13, 2019 at 02:09:15PM +0000, Manuel.Rambow@protonmail.com wrote:
+> Hello,
 > 
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  drivers/staging/rtl8188eu/core/rtw_mlme.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> index 714f7a70ed64..beae367df93b 100644
-> --- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> +++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> @@ -180,9 +180,8 @@ struct wlan_network *rtw_find_network(struct __queue *scanned_queue, u8 *addr)
->  {
->  	struct list_head *phead, *plist;
->  	struct wlan_network *pnetwork = NULL;
-> -	u8 zero_addr[ETH_ALEN] = {0, 0, 0, 0, 0, 0};
->  
-> -	if (!memcmp(zero_addr, addr, ETH_ALEN)) {
-> +	if (is_zero_ether_addr(addr)) {
+> this is my very first patch, very simple and check it, so it compiles properly and also go no errors on the checkpatch script.
 
-As Joe said, you have to prove that this is properly aligned before you
-can call this function.  Please do so.
+> From c8a66a3bee14fe89ad2a03545a76953bc880b9e6 Mon Sep 17 00:00:00 2001
+> From: Manuel Rambow <Manuel.Rambow@protonmail.com>
+> Date: Wed, 13 Mar 2019 13:00:35 +0100
+> Subject: [PATCH] Staging: greybus: pwm: fixed a coding style issue
+> 
+> Fixed a blank line coding style issue.
+> 
+> Signed-off-by: Manuel Rambow <Manuel.Rambow@protonmail.com>
+> ---
+>  drivers/staging/greybus/pwm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+> index 4a6d394b6c44..de74c37b14e9 100644
+> --- a/drivers/staging/greybus/pwm.c
+> +++ b/drivers/staging/greybus/pwm.c
+> @@ -21,10 +21,10 @@ struct gb_pwm_chip {
+>  	struct pwm_chip		chip;
+>  	struct pwm_chip		*pwm;
+>  };
+> +
+>  #define pwm_chip_to_gb_pwm_chip(chip) \
+>  	container_of(chip, struct gb_pwm_chip, chip)
+>  
+> -
+>  static int gb_pwm_count_operation(struct gb_pwm_chip *pwmc)
+>  {
+>  	struct gb_pwm_count_response response;
+> -- 
+> 2.21.0
+> 
+
+Hi,
+
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- Your patch was attached, please place it inline so that it can be
+  applied directly from the email message itself.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
 thanks,
 
-greg k-h
+greg k-h's patch email bot
