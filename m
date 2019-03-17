@@ -8,71 +8,67 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CE4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313E6C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F63C20896
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022CA20896
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqHCezEU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ni1mKPir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfCQSbe (ORCPT
+        id S1727492AbfCQSbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 14:31:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54479 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727438AbfCQSbb (ORCPT
+        Sun, 17 Mar 2019 14:31:37 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35551 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727438AbfCQSbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 14:31:31 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f3so10998207wmj.4
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 11:31:30 -0700 (PDT)
+        Sun, 17 Mar 2019 14:31:35 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w1so8661229wrp.2
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 11:31:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references:reply-to
          :mime-version:content-transfer-encoding;
-        bh=umGZEQbuKMgrNvhGvByniZ7Anp1p5oZ9xYk2M/7LMIg=;
-        b=lqHCezEUZ6jSPedRU9rTqJW5yiGweoe+Yn19uVLdegmn2kO6zhk03iwzcmiH3gYajM
-         7O8bKgdhISJhKDBjb1xBbzNE3ip/byTm5Fv7xRy2QoI5HtjfxjfMBBvrx9JCjQxzmhrq
-         DoaaoPrOMh22treLvonQYn66zlBdW2XUb/XubULFnalE1kXGn+0Ilg4whf94V2++RDg0
-         5Yl5LkP77aTObFrxPOJMyXo9vuMiCAxHm1lShKmCIaMm49u1Viq4lLpmqugbNsD4KQi5
-         cr+5Dt0guQd3Z3PUDXUICz6CXgJD4PwAcOOElHl4GKV1dStbtxt3pASsgNnHue1hhzdW
-         ef6g==
+        bh=KaDi2iVOcodlzUomJ8CuqU7h3SZ/Mey4GdaKVkxnTuo=;
+        b=ni1mKPir6uMjpPg9Ik5cJ36tQThgSkSYbVDt0q0v6P1KmK8wxtpPf0S7CgIdTNLy7J
+         sajNYigX112mrGWKiSHDqIccr2S2j96l5mQOx5+88BltCl9N3nM/rwVsub9hG5mUNUVw
+         Fq4E86/GrAmtbCDU0beA/AY+Z23a8H9iCu+xyKg46NHuae1BpmZA2tpKQCDHK0Jo8TWZ
+         k3D5Hx6Lpdv6h+AJ+JmqJX70aAWF3KaK9/wgPnMmvE6QRcs6MyDJz1ZSbeGzCQRbbOO8
+         2V2ftrcaL22IR55XIeeOamHvBtCaKxsaA0Cf1GOWyeeSolK735vuS2z40uRejnZ2x/b7
+         bSzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:reply-to:mime-version:content-transfer-encoding;
-        bh=umGZEQbuKMgrNvhGvByniZ7Anp1p5oZ9xYk2M/7LMIg=;
-        b=QarGHadEaTjJf+8DPNmjVzsQib7kcTxQNUk9utHodlnH7XbhcrGdCPxQpPOGlpCsjV
-         +1q7eyMy/QFrfnQtX6jYSw6HvTf1M+bvdJDKxTDjkE/05jRJQem+WqC+peLL4+8ut3ff
-         76y3CS6/rHNo0C+elT0Gfz2NuAanO07I9eT7gHv6nx+B2g8yZYF5PFd8ex6YXS+04DPk
-         4qx6DfBnXzn8H2whVz1eaGAXZfToN2xVIZEvWXX8lGPD4gTrrkjma2ZUjm5hvIdoendk
-         HLZK7HYcMmIE68GvohMSoWTNU0+DCgvjE906gXrPlYj5kewB1IgtRuNd0bS9g9YdtNg8
-         fAFA==
-X-Gm-Message-State: APjAAAWaxIqdafyN9F/6JH5BoAQencS438zd3Pwnc6OGYFfXmbK8+fSb
-        dmjrOcZjJGndGM7jAojWH8EUjmnaOgg=
-X-Google-Smtp-Source: APXvYqyfu1vaXnaBt/a4cn1Izhsu2KPPPssPZHqKOM0rU1mS0BC+Q2h87tf9PrHhZidxUsAj/sLU6A==
-X-Received: by 2002:a1c:6c16:: with SMTP id h22mr9120865wmc.87.1552847489783;
-        Sun, 17 Mar 2019 11:31:29 -0700 (PDT)
+        bh=KaDi2iVOcodlzUomJ8CuqU7h3SZ/Mey4GdaKVkxnTuo=;
+        b=lAbX1gFXcrNd3jhC6WIt6+WxtKdflqnf9TN8lpCyys8/m0XnCV7e6GBSRWYTXqxti9
+         RH3KtHEySrsBeCzOBg0I1JsvBpxAxKUGArERgt5eYTeC0uurU8yXRxfXudc9QWTuYKh8
+         Q+b5+TFkvztsrFZ6ArpHRssbtsHZcVtHGnUkDydJaHvWv/M4RVM81slsOQqzSZDN8//g
+         ncGXykC7WfX6ftgkagBbqr9UBCnkCbplJUN2lWOOne/kPL2FPNZUnfiEEB03b1tNiHCB
+         9MQgrqP7NTgqDzLgtzdg/g0Mq8LlPI9USLLercSzJqG+fp8MSrg+aAPTbolY3LnYrHj6
+         h0bQ==
+X-Gm-Message-State: APjAAAW/TdwS5Nvz/P7JFtAYNGRB630TGXebvQvdLDUxzN8OFOUUSa4i
+        8wUzaYJuKIbPV90vuqS13fFFx5Nm/Ls=
+X-Google-Smtp-Source: APXvYqzmXqAmdMevSCc8LXXjC3H0fvgVtoWKcJ+Hh9oB0zrMdslnH7CuF1OIj72drPisH48Mphy67g==
+X-Received: by 2002:adf:b591:: with SMTP id c17mr10052234wre.195.1552847493981;
+        Sun, 17 Mar 2019 11:31:33 -0700 (PDT)
 Received: from p200300EEEE2F.fritz.box (p200300C9871AF900B43796A8F69485B6.dip0.t-ipconnect.de. [2003:c9:871a:f900:b437:96a8:f694:85b6])
-        by smtp.gmail.com with ESMTPSA id q5sm8415358wrn.43.2019.03.17.11.31.28
+        by smtp.gmail.com with ESMTPSA id q5sm8415358wrn.43.2019.03.17.11.31.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 11:31:29 -0700 (PDT)
+        Sun, 17 Mar 2019 11:31:33 -0700 (PDT)
 From:   Emanuel Bennici <benniciemanuel78@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Joe Perches <joe@perches.com>,
-        Henriette Hofmeier <passt@h-hofmeier.de>,
-        Thomas Avery <tavery321@gmail.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Quytelda Kahja <quytelda@tamalin.org>,
-        Aymen Qader <qader.aymen@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Young Xiao <YangX92@hotmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 04/10] staging: rtl8723bs: Remove old unreachable Code
-Date:   Sun, 17 Mar 2019 19:31:07 +0100
-Message-Id: <20190317183115.32393-4-benniciemanuel78@gmail.com>
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 05/10] staging: rtl8723bs: Remove unreachable Code in core/rtw_cmd.c
+Date:   Sun, 17 Mar 2019 19:31:08 +0100
+Message-Id: <20190317183115.32393-5-benniciemanuel78@gmail.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190317183115.32393-1-benniciemanuel78@gmail.com>
 References: <20190317183115.32393-1-benniciemanuel78@gmail.com>
@@ -85,30 +81,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commented code in core/rtw_mlme_ext.c obsolete because the macro
-CONFIG_INTEL_WIDI no longer exists.
+The `case INTEl_WIDI_WK_CID`-Statement in Function `u8 rtw_drvextra_cmd_hdl`
+wouldn't be used because of CONFIG_INTEL_WIDI.
 
 Signed-off-by: Emanuel Bennici <benniciemanuel78@gmail.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 5 -----
+ drivers/staging/rtl8723bs/core/rtw_cmd.c | 5 -----
  1 file changed, 5 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-index 1f7c87e48c1e..b2813eb3d9d2 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-@@ -5707,11 +5707,6 @@ void linked_status_chk(struct adapter *padapter)
- 		/*  Marked by Kurt 20130715 */
- 		/*  For WiDi 3.5 and latered on, they don't ask WiDi sink to do roaming, so we could not check rx limit that strictly. */
- 		/*  todo: To check why we under miracast session, rx_chk would be false */
--		/* ifdef CONFIG_INTEL_WIDI */
--		/* if (padapter->mlmepriv.widi_state != INTEL_WIDI_STATE_NONE) */
--		/* 	rx_chk_limit = 1; */
--		/* endif */
--
- 		psta = rtw_get_stainfo(pstapriv, pmlmeinfo->network.MacAddress);
- 		if (psta != NULL) {
- 			if (chk_ap_is_alive(padapter, psta) == false)
+diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+index 91520ca3bbad..6c6ddf461590 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
++++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+@@ -2007,11 +2007,6 @@ u8 rtw_drvextra_cmd_hdl(struct adapter *padapter, unsigned char *pbuf)
+ 	case CHECK_HIQ_WK_CID:
+ 		rtw_chk_hi_queue_hdl(padapter);
+ 		break;
+-#ifdef CONFIG_INTEL_WIDI
+-	case INTEl_WIDI_WK_CID:
+-		intel_widi_wk_hdl(padapter, pdrvextra_cmd->type, pdrvextra_cmd->pbuf);
+-		break;
+-#endif /* CONFIG_INTEL_WIDI */
+ 	/* add for CONFIG_IEEE80211W, none 11w can use it */
+ 	case RESET_SECURITYPRIV:
+ 		reset_securitypriv_hdl(padapter);
 -- 
 2.19.1
 
