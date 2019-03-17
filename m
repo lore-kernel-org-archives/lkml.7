@@ -2,85 +2,80 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BD9C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B18CC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1E821019
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184F421019
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552817681;
+	bh=j/CVYloCWztagwFFR3aAr4bU2twa07TPsKT/AmYkjHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eyY3r7Xd1fZC+bAnFJNbdTpWuldVCHt+NkeqVB1IXJ/5LOlX/FayG/tSBcHy6fY9C
+	 Qx0/Y16DsPTl2yE1heERgojedDgO53tDC+bCIrBhg1kyI5iAs3bkq8cMdxlz4bBxR1
+	 ftPQaEUOqmfbOjPqQBw6DfEFRVb7Ybm3Ty/orLrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfCQKNq (ORCPT
+        id S1727085AbfCQKOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 06:13:46 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:58304 "EHLO a.mx.secunet.com"
+        Sun, 17 Mar 2019 06:14:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbfCQKNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 06:13:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id B104B20257;
-        Sun, 17 Mar 2019 11:13:44 +0100 (CET)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CDrnVdk8PZRg; Sun, 17 Mar 2019 11:13:39 +0100 (CET)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1726058AbfCQKOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 06:14:39 -0400
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 66817201C1;
-        Sun, 17 Mar 2019 11:13:39 +0100 (CET)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Sun, 17 Mar 2019
- 11:13:39 +0100
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 0B1BE318060C;
- Sun, 17 Mar 2019 11:13:39 +0100 (CET)
-Date:   Sun, 17 Mar 2019 11:13:39 +0100
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Su Yanjun <suyj.fnst@cn.fujitsu.com>, <davem@davemloft.net>,
-        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Subject: Re: [PATCH] xfrm6_tunnel: Fix potential panic when unloading
- xfrm6_tunnel module
-Message-ID: <20190317101338.GQ6035@gauss3.secunet.de>
-References: <1552546782-102587-1-git-send-email-suyj.fnst@cn.fujitsu.com>
- <20190315062438.id3664ccow5uxgvt@gondor.apana.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 617B521019;
+        Sun, 17 Mar 2019 10:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552817678;
+        bh=j/CVYloCWztagwFFR3aAr4bU2twa07TPsKT/AmYkjHs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wcAblW4L2aeI9fIfvYEJYV4E5jPfaxTNrSvwEA35GHjcskF9PRjxToDFIKK/rW0Jt
+         dDiXesQoT4SfL1bWkDq2L5vWu4/1nEufLc3kA1xSFTeAcvPwr6U65N2YUgasqpCW+r
+         d8jtCVu4N5bxwgwUqlLUtN5Q/VSnUttBZ3lh4IS8=
+Date:   Sun, 17 Mar 2019 11:14:35 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
+Subject: Re: [PATCH] staging: speakup: fix line over 80 characters.
+Message-ID: <20190317101435.GA20773@kroah.com>
+References: <20190317033946.12585-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190315062438.id3664ccow5uxgvt@gondor.apana.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-G-Data-MailSecurity-for-Exchange-State: 0
-X-G-Data-MailSecurity-for-Exchange-Error: 0
-X-G-Data-MailSecurity-for-Exchange-Sender: 23
-X-G-Data-MailSecurity-for-Exchange-Server: d65e63f7-5c15-413f-8f63-c0d707471c93
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-X-G-Data-MailSecurity-for-Exchange-Guid: 881F5785-CE43-43DA-B585-DD0F32861033
-X-G-Data-MailSecurity-for-Exchange-ProcessedOnRouted: True
+In-Reply-To: <20190317033946.12585-1-jbi.octave@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 02:24:38PM +0800, Herbert Xu wrote:
-> On Thu, Mar 14, 2019 at 02:59:42PM +0800, Su Yanjun wrote:
-> > When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
-> > frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
-> > xfrm6_tunnel_spi, so need to wait it.
-> > 
-> > Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
-> > Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-> > ---
-> >  net/ipv6/xfrm6_tunnel.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
+On Sun, Mar 17, 2019 at 03:39:46AM +0000, Jules Irenge wrote:
+> Fix coding style issues, which solves checkpatch.pl warning:
+>     "WARNING: line over 80 characters".
+> ---
+>  drivers/staging/speakup/kobjects.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> This looks good to me.  And it's not just the matter of accessing
-> freed memory.  A worse problem would be trying to execute code
-> from an unloaded module.
-> 
-> Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+> diff --git a/drivers/staging/speakup/kobjects.c b/drivers/staging/speakup/kobjects.c
+> index 2eb5af3debb3..abeab64899db 100644
+> --- a/drivers/staging/speakup/kobjects.c
+> +++ b/drivers/staging/speakup/kobjects.c
+> @@ -154,7 +154,7 @@ static ssize_t chars_chartab_store(struct kobject *kobj,
+>  			continue;
+>  		}
+>  
+> -		/* Do not replace with kstrtoul: here we need temp to be updated */
+> +/* Do not replace with kstrtoul: here we need temp to be updated */
 
-Applied, thanks everyone!
+No, never put code or comments this far to the left.  Instead, properly
+line-wrap them.
+
+thanks,
+
+greg k-h
