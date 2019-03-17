@@ -2,517 +2,198 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DE0C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C960C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F182184C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arrikto-com.20150623.gappssmtp.com header.i=@arrikto-com.20150623.gappssmtp.com header.b="L34WvEe3"
+	by mail.kernel.org (Postfix) with ESMTP id EB0D520872
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfCQMXX (ORCPT
+        id S1727106AbfCQMd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 08:23:23 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43445 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbfCQMXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 08:23:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d17so14012843wre.10
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 05:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arrikto-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CpdoALOVEW0/p10Olg9aJ0e2cRGSvGq4LVyy2sp/g/g=;
-        b=L34WvEe3txWEUXCHW6bCWvFe7we99rkUQ+T3VwZdrNqg6p+JiIz53+wgdVuQ6A1eHX
-         MHnZh+iUabntqBw1GNCOT+gYRr93AYXVputuRUqWsn7HNcuoDHEAKout5xQj9xemI3T7
-         oZUZaGx7ozXrFHwh3WmQ9FEdiPWhC/HZJ29vN9TyLnjRYsDih4v1FHX82pHGf7Mj7OeN
-         9TZe76rVug8eFyLk8u6D5ffronEebyUNcXvF63BnfDbUaDWrGXfO8MKwBifrT/ZJ9TGH
-         yj3fxLJwMhMw6dDThVkZOD2u75k2tWS8macoNKQbvx6tWFx0XPCrrFiAXfXEPVnSyRmr
-         Z/gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CpdoALOVEW0/p10Olg9aJ0e2cRGSvGq4LVyy2sp/g/g=;
-        b=nePZsKx5ohWc6NbchIoj4lD/ibeud1gkNBQqmNrMYek9BlIrqfNK+mmw6VJM4CzZiD
-         VWrjI1cPgmOsRL3S3CAIDiWXI/KKu2m5Nbwv8atAE1BY6EGGlM9gQ9PctzwiARNnp8nS
-         CBFowKDI0ily7rlWRzS/7JgMyGMQBlBuR7r0PEP9Ng2hS6hEaEye9ts21QU+bWfnKHWc
-         C6jpkYdpodxw6Ob4fGkk1uhXYHz8s/py5QFLWzx8bR3rELNvA5an3L5oJZfA6KPQE4OH
-         QncHvL2GOYLRlWkyHeDFzGtGYBLrc9j7jKzQBkmZ2ukkejV7pXec999fuhdoOrLi0Vyw
-         2Lrg==
-X-Gm-Message-State: APjAAAWwlmFGeOp2rsbFoadu0CX8rUMcx0N0/51xkSMhNMtLTW4LsKSM
-        kkmnJs06GcLtC/9F4jZYh6BFzw==
-X-Google-Smtp-Source: APXvYqwzdsgRtjmGNCjQK9mOrmAzetL/58zJ4JgpuNBBsnBlmlALfJkQqb10Ky53cIqWsAIufwwr5g==
-X-Received: by 2002:adf:ebce:: with SMTP id v14mr8398242wrn.69.1552825386982;
-        Sun, 17 Mar 2019 05:23:06 -0700 (PDT)
-Received: from snf-864.vm.snf.arr ([31.177.62.212])
-        by smtp.gmail.com with ESMTPSA id z10sm5453292wrs.11.2019.03.17.05.23.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 05:23:06 -0700 (PDT)
-From:   Nikos Tsironis <ntsironis@arrikto.com>
-To:     snitzer@redhat.com, agk@redhat.com, dm-devel@redhat.com
-Cc:     mpatocka@redhat.com, paulmck@linux.ibm.com, hch@infradead.org,
-        iliastsi@arrikto.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/6] dm snapshot: Make exception tables scalable
-Date:   Sun, 17 Mar 2019 14:22:57 +0200
-Message-Id: <20190317122258.21760-6-ntsironis@arrikto.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190317122258.21760-1-ntsironis@arrikto.com>
-References: <20190317122258.21760-1-ntsironis@arrikto.com>
+        Sun, 17 Mar 2019 08:33:28 -0400
+Received: from mail-oln040092065050.outbound.protection.outlook.com ([40.92.65.50]:21217
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726204AbfCQMd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 08:33:27 -0400
+Received: from VE1EUR01FT016.eop-EUR01.prod.protection.outlook.com
+ (10.152.2.52) by VE1EUR01HT139.eop-EUR01.prod.protection.outlook.com
+ (10.152.3.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1730.9; Sun, 17 Mar
+ 2019 12:33:19 +0000
+Received: from AM3PR03MB0966.eurprd03.prod.outlook.com (10.152.2.57) by
+ VE1EUR01FT016.mail.protection.outlook.com (10.152.2.227) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1730.9 via Frontend Transport; Sun, 17 Mar 2019 12:33:19 +0000
+Received: from AM3PR03MB0966.eurprd03.prod.outlook.com
+ ([fe80::c89:4e52:34c1:7009]) by AM3PR03MB0966.eurprd03.prod.outlook.com
+ ([fe80::c89:4e52:34c1:7009%5]) with mapi id 15.20.1709.015; Sun, 17 Mar 2019
+ 12:33:19 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: add HDMI sound node for
+ rk3328-rock64
+Thread-Topic: [PATCH v3 2/2] arm64: dts: rockchip: add HDMI sound node for
+ rk3328-rock64
+Thread-Index: AQHUxucMoxU67kG9/EyxObajZ+kTbqX4eAaAgAAypACAACM+AIAW8zEAgAAsSQA=
+Date:   Sun, 17 Mar 2019 12:33:19 +0000
+Message-ID: <AM3PR03MB0966C5CA52CE87DFB35D172BAC460@AM3PR03MB0966.eurprd03.prod.outlook.com>
+References: <20190217173407.29189-1-katsuhiro@katsuster.net>
+ <20190217173407.29189-2-katsuhiro@katsuster.net>
+ <d42dd768-d6c1-098d-759f-e3576d0edcc2@katsuster.net>
+ <AM3PR03MB0966F2308C6003C192A68F4DAC770@AM3PR03MB0966.eurprd03.prod.outlook.com>
+ <fb36eddb-ef3b-df4a-5e1a-6f8866726ae9@katsuster.net>
+ <b855ff66-19e5-4ea5-3337-23d5ada1bf1c@katsuster.net>
+In-Reply-To: <b855ff66-19e5-4ea5-3337-23d5ada1bf1c@katsuster.net>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0402CA0011.eurprd04.prod.outlook.com
+ (2603:10a6:3:d0::21) To AM3PR03MB0966.eurprd03.prod.outlook.com
+ (2a01:111:e400:884c::23)
+x-incomingtopheadermarker: OriginalChecksum:D46B4692027B03911B022275B8B43DD05384FF0747227C3207958F8960FD3FAC;UpperCasedChecksum:A8B40E2AFF728942F5F9F6C04ED95140D71BDC320BB65D127AC021811AE75CF7;SizeAsReceived:8076;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [2ENW0eRzFAmf3kbDMD9pqJOpPcGJmv5R]
+x-microsoft-original-message-id: <4247fb06-86cf-0e32-845c-d2617a6f6317@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031324274)(2017031323274)(1601125500)(1603101475)(1701031045);SRVR:VE1EUR01HT139;
+x-ms-traffictypediagnostic: VE1EUR01HT139:
+x-microsoft-antispam-message-info: nz07cA9dnOl2QME0EUM/xtYj27HgN1PnPhBWKl1XpgsL+D82pVyyk9kkpKz/DVJV
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C621DA6FB204EE47A772479BC91DB66D@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 518be6a6-ae77-4e0b-899c-08d6aad4bc08
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2019 12:33:19.5277
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use list_bl to implement the exception hash tables' buckets. This change
-permits concurrent access, to distinct buckets, by multiple threads.
-
-Also, implement helper functions to lock and unlock the exception tables
-based on the chunk number of the exception at hand.
-
-We retain the global locking, by means of down_write(), which is
-replaced by the next commit.
-
-Still, we must acquire the per-bucket spinlocks when accessing the hash
-tables, since list_bl does not allow modification on unlocked lists.
-
-Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
-Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
----
- drivers/md/dm-exception-store.h |   3 +-
- drivers/md/dm-snap.c            | 137 +++++++++++++++++++++++++++++++++-------
- 2 files changed, 116 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/md/dm-exception-store.h b/drivers/md/dm-exception-store.h
-index 12b5216c2cfe..5a3c696c057f 100644
---- a/drivers/md/dm-exception-store.h
-+++ b/drivers/md/dm-exception-store.h
-@@ -11,6 +11,7 @@
- #define _LINUX_DM_EXCEPTION_STORE
- 
- #include <linux/blkdev.h>
-+#include <linux/list_bl.h>
- #include <linux/device-mapper.h>
- 
- /*
-@@ -27,7 +28,7 @@ typedef sector_t chunk_t;
-  * chunk within the device.
-  */
- struct dm_exception {
--	struct list_head hash_list;
-+	struct hlist_bl_node hash_list;
- 
- 	chunk_t old_chunk;
- 	chunk_t new_chunk;
-diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
-index 209da5dd0ba6..ab75857309aa 100644
---- a/drivers/md/dm-snap.c
-+++ b/drivers/md/dm-snap.c
-@@ -13,6 +13,7 @@
- #include <linux/init.h>
- #include <linux/kdev_t.h>
- #include <linux/list.h>
-+#include <linux/list_bl.h>
- #include <linux/mempool.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -44,7 +45,7 @@ static const char dm_snapshot_merge_target_name[] = "snapshot-merge";
- struct dm_exception_table {
- 	uint32_t hash_mask;
- 	unsigned hash_shift;
--	struct list_head *table;
-+	struct hlist_bl_head *table;
- };
- 
- struct dm_snapshot {
-@@ -618,6 +619,36 @@ static void unregister_snapshot(struct dm_snapshot *s)
-  * The lowest hash_shift bits of the chunk number are ignored, allowing
-  * some consecutive chunks to be grouped together.
-  */
-+static uint32_t exception_hash(struct dm_exception_table *et, chunk_t chunk);
-+
-+/* Lock to protect access to the completed and pending exception hash tables. */
-+struct dm_exception_table_lock {
-+	struct hlist_bl_head *complete_slot;
-+	struct hlist_bl_head *pending_slot;
-+};
-+
-+static void dm_exception_table_lock_init(struct dm_snapshot *s, chunk_t chunk,
-+					 struct dm_exception_table_lock *lock)
-+{
-+	struct dm_exception_table *complete = &s->complete;
-+	struct dm_exception_table *pending = &s->pending;
-+
-+	lock->complete_slot = &complete->table[exception_hash(complete, chunk)];
-+	lock->pending_slot = &pending->table[exception_hash(pending, chunk)];
-+}
-+
-+static void dm_exception_table_lock(struct dm_exception_table_lock *lock)
-+{
-+	hlist_bl_lock(lock->complete_slot);
-+	hlist_bl_lock(lock->pending_slot);
-+}
-+
-+static void dm_exception_table_unlock(struct dm_exception_table_lock *lock)
-+{
-+	hlist_bl_unlock(lock->pending_slot);
-+	hlist_bl_unlock(lock->complete_slot);
-+}
-+
- static int dm_exception_table_init(struct dm_exception_table *et,
- 				   uint32_t size, unsigned hash_shift)
- {
-@@ -625,12 +656,12 @@ static int dm_exception_table_init(struct dm_exception_table *et,
- 
- 	et->hash_shift = hash_shift;
- 	et->hash_mask = size - 1;
--	et->table = dm_vcalloc(size, sizeof(struct list_head));
-+	et->table = dm_vcalloc(size, sizeof(struct hlist_bl_head));
- 	if (!et->table)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < size; i++)
--		INIT_LIST_HEAD(et->table + i);
-+		INIT_HLIST_BL_HEAD(et->table + i);
- 
- 	return 0;
- }
-@@ -638,15 +669,16 @@ static int dm_exception_table_init(struct dm_exception_table *et,
- static void dm_exception_table_exit(struct dm_exception_table *et,
- 				    struct kmem_cache *mem)
- {
--	struct list_head *slot;
--	struct dm_exception *ex, *next;
-+	struct hlist_bl_head *slot;
-+	struct dm_exception *ex;
-+	struct hlist_bl_node *pos, *n;
- 	int i, size;
- 
- 	size = et->hash_mask + 1;
- 	for (i = 0; i < size; i++) {
- 		slot = et->table + i;
- 
--		list_for_each_entry_safe (ex, next, slot, hash_list)
-+		hlist_bl_for_each_entry_safe(ex, pos, n, slot, hash_list)
- 			kmem_cache_free(mem, ex);
- 	}
- 
-@@ -660,7 +692,7 @@ static uint32_t exception_hash(struct dm_exception_table *et, chunk_t chunk)
- 
- static void dm_remove_exception(struct dm_exception *e)
- {
--	list_del(&e->hash_list);
-+	hlist_bl_del(&e->hash_list);
- }
- 
- /*
-@@ -670,11 +702,12 @@ static void dm_remove_exception(struct dm_exception *e)
- static struct dm_exception *dm_lookup_exception(struct dm_exception_table *et,
- 						chunk_t chunk)
- {
--	struct list_head *slot;
-+	struct hlist_bl_head *slot;
-+	struct hlist_bl_node *pos;
- 	struct dm_exception *e;
- 
- 	slot = &et->table[exception_hash(et, chunk)];
--	list_for_each_entry (e, slot, hash_list)
-+	hlist_bl_for_each_entry(e, pos, slot, hash_list)
- 		if (chunk >= e->old_chunk &&
- 		    chunk <= e->old_chunk + dm_consecutive_chunk_count(e))
- 			return e;
-@@ -721,7 +754,8 @@ static void free_pending_exception(struct dm_snap_pending_exception *pe)
- static void dm_insert_exception(struct dm_exception_table *eh,
- 				struct dm_exception *new_e)
- {
--	struct list_head *l;
-+	struct hlist_bl_head *l;
-+	struct hlist_bl_node *pos;
- 	struct dm_exception *e = NULL;
- 
- 	l = &eh->table[exception_hash(eh, new_e->old_chunk)];
-@@ -731,7 +765,7 @@ static void dm_insert_exception(struct dm_exception_table *eh,
- 		goto out;
- 
- 	/* List is ordered by old_chunk */
--	list_for_each_entry_reverse(e, l, hash_list) {
-+	hlist_bl_for_each_entry(e, pos, l, hash_list) {
- 		/* Insert after an existing chunk? */
- 		if (new_e->old_chunk == (e->old_chunk +
- 					 dm_consecutive_chunk_count(e) + 1) &&
-@@ -752,12 +786,24 @@ static void dm_insert_exception(struct dm_exception_table *eh,
- 			return;
- 		}
- 
--		if (new_e->old_chunk > e->old_chunk)
-+		if (new_e->old_chunk < e->old_chunk)
- 			break;
- 	}
- 
- out:
--	list_add(&new_e->hash_list, e ? &e->hash_list : l);
-+	if (!e) {
-+		/*
-+		 * Either the table doesn't support consecutive chunks or slot
-+		 * l is empty.
-+		 */
-+		hlist_bl_add_head(&new_e->hash_list, l);
-+	} else if (new_e->old_chunk < e->old_chunk) {
-+		/* Add before an existing exception */
-+		hlist_bl_add_before(&new_e->hash_list, &e->hash_list);
-+	} else {
-+		/* Add to l's tail: e is the last exception in this slot */
-+		hlist_bl_add_behind(&new_e->hash_list, &e->hash_list);
-+	}
- }
- 
- /*
-@@ -766,6 +812,7 @@ static void dm_insert_exception(struct dm_exception_table *eh,
-  */
- static int dm_add_exception(void *context, chunk_t old, chunk_t new)
- {
-+	struct dm_exception_table_lock lock;
- 	struct dm_snapshot *s = context;
- 	struct dm_exception *e;
- 
-@@ -778,7 +825,17 @@ static int dm_add_exception(void *context, chunk_t old, chunk_t new)
- 	/* Consecutive_count is implicitly initialised to zero */
- 	e->new_chunk = new;
- 
-+	/*
-+	 * Although there is no need to lock access to the exception tables
-+	 * here, if we don't then hlist_bl_add_head(), called by
-+	 * dm_insert_exception(), will complain about accessing the
-+	 * corresponding list without locking it first.
-+	 */
-+	dm_exception_table_lock_init(s, old, &lock);
-+
-+	dm_exception_table_lock(&lock);
- 	dm_insert_exception(&s->complete, e);
-+	dm_exception_table_unlock(&lock);
- 
- 	return 0;
- }
-@@ -807,7 +864,7 @@ static int calc_max_buckets(void)
- {
- 	/* use a fixed size of 2MB */
- 	unsigned long mem = 2 * 1024 * 1024;
--	mem /= sizeof(struct list_head);
-+	mem /= sizeof(struct hlist_bl_head);
- 
- 	return mem;
- }
-@@ -1473,13 +1530,18 @@ static void pending_complete(void *context, int success)
- 	struct bio *origin_bios = NULL;
- 	struct bio *snapshot_bios = NULL;
- 	struct bio *full_bio = NULL;
-+	struct dm_exception_table_lock lock;
- 	int error = 0;
- 
-+	dm_exception_table_lock_init(s, pe->e.old_chunk, &lock);
-+
- 	if (!success) {
- 		/* Read/write error - snapshot is unusable */
- 		down_write(&s->lock);
- 		__invalidate_snapshot(s, -EIO);
- 		error = 1;
-+
-+		dm_exception_table_lock(&lock);
- 		goto out;
- 	}
- 
-@@ -1488,11 +1550,14 @@ static void pending_complete(void *context, int success)
- 		down_write(&s->lock);
- 		__invalidate_snapshot(s, -ENOMEM);
- 		error = 1;
-+
-+		dm_exception_table_lock(&lock);
- 		goto out;
- 	}
- 	*e = pe->e;
- 
- 	down_write(&s->lock);
-+	dm_exception_table_lock(&lock);
- 	if (!s->valid) {
- 		free_completed_exception(e);
- 		error = 1;
-@@ -1510,14 +1575,19 @@ static void pending_complete(void *context, int success)
- 
- 	/* Wait for conflicting reads to drain */
- 	if (__chunk_is_tracked(s, pe->e.old_chunk)) {
-+		dm_exception_table_unlock(&lock);
- 		up_write(&s->lock);
- 		__check_for_conflicting_io(s, pe->e.old_chunk);
- 		down_write(&s->lock);
-+		dm_exception_table_lock(&lock);
- 	}
- 
- out:
- 	/* Remove the in-flight exception from the list */
- 	dm_remove_exception(&pe->e);
-+
-+	dm_exception_table_unlock(&lock);
-+
- 	snapshot_bios = bio_list_get(&pe->snapshot_bios);
- 	origin_bios = bio_list_get(&pe->origin_bios);
- 	full_bio = pe->full_bio;
-@@ -1733,6 +1803,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
- 	int r = DM_MAPIO_REMAPPED;
- 	chunk_t chunk;
- 	struct dm_snap_pending_exception *pe = NULL;
-+	struct dm_exception_table_lock lock;
- 
- 	init_tracked_chunk(bio);
- 
-@@ -1742,6 +1813,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
- 	}
- 
- 	chunk = sector_to_chunk(s->store, bio->bi_iter.bi_sector);
-+	dm_exception_table_lock_init(s, chunk, &lock);
- 
- 	/* Full snapshots are not usable */
- 	/* To get here the table must be live so s->active is always set. */
-@@ -1749,6 +1821,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
- 		return DM_MAPIO_KILL;
- 
- 	down_write(&s->lock);
-+	dm_exception_table_lock(&lock);
- 
- 	if (!s->valid || (unlikely(s->snapshot_overflowed) &&
- 	    bio_data_dir(bio) == WRITE)) {
-@@ -1771,9 +1844,11 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
- 	if (bio_data_dir(bio) == WRITE) {
- 		pe = __lookup_pending_exception(s, chunk);
- 		if (!pe) {
-+			dm_exception_table_unlock(&lock);
- 			up_write(&s->lock);
- 			pe = alloc_pending_exception(s);
- 			down_write(&s->lock);
-+			dm_exception_table_lock(&lock);
- 
- 			if (!s->valid || s->snapshot_overflowed) {
- 				free_pending_exception(pe);
-@@ -1790,13 +1865,17 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
- 
- 			pe = __find_pending_exception(s, pe, chunk);
- 			if (!pe) {
-+				dm_exception_table_unlock(&lock);
-+
- 				if (s->store->userspace_supports_overflow) {
- 					s->snapshot_overflowed = 1;
- 					DMERR("Snapshot overflowed: Unable to allocate exception.");
- 				} else
- 					__invalidate_snapshot(s, -ENOMEM);
-+				up_write(&s->lock);
-+
- 				r = DM_MAPIO_KILL;
--				goto out_unlock;
-+				goto out;
- 			}
- 		}
- 
-@@ -1808,6 +1887,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
- 		    bio->bi_iter.bi_size ==
- 		    (s->store->chunk_size << SECTOR_SHIFT)) {
- 			pe->started = 1;
-+			dm_exception_table_unlock(&lock);
- 			up_write(&s->lock);
- 			start_full_bio(pe, bio);
- 			goto out;
-@@ -1818,6 +1898,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
- 		if (!pe->started) {
- 			/* this is protected by snap->lock */
- 			pe->started = 1;
-+			dm_exception_table_unlock(&lock);
- 			up_write(&s->lock);
- 			start_copy(pe);
- 			goto out;
-@@ -1828,6 +1909,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
- 	}
- 
- out_unlock:
-+	dm_exception_table_unlock(&lock);
- 	up_write(&s->lock);
- out:
- 	return r;
-@@ -2129,6 +2211,7 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
- 	struct dm_snap_pending_exception *pe, *pe2;
- 	struct dm_snap_pending_exception *pe_to_start_now = NULL;
- 	struct dm_snap_pending_exception *pe_to_start_last = NULL;
-+	struct dm_exception_table_lock lock;
- 	chunk_t chunk;
- 
- 	/* Do all the snapshots on this origin */
-@@ -2140,21 +2223,23 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
- 		if (dm_target_is_snapshot_merge(snap->ti))
- 			continue;
- 
--		down_write(&snap->lock);
--
--		/* Only deal with valid and active snapshots */
--		if (!snap->valid || !snap->active)
--			goto next_snapshot;
--
- 		/* Nothing to do if writing beyond end of snapshot */
- 		if (sector >= dm_table_get_size(snap->ti->table))
--			goto next_snapshot;
-+			continue;
- 
- 		/*
- 		 * Remember, different snapshots can have
- 		 * different chunk sizes.
- 		 */
- 		chunk = sector_to_chunk(snap->store, sector);
-+		dm_exception_table_lock_init(snap, chunk, &lock);
-+
-+		down_write(&snap->lock);
-+		dm_exception_table_lock(&lock);
-+
-+		/* Only deal with valid and active snapshots */
-+		if (!snap->valid || !snap->active)
-+			goto next_snapshot;
- 
- 		pe = __lookup_pending_exception(snap, chunk);
- 		if (!pe) {
-@@ -2167,9 +2252,11 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
- 			if (e)
- 				goto next_snapshot;
- 
-+			dm_exception_table_unlock(&lock);
- 			up_write(&snap->lock);
- 			pe = alloc_pending_exception(snap);
- 			down_write(&snap->lock);
-+			dm_exception_table_lock(&lock);
- 
- 			if (!snap->valid) {
- 				free_pending_exception(pe);
-@@ -2187,8 +2274,11 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
- 
- 				pe = __insert_pending_exception(snap, pe, chunk);
- 				if (!pe) {
-+					dm_exception_table_unlock(&lock);
- 					__invalidate_snapshot(snap, -ENOMEM);
--					goto next_snapshot;
-+					up_write(&snap->lock);
-+
-+					continue;
- 				}
- 			} else {
- 				free_pending_exception(pe);
-@@ -2219,6 +2309,7 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
- 		}
- 
- next_snapshot:
-+		dm_exception_table_unlock(&lock);
- 		up_write(&snap->lock);
- 
- 		if (pe_to_start_now) {
--- 
-2.11.0
-
+SGVsbG8gS2F0c3VoaXJvLA0KDQpTb3JyeSBmb3IgdGhlIGRlbGF5LCBJIGhhdmUgbm90IGJlZW4g
+YWJsZSB0byBmdWxseSB0ZXN0IHRoaXMgeWV0IGJ1dCB3aWxsIGRvIG1vcmUgdGVzdGluZyBsYXRl
+ciB0b25pZ2h0Lg0KDQpNeSBjb25jZXJuIGFyZSByZWdhcmRpbmcgaG93IHRvIGNvbmZpZ3VyZSBh
+IHNpbmdsZSBncmFwaCBjYXJkIG5vZGUgdG8gYWRkIGEgaGRtaTogKGFuZCBpZWM5NTg6IGZvciBz
+cGRpZikgdmFyaWFudHMgdXNpbmcgYW4gYWxzYSBjb25maWcgZmlsZS4NCkluIExpYnJlRUxFQyBJ
+IGV4cG9zZSBIRE1JIGFuZCBTUERJRiBhcyB0d28gZGlmZmVyZW50IGNhcmQgbm9kZXMgdG8gc2lt
+cGxpZnkgYXBwbHlpbmcgYWxzYSBjb25maWcgZmlsZXMsIHNlZSBbMV0gYW5kIFsyXSBmb3IgdGhl
+IGFsc2EgY29uZmlnIGZpbGVzIEkgdXNlLg0KRG8geW91IGtub3cgaG93IEkgY2FuIGNvbmZpZ3Vy
+ZSB0aGUgaGRtaTogYW5kIGllYzk1ODogY2FyZHMgYW5kIGFkZCBhICJJRUM5NTggUGxheWJhY2si
+IGN0bCB3aXRoIHRoZSBjb21iaW5lZCBncmFwaCBjYXJkIG5vZGU/DQoNCkkgYW0gYWxzbyB3b3Jr
+aW5nIG9uIE5MLVBDTS9IQlItYXVkaW8gc3VwcG9ydCBmb3IgZHctaGRtaS1pMnMgYW5kIGl0IHdp
+bGwgcmVxdWlyZSAiSUVDOTU4IFBsYXliYWNrIiBjdGwgYW5kIHBsYXllcnMgc3VjaCBhcyBrb2Rp
+IGFuZCBtcHYgb25seSBzZXRzIEFFUzAtMyBmb3IgaGRtaTogYW5kIGllYzk1ODogY2FyZHMuDQoN
+ClsxXSBodHRwczovL2dpdGh1Yi5jb20vTGlicmVFTEVDL0xpYnJlRUxFQy50di9ibG9iL21hc3Rl
+ci9wcm9qZWN0cy9Sb2NrY2hpcC9maWxlc3lzdGVtL3Vzci9zaGFyZS9hbHNhL2NhcmRzL0hETUku
+Y29uZg0KWzJdIGh0dHBzOi8vZ2l0aHViLmNvbS9MaWJyZUVMRUMvTGlicmVFTEVDLnR2L2Jsb2Iv
+bWFzdGVyL3Byb2plY3RzL1JvY2tjaGlwL2ZpbGVzeXN0ZW0vdXNyL3NoYXJlL2Fsc2EvY2FyZHMv
+U1BESUYuY29uZg0KDQpSZWdhcmRzLA0KSm9uYXMNCg0KT24gMjAxOS0wMy0xNyAxMDo1NCwgS2F0
+c3VoaXJvIFN1enVraSB3cm90ZToNCj4gSGVsbG8gSm9uYXMsDQo+DQo+IEhvdyBhYm91dCB0aGlz
+IHRvcGljPw0KPg0KPiBJIHRoaW5rIHRoaXMgcGF0Y2ggZG9lcyBub3QgaGF2ZSBiYWQgZWZmZWN0
+IGZvciBtdWx0aSBjaGFubmVsDQo+IHNvdW5kIG9mIEhETUkuIElmIHlvdSBkb24ndCB0aGluayBz
+bywgcGxlYXNlIHRlbGwgbWUuDQo+IEkgd2FpdCB5b3VyIHNvdW5kIHBhdGNoIGFuZCBhZnRlciBy
+ZS1jaGVjayB0aGlzIHBhdGNoLg0KPg0KPiBCZXN0IFJlZ2FyZHMsDQo+IEthdHN1aGlybyBTdXp1
+a2kNCj4NCj4gT24gMjAxOS8wMy8wMyA0OjI2LCBLYXRzdWhpcm8gU3V6dWtpIHdyb3RlOg0KPj4g
+SGVsbG8gSm9uYXMsDQo+Pg0KPj4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KPj4NCj4+IE9u
+IDIwMTkvMDMvMDMgMjoyMCwgSm9uYXMgS2FybG1hbiB3cm90ZToNCj4+PiBPbiAyMDE5LTAzLTAy
+IDE1OjE5LCBLYXRzdWhpcm8gU3V6dWtpIHdyb3RlOg0KPj4+PiBQaW5nLi4uDQo+Pj4+DQo+Pj4+
+IE9uIDIwMTkvMDIvMTggMjozNCwgS2F0c3VoaXJvIFN1enVraSB3cm90ZToNCj4+Pj4+IFRoaXMg
+cGF0Y2ggYWRkcyBIRE1JIHNvdW5kIChJMlMwKSBub2RlIGZvciByb2NrNjQuDQo+Pj4+Pg0KPj4+
+Pj4gQWZ0ZXIgYXBwbHkgdGhpcyBwYXRjaCwgVUFSVDIgd2lsbCBmYWlsIHRvIGFsbG9jYXRlIERN
+QSByZXNvdXJjZXMNCj4+Pj4+IGJ1dCBVQVJUIGRyaXZlciBjYW4gd29yayBmaW5lIHdpdGhvdXQg
+RE1BLg0KPj4+Pj4NCj4+Pj4+IFRoaXMgZXJyb3IgaXMgcmVsYXRlZCB0byB0aGUgRE1BQyBvZiBy
+azMzMjggKHBsMzMwIG9yIGNvbXBhdGlibGUpLg0KPj4+Pj4gRE1BQyBjb25uZWN0ZWQgdG8gMTYg
+RE1BIHNvdXJjZXMuIEVhY2ggc291cmNlcyBoYXZlIElEIG51bWJlciB0aGF0IGlzDQo+Pj4+PiBj
+YWxsZWQgJ1JlcSBudW1iZXInIGluIHJrMzMyOCBUUk0uIEN1cnJlbnRseSB0b3RhbCA3IHNvdXJj
+ZXMgaGFzIGJlZW4NCj4+Pj4+IGFjdGl2YXRlZCBhcyBmb2xsb3dzOg0KPj4+Pj4NCj4+Pj4+IHwg
+UmVxIG51bWJlciB8IFNvdXJjZSB8IFJlcXVpcmVkwqAgfA0KPj4+Pj4gfMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfMKgwqDCoMKgwqDCoMKgIHwgY2hhbm5lbHPCoCB8DQo+Pj4+PiB8LS0tLS0tLS0t
+LS0tKy0tLS0tLS0tKy0tLS0tLS0tLS0tfA0KPj4+Pj4gfCAxNCwgMTXCoMKgwqDCoCB8IEkyUzHC
+oMKgIHwgMmNowqDCoMKgwqDCoMKgIHwNCj4+Pj4+IHzCoCA2LMKgIDfCoMKgwqDCoCB8IFVBUlQy
+wqAgfCAyY2jCoMKgwqDCoMKgwqAgfA0KPj4+Pj4gfMKgwqDCoMKgIDEwwqDCoMKgwqAgfCBTUERJ
+RsKgIHwgMWNowqDCoMKgwqDCoMKgIHwNCj4+Pj4+IHzCoCA4LMKgIDnCoMKgwqDCoCB8IFNQSTDC
+oMKgIHwgMmNowqDCoMKgwqDCoMKgIHwNCj4+Pj4+IHwtLS0tLS0tLS0tLS0rLS0tLS0tLS0rLS0t
+LS0tLS0tLS18DQo+Pj4+PiB8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IFRvdGFswqAgfCA3Y2jC
+oMKgwqDCoMKgwqAgfA0KPj4+Pj4NCj4+Pj4+IEhETUkgYXVkaW8gbmVlZHMgdG8gYWN0aXZhdGUg
+bmV3IHNvdXJjZSBJMlMwIChSZXEgbnVtYmVyIDExIGFuZCAxMikuDQo+Pj4+PiBJMlMwIGNhbiB3
+b3JrIGNvbmN1cnJlbnRseSB3aXRoIG90aGVyIHNvdXJjZXMsIGJ1dCByazMzMjggRE1BQyBjYW4N
+Cj4+Pj4+IHVzZSBtYXggOCBjaGFubmVscyBhdCBzYW1lIHRpbWUuIElmIEkyUzAgaXMgc2ltcGx5
+IGFjdGl2YXRlZCBieSB0aGlzDQo+Pj4+PiBwYXRjaCwgcmVxdWlyZWQgRE1BQyBjaGFubmVscyB3
+aWxsIGJlIDkuIFNvIGxhc3Qgb25lIChVQVJUMikgY2Fubm90DQo+Pj4+PiBhbGxvY2F0ZSB0aGUg
+RE1BIHJlc291cmNlcy4NCj4+Pj4+DQo+Pj4+PiBWaXJ0LWRtYSBtZWNoYW5pc20gZm9yIHBsMDMz
+MCBETUFDIGRyaXZlciBpcyBuZWVkZWQgdG8gZml4IHRoaXMNCj4+Pj4+IHByb2JsZW0uDQo+Pj4+
+Pg0KPj4+Pj4gU2lnbmVkLW9mZi1ieTogS2F0c3VoaXJvIFN1enVraSA8a2F0c3VoaXJvQGthdHN1
+c3Rlci5uZXQ+DQo+Pj4+PiAtLS0NCj4+Pj4+IMKgwqAgLi4uL2FybTY0L2Jvb3QvZHRzL3JvY2tj
+aGlwL3JrMzMyOC1yb2NrNjQuZHRzIHwgMjEgDQo+Pj4+PiArKysrKysrKysrKysrKysrKystDQo+
+Pj4+PiDCoMKgIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
+DQo+Pj4+Pg0KPj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAv
+cmszMzI4LXJvY2s2NC5kdHMgDQo+Pj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAv
+cmszMzI4LXJvY2s2NC5kdHMNCj4+Pj4+IGluZGV4IDIxNTdhNTI4Mjc2Yi4uYmZjMDkzMGQyNDVj
+IDEwMDY0NA0KPj4+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzMjgt
+cm9jazY0LmR0cw0KPj4+Pj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMz
+Mjgtcm9jazY0LmR0cw0KPj4+Pj4gQEAgLTY4LDcgKzY4LDggQEANCj4+Pj4+IMKgwqDCoMKgwqDC
+oCBzb3VuZCB7DQo+Pj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb21wYXRpYmxlID0gImF1ZGlv
+LWdyYXBoLWNhcmQiOw0KPj4+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgbGFiZWwgPSAicm9ja2No
+aXAscmszMzI4IjsNCj4+Pj4+IC3CoMKgwqDCoMKgwqDCoCBkYWlzID0gPCZpMnMxX3AwDQo+Pj4+
+PiArwqDCoMKgwqDCoMKgwqAgZGFpcyA9IDwmaTJzMF9wMA0KPj4+Pj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgJmkyczFfcDANCj4+Pj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJnNw
+ZGlmX3AwPjsNCj4+PiBJIGFtIHdvcmtpbmcgb24gbXVsdGktY2hhbm5lbCBoZG1pIGF1ZGlvIHN1
+cHBvcnQgZm9yIGR3LWhkbWkgYXQgWzFdIA0KPj4+IGFuZCBhcmUgd29uZGVyaW5nIGlmIGhhdmlu
+ZyBtdWx0aXBsZSBkYWlzIG9uIG9uZSBncmFwaCBjYXJkDQo+Pj4gaW5zdGVhZCBvZiBhIHNlcGFy
+YXRlIGhkbWkgc291bmQgY2FyZCB3aWxsIGFmZmVjdCB0aGUgYWJpbGl0eSB0byANCj4+PiBkZWZp
+bmUgYSBwcm9wZXIgYWxzYSBjb25maWcgZm9yIG11bHRpIGNoYW5uZWwgaGRtaSBzb3VuZC4NCj4+
+Pg0KPj4+IFsxXSANCj4+PiBodHRwczovL2dpdGh1Yi5jb20vS3dpYm9vL2xpbnV4LXJvY2tjaGlw
+L2NvbXBhcmUvODg3NGMyMDZkNjEzZGM1NzVmNWNiNmUzODVlN2E4NjYwMjAxMzhkMC4uLjkyYjIw
+ZWFhNmI2ZGQyY2YzNDE4YTQyOGY5MDVkMTBiYmM2MjcyNGYgDQo+Pj4NCj4+Pg0KPj4gSXQgc2Vl
+bXMgYSBwYXJ0IG9mIG11bHRpIGNoYW5uZWwgKDUuMSBjaCkgaGFzIGFscmVhZHkgYmVlbiBzdXBw
+b3J0ZWQNCj4+IGJ5IHJvY2tjaGlwLWkycyBhbmQgZHctaGRtaS4gU28gSSBhcHBsaWVkIHRoaXMg
+cGF0Y2ggYW5kIHRyaWVkIGJlbG93DQo+PiBjb21tYW5kLg0KPj4gIMKgIHNwZWFrZXItdGVzdCAt
+RCBodzowLDAgLWYgNDgwMDAgLWMgNg0KPj4gSXQgZG9lcyBub3QgcmV0dXJuIGVycm9ycy4NCj4+
+DQo+PiBXb3VsZCB5b3UgdGVsbCBtZSBtb3JlIGRldGFpbHMgeW91IHdvcnJpZWQgYWJvdXQgaWYg
+c29tZXRoaW5nIHdyb25nPw0KPj4NCj4+DQo+PiBGWUk6IFJvY2s2NCBQQ00gZGV2aWNlcyBhcmUg
+YXMgZm9sbG93cyBhZnRlciBhcHBsaWVkIHRoaXMgcGF0Y2guDQo+PiB+fn5+fg0KPj4gJCBjYXQg
+L3Byb2MvYXNvdW5kL3BjbQ0KPj4gMDAtMDA6IGZmMDAwMDAwLmkycy1pMnMtaGlmaSBpMnMtaGlm
+aS0wIDrCoCA6IHBsYXliYWNrIDENCj4+IDAwLTAxOiBmZjAxMDAwMC5pMnMtcmszMzI4LWhpZmkg
+ZmY0MTAwMDAuY29kZWMtMSA6wqAgOiBwbGF5YmFjayAxIDogDQo+PiBjYXB0dXJlIDENCj4+IDAw
+LTAyOiBmZjAzMDAwMC5zcGRpZi1kaXQtaGlmaSBkaXQtaGlmaS0yIDrCoCA6IHBsYXliYWNrIDEN
+Cj4+IH5+fn5+DQo+Pg0KPj4gQmVzdCBSZWdhcmRzLA0KPj4gS2F0c3VoaXJvIFN1enVraQ0KPj4N
+Cj4+DQo+Pj4gUmVnYXJkcywNCj4+PiBKb25hcw0KPj4+DQo+Pj4+PiDCoMKgwqDCoMKgwqAgfTsN
+Cj4+Pj4+IEBAIC0xNDEsNiArMTQyLDEyIEBADQo+Pj4+PiDCoMKgICZoZG1pIHsNCj4+Pj4+IMKg
+wqDCoMKgwqDCoCBzdGF0dXMgPSAib2theSI7DQo+Pj4+PiArDQo+Pj4+PiArwqDCoMKgIHBvcnRA
+MCB7DQo+Pj4+PiArwqDCoMKgwqDCoMKgwqAgaGRtaV9wMF8wOiBlbmRwb2ludCB7DQo+Pj4+PiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZW1vdGUtZW5kcG9pbnQgPSA8JmkyczBfcDBfMD47DQo+
+Pj4+PiArwqDCoMKgwqDCoMKgwqAgfTsNCj4+Pj4+ICvCoMKgwqAgfTsNCj4+Pj4+IMKgwqAgfTsN
+Cj4+Pj4+IMKgwqAgJmhkbWlwaHkgew0KPj4+Pj4gQEAgLTI1Niw2ICsyNjMsMTggQEANCj4+Pj4+
+IMKgwqDCoMKgwqDCoCB9Ow0KPj4+Pj4gwqDCoCB9Ow0KPj4+Pj4gKyZpMnMwIHsNCj4+Pj4+ICvC
+oMKgwqAgc3RhdHVzID0gIm9rYXkiOw0KPj4+Pj4gKw0KPj4+Pj4gK8KgwqDCoCBpMnMwX3AwOiBw
+b3J0IHsNCj4+Pj4+ICvCoMKgwqDCoMKgwqDCoCBpMnMwX3AwXzA6IGVuZHBvaW50IHsNCj4+Pj4+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRhaS1mb3JtYXQgPSAiaTJzIjsNCj4+Pj4+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIG1jbGstZnMgPSA8MjU2PjsNCj4+Pj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9wMF8wPjsNCj4+Pj4+ICvCoMKgwqDC
+oMKgwqDCoCB9Ow0KPj4+Pj4gK8KgwqDCoCB9Ow0KPj4+Pj4gK307DQo+Pj4+PiArDQo+Pj4+PiDC
+oMKgICZpMnMxIHsNCj4+Pj4+IMKgwqDCoMKgwqDCoCBzdGF0dXMgPSAib2theSI7DQo+Pj4+Pg0K
+Pj4+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPj4+
+PiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QNCj4+Pj4gTGludXgtcm9ja2NoaXBAbGlzdHMu
+aW5mcmFkZWFkLm9yZw0KPj4+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LXJvY2tjaGlwDQo+Pj4+DQo+Pj4NCj4+Pg0KPj4NCg0K
