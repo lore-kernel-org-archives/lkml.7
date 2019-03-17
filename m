@@ -2,305 +2,171 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DC5C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40747C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F3D20857
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8A6206DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 18:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="BAR3XUVC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0tFaXWh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfCQS1z (ORCPT
+        id S1727202AbfCQSa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 14:27:55 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50271 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfCQS1z (ORCPT
+        Sun, 17 Mar 2019 14:30:56 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37441 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfCQSa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 14:27:55 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z11so2357088wmi.0
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 11:27:53 -0700 (PDT)
+        Sun, 17 Mar 2019 14:30:56 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c1so8419390qkk.4;
+        Sun, 17 Mar 2019 11:30:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language;
-        bh=KQXbIgwURYXqhCAoG41rtpxoVVDT42+Z8WntBJzAedQ=;
-        b=BAR3XUVCXcwcF/ypzhlqYdYqT2hDtP5mmEF63hcf4AZb3zWj8TA7N04JzVt8PZ6ZcJ
-         pYQJPkOS4ecR75F4PgpAvblSMdxo+ZQwSgDoRHnEY6cSjasNfLTY/7MX+wOfX3Iz5ezo
-         TK4DaJ6HI6Q19HL2juZ2f0OrjfKoLQ2+XqHkwqScnlJ+jJQoTt+bpms0sESScRlsmI9k
-         MOjfVbVC9kojIm7gMWLaZb38/67LuzrzTPl4ugwTlIIbZ9n9UUnBOO0raadvQzPsUTJH
-         sLV/DGnFHEbhSPB821CxeVoai4uvLBAuFXMZPP7khRN5gFCWdwKN6uELsti3CIwjxHiJ
-         +G1Q==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wcjAgXMxaZ1t4MHbpg/y1kaYaozUNYkr7E15q7Q/JMw=;
+        b=n0tFaXWhsVNA7jtiVcTw55/B9fLz9ogS+ZjQ3WG0UgttDmgcskOAOTl3Fk6lpwGvSE
+         1c3ojNBn8bzowyV+HrxdRgXEMk2sfT0CwVVDBHMRhwYDCAt2EBK7IvgJBO4iSSaaRoKt
+         /w8E+PTy0FACu2czME/KamB2yMJmxKn3pUCSNIl0yFAbuFgxXXX9j43LpA5MMUDBzESB
+         qs9NsSdHJFUQakXiVC72/30OisVcxfIW3SaniCy1BOTMi5dBuebIs4/xlPx7BTDl2UbH
+         gT3FDYqlhU+Z9vnB43toryvIip1isC65TI5aiuWqT37eXh2Y9cB4g+3mcDKfhr0XV+cH
+         821g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language;
-        bh=KQXbIgwURYXqhCAoG41rtpxoVVDT42+Z8WntBJzAedQ=;
-        b=RuylQDt9j9F5wQGqMfkWlbhsT9eX2H3VXFMix0VzOa/XAK5OUS2h7FK1urZ1+MK3Fe
-         mzCUV4SdplMej7mlhmSaJMXf0E8z98PP3DIzA34KzAqfYzSQq3h/V0zMUwt/DEBYH9lJ
-         k8TOhYsTAAQ9GgiHLH5eOECDolFw4dTfj7QICcBWNxjdmqbXtTCUmkPmJ+1izoC+5E7e
-         pq3iWJdbhcL0BksK556NnszzgphhJS8u31vXDjVGRV4ZznoBWJtgCm1VJ2S/lQg/LCjH
-         UtSzpaMAmzQditO1knj1E4k1vcger/m2UlFQ9WdNuAzSpNN+Y/TigarcA8uJMb2V3mB0
-         edkg==
-X-Gm-Message-State: APjAAAWTPnmXT5EHtWzT4dBLQL8XU5xbtQ+lOTFXpnmmtzeRdyuXzhZd
-        GSCtzx1Mp8leBgzUFK0qKw7FMA==
-X-Google-Smtp-Source: APXvYqy1pp+6pkwXDGWhObjYiHStvXvyJZOMeGqqtCzT2oXnBdGmPhLIzAK5W2SGPouM47fFcfVE3A==
-X-Received: by 2002:a7b:cb54:: with SMTP id v20mr8974811wmj.0.1552847272984;
-        Sun, 17 Mar 2019 11:27:52 -0700 (PDT)
-Received: from linux.fritz.box (p200300D993C7CF006FC1A9295AF99078.dip0.t-ipconnect.de. [2003:d9:93c7:cf00:6fc1:a929:5af9:9078])
-        by smtp.googlemail.com with ESMTPSA id r10sm7374739wmh.21.2019.03.17.11.27.49
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 11:27:50 -0700 (PDT)
-Subject: Re: [PATCH v12 3/3] ipc: Do cyclic id allocation with ipcmni_extend
- mode
-To:     Waiman Long <longman@redhat.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>
-References: <1551379645-819-1-git-send-email-longman@redhat.com>
- <1551379645-819-4-git-send-email-longman@redhat.com>
-From:   Manfred Spraul <manfred@colorfullife.com>
-Message-ID: <e780cb59-ef1b-5f56-1e92-394dff5d4e32@colorfullife.com>
-Date:   Sun, 17 Mar 2019 19:27:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wcjAgXMxaZ1t4MHbpg/y1kaYaozUNYkr7E15q7Q/JMw=;
+        b=hjSXb1UKGhhgR2g4dFOrbvXQvyCwlVqHu57gJYexXoNJsVD8GeC7xC1qg8S5lkebgS
+         aHoGf8A4ZkGOh+nOt4FvriYM82RJyRkV3DCFUtkz9nkncaxEiElQCPgw8AH62cpKDCG+
+         /K5tiK5ndgU4gUaqahV59EU8Z/9nfZ84FX5RijfjXvviK+8em01LaSq0bEDlSuWVy2eh
+         g0qVKILcwMmOkThY0NfQvAvyMvBb5wb5Jdrlu9SRWpVfooml7qT6xdJrVWXu5UzKYX4y
+         umOC6KBnqD1Cl2mjnr3MLMf0oSfJIUs4RUv64K1Zog9okWsdBc5dzuKWD0uWCUb03Skx
+         DkoA==
+X-Gm-Message-State: APjAAAXwKeGLox7nEXDpZDCnnXalWhc2XMe6GsWsJ9HkbX1aTrrqe5CZ
+        uH7eEM4SPtOj6RI1zJwXMuQ=
+X-Google-Smtp-Source: APXvYqwFsPI9SNIAPlWtZI9QbHGIrJYatu0kiiipoc1Iq82LP2I3Sk97S2Bx0F+qFH55z/pUo+0ENw==
+X-Received: by 2002:a05:620a:10b1:: with SMTP id h17mr10552426qkk.69.1552847454723;
+        Sun, 17 Mar 2019 11:30:54 -0700 (PDT)
+Received: from rys-Inspiron-5420 ([201.82.188.175])
+        by smtp.gmail.com with ESMTPSA id a8sm130426qtc.19.2019.03.17.11.30.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 17 Mar 2019 11:30:53 -0700 (PDT)
+Date:   Sun, 17 Mar 2019 15:30:49 -0300
+From:   Renato Soma <renatoys08@gmail.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: Re: [PATCH 0/1] platform/x86: dell-wmi: Uncomment events that were
+Message-ID: <20190317183049.GA5989@rys-Inspiron-5420>
+References: <20190316010942.6448-1-renatoys08@gmail.com>
+ <20190316091756.2zfccpnhfnjogktp@pali>
 MIME-Version: 1.0
-In-Reply-To: <1551379645-819-4-git-send-email-longman@redhat.com>
-Content-Type: multipart/mixed;
- boundary="------------A4C6461DF8A7175F73D8A162"
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190316091756.2zfccpnhfnjogktp@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------A4C6461DF8A7175F73D8A162
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Hello,
 
-Hi Waiman,
+On Sat, Mar 16, 2019 at 10:17:56AM +0100, Pali Roh�r wrote:
+> 
+> Looks like that those keys are not as obvious as you wrote. Look at my
+> email with some investigation about Dell Audio With Preset Switch key:
+> https://www.spinics.net/lists/platform-driver-x86/msg15593.html
+> 
+> Also there is another user who wrote about 0xe02c key generated by
+> Inspirion 7520: https://ubuntuforum-br.org/index.php?topic=105434.0
+> 
+> You can a testing machine 5420, can you prove that behavior described in
+> my previous email match also your machine?
+> 
 
-On 2/28/19 7:47 PM, Waiman Long wrote:
-> For ipcmni_extend mode, the sequence number space is only 7 bits. So
-> the chance of id reuse is relatively high compared with the non-extended
-> mode.
->
-> To alleviate this id reuse problem, the id allocation will be done
-> cyclically to cycle through all the 24-bit id space before wrapping
-> around when in ipcmni_extend mode. This may cause the use of more memory
-> in term of the number of xa_nodes allocated as well as potentially more
-> cachelines used as the xa_nodes may be spread more sparsely in this case.
->
-> There is probably a slight memory and performance cost in doing cyclic
-> id allocation. For applications that really need more than 32k unique IPC
-> identifiers, this is a small price to pay to avoid the id reuse problem.
+Thanks for the feedback, I was unaware of this issue.
+I've performed some tests in my machine and this is what I've found so far:
 
-Have you measured it?
+=====================================================================
 
-I have observed -3% for semop() for a 4 level radix tree compared to a 
-1-level radix tree, and I'm a bit reluctant to accept that.
-Especially as the percentage will increase if the syscall overhead goes 
-down again (-> less spectre impact).
+----------------------------------------
+Left WMI key: Windows Mobility Center
+Press:    'x'
+Hold:     -
+Release:  -
 
-[...]
-
-> --- a/ipc/util.c
-> +++ b/ipc/util.c
-> @@ -221,7 +221,12 @@ static inline int ipc_idr_alloc(struct ipc_ids *ids, struct kern_ipc_perm *new)
->   	 */
->   
->   	if (next_id < 0) { /* !CHECKPOINT_RESTORE or next_id is unset */
-> -		idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
-> +		if (ipc_mni_extended)
-> +			idx = idr_alloc_cyclic(&ids->ipcs_idr, new, 0, ipc_mni,
-> +						GFP_NOWAIT);
-> +		else
-> +			idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
-> +
->   		if ((idx <= ids->last_idx) && (++ids->seq > IPCID_SEQ_MAX))
->   			ids->seq = 0;
-
-I don't like it that there are two different codepaths.
-
-Attached is a different proposal:
-
-Always use cyclic allocation, with some logic to minimize the additional 
-radix tree levels.
-
-What do you think?
-
---
-
-     Manfred
+In my machine (Inspiron 5420), whenever I press this key, the key
+outputs the character "x". I've seen nothing on dmesg even if I
+keep this key pressed for longer amounts of time. I'm still trying
+to understand why this is hapenning.
 
 
---------------A4C6461DF8A7175F73D8A162
-Content-Type: text/x-patch;
- name="0002-ipc-Do-cyclic-id-allocation-for-the-ipc-objects.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0002-ipc-Do-cyclic-id-allocation-for-the-ipc-objects.patch"
+----------------------------------------
+Middle WMI key: Dell Audio With Preset Switch
+Press:    Key with type 0x0000 and code 0xe02a pressed
+Hold:     -
+Release:  Key with type 0x0000 and code 0xe02b pressed
 
-From 491ea87cc3022e50c02caae009f9aeba2b6ddcb4 Mon Sep 17 00:00:00 2001
-From: Manfred Spraul <manfred@colorfullife.com>
-Date: Sun, 17 Mar 2019 06:29:00 +0100
-Subject: [PATCH 2/2] ipc: Do cyclic id allocation for the ipc objects.
+Differently from what you saw on a Inspiron 7520, I could not
+reproduce the behavior that you reported on the first link above.
+In my case, when I press the key, the code 0xe02a is shown at dmesg
+only once. Also, even though I keep it pressed for longer than ~30
+seconds or so, I could not see the entry 0xe02c apper. More on that
+behavior later on. When releasing the key, I can see the code 0xe02b
+show up at dmesg.
 
-For ipcmni_extend mode, the sequence number space is only 7 bits. So
-the chance of id reuse is relatively high compared with the non-extended
-mode.
+----------------------------------------
+Right WMI key: Dell Instant Launch
+Press:    -
+Hold:     -
+Release:  -
 
-To alleviate this id reuse problem, this patch enables cyclic allocation
-for the index to the radix tree (idx).
-The disadvantage is that this can cause a slight slow-down of the fast
-path, as the radix tree could be higher than necessary.
+This key is with a really weird behavior on my machine.
+When testing, I would normally press and relase so that the following
+messages would pop-up:
 
-To limit the radix tree height, I have chosen the following limits:
-- 1) The cycling is done over in_use*1.5.
-- 2) At least, the cycling is done over
-   "normal" ipcnmi mode: RADIX_TREE_MAP_SIZE elements
-   "ipcmni_extended": 4096 elements
+[ 2830.499420] atkbd serio0: Unknown key pressed (translated set 2,
+code 0x60 on isa0060/serio0).
+[ 2830.499422] atkbd serio0: Use 'setkeycodes 60 <keycode>'
+to make it known.
 
-Result:
-- for normal mode:
-	No change for <= 42 active ipc elements. With more than 42
-	active ipc elements, a 2nd level would be added to the radix
-	tree.
-	Without cyclic allocation, a 2nd level would be added only with
-	more than 63 active elements.
+But what I realized was that, if I kept this button pressed for about
+~3 seconds or so (like when your experiment in the link above), dmesg
+would not ouput anything untill those ~3 seconds elapsed. When they
+did, then dmesg log would have the following entries:
 
-- for extended mode:
-	Cycling creates always at least a 2-level radix tree.
-	With more than 2730 active objects, a 3rd level would be
-	added, instead of > 4095 active objects until the 3rd level
-	is added without cyclic allocation.
+[ 3058.494003] atkbd serio0: Unknown key pressed (translated set 2,
+code 0x60 on isa0060/serio0).
+[ 3058.494008] atkbd serio0: Use 'setkeycodes 60 <keycode>'
+to make it known.
+[ 3058.501494] dell_wmi: Unknown key with type 0x0000 and code
+0xe028 pressed
 
-For a 2-level radix tree compared to a 1-level radix tree, I have
-observed < 1% performance impact. I consider this as a good
-compromise.
+The last message being the weirdest, It would seem that only after
+about 3 seconds or so, the driver is being notified of it.
 
-Notes:
-1) Normal "x=semget();y=semget();" is unaffected: Then the idx
-  is e.g. a and a+1, regardless of idr_alloc() or idr_alloc_cyclic()
-  is used.
+=====================================================================
 
-2) The -1% happens in a microbenchmark after this situation:
-	x=semget();
-	for(i=0;i<4000;i++) {t=semget();semctl(t,0,IPC_RMID);}
-	y=semget();
-	Now perform semget calls on x and y that do not sleep.
+Anyway, It's clear now that this patch trully makes no sense since the
+hardwares (Inspiron 7520 x Inspiron 5420) are behaving somewhat
+differently on these keys.
 
-3) The worst-case reuse cycle time is unfortunately unaffected:
-   If you have 2^24-1 ipc objects allocated, and get/remove the last
-   possible element in a loop, then the id is reused after 128
-   get/remove pairs.
+Either way, It seems that at both of them, there are three behaviors
+that are strange. I'm still trying to learn kernel development (I'm a
+newbie) so could you please point out whether this is worth it to
+investigate, or if should I leave this as is?
 
-Performance check:
-A microbenchmark that performes no-op semop() randomly on two IDs,
-with only these two IDs allocated.
-The IDs were set using /proc/sys/kernel/sem_next_id.
-The test was run 5 times, averages are shown.
+In the meantime, I'll try to find out why the first button is outputting
+an "x" character on my machine.
 
-1 & 2: Base (6.22 seconds for 10.000.000 semops)
-1 & 40: -0.2%
-1 & 3348: - 0.8%
-1 & 27348: - 1.6%
-1 & 15777204: - 3.2%
-
-Or: ~12.6 cpu cycles per additional radix tree level.
-The cpu is an Intel I3-5010U. ~1300 cpu cycles/syscall is slower
-than what I remember (spectre impact?).
-
-Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
----
- ipc/ipc_sysctl.c |  2 ++
- ipc/util.c       | 10 +++++++++-
- ipc/util.h       |  3 +++
- 3 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
-index 73b7782eccf4..bfaae457810c 100644
---- a/ipc/ipc_sysctl.c
-+++ b/ipc/ipc_sysctl.c
-@@ -122,6 +122,7 @@ static int one = 1;
- static int int_max = INT_MAX;
- int ipc_mni = IPCMNI;
- int ipc_mni_shift = IPCMNI_SHIFT;
-+int ipc_min_cycle = RADIX_TREE_MAP_SIZE;
- 
- static struct ctl_table ipc_kern_table[] = {
- 	{
-@@ -252,6 +253,7 @@ static int __init ipc_mni_extend(char *str)
- {
- 	ipc_mni = IPCMNI_EXTEND;
- 	ipc_mni_shift = IPCMNI_EXTEND_SHIFT;
-+	ipc_min_cycle = IPCMNI_EXTEND_MIN_CYCLE;
- 	pr_info("IPCMNI extended to %d.\n", ipc_mni);
- 	return 0;
- }
-diff --git a/ipc/util.c b/ipc/util.c
-index 6e0fe3410423..90764b67af51 100644
---- a/ipc/util.c
-+++ b/ipc/util.c
-@@ -221,9 +221,17 @@ static inline int ipc_idr_alloc(struct ipc_ids *ids, struct kern_ipc_perm *new)
- 	 */
- 
- 	if (next_id < 0) { /* !CHECKPOINT_RESTORE or next_id is unset */
-+		int max_idx;
-+
-+		max_idx = ids->in_use*3/2;
-+		if (max_idx > ipc_mni)
-+			max_idx = ipc_mni;
-+		if (max_idx < ipc_min_cycle)
-+			max_idx = ipc_min_cycle;
- 
- 		/* allocate the idx, with a NULL struct kern_ipc_perm */
--		idx = idr_alloc(&ids->ipcs_idr, NULL, 0, 0, GFP_NOWAIT);
-+		idx = idr_alloc_cyclic(&ids->ipcs_idr, NULL, 0, max_idx,
-+					GFP_NOWAIT);
- 
- 		if (idx >= 0) {
- 			/*
-diff --git a/ipc/util.h b/ipc/util.h
-index 8c834ed39012..ef4e86bb2db8 100644
---- a/ipc/util.h
-+++ b/ipc/util.h
-@@ -27,12 +27,14 @@
-  */
- #define IPCMNI_SHIFT		15
- #define IPCMNI_EXTEND_SHIFT	24
-+#define IPCMNI_EXTEND_MIN_CYCLE	(2 << 12)
- #define IPCMNI			(1 << IPCMNI_SHIFT)
- #define IPCMNI_EXTEND		(1 << IPCMNI_EXTEND_SHIFT)
- 
- #ifdef CONFIG_SYSVIPC_SYSCTL
- extern int ipc_mni;
- extern int ipc_mni_shift;
-+extern int ipc_min_cycle;
- 
- #define ipcmni_seq_shift()	ipc_mni_shift
- #define IPCMNI_IDX_MASK		((1 << ipc_mni_shift) - 1)
-@@ -40,6 +42,7 @@ extern int ipc_mni_shift;
- #else /* CONFIG_SYSVIPC_SYSCTL */
- 
- #define ipc_mni			IPCMNI
-+#define ipc_min_cycle		RADIX_TREE_MAP_SIZE
- #define ipcmni_seq_shift()	IPCMNI_SHIFT
- #define IPCMNI_IDX_MASK		((1 << IPCMNI_SHIFT) - 1)
- #endif /* CONFIG_SYSVIPC_SYSCTL */
--- 
-2.17.2
-
-
---------------A4C6461DF8A7175F73D8A162--
+Thanks!
+Renato
