@@ -3,139 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071CCC10F05
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF585C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 21:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FD120857
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:52:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ygxzhKmg"
+	by mail.kernel.org (Postfix) with ESMTP id 8B0972082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 21:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552857536;
+	bh=iQWObzdMd+1G2mscRi6fwTjrskVAsPtEXZDVMOusDiI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MGjI7cIl8vmVeSsdRc9zcsjZFwGF3rEzBaTEen4qhxd953JT1QxNksFFKkv7iqrt9
+	 wHTa7loVV/Wr/nciyfVI3EAxSI0m0hvL6YBKMjcJPndxStgm2dbh+LCHgFs+wAsde5
+	 yBN5EnoJ4JT+0nS46n/TX7+SRDvD21cZJ/R9tvhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfCQUwT (ORCPT
+        id S1727464AbfCQVSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 16:52:19 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38402 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfCQUwT (ORCPT
+        Sun, 17 Mar 2019 17:18:55 -0400
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:38494 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfCQVSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 16:52:19 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g12so14844151wrm.5
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 13:52:18 -0700 (PDT)
+        Sun, 17 Mar 2019 17:18:54 -0400
+Received: by mail-lf1-f49.google.com with SMTP id a6so7889792lfl.5
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 14:18:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ImStykA1Cqt5hSrINrJCrRttPabhMd5Ia+ev+7263U8=;
-        b=ygxzhKmg6px0BqFso8CWJpWVNcuqx3tkmaWqMkfs7oySGzNPvDvcL4UVvX0i0QTZ/v
-         EaM38XsYLOR+txScGIZbhzW8fZcPFTwJx4hEP6SFq7rzcPY3ZyBc9dv8lh5B+/Mgy1Fd
-         7C+4otR3f+gutoAoXTKNqo3G/NzwHkqmfE360tEOI7JRXBmdO8xPIqKYcCvCBCbn8/n7
-         WK0c7gPdtLchDfyyqYx7BVJ+ULEjKWbLWhbfrgk2f6veGOtyVBkSRNJib2Ic2LswafHp
-         sLURrKopKkg3vuZRxDHOcKWiSNLfIbhAQsLA0NWB29GatkQASq5qx2bnnIPIkf4aSDwf
-         DDQw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lShswvubGaKX5BMzNtg5olzzP5MwYelMRVbMqFijlp8=;
+        b=BpcjAw8JGf8o735Yrl4XLXeA8pGNqD9kcJ18fPgtqfbcrDZvl9nd6s7Q9cuckI9mFb
+         0ZDI6MZzODBJJt/Lk59D4eSWzWqKvMnHx3dpvMbj4kWglY/ygHW4p30oYQiEfAPv9Wtd
+         vM+Ho2a768aQJFYfSYovamVx5cISB1/hn5mn0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ImStykA1Cqt5hSrINrJCrRttPabhMd5Ia+ev+7263U8=;
-        b=WFFN1/hLib+ovId6UK0O4RI4+bOD11h7JASD+sZ2qvy7sAg2x5tKDucvQSWRU9CDSv
-         GP/LAuhVdshzI8JANwJXHdgQOyYLurvwRaOBkV6Hqf8f8l6x/6g5Fj7HmPs6VYHvrHaj
-         OmWJRdEnameEE8vQS0QVG9xR2LA52TOgnlL7oh/K6EI7dj48QMCg1m8eLsgvs9U88Mqv
-         hIUbUTfucOesVg4pOx8By5IzvfzS9YiSD7UyhbnHz6xPZXRJ6nByc2earBw47DALnUZS
-         ovOPEEzoNCIk1cFP4bc1bBoxdtf7BkVwGg8MrMGDBC/C9Pz8PbSTjAXPIowsIaSL2Gtd
-         dr/A==
-X-Gm-Message-State: APjAAAW57+35gGB1hj9OVcjSu8k8nTnuCWZU9tv15rCoF0su/hZGUYGL
-        eFO7d6+HqgbSRzVxf4oROvQi1Q==
-X-Google-Smtp-Source: APXvYqxFT4g0TvoEUrXYcoIt7LZMTibQ+6Zdx1rKYMHwxnXM87+EnBRZhiz23pTbqTdNSCf3kRxS/Q==
-X-Received: by 2002:a5d:53c9:: with SMTP id a9mr3832781wrw.59.1552855937275;
-        Sun, 17 Mar 2019 13:52:17 -0700 (PDT)
-Received: from [192.168.0.41] (48.208.130.77.rev.sfr.net. [77.130.208.48])
-        by smtp.googlemail.com with ESMTPSA id w8sm6942862wmc.0.2019.03.17.13.52.11
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lShswvubGaKX5BMzNtg5olzzP5MwYelMRVbMqFijlp8=;
+        b=tuI9RIviDELsU5xbK+UjFf2sdcRSJHu/KgjadYIYj/dWtmLUwK1sKGavzSM249+DM+
+         CxYq9iDcx52pPNomnrlz9KhPGMQj4ouiGcN3+kiW19pIXmvI285qgyM5hqX26MXhYru3
+         y8HigRmlamndytD5CwbUgU3j0sqLhVFcIIcn4dMqG4xu/aDWWfU+1+7yMHdMmMmc9UXr
+         tstPtZdf2HUXnpXuQlTKfH6HyQJEOj/OB9PEsI+Qymw8VkCx+Eiem0vIrncyHctFMD4q
+         Nm+KYaG/gnbfEflO8LKKS+PHt0UFd0dnvc6CyoCi8JYEgt2M3WUThcQJMMKwZl7CzCsU
+         Wn5w==
+X-Gm-Message-State: APjAAAV3d9RtuTnwN6WUdt2tJStTf5uzwVFuHPElMJ/IzMJ8EMDGP2Qr
+        jUBTsY+jV5MNz9lpNxnTaM9DsA4u4+M=
+X-Google-Smtp-Source: APXvYqwe5chBFVSSYXsfbeOceA2CYWQAbsUOOQ2B6pCeU1D6LDGbOWg3cltcPP6AEr28P5iHSf5PlQ==
+X-Received: by 2002:a19:6d01:: with SMTP id i1mr7794686lfc.118.1552857532736;
+        Sun, 17 Mar 2019 14:18:52 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id n65sm1659238lfn.10.2019.03.17.14.18.51
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 13:52:16 -0700 (PDT)
-Subject: Re: [PATCH 0/7] Timer & SPI support for Allwinner suniv F1C100s
-To:     Icenowy Zheng <icenowy@aosc.xyz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mesih Kilinc <mesihkilinc@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <cover.1549875778.git.mesihkilinc@gmail.com>
- <2485e6c52810df376a0df6eb7f749f35b7b19044.camel@aosc.xyz>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <177e2598-3491-03af-8638-c60e77cc4a34@linaro.org>
-Date:   Sun, 17 Mar 2019 21:52:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sun, 17 Mar 2019 14:18:51 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id x13so12219017ljj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 14:18:51 -0700 (PDT)
+X-Received: by 2002:a2e:208a:: with SMTP id g10mr8605983lji.135.1552857531301;
+ Sun, 17 Mar 2019 14:18:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2485e6c52810df376a0df6eb7f749f35b7b19044.camel@aosc.xyz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190308173154.GC214730@google.com>
+In-Reply-To: <20190308173154.GC214730@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 17 Mar 2019 14:18:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgM-5WfPW9LNHGfc1RxjVbDvHZqNfxyLVRSPP0R4jetDg@mail.gmail.com>
+Message-ID: <CAHk-=wgM-5WfPW9LNHGfc1RxjVbDvHZqNfxyLVRSPP0R4jetDg@mail.gmail.com>
+Subject: Re: [GIT PULL] PCI changes for v5.1
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>
+Cc:     linux-pci@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/2019 18:39, Icenowy Zheng wrote:
-> 在 2019-02-11一的 12:21 +0300，Mesih Kilinc写道：
->> This is followup series for F1C100s initial support patchset. 
->> All patches merged except patch 1 ~ 2 which is related to timer.
->> I am resending those since they are already have Acked tags.
-> 
-> Ping.
-> 
-> Could you please merge these timer-related patches?
+On Fri, Mar 8, 2019 at 9:31 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+>   - Report PCIe links that become degraded at run-time (Alexandru Gagniuc)
 
-Hi,
+Gaah. Only now as I'm about to do the rc1 release am I looking at new
+runtime warnings, and noticing that this causes
 
-I acked the timer-related patches. If you resend the patches with my
-acked-by I will consider them to go through the allwinner tree.
+  genirq: Threaded irq requested with handler=NULL and !ONESHOT for irq 16
+  pcie_bw_notification: probe of 0000:00:1b.0:pcie010 failed with error -22
 
-Do you want me to take 1 and 2 through my tree?
+because you can't have a NULL handler for a level-triggered interrupt
+(you need something to shut the interrupt off so that it doesn't keep
+screaming!).
 
+Happens on both my desktop and my laptop, regular intel CPU and
+chipset, nothing odd in either case.
 
+Everything else works, but the new BW notification obviously will
+never work this way.
 
->> Our dt-bindings for F1C100s are merged, we can now use them at our 
->> device tree source - patch 3.
->>
->> Also this series add spi support and enables spi flash at Lichee-pi
->> Nano
->> in patch 4 ~ 7. This patches are based on Icenowy's work.
->>
->> Thanks!
->>
->> Mesih Kilinc (7):
->>   dt-bindings: timer: Add Allwinner suniv timer
->>   clocksource: sun4i: add a compatible for suniv
->>   ARM: dts: suniv: Add dt-binding headers for F1C100s
->>   dt-bindings: spi: Add Support for Allwinner F1C100s
->>   ARM: dts: suniv: Add SPI device-tree nodes
->>   ARM: dts: suniv: Add pinmux for SPI0 and SPI1 of F1C100s
->>   ARM: dts: f1c100s: Activate SPI flash on Lichee Pi Nano
->>
->>  .../devicetree/bindings/spi/spi-sun6i.txt          |  5 +-
->>  .../bindings/timer/allwinner,sun4i-timer.txt       |  4 +-
->>  arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts  | 13 ++++++
->>  arch/arm/boot/dts/suniv-f1c100s.dtsi               | 53
->> +++++++++++++++++++---
->>  drivers/clocksource/timer-sun4i.c                  |  5 +-
->>  5 files changed, 70 insertions(+), 10 deletions(-)
->>
-> 
+This is not holding up rc1, obviously, but I thought I'd mention it
+since I noticed it as part of my "let's see that nothing regressed"
+checks..
 
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+                    Linus
