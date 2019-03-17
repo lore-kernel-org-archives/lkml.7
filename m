@@ -2,230 +2,190 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5423DC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82178C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2533F2087C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E982087C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 17:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfCQRQ4 (ORCPT
+        id S1726846AbfCQRWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 13:16:56 -0400
-Received: from mail.hallyn.com ([178.63.66.53]:36188 "EHLO mail.hallyn.com"
+        Sun, 17 Mar 2019 13:22:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51412 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbfCQRQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 13:16:56 -0400
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id A59087C4; Sun, 17 Mar 2019 12:16:52 -0500 (CDT)
-Date:   Sun, 17 Mar 2019 12:16:52 -0500
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        Christian Brauner <christian@brauner.io>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190317171652.GA10567@mail.hallyn.com>
-References: <20190315182426.sujcqbzhzw4llmsa@brauner.io>
- <20190315184903.GB248160@google.com>
- <CAJuCfpGp_9fE9MPGVCWjnTaeBE0K_Q22LS1pBqhp7zW2M=dbGw@mail.gmail.com>
- <CAKOZueuauUXRyrvhzBD0op6W4TAnydSx92bvrPN2VRWERX8iQg@mail.gmail.com>
- <20190316185726.jc53aqq5ph65ojpk@brauner.io>
- <CAJuCfpF-uYpUZ1RO99i2qEw5Ou4nSimSkiQvnNQ_rv8ogHKRfw@mail.gmail.com>
- <20190317015306.GA167393@google.com>
- <20190317114238.ab6tvvovpkpozld5@brauner.io>
- <20190317163505.GA9904@mail.hallyn.com>
- <CAKOZuet+HCZoOgJBAUrcm8nxC-bQ00W7w+=k2SOh+dfXffMU4w@mail.gmail.com>
+        id S1726115AbfCQRWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 13:22:44 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A1903084212;
+        Sun, 17 Mar 2019 17:22:43 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-102.ams2.redhat.com [10.36.116.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2278E19C71;
+        Sun, 17 Mar 2019 17:22:34 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@linux.intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, robin.murphy@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+Subject: [PATCH v6 00/22] SMMUv3 Nested Stage Setup
+Date:   Sun, 17 Mar 2019 18:22:10 +0100
+Message-Id: <20190317172232.1068-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKOZuet+HCZoOgJBAUrcm8nxC-bQ00W7w+=k2SOh+dfXffMU4w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Sun, 17 Mar 2019 17:22:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 10:11:10AM -0700, Daniel Colascione wrote:
-> On Sun, Mar 17, 2019 at 9:35 AM Serge E. Hallyn <serge@hallyn.com> wrote:
-> >
-> > On Sun, Mar 17, 2019 at 12:42:40PM +0100, Christian Brauner wrote:
-> > > On Sat, Mar 16, 2019 at 09:53:06PM -0400, Joel Fernandes wrote:
-> > > > On Sat, Mar 16, 2019 at 12:37:18PM -0700, Suren Baghdasaryan wrote:
-> > > > > On Sat, Mar 16, 2019 at 11:57 AM Christian Brauner <christian@brauner.io> wrote:
-> > > > > >
-> > > > > > On Sat, Mar 16, 2019 at 11:00:10AM -0700, Daniel Colascione wrote:
-> > > > > > > On Sat, Mar 16, 2019 at 10:31 AM Suren Baghdasaryan <surenb@google.com> wrote:
-> > > > > > > >
-> > > > > > > > On Fri, Mar 15, 2019 at 11:49 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > > > > > > >
-> > > > > > > > > On Fri, Mar 15, 2019 at 07:24:28PM +0100, Christian Brauner wrote:
-> > > > > > > > > [..]
-> > > > > > > > > > > why do we want to add a new syscall (pidfd_wait) though? Why not just use
-> > > > > > > > > > > standard poll/epoll interface on the proc fd like Daniel was suggesting.
-> > > > > > > > > > > AFAIK, once the proc file is opened, the struct pid is essentially pinned
-> > > > > > > > > > > even though the proc number may be reused. Then the caller can just poll.
-> > > > > > > > > > > We can add a waitqueue to struct pid, and wake up any waiters on process
-> > > > > > > > > > > death (A quick look shows task_struct can be mapped to its struct pid) and
-> > > > > > > > > > > also possibly optimize it using Steve's TIF flag idea. No new syscall is
-> > > > > > > > > > > needed then, let me know if I missed something?
-> > > > > > > > > >
-> > > > > > > > > > Huh, I thought that Daniel was against the poll/epoll solution?
-> > > > > > > > >
-> > > > > > > > > Hmm, going through earlier threads, I believe so now. Here was Daniel's
-> > > > > > > > > reasoning about avoiding a notification about process death through proc
-> > > > > > > > > directory fd: http://lkml.iu.edu/hypermail/linux/kernel/1811.0/00232.html
-> > > > > > > > >
-> > > > > > > > > May be a dedicated syscall for this would be cleaner after all.
-> > > > > > > >
-> > > > > > > > Ah, I wish I've seen that discussion before...
-> > > > > > > > syscall makes sense and it can be non-blocking and we can use
-> > > > > > > > select/poll/epoll if we use eventfd.
-> > > > > > >
-> > > > > > > Thanks for taking a look.
-> > > > > > >
-> > > > > > > > I would strongly advocate for
-> > > > > > > > non-blocking version or at least to have a non-blocking option.
-> > > > > > >
-> > > > > > > Waiting for FD readiness is *already* blocking or non-blocking
-> > > > > > > according to the caller's desire --- users can pass options they want
-> > > > > > > to poll(2) or whatever. There's no need for any kind of special
-> > > > > > > configuration knob or non-blocking option. We already *have* a
-> > > > > > > non-blocking option that works universally for everything.
-> > > > > > >
-> > > > > > > As I mentioned in the linked thread, waiting for process exit should
-> > > > > > > work just like waiting for bytes to appear on a pipe. Process exit
-> > > > > > > status is just another blob of bytes that a process might receive. A
-> > > > > > > process exit handle ought to be just another information source. The
-> > > > > > > reason the unix process API is so awful is that for whatever reason
-> > > > > > > the original designers treated processes as some kind of special kind
-> > > > > > > of resource instead of fitting them into the otherwise general-purpose
-> > > > > > > unix data-handling API. Let's not repeat that mistake.
-> > > > > > >
-> > > > > > > > Something like this:
-> > > > > > > >
-> > > > > > > > evfd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
-> > > > > > > > // register eventfd to receive death notification
-> > > > > > > > pidfd_wait(pid_to_kill, evfd);
-> > > > > > > > // kill the process
-> > > > > > > > pidfd_send_signal(pid_to_kill, ...)
-> > > > > > > > // tend to other things
-> > > > > > >
-> > > > > > > Now you've lost me. pidfd_wait should return a *new* FD, not wire up
-> > > > > > > an eventfd.
-> > > > > > >
-> > > > >
-> > > > > Ok, I probably misunderstood your post linked by Joel. I though your
-> > > > > original proposal was based on being able to poll a file under
-> > > > > /proc/pid and then you changed your mind to have a separate syscall
-> > > > > which I assumed would be a blocking one to wait for process exit.
-> > > > > Maybe you can describe the new interface you are thinking about in
-> > > > > terms of userspace usage like I did above? Several lines of code would
-> > > > > explain more than paragraphs of text.
-> > > >
-> > > > Hey, Thanks Suren for the eventfd idea. I agree with Daniel on this. The idea
-> > > > from Daniel here is to wait for process death and exit events by just
-> > > > referring to a stable fd, independent of whatever is going on in /proc.
-> > > >
-> > > > What is needed is something like this (in highly pseudo-code form):
-> > > >
-> > > > pidfd = opendir("/proc/<pid>",..);
-> > > > wait_fd = pidfd_wait(pidfd);
-> > > > read or poll wait_fd (non-blocking or blocking whichever)
-> > > >
-> > > > wait_fd will block until the task has either died or reaped. In both these
-> > > > cases, it can return a suitable string such as "dead" or "reaped" although an
-> > > > integer with some predefined meaning is also Ok.
-> > > >
-> > > > What that guarantees is, even if the task's PID has been reused, or the task
-> > > > has already died or already died + reaped, all of these events cannot race
-> > > > with the code above and the information passed to the user is race-free and
-> > > > stable / guaranteed.
-> > > >
-> > > > An eventfd seems to not fit well, because AFAICS passing the raw PID to
-> > > > eventfd as in your example would still race since the PID could have been
-> > > > reused by another process by the time the eventfd is created.
-> > > >
-> > > > Also Andy's idea in [1] seems to use poll flags to communicate various tihngs
-> > > > which is still not as explicit about the PID's status so that's a poor API
-> > > > choice compared to the explicit syscall.
-> > > >
-> > > > I am planning to work on a prototype patch based on Daniel's idea and post something
-> > > > soon (chatted with Daniel about it and will reference him in the posting as
-> > > > well), during this posting I will also summarize all the previous discussions
-> > > > and come up with some tests as well.  I hope to have something soon.
-> > >
-> > > Having pidfd_wait() return another fd will make the syscall harder to
-> > > swallow for a lot of people I reckon.
-> > > What exactly prevents us from making the pidfd itself readable/pollable
-> > > for the exit staus? They are "special" fds anyway. I would really like
-> > > to avoid polluting the api with multiple different types of fds if possible.
-> > >
-> > > ret = pidfd_wait(pidfd);
-> > > read or poll pidfd
-> >
-> > I'm not quite clear on what the two steps are doing here.  Is pidfd_wait()
-> > doing a waitpid(2), and the read gets exit status info?
-> 
-> pidfd_wait on an open pidfd returns a "wait handle" FD. The wait
+This series allows a virtualizer to program the nested stage mode.
+This is useful when both the host and the guest are exposed with
+an SMMUv3 and a PCI device is assigned to the guest using VFIO.
 
-That is what you are proposing.  I'm not sure that's what Christian
-was proposing.  'ret' is ambiguous there.  Christian?
+In this mode, the physical IOMMU must be programmed to translate
+the two stages: the one set up by the guest (IOVA -> GPA) and the
+one set up by the host VFIO driver as part of the assignment process
+(GPA -> HPA).
 
-> handle works just like a pipe: you can select/epoll/whatever for
-> readability. read(2) on the wait handle (which blocks unless you set
-> O_NONBLOCK, just like a pipe) completes with a siginfo_t when the
-> process to which the wait handle is attached exits. Roughly,
-> 
-> int kill_and_wait_for_exit(int pidfd) {
->   int wait_handle = pidfd_wait(pidfd);
->   pidfd_send_signal(pidfd, ...);
->   siginfo_t exit_info;
->   read(wait_handle, &exit_info, sizeof(exit_info)); // Blocks because
-> we haven't configured non-blocking behavior, just like a pipe.
->   close(wait_handle);
->   return exit_info.si_status;
-> }
-> 
-> >
-> > > (Note that I'm traveling so my responses might be delayed quite a bit.)
-> > > (Ccing a few people that might have an opinion here.)
-> > >
-> > > Christian
-> >
-> > On its own, what you (Christian) show seems nicer.  But think about a main event
-> > loop (like in lxc), where we just loop over epoll_wait() on various descriptors.
-> > If we want to wait for any of several types of events - maybe a signalfd, socket
-> > traffic, or a process death - it would be nice if we can treat them all the same
-> > way, without having to setup a separate thread to watch the pidfd and send
-> > data over another fd.  Is there a nice way we can provide that with what you've
-> > got above?
-> 
-> Nobody is proposing any kind of mechanism that would require a
-> separate thread. What I'm proposing works with poll and read and
-> should be trivial to integrate into any existing event loop: from the
-> perspective of the event loop, it looks just like a pipe.
+On Intel, this is traditionnaly achieved by combining the 2 stages
+into a single physical stage. However this relies on the capability
+to trap on each guest translation structure update. This is possible
+by using the VTD Caching Mode. Unfortunately the ARM SMMUv3 does
+not offer a similar mechanism.
 
-(yes, I understood your proposal)
+However, the ARM SMMUv3 architecture supports 2 physical stages! Those
+were devised exactly with that use case in mind. Assuming the HW
+implements both stages (optional), the guest now can use stage 1
+while the host uses stage 2.
 
--serge
+This assumes the virtualizer has means to propagate guest settings
+to the host SMMUv3 driver. This series brings this VFIO/IOMMU
+infrastructure.  Those services are:
+- bind the guest stage 1 configuration to the stream table entry
+- propagate guest TLB invalidations
+- bind MSI IOVAs
+- propagate faults collected at physical level up to the virtualizer
+
+This series largely reuses the user API and infrastructure originally
+devised for SVA/SVM and patches submitted by Jacob, Yi Liu, Tianyu in
+[1-2] and Jean-Philippe [3-4].
+
+Best Regards
+
+Eric
+
+This series can be found at:
+https://github.com/eauger/linux/tree/v5.0-2stage-v6
+
+References:
+[1] [PATCH v5 00/23] IOMMU and VT-d driver support for Shared Virtual
+    Address (SVA)
+    https://lwn.net/Articles/754331/
+[2] [RFC PATCH 0/8] Shared Virtual Memory virtualization for VT-d
+    (VFIO part)
+    https://lists.linuxfoundation.org/pipermail/iommu/2017-April/021475.html
+[3] [v2,00/40] Shared Virtual Addressing for the IOMMU
+    https://patchwork.ozlabs.org/cover/912129/
+[4] [PATCH v3 00/10] Shared Virtual Addressing for the IOMMU
+    https://patchwork.kernel.org/cover/10608299/
+
+History:
+v5 -> v6:
+- Fix compilation issue when CONFIG_IOMMU_API is unset
+
+v4 -> v5:
+- fix bug reported by Vincent: fault handler unregistration now happens in
+  vfio_pci_release
+- IOMMU_FAULT_PERM_* moved outside of struct definition + small
+  uapi changes suggested by Kean-Philippe (except fetch_addr)
+- iommu: introduce device fault report API: removed the PRI part.
+- see individual logs for more details
+- reset the ste abort flag on detach
+
+v3 -> v4:
+- took into account Alex, jean-Philippe and Robin's comments on v3
+- rework of the smmuv3 driver integration
+- add tear down ops for msi binding and PASID table binding
+- fix S1 fault propagation
+- put fault reporting patches at the beginning of the series following
+  Jean-Philippe's request
+- update of the cache invalidate and fault API uapis
+- VFIO fault reporting rework with 2 separate regions and one mmappable
+  segment for the fault queue
+- moved to PATCH
+
+v2 -> v3:
+- When registering the S1 MSI binding we now store the device handle. This
+  addresses Robin's comment about discimination of devices beonging to
+  different S1 groups and using different physical MSI doorbells.
+- Change the fault reporting API: use VFIO_PCI_DMA_FAULT_IRQ_INDEX to
+  set the eventfd and expose the faults through an mmappable fault region
+
+v1 -> v2:
+- Added the fault reporting capability
+- asid properly passed on invalidation (fix assignment of multiple
+  devices)
+- see individual change logs for more info
+
+
+Eric Auger (13):
+  iommu: Introduce bind/unbind_guest_msi
+  vfio: VFIO_IOMMU_BIND/UNBIND_MSI
+  iommu/smmuv3: Get prepared for nested stage support
+  iommu/smmuv3: Implement attach/detach_pasid_table
+  iommu/smmuv3: Implement cache_invalidate
+  dma-iommu: Implement NESTED_MSI cookie
+  iommu/smmuv3: Implement bind/unbind_guest_msi
+  iommu/smmuv3: Report non recoverable faults
+  vfio-pci: Add a new VFIO_REGION_TYPE_NESTED region type
+  vfio-pci: Register an iommu fault handler
+  vfio_pci: Allow to mmap the fault queue
+  vfio-pci: Add VFIO_PCI_DMA_FAULT_IRQ_INDEX
+  vfio: Document nested stage control
+
+Jacob Pan (4):
+  driver core: add per device iommu param
+  iommu: introduce device fault data
+  iommu: introduce device fault report API
+  iommu: Introduce attach/detach_pasid_table API
+
+Jean-Philippe Brucker (2):
+  iommu/arm-smmu-v3: Link domains and devices
+  iommu/arm-smmu-v3: Maintain a SID->device structure
+
+Liu, Yi L (3):
+  iommu: Introduce cache_invalidate API
+  vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE
+  vfio: VFIO_IOMMU_CACHE_INVALIDATE
+
+ Documentation/vfio.txt              |  83 ++++
+ drivers/iommu/arm-smmu-v3.c         | 581 ++++++++++++++++++++++++++--
+ drivers/iommu/dma-iommu.c           | 145 ++++++-
+ drivers/iommu/iommu.c               | 201 +++++++++-
+ drivers/vfio/pci/vfio_pci.c         | 214 ++++++++++
+ drivers/vfio/pci/vfio_pci_intrs.c   |  19 +
+ drivers/vfio/pci/vfio_pci_private.h |  18 +
+ drivers/vfio/pci/vfio_pci_rdwr.c    |  73 ++++
+ drivers/vfio/vfio_iommu_type1.c     | 158 ++++++++
+ include/linux/device.h              |   3 +
+ include/linux/dma-iommu.h           |  18 +
+ include/linux/iommu.h               | 137 +++++++
+ include/uapi/linux/iommu.h          | 233 +++++++++++
+ include/uapi/linux/vfio.h           | 102 +++++
+ 14 files changed, 1951 insertions(+), 34 deletions(-)
+ create mode 100644 include/uapi/linux/iommu.h
+
+-- 
+2.20.1
+
