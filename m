@@ -2,199 +2,331 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4119C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BECC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997F92086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C57E2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 22:55:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEi36b5z"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vmZ7yYk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbfCQWzi (ORCPT
+        id S1727553AbfCQWzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 18:55:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44182 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbfCQWzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 17 Mar 2019 18:55:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h34so10009107pgh.11;
-        Sun, 17 Mar 2019 15:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HSikdKeOgVMUbPdUvSpI1vxVe2RfmJf1h+7n9WQeyU8=;
-        b=PEi36b5zpTEJmpsUOoisFLOi8d0Q0wXGJL03axzsB31v6fjwhnROUduUsTzUDN2VpB
-         gdU0L3pNl8GVgRy6yvobK7eIMSxSRgXn4jx9PQw2Yo+zbjqohE2vQKoy7Jm6uYV1jo9S
-         wdotEepLqUf4MPxOJPrb5dcs/Mm4Mc1tMd9zyIiZRk13wBSSBTYnfNDG50igZstmMsaX
-         5YWRmFDIHrLNoIxSIdRiaWvuoFaZ/zKuGhx55wWjIgVZgo5I+OahEOdF1QZHnVywEXsn
-         /7E07VUQBssgr0tIrT4GjqKOqQghkBNFwQbDGV/VoljyQ1px4irDTtjb2eXobN9W1Xzq
-         TvpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HSikdKeOgVMUbPdUvSpI1vxVe2RfmJf1h+7n9WQeyU8=;
-        b=c45MoFFEuOvMVIRJ0+we/DJ/eUNINCzzD/gfBWG8oM4Zr4r0TmOXZGUGtMI2F7iQvq
-         4l39xL6WPXgmWRiD3iFfjOTnnnG+piR8k+Pked6axRCllCZDiRGmniJOZN8LyjjD4P/M
-         AJq/x8et3dWE7IH0I9wzkYxIaIqIUy0u62I+fbr3BOtID7RVBZVOm+OfaifLBTCHhm3V
-         x0CaCRG+3HhDDnjxLWjjH6tGJ8Xr8uXdOxO5MIJlSMmsPbTA+/BRSi5jvACdLC9oG2Ft
-         AzpT4eXdOXzmLVHcEAlULD8T/AbuLvORkZuldOre01Tji9GXJ/qRq+3gIXGgO8kQi5fv
-         9eOg==
-X-Gm-Message-State: APjAAAVbU907xMZuDwadSbmF18oAe4/6SPDrvkg5j3H1MUv25wMDDxOO
-        guN603w7db/kKVC5cXkPE8w=
-X-Google-Smtp-Source: APXvYqyHAAmmuTYlCvbEWrpAnISBYqSZKxjOQsd5C8tcZzyRaWynTw9dZDqIz6Oll/Xt9t5tQfTRFw==
-X-Received: by 2002:a65:6559:: with SMTP id a25mr13688586pgw.99.1552863336090;
-        Sun, 17 Mar 2019 15:55:36 -0700 (PDT)
-Received: from localhost.localdomain (ppp94-29-37-86.pppoe.spdop.ru. [94.29.37.86])
-        by smtp.gmail.com with ESMTPSA id v2sm13738838pfg.118.2019.03.17.15.55.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 15:55:35 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Robert Yang <decatf@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v10 1/7] ARM: trusted_foundations: Support L2 cache maintenance
-Date:   Mon, 18 Mar 2019 01:52:04 +0300
-Message-Id: <20190317225211.23091-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190317225211.23091-1-digetx@gmail.com>
-References: <20190317225211.23091-1-digetx@gmail.com>
+Received: from perceval.ideasonboard.com ([213.167.242.64]:43952 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbfCQWzg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 18:55:36 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 66CA423A;
+        Sun, 17 Mar 2019 23:55:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1552863333;
+        bh=U/sw6zlRJ9dAk/4PRtbudOCv30wRobn1dk49Peyjupo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vmZ7yYk5DnLbi/miuoH8CSz8NjwnDTpg47X+bRCtjFKl3mSyVe7zXHDL3yRtW2sQ+
+         SYW0hoLBgTKlHUyruCDUvxw+MHdmf1ZF8vxfeCKsE9P4JXkzYfPVDCGsJ0EWSn8F7b
+         Ppjh4MNxQK/bxZvXRuMIaoaeU6deopUCpGeVaJRY=
+Date:   Mon, 18 Mar 2019 00:55:25 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/6] drm: rcar-du: Link CRTCs to the DU device
+Message-ID: <20190317225525.GC12636@pendragon.ideasonboard.com>
+References: <20190315170110.23280-1-kieran.bingham+renesas@ideasonboard.com>
+ <20190315170110.23280-2-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190315170110.23280-2-kieran.bingham+renesas@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement L2 cache initialization firmware callback that should be
-invoked early during boot in order to set up the required outer cache
-driver's callbacks and add the callback required for L2X0 maintenance.
+Hi Kieran,
 
-Partially based on work done by Michał Mirosław [1].
+Thank you for the patch.
 
-[1] https://www.spinics.net/lists/arm-kernel/msg594765.html
+On Fri, Mar 15, 2019 at 05:01:05PM +0000, Kieran Bingham wrote:
+> The rcar_du_crtc functions have a heavy reliance on the rcar_du_group
+> structure, in many cases just to access the DU device context.
+> 
+> To better separate the groups out of the CRTC handling code, give the
+> rcar_du_crtc its own pointer to the device and remove the indirection
+> through the group pointers.
 
-Tested-by: Robert Yang <decatf@gmail.com>
-Tested-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/firmware/trusted_foundations.c    | 41 ++++++++++++++++++++++
- arch/arm/include/asm/trusted_foundations.h | 10 ++++++
- 2 files changed, 51 insertions(+)
+I've thought about doing this so many times, every time I had to access
+the device from the crtc.
 
-diff --git a/arch/arm/firmware/trusted_foundations.c b/arch/arm/firmware/trusted_foundations.c
-index 689e6565abfc..d7ac05103a52 100644
---- a/arch/arm/firmware/trusted_foundations.c
-+++ b/arch/arm/firmware/trusted_foundations.c
-@@ -18,8 +18,15 @@
- #include <linux/init.h>
- #include <linux/of.h>
- #include <asm/firmware.h>
-+#include <asm/hardware/cache-l2x0.h>
-+#include <asm/outercache.h>
- #include <asm/trusted_foundations.h>
- 
-+#define TF_CACHE_MAINT		0xfffff100
-+
-+#define TF_CACHE_ENABLE		1
-+#define TF_CACHE_DISABLE	2
-+
- #define TF_SET_CPU_BOOT_ADDR_SMC 0xfffff200
- 
- #define TF_CPU_PM		0xfffffffc
-@@ -67,9 +74,43 @@ static int tf_prepare_idle(void)
- 	return 0;
- }
- 
-+#ifdef CONFIG_CACHE_L2X0
-+static void tf_cache_write_sec(unsigned long val, unsigned int reg)
-+{
-+	u32 l2x0_way_mask = 0xff;
-+
-+	switch (reg) {
-+	case L2X0_CTRL:
-+		if (l2x0_saved_regs.aux_ctrl & L310_AUX_CTRL_ASSOCIATIVITY_16)
-+			l2x0_way_mask = 0xffff;
-+
-+		if (val == L2X0_CTRL_EN)
-+			tf_generic_smc(TF_CACHE_MAINT, TF_CACHE_ENABLE,
-+				       l2x0_saved_regs.aux_ctrl);
-+		else
-+			tf_generic_smc(TF_CACHE_MAINT, TF_CACHE_DISABLE,
-+				       l2x0_way_mask);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+}
-+
-+static int tf_init_cache(void)
-+{
-+	outer_cache.write_sec = tf_cache_write_sec;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_CACHE_L2X0 */
-+
- static const struct firmware_ops trusted_foundations_ops = {
- 	.set_cpu_boot_addr = tf_set_cpu_boot_addr,
- 	.prepare_idle = tf_prepare_idle,
-+#ifdef CONFIG_CACHE_L2X0
-+	.l2x0_init = tf_init_cache,
-+#endif
- };
- 
- void register_trusted_foundations(struct trusted_foundations_platform_data *pd)
-diff --git a/arch/arm/include/asm/trusted_foundations.h b/arch/arm/include/asm/trusted_foundations.h
-index 00748350cf72..9e6a41e9215e 100644
---- a/arch/arm/include/asm/trusted_foundations.h
-+++ b/arch/arm/include/asm/trusted_foundations.h
-@@ -32,6 +32,9 @@
- #include <linux/cpu.h>
- #include <linux/smp.h>
- 
-+#include <asm/hardware/cache-l2x0.h>
-+#include <asm/outercache.h>
-+
- struct trusted_foundations_platform_data {
- 	unsigned int version_major;
- 	unsigned int version_minor;
-@@ -43,6 +46,9 @@ void register_trusted_foundations(struct trusted_foundations_platform_data *pd);
- void of_register_trusted_foundations(void);
- 
- #else /* CONFIG_TRUSTED_FOUNDATIONS */
-+static inline void tf_dummy_write_sec(unsigned long val, unsigned int reg)
-+{
-+}
- 
- static inline void register_trusted_foundations(
- 				   struct trusted_foundations_platform_data *pd)
-@@ -53,6 +59,10 @@ static inline void register_trusted_foundations(
- 	 */
- 	pr_err("No support for Trusted Foundations, continuing in degraded mode.\n");
- 	pr_err("Secondary processors as well as CPU PM will be disabled.\n");
-+#if IS_ENABLED(CONFIG_CACHE_L2X0)
-+	pr_err("L2X0 cache will be kept disabled.\n");
-+	outer_cache.write_sec = tf_dummy_write_sec;
-+#endif
- #if IS_ENABLED(CONFIG_SMP)
- 	setup_max_cpus = 0;
- #endif
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+And taken in my tree.
+
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 48 +++++++++++++-------------
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.h |  2 ++
+>  drivers/gpu/drm/rcar-du/rcar_du_vsp.c  |  2 +-
+>  3 files changed, 27 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 57fd5c00494b..471ce464654a 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -32,21 +32,21 @@
+>  
+>  static u32 rcar_du_crtc_read(struct rcar_du_crtc *rcrtc, u32 reg)
+>  {
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  
+>  	return rcar_du_read(rcdu, rcrtc->mmio_offset + reg);
+>  }
+>  
+>  static void rcar_du_crtc_write(struct rcar_du_crtc *rcrtc, u32 reg, u32 data)
+>  {
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  
+>  	rcar_du_write(rcdu, rcrtc->mmio_offset + reg, data);
+>  }
+>  
+>  static void rcar_du_crtc_clr(struct rcar_du_crtc *rcrtc, u32 reg, u32 clr)
+>  {
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  
+>  	rcar_du_write(rcdu, rcrtc->mmio_offset + reg,
+>  		      rcar_du_read(rcdu, rcrtc->mmio_offset + reg) & ~clr);
+> @@ -54,7 +54,7 @@ static void rcar_du_crtc_clr(struct rcar_du_crtc *rcrtc, u32 reg, u32 clr)
+>  
+>  static void rcar_du_crtc_set(struct rcar_du_crtc *rcrtc, u32 reg, u32 set)
+>  {
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  
+>  	rcar_du_write(rcdu, rcrtc->mmio_offset + reg,
+>  		      rcar_du_read(rcdu, rcrtc->mmio_offset + reg) | set);
+> @@ -62,7 +62,7 @@ static void rcar_du_crtc_set(struct rcar_du_crtc *rcrtc, u32 reg, u32 set)
+>  
+>  void rcar_du_crtc_dsysr_clr_set(struct rcar_du_crtc *rcrtc, u32 clr, u32 set)
+>  {
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  
+>  	rcrtc->dsysr = (rcrtc->dsysr & ~clr) | set;
+>  	rcar_du_write(rcdu, rcrtc->mmio_offset + DSYSR, rcrtc->dsysr);
+> @@ -157,10 +157,9 @@ static void rcar_du_dpll_divider(struct rcar_du_crtc *rcrtc,
+>  	}
+>  
+>  done:
+> -	dev_dbg(rcrtc->group->dev->dev,
+> +	dev_dbg(rcrtc->dev->dev,
+>  		"output:%u, fdpll:%u, n:%u, m:%u, diff:%lu\n",
+> -		 dpll->output, dpll->fdpll, dpll->n, dpll->m,
+> -		 best_diff);
+> +		 dpll->output, dpll->fdpll, dpll->n, dpll->m, best_diff);
+>  }
+>  
+>  struct du_clk_params {
+> @@ -212,7 +211,7 @@ static const struct soc_device_attribute rcar_du_r8a7795_es1[] = {
+>  static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
+>  {
+>  	const struct drm_display_mode *mode = &rcrtc->crtc.state->adjusted_mode;
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  	unsigned long mode_clock = mode->clock * 1000;
+>  	u32 dsmr;
+>  	u32 escr;
+> @@ -277,7 +276,7 @@ static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
+>  			rcar_du_escr_divider(rcrtc->extclock, mode_clock,
+>  					     ESCR_DCLKSEL_DCLKIN, &params);
+>  
+> -		dev_dbg(rcrtc->group->dev->dev,	"mode clock %lu %s rate %lu\n",
+> +		dev_dbg(rcrtc->dev->dev, "mode clock %lu %s rate %lu\n",
+>  			mode_clock, params.clk == rcrtc->clock ? "cpg" : "ext",
+>  			params.rate);
+>  
+> @@ -285,7 +284,7 @@ static void rcar_du_crtc_set_display_timing(struct rcar_du_crtc *rcrtc)
+>  		escr = params.escr;
+>  	}
+>  
+> -	dev_dbg(rcrtc->group->dev->dev, "%s: ESCR 0x%08x\n", __func__, escr);
+> +	dev_dbg(rcrtc->dev->dev, "%s: ESCR 0x%08x\n", __func__, escr);
+>  
+>  	rcar_du_crtc_write(rcrtc, rcrtc->index % 2 ? ESCR13 : ESCR02, escr);
+>  	rcar_du_crtc_write(rcrtc, rcrtc->index % 2 ? OTAR13 : OTAR02, 0);
+> @@ -333,7 +332,7 @@ plane_format(struct rcar_du_plane *plane)
+>  static void rcar_du_crtc_update_planes(struct rcar_du_crtc *rcrtc)
+>  {
+>  	struct rcar_du_plane *planes[RCAR_DU_NUM_HW_PLANES];
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  	unsigned int num_planes = 0;
+>  	unsigned int dptsr_planes;
+>  	unsigned int hwplanes = 0;
+> @@ -463,7 +462,7 @@ static bool rcar_du_crtc_page_flip_pending(struct rcar_du_crtc *rcrtc)
+>  
+>  static void rcar_du_crtc_wait_page_flip(struct rcar_du_crtc *rcrtc)
+>  {
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  
+>  	if (wait_event_timeout(rcrtc->flip_wait,
+>  			       !rcar_du_crtc_page_flip_pending(rcrtc),
+> @@ -493,7 +492,7 @@ static void rcar_du_crtc_setup(struct rcar_du_crtc *rcrtc)
+>  	rcar_du_group_write(rcrtc->group, rcrtc->index % 2 ? DS2PR : DS1PR, 0);
+>  
+>  	/* Enable the VSP compositor. */
+> -	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+> +	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_enable(rcrtc);
+>  
+>  	/* Turn vertical blanking interrupt reporting on. */
+> @@ -564,7 +563,7 @@ static void rcar_du_crtc_start(struct rcar_du_crtc *rcrtc)
+>  
+>  static void rcar_du_crtc_disable_planes(struct rcar_du_crtc *rcrtc)
+>  {
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  	struct drm_crtc *crtc = &rcrtc->crtc;
+>  	u32 status;
+>  
+> @@ -617,7 +616,7 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+>  	drm_crtc_vblank_off(crtc);
+>  
+>  	/* Disable the VSP compositor. */
+> -	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+> +	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_disable(rcrtc);
+>  
+>  	/*
+> @@ -627,7 +626,7 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+>  	 * TODO: Find another way to stop the display for DUs that don't support
+>  	 * TVM sync.
+>  	 */
+> -	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_TVM_SYNC))
+> +	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_TVM_SYNC))
+>  		rcar_du_crtc_dsysr_clr_set(rcrtc, DSYSR_TVM_MASK,
+>  					   DSYSR_TVM_SWITCH);
+>  
+> @@ -661,7 +660,7 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>  {
+>  	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+>  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(crtc->state);
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  
+>  	rcar_du_crtc_get(rcrtc);
+>  
+> @@ -689,7 +688,7 @@ static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+>  {
+>  	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+>  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(old_state);
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  
+>  	rcar_du_crtc_stop(rcrtc);
+>  	rcar_du_crtc_put(rcrtc);
+> @@ -735,7 +734,7 @@ static void rcar_du_crtc_atomic_begin(struct drm_crtc *crtc,
+>  	 */
+>  	rcar_du_crtc_get(rcrtc);
+>  
+> -	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+> +	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_atomic_begin(rcrtc);
+>  }
+>  
+> @@ -757,7 +756,7 @@ static void rcar_du_crtc_atomic_flush(struct drm_crtc *crtc,
+>  		spin_unlock_irqrestore(&dev->event_lock, flags);
+>  	}
+>  
+> -	if (rcar_du_has(rcrtc->group->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+> +	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_atomic_flush(rcrtc);
+>  }
+>  
+> @@ -766,7 +765,7 @@ rcar_du_crtc_mode_valid(struct drm_crtc *crtc,
+>  			const struct drm_display_mode *mode)
+>  {
+>  	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  	bool interlaced = mode->flags & DRM_MODE_FLAG_INTERLACE;
+>  	unsigned int vbp;
+>  
+> @@ -798,7 +797,7 @@ static const struct drm_crtc_helper_funcs crtc_helper_funcs = {
+>  
+>  static void rcar_du_crtc_crc_init(struct rcar_du_crtc *rcrtc)
+>  {
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  	const char **sources;
+>  	unsigned int count;
+>  	int i = -1;
+> @@ -1080,7 +1079,7 @@ static const struct drm_crtc_funcs crtc_funcs_gen3 = {
+>  static irqreturn_t rcar_du_crtc_irq(int irq, void *arg)
+>  {
+>  	struct rcar_du_crtc *rcrtc = arg;
+> -	struct rcar_du_device *rcdu = rcrtc->group->dev;
+> +	struct rcar_du_device *rcdu = rcrtc->dev;
+>  	irqreturn_t ret = IRQ_NONE;
+>  	u32 status;
+>  
+> @@ -1172,6 +1171,7 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
+>  	init_waitqueue_head(&rcrtc->vblank_wait);
+>  	spin_lock_init(&rcrtc->vblank_lock);
+>  
+> +	rcrtc->dev = rcdu;
+>  	rcrtc->group = rgrp;
+>  	rcrtc->mmio_offset = mmio_offsets[hwindex];
+>  	rcrtc->index = hwindex;
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+> index 3f339a7e8d14..11814eafef77 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+> @@ -24,6 +24,7 @@ struct rcar_du_vsp;
+>  /**
+>   * struct rcar_du_crtc - the CRTC, representing a DU superposition processor
+>   * @crtc: base DRM CRTC
+> + * @dev: the DU device
+>   * @clock: the CRTC functional clock
+>   * @extclock: external pixel dot clock (optional)
+>   * @mmio_offset: offset of the CRTC registers in the DU MMIO block
+> @@ -43,6 +44,7 @@ struct rcar_du_vsp;
+>  struct rcar_du_crtc {
+>  	struct drm_crtc crtc;
+>  
+> +	struct rcar_du_device *dev;
+>  	struct clk *clock;
+>  	struct clk *extclock;
+>  	unsigned int mmio_offset;
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+> index 0878accbd134..f6deea90dcce 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+> @@ -43,7 +43,7 @@ static void rcar_du_vsp_complete(void *private, bool completed, u32 crc)
+>  void rcar_du_vsp_enable(struct rcar_du_crtc *crtc)
+>  {
+>  	const struct drm_display_mode *mode = &crtc->crtc.state->adjusted_mode;
+> -	struct rcar_du_device *rcdu = crtc->group->dev;
+> +	struct rcar_du_device *rcdu = crtc->dev;
+>  	struct vsp1_du_lif_config cfg = {
+>  		.width = mode->hdisplay,
+>  		.height = mode->vdisplay,
+
 -- 
-2.20.1
+Regards,
 
+Laurent Pinchart
