@@ -2,189 +2,479 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B894DC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E50C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A54620896
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35E721019
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 15:52:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLLonRV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfCQPvE (ORCPT
+        id S1727421AbfCQPwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 11:51:04 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:45718 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfCQPvD (ORCPT
+        Sun, 17 Mar 2019 11:52:10 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34084 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfCQPwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 11:51:03 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 44MkLR6WhPz1rJD4;
-        Sun, 17 Mar 2019 16:50:55 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 44MkLR3jvzz1qql8;
-        Sun, 17 Mar 2019 16:50:55 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id wMWx7SLMMlHI; Sun, 17 Mar 2019 16:50:52 +0100 (CET)
-X-Auth-Info: Zh4TjbphzOCe6LC7WCHkygX8ZVCsYSAb5xxIjoO3yWI=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Sun, 17 Mar 2019 16:50:52 +0100 (CET)
-Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk numbering
- w/ device tree
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Stefan Agner <stefan@agner.ch>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        devicetree-spec@vger.kernel.org, shawn.lin@rock-chips.com,
-        Douglas Anderson <dianders@chromium.org>,
-        vbyravarasu@nvidia.com, Jisheng Zhang <jszhang@marvell.com>,
-        Lars-Peter Clausen <lars@metafoo.de>, jonathanh@nvidia.com,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        linux-rockchip@lists.infradead.org, chaotian.jing@mediatek.com,
-        devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        grundler@chromium.org, Tim Harvey <tharvey@gateworks.com>,
-        sudeep.holla@arm.com, lporzio@micron.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Kumar Gala <galak@codeaurora.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        zhonghui.fu@linux.intel.com, kirill.shutemov@linux.intel.com
-References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
- <yw1x5zsx5wc7.fsf@mansr.com>
- <CAJ+vNU1PxK-B63Dc3AgzYb9POyxxoF-xPOWBEpxJ+3eVNK8xqw@mail.gmail.com>
- <d5310138-7fdd-973d-5210-3fc91c4686ee@denx.de> <yw1xftrn2em9.fsf@mansr.com>
- <1fcd4dad-1e00-67cc-ac5d-24640ae34340@denx.de>
- <20190316153900.xqi55awrockovmsi@shell.armlinux.org.uk>
- <c23d6c4edf92d58aec86da811eaa97a5@agner.ch>
- <20190317154350.esbhdx4huzqe2jxy@shell.armlinux.org.uk>
-From:   Marek Vasut <marex@denx.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marex@denx.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <6962d659-5308-1f06-7329-1595e41aaeac@denx.de>
-Date:   Sun, 17 Mar 2019 16:50:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Sun, 17 Mar 2019 11:52:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v64so9567928pfb.1;
+        Sun, 17 Mar 2019 08:52:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7fT+358p/XGK+QSB8wXVX7agRty/cD3VVQMnPZkHtv8=;
+        b=lLLonRV5NRxYfwamCcjziY71JXbz/sVqZVndlpl4I1u4AKM9UJztqHlDGpWIhqrWOW
+         bels/hrTI6CX6XGfRVqA8lYiOHaXhyFYJqfvM/Qeiv/gYWhrCJ1rhZ0bAVY0kegzn8WA
+         SLktq8erIQNOm12Xk2P7TK2lVf6oyTjCo0+7M0krYbybdApPOrQFcGMOemSK1GvICNEM
+         osfszGo53lTLFrm3VY6zBiuYVIxJQxpK+KTvM2LVE8UUsjUTd4L/8aSqvRqJCyg6RWjN
+         Sg2UkkSK5ql5J4DXkIDOVnOA4PmQ9csflkGYlxIAvyv8RdLw1W/25fgHuGhpvA+59cKO
+         zK3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7fT+358p/XGK+QSB8wXVX7agRty/cD3VVQMnPZkHtv8=;
+        b=YtW0yYh+VSkxUwPBHDOhylQgSOY9EywL1bPQMYQRP36LLokB/p3Fw3fRR1N19CAG2X
+         jWc5i8snzoOTZ1xmwQpG3HL1jzjd6pX/3t3shYMyhlNm+zfKQRZSdYmdhFvMQnBFMRGe
+         9jIaZ/G5BVztAYT4z2w/h3wCS6WrEqyIGwBnoprNUa7SCmMNERbYeFSUBE+Ygqn1h1ZR
+         AxjaZNuHMuFRsV1xQPPkLq5yUE8rwxArSZWbMwvLumZ+Ygw3jDkX6Yvk+8dCLo/GgNxq
+         U6EqXo/wHauJEg/6pXTX73qM9ESwxz3oiCDcU5xWhM+AI1kQwJVJNT3W/yH+6dcLYU8Y
+         b26g==
+X-Gm-Message-State: APjAAAUb9vDHLVMraQR6s55lgtORTpEKP03OBKkjHmZNdpsXLt5WmsAk
+        i3kM3bsWJ9uM14g9d5d29g==
+X-Google-Smtp-Source: APXvYqwVAHslSIxlmyEbHHATCU+oQBtBJbQXTHKr9Vz1OWuRi+jRJMVI7Tl8duY+bjj3x5J1i0qv0w==
+X-Received: by 2002:a63:e14e:: with SMTP id h14mr13068073pgk.184.1552837927737;
+        Sun, 17 Mar 2019 08:52:07 -0700 (PDT)
+Received: from localhost (2.172.220.35.bc.googleusercontent.com. [35.220.172.2])
+        by smtp.gmail.com with ESMTPSA id z127sm261010pgb.77.2019.03.17.08.52.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 17 Mar 2019 08:52:06 -0700 (PDT)
+From:   Jacky Hu <hengqing.hu@gmail.com>
+To:     hengqing.hu@gmail.com
+Cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: [PATCH v4] ipvs: allow tunneling with gue encapsulation
+Date:   Sun, 17 Mar 2019 23:52:00 +0800
+Message-Id: <20190317155200.16586-1-hengqing.hu@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190317154350.esbhdx4huzqe2jxy@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/19 4:43 PM, Russell King - ARM Linux admin wrote:
-> On Sun, Mar 17, 2019 at 04:05:14PM +0100, Stefan Agner wrote:
->> On 16.03.2019 16:39, Russell King - ARM Linux admin wrote:
->>> On Sat, Mar 16, 2019 at 01:33:58PM +0100, Marek Vasut wrote:
->>>> If you have a FS or partition table there, it does.
->>>> If you don't, I agree ... that's a problem.
->>>
->>> eMMC boot partitions are called mmcblkXbootY, and unless you have more
->>> than one eMMC device on the system, they can be found either by looking
->>> for /dev/mmcblk*boot* or by querying udev.  The advantage of using udev
->>> is you can discover the physical device behind it by looking at DEVPATH,
->>> ID_PATH, etc, but you may not have that installed on an embedded device.
->>>
->>> However, as I say, just looking for /dev/mmcblk*boot* is sufficient to
->>> find the eMMC boot partitions where there is just one eMMC device
->>> present (which seems to be the standard setup.)
->>>
->>>>> I don't care the slightest what the numbering is, as long as it is
->>>>> stable.  On some hardware, with an unpatched kernel, the mmc device
->>>>> numbering changes depending on whether or not an SD card is inserted on
->>>>> boot.  Getting rid of that behaviour is really all I want.
->>>>
->>>> Agreed, that would be an improvement.
->>>
->>> The mmc device numbering was tied to the mmc host numbering a while back
->>> and the order that the hosts are probed should be completely independent
->>> of whether a card is inserted or not:
->>>
->>>         snprintf(md->disk->disk_name, sizeof(md->disk->disk_name),
->>>                  "mmcblk%u%s", card->host->index, subname ? subname : "");
->>>
->>>         snprintf(rpmb_name, sizeof(rpmb_name),
->>>                  "mmcblk%u%s", card->host->index, subname ? subname : "");
->>>
->>> I suspect that Mans is quoting something from the dim and distant past
->>> to confuse the issue - as shown above, it is now dependent on the host
->>> numbering order not the order in which cards are inserted.
->>
->> Commit 9aaf3437aa72 ("mmc: block: Use the mmc host device index as the
->> mmcblk device index") which came in with v4.6 enables constant mmc block
->> device numbering. I can confirm that it works nicely, and it improved
->> the situation a lot.
->>
->> That being said, we still use a patch downstream which allows
->> renumbering using an alias. We deal with a bunch of different boards
->> with different SoC's. I have a couple of SD cards with various rootfs
->> and use internal eMMC boot quite often as well. Remembering which board
->> uses which numbering is a pain. Maintaining a patch is just easier...
->> Furthermore, U-Boot allows reordering and all boards I deal with use mmc
->> 0 for the internal eMMC. The aliases allow consistency.
-> 
-> Maybe eMMC should've been given a different block device name?
+ipip packets are blocked in some public cloud environments, this patch
+allows gue encapsulation with the tunneling method, which would make
+tunneling working in those environments.
 
-I presume that's because they have hardware and software partitioning
-and that's why you want to discern those two.
+Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+---
+ include/net/ip_vs.h             |   5 ++
+ include/uapi/linux/ip_vs.h      |  11 +++
+ net/netfilter/ipvs/ip_vs_ctl.c  |  43 ++++++++++-
+ net/netfilter/ipvs/ip_vs_xmit.c | 124 ++++++++++++++++++++++++++++++--
+ 4 files changed, 178 insertions(+), 5 deletions(-)
 
+diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+index a0d2e0bb9a94..56c1770b00fe 100644
+--- a/include/net/ip_vs.h
++++ b/include/net/ip_vs.h
+@@ -603,6 +603,9 @@ struct ip_vs_dest_user_kern {
+ 
+ 	/* Address family of addr */
+ 	u16			af;
++
++	u16			tun_type;	/* tunnel type */
++	__be16			tun_port;	/* tunnel port */
+ };
+ 
+ 
+@@ -663,6 +666,8 @@ struct ip_vs_dest {
+ 	atomic_t		conn_flags;	/* flags to copy to conn */
+ 	atomic_t		weight;		/* server weight */
+ 	atomic_t		last_weight;	/* server latest weight */
++	atomic_t		tun_type;	/* tunnel type */
++	atomic_t		tun_port;	/* tunnel port */
+ 
+ 	refcount_t		refcnt;		/* reference counter */
+ 	struct ip_vs_stats      stats;          /* statistics */
+diff --git a/include/uapi/linux/ip_vs.h b/include/uapi/linux/ip_vs.h
+index 1c916b2f89dc..e34f436fc79d 100644
+--- a/include/uapi/linux/ip_vs.h
++++ b/include/uapi/linux/ip_vs.h
+@@ -124,6 +124,13 @@
+ 
+ #define IP_VS_PEDATA_MAXLEN     255
+ 
++/* Tunnel types */
++enum {
++	IP_VS_CONN_F_TUNNEL_TYPE_IPIP = 0,	/* IPIP */
++	IP_VS_CONN_F_TUNNEL_TYPE_GUE,		/* GUE */
++	IP_VS_CONN_F_TUNNEL_TYPE_MAX,
++};
++
+ /*
+  *	The struct ip_vs_service_user and struct ip_vs_dest_user are
+  *	used to set IPVS rules through setsockopt.
+@@ -392,6 +399,10 @@ enum {
+ 
+ 	IPVS_DEST_ATTR_STATS64,		/* nested attribute for dest stats */
+ 
++	IPVS_DEST_ATTR_TUN_TYPE,	/* tunnel type */
++
++	IPVS_DEST_ATTR_TUN_PORT,	/* tunnel port */
++
+ 	__IPVS_DEST_ATTR_MAX,
+ };
+ 
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 432141f04af3..94de9f23013e 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -830,6 +830,10 @@ __ip_vs_update_dest(struct ip_vs_service *svc, struct ip_vs_dest *dest,
+ 	conn_flags = udest->conn_flags & IP_VS_CONN_F_DEST_MASK;
+ 	conn_flags |= IP_VS_CONN_F_INACTIVE;
+ 
++	/* set the tunnel info */
++	atomic_set(&dest->tun_type, udest->tun_type);
++	atomic_set(&dest->tun_port, udest->tun_port);
++
+ 	/* set the IP_VS_CONN_F_NOOUTPUT flag if not masquerading/NAT */
+ 	if ((conn_flags & IP_VS_CONN_F_FWD_MASK) != IP_VS_CONN_F_MASQ) {
+ 		conn_flags |= IP_VS_CONN_F_NOOUTPUT;
+@@ -980,6 +984,17 @@ ip_vs_add_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
+ 		return -ERANGE;
+ 	}
+ 
++	switch (udest->tun_type) {
++	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++		if (udest->tun_port == 0) {
++			pr_err("%s(): tunnel port is zero\n", __func__);
++			return -EINVAL;
++		}
++		break;
++	default:
++		break;
++	}
++
+ 	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
+ 
+ 	/* We use function that requires RCU lock */
+@@ -1044,6 +1059,17 @@ ip_vs_edit_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
+ 		return -ERANGE;
+ 	}
+ 
++	switch (udest->tun_type) {
++	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++		if (udest->tun_port == 0) {
++			pr_err("%s(): tunnel port is zero\n", __func__);
++			return -EINVAL;
++		}
++		break;
++	default:
++		break;
++	}
++
+ 	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
+ 
+ 	/* We use function that requires RCU lock */
+@@ -2310,6 +2336,7 @@ static void ip_vs_copy_udest_compat(struct ip_vs_dest_user_kern *udest,
+ 	udest->u_threshold	= udest_compat->u_threshold;
+ 	udest->l_threshold	= udest_compat->l_threshold;
+ 	udest->af		= AF_INET;
++	udest->tun_type		= IP_VS_CONN_F_TUNNEL_TYPE_IPIP;
+ }
+ 
+ static int
+@@ -2869,6 +2896,8 @@ static const struct nla_policy ip_vs_dest_policy[IPVS_DEST_ATTR_MAX + 1] = {
+ 	[IPVS_DEST_ATTR_PERSIST_CONNS]	= { .type = NLA_U32 },
+ 	[IPVS_DEST_ATTR_STATS]		= { .type = NLA_NESTED },
+ 	[IPVS_DEST_ATTR_ADDR_FAMILY]	= { .type = NLA_U16 },
++	[IPVS_DEST_ATTR_TUN_TYPE]	= { .type = NLA_U8 },
++	[IPVS_DEST_ATTR_TUN_PORT]	= { .type = NLA_U16 },
+ };
+ 
+ static int ip_vs_genl_fill_stats(struct sk_buff *skb, int container_type,
+@@ -3172,6 +3201,10 @@ static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
+ 			 IP_VS_CONN_F_FWD_MASK)) ||
+ 	    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
+ 			atomic_read(&dest->weight)) ||
++	    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
++		       atomic_read(&dest->tun_type)) ||
++	    nla_put_be16(skb, IPVS_DEST_ATTR_TUN_PORT,
++			 atomic_read(&dest->tun_port)) ||
+ 	    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
+ 	    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
+ 	    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
+@@ -3294,12 +3327,14 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
+ 	/* If a full entry was requested, check for the additional fields */
+ 	if (full_entry) {
+ 		struct nlattr *nla_fwd, *nla_weight, *nla_u_thresh,
+-			      *nla_l_thresh;
++			      *nla_l_thresh, *nla_tun_type, *nla_tun_port;
+ 
+ 		nla_fwd		= attrs[IPVS_DEST_ATTR_FWD_METHOD];
+ 		nla_weight	= attrs[IPVS_DEST_ATTR_WEIGHT];
+ 		nla_u_thresh	= attrs[IPVS_DEST_ATTR_U_THRESH];
+ 		nla_l_thresh	= attrs[IPVS_DEST_ATTR_L_THRESH];
++		nla_tun_type	= attrs[IPVS_DEST_ATTR_TUN_TYPE];
++		nla_tun_port	= attrs[IPVS_DEST_ATTR_TUN_PORT];
+ 
+ 		if (!(nla_fwd && nla_weight && nla_u_thresh && nla_l_thresh))
+ 			return -EINVAL;
+@@ -3309,6 +3344,12 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
+ 		udest->weight = nla_get_u32(nla_weight);
+ 		udest->u_threshold = nla_get_u32(nla_u_thresh);
+ 		udest->l_threshold = nla_get_u32(nla_l_thresh);
++
++		if (nla_tun_type)
++			udest->tun_type = nla_get_u8(nla_tun_type);
++
++		if (nla_tun_port)
++			udest->tun_port = nla_get_be16(nla_tun_port);
+ 	}
+ 
+ 	return 0;
+diff --git a/net/netfilter/ipvs/ip_vs_xmit.c b/net/netfilter/ipvs/ip_vs_xmit.c
+index 473cce2a5231..1d02a7ad5c12 100644
+--- a/net/netfilter/ipvs/ip_vs_xmit.c
++++ b/net/netfilter/ipvs/ip_vs_xmit.c
+@@ -32,6 +32,7 @@
+ #include <linux/slab.h>
+ #include <linux/tcp.h>                  /* for tcphdr */
+ #include <net/ip.h>
++#include <net/gue.h>
+ #include <net/tcp.h>                    /* for csum_tcpudp_magic */
+ #include <net/udp.h>
+ #include <net/icmp.h>                   /* for icmp_send */
+@@ -382,6 +383,15 @@ __ip_vs_get_out_rt(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
+ 		mtu = dst_mtu(&rt->dst);
+ 	} else {
+ 		mtu = dst_mtu(&rt->dst) - sizeof(struct iphdr);
++		if (!dest)
++			goto err_put;
++		switch (atomic_read(&dest->tun_type)) {
++		case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
++			break;
++		default:
++			break;
++		}
+ 		if (mtu < 68) {
+ 			IP_VS_DBG_RL("%s(): mtu less than 68\n", __func__);
+ 			goto err_put;
+@@ -533,6 +543,15 @@ __ip_vs_get_out_rt_v6(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
+ 		mtu = dst_mtu(&rt->dst);
+ 	else {
+ 		mtu = dst_mtu(&rt->dst) - sizeof(struct ipv6hdr);
++		if (!dest)
++			goto err_put;
++		switch (atomic_read(&dest->tun_type)) {
++		case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
++			break;
++		default:
++			break;
++		}
+ 		if (mtu < IPV6_MIN_MTU) {
+ 			IP_VS_DBG_RL("%s(): mtu less than %d\n", __func__,
+ 				     IPV6_MIN_MTU);
+@@ -989,6 +1008,41 @@ static inline int __tun_gso_type_mask(int encaps_af, int orig_af)
+ 	}
+ }
+ 
++static int
++ipvs_gue_encap(struct net *net, struct sk_buff *skb,
++	       struct ip_vs_conn *cp, __u8 *next_protocol)
++{
++	__be16 dport;
++	__be16 sport = udp_flow_src_port(net, skb, 0, 0, false);
++	struct udphdr  *udph;	/* Our new UDP header */
++	struct guehdr  *gueh;	/* Our new GUE header */
++
++	skb_push(skb, sizeof(struct guehdr));
++
++	gueh = (struct guehdr *)skb->data;
++
++	gueh->control = 0;
++	gueh->version = 0;
++	gueh->hlen = 0;
++	gueh->flags = 0;
++	gueh->proto_ctype = *next_protocol;
++
++	skb_push(skb, sizeof(struct udphdr));
++	skb_reset_transport_header(skb);
++
++	udph = udp_hdr(skb);
++
++	dport = htons(atomic_read(&cp->dest->tun_port));
++	udph->dest = dport;
++	udph->source = sport;
++	udph->len = htons(skb->len);
++	udph->check = 0;
++
++	*next_protocol = IPPROTO_UDP;
++
++	return 0;
++}
++
+ /*
+  *   IP Tunneling transmitter
+  *
+@@ -1025,6 +1079,7 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+ 	struct iphdr  *iph;			/* Our new IP header */
+ 	unsigned int max_headroom;		/* The extra header space needed */
+ 	int ret, local;
++	int tun_type, gso_type;
+ 
+ 	EnterFunction(10);
+ 
+@@ -1046,6 +1101,16 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+ 	 */
+ 	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct iphdr);
+ 
++	tun_type = atomic_read(&cp->dest->tun_type);
++
++	switch (tun_type) {
++	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
++		break;
++	default:
++		break;
++	}
++
+ 	/* We only care about the df field if sysctl_pmtu_disc(ipvs) is set */
+ 	dfp = sysctl_pmtu_disc(ipvs) ? &df : NULL;
+ 	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
+@@ -1054,11 +1119,30 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+ 	if (IS_ERR(skb))
+ 		goto tx_error;
+ 
+-	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET, cp->af)))
++	switch (tun_type) {
++	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++		gso_type = SKB_GSO_UDP_TUNNEL;
++		break;
++	default:
++		gso_type = __tun_gso_type_mask(AF_INET, cp->af);
++		break;
++	}
++
++	if (iptunnel_handle_offloads(skb, gso_type))
+ 		goto tx_error;
+ 
+ 	skb->transport_header = skb->network_header;
+ 
++	skb_set_inner_ipproto(skb, next_protocol);
++
++	switch (tun_type) {
++	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++		ipvs_gue_encap(net, skb, cp, &next_protocol);
++		break;
++	default:
++		break;
++	}
++
+ 	skb_push(skb, sizeof(struct iphdr));
+ 	skb_reset_network_header(skb);
+ 	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
+@@ -1102,6 +1186,8 @@ int
+ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
+ 		     struct ip_vs_protocol *pp, struct ip_vs_iphdr *ipvsh)
+ {
++	struct netns_ipvs *ipvs = cp->ipvs;
++	struct net *net = ipvs->net;
+ 	struct rt6_info *rt;		/* Route to the other host */
+ 	struct in6_addr saddr;		/* Source for tunnel */
+ 	struct net_device *tdev;	/* Device to other host */
+@@ -1112,10 +1198,11 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
+ 	struct ipv6hdr  *iph;		/* Our new IP header */
+ 	unsigned int max_headroom;	/* The extra header space needed */
+ 	int ret, local;
++	int tun_type, gso_type;
+ 
+ 	EnterFunction(10);
+ 
+-	local = __ip_vs_get_out_rt_v6(cp->ipvs, cp->af, skb, cp->dest,
++	local = __ip_vs_get_out_rt_v6(ipvs, cp->af, skb, cp->dest,
+ 				      &cp->daddr.in6,
+ 				      &saddr, ipvsh, 1,
+ 				      IP_VS_RT_MODE_LOCAL |
+@@ -1134,17 +1221,46 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
+ 	 */
+ 	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct ipv6hdr);
+ 
++	tun_type = atomic_read(&cp->dest->tun_type);
++
++	switch (tun_type) {
++	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
++		break;
++	default:
++		break;
++	}
++
+ 	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
+ 					 &next_protocol, &payload_len,
+ 					 &dsfield, &ttl, NULL);
+ 	if (IS_ERR(skb))
+ 		goto tx_error;
+ 
+-	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET6, cp->af)))
++	switch (tun_type) {
++	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++		gso_type = SKB_GSO_UDP_TUNNEL;
++		break;
++	default:
++		gso_type = __tun_gso_type_mask(AF_INET6, cp->af);
++		break;
++	}
++
++	if (iptunnel_handle_offloads(skb, gso_type))
+ 		goto tx_error;
+ 
+ 	skb->transport_header = skb->network_header;
+ 
++	skb_set_inner_ipproto(skb, next_protocol);
++
++	switch (tun_type) {
++	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
++		ipvs_gue_encap(net, skb, cp, &next_protocol);
++		break;
++	default:
++		break;
++	}
++
+ 	skb_push(skb, sizeof(struct ipv6hdr));
+ 	skb_reset_network_header(skb);
+ 	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
+@@ -1167,7 +1283,7 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
+ 
+ 	ret = ip_vs_tunnel_xmit_prepare(skb, cp);
+ 	if (ret == NF_ACCEPT)
+-		ip6_local_out(cp->ipvs->net, skb->sk, skb);
++		ip6_local_out(net, skb->sk, skb);
+ 	else if (ret == NF_DROP)
+ 		kfree_skb(skb);
+ 
 -- 
-Best regards,
-Marek Vasut
+2.21.0
+
