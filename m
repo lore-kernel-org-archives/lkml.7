@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA11BC4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80BAC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D6F2148D
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20322148D
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 12:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arrikto-com.20150623.gappssmtp.com header.i=@arrikto-com.20150623.gappssmtp.com header.b="oePQeXqN"
+	dkim=pass (2048-bit key) header.d=arrikto-com.20150623.gappssmtp.com header.i=@arrikto-com.20150623.gappssmtp.com header.b="zvIswUFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfCQMXF (ORCPT
+        id S1727266AbfCQMXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 08:23:05 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40101 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfCQMXF (ORCPT
+        Sun, 17 Mar 2019 08:23:09 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52888 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfCQMXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 08:23:05 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t5so14034053wri.7
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 05:23:04 -0700 (PDT)
+        Sun, 17 Mar 2019 08:23:08 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f65so10394133wma.2
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 05:23:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arrikto-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RkrYZLLM/svtOayGyKhgfyVlvewbzak9YejfanGGyf0=;
-        b=oePQeXqNxnitLQbzw0Aawm6Vo99ZCdQ/8op5I3x4fwVrpgXZ2vFVP1djMmyk2alitV
-         qofim9f9tS2F5P9wAsXdjq+0bUb5WU2Mtn3VkDbUiZ3Tp2kuwwAS8xls8CuTc8VT6goj
-         GSE5DV7ux8Cw8qGjcj/10/O4xvKA30+v+l8U73QmHl/Xw8IzQdOTNMUMCHj9+TEzrl/C
-         1g8NYZs+UmDN67YSBNnvQCQ7HgNDo9zxvmDEmB6all/KIRy9CmsudSgg/y/NXsvOs2hX
-         fDAbajPOiKh09vXGErNa2yAD4ozRKjdEFY8IEAhA+IMwqTZh2eicDXmJBEkdQexIkkW/
-         2l9w==
+        bh=yJKWvEAg+PPtISy2HhtpN6lh+HoM3XG5cqvFTghE87g=;
+        b=zvIswUFhhALkUinlNamcM5EoU1uc8mg9TLhHkGYWpkJGmugTWdpECjg1NZgGnN8VGQ
+         EdxLf1ArwB4LdCEOTfOVJumeHESWfmDNfax3qxBJB3X0FZa2PUNhSGphzZS80cEvD/aL
+         wsDXIyxsWNoY+csiylH4HQZVCt3J6J/oA0eR/uW42i9r3J5Us9RuCSKGAIy9leA2+sMn
+         6ZwPcQjiCnMimlNucTLW/osXats7gqvFtgoMYGuvuS1QNpNAiwY3JL+KPiaNLfpqCSiV
+         NrrxJGe8kco+k6NG+ReiPCjK2GJi5oy4dXQXO/0Fj5NaD/8mY5V9qZjf4epPRPD7NTxB
+         T2Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=RkrYZLLM/svtOayGyKhgfyVlvewbzak9YejfanGGyf0=;
-        b=fRA9QjYMNc6tlZr41GPtuqV727MadeyRDs/XMe4SQpaNi9fFJf8af1sM9cUcWxvpTs
-         KR5gyuh8cWR0iMxFgOgDxMQ/kauuqBZ5Wgd2SgpbcH6IfxUGEvv7Hi46LjYj/pVUlegj
-         o7K2I3LY5p8pfVKPjxipTaSgjEb5EIIIm5gVdqvDfcPIHAPoakJ1qWY7+nc7oIL2qGa0
-         y0bmLMgByHflHQlnj2xSe82Cvk2rGmuaq8WZ2IEmxnaoZViR1PqOXzLb2+dmvebISu75
-         HLRskV1EMu6pGIgRekRfJZaXCIj0GFwtN0tWpK3au9M9gLdXk8fac3QccARL5gY0z3Af
-         jwvg==
-X-Gm-Message-State: APjAAAX+9pQCHd1twJWQIuADeE4TU9iWkHtwOQX163RXSNFC/Sz9V7Px
-        T4gF01ZspZb4XuwCWx5HDHsfUw==
-X-Google-Smtp-Source: APXvYqykp3hijQu1uj0lzMf4Uoky4HuSBXbY8DXMXl/9GDVA7jpoICzZrCSLrarmtQJ+oUDwgJVQrw==
-X-Received: by 2002:adf:a10b:: with SMTP id o11mr8265755wro.91.1552825383526;
-        Sun, 17 Mar 2019 05:23:03 -0700 (PDT)
+        bh=yJKWvEAg+PPtISy2HhtpN6lh+HoM3XG5cqvFTghE87g=;
+        b=JAygzqLLbQ29sVHe9PaEF25hyIG4DeH1ItgYJjQ/R++lOv6xhb+DI7jcRStOsAyvTu
+         iZFoFLHg7UhGJFAC48WemYPUnlSBnE2i6H/YBPQpRx0ZYVKCKLZA60gBBBxYNZetTmh6
+         JhzxqCWH6elZRU5eT8pxR3X57qhv1Rkmb8bPVLZisIf+6eLj7Z03D19uZKyMMDCvSaer
+         L3LjUGGzQKOwjL54ubkk00zYltjCKEJ+l+a8fgGZDZnI1djiJghkdc/tqAfnSru3MOfQ
+         sOA/BVHW9TwWDgItrc26PRa8ilQc+kxw6vq10/UUipNQY28qHZ+P8/CypiR6yIDVJVH/
+         tZ5A==
+X-Gm-Message-State: APjAAAXY7mzFMX8MTz4M0M+Mme/cEODDJSaV5xrsmZ2ZMHs3XFwi7a5D
+        2O2ZgpP7wkYhJEMs+eBrOsOJXRot9e4=
+X-Google-Smtp-Source: APXvYqxtuwkpP/kRMkqk10pkEwtWnNhbT3Trn964TLn8Yi/JcuuAqfqkvd1rOd7MG0Uvo3HstshfjQ==
+X-Received: by 2002:a1c:dc0a:: with SMTP id t10mr7958145wmg.101.1552825385851;
+        Sun, 17 Mar 2019 05:23:05 -0700 (PDT)
 Received: from snf-864.vm.snf.arr ([31.177.62.212])
-        by smtp.gmail.com with ESMTPSA id z10sm5453292wrs.11.2019.03.17.05.23.02
+        by smtp.gmail.com with ESMTPSA id z10sm5453292wrs.11.2019.03.17.05.23.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 05:23:02 -0700 (PDT)
+        Sun, 17 Mar 2019 05:23:05 -0700 (PDT)
 From:   Nikos Tsironis <ntsironis@arrikto.com>
 To:     snitzer@redhat.com, agk@redhat.com, dm-devel@redhat.com
 Cc:     mpatocka@redhat.com, paulmck@linux.ibm.com, hch@infradead.org,
         iliastsi@arrikto.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/6] list_bl: Add hlist_bl_add_before/behind helpers
-Date:   Sun, 17 Mar 2019 14:22:54 +0200
-Message-Id: <20190317122258.21760-3-ntsironis@arrikto.com>
+Subject: [PATCH v3 4/6] dm snapshot: Replace mutex with rw semaphore
+Date:   Sun, 17 Mar 2019 14:22:56 +0200
+Message-Id: <20190317122258.21760-5-ntsironis@arrikto.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190317122258.21760-1-ntsironis@arrikto.com>
 References: <20190317122258.21760-1-ntsironis@arrikto.com>
@@ -70,52 +70,360 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add hlist_bl_add_before/behind helpers to add an element before/after an
-existing element in a bl_list.
+dm-snapshot uses a single mutex to serialize every access to the
+snapshot state. This includes all accesses to the complete and pending
+exception tables, which occur at every origin write, every snapshot
+read/write and every exception completion.
+
+The lock statistics indicate that this mutex is a bottleneck (average
+wait time ~480 usecs for 8 processes doing random 4K writes to the
+origin device) preventing dm-snapshot to scale as the number of threads
+doing IO increases.
+
+The major contention points are __origin_write()/snapshot_map() and
+pending_complete(), i.e., the submission and completion of pending
+exceptions.
+
+Replace this mutex with a rw semaphore.
+
+We essentially revert commit ae1093be5a0ef9 ("dm snapshot: use mutex
+instead of rw_semaphore") and together with the next two patches we
+substitute the single mutex with a fine-grained locking scheme, where we
+use a read-write semaphore to protect the mostly read fields of the
+snapshot structure, e.g., valid, active, etc., and per-bucket bit
+spinlocks to protect accesses to the complete and pending exception
+tables.
 
 Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
 Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
 ---
- include/linux/list_bl.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/md/dm-snap.c | 88 +++++++++++++++++++++++++---------------------------
+ 1 file changed, 43 insertions(+), 45 deletions(-)
 
-diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
-index 3fc2cc57ba1b..ae1b541446c9 100644
---- a/include/linux/list_bl.h
-+++ b/include/linux/list_bl.h
-@@ -86,6 +86,32 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
- 	hlist_bl_set_first(h, n);
+diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
+index 4b34bfa0900a..209da5dd0ba6 100644
+--- a/drivers/md/dm-snap.c
++++ b/drivers/md/dm-snap.c
+@@ -48,7 +48,7 @@ struct dm_exception_table {
+ };
+ 
+ struct dm_snapshot {
+-	struct mutex lock;
++	struct rw_semaphore lock;
+ 
+ 	struct dm_dev *origin;
+ 	struct dm_dev *cow;
+@@ -457,9 +457,9 @@ static int __find_snapshots_sharing_cow(struct dm_snapshot *snap,
+ 		if (!bdev_equal(s->cow->bdev, snap->cow->bdev))
+ 			continue;
+ 
+-		mutex_lock(&s->lock);
++		down_read(&s->lock);
+ 		active = s->active;
+-		mutex_unlock(&s->lock);
++		up_read(&s->lock);
+ 
+ 		if (active) {
+ 			if (snap_src)
+@@ -927,7 +927,7 @@ static int remove_single_exception_chunk(struct dm_snapshot *s)
+ 	int r;
+ 	chunk_t old_chunk = s->first_merging_chunk + s->num_merging_chunks - 1;
+ 
+-	mutex_lock(&s->lock);
++	down_write(&s->lock);
+ 
+ 	/*
+ 	 * Process chunks (and associated exceptions) in reverse order
+@@ -942,7 +942,7 @@ static int remove_single_exception_chunk(struct dm_snapshot *s)
+ 	b = __release_queued_bios_after_merge(s);
+ 
+ out:
+-	mutex_unlock(&s->lock);
++	up_write(&s->lock);
+ 	if (b)
+ 		flush_bios(b);
+ 
+@@ -1001,9 +1001,9 @@ static void snapshot_merge_next_chunks(struct dm_snapshot *s)
+ 		if (linear_chunks < 0) {
+ 			DMERR("Read error in exception store: "
+ 			      "shutting down merge");
+-			mutex_lock(&s->lock);
++			down_write(&s->lock);
+ 			s->merge_failed = 1;
+-			mutex_unlock(&s->lock);
++			up_write(&s->lock);
+ 		}
+ 		goto shut;
+ 	}
+@@ -1044,10 +1044,10 @@ static void snapshot_merge_next_chunks(struct dm_snapshot *s)
+ 		previous_count = read_pending_exceptions_done_count();
+ 	}
+ 
+-	mutex_lock(&s->lock);
++	down_write(&s->lock);
+ 	s->first_merging_chunk = old_chunk;
+ 	s->num_merging_chunks = linear_chunks;
+-	mutex_unlock(&s->lock);
++	up_write(&s->lock);
+ 
+ 	/* Wait until writes to all 'linear_chunks' drain */
+ 	for (i = 0; i < linear_chunks; i++)
+@@ -1089,10 +1089,10 @@ static void merge_callback(int read_err, unsigned long write_err, void *context)
+ 	return;
+ 
+ shut:
+-	mutex_lock(&s->lock);
++	down_write(&s->lock);
+ 	s->merge_failed = 1;
+ 	b = __release_queued_bios_after_merge(s);
+-	mutex_unlock(&s->lock);
++	up_write(&s->lock);
+ 	error_bios(b);
+ 
+ 	merge_shutdown(s);
+@@ -1191,7 +1191,7 @@ static int snapshot_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 	s->exception_start_sequence = 0;
+ 	s->exception_complete_sequence = 0;
+ 	s->out_of_order_tree = RB_ROOT;
+-	mutex_init(&s->lock);
++	init_rwsem(&s->lock);
+ 	INIT_LIST_HEAD(&s->list);
+ 	spin_lock_init(&s->pe_lock);
+ 	s->state_bits = 0;
+@@ -1357,9 +1357,9 @@ static void snapshot_dtr(struct dm_target *ti)
+ 	/* Check whether exception handover must be cancelled */
+ 	(void) __find_snapshots_sharing_cow(s, &snap_src, &snap_dest, NULL);
+ 	if (snap_src && snap_dest && (s == snap_src)) {
+-		mutex_lock(&snap_dest->lock);
++		down_write(&snap_dest->lock);
+ 		snap_dest->valid = 0;
+-		mutex_unlock(&snap_dest->lock);
++		up_write(&snap_dest->lock);
+ 		DMERR("Cancelling snapshot handover.");
+ 	}
+ 	up_read(&_origins_lock);
+@@ -1390,8 +1390,6 @@ static void snapshot_dtr(struct dm_target *ti)
+ 
+ 	dm_exception_store_destroy(s->store);
+ 
+-	mutex_destroy(&s->lock);
+-
+ 	dm_put_device(ti, s->cow);
+ 
+ 	dm_put_device(ti, s->origin);
+@@ -1479,7 +1477,7 @@ static void pending_complete(void *context, int success)
+ 
+ 	if (!success) {
+ 		/* Read/write error - snapshot is unusable */
+-		mutex_lock(&s->lock);
++		down_write(&s->lock);
+ 		__invalidate_snapshot(s, -EIO);
+ 		error = 1;
+ 		goto out;
+@@ -1487,14 +1485,14 @@ static void pending_complete(void *context, int success)
+ 
+ 	e = alloc_completed_exception(GFP_NOIO);
+ 	if (!e) {
+-		mutex_lock(&s->lock);
++		down_write(&s->lock);
+ 		__invalidate_snapshot(s, -ENOMEM);
+ 		error = 1;
+ 		goto out;
+ 	}
+ 	*e = pe->e;
+ 
+-	mutex_lock(&s->lock);
++	down_write(&s->lock);
+ 	if (!s->valid) {
+ 		free_completed_exception(e);
+ 		error = 1;
+@@ -1512,9 +1510,9 @@ static void pending_complete(void *context, int success)
+ 
+ 	/* Wait for conflicting reads to drain */
+ 	if (__chunk_is_tracked(s, pe->e.old_chunk)) {
+-		mutex_unlock(&s->lock);
++		up_write(&s->lock);
+ 		__check_for_conflicting_io(s, pe->e.old_chunk);
+-		mutex_lock(&s->lock);
++		down_write(&s->lock);
+ 	}
+ 
+ out:
+@@ -1527,7 +1525,7 @@ static void pending_complete(void *context, int success)
+ 		full_bio->bi_end_io = pe->full_bio_end_io;
+ 	increment_pending_exceptions_done_count();
+ 
+-	mutex_unlock(&s->lock);
++	up_write(&s->lock);
+ 
+ 	/* Submit any pending write bios */
+ 	if (error) {
+@@ -1750,7 +1748,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 	if (!s->valid)
+ 		return DM_MAPIO_KILL;
+ 
+-	mutex_lock(&s->lock);
++	down_write(&s->lock);
+ 
+ 	if (!s->valid || (unlikely(s->snapshot_overflowed) &&
+ 	    bio_data_dir(bio) == WRITE)) {
+@@ -1773,9 +1771,9 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 	if (bio_data_dir(bio) == WRITE) {
+ 		pe = __lookup_pending_exception(s, chunk);
+ 		if (!pe) {
+-			mutex_unlock(&s->lock);
++			up_write(&s->lock);
+ 			pe = alloc_pending_exception(s);
+-			mutex_lock(&s->lock);
++			down_write(&s->lock);
+ 
+ 			if (!s->valid || s->snapshot_overflowed) {
+ 				free_pending_exception(pe);
+@@ -1810,7 +1808,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 		    bio->bi_iter.bi_size ==
+ 		    (s->store->chunk_size << SECTOR_SHIFT)) {
+ 			pe->started = 1;
+-			mutex_unlock(&s->lock);
++			up_write(&s->lock);
+ 			start_full_bio(pe, bio);
+ 			goto out;
+ 		}
+@@ -1820,7 +1818,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 		if (!pe->started) {
+ 			/* this is protected by snap->lock */
+ 			pe->started = 1;
+-			mutex_unlock(&s->lock);
++			up_write(&s->lock);
+ 			start_copy(pe);
+ 			goto out;
+ 		}
+@@ -1830,7 +1828,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 	}
+ 
+ out_unlock:
+-	mutex_unlock(&s->lock);
++	up_write(&s->lock);
+ out:
+ 	return r;
+ }
+@@ -1866,7 +1864,7 @@ static int snapshot_merge_map(struct dm_target *ti, struct bio *bio)
+ 
+ 	chunk = sector_to_chunk(s->store, bio->bi_iter.bi_sector);
+ 
+-	mutex_lock(&s->lock);
++	down_write(&s->lock);
+ 
+ 	/* Full merging snapshots are redirected to the origin */
+ 	if (!s->valid)
+@@ -1897,12 +1895,12 @@ static int snapshot_merge_map(struct dm_target *ti, struct bio *bio)
+ 	bio_set_dev(bio, s->origin->bdev);
+ 
+ 	if (bio_data_dir(bio) == WRITE) {
+-		mutex_unlock(&s->lock);
++		up_write(&s->lock);
+ 		return do_origin(s->origin, bio);
+ 	}
+ 
+ out_unlock:
+-	mutex_unlock(&s->lock);
++	up_write(&s->lock);
+ 
+ 	return r;
+ }
+@@ -1934,7 +1932,7 @@ static int snapshot_preresume(struct dm_target *ti)
+ 	down_read(&_origins_lock);
+ 	(void) __find_snapshots_sharing_cow(s, &snap_src, &snap_dest, NULL);
+ 	if (snap_src && snap_dest) {
+-		mutex_lock(&snap_src->lock);
++		down_read(&snap_src->lock);
+ 		if (s == snap_src) {
+ 			DMERR("Unable to resume snapshot source until "
+ 			      "handover completes.");
+@@ -1944,7 +1942,7 @@ static int snapshot_preresume(struct dm_target *ti)
+ 			      "source is suspended.");
+ 			r = -EINVAL;
+ 		}
+-		mutex_unlock(&snap_src->lock);
++		up_read(&snap_src->lock);
+ 	}
+ 	up_read(&_origins_lock);
+ 
+@@ -1990,11 +1988,11 @@ static void snapshot_resume(struct dm_target *ti)
+ 
+ 	(void) __find_snapshots_sharing_cow(s, &snap_src, &snap_dest, NULL);
+ 	if (snap_src && snap_dest) {
+-		mutex_lock(&snap_src->lock);
+-		mutex_lock_nested(&snap_dest->lock, SINGLE_DEPTH_NESTING);
++		down_write(&snap_src->lock);
++		down_write_nested(&snap_dest->lock, SINGLE_DEPTH_NESTING);
+ 		__handover_exceptions(snap_src, snap_dest);
+-		mutex_unlock(&snap_dest->lock);
+-		mutex_unlock(&snap_src->lock);
++		up_write(&snap_dest->lock);
++		up_write(&snap_src->lock);
+ 	}
+ 
+ 	up_read(&_origins_lock);
+@@ -2009,9 +2007,9 @@ static void snapshot_resume(struct dm_target *ti)
+ 	/* Now we have correct chunk size, reregister */
+ 	reregister_snapshot(s);
+ 
+-	mutex_lock(&s->lock);
++	down_write(&s->lock);
+ 	s->active = 1;
+-	mutex_unlock(&s->lock);
++	up_write(&s->lock);
  }
  
-+static inline void hlist_bl_add_before(struct hlist_bl_node *n,
-+				       struct hlist_bl_node *next)
-+{
-+	struct hlist_bl_node **pprev = next->pprev;
-+
-+	n->pprev = pprev;
-+	n->next = next;
-+	next->pprev = &n->next;
-+
-+	/* pprev may be `first`, so be careful not to lose the lock bit */
-+	WRITE_ONCE(*pprev,
-+		   (struct hlist_bl_node *)
-+			((uintptr_t)n | ((uintptr_t)*pprev & LIST_BL_LOCKMASK)));
-+}
-+
-+static inline void hlist_bl_add_behind(struct hlist_bl_node *n,
-+				       struct hlist_bl_node *prev)
-+{
-+	n->next = prev->next;
-+	n->pprev = &prev->next;
-+	prev->next = n;
-+
-+	if (n->next)
-+		n->next->pprev = &n->next;
-+}
-+
- static inline void __hlist_bl_del(struct hlist_bl_node *n)
- {
- 	struct hlist_bl_node *next = n->next;
+ static uint32_t get_origin_minimum_chunksize(struct block_device *bdev)
+@@ -2051,7 +2049,7 @@ static void snapshot_status(struct dm_target *ti, status_type_t type,
+ 	switch (type) {
+ 	case STATUSTYPE_INFO:
+ 
+-		mutex_lock(&snap->lock);
++		down_write(&snap->lock);
+ 
+ 		if (!snap->valid)
+ 			DMEMIT("Invalid");
+@@ -2076,7 +2074,7 @@ static void snapshot_status(struct dm_target *ti, status_type_t type,
+ 				DMEMIT("Unknown");
+ 		}
+ 
+-		mutex_unlock(&snap->lock);
++		up_write(&snap->lock);
+ 
+ 		break;
+ 
+@@ -2142,7 +2140,7 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
+ 		if (dm_target_is_snapshot_merge(snap->ti))
+ 			continue;
+ 
+-		mutex_lock(&snap->lock);
++		down_write(&snap->lock);
+ 
+ 		/* Only deal with valid and active snapshots */
+ 		if (!snap->valid || !snap->active)
+@@ -2169,9 +2167,9 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
+ 			if (e)
+ 				goto next_snapshot;
+ 
+-			mutex_unlock(&snap->lock);
++			up_write(&snap->lock);
+ 			pe = alloc_pending_exception(snap);
+-			mutex_lock(&snap->lock);
++			down_write(&snap->lock);
+ 
+ 			if (!snap->valid) {
+ 				free_pending_exception(pe);
+@@ -2221,7 +2219,7 @@ static int __origin_write(struct list_head *snapshots, sector_t sector,
+ 		}
+ 
+ next_snapshot:
+-		mutex_unlock(&snap->lock);
++		up_write(&snap->lock);
+ 
+ 		if (pe_to_start_now) {
+ 			start_copy(pe_to_start_now);
 -- 
 2.11.0
 
