@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B075CC10F05
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE0DC4360F
 	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 19:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE2C21738
+	by mail.kernel.org (Postfix) with ESMTP id A8EB720896
 	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 19:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYmcnyyq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4IJO0se"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfCQT7m (ORCPT
+        id S1727518AbfCQT7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 15:59:42 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38099 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfCQT7j (ORCPT
+        Sun, 17 Mar 2019 15:59:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42748 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727485AbfCQT7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 15:59:39 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g12so14761513wrm.5
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 12:59:38 -0700 (PDT)
+        Sun, 17 Mar 2019 15:59:42 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n9so10665050wrr.9
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 12:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=N8k6Xio/wZQp66Oa/L8yITZ1faKLJ8d+TtmJedkqx0U=;
-        b=KYmcnyyq3CRh2Z2McmnMqMcWWakv/a4vpDQPa8PN+HhSVPfvXwuwGQc87fgluIfD4Y
-         HfHgGYjJfcmnVl55Eeaho7kMcjFzVs2iFUZFMz7X8ZVn2AqqUR5cI65xEC3vCHlTMKEL
-         iiHvRGxuYEYEPyL3Bqh+X4yD2Yq/0xx+t38qW8pIDKbgucAY/NJo0uk9uPMIyhNiMy/K
-         MThVQNegPMIKkE9IO6gUCid944bj63g/ijUzJhOY3A4YwnekicpR3zI6oVoPQluM5pla
-         11+GCJJ27KWwG6nafMTjdOngCA+uMB+pK34RJ2pt0MBWzJ1YaO3gE3gGTAeZTtYzT5wD
-         6VwQ==
+        bh=bK9Ov11oNFfu1+tMHy0IsI+Waj7sbWUkp7bNzmSIAkk=;
+        b=Q4IJO0seHoF+g+wSVDbm6aSGgk6HLJmLgbt/1/UTL5f2lFvs06OwBxjheC9Tn1n2ny
+         TF2jNNlSOXCDBCbaudmwV9E7YttfWEulEyfaYlnvA/3eOf6wkZKYEQ5splMsuWgR1s8b
+         PWzb6E6y1pGDthhcfaVpakzang7LhWtD4S3C5MeQkXl7IC6saOu2yG29uhM0NBtVLmpr
+         IEHLGsSeG1aHe5u+gUtcdN3qJ94hszqwQ7wq6vHnSvwV3u/88vQd9LSeGVO1a+GyJWZk
+         TfaUtgMJH9lywVMmnJuZJJVy7QOxp7NY0fmLqbl18e0AxbHzZO5nhSqJ3gWoZcRPGdof
+         4QJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=N8k6Xio/wZQp66Oa/L8yITZ1faKLJ8d+TtmJedkqx0U=;
-        b=cCk+niwI8H/ufDCfHCYI95cCtsrlAdDipwVSpnta7PaXjsrvTHM6X9ZMekc/64UFYN
-         wRQ3qd5rUd2fSV99KwysaKZsAlS9zqPrDhSKJhL/BFdCtRU3pmpf4mQLMwOkm6GKpUH3
-         NFDok6+zvHAiGuZDUVLBZQLe1c9ZNffUmlQm1/WAtiGg7e/x+MUDq8ZZTz9Yf1etVkaI
-         QRWgXEnTT62jzKlX2VlUSg3f/3M3e2jFj+gFLHm4HFvAweAnzIK8egsEY7yV/fqtsBK0
-         +1F4Tz0Y3JSN4pU30/LxOkdtNOX0f4xQieDfnk75li998fFrrka5WYS1Icv379yBczSL
-         Qj6w==
-X-Gm-Message-State: APjAAAWL0KaB5D4qqd64qiArcz1ud5WevjQAtHKR7vasTxkn6C3oRsW5
-        861AgMJqZTuqHuIB54muYVvvqejQ
-X-Google-Smtp-Source: APXvYqwN/lNMzvsiYgG/vCllra2Q40fYwJOpLYjnTec4CuV1fFrom45eUwtdAfM7FJ9NAmBzsBORog==
-X-Received: by 2002:a5d:6a0c:: with SMTP id m12mr9499954wru.57.1552852777577;
-        Sun, 17 Mar 2019 12:59:37 -0700 (PDT)
+        bh=bK9Ov11oNFfu1+tMHy0IsI+Waj7sbWUkp7bNzmSIAkk=;
+        b=GX8AXtoxhyQ/9ZKFcsl73eccaFlV5jhXrCZxuCQsAXrlsk1ljxulcGLuA7dkD29MLF
+         r2vf1hIeseH//T4U0OF1Wr+Yy2C9ai5NPbknm+SZCp58AdVHNrNGvqgsPvSMptnFakIV
+         MH1pf6KoSD5POIWiQ9w7o/CsuzoP9/sCKcC02VWo/bL+GnGfy42D2mWuVQK89HDLHF0y
+         La7diwReXvOFvXUwBoJssAnX/Z94LJ0b9xQ03c/SoD9LVZdybI43my7i5Gsjf3h0aYXx
+         2wUuScn8HUmWQVaGP9QoQJsOwqcdNgZwGISratM2Grn8T/GTu+mvUV+3hSQoKoubz6pB
+         zZkg==
+X-Gm-Message-State: APjAAAWHdm67JMkM97eHfxq1oxUtayAPoToH02/uaw9CgTjz8OMmCp+n
+        2zqB/ncJadgCrrrY4t7Efqj2yCPD
+X-Google-Smtp-Source: APXvYqy5P8M1mmeGCjHcnRoWkeiSjwyT32iL2wGFXeV6VJsfSLPnIybyEbzGZx8/iJtOWs11BKDVLw==
+X-Received: by 2002:adf:cd87:: with SMTP id q7mr10225133wrj.92.1552852780958;
+        Sun, 17 Mar 2019 12:59:40 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id z1sm7039785wrw.28.2019.03.17.12.59.36
+        by smtp.gmail.com with ESMTPSA id z1sm7039785wrw.28.2019.03.17.12.59.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 12:59:36 -0700 (PDT)
+        Sun, 17 Mar 2019 12:59:40 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 02/15] habanalabs: rename goya_non_fatal_events array to all events
-Date:   Sun, 17 Mar 2019 21:59:14 +0200
-Message-Id: <20190317195927.26238-3-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org, Dotan Barak <dbarak@habana.ai>
+Subject: [PATCH 03/15] habanalabs: remove implicit include from header files
+Date:   Sun, 17 Mar 2019 21:59:15 +0200
+Message-Id: <20190317195927.26238-4-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190317195927.26238-1-oded.gabbay@gmail.com>
 References: <20190317195927.26238-1-oded.gabbay@gmail.com>
@@ -69,95 +69,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The goya_non_fatal_events array actually contains all the possible events
-the driver can receive from the F/W. Therefore, use a proper name
-for the array.
+From: Dotan Barak <dbarak@habana.ai>
 
-The patch also adds missing event Ids to the goya_async_event_id enum.
+This will prevent unneeded include of header files, which may increase
+compilation time.
 
+Signed-off-by: Dotan Barak <dbarak@habana.ai>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/goya/goya.c                      | 8 +++-----
- drivers/misc/habanalabs/include/goya/goya_async_events.h | 9 +++++++++
- 2 files changed, 12 insertions(+), 5 deletions(-)
+ drivers/misc/habanalabs/goya/goya_security.c | 1 +
+ drivers/misc/habanalabs/include/goya/goya.h  | 4 ----
+ 2 files changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 0185f11c5577..3dfac5393269 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -176,9 +176,7 @@ static u64 goya_mmu_regs[GOYA_MMU_REGS_NUM] = {
- 	mmMME_WBC_CONTROL_DATA
- };
+diff --git a/drivers/misc/habanalabs/goya/goya_security.c b/drivers/misc/habanalabs/goya/goya_security.c
+index 575003238401..9d2dee67e46f 100644
+--- a/drivers/misc/habanalabs/goya/goya_security.c
++++ b/drivers/misc/habanalabs/goya/goya_security.c
+@@ -6,6 +6,7 @@
+  */
  
--#define GOYA_ASYC_EVENT_GROUP_NON_FATAL_SIZE 121
+ #include "goyaP.h"
++#include "include/goya/asic_reg/goya_regs.h"
+ 
+ /*
+  * goya_set_block_as_protected - set the given block as protected
+diff --git a/drivers/misc/habanalabs/include/goya/goya.h b/drivers/misc/habanalabs/include/goya/goya.h
+index 614149efa412..3f02a52ba4ce 100644
+--- a/drivers/misc/habanalabs/include/goya/goya.h
++++ b/drivers/misc/habanalabs/include/goya/goya.h
+@@ -8,10 +8,6 @@
+ #ifndef GOYA_H
+ #define GOYA_H
+ 
+-#include "asic_reg/goya_regs.h"
 -
--static u32 goya_non_fatal_events[GOYA_ASYC_EVENT_GROUP_NON_FATAL_SIZE] = {
-+static u32 goya_all_events[] = {
- 	GOYA_ASYNC_EVENT_ID_PCIE_IF,
- 	GOYA_ASYNC_EVENT_ID_TPC0_ECC,
- 	GOYA_ASYNC_EVENT_ID_TPC1_ECC,
-@@ -4627,8 +4625,8 @@ static int goya_soft_reset_late_init(struct hl_device *hdev)
- 	 * Unmask all IRQs since some could have been received
- 	 * during the soft reset
- 	 */
--	return goya_unmask_irq_arr(hdev, goya_non_fatal_events,
--			sizeof(goya_non_fatal_events));
-+	return goya_unmask_irq_arr(hdev, goya_all_events,
-+					sizeof(goya_all_events));
- }
- 
- static int goya_unmask_irq(struct hl_device *hdev, u16 event_type)
-diff --git a/drivers/misc/habanalabs/include/goya/goya_async_events.h b/drivers/misc/habanalabs/include/goya/goya_async_events.h
-index 497937a17ee9..bb7a1aa3279e 100644
---- a/drivers/misc/habanalabs/include/goya/goya_async_events.h
-+++ b/drivers/misc/habanalabs/include/goya/goya_async_events.h
-@@ -9,7 +9,9 @@
- #define __GOYA_ASYNC_EVENTS_H_
- 
- enum goya_async_event_id {
-+	GOYA_ASYNC_EVENT_ID_PCIE_CORE = 32,
- 	GOYA_ASYNC_EVENT_ID_PCIE_IF = 33,
-+	GOYA_ASYNC_EVENT_ID_PCIE_PHY = 34,
- 	GOYA_ASYNC_EVENT_ID_TPC0_ECC = 36,
- 	GOYA_ASYNC_EVENT_ID_TPC1_ECC = 39,
- 	GOYA_ASYNC_EVENT_ID_TPC2_ECC = 42,
-@@ -23,6 +25,8 @@ enum goya_async_event_id {
- 	GOYA_ASYNC_EVENT_ID_MMU_ECC = 63,
- 	GOYA_ASYNC_EVENT_ID_DMA_MACRO = 64,
- 	GOYA_ASYNC_EVENT_ID_DMA_ECC = 66,
-+	GOYA_ASYNC_EVENT_ID_DDR0_PARITY = 69,
-+	GOYA_ASYNC_EVENT_ID_DDR1_PARITY = 72,
- 	GOYA_ASYNC_EVENT_ID_CPU_IF_ECC = 75,
- 	GOYA_ASYNC_EVENT_ID_PSOC_MEM = 78,
- 	GOYA_ASYNC_EVENT_ID_PSOC_CORESIGHT = 79,
-@@ -72,6 +76,7 @@ enum goya_async_event_id {
- 	GOYA_ASYNC_EVENT_ID_MME_WACSD = 142,
- 	GOYA_ASYNC_EVENT_ID_PLL0 = 143,
- 	GOYA_ASYNC_EVENT_ID_PLL1 = 144,
-+	GOYA_ASYNC_EVENT_ID_PLL2 = 145,
- 	GOYA_ASYNC_EVENT_ID_PLL3 = 146,
- 	GOYA_ASYNC_EVENT_ID_PLL4 = 147,
- 	GOYA_ASYNC_EVENT_ID_PLL5 = 148,
-@@ -81,6 +86,7 @@ enum goya_async_event_id {
- 	GOYA_ASYNC_EVENT_ID_PSOC = 160,
- 	GOYA_ASYNC_EVENT_ID_PCIE_FLR = 171,
- 	GOYA_ASYNC_EVENT_ID_PCIE_HOT_RESET = 172,
-+	GOYA_ASYNC_EVENT_ID_PCIE_PERST = 173,
- 	GOYA_ASYNC_EVENT_ID_PCIE_QID0_ENG0 = 174,
- 	GOYA_ASYNC_EVENT_ID_PCIE_QID0_ENG1 = 175,
- 	GOYA_ASYNC_EVENT_ID_PCIE_QID0_ENG2 = 176,
-@@ -144,8 +150,11 @@ enum goya_async_event_id {
- 	GOYA_ASYNC_EVENT_ID_PSOC_GPIO_U16_0 = 330,
- 	GOYA_ASYNC_EVENT_ID_PSOC_GPIO_U16_1 = 331,
- 	GOYA_ASYNC_EVENT_ID_PSOC_GPIO_U16_2 = 332,
-+	GOYA_ASYNC_EVENT_ID_PSOC_GPIO_U16_3 = 333,
-+	GOYA_ASYNC_EVENT_ID_PSOC_GPIO_U16_4 = 334,
- 	GOYA_ASYNC_EVENT_ID_PSOC_GPIO_05_SW_RESET = 356,
- 	GOYA_ASYNC_EVENT_ID_PSOC_GPIO_10_VRHOT_ICRIT = 361,
-+	GOYA_ASYNC_EVENT_ID_FAN = 425,
- 	GOYA_ASYNC_EVENT_ID_TPC0_CMDQ = 430,
- 	GOYA_ASYNC_EVENT_ID_TPC1_CMDQ = 431,
- 	GOYA_ASYNC_EVENT_ID_TPC2_CMDQ = 432,
+-#include <linux/types.h>
+-
+ #define SRAM_CFG_BAR_ID		0
+ #define MSIX_BAR_ID		2
+ #define DDR_BAR_ID		4
 -- 
 2.17.1
 
