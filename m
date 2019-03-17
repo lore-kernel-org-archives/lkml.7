@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6DDC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA43FC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1269820896
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8400F21738
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 20:00:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSzlYLmS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SR03qKmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfCQUAc (ORCPT
+        id S1727580AbfCQT74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 16:00:32 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35581 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727572AbfCQT75 (ORCPT
+        Sun, 17 Mar 2019 15:59:56 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37730 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727485AbfCQT7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 15:59:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 81so3361288wme.0
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 12:59:55 -0700 (PDT)
+        Sun, 17 Mar 2019 15:59:47 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y15so14762589wro.4
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 12:59:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=AKxoI6OcL3oxvp+cimCungYTvLi1W9hb2x1T5kIB5ko=;
-        b=WSzlYLmSCCKN+T54gR7jiWlchui/I/W5G+kjSkupvaOcBgPU51WXJF+q+7PzS2jPCY
-         P/YlmlYMMs3QYzLqXk0gRiopYmsBOzBfkFX/Z5+RjqiRfwK79kRFSG2egKh1dx2DqBvJ
-         xfJ1M/lWe6gvNRSHCYHjwNha0BwJNQ3HYJY3MjdyWWttWWr1hFuzj1ooOCBHUv3xA7z3
-         NW9s/90vGJx8qKvC0l0Xn6aXe1X9DM2UlzB+WwxAdDLbmclsInT1WRgUfd/vXG1WZCJi
-         xlYkvdiCBnAEHlKGiBhLw8hiUZnwXeZnZie83sAV7bPDRMXX02V1neUv4c/yYC3oq6qg
-         Xe0g==
+        bh=bL1WBDufUkqlFndI9jD2XiaNl+Wgz4BgYs3l/gkjWjk=;
+        b=SR03qKmMilWjk/plqua5+PwaAZxS0D9dw9UE+erJOFW+6cKyMFgSYYu0ZOzv/Vegki
+         RGcfloY/5IEn0FpVaxm1a+mWryjQ0lDJ+o0FewtresHdLDLwuH8guHeW8kjFxq20nTy4
+         fhAAlmbGdgnsJL59e63XYrmqKITSjbGO67znCIKPALBdDjsM/8idjUEUHnPuCAQY1LTm
+         hA3HMmDB9Tmn0mROUGhCdsB6eWkKT2d0meIxE3mH2tQuSPTitqvtOoC/9MOVv17zpO03
+         Z3wP3qaqPM5/VCUgcdjAb3zkSn2H17U7bEMhYk3rUPZFjwNDmLngBMiqFa8zrQ/oJlCr
+         asrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=AKxoI6OcL3oxvp+cimCungYTvLi1W9hb2x1T5kIB5ko=;
-        b=dF+z6F1s4b8mJWQBKdUXDeRtOrHhmMe+B3sWro/evx+5B/V0r1MsYYMJ2pXErPNcFF
-         oYjhHSjiElZEKsoLr4RocLPyI2vpgtN/ugP8WhcTZTyXlDTwrMKaPuDhre/eahwrtuVu
-         sz/bYhIVb/g3OoyoWYSpxcDMvIOfFCFTY9AhagEpNOb/ID4vFNJJqqrvxX24tTp6EVKZ
-         yLlb4JpeBKJntaQISJL9gvhfPxvuIGgsR3fp0wc4UqAUiMdXD0ljjkCMEotAsdntCqmp
-         3uNWQKY7I4uIvU9BQoVAhxh+LZ1yjJRwt1GMPFd3dobHHlPvEfIgPapSIa93OfVfWI5o
-         rtYQ==
-X-Gm-Message-State: APjAAAVD4QZ4JE4YIVQPj43NAbu4vaWJf86r0RUoyHUq/X/8oP3fPbQe
-        fvKU3Pg8eWdSC6PJTePeupkMB3ze
-X-Google-Smtp-Source: APXvYqyrypRmblvpzy/TcWLG1UAf9nm2zBmY5PoU7NppD9s+KUHNch1y1ElWsa2RRq7reRDxf+7Ksw==
-X-Received: by 2002:a7b:c016:: with SMTP id c22mr8611278wmb.55.1552852794339;
-        Sun, 17 Mar 2019 12:59:54 -0700 (PDT)
+        bh=bL1WBDufUkqlFndI9jD2XiaNl+Wgz4BgYs3l/gkjWjk=;
+        b=iYuR4r2+qrEejytUXwi2rsGRPb2vNBlFovEJq2hMG/ucJsRTNML/2brA+Oyzu7ukSk
+         9MrdbxtcTuHw14ZUy+shyqs2ErYAneq0xsOetQztq4TzRfzWMjtaZQdVERPuJIUOgq4S
+         FXhCggxBBUYWPflVHM6bEjQEIixYD5Jz5Z/N3lboqlMwerWKn2iyiT+DLF27VpFI/E+z
+         pvWFt3Mb/O1f1koLrrVUAVwOeeBpFdGDKiqLutPqy0hfhCSHs30pvVXXJ2x+YNY14P+m
+         cqjnPVCNErp6Es6I3EZur2w161JAGhf4SxWWk9OM+MnKXoL6u5MNxYJeEH1rl3RHqr6f
+         fAww==
+X-Gm-Message-State: APjAAAUyocrgH/DHZ2YHBJGTEGX2iWvmWiDsGjObdHsMedBXY8u+BYSC
+        WX1Qi5yGx/zxs14KxMoGDqu8QT9b
+X-Google-Smtp-Source: APXvYqzshc2Q6tDmEfCeXhFfcMhGuEVa3mmUL6PB8+62P2hABPhc7lolLdOyygMUTwGwSsGRcbx94w==
+X-Received: by 2002:a5d:4612:: with SMTP id t18mr9183818wrq.174.1552852784622;
+        Sun, 17 Mar 2019 12:59:44 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id z1sm7039785wrw.28.2019.03.17.12.59.53
+        by smtp.gmail.com with ESMTPSA id z1sm7039785wrw.28.2019.03.17.12.59.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 12:59:53 -0700 (PDT)
+        Sun, 17 Mar 2019 12:59:44 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, Tomer Tayar <ttayar@habana.ai>
-Subject: [PATCH 11/15] habanalabs: Add a printout with the name of a busy engine
-Date:   Sun, 17 Mar 2019 21:59:23 +0200
-Message-Id: <20190317195927.26238-12-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 05/15] habanalabs: use EQ MSI/X ID per chip
+Date:   Sun, 17 Mar 2019 21:59:17 +0200
+Message-Id: <20190317195927.26238-6-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190317195927.26238-1-oded.gabbay@gmail.com>
 References: <20190317195927.26238-1-oded.gabbay@gmail.com>
@@ -69,141 +69,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomer Tayar <ttayar@habana.ai>
+The Event Queue MSI/X ID is different per ASIC. This patch renames the
+current define to have the GOYA_ prefix to mark it only for Goya. It also
+moves it from the common armcp_if.h file to the ASIC specific goya_fw_if.h
+file.
 
-Print the name of a busy engine when checking if a device is idle.
-The change is done mainly to help a user to pinpoint problems in his
-topology's recipe.
-
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/goya/goya.c        | 24 ++++++++++++----------
- drivers/misc/habanalabs/habanalabs.h       |  8 +++++++-
- drivers/misc/habanalabs/habanalabs_ioctl.c |  2 +-
- 3 files changed, 21 insertions(+), 13 deletions(-)
+ drivers/misc/habanalabs/goya/goya.c               | 8 ++++----
+ drivers/misc/habanalabs/include/armcp_if.h        | 2 --
+ drivers/misc/habanalabs/include/goya/goya_fw_if.h | 2 ++
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 466464c026e0..b474651db0e5 100644
+index a578d01a56a6..6ba0faa979bd 100644
 --- a/drivers/misc/habanalabs/goya/goya.c
 +++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2784,6 +2784,7 @@ static int goya_send_job_on_qman0(struct hl_device *hdev, struct hl_cs_job *job)
- 	dma_addr_t fence_dma_addr;
- 	struct hl_cb *cb;
- 	u32 tmp, timeout;
-+	char buf[16] = {};
- 	int rc;
- 
- 	if (hdev->pldm)
-@@ -2791,9 +2792,10 @@ static int goya_send_job_on_qman0(struct hl_device *hdev, struct hl_cs_job *job)
- 	else
- 		timeout = HL_DEVICE_TIMEOUT_USEC;
- 
--	if (!hdev->asic_funcs->is_device_idle(hdev)) {
-+	if (!hdev->asic_funcs->is_device_idle(hdev, buf, sizeof(buf))) {
- 		dev_err_ratelimited(hdev->dev,
--			"Can't send KMD job on QMAN0 if device is not idle\n");
-+			"Can't send KMD job on QMAN0 because %s is busy\n",
-+			buf);
- 		return -EBUSY;
+@@ -2205,10 +2205,10 @@ static int goya_enable_msix(struct hl_device *hdev)
+ 		}
  	}
  
-@@ -4692,7 +4694,7 @@ static void goya_disable_clock_gating(struct hl_device *hdev)
+-	irq = pci_irq_vector(hdev->pdev, EVENT_QUEUE_MSIX_IDX);
++	irq = pci_irq_vector(hdev->pdev, GOYA_EVENT_QUEUE_MSIX_IDX);
  
+ 	rc = request_irq(irq, hl_irq_handler_eq, 0,
+-			goya_irq_name[EVENT_QUEUE_MSIX_IDX],
++			goya_irq_name[GOYA_EVENT_QUEUE_MSIX_IDX],
+ 			&hdev->event_queue);
+ 	if (rc) {
+ 		dev_err(hdev->dev, "Failed to request IRQ %d", irq);
+@@ -2239,7 +2239,7 @@ static void goya_sync_irqs(struct hl_device *hdev)
+ 	for (i = 0 ; i < hdev->asic_prop.completion_queues_count ; i++)
+ 		synchronize_irq(pci_irq_vector(hdev->pdev, i));
+ 
+-	synchronize_irq(pci_irq_vector(hdev->pdev, EVENT_QUEUE_MSIX_IDX));
++	synchronize_irq(pci_irq_vector(hdev->pdev, GOYA_EVENT_QUEUE_MSIX_IDX));
  }
  
--static bool goya_is_device_idle(struct hl_device *hdev)
-+static bool goya_is_device_idle(struct hl_device *hdev, char *buf, size_t size)
- {
- 	u64 offset, dma_qm_reg, tpc_qm_reg, tpc_cmdq_reg, tpc_cfg_reg;
- 	int i;
-@@ -4704,7 +4706,7 @@ static bool goya_is_device_idle(struct hl_device *hdev)
+ static void goya_disable_msix(struct hl_device *hdev)
+@@ -2252,7 +2252,7 @@ static void goya_disable_msix(struct hl_device *hdev)
  
- 		if ((RREG32(dma_qm_reg) & DMA_QM_IDLE_MASK) !=
- 				DMA_QM_IDLE_MASK)
--			return false;
-+			return HL_ENG_BUSY(buf, size, "DMA%d_QM", i);
- 	}
+ 	goya_sync_irqs(hdev);
  
- 	offset = mmTPC1_QM_GLBL_STS0 - mmTPC0_QM_GLBL_STS0;
-@@ -4716,31 +4718,31 @@ static bool goya_is_device_idle(struct hl_device *hdev)
+-	irq = pci_irq_vector(hdev->pdev, EVENT_QUEUE_MSIX_IDX);
++	irq = pci_irq_vector(hdev->pdev, GOYA_EVENT_QUEUE_MSIX_IDX);
+ 	free_irq(irq, &hdev->event_queue);
  
- 		if ((RREG32(tpc_qm_reg) & TPC_QM_IDLE_MASK) !=
- 				TPC_QM_IDLE_MASK)
--			return false;
-+			return HL_ENG_BUSY(buf, size, "TPC%d_QM", i);
+ 	for (i = 0 ; i < hdev->asic_prop.completion_queues_count ; i++) {
+diff --git a/drivers/misc/habanalabs/include/armcp_if.h b/drivers/misc/habanalabs/include/armcp_if.h
+index ccb82390241e..c8f28cadc335 100644
+--- a/drivers/misc/habanalabs/include/armcp_if.h
++++ b/drivers/misc/habanalabs/include/armcp_if.h
+@@ -32,8 +32,6 @@ struct hl_eq_entry {
+ #define EQ_CTL_EVENT_TYPE_SHIFT		16
+ #define EQ_CTL_EVENT_TYPE_MASK		0x03FF0000
  
- 		if ((RREG32(tpc_cmdq_reg) & TPC_CMDQ_IDLE_MASK) !=
- 				TPC_CMDQ_IDLE_MASK)
--			return false;
-+			return HL_ENG_BUSY(buf, size, "TPC%d_CMDQ", i);
+-#define EVENT_QUEUE_MSIX_IDX		5
+-
+ enum pq_init_status {
+ 	PQ_INIT_STATUS_NA = 0,
+ 	PQ_INIT_STATUS_READY_FOR_CP,
+diff --git a/drivers/misc/habanalabs/include/goya/goya_fw_if.h b/drivers/misc/habanalabs/include/goya/goya_fw_if.h
+index a9920cb4a07b..0fa80fe9f6cc 100644
+--- a/drivers/misc/habanalabs/include/goya/goya_fw_if.h
++++ b/drivers/misc/habanalabs/include/goya/goya_fw_if.h
+@@ -8,6 +8,8 @@
+ #ifndef GOYA_FW_IF_H
+ #define GOYA_FW_IF_H
  
- 		if ((RREG32(tpc_cfg_reg) & TPC_CFG_IDLE_MASK) !=
- 				TPC_CFG_IDLE_MASK)
--			return false;
-+			return HL_ENG_BUSY(buf, size, "TPC%d_CFG", i);
- 	}
- 
- 	if ((RREG32(mmMME_QM_GLBL_STS0) & MME_QM_IDLE_MASK) !=
- 			MME_QM_IDLE_MASK)
--		return false;
-+		return HL_ENG_BUSY(buf, size, "MME_QM");
- 
- 	if ((RREG32(mmMME_CMDQ_GLBL_STS0) & MME_CMDQ_IDLE_MASK) !=
- 			MME_CMDQ_IDLE_MASK)
--		return false;
-+		return HL_ENG_BUSY(buf, size, "MME_CMDQ");
- 
- 	if ((RREG32(mmMME_ARCH_STATUS) & MME_ARCH_IDLE_MASK) !=
- 			MME_ARCH_IDLE_MASK)
--		return false;
-+		return HL_ENG_BUSY(buf, size, "MME_ARCH");
- 
- 	if (RREG32(mmMME_SHADOW_0_STATUS) & MME_SHADOW_IDLE_MASK)
--		return false;
-+		return HL_ENG_BUSY(buf, size, "MME");
- 
- 	return true;
- }
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index ed3649d38ff8..9cc841777d81 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -555,7 +555,7 @@ struct hl_asic_funcs {
- 	int (*send_heartbeat)(struct hl_device *hdev);
- 	void (*enable_clock_gating)(struct hl_device *hdev);
- 	void (*disable_clock_gating)(struct hl_device *hdev);
--	bool (*is_device_idle)(struct hl_device *hdev);
-+	bool (*is_device_idle)(struct hl_device *hdev, char *buf, size_t size);
- 	int (*soft_reset_late_init)(struct hl_device *hdev);
- 	void (*hw_queues_lock)(struct hl_device *hdev);
- 	void (*hw_queues_unlock)(struct hl_device *hdev);
-@@ -1010,6 +1010,12 @@ void hl_wreg(struct hl_device *hdev, u32 reg, u32 val);
- 	WREG32(mm##reg, (RREG32(mm##reg) & ~REG_FIELD_MASK(reg, field)) | \
- 			(val) << REG_FIELD_SHIFT(reg, field))
- 
-+#define HL_ENG_BUSY(buf, size, fmt, ...) ({ \
-+		if (buf) \
-+			snprintf(buf, size, fmt, ##__VA_ARGS__); \
-+		false; \
-+	})
++#define GOYA_EVENT_QUEUE_MSIX_IDX	5
 +
- struct hwmon_chip_info;
+ #define CPU_BOOT_ADDR		0x7FF8040000ull
  
- /**
-diff --git a/drivers/misc/habanalabs/habanalabs_ioctl.c b/drivers/misc/habanalabs/habanalabs_ioctl.c
-index 19b96afc0308..37f9de8e7404 100644
---- a/drivers/misc/habanalabs/habanalabs_ioctl.c
-+++ b/drivers/misc/habanalabs/habanalabs_ioctl.c
-@@ -93,7 +93,7 @@ static int hw_idle(struct hl_device *hdev, struct hl_info_args *args)
- 	if ((!max_size) || (!out))
- 		return -EINVAL;
- 
--	hw_idle.is_idle = hdev->asic_funcs->is_device_idle(hdev);
-+	hw_idle.is_idle = hdev->asic_funcs->is_device_idle(hdev, NULL, 0);
- 
- 	return copy_to_user(out, &hw_idle,
- 		min((size_t) max_size, sizeof(hw_idle))) ? -EFAULT : 0;
+ #define UBOOT_FW_OFFSET		0x100000		/* 1MB in SRAM */
 -- 
 2.17.1
 
