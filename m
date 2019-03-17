@@ -2,158 +2,117 @@ Return-Path: <SRS0=5V/v=RU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4F4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BEBC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 122C92085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D452184C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Mar 2019 10:05:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Nynjf/yj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfCQKDS (ORCPT
+        id S1726971AbfCQKFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 06:03:18 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:53067 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfCQKDS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 06:03:18 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2HA3ESr083175;
-        Sun, 17 Mar 2019 19:03:14 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
- Sun, 17 Mar 2019 19:03:14 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
-Received: from localhost.localdomain (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2HA39bk083146
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sun, 17 Mar 2019 19:03:14 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Subject: [PATCH v2] dmaengine: pl330: introduce debugfs interface
-Date:   Sun, 17 Mar 2019 19:03:06 +0900
-Message-Id: <20190317100306.18405-1-katsuhiro@katsuster.net>
-X-Mailer: git-send-email 2.20.1
+        Sun, 17 Mar 2019 06:05:38 -0400
+Received: from mail-eopbgr70055.outbound.protection.outlook.com ([40.107.7.55]:12647
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726092AbfCQKFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 06:05:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6kkuNje1scYVaPR9kYQxeLZ0ux8uXpCe8K/EMFu7U1o=;
+ b=Nynjf/yjvvJeQFyLVAPdJrLIMHX4MPKuXVy4WOFls+uSUtf2iRWh0MXKb3GJpeMWImMHCyDRyzEgw2z21hsYIwx5ynE5U6AZXCvNcc9HAFNZeqIsoSuDH1YZNgdpsAN5DyYrAWbS0WY6qwPTnRvxQlEztWf7/2SMRHydYnVrduo=
+Received: from HE1PR05CA0305.eurprd05.prod.outlook.com (2603:10a6:7:93::36) by
+ AM0PR05MB4562.eurprd05.prod.outlook.com (2603:10a6:208:b0::29) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Sun, 17 Mar 2019 10:05:32 +0000
+Received: from VE1EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::205) by HE1PR05CA0305.outlook.office365.com
+ (2603:10a6:7:93::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.14 via Frontend
+ Transport; Sun, 17 Mar 2019 10:05:32 +0000
+Authentication-Results: spf=pass (sender IP is 193.47.165.134)
+ smtp.mailfrom=mellanox.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none
+ header.from=mellanox.com;
+Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
+ 193.47.165.134 as permitted sender) receiver=protection.outlook.com;
+ client-ip=193.47.165.134; helo=mtlcas13.mtl.com;
+Received: from mtlcas13.mtl.com (193.47.165.134) by
+ VE1EUR03FT057.mail.protection.outlook.com (10.152.19.123) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1730.9 via Frontend Transport; Sun, 17 Mar 2019 10:05:31 +0000
+Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4; Sun, 17 Mar 2019 12:05:30
+ +0200
+Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Sun,
+ 17 Mar 2019 12:05:30 +0200
+Received: from [10.223.3.162] (10.223.3.162) by MTLCAS01.mtl.com (10.0.8.71)
+ with Microsoft SMTP Server (TLS) id 14.3.301.0; Sun, 17 Mar 2019 12:05:28
+ +0200
+Subject: Re: [PATCH] IB/iser: remove uninitialized variable len
+To:     Colin King <colin.king@canonical.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, <linux-rdma@vger.kernel.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190316230512.8933-1-colin.king@canonical.com>
+From:   Max Gurtovoy <maxg@mellanox.com>
+Message-ID: <fe379614-5b0c-4063-2153-bd8a792d51c6@mellanox.com>
+Date:   Sun, 17 Mar 2019 12:05:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190316230512.8933-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.223.3.162]
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:193.47.165.134;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(39850400004)(396003)(346002)(2980300002)(199004)(189003)(36756003)(4326008)(106466001)(50466002)(23676004)(229853002)(2486003)(47776003)(65956001)(356004)(65806001)(6246003)(64126003)(8676002)(476003)(2906002)(478600001)(446003)(86362001)(336012)(316002)(58126008)(110136005)(81166006)(16526019)(65826007)(81156014)(486006)(11346002)(2616005)(76176011)(126002)(7736002)(305945005)(230700001)(26005)(77096007)(67846002)(31696002)(4744005)(53546011)(16576012)(3846002)(6116002)(8936002)(54906003)(5660300002)(106002)(186003)(31686004)(3940600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4562;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:mail13.mellanox.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 82e45f05-8439-429a-70b9-08d6aac0172f
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060)(7193020);SRVR:AM0PR05MB4562;
+X-MS-TrafficTypeDiagnostic: AM0PR05MB4562:
+X-Microsoft-Antispam-PRVS: <AM0PR05MB4562BF352F6D49B3F40AD00BB6460@AM0PR05MB4562.eurprd05.prod.outlook.com>
+X-Forefront-PRVS: 09796A1B83
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: ZaoAlYQfTMOo8jLXZoT0X88+3LZNBmLzUWkSPg3Fzb/rhGBPqag0nK6NVbSi/rOF4Xc8KYiebhmEbJ4uy59kkygLIHcKfStLL6tRocyuG0L4yEKgLrwLtjpgQQ1u5H/XnXnKkmPna82zXFLt/YwRr62zDG/EizH3qfeCQhkT5VFLKYCK8AWNU5Q0wDD5qHqqycx9Gq0hIkWC0nv1zNUOz5BVtR/zdDVXruk3/dD73vvMS2L0+anagXeiTOCztoDpdJrWn/BCvO8WUzquKW9PEbwvXbhog8amYjN0+Q4TXO+kwbUdRVZLWjinzpqr0yEHHfZJxJrZXrK/EfVG1K3xCvUESTxihlvIrm4NS3yppodWQaBdTSyu8GZbHkxcQ97fkQYsD3g3b8ej9lc8SX/zik2KV/jbSM+RrZgZaTB7aBk=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2019 10:05:31.4938
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82e45f05-8439-429a-70b9-08d6aac0172f
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.134];Helo=[mtlcas13.mtl.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4562
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds debugfs interface to show the relationship between
-DMA threads (hardware resource for transferring data) and DMA
-channel ID of DMA slave.
 
-Typically, PL330 has many slaves than number of DMA threads.
-So sometimes PL330 cannot allocate DMA threads for all slaves even
-if a user specify DMA channel ID in devicetree. This interface will
-be useful for checking that DMA threads are allocated or not.
+On 3/17/2019 1:05 AM, Colin King wrote:
+> From: Colin Ian King<colin.king@canonical.com>
+>
+> The variable len is not being inintialized and the uninitialized
+> value is being returned. However, this return path is never reached
+> because the default case in the switch statement returns -ENOSYS.
+> Clean up the code by replacing the return -ENOSYS with a break
+> for the default case and returning -ENOSYS at the end of the
+> function.  This allows len to be removed.  Also remove redundant
+> break that follows a return statement.
+>
+> Signed-off-by: Colin Ian King<colin.king@canonical.com>
 
-Below is an output sample:
+Looks good,
 
-$ sudo cat /sys/kernel/debug/ff1f0000.dmac
-PL330 physical channels:
-THREAD:         CHANNEL:
---------        -----
-0               8
-1               9
-2               11
-3               12
-4               14
-5               15
-6               10
-7               --
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
----
- drivers/dma/pl330.c | 51 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index eec79fdf27a5..c72f6fd79c43 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -11,6 +11,7 @@
-  * (at your option) any later version.
-  */
- 
-+#include <linux/debugfs.h>
- #include <linux/kernel.h>
- #include <linux/io.h>
- #include <linux/init.h>
-@@ -2896,6 +2897,55 @@ static irqreturn_t pl330_irq_handler(int irq, void *data)
- 	BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
- 	BIT(DMA_SLAVE_BUSWIDTH_8_BYTES)
- 
-+#ifdef CONFIG_DEBUG_FS
-+static int pl330_debugfs_show(struct seq_file *s, void *data)
-+{
-+	struct pl330_dmac *pl330 = s->private;
-+	int chans, pchs, ch, pr;
-+
-+	chans = pl330->pcfg.num_chan;
-+	pchs = pl330->num_peripherals;
-+
-+	seq_puts(s, "PL330 physical channels:\n");
-+	seq_puts(s, "THREAD:\t\tCHANNEL:\n");
-+	seq_puts(s, "--------\t-----\n");
-+	for (ch = 0; ch < chans; ch++) {
-+		struct pl330_thread *thrd = &pl330->channels[ch];
-+		int found = -1;
-+
-+		for (pr = 0; pr < pchs; pr++) {
-+			struct dma_pl330_chan *pch = &pl330->peripherals[pr];
-+
-+			if (!pch->thread || thrd->id != pch->thread->id)
-+				continue;
-+
-+			found = pr;
-+		}
-+
-+		seq_printf(s, "%d\t\t", thrd->id);
-+		if (found == -1)
-+			seq_puts(s, "--\n");
-+		else
-+			seq_printf(s, "%d\n", found);
-+	}
-+
-+	return 0;
-+}
-+
-+DEFINE_SHOW_ATTRIBUTE(pl330_debugfs);
-+
-+static inline void init_pl330_debugfs(struct pl330_dmac *pl330)
-+{
-+	debugfs_create_file(dev_name(pl330->ddma.dev),
-+			    S_IFREG | 0444, NULL, pl330,
-+			    &pl330_debugfs_fops);
-+}
-+#else
-+static inline void init_pl330_debugfs(struct pl330_dmac *pl330)
-+{
-+}
-+#endif
-+
- /*
-  * Runtime PM callbacks are provided by amba/bus.c driver.
-  *
-@@ -3082,6 +3132,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
- 		dev_err(&adev->dev, "unable to set the seg size\n");
- 
- 
-+	init_pl330_debugfs(pl330);
- 	dev_info(&adev->dev,
- 		"Loaded driver for PL330 DMAC-%x\n", adev->periphid);
- 	dev_info(&adev->dev,
--- 
-2.20.1
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 
