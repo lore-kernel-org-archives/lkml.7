@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B530CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F159C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BBA20872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10BCE20872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552920721;
-	bh=lFxH112PvR82FHMhyKWtzFt+LPrLlTtCZdOidHgb79A=;
+	s=default; t=1552920725;
+	bh=6y/w4ZM7ASxP+mIzwotr+wbo/tPYotuEhRcmJvsbzVU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=UE9/Zb+o4DTBH7h6ZWO4pjIpTX7Lse2JAOxSHmSZhgJpAudO9EG+TPU86YZTVDDQa
-	 tlgFtSdhEEdfeIW7iYdsOCpF/YVNdNS50vIls3o4LdtP7kzVFfZrOd3J1KrOf2wcix
-	 aY8FSG0fU+SjBJHAlFscLCJ7aSigUQeDrfo89g1s=
+	b=LsoEhJASoDWhuv78I/B7PAv4q/Yb9IljNAEao5h22KthQJwwE4GfTmF1hTGcFXGun
+	 ByRIDCtMLHQbx/Gg34INSbnuL2of+qR8XLKvBpoDHdV5KXhVlISUgZ5X9lzcOM5OmH
+	 lcB5NA9HlwiPPJXcJpoEqt1/v6i+hQL8OrDJPGxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbfCROwA (ORCPT
+        id S1727920AbfCROvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:52:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55710 "EHLO
+        Mon, 18 Mar 2019 10:51:51 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55408 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbfCROv7 (ORCPT
+        with ESMTP id S1727847AbfCROvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:51:59 -0400
+        Mon, 18 Mar 2019 10:51:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ZrCdrE3t5dW53mA2k3Or0vXE7pHzuM21sn91e9JTlVY=; b=uKSotXJh/k35
-        YRBkPUx/T3ig1FrlL+dQruvHGTfeVRKt73RJ3sxJahwd2mM7kH0vKmlcW3TchNypPTgMThClg65/A
-        Z+zoqZFCa++Hw31ukA9N0QrwaLVSHtFZ93SIQASeoPHYa6Gzi8010XKrgfQ3GHu9Z6RnweKmFMvVZ
-        zKV3w=;
+        List-Archive; bh=EzsDiUt4l5zrT1KJkIZXbBrB0h2v6sci3INyo+xxvvE=; b=piNpnalz5qJl
+        6w1BOogShx7bgjOw0v4Wn8Wn/ek5FjyrtAjoOy0L0AGu+9glNwZVX9sGTImdaZ5XPsaAV4THlpt/m
+        Wf9XJtmHqJa3Qpovpou0UGKlOfg5pqtA/lE1EzPW2CoLffJPXTQWAwN8blN9oQwdFgjHvqKVg/Qua
+        UrOAI=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h5tcG-0005pP-DR; Mon, 18 Mar 2019 14:51:52 +0000
+        id 1h5tcB-0005p6-4T; Mon, 18 Mar 2019 14:51:47 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id ABD611128874; Mon, 18 Mar 2019 14:51:51 +0000 (GMT)
+        id A9ED91128874; Mon, 18 Mar 2019 14:51:46 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: da9052: Include linux/of.h to fix build warning for of_match_ptr" to the regulator tree
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: cpcap: Convert to use of_device_get_match_data" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190318145151.ABD611128874@debutante.sirena.org.uk>
-Date:   Mon, 18 Mar 2019 14:51:51 +0000 (GMT)
+Message-Id: <20190318145146.A9ED91128874@debutante.sirena.org.uk>
+Date:   Mon, 18 Mar 2019 14:51:46 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: da9052: Include linux/of.h to fix build warning for of_match_ptr
+   regulator: cpcap: Convert to use of_device_get_match_data
 
 has been applied to the regulator tree at
 
@@ -86,38 +84,52 @@ to this mail.
 Thanks,
 Mark
 
-From 9cff03710d403f8872d1225d36a4b69432ae007d Mon Sep 17 00:00:00 2001
+From f4192c2cc923ecd79da6cc1619794164fbafcbc4 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sat, 16 Mar 2019 09:50:30 +0800
-Subject: [PATCH] regulator: da9052: Include linux/of.h to fix build warning
- for of_match_ptr
+Date: Sat, 16 Mar 2019 22:35:58 +0800
+Subject: [PATCH] regulator: cpcap: Convert to use of_device_get_match_data
 
-Remove #ifdef CONFIG_OF guard so linux/of.h will be included when
-!CONFIG_OF. This fixes build warnings when !CONFIG_OF.
+Use of_device_get_match_data to simplify the code a bit.
 
-Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/da9052-regulator.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/regulator/cpcap-regulator.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/regulator/da9052-regulator.c b/drivers/regulator/da9052-regulator.c
-index 98d486372b8c..b90a7ac3f3de 100644
---- a/drivers/regulator/da9052-regulator.c
-+++ b/drivers/regulator/da9052-regulator.c
-@@ -19,10 +19,8 @@
- #include <linux/platform_device.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
--#ifdef CONFIG_OF
- #include <linux/of.h>
- #include <linux/regulator/of_regulator.h>
--#endif
+diff --git a/drivers/regulator/cpcap-regulator.c b/drivers/regulator/cpcap-regulator.c
+index c9d805d7a979..d3284361e594 100644
+--- a/drivers/regulator/cpcap-regulator.c
++++ b/drivers/regulator/cpcap-regulator.c
+@@ -505,16 +505,12 @@ MODULE_DEVICE_TABLE(of, cpcap_regulator_id_table);
+ static int cpcap_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct cpcap_ddata *ddata;
+-	const struct of_device_id *match;
++	const struct cpcap_regulator *match_data;
+ 	struct regulator_config config;
+ 	int i;
  
- #include <linux/mfd/da9052/da9052.h>
- #include <linux/mfd/da9052/reg.h>
+-	match = of_match_device(of_match_ptr(cpcap_regulator_id_table),
+-				&pdev->dev);
+-	if (!match)
+-		return -EINVAL;
+-
+-	if (!match->data) {
++	match_data = of_device_get_match_data(&pdev->dev);
++	if (!match_data) {
+ 		dev_err(&pdev->dev, "no configuration data found\n");
+ 
+ 		return -ENODEV;
+@@ -529,7 +525,7 @@ static int cpcap_regulator_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 
+ 	ddata->dev = &pdev->dev;
+-	ddata->soc = match->data;
++	ddata->soc = match_data;
+ 	platform_set_drvdata(pdev, ddata);
+ 
+ 	memset(&config, 0, sizeof(config));
 -- 
 2.20.1
 
