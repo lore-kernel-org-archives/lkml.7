@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF347C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B530CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F062133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BBA20872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552920717;
-	bh=e98sWoYQGK/HCXBzOZWzHAjKgWJNlnMzE0RixryzvO8=;
+	s=default; t=1552920721;
+	bh=lFxH112PvR82FHMhyKWtzFt+LPrLlTtCZdOidHgb79A=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=I3s/lRtVu1ScUGDIDjJAYgyiznHiWX/cK4rZGUZIQuDu0WgIyMITlIcq2bY6UZkOe
-	 2gYieOp3x6Fo56cIdZgWnLHRDqi6xdVY3Yh4X4GBB21atNGtQ5a1dKwoF7E+/v/zXq
-	 ai3InR4z68A2nvQ2gk4hAKE/yXYlhy4jZbFRUHlI=
+	b=UE9/Zb+o4DTBH7h6ZWO4pjIpTX7Lse2JAOxSHmSZhgJpAudO9EG+TPU86YZTVDDQa
+	 tlgFtSdhEEdfeIW7iYdsOCpF/YVNdNS50vIls3o4LdtP7kzVFfZrOd3J1KrOf2wcix
+	 aY8FSG0fU+SjBJHAlFscLCJ7aSigUQeDrfo89g1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfCROv4 (ORCPT
+        id S1727966AbfCROwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:51:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55532 "EHLO
+        Mon, 18 Mar 2019 10:52:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55710 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbfCROvw (ORCPT
+        with ESMTP id S1727921AbfCROv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:51:52 -0400
+        Mon, 18 Mar 2019 10:51:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=9rOGbeO5bA78+ovCm+XbTQZfN55F1YLtKTgoPkwRxhQ=; b=BdRx1dOqALn3
-        YZQ4tAMhlXGj1F+yYZg22YAaPlKmec4FdbGg5NQ3r1+KW/2wfEbRHoXSOHcdJXlufTfa02fYoAVOO
-        6KuuMOGlR/3ej95Wcny9CCyWAuHX/JFHC+WN/V+hjYXrGEJ1UySSu0PDX2mlbQtFc+MHQGqmNKS+v
-        5pqK4=;
+        List-Archive; bh=ZrCdrE3t5dW53mA2k3Or0vXE7pHzuM21sn91e9JTlVY=; b=uKSotXJh/k35
+        YRBkPUx/T3ig1FrlL+dQruvHGTfeVRKt73RJ3sxJahwd2mM7kH0vKmlcW3TchNypPTgMThClg65/A
+        Z+zoqZFCa++Hw31ukA9N0QrwaLVSHtFZ93SIQASeoPHYa6Gzi8010XKrgfQ3GHu9Z6RnweKmFMvVZ
+        zKV3w=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h5tcE-0005pJ-Jx; Mon, 18 Mar 2019 14:51:50 +0000
+        id 1h5tcG-0005pP-DR; Mon, 18 Mar 2019 14:51:52 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 0FD0B1128874; Mon, 18 Mar 2019 14:51:50 +0000 (GMT)
+        id ABD611128874; Mon, 18 Mar 2019 14:51:51 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: as3722: Remove *rdevs[] from struct as3722_regulators" to the regulator tree
+Cc:     kbuild test robot <lkp@intel.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: da9052: Include linux/of.h to fix build warning for of_match_ptr" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190318145150.0FD0B1128874@debutante.sirena.org.uk>
-Date:   Mon, 18 Mar 2019 14:51:50 +0000 (GMT)
+Message-Id: <20190318145151.ABD611128874@debutante.sirena.org.uk>
+Date:   Mon, 18 Mar 2019 14:51:51 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: as3722: Remove *rdevs[] from struct as3722_regulators
+   regulator: da9052: Include linux/of.h to fix build warning for of_match_ptr
 
 has been applied to the regulator tree at
 
@@ -84,42 +86,38 @@ to this mail.
 Thanks,
 Mark
 
-From 4d92ac7bd9f8af387d387173b380f58ad6f98b51 Mon Sep 17 00:00:00 2001
+From 9cff03710d403f8872d1225d36a4b69432ae007d Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sat, 16 Mar 2019 11:52:57 +0800
-Subject: [PATCH] regulator: as3722: Remove *rdevs[] from struct
- as3722_regulators
+Date: Sat, 16 Mar 2019 09:50:30 +0800
+Subject: [PATCH] regulator: da9052: Include linux/of.h to fix build warning
+ for of_match_ptr
 
-Current code is using devm_regulator_register() so it is not necessary
-to save as3722_regs->rdevs[id] for clean up.
-The *rdevs[] is not used now, remove it.
+Remove #ifdef CONFIG_OF guard so linux/of.h will be included when
+!CONFIG_OF. This fixes build warnings when !CONFIG_OF.
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/as3722-regulator.c | 2 --
+ drivers/regulator/da9052-regulator.c | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/drivers/regulator/as3722-regulator.c b/drivers/regulator/as3722-regulator.c
-index e5fed289b52d..7a315adbe6c4 100644
---- a/drivers/regulator/as3722-regulator.c
-+++ b/drivers/regulator/as3722-regulator.c
-@@ -81,7 +81,6 @@ struct as3722_regulator_config_data {
- struct as3722_regulators {
- 	struct device *dev;
- 	struct as3722 *as3722;
--	struct regulator_dev *rdevs[AS3722_REGULATOR_ID_MAX];
- 	struct regulator_desc desc[AS3722_REGULATOR_ID_MAX];
- 	struct as3722_regulator_config_data
- 			reg_config_data[AS3722_REGULATOR_ID_MAX];
-@@ -929,7 +928,6 @@ static int as3722_regulator_probe(struct platform_device *pdev)
- 			return ret;
- 		}
+diff --git a/drivers/regulator/da9052-regulator.c b/drivers/regulator/da9052-regulator.c
+index 98d486372b8c..b90a7ac3f3de 100644
+--- a/drivers/regulator/da9052-regulator.c
++++ b/drivers/regulator/da9052-regulator.c
+@@ -19,10 +19,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+-#ifdef CONFIG_OF
+ #include <linux/of.h>
+ #include <linux/regulator/of_regulator.h>
+-#endif
  
--		as3722_regs->rdevs[id] = rdev;
- 		if (reg_config->ext_control) {
- 			ret = regulator_enable_regmap(rdev);
- 			if (ret < 0) {
+ #include <linux/mfd/da9052/da9052.h>
+ #include <linux/mfd/da9052/reg.h>
 -- 
 2.20.1
 
