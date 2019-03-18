@@ -2,196 +2,122 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EF8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC1DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EAF2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D0320811
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfCRI2s convert rfc822-to-8bit (ORCPT
+        id S1726813AbfCRIlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 04:28:48 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37330 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726719AbfCRI2s (ORCPT
+        Mon, 18 Mar 2019 04:41:31 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37826 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbfCRIlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 04:28:48 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2I8LllU028941;
-        Mon, 18 Mar 2019 09:28:38 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r8qg4ansc-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 18 Mar 2019 09:28:38 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 724D03A;
-        Mon, 18 Mar 2019 08:28:37 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4E56726E3;
-        Mon, 18 Mar 2019 08:28:37 +0000 (GMT)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 18 Mar
- 2019 09:28:36 +0100
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1347.000; Mon, 18 Mar 2019 09:28:37 +0100
-From:   Mickael GUENE <mickael.guene@st.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: Document MIPID02 bindings
-Thread-Topic: [PATCH v1 1/3] dt-bindings: Document MIPID02 bindings
-Thread-Index: AQHU2J8pWVpVm9MlqUmPoDIPHA9N66YOwYKAgAJFpQA=
-Date:   Mon, 18 Mar 2019 08:28:36 +0000
-Message-ID: <b238948a-4b08-4fb8-c955-d071bbcd3d2d@st.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1552373045-134493-2-git-send-email-mickael.guene@st.com>
- <20190316214649.co63p5arhiwbuv3g@valkosipuli.retiisi.org.uk>
-In-Reply-To: <20190316214649.co63p5arhiwbuv3g@valkosipuli.retiisi.org.uk>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.46]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <31217DE2CC8BF743A87F799B2144CEB6@st.com>
-Content-Transfer-Encoding: 8BIT
+        Mon, 18 Mar 2019 04:41:31 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1h5npp-0001bn-1T; Mon, 18 Mar 2019 08:41:29 +0000
+Subject: Re: [PATCH] hostfs: fix mismatch between link_file definition and
+ declaration
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Jeff Dike <jdike@addtoit.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-um@lists.infradead.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190317230909.7373-1-colin.king@canonical.com>
+ <1760676.zAVrM27zAz@blindfold>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <fa1378b0-3048-8309-a152-8fdf5696731d@canonical.com>
+Date:   Mon, 18 Mar 2019 08:41:28 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_06:,,
- signatures=0
+In-Reply-To: <1760676.zAVrM27zAz@blindfold>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
+On 17/03/2019 23:49, Richard Weinberger wrote:
+> Am Montag, 18. März 2019, 00:09:09 CET schrieb Colin King:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> The function link_file declaration in the header file has the order
+>> of the two arguments (from, to) swapped when compared to the definition
+>> arguments of (to, from).  Fix this by swapping them around to match
+>> the definition.
+>>
+>> This error predates the git history, so no idea when this error
+>> was introduced.
+> 
+> commit bf4f804738544a95b8bc8d6a7e2629c3fc0240dd
+> Author: jdike <jdike>
+> Date:   Sat Dec 9 22:52:44 2000 +0000
+> 
+>     hostfs now mostly works.  Almost all of the common operations are now
+>     implemented, the main exceptions being mknod and executing files from
+>     a hostfs filesystem.
+> 
+> Enough archaeology for today. :-)
 
-Thanks for your review. Find my comments below.
+Nice. How do you find these ancient git commits?
 
-On 3/16/19 22:46, Sakari Ailus wrote:
-> Hi Mickael,
 > 
-> Thanks for the patchset.
+> Thanks,
+> //richard
 > 
-> On Tue, Mar 12, 2019 at 07:44:03AM +0100, Mickael Guene wrote:
->> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
->> bridge.
->>
->> Signed-off-by: Mickael Guene <mickael.guene@st.com>
->> ---
->>
->>  .../bindings/media/i2c/st,st-mipid02.txt           | 69 ++++++++++++++++++++++
->>  1 file changed, 69 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
->> new file mode 100644
->> index 0000000..a1855da
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
->> @@ -0,0 +1,69 @@
->> +STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
->> +
->> +MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
->> +time. Active port input stream will be de-serialized and its content outputted
->> +through PARALLEL output port.
->> +CSI-2 first input port is a dual lane 800Mbps whereas CSI-2 second input port is
 > 
-> 800 Mbps per lane (or total)?
-> 
-800 Mbps per lane. I will document it.
->> +a single lane 800Mbps. Both ports support clock and data lane polarity swap.
->> +First port also supports data lane swap.
->> +PARALLEL output port has a maximum width of 12 bits.
->> +Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
->> +YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
->> +
->> +Required Properties:
->> +- compatible: should be "st,st-mipid02"
->> +- clocks: reference to the xclk input clock.
->> +- clock-names: should be "xclk".
->> +- VDDE-supply: sensor digital IO supply. Must be 1.8 volts.
->> +- VDDIN-supply: sensor internal regulator supply. Must be 1.8 volts.
-> 
-> Perhaps Rob can confirm, but AFAIR the custom is to use lower case letters.
-> 
- It seems there is a 50-50 ratio between upper and lower case usage in
-Documentation/devicetree/bindings/media/i2. I will wait Rob's answer to change
-it or not.
->> +
->> +Optional Properties:
->> +- reset-gpios: reference to the GPIO connected to the xsdn pin, if any.
->> +	       This is an active low signal to the mipid02.
->> +
->> +Required subnodes:
->> +  - ports: A ports node with one port child node per device input and output
->> +	   port, in accordance with the video interface bindings defined in
->> +	   Documentation/devicetree/bindings/media/video-interfaces.txt. The
->> +	   port nodes are numbered as follows:
->> +
->> +	   Port Description
->> +	   -----------------------------
->> +	   0    CSI-2 first input port
->> +	   1    CSI-2 second input port
->> +	   2    PARALLEL output
-> 
-> Please document which endpoint properties are relevant. From the above
-> description I'd presume this to be at least clock-lanes (1st input),
-> data-lanes, lane-polarities (for CSI-2) as well as bus-width for the
-> parallel bus.
-> 
-ok. I will add documentation.
->> +
->> +Example:
->> +
->> +mipid02: mipid02@14 {
-> 
-> The node should be a generic name. "csi2rx" is used by a few devices now.
->
- If I understand you well, you would prefer:
-csi2rx: mipid02@14 {
- I show no usage of csi2rx node naming except for MIPI-CSI2 RX controller.
->> +	compatible = "st,st-mipid02";
->> +	reg = <0x14>;
->> +	status = "okay";
->> +	clocks = <&clk_ext_camera_12>;
->> +	clock-names = "xclk";
->> +	VDDE-supply = <&vdd>;
->> +	VDDIN-supply = <&vdd>;
->> +	ports {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		port@0 {
->> +			reg = <0>;
->> +
->> +			ep0: endpoint {
->> +				clock-lanes = <0>;
->> +				data-lanes = <1 2>;
->> +				remote-endpoint = <&mipi_csi2_in>;
->> +			};
->> +		};
->> +		port@2 {
->> +			reg = <2>;
->> +
->> +			ep2: endpoint {
->> +				bus-width = <8>;
->> +				hsync-active = <0>;
->> +				vsync-active = <0>;
->> +				remote-endpoint = <&parallel_out>;
->> +			};
->> +		};
->> +	};
->> +};
-> 
+
