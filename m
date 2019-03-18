@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EAFC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9139C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A2F2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDD6217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901833;
-	bh=ndTUbg0XXhiKNxSk2qYqCJazzO96q0b21dgSOC12sUk=;
+	s=default; t=1552901834;
+	bh=2aA8A6BUwS3VNFz+UvrxP35ikrufnvUcC3USQHjvMzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c9y1Y65NzMempDN+Dg/ZExDCL5HhpyBpwtXmaAU4U46RC+ucRjhREb7l/c5A4GZEd
-	 fIl6fUElR7m9sQmz6rSCU6A3D1QZucGvlo/5SedRBrZm0KfzpjVwhIVQCo8AaAcpzC
-	 3uJtDN/+Hfieg38oeoPmkLeKGrbPBfXw29d8C3vM=
+	b=Gn9xw5/3GgXci0WxxgfbBPQmSoz0XMd0jmvTC9h09mjpk/PER7fRokV5Fq1+ghicO
+	 ER06fF5z2w2g+PKRToiRBWOjXKwpJk89KKpMHkZzwkjuYUm//gA4OcVoTrpYgKMWZX
+	 twRqyARldv78TslQ0wBseij6kvTJ26ROCE55zrj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387803AbfCRJhM (ORCPT
+        id S2387813AbfCRJhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:37:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:37:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387733AbfCRJhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:37:10 -0400
+        id S2387776AbfCRJhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:37:07 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB91121738;
-        Mon, 18 Mar 2019 09:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17AE7217D9;
+        Mon, 18 Mar 2019 09:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901830;
-        bh=ndTUbg0XXhiKNxSk2qYqCJazzO96q0b21dgSOC12sUk=;
+        s=default; t=1552901826;
+        bh=2aA8A6BUwS3VNFz+UvrxP35ikrufnvUcC3USQHjvMzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1SQHurZPWb89w52V1r3YC1N6vuFa813EvB600b5+5iITQJksCJDtMTHIH8vr1Zrwy
-         5s2bufl0h/xCzEFY9zR+sL/BCRtSwp2lk4PgBI8Qqfwe0ORHwqwb28GHiRgztJwR8M
-         Lsh72VG/Rzt/vfHNJRdWgWORN9ej1VFXqqroU5oI=
+        b=XToIaHEBbVF/602ZqviwNDI1WlRz91IJ9FM34He6xMPKEZvb5+6JK3tYu4WWVoFNq
+         2gAS3yhLyL9EzdN244QY//4yaVH9pJUIuT75/EF+bESbsQF9ZAjrKiTdL0wb3IRfQe
+         dIoVmc0k8I01UxAUhqRXcbHEux0KCvIxIK7bKZvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 26/31] perf/x86: Fixup typo in stub functions
-Date:   Mon, 18 Mar 2019 10:26:01 +0100
-Message-Id: <20190318084211.473372737@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Shankara Pailoor <sp3485@columbia.edu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guillaume Nault <gnault@redhat.com>
+Subject: [PATCH 4.9 25/31] tcp/dccp: remove reqsk_put() from inet_child_forget()
+Date:   Mon, 18 Mar 2019 10:26:00 +0100
+Message-Id: <20190318084211.432331870@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
 References: <20190318084210.397476003@linuxfoundation.org>
@@ -68,53 +67,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit f764c58b7faa26f5714e6907f892abc2bc0de4f8 upstream.
+commit da8ab57863ed7e912d10b179b6bdc652f635bd19 upstream.
 
-Guenter reported a build warning for CONFIG_CPU_SUP_INTEL=n:
+Back in linux-4.4, I inadvertently put a call to reqsk_put() in
+inet_child_forget(), forgetting it could be called from two different
+points.
 
-  > With allmodconfig-CONFIG_CPU_SUP_INTEL, this patch results in:
-  >
-  > In file included from arch/x86/events/amd/core.c:8:0:
-  > arch/x86/events/amd/../perf_event.h:1036:45: warning: ‘struct cpu_hw_event’ declared inside parameter list will not be visible outside of this definition or declaration
-  >  static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
+In the case it is called from inet_csk_reqsk_queue_add(), we want to
+keep the reference on the request socket, since it is released later by
+the caller (tcp_v{4|6}_rcv())
 
-While harmless (an unsed pointer is an unused pointer, no matter the type)
-it needs fixing.
+This bug never showed up because atomic_dec_and_test() was not signaling
+the underflow, and SLAB_DESTROY_BY RCU semantic for request sockets
+prevented the request to be put in quarantine.
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: d01b1f96a82e ("perf/x86/intel: Make cpuc allocations consistent")
-Link: http://lkml.kernel.org/r/20190315081410.GR5996@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Recent conversion of socket refcount from atomic_t to refcount_t finally
+exposed the bug.
+
+So move the reqsk_put() to inet_csk_listen_stop() to fix this.
+
+Thanks to Shankara Pailoor for using syzkaller and providing
+a nice set of .config and C repro.
+
+WARNING: CPU: 2 PID: 4277 at lib/refcount.c:186
+refcount_sub_and_test+0x167/0x1b0 lib/refcount.c:186
+Kernel panic - not syncing: panic_on_warn set ...
+
+CPU: 2 PID: 4277 Comm: syz-executor0 Not tainted 4.13.0-rc7 #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+Ubuntu-1.8.2-1ubuntu1 04/01/2014
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:16 [inline]
+ dump_stack+0xf7/0x1aa lib/dump_stack.c:52
+ panic+0x1ae/0x3a7 kernel/panic.c:180
+ __warn+0x1c4/0x1d9 kernel/panic.c:541
+ report_bug+0x211/0x2d0 lib/bug.c:183
+ fixup_bug+0x40/0x90 arch/x86/kernel/traps.c:190
+ do_trap_no_signal arch/x86/kernel/traps.c:224 [inline]
+ do_trap+0x260/0x390 arch/x86/kernel/traps.c:273
+ do_error_trap+0x118/0x340 arch/x86/kernel/traps.c:310
+ do_invalid_op+0x1b/0x20 arch/x86/kernel/traps.c:323
+ invalid_op+0x18/0x20 arch/x86/entry/entry_64.S:846
+RIP: 0010:refcount_sub_and_test+0x167/0x1b0 lib/refcount.c:186
+RSP: 0018:ffff88006e006b60 EFLAGS: 00010286
+RAX: 0000000000000026 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000026 RSI: 1ffff1000dc00d2c RDI: ffffed000dc00d60
+RBP: ffff88006e006bf0 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 1ffff1000dc00d6d
+R13: 00000000ffffffff R14: 0000000000000001 R15: ffff88006ce9d340
+ refcount_dec_and_test+0x1a/0x20 lib/refcount.c:211
+ reqsk_put+0x71/0x2b0 include/net/request_sock.h:123
+ tcp_v4_rcv+0x259e/0x2e20 net/ipv4/tcp_ipv4.c:1729
+ ip_local_deliver_finish+0x2e2/0xba0 net/ipv4/ip_input.c:216
+ NF_HOOK include/linux/netfilter.h:248 [inline]
+ ip_local_deliver+0x1ce/0x6d0 net/ipv4/ip_input.c:257
+ dst_input include/net/dst.h:477 [inline]
+ ip_rcv_finish+0x8db/0x19c0 net/ipv4/ip_input.c:397
+ NF_HOOK include/linux/netfilter.h:248 [inline]
+ ip_rcv+0xc3f/0x17d0 net/ipv4/ip_input.c:488
+ __netif_receive_skb_core+0x1fb7/0x31f0 net/core/dev.c:4298
+ __netif_receive_skb+0x2c/0x1b0 net/core/dev.c:4336
+ process_backlog+0x1c5/0x6d0 net/core/dev.c:5102
+ napi_poll net/core/dev.c:5499 [inline]
+ net_rx_action+0x6d3/0x14a0 net/core/dev.c:5565
+ __do_softirq+0x2cb/0xb2d kernel/softirq.c:284
+ do_softirq_own_stack+0x1c/0x30 arch/x86/entry/entry_64.S:898
+ </IRQ>
+ do_softirq.part.16+0x63/0x80 kernel/softirq.c:328
+ do_softirq kernel/softirq.c:176 [inline]
+ __local_bh_enable_ip+0x84/0x90 kernel/softirq.c:181
+ local_bh_enable include/linux/bottom_half.h:31 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:705 [inline]
+ ip_finish_output2+0x8ad/0x1360 net/ipv4/ip_output.c:231
+ ip_finish_output+0x74e/0xb80 net/ipv4/ip_output.c:317
+ NF_HOOK_COND include/linux/netfilter.h:237 [inline]
+ ip_output+0x1cc/0x850 net/ipv4/ip_output.c:405
+ dst_output include/net/dst.h:471 [inline]
+ ip_local_out+0x95/0x160 net/ipv4/ip_output.c:124
+ ip_queue_xmit+0x8c6/0x1810 net/ipv4/ip_output.c:504
+ tcp_transmit_skb+0x1963/0x3320 net/ipv4/tcp_output.c:1123
+ tcp_send_ack.part.35+0x38c/0x620 net/ipv4/tcp_output.c:3575
+ tcp_send_ack+0x49/0x60 net/ipv4/tcp_output.c:3545
+ tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:5795 [inline]
+ tcp_rcv_state_process+0x4876/0x4b60 net/ipv4/tcp_input.c:5930
+ tcp_v4_do_rcv+0x58a/0x820 net/ipv4/tcp_ipv4.c:1483
+ sk_backlog_rcv include/net/sock.h:907 [inline]
+ __release_sock+0x124/0x360 net/core/sock.c:2223
+ release_sock+0xa4/0x2a0 net/core/sock.c:2715
+ inet_wait_for_connect net/ipv4/af_inet.c:557 [inline]
+ __inet_stream_connect+0x671/0xf00 net/ipv4/af_inet.c:643
+ inet_stream_connect+0x58/0xa0 net/ipv4/af_inet.c:682
+ SYSC_connect+0x204/0x470 net/socket.c:1628
+ SyS_connect+0x24/0x30 net/socket.c:1609
+ entry_SYSCALL_64_fastpath+0x18/0xad
+RIP: 0033:0x451e59
+RSP: 002b:00007f474843fc08 EFLAGS: 00000216 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 0000000000718000 RCX: 0000000000451e59
+RDX: 0000000000000010 RSI: 0000000020002000 RDI: 0000000000000007
+RBP: 0000000000000046 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000216 R12: 0000000000000000
+R13: 00007ffc040a0f8f R14: 00007f47484409c0 R15: 0000000000000000
+
+Fixes: ebb516af60e1 ("tcp/dccp: fix race at listener dismantle phase")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Shankara Pailoor <sp3485@columbia.edu>
+Tested-by: Shankara Pailoor <sp3485@columbia.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Guillaume Nault <gnault@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/perf_event.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/inet_connection_sock.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -996,12 +996,12 @@ static inline int intel_pmu_init(void)
- 	return 0;
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -790,7 +790,6 @@ static void inet_child_forget(struct soc
+ 		tcp_sk(child)->fastopen_rsk = NULL;
+ 	}
+ 	inet_csk_destroy_sock(child);
+-	reqsk_put(req);
  }
  
--static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
-+static inline int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
- {
- 	return 0;
- }
+ struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
+@@ -861,6 +860,7 @@ void inet_csk_listen_stop(struct sock *s
+ 		sock_hold(child);
  
--static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
-+static inline void intel_cpuc_finish(struct cpu_hw_events *cpuc)
- {
- }
- 
+ 		inet_child_forget(sk, req, child);
++		reqsk_put(req);
+ 		bh_unlock_sock(child);
+ 		local_bh_enable();
+ 		sock_put(child);
 
 
