@@ -3,75 +3,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673FFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1325C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4424C20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B86C20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfCRR0N (ORCPT
+        id S1727028AbfCRR2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:26:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36482 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726626AbfCRR0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:26:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6E8B2AC2D;
-        Mon, 18 Mar 2019 17:26:11 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
-        <mvmimwotn60.fsf@suse.de>
-        <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
-X-Yow:  ..  ich bin in einem dusenjet ins jahr 53 vor chr...
- ich lande im antiken Rom...  einige gladiatoren spielen scrabble...
- ich rieche PIZZA...
-Date:   Mon, 18 Mar 2019 18:26:10 +0100
-In-Reply-To: <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
-        (Yash Shah's message of "Fri, 15 Mar 2019 17:19:59 +0530")
-Message-ID: <mvm5zsgp00d.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+        Mon, 18 Mar 2019 13:28:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38316 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfCRR2J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:28:09 -0400
+Received: by mail-pf1-f196.google.com with SMTP id n125so11722628pfn.5;
+        Mon, 18 Mar 2019 10:28:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5KE4wyfuPK8v8HlyIMBIYRZHkOOdHrncsG0EpVpGZwU=;
+        b=C7EXqa+Mw2udDaXmJMom8Bu3DzTWeTpo2I6vv3aYnm8+wlMi1g8gZyZbMAVT7MfPKK
+         QpWZ+mAr1U70q40ropFirP1/CxJnaS8+KPmRBRLYKjZMnGiejuy8Z6ZVS6zGux9Oj5GA
+         3Gva1m1UCiA5kFIXdMT0wXjuLk/wvwHK1r90uKpj34vF2saUwRLaNSJ3H70fLcJF1/Vn
+         gm10jnwaghpq+2OWmBxJlIuyRYrM9plRK9OBr8aKeX+wpWx/KcpempZq9Vt3N5wKRf/S
+         94OmZZVqTL4dqfdbLjVtob3V6+8UFyDffEE5agas44Md6vuuaAqQNNXqIoNOPdeqJjf1
+         ZBlw==
+X-Gm-Message-State: APjAAAWvZgrmk8TyvTdAsNrtLyMSu3qkC9p1JX5oF+ASg1BRmd87abhJ
+        AmjPbQLV0SlmTVDWj6RaOtE=
+X-Google-Smtp-Source: APXvYqxgsrVM9i5/x26a7Ori9du9Nh5vFam+SaNl68I4xRJ3CN5fa89ZLkFSxN2qHUjoGCIC6ZaE4Q==
+X-Received: by 2002:a63:ef57:: with SMTP id c23mr8565915pgk.176.1552930088073;
+        Mon, 18 Mar 2019 10:28:08 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
+        by smtp.gmail.com with ESMTPSA id m32sm1137034pgb.13.2019.03.18.10.28.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 10:28:06 -0700 (PDT)
+Message-ID: <1552930085.152266.36.camel@acm.org>
+Subject: Re: [PATCH 0/8]: blk-mq: use static_rqs to iterate busy tags
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Jianchao Wang <jianchao.w.wang@oracle.com>, axboe@kernel.dk
+Cc:     hch@lst.de, jthumshirn@suse.de, hare@suse.de, josef@toxicpanda.com,
+        sagi@grimberg.me, keith.busch@intel.com, jsmart2021@gmail.com,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 18 Mar 2019 10:28:05 -0700
+In-Reply-To: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+Content-Type: text/plain; charset="UTF-7"
+X-Mailer: Evolution 3.26.2-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mär 15 2019, Yash Shah <yash.shah@sifive.com> wrote:
+On Fri, 2019-03-15 at 16:57 +-0800, Jianchao Wang wrote:
++AD4 +AFs-2+AF0 https://marc.info/?l+AD0-linux-block+ACY-m+AD0-154526189023236+ACY-w+AD0-2
 
-> You need to make sure the period setting is passed via the
-> conventional way in DT file.
-> Example:
-> pwmleds {
->     compatible = "pwm-leds";
->     heartbeat {
->         pwms = <&L45 0 10000000 0>;
->         max-brightness = <255>;
->         linux,default-trigger = "heartbeat";
->     };
-> };
+Hi Jianchao,
 
-I've now managed to build a working FSBL with that change, but that
-didn't change anything.  There is not even a heartbeat option in
-/sys/class/leds/heartbeat/trigger any more.
+That is a reference to the +ACI-BUG: KASAN: use-after-free in bt+AF8-iter+ACI issue.
+I think that issue can be fixed in another way than modifying all code that
+iterates over tags, namely by adding an rcu+AF8-read+AF8-lock() / rcu+AF8-read+AF8-unlock()
+pair in bt+AF8-for+AF8-each() and bt+AF8-tags+AF8-for+AF8-each() and by changing the calls in
+blk+AF8-mq+AF8-free+AF8-rqs() and blk+AF8-free+AF8-flush+AF8-queue() that free the data structures
+used by the tag iteration functions into kfree+AF8-rcu() or call+AF8-rcu() calls.
 
-Andreas.
+Thanks,
 
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Bart.
