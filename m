@@ -2,243 +2,330 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1FCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB39FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0217C2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902092;
-	bh=Vk72O5DYFAVSTrsAcH51hTc2Z+mVy4QsRfQZO57rIfI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tWAPCe/pdsbD4neR105KOgwPg8DdDP5eCSEiYjUANAI5/pVEVxXHZv9iiCvzhXw3j
-	 l2GIbJZL2UDyU0CXWWz6Bh4860u3n9OZJ8XPhTySYbDd55et7kys2/Vjhq5AkmXqSG
-	 GXywThf0MBeK7CpA4uE5Our/OluGgjCDtquNlcHk=
+	by mail.kernel.org (Postfix) with ESMTP id A0D562083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbfCRJdz (ORCPT
+        id S2387612AbfCRJlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42172 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:41:42 -0400
+Received: from mga06.intel.com ([134.134.136.31]:4490 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728906AbfCRJdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:51 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E49842087C;
-        Mon, 18 Mar 2019 09:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901630;
-        bh=Vk72O5DYFAVSTrsAcH51hTc2Z+mVy4QsRfQZO57rIfI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GboU+vV7xZISbX379DmVlUoXp37/euPvaOu7kRV/+xDX5AyxP6E08+ICkeHMM9Fwj
-         ffggTfCyByvayRDC0GnOE4wbqIcM2V9THevENp6NdZUPYdounmk33dDoHkizqSZBP0
-         YEndlwmYnDEE7fChlQJAiINRGyPziPWeFqg4aATs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 39/52] ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O against Liquid Saffire 56
-Date:   Mon, 18 Mar 2019 10:25:36 +0100
-Message-Id: <20190318084018.117586152@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
-References: <20190318084013.532280682@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1728424AbfCRJlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:41:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 02:41:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,493,1544515200"; 
+   d="scan'208";a="329583747"
+Received: from elena-thinkpad-x1-carbon-6th.fi.intel.com ([10.237.66.146])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Mar 2019 02:41:33 -0700
+From:   Elena Reshetova <elena.reshetova@intel.com>
+To:     luto@kernel.org
+Cc:     luto@amacapital.net, jpoimboe@redhat.com, keescook@chromium.org,
+        jannh@google.com, enrico.perla@intel.com, mingo@redhat.com,
+        bp@alien8.de, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, gregkh@linuxfoundation.org,
+        Elena Reshetova <elena.reshetova@intel.com>
+Subject: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Date:   Mon, 18 Mar 2019 11:41:27 +0200
+Message-Id: <20190318094128.1488-1-elena.reshetova@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+If CONFIG_RANDOMIZE_KSTACK_OFFSET is selected,
+the kernel stack offset is randomized upon each
+entry to a system call after fixed location of pt_regs
+struct.
 
-------------------
+This feature is based on the original idea from
+the PaX's RANDKSTACK feature:
+https://pax.grsecurity.net/docs/randkstack.txt
+All the credits for the original idea goes to the PaX team.
+However, the design and implementation of
+RANDOMIZE_KSTACK_OFFSET differs greatly from the RANDKSTACK
+feature (see below).
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Reasoning for the feature:
 
-commit 7dc661bd8d3261053b69e4e2d0050cd1ee540fc1 upstream.
+This feature aims to make considerably harder various
+stack-based attacks that rely on deterministic stack
+structure.
+We have had many of such attacks in past [1],[2],[3]
+(just to name few), and as Linux kernel stack protections
+have been constantly improving (vmap-based stack
+allocation with guard pages, removal of thread_info,
+STACKLEAK), attackers have to find new ways for their
+exploits to work.
 
-ALSA bebob driver has an entry for Focusrite Saffire Pro 10 I/O. The
-entry matches vendor_id in root directory and model_id in unit
-directory of configuration ROM for IEEE 1394 bus.
+It is important to note that we currently cannot show
+a concrete attack that would be stopped by this new
+feature (given that other existing stack protections
+are enabled), so this is an attempt to be on a proactive
+side vs. catching up with existing successful exploits.
 
-On the other hand, configuration ROM of Focusrite Liquid Saffire 56
-has the same vendor_id and model_id. This device is an application of
-TCAT Dice (TCD2220 a.k.a Dice Jr.) however ALSA bebob driver can be
-bound to it randomly instead of ALSA dice driver. At present, drivers
-in ALSA firewire stack can not handle this situation appropriately.
+The main idea is that since the stack offset is
+randomized upon each system call, it is very hard for
+attacker to reliably land in any particular place on
+the thread stack when attack is performed.
+Also, since randomization is performed *after* pt_regs,
+the ptrace-based approach to discover randomization
+offset during a long-running syscall should not be
+possible.
 
-This commit uses more identical mod_alias for Focusrite Saffire Pro 10
-I/O in ALSA bebob driver.
+[1] jon.oberheide.org/files/infiltrate12-thestackisback.pdf
+[2] jon.oberheide.org/files/stackjacking-infiltrate11.pdf
+[3] googleprojectzero.blogspot.com/2016/06/exploiting-
+recursion-in-linux-kernel_20.html
 
-$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  042a829d  bus_info_length 4, crc_length 42, crc 33437
-404  31333934  bus_name "1394"
-408  f0649222  irmc 1, cmc 1, isc 1, bmc 1, pmc 0, cyc_clk_acc 100,
-               max_rec 9 (1024), max_rom 2, gen 2, spd 2 (S400)
-40c  00130e01  company_id 00130e     |
-410  000606e0  device_id 01000606e0  | EUI-64 00130e01000606e0
+Design description:
 
-               root directory
-               -----------------------------------------------------------------
-414  0009d31c  directory_length 9, crc 54044
-418  04000014  hardware version
-41c  0c0083c0  node capabilities per IEEE 1394
-420  0300130e  vendor
-424  81000012  --> descriptor leaf at 46c
-428  17000006  model
-42c  81000016  --> descriptor leaf at 484
-430  130120c2  version
-434  d1000002  --> unit directory at 43c
-438  d4000006  --> dependent info directory at 450
+During most of the kernel's execution, it runs on the "thread
+stack", which is allocated at fork.c/dup_task_struct() and stored in
+a per-task variable (tsk->stack). Since stack is growing downward,
+the stack top can be always calculated using task_top_of_stack(tsk)
+function, which essentially returns an address of tsk->stack + stack
+size. When VMAP_STACK is enabled, the thread stack is allocated from
+vmalloc space.
 
-               unit directory at 43c
-               -----------------------------------------------------------------
-43c  0004707c  directory_length 4, crc 28796
-440  1200a02d  specifier id: 1394 TA
-444  13010001  version: AV/C
-448  17000006  model
-44c  81000013  --> descriptor leaf at 498
+Thread stack is pretty deterministic on its structure - fixed in size,
+and upon every entry from a userspace to kernel on a
+syscall the thread stack is started to be constructed from an
+address fetched from a per-cpu cpu_current_top_of_stack variable.
+The first element to be pushed to the thread stack is the pt_regs struct
+that stores all required CPU registers and sys call parameters.
 
-               dependent info directory at 450
-               -----------------------------------------------------------------
-450  000637c7  directory_length 6, crc 14279
-454  120007f5  specifier id
-458  13000001  version
-45c  3affffc7  (immediate value)
-460  3b100000  (immediate value)
-464  3cffffc7  (immediate value)
-468  3d600000  (immediate value)
+The goal of RANDOMIZE_KSTACK_OFFSET feature is to add a random offset
+after the pt_regs has been pushed to the stack and the rest of thread
+stack (used during the syscall processing) every time a process issues
+a syscall. The source of randomness can be taken either from rdtsc or
+rdrand with performance implications listed below. The value of random
+offset is stored in a callee-saved register (r15 currently) and the
+maximum size of random offset is defined by __MAX_STACK_RANDOM_OFFSET
+value, which currently equals to 0xFF0.
 
-               descriptor leaf at 46c
-               -----------------------------------------------------------------
-46c  00056f3b  leaf_length 5, crc 28475
-470  00000000  textual descriptor
-474  00000000  minimal ASCII
-478  466f6375  "Focu"
-47c  73726974  "srit"
-480  65000000  "e"
+As a result this patch introduces 8 bits of randomness
+(bits 4 - 11 are randomized, bits 0-3 must be zero due to stack alignment)
+after pt_regs location on the thread stack.
+The amount of randomness can be adjusted based on how much of the
+stack space we wish/can trade for security.
 
-               descriptor leaf at 484
-               -----------------------------------------------------------------
-484  0004a165  leaf_length 4, crc 41317
-488  00000000  textual descriptor
-48c  00000000  minimal ASCII
-490  50726f31  "Pro1"
-494  30494f00  "0IO"
+The main issue with this approach is that it slightly breaks the
+processing of last frame in the unwinder, so I have made a simple
+fix to the frame pointer unwinder (I guess others should be fixed
+similarly) and stack dump functionality to "jump" over the random hole
+at the end. My way of solving this is probably far from ideal,
+so I would really appreciate feedback on how to improve it.
 
-               descriptor leaf at 498
-               -----------------------------------------------------------------
-498  0004a165  leaf_length 4, crc 41317
-49c  00000000  textual descriptor
-4a0  00000000  minimal ASCII
-4a4  50726f31  "Pro1"
-4a8  30494f00  "0IO"
+Performance:
 
-$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  040442e4  bus_info_length 4, crc_length 4, crc 17124
-404  31333934  bus_name "1394"
-408  e0ff8112  irmc 1, cmc 1, isc 1, bmc 0, pmc 0, cyc_clk_acc 255,
-               max_rec 8 (512), max_rom 1, gen 1, spd 2 (S400)
-40c  00130e04  company_id 00130e     |
-410  018001e9  device_id 04018001e9  | EUI-64 00130e04018001e9
+1) lmbench: ./lat_syscall -N 1000000 null
+    base:                     Simple syscall: 0.1774 microseconds
+    random_offset (rdtsc):     Simple syscall: 0.1803 microseconds
+    random_offset (rdrand): Simple syscall: 0.3702 microseconds
 
-               root directory
-               -----------------------------------------------------------------
-414  00065612  directory_length 6, crc 22034
-418  0300130e  vendor
-41c  8100000a  --> descriptor leaf at 444
-420  17000006  model
-424  8100000e  --> descriptor leaf at 45c
-428  0c0087c0  node capabilities per IEEE 1394
-42c  d1000001  --> unit directory at 430
+2)  Andy's tests, misc-tests: ./timing_test_64 10M sys_enosys
+    base:                     10000000 loops in 1.62224s = 162.22 nsec / loop
+    random_offset (rdtsc):     10000000 loops in 1.64660s = 164.66 nsec / loop
+    random_offset (rdrand): 10000000 loops in 3.51315s = 351.32 nsec / loop
 
-               unit directory at 430
-               -----------------------------------------------------------------
-430  000418a0  directory_length 4, crc 6304
-434  1200130e  specifier id
-438  13000001  version
-43c  17000006  model
-440  8100000f  --> descriptor leaf at 47c
+Comparison to grsecurity RANDKSTACK feature:
 
-               descriptor leaf at 444
-               -----------------------------------------------------------------
-444  00056f3b  leaf_length 5, crc 28475
-448  00000000  textual descriptor
-44c  00000000  minimal ASCII
-450  466f6375  "Focu"
-454  73726974  "srit"
-458  65000000  "e"
+RANDKSTACK feature randomizes the location of the stack start
+(cpu_current_top_of_stack), i.e. location of pt_regs structure
+itself on the stack. Initially this patch followed the same approach,
+but during the recent discussions [4], it has been determined
+to be of a little value since, if ptrace functionality is available
+for an attacker, he can use PTRACE_PEEKUSR/PTRACE_POKEUSR api to read/write
+different offsets in the pt_regs struct, observe the cache
+behavior of the pt_regs accesses, and figure out the random stack offset.
 
-               descriptor leaf at 45c
-               -----------------------------------------------------------------
-45c  000762c6  leaf_length 7, crc 25286
-460  00000000  textual descriptor
-464  00000000  minimal ASCII
-468  4c495155  "LIQU"
-46c  49445f53  "ID_S"
-470  41464649  "AFFI"
-474  52455f35  "RE_5"
-478  36000000  "6"
+Another big difference is that randomization is done upon
+syscall entry and not the exit, as with RANDKSTACK.
 
-               descriptor leaf at 47c
-               -----------------------------------------------------------------
-47c  000762c6  leaf_length 7, crc 25286
-480  00000000  textual descriptor
-484  00000000  minimal ASCII
-488  4c495155  "LIQU"
-48c  49445f53  "ID_S"
-490  41464649  "AFFI"
-494  52455f35  "RE_5"
-498  36000000  "6"
+Also, as a result of the above two differences, the implementation
+of RANDKSTACK and RANDOMIZE_KSTACK_OFFSET has nothing in common.
 
-Cc: <stable@vger.kernel.org> # v3.16+
-Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[4] https://www.openwall.com/lists/kernel-hardening/2019/02/08/6
 
+Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
 ---
- sound/firewire/bebob/bebob.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ arch/Kconfig                   | 15 +++++++++++++++
+ arch/x86/Kconfig               |  1 +
+ arch/x86/entry/calling.h       | 14 ++++++++++++++
+ arch/x86/entry/entry_64.S      |  6 ++++++
+ arch/x86/include/asm/frame.h   |  3 +++
+ arch/x86/kernel/dumpstack.c    | 10 +++++++++-
+ arch/x86/kernel/unwind_frame.c |  9 ++++++++-
+ 7 files changed, 56 insertions(+), 2 deletions(-)
 
---- a/sound/firewire/bebob/bebob.c
-+++ b/sound/firewire/bebob/bebob.c
-@@ -474,7 +474,19 @@ static const struct ieee1394_device_id b
- 	/* Focusrite, SaffirePro 26 I/O */
- 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000003, &saffirepro_26_spec),
- 	/* Focusrite, SaffirePro 10 I/O */
--	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000006, &saffirepro_10_spec),
-+	{
-+		// The combination of vendor_id and model_id is the same as the
-+		// same as the one of Liquid Saffire 56.
-+		.match_flags	= IEEE1394_MATCH_VENDOR_ID |
-+				  IEEE1394_MATCH_MODEL_ID |
-+				  IEEE1394_MATCH_SPECIFIER_ID |
-+				  IEEE1394_MATCH_VERSION,
-+		.vendor_id	= VEN_FOCUSRITE,
-+		.model_id	= 0x000006,
-+		.specifier_id	= 0x00a02d,
-+		.version	= 0x010001,
-+		.driver_data	= (kernel_ulong_t)&saffirepro_10_spec,
-+	},
- 	/* Focusrite, Saffire(no label and LE) */
- 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, MODEL_FOCUSRITE_SAFFIRE_BOTH,
- 			    &saffire_spec),
-
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 4cfb6de48f79..9a2557b0cfce 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -808,6 +808,21 @@ config VMAP_STACK
+ 	  the stack to map directly to the KASAN shadow map using a formula
+ 	  that is incorrect if the stack is in vmalloc space.
+ 
++config HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
++	def_bool n
++	help
++	  An arch should select this symbol if it can support kernel stack
++	  offset randomization.
++
++config RANDOMIZE_KSTACK_OFFSET
++	default n
++	bool "Randomize kernel stack offset on syscall entry"
++	depends on HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
++	help
++	  Enable this if you want the randomize kernel stack offset upon
++	  each syscall entry. This causes kernel stack (after pt_regs) to
++	  have a randomized offset upon executing each system call.
++
+ config ARCH_OPTIONAL_KERNEL_RWX
+ 	def_bool n
+ 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index ade12ec4224b..5edcae945b73 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -131,6 +131,7 @@ config X86
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD if X86_64
+ 	select HAVE_ARCH_VMAP_STACK		if X86_64
++	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET  if X86_64
+ 	select HAVE_ARCH_WITHIN_STACK_FRAMES
+ 	select HAVE_CMPXCHG_DOUBLE
+ 	select HAVE_CMPXCHG_LOCAL
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index efb0d1b1f15f..68502645d812 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -345,6 +345,20 @@ For 32-bit we have the following conventions - kernel is built with
+ #endif
+ .endm
+ 
++.macro RANDOMIZE_KSTACK
++#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
++	/* prepare a random offset in rax */
++	pushq %rax
++	xorq  %rax, %rax
++	ALTERNATIVE "rdtsc", "rdrand %rax", X86_FEATURE_RDRAND
++	andq  $__MAX_STACK_RANDOM_OFFSET, %rax
++
++	/* store offset in r15 */
++	movq  %rax, %r15
++	popq  %rax
++#endif
++.endm
++
+ /*
+  * This does 'call enter_from_user_mode' unless we can avoid it based on
+  * kernel config or using the static jump infrastructure.
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 1f0efdb7b629..0816ec680c21 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -167,13 +167,19 @@ GLOBAL(entry_SYSCALL_64_after_hwframe)
+ 
+ 	PUSH_AND_CLEAR_REGS rax=$-ENOSYS
+ 
++	RANDOMIZE_KSTACK		/* stores randomized offset in r15 */
++
+ 	TRACE_IRQS_OFF
+ 
+ 	/* IRQs are off. */
+ 	movq	%rax, %rdi
+ 	movq	%rsp, %rsi
++	sub 	%r15, %rsp          /* substitute random offset from rsp */
+ 	call	do_syscall_64		/* returns with IRQs disabled */
+ 
++	/* need to restore the gap */
++	add 	%r15, %rsp       /* add random offset back to rsp */
++
+ 	TRACE_IRQS_IRETQ		/* we're about to change IF */
+ 
+ 	/*
+diff --git a/arch/x86/include/asm/frame.h b/arch/x86/include/asm/frame.h
+index 5cbce6fbb534..e1bb91504f6e 100644
+--- a/arch/x86/include/asm/frame.h
++++ b/arch/x86/include/asm/frame.h
+@@ -4,6 +4,9 @@
+ 
+ #include <asm/asm.h>
+ 
++#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
++#define __MAX_STACK_RANDOM_OFFSET 0xFF0
++#endif
+ /*
+  * These are stack frame creation macros.  They should be used by every
+  * callable non-leaf asm function to make kernel stack traces more reliable.
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index 2b5886401e5f..4146a4c3e9c6 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -192,7 +192,6 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+ 	 */
+ 	for ( ; stack; stack = PTR_ALIGN(stack_info.next_sp, sizeof(long))) {
+ 		const char *stack_name;
+-
+ 		if (get_stack_info(stack, task, &stack_info, &visit_mask)) {
+ 			/*
+ 			 * We weren't on a valid stack.  It's possible that
+@@ -224,6 +223,9 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+ 		 */
+ 		for (; stack < stack_info.end; stack++) {
+ 			unsigned long real_addr;
++#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
++			unsigned long left_gap;
++#endif
+ 			int reliable = 0;
+ 			unsigned long addr = READ_ONCE_NOCHECK(*stack);
+ 			unsigned long *ret_addr_p =
+@@ -272,6 +274,12 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+ 			regs = unwind_get_entry_regs(&state, &partial);
+ 			if (regs)
+ 				show_regs_if_on_stack(&stack_info, regs, partial);
++#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
++			left_gap = (unsigned long)regs - (unsigned long)stack;
++			/* if we reached last frame, jump over the random gap*/
++			if (left_gap < __MAX_STACK_RANDOM_OFFSET)
++				stack = (unsigned long *)regs--;
++#endif
+ 		}
+ 
+ 		if (stack_name)
+diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
+index 3dc26f95d46e..656f36b1f1b3 100644
+--- a/arch/x86/kernel/unwind_frame.c
++++ b/arch/x86/kernel/unwind_frame.c
+@@ -98,7 +98,14 @@ static inline unsigned long *last_frame(struct unwind_state *state)
+ 
+ static bool is_last_frame(struct unwind_state *state)
+ {
+-	return state->bp == last_frame(state);
++	if (state->bp == last_frame(state))
++		return true;
++#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
++	if ((last_frame(state) - state->bp) < __MAX_STACK_RANDOM_OFFSET)
++		return true;
++#endif
++	return false;
++
+ }
+ 
+ #ifdef CONFIG_X86_32
+-- 
+2.17.1
 
