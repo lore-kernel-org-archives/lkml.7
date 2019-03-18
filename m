@@ -2,123 +2,131 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4588BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7BFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173CA2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BEA20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:06:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UBFUBm55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfCRLFS (ORCPT
+        id S1727054AbfCRLGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:05:18 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37155 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfCRLFS (ORCPT
+        Mon, 18 Mar 2019 07:06:06 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37934 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfCRLGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:05:18 -0400
-X-Originating-IP: 90.88.22.102
-Received: from aptenodytes (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id F2E3040013;
-        Mon, 18 Mar 2019 11:05:12 +0000 (UTC)
-Message-ID: <ef0c3061986b7456605a61f835f2a2003cf4c678.camel@bootlin.com>
-Subject: Re: [linux-sunxi] Re: [PATCH 04/14] pinctrl: sunxi: v3: really
- introduce support for V3
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     icenowy@aosc.io, linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        linux-clk@vger.kernel.org
-Date:   Mon, 18 Mar 2019 12:05:12 +0100
-In-Reply-To: <7B6C1341-BAB5-48C5-9E60-11BCEAC3D0CD@aosc.io>
-References: <20190312152256.35574-1-icenowy@aosc.io>
-         <20190312152256.35574-5-icenowy@aosc.io>
-         <20190312153654.25r5orlw7qjtlhbt@flea>
-         <7B6C1341-BAB5-48C5-9E60-11BCEAC3D0CD@aosc.io>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Mon, 18 Mar 2019 07:06:06 -0400
+Received: by mail-qk1-f196.google.com with SMTP id g1so5074212qki.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 04:06:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jUm0O90pdg0obPx/pFCJHgoAf1NtMJ+2lalb3fWgBuA=;
+        b=UBFUBm55T5kRA+jGk3ab/GC6HCwn52Y4ATq1pUAjhAvetKsaCmKWZ/o73cJu3xqp9Y
+         BE/6fYQzcXVW6Fxpqi2RjTyVwNaagPVAofVa9kTRhk0R0va1rFeblvZbomwEOhFcILCx
+         i4FtoRDfs4sGRjkap9frKj+xYoQviDyuv4QQmHsDnSpRDHKxF/fXsT++EKzv7q1mgyqY
+         hxtoWfr42FypKK1t20we3x7ti80zO7s6adz6C8VkyrwKrmZQOPluxb3nAEe9ohHEEpK7
+         c7vlPplcdEVP3dn7OGjAUg7oxFC0ddrIFNHq8/FEGMkZLW47uZItXDw4kSG7sKEvBRdj
+         rlGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jUm0O90pdg0obPx/pFCJHgoAf1NtMJ+2lalb3fWgBuA=;
+        b=sZS6DUHfm1VEUaxVZ6lZ+dbRHSwDilBEtsCHyTX+3gGYvwpp+3j3PvK9EOgsR+wRkm
+         2wHO0u2UyiMo0K7MRpWBxSVm3lTCW9OP6FHocJ/Vu2J5TYExZ3++q0gGYJHeq4bIIWik
+         JWduj5SHCNj/grTB0yXffs2EsOyU+klIZysK1YzGVEEu4amnS8pqCs6LRxt4hijiXRPo
+         ZQ79hAs3nagd4fYaAnPU/DrMnOxEVkUUvfsQZwZpHbQfs9iCr7M4HPdqpWqGNN0V0/8n
+         0qvPU50Bk892CO7iyo3CodfJ6qdLLY56zB8V/4hreoY4j1zlDAsPlhsFXlkLqRH36zH6
+         gKbQ==
+X-Gm-Message-State: APjAAAV5UvPf4GE7mFf5+99mLddXLqsHCsEOOZWxaS3sktEWfNZdYjp8
+        pbj9dI741aCaxqBbBd7sgNSdezLbKhqxyKsnOvISww==
+X-Google-Smtp-Source: APXvYqxRbRNk5dEDVUg1IRc43lm92Y2NflR/+89h14A3QVA73KUE02SyPrGHyXIsejDt0U4rDNqXFaj4t9vOw5y83MA=
+X-Received: by 2002:a05:620a:1315:: with SMTP id o21mr1351443qkj.228.1552907165314;
+ Mon, 18 Mar 2019 04:06:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190318100605.29120-1-benjamin.gaignard@st.com> <20190318104343.GA15574@e107155-lin>
+In-Reply-To: <20190318104343.GA15574@e107155-lin>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Mon, 18 Mar 2019 12:05:54 +0100
+Message-ID: <CA+M3ks6bsiGXCKEQmaFmzBRhWPVhV5wBjVhgyfCa-25DohnsOg@mail.gmail.com>
+Subject: Re: [RESEND PATCH 0/7] Introduce bus domains controller framework
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>,
+        s.hauer@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Le lun. 18 mars 2019 =C3=A0 11:43, Sudeep Holla <sudeep.holla@arm.com> a =
+=C3=A9crit :
+>
+> On Mon, Mar 18, 2019 at 11:05:58AM +0100, Benjamin Gaignard wrote:
+> > Bus domains controllers allow to divided system on chip into multiple d=
+omains
+> > that can be used to select by who hardware blocks could be accessed.
+> > A domain could be a cluster of CPUs (or coprocessors), a range of addre=
+sses or
+> > a group of hardware blocks.
+> >
+> > Framework architecture is inspirated by pinctrl framework:
+> > - a default configuration could be applied before bind the driver
+> > - configurations could be apllied dynamically by drivers
+> > - device node provides the bus domains configurations
+> >
+> > An example of bus domains controller is STM32 ETZPC hardware block
+> > which got 3 domains:
+> > - secure: hardware blocks are only accessible by software running on tr=
+ust
+> >   zone.
+> > - non-secure: hardware blocks are accessible by non-secure software (i.=
+e.
+> >   linux kernel).
+> > - coprocessor: hardware blocks are only accessible by the corpocessor.
+> > Up to 94 hardware blocks of the soc could be managed by ETZPC and
+> > assigned to one of the three domains.
+> >
+>
+> You fail to explain why do we need this in non-secure Linux ?
+> You need to have solid reasons as why this can't be done in secure
+> firmware. And yes I mean even on arm32. On platforms with such hardware
+> capabilities you will need some secure firmware to be running and these
+> things can be done there. I don't want this enabled for ARM64 at all,
+> firmware *has to deal* with this.
 
-Le mardi 12 mars 2019 à 23:45 +0800, Icenowy Zheng a écrit :
-> 
-> 于 2019年3月12日 GMT+08:00 下午11:36:54, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
-> > On Tue, Mar 12, 2019 at 11:22:46PM +0800, Icenowy Zheng wrote:
-> > > Introduce the GPIO pins that is only available on V3 (not on V3s) to
-> > the
-> > > V3 pinctrl driver.
-> > > 
-> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > > ---
-> > >  drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c | 291
-> > +++++++++++++++++++++--
-> > >  drivers/pinctrl/sunxi/pinctrl-sunxi.h    |   2 +
-> > >  2 files changed, 275 insertions(+), 18 deletions(-)
-> > > 
-> > > diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> > b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> > > index 6704ce8e5e3d..54c210871a95 100644
-> > > --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> > > +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> > > @@ -1,5 +1,5 @@
-> > >  /*
-> > > - * Allwinner V3s SoCs pinctrl driver.
-> > > + * Allwinner V3/V3s SoCs pinctrl driver.
-> > >   *
-> > >   * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
-> > >   *
-> > > @@ -23,7 +23,7 @@
-> > >  
-> > >  #include "pinctrl-sunxi.h"
-> > >  
-> > > -static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
-> > > +static const struct sunxi_desc_pin sun8i_v3_v3s_pins[] = {
-> > 
-> > I'm not sure all that remaining is worth it to be honest. It adds a
-> > lot of noise for no particular reason (and the same goes for renaming
-> > the file itself)
-> 
-> Maybe keeping names is okay "for historial reasons".
-> 
-> In fact I want to keep them.
+We use ETZPC to define if hardware blocks can be used by Cortex A7 or Corte=
+x M4
+(both non-secure) on STM32MP1 SoC, this new framework allow to change hardw=
+are
+block split at runtime. This could be done even on non-secure world
+because their is
+nothing critical to change hardware blocks users.
+For example you can do "complex" tasks like display pipe configuration
+on Cortex A7
+where linux is running and handover the control of this hardware block
+to Cortex M4 to
+offload drawing on framebuffer.
 
-My two cents about this: kernel development is plagued by the unability
-to rename and rework things as soon as backward compatibility is
-involved. I believe that renaming and reworking things is quite a good
-thing to do when it leads to a situation that is easier to understand
-and makes more sense.
+Benjamin
 
-In this case, I don't see any blockers that would prevent us from doing
-this, so I am strongly in favor of it. I really don't see how increased
-noise and "historical reasons" make up for better clarity.
-
-Cheers,
-
-Paul
-
-> > Maxime
-> 
-> -- 
-> 使用 K-9 Mail 发送自我的Android设备。
-> 
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
+>
+> --
+> Regards,
+> Sudeep
