@@ -2,151 +2,149 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCD9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF99C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD7E2133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D1C2133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="YUm0VaKU"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="sXS+4qgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfCRQcL (ORCPT
+        id S1727236AbfCRQe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:32:11 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36188 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbfCRQcL (ORCPT
+        Mon, 18 Mar 2019 12:34:58 -0400
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.132]:20581 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726808AbfCRQe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:32:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p10so4809857pff.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:32:10 -0700 (PDT)
+        Mon, 18 Mar 2019 12:34:58 -0400
+Received: from [46.226.53.56] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-c.eu-west-1.aws.symcld.net id 8C/97-22588-DA8CF8C5; Mon, 18 Mar 2019 16:34:53 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WSa0hTYRjH955zdjzZTrzOZE+SQoMgqq3NKFZ
+  GFHQZUVChCWHUUY9uMOfcmWkRYl/SLksjjFpepuUIywyjkjQ0a3nLFUplFwtpWWoXtTvEaGdn
+  lX37vc///9xeHoZU9tKxDF/g4O1WzqKmIynTEsUKTUNXaarO932BoXzYTxteffUiw9Opb3LDw
+  M0K2nBt9CNhOO7buIY2NtUfpo0vHrfSxpGaRsr4uSl+K7VTbram5RTskZuuVRUTtkmm4HDnzi
+  JUF3EERTIUbiQh4C0hxYcSlxFw0O8JKjOCj1cIKptzRaaxHqref0Iiz8bJ0HS/RC4mkLiWAHf
+  tKCkK0XglVBc9ISRTIvT72sOcAN6KoVAyhedDecmvELN4F3Q01xFSs/Vw6tG7UJ0ZeAMM9vlp
+  kRGOgy8HL4biJFbBM391yA8Yw/nWB6TEMTD6OiCX/LuhuO1DhBRfDH1P/EhiNXgGXXKJ46C/+
+  mg4vgUGbzwPfQXgZwh+FdeEGyyEyUMjYZMFvEP94WZzYaBL9IgJPXLoOFGPpA3SYaKyL9w5Hu
+  qdw5TED0lwfTNKGywGd8sULfEi8NSMk2VogWvacq5pNtc0myv0YVHQfcZPuRFVj5an2c1ZJkc
+  2Z7Zo9DqdRq9P0CTo9JqlWm6/Jl3L52nyecGh0Wu5fEEr7MtOt2RorbyjCQVPKsPWTTajkQtZ
+  HWgOQ6hj2GX3SlOVs9JyMvaZOMG0255n4YUONJdh1MDe6gxqUXY+iy/INFuCd/lHBkahns0mi
+  TIr2LhswZwlST1oKdNeO1xJMi9vv60klZQ1x8rHqthE0YpFqynP+rfQnxvvR3Gx0SySyWRKhY
+  23Z5sd/+tjSMUgdTR7V6yiMFsdf/uNBUchgqNcrgqN4uD+SbFFaG9uSkszqVq0o/DcscKisaS
+  fSllb9X2fuytlzPPjp8tZcfJUYLt9y9s0HBkT4e9OzXgwc9Mdyzr98iFsy3WvDgiTnivXkxs/
+  KiY2b4zp2bH2KvViXBZocLYTvdt6nIF5szJPsGtXOj+oNq0a8J2ldAHvm+2PV12aaDl9wKnw5
+  RSqKcHE6ReSdoH7DSuCfHDeAwAA
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-16.tower-308.messagelabs.com!1552926893!3791870!1
+X-Originating-IP: [104.47.12.57]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 21646 invoked from network); 18 Mar 2019 16:34:53 -0000
+Received: from mail-db3eur04lp2057.outbound.protection.outlook.com (HELO EUR04-DB3-obe.outbound.protection.outlook.com) (104.47.12.57)
+  by server-16.tower-308.messagelabs.com with AES256-SHA256 encrypted SMTP; 18 Mar 2019 16:34:53 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O0YKp3l4qEIPVSh/DMlvKZsLaS3E53Bm6RLCe9E6PZw=;
-        b=YUm0VaKUUOzw0H/qmwMhcWR8T9xlOXrf31VmIEUaHqGVrqr/8VB91CouRpcYJvKO+m
-         IBgNpN0wGWqoh9OqyXOQoj1W/oRdhfNWiikddZvj1Ib6wSA1S5V+fPO9uiHH9dxGQgE3
-         9FrpuW+PTiqAuhqK7IohAuFyP0N6EKlAwqe0Z3QUe51TOVDlxunaC2VNYBxUpkyq66bm
-         Ys312G6xmSs+duHs1e0w+ilgmAF4kLDKNRfq5NT0aXsIKVXHFKfmKmkUB/3f5px/Leo1
-         Iyd08yC0eC5zft3I79ufdjH9bEVTmXvboCAdc6NjXn7pR4PW2/X/UQlVJLfoIMDMFVrD
-         Mwfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O0YKp3l4qEIPVSh/DMlvKZsLaS3E53Bm6RLCe9E6PZw=;
-        b=F7IMIW3PrtA6ADuXX5ZNp+fgr2PzcO84hrjFrPAggwPYyYb2tK1fnP/KqsIwHynuHS
-         swkyrJdTQihY93XXgh/idwCBBj56peS567i23d5NsibbhjcmuB89gNeXHceQ8jj7phiQ
-         jViAzBH4xU8u5orwaB35UQIRDmJtV5CkNLXHmcG0gr8Bd78gkuTZZV2uzlwbXzKYmTkY
-         qxwGEPcae2mGXPhKDqRUiSz5p2UkXEGVGTIpadjf3q5qnjhVhVvalCD6kWr+q+z1NCgB
-         JVopTEX9OQUUEyk98eT4ufbg8lq8+mCVjVBXyZnOe3ix05PT8wlcI2Tg2yDqQ88iqNDs
-         erdA==
-X-Gm-Message-State: APjAAAX66auTk3N8U2tasB+JsjEop9wblJC9T0DwnDBvW924kIErUeov
-        kG6WaQbK5m4g9x5ScU5KC9Eztw==
-X-Google-Smtp-Source: APXvYqxmdwh2W6vbmBaBFHQ4BYzdg9CFw+vFZNqD4B/mTy5zIAGVHjeteg2crtVVoC9B2AnKaRfg3Q==
-X-Received: by 2002:a63:68c9:: with SMTP id d192mr18875526pgc.264.1552926730445;
-        Mon, 18 Mar 2019 09:32:10 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id i29sm5277649pgb.76.2019.03.18.09.32.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 09:32:09 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 09:32:08 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tcp: don't use __constant_cpu_to_be32
-Message-ID: <20190318163208.GC7431@mini-arch.hsd1.ca.comcast.net>
-References: <20190314061514.19586-1-sergey.senozhatsky@gmail.com>
- <CANn89iJMFfh1Pkvk9LOn3FwgAfpVjwS7q5x_8Y9zo2rzpy7w9g@mail.gmail.com>
- <20190315012012.GA748@jagdpanzerIV>
- <20190315172428.GB5481@mini-arch.hsd1.ca.comcast.net>
- <20190316051902.GA27630@tigerII.localdomain>
- <20190316142646.GA10815@tigerII.localdomain>
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hs/YECII6fMB+DIwXJkEdxK/XyI6fmyjDVoyN0l0J/E=;
+ b=sXS+4qgM+tx4POxUP1twF6nqjBzBbXlZUPzucxaDJOi6YgZb7blUeO7zHkcBs63+C4PlrVny2qrVrhwko3gv1pYdmO3n0WwShmaNxwShwdMfZkYrTvBPzMC8+s4KS5SDDVISS2+J+APgDX7normGssKjqAwU95EjgdJ/zwqYCCw=
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
+ VI1PR10MB1614.EURPRD10.PROD.OUTLOOK.COM (10.165.191.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Mon, 18 Mar 2019 16:34:52 +0000
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e426:c8bc:d222:5cd7]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e426:c8bc:d222:5cd7%4]) with mapi id 15.20.1709.015; Mon, 18 Mar 2019
+ 16:34:52 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Subject: RE: [PATCH 0/6] mfd: da9063: remove platform_data
+Thread-Topic: [PATCH 0/6] mfd: da9063: remove platform_data
+Thread-Index: AQHU3aIiRxuJGE6LNESZwBdNcQFfU6YRjIxg
+Date:   Mon, 18 Mar 2019 16:34:52 +0000
+Message-ID: <VI1PR10MB23522C4EA0F730414CD14B56FE470@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1a783dd0-3ddd-456b-4675-08d6abbfa583
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB1614;
+x-ms-traffictypediagnostic: VI1PR10MB1614:
+x-microsoft-antispam-prvs: <VI1PR10MB1614598D80130D8D1F1AD8F4F5470@VI1PR10MB1614.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 098076C36C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(39850400004)(136003)(396003)(376002)(189003)(199004)(14454004)(476003)(99286004)(6116002)(86362001)(6506007)(102836004)(7736002)(3846002)(26005)(7696005)(446003)(4326008)(76176011)(53546011)(305945005)(52536014)(11346002)(33656002)(186003)(25786009)(486006)(71190400001)(2906002)(110136005)(478600001)(8676002)(97736004)(81166006)(71200400001)(81156014)(5660300002)(53936002)(55016002)(316002)(105586002)(6246003)(54906003)(68736007)(229853002)(9686003)(106356001)(256004)(6436002)(66066001)(74316002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB1614;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 36oigYzDyClE692fplUzD8x7ynZT7RDCnSQx0a58DCUgnSZVUO7pFtTSLfDgFGgsGR9WmxPLO1AIm+DZKuMinY/vo488UgfFi2aW/sPOe60DbasXe6B99KknsGqSKPZwvKU26F8pSC8Ov3taPKpmDQsKlmq4yMtmeV3ItVxm/3+buZ0cd/r6K2gBAjb3HjBM85THBhojhb4cOwQHlKt8RMf0bu+05F83m3tXBp/vdv16c0c6gc0EabYZIKjUtn8VSUlPp0V2wwSCVDCSARQ6uKtKKQKlJSNqf8/koOqvVRLvVxCcf4DCl95ydNnFYEdqUS/NlD2j1GmkYXiP5QyM1TWdDLzG+LB8Nmocp2foZfZP5kZMhebiJCM0nIYUj/NxCi9llk2rvHbPfYDjmOTwKeDs6qrXWZ0kjMH1r9Zp0Rg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190316142646.GA10815@tigerII.localdomain>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a783dd0-3ddd-456b-4675-08d6abbfa583
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 16:34:52.2130
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB1614
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/16, Sergey Senozhatsky wrote:
-> On (03/16/19 14:19), Sergey Senozhatsky wrote:
-> > # define __bpf_ntohs(x)                 __builtin_bswap16(x)
-> > # define __bpf_htons(x)                 __builtin_bswap16(x)
-> > 
-> > So I sort of suspect that what should have been done was that
-> > __HAVE_BUILTIN_BSWAP16__ ifdef, just like what include/uapi/linux/swab.h
-> > does.
-> 
-> E.g. use uapi __swab16/__swab32 in selftests/bpf/bpf_endian.h?
-> 
-> -=-=-=-=-=-
-> 
->  tools/testing/selftests/bpf/bpf_endian.h | 32 ++++++++------------------------
->  1 file changed, 8 insertions(+), 24 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/bpf/bpf_endian.h b/tools/testing/selftests/bpf/bpf_endian.h
-> index b25595ea4a78..68789b4c7ef0 100644
-> --- a/tools/testing/selftests/bpf/bpf_endian.h
-> +++ b/tools/testing/selftests/bpf/bpf_endian.h
-> @@ -20,38 +20,22 @@
->   * use different targets.
->   */
->  #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-> -# define __bpf_ntohs(x)			__builtin_bswap16(x)
-> -# define __bpf_htons(x)			__builtin_bswap16(x)
-> -# define __bpf_constant_ntohs(x)	___constant_swab16(x)
-> -# define __bpf_constant_htons(x)	___constant_swab16(x)
-> -# define __bpf_ntohl(x)			__builtin_bswap32(x)
-> -# define __bpf_htonl(x)			__builtin_bswap32(x)
-> -# define __bpf_constant_ntohl(x)	___constant_swab32(x)
-> -# define __bpf_constant_htonl(x)	___constant_swab32(x)
-> +# define __bpf_ntohs(x)			__swab16(x)
-> +# define __bpf_htons(x)			__swab16(x)
-> +# define __bpf_ntohl(x)			__swab32(x)
-> +# define __bpf_htonl(x)			__swab32(x)
->  #elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
->  # define __bpf_ntohs(x)			(x)
->  # define __bpf_htons(x)			(x)
-> -# define __bpf_constant_ntohs(x)	(x)
-> -# define __bpf_constant_htons(x)	(x)
->  # define __bpf_ntohl(x)			(x)
->  # define __bpf_htonl(x)			(x)
-> -# define __bpf_constant_ntohl(x)	(x)
-> -# define __bpf_constant_htonl(x)	(x)
->  #else
->  # error "Fix your compiler's __BYTE_ORDER__?!"
->  #endif
->  
-> -#define bpf_htons(x)				\
-> -	(__builtin_constant_p(x) ?		\
-> -	 __bpf_constant_htons(x) : __bpf_htons(x))
-> -#define bpf_ntohs(x)				\
-> -	(__builtin_constant_p(x) ?		\
-> -	 __bpf_constant_ntohs(x) : __bpf_ntohs(x))
-> -#define bpf_htonl(x)				\
-> -	(__builtin_constant_p(x) ?		\
-> -	 __bpf_constant_htonl(x) : __bpf_htonl(x))
-> -#define bpf_ntohl(x)				\
-> -	(__builtin_constant_p(x) ?		\
-> -	 __bpf_constant_ntohl(x) : __bpf_ntohl(x))
-> +#define bpf_htons(x)	__bpf_htons((x))
-> +#define bpf_ntohs(x)	__bpf_ntohs((x))
-> +#define bpf_htonl(x)	__bpf_htonl((x))
-> +#define bpf_ntohl(x)	__bpf_ntohl((x))
-At this point we can probably drop __bpf_xxx as well?
-Care to resend with proper description when bpf-next opens?
+Hi Mark,
 
->  
->  #endif /* __BPF_ENDIAN__ */
+On 18 March 2019 15:48, Wolfram Sang wrote:
+
+> To: linux-kernel@vger.kernel.org
+> Subject: [PATCH 0/6] mfd: da9063: remove platform_data
+>=20
+> When working with this driver while debugging something else, I noticed t=
+hat
+> there are no in-kernel users of platform_data anymore. Removing the suppo=
+rt
+> simplifies the code and gets rid of quite some lines. The biggest refacto=
+ring
+> went to the regulator driver which could maybe benefit from more
+> refactorization. However, there is no in-kernel user of that driver, so n=
+o
+> testing. I left it at this stage. I think the changes are still at a leve=
+l
+> where review and build-testing will give enough confidence.
+>=20
+> Besides the regulator thing, it was tested on a Renesas Lager board (R-Ca=
+r H2).
+> No regressions encountered. buildbot was happy, too.
+>=20
+> The patches are based on v5.1-rc1. I'd vote for all of them going through=
+ the
+> MFD tree. Looking forward to comments!
+>=20
+>    Wolfram
+
+My regulator tests are currently broken, so I'm looking into it.
+I'll read-through and test these patches as soon as I've solved the regress=
+ions.
+
+Regards,
+Steve
