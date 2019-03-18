@@ -3,134 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E51AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56BBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4115E20685
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B659020863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfCRR56 (ORCPT
+        id S1727069AbfCRR7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:57:58 -0400
-Received: from mga18.intel.com ([134.134.136.126]:33026 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbfCRR56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:57:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:57:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="329714040"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Mar 2019 10:57:55 -0700
-Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
-        by linux.intel.com (Postfix) with ESMTP id 9B6AD580238;
-        Mon, 18 Mar 2019 10:57:52 -0700 (PDT)
-Subject: Re: [PATCH v9 00/12] perf: enable compression of record mode trace to
- save storage space
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
- <20190318114625.GB7900@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <99c0d81f-95e2-7036-d8f1-5ca3e9160acd@linux.intel.com>
-Date:   Mon, 18 Mar 2019 20:57:51 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Mon, 18 Mar 2019 13:59:22 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39152 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726857AbfCRR7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:59:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E895EBD;
+        Mon, 18 Mar 2019 10:59:21 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6F0C3F614;
+        Mon, 18 Mar 2019 10:59:18 -0700 (PDT)
+Subject: Re: [PATCH] arm64/io: Don't use WZR in writel
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <68b71c15f32341468a868f6418e4fcb375bc49ba.camel@gmail.com>
+ <20190211105755.GB30880@fuggles.cambridge.arm.com>
+ <38d8965a-cd41-17cf-1b95-8dd58c079be4@arm.com>
+ <874c702b8af760aa8fae38d478c79e3ecba00515.camel@gmail.com>
+ <235d20ef-3054-69d9-975d-25aebf32aad3@arm.com>
+ <20190223181254.GC572@tuxbook-pro> <86zhqm8i6d.wl-marc.zyngier@arm.com>
+ <20190224035356.GD572@tuxbook-pro>
+ <33d765b5-1807-fa6c-1ceb-99f09f7c8d5a@free.fr>
+ <8eb4f446-6152-ffb6-9529-77fb0bcc307f@arm.com>
+ <20190318170041.qu4x2565fmno6sei@shell.armlinux.org.uk>
+ <5ba7c4d0-30ec-e38d-41dc-653fd5cb7f05@arm.com>
+ <fbacd3df-41c4-f98a-8875-db654aff3a5c@free.fr>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0c06cb51-fc33-f2ba-e2b8-ad280b89f35c@arm.com>
+Date:   Mon, 18 Mar 2019 17:59:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190318114625.GB7900@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <fbacd3df-41c4-f98a-8875-db654aff3a5c@free.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.03.2019 14:46, Jiri Olsa wrote:
-> On Sat, Mar 16, 2019 at 11:58:30AM +0300, Alexey Budankov wrote:
+On 18/03/2019 17:30, Marc Gonzalez wrote:
+> On 18/03/2019 18:19, Robin Murphy wrote:
 > 
-> SNIP
+>> For the context bank reset, yes, I am assuming that no complier will
+>> ever be perverse enough to detect that cfg is not written after the
+>> NULL check and immediately reallocate it to XZR for no good reason.
+>> I'd like to think that assumption is going to hold for the reasonable
+>> scope of this particular workaround, though.
 > 
->> ---
->> Alexey Budankov (12):
->>   feature: implement libzstd check, LIBZSTD_DIR and NO_LIBZSTD defines
->>   perf record: implement --mmap-flush=<number> option
->>   perf session: define bytes_transferred and bytes_compressed metrics
->>   perf record: implement COMPRESSED event record and its attributes
->>   perf mmap: implement dedicated memory buffer for data compression
->>   perf util: introduce Zstd streaming based compression API
->>   perf record: implement compression for serial trace streaming
->>   perf record: implement compression for AIO trace streaming
->>   perf record: implement -z,--compression_level[=<n>] option
->>   perf report: implement record trace decompression
->>   perf inject: enable COMPRESSED records decompression
->>   perf tests: implement Zstd comp/decomp integration test
->>
->>  tools/build/Makefile.feature                  |   6 +-
->>  tools/build/feature/Makefile                  |   6 +-
->>  tools/build/feature/test-all.c                |   5 +
->>  tools/build/feature/test-libzstd.c            |  12 +
->>  tools/perf/Documentation/perf-record.txt      |  17 ++
->>  .../Documentation/perf.data-file-format.txt   |  24 ++
->>  tools/perf/Makefile.config                    |  20 ++
->>  tools/perf/Makefile.perf                      |   3 +
->>  tools/perf/builtin-inject.c                   |   4 +
->>  tools/perf/builtin-record.c                   | 285 +++++++++++++++---
->>  tools/perf/builtin-report.c                   |   5 +-
->>  tools/perf/builtin-version.c                  |   2 +
->>  tools/perf/perf.h                             |   2 +
->>  .../tests/shell/record+zstd_comp_decomp.sh    |  28 ++
->>  tools/perf/util/Build                         |   2 +
->>  tools/perf/util/compress.h                    |  54 ++++
->>  tools/perf/util/env.h                         |  11 +
->>  tools/perf/util/event.c                       |   1 +
->>  tools/perf/util/event.h                       |   7 +
->>  tools/perf/util/evlist.c                      |   8 +-
->>  tools/perf/util/evlist.h                      |   3 +-
->>  tools/perf/util/header.c                      |  55 +++-
->>  tools/perf/util/header.h                      |   1 +
->>  tools/perf/util/mmap.c                        | 106 ++-----
->>  tools/perf/util/mmap.h                        |  17 +-
->>  tools/perf/util/session.c                     | 124 +++++++-
->>  tools/perf/util/session.h                     |  14 +
->>  tools/perf/util/tool.h                        |   2 +
->>  tools/perf/util/zstd.c                        | 111 +++++++
->>  29 files changed, 801 insertions(+), 134 deletions(-)
->>  create mode 100644 tools/build/feature/test-libzstd.c
->>  create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp.sh
->>  create mode 100644 tools/perf/util/zstd.c
->>
->> ---
->> Changes in v9:
->> - fixed issue with improper max COMPRESSED record size calculation
->> - moved up calculation of ratio variable in 03/12
->> - made minor corrections in changelogs
->> - corrected several checkpatch.pl warnings and errors
+> I'm not sure I understand the above paragraph.
 > 
-> apart from 2 comments I'm ok with this patchset
+> In code such as:
+> 
+> 	if (val == 0) foo(val);
+> 
+> gcc's algorithm is likely to figure out that the code is equivalent to
+> 
+> 	if (val == 0) foo(0)
+> 
+> and perform constant-propagation, etc.
+> 
+> Is that what we're talking about?
 
-Comments are addressed in v10.
+As may already be apparent, the way I expect compilers to behave, and 
+the way compilers actually behave, are two overlapping but distinct sets 
+of concepts...
 
-> 
-> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-
-Thanks,
-Alexey
-
-> 
-> thanks a lot,
-> jirka
-> 
+Robin.
