@@ -2,191 +2,126 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCA2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43619C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055B720857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1186D20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:34:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHiScq5X"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="UW/rFXoO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="11OkRF/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfCRDeJ (ORCPT
+        id S1727860AbfCRDe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 23:34:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40605 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfCRDeI (ORCPT
+        Sun, 17 Mar 2019 23:34:57 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:47025 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726828AbfCRDe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 23:34:08 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t5so15365961wri.7;
-        Sun, 17 Mar 2019 20:34:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LeP+el6bzDYdXLZZ4sPZcEyRGv5NN81j7a+/08GHHMg=;
-        b=QHiScq5Xqm/WV/2efsqU9mn7XevoLFKf1TxUSyeh0zczPi+tY6n+OdCpjQT5YR3eg0
-         DV+KPcUmvFtd+ALOu+0ezzfH2FdU1qlxzvHn8NxLnf8RQnINAc1YCWPnVeQK8QNKjm1f
-         QI2HXzJX3e0kaBhvlOA1mu5guSWSCIKWL6kMJYNiaxi/O7noWptPmcUs/kHLpruN+p0m
-         uiX5nsB2R8/LrC4tegJSKptiBVQ3RNmz9vqRmQ2jSLoCIm6dZtETzFMEYmFltpFwz+iH
-         9HlTnFBddeHOg9w+jfIxtAVmk9iMZwB4+mk4eioN8hTlXlwCB0f0tZxSjK+E9eCA3eRX
-         3x+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LeP+el6bzDYdXLZZ4sPZcEyRGv5NN81j7a+/08GHHMg=;
-        b=VeV07TEtXRmJjG4n+xs8ZJuqcSaDEi2mdAX0JIICE/6DxnfBxg4vkdHqgkg1t2E5aQ
-         QfsfBlAi2B4Moypm2Rpu6w4xVNSBJi+KuCla1lxs5vR4/cy8YmKDbhhvJghypjiQ3gNN
-         XiRQCelor61mnWF6bOg8DgnaPDZUHBgU/QMggmK9plIB4Xwg6XDLEzQI2OY5PHKJ+LL/
-         F2a00y4DAncA0JZt3AvSheZFU0dJ4/+wUiDV/uINz8u5EBsQ/l91KV9I8O8kgPR5YDuv
-         GnHwXB1aBYQDSfhd3cdTTYkpOaRpDwpSmBRyncxHk9GeQfbPSun745nRRmGdopVoVK71
-         SMag==
-X-Gm-Message-State: APjAAAVVEWicQx8znVidfFG5Psxkzp+hAF3MEaEY/iSOC9vzBwOXsHnh
-        FTIGqVP2Hy4is3/H15GhH1L4eVuvedLqTrTDSgg=
-X-Google-Smtp-Source: APXvYqxkmSe2BF5oKiSCGrP5er3q8yb30u0J8GWY5U07NbBc4FUxvaFVo2FggGb1eNLcl8ItS04kOVUNZGg+mpzDK1g=
-X-Received: by 2002:adf:db02:: with SMTP id s2mr10722693wri.206.1552880046106;
- Sun, 17 Mar 2019 20:34:06 -0700 (PDT)
+        Sun, 17 Mar 2019 23:34:56 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id AD74E21F0A;
+        Sun, 17 Mar 2019 23:34:55 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sun, 17 Mar 2019 23:34:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=hI9nacIh4+ikVwoTJa91cBLhdkZ
+        GR9SIE248o1LFToU=; b=UW/rFXoOd/5BbBJVU6zfxQaFsTXkpvA+MpxSScA8qP3
+        Eih+c4eE7vnBhsb2dqZ13WsD1rth1NSXJzXEifrHf8lwVy5R4cf0awgGTUszOQo4
+        zh/xtsc5rNI+13f/avbw8GaoxuCY6RDjuK2b3uXX7QNagO1mUaZ6FBcn00m3uIIp
+        lBaX6/0/AnwRSRy1Kw3p+BTyG+hmIsS1fijXJfoQLS0N550w70THcUJEh9xxdhWR
+        OoJBJq20M/p330ciq++MpITTdmAehsSYvHFRsWYfLZOVqGMas2vvH32YH/d/QEyA
+        Bfe6GmjYeMM/r91MkghEdEN5scvZrNXN+ixf//sfW8A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=hI9nac
+        Ih4+ikVwoTJa91cBLhdkZGR9SIE248o1LFToU=; b=11OkRF/D0zKvFE7vRvMuiB
+        0ai/MJo/MseB6XlYPeCUJDTp4Ho6wPb3UquHbggEVC/se4trdaH4wtmPgIqfG6K6
+        zamvQy0pA0xQCjQ17ALdvea8GwWdAh3Ew+hNnZZHldwhs4VOQC435STj5/BIcHbF
+        2NNuJgXTGK349GanVHA+IrQ/Cb5tZdNcpIdfmfl1IaQGHZyQNdbabMsbMW61/+gb
+        3D/CjHl+01F62IxD7BW/0SxcXV65BmpHgqxsNdQrNoW3jsutxNOBTTiwkEbuwaU9
+        eAwEs3my3hblSV6H57eW8pTb9+NwqwGF3Of8dEzTElXoEEWkstTY3OVB04s5HK1w
+        ==
+X-ME-Sender: <xms:3xGPXOUkm_nsCcb2snkmtvgBInzrsJIc_ZJFdMtSpFvFx1kFysmUkg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddriedtgdeiudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfkphepuddukedrvdduuddrudelledruddvieenucfrrghrrghmpehm
+    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:3xGPXJBwExd4evTDKdd26kghov25SnbCQcIX4bvNXxbtwYiaIWB4Dw>
+    <xmx:3xGPXFLY3QuS1Uy_yQ9m7jnMs0nlrWuHZ_xaBqjmlBifaweMTpZfdQ>
+    <xmx:3xGPXKKM3Tx0C-AZg5CGlNmJurvmugpczxCSZwsGbuaCqDp18sC8iQ>
+    <xmx:3xGPXN05NLa63RAk1jopcRE0pdHkhj888akSWiluGA5_kt_-rSsWjA>
+Received: from localhost (ppp118-211-199-126.bras1.syd2.internode.on.net [118.211.199.126])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 94173100E5;
+        Sun, 17 Mar 2019 23:34:54 -0400 (EDT)
+Date:   Mon, 18 Mar 2019 14:34:30 +1100
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/13] Convert vfs.txt to vfs.rst
+Message-ID: <20190318033430.GA27728@eros.localdomain>
+References: <20190313040919.6937-1-tobin@kernel.org>
+ <821449c9-e1f7-caa1-ff18-0cc1cc625596@infradead.org>
 MIME-Version: 1.0
-References: <20190316020905.14962-1-yanaijie@huawei.com>
-In-Reply-To: <20190316020905.14962-1-yanaijie@huawei.com>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Mon, 18 Mar 2019 11:33:54 +0800
-Message-ID: <CACVXFVPWfng1ukgMEjBsjBMbMfWkUuTuiAbi2w+WDZ95wA70Mg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] scsi: fix oops in scsi_uninit_cmd()
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        James Bottomley <jejb@linux.vnet.ibm.com>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <821449c9-e1f7-caa1-ff18-0cc1cc625596@infradead.org>
+X-Mailer: Mutt 1.11.3 (2019-02-01)
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 10:11 AM Jason Yan <yanaijie@huawei.com> wrote:
->
-> If we remove the scsi disk when running io with fio, oops occured with
-> the following condition.
->
-> [scsi_eh_0]                              [fio]
-> scsi_end_request
->   ->blk_update_request
->     ->end_bio(io returned to userspace)
->                                          close
->                                            ->sd_release
->                                               ->scsi_disk_put
->                                                  ->scsi_disk_release
->                                                      ->disk->private_data = NULL;
->
->   ->scsi_mq_uninit_cmd
->     ->scsi_uninit_cmd
->       ->scsi_cmd_to_driver
->     ->drv is NULL, Oops
->
-> There is a small window between blk_update_request() and
-> scsi_mq_uninit_cmd() that scsi disk may have been released. This will
-> cause a oops like below:
->
-> Unable to handle kernel NULL pointer dereference at virtual address
-> 0000000000000000
-> s/sync.c:67, func=xfer, error=In[11347.116050] Mem abort info:
-> put/output error
-> [11347.121598]   ESR = 0x96000006
-> [11347.126200]   Exception class = DABT (current EL), IL = 32 bits
-> [11347.132117]   SET = 0, FnV = 0
-> [11347.135170]   EA = 0, S1PTW = 0
-> [11347.138308] Data abort info:
-> [11347.141186]   ISV = 0, ISS = 0x00000006
-> [11347.145019]   CM = 0, WnR = 0
-> [11347.147977] user pgtable: 4k pages, 48-bit VAs, pgdp =
-> 00000000a67aece2
-> [11347.154591] [0000000000000000] pgd=0000002f90774003,
-> pud=0000002fab098003, pmd=0000000000000000
-> [11347.163304] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> [11347.168870] Modules linked in: hisi_sas_v3_hw hisi_sas_main libsas
-> [11347.175044] CPU: 56 PID: 4294 Comm: scsi_eh_2 Not tainted
-> 4.19.0-g8052059-dirty #2
-> [11347.182600] Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
-> RC0 - B601 (V6.01) 11/08/2018
-> [11347.191370] pstate: a0c00009 (NzCv daif +PAN +UAO)
-> [11347.196155] pc : scsi_uninit_cmd+0x24/0x3c
-> [11347.200240] lr : scsi_mq_uninit_cmd+0x1c/0x30
-> [11347.204583] sp : ffff000024dabb60
-> [11347.207884] x29: ffff000024dabb60 x28: ffff000024dabd38
-> [11347.213184] x27: ffff000000f5b3a8 x26: ffff7df3b0181600
-> [11347.218484] x25: 0000000000000000 x24: ffff803bc5d36778
-> [11347.223783] x23: 000000000000000a x22: 0000000000000000
-> [11347.229082] x21: ffff803bc7397000 x20: ffff802f9148e530
-> [11347.234381] x19: ffff802f9148e530 x18: ffff7e0000000000
-> [11347.239679] x17: 0000000000000000 x16: 0000002f9e37d000
-> [11347.244979] x15: ffff7e0000000000 x14: 3863206336203839
-> [11347.250278] x13: 2036302030302038 x12: a46fac3d0d363d00
-> [11347.255578] x11: ffffffffffffffff x10: a46fac3d0d363d00
-> [11347.260877] x9 : 0000000040040000 x8 : 000000000000eb4b
-> [11347.266177] x7 : ffff000009771000 x6 : 0000000000210d00
-> [11347.271476] x5 : ffff803bc9f50000 x4 : 0000000000000000
-> [11347.276775] x3 : ffff802fb02b4380 x2 : ffff802f9148e400
-> [11347.282075] x1 : 0000000000000000 x0 : ffff802f9148e530
-> [11347.287375] Process scsi_eh_2 (pid: 4294, stack limit =
-> 0x000000007d2257f8)
-> [11347.294323] Call trace:
-> Jobs: 6 (f=6): [R[RRR1XXX1XRR3] 47.296758]  scsi_uninit_cmd+0x24/0x3c
-> [22.7% done] [1516MB/0KB/0KB /s] [754/0/0 iops] [eta 08m:39s]
-> [11347.308390]  scsi_mq_uninit_cmd+0x1c/0x30
-> [11347.312387]  scsi_end_request+0x7c/0x1b8
-> [11347.316297]  scsi_io_completion+0x464/0x668
-> [11347.320467]  scsi_finish_command+0xbc/0x160
-> [11347.324636]  scsi_eh_flush_done_q+0x10c/0x170
-> [11347.328990]  sas_scsi_recover_host+0x84c/0xa98 [libsas]
-> [11347.334202]  scsi_error_handler+0x140/0x5b0
-> [11347.338374]  kthread+0x100/0x12c
-> [11347.341590]  ret_from_fork+0x10/0x18
-> [11347.345153] Code: 71000c3f 540000e9 f9404c41 f941f421 (f9400021)
-> [11347.351234] ---[ end trace f496aacdaa1dcc51 ]---
->
-> To fix this, move the bio_endio() action from blk_update_request() to
-> __blk_mq_end_request().
->
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  block/blk-core.c       | 6 ++++--
->  block/blk-mq.c         | 7 +++++++
->  include/linux/blkdev.h | 1 +
->  3 files changed, 12 insertions(+), 2 deletions(-)
->
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 4673ebe42255..f39ea78c0535 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -192,8 +192,10 @@ static void req_bio_endio(struct request *rq, struct bio *bio,
->         bio_advance(bio, nbytes);
->
->         /* don't actually finish bio if it's part of flush sequence */
-> -       if (bio->bi_iter.bi_size == 0 && !(rq->rq_flags & RQF_FLUSH_SEQ))
-> -               bio_endio(bio);
-> +       if (bio->bi_iter.bi_size == 0 && !(rq->rq_flags & RQF_FLUSH_SEQ)) {
-> +               bio->bi_next = rq->bio_to_release;
-> +               rq->bio_to_release = bio;
-> +       }
->  }
+On Sun, Mar 17, 2019 at 06:46:40PM -0700, Randy Dunlap wrote:
+> On 3/12/19 9:09 PM, Tobin C. Harding wrote:
+> > Hi,
+> > 
+> > This set converts the VFS overview documentation to RST format.  I think
+> > I'm slowly getting better at structuring these conversions to ease
+> > review, if you disagree or you notice any way to further improve please
+> > say so.
+> 
+> Hi Tobin,
+> 
+> What does this patch set apply to?  Maybe Jon's git tree?
 
-In case of partial completion, the completed bios should have been
-done immediately, instead that their .end_io is called after the whole
-request is completed.
+I did this on top of Jon's tree before rc-1 came out (so during the
+merge window last week).  I can rebase and fire off another version if
+its easier for you Jon.
 
-Also rq->bio may be reused to hold the bios to be ended.
+> I applied it to 5.1-rc1 with some forceful (minor) editing and ran
+> 'make htmldocs' successfully, so
+> 
+> Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
-Jason, sorry for not Cc list in previous reply.
+Thanks Randy.
 
-Thanks,
-Ming Lei
+> although there is at least one new field in struct file_operations: iopoll.
+
+I purposely kept the conversion separate from the update.  Most of this
+file explicitly states the kernel version each struct documented is for
+(and at least two of them are 2.6.22).
+
+One reason for the separation is that this set should be reviewable by
+'docs' folk without having to be too closely looked at by anyone from
+filesystems but the update will most likely benefit from at least a
+cursory look over by someone from filesystems.
+
+I have started the update to v5.20 but its slow going because I don't
+know the VFS.  I'm learning as I go, I should have something together
+soon.
+
+thanks,
+Tobin.
