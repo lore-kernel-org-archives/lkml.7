@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F4BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC42C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0D9214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91A2214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901249;
-	bh=OK8NdKKlfwWklIJhavrwq5cyYsbRz/CBPE5q8uVm1fE=;
+	s=default; t=1552901250;
+	bh=MZJT+BqMCk+xUgSlG6ecV5ROVtc5ZPTb1QTgutH7FIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jyx2bgG/fVgiu+rqofTqLxIzc7mzHVKSA6NyFzf8hIbYJCdAedoPk6RmEKfCAprig
-	 IcaV4YJd5jCMtQK6qqGuU0BEOyv+vm7fWRBNycVPu5QIOiB4biRH+grSsD3pvPO+We
-	 jfmjq2Cr0RvF3HZFeIlGJ2gemGee7vELBvNUsuZ0=
+	b=qLJq2q5p4L1+ej/1XMQjX4gZwuCRByNlxOJcDITPxd0fCfGdgM1QKOSfIbGlDhwpX
+	 vs0Z8Gb/GtFoihsmzg1gg0kMqxur8vujTkimjdIpeqLEK/+kbxHMJZTUwsWJzU4q1o
+	 7mg1OsSA6bOSeP+ti2PMAUrsGc/za6WAqfgLYpKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfCRJ12 (ORCPT
+        id S1727824AbfCRJ13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:27:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60882 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbfCRJ1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:27:25 -0400
+        id S1727797AbfCRJ11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:27:27 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 498762083D;
-        Mon, 18 Mar 2019 09:27:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01B0421741;
+        Mon, 18 Mar 2019 09:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901243;
-        bh=OK8NdKKlfwWklIJhavrwq5cyYsbRz/CBPE5q8uVm1fE=;
+        s=default; t=1552901246;
+        bh=MZJT+BqMCk+xUgSlG6ecV5ROVtc5ZPTb1QTgutH7FIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1MbLCO7oyOSkMgPsjxIRXHntcNpbJ3i2Ihsw8HOg/F8JiPfZDR6bjaZjxXXsAt1Ge
-         vrXnP2dN/vmXsdQCjhR8QlWaKthn8GalwP2XWUHTp48lvgSS8Ha6TbdrHz6iiV/1/t
-         Q0T8mEvaHPISrv8b1MBlXTroMjHFtoUGR5ynFU2g=
+        b=06WW5f8TR7s4y2GxTlPuX5a+/XbiS3mFvr2jQIJIwuJFRlCsTu37lhQ8XCiUbIUUV
+         HYx+PeWCmHpzXS3EeoXdsLznk/oQBT8FCxt090PYHSHuzJ/u87wryVXTCK+RbiWJNB
+         GV/Y05PzRhjbmLVhPsbs8of0zF1bOcv3v/1Gy8rI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandru Herghelegiu <aherghelegiu@bitdefender.com>,
-        =?UTF-8?q?Adalbert=20Laz=C4=83r?= <alazar@bitdefender.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 29/43] vsock/virtio: fix kernel panic from virtio_transport_reset_no_sock
-Date:   Mon, 18 Mar 2019 10:24:21 +0100
-Message-Id: <20190318083716.728432293@linuxfoundation.org>
+Subject: [PATCH 5.0 03/43] gro_cells: make sure device is up in gro_cells_receive()
+Date:   Mon, 18 Mar 2019 10:23:55 +0100
+Message-Id: <20190318083715.977711479@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -68,101 +66,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Adalbert Lazăr" <alazar@bitdefender.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 4c404ce23358d5d8fbdeb7a6021a9b33d3c3c167 ]
+[ Upstream commit 2a5ff07a0eb945f291e361aa6f6becca8340ba46 ]
 
-Previous to commit 22b5c0b63f32 ("vsock/virtio: fix kernel panic
-after device hot-unplug"), vsock_core_init() was called from
-virtio_vsock_probe(). Now, virtio_transport_reset_no_sock() can be called
-before vsock_core_init() has the chance to run.
+We keep receiving syzbot reports [1] that show that tunnels do not play
+the rcu/IFF_UP rules properly.
 
-[Wed Feb 27 14:17:09 2019] BUG: unable to handle kernel NULL pointer dereference at 0000000000000110
-[Wed Feb 27 14:17:09 2019] #PF error: [normal kernel read fault]
-[Wed Feb 27 14:17:09 2019] PGD 0 P4D 0
-[Wed Feb 27 14:17:09 2019] Oops: 0000 [#1] SMP PTI
-[Wed Feb 27 14:17:09 2019] CPU: 3 PID: 59 Comm: kworker/3:1 Not tainted 5.0.0-rc7-390-generic-hvi #390
-[Wed Feb 27 14:17:09 2019] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[Wed Feb 27 14:17:09 2019] Workqueue: virtio_vsock virtio_transport_rx_work [vmw_vsock_virtio_transport]
-[Wed Feb 27 14:17:09 2019] RIP: 0010:virtio_transport_reset_no_sock+0x8c/0xc0 [vmw_vsock_virtio_transport_common]
-[Wed Feb 27 14:17:09 2019] Code: 35 8b 4f 14 48 8b 57 08 31 f6 44 8b 4f 10 44 8b 07 48 8d 7d c8 e8 84 f8 ff ff 48 85 c0 48 89 c3 74 2a e8 f7 31 03 00 48 89 df <48> 8b 80 10 01 00 00 e8 68 fb 69 ed 48 8b 75 f0 65 48 33 34 25 28
-[Wed Feb 27 14:17:09 2019] RSP: 0018:ffffb42701ab7d40 EFLAGS: 00010282
-[Wed Feb 27 14:17:09 2019] RAX: 0000000000000000 RBX: ffff9d79637ee080 RCX: 0000000000000003
-[Wed Feb 27 14:17:09 2019] RDX: 0000000000000001 RSI: 0000000000000002 RDI: ffff9d79637ee080
-[Wed Feb 27 14:17:09 2019] RBP: ffffb42701ab7d78 R08: ffff9d796fae70e0 R09: ffff9d796f403500
-[Wed Feb 27 14:17:09 2019] R10: ffffb42701ab7d90 R11: 0000000000000000 R12: ffff9d7969d09240
-[Wed Feb 27 14:17:09 2019] R13: ffff9d79624e6840 R14: ffff9d7969d09318 R15: ffff9d796d48ff80
-[Wed Feb 27 14:17:09 2019] FS:  0000000000000000(0000) GS:ffff9d796fac0000(0000) knlGS:0000000000000000
-[Wed Feb 27 14:17:09 2019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[Wed Feb 27 14:17:09 2019] CR2: 0000000000000110 CR3: 0000000427f22000 CR4: 00000000000006e0
-[Wed Feb 27 14:17:09 2019] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[Wed Feb 27 14:17:09 2019] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[Wed Feb 27 14:17:09 2019] Call Trace:
-[Wed Feb 27 14:17:09 2019]  virtio_transport_recv_pkt+0x63/0x820 [vmw_vsock_virtio_transport_common]
-[Wed Feb 27 14:17:09 2019]  ? kfree+0x17e/0x190
-[Wed Feb 27 14:17:09 2019]  ? detach_buf_split+0x145/0x160
-[Wed Feb 27 14:17:09 2019]  ? __switch_to_asm+0x40/0x70
-[Wed Feb 27 14:17:09 2019]  virtio_transport_rx_work+0xa0/0x106 [vmw_vsock_virtio_transport]
-[Wed Feb 27 14:17:09 2019] NET: Registered protocol family 40
-[Wed Feb 27 14:17:09 2019]  process_one_work+0x167/0x410
-[Wed Feb 27 14:17:09 2019]  worker_thread+0x4d/0x460
-[Wed Feb 27 14:17:09 2019]  kthread+0x105/0x140
-[Wed Feb 27 14:17:09 2019]  ? rescuer_thread+0x360/0x360
-[Wed Feb 27 14:17:09 2019]  ? kthread_destroy_worker+0x50/0x50
-[Wed Feb 27 14:17:09 2019]  ret_from_fork+0x35/0x40
-[Wed Feb 27 14:17:09 2019] Modules linked in: vmw_vsock_virtio_transport vmw_vsock_virtio_transport_common input_leds vsock serio_raw i2c_piix4 mac_hid qemu_fw_cfg autofs4 cirrus ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops virtio_net psmouse drm net_failover pata_acpi virtio_blk failover floppy
+At device dismantle phase, gro_cells_destroy() will be called
+only after a full rcu grace period is observed after IFF_UP
+has been cleared.
 
-Fixes: 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unplug")
-Reported-by: Alexandru Herghelegiu <aherghelegiu@bitdefender.com>
-Signed-off-by: Adalbert Lazăr <alazar@bitdefender.com>
-Co-developed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+This means that IFF_UP needs to be tested before queueing packets
+into netif_rx() or gro_cells.
+
+This patch implements the test in gro_cells_receive() because
+too many callers do not seem to bother enough.
+
+[1]
+BUG: unable to handle kernel paging request at fffff4ca0b9ffffe
+PGD 0 P4D 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
+RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
+RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
+RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
+RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
+Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
+RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
+RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
+RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
+RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
+R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
+kobject: 'loop2' (000000004bd7d84a): kobject_uevent_env
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
+Call Trace:
+kobject: 'loop2' (000000004bd7d84a): fill_kobj_path: path = '/devices/virtual/block/loop2'
+ ip_tunnel_dev_free+0x19/0x60 net/ipv4/ip_tunnel.c:1010
+ netdev_run_todo+0x51c/0x7d0 net/core/dev.c:8970
+ rtnl_unlock+0xe/0x10 net/core/rtnetlink.c:116
+ ip_tunnel_delete_nets+0x423/0x5f0 net/ipv4/ip_tunnel.c:1124
+ vti_exit_batch_net+0x23/0x30 net/ipv4/ip_vti.c:495
+ ops_exit_list.isra.0+0x105/0x160 net/core/net_namespace.c:156
+ cleanup_net+0x3fb/0x960 net/core/net_namespace.c:551
+ process_one_work+0x98e/0x1790 kernel/workqueue.c:2173
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2319
+ kthread+0x357/0x430 kernel/kthread.c:246
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Modules linked in:
+CR2: fffff4ca0b9ffffe
+   [ end trace 513fc9c1338d1cb3 ]
+RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
+RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
+RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
+RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
+RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
+Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
+RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
+RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
+RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
+RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
+R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
+kobject: 'loop3' (00000000e4ee57a6): kobject_uevent_env
+R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
+
+Fixes: c9e6bc644e55 ("net: add gro_cells infrastructure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/vmw_vsock/virtio_transport_common.c |   22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ net/core/gro_cells.c |   22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -662,6 +662,8 @@ static int virtio_transport_reset(struct
-  */
- static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
+--- a/net/core/gro_cells.c
++++ b/net/core/gro_cells.c
+@@ -13,22 +13,36 @@ int gro_cells_receive(struct gro_cells *
  {
-+	const struct virtio_transport *t;
-+	struct virtio_vsock_pkt *reply;
- 	struct virtio_vsock_pkt_info info = {
- 		.op = VIRTIO_VSOCK_OP_RST,
- 		.type = le16_to_cpu(pkt->hdr.type),
-@@ -672,15 +674,21 @@ static int virtio_transport_reset_no_soc
- 	if (le16_to_cpu(pkt->hdr.op) == VIRTIO_VSOCK_OP_RST)
- 		return 0;
+ 	struct net_device *dev = skb->dev;
+ 	struct gro_cell *cell;
++	int res;
  
--	pkt = virtio_transport_alloc_pkt(&info, 0,
--					 le64_to_cpu(pkt->hdr.dst_cid),
--					 le32_to_cpu(pkt->hdr.dst_port),
--					 le64_to_cpu(pkt->hdr.src_cid),
--					 le32_to_cpu(pkt->hdr.src_port));
--	if (!pkt)
-+	reply = virtio_transport_alloc_pkt(&info, 0,
-+					   le64_to_cpu(pkt->hdr.dst_cid),
-+					   le32_to_cpu(pkt->hdr.dst_port),
-+					   le64_to_cpu(pkt->hdr.src_cid),
-+					   le32_to_cpu(pkt->hdr.src_port));
-+	if (!reply)
- 		return -ENOMEM;
- 
--	return virtio_transport_get_ops()->send_pkt(pkt);
-+	t = virtio_transport_get_ops();
-+	if (!t) {
-+		virtio_transport_free_pkt(reply);
-+		return -ENOTCONN;
-+	}
+-	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev))
+-		return netif_rx(skb);
++	rcu_read_lock();
++	if (unlikely(!(dev->flags & IFF_UP)))
++		goto drop;
 +
-+	return t->send_pkt(reply);
- }
++	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev)) {
++		res = netif_rx(skb);
++		goto unlock;
++	}
  
- static void virtio_transport_wait_close(struct sock *sk, long timeout)
+ 	cell = this_cpu_ptr(gcells->cells);
+ 
+ 	if (skb_queue_len(&cell->napi_skbs) > netdev_max_backlog) {
++drop:
+ 		atomic_long_inc(&dev->rx_dropped);
+ 		kfree_skb(skb);
+-		return NET_RX_DROP;
++		res = NET_RX_DROP;
++		goto unlock;
+ 	}
+ 
+ 	__skb_queue_tail(&cell->napi_skbs, skb);
+ 	if (skb_queue_len(&cell->napi_skbs) == 1)
+ 		napi_schedule(&cell->napi);
+-	return NET_RX_SUCCESS;
++
++	res = NET_RX_SUCCESS;
++
++unlock:
++	rcu_read_unlock();
++	return res;
+ }
+ EXPORT_SYMBOL(gro_cells_receive);
+ 
 
 
