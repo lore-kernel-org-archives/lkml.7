@@ -2,130 +2,380 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CEBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBD9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42DD2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ZPPPvL3s"
+	by mail.kernel.org (Postfix) with ESMTP id C60DF2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbfCRRoQ (ORCPT
+        id S1728131AbfCRRoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 Mar 2019 13:44:19 -0400
+Received: from mga18.intel.com ([134.134.136.126]:31893 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728118AbfCRRoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Mar 2019 13:44:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39114 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfCRRmh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:42:37 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j9so3891345wrn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:42:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KouBHCieDSV7idkFJwAAq2H7EglJYSpQY5o99NkrtdQ=;
-        b=ZPPPvL3sR/4zgjsZNfE25S5k4HFsc8d0UyqcHXUi9IPBJUg8EtyFwqavCwBiZ1jYyj
-         VSPC7d+OFxUcZkEEHs7sG9lXnXKaKNzRjdg1g/zNRrZKQ3o8D/VR7KHKxQiXCIn1TSdG
-         0YRveVd1Ng88RPNaqpUr/IqY7NhyCvuKsj7Bb9EzyeL0Q9HBEMn7jk5TgdfqdjqnNv43
-         fjgU6WTHaKuOyfNaqq2ynG8O6o8Fj6wz7ot2IT8vyBjLchSxmxDTmDu0/kI7PW71r7De
-         rcSjpm/Ke1yCzZAnuf0F09OqAh89eAbOeTvms+Y+bX5yrBTDCgoeta9x2cL2CBW77SYc
-         BuPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KouBHCieDSV7idkFJwAAq2H7EglJYSpQY5o99NkrtdQ=;
-        b=QmPPNQpUwLxS4dC0TlVAsH4kIw7goildkiGf5c3veT6xUI9Z7P544NIVwu5ABS14UG
-         3PeU/NFK2mUhhZc9bGwxMCVDkwU03knGyHNNRx3Z/Mt2ZhoFi/jmN+GwD24mfsSr48Zz
-         oAbrs1ET96zAtbkZROSGAbJdPX4+8LV0YgLwzxcfZmt6D99nvet61TgKv8DidfxmdPJ2
-         yC0nQUrJddno7/nt8Mnxn1MR8/vzfHY0mIQ+UtO5tOKKP7DEWN4PptUwcnTOYkeEqurF
-         4ZLuGECFXCkBgxazRUikCrbwar+mZy/v+ygkrnUGaqZiFDfopL5rrRKom94i8NfKmWKc
-         LGIg==
-X-Gm-Message-State: APjAAAVjdGAevv/NiusnXthNOfkRavPBnDGa5ROLEBSwMJ9JPr2ebOLf
-        HirR05X4qTSkdmEXqwJtkiv9bQ==
-X-Google-Smtp-Source: APXvYqxY7VJT4IATEvCgkJ3hr4R5vjIOfQ5r2GtjjltpSGItLoNblyMUYH2oN/16xqZargkaGMXt8w==
-X-Received: by 2002:adf:dc4d:: with SMTP id m13mr13749090wrj.330.1552930955353;
-        Mon, 18 Mar 2019 10:42:35 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id g24sm14873909wmh.45.2019.03.18.10.42.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 10:42:34 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [RESEND PATCH v6 02/11] dt-bindings: power: supply: add DT bindings for max77650
-Date:   Mon, 18 Mar 2019 18:42:19 +0100
-Message-Id: <20190318174228.18194-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190318174228.18194-1-brgl@bgdev.pl>
-References: <20190318174228.18194-1-brgl@bgdev.pl>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:44:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="215245733"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 18 Mar 2019 10:44:16 -0700
+Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
+        by linux.intel.com (Postfix) with ESMTP id 9FC5F580238;
+        Mon, 18 Mar 2019 10:44:13 -0700 (PDT)
+Subject: [PATCH v10 08/12] perf record: implement compression for AIO trace
+ streaming
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <77db2b2c-5d03-dbb0-aeac-c4dd92129ab9@linux.intel.com>
+Date:   Mon, 18 Mar 2019 20:44:12 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add the DT binding document for the battery charger module of max77650.
+Compression is implemented using the functions from zstd.c. As the memory
+to operate on the compression uses mmap->aio.data[] buffers. If Zstd
+streaming compression API fails for some reason the data to be compressed
+are just copied into the memory buffers using plain memcpy().
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Compressed trace frame consists of an array of PERF_RECORD_COMPRESSED
+records. Each element of the array is not longer that PERF_SAMPLE_MAX_SIZE
+and consists of perf_event_header followed by the compressed chunk
+that is decompressed on the loading stage.
+
+perf_mmap__aio_push() is replaced by perf_mmap__push() which is now used
+in the both serial and AIO streaming cases. perf_mmap__push() is extended
+with positive return values to signify absence of data ready for
+processing.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- .../power/supply/max77650-charger.txt         | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+ tools/perf/builtin-record.c | 114 ++++++++++++++++++++++++++++--------
+ tools/perf/util/mmap.c      |  76 +-----------------------
+ tools/perf/util/mmap.h      |  12 ----
+ 3 files changed, 89 insertions(+), 113 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/max77650-charger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-new file mode 100644
-index 000000000000..d25c95369616
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-@@ -0,0 +1,27 @@
-+Battery charger driver for MAX77650 PMIC from Maxim Integrated.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index c22e65f6b8e6..2e083891affa 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -130,6 +130,8 @@ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unuse
+ 	return 0;
+ }
+ 
++static int record__aio_enabled(struct record *rec);
++static int record__comp_enabled(struct record *rec);
+ static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
+ 			    void *src, size_t src_size);
+ 
+@@ -183,9 +185,9 @@ static int record__aio_complete(struct perf_mmap *md, struct aiocb *cblock)
+ 	if (rem_size == 0) {
+ 		cblock->aio_fildes = -1;
+ 		/*
+-		 * md->refcount is incremented in perf_mmap__push() for
+-		 * every enqueued aio write request so decrement it because
+-		 * the request is now complete.
++		 * md->refcount is incremented in record__aio_pushfn() for
++		 * every aio write request started in record__aio_push() so
++		 * decrement it because the request is now complete.
+ 		 */
+ 		perf_mmap__put(md);
+ 		rc = 1;
+@@ -240,18 +242,89 @@ static int record__aio_sync(struct perf_mmap *md, bool sync_all)
+ 	} while (1);
+ }
+ 
+-static int record__aio_pushfn(void *to, struct aiocb *cblock, void *bf, size_t size, off_t off)
++struct record_aio {
++	struct record	*rec;
++	void		*data;
++	size_t		size;
++};
 +
-+This module is part of the MAX77650 MFD device. For more details
-+see Documentation/devicetree/bindings/mfd/max77650.txt.
++static int record__aio_pushfn(struct perf_mmap *map, void *to, void *buf, size_t size)
+ {
+-	struct record *rec = to;
+-	int ret, trace_fd = rec->session->data->file.fd;
++	struct record_aio *aio = to;
+ 
+-	rec->samples++;
++	/*
++	 * map->base data pointed by buf is copied into free map->aio.data[] buffer
++	 * to release space in the kernel buffer as fast as possible, calling
++	 * perf_mmap__consume() from perf_mmap__push() function.
++	 *
++	 * That lets the kernel to proceed with storing more profiling data into
++	 * the kernel buffer earlier than other per-cpu kernel buffers are handled.
++	 *
++	 * Coping can be done in two steps in case the chunk of profiling data
++	 * crosses the upper bound of the kernel buffer. In this case we first move
++	 * part of data from map->start till the upper bound and then the reminder
++	 * from the beginning of the kernel buffer till the end of the data chunk.
++	 */
+ 
+-	ret = record__aio_write(cblock, trace_fd, bf, size, off);
++	if (record__comp_enabled(aio->rec)) {
++		size = zstd_compress(aio->rec->session, aio->data + aio->size,
++				     perf_mmap__mmap_len(map) - aio->size,
++				     buf, size);
++	} else {
++		memcpy(aio->data + aio->size, buf, size);
++	}
 +
-+The charger is represented as a sub-node of the PMIC node on the device tree.
++	if (!aio->size) {
++		/*
++		 * Increment map->refcount to guard map->aio.data[] buffer
++		 * from premature deallocation because map object can be
++		 * released earlier than aio write request started on
++		 * map->aio.data[] buffer is complete.
++		 *
++		 * perf_mmap__put() is done at record__aio_complete()
++		 * after started aio request completion or at record__aio_push()
++		 * if the request failed to start.
++		 */
++		perf_mmap__get(map);
++	}
 +
-+Required properties:
-+--------------------
-+- compatible:		Must be "maxim,max77650-charger"
++	aio->size += size;
 +
-+Optional properties:
-+--------------------
-+- min-microvolt:	Minimum CHGIN regulation voltage (in microvolts). Must be
-+			one of: 4000000, 4100000, 4200000, 4300000, 4400000,
-+			4500000, 4600000, 4700000.
-+- curr-lim-microamp:	CHGIN input current limit (in microamps). Must be one of:
-+			95000, 190000, 285000, 380000, 475000.
++	return size;
++}
 +
-+Example:
-+--------
++static int record__aio_push(struct record *rec, struct perf_mmap *map, off_t *off)
++{
++	int ret, idx;
++	int trace_fd = rec->session->data->file.fd;
++	struct record_aio aio = { .rec = rec, .size = 0 };
 +
-+	charger {
-+		compatible = "maxim,max77650-charger";
-+		min-microvolt = <4200000>;
-+		curr-lim-microamp = <285000>;
-+	};
++	/*
++	 * Call record__aio_sync() to wait till map->aio.data[] buffer
++	 * becomes available after previous aio write operation.
++	 */
++
++	idx = record__aio_sync(map, false);
++	aio.data = map->aio.data[idx];
++	ret = perf_mmap__push(map, &aio, record__aio_pushfn);
++	if (ret != 0) /* ret > 0 - no data, ret < 0 - error */
++		return ret;
++
++	rec->samples++;
++	ret = record__aio_write(&(map->aio.cblocks[idx]), trace_fd, aio.data, aio.size, *off);
+ 	if (!ret) {
+-		rec->bytes_written += size;
++		*off += aio.size;
++		rec->bytes_written += aio.size;
+ 		if (switch_output_size(rec))
+ 			trigger_hit(&switch_output_trigger);
++	} else {
++		/*
++		 * Decrement map->refcount incremented in record__aio_pushfn()
++		 * back if record__aio_write() operation failed to start, otherwise
++		 * map->refcount is decremented in record__aio_complete() after
++		 * aio write operation finishes successfully.
++		 */
++		perf_mmap__put(map);
+ 	}
+ 
+ 	return ret;
+@@ -273,7 +346,7 @@ static void record__aio_mmap_read_sync(struct record *rec)
+ 	struct perf_evlist *evlist = rec->evlist;
+ 	struct perf_mmap *maps = evlist->mmap;
+ 
+-	if (!rec->opts.nr_cblocks)
++	if (!record__aio_enabled(rec))
+ 		return;
+ 
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
+@@ -307,13 +380,8 @@ static int record__aio_parse(const struct option *opt,
+ #else /* HAVE_AIO_SUPPORT */
+ static int nr_cblocks_max = 0;
+ 
+-static int record__aio_sync(struct perf_mmap *md __maybe_unused, bool sync_all __maybe_unused)
+-{
+-	return -1;
+-}
+-
+-static int record__aio_pushfn(void *to __maybe_unused, struct aiocb *cblock __maybe_unused,
+-		void *bf __maybe_unused, size_t size __maybe_unused, off_t off __maybe_unused)
++static int record__aio_push(struct record *rec __maybe_unused, struct perf_mmap *map __maybe_unused,
++			    off_t *off __maybe_unused)
+ {
+ 	return -1;
+ }
+@@ -824,7 +892,7 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	int rc = 0;
+ 	struct perf_mmap *maps;
+ 	int trace_fd = rec->data.file.fd;
+-	off_t off;
++	off_t off = 0;
+ 
+ 	if (!evlist)
+ 		return 0;
+@@ -850,20 +918,14 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				map->flush = 1;
+ 			}
+ 			if (!record__aio_enabled(rec)) {
+-				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
++				if (perf_mmap__push(map, rec, record__pushfn) < 0) {
+ 					if (sync)
+ 						map->flush = flush;
+ 					rc = -1;
+ 					goto out;
+ 				}
+ 			} else {
+-				int idx;
+-				/*
+-				 * Call record__aio_sync() to wait till map->data buffer
+-				 * becomes available after previous aio write request.
+-				 */
+-				idx = record__aio_sync(map, false);
+-				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
++				if (record__aio_push(rec, map, &off) < 0) {
+ 					record__aio_set_pos(trace_fd, off);
+ 					if (sync)
+ 						map->flush = flush;
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index d85e73fc82e2..868c0b0e909c 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -289,80 +289,6 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map)
+ 	zfree(&map->aio.cblocks);
+ 	zfree(&map->aio.aiocb);
+ }
+-
+-int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off)
+-{
+-	u64 head = perf_mmap__read_head(md);
+-	unsigned char *data = md->base + page_size;
+-	unsigned long size, size0 = 0;
+-	void *buf;
+-	int rc = 0;
+-
+-	rc = perf_mmap__read_init(md);
+-	if (rc < 0)
+-		return (rc == -EAGAIN) ? 0 : -1;
+-
+-	/*
+-	 * md->base data is copied into md->data[idx] buffer to
+-	 * release space in the kernel buffer as fast as possible,
+-	 * thru perf_mmap__consume() below.
+-	 *
+-	 * That lets the kernel to proceed with storing more
+-	 * profiling data into the kernel buffer earlier than other
+-	 * per-cpu kernel buffers are handled.
+-	 *
+-	 * Coping can be done in two steps in case the chunk of
+-	 * profiling data crosses the upper bound of the kernel buffer.
+-	 * In this case we first move part of data from md->start
+-	 * till the upper bound and then the reminder from the
+-	 * beginning of the kernel buffer till the end of
+-	 * the data chunk.
+-	 */
+-
+-	size = md->end - md->start;
+-
+-	if ((md->start & md->mask) + size != (md->end & md->mask)) {
+-		buf = &data[md->start & md->mask];
+-		size = md->mask + 1 - (md->start & md->mask);
+-		md->start += size;
+-		memcpy(md->aio.data[idx], buf, size);
+-		size0 = size;
+-	}
+-
+-	buf = &data[md->start & md->mask];
+-	size = md->end - md->start;
+-	md->start += size;
+-	memcpy(md->aio.data[idx] + size0, buf, size);
+-
+-	/*
+-	 * Increment md->refcount to guard md->data[idx] buffer
+-	 * from premature deallocation because md object can be
+-	 * released earlier than aio write request started
+-	 * on mmap->data[idx] is complete.
+-	 *
+-	 * perf_mmap__put() is done at record__aio_complete()
+-	 * after started request completion.
+-	 */
+-	perf_mmap__get(md);
+-
+-	md->prev = head;
+-	perf_mmap__consume(md);
+-
+-	rc = push(to, &md->aio.cblocks[idx], md->aio.data[idx], size0 + size, *off);
+-	if (!rc) {
+-		*off += size0 + size;
+-	} else {
+-		/*
+-		 * Decrement md->refcount back if aio write
+-		 * operation failed to start.
+-		 */
+-		perf_mmap__put(md);
+-	}
+-
+-	return rc;
+-}
+ #else /* !HAVE_AIO_SUPPORT */
+ static int perf_mmap__aio_enabled(struct perf_mmap *map __maybe_unused)
+ {
+@@ -566,7 +492,7 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 
+ 	rc = perf_mmap__read_init(md);
+ 	if (rc < 0)
+-		return (rc == -EAGAIN) ? 0 : -1;
++		return (rc == -EAGAIN) ? 1 : -1;
+ 
+ 	size = md->end - md->start;
+ 
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index 4e2f58d95c1f..274ce389cd84 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -101,18 +101,6 @@ union perf_event *perf_mmap__read_event(struct perf_mmap *map);
+ 
+ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 		    int push(struct perf_mmap *map, void *to, void *buf, size_t size));
+-#ifdef HAVE_AIO_SUPPORT
+-int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off);
+-#else
+-static inline int perf_mmap__aio_push(struct perf_mmap *md __maybe_unused, void *to __maybe_unused, int idx __maybe_unused,
+-	int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off) __maybe_unused,
+-	off_t *off __maybe_unused)
+-{
+-	return 0;
+-}
+-#endif
+ 
+ size_t perf_mmap__mmap_len(struct perf_mmap *map);
+ 
 -- 
 2.20.1
 
