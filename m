@@ -2,201 +2,338 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC04C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B19C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F3B20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:00:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="O2HJPqqf"
+	by mail.kernel.org (Postfix) with ESMTP id 5E27220863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfCRPA1 (ORCPT
+        id S1727432AbfCRPCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:00:27 -0400
-Received: from mail-eopbgr750074.outbound.protection.outlook.com ([40.107.75.74]:9955
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726731AbfCRPA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:00:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mChfGp0uaeisGPX8W+5mULJJWchM72/CK8EkKlL9g3M=;
- b=O2HJPqqfZE3WCz2t8AE61dcqXh1uGkR+y1WcB/sROLmptcf3PhJLOfEUwA75UaTG8iGJlUQzLQQ3Og22QvxQ0nXbImOSs9igsEvrTnMb3p5KpU3QbP2nbpC52rk9RsiR7TdPXFc6ThmY3qickNdgRlTtYJ4SXVv6LsNOSAYt7IM=
-Received: from SN6PR02CA0015.namprd02.prod.outlook.com (52.135.118.156) by
- BN6PR02MB2355.namprd02.prod.outlook.com (10.168.254.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Mon, 18 Mar 2019 14:59:44 +0000
-Received: from SN1NAM02FT057.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::209) by SN6PR02CA0015.outlook.office365.com
- (2603:10b6:805:a2::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.14 via Frontend
- Transport; Mon, 18 Mar 2019 14:59:43 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
- smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- SN1NAM02FT057.mail.protection.outlook.com (10.152.73.105) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1730.9
- via Frontend Transport; Mon, 18 Mar 2019 14:59:43 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:34732 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1h5tjq-0006Nu-Pv; Mon, 18 Mar 2019 07:59:42 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1h5tjl-0003AG-MU; Mon, 18 Mar 2019 07:59:37 -0700
-Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x2IExYta017861;
-        Mon, 18 Mar 2019 07:59:34 -0700
-Received: from [172.30.17.111]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1h5tji-00039w-66; Mon, 18 Mar 2019 07:59:34 -0700
-Subject: Re: [PATCH] arm64: zynqmp: dt: Add TI PHY quirk
-To:     Harini Katakam <harini.katakam@xilinx.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <michal.simek@xilinx.com>,
-        <sudeep.holla@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <harinikatakamlinux@gmail.com>
-References: <1552130218-21505-1-git-send-email-harini.katakam@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <0abac7f6-0aff-4577-18f6-17516cea0b04@xilinx.com>
-Date:   Mon, 18 Mar 2019 15:59:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 11:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbfCRPCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 11:02:54 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CC9620850;
+        Mon, 18 Mar 2019 15:02:52 +0000 (UTC)
+Date:   Mon, 18 Mar 2019 11:02:50 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Prateek Sood <prsood@codeaurora.org>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        sramana@codeaurora.org, Frederic Weisbecker <fweisbec@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] perf: extend total_ref_count usage to protect
+ perf_trace_buf access
+Message-ID: <20190318110250.7214cfa7@gandalf.local.home>
+In-Reply-To: <1552906065-24137-1-git-send-email-prsood@codeaurora.org>
+References: <1552906065-24137-1-git-send-email-prsood@codeaurora.org>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1552130218-21505-1-git-send-email-harini.katakam@xilinx.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(979002)(39860400002)(376002)(136003)(396003)(346002)(2980300002)(199004)(189003)(50466002)(76176011)(64126003)(47776003)(54906003)(478600001)(65806001)(65956001)(110136005)(2201001)(23676004)(8936002)(5660300002)(316002)(77096007)(58126008)(14444005)(36756003)(4326008)(186003)(26005)(31696002)(106466001)(2616005)(426003)(81166006)(81156014)(126002)(476003)(230700001)(8676002)(6246003)(336012)(11346002)(44832011)(65826007)(446003)(2906002)(36386004)(305945005)(9786002)(229853002)(63266004)(486006)(106002)(31686004)(2486003)(356004)(6666004)(5001870100001)(2101003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2355;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7859c455-a292-47b5-c1c4-08d6abb25acf
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:BN6PR02MB2355;
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2355:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <BN6PR02MB23557C6A4C875E59019E239AC6470@BN6PR02MB2355.namprd02.prod.outlook.com>
-X-Forefront-PRVS: 098076C36C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: jlXkJCnjXs6ouxjObXrw6WbY5Rp3rG1L4EDrmNqrmzsYkGl1eR0LPRUBYlSLM8xptLmowSn11ittu5CBngkeiYuOZ7GTpuDEVpxDqN9D7NUXYXze7BGk6JGpa5H0NbOpdQllfsnE2jIIO2E4AlcPxghxtG9jvXnNcG7429HOrhsnGOe8Sbr612YYb8umTD6+AqO8Rg3paQNuAUBUf/ppA6SHT1nuDKQ56Tvo0jF13sJbl51L2/NF6Ti+R6Ww3y0Vm1gkfAeERxUPaKVx4hDaArb3ibwQ7fL6azFuLhvmrKTPoFnKTGHWcfIhKrDspR3JgWvFIQsenYeiSH6MlKku6I6kvC72ztSNUce7Ob2h7YI2Em2ZBKj7+F19URaAcnqbT4ivA4RukVfcBxHiPBrdvscNtnjLoYmNSlPVoB4Y4b8=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2019 14:59:43.2274
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7859c455-a292-47b5-c1c4-08d6abb25acf
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2355
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09. 03. 19 12:16, Harini Katakam wrote:
-> Add TI PHY strap ctrl quirk for all the HW where applicable.
+On Mon, 18 Mar 2019 16:17:45 +0530
+Prateek Sood <prsood@codeaurora.org> wrote:
+
+> A potential race exists between access of perf_trace_buf[i] from
+> perf_trace_buf_alloc() and perf_trace_event_unreg(). This can
+> result in perf_trace_buf[i] being NULL during access from memset()
+> in perf_trace_buf_alloc().
 > 
-> Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+> Signed-off-by: Prateek Sood <prsood@codeaurora.org>
 > ---
->  arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts | 1 +
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts      | 1 +
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts      | 1 +
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts      | 1 +
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts      | 1 +
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts      | 1 +
->  6 files changed, 6 insertions(+)
+>  include/linux/trace_events.h    |  2 ++
+>  include/trace/perf.h            |  5 ++++-
+>  kernel/trace/trace_event_perf.c | 43 ++++++++++++++++++++++++++++-------------
+>  kernel/trace/trace_kprobe.c     | 10 ++++++++--
+>  kernel/trace/trace_syscalls.c   | 14 ++++++++++----
+>  kernel/trace/trace_uprobe.c     |  2 ++
+>  6 files changed, 56 insertions(+), 20 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
-> index 11cc671..2421ec7 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
-> @@ -89,6 +89,7 @@
->  		ti,rx-internal-delay = <0x8>;
->  		ti,tx-internal-delay = <0xa>;
->  		ti,fifo-depth = <0x1>;
-> +		ti,dp83867-rxctrl-strap-quirk;
->  	};
->  };
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 8a62731..dbdad19 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -591,6 +591,8 @@ extern int  ftrace_profile_set_filter(struct perf_event *event, int event_id,
+>  extern void ftrace_profile_free_filter(struct perf_event *event);
+>  void perf_trace_buf_update(void *record, u16 type);
+>  void *perf_trace_buf_alloc(int size, struct pt_regs **regs, int *rctxp);
+> +void get_perf_trace_buf(void);
+> +void put_perf_trace_buf(void);
 >  
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-> index cef8167..2a3b665 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-> @@ -110,6 +110,7 @@
->  		ti,rx-internal-delay = <0x8>;
->  		ti,tx-internal-delay = <0xa>;
->  		ti,fifo-depth = <0x1>;
-> +		ti,dp83867-rxctrl-strap-quirk;
->  	};
->  };
->  
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
-> index af4d868..1780ed2 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
-> @@ -21,6 +21,7 @@
->  		ti,rx-internal-delay = <0x8>;
->  		ti,tx-internal-delay = <0xa>;
->  		ti,fifo-depth = <0x1>;
-> +		ti,dp83867-rxctrl-strap-quirk;
->  	};
->  	/* Cleanup from RevA */
->  	/delete-node/ phy@21;
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-> index d4ad19a..8f45614 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-> @@ -55,6 +55,7 @@
->  		ti,rx-internal-delay = <0x8>;
->  		ti,tx-internal-delay = <0xa>;
->  		ti,fifo-depth = <0x1>;
-> +		ti,dp83867-rxctrl-strap-quirk;
->  	};
->  };
->  
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-> index 94cf509..93ce7eb 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-> @@ -111,6 +111,7 @@
->  		ti,rx-internal-delay = <0x8>;
->  		ti,tx-internal-delay = <0xa>;
->  		ti,fifo-depth = <0x1>;
-> +		ti,dp83867-rxctrl-strap-quirk;
->  	};
->  };
->  
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-> index 460adc3..8bb0001 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-> @@ -106,6 +106,7 @@
->  		ti,rx-internal-delay = <0x8>;
->  		ti,tx-internal-delay = <0xa>;
->  		ti,fifo-depth = <0x1>;
-> +		ti,dp83867-rxctrl-strap-quirk;
->  	};
->  };
->  
-> 
+>  void bpf_trace_run1(struct bpf_prog *prog, u64 arg1);
+>  void bpf_trace_run2(struct bpf_prog *prog, u64 arg1, u64 arg2);
+> diff --git a/include/trace/perf.h b/include/trace/perf.h
+> index dbc6c74..f808c33 100644
+> --- a/include/trace/perf.h
+> +++ b/include/trace/perf.h
+> @@ -55,9 +55,10 @@
+>  			     sizeof(u64));				\
+>  	__entry_size -= sizeof(u32);					\
+>  									\
+> +	get_perf_trace_buf();						\
+>  	entry = perf_trace_buf_alloc(__entry_size, &__regs, &rctx);	\
+>  	if (!entry)							\
+> -		return;							\
+> +		goto out;						\
+>  									\
+>  	perf_fetch_caller_regs(__regs);					\
+>  									\
+> @@ -68,6 +69,8 @@
+>  	perf_trace_run_bpf_submit(entry, __entry_size, rctx,		\
+>  				  event_call, __count, __regs,		\
+>  				  head, __task);			\
+> +out:									\
+> +	put_perf_trace_buf();						\
 
-Applied.
+So this gets called in a trace point.
 
-Thanks,
-Michal
+>  }
+>  
+>  /*
+> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+> index 4629a61..fabfc21 100644
+> --- a/kernel/trace/trace_event_perf.c
+> +++ b/kernel/trace/trace_event_perf.c
+> @@ -21,7 +21,7 @@ typedef typeof(unsigned long [PERF_MAX_TRACE_SIZE / sizeof(unsigned long)])
+>  	perf_trace_t;
+>  
+>  /* Count the events in use (per event id, not per instance) */
+> -static int	total_ref_count;
+> +static atomic_t	total_ref_count;
+>  
+>  static int perf_trace_event_perm(struct trace_event_call *tp_event,
+>  				 struct perf_event *p_event)
+> @@ -88,6 +88,27 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
+>  	return 0;
+>  }
+>  
+> +void get_perf_trace_buf()
+> +{
+> +	atomic_inc(&total_ref_count);
+> +}
+> +EXPORT_SYMBOL_GPL(get_perf_trace_buf);
+> +NOKPROBE_SYMBOL(get_perf_trace_buf);
+> +
+> +void put_perf_trace_buf()
+> +{
+> +	int index;
+> +
+> +	if (atomic_dec_and_test(&total_ref_count)) {
+> +		for (index = 0; index < PERF_NR_CONTEXTS; index++) {
+> +			free_percpu(perf_trace_buf[index]);
+
+free_percpu() calls spin locks and lots of other code, which because
+you called this from a tracepoint, could cause deadlocks. Not only
+that, it too calls tracepoints. Which will cause this to recurse.
+
+This doesn't look like the right solution to me.
+
+-- Steve
+
+
+> +			perf_trace_buf[index] = NULL;
+> +		}
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(put_perf_trace_buf);
+> +NOKPROBE_SYMBOL(put_perf_trace_buf);
+> +
+>  static int perf_trace_event_reg(struct trace_event_call *tp_event,
+>  				struct perf_event *p_event)
+>  {
+> @@ -108,7 +129,7 @@ static int perf_trace_event_reg(struct trace_event_call *tp_event,
+>  
+>  	tp_event->perf_events = list;
+>  
+> -	if (!total_ref_count) {
+> +	if (!atomic_read(&total_ref_count)) {
+>  		char __percpu *buf;
+>  		int i;
+>  
+> @@ -125,11 +146,11 @@ static int perf_trace_event_reg(struct trace_event_call *tp_event,
+>  	if (ret)
+>  		goto fail;
+>  
+> -	total_ref_count++;
+> +	get_perf_trace_buf();
+>  	return 0;
+>  
+>  fail:
+> -	if (!total_ref_count) {
+> +	if (!atomic_read(&total_ref_count)) {
+>  		int i;
+>  
+>  		for (i = 0; i < PERF_NR_CONTEXTS; i++) {
+> @@ -164,13 +185,7 @@ static void perf_trace_event_unreg(struct perf_event *p_event)
+>  
+>  	free_percpu(tp_event->perf_events);
+>  	tp_event->perf_events = NULL;
+> -
+> -	if (!--total_ref_count) {
+> -		for (i = 0; i < PERF_NR_CONTEXTS; i++) {
+> -			free_percpu(perf_trace_buf[i]);
+> -			perf_trace_buf[i] = NULL;
+> -		}
+> -	}
+> +	put_perf_trace_buf();
+>  out:
+>  	module_put(tp_event->mod);
+>  }
+> @@ -453,15 +468,17 @@ void perf_trace_buf_update(void *record, u16 type)
+>  	memset(&regs, 0, sizeof(regs));
+>  	perf_fetch_caller_regs(&regs);
+>  
+> +	get_perf_trace_buf();
+>  	entry = perf_trace_buf_alloc(ENTRY_SIZE, NULL, &rctx);
+>  	if (!entry)
+> -		return;
+> +		goto out;
+>  
+>  	entry->ip = ip;
+>  	entry->parent_ip = parent_ip;
+>  	perf_trace_buf_submit(entry, ENTRY_SIZE, rctx, TRACE_FN,
+>  			      1, &regs, &head, NULL);
+> -
+> +out:
+> +	put_perf_trace_buf();
+>  #undef ENTRY_SIZE
+>  }
+>  
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 5d5129b..7830190 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1166,15 +1166,18 @@ static int kretprobe_event_define_fields(struct trace_event_call *event_call)
+>  	size = ALIGN(__size + sizeof(u32), sizeof(u64));
+>  	size -= sizeof(u32);
+>  
+> +	get_perf_trace_buf();
+>  	entry = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!entry)
+> -		return 0;
+> +		goto out;
+>  
+>  	entry->ip = (unsigned long)tk->rp.kp.addr;
+>  	memset(&entry[1], 0, dsize);
+>  	store_trace_args(&entry[1], &tk->tp, regs, sizeof(*entry), dsize);
+>  	perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, regs,
+>  			      head, NULL);
+> +out:
+> +	put_perf_trace_buf();
+>  	return 0;
+>  }
+>  NOKPROBE_SYMBOL(kprobe_perf_func);
+> @@ -1202,15 +1205,18 @@ static int kretprobe_event_define_fields(struct trace_event_call *event_call)
+>  	size = ALIGN(__size + sizeof(u32), sizeof(u64));
+>  	size -= sizeof(u32);
+>  
+> +	get_perf_trace_buf();
+>  	entry = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!entry)
+> -		return;
+> +		goto out;
+>  
+>  	entry->func = (unsigned long)tk->rp.kp.addr;
+>  	entry->ret_ip = (unsigned long)ri->ret_addr;
+>  	store_trace_args(&entry[1], &tk->tp, regs, sizeof(*entry), dsize);
+>  	perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, regs,
+>  			      head, NULL);
+> +out:
+> +	put_perf_trace_buf();
+>  }
+>  NOKPROBE_SYMBOL(kretprobe_perf_func);
+>  
+> diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+> index f93a56d..a08110f 100644
+> --- a/kernel/trace/trace_syscalls.c
+> +++ b/kernel/trace/trace_syscalls.c
+> @@ -608,9 +608,10 @@ static void perf_syscall_enter(void *ignore, struct pt_regs *regs, long id)
+>  	size = ALIGN(size + sizeof(u32), sizeof(u64));
+>  	size -= sizeof(u32);
+>  
+> +	get_perf_trace_buf();
+>  	rec = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!rec)
+> -		return;
+> +		goto out;
+>  
+>  	rec->nr = syscall_nr;
+>  	syscall_get_arguments(current, regs, 0, sys_data->nb_args,
+> @@ -620,12 +621,14 @@ static void perf_syscall_enter(void *ignore, struct pt_regs *regs, long id)
+>  	     !perf_call_bpf_enter(sys_data->enter_event, regs, sys_data, rec)) ||
+>  	    hlist_empty(head)) {
+>  		perf_swevent_put_recursion_context(rctx);
+> -		return;
+> +		goto out;
+>  	}
+>  
+>  	perf_trace_buf_submit(rec, size, rctx,
+>  			      sys_data->enter_event->event.type, 1, regs,
+>  			      head, NULL);
+> +out:
+> +	put_perf_trace_buf();
+>  }
+>  
+>  static int perf_sysenter_enable(struct trace_event_call *call)
+> @@ -706,9 +709,10 @@ static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long ret)
+>  	size = ALIGN(sizeof(*rec) + sizeof(u32), sizeof(u64));
+>  	size -= sizeof(u32);
+>  
+> +	get_perf_trace_buf();
+>  	rec = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!rec)
+> -		return;
+> +		goto out;
+>  
+>  	rec->nr = syscall_nr;
+>  	rec->ret = syscall_get_return_value(current, regs);
+> @@ -717,11 +721,13 @@ static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long ret)
+>  	     !perf_call_bpf_exit(sys_data->exit_event, regs, rec)) ||
+>  	    hlist_empty(head)) {
+>  		perf_swevent_put_recursion_context(rctx);
+> -		return;
+> +		goto out;
+>  	}
+>  
+>  	perf_trace_buf_submit(rec, size, rctx, sys_data->exit_event->event.type,
+>  			      1, regs, head, NULL);
+> +out:
+> +	put_perf_trace_buf();
+>  }
+>  
+>  static int perf_sysexit_enable(struct trace_event_call *call)
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index be78d99..c931b22 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -1116,6 +1116,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+>  	if (hlist_empty(head))
+>  		goto out;
+>  
+> +	get_perf_trace_buf();
+>  	entry = perf_trace_buf_alloc(size, NULL, &rctx);
+>  	if (!entry)
+>  		goto out;
+> @@ -1140,6 +1141,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+>  	perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, regs,
+>  			      head, NULL);
+>   out:
+> +	put_perf_trace_buf();
+>  	preempt_enable();
+>  }
+>  
+
