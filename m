@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1906C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E48C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A7120854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F38A20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfCRLqW (ORCPT
+        id S1727274AbfCRLq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:46:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42458 "EHLO mx1.redhat.com"
+        Mon, 18 Mar 2019 07:46:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48300 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbfCRLqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:46:21 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S1726713AbfCRLq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 07:46:27 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A418A308219C;
-        Mon, 18 Mar 2019 11:46:21 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id EC11A3092642;
+        Mon, 18 Mar 2019 11:46:26 +0000 (UTC)
 Received: from krava (unknown [10.43.17.124])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 028AA1001DFE;
-        Mon, 18 Mar 2019 11:46:19 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 12:46:19 +0100
+        by smtp.corp.redhat.com (Postfix) with SMTP id 53D935C207;
+        Mon, 18 Mar 2019 11:46:25 +0000 (UTC)
+Date:   Mon, 18 Mar 2019 12:46:25 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -37,53 +37,85 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Andi Kleen <ak@linux.intel.com>,
         linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 10/12] perf report: implement record trace
- decompression
-Message-ID: <20190318114619.GA7900@krava>
+Subject: Re: [PATCH v9 00/12] perf: enable compression of record mode trace
+ to save storage space
+Message-ID: <20190318114625.GB7900@krava>
 References: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
- <f688ddcd-99cf-ee59-06d7-205fa0dd2f3f@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f688ddcd-99cf-ee59-06d7-205fa0dd2f3f@linux.intel.com>
+In-Reply-To: <c1423198-e474-1739-e800-4615cce501ce@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 18 Mar 2019 11:46:21 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 18 Mar 2019 11:46:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 05:17:06PM +0300, Alexey Budankov wrote:
+On Sat, Mar 16, 2019 at 11:58:30AM +0300, Alexey Budankov wrote:
 
 SNIP
 
->  static int perf_session__deliver_event(struct perf_session *session,
->  				       union perf_event *event,
->  				       struct perf_tool *tool,
-> @@ -198,12 +259,23 @@ static void perf_session__delete_threads(struct perf_session *session)
->  
->  void perf_session__delete(struct perf_session *session)
->  {
-> +	struct decomp *next, *decomp;
-> +	size_t decomp_len;
->  	if (session == NULL)
->  		return;
->  	auxtrace__free(session);
->  	auxtrace_index__free(&session->auxtrace_index);
->  	perf_session__destroy_kernel_maps(session);
->  	perf_session__delete_threads(session);
-> +	next = session->decomp;
-> +	decomp_len = session->header.env.comp_mmap_len;
-> +	do {
-> +		decomp = next;
-> +		if (decomp == NULL)
-> +			break;
-> +		next = decomp->next;
-> +		munmap(decomp, decomp_len + sizeof(struct decomp));
-> +	} while (1);
+> ---
+> Alexey Budankov (12):
+>   feature: implement libzstd check, LIBZSTD_DIR and NO_LIBZSTD defines
+>   perf record: implement --mmap-flush=<number> option
+>   perf session: define bytes_transferred and bytes_compressed metrics
+>   perf record: implement COMPRESSED event record and its attributes
+>   perf mmap: implement dedicated memory buffer for data compression
+>   perf util: introduce Zstd streaming based compression API
+>   perf record: implement compression for serial trace streaming
+>   perf record: implement compression for AIO trace streaming
+>   perf record: implement -z,--compression_level[=<n>] option
+>   perf report: implement record trace decompression
+>   perf inject: enable COMPRESSED records decompression
+>   perf tests: implement Zstd comp/decomp integration test
+> 
+>  tools/build/Makefile.feature                  |   6 +-
+>  tools/build/feature/Makefile                  |   6 +-
+>  tools/build/feature/test-all.c                |   5 +
+>  tools/build/feature/test-libzstd.c            |  12 +
+>  tools/perf/Documentation/perf-record.txt      |  17 ++
+>  .../Documentation/perf.data-file-format.txt   |  24 ++
+>  tools/perf/Makefile.config                    |  20 ++
+>  tools/perf/Makefile.perf                      |   3 +
+>  tools/perf/builtin-inject.c                   |   4 +
+>  tools/perf/builtin-record.c                   | 285 +++++++++++++++---
+>  tools/perf/builtin-report.c                   |   5 +-
+>  tools/perf/builtin-version.c                  |   2 +
+>  tools/perf/perf.h                             |   2 +
+>  .../tests/shell/record+zstd_comp_decomp.sh    |  28 ++
+>  tools/perf/util/Build                         |   2 +
+>  tools/perf/util/compress.h                    |  54 ++++
+>  tools/perf/util/env.h                         |  11 +
+>  tools/perf/util/event.c                       |   1 +
+>  tools/perf/util/event.h                       |   7 +
+>  tools/perf/util/evlist.c                      |   8 +-
+>  tools/perf/util/evlist.h                      |   3 +-
+>  tools/perf/util/header.c                      |  55 +++-
+>  tools/perf/util/header.h                      |   1 +
+>  tools/perf/util/mmap.c                        | 106 ++-----
+>  tools/perf/util/mmap.h                        |  17 +-
+>  tools/perf/util/session.c                     | 124 +++++++-
+>  tools/perf/util/session.h                     |  14 +
+>  tools/perf/util/tool.h                        |   2 +
+>  tools/perf/util/zstd.c                        | 111 +++++++
+>  29 files changed, 801 insertions(+), 134 deletions(-)
+>  create mode 100644 tools/build/feature/test-libzstd.c
+>  create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp.sh
+>  create mode 100644 tools/perf/util/zstd.c
+> 
+> ---
+> Changes in v9:
+> - fixed issue with improper max COMPRESSED record size calculation
+> - moved up calculation of ratio variable in 03/12
+> - made minor corrections in changelogs
+> - corrected several checkpatch.pl warnings and errors
 
-please put this to separate function
+apart from 2 comments I'm ok with this patchset
 
-thanks,
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks a lot,
 jirka
