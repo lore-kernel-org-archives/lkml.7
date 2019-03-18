@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F00C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9788C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 117482133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD21D2175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbfCRVoY (ORCPT
+        id S1727998AbfCRVpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 17:44:24 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57597 "EHLO mga04.intel.com"
+        Mon, 18 Mar 2019 17:45:20 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57599 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbfCRVoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 17:44:22 -0400
+        id S1727817AbfCRVoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 17:44:24 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 14:44:21 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 14:44:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,495,1544515200"; 
-   d="scan'208";a="308301806"
+   d="scan'208";a="308301820"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2019 14:44:21 -0700
+  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2019 14:44:23 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 11/22] perf/core: Support a REMOVE transaction
-Date:   Mon, 18 Mar 2019 14:41:33 -0700
-Message-Id: <20190318214144.4639-12-kan.liang@linux.intel.com>
+Subject: [PATCH 13/22] perf/x86/intel: Support overflows on SLOTS
+Date:   Mon, 18 Mar 2019 14:41:35 -0700
+Message-Id: <20190318214144.4639-14-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190318214144.4639-1-kan.liang@linux.intel.com>
 References: <20190318214144.4639-1-kan.liang@linux.intel.com>
@@ -47,74 +47,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-For TopDown metrics it is useful to have a remove transaction when
-the counter is unscheduled, so that the value can be saved correctly.
-Add a remove transaction to the perf core.
+The internal counters used for the metrics can overflow. If this happens
+an overflow is triggered on the SLOTS fixed counter. Add special code
+that resets all the slave metric counters in this case.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/core.c     | 3 +--
- include/linux/perf_event.h | 1 +
- kernel/events/core.c       | 5 +++++
- 3 files changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/core.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index b684f0294f35..2b2328a528df 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1902,8 +1902,7 @@ static inline void x86_pmu_read(struct perf_event *event)
-  * Set the flag to make pmu::enable() not perform the
-  * schedulability test, it will be performed at commit time
-  *
-- * We only support PERF_PMU_TXN_ADD transactions. Save the
-- * transaction flags but otherwise ignore non-PERF_PMU_TXN_ADD
-+ * Save the transaction flags and ignore non-PERF_PMU_TXN_ADD
-  * transactions.
-  */
- static void x86_pmu_start_txn(struct pmu *pmu, unsigned int txn_flags)
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index bd3d6a89ccd4..088358be55ff 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -233,6 +233,7 @@ struct perf_event;
-  */
- #define PERF_PMU_TXN_ADD  0x1		/* txn to add/schedule event on PMU */
- #define PERF_PMU_TXN_READ 0x2		/* txn to read event group from PMU */
-+#define PERF_PMU_TXN_REMOVE 0x4		/* txn to remove event on PMU */
- 
- /**
-  * pmu::capabilities flags
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 560ac237b8be..bc07cd5a302d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2032,6 +2032,7 @@ group_sched_out(struct perf_event *group_event,
- 		struct perf_cpu_context *cpuctx,
- 		struct perf_event_context *ctx)
- {
-+	struct pmu *pmu = ctx->pmu;
- 	struct perf_event *event;
- 
- 	if (group_event->state != PERF_EVENT_STATE_ACTIVE)
-@@ -2039,6 +2040,8 @@ group_sched_out(struct perf_event *group_event,
- 
- 	perf_pmu_disable(ctx->pmu);
- 
-+	pmu->start_txn(pmu, PERF_PMU_TXN_REMOVE);
-+
- 	event_sched_out(group_event, cpuctx, ctx);
- 
- 	/*
-@@ -2051,6 +2054,8 @@ group_sched_out(struct perf_event *group_event,
- 
- 	if (group_event->attr.exclusive)
- 		cpuctx->exclusive = 0;
-+
-+	pmu->commit_txn(pmu);
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index f1cb0155c79a..545db8da24de 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2198,12 +2198,35 @@ static void intel_pmu_add_event(struct perf_event *event)
+ 		intel_pmu_lbr_add(event);
  }
  
- #define DETACH_GROUP	0x01UL
++/* When SLOTS overflowed update all the active topdown-* events */
++static void intel_pmu_update_metrics(struct perf_event *event)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	int idx;
++	u64 slots_events;
++
++	slots_events = *(u64 *)cpuc->enabled_events & INTEL_PMC_MSK_ANY_SLOTS;
++
++	for_each_set_bit(idx, (unsigned long *)&slots_events, 64) {
++		struct perf_event *ev = cpuc->events[idx];
++
++		if (ev == event)
++			continue;
++		x86_perf_event_update(event);
++	}
++}
++
+ /*
+  * Save and restart an expired event. Called by NMI contexts,
+  * so it has to be careful about preempting normal event ops:
+  */
+ int intel_pmu_save_and_restart(struct perf_event *event)
+ {
++	struct hw_perf_event *hwc = &event->hw;
++
++	if (unlikely(hwc->reg_idx == INTEL_PMC_IDX_FIXED_SLOTS))
++		intel_pmu_update_metrics(event);
++
+ 	x86_perf_event_update(event);
+ 	/*
+ 	 * For a checkpointed counter always reset back to 0.  This
 -- 
 2.17.1
 
