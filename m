@@ -2,150 +2,119 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366EDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90478C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B8C20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q1CtwesH"
+	by mail.kernel.org (Postfix) with ESMTP id 5CFA821741
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552938845;
+	bh=S5qXjlimOmlmPK6S44dA6deTiv59CNz9XxD1naSz9Ys=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=yh5GSIiU7r7h9oyr9rcG3OOEtXtcQxK4naTLBKRrc+K5fg0suZo9zTKAQm237IbdD
+	 VBUrJALzLl5KfjXPlO+32wmo7mGdSeVv0tMHBwE1G6GW/PmU9/GLmV4UF+o7OrGjzA
+	 0PTioMx2spqxZToZcHcTQiAzfePrePVCdgjn2sRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfCRTse (ORCPT
+        id S1727704AbfCRTyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 15:48:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35378 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727616AbfCRTsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 15:48:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Message-Id:Date:Subject:Cc:To:From:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mXP/4nqEzp9SCbDeLgU2U3ahxIM78P+pSFr63IEY7qs=; b=Q1CtwesH3UbigUHIWuYJRyVVJ
-        +Vx8ph1dbllLLz9EuLc+B4m3YR4uF+V1hegobwONO+Ob87CKW36OkrVe7SKsVlUnHblWeKePeJpiO
-        /UYsgKynZvvubT2iy3N/EnmXysMnpQ0cXYeX6XN7uPCOAKstnSx6HqpR43s+q0cdAuM9dK65AdyIE
-        u7ea9dXbES0wHrDIXA+gan+9qlMFEw1v0gqZtyUgy7DQ64mUreslQxKzt32w28jYLI9qxu8BV3JgS
-        BkJk/t/PvO6vPDktBAacHfs+GFEMbHcQjziwkvRatXxFcEPpcrmUn/sSGxaqQ9CNI8+vd4PLjgizr
-        YvJh2QcXg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5yFH-0000v5-LO; Mon, 18 Mar 2019 19:48:27 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-block@vger.kernel.org
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        FUJITA Tomonori <fujita.tomonori@lab.ntt.co.jp>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Liu Bo <bo.liu@linux.alibaba.com>,
-        "Dennis Zhou " <dennisszhou@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        drbd-dev@lists.linbit.com, nbd@other.debian.org
-Subject: [PATCH 00/14] Convert block layer & drivers to XArray
-Date:   Mon, 18 Mar 2019 12:48:07 -0700
-Message-Id: <20190318194821.3470-1-willy@infradead.org>
-X-Mailer: git-send-email 2.14.5
+        Mon, 18 Mar 2019 15:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726806AbfCRTyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 15:54:03 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCB712173C;
+        Mon, 18 Mar 2019 19:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552938843;
+        bh=S5qXjlimOmlmPK6S44dA6deTiv59CNz9XxD1naSz9Ys=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=pY9hE0g6FBj3ayx2f0DIl7j+GMvQFXTEmNqc7Qwny151k0RrV4QWRRFv3Jjwb/dJ2
+         c0S8LHITMTFvqDbFz3tU9Ql1vjVuzuimLn2z4Wd5SPN3QzUSFK6iNQex3TqDpBE1jA
+         cLa96OoJZzVqqeqeu2/4AdIhWGMe0/U2uc5yYwVk=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190318105045.26943-1-nicolas.ferre@microchip.com>
+References: <20190318105045.26943-1-nicolas.ferre@microchip.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2] clk: at91: fix programmable clock for sama5d2
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, matthias.wieloch@few-bauer.de,
+        stable@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-clk@vger.kernel.org
+Message-ID: <155293884206.20095.9858756917267939797@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Mon, 18 Mar 2019 12:54:02 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I would like to remove the IDR and radix tree APIs from the kernel.
-This patch series converts all the IDRs and radix trees in the block
-layer and block drivers to use the XArray APIs.  Testing of these
-patches has been minimal, mostly limited to compilation testing.
-I would be grateful if you could take these patches through your tree.
-To cut down on wasted electrons, only this cover letter is being
-distributed to everyone listed by get-maintainers; the patches can
-be found on the linux-block mailing list.
+Quoting Nicolas Ferre (2019-03-18 03:50:45)
+> From: Matthias Wieloch <matthias.wieloch@few-bauer.de>
+>=20
+> The prescaler formula of the programmable clock has changed for sama5d2. =
+Update
+> the driver accordingly.
+>=20
+> Fixes: a2038077de9a ("clk: at91: add sama5d2 PMC driver")
+> Cc: <stable@vger.kernel.org> # v4.20+
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> [nicolas.ferre@microchip.com: adapt the prescaler range,
+>                 fix clk_programmable_recalc_rate, split patch]
+> Signed-off-by: Matthias Wieloch <matthias.wieloch@few-bauer.de>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+> v2: adapt to v5.1-rc1
+>     remove unneeded sentence about DT in commit message
+>=20
+> Stephen,
+>=20
+> I think it would be good to see this fix going upstream during v5.1-rc ph=
+ase.
 
-Please check these patches over carefully and test them; there may be
-off-by-one errors, locking mistakes, or various other failures on my part.
+Ok. I can apply this clk-fixes. I presume that things are real bad and
+it can't wait until v5.2?
 
-Substantive interface changes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> @@ -60,10 +68,18 @@ static int clk_programmable_determine_rate(struct clk=
+_hw *hw,
+>                         continue;
+> =20
+>                 parent_rate =3D clk_hw_get_rate(parent);
+> -               for (shift =3D 0; shift < PROG_PRES_MASK; shift++) {
+> -                       tmp_rate =3D parent_rate >> shift;
+> -                       if (tmp_rate <=3D req->rate)
+> -                               break;
+> +               if (layout->is_pres_direct) {
+> +                       for (shift =3D 0; shift <=3D layout->pres_mask; s=
+hift++) {
+> +                               tmp_rate =3D parent_rate / (shift + 1);
+> +                               if (tmp_rate <=3D req->rate)
+> +                                       break;
+> +                       }
+> +               } else {
+> +                       for (shift =3D 0; shift < layout->pres_mask; shif=
+t++) {
+> +                               tmp_rate =3D parent_rate >> shift;
+> +                               if (tmp_rate <=3D req->rate)
+> +                                       break;
+> +                       }
 
- - The IDR and radix tree required callers to handle their own locking.
-   The XArray embeds a spinlock which is taken for modifications to
-   the data structure; plain lookups occur under the RCU read lock or
-   under the spinlock.
- - You can take the spinlock yourself (xa_lock() and friends) to protect
-   related data.
- - idr_alloc() returned -ENOSPC, radix_tree_insert() returned -EEXIST.
-   xa_insert() and xa_alloc() return -EBUSY.
- - The search keys which the radix tree calls "tags", the XArray calls
-   "marks".
- - There is no preloading in the XArray API.  Most users of the
-   preloading APIs only needed to use it because they were trying to
-   allocate under their own spinlock.  If your locking is exceptionally
-   complicated, you may need to use xa_insert() with a NULL pointer.
- - The radix tree provided GFP flags as part of the tree definition;
-   the XArray (like the IDR) passes GFP flags at the point of allocation.
- - radix_tree_insert() of a NULL pointer was not well-specified.  The
-   XArray treats it as reserving the entry (it reads back as NULL but
-   a subsequent xa_insert() to that slot will fail).
- - xa_alloc_cyclic() returns 1 if the allocation wraps, unlike
-   idr_alloc_cyclic() which provides no indication.
- - There is no equivalent to idr_for_each(); the xa_for_each() iterator
-   is similar to idr_for_each_entry().
- - idr_replace() has no exact equivalent.  Some users relied on its exact
-   semantics of only storing if the entry was non-NULL, but all users of
-   idr_replace() were able to use xa_store() or xa_cmpxchg().
- - The family of radix tree gang lookup functions have been replaced with
-   xa_extract().
+This looks like a lot of copy paste when the if statement could have been
+pulled into the for loop instead of duplicating the loops and
+surrounding if condition check for tmp_rate.
 
-Matthew Wilcox (14):
-  blk-cgroup: Convert to XArray
-  blk-cgroup: Remove blkg_list hlist
-  blk-cgroup: Reduce scope of blkg_array lock
-  blk-ioc: Convert to XArray
-  blk-ioc: Remove ioc's icq_list
-  genhd: Convert to XArray
-  bsg: Convert bsg_minor_idr to XArray
-  brd: Convert to XArray
-  null_blk: Convert to XArray
-  loop: Convert loop_index_idr to XArray
-  nbd: Convert nbd_index_idr to XArray
-  zram: Convert zram_index_idr to XArray
-  drbd: Convert drbd devices to XArray
-  drbd: Convert peer devices to XArray
-
- block/bfq-cgroup.c                 |   7 +-
- block/blk-cgroup.c                 |  94 +++++++------------
- block/blk-ioc.c                    |  38 ++++----
- block/bsg.c                        |  20 ++--
- block/genhd.c                      |  42 ++++-----
- drivers/block/brd.c                |  93 ++++++------------
- drivers/block/drbd/drbd_debugfs.c  |  16 ++--
- drivers/block/drbd/drbd_int.h      |  10 +-
- drivers/block/drbd/drbd_main.c     |  77 +++++++--------
- drivers/block/drbd/drbd_nl.c       |  77 ++++++++-------
- drivers/block/drbd/drbd_proc.c     |   8 +-
- drivers/block/drbd/drbd_receiver.c |  33 +++----
- drivers/block/drbd/drbd_state.c    |  67 ++++++-------
- drivers/block/drbd/drbd_worker.c   |  20 ++--
- drivers/block/loop.c               |  88 ++++++-----------
- drivers/block/nbd.c                | 145 ++++++++++++-----------------
- drivers/block/null_blk.h           |   4 +-
- drivers/block/null_blk_main.c      |  97 ++++++++-----------
- drivers/block/zram/zram_drv.c      |  40 +++-----
- include/linux/blk-cgroup.h         |   7 +-
- include/linux/iocontext.h          |  22 ++---
- 21 files changed, 419 insertions(+), 586 deletions(-)
-
--- 
-2.20.1
-
+>                 }
+> =20
+>                 if (tmp_rate > req->rate)
