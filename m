@@ -2,122 +2,115 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD38C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC523C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12304217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Ui9bIRpg"
+	by mail.kernel.org (Postfix) with ESMTP id AA7A320685
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:16:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552950971;
+	bh=D9a5mfXIH6A0vc9AUxpi0w/qwtFkZJa+fjFzX9poOag=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UazbwNT2ZW26rVIJIqEpWaWK0fHY7x290BN6/ZT6qnn2hakz/m9kqV6JHxHirAH1a
+	 4vShhJmPP2OzHC8n6C2gZp81UuIht/Ck/qPYCXRPg/LpoLOVg7DnAWW/+Jw2AmKCHd
+	 otnWgKCRZygY59va77LWVkeMJYt58p4vRJwUM1ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfCRXQE (ORCPT
+        id S2387416AbfCRXQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 19:16:04 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:38700 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbfCRXQA (ORCPT
+        Mon, 18 Mar 2019 19:16:10 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:56153 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727929AbfCRXQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 19:16:00 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 67566A06
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 23:15:59 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yRSvTE0trhMr for <linux-kernel@vger.kernel.org>;
-        Mon, 18 Mar 2019 18:15:59 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 39183697
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 18:15:59 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id r21so14649505iod.12
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 16:15:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=+ZJmJ2UM5bB0oCIauMpHMdRG8HOlzN7uYKLmmvwFiO4=;
-        b=Ui9bIRpgXX8gG2r4owhpMXf9GzFRmqGCjUr7CFvTPsFblxaDZ0FuKrOwYrRGKSLgj/
-         dmDnw7ucrBj+76Dei0BjaxcMA9UGhtD//byERMryGc76ZXtryJplZwS0ARBXmTkIcADc
-         A9eTIfHJ++FRvOtbvnJmHVFRGC1TFY4dAWlODHEyLvymDD444rvei5Z6h6GRYPLwSMU/
-         aEvOEZN8/uc0f8abWLXNeje+hzdWt1zMLSrT8QS5i+b49iRa04sZyeotDLFGCQGTyXWy
-         KBCrZoFGSzHhc8KUU9tHUjx2QutsbqfGU+uu5NBOvsARKUl+xRxbUzROJxAJvQkZTpWO
-         jaAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+ZJmJ2UM5bB0oCIauMpHMdRG8HOlzN7uYKLmmvwFiO4=;
-        b=I3XGd9nM4TRlXf5zZNnl3sSKajE1Bk2eYeLSFSRPG15glKQiDOKjabcGt/nC8V9C0m
-         C7PHeFAGNL3UmycVm4PvcHicssfsUmPG/EFT8bUt68nb5vzUOcoFN5k77Nkk5I0bEwL2
-         lm6iZXFFXifjyMDaS1iTzHmAN/HsSaXH31HSzKjmnSEoQ8nJIuGXnfXLN6zgziHGaZBm
-         9+r6UrbUv7rxGQJJFo45uSOrMsrILDst9cu0BzvQk+jDR4/hYRfUa1B/8HEe6eaQk6JO
-         VWI8xsVT0ECC0ee45oR0x9890NGnU3YynFRgbyS33G/uEo7Lpj6QMZHm2woKtJhrlKFf
-         eU9A==
-X-Gm-Message-State: APjAAAUBcxoEIFPbc5miaN3tIB3m5Byvy7A+Enqf8Xdb3Yg2d0YUJcKi
-        eGG/xQwxY2tR9i7p25A51XEIJZmIxOKxS3j5eRlFRPqWPZb9bO4K6fbrynSyPK+KCKvp4klkpsZ
-        kU1LEG9tprzW0oCvCJkkkNXH2zZjz
-X-Received: by 2002:a6b:4102:: with SMTP id n2mr2854665ioa.256.1552950958856;
-        Mon, 18 Mar 2019 16:15:58 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyotnn/YcDYNpUoq4n65VPzx4KWQ2IcUczBt4aFp2xGPpAqVEwM5Dm6J82hq/M/Nqnop358vQ==
-X-Received: by 2002:a6b:4102:: with SMTP id n2mr2854660ioa.256.1552950958666;
-        Mon, 18 Mar 2019 16:15:58 -0700 (PDT)
-Received: from lenovo-1.hsd1.mn.comcast.net (c-73-242-25-233.hsd1.mn.comcast.net. [73.242.25.233])
-        by smtp.googlemail.com with ESMTPSA id b202sm396706itb.36.2019.03.18.16.15.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 16:15:58 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Lee Jones <lee.jones@linaro.org>,
+        Mon, 18 Mar 2019 19:16:02 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id B25462225D;
+        Mon, 18 Mar 2019 19:16:00 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 18 Mar 2019 19:16:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=wO87VhxlCRKJ6UZlTZ7CZPC3aFH+ZWg+1lDNDo6jzTY=; b=rj5LEI8w
+        3oY1HSnHFAAy1aECihxdSO4BhYbR3a7m4h8aZVZyiSnRrHpvDwL7jULer2aIOK1Z
+        usqY5sOx72yCP903jHAVEVB/Avnibesl+2dUC1hYkvuDcH4cQcohrUqz+I3oZOQm
+        UrP5otMzKLvl/10Ke7IXlQoKxzriKFC/WUjDUzVcPXkpmMxr9il3SblpYS4LcHCN
+        c64nfdrh7ezm437Rzu181/gY3iih9gOQz/bp0N3E3D0jbvqlPutPTUT7M0cbd2O4
+        pJeOFPl70EIQmgM2TU/jJk3WaU1b/oFiiyPXNBnTcHXsIKdoANBUjuhwC4BbdH09
+        xok9eiwaQWlFIg==
+X-ME-Sender: <xms:sCaQXD1HKUltEkRci5I-OjP3UUQJu7xVTeqaqDkJKMhMwYIpjVl9UQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddriedvgddtfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
+    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
+    epuddvgedrudeiledrudegledrgedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
+    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeduud
+X-ME-Proxy: <xmx:sCaQXGUY9W9cHeRX8axAOtPy6Xdc1T4GCX_2cxYFmM2DuZQBB6CYJQ>
+    <xmx:sCaQXO4NDbQagNqawC0tuTT6TP8rVCMKLcMu0qwnkXJEhEcC-xVunA>
+    <xmx:sCaQXNLLea7OaNHOdFniYNDDe3tbuVb9L6tpW3PsNwXvPvYQsAlnhw>
+    <xmx:sCaQXFPSuzsQJF1tucUl0Ex_XiI1fX3-T-P17Z0XccRW8PVqdQqLlA>
+Received: from eros.localdomain (124-169-149-40.dyn.iinet.net.au [124.169.149.40])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1C70910311;
+        Mon, 18 Mar 2019 19:15:57 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] mfd: mc13xxx: i2c/spi Fix to avoid NULL pointer dereference
-Date:   Mon, 18 Mar 2019 18:15:54 -0500
-Message-Id: <20190318231554.8862-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH v2 13/13] docs: filesystems: vfs: Use backticks to guard star
+Date:   Tue, 19 Mar 2019 10:14:37 +1100
+Message-Id: <20190318231437.1666-14-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190318231437.1666-1-tobin@kernel.org>
+References: <20190318231437.1666-1-tobin@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-of_match_device can return NULL if no matching device is found. The patches
-avoids a scenario causing null pointer dereference.
+Sphinx emits a warning because of the use of a * (C pointer construct)
+within the document.  We can prevent this by guarding the C source code
+with back ticks.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Use backticks to guard star (C pointer).
+
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- drivers/mfd/mc13xxx-i2c.c | 2 ++
- drivers/mfd/mc13xxx-spi.c | 2 ++
- 2 files changed, 4 insertions(+)
+ Documentation/filesystems/vfs.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/mc13xxx-i2c.c b/drivers/mfd/mc13xxx-i2c.c
-index 67e4c9aa7d18..1fbc9713bb9a 100644
---- a/drivers/mfd/mc13xxx-i2c.c
-+++ b/drivers/mfd/mc13xxx-i2c.c
-@@ -80,6 +80,8 @@ static int mc13xxx_i2c_probe(struct i2c_client *client,
- 	if (client->dev.of_node) {
- 		const struct of_device_id *of_id =
- 			of_match_device(mc13xxx_dt_ids, &client->dev);
-+		if (!of_id)
-+			return -ENODEV;
- 		mc13xxx->variant = of_id->data;
- 	} else {
- 		mc13xxx->variant = (void *)id->driver_data;
-diff --git a/drivers/mfd/mc13xxx-spi.c b/drivers/mfd/mc13xxx-spi.c
-index ee3411cc5ce4..c044a02bdb64 100644
---- a/drivers/mfd/mc13xxx-spi.c
-+++ b/drivers/mfd/mc13xxx-spi.c
-@@ -158,6 +158,8 @@ static int mc13xxx_spi_probe(struct spi_device *spi)
- 	if (spi->dev.of_node) {
- 		const struct of_device_id *of_id =
- 			of_match_device(mc13xxx_dt_ids, &spi->dev);
-+		if (!of_id)
-+			return -ENODEV;
+diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+index 12b8e90403eb..8ad2507b3df6 100644
+--- a/Documentation/filesystems/vfs.rst
++++ b/Documentation/filesystems/vfs.rst
+@@ -355,7 +355,7 @@ Extended attributes are name:value pairs.
  
- 		mc13xxx->variant = of_id->data;
- 	} else {
+ When none of the xattr handlers of a filesystem match the specified
+ attribute name or when a filesystem doesn't support extended attributes,
+-the various *xattr(2) system calls return -EOPNOTSUPP.
++the various ``*xattr(2)`` system calls return -EOPNOTSUPP.
+ 
+ 
+ The Inode Object
+@@ -722,7 +722,7 @@ cache in your filesystem.  The following members are defined:
+   out properly.
+ 
+   The filesystem must return the locked pagecache page for the specified
+-  offset, in *pagep, for the caller to write into.
++  offset, in ``*pagep``, for the caller to write into.
+ 
+   It must be able to cope with short writes (where the length passed to
+   write_begin is greater than the number of bytes copied into the page).
 -- 
-2.17.1
+2.21.0
 
