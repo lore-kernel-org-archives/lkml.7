@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849FFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948E1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508BD214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57EBB214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901351;
-	bh=8rX3djr0Cm/6mpJxCFPCUh/vueTRPrtoOoAAQMDzBCY=;
+	s=default; t=1552901355;
+	bh=YlFlkksEdrjl+HAvwvXHEKjc5Hc9edEZE8A9MPUQY+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AZaIB5a9AJwHF3RvsluYMDYVtmhuBjwslq8IHucwwPHf472jl/E8/87jD3Broia4Z
-	 Ed6JHVnchzH2kHOq/OMH3g6BBY/7EDUEeg5LHPsvH84ZN3zO1c/5KfxYPa9z4wgIe3
-	 v6ZaPxePUGd9ysLyvgzcu0Whf8cpgMSp7GbaFHk8=
+	b=0d9YovYyo/GvHih/eH+QhHwdQmoTChEKev2FTYkadfnKWihzUyjqqH3SCgBmx5bZl
+	 sFCzj0E9phOqMlaBscX4SVywDUaDGHyq34/EqtSUK2ADvEmfyG2vIWQoCZhzhtDXD+
+	 RqLr9VYX1JsPy4zleCKJcO2TGUDooYcsvjeM7+Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbfCRJ3K (ORCPT
+        id S1728200AbfCRJ3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:29:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35238 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728178AbfCRJ3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:29:05 -0400
+        id S1728178AbfCRJ3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:29:11 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64D5D2083D;
-        Mon, 18 Mar 2019 09:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB0002087C;
+        Mon, 18 Mar 2019 09:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901344;
-        bh=8rX3djr0Cm/6mpJxCFPCUh/vueTRPrtoOoAAQMDzBCY=;
+        s=default; t=1552901351;
+        bh=YlFlkksEdrjl+HAvwvXHEKjc5Hc9edEZE8A9MPUQY+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uBsgpd/ThHuTPFQL+vb3PvFetDKGymiZ7xvx4YIZzLQ2jmaIgIrryUwWrebwQtVuk
-         Sc1ZblD+4YlxZ0ogEvS/pirsE2Q5odLSQIfEcNYszt9FgrwiME4IiSM+eF+V6n38Gz
-         yZpmZjLu32wU+Qwj/ytbaJsTOHBnYvRfQzmBN9mc=
+        b=VuKls+PDeVR/cJdcbWRC9oFY4JklNF+75hfbWsen/toNPXPTHysktX4DoA760KC68
+         bQTI2FUrwbDFsVlQkm/RosEIUy42XrD3L8rkhLeRJa6s6jnpb7vbuT5F5Q9IcaYotK
+         1M/5sqmhBHfr0SXXTgK8vEfkZuKEFtLWIaNPv6aU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 17/52] sctp: remove sched init from sctp_stream_init
-Date:   Mon, 18 Mar 2019 10:25:04 +0100
-Message-Id: <20190318083845.494264659@linuxfoundation.org>
+Subject: [PATCH 4.20 19/52] tcp: Dont access TCP_SKB_CB before initializing it
+Date:   Mon, 18 Mar 2019 10:25:06 +0100
+Message-Id: <20190318083845.739720313@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -69,46 +65,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Christoph Paasch <cpaasch@apple.com>
 
-[ Upstream commit 2e990dfd13974d9eae493006f42ffb48707970ef ]
+[ Upstream commit f2feaefdabb0a6253aa020f65e7388f07a9ed47c ]
 
-syzbot reported a NULL-ptr deref caused by that sched->init() in
-sctp_stream_init() set stream->rr_next = NULL.
+Since commit eeea10b83a13 ("tcp: add
+tcp_v4_fill_cb()/tcp_v4_restore_cb()"), tcp_vX_fill_cb is only called
+after tcp_filter(). That means, TCP_SKB_CB(skb)->end_seq still points to
+the IP-part of the cb.
 
-  kasan: GPF could be caused by NULL-ptr deref or user memory access
-  RIP: 0010:sctp_sched_rr_dequeue+0xd3/0x170 net/sctp/stream_sched_rr.c:141
-  Call Trace:
-    sctp_outq_dequeue_data net/sctp/outqueue.c:90 [inline]
-    sctp_outq_flush_data net/sctp/outqueue.c:1079 [inline]
-    sctp_outq_flush+0xba2/0x2790 net/sctp/outqueue.c:1205
+We thus should not mock with it, as this can trigger bugs (thanks
+syzkaller):
+[   12.349396] ==================================================================
+[   12.350188] BUG: KASAN: slab-out-of-bounds in ip6_datagram_recv_specific_ctl+0x19b3/0x1a20
+[   12.351035] Read of size 1 at addr ffff88006adbc208 by task test_ip6_datagr/1799
 
-All sched info is saved in sout->ext now, in sctp_stream_init()
-sctp_stream_alloc_out() will not change it, there's no need to
-call sched->init() again, since sctp_outq_init() has already
-done it.
+Setting end_seq is actually no more necessary in tcp_filter as it gets
+initialized later on in tcp_vX_fill_cb.
 
-Fixes: 5bbbbe32a431 ("sctp: introduce stream scheduler foundations")
-Reported-by: syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: eeea10b83a13 ("tcp: add tcp_v4_fill_cb()/tcp_v4_restore_cb()")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/stream.c |    2 --
- 1 file changed, 2 deletions(-)
+ net/ipv4/tcp_ipv4.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/net/sctp/stream.c
-+++ b/net/sctp/stream.c
-@@ -230,8 +230,6 @@ int sctp_stream_init(struct sctp_stream
- 	for (i = 0; i < stream->outcnt; i++)
- 		SCTP_SO(stream, i)->state = SCTP_STREAM_OPEN;
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1646,15 +1646,8 @@ EXPORT_SYMBOL(tcp_add_backlog);
+ int tcp_filter(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct tcphdr *th = (struct tcphdr *)skb->data;
+-	unsigned int eaten = skb->len;
+-	int err;
  
--	sched->init(stream);
--
- in:
- 	sctp_stream_interleave_init(stream);
- 	if (!incnt)
+-	err = sk_filter_trim_cap(sk, skb, th->doff * 4);
+-	if (!err) {
+-		eaten -= skb->len;
+-		TCP_SKB_CB(skb)->end_seq -= eaten;
+-	}
+-	return err;
++	return sk_filter_trim_cap(sk, skb, th->doff * 4);
+ }
+ EXPORT_SYMBOL(tcp_filter);
+ 
 
 
