@@ -2,95 +2,77 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB65C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72785C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860BB20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFFF20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:39:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kOlc3ISS"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CYPvVvt3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfCRTix (ORCPT
+        id S1727606AbfCRTjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 15:38:53 -0400
-Received: from mail-pg1-f181.google.com ([209.85.215.181]:46463 "EHLO
-        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfCRTiw (ORCPT
+        Mon, 18 Mar 2019 15:39:11 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34629 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfCRTjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 15:38:52 -0400
-Received: by mail-pg1-f181.google.com with SMTP id a22so12064829pgg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:38:52 -0700 (PDT)
+        Mon, 18 Mar 2019 15:39:11 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r19so15555508otn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:39:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references:from
-         :subject:cc:to:message-id:user-agent:date;
-        bh=qqxq7T5e5SNvDLSGq+7M3dJLQIOrKKJn/oIAQ/s9/s8=;
-        b=kOlc3ISSirC/Z4adxBQJt4TUkQoEy30wx6L4jqV7uvK3O9KcIZqGwmbYOhLOxeUNNw
-         I2BCjiW/D//Bg53tonifGW+wDTKTpvHP88HS/hUgDI2Wp264i56PixcOXexWMUJua2wn
-         J37CgWnsvnEtOn+LVBJHLP0jFUVKB/FW4yxok=
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BGgCTUc7PrXmapvItTm0TAlgoUUh0KcB9uVn9jFtG0M=;
+        b=CYPvVvt3z++hs3TSLs3l2bTThrnLI5zCUXwJN83g3VKx5McM3ZX8X0RRyotRdVMfPx
+         6006NnSj8NioxaVVRoiFZsq3wovAt7PfPK6JpC7t1QrrEVr0tEGaRkdkjV96WHVvV8tf
+         Jaq4TnIoc+qGsc99LfcfRBRQ5uf85b/De4jDMrirHX6VlsqkwZd/X7HIG9Cv6ElcabPG
+         Mx9Ou+E9npxuBPNbbbcMrBLBdbX8nrcfMaKTcamzDwu28VQkYDwR7DAFxkndvcWt+FEe
+         izlE2QKG+a+xuxWjEG5Vg0inkJfrRbadLHa0EIJkKfWah5QKr6zRfwtLUe614vfca8W0
+         NThQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
-         :date;
-        bh=qqxq7T5e5SNvDLSGq+7M3dJLQIOrKKJn/oIAQ/s9/s8=;
-        b=VlQipCZ1fUfBhaCQ2FiF33rGLNWkyvlyN9KOUDgiliYqMVPikEGjIw4Il4PoDzTIdG
-         6l0PUWqexXUwfoFpj6ZGintNG1v0N4ReCoH60gRVm8rSXvGAGyk+eyqH1okTVFGT5+qD
-         itin59ldUgwTlxOpjeOO5NGVU/NTgsxdWX/qhAbri41wX+UrJ6kKUj1AeeDdhbM2UQpi
-         dUnDUkKA/MEh1dzwnN6/+XfW2zbviNLrQDJPQwpmiOD96GvmGyVkH2QwaJhDrb6dPGMN
-         rlC8LC7z9UCaud6nfDQaMP4QyVRLvHyqW4T4UMOuwEY2JX78swC5bnQZRQo1xNpSNYKT
-         sbKg==
-X-Gm-Message-State: APjAAAXircF5C7jkYbC01NBascqWJPiUP8FuoFgBv/FEgkb50MOqiDuv
-        4saP/Lp0IvEDBOaaif5TJiKhKQ==
-X-Google-Smtp-Source: APXvYqwFtiO0T+Xf4AI3DDLsMYvKLrAnkFR1dCO9LFgMsjAal7tAT10BEyXROZcuHQXN3mJC2CUGCw==
-X-Received: by 2002:a62:b608:: with SMTP id j8mr21252262pff.183.1552937932015;
-        Mon, 18 Mar 2019 12:38:52 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id j24sm19412189pgl.58.2019.03.18.12.38.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 12:38:51 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BGgCTUc7PrXmapvItTm0TAlgoUUh0KcB9uVn9jFtG0M=;
+        b=FckJUt7oax6DlaR3Gq9FAHWMr61ABtL/Q8yJ42qZ4sWVy1jVSH4SJI5N3E/pKtQPNO
+         G6CSjj2V1QC+seVtsEQI87p6CFTpD5bW5TtJzZKArJRcsV41oRY7NkNWzHu8D1ymnDOL
+         bbfTL69wzVcoAvzsjvfVDXD2lSk5v6q8X1J7LggTLp+YkytFvsLG2L4nJgig+obsptJ+
+         A6uYOTSeY6VqriQunnO4XqVGHzgIXksuHsfc/2kzkCcyyKaH3rXDV+Z3TW/ml4iblldI
+         prjyc1Df6OcMQOn0n0VUqXmuAyuT1EcVtXQEAzqu5bGb0t+zMFjIx7MRDidsS88DQZMa
+         yaug==
+X-Gm-Message-State: APjAAAUbFQ/RSW0zeW/OFNqd5m3fP3xm4Ny7DWg1JEApP3uzrFvX4Uv+
+        V0oddQ598CoJXBe0+TgUdVexrqFHv7yncWWs7+A=
+X-Google-Smtp-Source: APXvYqwlaG7jOkef9H61Qc05HXQmeQ729Rr+O+UCrs2UYzLUnZs/un+Ha1yR8cfKcddzpzmghrHcUOZxUPfBy5TzzxA=
+X-Received: by 2002:a9d:5906:: with SMTP id t6mr11957242oth.308.1552937950723;
+ Mon, 18 Mar 2019 12:39:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190318183636.GA31345@roeck-us.net>
-References: <20190318155457.197339-1-swboyd@chromium.org> <20190318183636.GA31345@roeck-us.net>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] firmware: vpd: Drop __iomem usage for memremap() memory
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Anton Vasilyev <vasilyev@ispras.ru>
-To:     Guenter Roeck <linux@roeck-us.net>
-Message-ID: <155293792998.20095.17902613055366994243@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Mon, 18 Mar 2019 12:38:49 -0700
+References: <20190318095851.4062-1-narmstrong@baylibre.com> <20190318095851.4062-6-narmstrong@baylibre.com>
+In-Reply-To: <20190318095851.4062-6-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 18 Mar 2019 20:38:59 +0100
+Message-ID: <CAFBinCDvvpn3xXvUvb7wXvEj+65XnT5Dms=7152qNu2FcCwxRg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/8] arm64: dts: meson: g12a: Add UART A, B & C nodes
+ and pins
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Guenter Roeck (2019-03-18 11:36:36)
-> On Mon, Mar 18, 2019 at 08:54:57AM -0700, Stephen Boyd wrote:
-> > memremap() doesn't return an iomem pointer, so we can just use memcpy()
-> > and drop the __iomem annotation here. This silences a sparse warning.
-> >=20
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Cc: Anton Vasilyev <vasilyev@ispras.ru>
-> > Smgned-off-by: Stephen Boyd <swboyd@chromium.org>
->=20
-> Smgned ?
-
-Hm, something went wrong!
-
->=20
-> Other than that,
->=20
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-Thanks. I'll resend with everything fixed.
-
+On Mon, Mar 18, 2019 at 11:00 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> This patch adds the 3 UART nodes in the EE power domain with the corresponding
+> pinctrl nodes.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
