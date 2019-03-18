@@ -2,380 +2,284 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBD9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58ABC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60DF2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FADA2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="oAc6hSZm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbfCRRoT (ORCPT
+        id S1728144AbfCRRod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:44:19 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31893 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728118AbfCRRoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:44:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:44:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="215245733"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 18 Mar 2019 10:44:16 -0700
-Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
-        by linux.intel.com (Postfix) with ESMTP id 9FC5F580238;
-        Mon, 18 Mar 2019 10:44:13 -0700 (PDT)
-Subject: [PATCH v10 08/12] perf record: implement compression for AIO trace
- streaming
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <77db2b2c-5d03-dbb0-aeac-c4dd92129ab9@linux.intel.com>
-Date:   Mon, 18 Mar 2019 20:44:12 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 13:44:33 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:38439 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbfCRRoa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:44:30 -0400
+Received: by mail-it1-f196.google.com with SMTP id m18so5110835ita.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=90d1PiIl0chi1J7EpBoGQUU4QtkFjeVvq9GIx5ZTBR8=;
+        b=oAc6hSZmIR3fZy8c87immg80IiLB0F8viDpDn4lO5yGxhixUEOUx+/LykC0uvVIots
+         +GDOSaYkCmC8uJxmJBWYxFaqkEoW+tML5bAzUmojvKwtjRUdUTd3FsB6KI7+Ug0PkrvK
+         oqhcJxkqjG0C15Rl3bxjiYKdXXDMS0ewdSojFuYvYT6MZn7grFMXqrOcFSLtnUwKii0t
+         QC9nY6Z8LNR+rAlz2TJOzZY0EkybQ2RSMvmHUBb/dGnCIxOflPofLJa48oiNVxBxdVRV
+         zUvOPkxbZxCpc6TKD3FeZOZf/6RUWijnjTUyeK5HCM+WBV5ICh5g/C6VGHwa/HOv53Ya
+         MFgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=90d1PiIl0chi1J7EpBoGQUU4QtkFjeVvq9GIx5ZTBR8=;
+        b=el9TnUtaqwEkTGz8CDUOsBw1FYyRFe0SbR/FWhpKcV40TipkoJWo22eXrpWk2T73VN
+         NjrMUMX+d7v0v5KagoLnov/KyRGAnDWL/PkbDJu07ZGPx8Qa7Ol9p5epsju9nEAEi3qT
+         t3EQ1/pCrPQWUJ5qq1//az04am1gEAy0/DPNiYRRUPOg9zsRdVZpAdbz7bDwxs2bym5g
+         JsGYXfHKcEC7lup7fYxHZCRieK30Y/igz2ZjwixfixfncdjxuwEdGA7RKrQZlApifYyW
+         dd1lGKvJVdbGvrm8Kh73DOG5/mjQi47bzlKIhBIWsDDrGflcBFSH1inVgcjznRMlBkSg
+         lvSw==
+X-Gm-Message-State: APjAAAXEI2cw4m2cASCWHrzw1fMBHxb2Jn3jQNbmjayTeTsG3SS6nho8
+        +/Gm1pb7ntZS3qt0gO4jKYLAMUUFcDZBpd832jJOjg==
+X-Google-Smtp-Source: APXvYqyM6cHR2qquFIkGq3HUXWRWQUWrSzy4xuc3KHw/QEGxC2/Amr0+8s4okJLL71lr24tR5wQ34/Db1abjYV8rjoU=
+X-Received: by 2002:a02:1185:: with SMTP id 127mr12422259jaf.136.1552931069331;
+ Mon, 18 Mar 2019 10:44:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190318174040.17899-1-brgl@bgdev.pl>
+In-Reply-To: <20190318174040.17899-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 18 Mar 2019 18:44:18 +0100
+Message-ID: <CAMRc=Mf5itrBMdgAUaMLJ8tWKByPSstZbdKvEhw=_qnsKXdKAg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v6 00/11] mfd: add support for max77650 PMIC
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+pon., 18 mar 2019 o 18:40 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
+a):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> This series missed the last merge window so resending rebased on top
+> of v5.1-rc1 with no functional changes.
+>
+> ---
+>
+> This series adds support for max77650 ultra low-power PMIC. It provides
+> the core mfd driver and a set of five sub-drivers for the regulator,
+> power supply, gpio, leds and input subsystems.
+>
+> Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_devic=
+es().
+> Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for thi=
+s
+> device.
+>
+> The regulator part is already upstream.
+>
+> v1 -> v2:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> General:
+> - use C++ style comments for the SPDX license identifier and the
+>   copyright header
+> - s/MODULE_LICENSE("GPL")/MODULE_LICENSE("GPL v2")/
+> - lookup the virtual interrupt numbers in the MFD driver, setup
+>   resources for child devices and use platform_get_irq_byname()
+>   in sub-drivers
+> - picked up review tags
+> - use devm_request_any_context_irq() for interrupt requests
+>
+> LEDs:
+> - changed the max77650_leds_ prefix to max77650_led_
+> - drop the max77650_leds structure as the only field it held was the
+>   regmap pointer, move said pointer to struct max77650_led
+> - change the driver name to "max77650-led"
+> - drop the last return value check and return the result of
+>   regmap_write() directly
+> - change the labeling scheme to one consistent with other LED drivers
+>
+> ONKEY:
+> - drop the key reporting helper and call the input functions directly
+>   from interrupt handlers
+> - rename the rv local variable to error
+> - drop parent device asignment
+>
+> Regulator:
+> - drop the unnecessary init_data lookup from the driver code
+> - drop unnecessary include
+>
+> Charger:
+> - disable the charger on driver remove
+> - change the power supply type to POWER_SUPPLY_TYPE_USB
+>
+> GPIO:
+> - drop interrupt support until we have correct implementation of hierarch=
+ical
+>   irqs in gpiolib
+>
+> v2 -> v3:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> General:
+> - dropped regulator patches as they're already in Mark Brown's branch
+>
+> LED:
+> - fix the compatible string in the DT binding example
+> - use the max_brightness property
+> - use a common prefix ("MAX77650_LED") for all defines in the driver
+>
+> MFD:
+> - add the MODULE_DEVICE_TABLE()
+> - add a sentinel to the of_device_id array
+> - constify the pointers to irq names
+> - use an enum instead of defines for interrupt indexes
+>
+> v3 -> v4:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> GPIO:
+> - as discussed with Linus Walleij: the gpio-controller is now part of
+>   the core mfd module (we don't spawn a sub-node anymore), the binding
+>   document for GPIO has been dropped, the GPIO properties have been
+>   defined in the binding document for the mfd core, the interrupt
+>   functionality has been reintroduced with the irq directly passed from
+>   the mfd part
+> - due to the above changes the Reviewed-by tag from Linus was dropped
+>
+> v4 -> v5:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> General:
+> - add a patch documenting mfd_add_devices()
+>
+> MFD:
+> - pass the regmap irq_chip irq domain to mfd over mfd_add_devices so that
+>   the hw interrupts from resources can be correctly mapped to virtual irq=
+s
+> - remove the enum listing cell indexes
+> - extend Kconfig help
+> - add a link to the programming manual
+> - use REGMAP_IRQ_REG() for regmap interrupts (except for GPI which has
+>   is composed of two hw interrupts for rising and falling edge)
+> - add error messages in probe
+> - use PLATFORM_DEVID_NONE constant in devm_mfd_add_devices()
+> - set irq_base to 0 in regmap_add_irq_chip() as other users to, it's only
+>   relevant if it's > 0
+>
+> Charger:
+> - use non-maxim specific property names for minimum input voltage and cur=
+rent
+>   limit
+> - code shrink by using the enable/disable charger helpers everywhere
+> - use more descriptive names for constants
+>
+> Onkey:
+> - use EV_SW event type for slide mode
+>
+> LED:
+> - remove stray " from Kconfig help
+>
+> v5 -> v6:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> MFD:
+> - remove stray spaces in the binding document
+> - rename the example dt node
+> - remove unnecessary interrupt-parent property from the bindings
+>
+> LED:
+> - add a missing dependency on LEDS_CLASS to Kconfig
+>
+> Onkey:
+> - use boolean for the slide button property
+>
+> Charger:
+> - fix the property names in DT example
+> - make constants even more readable
+>
+> Bartosz Golaszewski (11):
+>   dt-bindings: mfd: add DT bindings for max77650
+>   dt-bindings: power: supply: add DT bindings for max77650
+>   dt-bindings: leds: add DT bindings for max77650
+>   dt-bindings: input: add DT bindings for max77650
+>   mfd: core: document mfd_add_devices()
+>   mfd: max77650: new core mfd driver
+>   power: supply: max77650: add support for battery charger
+>   gpio: max77650: add GPIO support
+>   leds: max77650: add LEDs support
+>   input: max77650: add onkey support
+>   MAINTAINERS: add an entry for max77650 mfd driver
+>
+>  .../bindings/input/max77650-onkey.txt         |  26 ++
+>  .../bindings/leds/leds-max77650.txt           |  57 +++
+>  .../devicetree/bindings/mfd/max77650.txt      |  46 +++
+>  .../power/supply/max77650-charger.txt         |  27 ++
+>  MAINTAINERS                                   |  14 +
+>  drivers/gpio/Kconfig                          |   7 +
+>  drivers/gpio/Makefile                         |   1 +
+>  drivers/gpio/gpio-max77650.c                  | 190 +++++++++
+>  drivers/input/misc/Kconfig                    |   9 +
+>  drivers/input/misc/Makefile                   |   1 +
+>  drivers/input/misc/max77650-onkey.c           | 121 ++++++
+>  drivers/leds/Kconfig                          |   6 +
+>  drivers/leds/Makefile                         |   1 +
+>  drivers/leds/leds-max77650.c                  | 147 +++++++
+>  drivers/mfd/Kconfig                           |  14 +
+>  drivers/mfd/Makefile                          |   1 +
+>  drivers/mfd/max77650.c                        | 234 +++++++++++
+>  drivers/mfd/mfd-core.c                        |  14 +
+>  drivers/power/supply/Kconfig                  |   7 +
+>  drivers/power/supply/Makefile                 |   1 +
+>  drivers/power/supply/max77650-charger.c       | 366 ++++++++++++++++++
+>  include/linux/mfd/max77650.h                  |  59 +++
+>  22 files changed, 1349 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/max77650-onke=
+y.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.=
+txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max776=
+50-charger.txt
+>  create mode 100644 drivers/gpio/gpio-max77650.c
+>  create mode 100644 drivers/input/misc/max77650-onkey.c
+>  create mode 100644 drivers/leds/leds-max77650.c
+>  create mode 100644 drivers/mfd/max77650.c
+>  create mode 100644 drivers/power/supply/max77650-charger.c
+>  create mode 100644 include/linux/mfd/max77650.h
+>
+> --
+> 2.20.1
+>
 
-Compression is implemented using the functions from zstd.c. As the memory
-to operate on the compression uses mmap->aio.data[] buffers. If Zstd
-streaming compression API fails for some reason the data to be compressed
-are just copied into the memory buffers using plain memcpy().
+Sorry for spamming - I got a strange error from git send-email:
 
-Compressed trace frame consists of an array of PERF_RECORD_COMPRESSED
-records. Each element of the array is not longer that PERF_SAMPLE_MAX_SIZE
-and consists of perf_event_header followed by the compressed chunk
-that is decompressed on the loading stage.
+Died at /<snip!>libexec/git-core/git-send-email line 1542.
 
-perf_mmap__aio_push() is replaced by perf_mmap__push() which is now used
-in the both serial and AIO streaming cases. perf_mmap__push() is extended
-with positive return values to signify absence of data ready for
-processing.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-record.c | 114 ++++++++++++++++++++++++++++--------
- tools/perf/util/mmap.c      |  76 +-----------------------
- tools/perf/util/mmap.h      |  12 ----
- 3 files changed, 89 insertions(+), 113 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index c22e65f6b8e6..2e083891affa 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -130,6 +130,8 @@ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unuse
- 	return 0;
- }
- 
-+static int record__aio_enabled(struct record *rec);
-+static int record__comp_enabled(struct record *rec);
- static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
- 			    void *src, size_t src_size);
- 
-@@ -183,9 +185,9 @@ static int record__aio_complete(struct perf_mmap *md, struct aiocb *cblock)
- 	if (rem_size == 0) {
- 		cblock->aio_fildes = -1;
- 		/*
--		 * md->refcount is incremented in perf_mmap__push() for
--		 * every enqueued aio write request so decrement it because
--		 * the request is now complete.
-+		 * md->refcount is incremented in record__aio_pushfn() for
-+		 * every aio write request started in record__aio_push() so
-+		 * decrement it because the request is now complete.
- 		 */
- 		perf_mmap__put(md);
- 		rc = 1;
-@@ -240,18 +242,89 @@ static int record__aio_sync(struct perf_mmap *md, bool sync_all)
- 	} while (1);
- }
- 
--static int record__aio_pushfn(void *to, struct aiocb *cblock, void *bf, size_t size, off_t off)
-+struct record_aio {
-+	struct record	*rec;
-+	void		*data;
-+	size_t		size;
-+};
-+
-+static int record__aio_pushfn(struct perf_mmap *map, void *to, void *buf, size_t size)
- {
--	struct record *rec = to;
--	int ret, trace_fd = rec->session->data->file.fd;
-+	struct record_aio *aio = to;
- 
--	rec->samples++;
-+	/*
-+	 * map->base data pointed by buf is copied into free map->aio.data[] buffer
-+	 * to release space in the kernel buffer as fast as possible, calling
-+	 * perf_mmap__consume() from perf_mmap__push() function.
-+	 *
-+	 * That lets the kernel to proceed with storing more profiling data into
-+	 * the kernel buffer earlier than other per-cpu kernel buffers are handled.
-+	 *
-+	 * Coping can be done in two steps in case the chunk of profiling data
-+	 * crosses the upper bound of the kernel buffer. In this case we first move
-+	 * part of data from map->start till the upper bound and then the reminder
-+	 * from the beginning of the kernel buffer till the end of the data chunk.
-+	 */
- 
--	ret = record__aio_write(cblock, trace_fd, bf, size, off);
-+	if (record__comp_enabled(aio->rec)) {
-+		size = zstd_compress(aio->rec->session, aio->data + aio->size,
-+				     perf_mmap__mmap_len(map) - aio->size,
-+				     buf, size);
-+	} else {
-+		memcpy(aio->data + aio->size, buf, size);
-+	}
-+
-+	if (!aio->size) {
-+		/*
-+		 * Increment map->refcount to guard map->aio.data[] buffer
-+		 * from premature deallocation because map object can be
-+		 * released earlier than aio write request started on
-+		 * map->aio.data[] buffer is complete.
-+		 *
-+		 * perf_mmap__put() is done at record__aio_complete()
-+		 * after started aio request completion or at record__aio_push()
-+		 * if the request failed to start.
-+		 */
-+		perf_mmap__get(map);
-+	}
-+
-+	aio->size += size;
-+
-+	return size;
-+}
-+
-+static int record__aio_push(struct record *rec, struct perf_mmap *map, off_t *off)
-+{
-+	int ret, idx;
-+	int trace_fd = rec->session->data->file.fd;
-+	struct record_aio aio = { .rec = rec, .size = 0 };
-+
-+	/*
-+	 * Call record__aio_sync() to wait till map->aio.data[] buffer
-+	 * becomes available after previous aio write operation.
-+	 */
-+
-+	idx = record__aio_sync(map, false);
-+	aio.data = map->aio.data[idx];
-+	ret = perf_mmap__push(map, &aio, record__aio_pushfn);
-+	if (ret != 0) /* ret > 0 - no data, ret < 0 - error */
-+		return ret;
-+
-+	rec->samples++;
-+	ret = record__aio_write(&(map->aio.cblocks[idx]), trace_fd, aio.data, aio.size, *off);
- 	if (!ret) {
--		rec->bytes_written += size;
-+		*off += aio.size;
-+		rec->bytes_written += aio.size;
- 		if (switch_output_size(rec))
- 			trigger_hit(&switch_output_trigger);
-+	} else {
-+		/*
-+		 * Decrement map->refcount incremented in record__aio_pushfn()
-+		 * back if record__aio_write() operation failed to start, otherwise
-+		 * map->refcount is decremented in record__aio_complete() after
-+		 * aio write operation finishes successfully.
-+		 */
-+		perf_mmap__put(map);
- 	}
- 
- 	return ret;
-@@ -273,7 +346,7 @@ static void record__aio_mmap_read_sync(struct record *rec)
- 	struct perf_evlist *evlist = rec->evlist;
- 	struct perf_mmap *maps = evlist->mmap;
- 
--	if (!rec->opts.nr_cblocks)
-+	if (!record__aio_enabled(rec))
- 		return;
- 
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
-@@ -307,13 +380,8 @@ static int record__aio_parse(const struct option *opt,
- #else /* HAVE_AIO_SUPPORT */
- static int nr_cblocks_max = 0;
- 
--static int record__aio_sync(struct perf_mmap *md __maybe_unused, bool sync_all __maybe_unused)
--{
--	return -1;
--}
--
--static int record__aio_pushfn(void *to __maybe_unused, struct aiocb *cblock __maybe_unused,
--		void *bf __maybe_unused, size_t size __maybe_unused, off_t off __maybe_unused)
-+static int record__aio_push(struct record *rec __maybe_unused, struct perf_mmap *map __maybe_unused,
-+			    off_t *off __maybe_unused)
- {
- 	return -1;
- }
-@@ -824,7 +892,7 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
- 	int rc = 0;
- 	struct perf_mmap *maps;
- 	int trace_fd = rec->data.file.fd;
--	off_t off;
-+	off_t off = 0;
- 
- 	if (!evlist)
- 		return 0;
-@@ -850,20 +918,14 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
- 				map->flush = 1;
- 			}
- 			if (!record__aio_enabled(rec)) {
--				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
-+				if (perf_mmap__push(map, rec, record__pushfn) < 0) {
- 					if (sync)
- 						map->flush = flush;
- 					rc = -1;
- 					goto out;
- 				}
- 			} else {
--				int idx;
--				/*
--				 * Call record__aio_sync() to wait till map->data buffer
--				 * becomes available after previous aio write request.
--				 */
--				idx = record__aio_sync(map, false);
--				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
-+				if (record__aio_push(rec, map, &off) < 0) {
- 					record__aio_set_pos(trace_fd, off);
- 					if (sync)
- 						map->flush = flush;
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index d85e73fc82e2..868c0b0e909c 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -289,80 +289,6 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map)
- 	zfree(&map->aio.cblocks);
- 	zfree(&map->aio.aiocb);
- }
--
--int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
--			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
--			off_t *off)
--{
--	u64 head = perf_mmap__read_head(md);
--	unsigned char *data = md->base + page_size;
--	unsigned long size, size0 = 0;
--	void *buf;
--	int rc = 0;
--
--	rc = perf_mmap__read_init(md);
--	if (rc < 0)
--		return (rc == -EAGAIN) ? 0 : -1;
--
--	/*
--	 * md->base data is copied into md->data[idx] buffer to
--	 * release space in the kernel buffer as fast as possible,
--	 * thru perf_mmap__consume() below.
--	 *
--	 * That lets the kernel to proceed with storing more
--	 * profiling data into the kernel buffer earlier than other
--	 * per-cpu kernel buffers are handled.
--	 *
--	 * Coping can be done in two steps in case the chunk of
--	 * profiling data crosses the upper bound of the kernel buffer.
--	 * In this case we first move part of data from md->start
--	 * till the upper bound and then the reminder from the
--	 * beginning of the kernel buffer till the end of
--	 * the data chunk.
--	 */
--
--	size = md->end - md->start;
--
--	if ((md->start & md->mask) + size != (md->end & md->mask)) {
--		buf = &data[md->start & md->mask];
--		size = md->mask + 1 - (md->start & md->mask);
--		md->start += size;
--		memcpy(md->aio.data[idx], buf, size);
--		size0 = size;
--	}
--
--	buf = &data[md->start & md->mask];
--	size = md->end - md->start;
--	md->start += size;
--	memcpy(md->aio.data[idx] + size0, buf, size);
--
--	/*
--	 * Increment md->refcount to guard md->data[idx] buffer
--	 * from premature deallocation because md object can be
--	 * released earlier than aio write request started
--	 * on mmap->data[idx] is complete.
--	 *
--	 * perf_mmap__put() is done at record__aio_complete()
--	 * after started request completion.
--	 */
--	perf_mmap__get(md);
--
--	md->prev = head;
--	perf_mmap__consume(md);
--
--	rc = push(to, &md->aio.cblocks[idx], md->aio.data[idx], size0 + size, *off);
--	if (!rc) {
--		*off += size0 + size;
--	} else {
--		/*
--		 * Decrement md->refcount back if aio write
--		 * operation failed to start.
--		 */
--		perf_mmap__put(md);
--	}
--
--	return rc;
--}
- #else /* !HAVE_AIO_SUPPORT */
- static int perf_mmap__aio_enabled(struct perf_mmap *map __maybe_unused)
- {
-@@ -566,7 +492,7 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
- 
- 	rc = perf_mmap__read_init(md);
- 	if (rc < 0)
--		return (rc == -EAGAIN) ? 0 : -1;
-+		return (rc == -EAGAIN) ? 1 : -1;
- 
- 	size = md->end - md->start;
- 
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index 4e2f58d95c1f..274ce389cd84 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -101,18 +101,6 @@ union perf_event *perf_mmap__read_event(struct perf_mmap *map);
- 
- int perf_mmap__push(struct perf_mmap *md, void *to,
- 		    int push(struct perf_mmap *map, void *to, void *buf, size_t size));
--#ifdef HAVE_AIO_SUPPORT
--int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
--			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
--			off_t *off);
--#else
--static inline int perf_mmap__aio_push(struct perf_mmap *md __maybe_unused, void *to __maybe_unused, int idx __maybe_unused,
--	int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off) __maybe_unused,
--	off_t *off __maybe_unused)
--{
--	return 0;
--}
--#endif
- 
- size_t perf_mmap__mmap_len(struct perf_mmap *map);
- 
--- 
-2.20.1
-
+Bart
