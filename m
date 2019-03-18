@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1087C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC5AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC10020685
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0011F2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rDY5Z6be"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uhf9yDYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfCRTlH (ORCPT
+        id S1727830AbfCRTlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 15:41:07 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38751 "EHLO
+        Mon, 18 Mar 2019 15:41:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46068 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbfCRTlC (ORCPT
+        with ESMTP id S1727687AbfCRTlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 15:41:02 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g12so18452262wrm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:41:01 -0700 (PDT)
+        Mon, 18 Mar 2019 15:41:01 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s15so3093996wra.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:41:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=f+uCN0dtjEGnlJv3pfIkjdcZRrqjbDiHnBp4IPbDmW4=;
-        b=rDY5Z6beU5to+2BGAZgeIkJkgr3wfP/KjLMRUdOpcCW6YCcJ4RivVQwKnooXBtJ2dj
-         7ok/tS8E0MGmIRyTmVgHPxRcJwd/tiRKSmPIbanxJm74jm/pZ3aUUI75FRp5+v5K/aTk
-         vzJp68jARltyDy5MT0btgZdSjS5LTLQuLPAVaefO6yYD3maHUd2VxrlHDHVybALZ4mpK
-         5TzpsvylL5K4z+4aF+zVwWWRNby21sQ+vjjhehkTawWw9y+hheExStyuzngOL6bFP6w5
-         apFCKS0evYsNOvuWmCAb6rPc8eehmHkyOGdrVFROzko5ZAx02jSkcjFrS7KFWRNA+IsB
-         nZtA==
+        bh=2T8O0Mm4ruygwgr6c+1/UMNXLrosJEb50l9fzQq3+LI=;
+        b=Uhf9yDYxmFCusnccxywzNceiIL+v/S2FVJrRXHMcKpbtFSzGE2KlxkfICt3hFRgRj9
+         SfGAAT7pvHqE20/PNiRTaQUqvMdkCt7X1BE6zng67/Jsrfr6soPXzMs0SBP9XhaUYTGm
+         0KtDzFKgCARAFb5D2wRdtxsd16NKlPIOBIl4qZ+lIvRkyxvzbV4niZ3tt2ULgvohMy4o
+         jHKl+dbcAUTpTA/CGJrz5A42dLNe/sUn0To+anS/GWhqcFSQZTW3jVcZ7JoxMhIFYhxd
+         dmR45nrOgYUK7wkzzpr1vKlhMAZRIlNWQfMttBozfa2K+54ccQuXbtuv9xLsNYbptOyu
+         egsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=f+uCN0dtjEGnlJv3pfIkjdcZRrqjbDiHnBp4IPbDmW4=;
-        b=uKiSu0426Nz6uEFtkEp0tu0JY7G6VODssCn48Cqb/EiCpTeojPH0frE5gOq9h38Grl
-         10YgG3lyWDLp6GCRGe1CG/pP8u8L52IYCrUC9OzbcyTrvVwl7rF2cfAj26Kxfqi67fxT
-         0TyMcqbEuZuG+Gjru5gvrMXFZ29FY7LBqKI7D2N6ulvLMgY2FWV/l9qzTMo2VEhVJoUZ
-         Xv9dNjJTWV97LU8fpbXBTutTSLaLNXOGtXcS7y0lqdUXkASfuAhBVxWTMwQRskS7eqGU
-         ewEhm7rtL6nN4vivBNYNpJxTg45WbVIhX4fSYsnm6DZAIph+BW9DPcBXF5TiYC5hEXJi
-         j2Sg==
-X-Gm-Message-State: APjAAAWmjZOuBfgkc9zzM8zz+qdDQUlZ4UWifn1M4ZWitjimnuMGtNYV
-        Dac050Xt5cJbilLBX7Tk7SMHbg==
-X-Google-Smtp-Source: APXvYqx+OpyuPhR9OKH2oYNzz4yUdu4KL8pJugxaOx7zkWRlZz+b/DZpiR2HE59qYxCt/JwwY6NXNQ==
-X-Received: by 2002:adf:fb82:: with SMTP id a2mr4551043wrr.214.1552938061153;
-        Mon, 18 Mar 2019 12:41:01 -0700 (PDT)
+        bh=2T8O0Mm4ruygwgr6c+1/UMNXLrosJEb50l9fzQq3+LI=;
+        b=QByfzaIw+cN1zf3iztQnYsAUWdhRmeE2z/UUGviNAvGHFVPG9tRKDvrIUbPYdqmS1C
+         jqkVYsaiX8PNWwTwIIr4/eQcRDjUMaGoppg0l6XgpS6Sq7wwBQxVkEcuv3B9e1hIVzMn
+         d2kxH2PgOXGBkP86RK94Vh/wUQrivmnBwVdAQ1vDImppjBUKo5SppzQs6X9nLg4EOkiU
+         V+PKMwLxaCffFvfp/uzu9I1vCMQn1bDlgfUYvQhLn1rsKXJ9qR9YuIXZfAcAKimZSYC0
+         17gdUvJylS15oXKRR2MdsFPOFpZwiA5QJ+xP6mDtFksdbdva7owu1EjTR4MTXZcRR/89
+         5mLw==
+X-Gm-Message-State: APjAAAVfCSXz8kv0k4l6thjzDkqtuugu6VCvsVI7dCZJb7li7C8hGWUS
+        5mz5V4tm9/7CKlL7Zpn/yqe/pw==
+X-Google-Smtp-Source: APXvYqwSlmj56Jf2NE2Gd3GBSYXic9INk2IDtEWlgFgQAvHuYAAMzoPBZjojS2u4BMrrmZiOOKIK5A==
+X-Received: by 2002:a5d:6543:: with SMTP id z3mr13195408wrv.200.1552938059981;
+        Mon, 18 Mar 2019 12:40:59 -0700 (PDT)
 Received: from localhost.localdomain (cpc89244-aztw30-2-0-cust4998.18-1.cable.virginm.net. [86.31.179.135])
-        by smtp.gmail.com with ESMTPSA id s10sm4583941wrv.56.2019.03.18.12.41.00
+        by smtp.gmail.com with ESMTPSA id s10sm4583941wrv.56.2019.03.18.12.40.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 18 Mar 2019 12:41:00 -0700 (PDT)
+        Mon, 18 Mar 2019 12:40:59 -0700 (PDT)
 From:   Peter Griffin <peter.griffin@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
@@ -63,9 +63,9 @@ To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 Cc:     john.stultz@linaro.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         yuq825@gmail.com
-Subject: [PATCH v1 6/6] clk: hi6220: use CLK_OF_DECLARE_DRIVER
-Date:   Mon, 18 Mar 2019 19:38:51 +0000
-Message-Id: <1552937931-23050-7-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v1 5/6] dt-bindings: reset: hisilicon: Add ao reset controller
+Date:   Mon, 18 Mar 2019 19:38:50 +0000
+Message-Id: <1552937931-23050-6-git-send-email-peter.griffin@linaro.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
 References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
@@ -74,26 +74,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As now we also need to probe in the reset driver as well.
+This is required to bring Mali450 gpu out of reset.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- drivers/clk/hisilicon/clk-hi6220.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/dt-bindings/reset/hisi,hi6220-resets.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/clk-hi6220.c
-index a87809d..952ffe2 100644
---- a/drivers/clk/hisilicon/clk-hi6220.c
-+++ b/drivers/clk/hisilicon/clk-hi6220.c
-@@ -89,7 +89,7 @@ static void __init hi6220_clk_ao_init(struct device_node *np)
- 	hisi_clk_register_gate_sep(hi6220_separated_gate_clks_ao,
- 				ARRAY_SIZE(hi6220_separated_gate_clks_ao), clk_data_ao);
- }
--CLK_OF_DECLARE(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_clk_ao_init);
-+CLK_OF_DECLARE_DRIVER(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_clk_ao_init);
+diff --git a/include/dt-bindings/reset/hisi,hi6220-resets.h b/include/dt-bindings/reset/hisi,hi6220-resets.h
+index e7c362a8..63aff7d 100644
+--- a/include/dt-bindings/reset/hisi,hi6220-resets.h
++++ b/include/dt-bindings/reset/hisi,hi6220-resets.h
+@@ -73,4 +73,11 @@
+ #define MEDIA_MMU                       6
+ #define MEDIA_XG2RAM1                   7
  
- 
- /* clocks in sysctrl */
++#define AO_G3D                          1
++#define AO_CODECISP                     2
++#define AO_MCPU                         4
++#define AO_BBPHARQMEM                   5
++#define AO_HIFI                         8
++#define AO_ACPUSCUL2C                   12
++
+ #endif /*_DT_BINDINGS_RESET_CONTROLLER_HI6220*/
 -- 
 2.7.4
 
