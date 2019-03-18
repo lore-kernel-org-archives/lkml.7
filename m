@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2FBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AB6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCEA2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF8B21734
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901447;
-	bh=RJIMLS9pgwQA69lo7Q1tJLEgZfLdzfGvZ5zM5lbTnuY=;
+	s=default; t=1552901452;
+	bh=c1AfJdwPox77wt51UosM9WG7cpPc+D/IrspEeIwILbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZHkx6oV1q2lPjXsZZ5e2YkHkHvvRYC7s5yPlXaFEXzR3tkkMsaN7SOHWJmO8gEQzI
-	 3POkB7GOJx7Qea+rQg14F6/zedwy8DcleMNlnuU1ELf61vXmZtq90W1bJtMk4gekap
-	 c9i+8n3tSiQHVsugtRCK2w6eOJ8/5/Dw9WCG41dM=
+	b=OhZibS/0yfxbUjKDZgT7IMbzESnE6mG7gnP+zPT2wuyIdD6y4koMlkk/xfkPaejuw
+	 s4gu1mnyMnOO8OwG831s8cculjzj7uNTeL7Lj/+7AjSzaTIMdGxwlir4C5RCmu0x2o
+	 JR/JiXT6zo6Uj3ZTE2xTaTqZhYA4g/3KgsjAAJCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbfCRJap (ORCPT
+        id S1728467AbfCRJau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37768 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728416AbfCRJae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:30:34 -0400
+        id S1728450AbfCRJar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:30:47 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71E392075C;
-        Mon, 18 Mar 2019 09:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63F012075C;
+        Mon, 18 Mar 2019 09:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901433;
-        bh=RJIMLS9pgwQA69lo7Q1tJLEgZfLdzfGvZ5zM5lbTnuY=;
+        s=default; t=1552901446;
+        bh=c1AfJdwPox77wt51UosM9WG7cpPc+D/IrspEeIwILbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=liQFQpQN5ddXY9vR+hLtV/ojEcOlmBswpPI9Bn09XLG9jKKYhUZAu154HGX7Hm8Xh
-         V5U8RbDkJjSzlY6avrhuDNiDR17h1diWgyjybKb552G0ob8q8e8oeO7fJFKtFmMbLI
-         tyaSwtGd7Xa9cZXromNAUInCgakNA8NEK+dy4aK0=
+        b=cA33DnAWoWIhNn9ot1hS7nxV5omTPobr0dVkL1GHuNcvBf+ETvqv2m7pkLjsHFHY+
+         mTlWai1I/LO32Ml0OF2WpKRcOhVpjNmPbKPmXMRiRi9mDdqPFmdw2h/csXtXgitmpT
+         rTcgHUyEEoUfBi/tGSsYYNVU+1koJxdm59uuzL04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Menzel <pmenzel+alsa-devel@molgen.mpg.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.20 43/52] ALSA: hda: Extend i915 component bind timeout
-Date:   Mon, 18 Mar 2019 10:25:30 +0100
-Message-Id: <20190318083848.851660496@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.20 46/52] ALSA: hda/realtek - Reduce click noise on Dell Precision 5820 headphone
+Date:   Mon, 18 Mar 2019 10:25:33 +0100
+Message-Id: <20190318083849.311230519@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -68,41 +66,206 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit cfc35f9c128cea8fce6a5513b1de50d36f3b209f upstream.
+commit c0ca5eced22215c1e03e3ad479f8fab0bbb30772 upstream.
 
-I set 10 seconds for the timeout of the i915 audio component binding
-with a hope that recent machines are fast enough to handle all probe
-tasks in that period, but I was too optimistic.  The binding may take
-longer than that, and this caused a problem on the machine with both
-audio and graphics driver modules loaded in parallel, as Paul Menzel
-experienced.  This problem haven't hit so often just because the KMS
-driver is loaded in initrd on most machines.
+Dell Precision 5820 with ALC3234 codec (which is equivalent with
+ALC255) shows click noises at (runtime) PM resume on the headphone.
+The biggest source of the noise comes from the cleared headphone pin
+control at resume, which is done via the standard shutup procedure.
 
-As a simple workaround, extend the timeout to 60 seconds.
+Although we have an override of the standard shutup callback to
+replace with NOP, this would skip other needed stuff (e.g. the pull
+down of headset power).  So, instead, this "fixes" the behavior of
+alc_fixup_no_shutup() by introducing spec->no_shutup_pins flag.
+When this flag is set, Realtek codec won't call the standard
+snd_hda_shutup_pins() & co.  Now alc_fixup_no_shutup() just sets this
+flag instead of overriding spec->shutup callback itself.  This allows
+us to apply the similar fix for other entries easily if needed in
+future.
 
-Fixes: f9b54e1961c7 ("ALSA: hda/i915: Allow delayed i915 audio component binding")
-Reported-by: Paul Menzel <pmenzel+alsa-devel@molgen.mpg.de>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/hda/hdac_i915.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |   57 +++++++++++++++++++++++++-----------------
+ 1 file changed, 34 insertions(+), 23 deletions(-)
 
---- a/sound/hda/hdac_i915.c
-+++ b/sound/hda/hdac_i915.c
-@@ -144,9 +144,9 @@ int snd_hdac_i915_init(struct hdac_bus *
- 		return -ENODEV;
- 	if (!acomp->ops) {
- 		request_module("i915");
--		/* 10s timeout */
-+		/* 60s timeout */
- 		wait_for_completion_timeout(&bind_complete,
--					    msecs_to_jiffies(10 * 1000));
-+					    msecs_to_jiffies(60 * 1000));
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -118,6 +118,7 @@ struct alc_spec {
+ 	unsigned int has_alc5505_dsp:1;
+ 	unsigned int no_depop_delay:1;
+ 	unsigned int done_hp_init:1;
++	unsigned int no_shutup_pins:1;
+ 
+ 	/* for PLL fix */
+ 	hda_nid_t pll_nid;
+@@ -476,6 +477,14 @@ static void alc_auto_setup_eapd(struct h
+ 		set_eapd(codec, *p, on);
+ }
+ 
++static void alc_shutup_pins(struct hda_codec *codec)
++{
++	struct alc_spec *spec = codec->spec;
++
++	if (!spec->no_shutup_pins)
++		snd_hda_shutup_pins(codec);
++}
++
+ /* generic shutup callback;
+  * just turning off EAPD and a little pause for avoiding pop-noise
+  */
+@@ -486,7 +495,7 @@ static void alc_eapd_shutup(struct hda_c
+ 	alc_auto_setup_eapd(codec, false);
+ 	if (!spec->no_depop_delay)
+ 		msleep(200);
+-	snd_hda_shutup_pins(codec);
++	alc_shutup_pins(codec);
+ }
+ 
+ /* generic EAPD initialization */
+@@ -814,7 +823,7 @@ static inline void alc_shutup(struct hda
+ 	if (spec && spec->shutup)
+ 		spec->shutup(codec);
+ 	else
+-		snd_hda_shutup_pins(codec);
++		alc_shutup_pins(codec);
+ }
+ 
+ static void alc_reboot_notify(struct hda_codec *codec)
+@@ -2950,7 +2959,7 @@ static void alc269_shutup(struct hda_cod
+ 			(alc_get_coef0(codec) & 0x00ff) == 0x018) {
+ 		msleep(150);
  	}
- 	if (!acomp->ops) {
- 		dev_info(bus->dev, "couldn't bind with audio component\n");
+-	snd_hda_shutup_pins(codec);
++	alc_shutup_pins(codec);
+ }
+ 
+ static struct coef_fw alc282_coefs[] = {
+@@ -3053,14 +3062,15 @@ static void alc282_shutup(struct hda_cod
+ 	if (hp_pin_sense)
+ 		msleep(85);
+ 
+-	snd_hda_codec_write(codec, hp_pin, 0,
+-			    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
++	if (!spec->no_shutup_pins)
++		snd_hda_codec_write(codec, hp_pin, 0,
++				    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
+ 
+ 	if (hp_pin_sense)
+ 		msleep(100);
+ 
+ 	alc_auto_setup_eapd(codec, false);
+-	snd_hda_shutup_pins(codec);
++	alc_shutup_pins(codec);
+ 	alc_write_coef_idx(codec, 0x78, coef78);
+ }
+ 
+@@ -3166,15 +3176,16 @@ static void alc283_shutup(struct hda_cod
+ 	if (hp_pin_sense)
+ 		msleep(100);
+ 
+-	snd_hda_codec_write(codec, hp_pin, 0,
+-			    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
++	if (!spec->no_shutup_pins)
++		snd_hda_codec_write(codec, hp_pin, 0,
++				    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
+ 
+ 	alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
+ 
+ 	if (hp_pin_sense)
+ 		msleep(100);
+ 	alc_auto_setup_eapd(codec, false);
+-	snd_hda_shutup_pins(codec);
++	alc_shutup_pins(codec);
+ 	alc_write_coef_idx(codec, 0x43, 0x9614);
+ }
+ 
+@@ -3240,14 +3251,15 @@ static void alc256_shutup(struct hda_cod
+ 	/* NOTE: call this before clearing the pin, otherwise codec stalls */
+ 	alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
+ 
+-	snd_hda_codec_write(codec, hp_pin, 0,
+-			    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
++	if (!spec->no_shutup_pins)
++		snd_hda_codec_write(codec, hp_pin, 0,
++				    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
+ 
+ 	if (hp_pin_sense)
+ 		msleep(100);
+ 
+ 	alc_auto_setup_eapd(codec, false);
+-	snd_hda_shutup_pins(codec);
++	alc_shutup_pins(codec);
+ }
+ 
+ static void alc225_init(struct hda_codec *codec)
+@@ -3334,7 +3346,7 @@ static void alc225_shutup(struct hda_cod
+ 		msleep(100);
+ 
+ 	alc_auto_setup_eapd(codec, false);
+-	snd_hda_shutup_pins(codec);
++	alc_shutup_pins(codec);
+ }
+ 
+ static void alc_default_init(struct hda_codec *codec)
+@@ -3388,14 +3400,15 @@ static void alc_default_shutup(struct hd
+ 	if (hp_pin_sense)
+ 		msleep(85);
+ 
+-	snd_hda_codec_write(codec, hp_pin, 0,
+-			    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
++	if (!spec->no_shutup_pins)
++		snd_hda_codec_write(codec, hp_pin, 0,
++				    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
+ 
+ 	if (hp_pin_sense)
+ 		msleep(100);
+ 
+ 	alc_auto_setup_eapd(codec, false);
+-	snd_hda_shutup_pins(codec);
++	alc_shutup_pins(codec);
+ }
+ 
+ static void alc294_hp_init(struct hda_codec *codec)
+@@ -3412,8 +3425,9 @@ static void alc294_hp_init(struct hda_co
+ 
+ 	msleep(100);
+ 
+-	snd_hda_codec_write(codec, hp_pin, 0,
+-			    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
++	if (!spec->no_shutup_pins)
++		snd_hda_codec_write(codec, hp_pin, 0,
++				    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
+ 
+ 	alc_update_coef_idx(codec, 0x6f, 0x000f, 0);/* Set HP depop to manual mode */
+ 	alc_update_coefex_idx(codec, 0x58, 0x00, 0x8000, 0x8000); /* HP depop procedure start */
+@@ -5007,16 +5021,12 @@ static void alc_fixup_auto_mute_via_amp(
+ 	}
+ }
+ 
+-static void alc_no_shutup(struct hda_codec *codec)
+-{
+-}
+-
+ static void alc_fixup_no_shutup(struct hda_codec *codec,
+ 				const struct hda_fixup *fix, int action)
+ {
+ 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+ 		struct alc_spec *spec = codec->spec;
+-		spec->shutup = alc_no_shutup;
++		spec->no_shutup_pins = 1;
+ 	}
+ }
+ 
+@@ -6596,6 +6606,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
+ 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
+ 	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
+ 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
 
 
