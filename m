@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB6BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D1BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC8F921734
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB4B214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901261;
-	bh=Ijj4uvqnKypIgSt15Wio4VAF6FjNtuI5Jk3Yk/d2Ofw=;
+	s=default; t=1552901264;
+	bh=59tAehUSvbp7rBiWtVQOwlswuYS+CiiGh0X2NIZZUGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVH9AIz+/tW/rngm2jsjr8F0WNOVRxnNdYmuB05PuY5pYG+MXA899a9fE/3rW4fSF
-	 l9J4CWgaJGebgYsRDyqHL9pDMDwTycaW443h7+gqniAgg6khM7yakJ7qWY9tY2ioSe
-	 7qQNrcZjPTQb7rQeTsTrCOTMQo9/gbaAqJH1Q7NM=
+	b=Jw/x2jkE1fxC+brwXTZyrCyT7vLZxk5JX17q/6Jd/Zygo69RBPZSor5kk5MN5xw6v
+	 MTiG/uAJmZd2bNVATV0YoLHdTOESWnt7bWj2gmGPXJCCm12sdXbjqkJP3W35w9WyjE
+	 537KEC9QWuGdGrSHkkmiVbQ7woeIx9V5Ky69GGtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfCRJ1k (ORCPT
+        id S1727397AbfCRJ1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:27:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbfCRJ1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:27:37 -0400
+        id S1727874AbfCRJ1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:27:40 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 644312075C;
-        Mon, 18 Mar 2019 09:27:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 166482083D;
+        Mon, 18 Mar 2019 09:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901256;
-        bh=Ijj4uvqnKypIgSt15Wio4VAF6FjNtuI5Jk3Yk/d2Ofw=;
+        s=default; t=1552901259;
+        bh=59tAehUSvbp7rBiWtVQOwlswuYS+CiiGh0X2NIZZUGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=plBByShPhxKTXtRkVWbE5qVdDsuREz20HWG3W8Nn4QIwk3r44deWd3zSv1cXw7zuM
-         pMfmXzM9sFXI0VWpqHJxnaUhPstyeL7nLgUNnk4TR8VOv/qZSm5w3Ux3ojy/7Y3K+P
-         35sZ6NTMssMA9XiC6L4hXYhI4nNmUuNXeRynKi/o=
+        b=sei1hzVHcDkjWf0IXV3faiYr+nUGkyI0pVjFIQj+tF4MJsvvDtIvBXIkeyQ1+7Yhc
+         lYvF32xmTf+PCGNMJUP8FnYNQ20JuqNuxHoqSy8etr4udcFnSlEs2FrWgKaT201+Di
+         GPnueaUjc00yZPm3wdhjEl+ACD3KXyMPUVuqjnI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.0 32/43] perf/x86: Fixup typo in stub functions
-Date:   Mon, 18 Mar 2019 10:24:24 +0100
-Message-Id: <20190318083716.809392022@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 33/43] ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O against Liquid Saffire 56
+Date:   Mon, 18 Mar 2019 10:24:25 +0100
+Message-Id: <20190318083716.838916890@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -68,53 +65,180 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit f764c58b7faa26f5714e6907f892abc2bc0de4f8 upstream.
+commit 7dc661bd8d3261053b69e4e2d0050cd1ee540fc1 upstream.
 
-Guenter reported a build warning for CONFIG_CPU_SUP_INTEL=n:
+ALSA bebob driver has an entry for Focusrite Saffire Pro 10 I/O. The
+entry matches vendor_id in root directory and model_id in unit
+directory of configuration ROM for IEEE 1394 bus.
 
-  > With allmodconfig-CONFIG_CPU_SUP_INTEL, this patch results in:
-  >
-  > In file included from arch/x86/events/amd/core.c:8:0:
-  > arch/x86/events/amd/../perf_event.h:1036:45: warning: ‘struct cpu_hw_event’ declared inside parameter list will not be visible outside of this definition or declaration
-  >  static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
+On the other hand, configuration ROM of Focusrite Liquid Saffire 56
+has the same vendor_id and model_id. This device is an application of
+TCAT Dice (TCD2220 a.k.a Dice Jr.) however ALSA bebob driver can be
+bound to it randomly instead of ALSA dice driver. At present, drivers
+in ALSA firewire stack can not handle this situation appropriately.
 
-While harmless (an unsed pointer is an unused pointer, no matter the type)
-it needs fixing.
+This commit uses more identical mod_alias for Focusrite Saffire Pro 10
+I/O in ALSA bebob driver.
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: d01b1f96a82e ("perf/x86/intel: Make cpuc allocations consistent")
-Link: http://lkml.kernel.org/r/20190315081410.GR5996@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  042a829d  bus_info_length 4, crc_length 42, crc 33437
+404  31333934  bus_name "1394"
+408  f0649222  irmc 1, cmc 1, isc 1, bmc 1, pmc 0, cyc_clk_acc 100,
+               max_rec 9 (1024), max_rom 2, gen 2, spd 2 (S400)
+40c  00130e01  company_id 00130e     |
+410  000606e0  device_id 01000606e0  | EUI-64 00130e01000606e0
+
+               root directory
+               -----------------------------------------------------------------
+414  0009d31c  directory_length 9, crc 54044
+418  04000014  hardware version
+41c  0c0083c0  node capabilities per IEEE 1394
+420  0300130e  vendor
+424  81000012  --> descriptor leaf at 46c
+428  17000006  model
+42c  81000016  --> descriptor leaf at 484
+430  130120c2  version
+434  d1000002  --> unit directory at 43c
+438  d4000006  --> dependent info directory at 450
+
+               unit directory at 43c
+               -----------------------------------------------------------------
+43c  0004707c  directory_length 4, crc 28796
+440  1200a02d  specifier id: 1394 TA
+444  13010001  version: AV/C
+448  17000006  model
+44c  81000013  --> descriptor leaf at 498
+
+               dependent info directory at 450
+               -----------------------------------------------------------------
+450  000637c7  directory_length 6, crc 14279
+454  120007f5  specifier id
+458  13000001  version
+45c  3affffc7  (immediate value)
+460  3b100000  (immediate value)
+464  3cffffc7  (immediate value)
+468  3d600000  (immediate value)
+
+               descriptor leaf at 46c
+               -----------------------------------------------------------------
+46c  00056f3b  leaf_length 5, crc 28475
+470  00000000  textual descriptor
+474  00000000  minimal ASCII
+478  466f6375  "Focu"
+47c  73726974  "srit"
+480  65000000  "e"
+
+               descriptor leaf at 484
+               -----------------------------------------------------------------
+484  0004a165  leaf_length 4, crc 41317
+488  00000000  textual descriptor
+48c  00000000  minimal ASCII
+490  50726f31  "Pro1"
+494  30494f00  "0IO"
+
+               descriptor leaf at 498
+               -----------------------------------------------------------------
+498  0004a165  leaf_length 4, crc 41317
+49c  00000000  textual descriptor
+4a0  00000000  minimal ASCII
+4a4  50726f31  "Pro1"
+4a8  30494f00  "0IO"
+
+$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  040442e4  bus_info_length 4, crc_length 4, crc 17124
+404  31333934  bus_name "1394"
+408  e0ff8112  irmc 1, cmc 1, isc 1, bmc 0, pmc 0, cyc_clk_acc 255,
+               max_rec 8 (512), max_rom 1, gen 1, spd 2 (S400)
+40c  00130e04  company_id 00130e     |
+410  018001e9  device_id 04018001e9  | EUI-64 00130e04018001e9
+
+               root directory
+               -----------------------------------------------------------------
+414  00065612  directory_length 6, crc 22034
+418  0300130e  vendor
+41c  8100000a  --> descriptor leaf at 444
+420  17000006  model
+424  8100000e  --> descriptor leaf at 45c
+428  0c0087c0  node capabilities per IEEE 1394
+42c  d1000001  --> unit directory at 430
+
+               unit directory at 430
+               -----------------------------------------------------------------
+430  000418a0  directory_length 4, crc 6304
+434  1200130e  specifier id
+438  13000001  version
+43c  17000006  model
+440  8100000f  --> descriptor leaf at 47c
+
+               descriptor leaf at 444
+               -----------------------------------------------------------------
+444  00056f3b  leaf_length 5, crc 28475
+448  00000000  textual descriptor
+44c  00000000  minimal ASCII
+450  466f6375  "Focu"
+454  73726974  "srit"
+458  65000000  "e"
+
+               descriptor leaf at 45c
+               -----------------------------------------------------------------
+45c  000762c6  leaf_length 7, crc 25286
+460  00000000  textual descriptor
+464  00000000  minimal ASCII
+468  4c495155  "LIQU"
+46c  49445f53  "ID_S"
+470  41464649  "AFFI"
+474  52455f35  "RE_5"
+478  36000000  "6"
+
+               descriptor leaf at 47c
+               -----------------------------------------------------------------
+47c  000762c6  leaf_length 7, crc 25286
+480  00000000  textual descriptor
+484  00000000  minimal ASCII
+488  4c495155  "LIQU"
+48c  49445f53  "ID_S"
+490  41464649  "AFFI"
+494  52455f35  "RE_5"
+498  36000000  "6"
+
+Cc: <stable@vger.kernel.org> # v3.16+
+Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/perf_event.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/firewire/bebob/bebob.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1032,12 +1032,12 @@ static inline int intel_pmu_init(void)
- 	return 0;
- }
- 
--static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
-+static inline int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
- {
- 	return 0;
- }
- 
--static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
-+static inline void intel_cpuc_finish(struct cpu_hw_events *cpuc)
- {
- }
- 
+--- a/sound/firewire/bebob/bebob.c
++++ b/sound/firewire/bebob/bebob.c
+@@ -448,7 +448,19 @@ static const struct ieee1394_device_id b
+ 	/* Focusrite, SaffirePro 26 I/O */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000003, &saffirepro_26_spec),
+ 	/* Focusrite, SaffirePro 10 I/O */
+-	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000006, &saffirepro_10_spec),
++	{
++		// The combination of vendor_id and model_id is the same as the
++		// same as the one of Liquid Saffire 56.
++		.match_flags	= IEEE1394_MATCH_VENDOR_ID |
++				  IEEE1394_MATCH_MODEL_ID |
++				  IEEE1394_MATCH_SPECIFIER_ID |
++				  IEEE1394_MATCH_VERSION,
++		.vendor_id	= VEN_FOCUSRITE,
++		.model_id	= 0x000006,
++		.specifier_id	= 0x00a02d,
++		.version	= 0x010001,
++		.driver_data	= (kernel_ulong_t)&saffirepro_10_spec,
++	},
+ 	/* Focusrite, Saffire(no label and LE) */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, MODEL_FOCUSRITE_SAFFIRE_BOTH,
+ 			    &saffire_spec),
 
 
