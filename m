@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE62CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194ACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80D0217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCDCA21738
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901410;
-	bh=QoP5RA7OD+SSaauQH84WvpEUS3udP2BYXI3SmtytCZA=;
+	s=default; t=1552901413;
+	bh=vUTFL7kcYu2OurL96qK3bzB6YqcGSp6d//Kgsjc/SVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yUoFxu1ofDv/wxOk/x2tzKUe/Nsob82CXMdV3p9SUSvei0uTORTQ6u6LdRU6P4tVG
-	 6cWR2nwuK8NTtwhDDtMoWXToIM4Xeb76jG/01AcqHHV7PG6VeC1AH4o42wky7eoiYA
-	 wtZKBT/YA0wMp18foUlSeFXmY+ydaMrNErqTGiIg=
+	b=LqwI/Z4zn4x+Ox+SNujlOp334GD4EOf6GiVdnHENsCBzEPfnrJQWBVkDSmpH9/xbU
+	 DLL+qdh3W1UuMUITpt1AueOcIOOM0eLoBVHD4PYm2LAl1sd9SCrs+OXL8gpT+A4P9Y
+	 lqgoD4z98nWcaten3E2BlzoBW+poBhaZX7YSjAnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbfCRJaI (ORCPT
+        id S1728339AbfCRJaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:30:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36836 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:30:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727672AbfCRJaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:30:02 -0400
+        id S1728006AbfCRJaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:30:10 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4B9C214D8;
-        Mon, 18 Mar 2019 09:30:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4C03214AF;
+        Mon, 18 Mar 2019 09:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901401;
-        bh=QoP5RA7OD+SSaauQH84WvpEUS3udP2BYXI3SmtytCZA=;
+        s=default; t=1552901410;
+        bh=vUTFL7kcYu2OurL96qK3bzB6YqcGSp6d//Kgsjc/SVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qvI62bf4I3DO15E6ArLHXWcRGl9Dwb91HfR1/tQcB4qyV+bwLUg9DxjFWGhy2vGHC
-         wQUHSbMk0w0lm/LAjHmzv2UDPx9Bfj8l6ydVsE8kWh5TJplzY0fZ31mnM5OKyk/TIQ
-         miUUxcq6WSiuMvShn1D0lWtiTAKZaDUTF0lptAVc=
+        b=yg47ldgA/Jq0qQj+aU6SETbC6M/F15d6YN8o8mT+CdNtVHVVzmOu4eth6XmvL/Kb0
+         jhXocZFMdd9V3Dwb/5akASaHA+sfhTbbX1/XQRjWjVgPoNtxnkGs+YK2f725Fw/t8d
+         xjqhgVF75dUWMceBRUFuy44WpF8x8arrc9J89Vlg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Mahesh Bandewar <maheshb@google.com>,
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 33/52] ipvlan: disallow userns cap_net_admin to change global mode/flags
-Date:   Mon, 18 Mar 2019 10:25:20 +0100
-Message-Id: <20190318083847.274242743@linuxfoundation.org>
+Subject: [PATCH 4.20 35/52] ipv6: route: enforce RCU protection in ip6_route_check_nh_onlink()
+Date:   Mon, 18 Mar 2019 10:25:22 +0100
+Message-Id: <20190318083847.480216970@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -66,129 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 7cc9f7003a969d359f608ebb701d42cafe75b84a ]
+[ Upstream commit bf1dc8bad1d42287164d216d8efb51c5cd381b18 ]
 
-When running Docker with userns isolation e.g. --userns-remap="default"
-and spawning up some containers with CAP_NET_ADMIN under this realm, I
-noticed that link changes on ipvlan slave device inside that container
-can affect all devices from this ipvlan group which are in other net
-namespaces where the container should have no permission to make changes
-to, such as the init netns, for example.
+We need a RCU critical section around rt6_info->from deference, and
+proper annotation.
 
-This effectively allows to undo ipvlan private mode and switch globally to
-bridge mode where slaves can communicate directly without going through
-hostns, or it allows to switch between global operation mode (l2/l3/l3s)
-for everyone bound to the given ipvlan master device. libnetwork plugin
-here is creating an ipvlan master and ipvlan slave in hostns and a slave
-each that is moved into the container's netns upon creation event.
-
-* In hostns:
-
-  # ip -d a
-  [...]
-  8: cilium_host@bond0: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-     link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
-     ipvlan  mode l3 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-     inet 10.41.0.1/32 scope link cilium_host
-       valid_lft forever preferred_lft forever
-  [...]
-
-* Spawn container & change ipvlan mode setting inside of it:
-
-  # docker run -dt --cap-add=NET_ADMIN --network cilium-net --name client -l app=test cilium/netperf
-  9fff485d69dcb5ce37c9e33ca20a11ccafc236d690105aadbfb77e4f4170879c
-
-  # docker exec -ti client ip -d a
-  [...]
-  10: cilium0@if4: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
-      ipvlan  mode l3 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-      inet 10.41.197.43/32 brd 10.41.197.43 scope global cilium0
-         valid_lft forever preferred_lft forever
-
-  # docker exec -ti client ip link change link cilium0 name cilium0 type ipvlan mode l2
-
-  # docker exec -ti client ip -d a
-  [...]
-  10: cilium0@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
-      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-      inet 10.41.197.43/32 brd 10.41.197.43 scope global cilium0
-         valid_lft forever preferred_lft forever
-
-* In hostns (mode switched to l2):
-
-  # ip -d a
-  [...]
-  8: cilium_host@bond0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
-      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-      inet 10.41.0.1/32 scope link cilium_host
-         valid_lft forever preferred_lft forever
-  [...]
-
-Same l3 -> l2 switch would also happen by creating another slave inside
-the container's network namespace when specifying the existing cilium0
-link to derive the actual (bond0) master:
-
-  # docker exec -ti client ip link add link cilium0 name cilium1 type ipvlan mode l2
-
-  # docker exec -ti client ip -d a
-  [...]
-  2: cilium1@if4: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
-      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
-      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-  10: cilium0@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
-      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-      inet 10.41.197.43/32 brd 10.41.197.43 scope global cilium0
-         valid_lft forever preferred_lft forever
-
-* In hostns:
-
-  # ip -d a
-  [...]
-  8: cilium_host@bond0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
-      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-      inet 10.41.0.1/32 scope link cilium_host
-         valid_lft forever preferred_lft forever
-  [...]
-
-One way to mitigate it is to check CAP_NET_ADMIN permissions of
-the ipvlan master device's ns, and only then allow to change
-mode or flags for all devices bound to it. Above two cases are
-then disallowed after the patch.
-
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Mahesh Bandewar <maheshb@google.com>
+Fixes: 4ed591c8ab44 ("net/ipv6: Allow onlink routes to have a device mismatch if it is the default route")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ipvlan/ipvlan_main.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv6/route.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ipvlan/ipvlan_main.c
-+++ b/drivers/net/ipvlan/ipvlan_main.c
-@@ -494,6 +494,8 @@ static int ipvlan_nl_changelink(struct n
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -2752,20 +2752,24 @@ static int ip6_route_check_nh_onlink(str
+ 	u32 tbid = l3mdev_fib_table(dev) ? : RT_TABLE_MAIN;
+ 	const struct in6_addr *gw_addr = &cfg->fc_gateway;
+ 	u32 flags = RTF_LOCAL | RTF_ANYCAST | RTF_REJECT;
++	struct fib6_info *from;
+ 	struct rt6_info *grt;
+ 	int err;
  
- 	if (!data)
- 		return 0;
-+	if (!ns_capable(dev_net(ipvlan->phy_dev)->user_ns, CAP_NET_ADMIN))
-+		return -EPERM;
+ 	err = 0;
+ 	grt = ip6_nh_lookup_table(net, cfg, gw_addr, tbid, 0);
+ 	if (grt) {
++		rcu_read_lock();
++		from = rcu_dereference(grt->from);
+ 		if (!grt->dst.error &&
+ 		    /* ignore match if it is the default route */
+-		    grt->from && !ipv6_addr_any(&grt->from->fib6_dst.addr) &&
++		    from && !ipv6_addr_any(&from->fib6_dst.addr) &&
+ 		    (grt->rt6i_flags & flags || dev != grt->dst.dev)) {
+ 			NL_SET_ERR_MSG(extack,
+ 				       "Nexthop has invalid gateway or device mismatch");
+ 			err = -EINVAL;
+ 		}
++		rcu_read_unlock();
  
- 	if (data[IFLA_IPVLAN_MODE]) {
- 		u16 nmode = nla_get_u16(data[IFLA_IPVLAN_MODE]);
-@@ -596,6 +598,8 @@ int ipvlan_link_new(struct net *src_net,
- 		struct ipvl_dev *tmp = netdev_priv(phy_dev);
- 
- 		phy_dev = tmp->phy_dev;
-+		if (!ns_capable(dev_net(phy_dev)->user_ns, CAP_NET_ADMIN))
-+			return -EPERM;
- 	} else if (!netif_is_ipvlan_port(phy_dev)) {
- 		/* Exit early if the underlying link is invalid or busy */
- 		if (phy_dev->type != ARPHRD_ETHER ||
+ 		ip6_rt_put(grt);
+ 	}
 
 
