@@ -2,108 +2,78 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EC6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C8BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1462087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9602082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:59:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ViYNm6vV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfCRI7S (ORCPT
+        id S1727225AbfCRI7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 04:59:18 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:42127 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfCRI5y (ORCPT
+        Mon, 18 Mar 2019 04:59:39 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:53176 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfCRI7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 04:57:54 -0400
-X-Originating-IP: 90.88.22.102
-Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id F1D48240003;
-        Mon, 18 Mar 2019 08:57:51 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 09:57:51 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/6] nvmem: sunxi_sid: Read out data in native format
-Message-ID: <20190318085751.kziqzxnadtho4kdb@flea>
-References: <20190318073354.12151-1-wens@kernel.org>
- <20190318073354.12151-5-wens@kernel.org>
- <20190318084212.lv2lorskizl65uzg@flea>
- <CAGb2v67H9FkjKjSE5a7fUCb_t95Zfuk1p0bjWYJxjMqhMN-hfg@mail.gmail.com>
+        Mon, 18 Mar 2019 04:59:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1ALmgar4B3X6CqTSYLBcFD1k8l6NcBpwpstUxNSyhdg=; b=ViYNm6vVENIq+R/bqPElRTcaJ
+        IPFONXJ73t6pthX+imVELQky2WZ4ecvDQx77Y1O39OxsQlSpq17/AEg7XVt19/hoqt2yGBanq+Auc
+        59kAdBi+RB1rGp/vSlAIB0cZh6f8sMB6r5oUMw/sEyjXq3BLeZtZGVVlK34Jur3AaDhdHgnnSJetU
+        5EZkFg4ahRrGV5TIdQqHIRZcNj4L4+eQk0n3oalbB+pIebwZUzA8ZZI3UyGtJJYglIvvo9nXGtOFy
+        ZMzvB46HyFztKfFOhJgRVZHAJ37gOdAzuOpRgwFsdQPFmh09KFKKHJz2uaE2SMNM3PgVVbYnUInJH
+        vrGtyxOBA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h5o74-0007ix-W8; Mon, 18 Mar 2019 08:59:19 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 894CD202194EA; Mon, 18 Mar 2019 09:59:16 +0100 (CET)
+Date:   Mon, 18 Mar 2019 09:59:16 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     hpa@zytor.com
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Manoj Gupta <manojgupta@chromium.org>,
+        Tiancong Wang <tcwang@chromium.org>,
+        Stephen Hines <srhines@google.com>,
+        clang-built-linux@googlegroups.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] x86/vdso: include generic __lshrdi3 in 32-bit vDSO
+Message-ID: <20190318085916.GH6058@hirez.programming.kicks-ass.net>
+References: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com>
+ <CAKwvOd=aqWvjzC1ZF5_pXx2VutAX0dneDPxU_=jroqHUGw-X6g@mail.gmail.com>
+ <20190315222906.GC112750@google.com>
+ <33DE9AEF-C51C-4021-97FD-BEE2C5D98DBE@zytor.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="la2n7sufjnrgak3p"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGb2v67H9FkjKjSE5a7fUCb_t95Zfuk1p0bjWYJxjMqhMN-hfg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <33DE9AEF-C51C-4021-97FD-BEE2C5D98DBE@zytor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 15, 2019 at 04:18:31PM -0700, hpa@zytor.com wrote:
+> Note: it is also probably no reason to use -Os/-Oz for the vdso.
 
---la2n7sufjnrgak3p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Is anyone actually using -Os and CONFIG_CC_OPTIMIZE_FOR_SIZE ? I've been
+staring at compiler output a lot lately and -Os really generates
+atrocious crap.
 
-On Mon, Mar 18, 2019 at 04:45:19PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Mar 18, 2019 at 4:42 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > Hi,
-> >
-> > On Mon, Mar 18, 2019 at 03:33:52PM +0800, Chen-Yu Tsai wrote:
-> > > From: Chen-Yu Tsai <wens@csie.org>
-> > >
-> > > Originally the SID e-fuses were thought to be in big-endian format.
-> > > Later sources show that they are in fact native or little-endian.
-> > > The most compelling evidence is the thermal sensor calibration data,
-> > > which is a set of one to three 16-bit values. In native-endian they
-> > > are in 16-bit cells with increasing offsets, whereas with big-endian
-> > > they are in the wrong order, and a gap with no data will show if there
-> > > are one or three cells.
-> > >
-> > > Switch to a native endian representation for the nvmem device. For the
-> > > H3, the register read-out method was already returning data in native
-> > > endian. This only affects the other SoCs.
-> > >
-> > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> >
-> > I thought only the newer SoCs were impacted by this issue?
->
-> It is noticable on the newer SoCs. The old ones only have the 128-bit SID,
-> which could be read either way, as AFAIK it's just a serial number.
->
-> If you think we should leave the old ones alone I can factor that in.
-
-IIRC, there was also the SoC ID in the SID on those SoCs as well,
-which we might have to use in the future so we'll want to make sure it
-is correct.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---la2n7sufjnrgak3p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXI9djwAKCRDj7w1vZxhR
-xacmAP4xfPGpJtpCHJ0I2F8yxGCMGRneL3goh1L81MJkeHEBLAEAnmZ8MEF+36qZ
-4iIBaJugFY1u2UhzN65t+mHMEi0+SwI=
-=bftt
------END PGP SIGNATURE-----
-
---la2n7sufjnrgak3p--
+That is, should we just get rid of it?
