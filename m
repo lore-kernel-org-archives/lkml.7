@@ -2,162 +2,144 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87DEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D325AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DFD2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="i4uHt6Ct"
+	by mail.kernel.org (Postfix) with ESMTP id B084C2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbfCRRlD (ORCPT
+        id S1727828AbfCRRlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:41:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37321 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbfCRRk4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:40:56 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v14so5231977wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QKNCVQXWN6oEf8giX8idUUq1TytMK5c/qkMs8Fw701U=;
-        b=i4uHt6CtexflJwvEVHlktzw5ym29/cAovC6xWOaqOZNG5kkaX/d1oKDNP77R/k1K38
-         KO39o93U3Gk8/lNlYvZSzewvK26FtloXqwgDbIxvi+28QlW5D56rFm8OrzFAz6iqV9Gu
-         iN1hQHpS6v2weivc0upGEgMCt6wc+/VmGiB1v9D7xyjkg1vK5lki3SToMGk1lzY4cfT0
-         dw0hj8NBuNYRjz3KYFqxYbsbXeD4BiV9APIWmF+nZaWP08wImXz0vYquG+Bn02Ro67mq
-         wo7gLLMIfcc825W7y46kqzgFrQWSOBAVUofgiGiuMmCFRPNL8IAEPOzaHKtko5+2dWl3
-         0ndQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QKNCVQXWN6oEf8giX8idUUq1TytMK5c/qkMs8Fw701U=;
-        b=WeWZpzyoP6XghBUd0AijAKh06uBkp7weEfd55TrKZNxW60g4W65+hot0v/48jqoZud
-         r6uOuIz2ycpBVu6viRtFmtpm/VsgpJ9S5MyGwLkC87L14dmRBLv3AhILPvKTtYE6Wd2k
-         zJQ576YO1TNn7DJAes+98hXyeg2/ON6vROp9+Hy+xlqDC38IxcDPCBGrxa3pMZ0qyX8i
-         bFwF9SoJXnnpU+pACLpD4IPxcWDmEa5wshD5CDG4jr5t/riOR6JgRdY1W2vh2KvAeiXa
-         lnGRRNaBU5Lz0JQqMyFOTnOMlT2tl2MV8hhAA4AA/vZvoB+0+8M8FpbLNUtuPMHIiGDd
-         EcPg==
-X-Gm-Message-State: APjAAAV8LdsXClzR4TPwBzNItpOEZ9ax8wGL+C+ADRWG5y8peFPuip3D
-        j+TAgB8osReaqaDoN4qzSeKijw==
-X-Google-Smtp-Source: APXvYqwi4r2wD+0c/hTXbA9dq9pW8ZSDE1+b/L8TVbVaD6iVFv7WK1lI9Rhgqh6fMbwWejfD7BijCA==
-X-Received: by 2002:a1c:9684:: with SMTP id y126mr41571wmd.124.1552930854549;
-        Mon, 18 Mar 2019 10:40:54 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id y140sm41436988wmd.18.2019.03.18.10.40.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 10:40:53 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [RESEND PATCH v6 03/11] dt-bindings: leds: add DT bindings for max77650
-Date:   Mon, 18 Mar 2019 18:40:32 +0100
-Message-Id: <20190318174040.17899-4-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190318174040.17899-1-brgl@bgdev.pl>
-References: <20190318174040.17899-1-brgl@bgdev.pl>
+        Mon, 18 Mar 2019 13:41:09 -0400
+Received: from mga05.intel.com ([192.55.52.43]:47808 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727808AbfCRRlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:41:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:41:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="123687196"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 18 Mar 2019 10:41:06 -0700
+Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
+        by linux.intel.com (Postfix) with ESMTP id B05D758052E;
+        Mon, 18 Mar 2019 10:41:03 -0700 (PDT)
+Subject: [PATCH v10 03/12] perf session: define bytes_transferred and
+ bytes_compressed metrics
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <1d4bf499-cb03-26dc-6fc6-f14fec7622ce@linux.intel.com>
+Date:   Mon, 18 Mar 2019 20:41:02 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add the DT binding document for the LEDs module of max77650.
+Define bytes_transferred and bytes_compressed metrics to calculate ratio
+in the end of the data collection:
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+	compression ratio = bytes_transferred / bytes_compressed
+
+bytes_transferred accumulates the amount of bytes that was extracted from
+the mmaped kernel buffers for compression. bytes_compressed accumulates
+the amount of bytes that was received after applying compression.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- .../bindings/leds/leds-max77650.txt           | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.txt
+ tools/perf/builtin-record.c | 14 +++++++++++++-
+ tools/perf/util/env.h       |  1 +
+ tools/perf/util/session.h   |  2 ++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-max77650.txt b/Documentation/devicetree/bindings/leds/leds-max77650.txt
-new file mode 100644
-index 000000000000..3a67115cc1da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-max77650.txt
-@@ -0,0 +1,57 @@
-+LED driver for MAX77650 PMIC from Maxim Integrated.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index f55302dec440..51b7f23a0c7a 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1166,6 +1166,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	struct perf_session *session;
+ 	bool disabled = false, draining = false;
+ 	int fd;
++	float ratio = 0;
+ 
+ 	atexit(record__sig_exit);
+ 	signal(SIGCHLD, sig_handler);
+@@ -1463,6 +1464,11 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	record__mmap_read_all(rec, true);
+ 	record__aio_mmap_read_sync(rec);
+ 
++	if (rec->session->bytes_transferred && rec->session->bytes_compressed) {
++		ratio = (float)rec->session->bytes_transferred/(float)rec->session->bytes_compressed;
++		session->header.env.comp_ratio = ratio + 0.5;
++	}
 +
-+This module is part of the MAX77650 MFD device. For more details
-+see Documentation/devicetree/bindings/mfd/max77650.txt.
-+
-+The LED controller is represented as a sub-node of the PMIC node on
-+the device tree.
-+
-+This device has three current sinks.
-+
-+Required properties:
-+--------------------
-+- compatible:		Must be "maxim,max77650-led"
-+- #address-cells:	Must be <1>.
-+- #size-cells:		Must be <0>.
-+
-+Each LED is represented as a sub-node of the LED-controller node. Up to
-+three sub-nodes can be defined.
-+
-+Required properties of the sub-node:
-+------------------------------------
-+
-+- reg:			Must be <0>, <1> or <2>.
-+
-+Optional properties of the sub-node:
-+------------------------------------
-+
-+- label:		See Documentation/devicetree/bindings/leds/common.txt
-+- linux,default-trigger: See Documentation/devicetree/bindings/leds/common.txt
-+
-+For more details, please refer to the generic GPIO DT binding document
-+<devicetree/bindings/gpio/gpio.txt>.
-+
-+Example:
-+--------
-+
-+	leds {
-+		compatible = "maxim,max77650-led";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		led@0 {
-+			reg = <0>;
-+			label = "blue:usr0";
-+		};
-+
-+		led@1 {
-+			reg = <1>;
-+			label = "red:usr1";
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led@2 {
-+			reg = <2>;
-+			label = "green:usr2";
-+		};
-+	};
+ 	if (forks) {
+ 		int exit_status;
+ 
+@@ -1509,9 +1515,15 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		else
+ 			samples[0] = '\0';
+ 
+-		fprintf(stderr,	"[ perf record: Captured and wrote %.3f MB %s%s%s ]\n",
++		fprintf(stderr,	"[ perf record: Captured and wrote %.3f MB %s%s%s",
+ 			perf_data__size(data) / 1024.0 / 1024.0,
+ 			data->path, postfix, samples);
++		if (ratio) {
++			fprintf(stderr,	", compressed (original %.3f MB, ratio is %.3f)",
++					rec->session->bytes_transferred / 1024.0 / 1024.0,
++					ratio);
++		}
++		fprintf(stderr, " ]\n");
+ 	}
+ 
+ out_delete_session:
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index d01b8355f4ca..fb39e9af128f 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -64,6 +64,7 @@ struct perf_env {
+ 	struct memory_node	*memory_nodes;
+ 	unsigned long long	 memory_bsize;
+ 	u64                     clockid_res_ns;
++	u32                     comp_ratio;
+ };
+ 
+ extern struct perf_env perf_env;
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index d96eccd7d27f..0e14884f28b2 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -35,6 +35,8 @@ struct perf_session {
+ 	struct ordered_events	ordered_events;
+ 	struct perf_data	*data;
+ 	struct perf_tool	*tool;
++	u64			bytes_transferred;
++	u64			bytes_compressed;
+ };
+ 
+ struct perf_tool;
 -- 
 2.20.1
 
