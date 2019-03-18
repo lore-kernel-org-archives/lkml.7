@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E752C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07172C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B27F2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5B32075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902040;
-	bh=pHmIvXagGA08tc/MoOqTsSwyePGHHPCRiP/kglmbgVA=;
+	s=default; t=1552902043;
+	bh=+SEbrTykt3WSChnilwTKQ9FEIo6V/W2G/JduYL505Fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hc1AX46GTeoSamVcwaYgOzPQBt6KtnfDb6uXrTgwisw0cz5sQUAsZhtrH/SihfXTa
-	 5OwgUuEDCc1jAKYgWh2Yi7LcBNqh90OaRxxuT96ffsuNu8+o2ddKC4xwsDkuuTIsSE
-	 xZoT0w1DvQGO+EQf4dbRDV4hjs6SY5Wgk6Ft1rNs=
+	b=it2WC+FiRmvBd5+kpiGRGTCFN4uUxRI/VmGnkrFg8Pmy0pHqenVM8LCGdHZ03ZZav
+	 dkvBhxvmFRQJ67ILQovJ4+WICC5BWK6kY2ALNP+2rhTMSnuqesCug0rDEukgQlWLtc
+	 tPEzKYwR/dQPR1mNX6S2vL6HZk+PUUqDjdYTC0Ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbfCRJkj (ORCPT
+        id S1728563AbfCRJep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:40:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43244 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:34:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfCRJev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:51 -0400
+        id S1729033AbfCRJej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:34:39 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 579152075C;
-        Mon, 18 Mar 2019 09:34:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA3632175B;
+        Mon, 18 Mar 2019 09:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901689;
-        bh=pHmIvXagGA08tc/MoOqTsSwyePGHHPCRiP/kglmbgVA=;
+        s=default; t=1552901679;
+        bh=+SEbrTykt3WSChnilwTKQ9FEIo6V/W2G/JduYL505Fs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzdp9+kUId1pEc18j9SZRC+O6CFuPvKT9z5h/KQimhOovUJ+TJYdrNoR0K3R6Kg0C
-         JEJY0MLQ47CDe6G7MD8w5wQQTMiFv45hx9LY3LUwxQ0okdmmtN5CCQ5EMGHOATdar5
-         dvcKU6CG+e0ZqcDhLLx1A9u92v5vfJtWJbWkI9NA=
+        b=XvvVdOLV2I8jR/sx3q+fX+6qmfVpenk421ACOSIX31MBS79MZAHO/fkwfPDxLZpPj
+         VY2587h+awF0iDZgXQp+eKUJvggeL1BZmx6fWiyZI5e70voRKaRN4Zkyw5Tdy8oLAr
+         tziw25oIvU2IYwc8A0Wx6xbmqbhN7JUHZA7Oms+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Tariq Toukan <tariqt@mellanox.com>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 19/34] net/mlx4_core: Fix reset flow when in command polling mode
-Date:   Mon, 18 Mar 2019 10:25:43 +0100
-Message-Id: <20190318084147.344341912@linuxfoundation.org>
+Subject: [PATCH 4.14 16/34] tcp: handle inet_csk_reqsk_queue_add() failures
+Date:   Mon, 18 Mar 2019 10:25:40 +0100
+Message-Id: <20190318084146.917722087@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -67,85 +66,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Guillaume Nault <gnault@redhat.com>
 
-[ Upstream commit e15ce4b8d11227007577e6dc1364d288b8874fbe ]
+[  Upstream commit 9d3e1368bb45893a75a5dfb7cd21fdebfa6b47af ]
 
-As part of unloading a device, the driver switches from
-FW command event mode to FW command polling mode.
+Commit 7716682cc58e ("tcp/dccp: fix another race at listener
+dismantle") let inet_csk_reqsk_queue_add() fail, and adjusted
+{tcp,dccp}_check_req() accordingly. However, TFO and syncookies
+weren't modified, thus leaking allocated resources on error.
 
-Part of switching over to polling mode is freeing the command context array
-memory (unfortunately, currently, without NULLing the command context array
-pointer).
+Contrary to tcp_check_req(), in both syncookies and TFO cases,
+we need to drop the request socket. Also, since the child socket is
+created with inet_csk_clone_lock(), we have to unlock it and drop an
+extra reference (->sk_refcount is initially set to 2 and
+inet_csk_reqsk_queue_add() drops only one ref).
 
-The reset flow calls "complete" to complete all outstanding fw commands
-(if we are in event mode). The check for event vs. polling mode here
-is to test if the command context array pointer is NULL.
+For TFO, we also need to revert the work done by tcp_try_fastopen()
+(with reqsk_fastopen_remove()).
 
-If the reset flow is activated after the switch to polling mode, it will
-attempt (incorrectly) to complete all the commands in the context array --
-because the pointer was not NULLed when the driver switched over to polling
-mode.
-
-As a result, we have a use-after-free situation, which results in a
-kernel crash.
-
-For example:
-BUG: unable to handle kernel NULL pointer dereference at           (null)
-IP: [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
-PGD 0
-Oops: 0000 [#1] SMP
-Modules linked in: netconsole nfsv3 nfs_acl nfs lockd grace ...
-CPU: 2 PID: 940 Comm: kworker/2:3 Kdump: loaded Not tainted 3.10.0-862.el7.x86_64 #1
-Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090006  04/28/2016
-Workqueue: events hv_eject_device_work [pci_hyperv]
-task: ffff8d1734ca0fd0 ti: ffff8d17354bc000 task.ti: ffff8d17354bc000
-RIP: 0010:[<ffffffff876c4a8e>]  [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
-RSP: 0018:ffff8d17354bfa38  EFLAGS: 00010082
-RAX: 0000000000000000 RBX: ffff8d17362d42c8 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: 0000000000000003 RDI: ffff8d17362d42c8
-RBP: ffff8d17354bfa70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000298 R11: ffff8d173610e000 R12: ffff8d17362d42d0
-R13: 0000000000000246 R14: 0000000000000000 R15: 0000000000000003
-FS:  0000000000000000(0000) GS:ffff8d1802680000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 00000000f16d8000 CR4: 00000000001406e0
-Call Trace:
- [<ffffffff876c7adc>] complete+0x3c/0x50
- [<ffffffffc04242f0>] mlx4_cmd_wake_completions+0x70/0x90 [mlx4_core]
- [<ffffffffc041e7b1>] mlx4_enter_error_state+0xe1/0x380 [mlx4_core]
- [<ffffffffc041fa4b>] mlx4_comm_cmd+0x29b/0x360 [mlx4_core]
- [<ffffffffc041ff51>] __mlx4_cmd+0x441/0x920 [mlx4_core]
- [<ffffffff877f62b1>] ? __slab_free+0x81/0x2f0
- [<ffffffff87951384>] ? __radix_tree_lookup+0x84/0xf0
- [<ffffffffc043a8eb>] mlx4_free_mtt_range+0x5b/0xb0 [mlx4_core]
- [<ffffffffc043a957>] mlx4_mtt_cleanup+0x17/0x20 [mlx4_core]
- [<ffffffffc04272c7>] mlx4_free_eq+0xa7/0x1c0 [mlx4_core]
- [<ffffffffc042803e>] mlx4_cleanup_eq_table+0xde/0x130 [mlx4_core]
- [<ffffffffc0433e08>] mlx4_unload_one+0x118/0x300 [mlx4_core]
- [<ffffffffc0434191>] mlx4_remove_one+0x91/0x1f0 [mlx4_core]
-
-The fix is to set the command context array pointer to NULL after freeing
-the array.
-
-Fixes: f5aef5aa3506 ("net/mlx4_core: Activate reset flow upon fatal command cases")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Fixes: 7716682cc58e ("tcp/dccp: fix another race at listener dismantle")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/cmd.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/ipv4/syncookies.c |    7 ++++++-
+ net/ipv4/tcp_input.c  |    8 +++++++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
-@@ -2686,6 +2686,7 @@ void mlx4_cmd_use_polling(struct mlx4_de
- 		down(&priv->cmd.event_sem);
- 
- 	kfree(priv->cmd.context);
-+	priv->cmd.context = NULL;
- 
- 	up(&priv->cmd.poll_sem);
- 	up_write(&priv->cmd.switch_sem);
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -216,7 +216,12 @@ struct sock *tcp_get_cookie_sock(struct
+ 		refcount_set(&req->rsk_refcnt, 1);
+ 		tcp_sk(child)->tsoffset = tsoff;
+ 		sock_rps_save_rxhash(child, skb);
+-		inet_csk_reqsk_queue_add(sk, req, child);
++		if (!inet_csk_reqsk_queue_add(sk, req, child)) {
++			bh_unlock_sock(child);
++			sock_put(child);
++			child = NULL;
++			reqsk_put(req);
++		}
+ 	} else {
+ 		reqsk_free(req);
+ 	}
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6406,7 +6406,13 @@ int tcp_conn_request(struct request_sock
+ 		af_ops->send_synack(fastopen_sk, dst, &fl, req,
+ 				    &foc, TCP_SYNACK_FASTOPEN);
+ 		/* Add the child socket directly into the accept queue */
+-		inet_csk_reqsk_queue_add(sk, req, fastopen_sk);
++		if (!inet_csk_reqsk_queue_add(sk, req, fastopen_sk)) {
++			reqsk_fastopen_remove(fastopen_sk, req, false);
++			bh_unlock_sock(fastopen_sk);
++			sock_put(fastopen_sk);
++			reqsk_put(req);
++			goto drop;
++		}
+ 		sk->sk_data_ready(sk);
+ 		bh_unlock_sock(fastopen_sk);
+ 		sock_put(fastopen_sk);
 
 
