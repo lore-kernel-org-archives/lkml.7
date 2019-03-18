@@ -7,67 +7,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCA2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97462C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C048120857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B4420872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="AvHB/4fz"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="S4ASl6WF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfCRCyy (ORCPT
+        id S1727828AbfCRCy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 22:54:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45068 "EHLO
+        Sun, 17 Mar 2019 22:54:58 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36300 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfCRCyw (ORCPT
+        with ESMTP id S1727812AbfCRCy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 22:54:52 -0400
-Received: by mail-pg1-f193.google.com with SMTP id y3so1114549pgk.12
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 19:54:51 -0700 (PDT)
+        Sun, 17 Mar 2019 22:54:56 -0400
+Received: by mail-pg1-f193.google.com with SMTP id r124so10359016pgr.3
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 19:54:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=android.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wWWZNDWd+FWIOjSgichNyGC/xUixR5k8kecs1f/kOUU=;
-        b=AvHB/4fzEan52dd5kOwkqq0bOuVdkcBU9SKo01zR1VxQeE9G4tuzZAx8RINJTXAs7c
-         Z04TPz9h7oa/+eEm8VzntdCJTfoa/muP3C0+nZEI+gA1RjwiOMf9nn4ecESBnpQwmGUK
-         VwmjqeAycBQXiQZVTwpcPOpub1BqNCORX4JcSVi/TDTIDKJTa/BQ7cIFsZF24yr8mNMZ
-         Y27gsapgq/9LqPVdiiQaVErJryNyGQpkrHeLtNve/AiNH/mFc2T3DJ8gyvZvHPNhY+ji
-         s+LRy0FCwBbt29YiBC0cTJlkefLxDOHQnhAUflfUAES5mvXgMWK/EJ9c0bh67VGMAYdt
-         TsZA==
+        bh=uxWlvWRp142ZO+FTsvYeQNdtkGjJnnW9XeB4oJyrR7o=;
+        b=S4ASl6WF1UAP+fPmavbstvMdQfcHspGxwcTlV/UMsH80rBqxcWII7932i1JGfLQjH4
+         yxrm+TVMTjeFXmxzRh6CQD8Q2QNtRfRumHjqU2kk4HfkNCMqj+xIgF1mcpYC7Eju1gIq
+         SVG7Ni+KYaMa6eOi8ZP/9MK5w6SzwjOUrzOc951EAGzPpgT48XzfU/KZzW7JHbeU0bKq
+         iopKYrHu6vp4oqN7BqSH5qBdAlANNrn4LKmwSA7f1keDiG0lEc9W60Oz6a1FriUKjjYc
+         DLXqaW0rR0gQN8eK3DOQN0xuh9+HabQZ5K6xrgG17fXDd8YDvu7X71umvU3DZl/LPENU
+         2Adg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wWWZNDWd+FWIOjSgichNyGC/xUixR5k8kecs1f/kOUU=;
-        b=GbautwFy+1M69ktTYE8a0tWry7lzMFIJPdv2qepwK+HIygel9aLGjfHfZ73OYyip01
-         p27Yf4XRGo0tFQ1tOKpsSy2R+0tXMCsLu8UDCAbqsz/4/n98vggB2ocavNzAWyfhHRAm
-         CBLX6Yv6aT0ECZE+yhtyVhhJyJNF0k5aUZ4nrr7feNcaiGIW9005cifezR79XeB7pA7A
-         wGQcne5l+YHIClUMsR/JimQiIS0XQocvdJF+lyRAZ+6k3ZNsIq0AF5abER0Q6WolaTey
-         nlegBIUMQACCvYxeCTDlDT919HXeMGxSC+uMMfB507TwKnk96vQ3BpSz2bNwgn2j2Czm
-         AnNQ==
-X-Gm-Message-State: APjAAAUGBVVp4sqw5eEpMdm098Fh3M0m/Z79hvwDbeaeZXuI9gAt+5FJ
-        kWDqD1x03oIKXwFIs9htYHGPzg==
-X-Google-Smtp-Source: APXvYqxMOiVgFlOi7zUHGVpnGPU/xaabdxdL9ctLsY3b7wrNIHenYfUlSF0wjc2JUcP5MXybQxiakQ==
-X-Received: by 2002:a17:902:e3:: with SMTP id a90mr17101562pla.45.1552877690812;
-        Sun, 17 Mar 2019 19:54:50 -0700 (PDT)
+        bh=uxWlvWRp142ZO+FTsvYeQNdtkGjJnnW9XeB4oJyrR7o=;
+        b=IWD8fO5wpLGyC7NCwcU91E7PGdO7tKH5Q526yAhnTHP9wXzPdt5XES/zqtc5zHOvP8
+         sgXp1dAO7iB4KxZ77vy+siTcX1acopBsu4nwnmcUtOfxVZ1j0rbSuLIBYIsuG/b7ka3/
+         jmVDV6B4R5yt7Q63nsUXAf4awX4XcTv8V30o0d5cXTIy6CT2r08PXJAUe51/7fiP/xqi
+         /vLnoPOl6W47GuhOWL0r9Pg9TpeQGWeawq9Ywb4KUP/dgpsmmi+UTGZNGgYRMOxQigv6
+         YZHPzHlxfchuUfpo5SB53rCGvvj+Y4+ZeH1cBoqowQxBMs4Ih0HogAgwXdSMCUmgqOvK
+         HKSQ==
+X-Gm-Message-State: APjAAAWbkfwD5MNWsAX2Ezqi4a66rhANnj+MoP5AFZssiL0lA+8xKL3g
+        WDqtIlsp3VbP9Y0HsPYpax7Oaw==
+X-Google-Smtp-Source: APXvYqz55JkEnzzHCzVK5JIsmwVxAXDv2hcAnNpvxPoKO/etKT+pEMZuBoG3qXRJiZh09+Hhavw0/g==
+X-Received: by 2002:a17:902:e784:: with SMTP id cp4mr17438684plb.135.1552877695882;
+        Sun, 17 Mar 2019 19:54:55 -0700 (PDT)
 Received: from trong0.mtv.corp.google.com ([2620:0:1000:1601:c43f:8c1b:f6ef:3dce])
-        by smtp.gmail.com with ESMTPSA id i126sm13672955pfc.101.2019.03.17.19.54.49
+        by smtp.gmail.com with ESMTPSA id i126sm13672955pfc.101.2019.03.17.19.54.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Mar 2019 19:54:50 -0700 (PDT)
+        Sun, 17 Mar 2019 19:54:55 -0700 (PDT)
 From:   Tri Vo <trong@android.com>
 To:     oberpar@linux.ibm.com
 Cc:     ghackmann@android.com, ndesaulniers@google.com,
         linux-kernel@vger.kernel.org, kernel-team@android.com,
         yamada.masahiro@socionext.com, akpm@linux-foundation.org,
-        Tri Vo <trong@android.com>, Trilok Soni <tsoni@quicinc.com>,
-        Prasad Sodagudi <psodagud@quicinc.com>,
-        Daniel Mentz <danielmentz@google.com>,
-        Petri Gynther <pgynther@google.com>
-Subject: [PATCH v4 2/3] gcov: Clang support
-Date:   Sun, 17 Mar 2019 19:54:10 -0700
-Message-Id: <20190318025411.98014-3-trong@android.com>
+        Tri Vo <trong@android.com>
+Subject: [PATCH v4 3/3] gcov: docs: add a note on GCC vs Clang differences
+Date:   Sun, 17 Mar 2019 19:54:11 -0700
+Message-Id: <20190318025411.98014-4-trong@android.com>
 X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
 In-Reply-To: <20190318025411.98014-1-trong@android.com>
 References: <20190318025411.98014-1-trong@android.com>
@@ -78,758 +75,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Hackmann <ghackmann@android.com>
+Document some things of note to gcov users:
+1. GCC gcov and Clang llvm-cov tools are not compatible.
+2. The use of GCC vs Clang is transparent at build-time.
 
-LLVM uses profiling data that's deliberately similar to GCC, but has a very
-different way of exporting that data.  LLVM calls llvm_gcov_init() once per
-module, and provides a couple of callbacks that we can use to ask for more
-data.
+Also adjust the documentation to account for the removal of config
+symbol CONFIG_GCOV_FORMAT_AUTODETECT by commit 6a61b70b43c9
+("gcov: remove CONFIG_GCOV_FORMAT_AUTODETECT").
 
-We care about the "writeout" callback, which in turn calls back into
-compiler-rt/this module to dump all the gathered coverage data to disk:
-
-   llvm_gcda_start_file()
-     llvm_gcda_emit_function()
-     llvm_gcda_emit_arcs()
-     llvm_gcda_emit_function()
-     llvm_gcda_emit_arcs()
-     [... repeats for each function ...]
-   llvm_gcda_summary_info()
-   llvm_gcda_end_file()
-
-This design is much more stateless and unstructured than gcc's, and is
-intended to run at process exit.  This forces us to keep some local state
-about which module we're dealing with at the moment.  On the other hand, it
-also means we don't depend as much on how LLVM represents profiling data
-internally.
-
-See LLVM's lib/Transforms/Instrumentation/GCOVProfiling.cpp for more
-details on how this works, particularly GCOVProfiler::emitProfileArcs(),
-GCOVProfiler::insertCounterWriteout(), and GCOVProfiler::insertFlush().
-
-Co-authored-by: Nick Desaulniers <ndesaulniers@google.com>
-Co-authored-by: Tri Vo <trong@android.com>
-Signed-off-by: Greg Hackmann <ghackmann@android.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Tri Vo <trong@android.com>
-Tested-by: Trilok Soni <tsoni@quicinc.com>
-Tested-by: Prasad Sodagudi <psodagud@quicinc.com>
-Tested-by: Tri Vo <trong@android.com>
-Tested-by: Daniel Mentz <danielmentz@google.com>
-Tested-by: Petri Gynther <pgynther@google.com>
 Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
 ---
- kernel/gcov/Kconfig   |   3 +-
- kernel/gcov/Makefile  |   1 +
- kernel/gcov/base.c    |   2 +-
- kernel/gcov/clang.c   | 586 ++++++++++++++++++++++++++++++++++++++++++
- kernel/gcov/gcc_3_4.c |  12 +
- kernel/gcov/gcc_4_7.c |  12 +
- kernel/gcov/gcov.h    |   2 +
- 7 files changed, 616 insertions(+), 2 deletions(-)
- create mode 100644 kernel/gcov/clang.c
+ Documentation/dev-tools/gcov.rst | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-index 1e3823fa799b..f71c1adcff31 100644
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -53,6 +53,7 @@ config GCOV_PROFILE_ALL
- choice
- 	prompt "Specify GCOV format"
- 	depends on GCOV_KERNEL
-+	depends on CC_IS_GCC
- 	---help---
- 	The gcov format is usually determined by the GCC version, and the
- 	default is chosen according to your GCC version. However, there are
-@@ -62,7 +63,7 @@ choice
+diff --git a/Documentation/dev-tools/gcov.rst b/Documentation/dev-tools/gcov.rst
+index 69a7d90c320a..46aae52a41d0 100644
+--- a/Documentation/dev-tools/gcov.rst
++++ b/Documentation/dev-tools/gcov.rst
+@@ -34,10 +34,6 @@ Configure the kernel with::
+         CONFIG_DEBUG_FS=y
+         CONFIG_GCOV_KERNEL=y
  
- config GCOV_FORMAT_3_4
- 	bool "GCC 3.4 format"
--	depends on CC_IS_GCC && GCC_VERSION < 40700
-+	depends on GCC_VERSION < 40700
- 	---help---
- 	Select this option to use the format defined by GCC 3.4.
+-select the gcc's gcov format, default is autodetect based on gcc version::
+-
+-        CONFIG_GCOV_FORMAT_AUTODETECT=y
+-
+ and to get coverage data for the entire kernel::
  
-diff --git a/kernel/gcov/Makefile b/kernel/gcov/Makefile
-index 45431ed679d1..d66a74b0f100 100644
---- a/kernel/gcov/Makefile
-+++ b/kernel/gcov/Makefile
-@@ -4,3 +4,4 @@ ccflags-y := -DSRCTREE='"$(srctree)"' -DOBJTREE='"$(objtree)"'
- obj-y := base.o fs.o
- obj-$(CONFIG_GCOV_FORMAT_3_4) += gcc_base.o gcc_3_4.o
- obj-$(CONFIG_GCOV_FORMAT_4_7) += gcc_base.o gcc_4_7.o
-+obj-$(CONFIG_CC_IS_CLANG) += clang.o
-diff --git a/kernel/gcov/base.c b/kernel/gcov/base.c
-index 799d42072727..0ffe9f194080 100644
---- a/kernel/gcov/base.c
-+++ b/kernel/gcov/base.c
-@@ -64,7 +64,7 @@ static int gcov_module_notifier(struct notifier_block *nb, unsigned long event,
+         CONFIG_GCOV_PROFILE_ALL=y
+@@ -169,6 +165,20 @@ b) gcov is run on the BUILD machine
+       [user@build] gcov -o /tmp/coverage/tmp/out/init main.c
  
- 	/* Remove entries located in module from linked list. */
- 	while ((info = gcov_info_next(info))) {
--		if (within_module((unsigned long)info, mod)) {
-+		if (gcov_info_within_module(info, mod)) {
- 			gcov_info_unlink(prev, info);
- 			if (gcov_events_enabled)
- 				gcov_event(GCOV_REMOVE, info);
-diff --git a/kernel/gcov/clang.c b/kernel/gcov/clang.c
-new file mode 100644
-index 000000000000..125c50397ba2
---- /dev/null
-+++ b/kernel/gcov/clang.c
-@@ -0,0 +1,586 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Google, Inc.
-+ * modified from kernel/gcov/gcc_4_7.c
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ *
-+ * LLVM uses profiling data that's deliberately similar to GCC, but has a
-+ * very different way of exporting that data.  LLVM calls llvm_gcov_init() once
-+ * per module, and provides a couple of callbacks that we can use to ask for
-+ * more data.
-+ *
-+ * We care about the "writeout" callback, which in turn calls back into
-+ * compiler-rt/this module to dump all the gathered coverage data to disk:
-+ *
-+ *    llvm_gcda_start_file()
-+ *      llvm_gcda_emit_function()
-+ *      llvm_gcda_emit_arcs()
-+ *      llvm_gcda_emit_function()
-+ *      llvm_gcda_emit_arcs()
-+ *      [... repeats for each function ...]
-+ *    llvm_gcda_summary_info()
-+ *    llvm_gcda_end_file()
-+ *
-+ * This design is much more stateless and unstructured than gcc's, and is
-+ * intended to run at process exit.  This forces us to keep some local state
-+ * about which module we're dealing with at the moment.  On the other hand, it
-+ * also means we don't depend as much on how LLVM represents profiling data
-+ * internally.
-+ *
-+ * See LLVM's lib/Transforms/Instrumentation/GCOVProfiling.cpp for more
-+ * details on how this works, particularly GCOVProfiler::emitProfileArcs(),
-+ * GCOVProfiler::insertCounterWriteout(), and
-+ * GCOVProfiler::insertFlush().
-+ */
-+
-+#define pr_fmt(fmt)	"gcov: " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/printk.h>
-+#include <linux/ratelimit.h>
-+#include <linux/seq_file.h>
-+#include <linux/slab.h>
-+#include <linux/vmalloc.h>
-+#include "gcov.h"
-+
-+typedef void (*llvm_gcov_callback)(void);
-+
-+struct gcov_info {
-+	struct list_head head;
-+
-+	const char *filename;
-+	unsigned int version;
-+	u32 checksum;
-+
-+	struct list_head functions;
-+};
-+
-+struct gcov_fn_info {
-+	struct list_head head;
-+
-+	u32 ident;
-+	u32 checksum;
-+	u8 use_extra_checksum;
-+	u32 cfg_checksum;
-+
-+	u32 num_counters;
-+	u64 *counters;
-+	const char *function_name;
-+};
-+
-+static struct gcov_info *current_info;
-+
-+static LIST_HEAD(clang_gcov_list);
-+
-+void llvm_gcov_init(llvm_gcov_callback writeout, llvm_gcov_callback flush)
-+{
-+	struct gcov_info *info = kzalloc(sizeof(*info), GFP_KERNEL);
-+
-+	if (!info) {
-+		pr_warn_ratelimited("failed to allocate gcov info\n");
-+		return;
-+	}
-+
-+	INIT_LIST_HEAD(&info->head);
-+	INIT_LIST_HEAD(&info->functions);
-+
-+	mutex_lock(&gcov_lock);
-+
-+	list_add_tail(&info->head, &clang_gcov_list);
-+	current_info = info;
-+	writeout();
-+	current_info = NULL;
-+	if (gcov_events_enabled)
-+		gcov_event(GCOV_ADD, info);
-+
-+	mutex_unlock(&gcov_lock);
-+}
-+EXPORT_SYMBOL(llvm_gcov_init);
-+
-+void llvm_gcda_start_file(const char *orig_filename, const char version[4],
-+		u32 checksum)
-+{
-+	current_info->filename = orig_filename;
-+	memcpy(&current_info->version, version, sizeof(current_info->version));
-+	current_info->checksum = checksum;
-+}
-+EXPORT_SYMBOL(llvm_gcda_start_file);
-+
-+void llvm_gcda_emit_function(u32 ident, const char *function_name,
-+		u32 func_checksum, u8 use_extra_checksum, u32 cfg_checksum)
-+{
-+	struct gcov_fn_info *info = kzalloc(sizeof(*info), GFP_KERNEL);
-+
-+	if (!info) {
-+		pr_warn_ratelimited("failed to allocate gcov function info for %s\n",
-+				function_name ?: "UNKNOWN");
-+		return;
-+	}
-+
-+	INIT_LIST_HEAD(&info->head);
-+	info->ident = ident;
-+	info->checksum = func_checksum;
-+	info->use_extra_checksum = use_extra_checksum;
-+	info->cfg_checksum = cfg_checksum;
-+	if (function_name)
-+		info->function_name = kstrdup(function_name, GFP_KERNEL);
-+
-+	list_add_tail(&info->head, &current_info->functions);
-+}
-+EXPORT_SYMBOL(llvm_gcda_emit_function);
-+
-+void llvm_gcda_emit_arcs(u32 num_counters, u64 *counters)
-+{
-+	struct gcov_fn_info *info = list_last_entry(&current_info->functions,
-+			struct gcov_fn_info, head);
-+
-+	info->num_counters = num_counters;
-+	info->counters = counters;
-+}
-+EXPORT_SYMBOL(llvm_gcda_emit_arcs);
-+
-+void llvm_gcda_summary_info(void)
-+{
-+}
-+EXPORT_SYMBOL(llvm_gcda_summary_info);
-+
-+void llvm_gcda_end_file(void)
-+{
-+}
-+EXPORT_SYMBOL(llvm_gcda_end_file);
-+
-+/**
-+ * gcov_info_filename - return info filename
-+ * @info: profiling data set
-+ */
-+const char *gcov_info_filename(struct gcov_info *info)
-+{
-+	return info->filename;
-+}
-+
-+/**
-+ * gcov_info_version - return info version
-+ * @info: profiling data set
-+ */
-+unsigned int gcov_info_version(struct gcov_info *info)
-+{
-+	return info->version;
-+}
-+
-+/**
-+ * gcov_info_next - return next profiling data set
-+ * @info: profiling data set
-+ *
-+ * Returns next gcov_info following @info or first gcov_info in the chain if
-+ * @info is %NULL.
-+ */
-+struct gcov_info *gcov_info_next(struct gcov_info *info)
-+{
-+	if (!info)
-+		return list_first_entry_or_null(&clang_gcov_list,
-+				struct gcov_info, head);
-+	if (list_is_last(&info->head, &clang_gcov_list))
-+		return NULL;
-+	return list_next_entry(info, head);
-+}
-+
-+/**
-+ * gcov_info_link - link/add profiling data set to the list
-+ * @info: profiling data set
-+ */
-+void gcov_info_link(struct gcov_info *info)
-+{
-+	list_add_tail(&info->head, &clang_gcov_list);
-+}
-+
-+/**
-+ * gcov_info_unlink - unlink/remove profiling data set from the list
-+ * @prev: previous profiling data set
-+ * @info: profiling data set
-+ */
-+void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
-+{
-+	/* Generic code unlinks while iterating. */
-+	__list_del_entry(&info->head);
-+}
-+
-+/**
-+ * gcov_info_within_module - check if a profiling data set belongs to a module
-+ * @info: profiling data set
-+ * @mod: module
-+ *
-+ * Returns true if profiling data belongs module, false otherwise.
-+ */
-+bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
-+{
-+	return within_module((unsigned long)info->filename, mod);
-+}
-+
-+/* Symbolic links to be created for each profiling data file. */
-+const struct gcov_link gcov_link[] = {
-+	{ OBJ_TREE, "gcno" },	/* Link to .gcno file in $(objtree). */
-+	{ 0, NULL},
-+};
-+
-+/**
-+ * gcov_info_reset - reset profiling data to zero
-+ * @info: profiling data set
-+ */
-+void gcov_info_reset(struct gcov_info *info)
-+{
-+	struct gcov_fn_info *fn;
-+
-+	list_for_each_entry(fn, &info->functions, head)
-+		memset(fn->counters, 0,
-+				sizeof(fn->counters[0]) * fn->num_counters);
-+}
-+
-+/**
-+ * gcov_info_is_compatible - check if profiling data can be added
-+ * @info1: first profiling data set
-+ * @info2: second profiling data set
-+ *
-+ * Returns non-zero if profiling data can be added, zero otherwise.
-+ */
-+int gcov_info_is_compatible(struct gcov_info *info1, struct gcov_info *info2)
-+{
-+	struct gcov_fn_info *fn_ptr1 = list_first_entry_or_null(
-+			&info1->functions, struct gcov_fn_info, head);
-+	struct gcov_fn_info *fn_ptr2 = list_first_entry_or_null(
-+			&info2->functions, struct gcov_fn_info, head);
-+
-+	if (info1->checksum != info2->checksum)
-+		return false;
-+	if (!fn_ptr1)
-+		return fn_ptr1 == fn_ptr2;
-+	while (!list_is_last(&fn_ptr1->head, &info1->functions) &&
-+		!list_is_last(&fn_ptr2->head, &info2->functions)) {
-+		if (fn_ptr1->checksum != fn_ptr2->checksum)
-+			return false;
-+		if (fn_ptr1->use_extra_checksum != fn_ptr2->use_extra_checksum)
-+			return false;
-+		if (fn_ptr1->use_extra_checksum &&
-+			fn_ptr1->cfg_checksum != fn_ptr2->cfg_checksum)
-+			return false;
-+		fn_ptr1 = list_next_entry(fn_ptr1, head);
-+		fn_ptr2 = list_next_entry(fn_ptr2, head);
-+	}
-+	return list_is_last(&fn_ptr1->head, &info1->functions) &&
-+		list_is_last(&fn_ptr2->head, &info2->functions);
-+}
-+
-+/**
-+ * gcov_info_add - add up profiling data
-+ * @dest: profiling data set to which data is added
-+ * @source: profiling data set which is added
-+ *
-+ * Adds profiling counts of @source to @dest.
-+ */
-+void gcov_info_add(struct gcov_info *dst, struct gcov_info *src)
-+{
-+	struct gcov_fn_info *dfn_ptr;
-+	struct gcov_fn_info *sfn_ptr = list_first_entry_or_null(&src->functions,
-+			struct gcov_fn_info, head);
-+
-+	list_for_each_entry(dfn_ptr, &dst->functions, head) {
-+		u32 i;
-+
-+		for (i = 0; i < sfn_ptr->num_counters; i++)
-+			dfn_ptr->counters[i] += sfn_ptr->counters[i];
-+	}
-+}
-+
-+static struct gcov_fn_info *gcov_fn_info_dup(struct gcov_fn_info *fn)
-+{
-+	size_t cv_size; /* counter values size */
-+	struct gcov_fn_info *fn_dup = kmemdup(fn, sizeof(*fn),
-+			GFP_KERNEL);
-+	if (!fn_dup)
-+		return NULL;
-+	INIT_LIST_HEAD(&fn_dup->head);
-+
-+	fn_dup->function_name = kstrdup(fn->function_name, GFP_KERNEL);
-+	if (!fn_dup->function_name)
-+		goto err_name;
-+
-+	cv_size = fn->num_counters * sizeof(fn->counters[0]);
-+	fn_dup->counters = vmalloc(cv_size);
-+	if (!fn_dup->counters)
-+		goto err_counters;
-+	memcpy(fn_dup->counters, fn->counters, cv_size);
-+
-+	return fn_dup;
-+
-+err_counters:
-+	kfree(fn_dup->function_name);
-+err_name:
-+	kfree(fn_dup);
-+	return NULL;
-+}
-+
-+/**
-+ * gcov_info_dup - duplicate profiling data set
-+ * @info: profiling data set to duplicate
-+ *
-+ * Return newly allocated duplicate on success, %NULL on error.
-+ */
-+struct gcov_info *gcov_info_dup(struct gcov_info *info)
-+{
-+	struct gcov_info *dup;
-+	struct gcov_fn_info *fn;
-+
-+	dup = kmemdup(info, sizeof(*dup), GFP_KERNEL);
-+	if (!dup)
-+		return NULL;
-+	INIT_LIST_HEAD(&dup->head);
-+	INIT_LIST_HEAD(&dup->functions);
-+	dup->filename = kstrdup(info->filename, GFP_KERNEL);
-+	if (!dup->filename)
-+		goto err;
-+
-+	list_for_each_entry(fn, &info->functions, head) {
-+		struct gcov_fn_info *fn_dup = gcov_fn_info_dup(fn);
-+
-+		if (!fn_dup)
-+			goto err;
-+		list_add_tail(&fn_dup->head, &dup->functions);
-+	}
-+
-+	return dup;
-+
-+err:
-+	gcov_info_free(dup);
-+	return NULL;
-+}
-+
-+/**
-+ * gcov_info_free - release memory for profiling data set duplicate
-+ * @info: profiling data set duplicate to free
-+ */
-+void gcov_info_free(struct gcov_info *info)
-+{
-+	struct gcov_fn_info *fn, *tmp;
-+
-+	list_for_each_entry_safe(fn, tmp, &info->functions, head) {
-+		kfree(fn->function_name);
-+		vfree(fn->counters);
-+		list_del(&fn->head);
-+		kfree(fn);
-+	}
-+	kfree(info->filename);
-+	kfree(info);
-+}
-+
-+#define ITER_STRIDE	PAGE_SIZE
-+
-+/**
-+ * struct gcov_iterator - specifies current file position in logical records
-+ * @info: associated profiling data
-+ * @buffer: buffer containing file data
-+ * @size: size of buffer
-+ * @pos: current position in file
-+ */
-+struct gcov_iterator {
-+	struct gcov_info *info;
-+	void *buffer;
-+	size_t size;
-+	loff_t pos;
-+};
-+
-+/**
-+ * store_gcov_u32 - store 32 bit number in gcov format to buffer
-+ * @buffer: target buffer or NULL
-+ * @off: offset into the buffer
-+ * @v: value to be stored
-+ *
-+ * Number format defined by gcc: numbers are recorded in the 32 bit
-+ * unsigned binary form of the endianness of the machine generating the
-+ * file. Returns the number of bytes stored. If @buffer is %NULL, doesn't
-+ * store anything.
-+ */
-+static size_t store_gcov_u32(void *buffer, size_t off, u32 v)
-+{
-+	u32 *data;
-+
-+	if (buffer) {
-+		data = buffer + off;
-+		*data = v;
-+	}
-+
-+	return sizeof(*data);
-+}
-+
-+/**
-+ * store_gcov_u64 - store 64 bit number in gcov format to buffer
-+ * @buffer: target buffer or NULL
-+ * @off: offset into the buffer
-+ * @v: value to be stored
-+ *
-+ * Number format defined by gcc: numbers are recorded in the 32 bit
-+ * unsigned binary form of the endianness of the machine generating the
-+ * file. 64 bit numbers are stored as two 32 bit numbers, the low part
-+ * first. Returns the number of bytes stored. If @buffer is %NULL, doesn't store
-+ * anything.
-+ */
-+static size_t store_gcov_u64(void *buffer, size_t off, u64 v)
-+{
-+	u32 *data;
-+
-+	if (buffer) {
-+		data = buffer + off;
-+
-+		data[0] = (v & 0xffffffffUL);
-+		data[1] = (v >> 32);
-+	}
-+
-+	return sizeof(*data) * 2;
-+}
-+
-+/**
-+ * convert_to_gcda - convert profiling data set to gcda file format
-+ * @buffer: the buffer to store file data or %NULL if no data should be stored
-+ * @info: profiling data set to be converted
-+ *
-+ * Returns the number of bytes that were/would have been stored into the buffer.
-+ */
-+static size_t convert_to_gcda(char *buffer, struct gcov_info *info)
-+{
-+	struct gcov_fn_info *fi_ptr;
-+	size_t pos = 0;
-+
-+	/* File header. */
-+	pos += store_gcov_u32(buffer, pos, GCOV_DATA_MAGIC);
-+	pos += store_gcov_u32(buffer, pos, info->version);
-+	pos += store_gcov_u32(buffer, pos, info->checksum);
-+
-+	list_for_each_entry(fi_ptr, &info->functions, head) {
-+		u32 i;
-+		u32 len = 2;
-+
-+		if (fi_ptr->use_extra_checksum)
-+			len++;
-+
-+		pos += store_gcov_u32(buffer, pos, GCOV_TAG_FUNCTION);
-+		pos += store_gcov_u32(buffer, pos, len);
-+		pos += store_gcov_u32(buffer, pos, fi_ptr->ident);
-+		pos += store_gcov_u32(buffer, pos, fi_ptr->checksum);
-+		if (fi_ptr->use_extra_checksum)
-+			pos += store_gcov_u32(buffer, pos, fi_ptr->cfg_checksum);
-+
-+		pos += store_gcov_u32(buffer, pos, GCOV_TAG_COUNTER_BASE);
-+		pos += store_gcov_u32(buffer, pos, fi_ptr->num_counters * 2);
-+		for (i = 0; i < fi_ptr->num_counters; i++)
-+			pos += store_gcov_u64(buffer, pos, fi_ptr->counters[i]);
-+	}
-+
-+	return pos;
-+}
-+
-+/**
-+ * gcov_iter_new - allocate and initialize profiling data iterator
-+ * @info: profiling data set to be iterated
-+ *
-+ * Return file iterator on success, %NULL otherwise.
-+ */
-+struct gcov_iterator *gcov_iter_new(struct gcov_info *info)
-+{
-+	struct gcov_iterator *iter;
-+
-+	iter = kzalloc(sizeof(struct gcov_iterator), GFP_KERNEL);
-+	if (!iter)
-+		goto err_free;
-+
-+	iter->info = info;
-+	/* Dry-run to get the actual buffer size. */
-+	iter->size = convert_to_gcda(NULL, info);
-+	iter->buffer = vmalloc(iter->size);
-+	if (!iter->buffer)
-+		goto err_free;
-+
-+	convert_to_gcda(iter->buffer, info);
-+
-+	return iter;
-+
-+err_free:
-+	kfree(iter);
-+	return NULL;
-+}
-+
-+
-+/**
-+ * gcov_iter_get_info - return profiling data set for given file iterator
-+ * @iter: file iterator
-+ */
-+void gcov_iter_free(struct gcov_iterator *iter)
-+{
-+	vfree(iter->buffer);
-+	kfree(iter);
-+}
-+
-+/**
-+ * gcov_iter_get_info - return profiling data set for given file iterator
-+ * @iter: file iterator
-+ */
-+struct gcov_info *gcov_iter_get_info(struct gcov_iterator *iter)
-+{
-+	return iter->info;
-+}
-+
-+/**
-+ * gcov_iter_start - reset file iterator to starting position
-+ * @iter: file iterator
-+ */
-+void gcov_iter_start(struct gcov_iterator *iter)
-+{
-+	iter->pos = 0;
-+}
-+
-+/**
-+ * gcov_iter_next - advance file iterator to next logical record
-+ * @iter: file iterator
-+ *
-+ * Return zero if new position is valid, non-zero if iterator has reached end.
-+ */
-+int gcov_iter_next(struct gcov_iterator *iter)
-+{
-+	if (iter->pos < iter->size)
-+		iter->pos += ITER_STRIDE;
-+
-+	if (iter->pos >= iter->size)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/**
-+ * gcov_iter_write - write data for current pos to seq_file
-+ * @iter: file iterator
-+ * @seq: seq_file handle
-+ *
-+ * Return zero on success, non-zero otherwise.
-+ */
-+int gcov_iter_write(struct gcov_iterator *iter, struct seq_file *seq)
-+{
-+	size_t len;
-+
-+	if (iter->pos >= iter->size)
-+		return -EINVAL;
-+
-+	len = ITER_STRIDE;
-+	if (iter->pos + len > iter->size)
-+		len = iter->size - iter->pos;
-+
-+	seq_write(seq, iter->buffer + iter->pos, len);
-+
-+	return 0;
-+}
-diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
-index 1e32e66c9563..64d2dd9f7c64 100644
---- a/kernel/gcov/gcc_3_4.c
-+++ b/kernel/gcov/gcc_3_4.c
-@@ -137,6 +137,18 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
- 		gcov_info_head = info->next;
- }
  
-+/**
-+ * gcov_info_within_module - check if a profiling data set belongs to a module
-+ * @info: profiling data set
-+ * @mod: module
-+ *
-+ * Returns true if profiling data belongs module, false otherwise.
-+ */
-+bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
-+{
-+	return within_module((unsigned long)info, mod);
-+}
++Note on compilers
++-----------------
 +
- /* Symbolic links to be created for each profiling data file. */
- const struct gcov_link gcov_link[] = {
- 	{ OBJ_TREE, "gcno" },	/* Link to .gcno file in $(objtree). */
-diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
-index ca5e5c0ef853..ec37563674d6 100644
---- a/kernel/gcov/gcc_4_7.c
-+++ b/kernel/gcov/gcc_4_7.c
-@@ -150,6 +150,18 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
- 		gcov_info_head = info->next;
- }
- 
-+/**
-+ * gcov_info_within_module - check if a profiling data set belongs to a module
-+ * @info: profiling data set
-+ * @mod: module
-+ *
-+ * Returns true if profiling data belongs module, false otherwise.
-+ */
-+bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
-+{
-+	return within_module((unsigned long)info, mod);
-+}
++GCC and LLVM gcov tools are not necessarily compatible. Use gcov_ to work with
++GCC-generated .gcno and .gcda files, and use llvm-cov_ for Clang.
 +
- /* Symbolic links to be created for each profiling data file. */
- const struct gcov_link gcov_link[] = {
- 	{ OBJ_TREE, "gcno" },	/* Link to .gcno file in $(objtree). */
-diff --git a/kernel/gcov/gcov.h b/kernel/gcov/gcov.h
-index 0ecf1d664ec3..6ab2c1808c9d 100644
---- a/kernel/gcov/gcov.h
-+++ b/kernel/gcov/gcov.h
-@@ -15,6 +15,7 @@
- #ifndef GCOV_H
- #define GCOV_H GCOV_H
++.. _gcov: http://gcc.gnu.org/onlinedocs/gcc/Gcov.html
++.. _llvm-cov: https://llvm.org/docs/CommandGuide/llvm-cov.html
++
++Build differences between GCC and Clang gcov are handled by Kconfig. It
++automatically selects the appropriate gcov format depending on the detected
++toolchain.
++
++
+ Troubleshooting
+ ---------------
  
-+#include <linux/module.h>
- #include <linux/types.h>
- 
- /*
-@@ -46,6 +47,7 @@ unsigned int gcov_info_version(struct gcov_info *info);
- struct gcov_info *gcov_info_next(struct gcov_info *info);
- void gcov_info_link(struct gcov_info *info);
- void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info);
-+bool gcov_info_within_module(struct gcov_info *info, struct module *mod);
- 
- /* Base interface. */
- enum gcov_action {
 -- 
 2.21.0.225.g810b269d1ac-goog
 
