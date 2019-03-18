@@ -2,126 +2,138 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43619C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509E6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1186D20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="UW/rFXoO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="11OkRF/D"
+	by mail.kernel.org (Postfix) with ESMTP id 22F2E20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfCRDe5 (ORCPT
+        id S1727872AbfCRDgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 23:34:57 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:47025 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726828AbfCRDe4 (ORCPT
+        Sun, 17 Mar 2019 23:36:05 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42503 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbfCRDgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 23:34:56 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id AD74E21F0A;
-        Sun, 17 Mar 2019 23:34:55 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 17 Mar 2019 23:34:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=hI9nacIh4+ikVwoTJa91cBLhdkZ
-        GR9SIE248o1LFToU=; b=UW/rFXoOd/5BbBJVU6zfxQaFsTXkpvA+MpxSScA8qP3
-        Eih+c4eE7vnBhsb2dqZ13WsD1rth1NSXJzXEifrHf8lwVy5R4cf0awgGTUszOQo4
-        zh/xtsc5rNI+13f/avbw8GaoxuCY6RDjuK2b3uXX7QNagO1mUaZ6FBcn00m3uIIp
-        lBaX6/0/AnwRSRy1Kw3p+BTyG+hmIsS1fijXJfoQLS0N550w70THcUJEh9xxdhWR
-        OoJBJq20M/p330ciq++MpITTdmAehsSYvHFRsWYfLZOVqGMas2vvH32YH/d/QEyA
-        Bfe6GmjYeMM/r91MkghEdEN5scvZrNXN+ixf//sfW8A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=hI9nac
-        Ih4+ikVwoTJa91cBLhdkZGR9SIE248o1LFToU=; b=11OkRF/D0zKvFE7vRvMuiB
-        0ai/MJo/MseB6XlYPeCUJDTp4Ho6wPb3UquHbggEVC/se4trdaH4wtmPgIqfG6K6
-        zamvQy0pA0xQCjQ17ALdvea8GwWdAh3Ew+hNnZZHldwhs4VOQC435STj5/BIcHbF
-        2NNuJgXTGK349GanVHA+IrQ/Cb5tZdNcpIdfmfl1IaQGHZyQNdbabMsbMW61/+gb
-        3D/CjHl+01F62IxD7BW/0SxcXV65BmpHgqxsNdQrNoW3jsutxNOBTTiwkEbuwaU9
-        eAwEs3my3hblSV6H57eW8pTb9+NwqwGF3Of8dEzTElXoEEWkstTY3OVB04s5HK1w
-        ==
-X-ME-Sender: <xms:3xGPXOUkm_nsCcb2snkmtvgBInzrsJIc_ZJFdMtSpFvFx1kFysmUkg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddriedtgdeiudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddukedrvdduuddrudelledruddvieenucfrrghrrghmpehm
-    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:3xGPXJBwExd4evTDKdd26kghov25SnbCQcIX4bvNXxbtwYiaIWB4Dw>
-    <xmx:3xGPXFLY3QuS1Uy_yQ9m7jnMs0nlrWuHZ_xaBqjmlBifaweMTpZfdQ>
-    <xmx:3xGPXKKM3Tx0C-AZg5CGlNmJurvmugpczxCSZwsGbuaCqDp18sC8iQ>
-    <xmx:3xGPXN05NLa63RAk1jopcRE0pdHkhj888akSWiluGA5_kt_-rSsWjA>
-Received: from localhost (ppp118-211-199-126.bras1.syd2.internode.on.net [118.211.199.126])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 94173100E5;
-        Sun, 17 Mar 2019 23:34:54 -0400 (EDT)
-Date:   Mon, 18 Mar 2019 14:34:30 +1100
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] Convert vfs.txt to vfs.rst
-Message-ID: <20190318033430.GA27728@eros.localdomain>
-References: <20190313040919.6937-1-tobin@kernel.org>
- <821449c9-e1f7-caa1-ff18-0cc1cc625596@infradead.org>
+        Sun, 17 Mar 2019 23:36:05 -0400
+Received: by mail-io1-f71.google.com with SMTP id i1so12723439ioq.9
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 20:36:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=morH9Kcq7W+GD/BZ5/IcndI6yLmG52mfSNJ6mTI7vK4=;
+        b=s0nM3NcIiIhXWBDmpkOv1WGURnroUUrULxR2/LBqHuh8pMtCT7ZNSHkVlP7HJw9pk/
+         2l7atFZiXehELvA72D3TxbIUsoq/vYtYK+p2yDiMIpvzvBHPig9W9O6cx2tZz8TYrX51
+         ZebiGsvqMZKBS+eGpQKjSew+nSJPCOmyaKhHbQeGe59gRG4N+W3qPt19oQf0/FcHGkbr
+         66n4BkzcvHZoWbJCwlvRQRio1PcYkXCfZVZKHJGyGWRrzO7HYK8JKRa1nTKDELzJZYAY
+         NEvVCs+UvDt+xq5L4KHWUnBwg3MiaXuzBncj+VCMpqAq35BomYPoi1cz1VQGJOoxE0GH
+         f5rQ==
+X-Gm-Message-State: APjAAAW8W8bCm1Ost1mYkkZL3XcE93pN/hFqN7hRH90xrK5BoVLS0yTl
+        WwmpVyfe0xGpa2gFNTxIU52etQT2MktXUm1MCZmqWccDrvzH
+X-Google-Smtp-Source: APXvYqx57rZSIUj0MtRaGCTthqH2HN/Nyhaz4ehwiu5PtmvBW3yE6dYMMBGi8ec+dVwS5bdSr6ZwAgUrj+D8i7mgTNvjD3ozsqTw
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <821449c9-e1f7-caa1-ff18-0cc1cc625596@infradead.org>
-X-Mailer: Mutt 1.11.3 (2019-02-01)
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Received: by 2002:a24:78c:: with SMTP id f134mr9043752itf.30.1552880164713;
+ Sun, 17 Mar 2019 20:36:04 -0700 (PDT)
+Date:   Sun, 17 Mar 2019 20:36:04 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000098bf7d05845616d7@google.com>
+Subject: general protection fault in loop_validate_file (2)
+From:   syzbot <syzbot+9bdc1adc1c55e7fe765b@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 06:46:40PM -0700, Randy Dunlap wrote:
-> On 3/12/19 9:09 PM, Tobin C. Harding wrote:
-> > Hi,
-> > 
-> > This set converts the VFS overview documentation to RST format.  I think
-> > I'm slowly getting better at structuring these conversions to ease
-> > review, if you disagree or you notice any way to further improve please
-> > say so.
-> 
-> Hi Tobin,
-> 
-> What does this patch set apply to?  Maybe Jon's git tree?
+Hello,
 
-I did this on top of Jon's tree before rc-1 came out (so during the
-merge window last week).  I can rebase and fire off another version if
-its easier for you Jon.
+syzbot found the following crash on:
 
-> I applied it to 5.1-rc1 with some forceful (minor) editing and ran
-> 'make htmldocs' successfully, so
-> 
-> Tested-by: Randy Dunlap <rdunlap@infradead.org>
+HEAD commit:    9c7dc824 Merge tag '5.1-rc-smb3' of git://git.samba.org/sf..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=148a35fb200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7e1aaa1cfbfe1abf
+dashboard link: https://syzkaller.appspot.com/bug?extid=9bdc1adc1c55e7fe765b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Thanks Randy.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> although there is at least one new field in struct file_operations: iopoll.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9bdc1adc1c55e7fe765b@syzkaller.appspotmail.com
 
-I purposely kept the conversion separate from the update.  Most of this
-file explicitly states the kernel version each struct documented is for
-(and at least two of them are 2.6.22).
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 9499 Comm: syz-executor.4 Not tainted 5.0.0+ #25
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:loop_validate_file+0x23e/0x310 drivers/block/loop.c:652
+Code: 00 48 89 f8 48 c1 e8 03 42 80 3c 38 00 0f 85 d4 00 00 00 4d 8b a4 24  
+f0 00 00 00 49 8d bc 24 b8 01 00 00 48 89 f8 48 c1 e8 03 <42> 80 3c 38 00  
+0f 85 a8 00 00 00 4d 8b a4 24 b8 01 00 00 4c 89 e0
+RSP: 0018:ffff88804d2bfb18 EFLAGS: 00010202
+RAX: 0000000000000037 RBX: ffff888095ffa3d8 RCX: ffffc9000e657000
+RDX: 0000000000000077 RSI: ffffffff83e754ed RDI: 00000000000001b8
+RBP: ffff88804d2bfb40 R08: ffff88808eab41c0 R09: fffffbfff11d981d
+R10: ffff88804d2bfb40 R11: ffffffff88ecc0e7 R12: 0000000000000000
+R13: 0000000000000002 R14: ffff888095ffa800 R15: dffffc0000000000
+FS:  00007f04b0c91700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000625208 CR3: 00000000a7af8000 CR4: 00000000001406e0
+Call Trace:
+  loop_set_fd drivers/block/loop.c:930 [inline]
+  lo_ioctl+0x99d/0x2150 drivers/block/loop.c:1542
+  __blkdev_driver_ioctl block/ioctl.c:303 [inline]
+  blkdev_ioctl+0xee8/0x1c40 block/ioctl.c:605
+  block_ioctl+0xee/0x130 fs/block_dev.c:1931
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458079
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f04b0c90c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458079
+RDX: 0000000000000004 RSI: 0000000000004c00 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f04b0c916d4
+R13: 00000000004c1252 R14: 00000000004d3160 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace 81b29486bae7280a ]---
+RIP: 0010:loop_validate_file+0x23e/0x310 drivers/block/loop.c:652
+Code: 00 48 89 f8 48 c1 e8 03 42 80 3c 38 00 0f 85 d4 00 00 00 4d 8b a4 24  
+f0 00 00 00 49 8d bc 24 b8 01 00 00 48 89 f8 48 c1 e8 03 <42> 80 3c 38 00  
+0f 85 a8 00 00 00 4d 8b a4 24 b8 01 00 00 4c 89 e0
+RSP: 0018:ffff88804d2bfb18 EFLAGS: 00010202
+RAX: 0000000000000037 RBX: ffff888095ffa3d8 RCX: ffffc9000e657000
+RDX: 0000000000000077 RSI: ffffffff83e754ed RDI: 00000000000001b8
+RBP: ffff88804d2bfb40 R08: ffff88808eab41c0 R09: fffffbfff11d981d
+R10: ffff88804d2bfb40 R11: ffffffff88ecc0e7 R12: 0000000000000000
+R13: 0000000000000002 R14: ffff888095ffa800 R15: dffffc0000000000
+FS:  00007f04b0c91700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000625208 CR3: 00000000a7af8000 CR4: 00000000001406e0
 
-One reason for the separation is that this set should be reviewable by
-'docs' folk without having to be too closely looked at by anyone from
-filesystems but the update will most likely benefit from at least a
-cursory look over by someone from filesystems.
 
-I have started the update to v5.20 but its slow going because I don't
-know the VFS.  I'm learning as I go, I should have something together
-soon.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-thanks,
-Tobin.
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
+syzbot.
