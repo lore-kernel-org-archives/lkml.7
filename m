@@ -2,82 +2,116 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6DCC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDF5C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E09520863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3FB2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:21:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jDPYNyak"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tSAIpPkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfCROTU (ORCPT
+        id S1727672AbfCROVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:19:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57486 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbfCROTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:19:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=+L3QjrqFC6cIDJwwlnq/wbic5OOexHViJmER9wU/Dsk=; b=jDPYNyakZqIhZlt8q5IL9bz3gV
-        I6zfgKbmLsAoNDH/TIr0yOU/QcmfJoXtA8GOsRNl9qiOH1ZR9S9nFyDSLbWwTYKKltmGC8BlMVZFr
-        Fo+8j1RjilwmhZYKs1lJCElsubuL72VAALsmn9T5tk4bRF4SalH9/KBtMzH4jZrDT2bA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1h5t6f-0005Sw-7k; Mon, 18 Mar 2019 15:19:13 +0100
-Date:   Mon, 18 Mar 2019 15:19:13 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jose Abreu <jose.abreu@synopsys.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Joao Pinto <joao.pinto@synopsys.com>
-Subject: Re: [PATCH net] net: phy: Don't assume loopback is supported
-Message-ID: <20190318141913.GJ30224@lunn.ch>
-References: <eeea080649153eefafef8ff93274733fe8f25b01.1552559796.git.joabreu@synopsys.com>
- <19c8d2b3-bffe-b3b2-6e91-e878f89e5247@gmail.com>
- <20190317183843.GE22226@lunn.ch>
- <07dd8427-4779-1706-3c0a-17ae58939c41@synopsys.com>
+        Mon, 18 Mar 2019 10:21:42 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:34402 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfCROVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 10:21:42 -0400
+Received: by mail-it1-f195.google.com with SMTP id l4so9911642ite.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 07:21:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3+eAWS/Rmc6f7GwRJVmc9nC5CxO0UcnP7Zod6D16lqU=;
+        b=tSAIpPkB05uDR+b9SKj/vLk1S5eLFEW6C3+lscD2/hWQRnnyGnJKV8tOgvBccDQs04
+         LuMo6kTjA06s17gxwj8At93ZTi3DZUFUAfE+ax9aOCjLgy6VFiS1KUdD+Ssnu4FcEH2D
+         wRo2gaNG6GXj5q4IJTsoc9/JwJ4WsqAoEmKKqeyLZmDosq8Rq5AcqdCDST94l11KHRJU
+         RjDXY5me8VOVc0uT79cpV8pW4inrGeO7WxgSL+MhbkxEcJpY/GYgffGWq/Zfb70zvm/s
+         Jk0LaCH05tP+vlJs2b/WcPS6YZSaE4ZdvtRG9ET9WmyLJA5i0+Yt8NDDksQTT+k2aCwx
+         PakA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3+eAWS/Rmc6f7GwRJVmc9nC5CxO0UcnP7Zod6D16lqU=;
+        b=boHtvvIFmZEnEkaCkqdbZ4/NwI0nJ303QnGe6K/QbRfgWXWf58fJdFVBZnxGsle0To
+         G2rXdE9XrAhkrPmN7SFdSM8OL2WJGnFdgLAr7LnolxKdMoZpucLIKJEzucbsogO7XLBD
+         ieBczSh9sH/GObi8TKeSM9aC4CnIGWJ0HFWryjr/INqoAwq5KtiWgf+WPtvNqK40izwG
+         TeobWKcAaR7lbcFCtKGAlm75DV2G0khIe5Zo7uliBqiXDNDc0njMLk9DM/2NqjG9XUdr
+         30DyYPg+SPeK7Se76TXJvWmD1xRa1Opeajgd8YUsiNn0ABxhMg1UeD7o8jk1WRyRwRXN
+         KxJQ==
+X-Gm-Message-State: APjAAAXS+ZcvVbcEbYeC78gl/7iO62yb19iKWMdThq/m3ytlyWqf8IjL
+        BBU3LOjX/MidIPRjaTAIUodRmQ==
+X-Google-Smtp-Source: APXvYqyYuaYDqCSh8xnnjVgv6aCwNdZGp+Qz387KHmKQwg1GeVczfDKJkSVkUVLhkpe50aByitngrg==
+X-Received: by 2002:a24:1747:: with SMTP id 68mr8917990ith.62.1552918900809;
+        Mon, 18 Mar 2019 07:21:40 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id t74sm186626itb.11.2019.03.18.07.21.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 07:21:39 -0700 (PDT)
+Subject: Re: [PATCH 1/1] loop: access lo_backing_file only when the loop
+ device is Lo_bound
+To:     Dongli Zhang <dongli.zhang@oracle.com>, linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, jack@suse.cz,
+        penguin-kernel@i-love.sakura.ne.jp
+References: <1552911797-20455-1-git-send-email-dongli.zhang@oracle.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2debdd71-c444-a04b-c308-097d8e51ee4c@kernel.dk>
+Date:   Mon, 18 Mar 2019 08:21:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07dd8427-4779-1706-3c0a-17ae58939c41@synopsys.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1552911797-20455-1-git-send-email-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> We provide PHYs to our customers and in the documentation I have
-> this can be an optional feature that HW team can choose to have
-> or not, making the bit read-only or r/w.
+On 3/18/19 6:23 AM, Dongli Zhang wrote:
+> Commit 758a58d0bc67 ("loop: set GENHD_FL_NO_PART_SCAN after
+> blkdev_reread_part()") separates "lo->lo_backing_file = NULL" and
+> "lo->lo_state = Lo_unbound" into different critical regions protected by
+> loop_ctl_mutex.
 > 
-> Heiner, can you please confirm there is no Clause 22 "pitfalls" /
-> "hidden comments" that allow this bitfield to be read-only ?
+> However, there is below race that the NULL lo->lo_backing_file would be
+> accessed when the backend of a loop is another loop device, e.g., loop0's
+> backend is a file, while loop1's backend is loop0.
+> 
+> loop0's backend is file            loop1's backend is loop0
+> 
+> __loop_clr_fd()
+>   mutex_lock(&loop_ctl_mutex);
+>   lo->lo_backing_file = NULL; --> set to NULL
+>   mutex_unlock(&loop_ctl_mutex);
+>                                    loop_set_fd()
+>                                      mutex_lock_killable(&loop_ctl_mutex);
+>                                      loop_validate_file()
+>                                        f = l->lo_backing_file; --> NULL
+>                                          access if loop0 is not Lo_unbound
+>   mutex_lock(&loop_ctl_mutex);
+>   lo->lo_state = Lo_unbound;
+>   mutex_unlock(&loop_ctl_mutex);
+> 
+> lo->lo_backing_file should be accessed only when the loop device is
+> Lo_bound.
+> 
+> In fact, the problem has been introduced already in commit 7ccd0791d985
+> ("loop: Push loop_ctl_mutex down into loop_clr_fd()") after which
+> loop_validate_file() could see devices in Lo_rundown state with which it
+> did not count. It was harmless at that point but still.
 
-Hi Jose
+Thanks, applied.
 
-I have the 802.3 standard from 2015. It should be free to download
-from the IEEE. So you can go get it yourself.
-
-Section 22.2.4.1.2 defines loopback. I don't see anything which makes
-it optional. The only wiggle room you have is where in the PHY the
-loopback actually takes place. That is implementation specific, but it
-recommends you make it as late as possible in the path so as to test
-as much as possible.
-
-If your PHY does not implement loopback, i would say it breaks the
-standard. We try to keep workarounds for brokenness in the specific
-PHY driver, not the generic code.
-
-    Andrew
+-- 
+Jens Axboe
 
