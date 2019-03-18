@@ -2,189 +2,76 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D177C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673FFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2005C20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4424C20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfCRRZt (ORCPT
+        id S1727426AbfCRR0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:25:49 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46761 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfCRRZt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:25:49 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h5w13-0003KF-JO; Mon, 18 Mar 2019 18:25:37 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h5w11-0001XZ-NR; Mon, 18 Mar 2019 18:25:35 +0100
-Date:   Mon, 18 Mar 2019 18:25:35 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V4 2/5] pwm: Add i.MX TPM PWM driver support
-Message-ID: <20190318172535.2yxokxwu52yjf6xf@pengutronix.de>
-References: <1552610505-13568-1-git-send-email-Anson.Huang@nxp.com>
- <1552610505-13568-3-git-send-email-Anson.Huang@nxp.com>
- <20190315093532.xw5ivfkxrwvrkvix@pengutronix.de>
- <DB3PR0402MB39161B062231C59842595374F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190318080743.xumj6e72bzumszvp@pengutronix.de>
- <DB3PR0402MB391627A8C741C84A2057E576F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Mon, 18 Mar 2019 13:26:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36482 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726626AbfCRR0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:26:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6E8B2AC2D;
+        Mon, 18 Mar 2019 17:26:11 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+        <mvmimwotn60.fsf@suse.de>
+        <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
+X-Yow:  ..  ich bin in einem dusenjet ins jahr 53 vor chr...
+ ich lande im antiken Rom...  einige gladiatoren spielen scrabble...
+ ich rieche PIZZA...
+Date:   Mon, 18 Mar 2019 18:26:10 +0100
+In-Reply-To: <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
+        (Yash Shah's message of "Fri, 15 Mar 2019 17:19:59 +0530")
+Message-ID: <mvm5zsgp00d.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On MÃ¤r 15 2019, Yash Shah <yash.shah@sifive.com> wrote:
 
-On Mon, Mar 18, 2019 at 02:04:00PM +0000, Anson Huang wrote:
-> > > On Mon, Mar 18, 2019 at 07:41:02AM +0000, Anson Huang wrote:
-> > > > > > +	val &= ~PWM_IMX_TPM_SC_CMOD;
-> > > > > > +	writel(val, tpm->base + PWM_IMX_TPM_SC);
-> > > > >
-> > > > > As this interrupts the output, please only do it if necessary.
-> > > >
-> > > > OK, will do it ONLY when it is enabled previously.
-> > >
-> > > I think you only need to do that when the value actually changes.
-> > 
-> > OK, I will save the period/div count and ONLY do it when the value actually
-> > changes.
-> 
-> After further think, I added below tpm->period to save the current period settings,
-> ONLY when the new period to be set is different from the current period, then the 
-> pwm_imx_tpm_config_counter() is called, so I think no need to care about the value
-> changes, the value is always changed when pwm_imx_tpm_config_counter() is called.
-> 
->                  if (tpm->user_count != 1 && state->period != tpm->period)
->                          return -EBUSY;
->                  ret = pwm_imx_tpm_config_counter(chip, state->period);
->                  if (ret)
->                          return ret;
+> You need to make sure the period setting is passed via the
+> conventional way in DT file.
+> Example:
+> pwmleds {
+>     compatible = "pwm-leds";
+>     heartbeat {
+>         pwms = <&L45 0 10000000 0>;
+>         max-brightness = <255>;
+>         linux,default-trigger = "heartbeat";
+>     };
+> };
 
-This is still not the optimal thing to do. What you really want is:
+I've now managed to build a working FSBL with that change, but that
+didn't change anything.  There is not even a heartbeat option in
+/sys/class/leds/heartbeat/trigger any more.
 
-	p = round_period_according_to_hw_caps(state->period);
-	if (p != actually_configured_period && tpm->user_count != 1)
-		return -EBUSY;
-
-
-> > > > > > +	/* set duty counter */
-> > > > > > +	tmp = readl(tpm->base + PWM_IMX_TPM_MOD) &
-> > > > > > +PWM_IMX_TPM_MOD_MOD_MASK;
-> > > > >
-> > > > > I recommend storing this value in driver data.
-> > > >
-> > > > NOT quite understand, as we did NOT use it in other places except
-> > > > the get_state, just reading the register once should be OK there.
-> > >
-> > > I had the impression it is used more than once. Will look again in the
-> > > next iteration. But also note that shadowing the value might already
-> > > be beneficial for a single call site as driver data might occupy more
-> > > RAM than necessary anyhow and reading from RAM is faster than from the
-> > > hardware's register.
-> > > Probably this is not a fast path, so not worth the optimisation?!
-> > 
-> > OK, will save it in driver data and avoid accessing register again.
-
-please apply some thought before following my advices. If this is not a
-fast path and it hurts readability, don't shadow the register in driver
-data.
-
-> > > > > > +		/* disable channel */
-> > > > > > +		writel(PWM_IMX_TPM_CnSC_CHF,
-> > > > > > +			tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-> > > > >
-> > > > > Clearing CHF doens't disable the channel as I read the manual.
-> > > >
-> > > > This write clears CHF as well as writing other bits 0, to disable
-> > > > the output. Maybe I can explicitly clear MSA/MSB/ELSA/ELSB to avoid
-> > > > confusion.
-> > >
-> > > Ah, I misinterpreted the value written.
-> > >
-> > > > > > +static int pwm_imx_tpm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > > > > +			     struct pwm_state *state) {
-> > > > > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> > > > > > +	struct pwm_state curstate;
-> > > > > > +	u32 duty_cycle = state->duty_cycle;
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	pwm_imx_tpm_get_state(chip, pwm, &curstate);
-> > > > > > +
-> > > > > > +	mutex_lock(&tpm->lock);
-> > > > >
-> > > > > What should this lock protect? Does it hurt if the state changes
-> > > > > between pwm_imx_tpm_get_state releasing the lock and
-> > > > > pwm_imx_tpm_apply taking it?
-> > > >
-> > > > The idea is to protect the share resourced by multiple channels, but
-> > > > I think I can make the mutex_lock includes get_state and remove the
-> > > > lock in get_state function.
-> > >
-> > > You might need it in .get_state to return a consistent state to the
-> > > caller. In this case just introduce an unlocked variant of .get_state
-> > > to share code between the two functions.
-> > >
-> > > And BTW the question was honest. I'm not entirely sure that you need
-> > > to hold the lock.
-> > 
-> > Agreed, if the different channel configuration ONLY access its own register,
-> > NOT any shared registers, then I think this lock is unnecessary.
-> 
-> Since all the functions in .apply function will need to access registers and these
-> registers are shared by different channels, so I think the lock is necessary. 
-
-I think so, too, but didn't thought it to the end. I can invest some
-time here in the next review round.
-
-BTW, one thing that I think is missing is, that .apply must only return
-when the newly configured setting is already active.
-
-Best regards
-Uwe
+Andreas.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
