@@ -2,107 +2,139 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC0EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D90C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD5B20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:22:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="tSKUMbGI"
+	by mail.kernel.org (Postfix) with ESMTP id 4A5E120850
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfCRNW2 (ORCPT
+        id S1727146AbfCRN07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 09:22:28 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43170 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbfCRNW1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 09:22:27 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d17so17012995wre.10
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 06:22:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=anDKkfkfgUjbCFW17LBVFkEpDX5SSum7g1bnWPoKEUQ=;
-        b=tSKUMbGIV9ZwCxl3dvzjGmK0CSvR3tloAf3yCB+5XWILhJ3KVrL6nXRH2Ow+fLR8tw
-         lqLxmM+g2SM30sOZp89wkCBPTqhlbzcXyeTJLkn3UI7vldE8a+r2rChL+xphqWpPXj37
-         6xNXEcuQrU1/ZXE3A7oNIKT7PknVlRllCptQJ6RRR27K4mhLm7RPizx5fzE2Oc5ayAL4
-         u7uX0ynKJX5tjEILSjbaRspg8vJ+kyOpM10q0cniNxLRWOetfhjqYyi1F600qP3iKBXh
-         uDfzVEPWya5IOQrFfs9+ldmjBM+GjYmAJn14EgUrREt9O1flkxcME+f8zu0QJPo3+AI9
-         tZ8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=anDKkfkfgUjbCFW17LBVFkEpDX5SSum7g1bnWPoKEUQ=;
-        b=okY/doiq/33hsQqID/dfSHEtg6eeQAi7T9FpZrZgXV/90D/lQxxOXbnmWcsHiEc8hq
-         +nUhjUI3t6tDQIfYYEwGrj5XxVONwVS62aGFvBL9tF2sTLwLD+gY7bj7keMbR/8ukaAw
-         83R2qqft2lX6vpCqCilN+8Y+qrTJ1HYnewvxjyuEwqrHIIeGzchSWrR0fmwzazACEWEL
-         mrGwLJqnnPmvS2DngisW3sHHyfbv7ViCpMnf+3+z6NFhdVd9mPgdm6IHuoYGAKDikV11
-         yVOFrUscbz5Uita8dA7CDb28kmGkzssAod1mTdcqr12gF4RSTVPMMZQgqhhXhg7lsNiv
-         nKZw==
-X-Gm-Message-State: APjAAAXCnwWQQBTuBiDCiuhikHVrSF6/CWjE3i6M1RCPTzTrRVqsTSLo
-        4yoc9hplO+cDS+dmJrbR0FXCHhWFWjtyug==
-X-Google-Smtp-Source: APXvYqyXauMsFn3SlSvfcWq33BwglwLizvemnTLDarX6qEVWPh8legvjQFVMJeTr0hupP0vvK+pR5A==
-X-Received: by 2002:a5d:6981:: with SMTP id g1mr9539495wru.326.1552915346318;
-        Mon, 18 Mar 2019 06:22:26 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id t202sm19580833wmt.0.2019.03.18.06.22.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 06:22:25 -0700 (PDT)
-Message-ID: <5c8f9b91.1c69fb81.e9cdc.e1fb@mx.google.com>
-Date:   Mon, 18 Mar 2019 06:22:25 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 18 Mar 2019 09:26:59 -0400
+Received: from foss.arm.com ([217.140.101.70]:34318 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbfCRN06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 09:26:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A984FEBD;
+        Mon, 18 Mar 2019 06:26:57 -0700 (PDT)
+Received: from [10.1.199.35] (e107154-lin.cambridge.arm.com [10.1.199.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DF053F71A;
+        Mon, 18 Mar 2019 06:26:51 -0700 (PDT)
+Subject: Re: [PATCH v11 13/14] arm64: update
+ Documentation/arm64/tagged-pointers.txt
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1552679409.git.andreyknvl@google.com>
+ <bf0abceeaf32e6b9cdbc9dde45cc5966b5747ec4.1552679409.git.andreyknvl@google.com>
+From:   Kevin Brodsky <kevin.brodsky@arm.com>
+Message-ID: <81bc3110-b638-4545-1270-26baec3d59e7@arm.com>
+Date:   Mon, 18 Mar 2019 13:26:48 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.14.106-35-g6fdcb56d3713
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.14.y
-In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
-References: <20190318084144.657740413@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/34] 4.14.107-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+In-Reply-To: <bf0abceeaf32e6b9cdbc9dde45cc5966b5747ec4.1552679409.git.andreyknvl@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 103 boots: 1 failed, 101 passed with 1 untried=
-/unknown (v4.14.106-35-g6fdcb56d3713)
+On 15/03/2019 19:51, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
+>
+> Document the ABI changes in Documentation/arm64/tagged-pointers.txt.
+>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>   Documentation/arm64/tagged-pointers.txt | 18 ++++++++----------
+>   1 file changed, 8 insertions(+), 10 deletions(-)
+>
+> diff --git a/Documentation/arm64/tagged-pointers.txt b/Documentation/arm64/tagged-pointers.txt
+> index a25a99e82bb1..07fdddeacad0 100644
+> --- a/Documentation/arm64/tagged-pointers.txt
+> +++ b/Documentation/arm64/tagged-pointers.txt
+> @@ -17,13 +17,15 @@ this byte for application use.
+>   Passing tagged addresses to the kernel
+>   --------------------------------------
+>   
+> -All interpretation of userspace memory addresses by the kernel assumes
+> -an address tag of 0x00.
+> +The kernel supports tags in pointer arguments (including pointers in
+> +structures) of syscalls, however such pointers must point to memory ranges
+> +obtained by anonymous mmap() or brk().
+>   
+> -This includes, but is not limited to, addresses found in:
+> +The kernel supports tags in user fault addresses. However the fault_address
+> +field in the sigcontext struct will contain an untagged address.
+>   
+> - - pointer arguments to system calls, including pointers in structures
+> -   passed to system calls,
+> +All other interpretations of userspace memory addresses by the kernel
+> +assume an address tag of 0x00, in particular:
+>   
+>    - the stack pointer (sp), e.g. when interpreting it to deliver a
+>      signal,
+> @@ -33,11 +35,7 @@ This includes, but is not limited to, addresses found in:
+>   
+>   Using non-zero address tags in any of these locations may result in an
+>   error code being returned, a (fatal) signal being raised, or other modes
+> -of failure.
+> -
+> -For these reasons, passing non-zero address tags to the kernel via
+> -system calls is forbidden, and using a non-zero address tag for sp is
+> -strongly discouraged.
+> +of failure. Using a non-zero address tag for sp is strongly discouraged.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.106-35-g6fdcb56d3713/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.106-35-g6fdcb56d3713/
+I don't understand why we should keep such a limitation. For MTE, tagging SP is 
+something we are definitely considering. This does bother userspace software in some 
+rare cases, but I'm not sure in what way it bothers the kernel.
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.106-35-g6fdcb56d3713
-Git Commit: 6fdcb56d3713e8abec18669625bc170613795f5d
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 60 unique boards, 23 SoC families, 14 builds out of 201
+Kevin
 
-Boot Failure Detected:
+>   
+>   Programs maintaining a frame pointer and frame records that use non-zero
+>   address tags may suffer impaired or inaccurate debug and profiling
 
-arm64:
-
-    defconfig:
-        gcc-7:
-            rk3399-firefly: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
