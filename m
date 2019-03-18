@@ -3,23 +3,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46310C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 126CD20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2A92085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fq6G0g5y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AJ9zSsYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfCRPyP (ORCPT
+        id S1728001AbfCRPyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:54:15 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58722 "EHLO
+        Mon, 18 Mar 2019 11:54:20 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58720 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfCRPw6 (ORCPT
+        with ESMTP id S1727647AbfCRPw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Mar 2019 11:52:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -28,20 +28,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZzqstxTm+4RKpAgonk1jK5brJjDJNa9fUa5HmM0UqMk=; b=fq6G0g5yV0qih+1vTQYPLzrZg+
-        5pf2RKMVYlFtoTUmod8/ZpXCnU8fQZO31sE3z0zsnioTvhGxSgDxB07c5SquL5ZX+bZDbl3dDx9uv
-        /GZ5RsUAy8T17gDe1x15d7EdSiaHgsTnR3ijuV5/cS2eUuXAxcr5iMJH8SxLyLZHjrkkbbvFQxTse
-        eapo/86xsZHS8sfBmY6o+Uark/4IWou1exK0GPh8D0KsEFFh0g3jj1Cnv2jIQ8aY4+SuJG6K/Dd2l
-        cVVeJv0WbsHdx8yKw9Pt+LsXAj7gl2QpbqzyQ7mBaFdu4lvt4BvE/4Pgn/ZEm6o29e3XSgIsxh7zp
-        oJUr++cA==;
+        bh=jTZTkE7R0FuioCOO1jzakCVlSh4d903b9RMZ07cf9bs=; b=AJ9zSsYJyvPBKjTA1Q+CshGBx6
+        vE8YHaxlbf8xdX+CNfY2QHk/1Vd+WG7aUI/iiyXqyf954T+2lCIV9ZDc2QymL9USon/Y2ozncTrLT
+        ld+tsL+ygCwzF5FF64GmFclQ95gP6qfib/V4imBaA71l9pAi3HJtWqkHiLKkaBn6qv5Yv3ioCq6Zt
+        rnIHESqIh2dTstJe0eOadO/1zGIUe5/ljt7RpFc4WMugjYIQR1xHk7SWbYZ8kN5XHOkS1i7G7zWSR
+        3rJglIxkKs5y0dbs9ILwRQdxYqaeVqCHf/rTuviZki9a8R+kCgZ2WZQxqaQNMuLiazzzZj3dXtXRP
+        HbC3OrJQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5uZ5-0005Uh-Rk; Mon, 18 Mar 2019 15:52:40 +0000
+        id 1h5uZ7-0005Uu-Ft; Mon, 18 Mar 2019 15:52:41 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 824EC2026BE92; Mon, 18 Mar 2019 16:52:38 +0100 (CET)
-Message-Id: <20190318155139.963285969@infradead.org>
+        id 96A0C25E45D6F; Mon, 18 Mar 2019 16:52:38 +0100 (CET)
+Message-Id: <20190318155140.346218947@infradead.org>
 User-Agent: quilt/0.65
-Date:   Mon, 18 Mar 2019 16:38:41 +0100
+Date:   Mon, 18 Mar 2019 16:38:45 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
         julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
@@ -50,7 +50,7 @@ To:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
         luto@kernel.org, bp@alien8.de, dvlasenk@redhat.com
 Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
         dvyukov@google.com, rostedt@goodmis.org
-Subject: [PATCH 01/25] x86: Make SMAP 64-bit only
+Subject: [PATCH 05/25] x86/uaccess: Move copy_user_handle_tail into asm
 References: <20190318153840.906404905@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,31 +59,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We rely on objtool to verify AC=1 doesn't escape. However there is no
-objtool support for x86_32, and thus we cannot guarantee the
-correctness of the 32bit code.
+By writing the function in asm we avoid cross object code flow and
+objtool no longer gets confused about a 'stray' CLAC.
 
-Also; if you're running 32bit kernels on hardware with SMAP (which all
-should have LM support afaik) you're doing it wrong anyway.
-
-XXX: we could do the PUSHF/POPF thing in __switch_to_asm() on x86_32,
-but why bother.
+Also; the asm version is actually _simpler_.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/Kconfig |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/asm.h        |   24 -------------------
+ arch/x86/include/asm/uaccess_64.h |    3 --
+ arch/x86/lib/copy_user_64.S       |   48 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/lib/usercopy_64.c        |   20 ---------------
+ 4 files changed, 48 insertions(+), 47 deletions(-)
 
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1853,6 +1853,8 @@ config ARCH_RANDOM
+--- a/arch/x86/include/asm/asm.h
++++ b/arch/x86/include/asm/asm.h
+@@ -148,30 +148,6 @@
+ 	_ASM_PTR (entry);					\
+ 	.popsection
  
- config X86_SMAP
- 	def_bool y
-+	# Note: we rely on objtool to validate AC=1 doesn't escape
-+	depends on HAVE_STACK_VALIDATION
- 	prompt "Supervisor Mode Access Prevention" if EXPERT
- 	---help---
- 	  Supervisor Mode Access Prevention (SMAP) is a security
+-.macro ALIGN_DESTINATION
+-	/* check for bad alignment of destination */
+-	movl %edi,%ecx
+-	andl $7,%ecx
+-	jz 102f				/* already aligned */
+-	subl $8,%ecx
+-	negl %ecx
+-	subl %ecx,%edx
+-100:	movb (%rsi),%al
+-101:	movb %al,(%rdi)
+-	incq %rsi
+-	incq %rdi
+-	decl %ecx
+-	jnz 100b
+-102:
+-	.section .fixup,"ax"
+-103:	addl %ecx,%edx			/* ecx is zerorest also */
+-	jmp copy_user_handle_tail
+-	.previous
+-
+-	_ASM_EXTABLE_UA(100b, 103b)
+-	_ASM_EXTABLE_UA(101b, 103b)
+-	.endm
+-
+ #else
+ # define _EXPAND_EXTABLE_HANDLE(x) #x
+ # define _ASM_EXTABLE_HANDLE(from, to, handler)			\
+--- a/arch/x86/include/asm/uaccess_64.h
++++ b/arch/x86/include/asm/uaccess_64.h
+@@ -208,9 +208,6 @@ __copy_from_user_flushcache(void *dst, c
+ }
+ 
+ unsigned long
+-copy_user_handle_tail(char *to, char *from, unsigned len);
+-
+-unsigned long
+ mcsafe_handle_tail(char *to, char *from, unsigned len);
+ 
+ #endif /* _ASM_X86_UACCESS_64_H */
+--- a/arch/x86/lib/copy_user_64.S
++++ b/arch/x86/lib/copy_user_64.S
+@@ -16,6 +16,30 @@
+ #include <asm/smap.h>
+ #include <asm/export.h>
+ 
++.macro ALIGN_DESTINATION
++	/* check for bad alignment of destination */
++	movl %edi,%ecx
++	andl $7,%ecx
++	jz 102f				/* already aligned */
++	subl $8,%ecx
++	negl %ecx
++	subl %ecx,%edx
++100:	movb (%rsi),%al
++101:	movb %al,(%rdi)
++	incq %rsi
++	incq %rdi
++	decl %ecx
++	jnz 100b
++102:
++	.section .fixup,"ax"
++103:	addl %ecx,%edx			/* ecx is zerorest also */
++	jmp copy_user_handle_tail
++	.previous
++
++	_ASM_EXTABLE_UA(100b, 103b)
++	_ASM_EXTABLE_UA(101b, 103b)
++	.endm
++
+ /*
+  * copy_user_generic_unrolled - memory copy with exception handling.
+  * This version is for CPUs like P4 that don't have efficient micro
+@@ -194,6 +218,30 @@ ENDPROC(copy_user_enhanced_fast_string)
+ EXPORT_SYMBOL(copy_user_enhanced_fast_string)
+ 
+ /*
++ * Try to copy last bytes and clear the rest if needed.
++ * Since protection fault in copy_from/to_user is not a normal situation,
++ * it is not necessary to optimize tail handling.
++ *
++ * Input:
++ * rdi destination
++ * rsi source
++ * rdx count
++ *
++ * Output:
++ * eax uncopied bytes or 0 if successful.
++ */
++ALIGN;
++copy_user_handle_tail:
++	movl %edx,%ecx
++1:	rep movsb
++2:	mov %ecx,%eax
++	ASM_CLAC
++	ret
++
++	_ASM_EXTABLE_UA(1b, 2b)
++ENDPROC(copy_user_handle_tail)
++
++/*
+  * copy_user_nocache - Uncached memory copy with exception handling
+  * This will force destination out of cache for more performance.
+  *
+--- a/arch/x86/lib/usercopy_64.c
++++ b/arch/x86/lib/usercopy_64.c
+@@ -55,26 +55,6 @@ unsigned long clear_user(void __user *to
+ EXPORT_SYMBOL(clear_user);
+ 
+ /*
+- * Try to copy last bytes and clear the rest if needed.
+- * Since protection fault in copy_from/to_user is not a normal situation,
+- * it is not necessary to optimize tail handling.
+- */
+-__visible unsigned long
+-copy_user_handle_tail(char *to, char *from, unsigned len)
+-{
+-	for (; len; --len, to++) {
+-		char c;
+-
+-		if (__get_user_nocheck(c, from++, sizeof(char)))
+-			break;
+-		if (__put_user_nocheck(c, to, sizeof(char)))
+-			break;
+-	}
+-	clac();
+-	return len;
+-}
+-
+-/*
+  * Similar to copy_user_handle_tail, probe for the write fault point,
+  * but reuse __memcpy_mcsafe in case a new read error is encountered.
+  * clac() is handled in _copy_to_iter_mcsafe().
 
 
