@@ -2,118 +2,102 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4274C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F77C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5BA2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335542085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:39:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dE9C1kNE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="O5SwATPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfCRUil (ORCPT
+        id S1727702AbfCRUji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:38:41 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:44203 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbfCRUik (ORCPT
+        Mon, 18 Mar 2019 16:39:38 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:29476 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbfCRUji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:38:40 -0400
-Received: by mail-vk1-f193.google.com with SMTP id q189so4111572vkq.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:38:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xFsMmX/k0i1rBGaGSCpX1BTyFqBPFztwdG/wsbG1D2M=;
-        b=dE9C1kNEFUMCBqguAAFAp4qeOodfL1P1AzX66kHRB8TW9+ML51qhd5t+mpf8CHFo7J
-         Aa23FWwlvQbh7onhMray0Xw4EXgGGcM0vjrAr+g6cRhgWgF0/ZZjlDJft5iH9vMUSp1G
-         cloxRLwPBjpDBGzmuEINAMr3TccbD35vtMMH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xFsMmX/k0i1rBGaGSCpX1BTyFqBPFztwdG/wsbG1D2M=;
-        b=Ep/CcUG4dYfAA7g7yY81qkcQALqwvI5IWf84M231djb62qfumUSrGeM0h3RmlPRtJU
-         1ZiVwFSMSF0f+MrZA6tzq1OTTBVO88RujvYJxMS21UtlTG4M93axAYwhsc5/FCVA1bpr
-         krO2YRpgNOocBHRgcgMqm2laPcbHMN5JRGvgZ7TSat1BNnO69AVnIjrNlZ/OG3ksPpYI
-         UN/eK+ouVU+saVZWZ+eltMrWyhUdmOhtPzjHqa+NzCjQEdYOSW5QTjY5nxNyeEQkPy4Q
-         rxp8yUGSDreNiD7+dWUZNQQfLWPrT0/axreawFZB7kxKYW7dnmxO7A5nd3pFpK1ud6Wc
-         ZryQ==
-X-Gm-Message-State: APjAAAWPgEO0gzQe/AWSjuHKcYeQt+m2fT+vfK54UOVXUIlvHVmcfZSU
-        avyhAS/EnUUJq2V+4yiyn3sJNtk0wBI=
-X-Google-Smtp-Source: APXvYqywSN/Cdq95EbPCHa9d3wfxiVl4ANSXWsHeIJRHfIBuTebzeKz1/bdIFyaa+iDfMMyQpG7aMw==
-X-Received: by 2002:a1f:ad10:: with SMTP id w16mr9905139vke.49.1552941519570;
-        Mon, 18 Mar 2019 13:38:39 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id k202sm3347533vke.50.2019.03.18.13.38.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 13:38:38 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id i207so1833513vsd.10
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:38:38 -0700 (PDT)
-X-Received: by 2002:a67:bc01:: with SMTP id t1mr3234954vsn.149.1552941517745;
- Mon, 18 Mar 2019 13:38:37 -0700 (PDT)
+        Mon, 18 Mar 2019 16:39:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1552941575;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=agDPtw/n3WgKjUcJkDAc7cIWnYbVRIjr3hxno9Di6O4=;
+        b=O5SwATPgeUoj7tWcbd1RhktTHEIMrODySadH3/GK0c8wtT3sijrfwmsenHBl855CNd
+        ODUoNvVyZFS+aqH4eA+nfMAfKZqBq8B9P/tPKsVpy/0KdSNR1mXknC7CW7FzOGhhAh33
+        4nQ09jrz9gp9GN7snPZDl1hS7CbwEoUiq/6hIz3Mxls58KxmqyLr9rZmUMvRNEjzz/uB
+        ydyHF9DKfHzhVn4z0TVhekOp5xQa172+KZd2/aeB38Y3X52g5wY1Nld+IjXvCOjSmuuD
+        83JVafyEhWzCWi8ZIs2LJ3hcVC20O5YiIXEP9bDJ5gjGpEUEQrHLyGhlw2Q7ILENKSDd
+        ikAQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7O2CKNdGj"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.16 DYNA|AUTH)
+        with ESMTPSA id h04075v2IKdYFyi
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 18 Mar 2019 21:39:34 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [RFC 0/4] iio-input-bridge so that accelerometers which only have an iio driver can still present evdev input events
+Date:   Mon, 18 Mar 2019 21:39:30 +0100
+Message-Id: <cover.1552941573.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <20190116184623.77136-1-dianders@chromium.org> <20190116184623.77136-2-dianders@chromium.org>
-In-Reply-To: <20190116184623.77136-2-dianders@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 18 Mar 2019 13:38:26 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UaaHtXEut=zZBOvdsS-14Emmnyos84ONup8FkBexzcMQ@mail.gmail.com>
-Message-ID: <CAD=FV=UaaHtXEut=zZBOvdsS-14Emmnyos84ONup8FkBexzcMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] drm/msm: Cleanup A6XX opp-level reading
-To:     Rob Clark <robdclark@gmail.com>,
-        Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Kristian H . Kristensen" <hoegsberg@chromium.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        David Airlie <airlied@linux.ie>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Some user spaces (e.g. some Android) use /dev/input/event* for handling the 3D
+position of the device with respect to the center of gravity (earth). This can
+be used for gaming input, rotation of screens etc.
 
-On Wed, Jan 16, 2019 at 10:46 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> The patch ("OPP: Add support for parsing the 'opp-level' property")
-> adds an API enabling a cleaner way to read the opp-level.  Let's use
-> the new API.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
-> Obviously this can't land until we have a tree that contains the patch
-> adding the API.  I believe that means we'll want to target this patch
-> for 5.2.  Luckily it's fine to wait since this patch has no functional
-> changes--it's all cleanup.
->
-> Changes in v2:
-> - Split into two patches to facilitate landing.
->
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 17 ++++++-----------
->  1 file changed, 6 insertions(+), 11 deletions(-)
+This should be the standard because this interface is an abstraction of how
+this data is acquired from sensor chips. Sensor chips may be connected through
+different interfaces and in different positions. They may also have different
+parameters. And, if a chip is replaced by a different one, the values reported
+by the device position interface should remain the same.
 
-FWIW I think this patch is ready to land any time.  That commit
-5b93ac542301 ("OPP: Add support for parsing the 'opp-level' property")
-is now in linux/master.
+But nowadays, new accelerometer chips usually just get iio drivers and rarely
+an evdev input driver.
+
+Therefore we need something like a protocol stack: input device vs. raw data.
+It can be seen as a similar layering like TCP/IP vs. bare Ethernet. Or keyboard
+input events vs. raw gpio or raw USB access.
+
+This patch set bridges the gap between raw iio data and the input device abstraction
+so that accelerometer measurements can also be presented as X/Y/Z accelerometer
+channels (INPUT_PROP_ACCELEROMETER) through /dev/input/event*.
 
 
--Doug
+H. Nikolaus Schaller (4):
+  iio: input-bridge: optionally bridge iio acceleometers to create a
+    /dev/input
+  iio: input-bridge: add iio-input-bridge to Makefile
+  iio: input-bridge: add IIO_INPUT_BRIDGE kernel config option
+  iio: input-bridge: make the iio-input-bridge driver called by iio-core
+
+ drivers/iio/Kconfig                    |   7 +
+ drivers/iio/Makefile                   |   1 +
+ drivers/iio/industrialio-core.c        |  12 +
+ drivers/iio/industrialio-inputbridge.c | 420 +++++++++++++++++++++++++
+ drivers/iio/industrialio-inputbridge.h |  28 ++
+ 5 files changed, 468 insertions(+)
+ create mode 100644 drivers/iio/industrialio-inputbridge.c
+ create mode 100644 drivers/iio/industrialio-inputbridge.h
+
+-- 
+2.19.1
+
