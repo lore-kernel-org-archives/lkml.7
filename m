@@ -3,35 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2EDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C313C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CDC20872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4042820872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfCRPtE (ORCPT
+        id S1727645AbfCRPtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:49:04 -0400
-Received: from sauhun.de ([88.99.104.3]:36864 "EHLO pokefinder.org"
+        Mon, 18 Mar 2019 11:49:06 -0400
+Received: from sauhun.de ([88.99.104.3]:36852 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727134AbfCRPtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:49:01 -0400
+        id S1727499AbfCRPtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 11:49:00 -0400
 Received: from localhost (p54B330C6.dip0.t-ipconnect.de [84.179.48.198])
-        by pokefinder.org (Postfix) with ESMTPSA id 530284A134C;
-        Mon, 18 Mar 2019 16:48:59 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 85F474A134A;
+        Mon, 18 Mar 2019 16:48:58 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-renesas-soc@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         Mark Brown <broonie@kernel.org>,
         Support Opensource <support.opensource@diasemi.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 5/6] mfd: da9063: remove leftover platform_data definitions
-Date:   Mon, 18 Mar 2019 16:47:57 +0100
-Message-Id: <20190318154759.21978-6-wsa+renesas@sang-engineering.com>
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: [PATCH 4/6] regulator: da9063: move definitions out of a header into the driver
+Date:   Mon, 18 Mar 2019 16:47:56 +0100
+Message-Id: <20190318154759.21978-5-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
 References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
@@ -40,85 +41,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not used, not needed, remove them.
+Those definitions are only used within the driver meanwhile, so put them
+there.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- include/linux/mfd/da9063/pdata.h | 65 ----------------------------------------
- 1 file changed, 65 deletions(-)
- delete mode 100644 include/linux/mfd/da9063/pdata.h
+ drivers/regulator/da9063-regulator.c | 44 +++++++++++++++++++++++++++++++-
+ include/linux/mfd/da9063/pdata.h     | 49 ------------------------------------
+ 2 files changed, 43 insertions(+), 50 deletions(-)
 
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 73c85039d0cf..c05859ad63d8 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -25,7 +25,6 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/mfd/da9063/core.h>
+-#include <linux/mfd/da9063/pdata.h>
+ #include <linux/mfd/da9063/registers.h>
+ 
+ 
+@@ -34,6 +33,49 @@
+ 	REG_FIELD(_reg, __builtin_ffs((int)_mask) - 1, \
+ 		sizeof(unsigned int) * 8 - __builtin_clz((_mask)) - 1)
+ 
++/* DA9063 and DA9063L regulator IDs */
++enum {
++	/* BUCKs */
++	DA9063_ID_BCORE1,
++	DA9063_ID_BCORE2,
++	DA9063_ID_BPRO,
++	DA9063_ID_BMEM,
++	DA9063_ID_BIO,
++	DA9063_ID_BPERI,
++
++	/* BCORE1 and BCORE2 in merged mode */
++	DA9063_ID_BCORES_MERGED,
++	/* BMEM and BIO in merged mode */
++	DA9063_ID_BMEM_BIO_MERGED,
++	/* When two BUCKs are merged, they cannot be reused separately */
++
++	/* LDOs on both DA9063 and DA9063L */
++	DA9063_ID_LDO3,
++	DA9063_ID_LDO7,
++	DA9063_ID_LDO8,
++	DA9063_ID_LDO9,
++	DA9063_ID_LDO11,
++
++	/* DA9063-only LDOs */
++	DA9063_ID_LDO1,
++	DA9063_ID_LDO2,
++	DA9063_ID_LDO4,
++	DA9063_ID_LDO5,
++	DA9063_ID_LDO6,
++	DA9063_ID_LDO10,
++};
++
++/* Old regulator platform data */
++struct da9063_regulator_data {
++	int				id;
++	struct regulator_init_data	*initdata;
++};
++
++struct da9063_regulators_pdata {
++	unsigned int			n_regulators;
++	struct da9063_regulator_data	*regulator_data;
++};
++
+ /* Regulator capabilities and registers description */
+ struct da9063_regulator_info {
+ 	struct regulator_desc desc;
 diff --git a/include/linux/mfd/da9063/pdata.h b/include/linux/mfd/da9063/pdata.h
-deleted file mode 100644
-index 21a2d107f0cf..000000000000
+index 50bed4f89c1a..21a2d107f0cf 100644
 --- a/include/linux/mfd/da9063/pdata.h
-+++ /dev/null
-@@ -1,65 +0,0 @@
--/*
-- * Platform configuration options for DA9063
-- *
-- * Copyright 2012 Dialog Semiconductor Ltd.
-- *
-- * Author: Michal Hajduk, Dialog Semiconductor
-- * Author: Krystian Garbaciak, Dialog Semiconductor
-- *
-- *  This program is free software; you can redistribute  it and/or modify it
-- *  under  the terms of  the GNU General  Public License as published by the
-- *  Free Software Foundation;  either version 2 of the  License, or (at your
-- *  option) any later version.
-- *
-- */
--
--#ifndef __MFD_DA9063_PDATA_H__
--#define __MFD_DA9063_PDATA_H__
++++ b/include/linux/mfd/da9063/pdata.h
+@@ -16,55 +16,6 @@
+ #ifndef __MFD_DA9063_PDATA_H__
+ #define __MFD_DA9063_PDATA_H__
+ 
+-#include <linux/regulator/machine.h>
 -
 -/*
-- * RGB LED configuration
+- * Regulator configuration
 - */
--/* LED IDs for flags in struct led_info. */
+-/* DA9063 and DA9063L regulator IDs */
 -enum {
--	DA9063_GPIO11_LED,
--	DA9063_GPIO14_LED,
--	DA9063_GPIO15_LED,
+-	/* BUCKs */
+-	DA9063_ID_BCORE1,
+-	DA9063_ID_BCORE2,
+-	DA9063_ID_BPRO,
+-	DA9063_ID_BMEM,
+-	DA9063_ID_BIO,
+-	DA9063_ID_BPERI,
 -
--	DA9063_LED_NUM
--};
--#define DA9063_LED_ID_MASK		0x3
+-	/* BCORE1 and BCORE2 in merged mode */
+-	DA9063_ID_BCORES_MERGED,
+-	/* BMEM and BIO in merged mode */
+-	DA9063_ID_BMEM_BIO_MERGED,
+-	/* When two BUCKs are merged, they cannot be reused separately */
 -
--/* LED polarity for flags in struct led_info. */
--#define DA9063_LED_HIGH_LEVEL_ACTIVE	0x0
--#define DA9063_LED_LOW_LEVEL_ACTIVE	0x4
+-	/* LDOs on both DA9063 and DA9063L */
+-	DA9063_ID_LDO3,
+-	DA9063_ID_LDO7,
+-	DA9063_ID_LDO8,
+-	DA9063_ID_LDO9,
+-	DA9063_ID_LDO11,
 -
--
--/*
-- * General PMIC configuration
-- */
--/* HWMON ADC channels configuration */
--#define DA9063_FLG_FORCE_IN0_MANUAL_MODE	0x0010
--#define DA9063_FLG_FORCE_IN0_AUTO_MODE		0x0020
--#define DA9063_FLG_FORCE_IN1_MANUAL_MODE	0x0040
--#define DA9063_FLG_FORCE_IN1_AUTO_MODE		0x0080
--#define DA9063_FLG_FORCE_IN2_MANUAL_MODE	0x0100
--#define DA9063_FLG_FORCE_IN2_AUTO_MODE		0x0200
--#define DA9063_FLG_FORCE_IN3_MANUAL_MODE	0x0400
--#define DA9063_FLG_FORCE_IN3_AUTO_MODE		0x0800
--
--/* Disable register caching. */
--#define DA9063_FLG_NO_CACHE			0x0008
--
--struct da9063;
--
--/* DA9063 platform data */
--struct da9063_pdata {
--	int				(*init)(struct da9063 *da9063);
--	int				irq_base;
--	bool				key_power;
--	unsigned			flags;
--	struct da9063_regulators_pdata	*regulators_pdata;
--	struct led_platform_data	*leds_pdata;
+-	/* DA9063-only LDOs */
+-	DA9063_ID_LDO1,
+-	DA9063_ID_LDO2,
+-	DA9063_ID_LDO4,
+-	DA9063_ID_LDO5,
+-	DA9063_ID_LDO6,
+-	DA9063_ID_LDO10,
 -};
 -
--#endif	/* __MFD_DA9063_PDATA_H__ */
+-/* Regulators platform data */
+-struct da9063_regulator_data {
+-	int				id;
+-	struct regulator_init_data	*initdata;
+-};
+-
+-struct da9063_regulators_pdata {
+-	unsigned			n_regulators;
+-	struct da9063_regulator_data	*regulator_data;
+-};
+-
+-
+ /*
+  * RGB LED configuration
+  */
 -- 
 2.11.0
 
