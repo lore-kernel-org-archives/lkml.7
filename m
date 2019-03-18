@@ -2,183 +2,123 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD3CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4588BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C8720854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173CA2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfCRLBn (ORCPT
+        id S1726776AbfCRLFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:01:43 -0400
-Received: from foss.arm.com ([217.140.101.70]:60120 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbfCRLBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:01:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2416A80D;
-        Mon, 18 Mar 2019 04:01:42 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 412D03F614;
-        Mon, 18 Mar 2019 04:01:39 -0700 (PDT)
-Subject: Re: [PATCH v5 05/22] iommu: Introduce cache_invalidate API
-To:     Auger Eric <eric.auger@redhat.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "yi.l.liu@linux.intel.com" <yi.l.liu@linux.intel.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        Christoffer Dall <Christoffer.Dall@arm.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        Vincent Stehle <Vincent.Stehle@arm.com>
-References: <20190315160906.12900-1-eric.auger@redhat.com>
- <20190315160906.12900-6-eric.auger@redhat.com>
- <20190315113702.1184d162@jacob-builder>
- <281167f1-c046-3077-e954-d1f510c27d61@redhat.com>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <71bec2ed-97ed-d543-7ebd-9fb03c093e77@arm.com>
-Date:   Mon, 18 Mar 2019 11:01:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Mon, 18 Mar 2019 07:05:18 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37155 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfCRLFS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 07:05:18 -0400
+X-Originating-IP: 90.88.22.102
+Received: from aptenodytes (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id F2E3040013;
+        Mon, 18 Mar 2019 11:05:12 +0000 (UTC)
+Message-ID: <ef0c3061986b7456605a61f835f2a2003cf4c678.camel@bootlin.com>
+Subject: Re: [linux-sunxi] Re: [PATCH 04/14] pinctrl: sunxi: v3: really
+ introduce support for V3
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     icenowy@aosc.io, linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        linux-clk@vger.kernel.org
+Date:   Mon, 18 Mar 2019 12:05:12 +0100
+In-Reply-To: <7B6C1341-BAB5-48C5-9E60-11BCEAC3D0CD@aosc.io>
+References: <20190312152256.35574-1-icenowy@aosc.io>
+         <20190312152256.35574-5-icenowy@aosc.io>
+         <20190312153654.25r5orlw7qjtlhbt@flea>
+         <7B6C1341-BAB5-48C5-9E60-11BCEAC3D0CD@aosc.io>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
 MIME-Version: 1.0
-In-Reply-To: <281167f1-c046-3077-e954-d1f510c27d61@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/03/2019 16:43, Auger Eric wrote:
->>> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
->>> index 532a64075f23..e4c6a447e85a 100644
->>> --- a/include/uapi/linux/iommu.h
->>> +++ b/include/uapi/linux/iommu.h
->>> @@ -159,4 +159,75 @@ struct iommu_pasid_table_config {
->>>  	};
->>>  };
->>>  
->>> +/* defines the granularity of the invalidation */
->>> +enum iommu_inv_granularity {
->>> +	IOMMU_INV_GRANU_DOMAIN,	/* domain-selective
->>> invalidation */
->>> +	IOMMU_INV_GRANU_PASID,	/* pasid-selective
->>> invalidation */
->>> +	IOMMU_INV_GRANU_ADDR,	/* page-selective invalidation
->>> */ +};
->>> +
->>> +/**
->>> + * Address Selective Invalidation Structure
->>> + *
->>> + * @flags indicates the granularity of the address-selective
->>> invalidation
->>> + * - if PASID bit is set, @pasid field is populated and the
->>> invalidation
->>> + *   relates to cache entries tagged with this PASID and matching the
->>> + *   address range.
->>> + * - if ARCHID bit is set, @archid is populated and the invalidation
->>> relates
->>> + *   to cache entries tagged with this architecture specific id and
->>> matching
->>> + *   the address range.
->>> + * - Both PASID and ARCHID can be set as they may tag different
->>> caches.
->>> + * - if neither PASID or ARCHID is set, global addr invalidation
->>> applies
->>> + * - LEAF flag indicates whether only the leaf PTE caching needs to
->>> be
->>> + *   invalidated and other paging structure caches can be preserved.
->>> + * @pasid: process address space id
->>> + * @archid: architecture-specific id
->>> + * @addr: first stage/level input address
->>> + * @granule_size: page/block size of the mapping in bytes
->>> + * @nb_granules: number of contiguous granules to be invalidated
->>> + */
->>> +struct iommu_inv_addr_info {
->>> +#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
->>> +#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
->>> +#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
->>> +	__u32	flags;
->>> +	__u32	archid;
->>> +	__u64	pasid;
->>> +	__u64	addr;
->>> +	__u64	granule_size;
->>> +	__u64	nb_granules;
->>> +};
->>> +
->>> +/**
->>> + * First level/stage invalidation information
->>> + * @cache: bitfield that allows to select which caches to invalidate
->>> + * @granularity: defines the lowest granularity used for the
->>> invalidation:
->>> + *     domain > pasid > addr
->>> + *
->>> + * Not all the combinations of cache/granularity make sense:
->>> + *
->>> + *         type |   DEV_IOTLB   |     IOTLB     |      PASID    |
->>> + * granularity	|		|		|
->>> cache	|
->>> + * -------------+---------------+---------------+---------------+
->>> + * DOMAIN	|	N/A	|       Y	|
->>> Y	|
->>> + * PASID	|	Y	|       Y	|
->>> Y	|
->>> + * ADDR		|       Y	|       Y	|
->>> N/A	|
->>> + */
->>> +struct iommu_cache_invalidate_info {
->>> +#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
->>> +	__u32	version;
->>> +/* IOMMU paging structure cache */
->>> +#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
->>> +#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device
->>> IOTLB */ +#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID
->>> cache */
->>> +	__u8	cache;
->>> +	__u8	granularity;
->>> +	__u8	padding[2];
->>> +	union {
->>> +		__u64	pasid;
->> just realized there is already a pasid field in the addr_info, do we
->> still need this?
-> I think so. Either you do a PASID based invalidation and you directly
-> use the pasid field or you do an address based invalidation and you use
-> the addr_info where the pasid may or not be passed.
+Hi,
 
-I guess a comment would be useful?
-
-    - Invalidations by %IOMMU_INV_GRANU_ADDR use field @addr_info.
-    - Invalidations by %IOMMU_INV_GRANU_PASID use field @pasid.
-    - Invalidations by %IOMMU_INV_GRANU_DOMAIN don't take an argument.
-
-Thanks,
-Jean
-
+Le mardi 12 mars 2019 à 23:45 +0800, Icenowy Zheng a écrit :
 > 
-> Thanks
+> 于 2019年3月12日 GMT+08:00 下午11:36:54, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
+> > On Tue, Mar 12, 2019 at 11:22:46PM +0800, Icenowy Zheng wrote:
+> > > Introduce the GPIO pins that is only available on V3 (not on V3s) to
+> > the
+> > > V3 pinctrl driver.
+> > > 
+> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > ---
+> > >  drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c | 291
+> > +++++++++++++++++++++--
+> > >  drivers/pinctrl/sunxi/pinctrl-sunxi.h    |   2 +
+> > >  2 files changed, 275 insertions(+), 18 deletions(-)
+> > > 
+> > > diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> > b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> > > index 6704ce8e5e3d..54c210871a95 100644
+> > > --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> > > +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> > > @@ -1,5 +1,5 @@
+> > >  /*
+> > > - * Allwinner V3s SoCs pinctrl driver.
+> > > + * Allwinner V3/V3s SoCs pinctrl driver.
+> > >   *
+> > >   * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+> > >   *
+> > > @@ -23,7 +23,7 @@
+> > >  
+> > >  #include "pinctrl-sunxi.h"
+> > >  
+> > > -static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
+> > > +static const struct sunxi_desc_pin sun8i_v3_v3s_pins[] = {
+> > 
+> > I'm not sure all that remaining is worth it to be honest. It adds a
+> > lot of noise for no particular reason (and the same goes for renaming
+> > the file itself)
 > 
-> Eric
->>> +		struct iommu_inv_addr_info addr_info;
->>> +	};
->>> +};
->>> +
->>> +
->>>  #endif /* _UAPI_IOMMU_H */
->>
->> [Jacob Pan]
->>
+> Maybe keeping names is okay "for historial reasons".
+> 
+> In fact I want to keep them.
+
+My two cents about this: kernel development is plagued by the unability
+to rename and rework things as soon as backward compatibility is
+involved. I believe that renaming and reworking things is quite a good
+thing to do when it leads to a situation that is easier to understand
+and makes more sense.
+
+In this case, I don't see any blockers that would prevent us from doing
+this, so I am strongly in favor of it. I really don't see how increased
+noise and "historical reasons" make up for better clarity.
+
+Cheers,
+
+Paul
+
+> > Maxime
+> 
+> -- 
+> 使用 K-9 Mail 发送自我的Android设备。
+> 
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
