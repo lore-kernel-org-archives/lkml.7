@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BEAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122E6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D074D214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D4B2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901631;
-	bh=WB+WnKuE+7Xx1t830uueUImXHHVBlLa73KzzojHWnLs=;
+	s=default; t=1552901637;
+	bh=gl+7B0CYp/efPD69FQ6AZLrcbBbhaZ4pZjya/agZwX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W/bZyRxYIKtFPIkyKuhzjOFL1mqTR2ZhyBX5ew2D+nWoqB4ul90AdpN3enmob6V0/
-	 XbK/NJWjgjBCYovR8GZKWuAAgknNbTmVTMyOpKZEaT/B9lN1rv1K2GSdf4S/p5EBak
-	 HIlfNIDP7bw3M1RjnGkX0Sq03Ud3Sze6fQQJ1RyI=
+	b=o0g2IvuYz77CFxT9DxGxUYHOxlKVs4U4DaNfV3HA8tL9yYStXF3ktR3MXI/s188D9
+	 LHw+3znvtJxjFt2wquhfvtB582Jw5agAp1Ir6nUTg9i5VJulyR0GAkPTTVybNYCQHM
+	 zJGEvpbWB/o+p6kgkfWgcPQrRYi/Sjlb3yn6S/18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfCRJdu (ORCPT
+        id S1728625AbfCRJd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:33:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:33:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728906AbfCRJdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:47 -0400
+        id S1728921AbfCRJdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:33:53 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CD60214AF;
-        Mon, 18 Mar 2019 09:33:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8446214D8;
+        Mon, 18 Mar 2019 09:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901626;
-        bh=WB+WnKuE+7Xx1t830uueUImXHHVBlLa73KzzojHWnLs=;
+        s=default; t=1552901633;
+        bh=gl+7B0CYp/efPD69FQ6AZLrcbBbhaZ4pZjya/agZwX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UxZnp7DLcg3rZK0NeZKwrDgXtKCt/WKnphVGAfOU3cn+bnyVVz4QueTSNsGLuvKrg
-         kk3+SfXKawRuf9yQWeuwEBNpElksUDlQz2iSbp9Vwx8lYKXurJy6SbUAWGUAku8PPJ
-         cXqanztH8NczmX2KgsyQ61eEeGvwB9S9WTjpk9gY=
+        b=zX3y/+xz6yfvHEOsViHFtifl4JJlJ8m8R8qOgfCx45hof/h596ZIs9fXqg9CtioEP
+         74jgTdERM71HmtT1wHqx0VrBdaJuh54oOATvBCw3+Dfjs94YDfFZbQcs3yE2PxakqL
+         0m/cicZaf1NaiMDkDaJH9kQrJx5FkXIYGffRZVXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 38/52] perf/x86: Fixup typo in stub functions
-Date:   Mon, 18 Mar 2019 10:25:35 +0100
-Message-Id: <20190318084018.015238657@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Peter=20Sj=C3=B6berg?= <autopeter@gmail.com>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 40/52] ALSA: firewire-motu: fix construction of PCM frame for capture direction
+Date:   Mon, 18 Mar 2019 10:25:37 +0100
+Message-Id: <20190318084018.228063303@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -68,53 +67,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit f764c58b7faa26f5714e6907f892abc2bc0de4f8 upstream.
+commit f97a0944a72b26a2bece72516294e112a890f98a upstream.
 
-Guenter reported a build warning for CONFIG_CPU_SUP_INTEL=n:
+In data blocks of common isochronous packet for MOTU devices, PCM
+frames are multiplexed in a shape of '24 bit * 4 Audio Pack', described
+in IEC 61883-6. The frames are not aligned to quadlet.
 
-  > With allmodconfig-CONFIG_CPU_SUP_INTEL, this patch results in:
-  >
-  > In file included from arch/x86/events/amd/core.c:8:0:
-  > arch/x86/events/amd/../perf_event.h:1036:45: warning: ‘struct cpu_hw_event’ declared inside parameter list will not be visible outside of this definition or declaration
-  >  static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
+For capture PCM substream, ALSA firewire-motu driver constructs PCM
+frames by reading data blocks byte-by-byte. However this operation
+includes bug for lower byte of the PCM sample. This brings invalid
+content of the PCM samples.
 
-While harmless (an unsed pointer is an unused pointer, no matter the type)
-it needs fixing.
+This commit fixes the bug.
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: d01b1f96a82e ("perf/x86/intel: Make cpuc allocations consistent")
-Link: http://lkml.kernel.org/r/20190315081410.GR5996@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: Peter Sjöberg <autopeter@gmail.com>
+Cc: <stable@vger.kernel.org> # v4.12+
+Fixes: 4641c9394010 ("ALSA: firewire-motu: add MOTU specific protocol layer")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/perf_event.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/firewire/motu/amdtp-motu.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1030,12 +1030,12 @@ static inline int intel_pmu_init(void)
- 	return 0;
- }
+--- a/sound/firewire/motu/amdtp-motu.c
++++ b/sound/firewire/motu/amdtp-motu.c
+@@ -136,7 +136,9 @@ static void read_pcm_s32(struct amdtp_st
+ 		byte = (u8 *)buffer + p->pcm_byte_offset;
  
--static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
-+static inline int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
- {
- 	return 0;
- }
- 
--static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
-+static inline void intel_cpuc_finish(struct cpu_hw_events *cpuc)
- {
- }
- 
+ 		for (c = 0; c < channels; ++c) {
+-			*dst = (byte[0] << 24) | (byte[1] << 16) | byte[2];
++			*dst = (byte[0] << 24) |
++			       (byte[1] << 16) |
++			       (byte[2] << 8);
+ 			byte += 3;
+ 			dst++;
+ 		}
 
 
