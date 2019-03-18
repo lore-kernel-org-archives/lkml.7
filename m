@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED956C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4E0C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09AE2175B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1BD621741
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YkzThGw7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZmesG1+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfCRRSH (ORCPT
+        id S1727944AbfCRRSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:18:07 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:34326 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727870AbfCRRSF (ORCPT
+        Mon, 18 Mar 2019 13:18:11 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:43691 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727911AbfCRRSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:18:05 -0400
-Received: by mail-qk1-f202.google.com with SMTP id y6so15362263qke.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:18:04 -0700 (PDT)
+        Mon, 18 Mar 2019 13:18:08 -0400
+Received: by mail-qt1-f201.google.com with SMTP id q21so5872282qtf.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:18:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=LfpjTjIWpAUqgBuBr+ROlRDq3TWjVWHbA3wqyLv7Gqg=;
-        b=YkzThGw7U5bxwuGivZfG7gXjy3sbFeGI9LQQNwpjKesMWYXA6dWvmlyTVIDVds3jdT
-         99Hv46CfyNGepDjQmBrGdjnE8DmIFRJxBJqNXjHLIWC7+99xjXgyacIB4V4zSxrfGRS1
-         gCdVGS/MQBILBUagjA0XfHFo8FDflJm4SJEr94PsmlNdR79rNuZTcqAgPDOmgM2h8uU1
-         X27jM72pTPp4w4jfVrzQIbmq9wd3O59csXywpy8yafGddFfq57LOwhbAfJSUMg2BvGCJ
-         ay4PGD3jH0Ph4L+WAj6gW2ezv9U1Ktw+Hx+TJhzvpdvgFTaZaxSZHrZdwWAc4E0uG5zJ
-         mTGw==
+        bh=/AfMcWXUpr8qOV9jNlH+KOvJdLIB2O2rWZvj+eGhaHk=;
+        b=ZmesG1+vdfvVJVysloZ/DvNyAHwl1NeoVDeZqmznyOpJWfePQRGjlMOaVKfDpQrgzs
+         J2EQbjkMYChUC5zNqacIMsL4hIDlSJ8LlP4Fmv1sBUKWq1gONhy9n6WlIdgh6miGrDT+
+         kxO+pObNRxAVLj1qO6umMp4FBt4KoE0pcjnUi2zV7lJYuNIAUHoun/OybTmy1PNaA5yQ
+         p3eG+Dhv94MxYowpcID5/Yi84v5cik+7L0zhfsc+N+0vCh3BkkQf0oPyRfu2qOWqEfLW
+         2tCSF4/OHp/EYgkB0s7TOad99Oui2rlmLjv/5KNArBSNE7FFiFH/+uNURIDaDJj0/jzV
+         BjkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=LfpjTjIWpAUqgBuBr+ROlRDq3TWjVWHbA3wqyLv7Gqg=;
-        b=TxB/RdIOnw+96AOLpywPdaQCDSVKcRqBvA5aLDBSov0VgxMFIstoTWa1vHZ8mc217e
-         9cxnNkcsJISWo/7/Dpj1zqw35h06Z3+Sr4AFw1aWRHoT4t3SN+Q/z4j2evs8069yUXG7
-         2JoDRroMbNLoH+da0e9QKEKU09YjjNcLfp/g5iwM6mHfrUB4IvB+PuxE82k8ZwUh5E7I
-         +NHQK3mhP9SAQ7LjtWSPOJGyo2TN5GUev/+GuLQuxKxcHxwMmTH96MnPWQqYIrxTbHVg
-         Gy8KNnMQPnxVaEL2GMwICebBFoJVm1s8n9Y/KEgQ22rDBu5W05IvpMDbbY5Boq6+rr/l
-         n7cA==
-X-Gm-Message-State: APjAAAWw8DghspwmRCmiTzZcprTcUNzCb6G2YeEkarLtC7yes/V+h3A/
-        ziEM2OOjHwknWONgt7YqOPQButYmp99rlvIj
-X-Google-Smtp-Source: APXvYqwvaFpE6Rrk389WuFNgjhFYIoDJPXDJycXik4soUJpzaOpECOFFeWGr/7DmdYgwI9v4deSBDrsPhVpuummk
-X-Received: by 2002:aed:3a42:: with SMTP id n60mr10517091qte.62.1552929484433;
- Mon, 18 Mar 2019 10:18:04 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 18:17:37 +0100
+        bh=/AfMcWXUpr8qOV9jNlH+KOvJdLIB2O2rWZvj+eGhaHk=;
+        b=Aaz13aXaskMhA1xtdKlriHFLxuWjTyUZRfmkT6jEuDD1FLQXEcBOTQtcuvxLinTVuj
+         r44hc4xrarFmE5rC4HAaJyQdypVxm8wrrhG+uEGvK1/x/DAfyuErH4mGtmF/cd0AfkAY
+         RWz9gIOBikdUlbjc1t2g44+7kWv+ZTFDzM4eEiOY3xOfr3monynpJ4c3nuzaMW85PdW1
+         lkc+1zmSWUpHxbm89axQo54fIByLijjqCTn0UHBdJz3KUzhrXmVQ3www1JYUvJyvZYOA
+         nhbabkWTNP/ExRlSLyR0x8D+ziD2CS7xoIOCYP/cQaYYfcRXcAykwtf5dyBWgfjOHTM7
+         FCVA==
+X-Gm-Message-State: APjAAAX13f2V7/FlD2Qho+73roo6JwgkN8ycy8QIz+RuqWmrP5SUjSQs
+        QgYzge1f/0vu15Aw5eeW2pVYED4kyYgx/zJW
+X-Google-Smtp-Source: APXvYqzQcEeEWS2cRarzaICPGg9P+n5KYCEBV6zZ1LX2+H91hhlcnbntbKdJigMJk6uOOiOh4IgPE1iT+lDz1l6o
+X-Received: by 2002:ac8:2733:: with SMTP id g48mr11081110qtg.0.1552929487390;
+ Mon, 18 Mar 2019 10:18:07 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 18:17:38 +0100
 In-Reply-To: <cover.1552929301.git.andreyknvl@google.com>
-Message-Id: <f46caf7bea6bdbb7e50f2abedc83df13d075735c.1552929301.git.andreyknvl@google.com>
+Message-Id: <e12d6b5008f63b530d25ad73b2e3491939005c22.1552929301.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1552929301.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH v12 05/13] mm, arm64: untag user pointers in mm/gup.c
+Subject: [PATCH v12 06/13] fs, arm64: untag user pointers in copy_mount_options
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -107,39 +107,31 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-mm/gup.c provides a kernel interface that accepts user addresses and
-manipulates user pages directly (for example get_user_pages, that is used
-by the futex syscall). Since a user can provided tagged addresses, we need
-to handle this case.
+In copy_mount_options a user address is being subtracted from TASK_SIZE.
+If the address is lower than TASK_SIZE, the size is calculated to not
+allow the exact_copy_from_user() call to cross TASK_SIZE boundary.
+However if the address is tagged, then the size will be calculated
+incorrectly.
 
-Add untagging to gup.c functions that use user addresses for vma lookups.
+Untag the address before subtracting.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- mm/gup.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index f84e22685aaa..3192741e0b3a 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -686,6 +686,8 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
- 	if (!nr_pages)
- 		return 0;
- 
-+	start = untagged_addr(start);
-+
- 	VM_BUG_ON(!!pages != !!(gup_flags & FOLL_GET));
- 
- 	/*
-@@ -848,6 +850,8 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
- 	struct vm_area_struct *vma;
- 	vm_fault_t ret, major = 0;
- 
-+	address = untagged_addr(address);
-+
- 	if (unlocked)
- 		fault_flags |= FAULT_FLAG_ALLOW_RETRY;
+diff --git a/fs/namespace.c b/fs/namespace.c
+index c9cab307fa77..c27e5713bf04 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2825,7 +2825,7 @@ void *copy_mount_options(const void __user * data)
+ 	 * the remainder of the page.
+ 	 */
+ 	/* copy_from_user cannot cross TASK_SIZE ! */
+-	size = TASK_SIZE - (unsigned long)data;
++	size = TASK_SIZE - (unsigned long)untagged_addr(data);
+ 	if (size > PAGE_SIZE)
+ 		size = PAGE_SIZE;
  
 -- 
 2.21.0.225.g810b269d1ac-goog
