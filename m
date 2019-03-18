@@ -2,172 +2,145 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E6BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B24C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCF720854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5383220854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Cmr0mfSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfCRPji (ORCPT
+        id S1727505AbfCRPkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:39:38 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3163 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727017AbfCRPjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:39:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 08:39:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="153416287"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Mar 2019 08:39:32 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A7F00FA; Mon, 18 Mar 2019 17:39:31 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] dmaengine: idma64: Use actual device for DMA transfers
-Date:   Mon, 18 Mar 2019 18:39:30 +0300
-Message-Id: <20190318153930.25641-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 18 Mar 2019 11:40:10 -0400
+Received: from mail-eopbgr70078.outbound.protection.outlook.com ([40.107.7.78]:24079
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726932AbfCRPkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 11:40:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4uSxtNUSAj8VDMqVARMuCCZdDPQTSFuMGuLncn5xIyA=;
+ b=Cmr0mfSyrgg6Bn8Z214negEuGTIhzKZyrMLNccC7eNC8zRiAofSusGnhpRsmrSKoVS8Ve5wYoP7J6dgAMzk/zZ+hGFLVIkBPTTnt+gRym8wUsMWYWTAxVYkx+LPz+L7/323Y4D24GN6YnwdmYI9BQqiOvtUtL6VlPR35XhHtOZg=
+Received: from AM0PR08MB3025.eurprd08.prod.outlook.com (52.134.93.10) by
+ AM0PR08MB4114.eurprd08.prod.outlook.com (20.178.202.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Mon, 18 Mar 2019 15:40:05 +0000
+Received: from AM0PR08MB3025.eurprd08.prod.outlook.com
+ ([fe80::7e:6dfb:116b:befd]) by AM0PR08MB3025.eurprd08.prod.outlook.com
+ ([fe80::7e:6dfb:116b:befd%2]) with mapi id 15.20.1709.015; Mon, 18 Mar 2019
+ 15:40:05 +0000
+From:   Brian Starkey <Brian.Starkey@arm.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+CC:     Ayan Halder <Ayan.Halder@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "malidp@foss.arm.com" <malidp@foss.arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alyssa@rosenzweig.io" <alyssa@rosenzweig.io>, nd <nd@arm.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dave Airlie <airlied@gmail.com>,
+        Swati Sharma <swati2.sharma@intel.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Vidya Srinivas <vidya.srinivas@intel.com>
+Subject: Re: [PATCH v4 01/10] drm/fourcc: Add AFBC yuv fourccs for Mali
+Thread-Topic: [PATCH v4 01/10] drm/fourcc: Add AFBC yuv fourccs for Mali
+Thread-Index: AQHU2P+qA2ep7AXS+0OoMG0/Q7/SaqYRNbSAgABaAgA=
+Date:   Mon, 18 Mar 2019 15:40:05 +0000
+Message-ID: <20190318154004.2llnsarwx77kyqbf@DESKTOP-E1NTVVP.localdomain>
+References: <1552414556-5756-1-git-send-email-ayan.halder@arm.com>
+ <dea64e97-1d6b-e728-1e1c-3880e2f0a2e8@linux.intel.com>
+In-Reply-To: <dea64e97-1d6b-e728-1e1c-3880e2f0a2e8@linux.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: NeoMutt/20180716-849-147d51-dirty
+x-originating-ip: [217.140.106.54]
+x-clientproxiedby: LO2P265CA0164.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9::32) To AM0PR08MB3025.eurprd08.prod.outlook.com
+ (2603:10a6:208:5c::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Brian.Starkey@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 61b161d3-b603-4b7a-f914-08d6abb7fe70
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR08MB4114;
+x-ms-traffictypediagnostic: AM0PR08MB4114:
+x-ms-exchange-purlcount: 1
+nodisclaimer: True
+x-microsoft-antispam-prvs: <AM0PR08MB4114E037503355EF5F2932DFF0470@AM0PR08MB4114.eurprd08.prod.outlook.com>
+x-forefront-prvs: 098076C36C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(346002)(366004)(396003)(189003)(199004)(446003)(6486002)(53936002)(1076003)(7416002)(6306002)(6512007)(9686003)(6436002)(256004)(316002)(66066001)(186003)(68736007)(6916009)(229853002)(86362001)(97736004)(5660300002)(3846002)(6116002)(26005)(11346002)(7736002)(14454004)(8936002)(54906003)(25786009)(305945005)(4326008)(81156014)(8676002)(45080400002)(6246003)(72206003)(966005)(478600001)(2906002)(81166006)(99286004)(58126008)(76176011)(386003)(6506007)(71190400001)(106356001)(105586002)(476003)(486006)(44832011)(52116002)(102836004)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB4114;H:AM0PR08MB3025.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BD73QoHP9lkPvIFUIB35f3FEC+kYy7R8zrDNo8BhTiIJIMQ54FAOZCeeEuiBElYStAOCRCLetaH/evFEB6yfJiWI+++nkwau3ix+CaA0v6NOu4C3K5gQ4r4CTNTBrIXi9IjojQNMaPAMl4rB1iKzX+y7vXFnpiS6WoOkgpryu7QRBG8Oim+DDvHSF1//yGPVSOirqsgbpOzDb6YJIkiBbIizBk8Wc+LBQkr2XEURKm27gjnmmm5KyjY2MdBYKGSPHD+LoM44HLotI+RbnZt+H4x4dSfMMWtbGE2JhObqMyGQAnvhMrtsgoHGdH8fcdaBJ9E9akmq8nfPG3kenRwOF1RS2YZEzb8eWcE1JOfdEX7pdLPwIUVKd6fg2IxyUnCNoeK8rmkTXPhVJKNLJHTGpSP9FXT9cKsN6x/9iK5/gMo=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4A1217FD59959949926952809B2DBE75@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61b161d3-b603-4b7a-f914-08d6abb7fe70
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 15:40:05.8487
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel IOMMU, when enabled, tries to find the domain of the device,
-assuming it's a PCI one, during DMA operations, such as mapping or
-unmapping. Since we are splitting the actual PCI device to couple of
-children via MFD framework (see drivers/mfd/intel-lpss.c for details),
-the DMA device appears to be a platform one, and thus not an actual one
-that performs DMA. In a such situation IOMMU can't find or allocate
-a proper domain for its operations. As a result, all DMA operations are
-failed.
+Hi,
 
-In order to fix this, supply parent of the platform device
-to the DMA engine framework and fix filter functions accordingly.
+On Mon, Mar 18, 2019 at 11:17:55AM +0100, Maarten Lankhorst wrote:
 
-We may rely on the fact that parent is a real PCI device, because no
-other configuration is present in the wild.
+<snip>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/dma/idma64.c              | 6 ++++--
- drivers/dma/idma64.h              | 2 ++
- drivers/spi/spi-pxa2xx.c          | 7 +------
- drivers/tty/serial/8250/8250_dw.c | 4 ++--
- 4 files changed, 9 insertions(+), 10 deletions(-)
+> Hey..
+>=20
+> There's a conflict with this patch and the merge of topic/hdr-formats, re=
+sulting in double definitions for Y210, Y410 and P010.
+>=20
+> Worse still is that one has set has_alpha to true for Y41x and other to f=
+alse.
+>=20
+> ~Maarten
+>=20
 
-diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
-index 0baf9797cc09..83796a33dc16 100644
---- a/drivers/dma/idma64.c
-+++ b/drivers/dma/idma64.c
-@@ -592,7 +592,7 @@ static int idma64_probe(struct idma64_chip *chip)
- 	idma64->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
- 	idma64->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
- 
--	idma64->dma.dev = chip->dev;
-+	idma64->dma.dev = chip->sysdev;
- 
- 	dma_set_max_seg_size(idma64->dma.dev, IDMA64C_CTLH_BLOCK_TS_MASK);
- 
-@@ -632,6 +632,7 @@ static int idma64_platform_probe(struct platform_device *pdev)
- {
- 	struct idma64_chip *chip;
- 	struct device *dev = &pdev->dev;
-+	struct device *sysdev = dev->parent;
- 	struct resource *mem;
- 	int ret;
- 
-@@ -648,11 +649,12 @@ static int idma64_platform_probe(struct platform_device *pdev)
- 	if (IS_ERR(chip->regs))
- 		return PTR_ERR(chip->regs);
- 
--	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	ret = dma_coerce_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
- 	if (ret)
- 		return ret;
- 
- 	chip->dev = dev;
-+	chip->sysdev = sysdev;
- 
- 	ret = idma64_probe(chip);
- 	if (ret)
-diff --git a/drivers/dma/idma64.h b/drivers/dma/idma64.h
-index 6b816878e5e7..baa32e1425de 100644
---- a/drivers/dma/idma64.h
-+++ b/drivers/dma/idma64.h
-@@ -216,12 +216,14 @@ static inline void idma64_writel(struct idma64 *idma64, int offset, u32 value)
- /**
-  * struct idma64_chip - representation of iDMA 64-bit controller hardware
-  * @dev:		struct device of the DMA controller
-+ * @sysdev:		struct device of the physical device that does DMA
-  * @irq:		irq line
-  * @regs:		memory mapped I/O space
-  * @idma64:		struct idma64 that is filed by idma64_probe()
-  */
- struct idma64_chip {
- 	struct device	*dev;
-+	struct device	*sysdev;
- 	int		irq;
- 	void __iomem	*regs;
- 	struct idma64	*idma64;
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index b6ddba833d02..5ea70f7d12e7 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1487,12 +1487,7 @@ static int pxa2xx_spi_get_port_id(struct acpi_device *adev)
- 
- static bool pxa2xx_spi_idma_filter(struct dma_chan *chan, void *param)
- {
--	struct device *dev = param;
--
--	if (dev != chan->device->dev->parent)
--		return false;
--
--	return true;
-+	return param == chan->device->dev;
- }
- 
- #endif /* CONFIG_PCI */
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index d31b975dd3fd..284e8d052fc3 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -365,7 +365,7 @@ static bool dw8250_fallback_dma_filter(struct dma_chan *chan, void *param)
- 
- static bool dw8250_idma_filter(struct dma_chan *chan, void *param)
- {
--	return param == chan->device->dev->parent;
-+	return param == chan->device->dev;
- }
- 
- /*
-@@ -434,7 +434,7 @@ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
- 		data->uart_16550_compatible = true;
- 	}
- 
--	/* Platforms with iDMA */
-+	/* Platforms with iDMA 64-bit */
- 	if (platform_get_resource_byname(to_platform_device(p->dev),
- 					 IORESOURCE_MEM, "lpss_priv")) {
- 		data->dma.rx_param = p->dev->parent;
--- 
-2.20.1
+Oh that's sad :-( I think this fell through the cracks on our side
+when someone left our team. Also turns out I'm not subscribed to
+igt-dev.
 
+I see you commented the same on one of the previous patches, and that
+there was some discussion of this on the test patches too.
+
+I have been referring to Microsoft's page[1] as "the" source for these
+formats, which does indeed call out Y410 as having 2 bits of alpha.
+Our GPU expects alpha.
+
+Was there a specific reason for opting to change the test instead of
+the definition? Any way to get this changed now?
+
+It doesn't seem that sensible for the kernel to call something Y410
+which doesn't match an "existing" definition by the same name. If
+alpha needs to be ignored on scanout, the alpha blend mode property
+can be used (more archaeology - I see that was still giving CRC
+failures, but that might be a "known issue" for all YUV on your HW?)
+
+-Brian
+
+[1] https://docs.microsoft.com/en-us/windows/desktop/medfound/10-bit-and-16=
+-bit-yuv-video-formats#444-formats
