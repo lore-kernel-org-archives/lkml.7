@@ -3,99 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E19C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C29C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D0E20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C157D20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfCRQzj convert rfc822-to-8bit (ORCPT
+        id S1727390AbfCRQ5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:55:39 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:42603 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfCRQzj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:55:39 -0400
-Received: from marcel-macpro.fritz.box (p4FEFC449.dip0.t-ipconnect.de [79.239.196.73])
-        by mail.holtmann.org (Postfix) with ESMTPSA id D9450CF172;
-        Mon, 18 Mar 2019 18:03:37 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH] Bluetooth: mediatek: fix uninitialized symbol errors in
- btmtksdio_rx_packet
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <8fb8e6840a39127112597963d665fbe6c21d8b91.1552509647.git.sean.wang@mediatek.com>
-Date:   Mon, 18 Mar 2019 17:55:37 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <93CB6259-6FB8-4D3D-9FF3-8EB59499A6A1@holtmann.org>
-References: <8fb8e6840a39127112597963d665fbe6c21d8b91.1552509647.git.sean.wang@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Mon, 18 Mar 2019 12:57:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50512 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726837AbfCRQ5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:57:11 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B6B9EF74D0;
+        Mon, 18 Mar 2019 16:57:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-17.rdu2.redhat.com [10.10.120.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BF0A660FAB;
+        Mon, 18 Mar 2019 16:57:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] vfs: Fix refcounting of filenames in fs_parser
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dhowells@redhat.com
+Date:   Mon, 18 Mar 2019 16:57:09 +0000
+Message-ID: <155292822993.1511.7755301484525814050.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 18 Mar 2019 16:57:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sean,
+Fix an overput in which filename_lookup() unconditionally drops a ref to
+the filename it was given, but this isn't taken account of in the caller,
+fs_lookup_param().
 
-> Fixed all the below warnings. They would probably cause the following
-> error handling path would use the uninitialized value and then produce
-> unexpected behavior.
-> 
-> drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_len’ may be used
-> uninitialized in this function [-Wmaybe-uninitialized]
->  print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
->  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->          old_data, old_len, true);
->          ~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/bluetooth/btmtksdio.c:376:15: note: ‘old_len’ was declared here
->  unsigned int old_len;
->               ^~~~~~~
-> drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_data’ may be used
-> uninitialized in this function [-Wmaybe-uninitialized]
->  print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
->  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->          old_data, old_len, true);
->          ~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/bluetooth/btmtksdio.c:375:17: note: ‘old_data’ was declared here
->  unsigned char *old_data;
->                 ^~~~~~~~
-> 
-> Fixes: d74eef2834b5 ("Bluetooth: mediatek: add support for MediaTek MT7663S and MT7668S SDIO devices")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Reported-by: Marcel Holtmann <marcel@holtmann.org>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
-> drivers/bluetooth/btmtksdio.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
-> index b4b8320f279e..23cf63888bac 100644
-> --- a/drivers/bluetooth/btmtksdio.c
-> +++ b/drivers/bluetooth/btmtksdio.c
-> @@ -372,8 +372,8 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
-> 	const struct h4_recv_pkt *pkts = mtk_recv_pkts;
-> 	int pkts_count = ARRAY_SIZE(mtk_recv_pkts);
-> 	struct mtkbtsdio_hdr *sdio_hdr;
-> -	unsigned char *old_data;
-> -	unsigned int old_len;
-> +	unsigned char *old_data = NULL;
-> +	unsigned int old_len = 0;
-> 	int err, i, pad_size;
-> 	struct sk_buff *skb;
-> 	u16 dlen;
+Addresses-Coverity-ID: 1443811 ("Use after free")
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-or instead just remove this whole old_len + old_data stuff anyway since it is rather pointless. Or at least introduce a proper error path for sdio_readsb since you know when it fails, there is no point in writing the SKB.
+ fs/fs_parser.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-Regards
-
-Marcel
+diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+index 842e8f749db6..be86703ec371 100644
+--- a/fs/fs_parser.c
++++ b/fs/fs_parser.c
+@@ -268,6 +268,7 @@ int fs_lookup_param(struct fs_context *fc,
+ 		return invalf(fc, "%s: not usable as path", param->key);
+ 	}
+ 
++	f->refcnt++; /* filename_lookup() drops our ref. */
+ 	ret = filename_lookup(param->dirfd, f, flags, _path, NULL);
+ 	if (ret < 0) {
+ 		errorf(fc, "%s: Lookup failure for '%s'", param->key, f->name);
 
