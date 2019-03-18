@@ -2,81 +2,354 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA35C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8FFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D53A620854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BDD20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbfCRRdq (ORCPT
+        id S1727603AbfCRReU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:33:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58654 "EHLO mx1.redhat.com"
+        Mon, 18 Mar 2019 13:34:20 -0400
+Received: from foss.arm.com ([217.140.101.70]:38702 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbfCRRdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:33:46 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 944DA3082E55;
-        Mon, 18 Mar 2019 17:33:45 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.34])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7FFE627CC2;
-        Mon, 18 Mar 2019 17:33:42 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 18 Mar 2019 18:33:45 +0100 (CET)
-Date:   Mon, 18 Mar 2019 18:33:41 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
-        Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2 4/6] powerpc: use common ptrace_syscall_enter hook to
- handle _TIF_SYSCALL_EMU
-Message-ID: <20190318173341.GD23521@redhat.com>
-References: <20190318104925.16600-1-sudeep.holla@arm.com>
- <20190318104925.16600-5-sudeep.holla@arm.com>
- <20190318172024.GB23521@redhat.com>
- <20190318172457.GD18196@e107155-lin>
+        id S1726720AbfCRReU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:34:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF737EBD;
+        Mon, 18 Mar 2019 10:34:19 -0700 (PDT)
+Received: from en101 (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 645533F614;
+        Mon, 18 Mar 2019 10:34:17 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 17:34:07 +0000
+From:   Suzuki K Poulose <Suzuki.Poulose@arm.com>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     zhengxiang9@huawei.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, james.morse@arm.com,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com,
+        lious.lilei@hisilicon.com, lishuo1@hisilicon.com,
+        suzuki.poulose@arm.com
+Subject: Re: [RFC] Question about TLB flush while set Stage-2 huge pages
+Message-ID: <20190318173405.GA31412@en101>
+References: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
+ <e2a94937-c324-e2d6-7e61-3f998e6e6e22@arm.com>
+ <1c0e07b9-73f0-efa4-c1b7-ad81789b42c5@huawei.com>
+ <5188e3b9-5b5a-a6a7-7ef0-09b7b4f06af6@arm.com>
+ <348d0b3b-c74b-7b39-ec30-85905c077c38@huawei.com>
+ <20190314105537.GA15323@en101>
+ <368bd218-ac1d-19b2-6e92-960b91afee8b@huawei.com>
+ <d322e126-4da2-6dfd-a86d-088dfb3bf0f4@huawei.com>
+ <6aea4049-7860-7144-a7be-14f856cdc789@arm.com>
+ <f6639daa-cfba-c65a-7320-c9dcc1ef8377@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190318172457.GD18196@e107155-lin>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6639daa-cfba-c65a-7320-c9dcc1ef8377@huawei.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 18 Mar 2019 17:33:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/18, Sudeep Holla wrote:
+Hi !
+On Sun, Mar 17, 2019 at 09:34:11PM +0800, Zenghui Yu wrote:
+> Hi Suzuki,
+> 
+> On 2019/3/15 22:56, Suzuki K Poulose wrote:
+> >Hi Zhengui,
+> 
+> s/Zhengui/Zheng/
+> 
+> (I think you must wanted to say "Hi" to Zheng :-) )
+> 
+
+Sorry about that.
+
+> 
+> I have looked into your patch and the kernel log, and I believe that
+> your patch had already addressed this issue. But I think we can do it
+> a little better - two more points need to be handled with caution.
+> 
+> Take PMD hugepage (PMD_SIZE == 2M) for example:
 >
-> On Mon, Mar 18, 2019 at 06:20:24PM +0100, Oleg Nesterov wrote:
+
+...
+
+> >Thats bad, we seem to be making upto 4 unbalanced put_page().
 > >
-> > Again, to me this patch just makes the code look worse. Honestly, I don't
-> > think that the new (badly named) ptrace_syscall_enter() hook makes any sense.
+> >>>>---
+> >>>>   virt/kvm/arm/mmu.c | 51
+> >>>>+++++++++++++++++++++++++++++++++++----------------
+> >>>>   1 file changed, 35 insertions(+), 16 deletions(-)
+> >>>>
+> >>>>diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> >>>>index 66e0fbb5..04b0f9b 100644
+> >>>>--- a/virt/kvm/arm/mmu.c
+> >>>>+++ b/virt/kvm/arm/mmu.c
+> >>>>@@ -1076,24 +1076,38 @@ static int stage2_set_pmd_huge(struct kvm
+> >>>>*kvm, struct kvm_mmu_memory_cache
+> >>>>            * Skip updating the page table if the entry is
+> >>>>            * unchanged.
+> >>>>            */
+> >>>>-        if (pmd_val(old_pmd) == pmd_val(*new_pmd))
+> >>>>+        if (pmd_val(old_pmd) == pmd_val(*new_pmd)) {
+> >>>>               return 0;
+> >>>>-
+> >>>>+        } else if (WARN_ON_ONCE(!pmd_thp_or_huge(old_pmd))) {
+> >>>>           /*
+> >>>>-         * Mapping in huge pages should only happen through a
+> >>>>-         * fault.  If a page is merged into a transparent huge
+> >>>>-         * page, the individual subpages of that huge page
+> >>>>-         * should be unmapped through MMU notifiers before we
+> >>>>-         * get here.
+> >>>>-         *
+> >>>>-         * Merging of CompoundPages is not supported; they
+> >>>>-         * should become splitting first, unmapped, merged,
+> >>>>-         * and mapped back in on-demand.
+> >>>>+         * If we have PTE level mapping for this block,
+> >>>>+         * we must unmap it to avoid inconsistent TLB
+> >>>>+         * state. We could end up in this situation if
+> >>>>+         * the memory slot was marked for dirty logging
+> >>>>+         * and was reverted, leaving PTE level mappings
+> >>>>+         * for the pages accessed during the period.
+> >>>>+         * Normal THP split/merge follows mmu_notifier
+> >>>>+         * callbacks and do get handled accordingly.
+> >>>>            */
+> >>>>-        VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
+> >>>>+            unmap_stage2_range(kvm, (addr & S2_PMD_MASK),
+> >>>>S2_PMD_SIZE);
+> 
+> First, using unmap_stage2_range() here is not quite appropriate. Suppose
+> we've only accessed one 2M page in HPA [x, x+1]Gib range, with other
+> pages unaccessed.  What will happen if unmap_stage2_range(this_2M_page)?
+> We'll unexpectedly reach clear_stage2_pud_entry(), and things are going
+> to get really bad.  So we'd better use unmap_stage2_ptes() here since we
+> only want to unmap a 2M range.
+
+Yes, you're right. If this PMD entry is the only entry in the parent PUD table,
+then the PUD table may get free'd and we may install the table in a place which
+is not plugged into the table.
+
+> 
+> 
+> Second, consider below function stack:
+> 
+>   unmap_stage2_ptes()
+>     clear_stage2_pmd_entry()
+>       put_page(virt_to_page(pmd))
+> 
+> It seems that we have one "redundant" put_page() here, (thus comes the
+> bad kernel log ... ,) but actually we do not.  By stage2_set_pmd_huge(),
+> the PMD table entry will then point to a 2M block (originally pointed
+> to a PTE table), the _refcount of this PMD-level table page should _not_
+> change after unmap_stage2_ptes().  So what we really should do is adding
+> a get_page() after unmapping to keep the _refcount a balance!
+
+Yes we need an additional refcount on the new huge pmd table, if we are
+tearing down the PTE level table.
+
+> 
+> 
+> thoughts ? A simple patch below (based on yours) for details.
+> 
+> 
+> thanks,
+> 
+> zenghui
+> 
+> 
+> >>
+> >>It seems that kvm decreases the _refcount of the page twice in
+> >>transparent_hugepage_adjust()
+> >>and unmap_stage2_range().
 > >
->
-> Worse because we end up reading current_thread_info->flags twice ?
+> >But I thought we should be doing that on the head_page already, as this is
+> >THP.
+> >I will take a look and get back to you on this. Btw, is it possible for you
+> >to turn on CONFIG_DEBUG_VM and re-run with the above patch ?
+> >
+> >Kind regards
+> >Suzuki
+> >
+> 
+> ---8<---
+> 
+> test: kvm: arm: Maybe two more fixes
+> 
+> Applied based on Suzuki's patch.
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  virt/kvm/arm/mmu.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index 05765df..ccd5d5d 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1089,7 +1089,9 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct
+> kvm_mmu_memory_cache
+>  		 * Normal THP split/merge follows mmu_notifier
+>  		 * callbacks and do get handled accordingly.
+>  		 */
+> -			unmap_stage2_range(kvm, (addr & S2_PMD_MASK), S2_PMD_SIZE);
+> +			addr &= S2_PMD_MASK;
+> +			unmap_stage2_ptes(kvm, pmd, addr, addr + S2_PMD_SIZE);
+> +			get_page(virt_to_page(pmd));
+>  		} else {
+> 
+>  			/*
+> @@ -1138,7 +1140,9 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct
+> kvm_mmu_memory_cache *cac
+>  	if (stage2_pud_present(kvm, old_pud)) {
+>  		/* If we have PTE level mapping, unmap the entire range */
+>  		if (WARN_ON_ONCE(!stage2_pud_huge(kvm, old_pud))) {
+> -			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
+> +			addr &= S2_PUD_MASK;
+> +			unmap_stage2_pmds(kvm, pudp, addr, addr + S2_PUD_SIZE);
+> +			get_page(virt_to_page(pudp));
+>  		} else {
+>  			stage2_pud_clear(kvm, pudp);
+>  			kvm_tlb_flush_vmid_ipa(kvm, addr);
 
-Mostly because in my opinion ptrace_syscall_enter() buys nothing but makes
-the caller's code less readable/understandable.
+This makes it a bit tricky to follow the code. The other option is to
+do something like :
 
-Sure, this is subjective.
 
-Oleg.
+---8>---
 
+kvm: arm: Fix handling of stage2 huge mappings
+
+We rely on the mmu_notifier call backs to handle the split/merging
+of huge pages and thus we are guaranteed that while creating a
+block mapping, the entire block is unmapped at stage2. However,
+we miss a case where the block mapping is split for dirty logging
+case and then could later be made block mapping, if we cancel the
+dirty logging. This not only creates inconsistent TLB entries for
+the pages in the the block, but also leakes the table pages for
+PMD level.
+
+Handle these corner cases for the huge mappings at stage2 by
+unmapping the PTE level mapping. This could potentially release
+the upper level table. So we need to restart the table walk
+once we unmap the range.
+
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ virt/kvm/arm/mmu.c | 57 +++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 41 insertions(+), 16 deletions(-)
+
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index fce0983..a38a3f1 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1060,25 +1060,41 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
+ {
+ 	pmd_t *pmd, old_pmd;
+ 
++retry:
+ 	pmd = stage2_get_pmd(kvm, cache, addr);
+ 	VM_BUG_ON(!pmd);
+ 
+ 	old_pmd = *pmd;
++	/*
++	 * Multiple vcpus faulting on the same PMD entry, can
++	 * lead to them sequentially updating the PMD with the
++	 * same value. Following the break-before-make
++	 * (pmd_clear() followed by tlb_flush()) process can
++	 * hinder forward progress due to refaults generated
++	 * on missing translations.
++	 *
++	 * Skip updating the page table if the entry is
++	 * unchanged.
++	 */
++	if (pmd_val(old_pmd) == pmd_val(*new_pmd))
++		return 0;
++
+ 	if (pmd_present(old_pmd)) {
+ 		/*
+-		 * Multiple vcpus faulting on the same PMD entry, can
+-		 * lead to them sequentially updating the PMD with the
+-		 * same value. Following the break-before-make
+-		 * (pmd_clear() followed by tlb_flush()) process can
+-		 * hinder forward progress due to refaults generated
+-		 * on missing translations.
+-		 *
+-		 * Skip updating the page table if the entry is
+-		 * unchanged.
++		 * If we already have PTE level mapping for this block,
++		 * we must unmap it to avoid inconsistent TLB
++		 * state. We could end up in this situation if
++		 * the memory slot was marked for dirty logging
++		 * and was reverted, leaving PTE level mappings
++		 * for the pages accessed during the period.
++		 * Normal THP split/merge follows mmu_notifier
++		 * callbacks and do get handled accordingly.
++		 * Unmap the PTE level mapping and retry.
+ 		 */
+-		if (pmd_val(old_pmd) == pmd_val(*new_pmd))
+-			return 0;
+-
++		if (!pmd_thp_or_huge(old_pmd)) {
++			unmap_stage2_range(kvm, (addr & S2_PMD_MASK), S2_PMD_SIZE);
++			goto retry;
++		}
+ 		/*
+ 		 * Mapping in huge pages should only happen through a
+ 		 * fault.  If a page is merged into a transparent huge
+@@ -1090,8 +1106,7 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
+ 		 * should become splitting first, unmapped, merged,
+ 		 * and mapped back in on-demand.
+ 		 */
+-		VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
+-
++		WARN_ON_ONCE(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
+ 		pmd_clear(pmd);
+ 		kvm_tlb_flush_vmid_ipa(kvm, addr);
+ 	} else {
+@@ -1107,6 +1122,7 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
+ {
+ 	pud_t *pudp, old_pud;
+ 
++retry:
+ 	pudp = stage2_get_pud(kvm, cache, addr);
+ 	VM_BUG_ON(!pudp);
+ 
+@@ -1122,8 +1138,17 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
+ 		return 0;
+ 
+ 	if (stage2_pud_present(kvm, old_pud)) {
+-		stage2_pud_clear(kvm, pudp);
+-		kvm_tlb_flush_vmid_ipa(kvm, addr);
++		/*
++		 * If we already have PTE level mapping, unmap the entire
++		 * range and retry.
++		 */
++		if (!stage2_pud_huge(kvm, old_pud)) {
++			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
++			goto retry;
++		} else {
++			stage2_pud_clear(kvm, pudp);
++			kvm_tlb_flush_vmid_ipa(kvm, addr);
++		}
+ 	} else {
+ 		get_page(virt_to_page(pudp));
+ 	}
+-- 
+2.7.4
+
+
+> -- 
+> 1.8.3.1
+> 
+> 
+> 
+> 
+> 
