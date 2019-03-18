@@ -2,96 +2,85 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208EAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F3CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF61E2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1699420863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552916567;
-	bh=yPy/EHnR+eRSRxO6OE5vwLK8mfQEKBt7xNCvAMl49RI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LA/tsHKAAG2nepuopr57AAcZDtYexhtVuqUrfuojWzk/KKeS4FSFli0KyYMD2zoKY
-	 K7wOt51a1tzm3majDJZ0wVStcZVf53x+fBQm+Cs0vqw1BNCCcEbJLbi3rlXRq3zpkY
-	 OOxDS3F11rp5ZW9jBDPqm0zRUIH7Ltt37WUGcjXM=
+	s=default; t=1552916700;
+	bh=1Wwod+whsqUcagQl48vEGXMXZQ+SS6Cc0KXBdKUtTyE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=01j06vr9BGrPzEAh+Ny9e9VMFmoVnhKEEG0cOE2OPbmMtFiKEuR7qbsPa6x1FSTkA
+	 Yl27NRT5rYMkSEp0BJW7WBZSJhqMmWTuGmWP3KqO/P2CAmcHTarTFSVwEPKqPQgFvw
+	 q0a3/yAMWLOCJE5hRkpkCobA2aTqQqo1o6YNqQ58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfCRNmp (ORCPT
+        id S1727203AbfCRNo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 09:42:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45066 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726356AbfCRNmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 09:42:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 83D40AD70;
-        Mon, 18 Mar 2019 13:42:43 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 14:42:42 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [External] Re: mm/cma.c: High latency for cma allocation
-Message-ID: <20190318134242.GI8924@dhcp22.suse.cz>
-References: <SG2PR02MB3098E44824F5AA69BC04F935E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <20190318130757.GG8924@dhcp22.suse.cz>
- <SG2PR02MB309886996889791555D5B53EE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
+        Mon, 18 Mar 2019 09:44:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbfCRNo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 09:44:58 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE0A42085A;
+        Mon, 18 Mar 2019 13:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552916698;
+        bh=1Wwod+whsqUcagQl48vEGXMXZQ+SS6Cc0KXBdKUtTyE=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=A09Crn0y5HscSpvFHXqu8pQl5KWopahcNrjBNkjYdBq4pIA0+lXubfVmRCTlml0Pz
+         et4Zk6ufRoxhgIfFWi1PRXUlndUvVQcUoMBTWxCzhZlvkv5m8MCv6SiZwl7lQfQ3Zd
+         zSWpLQqR3HnAgjhvHtjZNesUb3a3PDK6d2WJnpuU=
+Date:   Mon, 18 Mar 2019 14:44:54 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Simon Gene Gottlieb <simon@gottliebtfreitag.de>
+Subject: Re: [PATCH] HID: steam: fix deadlock with input devices.
+In-Reply-To: <20190315190910.4602-1-rodrigorivascosta@gmail.com>
+Message-ID: <nycvar.YFH.7.76.1903181444420.19912@cbobk.fhfr.pm>
+References: <20190315190910.4602-1-rodrigorivascosta@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SG2PR02MB309886996889791555D5B53EE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Please do not use html emails to the mailing list and try to fix your
-email client to not break quoating. Fixed for this email]
+On Fri, 15 Mar 2019, Rodrigo Rivas Costa wrote:
 
-On Mon 18-03-19 13:28:50, Pankaj Suryawanshi wrote:
-> On Mon 18-03-19 12:58:28, Pankaj Suryawanshi wrote:
-> > > Hello,
-> > >
-> > > I am facing issue of high latency in CMA allocation of large size buffer.
-> > >
-> > > I am frequently allocating/deallocation CMA memory, latency of allocation is very high.
-> > >
-> > > Below are the stat for allocation/deallocation latency issue.
-> > >
-> > > (390100 kB),  latency 29997 us
-> > > (390100 kB),  latency 22957 us
-> > > (390100 kB),  latency 25735 us
-> > > (390100 kB),  latency 12736 us
-> > > (390100 kB),  latency 26009 us
-> > > (390100 kB),  latency 18058 us
-> > > (390100 kB),  latency 27997 us
-> > > (16 kB), latency 560 us
-> > > (256 kB), latency 280 us
-> > > (4 kB), latency 311 us
-> > >
-> > > I am using kernel 4.14.65 with android pie(9.0).
-> > >
-> > > Is there any workaround or solution for this(cma_alloc latency) issue ?
-> > 
-> > Do you have any more detailed information on where the time is spent?
-> > E.g. migration tracepoints?
-> > 
-> > Hello Michal,
+> When using this driver with the wireless dongle and some usermode
+> program that monitors every input device (acpid, for example), while
+> another usermode client opens and closes the low-level device
+> repeadedly, the system eventually deadlocks.
 > 
-> I have the system(vanilla kernel) with 2GB of RAM, reserved 1GB for CMA. No swap or zram.
-> Sorry, I don't have information where the time is spent.
-> time is calculated in between cma_alloc call.
-> I have just cma_alloc trace information/function graph.
+> The reason is that steam_input_register_device() must not be called with
+> the mutex held, because the input subsystem has its own synchronization
+> that clashes with this one: it is possible that steam_input_open() is
+> called before input_register_device() returns, and since
+> steam_input_open() needs to lock the mutex, it deadlocks.
+> 
+> However we must hold the mutex when calling any function that sends
+> commands to the controller. If not, random commands end up falling fail.
+> 
+> Reported-by: Simon Gene Gottlieb <simon@gottliebtfreitag.de>
+> Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+> Tested-by: Simon Gene Gottlieb <simon@gottliebtfreitag.de>
 
-Then please collect that data because it is really hard to judge
-anything from the numbers you have provided.
+Applied to for-5.1/upstream-fixes, thanks.
+
 -- 
-Michal Hocko
+Jiri Kosina
 SUSE Labs
+
