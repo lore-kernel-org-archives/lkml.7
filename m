@@ -3,44 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C7CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B133AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615BC204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5E22075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfCRJwc (ORCPT
+        id S1727645AbfCRJxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:52:32 -0400
-Received: from mga05.intel.com ([192.55.52.43]:18074 "EHLO mga05.intel.com"
+        Mon, 18 Mar 2019 05:53:20 -0400
+Received: from mga05.intel.com ([192.55.52.43]:18129 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbfCRJwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:52:30 -0400
+        id S1726691AbfCRJxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:53:19 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 02:52:28 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 02:53:18 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,493,1544515200"; 
-   d="scan'208";a="329585949"
+   d="scan'208";a="127898182"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Mar 2019 02:52:27 -0700
+  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2019 02:53:17 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 7EFBB11F; Mon, 18 Mar 2019 11:52:26 +0200 (EET)
+        id 6D58817F; Mon, 18 Mar 2019 11:53:16 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] extcon: mrfld: Introduce extcon driver for Basin Cove PMIC
-Date:   Mon, 18 Mar 2019 12:52:25 +0300
-Message-Id: <20190318095225.69200-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] mfd: Add support for Merrifield Basin Cove PMIC
+Date:   Mon, 18 Mar 2019 12:53:16 +0300
+Message-Id: <20190318095316.69278-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190318095225.69200-1-andriy.shevchenko@linux.intel.com>
-References: <20190318095225.69200-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,308 +44,302 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TBD
+Add an mfd driver for Intel Merrifield Basin Cove PMIC.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/extcon/Kconfig              |   7 +
- drivers/extcon/Makefile             |   1 +
- drivers/extcon/extcon-intel-mrfld.c | 256 ++++++++++++++++++++++++++++
- 3 files changed, 264 insertions(+)
- create mode 100644 drivers/extcon/extcon-intel-mrfld.c
+ drivers/mfd/Kconfig                      |  11 ++
+ drivers/mfd/Makefile                     |   1 +
+ drivers/mfd/intel_soc_pmic_mrfld.c       | 157 +++++++++++++++++++++++
+ include/linux/mfd/intel_soc_pmic_mrfld.h |  81 ++++++++++++
+ 4 files changed, 250 insertions(+)
+ create mode 100644 drivers/mfd/intel_soc_pmic_mrfld.c
+ create mode 100644 include/linux/mfd/intel_soc_pmic_mrfld.h
 
-diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-index 8e17149655f0..75349c6cc89e 100644
---- a/drivers/extcon/Kconfig
-+++ b/drivers/extcon/Kconfig
-@@ -60,6 +60,13 @@ config EXTCON_INTEL_CHT_WC
- 	  Say Y here to enable extcon support for charger detection / control
- 	  on the Intel Cherrytrail Whiskey Cove PMIC.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 0ce2d8dfc5f1..2adf9d393029 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -572,6 +572,17 @@ config INTEL_SOC_PMIC_CHTDC_TI
+ 	  Select this option for supporting Dollar Cove (TI version) PMIC
+ 	  device that is found on some Intel Cherry Trail systems.
  
-+config EXTCON_INTEL_MRFLD
-+	tristate "Intel MErrifield Basin Cove PMIC extcon driver"
-+	depends on INTEL_SOC_PMIC_MRFLD
++config INTEL_SOC_PMIC_MRFLD
++	tristate "Support for Intel Merrifield Basin Cove PMIC"
++	depends on GPIOLIB
++	depends on ACPI
++	depends on INTEL_SCU_IPC
++	select MFD_CORE
++	select REGMAP_IRQ
 +	help
-+	  Say Y here to enable extcon support for charger detection / control
-+	  on the Intel Merrifiel Basin Cove PMIC.
++	  Select this option for supporting Basin Cove PMIC device
++	  that is found on Intel Merrifield systems.
 +
- config EXTCON_MAX14577
- 	tristate "Maxim MAX14577/77836 EXTCON Support"
- 	depends on MFD_MAX14577
-diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-index 261ce4cfe209..d3941a735df3 100644
---- a/drivers/extcon/Makefile
-+++ b/drivers/extcon/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_EXTCON_AXP288)	+= extcon-axp288.o
- obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
- obj-$(CONFIG_EXTCON_INTEL_INT3496) += extcon-intel-int3496.o
- obj-$(CONFIG_EXTCON_INTEL_CHT_WC) += extcon-intel-cht-wc.o
-+obj-$(CONFIG_EXTCON_INTEL_MRFLD) += extcon-intel-mrfld.o
- obj-$(CONFIG_EXTCON_MAX14577)	+= extcon-max14577.o
- obj-$(CONFIG_EXTCON_MAX3355)	+= extcon-max3355.o
- obj-$(CONFIG_EXTCON_MAX77693)	+= extcon-max77693.o
-diff --git a/drivers/extcon/extcon-intel-mrfld.c b/drivers/extcon/extcon-intel-mrfld.c
+ config MFD_INTEL_LPSS
+ 	tristate
+ 	select COMMON_CLK
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index b4569ed7f3f3..1b746bd01ac5 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -234,6 +234,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
++obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
+ obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
+ 
+ obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
 new file mode 100644
-index 000000000000..d45db4975b5f
+index 000000000000..bbee89c0c25b
 --- /dev/null
-+++ b/drivers/extcon/extcon-intel-mrfld.c
-@@ -0,0 +1,256 @@
++++ b/drivers/mfd/intel_soc_pmic_mrfld.c
+@@ -0,0 +1,157 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Extcon driver for Basin Cove PMIC
++ * Device access for Basin Cove PMIC
 + *
 + * Copyright (c) 2018, Intel Corporation.
 + * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 + */
 +
-+#include <linux/extcon-provider.h>
++#include <linux/acpi.h>
 +#include <linux/interrupt.h>
++#include <linux/mfd/core.h>
 +#include <linux/mfd/intel_soc_pmic.h>
 +#include <linux/mfd/intel_soc_pmic_mrfld.h>
-+#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
 +#include <linux/regmap.h>
 +
-+#include "extcon-intel.h"
++#include <asm/intel_scu_ipc.h>
 +
-+#define BCOVE_USBIDCTRL			0x19
-+#define BCOVE_USBIDCTRL_ID		BIT(0)
-+#define BCOVE_USBIDCTRL_ACA		BIT(1)
-+#define BCOVE_USBIDCTRL_ALL	(BCOVE_USBIDCTRL_ID | BCOVE_USBIDCTRL_ACA)
-+
-+#define BCOVE_USBIDSTS			0x1a
-+#define BCOVE_USBIDSTS_GND		BIT(0)
-+#define BCOVE_USBIDSTS_RARBRC_MASK	GENMASK(2, 1)
-+#define BCOVE_USBIDSTS_RARBRC_SHIFT	1
-+#define BCOVE_USBIDSTS_NO_ACA		0
-+#define BCOVE_USBIDSTS_R_ID_A		1
-+#define BCOVE_USBIDSTS_R_ID_B		2
-+#define BCOVE_USBIDSTS_R_ID_C		3
-+#define BCOVE_USBIDSTS_FLOAT		BIT(3)
-+#define BCOVE_USBIDSTS_SHORT		BIT(4)
-+
-+#define BCOVE_CHGRIRQ_ALL	(BCOVE_CHGRIRQ_VBUSDET | BCOVE_CHGRIRQ_DCDET | \
-+				 BCOVE_CHGRIRQ_BATTDET | BCOVE_CHGRIRQ_USBIDDET)
-+
-+#define BCOVE_CHGRCTRL0			0x4b
-+#define BCOVE_CHGRCTRL0_CHGRRESET	BIT(0)
-+#define BCOVE_CHGRCTRL0_EMRGCHREN	BIT(1)
-+#define BCOVE_CHGRCTRL0_EXTCHRDIS	BIT(2)
-+#define BCOVE_CHGRCTRL0_SWCONTROL	BIT(3)
-+#define BCOVE_CHGRCTRL0_TTLCK		BIT(4)
-+#define BCOVE_CHGRCTRL0_BIT_5		BIT(5)
-+#define BCOVE_CHGRCTRL0_BIT_6		BIT(6)
-+#define BCOVE_CHGRCTRL0_CHR_WDT_NOKICK	BIT(7)
-+
-+struct mrfld_extcon_data {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct extcon_dev *edev;
-+	unsigned int status;
-+	unsigned int id;
++/*
++ * Level 2 IRQs
++ *
++ * Firmware on the systems with Basin Cove PMIC services Level 1 IRQs
++ * without an assistance. Thus, each of the Level 1 IRQ is represented
++ * as a separate RTE in IOAPIC.
++ */
++static struct resource irq_level2_resources[] = {
++	DEFINE_RES_IRQ(0), /* power button */
++	DEFINE_RES_IRQ(0), /* TMU */
++	DEFINE_RES_IRQ(0), /* thermal */
++	DEFINE_RES_IRQ(0), /* BCU */
++	DEFINE_RES_IRQ(0), /* ADC */
++	DEFINE_RES_IRQ(0), /* charger */
++	DEFINE_RES_IRQ(0), /* GPIO */
 +};
 +
-+static const unsigned int mrfld_extcon_cable[] = {
-+	EXTCON_USB,
-+	EXTCON_USB_HOST,
-+	EXTCON_CHG_USB_SDP,
-+	EXTCON_CHG_USB_CDP,
-+	EXTCON_CHG_USB_DCP,
-+	EXTCON_CHG_USB_ACA,
-+	EXTCON_NONE,
++static const struct mfd_cell bcove_dev[] = {
++	{
++		.name = "mrfld_bcove_pwrbtn",
++		.num_resources = 1,
++		.resources = &irq_level2_resources[0],
++	}, {
++		.name = "mrfld_bcove_tmu",
++		.num_resources = 1,
++		.resources = &irq_level2_resources[1],
++	}, {
++		.name = "mrfld_bcove_thermal",
++		.num_resources = 1,
++		.resources = &irq_level2_resources[2],
++	}, {
++		.name = "mrfld_bcove_bcu",
++		.num_resources = 1,
++		.resources = &irq_level2_resources[3],
++	}, {
++		.name = "mrfld_bcove_adc",
++		.num_resources = 1,
++		.resources = &irq_level2_resources[4],
++	}, {
++		.name = "mrfld_bcove_charger",
++		.num_resources = 1,
++		.resources = &irq_level2_resources[5],
++	}, {
++		.name = "mrfld_bcove_extcon",
++		.num_resources = 1,
++		.resources = &irq_level2_resources[5],
++	}, {
++		.name = "mrfld_bcove_gpio",
++		.num_resources = 1,
++		.resources = &irq_level2_resources[6],
++	},
++	{	.name = "mrfld_bcove_region", },
 +};
 +
-+static int mrfld_extcon_clear(struct mrfld_extcon_data *data, unsigned int reg,
-+			      unsigned int mask)
++static int regmap_ipc_byte_reg_read(void *context, unsigned int reg,
++				    unsigned int *val)
 +{
-+	return regmap_update_bits(data->regmap, reg, mask, 0x00);
-+}
-+
-+static int mrfld_extcon_set(struct mrfld_extcon_data *data, unsigned int reg,
-+			    unsigned int mask)
-+{
-+	return regmap_update_bits(data->regmap, reg, mask, 0xff);
-+}
-+
-+static int mrfld_extcon_get_id(struct mrfld_extcon_data *data)
-+{
-+	struct regmap *regmap = data->regmap;
-+	unsigned int id;
-+	bool ground;
++	u8 ipc_out;
 +	int ret;
 +
-+	ret = regmap_read(regmap, BCOVE_USBIDSTS, &id);
++	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
 +	if (ret)
 +		return ret;
 +
-+	if (id & BCOVE_USBIDSTS_FLOAT)
-+		return INTEL_USB_ID_FLOAT;
-+
-+	switch ((id & BCOVE_USBIDSTS_RARBRC_MASK) >> BCOVE_USBIDSTS_RARBRC_SHIFT) {
-+	case BCOVE_USBIDSTS_R_ID_A:
-+		return INTEL_USB_RID_A;
-+	case BCOVE_USBIDSTS_R_ID_B:
-+		return INTEL_USB_RID_B;
-+	case BCOVE_USBIDSTS_R_ID_C:
-+		return INTEL_USB_RID_C;
-+	}
-+
-+	/*
-+	 * PMIC A0 reports USBIDSTS_GND = 1 for ID_GND,
-+	 * but PMIC B0 reports USBIDSTS_GND = 0 for ID_GND.
-+	 * Thus we must check this bit at last.
-+	 */
-+	ground = id & BCOVE_USBIDSTS_GND;
-+	switch ('A' + BCOVE_MAJOR(data->id)) {
-+	case 'A':
-+		return ground ? INTEL_USB_ID_GND : INTEL_USB_ID_FLOAT;
-+	case 'B':
-+		return ground ? INTEL_USB_ID_FLOAT : INTEL_USB_ID_GND;
-+	}
-+
-+	/* Unknown or unsupported type */
-+	return INTEL_USB_ID_FLOAT;
++	*val = ipc_out;
++	return 0;
 +}
 +
-+static int mrfld_extcon_role_detect(struct mrfld_extcon_data *data)
++static int regmap_ipc_byte_reg_write(void *context, unsigned int reg,
++				     unsigned int val)
 +{
-+	unsigned int id;
-+	bool usb_host;
++	u8 ipc_in = val;
 +	int ret;
 +
-+	ret = mrfld_extcon_get_id(data);
-+	if (ret < 0)
++	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
++	if (ret)
 +		return ret;
-+
-+	id = ret;
-+
-+	usb_host = (id == INTEL_USB_ID_GND) || (id == INTEL_USB_RID_A);
-+	extcon_set_state_sync(data->edev, EXTCON_USB_HOST, usb_host);
 +
 +	return 0;
 +}
 +
-+static int mrfld_extcon_cable_detect(struct mrfld_extcon_data *data)
-+{
-+	struct regmap *regmap = data->regmap;
-+	unsigned int status;
-+	int ret;
++static const struct regmap_config bcove_regmap_config = {
++	.reg_bits = 16,
++	.val_bits = 8,
++	.max_register = 0xff,
++	.reg_write = regmap_ipc_byte_reg_write,
++	.reg_read = regmap_ipc_byte_reg_read,
++};
 +
-+	/*
-+	 * It seems SCU firmware clears the content of BCOVE_CHGRIRQ1
-+	 * and makes it useless for OS. Instead we compare a previously
-+	 * stored status to the current one, provided by BCOVE_SCHGRIRQ1.
-+	 */
-+	ret = regmap_read(regmap, BCOVE_SCHGRIRQ1, &status);
-+	if (ret)
-+		return ret;
-+
-+	if (!(status ^ data->status))
-+		return -ENODATA;
-+
-+	if ((status ^ data->status) & BCOVE_CHGRIRQ_USBIDDET)
-+		ret = mrfld_extcon_role_detect(data);
-+
-+	data->status = status;
-+	return ret;
-+}
-+
-+static irqreturn_t mrfld_extcon_interrupt(int irq, void *dev_id)
-+{
-+	struct mrfld_extcon_data *data = dev_id;
-+	int ret;
-+
-+	ret = mrfld_extcon_cable_detect(data);
-+
-+	mrfld_extcon_clear(data, BCOVE_MIRQLVL1, BCOVE_LVL1_CHGR);
-+
-+	return ret ? IRQ_NONE: IRQ_HANDLED;
-+}
-+
-+static int mrfld_extcon_probe(struct platform_device *pdev)
++static int bcove_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
-+	struct regmap *regmap = pmic->regmap;
-+	struct mrfld_extcon_data *data;
-+	unsigned int id;
-+	int irq, ret;
++	struct intel_soc_pmic *pmic;
++	unsigned int i;
++	int ret;
 +
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
++	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
++	if (!pmic)
 +		return -ENOMEM;
 +
-+	data->dev = dev;
-+	data->regmap = regmap;
++	platform_set_drvdata(pdev, pmic);
++	pmic->dev = &pdev->dev;
 +
-+	data->edev = devm_extcon_dev_allocate(dev, mrfld_extcon_cable);
-+	if (IS_ERR(data->edev))
-+		return -ENOMEM;
++	pmic->regmap = devm_regmap_init(dev, NULL, pmic, &bcove_regmap_config);
++	if (IS_ERR(pmic->regmap))
++		return PTR_ERR(pmic->regmap);
 +
-+	ret = devm_extcon_dev_register(dev, data->edev);
-+	if (ret < 0) {
-+		dev_err(dev, "can't register extcon device: %d\n", ret);
-+		return ret;
++	for (i = 0; i < ARRAY_SIZE(irq_level2_resources); i++) {
++		ret = platform_get_irq(pdev, i);
++		if (ret < 0)
++			return ret;
++
++		irq_level2_resources[i].start = ret;
++		irq_level2_resources[i].end = ret;
 +	}
 +
-+	ret = devm_request_threaded_irq(dev, irq, NULL, mrfld_extcon_interrupt,
-+					IRQF_ONESHOT | IRQF_SHARED, pdev->name,
-+					data);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(regmap, BCOVE_ID, &id);
-+	if (ret)
-+		return ret;
-+
-+	data->id = id;
-+
-+	mrfld_extcon_set(data, BCOVE_CHGRCTRL0, BCOVE_CHGRCTRL0_SWCONTROL);
-+
-+	/* Get initial state */
-+	mrfld_extcon_role_detect(data);
-+
-+	mrfld_extcon_clear(data, BCOVE_MIRQLVL1, BCOVE_LVL1_CHGR);
-+	mrfld_extcon_clear(data, BCOVE_MCHGRIRQ1, BCOVE_CHGRIRQ_ALL);
-+
-+	mrfld_extcon_set(data, BCOVE_USBIDCTRL, BCOVE_USBIDCTRL_ALL);
-+
-+	platform_set_drvdata(pdev, data);
-+	return 0;
++	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
++				    bcove_dev, ARRAY_SIZE(bcove_dev),
++				    NULL, 0, NULL);
 +}
 +
-+static int mrfld_extcon_remove(struct platform_device *pdev)
-+{
-+	struct mrfld_extcon_data *data = platform_get_drvdata(pdev);
-+
-+	mrfld_extcon_clear(data, BCOVE_CHGRCTRL0, BCOVE_CHGRCTRL0_SWCONTROL);
-+	return 0;
-+}
-+
-+static const struct platform_device_id mrfld_extcon_id_table[] = {
-+	{ .name = "mrfld_bcove_extcon" },
++static const struct acpi_device_id bcove_acpi_ids[] = {
++	{ "INTC100E" },
 +	{}
 +};
-+MODULE_DEVICE_TABLE(platform, mrfld_extcon_id_table);
++MODULE_DEVICE_TABLE(acpi, bcove_acpi_ids);
 +
-+static struct platform_driver mrfld_extcon_driver = {
++static struct platform_driver bcove_driver = {
 +	.driver = {
-+		.name	= KBUILD_MODNAME,
++		.name = "intel_soc_pmic_mrfld",
++		.acpi_match_table = bcove_acpi_ids,
 +	},
-+	.probe		= mrfld_extcon_probe,
-+	.remove		= mrfld_extcon_remove,
-+	.id_table	= mrfld_extcon_id_table,
++	.probe = bcove_probe,
 +};
-+module_platform_driver(mrfld_extcon_driver);
++module_platform_driver(bcove_driver);
 +
-+MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
-+MODULE_DESCRIPTION("Extcon driver for Basin Cove PMIC");
++MODULE_DESCRIPTION("IPC driver for Intel SoC Basin Cove PMIC");
 +MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mfd/intel_soc_pmic_mrfld.h b/include/linux/mfd/intel_soc_pmic_mrfld.h
+new file mode 100644
+index 000000000000..00feed7c2787
+--- /dev/null
++++ b/include/linux/mfd/intel_soc_pmic_mrfld.h
+@@ -0,0 +1,81 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Header file for Intel Merrifield Basin Cove PMIC
++ *
++ * Copyright (C) 2018 Intel Corporation. All rights reserved.
++ */
++
++#ifndef __INTEL_SOC_PMIC_MRFLD_H__
++#define __INTEL_SOC_PMIC_MRFLD_H__
++
++#include <linux/bits.h>
++
++#define BCOVE_ID		0x00
++
++#define BCOVE_ID_MINREV0	GENMASK(2, 0)
++#define BCOVE_ID_MAJREV0	GENMASK(5, 3)
++#define BCOVE_ID_VENDID0	GENMASK(7, 6)
++
++#define BCOVE_MINOR(x)		(unsigned int)(((x) & BCOVE_ID_MINREV0) >> 0)
++#define BCOVE_MAJOR(x)		(unsigned int)(((x) & BCOVE_ID_MAJREV0) >> 3)
++#define BCOVE_VENDOR(x)		(unsigned int)(((x) & BCOVE_ID_VENDID0) >> 6)
++
++#define BCOVE_IRQLVL1		0x01
++
++#define BCOVE_PBIRQ		0x02
++#define BCOVE_TMUIRQ		0x03
++#define BCOVE_THRMIRQ		0x04
++#define BCOVE_BCUIRQ		0x05
++#define BCOVE_ADCIRQ		0x06
++#define BCOVE_CHGRIRQ0		0x07
++#define BCOVE_CHGRIRQ1		0x08
++#define BCOVE_GPIOIRQ		0x09
++#define BCOVE_CRITIRQ		0x0B
++
++#define BCOVE_MIRQLVL1		0x0C
++
++#define BCOVE_MPBIRQ		0x0D
++#define BCOVE_MTMUIRQ		0x0E
++#define BCOVE_MTHRMIRQ		0x0F
++#define BCOVE_MBCUIRQ		0x10
++#define BCOVE_MADCIRQ		0x11
++#define BCOVE_MCHGRIRQ0		0x12
++#define BCOVE_MCHGRIRQ1		0x13
++#define BCOVE_MGPIOIRQ		0x14
++#define BCOVE_MCRITIRQ		0x16
++
++#define BCOVE_SCHGRIRQ0		0x4E
++#define BCOVE_SCHGRIRQ1		0x4F
++
++/* Level 1 IRQs */
++#define BCOVE_LVL1_PWRBTN	BIT(0)	/* power button */
++#define BCOVE_LVL1_TMU		BIT(1)	/* time management unit */
++#define BCOVE_LVL1_THRM		BIT(2)	/* thermal */
++#define BCOVE_LVL1_BCU		BIT(3)	/* burst control unit */
++#define BCOVE_LVL1_ADC		BIT(4)	/* ADC */
++#define BCOVE_LVL1_CHGR		BIT(5)	/* charger */
++#define BCOVE_LVL1_GPIO		BIT(6)	/* GPIO */
++#define BCOVE_LVL1_CRIT		BIT(7)	/* critical event */
++
++/* Level 2 IRQs: power button */
++#define BCOVE_PBIRQ_PBTN	BIT(0)
++#define BCOVE_PBIRQ_UBTN	BIT(1)
++
++/* Level 2 IRQs: ADC */
++#define BCOVE_ADCIRQ_BATTEMP	BIT(2)
++#define BCOVE_ADCIRQ_SYSTEMP	BIT(3)
++#define BCOVE_ADCIRQ_BATTID	BIT(4)
++#define BCOVE_ADCIRQ_VIBATT	BIT(5)
++#define BCOVE_ADCIRQ_CCTICK	BIT(7)
++
++/* Level 2 IRQs: charger */
++#define BCOVE_CHGRIRQ_BAT0ALRT	BIT(4)
++#define BCOVE_CHGRIRQ_BAT1ALRT	BIT(5)
++#define BCOVE_CHGRIRQ_BATCRIT	BIT(6)
++
++#define BCOVE_CHGRIRQ_VBUSDET	BIT(0)
++#define BCOVE_CHGRIRQ_DCDET	BIT(1)
++#define BCOVE_CHGRIRQ_BATTDET	BIT(2)
++#define BCOVE_CHGRIRQ_USBIDDET	BIT(3)
++
++#endif	/* __INTEL_SOC_PMIC_MRFLD_H__ */
 -- 
 2.20.1
 
