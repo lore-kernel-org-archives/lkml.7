@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25F7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D6CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC5C2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4BC120857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552894471;
-	bh=gZK/oQQyMg7LNOvSl8TXPpLQkaVJcRwcuBuQ2Sv23Qg=;
+	s=default; t=1552894474;
+	bh=nAAo/1LX2vXq7A+NRWcsLlsTs41CH3ARrF4ZrQWe5aE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DTVzjppNuYRclYyytwzdxAgsTp+LWn9hBrs4JOoXDm2OSkS9nCYIxOLjtpZjOj0Pl
-	 euZf97FZ85zo0Cx4iUkZUxBzn0aXFWj6UfgiLHqAp/vQWuwOI0iWhSeWFicWC7QIXl
-	 GrEDRIBhlLmv/1alHn3hEJBTvHaHOzE3fPjtkzpE=
+	b=NlQEH6PDlSBSWhXFbfN/5HqMx0dqUsPjldmCxPWvZ0WPS91o3zobTsPWE9EPvYjZg
+	 ZRK38vSxsqr1QFCfaUyUSvy3G9VOH1vgRlkMGHagrxAbayFVlzpw7NjfUTX2Po3fGv
+	 tz+4vMMA8QD/gWj+3EiTG2KOh4MRmwMX2U6xvOQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfCRHeQ (ORCPT
+        id S1727537AbfCRHed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 03:34:16 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:40880 "EHLO
+        Mon, 18 Mar 2019 03:34:33 -0400
+Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:40928 "EHLO
         wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbfCRHeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 03:34:14 -0400
+        id S1727182AbfCRHeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 03:34:15 -0400
 Received: by wens.csie.org (Postfix, from userid 1000)
-        id F24A35F9F2; Mon, 18 Mar 2019 15:34:11 +0800 (CST)
+        id 18D7D5FDF4; Mon, 18 Mar 2019 15:34:12 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>
 Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] nvmem: sunxi_sid: Read out SID for randomness without looping
-Date:   Mon, 18 Mar 2019 15:33:49 +0800
-Message-Id: <20190318073354.12151-2-wens@kernel.org>
+Subject: [PATCH 6/6] ARM: dts: sunxi: h3/h5: Add device node for SID
+Date:   Mon, 18 Mar 2019 15:33:54 +0800
+Message-Id: <20190318073354.12151-7-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190318073354.12151-1-wens@kernel.org>
 References: <20190318073354.12151-1-wens@kernel.org>
@@ -49,40 +49,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Since the reg_read callbacks already support arbitrary, but 4-byte
-aligned. offsets and lengths into the SID, there is no need for another
-for loop just to use it to read 1 byte at a time.
-
-Read out the whole SID block in one go.
+The device tree binding already lists compatible strings for these two
+SoCs. Add a device node for them.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/nvmem/sunxi_sid.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun8i-h3.dtsi              | 4 ++++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi           | 5 +++++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 4 ++++
+ 3 files changed, 13 insertions(+)
 
-diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-index 570a2e354f30..704c35edf796 100644
---- a/drivers/nvmem/sunxi_sid.c
-+++ b/drivers/nvmem/sunxi_sid.c
-@@ -154,7 +154,7 @@ static int sunxi_sid_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	struct nvmem_device *nvmem;
- 	struct sunxi_sid *sid;
--	int i, size;
-+	int size;
- 	char *randomness;
- 	const struct sunxi_sid_cfg *cfg;
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 959d265e7254..e37c30e811d3 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -231,3 +231,7 @@
+ &rtc {
+ 	compatible = "allwinner,sun8i-h3-rtc";
+ };
++
++&sid {
++	compatible = "allwinner,sun8i-h3-sid";
++};
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index d74a6cbbfdf4..e2100b673a51 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -227,6 +227,11 @@
+ 			#size-cells = <0>;
+ 		};
  
-@@ -189,8 +189,7 @@ static int sunxi_sid_probe(struct platform_device *pdev)
- 	if (!randomness)
- 		return -ENOMEM;
- 
--	for (i = 0; i < size; i++)
--		econfig.reg_read(sid, i, &randomness[i], 1);
-+	econfig.reg_read(sid, 0, randomness, size);
- 
- 	add_device_randomness(randomness, size);
- 	kfree(randomness);
++		sid: eeprom@1c14000 {
++			/* compatible and clocks are in per SoC .dtsi file */
++			reg = <0x1c14000 0x400>;
++		};
++
+ 		usb_otg: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-h3-musb";
+ 			reg = <0x01c19000 0x400>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index 96acafd3a852..f002a496d7cb 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -209,3 +209,7 @@
+ &rtc {
+ 	compatible = "allwinner,sun50i-h5-rtc";
+ };
++
++&sid {
++	compatible = "allwinner,sun50i-h5-sid";
++};
 -- 
 2.20.1
 
