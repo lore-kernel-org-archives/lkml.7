@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC66C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361EAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 369942082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D138A2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552891430;
-	bh=azu/0fVukc9Evn8KMSrx0qamlf7DkV0bn/SCkDfbJvk=;
+	s=default; t=1552891442;
+	bh=IStbavUVXwjX+fa1gjQK0L4DaQesgl9LQUeLjPM9Wpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cIKny0K+lWlegMlHvnB7uuE5gT9ZmT5XSTNldUCve8oqeL8DFhjmvMC6r8VyV23B/
-	 yMXFvaqTZ+OzMWQH/po0vME6LoHIpysvU0lmK9alRw8h/YiMiYqCPXIhjQXQ8nOLkp
-	 tQxFr9e8oJxvqjsgF7yEsuAv8889uYUOp/S52z0o=
+	b=SSLeDr62gG1sfvWnw8v2H1wlPwjm9rrvt5ijvg9rqlIc5vjKX8yX1OusmQPCvqrXc
+	 xdCbqEbMVGfsuAt9/zOZ3K2Kx5R01aUJNvxvwlEWAjY8mR/lieFAv7F89OlFM4zGU1
+	 Wu5WJjq2Sd37dBTzOUE9QFiBOsxEhdm8T3p6lS9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfCRGns (ORCPT
+        id S1727914AbfCRGoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 02:43:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 02:44:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727188AbfCRGns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 02:43:48 -0400
+        id S1727188AbfCRGoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 02:44:00 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8245217F4;
-        Mon, 18 Mar 2019 06:43:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEE9A2082F;
+        Mon, 18 Mar 2019 06:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552891426;
-        bh=azu/0fVukc9Evn8KMSrx0qamlf7DkV0bn/SCkDfbJvk=;
+        s=default; t=1552891438;
+        bh=IStbavUVXwjX+fa1gjQK0L4DaQesgl9LQUeLjPM9Wpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qzqzTPYsjC2wCCRpWNA2Ap4nKj1fWx6hDAmIPai5z0S0BilcJExwsu1zJzQoQsZcT
-         Wqrx82wib7z3Fgucg+z6InHjTSdI+6cX3OEgKfFifZLN+TLf8podxSvrzQwKBDbreo
-         vcVoYRpynL9TrPKa+1UqWvf9DcHOgAWPDTH0j89k=
+        b=iGJyrGzYdw2ZArxuwybC/yxw8GUBUqhezD+eX4svpHrTSYEqpS0aQXIdeS4huHqJ4
+         3KrJcSAECp6nL+muFB20JqFHX48M2YIP53/Z4tGbGg20K6FP0UMENb7mtzl+XwAmao
+         xD94X4XfSO+3AneU7KHmjmZ4yPBdP+Sw1+BHpwOk=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -55,9 +55,9 @@ Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
         Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Nadav Amit <namit@vmware.com>,
         Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: [RFC PATCH v6 3/6] tracing/probe: Add ustring type for user-space string
-Date:   Mon, 18 Mar 2019 15:43:40 +0900
-Message-Id: <155289141983.7218.9514615430527952605.stgit@devnote2>
+Subject: [RFC PATCH v6 4/6] tracing/probe: Support user-space dereference
+Date:   Mon, 18 Mar 2019 15:43:52 +0900
+Message-Id: <155289143224.7218.6083289081805224583.stgit@devnote2>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <155289137555.7218.9282784065958321058.stgit@devnote2>
 References: <155289137555.7218.9282784065958321058.stgit@devnote2>
@@ -70,254 +70,325 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "ustring" type for fetching user-space string from kprobe event.
-User can specify ustring type at uprobe event, and it is same as
-"string" for uprobe.
+Support user-space dereference syntax for probe event arguments
+to dereference the data-structure or array in user-space.
 
-Note that probe-event provides this option but it doesn't choose the
-correct type automatically since we have not way to decide the address
-is in user-space or not on some arch (and on some other arch, you can
-fetch the string by "string" type). So user must carefully check the
-target code (e.g. if you see __user on the target variable) and
-use this new type.
+The syntax is just adding 'u' before an offset value.
+
+ +|-u<OFFSET>(<FETCHARG>)
+
+e.g. +u8(%ax), +u0(+0(%si))
+
+For example, if you probe do_sched_setscheduler(pid, policy,
+param) and record param->sched_priority, you can add new
+probe as below;
+
+ p do_sched_setscheduler priority=+u0($arg3)
+
+Note that kprobe event provides this and it doesn't change the
+dereference method automatically because we do not know whether
+the given address is in userspace or kernel on some arch.
+
+So as same as "ustring", this is an option for user, who has to
+carefully choose the dereference method.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
 ---
- Changes in v5:
- - Use strnlen_unsafe_user() in fetch_store_strlen_user().
- Changes in v2:
- - Use strnlen_user() instead of open code for fetch_store_strlen_user().
+ Changes in v4:
+  - Fix a bug for parsing argument and simplify code.
+  - Fix documents accroding to Steve's comment.
+ Changes in v3:
+  - Add a section for user memory access to the document.
 ---
- Documentation/trace/kprobetrace.rst |    9 +++++++--
- kernel/trace/trace.c                |    2 +-
- kernel/trace/trace_kprobe.c         |   29 +++++++++++++++++++++++++++++
- kernel/trace/trace_probe.c          |   14 +++++++++++---
- kernel/trace/trace_probe.h          |    1 +
- kernel/trace/trace_probe_tmpl.h     |   14 +++++++++++++-
- kernel/trace/trace_uprobe.c         |   12 ++++++++++++
- 7 files changed, 74 insertions(+), 7 deletions(-)
+ Documentation/trace/kprobetrace.rst  |   27 ++++++++++++++++++++++-----
+ Documentation/trace/uprobetracer.rst |    9 +++++----
+ kernel/trace/trace.c                 |    5 +++--
+ kernel/trace/trace_kprobe.c          |    6 ++++++
+ kernel/trace/trace_probe.c           |   25 ++++++++++++++++++-------
+ kernel/trace/trace_probe.h           |    2 ++
+ kernel/trace/trace_probe_tmpl.h      |   23 ++++++++++++++++++-----
+ kernel/trace/trace_uprobe.c          |    7 +++++++
+ 8 files changed, 81 insertions(+), 23 deletions(-)
 
 diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index 235ce2ab131a..a3ac7c9ac242 100644
+index a3ac7c9ac242..0639ae492932 100644
 --- a/Documentation/trace/kprobetrace.rst
 +++ b/Documentation/trace/kprobetrace.rst
-@@ -55,7 +55,8 @@ Synopsis of kprobe_events
+@@ -51,7 +51,7 @@ Synopsis of kprobe_events
+   $argN		: Fetch the Nth function argument. (N >= 1) (\*1)
+   $retval	: Fetch return value.(\*2)
+   $comm		: Fetch current task comm.
+-  +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(\*3)
++  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
    NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
    FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
  		  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
--		  (x8/x16/x32/x64), "string" and bitfield are supported.
-+		  (x8/x16/x32/x64), "string", "ustring" and bitfield
-+		  are supported.
- 
+@@ -61,6 +61,7 @@ Synopsis of kprobe_events
    (\*1) only for the probe on function entry (offs == 0).
    (\*2) only for return probe.
-@@ -77,7 +78,11 @@ apply it to registers/stack-entries etc. (for example, '$stack1:x8[8]' is
- wrong, but '+8($stack):x8[8]' is OK.)
+   (\*3) this is useful for fetching a field of data structures.
++  (\*4) "u" means user-space dereference. See :ref:`user_mem_access`.
+ 
+ Types
+ -----
+@@ -79,10 +80,7 @@ wrong, but '+8($stack):x8[8]' is OK.)
  String type is a special type, which fetches a "null-terminated" string from
  kernel space. This means it will fail and store NULL if the string container
--has been paged out.
-+has been paged out. "ustring" type is an alternative of string for user-space.
-+Note that kprobe-event provides string/ustring types, but doesn't change it
-+automatically. So user has to decide if the targe string in kernel or in user
-+space carefully. On some arch, if you choose wrong one, it always fails to
-+record string data.
+ has been paged out. "ustring" type is an alternative of string for user-space.
+-Note that kprobe-event provides string/ustring types, but doesn't change it
+-automatically. So user has to decide if the targe string in kernel or in user
+-space carefully. On some arch, if you choose wrong one, it always fails to
+-record string data.
++See :ref:`user_mem_access` for more info..
  The string array type is a bit different from other types. For other base
  types, <base-type>[1] is equal to <base-type> (e.g. +0(%di):x32[1] is same
  as +0(%di):x32.) But string[1] is not equal to string. The string type itself
+@@ -97,6 +95,25 @@ Symbol type('symbol') is an alias of u32 or u64 type (depends on BITS_PER_LONG)
+ which shows given pointer in "symbol+offset" style.
+ For $comm, the default type is "string"; any other type is invalid.
+ 
++.. _user_mem_access:
++User Memory Access
++------------------
++Kprobe events supports user-space memory access. For that purpose, you can use
++either user-space dereference syntax or 'ustring' type.
++
++The user-space dereference syntax allows you to access a field of a data
++structure in user-space. This is done by adding the "u" prefix to the
++dereference syntax. For example, +u4(%si) means it will read memory from the
++address in the register %si offset by 4, and the mory is expected to be in
++user-space. You can use this for strings too, e.g. +u0(%si):string will read
++a string from the address in the register %si that is expected to be in user-
++space. 'ustring' is a shortcut way of performing the same task. That is,
+++0(%si):ustring is equivalent to +u0(%si):string.
++
++Note that kprobe-event provides the user-memory access syntax but it doesn't
++use it transparently. This means if you use normal dereference or string type
++for user memory, it might fail, and always fails on some arch. So user has to
++check if the targe data is in kernel or in user space carefully.
+ 
+ Per-Probe Event Filtering
+ -------------------------
+diff --git a/Documentation/trace/uprobetracer.rst b/Documentation/trace/uprobetracer.rst
+index 4346e23e3ae7..de8812c932bc 100644
+--- a/Documentation/trace/uprobetracer.rst
++++ b/Documentation/trace/uprobetracer.rst
+@@ -42,16 +42,17 @@ Synopsis of uprobe_tracer
+    @+OFFSET	: Fetch memory at OFFSET (OFFSET from same file as PATH)
+    $stackN	: Fetch Nth entry of stack (N >= 0)
+    $stack	: Fetch stack address.
+-   $retval	: Fetch return value.(*)
++   $retval	: Fetch return value.(\*1)
+    $comm	: Fetch current task comm.
+-   +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(**)
++   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*2)(\*3)
+    NAME=FETCHARG     : Set NAME as the argument name of FETCHARG.
+    FETCHARG:TYPE     : Set TYPE as the type of FETCHARG. Currently, basic types
+ 		       (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+ 		       (x8/x16/x32/x64), "string" and bitfield are supported.
+ 
+-  (*) only for return probe.
+-  (**) this is useful for fetching a field of data structures.
++  (\*1) only for return probe.
++  (\*2) this is useful for fetching a field of data structures.
++  (\*3) Unlike kprobe event, "u" prefix will just be ignored.
+ 
+ Types
+ -----
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 21153e64bf1c..7a6ed76ba104 100644
+index 7a6ed76ba104..b595d5ef099a 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -4820,7 +4820,7 @@ static const char readme_msg[] =
- 	"\t           $stack<index>, $stack, $retval, $comm\n"
+@@ -4815,10 +4815,11 @@ static const char readme_msg[] =
+ 	"\t     args: <name>=fetcharg[:type]\n"
+ 	"\t fetcharg: %<register>, @<address>, @<symbol>[+|-<offset>],\n"
+ #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+-	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>\n"
++	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
+ #else
+-	"\t           $stack<index>, $stack, $retval, $comm\n"
++	"\t           $stack<index>, $stack, $retval, $comm,\n"
  #endif
++	"\t           +|-[u]<offset>(<fetcharg>)\n"
  	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, string, symbol,\n"
--	"\t           b<bit-width>@<bit-offset>/<container-size>,\n"
-+	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
+ 	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
  	"\t           <type>\\[<array-size>\\]\n"
- #ifdef CONFIG_HIST_TRIGGERS
- 	"\t    field: <stype> <name>;\n"
 diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 5d5129b05df7..e346229ddbba 100644
+index e346229ddbba..9456f4ca3b8a 100644
 --- a/kernel/trace/trace_kprobe.c
 +++ b/kernel/trace/trace_kprobe.c
-@@ -871,6 +871,14 @@ fetch_store_strlen(unsigned long addr)
- 	return (ret < 0) ? ret : len;
+@@ -930,6 +930,12 @@ probe_mem_read(void *dest, void *src, size_t size)
+ 	return probe_kernel_read(dest, src, size);
  }
  
-+/* Return the length of string -- including null terminal byte */
 +static nokprobe_inline int
-+fetch_store_strlen_user(unsigned long addr)
++probe_mem_read_user(void *dest, void *src, size_t size)
 +{
-+	return strnlen_unsafe_user((__force const void __user *)addr,
-+				   MAX_STRING_SIZE);
++	return probe_user_read(dest, src, size);
++}
++
+ /* Note that we don't verify it, since the code does not come from user space */
+ static int
+ process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs, void *dest,
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 30054136cfde..00771e7b6ef8 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -253,6 +253,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ {
+ 	struct fetch_insn *code = *pcode;
+ 	unsigned long param;
++	int deref = FETCH_OP_DEREF;
+ 	long offset = 0;
+ 	char *tmp;
+ 	int ret = 0;
+@@ -315,9 +316,14 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 		break;
+ 
+ 	case '+':	/* deref memory */
+-		arg++;	/* Skip '+', because kstrtol() rejects it. */
+-		/* fall through */
+ 	case '-':
++		if (arg[1] == 'u') {
++			deref = FETCH_OP_UDEREF;
++			arg[1] = arg[0];
++			arg++;
++		}
++		if (arg[0] == '+')
++			arg++;	/* Skip '+', because kstrtol() rejects it. */
+ 		tmp = strchr(arg, '(');
+ 		if (!tmp)
+ 			return -EINVAL;
+@@ -343,7 +349,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 				return -E2BIG;
+ 			*pcode = code;
+ 
+-			code->op = FETCH_OP_DEREF;
++			code->op = deref;
+ 			code->offset = offset;
+ 		}
+ 		break;
+@@ -459,13 +465,14 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+ 	/* Store operation */
+ 	if (!strcmp(parg->type->name, "string") ||
+ 	    !strcmp(parg->type->name, "ustring")) {
+-		if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_IMM &&
+-		    code->op != FETCH_OP_COMM) {
++		if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_UDEREF
++		    && code->op != FETCH_OP_IMM && code->op != FETCH_OP_COMM) {
+ 			pr_info("string only accepts memory or address.\n");
+ 			ret = -EINVAL;
+ 			goto fail;
+ 		}
+-		if (code->op != FETCH_OP_DEREF || parg->count) {
++		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM)
++		    || parg->count) {
+ 			/*
+ 			 * IMM and COMM is pointing actual address, those must
+ 			 * be kept, and if parg->count != 0, this is an array
+@@ -478,7 +485,8 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+ 			}
+ 		}
+ 		/* If op == DEREF, replace it with STRING */
+-		if (!strcmp(parg->type->name, "ustring"))
++		if (!strcmp(parg->type->name, "ustring") ||
++		    code->op == FETCH_OP_UDEREF)
+ 			code->op = FETCH_OP_ST_USTRING;
+ 		else
+ 			code->op = FETCH_OP_ST_STRING;
+@@ -487,6 +495,9 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+ 	} else if (code->op == FETCH_OP_DEREF) {
+ 		code->op = FETCH_OP_ST_MEM;
+ 		code->size = parg->type->size;
++	} else if (code->op == FETCH_OP_UDEREF) {
++		code->op = FETCH_OP_ST_UMEM;
++		code->size = parg->type->size;
+ 	} else {
+ 		code++;
+ 		if (code->op != FETCH_OP_NOP) {
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 94cdcfdaced0..0feac0a81f82 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -92,9 +92,11 @@ enum fetch_op {
+ 	FETCH_OP_FOFFS,		/* File offset: .immediate */
+ 	// Stage 2 (dereference) op
+ 	FETCH_OP_DEREF,		/* Dereference: .offset */
++	FETCH_OP_UDEREF,	/* User-space Dereference: .offset */
+ 	// Stage 3 (store) ops
+ 	FETCH_OP_ST_RAW,	/* Raw: .size */
+ 	FETCH_OP_ST_MEM,	/* Mem: .offset, .size */
++	FETCH_OP_ST_UMEM,	/* Mem: .offset, .size */
+ 	FETCH_OP_ST_STRING,	/* String: .offset, .size */
+ 	FETCH_OP_ST_USTRING,	/* User String: .offset, .size */
+ 	// Stage 4 (modify) op
+diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+index 7526f6f8d7b0..06f2d901c4cf 100644
+--- a/kernel/trace/trace_probe_tmpl.h
++++ b/kernel/trace/trace_probe_tmpl.h
+@@ -64,6 +64,8 @@ static nokprobe_inline int
+ fetch_store_string_user(unsigned long addr, void *dest, void *base);
+ static nokprobe_inline int
+ probe_mem_read(void *dest, void *src, size_t size);
++static nokprobe_inline int
++probe_mem_read_user(void *dest, void *src, size_t size);
+ 
+ /* From the 2nd stage, routine is same */
+ static nokprobe_inline int
+@@ -77,14 +79,21 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 
+ stage2:
+ 	/* 2nd stage: dereference memory if needed */
+-	while (code->op == FETCH_OP_DEREF) {
+-		lval = val;
+-		ret = probe_mem_read(&val, (void *)val + code->offset,
+-					sizeof(val));
++	do {
++		if (code->op == FETCH_OP_DEREF) {
++			lval = val;
++			ret = probe_mem_read(&val, (void *)val + code->offset,
++					     sizeof(val));
++		} else if (code->op == FETCH_OP_UDEREF) {
++			lval = val;
++			ret = probe_mem_read_user(&val,
++				 (void *)val + code->offset, sizeof(val));
++		} else
++			break;
+ 		if (ret)
+ 			return ret;
+ 		code++;
+-	}
++	} while (1);
+ 
+ 	s3 = code;
+ stage3:
+@@ -109,6 +118,10 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 	case FETCH_OP_ST_MEM:
+ 		probe_mem_read(dest, (void *)val + code->offset, code->size);
+ 		break;
++	case FETCH_OP_ST_UMEM:
++		probe_mem_read_user(dest, (void *)val + code->offset,
++				    code->size);
++		break;
+ 	case FETCH_OP_ST_STRING:
+ 		loc = *(u32 *)dest;
+ 		ret = fetch_store_string(val + code->offset, dest, base);
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index f4e37c4f8a21..5bc8c3686f6f 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -140,6 +140,13 @@ probe_mem_read(void *dest, void *src, size_t size)
+ 
+ 	return copy_from_user(dest, vaddr, size) ? -EFAULT : 0;
+ }
++
++static nokprobe_inline int
++probe_mem_read_user(void *dest, void *src, size_t size)
++{
++	return probe_mem_read(dest, src, size);
 +}
 +
  /*
-  * Fetch a null-terminated string. Caller MUST set *(u32 *)buf with max
+  * Fetch a null-terminated string. Caller MUST set *(u32 *)dest with max
   * length and relative data location.
-@@ -895,6 +903,27 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 	return ret;
- }
- 
-+/*
-+ * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
-+ * with max length and relative data location.
-+ */
-+static nokprobe_inline int
-+fetch_store_string_user(unsigned long addr, void *dest, void *base)
-+{
-+	int maxlen = get_loc_len(*(u32 *)dest);
-+	u8 *dst = get_loc_data(dest, base);
-+	long ret;
-+
-+	if (unlikely(!maxlen))
-+		return -ENOMEM;
-+	ret = strncpy_from_unsafe_user(dst, (__force const void __user *)addr,
-+				       maxlen);
-+
-+	if (ret >= 0)
-+		*(u32 *)dest = make_data_loc(ret, (void *)dst - base);
-+	return ret;
-+}
-+
- static nokprobe_inline int
- probe_mem_read(void *dest, void *src, size_t size)
- {
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 8f8411e7835f..30054136cfde 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -73,6 +73,8 @@ static const struct fetch_type probe_fetch_types[] = {
- 	/* Special types */
- 	__ASSIGN_FETCH_TYPE("string", string, string, sizeof(u32), 1,
- 			    "__data_loc char[]"),
-+	__ASSIGN_FETCH_TYPE("ustring", string, string, sizeof(u32), 1,
-+			    "__data_loc char[]"),
- 	/* Basic types */
- 	ASSIGN_FETCH_TYPE(u8,  u8,  0),
- 	ASSIGN_FETCH_TYPE(u16, u16, 0),
-@@ -455,7 +457,8 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
- 		goto fail;
- 
- 	/* Store operation */
--	if (!strcmp(parg->type->name, "string")) {
-+	if (!strcmp(parg->type->name, "string") ||
-+	    !strcmp(parg->type->name, "ustring")) {
- 		if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_IMM &&
- 		    code->op != FETCH_OP_COMM) {
- 			pr_info("string only accepts memory or address.\n");
-@@ -474,7 +477,11 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
- 				goto fail;
- 			}
- 		}
--		code->op = FETCH_OP_ST_STRING;	/* In DEREF case, replace it */
-+		/* If op == DEREF, replace it with STRING */
-+		if (!strcmp(parg->type->name, "ustring"))
-+			code->op = FETCH_OP_ST_USTRING;
-+		else
-+			code->op = FETCH_OP_ST_STRING;
- 		code->size = parg->type->size;
- 		parg->dynamic = true;
- 	} else if (code->op == FETCH_OP_DEREF) {
-@@ -499,7 +506,8 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
- 	/* Loop(Array) operation */
- 	if (parg->count) {
- 		if (scode->op != FETCH_OP_ST_MEM &&
--		    scode->op != FETCH_OP_ST_STRING) {
-+		    scode->op != FETCH_OP_ST_STRING &&
-+		    scode->op != FETCH_OP_ST_USTRING) {
- 			pr_info("array only accepts memory or address\n");
- 			ret = -EINVAL;
- 			goto fail;
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 2177c206de15..94cdcfdaced0 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -96,6 +96,7 @@ enum fetch_op {
- 	FETCH_OP_ST_RAW,	/* Raw: .size */
- 	FETCH_OP_ST_MEM,	/* Mem: .offset, .size */
- 	FETCH_OP_ST_STRING,	/* String: .offset, .size */
-+	FETCH_OP_ST_USTRING,	/* User String: .offset, .size */
- 	// Stage 4 (modify) op
- 	FETCH_OP_MOD_BF,	/* Bitfield: .basesize, .lshift, .rshift */
- 	// Stage 5 (loop) op
-diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-index 4737bb8c07a3..7526f6f8d7b0 100644
---- a/kernel/trace/trace_probe_tmpl.h
-+++ b/kernel/trace/trace_probe_tmpl.h
-@@ -59,6 +59,9 @@ process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs,
- static nokprobe_inline int fetch_store_strlen(unsigned long addr);
- static nokprobe_inline int
- fetch_store_string(unsigned long addr, void *dest, void *base);
-+static nokprobe_inline int fetch_store_strlen_user(unsigned long addr);
-+static nokprobe_inline int
-+fetch_store_string_user(unsigned long addr, void *dest, void *base);
- static nokprobe_inline int
- probe_mem_read(void *dest, void *src, size_t size);
- 
-@@ -91,6 +94,10 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 			ret += fetch_store_strlen(val + code->offset);
- 			code++;
- 			goto array;
-+		} else if (code->op == FETCH_OP_ST_USTRING) {
-+			ret += fetch_store_strlen_user(val + code->offset);
-+			code++;
-+			goto array;
- 		} else
- 			return -EILSEQ;
- 	}
-@@ -106,6 +113,10 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 		loc = *(u32 *)dest;
- 		ret = fetch_store_string(val + code->offset, dest, base);
- 		break;
-+	case FETCH_OP_ST_USTRING:
-+		loc = *(u32 *)dest;
-+		ret = fetch_store_string_user(val + code->offset, dest, base);
-+		break;
- 	default:
- 		return -EILSEQ;
- 	}
-@@ -123,7 +134,8 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 		total += ret;
- 		if (++i < code->param) {
- 			code = s3;
--			if (s3->op != FETCH_OP_ST_STRING) {
-+			if (s3->op != FETCH_OP_ST_STRING &&
-+			    s3->op != FETCH_OP_ST_USTRING) {
- 				dest += s3->size;
- 				val += s3->size;
- 				goto stage3;
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index be78d99ee6bc..f4e37c4f8a21 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -173,6 +173,12 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 	return ret;
- }
- 
-+static nokprobe_inline int
-+fetch_store_string_user(unsigned long addr, void *dest, void *base)
-+{
-+	return fetch_store_string(addr, dest, base);
-+}
-+
- /* Return the length of string -- including null terminal byte */
- static nokprobe_inline int
- fetch_store_strlen(unsigned long addr)
-@@ -185,6 +191,12 @@ fetch_store_strlen(unsigned long addr)
- 	return (len > MAX_STRING_SIZE) ? 0 : len;
- }
- 
-+static nokprobe_inline int
-+fetch_store_strlen_user(unsigned long addr)
-+{
-+	return fetch_store_strlen(addr);
-+}
-+
- static unsigned long translate_user_vaddr(unsigned long file_offset)
- {
- 	unsigned long base_addr;
 
