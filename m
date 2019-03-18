@@ -2,128 +2,128 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E63C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEDCC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F31320828
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF1F214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:58:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sm70s1yn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VN0couvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfCRG4e (ORCPT
+        id S1727876AbfCRG6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 02:56:34 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44460 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfCRG4d (ORCPT
+        Mon, 18 Mar 2019 02:58:03 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:59268 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbfCRG6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 02:56:33 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u9so10784252lfe.11
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 23:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tp0gV0tq+BmhiNJ7POdrMiMAn60sM6dP9Em7UwdIHuk=;
-        b=sm70s1ynaSmZ7S7rxjwbjUCo/skRJW+Vtn8DcShgcNcVOvmxzSXUA6dTl8mFhAkFh9
-         DPOzfMgVbBSCZ1IJaZoYUqW5IS9BtsrjhrcwP8k/C3CH1F220vW04XnSTNMPWCcw9hCY
-         HACO8Jmk6BJgfSTFJg0xd7eKJ6u7h074bN40aunM8ZA9CY0ew1n9bV5PcF03OdZU7Cvl
-         bbsa1v7k/xcqW7gMSq5yqDVzbU/My0hm/mbvIS3QVL3dKs+wxQtCFlYkp7ZjSXp0WTDK
-         E6Wk2dDqXcAmgPFIXNy3MS7Vs8a69t6Z3r0PkpZYLsDL38JpZKiq6m8YWBI0qjIeRc6/
-         OP3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tp0gV0tq+BmhiNJ7POdrMiMAn60sM6dP9Em7UwdIHuk=;
-        b=KBnElr3QwSuoOwEbE26q+HsuCWlEyYpb037FmpSmHRcVzAHvzlGR56F/NGCVH6VkqQ
-         eUojAcOmSvW3/eKjZylESD8QuGu+NHKG+yLZzecNgGrOLm6rpxjQi9DMmIHQYl8I4xd6
-         Rc462/ywc9nsW4fNf6iam8+7FaMUFzlbaV9rQXru/wuXKz5uHiAYoCRaM72JHZ2pkof6
-         RKuSiD+ISbwbBtMq1R0vjcRTbpKDyf1ygWhbwO2QHaPp+ur66vkVW6e6NWZzFl4h3+H3
-         05XclU2z0MbHFx5bit3dSk/9CD53wKn2zXubsdkM17wXBH3BIeiFABvKkiKuHP+bTZUr
-         E9LQ==
-X-Gm-Message-State: APjAAAWwo4Jhh0ldXLfL98B01bi8Wo37bqxjG2v2gijeTtRGEc5V71K6
-        Tok5b2L2TSjNqtFxfuVnt82pL1LyC/hiqv8o5WoKoZknryE=
-X-Google-Smtp-Source: APXvYqx3xjgGUAxnFAgDsL4jEiC7JlCOpjIk2Q4Van711kdA+QU7tEZekCrsZnymP/GlzMJK3ana3PBaqU565yn7AS4=
-X-Received: by 2002:a19:550d:: with SMTP id n13mr9252212lfe.26.1552892191900;
- Sun, 17 Mar 2019 23:56:31 -0700 (PDT)
+        Mon, 18 Mar 2019 02:58:03 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2I6sZX4080941;
+        Mon, 18 Mar 2019 06:57:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=3gX8cKTbyoZG3L+QNNnAaLKgQc7So5R3/tqK9Oa6rDQ=;
+ b=VN0couvw8PSJFliV65Q6a6hkKT3q2lCQS+gGYyRtKwkJDP1DmYMByNzIrkDCZ9yG3auZ
+ Bw8YmlAmea0g91sQnZxOnLi8LExXvgtfyvQ6Wr2DiZ70kYLMaG8WnFQ0j1qaV/WMoNLK
+ 1p7V+y4EoAC6sWh8/Ob2OwLsCe6qTycmS37s4XfVOyBNrGAdT6q/3eEOpt4gYxaOiuLp
+ luB8VWTE9DtjZNajfKK2eMxbuUd8LHy77aQJRAiKDYoiXpgeWnWOXP2Tr9kla9bMmNcu
+ tCXbpjqhR4guSOqdxOPFC3ZYTP7oxa+/+sKRUamKNIF4FMXmGyL9B96rz1gQT04zeho2 Ng== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by aserp2130.oracle.com with ESMTP id 2r8pnecsk6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Mar 2019 06:57:39 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2I6vbMP031557
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Mar 2019 06:57:37 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2I6vWjF024292;
+        Mon, 18 Mar 2019 06:57:32 GMT
+Received: from [10.182.69.118] (/10.182.69.118)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 17 Mar 2019 23:57:32 -0700
+Subject: Re: [PATCH 7/8] nvme: use blk_mq_queue_tag_busy_iter
+To:     James Smart <jsmart2021@gmail.com>, axboe@kernel.dk
+Cc:     hch@lst.de, jthumshirn@suse.de, hare@suse.de, josef@toxicpanda.com,
+        bvanassche@acm.org, sagi@grimberg.me, keith.busch@intel.com,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1552640264-26101-8-git-send-email-jianchao.w.wang@oracle.com>
+ <62de99e8-0d8d-910a-bfdc-649f734b152c@gmail.com>
+From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
+Message-ID: <3ce02cf8-f310-4a79-18d4-1ac2e1ef823a@oracle.com>
+Date:   Mon, 18 Mar 2019 15:00:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190218165620.383905466@infradead.org> <CAHk-=wh32Zgp+bN7G1KH7SuCiY1YSJ41Y-_eWpfWubGjqq2_dw@mail.gmail.com>
- <20190222124544.GY9565@techsingularity.net> <14a9adf7-9b50-1dfa-0c35-d04e976081c2@oracle.com>
- <CAERHkru9DzvszvdGHWp8PhEAqeUc-wVR1Gey-KtQ6aMRLx68bQ@mail.gmail.com>
- <19d5d492-a4c1-b3c8-cae4-da2fdfcb872b@oracle.com> <ac10b8fd-da1a-2cc2-afee-4e2b9b4278ee@oracle.com>
-In-Reply-To: <ac10b8fd-da1a-2cc2-afee-4e2b9b4278ee@oracle.com>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Mon, 18 Mar 2019 14:56:20 +0800
-Message-ID: <CAERHkrt+Ovsw308CX6Z6yoCC+ON6AF_LND9G0KRYTGBOp8qHhQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 00/16] sched: Core scheduling
-To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Fr?d?ric Weisbecker" <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <62de99e8-0d8d-910a-bfdc-649f734b152c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9198 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903180053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 7:36 AM Subhra Mazumdar
-<subhra.mazumdar@oracle.com> wrote:
->
->
-> On 3/11/19 11:34 AM, Subhra Mazumdar wrote:
-> >
-> > On 3/10/19 9:23 PM, Aubrey Li wrote:
-> >> On Sat, Mar 9, 2019 at 3:50 AM Subhra Mazumdar
-> >> <subhra.mazumdar@oracle.com> wrote:
-> >>> expected. Most of the performance recovery happens in patch 15 which,
-> >>> unfortunately, is also the one that introduces the hard lockup.
-> >>>
-> >> After applied Subhra's patch, the following is triggered by enabling
-> >> core sched when a cgroup is
-> >> under heavy load.
-> >>
-> > It seems you are facing some other deadlock where printk is involved.
-> > Can you
-> > drop the last patch (patch 16 sched: Debug bits...) and try?
-> >
-> > Thanks,
-> > Subhra
-> >
-> Never Mind, I am seeing the same lockdep deadlock output even w/o patch
-> 16. Btw
-> the NULL fix had something missing, following works.
->
+Hi James
 
-okay, here is another one, on my system, the boot up CPUs don't match the
-possible cpu map, so the not onlined CPU rq->core are not initialized, which
-causes NULL pointer dereference panic in online_fair_sched_group():
+On 3/16/19 12:33 AM, James Smart wrote:
+> On 3/15/2019 1:57 AM, Jianchao Wang wrote:
+>> blk_mq_tagset_busy_iter is not safe that it could get stale request
+>> in tags->rqs[]. Use blk_mq_queue_tag_busy_iter here. A new helper
+>> interface nvme_iterate_inflight_rqs is introduced to iterate
+>> all of the ns under a ctrl.
+>>
+>> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
+>> ---
+>>   drivers/nvme/host/core.c   | 12 ++++++++++++
+>>   drivers/nvme/host/fc.c     | 12 ++++++------
+>>   drivers/nvme/host/nvme.h   |  2 ++
+>>   drivers/nvme/host/pci.c    |  5 +++--
+>>   drivers/nvme/host/rdma.c   |  6 +++---
+>>   drivers/nvme/host/tcp.c    |  5 +++--
+>>   drivers/nvme/target/loop.c |  6 +++---
+>>   7 files changed, 32 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+>> index 6a9dd68..5760fad 100644
+>> --- a/drivers/nvme/host/core.c
+>> +++ b/drivers/nvme/host/core.c
+>> @@ -3816,6 +3816,18 @@ void nvme_start_queues(struct nvme_ctrl *ctrl)
+>>   }
+>>   EXPORT_SYMBOL_GPL(nvme_start_queues);
+>>   +void nvme_iterate_inflight_rqs(struct nvme_ctrl *ctrl,
+>> +        busy_iter_fn *fn, void *data)
+>> +{
+>> +    struct nvme_ns *ns;
+>> +
+>> +    down_read(&ctrl->namespaces_rwsem);
+>> +    list_for_each_entry(ns, &ctrl->namespaces, list)
+>> +        blk_mq_queue_tag_busy_iter(ns->queue, fn, data, true);
+>> +    up_read(&ctrl->namespaces_rwsem);
+>> +}
+>> +EXPORT_SYMBOL_GPL(nvme_iterate_inflight_rqs);
+> 
+> Hmm... so this aborts ios for namespaces. How about ios that aren't for a namespace but rather for the controller itself.  For example, anything on the admin queue ?   Rather critical for those ios be terminated as well.
+> 
 
-And here is a quick fix.
------------------------------------------------------------------------------------------------------
-@@ -10488,7 +10493,8 @@ void online_fair_sched_group(struct task_group *tg)
-        for_each_possible_cpu(i) {
-                rq = cpu_rq(i);
-                se = tg->se[i];
--
-+               if (!rq->core)
-+                       continue;
-                raw_spin_lock_irq(rq_lockp(rq));
-                update_rq_clock(rq);
-                attach_entity_cfs_rq(se);
+The blk_mq_tagset_busy_iter which is currently used by nvme is iterating the in-flight ios for the controller.
+But due to blk_mq_tagset_busy_iter is not safe which is talked in the patch 0/8,
+so change it to blk_mq_queue_busy_tag_iter which is for a namespace/request_queue.
 
-Thanks,
--Aubrey
+Thanks
+Jianchao
