@@ -2,89 +2,65 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0481C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81713C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8275D20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574D320857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfCRH2b (ORCPT
+        id S1727239AbfCRH3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 03:28:31 -0400
-Received: from mout02.posteo.de ([185.67.36.142]:57669 "EHLO mout02.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfCRH2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 03:28:31 -0400
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id C39B82400FC
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 08:28:28 +0100 (CET)
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 44N7884Lwgz9rxH;
-        Mon, 18 Mar 2019 08:28:24 +0100 (CET)
-Subject: Re: [PATCH] tty: atmel_serial: fix a NULL pointer dereference
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <d8978a94-23fc-3610-e3da-5e1da2d86914@sorico.fr>
- <20190315171606.6282-1-kjlu@umn.edu>
-From:   Richard Genoud <richard.genoud@gmail.com>
-Message-ID: <cb9a62d2-1d91-a9d6-22ed-1e19ca1d96c7@sorico.fr>
-Date:   Mon, 18 Mar 2019 08:28:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190315171606.6282-1-kjlu@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        Mon, 18 Mar 2019 03:29:52 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:50525 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfCRH3w (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Mon, 18 Mar 2019 03:29:52 -0400
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Mon, 18 Mar 2019 08:29:51 +0100
+Received: from d104.suse.de (nwb-a10-snat.microfocus.com [10.120.13.201])
+        by emea4-mta.ukb.novell.com with ESMTP (NOT encrypted); Mon, 18 Mar 2019 07:29:44 +0000
+From:   Oscar Salvador <osalvador@suse.de>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@suse.com, anshuman.khandual@arm.com,
+        william.kucharski@oracle.com, hughd@google.com, jack@suse.cz,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v2] mm: Fix __dump_page when mapping->host is not set
+Date:   Mon, 18 Mar 2019 08:29:31 +0100
+Message-Id: <20190318072931.29094-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.13.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 15/03/2019 à 18:16, Kangjie Lu a écrit :
-> In case dmaengine_prep_dma_cyclic fails, the fix returns a proper
-> error code to avoid NULL pointer dereference.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> Fixes: 34df42f59a60 ("serial: at91: add rx dma support")
-Acked-by: Richard Genoud <richard.genoud@gmail.com>
+Swap mapping->host is NULL, so let us protect __dump_page() for such cases.
 
-> 
-> ---
-> V2: simplified the patch as suggested by
-> Richard Genoud <richard.genoud@gmail.com>
-> ---
->  drivers/tty/serial/atmel_serial.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> index 05147fe24343..41b728d223d1 100644
-> --- a/drivers/tty/serial/atmel_serial.c
-> +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -1288,6 +1288,10 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
->  					 sg_dma_len(&atmel_port->sg_rx)/2,
->  					 DMA_DEV_TO_MEM,
->  					 DMA_PREP_INTERRUPT);
-> +	if (!desc) {
-> +		dev_err(port->dev, "Preparing DMA cyclic failed\n");
-> +		goto chan_err;
-> +	}
->  	desc->callback = atmel_complete_rx_dma;
->  	desc->callback_param = port;
->  	atmel_port->desc_rx = desc;
-> 
+Fixes: 1c6fb1d89e73c ("mm: print more information about mapping in __dump_page")
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+---
+ mm/debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks !
+diff --git a/mm/debug.c b/mm/debug.c
+index c0b31b6c3877..7759f12a8fbb 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -79,7 +79,7 @@ void __dump_page(struct page *page, const char *reason)
+ 		pr_warn("ksm ");
+ 	else if (mapping) {
+ 		pr_warn("%ps ", mapping->a_ops);
+-		if (mapping->host->i_dentry.first) {
++		if (mapping->host && mapping->host->i_dentry.first) {
+ 			struct dentry *dentry;
+ 			dentry = container_of(mapping->host->i_dentry.first, struct dentry, d_u.d_alias);
+ 			pr_warn("name:\"%pd\" ", dentry);
+-- 
+2.13.7
 
-Richard
