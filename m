@@ -2,228 +2,90 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2C1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E56C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86EA21741
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7443621741
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552930995;
+	bh=UAVlSvX7KALeTZcWxjui/etBtlz5c8X0YszkVu6dDKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FW+0cIkuHrNoViCegcJ8JmcnFR2k6E1P5P4/Bdme/RwDQxDyEW6+CsNa5neXMvE9U
+	 Uae7MVzkyGlBUhZm74pv9d1775YA20hvEDQEB5hRXri/cy6eyPiflMjH5xxIEHfQal
+	 JF1y242VZUZ8DS1AJZqF6iE3uoM03EfEUAIHna4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfCRRnE (ORCPT
+        id S1728064AbfCRRnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:43:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:47938 "EHLO mga05.intel.com"
+        Mon, 18 Mar 2019 13:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbfCRRm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:42:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:42:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="283714944"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 18 Mar 2019 10:42:58 -0700
-Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
-        by linux.intel.com (Postfix) with ESMTP id 966E6580238;
-        Mon, 18 Mar 2019 10:42:56 -0700 (PDT)
-Subject: [PATCH v10 06/12] perf util: introduce Zstd streaming based
- compression API
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <18bf36f3-b85a-1fe2-dd83-10e0c6069568@linux.intel.com>
-Date:   Mon, 18 Mar 2019 20:42:55 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1727990AbfCRRmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:42:50 -0400
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78FB720989;
+        Mon, 18 Mar 2019 17:42:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552930970;
+        bh=UAVlSvX7KALeTZcWxjui/etBtlz5c8X0YszkVu6dDKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qx+oU95rhGqpI/GZCwtAiHLRW/0oEZAiNgDi9LfO0tKDhDg2psd7YKfaicWQbcFxC
+         M+adKABMrwmiLyF1s8e4V/Mi1zl0d6jDSHKhhHnFq3qaDGT1WDBCTpuOuLf7hOItdS
+         LkqWQMrcOQ1svO1P5ABL4G6YEcW3f3vi1W/n8aC4=
+Date:   Mon, 18 Mar 2019 18:42:47 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     VizXu <xujiweigo@163.com>
+Cc:     valentina.manea.m@gmail.com, shuah@kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Add code to support USBIP Project for Windows
+Message-ID: <20190318174247.GA22350@kroah.com>
+References: <1552927048-15857-1-git-send-email-xujiweigo@163.com>
 MIME-Version: 1.0
-In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552927048-15857-1-git-send-email-xujiweigo@163.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 18, 2019 at 09:37:28AM -0700, VizXu wrote:
+> Signed-off-by: VizXu <xujiweigo@163.com>
+> ---
 
-Implemented functions are based on Zstd streaming compression API.
-The functions are used in runtime to compress data that come from
-mmaped kernel buffer. zstd_init(), zstd_fini() are used for
-initialization and finalization to allocate and deallocate internal
-zstd objects. zstd_compress_stream_to_records() is used to convert
-parts of mmaped kernel buffer into an array of PERF_RECORD_COMPRESSED
-records.
+I can not take patches without any changelog text, sorry.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/util/Build      |  2 ++
- tools/perf/util/compress.h | 43 +++++++++++++++++++++++
- tools/perf/util/zstd.c     | 71 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 116 insertions(+)
- create mode 100644 tools/perf/util/zstd.c
+Please fix up and resend so we have an idea of what this patch is for
+and why it is needed.
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8dd3102301ea..6d5bbc8b589b 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -145,6 +145,8 @@ perf-y += scripting-engines/
- 
- perf-$(CONFIG_ZLIB) += zlib.o
- perf-$(CONFIG_LZMA) += lzma.o
-+perf-$(CONFIG_ZSTD) += zstd.o
-+
- perf-y += demangle-java.o
- perf-y += demangle-rust.o
- 
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index 892e92e7e7fc..d00d7cb095aa 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -2,6 +2,11 @@
- #ifndef PERF_COMPRESS_H
- #define PERF_COMPRESS_H
- 
-+#include <stdbool.h>
-+#ifdef HAVE_ZSTD_SUPPORT
-+#include <zstd.h>
-+#endif
-+
- #ifdef HAVE_ZLIB_SUPPORT
- int gzip_decompress_to_file(const char *input, int output_fd);
- bool gzip_is_compressed(const char *input);
-@@ -12,4 +17,42 @@ int lzma_decompress_to_file(const char *input, int output_fd);
- bool lzma_is_compressed(const char *input);
- #endif
- 
-+struct zstd_data {
-+#ifdef HAVE_ZSTD_SUPPORT
-+	ZSTD_CStream	*cstream;
-+#endif
-+};
-+
-+#ifdef HAVE_ZSTD_SUPPORT
-+
-+int zstd_init(struct zstd_data *data, int level);
-+int zstd_fini(struct zstd_data *data);
-+
-+size_t zstd_compress_stream_to_records(struct zstd_data *data,
-+	void *dst, size_t dst_size, void *src, size_t src_size,	size_t max_record_size,
-+	size_t process_header(void *record, size_t increment));
-+
-+#else /* !HAVE_ZSTD_SUPPORT */
-+
-+static inline int zstd_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static inline int zstd_fini(struct zstd_data *data __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static inline size_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
-+		void *dst __maybe_unused, size_t dst_size __maybe_unused,
-+		void *src __maybe_unused, size_t src_size __maybe_unused,
-+		size_t max_record_size __maybe_unused,
-+		size_t process_header(void *record, size_t increment) __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+#endif
-+
- #endif /* PERF_COMPRESS_H */
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-new file mode 100644
-index 000000000000..6d4f69d57567
---- /dev/null
-+++ b/tools/perf/util/zstd.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <string.h>
-+
-+#include "util/compress.h"
-+#include "util/debug.h"
-+
-+int zstd_init(struct zstd_data *data, int level)
-+{
-+	size_t ret;
-+
-+	data->cstream = ZSTD_createCStream();
-+	if (data->cstream == NULL) {
-+		pr_err("Couldn't create compression stream.\n");
-+		return -1;
-+	}
-+
-+	ret = ZSTD_initCStream(data->cstream, level);
-+	if (ZSTD_isError(ret)) {
-+		pr_err("Failed to initialize compression stream: %s\n", ZSTD_getErrorName(ret));
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+int zstd_fini(struct zstd_data *data)
-+{
-+	if (data->cstream) {
-+		ZSTD_freeCStream(data->cstream);
-+		data->cstream = NULL;
-+	}
-+
-+	return 0;
-+}
-+
-+size_t zstd_compress_stream_to_records(struct zstd_data *data,
-+	void *dst, size_t dst_size, void *src, size_t src_size,	size_t max_record_size,
-+	size_t process_header(void *record, size_t increment))
-+{
-+	size_t ret, size, compressed = 0;
-+	ZSTD_inBuffer input = { src, src_size, 0 };
-+	ZSTD_outBuffer output;
-+	void *record;
-+
-+	while (input.pos < input.size) {
-+		record = dst;
-+		size = process_header(record, 0);
-+		compressed += size;
-+		dst += size;
-+		dst_size -= size;
-+		output = (ZSTD_outBuffer){ dst, (dst_size > max_record_size) ?
-+						max_record_size : dst_size, 0 };
-+		ret = ZSTD_compressStream(data->cstream, &output, &input);
-+		ZSTD_flushStream(data->cstream, &output);
-+		if (ZSTD_isError(ret)) {
-+			pr_err("failed to compress %ld bytes: %s\n",
-+				(long)src_size, ZSTD_getErrorName(ret));
-+			memcpy(dst, src, src_size);
-+			return src_size;
-+		}
-+		size = output.pos;
-+		size = process_header(record, size);
-+		compressed += size;
-+		dst += size;
-+		dst_size -= size;
-+	}
-+
-+	return compressed;
-+}
-+
--- 
-2.20.1
+>  drivers/usb/usbip/stub_dev.c     |  4 ++++
+>  drivers/usb/usbip/stub_rx.c      | 37 +++++++++++++++++++++++++++++++++++++
+>  drivers/usb/usbip/usbip_common.h | 16 ++++++++++++++++
+>  3 files changed, 57 insertions(+)
+> 
+> diff --git a/drivers/usb/usbip/stub_dev.c b/drivers/usb/usbip/stub_dev.c
+> index c0d6ff1..be95c72 100644
+> --- a/drivers/usb/usbip/stub_dev.c
+> +++ b/drivers/usb/usbip/stub_dev.c
+> @@ -270,6 +270,10 @@ static struct stub_device *stub_device_alloc(struct usb_device *udev)
+>  	sdev->ud.tcp_socket	= NULL;
+>  	sdev->ud.sockfd		= -1;
+>  
+> +#ifdef SUPPORT_WIN
+> +	sdev->ud.is_configured = false;
+> +#endif
 
+#ifdef should never be in a .c file if at all possible.  Please rework
+this to use the proper style of doing this type of thing in a .h file.
+
+thanks,
+
+greg k-h
