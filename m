@@ -2,152 +2,333 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F6BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A46C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3039E20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JxUL12pQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4D7B62070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfCRRlU (ORCPT
+        id S1727841AbfCRRli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:41:20 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35933 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfCRRkx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:40:53 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y13so13541822wrd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ed0hAf8WZbtq4MmRoK//lOwdefFE9pMkHjk9cFK24Ko=;
-        b=JxUL12pQlaIO5TNX8dVKqnZ0lXofUYGBvKkE0BNJDt2U9aRuyhF+YqNTEwCsUNOfFD
-         6apCD7352gr6JAnF3nMdnUGlV0/5Aky3HLxDy4t07qCsKvvXh6kM2DFIY6yWG9GWiQFA
-         C+FT+S2/pXO0Ipm2Ky5YGWok8xSQtEKzwRgR2fBgfn7MY7OJWqT3WOamXReZG21m1I/L
-         VJaVipjN4Q9ra1+q1wPfWEPTY2fVTd+0IPMmy7wfwzk2vqXMYVv+obFFoBEDMKvn5Nw3
-         YVow2bLk3kg9kzhJYNLStR6e0tVSenXpYfWM6pu/mXpKGqFQ+MezcNGxSRO5snhh4AeE
-         Fh1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ed0hAf8WZbtq4MmRoK//lOwdefFE9pMkHjk9cFK24Ko=;
-        b=twAwbJv4kWSnODLFE45FZKRTihfrycnGR2zmbRyHJ5bP0vxUegul/ecSY49+ReGEbp
-         GvAK6gVY/mGXsnvZo7a+YyLQJhUWAXiqp4HTJITV8wiHthDHwUrkbbSI8VB/lH+WW8Eo
-         /+DNYQsvv4X1MdH0r9WuSJ0E25Lals3pVcEaiTuCbTmgHRkQ/envVkHJxUpjJJNXEZ0Z
-         A7SWuWErvMu2ApI95B0OCMvNKeCbjiSugVjy7Jf3FMViza5jXs10Wcw0v5gSVIDmVCbx
-         EnTT4dcJhvyi/IHXPphDcy+EC5gnAHBKSbXvr0o7uhGKZGMrt0G83c2AFUJ9pKRvztqs
-         T1RQ==
-X-Gm-Message-State: APjAAAWX5xoB86jwa1EoILtCHZa+521QzcUvi1bT6KkysE9j3WlXb74k
-        rQnsJAWed9uRVwu4TbYgkegGbQ==
-X-Google-Smtp-Source: APXvYqx01qIhnlIcrj3nuT5ifZorgpxn9tT4Uwtl7wftmlPwJurrNtiNjZNDIPXIfGEEp0v1jq2r4g==
-X-Received: by 2002:adf:9cc4:: with SMTP id h4mr12660115wre.327.1552930851574;
-        Mon, 18 Mar 2019 10:40:51 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id y140sm41436988wmd.18.2019.03.18.10.40.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 10:40:50 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [RESEND PATCH v6 01/11] dt-bindings: mfd: add DT bindings for max77650
-Date:   Mon, 18 Mar 2019 18:40:30 +0100
-Message-Id: <20190318174040.17899-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190318174040.17899-1-brgl@bgdev.pl>
-References: <20190318174040.17899-1-brgl@bgdev.pl>
+        Mon, 18 Mar 2019 13:41:38 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26474 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726884AbfCRRli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:41:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:41:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="283714678"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 18 Mar 2019 10:41:37 -0700
+Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
+        by linux.intel.com (Postfix) with ESMTP id F40F7580238;
+        Mon, 18 Mar 2019 10:41:34 -0700 (PDT)
+Subject: [PATCH v10 04/12] perf record: implement COMPRESSED event record and
+ its attributes
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <ebbaf031-8dda-3864-ebc6-7922d43ee515@linux.intel.com>
+Date:   Mon, 18 Mar 2019 20:41:33 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add a DT binding document for max77650 ultra-low power PMIC. This
-describes the core mfd device and the GPIO module.
+Implemented PERF_RECORD_COMPRESSED event, related data types, header
+feature and functions to write, read and print feature attributes
+from the trace header section.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+comp_mmap_len preserves the size of mmaped kernel buffer that was used
+during collection. comp_mmap_len size is used on loading stage as the
+size of decomp buffer for decompression of COMPRESSED events content.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- .../devicetree/bindings/mfd/max77650.txt      | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+ .../Documentation/perf.data-file-format.txt   | 24 ++++++++
+ tools/perf/builtin-record.c                   |  8 +++
+ tools/perf/perf.h                             |  1 +
+ tools/perf/util/env.h                         | 10 ++++
+ tools/perf/util/event.c                       |  1 +
+ tools/perf/util/event.h                       |  7 +++
+ tools/perf/util/header.c                      | 55 ++++++++++++++++++-
+ tools/perf/util/header.h                      |  1 +
+ 8 files changed, 106 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
-new file mode 100644
-index 000000000000..b529d8d19335
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max77650.txt
-@@ -0,0 +1,46 @@
-+MAX77650 ultra low-power PMIC from Maxim Integrated.
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index 593ef49b273c..418fa0bce52e 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -272,6 +272,19 @@ struct {
+ 
+ Two uint64_t for the time of first sample and the time of last sample.
+ 
++        HEADER_COMPRESSED = 24,
 +
-+Required properties:
-+-------------------
-+- compatible:		Must be "maxim,max77650"
-+- reg:			I2C device address.
-+- interrupts:		The interrupt on the parent the controller is
-+			connected to.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells:	Must be <2>.
++struct {
++	u32	version;
++	u32	type;
++	u32	level;
++	u32	ratio;
++	u32	mmap_len;
++};
 +
-+- gpio-controller:	Marks the device node as a gpio controller.
-+- #gpio-cells:		Must be <2>. The first cell is the pin number and
-+			the second cell is used to specify the gpio active
-+			state.
++Indicates that trace contains records of PERF_RECORD_COMPRESSED type
++that have perf_events records in compressed form.
 +
-+Optional properties:
-+--------------------
-+gpio-line-names:	Single string containing the name of the GPIO line.
+ 	other bits are reserved and should ignored for now
+ 	HEADER_FEAT_BITS	= 256,
+ 
+@@ -437,6 +450,17 @@ struct auxtrace_error_event {
+ Describes a header feature. These are records used in pipe-mode that
+ contain information that otherwise would be in perf.data file's header.
+ 
++	PERF_RECORD_COMPRESSED 			= 81,
 +
-+The GPIO-controller module is represented as part of the top-level PMIC
-+node. The device exposes a single GPIO line.
++struct compressed_event {
++	struct perf_event_header	header;
++	char				data[];
++};
 +
-+For device-tree bindings of other sub-modules (regulator, power supply,
-+LEDs and onkey) refer to the binding documents under the respective
-+sub-system directories.
++The header is followed by compressed data frame that can be decompressed
++into array of perf trace records. The size of the entire compressed event
++record including the header is limited by the max value of header.size.
 +
-+For more details on GPIO bindings, please refer to the generic GPIO DT
-+binding document <devicetree/bindings/gpio/gpio.txt>.
+ Event types
+ 
+ Define the event attributes with their IDs.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 51b7f23a0c7a..7125b780c4f4 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -369,6 +369,11 @@ static int record__mmap_flush_parse(const struct option *opt,
+ 	return 0;
+ }
+ 
++static int record__comp_enabled(struct record *rec)
++{
++	return rec->opts.comp_level > 0;
++}
 +
-+Example:
-+--------
+ static int process_synthesized_event(struct perf_tool *tool,
+ 				     union perf_event *event,
+ 				     struct perf_sample *sample __maybe_unused,
+@@ -885,6 +890,8 @@ static void record__init_features(struct record *rec)
+ 		perf_header__clear_feat(&session->header, HEADER_CLOCKID);
+ 
+ 	perf_header__clear_feat(&session->header, HEADER_DIR_FORMAT);
++	if (!record__comp_enabled(rec))
++		perf_header__clear_feat(&session->header, HEADER_COMPRESSED);
+ 
+ 	perf_header__clear_feat(&session->header, HEADER_STAT);
+ }
+@@ -1225,6 +1232,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		err = -1;
+ 		goto out_child;
+ 	}
++	session->header.env.comp_mmap_len = session->evlist->mmap_len;
+ 
+ 	err = bpf__apply_obj_config();
+ 	if (err) {
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index 7886cc9771cf..2c6caad45b10 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -86,6 +86,7 @@ struct record_opts {
+ 	int	     nr_cblocks;
+ 	int	     affinity;
+ 	int	     mmap_flush;
++	unsigned int comp_level;
+ };
+ 
+ enum perf_affinity {
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index fb39e9af128f..7990d63ab764 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -65,6 +65,16 @@ struct perf_env {
+ 	unsigned long long	 memory_bsize;
+ 	u64                     clockid_res_ns;
+ 	u32                     comp_ratio;
++	u32			comp_ver;
++	u32			comp_type;
++	u32			comp_level;
++	u32			comp_mmap_len;
++};
 +
-+	pmic@48 {
-+		compatible = "maxim,max77650";
-+		reg = <0x48>;
++enum perf_compress_type {
++	PERF_COMP_NONE = 0,
++	PERF_COMP_ZSTD,
++	PERF_COMP_MAX
+ };
+ 
+ extern struct perf_env perf_env;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index ba7be74fad6e..d1ad6c419724 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -68,6 +68,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_EVENT_UPDATE]		= "EVENT_UPDATE",
+ 	[PERF_RECORD_TIME_CONV]			= "TIME_CONV",
+ 	[PERF_RECORD_HEADER_FEATURE]		= "FEATURE",
++	[PERF_RECORD_COMPRESSED]		= "COMPRESSED",
+ };
+ 
+ static const char *perf_ns__names[] = {
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 36ae7e92dab1..8a13aefe734e 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -254,6 +254,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+ 	PERF_RECORD_EVENT_UPDATE		= 78,
+ 	PERF_RECORD_TIME_CONV			= 79,
+ 	PERF_RECORD_HEADER_FEATURE		= 80,
++	PERF_RECORD_COMPRESSED			= 81,
+ 	PERF_RECORD_HEADER_MAX
+ };
+ 
+@@ -626,6 +627,11 @@ struct feature_event {
+ 	char				data[];
+ };
+ 
++struct compressed_event {
++	struct perf_event_header	header;
++	char				data[];
++};
 +
-+		interrupt-controller;
-+		interrupt-parent = <&gpio2>;
-+		#interrupt-cells = <2>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+ union perf_event {
+ 	struct perf_event_header	header;
+ 	struct mmap_event		mmap;
+@@ -659,6 +665,7 @@ union perf_event {
+ 	struct feature_event		feat;
+ 	struct ksymbol_event		ksymbol_event;
+ 	struct bpf_event		bpf_event;
++	struct compressed_event		pack;
+ };
+ 
+ void perf_event__print_totals(void);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index b0683bf4d9f3..ee5dd3befa4b 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1259,6 +1259,30 @@ static int write_mem_topology(struct feat_fd *ff __maybe_unused,
+ 	return ret;
+ }
+ 
++static int write_compressed(struct feat_fd *ff __maybe_unused,
++			    struct perf_evlist *evlist __maybe_unused)
++{
++	int ret;
 +
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names = "max77650-charger";
-+	};
++	ret = do_write(ff, &(ff->ph->env.comp_ver), sizeof(ff->ph->env.comp_ver));
++	if (ret)
++		return ret;
++
++	ret = do_write(ff, &(ff->ph->env.comp_type), sizeof(ff->ph->env.comp_type));
++	if (ret)
++		return ret;
++
++	ret = do_write(ff, &(ff->ph->env.comp_level), sizeof(ff->ph->env.comp_level));
++	if (ret)
++		return ret;
++
++	ret = do_write(ff, &(ff->ph->env.comp_ratio), sizeof(ff->ph->env.comp_ratio));
++	if (ret)
++		return ret;
++
++	return do_write(ff, &(ff->ph->env.comp_mmap_len), sizeof(ff->ph->env.comp_mmap_len));
++}
++
+ static void print_hostname(struct feat_fd *ff, FILE *fp)
+ {
+ 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
+@@ -1557,6 +1581,13 @@ static void print_cache(struct feat_fd *ff, FILE *fp __maybe_unused)
+ 	}
+ }
+ 
++static void print_compressed(struct feat_fd *ff, FILE *fp)
++{
++	fprintf(fp, "# compressed : %s, level = %d, ratio = %d\n",
++		ff->ph->env.comp_type == PERF_COMP_ZSTD ? "Zstd" : "Unknown",
++		ff->ph->env.comp_level, ff->ph->env.comp_ratio);
++}
++
+ static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
+ {
+ 	const char *delimiter = "# pmu mappings: ";
+@@ -2414,6 +2445,27 @@ static int process_dir_format(struct feat_fd *ff,
+ 	return do_read_u64(ff, &data->dir.version);
+ }
+ 
++static int process_compressed(struct feat_fd *ff,
++			      void *data __maybe_unused)
++{
++	if (do_read_u32(ff, &(ff->ph->env.comp_ver)))
++		return -1;
++
++	if (do_read_u32(ff, &(ff->ph->env.comp_type)))
++		return -1;
++
++	if (do_read_u32(ff, &(ff->ph->env.comp_level)))
++		return -1;
++
++	if (do_read_u32(ff, &(ff->ph->env.comp_ratio)))
++		return -1;
++
++	if (do_read_u32(ff, &(ff->ph->env.comp_mmap_len)))
++		return -1;
++
++	return 0;
++}
++
+ struct feature_ops {
+ 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
+ 	void (*print)(struct feat_fd *ff, FILE *fp);
+@@ -2474,7 +2526,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
+ 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
+ 	FEAT_OPR(CLOCKID,	clockid,	false),
+-	FEAT_OPN(DIR_FORMAT,	dir_format,	false)
++	FEAT_OPN(DIR_FORMAT,	dir_format,	false),
++	FEAT_OPR(COMPRESSED,	compressed,	false)
+ };
+ 
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 6a231340238d..9ccfb204bd2c 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -40,6 +40,7 @@ enum {
+ 	HEADER_MEM_TOPOLOGY,
+ 	HEADER_CLOCKID,
+ 	HEADER_DIR_FORMAT,
++	HEADER_COMPRESSED,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
 -- 
 2.20.1
 
