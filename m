@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8773AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849FFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D90214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508BD214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901347;
-	bh=q+rztsWH+IacQFsnmGrmXwqJSGtzJItBrN5o5C7IeW8=;
+	s=default; t=1552901351;
+	bh=8rX3djr0Cm/6mpJxCFPCUh/vueTRPrtoOoAAQMDzBCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UtDUwOQGOP4EHRC5YyobxmmQeOQre6Gx7RByoYoAaD53WNo48gl/DpY0c+QaB9UpZ
-	 YfMY0YfjA0XI2pdnH/0tP1p4jKmgEEsrAuit7A8VdF5/wl4hHhzHIsnw76EP1tDIvn
-	 w7PFfnYqhj4dK7PD0qXXVG+10v6iGyn5Pe2/qRBM=
+	b=AZaIB5a9AJwHF3RvsluYMDYVtmhuBjwslq8IHucwwPHf472jl/E8/87jD3Broia4Z
+	 Ed6JHVnchzH2kHOq/OMH3g6BBY/7EDUEeg5LHPsvH84ZN3zO1c/5KfxYPa9z4wgIe3
+	 v6ZaPxePUGd9ysLyvgzcu0Whf8cpgMSp7GbaFHk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbfCRJ3G (ORCPT
+        id S1728190AbfCRJ3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35182 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:29:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbfCRJ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:29:02 -0400
+        id S1728178AbfCRJ3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:29:05 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D04B2075C;
-        Mon, 18 Mar 2019 09:29:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64D5D2083D;
+        Mon, 18 Mar 2019 09:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901342;
-        bh=q+rztsWH+IacQFsnmGrmXwqJSGtzJItBrN5o5C7IeW8=;
+        s=default; t=1552901344;
+        bh=8rX3djr0Cm/6mpJxCFPCUh/vueTRPrtoOoAAQMDzBCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kUL1FLMDcq9Ot5rRyfJoeEHHMwwicsUios0Tw90NzdsWvPlLwZVSP0KaoqRWnQmM7
-         KiLEyfVbYUfPx7Kwy3uH6L1F6PQeqUnAQaqatPD7fBLateS2eBHVC/H5JuX5NfIyh7
-         UAgsP8W4krI9F5RELBbNr6h3jT1ZMHe35v7xFEeM=
+        b=uBsgpd/ThHuTPFQL+vb3PvFetDKGymiZ7xvx4YIZzLQ2jmaIgIrryUwWrebwQtVuk
+         Sc1ZblD+4YlxZ0ogEvS/pirsE2Q5odLSQIfEcNYszt9FgrwiME4IiSM+eF+V6n38Gz
+         yZpmZjLu32wU+Qwj/ytbaJsTOHBnYvRfQzmBN9mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
+        stable@vger.kernel.org,
+        syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 16/52] rxrpc: Fix client call queueing, waiting for channel
-Date:   Mon, 18 Mar 2019 10:25:03 +0100
-Message-Id: <20190318083845.369418065@linuxfoundation.org>
+Subject: [PATCH 4.20 17/52] sctp: remove sched init from sctp_stream_init
+Date:   Mon, 18 Mar 2019 10:25:04 +0100
+Message-Id: <20190318083845.494264659@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -65,49 +69,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: David Howells <dhowells@redhat.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 69ffaebb90369ce08657b5aea4896777b9d6e8fc ]
+[ Upstream commit 2e990dfd13974d9eae493006f42ffb48707970ef ]
 
-rxrpc_get_client_conn() adds a new call to the front of the waiting_calls
-queue if the connection it's going to use already exists.  This is bad as
-it allows calls to get starved out.
+syzbot reported a NULL-ptr deref caused by that sched->init() in
+sctp_stream_init() set stream->rr_next = NULL.
 
-Fix this by adding to the tail instead.
+  kasan: GPF could be caused by NULL-ptr deref or user memory access
+  RIP: 0010:sctp_sched_rr_dequeue+0xd3/0x170 net/sctp/stream_sched_rr.c:141
+  Call Trace:
+    sctp_outq_dequeue_data net/sctp/outqueue.c:90 [inline]
+    sctp_outq_flush_data net/sctp/outqueue.c:1079 [inline]
+    sctp_outq_flush+0xba2/0x2790 net/sctp/outqueue.c:1205
 
-Also change the other enqueue point in the same function to put it on the
-front (ie. when we have a new connection).  This makes the point that in
-the case of a new connection the new call goes at the front (though it
-doesn't actually matter since the queue should be unoccupied).
+All sched info is saved in sout->ext now, in sctp_stream_init()
+sctp_stream_alloc_out() will not change it, there's no need to
+call sched->init() again, since sctp_outq_init() has already
+done it.
 
-Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Fixes: 5bbbbe32a431 ("sctp: introduce stream scheduler foundations")
+Reported-by: syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/conn_client.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sctp/stream.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -353,7 +353,7 @@ static int rxrpc_get_client_conn(struct
- 	 * normally have to take channel_lock but we do this before anyone else
- 	 * can see the connection.
- 	 */
--	list_add_tail(&call->chan_wait_link, &candidate->waiting_calls);
-+	list_add(&call->chan_wait_link, &candidate->waiting_calls);
+--- a/net/sctp/stream.c
++++ b/net/sctp/stream.c
+@@ -230,8 +230,6 @@ int sctp_stream_init(struct sctp_stream
+ 	for (i = 0; i < stream->outcnt; i++)
+ 		SCTP_SO(stream, i)->state = SCTP_STREAM_OPEN;
  
- 	if (cp->exclusive) {
- 		call->conn = candidate;
-@@ -432,7 +432,7 @@ found_extant_conn:
- 	call->conn = conn;
- 	call->security_ix = conn->security_ix;
- 	call->service_id = conn->service_id;
--	list_add(&call->chan_wait_link, &conn->waiting_calls);
-+	list_add_tail(&call->chan_wait_link, &conn->waiting_calls);
- 	spin_unlock(&conn->channel_lock);
- 	_leave(" = 0 [extant %d]", conn->debug_id);
- 	return 0;
+-	sched->init(stream);
+-
+ in:
+ 	sctp_stream_interleave_init(stream);
+ 	if (!incnt)
 
 
