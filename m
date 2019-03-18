@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC99BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9DDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9412087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123A621741
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901822;
-	bh=082Gf6kNPC06tNrJ5hB5mW6/BlJwjZVqkVKdjyRBKi4=;
+	s=default; t=1552901829;
+	bh=sdqthjSM1A7zhumrklTJatF7xftN0D0A5eeCW8KtBoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JcgyX1rG1HwlgNrZY/BcSf8BVJ2vE5cI8CTzNoJJAt0soL36Xd+q6CUmAMbI7h0K+
-	 fYtor9Zpq3EuPeP/ZBys6uXocBynT3Ne2JKF3Qs9cFaJnNvD/CKhZu6q5O1cN+MzXF
-	 qccO5IXX8GzIyA3ir7gHQgjXbeN6g6BkPBVirLnw=
+	b=ftFQ2Z257RRfwxyFOPfKl7DyPpBuyk9mDyft/TqyAat8TCkQ2Xxgp46ui2bj3k4Qm
+	 siloGRKlpma9d56YlS7UyONEmH5/xsxvi0w0XN/PkCrJxXiGGf+h3B+VCChz3AC5J5
+	 WvvANl68Fhkvyr6lzu/6sjrVbqSaD/zCL0RxtA4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387765AbfCRJhB (ORCPT
+        id S2387789AbfCRJhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45274 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:37:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387733AbfCRJg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:36:57 -0400
+        id S2387733AbfCRJhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:37:05 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D07E6217D9;
-        Mon, 18 Mar 2019 09:36:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CB032175B;
+        Mon, 18 Mar 2019 09:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901817;
-        bh=082Gf6kNPC06tNrJ5hB5mW6/BlJwjZVqkVKdjyRBKi4=;
+        s=default; t=1552901823;
+        bh=sdqthjSM1A7zhumrklTJatF7xftN0D0A5eeCW8KtBoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pQ+V/OtDebxim3zArj/bt41a8XKxfKk/sQSj1pg9XueehHjAgiNs0sdeMYUY8WQua
-         0rIvmyabppEriUCozhmWqT0mL5GU5XnU3gLszqJECUQiToHd1kAYvUPH7esRM6Le5i
-         eY3x5/B+1BcWC7WQSZQkir7TN8+rbb9qAYqbxU2k=
+        b=MIjo/p33SJCscqjMOJ0vHcMJqk7ueWJuzPkCHxDOGaV0tvNoDAitem8AbYcDuV0iT
+         4a2s2vYHlmYHVSMekdRcPtGtLPacUuqDR8ySXVBQHTk0E+1JxOtewtM2eFE6JcHB7y
+         wUJ4lLFsEnuE0hKsQbiiY4rdz0aJVXTPntO/PsIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 22/31] vxlan: Fix GRO cells race condition between receive and link delete
-Date:   Mon, 18 Mar 2019 10:25:57 +0100
-Message-Id: <20190318084211.302225086@linuxfoundation.org>
+Subject: [PATCH 4.9 24/31] gro_cells: make sure device is up in gro_cells_receive()
+Date:   Mon, 18 Mar 2019 10:25:59 +0100
+Message-Id: <20190318084211.387901728@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
 References: <20190318084210.397476003@linuxfoundation.org>
@@ -68,53 +66,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit ad6c9986bcb627c7c22b8f9e9a934becc27df87c ]
+[ Upstream commit 2a5ff07a0eb945f291e361aa6f6becca8340ba46 ]
 
-If we receive a packet while deleting a VXLAN device, there's a chance
-vxlan_rcv() is called at the same time as vxlan_dellink(). This is fine,
-except that vxlan_dellink() should never ever touch stuff that's still in
-use, such as the GRO cells list.
+We keep receiving syzbot reports [1] that show that tunnels do not play
+the rcu/IFF_UP rules properly.
 
-Otherwise, vxlan_rcv() crashes while queueing packets via
-gro_cells_receive().
+At device dismantle phase, gro_cells_destroy() will be called
+only after a full rcu grace period is observed after IFF_UP
+has been cleared.
 
-Move the gro_cells_destroy() to vxlan_uninit(), which runs after the RCU
-grace period is elapsed and nothing needs the gro_cells anymore.
+This means that IFF_UP needs to be tested before queueing packets
+into netif_rx() or gro_cells.
 
-This is now done in the same way as commit 8e816df87997 ("geneve: Use GRO
-cells infrastructure.") originally implemented for GENEVE.
+This patch implements the test in gro_cells_receive() because
+too many callers do not seem to bother enough.
 
-Reported-by: Jianlin Shi <jishi@redhat.com>
-Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+[1]
+BUG: unable to handle kernel paging request at fffff4ca0b9ffffe
+PGD 0 P4D 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
+RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
+RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
+RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
+RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
+Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
+RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
+RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
+RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
+RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
+R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
+kobject: 'loop2' (000000004bd7d84a): kobject_uevent_env
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
+Call Trace:
+kobject: 'loop2' (000000004bd7d84a): fill_kobj_path: path = '/devices/virtual/block/loop2'
+ ip_tunnel_dev_free+0x19/0x60 net/ipv4/ip_tunnel.c:1010
+ netdev_run_todo+0x51c/0x7d0 net/core/dev.c:8970
+ rtnl_unlock+0xe/0x10 net/core/rtnetlink.c:116
+ ip_tunnel_delete_nets+0x423/0x5f0 net/ipv4/ip_tunnel.c:1124
+ vti_exit_batch_net+0x23/0x30 net/ipv4/ip_vti.c:495
+ ops_exit_list.isra.0+0x105/0x160 net/core/net_namespace.c:156
+ cleanup_net+0x3fb/0x960 net/core/net_namespace.c:551
+ process_one_work+0x98e/0x1790 kernel/workqueue.c:2173
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2319
+ kthread+0x357/0x430 kernel/kthread.c:246
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Modules linked in:
+CR2: fffff4ca0b9ffffe
+   [ end trace 513fc9c1338d1cb3 ]
+RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
+RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
+RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
+RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
+RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
+Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
+RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
+RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
+RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
+RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
+R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
+kobject: 'loop3' (00000000e4ee57a6): kobject_uevent_env
+R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
+
+Fixes: c9e6bc644e55 ("net: add gro_cells infrastructure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vxlan.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/net/gro_cells.h |   22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2373,6 +2373,8 @@ static void vxlan_uninit(struct net_devi
+--- a/include/net/gro_cells.h
++++ b/include/net/gro_cells.h
+@@ -18,22 +18,36 @@ static inline int gro_cells_receive(stru
  {
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
+ 	struct gro_cell *cell;
+ 	struct net_device *dev = skb->dev;
++	int res;
  
-+	gro_cells_destroy(&vxlan->gro_cells);
+-	if (!gcells->cells || skb_cloned(skb) || !(dev->features & NETIF_F_GRO))
+-		return netif_rx(skb);
++	rcu_read_lock();
++	if (unlikely(!(dev->flags & IFF_UP)))
++		goto drop;
 +
- 	vxlan_fdb_delete_default(vxlan);
++	if (!gcells->cells || skb_cloned(skb) || !(dev->features & NETIF_F_GRO)) {
++		res = netif_rx(skb);
++		goto unlock;
++	}
  
- 	free_percpu(dev->tstats);
-@@ -3123,7 +3125,6 @@ static void vxlan_dellink(struct net_dev
- {
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
+ 	cell = this_cpu_ptr(gcells->cells);
  
--	gro_cells_destroy(&vxlan->gro_cells);
- 	list_del(&vxlan->next);
- 	unregister_netdevice_queue(dev, head);
+ 	if (skb_queue_len(&cell->napi_skbs) > netdev_max_backlog) {
++drop:
+ 		atomic_long_inc(&dev->rx_dropped);
+ 		kfree_skb(skb);
+-		return NET_RX_DROP;
++		res = NET_RX_DROP;
++		goto unlock;
+ 	}
+ 
+ 	__skb_queue_tail(&cell->napi_skbs, skb);
+ 	if (skb_queue_len(&cell->napi_skbs) == 1)
+ 		napi_schedule(&cell->napi);
+-	return NET_RX_SUCCESS;
++
++	res = NET_RX_SUCCESS;
++
++unlock:
++	rcu_read_unlock();
++	return res;
  }
+ 
+ /* called under BH context */
 
 
