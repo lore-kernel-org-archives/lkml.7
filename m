@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31313C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BEAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01194214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D074D214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901629;
-	bh=43q9644GxKPtucTiDffZGvk9fkNf+G4w4PxfEwQD5qI=;
+	s=default; t=1552901631;
+	bh=WB+WnKuE+7Xx1t830uueUImXHHVBlLa73KzzojHWnLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OF/0rZE16TQ28pq3YVzA9a6+7SQpLx5wcPkHUgR8IL/YXEsuyP3+I77MFGVwzu9ER
-	 4DPo1JxjKRC8s3LlOcu5XsCtkWjj5CFJaCFTVKL2cfoMQM0Nb5DX+AMs1JpNvrPfMS
-	 h6rxPvZJxjYYxmVyUG9uCSMOn3ax/NFqkIkooDOw=
+	b=W/bZyRxYIKtFPIkyKuhzjOFL1mqTR2ZhyBX5ew2D+nWoqB4ul90AdpN3enmob6V0/
+	 XbK/NJWjgjBCYovR8GZKWuAAgknNbTmVTMyOpKZEaT/B9lN1rv1K2GSdf4S/p5EBak
+	 HIlfNIDP7bw3M1RjnGkX0Sq03Ud3Sze6fQQJ1RyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfCRJdq (ORCPT
+        id S1728419AbfCRJdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:33:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42006 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:33:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728574AbfCRJdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:41 -0400
+        id S1728906AbfCRJdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:33:47 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C15AC2083D;
-        Mon, 18 Mar 2019 09:33:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CD60214AF;
+        Mon, 18 Mar 2019 09:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901620;
-        bh=43q9644GxKPtucTiDffZGvk9fkNf+G4w4PxfEwQD5qI=;
+        s=default; t=1552901626;
+        bh=WB+WnKuE+7Xx1t830uueUImXHHVBlLa73KzzojHWnLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HbawI2iLePX98pYMdHnu4WgMfVyED12S1vE8UlSWc27kjdqYJjOf5DzmFbIZjtwBf
-         vrzqpnJLHqAHSxOoU6zlp7b2rje/N6D61ji2TdpY0JjpT4T/1IFhSZN8ykEuJJ79z3
-         NFQWPOTOEJ9VCwOjOFwRbaOtjIX3KUhzl9BjRFtc=
+        b=UxZnp7DLcg3rZK0NeZKwrDgXtKCt/WKnphVGAfOU3cn+bnyVVz4QueTSNsGLuvKrg
+         kk3+SfXKawRuf9yQWeuwEBNpElksUDlQz2iSbp9Vwx8lYKXurJy6SbUAWGUAku8PPJ
+         cXqanztH8NczmX2KgsyQ61eEeGvwB9S9WTjpk9gY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Emeric Brun <ebrun@haproxy.com>
-Subject: [PATCH 4.19 51/52] i40e: report correct statistics when XDP is enabled
-Date:   Mon, 18 Mar 2019 10:25:48 +0100
-Message-Id: <20190318084019.553098290@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 38/52] perf/x86: Fixup typo in stub functions
+Date:   Mon, 18 Mar 2019 10:25:35 +0100
+Message-Id: <20190318084018.015238657@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -68,79 +68,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Björn Töpel <bjorn.topel@intel.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit cdec2141c24ef177d929765c5a6f95549c266fb3 upstream.
+commit f764c58b7faa26f5714e6907f892abc2bc0de4f8 upstream.
 
-When XDP is enabled, the driver will report incorrect
-statistics. Received frames will reported as transmitted frames.
+Guenter reported a build warning for CONFIG_CPU_SUP_INTEL=n:
 
-This commits fixes the i40e implementation of ndo_get_stats64 (struct
-net_device_ops), so that iproute2 will report correct statistics
-(e.g. when running "ip -stats link show dev eth0") even when XDP is
-enabled.
+  > With allmodconfig-CONFIG_CPU_SUP_INTEL, this patch results in:
+  >
+  > In file included from arch/x86/events/amd/core.c:8:0:
+  > arch/x86/events/amd/../perf_event.h:1036:45: warning: ‘struct cpu_hw_event’ declared inside parameter list will not be visible outside of this definition or declaration
+  >  static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
 
-Reported-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Fixes: 74608d17fe29 ("i40e: add support for XDP_TX action")
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc: Emeric Brun <ebrun@haproxy.com>
+While harmless (an unsed pointer is an unused pointer, no matter the type)
+it needs fixing.
+
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Fixes: d01b1f96a82e ("perf/x86/intel: Make cpuc allocations consistent")
+Link: http://lkml.kernel.org/r/20190315081410.GR5996@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c |   24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ arch/x86/events/perf_event.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -424,9 +424,9 @@ static void i40e_get_netdev_stats_struct
- 				  struct rtnl_link_stats64 *stats)
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1030,12 +1030,12 @@ static inline int intel_pmu_init(void)
+ 	return 0;
+ }
+ 
+-static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
++static inline int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
  {
- 	struct i40e_netdev_priv *np = netdev_priv(netdev);
--	struct i40e_ring *tx_ring, *rx_ring;
- 	struct i40e_vsi *vsi = np->vsi;
- 	struct rtnl_link_stats64 *vsi_stats = i40e_get_vsi_stats_struct(vsi);
-+	struct i40e_ring *ring;
- 	int i;
+ 	return 0;
+ }
  
- 	if (test_bit(__I40E_VSI_DOWN, vsi->state))
-@@ -440,24 +440,26 @@ static void i40e_get_netdev_stats_struct
- 		u64 bytes, packets;
- 		unsigned int start;
- 
--		tx_ring = READ_ONCE(vsi->tx_rings[i]);
--		if (!tx_ring)
-+		ring = READ_ONCE(vsi->tx_rings[i]);
-+		if (!ring)
- 			continue;
--		i40e_get_netdev_stats_struct_tx(tx_ring, stats);
-+		i40e_get_netdev_stats_struct_tx(ring, stats);
- 
--		rx_ring = &tx_ring[1];
-+		if (i40e_enabled_xdp_vsi(vsi)) {
-+			ring++;
-+			i40e_get_netdev_stats_struct_tx(ring, stats);
-+		}
- 
-+		ring++;
- 		do {
--			start = u64_stats_fetch_begin_irq(&rx_ring->syncp);
--			packets = rx_ring->stats.packets;
--			bytes   = rx_ring->stats.bytes;
--		} while (u64_stats_fetch_retry_irq(&rx_ring->syncp, start));
-+			start   = u64_stats_fetch_begin_irq(&ring->syncp);
-+			packets = ring->stats.packets;
-+			bytes   = ring->stats.bytes;
-+		} while (u64_stats_fetch_retry_irq(&ring->syncp, start));
- 
- 		stats->rx_packets += packets;
- 		stats->rx_bytes   += bytes;
- 
--		if (i40e_enabled_xdp_vsi(vsi))
--			i40e_get_netdev_stats_struct_tx(&rx_ring[1], stats);
- 	}
- 	rcu_read_unlock();
+-static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
++static inline void intel_cpuc_finish(struct cpu_hw_events *cpuc)
+ {
+ }
  
 
 
