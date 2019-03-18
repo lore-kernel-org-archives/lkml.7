@@ -2,95 +2,114 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8744C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA29C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28A22085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:34:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRAwBlTZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4DA8420879
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfCROex (ORCPT
+        id S1727797AbfCROfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:34:53 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44888 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfCROex (ORCPT
+        Mon, 18 Mar 2019 10:35:23 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11891 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726868AbfCROfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:34:53 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h34so11499530pgh.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 07:34:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oNe+B0p7D+d5WR49jlZ/vcloKG63Et3my9JV/mFWf0Y=;
-        b=cRAwBlTZnjjGHQI4lF59YPu7bOM8YYp5HOXA/bDkQwSAlXRxN4aIJtEebiUbErE+q3
-         J8jQkAhNtCVpzMvMDFkrA40GajYtGRjnL14+9nsb/MXiKgFzV0ShHTiAFOTCFtHMep9s
-         QA76YdYwFjgx5SIcOYo/JXsBxzPSwDE8+SRnmjv53LD+XzcRB+B5CqhN4E2MewjvsBJG
-         yt2h97+yWlUjA7CYgEPvL/iHtaFpmqBJtg+2Y14OnMJE8ZlCq6wuDBcWPtlHZy2CjPWc
-         IU0UgJG1QQIe4L71N4IhJoIu8SZNt6YtQz9UWW/JIN8HiAUw9kUFW90J1PpOwVA9zsdh
-         Attw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oNe+B0p7D+d5WR49jlZ/vcloKG63Et3my9JV/mFWf0Y=;
-        b=oqlIjnOsha/s532wfCNS5Pw0R0T/ZhehoEqOCfJcU48wxCeFguyix5klGkZUa537+h
-         bLz50XpwN0MMzzMwe38zre1R8Jw0Lpm+cTOUm4IoM493jBRjUOeZaZGZT2nAlQzfAkp3
-         wW1XSFU0g2+/OHq3FkutOTXL4PdcW92WC/85Xv231mUDHFip6R+en0k39wZz76PsvOxA
-         v6uOT99Koi45Hr6PNVAl5RuU6YZh2ay9LU5YOBoEdlanbPDWn0Oj5DKmyJpNQxxflAQn
-         uhh73WXV6ly7QhtncDm52ZCPgUp3VORUQwpHwX84Ymhda+mQeZ/80pKORWVwlhIGzUzT
-         5NAQ==
-X-Gm-Message-State: APjAAAW9E5hewTBhwDCFbmImvvLoihHrrO5wMLOSAtvZtY3tEs8kg5ab
-        qa6WHa6Ex9HjHOqqOhdgdpI=
-X-Google-Smtp-Source: APXvYqzskAJv79kQDMUTMC79yL6/+6tgjEe6BamCbss0CBUNNZeWil64AUz9ZIICuJpulPf3VrXe5A==
-X-Received: by 2002:a17:902:a704:: with SMTP id w4mr19638834plq.251.1552919692274;
-        Mon, 18 Mar 2019 07:34:52 -0700 (PDT)
-Received: from localhost ([121.137.63.184])
-        by smtp.gmail.com with ESMTPSA id y8sm20123068pge.35.2019.03.18.07.34.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 07:34:51 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Mon, 18 Mar 2019 23:34:21 +0900
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] printk: Remove no longer used console_silent().
-Message-ID: <20190318143421.GB29374@tigerII.localdomain>
-References: <1552917923-16601-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+        Mon, 18 Mar 2019 10:35:22 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IEQ00t005301;
+        Mon, 18 Mar 2019 15:35:05 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2r8q5b4jru-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 18 Mar 2019 15:35:05 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E3F0931;
+        Mon, 18 Mar 2019 14:35:04 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9062651C9;
+        Mon, 18 Mar 2019 14:35:04 +0000 (GMT)
+Received: from [10.48.0.167] (10.75.127.45) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 18 Mar
+ 2019 15:35:03 +0100
+Subject: Re: [PATCH v5 0/3] Add PM support to STM32 LP Timer drivers
+To:     <thierry.reding@gmail.com>
+CC:     <robh+dt@kernel.org>, <u.kleine-koenig@pengutronix.de>,
+        <tduszyns@gmail.com>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>, <mcoquelin.stm32@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1550668068-9661-1-git-send-email-fabrice.gasnier@st.com>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <b89207ac-d80b-d79f-02cc-095f19b8aecf@st.com>
+Date:   Mon, 18 Mar 2019 15:35:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552917923-16601-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1550668068-9661-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (03/18/19 23:05), Tetsuo Handa wrote:
-> console_silent() is no longer used after the removal of
-> arch/mn10300/kernel/mn10300-watchdog.c in Linux 4.17-rc1.
+On 2/20/19 2:07 PM, Fabrice Gasnier wrote:
+> This patch series adds power management support for STM32 LP Timer:
+> - PWM driver
+> - Document the pinctrl states for sleep mode
+> 
+> It also adds device link between the PWM consumer and the PWM provider.
+> This allows proper sequencing for suspend/resume (e.g. user will likely
+> do a pwm_disable() before the PWM provider suspend executes), see [1].
+> 
+> [1] https://lkml.org/lkml/2019/2/5/770
 
-[..]
+Hi Thierry,
 
-> -static inline void console_silent(void)
-> -{
-> -	console_loglevel = CONSOLE_LOGLEVEL_SILENT;
-> -}
+Gentle reminder to review changes I've made in v5.
 
-I would keep it, I guess, and would instead covert
+Thanks in advance,
+Best Regards,
+Fabrice
 
-kernel/debug/kdb/kdb_io.c:              console_loglevel = CONSOLE_LOGLEVEL_SILENT
-
-to use proper API (console_silent()).
-
-	-ss
+> 
+> ---
+> Changes in v5:
+> - improve a warning message, fix a style issue.
+> 
+> Changes in v4:
+> - improve error handling when adding the PWM consumer device link.
+> 
+> Changes in v3:
+> - Move the device_link_add() call to of_pwm_get() as discussed with Uwe.
+> 
+> Changes in v2:
+> - Don't disable PWM channel in PWM provider: rather refuse to suspend
+>   and report an error as suggested by Uwe and Thierry.
+> - Add patch 3/3 to propose device link addition.
+> - No updates for STM32 LP Timer IIO driver. Patches can be send separately.
+> 
+> Fabrice Gasnier (3):
+>   dt-bindings: pwm-stm32-lp: document pinctrl sleep state
+>   pwm: stm32-lp: Add power management support
+>   pwm: core: add consumer device link
+> 
+>  .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  9 ++--
+>  drivers/pwm/core.c                                 | 50 ++++++++++++++++++++--
+>  drivers/pwm/pwm-stm32-lp.c                         | 25 +++++++++++
+>  include/linux/pwm.h                                |  6 ++-
+>  4 files changed, 82 insertions(+), 8 deletions(-)
+> 
