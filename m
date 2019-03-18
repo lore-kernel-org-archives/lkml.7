@@ -2,112 +2,118 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477E8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DFCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238062064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2B72064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfCRRqY (ORCPT
+        id S1727116AbfCRRtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:46:24 -0400
-Received: from mga01.intel.com ([192.55.52.88]:27340 "EHLO mga01.intel.com"
+        Mon, 18 Mar 2019 13:49:16 -0400
+Received: from foss.arm.com ([217.140.101.70]:39044 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfCRRqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:46:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:46:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="153454112"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Mar 2019 10:46:20 -0700
-Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
-        by linux.intel.com (Postfix) with ESMTP id 553D2580238;
-        Mon, 18 Mar 2019 10:46:18 -0700 (PDT)
-Subject: [PATCH v10 12/12] perf tests: implement Zstd comp/decomp integration
- test
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <dc007ae4-104a-2b7c-316e-275929025f0d@linux.intel.com>
-Date:   Mon, 18 Mar 2019 20:46:17 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726623AbfCRRtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:49:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CB16EBD;
+        Mon, 18 Mar 2019 10:49:15 -0700 (PDT)
+Received: from why.lan (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADD583F614;
+        Mon, 18 Mar 2019 10:49:13 -0700 (PDT)
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] usb: typec: fusb302: Fix debugfs mutex initialisation
+Date:   Mon, 18 Mar 2019 17:49:06 +0000
+Message-Id: <20190318174906.10429-1-marc.zyngier@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Running a kernel with the fusb302 driver and lockdep enabled
+leads to an unpleasant warning:
 
-Implemented basic integration test for Zstd based trace
-compression/decompression in record and report modes.
+[    4.617477] INFO: trying to register non-static key.
+[    4.617930] the code is fine but needs lockdep annotation.
+[    4.618418] turning off the locking correctness validator.
+[    4.618913] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc1-00007-g3542533f3fc9 #13
+[    4.619620] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
+[    4.620454] Call trace:
+[    4.620693]  dump_backtrace+0x0/0x138
+[    4.621028]  show_stack+0x24/0x30
+[    4.621336]  dump_stack+0xbc/0x104
+[    4.621649]  register_lock_class+0x594/0x598
+[    4.622036]  __lock_acquire+0x80/0x11b8
+[    4.622384]  lock_acquire+0xdc/0x260
+[    4.622711]  __mutex_lock+0x90/0x8a0
+[    4.623037]  mutex_lock_nested+0x3c/0x50
+[    4.623394]  _fusb302_log+0x88/0x1f0
+[    4.623721]  fusb302_log+0x7c/0xa0
+[    4.624033]  tcpm_init+0x5c/0x190
+[    4.624336]  tcpm_init+0x3c/0x130
+[    4.624640]  tcpm_register_port+0x574/0x878
+[    4.625019]  fusb302_probe+0x2c8/0x590
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Despite what the message says, the code isn't fine, as it tries to
+make use of the fusb302_log facility pretty early. This requires the
+logbuffer_lock mutex to be initialised, but that only happens much
+later. Boo.
+
+Hoist the fusb302_debugfs_init call before tcpm_register_port so that
+we can enjoy a working mutex. At Guenter's request, also add teardown
+of the debugfs facility on the error path.
+
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 ---
- .../tests/shell/record+zstd_comp_decomp.sh    | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp.sh
+ drivers/usb/typec/tcpm/fusb302.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-new file mode 100755
-index 000000000000..c0ff142bf66a
---- /dev/null
-+++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-@@ -0,0 +1,35 @@
-+#!/bin/sh
-+# record trace Zstd compression/decompression
-+
-+trace_file=$(mktemp /tmp/perf.data.XXX)
-+perf_tool=perf
-+output=/dev/null
-+
-+skip_if_no_z_record() {
-+	$perf_tool record -h 2>&1 | grep '\-z, \-\-compression\-level'
-+}
-+
-+collect_z_record() {
-+	echo "Collecting compressed record trace file:"
-+	$perf_tool record -o $trace_file -g -z -F 25000 -- \
-+		dd count=1000 if=/dev/random of=/dev/null > $output 2>&1
-+}
-+
-+check_compressed_stats() {
-+	echo "Checking compressed events stats:"
-+	$perf_tool report -i $trace_file --header --stats | \
-+		grep -E "(# compressed : Zstd,)|(COMPRESSED events:)" > $output 2>&1
-+}
-+
-+check_compressed_output() {
-+	$perf_tool inject -i $trace_file -o $trace_file.decomp &&
-+	$perf_tool report -i $trace_file --stdio | head -n -3 > $trace_file.comp.output &&
-+	$perf_tool report -i $trace_file.decomp --stdio | head -n -3 > $trace_file.decomp.output &&
-+	diff $trace_file.comp.output $trace_file.decomp.output > $output 2>&1
-+}
-+
-+skip_if_no_z_record || exit 2
-+collect_z_record && check_compressed_stats && check_compressed_output
-+err=$?
-+rm -f $trace_file*
-+exit $err
+diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
+index e9344997329c..76cb8be6f3eb 100644
+--- a/drivers/usb/typec/tcpm/fusb302.c
++++ b/drivers/usb/typec/tcpm/fusb302.c
+@@ -1790,12 +1790,13 @@ static int fusb302_probe(struct i2c_client *client,
+ 			goto destroy_workqueue;
+ 	}
+ 
++	fusb302_debugfs_init(chip);
+ 	chip->tcpm_port = tcpm_register_port(&client->dev, &chip->tcpc_dev);
+ 	if (IS_ERR(chip->tcpm_port)) {
+ 		ret = PTR_ERR(chip->tcpm_port);
+ 		if (ret != -EPROBE_DEFER)
+ 			dev_err(dev, "cannot register tcpm port, ret=%d", ret);
+-		goto destroy_workqueue;
++		goto unregister_debugfs;
+ 	}
+ 
+ 	ret = devm_request_threaded_irq(chip->dev, chip->gpio_int_n_irq,
+@@ -1807,13 +1808,14 @@ static int fusb302_probe(struct i2c_client *client,
+ 		goto tcpm_unregister_port;
+ 	}
+ 	enable_irq_wake(chip->gpio_int_n_irq);
+-	fusb302_debugfs_init(chip);
+ 	i2c_set_clientdata(client, chip);
+ 
+ 	return ret;
+ 
+ tcpm_unregister_port:
+ 	tcpm_unregister_port(chip->tcpm_port);
++unregister_debugfs:
++	fusb302_debugfs_exit(chip);
+ destroy_workqueue:
+ 	destroy_workqueue(chip->wq);
+ 
 -- 
 2.20.1
 
