@@ -2,114 +2,120 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70ACAC10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422CC20811
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B893E20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:36:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Ti6WT1kE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLr8ijpG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfCRSa2 (ORCPT
+        id S1726995AbfCRSgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:30:28 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46914 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfCRSa2 (ORCPT
+        Mon, 18 Mar 2019 14:36:40 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46535 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbfCRSgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:30:28 -0400
-Received: by mail-oi1-f193.google.com with SMTP id x188so1676007oia.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:30:27 -0700 (PDT)
+        Mon, 18 Mar 2019 14:36:39 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a22so11954111pgg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:36:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sbsTYKGPUf22VNUHUiDumPSMR3YTxTtHfk3y04Q51PI=;
-        b=Ti6WT1kEvz5706AzrASGb3DEtp+m8ZO+QEXN5wFB+65Dn64vkucYPUtl275qzWQcDL
-         OkR0bul4zxaYW6XYbh4PIZpjS8+i0ejH1t92P0sHeChDtCDzOuJwwPbk3tbyqGkr1I1s
-         /CRlBL/qG+BRneir31rdy3ywTvLqDjVal2nUrrGHjc5tnTc+oLaAJ6w17FESSUFhpTTz
-         H6oRDlE3nXOpY32QB6p7bgx5T6ZDi3cQ8pYGtpdtYPnvfTmVg+492QO6Dtkv7FhmtV2l
-         RHN/0nkQsymYJPOLXNo9xYLbxTdMNX/84V7RB/qzEBmNsVk3fEoiZOuBtFYjxosXSVAa
-         No3Q==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K4VPW3+O7VtSE35FtNM/dNGTrhsfi9enghyv3AubiYg=;
+        b=LLr8ijpGNWEv1BzA2/jYc3cvRgoXuRwJqOT3HHEgTXGPLHqJDCRM5MQ4iJkQCJR6kU
+         q9ORbjeefbqD/Kllvsfe0ZY7HqPyVINgPJfZBHByWFnr+lp48UP3EED0W3ZZApKzr7v3
+         ttlHhTkZx8SWzYWzF9XuTf3TK58aAXIEiwc/4nlmX9ngw4iH4iwszsE69UVa18sBnCTO
+         x4Bet9SOz7I6o363DdG5Rrp/fKruiZwRc0cQVNLen4Xh2qIkjqBY/TCs1L7r/zqI706I
+         eqBkO1xHvqnAXwLZ0TYdJO1J7PQWc+aLVCsZj7vTRBByn2XA/SelTxDhHHqA8QqyPONf
+         jd9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sbsTYKGPUf22VNUHUiDumPSMR3YTxTtHfk3y04Q51PI=;
-        b=GG7sGAqU7ljEiKNYTi4zf6U/cjCi0R4wF63UW1lCHWHhWywamRDqUIBkDTHbCxMqqg
-         80hvvMKZ7GjJYWTydURSgOHYXVk3sRu6c3PxO5IUHKCzG02/4sCX2wJ/P3Xv9b/sTWQg
-         R39YhZghCN2sQ7TdMQa6rR347AlnOJVPzgs1XBBZHPk8nbQ1LcZ7J1G/xB+03DIAgcX1
-         p4ERfZmCcLco3mVxLZzHbr5/OH2I5Y8VglAWQUu0iGjhn2M7cSZHAkLLq0/H1ptNkqa4
-         cPBXL0y1CQacCu2Fe0hjG3SLZ8gI2cTaCCLON3/rQUSKfJb60rEgWwsrvcDmybK8znFw
-         U/Dg==
-X-Gm-Message-State: APjAAAUO4BhhExSukqCicfVY9rsEtYFEd3InPwj7Anucokr2dabprC2V
-        7U6fAIIMn4muiQLMQKdRAIJ9j/1m5eVyQqjF3fLKkg==
-X-Google-Smtp-Source: APXvYqy38RzGaS6GmKEWk8AVCslWmyO1VRMUjt3IiqPFlac6gvhzxAIrS42qy+DE9houQ7j4yhnpSI2lrBv5oKHke9g=
-X-Received: by 2002:aca:f581:: with SMTP id t123mr198768oih.0.1552933827507;
- Mon, 18 Mar 2019 11:30:27 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K4VPW3+O7VtSE35FtNM/dNGTrhsfi9enghyv3AubiYg=;
+        b=SLSFxG1j2h9cplmOWVs42yD2HYW0uW+MWEn2jZNKt3rCO5YTYZwaFJA4aSlS8GBH3W
+         ddljhINT2j0xdRfrwfQdgOfEHAFaR8jo04wKqB7BEOfodg2JSuT+xD3bs9FMRtwmZqVC
+         SEdpiyzsRq7ivkgfj5aSX1T30Iwk6UlSssQI+C6tK3qzEjrc1DmmdYDF8hjPyQ4+C6/R
+         ylOHDMiInljGv7qyR/OBonyfn/1Z/gDo3KmftsebLUtzpHTV2+Wrlk7XSZF0ljsHoMe2
+         hQemQgBn0EtZGZqIQ5AZfDNe6TKuHfxgZ4bViD2wZ3q9VKt37MJ0aFOypk9JDLIlAk34
+         nsVA==
+X-Gm-Message-State: APjAAAV8Zs90Tw08QvbYc/aw1CXcCbJSNHRj0yCJwgDKakv5NoDB0aT6
+        nh4Cy3j16eJW93tYMYX1Y8Y=
+X-Google-Smtp-Source: APXvYqzAPbK3ICS/zO5WrsgUKLAHeWFlsDRkSFvm0aI3oRvjuDsvNzfCIhrEk24etiE5bNjzWqIZzg==
+X-Received: by 2002:a63:c042:: with SMTP id z2mr19038053pgi.307.1552934198785;
+        Mon, 18 Mar 2019 11:36:38 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i22sm4227996pgl.8.2019.03.18.11.36.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 11:36:38 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 11:36:36 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Anton Vasilyev <vasilyev@ispras.ru>
+Subject: Re: [PATCH] firmware: vpd: Drop __iomem usage for memremap() memory
+Message-ID: <20190318183636.GA31345@roeck-us.net>
+References: <20190318155457.197339-1-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <20190129165428.3931-1-jglisse@redhat.com> <20190313012706.GB3402@redhat.com>
- <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org> <20190318170404.GA6786@redhat.com>
-In-Reply-To: <20190318170404.GA6786@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 18 Mar 2019 11:30:15 -0700
-Message-ID: <CAPcyv4geu34vgZszALiDxJWR8itK+A3qSmpR+_jOq29whGngNg@mail.gmail.com>
-Subject: Re: [PATCH 00/10] HMM updates for 5.1
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318155457.197339-1-swboyd@chromium.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 10:04 AM Jerome Glisse <jglisse@redhat.com> wrote:
->
-> On Wed, Mar 13, 2019 at 09:10:04AM -0700, Andrew Morton wrote:
-> > On Tue, 12 Mar 2019 21:27:06 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
-> >
-> > > Andrew you will not be pushing this patchset in 5.1 ?
-> >
-> > I'd like to.  It sounds like we're converging on a plan.
-> >
-> > It would be good to hear more from the driver developers who will be
-> > consuming these new features - links to patchsets, review feedback,
-> > etc.  Which individuals should we be asking?  Felix, Christian and
-> > Jason, perhaps?
-> >
->
-> So i am guessing you will not send this to Linus ? Should i repost ?
-> This patchset has 2 sides, first side is just reworking the HMM API
-> to make something better in respect to process lifetime. AMD folks
-> did find that helpful [1]. This rework is also necessary to ease up
-> the convertion of ODP to HMM [2] and Jason already said that he is
-> interested in seing that happening [3]. By missing 5.1 it means now
-> that i can not push ODP to HMM in 5.2 and it will be postpone to 5.3
-> which is also postoning other work ...
->
-> The second side is it adds 2 new helper dma map and dma unmap both
-> are gonna be use by ODP and latter by nouveau (after some other
-> nouveau changes are done). This new functions just do dma_map ie:
->     hmm_dma_map() {
->         existing_hmm_api()
->         for_each_page() {
->             dma_map_page()
->         }
->     }
->
-> Do you want to see anymore justification than that ?
+On Mon, Mar 18, 2019 at 08:54:57AM -0700, Stephen Boyd wrote:
+> memremap() doesn't return an iomem pointer, so we can just use memcpy()
+> and drop the __iomem annotation here. This silences a sparse warning.
+> 
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Anton Vasilyev <vasilyev@ispras.ru>
+> Smgned-off-by: Stephen Boyd <swboyd@chromium.org>
 
-Yes, why does hmm needs its own dma mapping apis? It seems to
-perpetuate the perception that hmm is something bolted onto the side
-of the core-mm rather than a native capability.
+Smgned ?
+
+Other than that,
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/firmware/google/vpd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/google/vpd.c
+> index c0c0b4e4e281..f240946ed701 100644
+> --- a/drivers/firmware/google/vpd.c
+> +++ b/drivers/firmware/google/vpd.c
+> @@ -254,7 +254,7 @@ static int vpd_section_destroy(struct vpd_section *sec)
+>  
+>  static int vpd_sections_init(phys_addr_t physaddr)
+>  {
+> -	struct vpd_cbmem __iomem *temp;
+> +	struct vpd_cbmem *temp;
+>  	struct vpd_cbmem header;
+>  	int ret = 0;
+>  
+> @@ -262,7 +262,7 @@ static int vpd_sections_init(phys_addr_t physaddr)
+>  	if (!temp)
+>  		return -ENOMEM;
+>  
+> -	memcpy_fromio(&header, temp, sizeof(struct vpd_cbmem));
+> +	memcpy(&header, temp, sizeof(struct vpd_cbmem));
+>  	memunmap(temp);
+>  
+>  	if (header.magic != VPD_CBMEM_MAGIC)
+> -- 
+> Sent by a computer through tubes
+> 
