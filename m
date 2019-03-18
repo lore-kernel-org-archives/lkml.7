@@ -4,140 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A145AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B05C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C72205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33792070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:09:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AsmRD968"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eB+E27zQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfCRKJT (ORCPT
+        id S1727736AbfCRKJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:09:19 -0400
-Received: from mail-eopbgr10088.outbound.protection.outlook.com ([40.107.1.88]:32840
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727130AbfCRKJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:09:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WxagMeiteWidLro3dGUpcOaM0OL2qxicyzuUQ4MuHFc=;
- b=AsmRD968LyELNliOG6guXL62Ovu/iulbLX3C7mNnQNvi+8lmjXEHaKOdClCFcCYBLx0ziG3lU3o+mheWqdlkJDq1DY+VewHGaBAVc4Qr71/ABezDq1g7cRtFNsd8GFTs7tTjyr8N4qNzDPz6B2C1oQH/WmcWZ9oLGWHQDJ/Ce/o=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3754.eurprd04.prod.outlook.com (52.134.67.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Mon, 18 Mar 2019 10:09:01 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%6]) with mapi id 15.20.1709.015; Mon, 18 Mar 2019
- 10:09:01 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Mon, 18 Mar 2019 06:09:27 -0400
+Received: from smtprelay.synopsys.com ([198.182.60.111]:42974 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbfCRKJ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 06:09:27 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay.synopsys.com (Postfix) with ESMTPS id 9028710C1556;
+        Mon, 18 Mar 2019 03:09:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1552903766; bh=qCm9KvfTairpRxzfIGQbUimxdnzi/aiQzGOCYJfipJk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
+        b=eB+E27zQGNgjiP19ZIc99nYSdRFgzEQOBSZGXIf2kWy/hl1s4Gaa6Qlhean6p4l3c
+         aGwP6nvKn/OPJ/VbZNMFyunItwxwKc8MZOZAAJQJwFSBVdmI3C85rlseZOwKGJE2Pm
+         sDTANH7pxAOJu1OdyG1I8qXkD2OhHvrRx1MIcEp8VfbwgbtRo28hh271a6/qtOz0/s
+         KPvTbYu9uv+rJCcLG+8hflUShfe7g84JwFvIzroUDlGmV3NCPgfyO8bemdhQPt2mll
+         88eGOZT/QQDCup7Q9d18kWS/Z4s58EBvvJkIV7oTYec3o217nqS6w1KjMkWTLSxxq9
+         KpCckE+1zEmmg==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 753DCA0062;
+        Mon, 18 Mar 2019 10:09:26 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 18 Mar 2019 03:09:26 -0700
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ DE02WEHTCB.internal.synopsys.com (10.225.19.94) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 18 Mar 2019 11:09:24 +0100
+Received: from [10.107.25.131] (10.107.25.131) by
+ DE02WEHTCA.internal.synopsys.com (10.225.19.80) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 18 Mar 2019 11:09:23 +0100
+Subject: Re: [PATCH v3 5/5] PCI: dwc: Save root bus for driver remove
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V5 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Thread-Topic: [PATCH V5 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Thread-Index: AQHU3V4B0+Op6lebhUq7cDF33YTb6qYRJ5kAgAACvOA=
-Date:   Mon, 18 Mar 2019 10:09:01 +0000
-Message-ID: <DB3PR0402MB3916F037CC96A5CDE328BC19F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1552894581-3391-1-git-send-email-Anson.Huang@nxp.com>
- <1552894581-3391-2-git-send-email-Anson.Huang@nxp.com>
- <20190318095842.GD17565@ulmo>
-In-Reply-To: <20190318095842.GD17565@ulmo>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [119.31.174.69]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6bf837e4-f43d-4bc3-4ecf-08d6ab89be94
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3754;
-x-ms-traffictypediagnostic: DB3PR0402MB3754:
-x-microsoft-antispam-prvs: <DB3PR0402MB37544FCF16755FCF0B3F07E1F5470@DB3PR0402MB3754.eurprd04.prod.outlook.com>
-x-forefront-prvs: 098076C36C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(376002)(366004)(136003)(39860400002)(346002)(396003)(13464003)(189003)(199004)(105586002)(7736002)(106356001)(71190400001)(71200400001)(305945005)(7416002)(476003)(74316002)(316002)(33656002)(9686003)(55016002)(229853002)(14454004)(52536014)(6436002)(53936002)(54906003)(446003)(6346003)(11346002)(2906002)(81156014)(8676002)(81166006)(8936002)(5660300002)(97736004)(53546011)(68736007)(102836004)(6506007)(66066001)(4326008)(186003)(3846002)(6116002)(478600001)(6246003)(256004)(76176011)(26005)(99286004)(7696005)(486006)(44832011)(25786009)(86362001)(6916009)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3754;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: r2cLjSYzKaLbjbsRWP6GtZHpTttq/8ZtLvk0q08/GAVn1bQqj4yuCkGWNBl/CJB53rLdb0sOS/Tpajtj0NG14pacey6cZ3024NlNJlpFf2199j8hZU/PcofMAczQ1wi7dVJjiREC0h+AuLPwERss/lkJQicMwmf7MWjM7tisTJcIe99KS8qOubAyEm8NKZKyy8ckeyPdTSYo659dfDNSC6ZzT5fwqeU3wPg/CC3jGIvGcgtSzhebxrB9tE92GPR76T25VZMpzihTLC2vagHvMDrqqXE4rukm2CQX07vUU/K2yRbwcoGlCDoD3roJ6QYfFMScNIxDPza2YW5qgNK1p34fr26YbrT5S17/eOEurL5AMv7scK6FYbAcS8HR2CrhauNxvXD1tGbEgWcgBnyrznEJy7t29LXJEWiSnSsM46U=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190318174415.74fd25a5@xhacker.debian>
+ <20190318175051.5430be17@xhacker.debian>
+From:   Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Message-ID: <52f4dc09-f1d0-47a1-2c75-91981308b08b@synopsys.com>
+Date:   Mon, 18 Mar 2019 10:09:22 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bf837e4-f43d-4bc3-4ecf-08d6ab89be94
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 10:09:01.4893
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3754
+In-Reply-To: <20190318175051.5430be17@xhacker.debian>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.107.25.131]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFRoaWVycnkNCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBUaGllcnJ5IFJlZGluZyBbbWFpbHRvOnRoaWVycnku
-cmVkaW5nQGdtYWlsLmNvbV0NCj4gU2VudDogMjAxOcTqM9TCMTjI1SAxNzo1OQ0KPiBUbzogQW5z
-b24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7
-IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVyQHBl
-bmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsN
-Cj4gbGludXhAYXJtbGludXgub3JnLnVrOyBvdGF2aW9Ab3NzeXN0ZW1zLmNvbS5icjsgc3RlZmFu
-QGFnbmVyLmNoOw0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsg
-Um9iaW4gR29uZw0KPiA8eWliaW4uZ29uZ0BueHAuY29tPjsgamFuLnR1ZXJrQGVtdHJpb24uY29t
-OyBsaW51eC0NCj4gcHdtQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IHUua2xlaW5lLQ0KPiBrb2VuaWdAcGVuZ3V0cm9uaXguZGU7IGRs
-LWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjUg
-MS81XSBkdC1iaW5kaW5nczogcHdtOiBBZGQgaS5NWCBUUE0gUFdNIGJpbmRpbmcNCj4gDQo+IE9u
-IE1vbiwgTWFyIDE4LCAyMDE5IGF0IDA3OjQxOjMyQU0gKzAwMDAsIEFuc29uIEh1YW5nIHdyb3Rl
-Og0KPiA+IEFkZCBpLk1YIFRQTShMb3cgUG93ZXIgVGltZXIvUHVsc2UgV2lkdGggTW9kdWxhdGlv
-biBNb2R1bGUpIFBXTQ0KPiBiaW5kaW5nLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24g
-SHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gTm8gY2hhbmdlcy4NCj4g
-PiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBt
-LXB3bS50eHQgfCAxOQ0KPiA+ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDE5IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBtLXB3bS50eHQNCj4gPg0KPiA+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2lteC10
-cG0tcHdtLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9p
-bXgtdHBtLXB3bS50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAw
-MDAuLmQ0N2I4ZmINCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBtLXB3bS50eHQNCj4gPiBAQCAtMCwwICsxLDE5
-IEBADQo+ID4gK0ZyZWVzY2FsZSBpLk1YIFRQTSBQV00gY29udHJvbGxlcg0KPiA+ICsNCj4gPiAr
-UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2ws
-aW14LXRwbS1wd20iLg0KPiANCj4gU2hvdWxkIHRoaXMgcGVyaGFwcyBvbmx5IGJlICJmc2wsaW14
-LXRwbSI/IFNvdW5kcyB0byBtZSBsaWtlIHRoaXMgaXMgYQ0KPiBoYXJkd2FyZSBibG9jayBjYWxs
-ZWQgIlRQTSIgdGhhdCBjYW4gYmUgdXNlZCBhcyBhIFBXTS4gVGhlIGNvbXBhdGlibGUNCj4gc3Ry
-aW5nIHNob3VsZCBkZXNjcmliZSB0aGUgaGFyZHdhcmUgYmxvY2ssIG5vdCB0aGUgbW9kZSBpbiB3
-aGljaCBpdCBpcyB1c2VkLg0KDQpPSywgd2lsbCBmaXggaXQuDQoNCj4gDQo+ID4gKy0gcmVnOiBQ
-aHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lz
-dGVycy4NCj4gPiArLSAjcHdtLWNlbGxzOiBTaG91bGQgYmUgMi4gU2VlIHB3bS50eHQgaW4gdGhp
-cyBkaXJlY3RvcnkgZm9yIGEgZGVzY3JpcHRpb24NCj4gb2YgdGhlIGNlbGxzIGZvcm1hdC4NCj4g
-PiArLSBjbG9ja3MgOiBUaGUgY2xvY2sgcHJvdmlkZWQgYnkgdGhlIFNvQyB0byBkcml2ZSB0aGUg
-UFdNLg0KPiA+ICstIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgZm9yIHRoZSBwd20gY29udHJv
-bGxlci4NCj4gDQo+IHB3bSAtPiBQV00NCg0KT0suDQpUaGFua3MsDQpBbnNvbg0KDQo+IA0KPiBU
-aGllcnJ5DQo=
+Hi,
+
+On 18/03/2019 09:58, Jisheng Zhang wrote:
+> Currently dwc host doesn't support the remove, but nothing prevent us
+> from supporting it. Save the root bus for clean up work in driver
+> remove code path.
+> 
+> After this patch, the dwc host users could implement its remove as:
+> 
+> static int foo_pcie_remove(struct platform_device *pdev)
+> {
+> 	...
+> 	pci_stop_root_bus(pp->root_bus);
+> 	pci_remove_root_bus(pp->root_bus);
+> 	dw_pcie_free_msi(pp);
+> 	...
+> }
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 12 ++++++------
+>  drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+>  2 files changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 68a9dac23b1b..7e9dad7ba056 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -341,7 +341,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	struct device_node *np = dev->of_node;
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct resource_entry *win, *tmp;
+> -	struct pci_bus *bus, *child;
+> +	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	struct resource *cfg_res;
+>  	int ret;
+> @@ -496,18 +496,18 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	if (ret)
+>  		goto err_free_msi;
+>  
+> -	bus = bridge->bus;
+> +	pp->root_bus = bridge->bus;
+>  
+>  	if (pp->ops->scan_bus)
+>  		pp->ops->scan_bus(pp);
+>  
+> -	pci_bus_size_bridges(bus);
+> -	pci_bus_assign_resources(bus);
+> +	pci_bus_size_bridges(pp->root_bus);
+> +	pci_bus_assign_resources(pp->root_bus);
+>  
+> -	list_for_each_entry(child, &bus->children, node)
+> +	list_for_each_entry(child, &pp->root_bus->children, node)
+>  		pcie_bus_configure_settings(child);
+>  
+> -	pci_bus_add_devices(bus);
+> +	pci_bus_add_devices(pp->root_bus);
+>  	return 0;
+>  
+>  err_free_msi:
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 6fb0a1879932..adff0c713665 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -182,6 +182,7 @@ struct pcie_port {
+>  	struct page		*msi_page;
+>  	u32			num_vectors;
+>  	u32			irq_mask[MAX_MSI_CTRLS];
+> +	struct pci_bus		*root_bus;
+>  	raw_spinlock_t		lock;
+>  	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+>  };
+> 
+
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+
