@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A73C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1B8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76ADB2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2431F2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901254;
-	bh=bACvmnHqpjdiM0WNpuRegXcDV/r7bpbC6dzlm5dR2Ro=;
+	s=default; t=1552901259;
+	bh=jh7gsn1ni+VUrG4d4VsCWwlalE3mV3XeksCN99prW6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=keIIHnxBdq60vupJk1ksfZRuIt3yQOB84djaAaK9/vlqEuSFfYkBpGOYOENPf2O+w
-	 iVkiAP2Te+M4nh4zwm+P1MLNgf2uViGbxlwlHAOs1K1h/oK4LnIFWG1HNbaZWskMxZ
-	 tWa8rrwwFBSV5uz5Ii0K8mCC2HIrnRVUqB60rdGU=
+	b=x3ShhNwowH1eoVcdGeXHCvwsgiVTmcri9Y32lz2F3WJ7WpGI1CWoDozcQ2yJxtkX/
+	 R9juF1PDL37cA1A/ynL4hlabcAAJ9QG2LArs9rrYJ5vza4GDBv95E4QnRhtHw3Ln12
+	 bNpmO2gzJ3MXqHbu8/bPaS9ond8M9jGXrAgCLF1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfCRJ1d (ORCPT
+        id S1727866AbfCRJ1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32830 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:27:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbfCRJ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:27:31 -0400
+        id S1726922AbfCRJ1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:27:34 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 071EB2075C;
-        Mon, 18 Mar 2019 09:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE2502083D;
+        Mon, 18 Mar 2019 09:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901250;
-        bh=bACvmnHqpjdiM0WNpuRegXcDV/r7bpbC6dzlm5dR2Ro=;
+        s=default; t=1552901253;
+        bh=jh7gsn1ni+VUrG4d4VsCWwlalE3mV3XeksCN99prW6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZCmwWHPCCsC7YQnljKE2EqrgUEFjBetYmwnR2NGdM/AedYHAkIzK9M7Jm8Bq6ApN
-         zVZZYevTDrlE5b1fbXvr6NnmG2isIB28L2ukRsj+6PIH/YB4y1Uuwy2udd652MvJ28
-         mHMYBkOI2ERKUzMCE4SeuYXz9e+fERJnju70Iypo=
+        b=lHnSUBk0DY3Vq2AY/dxYloaYn8xZpLSvf3zjiqnrmggLGufAakxiTqdisQMh9WHfD
+         XXPpuNquLVh6/rBtG/GewcSwP0MlQW/5qb1LvgGcBkZtOm3iNc/xsGvh1tszYzcrHC
+         CIbNn4SlBHaEMzd8P/RQLqoKxa/vA8ucoh/VC/6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 30/43] net: sched: flower: insert new filter to idr after setting its mask
-Date:   Mon, 18 Mar 2019 10:24:22 +0100
-Message-Id: <20190318083716.755134580@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.0 31/43] f2fs: wait on atomic writes to count F2FS_CP_WB_DATA
+Date:   Mon, 18 Mar 2019 10:24:23 +0100
+Message-Id: <20190318083716.783100614@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -66,141 +64,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit ecb3dea400d3beaf611ce76ac7a51d4230492cf2 ]
+commit 31867b23d7d1ee3535136c6a410a6cf56f666bfc upstream.
 
-When adding new filter to flower classifier, fl_change() inserts it to
-handle_idr before initializing filter extensions and assigning it a mask.
-Normally this ordering doesn't matter because all flower classifier ops
-callbacks assume rtnl lock protection. However, when filter has an action
-that doesn't have its kernel module loaded, rtnl lock is released before
-call to request_module(). During this time the filter can be accessed bu
-concurrent task before its initialization is completed, which can lead to a
-crash.
+Otherwise, we can get wrong counts incurring checkpoint hang.
 
-Example case of NULL pointer dereference in concurrent dump:
+IO_W (CP:  -24, Data:   24, Flush: (   0    0    1), Discard: (   0    0))
 
-Task 1                           Task 2
+Thread A                        Thread B
+- f2fs_write_data_pages
+ -  __write_data_page
+  - f2fs_submit_page_write
+   - inc_page_count(F2FS_WB_DATA)
+     type is F2FS_WB_DATA due to file is non-atomic one
+- f2fs_ioc_start_atomic_write
+ - set_inode_flag(FI_ATOMIC_FILE)
+                                - f2fs_write_end_io
+                                 - dec_page_count(F2FS_WB_CP_DATA)
+                                   type is F2FS_WB_DATA due to file becomes
+                                   atomic one
 
-tc_new_tfilter()
- fl_change()
-  idr_alloc_u32(fnew)
-  fl_set_parms()
-   tcf_exts_validate()
-    tcf_action_init()
-     tcf_action_init_1()
-      rtnl_unlock()
-      request_module()
-      ...                        rtnl_lock()
-      				 tc_dump_tfilter()
-      				  tcf_chain_dump()
-				   fl_walk()
-				    idr_get_next_ul()
-				    tcf_node_dump()
-				     tcf_fill_node()
-				      fl_dump()
-				       mask = &f->mask->key; <- NULL ptr
-      rtnl_lock()
-
-Extension initialization and mask assignment don't depend on fnew->handle
-that is allocated by idr_alloc_u32(). Move idr allocation code after action
-creation and mask assignment in fl_change() to prevent concurrent access
-to not fully initialized filter when rtnl lock is released to load action
-module.
-
-Fixes: 01683a146999 ("net: sched: refactor flower walk to iterate over idr")
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/cls_flower.c |   43 ++++++++++++++++++++++---------------------
- 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -1327,46 +1327,46 @@ static int fl_change(struct net *net, st
- 	if (err < 0)
- 		goto errout;
+---
+ fs/f2fs/file.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1750,10 +1750,12 @@ static int f2fs_ioc_start_atomic_write(s
  
--	if (!handle) {
--		handle = 1;
--		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
--				    INT_MAX, GFP_KERNEL);
--	} else if (!fold) {
--		/* user specifies a handle and it doesn't exist */
--		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
--				    handle, GFP_KERNEL);
--	}
--	if (err)
--		goto errout;
--	fnew->handle = handle;
+ 	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 
+-	if (!get_dirty_pages(inode))
+-		goto skip_flush;
 -
- 	if (tb[TCA_FLOWER_FLAGS]) {
- 		fnew->flags = nla_get_u32(tb[TCA_FLOWER_FLAGS]);
- 
- 		if (!tc_flags_valid(fnew->flags)) {
- 			err = -EINVAL;
--			goto errout_idr;
-+			goto errout;
- 		}
+-	f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
++	/*
++	 * Should wait end_io to count F2FS_WB_CP_DATA correctly by
++	 * f2fs_is_atomic_file.
++	 */
++	if (get_dirty_pages(inode))
++		f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
+ 		"Unexpected flush for atomic writes: ino=%lu, npages=%u",
+ 					inode->i_ino, get_dirty_pages(inode));
+ 	ret = filemap_write_and_wait_range(inode->i_mapping, 0, LLONG_MAX);
+@@ -1761,7 +1763,7 @@ static int f2fs_ioc_start_atomic_write(s
+ 		up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 		goto out;
  	}
- 
- 	err = fl_set_parms(net, tp, fnew, mask, base, tb, tca[TCA_RATE], ovr,
- 			   tp->chain->tmplt_priv, extack);
- 	if (err)
--		goto errout_idr;
-+		goto errout;
- 
- 	err = fl_check_assign_mask(head, fnew, fold, mask);
- 	if (err)
--		goto errout_idr;
-+		goto errout;
+-skip_flush:
 +
-+	if (!handle) {
-+		handle = 1;
-+		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
-+				    INT_MAX, GFP_KERNEL);
-+	} else if (!fold) {
-+		/* user specifies a handle and it doesn't exist */
-+		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
-+				    handle, GFP_KERNEL);
-+	}
-+	if (err)
-+		goto errout_mask;
-+	fnew->handle = handle;
- 
- 	if (!fold && __fl_lookup(fnew->mask, &fnew->mkey)) {
- 		err = -EEXIST;
--		goto errout_mask;
-+		goto errout_idr;
- 	}
- 
- 	err = rhashtable_insert_fast(&fnew->mask->ht, &fnew->ht_node,
- 				     fnew->mask->filter_ht_params);
- 	if (err)
--		goto errout_mask;
-+		goto errout_idr;
- 
- 	if (!tc_skip_hw(fnew->flags)) {
- 		err = fl_hw_replace_filter(tp, fnew, extack);
-@@ -1405,12 +1405,13 @@ errout_mask_ht:
- 	rhashtable_remove_fast(&fnew->mask->ht, &fnew->ht_node,
- 			       fnew->mask->filter_ht_params);
- 
--errout_mask:
--	fl_mask_put(head, fnew->mask, false);
--
- errout_idr:
- 	if (!fold)
- 		idr_remove(&head->handle_idr, fnew->handle);
-+
-+errout_mask:
-+	fl_mask_put(head, fnew->mask, false);
-+
- errout:
- 	tcf_exts_destroy(&fnew->exts);
- 	kfree(fnew);
+ 	set_inode_flag(inode, FI_ATOMIC_FILE);
+ 	clear_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
+ 	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
 
 
