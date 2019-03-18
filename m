@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8697C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06323C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8673D2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93D8214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901317;
-	bh=gjTpHb7RJWm3R2rMmlS0H+X6nHgzCtWLjpW+ZAU7NTU=;
+	s=default; t=1552901322;
+	bh=aOfo5k05Mz1weIWb5YNj43vtz/flPmZiufH8H5U0Oo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YBsvJOxYeO5YkDg+7nnsAQy2nrVVtXBrASlN2e3BmNEE1q9LtrmlaBcW5ngAMBty2
-	 ytFcuq0yfLYYwnRLygkWoRx0B3XhJ19bhfMd1L7dxOzL98wCFQzf4eGewVdHoeLEvr
-	 si4h4i01k4IMhRUcoDokmUbH9ZgziKeaSHA79rvw=
+	b=IIymVHzw5uMQ5HlbyuWPWg1VKRu+O8YdDcnO3p7ZXSK0bC9vwjzbg+0EOH3aavx9T
+	 Po4JEE1iYAlz2571xgOIyByvc1RUVVdCaikflaricL4JEK0uDKiKC8ULCm6hKpcF5e
+	 wIoAWgwYQ/tZPHozPDR3tTWJiymnOiI7iMSuS0Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfCRJ2f (ORCPT
+        id S1728118AbfCRJ2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:28:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34464 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:28:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbfCRJ2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:28:33 -0400
+        id S1728102AbfCRJ2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:28:39 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA2702087C;
-        Mon, 18 Mar 2019 09:28:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D7F82087C;
+        Mon, 18 Mar 2019 09:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901312;
-        bh=gjTpHb7RJWm3R2rMmlS0H+X6nHgzCtWLjpW+ZAU7NTU=;
+        s=default; t=1552901318;
+        bh=aOfo5k05Mz1weIWb5YNj43vtz/flPmZiufH8H5U0Oo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z3oMyYy7mZTPgCoo/dda5QZ0VY1dpzirWhkILW/SfsmQxWp10EoBGh4BQSGd7BYzy
-         u2dIIZmh60ueAk+55etgB+g7aKWVMiiY/V8UiSFRELANlU0HCyLadEujno3ih/Cu8f
-         CMRcHAsHzT7XdkRTMgTt/JYw4q3WdUfNXf+vMzNY=
+        b=o1GKLtTz+chX0WBXUVye7C7wvPMepk4Weu7fpryzYAhzI44kr7woNbqaVAmVYLajH
+         X0oLsRB91unOAVUk4DZ1eV4IJQhQ88rPszgL94dIKp/itXNlcLCqoExQLU5StBzL7v
+         gyAE2d/DhAb04SeoziGJtkPLdZ8pd+hRbp+/zjYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org, Zhang Yu <zhangyu31@baidu.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 09/43] net: hsr: fix memory leak in hsr_dev_finalize()
-Date:   Mon, 18 Mar 2019 10:24:01 +0100
-Message-Id: <20190318083716.147391757@linuxfoundation.org>
+Subject: [PATCH 4.20 01/52] connector: fix unsafe usage of ->real_parent
+Date:   Mon, 18 Mar 2019 10:24:48 +0100
+Message-Id: <20190318083843.547596355@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
-References: <20190318083715.877441740@linuxfoundation.org>
+In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
+References: <20190318083843.398913295@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,106 +63,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 3dc6da493a29dbeda9f13b637bd9c02c414b2261 ]
+[ Upstream commit 6d2b0f02f5a07a4bf02e4cbc90d7eaa85cac2986 ]
 
-If hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER) failed to
-add port, it directly returns res and forgets to free the node
-that allocated in hsr_create_self_node(), and forgets to delete
-the node->mac_list linked in hsr->self_node_db.
+proc_exit_connector() uses ->real_parent lockless. This is not
+safe that its parent can go away at any moment, so use RCU to
+protect it, and ensure that this task is not released.
 
-BUG: memory leak
-unreferenced object 0xffff8881cfa0c780 (size 64):
-  comm "syz-executor.0", pid 2077, jiffies 4294717969 (age 2415.377s)
-  hex dump (first 32 bytes):
-    e0 c7 a0 cf 81 88 ff ff 00 02 00 00 00 00 ad de  ................
-    00 e6 49 cd 81 88 ff ff c0 9b 87 d0 81 88 ff ff  ..I.............
-  backtrace:
-    [<00000000e2ff5070>] hsr_dev_finalize+0x736/0x960 [hsr]
-    [<000000003ed2e597>] hsr_newlink+0x2b2/0x3e0 [hsr]
-    [<000000003fa8c6b6>] __rtnl_newlink+0xf1f/0x1600 net/core/rtnetlink.c:3182
-    [<000000001247a7ad>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3240
-    [<00000000e7d1b61d>] rtnetlink_rcv_msg+0x54e/0xb90 net/core/rtnetlink.c:5130
-    [<000000005556bd3a>] netlink_rcv_skb+0x129/0x340 net/netlink/af_netlink.c:2477
-    [<00000000741d5ee6>] netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
-    [<00000000741d5ee6>] netlink_unicast+0x49a/0x650 net/netlink/af_netlink.c:1336
-    [<000000009d56f9b7>] netlink_sendmsg+0x88b/0xdf0 net/netlink/af_netlink.c:1917
-    [<0000000046b35c59>] sock_sendmsg_nosec net/socket.c:621 [inline]
-    [<0000000046b35c59>] sock_sendmsg+0xc3/0x100 net/socket.c:631
-    [<00000000d208adc9>] __sys_sendto+0x33e/0x560 net/socket.c:1786
-    [<00000000b582837a>] __do_sys_sendto net/socket.c:1798 [inline]
-    [<00000000b582837a>] __se_sys_sendto net/socket.c:1794 [inline]
-    [<00000000b582837a>] __x64_sys_sendto+0xdd/0x1b0 net/socket.c:1794
-    [<00000000c866801d>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
-    [<00000000fea382d9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e01dacb3>] 0xffffffffffffffff
+[  747.624551] ==================================================================
+[  747.632946] BUG: KASAN: use-after-free in proc_exit_connector+0x1f7/0x310
+[  747.640686] Read of size 4 at addr ffff88a0276988e0 by task sshd/2882
+[  747.648032]
+[  747.649804] CPU: 11 PID: 2882 Comm: sshd Tainted: G            E     4.19.26-rc2 #11
+[  747.658629] Hardware name: IBM x3550M4 -[7914OFV]-/00AM544, BIOS -[D7E142BUS-1.71]- 07/31/2014
+[  747.668419] Call Trace:
+[  747.671269]  dump_stack+0xf0/0x19b
+[  747.675186]  ? show_regs_print_info+0x5/0x5
+[  747.679988]  ? kmsg_dump_rewind_nolock+0x59/0x59
+[  747.685302]  print_address_description+0x6a/0x270
+[  747.691162]  kasan_report+0x258/0x380
+[  747.695835]  ? proc_exit_connector+0x1f7/0x310
+[  747.701402]  proc_exit_connector+0x1f7/0x310
+[  747.706767]  ? proc_coredump_connector+0x2d0/0x2d0
+[  747.712715]  ? _raw_write_unlock_irq+0x29/0x50
+[  747.718270]  ? _raw_write_unlock_irq+0x29/0x50
+[  747.723820]  ? ___preempt_schedule+0x16/0x18
+[  747.729193]  ? ___preempt_schedule+0x16/0x18
+[  747.734574]  do_exit+0xa11/0x14f0
+[  747.738880]  ? mm_update_next_owner+0x590/0x590
+[  747.744525]  ? debug_show_all_locks+0x3c0/0x3c0
+[  747.761448]  ? ktime_get_coarse_real_ts64+0xeb/0x1c0
+[  747.767589]  ? lockdep_hardirqs_on+0x1a6/0x290
+[  747.773154]  ? check_chain_key+0x139/0x1f0
+[  747.778345]  ? check_flags.part.35+0x240/0x240
+[  747.783908]  ? __lock_acquire+0x2300/0x2300
+[  747.789171]  ? _raw_spin_unlock_irqrestore+0x59/0x70
+[  747.795316]  ? _raw_spin_unlock_irqrestore+0x59/0x70
+[  747.801457]  ? do_raw_spin_unlock+0x10f/0x1e0
+[  747.806914]  ? do_raw_spin_trylock+0x120/0x120
+[  747.812481]  ? preempt_count_sub+0x14/0xc0
+[  747.817645]  ? _raw_spin_unlock+0x2e/0x50
+[  747.822708]  ? __handle_mm_fault+0x12db/0x1fa0
+[  747.828367]  ? __pmd_alloc+0x2d0/0x2d0
+[  747.833143]  ? check_noncircular+0x50/0x50
+[  747.838309]  ? match_held_lock+0x7f/0x340
+[  747.843380]  ? check_noncircular+0x50/0x50
+[  747.848561]  ? handle_mm_fault+0x21a/0x5f0
+[  747.853730]  ? check_flags.part.35+0x240/0x240
+[  747.859290]  ? check_chain_key+0x139/0x1f0
+[  747.864474]  ? __do_page_fault+0x40f/0x760
+[  747.869655]  ? __audit_syscall_entry+0x4b/0x1f0
+[  747.875319]  ? syscall_trace_enter+0x1d5/0x7b0
+[  747.880877]  ? trace_raw_output_preemptirq_template+0x90/0x90
+[  747.887895]  ? trace_raw_output_sys_exit+0x80/0x80
+[  747.893860]  ? up_read+0x3b/0x90
+[  747.898142]  ? stop_critical_timings+0x260/0x260
+[  747.903909]  do_group_exit+0xe0/0x1c0
+[  747.908591]  ? __x64_sys_exit+0x30/0x30
+[  747.913460]  ? trace_raw_output_preemptirq_template+0x90/0x90
+[  747.920485]  ? tracer_hardirqs_on+0x270/0x270
+[  747.925956]  __x64_sys_exit_group+0x28/0x30
+[  747.931214]  do_syscall_64+0x117/0x400
+[  747.935988]  ? syscall_return_slowpath+0x2f0/0x2f0
+[  747.941931]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[  747.947788]  ? trace_hardirqs_on_caller+0x1d0/0x1d0
+[  747.953838]  ? lockdep_sys_exit+0x16/0x8e
+[  747.958915]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[  747.964784]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  747.971021] RIP: 0033:0x7f572f154c68
+[  747.975606] Code: Bad RIP value.
+[  747.979791] RSP: 002b:00007ffed2dfaa58 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+[  747.989324] RAX: ffffffffffffffda RBX: 00007f572f431840 RCX: 00007f572f154c68
+[  747.997910] RDX: 0000000000000001 RSI: 000000000000003c RDI: 0000000000000001
+[  748.006495] RBP: 0000000000000001 R08: 00000000000000e7 R09: fffffffffffffee0
+[  748.015079] R10: 00007f572f4387e8 R11: 0000000000000246 R12: 00007f572f431840
+[  748.023664] R13: 000055a7f90f2c50 R14: 000055a7f96e2310 R15: 000055a7f96e2310
+[  748.032287]
+[  748.034509] Allocated by task 2300:
+[  748.038982]  kasan_kmalloc+0xa0/0xd0
+[  748.043562]  kmem_cache_alloc_node+0xf5/0x2e0
+[  748.049018]  copy_process+0x1781/0x4790
+[  748.053884]  _do_fork+0x166/0x9a0
+[  748.058163]  do_syscall_64+0x117/0x400
+[  748.062943]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  748.069180]
+[  748.071405] Freed by task 15395:
+[  748.075591]  __kasan_slab_free+0x130/0x180
+[  748.080752]  kmem_cache_free+0xc2/0x310
+[  748.085619]  free_task+0xea/0x130
+[  748.089901]  __put_task_struct+0x177/0x230
+[  748.095063]  finish_task_switch+0x51b/0x5d0
+[  748.100315]  __schedule+0x506/0xfa0
+[  748.104791]  schedule+0xca/0x260
+[  748.108978]  futex_wait_queue_me+0x27e/0x420
+[  748.114333]  futex_wait+0x251/0x550
+[  748.118814]  do_futex+0x75b/0xf80
+[  748.123097]  __x64_sys_futex+0x231/0x2a0
+[  748.128065]  do_syscall_64+0x117/0x400
+[  748.132835]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  748.139066]
+[  748.141289] The buggy address belongs to the object at ffff88a027698000
+[  748.141289]  which belongs to the cache task_struct of size 12160
+[  748.156589] The buggy address is located 2272 bytes inside of
+[  748.156589]  12160-byte region [ffff88a027698000, ffff88a02769af80)
+[  748.171114] The buggy address belongs to the page:
+[  748.177055] page:ffffea00809da600 count:1 mapcount:0 mapping:ffff888107d01e00 index:0x0 compound_mapcount: 0
+[  748.189136] flags: 0x57ffffc0008100(slab|head)
+[  748.194688] raw: 0057ffffc0008100 ffffea00809a3200 0000000300000003 ffff888107d01e00
+[  748.204424] raw: 0000000000000000 0000000000020002 00000001ffffffff 0000000000000000
+[  748.214146] page dumped because: kasan: bad access detected
+[  748.220976]
+[  748.223197] Memory state around the buggy address:
+[  748.229128]  ffff88a027698780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.238271]  ffff88a027698800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.247414] >ffff88a027698880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.256564]                                                        ^
+[  748.264267]  ffff88a027698900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.273493]  ffff88a027698980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.282630] ==================================================================
 
-Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Fixes: b086ff87251b4a4 ("connector: add parent pid and tgid to coredump and exit events")
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Acked-by: Evgeniy Polyakov <zbr@ioremap.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_device.c   |    4 +++-
- net/hsr/hsr_framereg.c |   12 ++++++++++++
- net/hsr/hsr_framereg.h |    1 +
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ drivers/connector/cn_proc.c |   22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -486,7 +486,7 @@ int hsr_dev_finalize(struct net_device *
+--- a/drivers/connector/cn_proc.c
++++ b/drivers/connector/cn_proc.c
+@@ -250,6 +250,7 @@ void proc_coredump_connector(struct task
+ {
+ 	struct cn_msg *msg;
+ 	struct proc_event *ev;
++	struct task_struct *parent;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
  
- 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
- 	if (res)
--		return res;
-+		goto err_add_port;
- 
- 	res = register_netdevice(hsr_dev);
- 	if (res)
-@@ -506,6 +506,8 @@ int hsr_dev_finalize(struct net_device *
- fail:
- 	hsr_for_each_port(hsr, port)
- 		hsr_del_port(port);
-+err_add_port:
-+	hsr_del_node(&hsr->self_node_db);
- 
- 	return res;
- }
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -124,6 +124,18 @@ int hsr_create_self_node(struct list_hea
- 	return 0;
- }
- 
-+void hsr_del_node(struct list_head *self_node_db)
-+{
-+	struct hsr_node *node;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+@@ -262,8 +263,14 @@ void proc_coredump_connector(struct task
+ 	ev->what = PROC_EVENT_COREDUMP;
+ 	ev->event_data.coredump.process_pid = task->pid;
+ 	ev->event_data.coredump.process_tgid = task->tgid;
+-	ev->event_data.coredump.parent_pid = task->real_parent->pid;
+-	ev->event_data.coredump.parent_tgid = task->real_parent->tgid;
 +
 +	rcu_read_lock();
-+	node = list_first_or_null_rcu(self_node_db, struct hsr_node, mac_list);
-+	rcu_read_unlock();
-+	if (node) {
-+		list_del_rcu(&node->mac_list);
-+		kfree(node);
++	if (pid_alive(task)) {
++		parent = rcu_dereference(task->real_parent);
++		ev->event_data.coredump.parent_pid = parent->pid;
++		ev->event_data.coredump.parent_tgid = parent->tgid;
 +	}
-+}
++	rcu_read_unlock();
  
- /* Allocate an hsr_node and add it to node_db. 'addr' is the node's AddressA;
-  * seq_out is used to initialize filtering of outgoing duplicate frames
---- a/net/hsr/hsr_framereg.h
-+++ b/net/hsr/hsr_framereg.h
-@@ -16,6 +16,7 @@
+ 	memcpy(&msg->id, &cn_proc_event_id, sizeof(msg->id));
+ 	msg->ack = 0; /* not used */
+@@ -276,6 +283,7 @@ void proc_exit_connector(struct task_str
+ {
+ 	struct cn_msg *msg;
+ 	struct proc_event *ev;
++	struct task_struct *parent;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
  
- struct hsr_node;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+@@ -290,8 +298,14 @@ void proc_exit_connector(struct task_str
+ 	ev->event_data.exit.process_tgid = task->tgid;
+ 	ev->event_data.exit.exit_code = task->exit_code;
+ 	ev->event_data.exit.exit_signal = task->exit_signal;
+-	ev->event_data.exit.parent_pid = task->real_parent->pid;
+-	ev->event_data.exit.parent_tgid = task->real_parent->tgid;
++
++	rcu_read_lock();
++	if (pid_alive(task)) {
++		parent = rcu_dereference(task->real_parent);
++		ev->event_data.exit.parent_pid = parent->pid;
++		ev->event_data.exit.parent_tgid = parent->tgid;
++	}
++	rcu_read_unlock();
  
-+void hsr_del_node(struct list_head *self_node_db);
- struct hsr_node *hsr_add_node(struct list_head *node_db, unsigned char addr[],
- 			      u16 seq_out);
- struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
+ 	memcpy(&msg->id, &cn_proc_event_id, sizeof(msg->id));
+ 	msg->ack = 0; /* not used */
 
 
