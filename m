@@ -2,116 +2,80 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9B4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A191EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914FC204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902441;
-	bh=/JD+vbC7/Lj1SgOn1wOvcT98mZN7/KO9kI3XWAr/0xk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tqvT5CnvLiY5ifXdrewgJO5YG/33haB600mK5V8M1eg4echGUxizTbnqR8gTSUsOH
-	 P0hVmHY9bVXWUYonogmwj4e0zzmBPHH63HVfmTz3DxR84E6QSVc/68SQ5jinPsPHPC
-	 XXWB9Zq/3KwqCdB3pThD3aNo2aaC4itIzAyVnUts=
+	by mail.kernel.org (Postfix) with ESMTP id 7C227204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfCRJrU (ORCPT
+        id S1727991AbfCRJ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33718 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:28:04 -0400
+Received: from skyboo.net ([94.40.87.198]:39026 "EHLO skyboo.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727998AbfCRJ2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:28:06 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66D572075C;
-        Mon, 18 Mar 2019 09:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901285;
-        bh=/JD+vbC7/Lj1SgOn1wOvcT98mZN7/KO9kI3XWAr/0xk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YjbdboreKZps8/Zf8y5svguqWXcbkRJpKRf8G2Uj8eaGwRZzvVRakmRTFEbGaO9js
-         9uG8rWfN2is01jOnEHOfpwzvg8co0A3fgXeyXOPWRPzcmIcpPlcRCKwkrkH3Xsm5om
-         Y7s36W3vRSlqgkbbLPqdQ/np7ctBFVK9HpVMyj8k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Jones <tonyj@suse.com>,
-        "DSouza, Nelson" <nelson.dsouza@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, eranian@google.com,
-        jolsa@redhat.com, stable@kernel.org
-Subject: [PATCH 5.0 40/43] perf/x86/intel: Fix memory corruption
-Date:   Mon, 18 Mar 2019 10:24:32 +0100
-Message-Id: <20190318083717.048426863@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
-References: <20190318083715.877441740@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        id S1727944AbfCRJ1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:27:55 -0400
+Received: from manio by skyboo.net with local (Exim 4.91)
+        (envelope-from <manio@skyboo.net>)
+        id 1h5oYc-0002HH-KC; Mon, 18 Mar 2019 10:27:52 +0100
+From:   Mariusz Bialonczyk <manio@skyboo.net>
+To:     linux-kernel@vger.kernel.org, Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Cc:     Mariusz Bialonczyk <manio@skyboo.net>
+Date:   Mon, 18 Mar 2019 10:27:35 +0100
+Message-Id: <20190318092737.8170-1-manio@skyboo.net>
+X-Mailer: git-send-email 2.19.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, zbr@ioremap.net, greg@kroah.com, jeff.dagenais@gmail.com, manio@skyboo.net
+X-SA-Exim-Mail-From: manio@skyboo.net
+Subject: [PATCH 0/2] w1: DS2408 fixes
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on skyboo.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+Hi,
+I prepared a two fixes related with 1wire and DS2408.
 
-------------------
+In short the problem was that a single DS2408 slave was properly setting
+the output value to a channel access write but the command was returning
+error.
+Moreover when there was a write of a 0xff value (all inputs off, there was 
+also no problem - it's now also understandable for me after looking
+at the transmission log) ;)
+This problem doesn't occur on a multidrop bus.
 
-From: Peter Zijlstra <peterz@infradead.org>
+Finally I was able to catch the problems recently after analyzing the
+oscilloscope waveforms in PulseView.
+After those fixes all is now working perfectly fine - no matter if it
+is multidrop or single slave bus :)
 
-commit ede271b059463731cbd6dffe55ffd70d7dbe8392 upstream.
+ps. if you are merging this please also take into account a patch which
+I've sent recently but it is still not merged:
+https://lore.kernel.org/lkml/20190304112336.21397-1-manio@skyboo.net/
 
-Through:
+regards,
+Mariusz Białończyk | xmpp/e-mail: manio@skyboo.net
+https://skyboo.net | https://github.com/manio
 
-  validate_event()
-    x86_pmu.get_event_constraints(.idx=-1)
-      tfa_get_event_constraints()
-        dyn_constraint()
+Mariusz Bialonczyk (2):
+  w1: ds2408: add a missing reset when retrying in output_write()
+  w1: fix the resume command API
 
-cpuc->constraint_list[-1] is used, which is an obvious out-of-bound access.
+ drivers/w1/slaves/w1_ds2408.c | 13 ++++++++-----
+ drivers/w1/w1_io.c            | 11 +++++++++--
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-In this case, simply skip the TFA constraint code, there is no event
-constraint with just PMC3, therefore the code will never result in the
-empty set.
-
-Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
-Reported-by: Tony Jones <tonyj@suse.com>
-Reported-by: "DSouza, Nelson" <nelson.dsouza@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Tony Jones <tonyj@suse.com>
-Tested-by: "DSouza, Nelson" <nelson.dsouza@intel.com>
-Cc: eranian@google.com
-Cc: jolsa@redhat.com
-Cc: stable@kernel.org
-Link: https://lkml.kernel.org/r/20190314130705.441549378@infradead.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/events/intel/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3398,7 +3398,7 @@ tfa_get_event_constraints(struct cpu_hw_
- 	/*
- 	 * Without TFA we must not use PMC3.
- 	 */
--	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk)) {
-+	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk) && idx >= 0) {
- 		c = dyn_constraint(cpuc, c, idx);
- 		c->idxmsk64 &= ~(1ULL << 3);
- 		c->weight--;
-
+-- 
+2.19.0.rc1
 
