@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E98C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7A8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3381F2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CC32083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901904;
-	bh=YZsw8B000PZK+uDvPHjnQq70104DKD/Y+ZIG5z1+s5s=;
+	s=default; t=1552901910;
+	bh=bupNWLf220FyMFJhBZYvxcQCePHCOtj5i6/h7g15GRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RHWXwhGtRVBlQluXu8+W2KlIqmuZvFzvf8w3vcRO4huFjsgoDPN/2IrvtTztp96NY
-	 g2LrMQRLPUxCYW/ADFUZn4VVFgvA5RKsSqMC88bHjX5WeUGr25n2JNe2QXhQZPbMbI
-	 RLj/eNIBRwKHLFGFkl6zH9mFlrSo697fvK4+Y9ss=
+	b=y0jWG22S36RCsM66/xDCQ6ZYJVRuyGI3+zc+ccWUHsaxvVp+5tc4JP7LCAM66qKbu
+	 6OSyhpI9cAkmcRsfQPFlCfQXNqRS7OGS0cSIYL9i5hjWPBTCTMyuD9xHH5FeGklpit
+	 gLWxbXruEw+zhTiMF4yE8yzPf2cu07xR36cQRXWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387865AbfCRJhY (ORCPT
+        id S2387568AbfCRJi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45708 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:38:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387824AbfCRJhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:37:23 -0400
+        id S2387831AbfCRJhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:37:20 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D017214D8;
-        Mon, 18 Mar 2019 09:37:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B1582175B;
+        Mon, 18 Mar 2019 09:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901841;
-        bh=YZsw8B000PZK+uDvPHjnQq70104DKD/Y+ZIG5z1+s5s=;
+        s=default; t=1552901839;
+        bh=bupNWLf220FyMFJhBZYvxcQCePHCOtj5i6/h7g15GRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PEQXPSeqFYv5fXNCDM8wd6zenEdQCmEfCX12UN8dKk7PYuJm0rNQeosFeXLlToTuO
-         uoRPeyNgXfA1MT9guH/SzlgBHeHK9lenkZH2+E45IMeINHt2VXGoNGnObuUmNqjLJn
-         1n2/cELlTgMr/3wzPH/SjZlTtEE9fJ8BeHGBJh+I=
+        b=Mq2gy0ZQ2IsIzXgfUchyoTSbOhC/wTzvl0DYFf6/KD9wNKvRcxJsT7Lghqk7rUSbM
+         mxy9vp4mIJhSrLG3eMwFfW5yIr3XTAejr4VO+0oVQHM9CDSGSQi1upXOSxV5rmzhEW
+         PwsgxshPw1SG/EQWFG3Bz8+vBqLK2K5GckG1oeOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 04/31] net: hsr: fix memory leak in hsr_dev_finalize()
-Date:   Mon, 18 Mar 2019 10:25:39 +0100
-Message-Id: <20190318084210.569003826@linuxfoundation.org>
+Subject: [PATCH 4.9 03/31] l2tp: fix infoleak in l2tp_ip6_recvmsg()
+Date:   Mon, 18 Mar 2019 10:25:38 +0100
+Message-Id: <20190318084210.527455494@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
 References: <20190318084210.397476003@linuxfoundation.org>
@@ -66,102 +65,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 3dc6da493a29dbeda9f13b637bd9c02c414b2261 ]
+[ Upstream commit 163d1c3d6f17556ed3c340d3789ea93be95d6c28 ]
 
-If hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER) failed to
-add port, it directly returns res and forgets to free the node
-that allocated in hsr_create_self_node(), and forgets to delete
-the node->mac_list linked in hsr->self_node_db.
+Back in 2013 Hannes took care of most of such leaks in commit
+bceaa90240b6 ("inet: prevent leakage of uninitialized memory to user in recv syscalls")
 
-BUG: memory leak
-unreferenced object 0xffff8881cfa0c780 (size 64):
-  comm "syz-executor.0", pid 2077, jiffies 4294717969 (age 2415.377s)
-  hex dump (first 32 bytes):
-    e0 c7 a0 cf 81 88 ff ff 00 02 00 00 00 00 ad de  ................
-    00 e6 49 cd 81 88 ff ff c0 9b 87 d0 81 88 ff ff  ..I.............
-  backtrace:
-    [<00000000e2ff5070>] hsr_dev_finalize+0x736/0x960 [hsr]
-    [<000000003ed2e597>] hsr_newlink+0x2b2/0x3e0 [hsr]
-    [<000000003fa8c6b6>] __rtnl_newlink+0xf1f/0x1600 net/core/rtnetlink.c:3182
-    [<000000001247a7ad>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3240
-    [<00000000e7d1b61d>] rtnetlink_rcv_msg+0x54e/0xb90 net/core/rtnetlink.c:5130
-    [<000000005556bd3a>] netlink_rcv_skb+0x129/0x340 net/netlink/af_netlink.c:2477
-    [<00000000741d5ee6>] netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
-    [<00000000741d5ee6>] netlink_unicast+0x49a/0x650 net/netlink/af_netlink.c:1336
-    [<000000009d56f9b7>] netlink_sendmsg+0x88b/0xdf0 net/netlink/af_netlink.c:1917
-    [<0000000046b35c59>] sock_sendmsg_nosec net/socket.c:621 [inline]
-    [<0000000046b35c59>] sock_sendmsg+0xc3/0x100 net/socket.c:631
-    [<00000000d208adc9>] __sys_sendto+0x33e/0x560 net/socket.c:1786
-    [<00000000b582837a>] __do_sys_sendto net/socket.c:1798 [inline]
-    [<00000000b582837a>] __se_sys_sendto net/socket.c:1794 [inline]
-    [<00000000b582837a>] __x64_sys_sendto+0xdd/0x1b0 net/socket.c:1794
-    [<00000000c866801d>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
-    [<00000000fea382d9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e01dacb3>] 0xffffffffffffffff
+But the bug in l2tp_ip6_recvmsg() has not been fixed.
 
-Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+syzbot report :
+
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+CPU: 1 PID: 10996 Comm: syz-executor362 Not tainted 5.0.0+ #11
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+ kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
+ kmsan_internal_check_memory+0x9f4/0xb10 mm/kmsan/kmsan.c:694
+ kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:601
+ _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+ copy_to_user include/linux/uaccess.h:174 [inline]
+ move_addr_to_user+0x311/0x570 net/socket.c:227
+ ___sys_recvmsg+0xb65/0x1310 net/socket.c:2283
+ do_recvmmsg+0x646/0x10c0 net/socket.c:2390
+ __sys_recvmmsg net/socket.c:2469 [inline]
+ __do_sys_recvmmsg net/socket.c:2492 [inline]
+ __se_sys_recvmmsg+0x1d1/0x350 net/socket.c:2485
+ __x64_sys_recvmmsg+0x62/0x80 net/socket.c:2485
+ do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+ entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x445819
+Code: e8 6c b6 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f64453eddb8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
+RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 0000000000445819
+RDX: 0000000000000005 RSI: 0000000020002f80 RDI: 0000000000000003
+RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
+R13: 00007ffeba8f87af R14: 00007f64453ee9c0 R15: 20c49ba5e353f7cf
+
+Local variable description: ----addr@___sys_recvmsg
+Variable was created at:
+ ___sys_recvmsg+0xf6/0x1310 net/socket.c:2244
+ do_recvmmsg+0x646/0x10c0 net/socket.c:2390
+
+Bytes 0-31 of 32 are uninitialized
+Memory access of size 32 starts at ffff8880ae62fbb0
+Data copied to user address 0000000020000000
+
+Fixes: a32e0eec7042 ("l2tp: introduce L2TPv3 IP encapsulation support for IPv6")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_device.c   |    4 +++-
- net/hsr/hsr_framereg.c |   12 ++++++++++++
- net/hsr/hsr_framereg.h |    1 +
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ net/l2tp/l2tp_ip6.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -485,7 +485,7 @@ int hsr_dev_finalize(struct net_device *
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -680,9 +680,6 @@ static int l2tp_ip6_recvmsg(struct sock
+ 	if (flags & MSG_OOB)
+ 		goto out;
  
- 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
- 	if (res)
--		return res;
-+		goto err_add_port;
+-	if (addr_len)
+-		*addr_len = sizeof(*lsa);
+-
+ 	if (flags & MSG_ERRQUEUE)
+ 		return ipv6_recv_error(sk, msg, len, addr_len);
  
- 	res = register_netdevice(hsr_dev);
- 	if (res)
-@@ -505,6 +505,8 @@ int hsr_dev_finalize(struct net_device *
- fail:
- 	hsr_for_each_port(hsr, port)
- 		hsr_del_port(port);
-+err_add_port:
-+	hsr_del_node(&hsr->self_node_db);
+@@ -712,6 +709,7 @@ static int l2tp_ip6_recvmsg(struct sock
+ 		lsa->l2tp_conn_id = 0;
+ 		if (ipv6_addr_type(&lsa->l2tp_addr) & IPV6_ADDR_LINKLOCAL)
+ 			lsa->l2tp_scope_id = inet6_iif(skb);
++		*addr_len = sizeof(*lsa);
+ 	}
  
- 	return res;
- }
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -124,6 +124,18 @@ int hsr_create_self_node(struct list_hea
- 	return 0;
- }
- 
-+void hsr_del_node(struct list_head *self_node_db)
-+{
-+	struct hsr_node *node;
-+
-+	rcu_read_lock();
-+	node = list_first_or_null_rcu(self_node_db, struct hsr_node, mac_list);
-+	rcu_read_unlock();
-+	if (node) {
-+		list_del_rcu(&node->mac_list);
-+		kfree(node);
-+	}
-+}
- 
- /* Allocate an hsr_node and add it to node_db. 'addr' is the node's AddressA;
-  * seq_out is used to initialize filtering of outgoing duplicate frames
---- a/net/hsr/hsr_framereg.h
-+++ b/net/hsr/hsr_framereg.h
-@@ -16,6 +16,7 @@
- 
- struct hsr_node;
- 
-+void hsr_del_node(struct list_head *self_node_db);
- struct hsr_node *hsr_add_node(struct list_head *node_db, unsigned char addr[],
- 			      u16 seq_out);
- struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
+ 	if (np->rxopt.all)
 
 
