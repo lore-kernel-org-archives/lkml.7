@@ -3,40 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F87C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0A4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96079217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10092175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfCRVod (ORCPT
+        id S1727933AbfCRVog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 17:44:33 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57599 "EHLO mga04.intel.com"
+        Mon, 18 Mar 2019 17:44:36 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57622 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbfCRVoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 17:44:30 -0400
+        id S1727880AbfCRVo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 17:44:28 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 14:44:29 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 14:44:28 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,495,1544515200"; 
-   d="scan'208";a="308301839"
+   d="scan'208";a="308301838"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2019 14:44:29 -0700
+  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2019 14:44:28 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 19/22] perf, tools: Add support for recording and printing XMM registers
-Date:   Mon, 18 Mar 2019 14:41:41 -0700
-Message-Id: <20190318214144.4639-20-kan.liang@linux.intel.com>
+Subject: [PATCH 18/22] perf/x86/intel: Support CPUID 10.ECX to disable fixed counters
+Date:   Mon, 18 Mar 2019 14:41:40 -0700
+Message-Id: <20190318214144.4639-19-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190318214144.4639-1-kan.liang@linux.intel.com>
 References: <20190318214144.4639-1-kan.liang@linux.intel.com>
@@ -47,143 +47,140 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Newer kernel code can collect XMM registers in some cases.
-Add support for perf script to dump them, and support
-for the register parser in perf record -I ... to configure them.
-For now they are just printed in hex, could potentially add
-other formats too.
+Icelake supports a new CPUID 10.ECX cpu leaf to indicate some fixed
+counters are not supported.  This extends the previous count to a bitmap
+which allows to disable even lower counters.
+
+It's a nop on Icelake (all fixed counters are supported), but let's
+implement it here.  This adds the necessary checks. In theory it could
+be used today by a Hypervisor.
+
+For disabled counters disable any constraint events. I reuse the
+existing intel_ctrl variable to remember which counters are disabled.
+All code that reads all counters is fixed to check this extra bitmask.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/arch/x86/include/uapi/asm/perf_regs.h | 19 +++++++++++++++
- tools/perf/arch/x86/include/perf_regs.h     | 27 ++++++++++++++++++---
- tools/perf/arch/x86/util/perf_regs.c        | 16 ++++++++++++
- tools/perf/util/perf_regs.h                 |  1 +
- 4 files changed, 60 insertions(+), 3 deletions(-)
+ arch/x86/events/core.c       |  8 +++++++-
+ arch/x86/events/intel/core.c | 22 +++++++++++++++-------
+ arch/x86/events/perf_event.h |  6 ++++++
+ 3 files changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
-index f3329cabce5c..29a90e4464b2 100644
---- a/tools/arch/x86/include/uapi/asm/perf_regs.h
-+++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
-@@ -28,6 +28,25 @@ enum perf_event_x86_regs {
- 	PERF_REG_X86_R14,
- 	PERF_REG_X86_R15,
- 
-+	/* These all need two bits set because they are 128bit */
-+	PERF_REG_X86_XMM0  = 32,
-+	PERF_REG_X86_XMM1  = 34,
-+	PERF_REG_X86_XMM2  = 36,
-+	PERF_REG_X86_XMM3  = 38,
-+	PERF_REG_X86_XMM4  = 40,
-+	PERF_REG_X86_XMM5  = 42,
-+	PERF_REG_X86_XMM6  = 44,
-+	PERF_REG_X86_XMM7  = 46,
-+	PERF_REG_X86_XMM8  = 48,
-+	PERF_REG_X86_XMM9  = 50,
-+	PERF_REG_X86_XMM10 = 52,
-+	PERF_REG_X86_XMM11 = 54,
-+	PERF_REG_X86_XMM12 = 56,
-+	PERF_REG_X86_XMM13 = 58,
-+	PERF_REG_X86_XMM14 = 60,
-+	PERF_REG_X86_XMM15 = 62,
-+
-+	/* This does not include the XMMX registers */
- 	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
- 	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
- };
-diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
-index 7f6d538f8a89..c6923eb3a0ce 100644
---- a/tools/perf/arch/x86/include/perf_regs.h
-+++ b/tools/perf/arch/x86/include/perf_regs.h
-@@ -8,9 +8,9 @@
- 
- void perf_regs_load(u64 *regs);
- 
-+#define PERF_REGS_MAX 64
- #ifndef HAVE_ARCH_X86_64_SUPPORT
--#define PERF_REGS_MASK ((1ULL << PERF_REG_X86_32_MAX) - 1)
--#define PERF_REGS_MAX PERF_REG_X86_32_MAX
-+#define PERF_REGS_MASK (((1ULL << PERF_REG_X86_32_MAX) - 1))
- #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_32
- #else
- #define REG_NOSUPPORT ((1ULL << PERF_REG_X86_DS) | \
-@@ -18,7 +18,6 @@ void perf_regs_load(u64 *regs);
- 		       (1ULL << PERF_REG_X86_FS) | \
- 		       (1ULL << PERF_REG_X86_GS))
- #define PERF_REGS_MASK (((1ULL << PERF_REG_X86_64_MAX) - 1) & ~REG_NOSUPPORT)
--#define PERF_REGS_MAX PERF_REG_X86_64_MAX
- #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_64
- #endif
- #define PERF_REG_IP PERF_REG_X86_IP
-@@ -77,6 +76,28 @@ static inline const char *perf_reg_name(int id)
- 	case PERF_REG_X86_R15:
- 		return "R15";
- #endif /* HAVE_ARCH_X86_64_SUPPORT */
-+
-+#define XMM(x) \
-+	case PERF_REG_X86_XMM ## x:	\
-+	case PERF_REG_X86_XMM ## x + 1:	\
-+		return "XMM" #x;
-+	XMM(0)
-+	XMM(1)
-+	XMM(2)
-+	XMM(3)
-+	XMM(4)
-+	XMM(5)
-+	XMM(6)
-+	XMM(7)
-+	XMM(8)
-+	XMM(9)
-+	XMM(10)
-+	XMM(11)
-+	XMM(12)
-+	XMM(13)
-+	XMM(14)
-+	XMM(15)
-+#undef XMM
- 	default:
- 		return NULL;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 796e46a59148..283df78c52e0 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -225,6 +225,8 @@ static bool check_hw_exists(void)
+ 		if (ret)
+ 			goto msr_fail;
+ 		for (i = 0; i < x86_pmu.num_counters_fixed; i++) {
++			if (fixed_counter_disabled(i))
++				continue;
+ 			if (val & (0x03 << i*4)) {
+ 				bios_fail = 1;
+ 				val_fail = val;
+@@ -1362,6 +1364,8 @@ void perf_event_print_debug(void)
+ 			cpu, idx, prev_left);
  	}
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index fead6b3b4206..71d7604dbf0b 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -31,6 +31,22 @@ const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG(R14, PERF_REG_X86_R14),
- 	SMPL_REG(R15, PERF_REG_X86_R15),
- #endif
-+	SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
-+	SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
-+	SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
-+	SMPL_REG2(XMM3, PERF_REG_X86_XMM3),
-+	SMPL_REG2(XMM4, PERF_REG_X86_XMM4),
-+	SMPL_REG2(XMM5, PERF_REG_X86_XMM5),
-+	SMPL_REG2(XMM6, PERF_REG_X86_XMM6),
-+	SMPL_REG2(XMM7, PERF_REG_X86_XMM7),
-+	SMPL_REG2(XMM8, PERF_REG_X86_XMM8),
-+	SMPL_REG2(XMM9, PERF_REG_X86_XMM9),
-+	SMPL_REG2(XMM10, PERF_REG_X86_XMM10),
-+	SMPL_REG2(XMM11, PERF_REG_X86_XMM11),
-+	SMPL_REG2(XMM12, PERF_REG_X86_XMM12),
-+	SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
-+	SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
-+	SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
- 	SMPL_REG_END
- };
+ 	for (idx = 0; idx < x86_pmu.num_counters_fixed; idx++) {
++		if (fixed_counter_disabled(idx))
++			continue;
+ 		rdmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + idx, pmc_count);
  
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index c9319f8d17a6..1a15a4bfc28d 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -12,6 +12,7 @@ struct sample_reg {
- 	uint64_t mask;
- };
- #define SMPL_REG(n, b) { .name = #n, .mask = 1ULL << (b) }
-+#define SMPL_REG2(n, b) { .name = #n, .mask = 3ULL << (b) }
- #define SMPL_REG_END { .name = NULL }
+ 		pr_info("CPU#%d: fixed-PMC%d count: %016llx\n",
+@@ -1877,7 +1881,9 @@ static int __init init_hw_perf_events(void)
+ 	pr_info("... generic registers:      %d\n",     x86_pmu.num_counters);
+ 	pr_info("... value mask:             %016Lx\n", x86_pmu.cntval_mask);
+ 	pr_info("... max period:             %016Lx\n", x86_pmu.max_period);
+-	pr_info("... fixed-purpose events:   %d\n",     x86_pmu.num_counters_fixed);
++	pr_info("... fixed-purpose events:   %lu\n",
++			hweight64((((1ULL << x86_pmu.num_counters_fixed) - 1)
++					<< INTEL_PMC_IDX_FIXED) & x86_pmu.intel_ctrl));
+ 	pr_info("... event mask:             %016Lx\n", x86_pmu.intel_ctrl);
  
- extern const struct sample_reg sample_reg_masks[];
+ 	/*
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 3f86af8ce832..433dbd0152a9 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2278,8 +2278,11 @@ static void intel_pmu_reset(void)
+ 		wrmsrl_safe(x86_pmu_config_addr(idx), 0ull);
+ 		wrmsrl_safe(x86_pmu_event_addr(idx),  0ull);
+ 	}
+-	for (idx = 0; idx < x86_pmu.num_counters_fixed; idx++)
++	for (idx = 0; idx < x86_pmu.num_counters_fixed; idx++) {
++		if (fixed_counter_disabled(idx))
++			continue;
+ 		wrmsrl_safe(MSR_ARCH_PERFMON_FIXED_CTR0 + idx, 0ull);
++	}
+ 
+ 	if (ds)
+ 		ds->bts_index = ds->bts_buffer_base;
+@@ -4476,7 +4479,7 @@ __init int intel_pmu_init(void)
+ 	union cpuid10_eax eax;
+ 	union cpuid10_ebx ebx;
+ 	struct event_constraint *c;
+-	unsigned int unused;
++	unsigned int fixed_mask;
+ 	struct extra_reg *er;
+ 	int version, i;
+ 	char *name;
+@@ -4497,9 +4500,11 @@ __init int intel_pmu_init(void)
+ 	 * Check whether the Architectural PerfMon supports
+ 	 * Branch Misses Retired hw_event or not.
+ 	 */
+-	cpuid(10, &eax.full, &ebx.full, &unused, &edx.full);
++	cpuid(10, &eax.full, &ebx.full, &fixed_mask, &edx.full);
+ 	if (eax.split.mask_length < ARCH_PERFMON_EVENTS_COUNT)
+ 		return -ENODEV;
++	if (!fixed_mask)
++		fixed_mask = -1;
+ 
+ 	version = eax.split.version_id;
+ 	if (version < 2)
+@@ -5017,7 +5022,8 @@ __init int intel_pmu_init(void)
+ 	}
+ 
+ 	x86_pmu.intel_ctrl |=
+-		((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
++		(((1LL << x86_pmu.num_counters_fixed)-1) & (u64)fixed_mask)
++			<< INTEL_PMC_IDX_FIXED;
+ 
+ 	if (x86_pmu.event_constraints) {
+ 		/*
+@@ -5034,9 +5040,11 @@ __init int intel_pmu_init(void)
+ 				c->weight = hweight64(c->idxmsk64);
+ 				continue;
+ 			}
+-			if (c->cmask == FIXED_EVENT_FLAGS
+-			    && c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES) {
+-				c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
++			if (c->cmask == FIXED_EVENT_FLAGS)  {
++				if (c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES)
++					c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
++				/* Disabled fixed counters which are not in CPUID */
++				c->idxmsk64 &= x86_pmu.intel_ctrl;
+ 			}
+ 			c->idxmsk64 &=
+ 				~(~0ULL << (INTEL_PMC_IDX_FIXED + x86_pmu.num_counters_fixed));
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index ef8c4d846e87..8894e3bd1f23 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -926,6 +926,12 @@ ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr,
+ ssize_t events_ht_sysfs_show(struct device *dev, struct device_attribute *attr,
+ 			  char *page);
+ 
++static inline bool fixed_counter_disabled(int i)
++{
++	return x86_pmu.intel_ctrl &&
++		((1ULL << (i + INTEL_PMC_IDX_FIXED)) & x86_pmu.intel_ctrl);
++}
++
+ #ifdef CONFIG_CPU_SUP_AMD
+ 
+ int amd_pmu_init(void);
 -- 
 2.17.1
 
