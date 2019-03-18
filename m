@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B89C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64336C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83AB8214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3091B2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901643;
-	bh=LLnHyaca2MKAeXBvB1Lzcq/Di26rB2NMTEV68Q6s0jI=;
+	s=default; t=1552901648;
+	bh=MWJ9JzHP3kN6wa3SIL4dpXhcPGdIY0BqUirY7m7x82I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aEbjSmPxrcezS+Hmuc6tPn1mc0fAcB8VgVmPTlRFrJV8jdZ+YbrmsS6sqARNRQ5rN
-	 uhRkHq2x8cPPQzO9woQ/h01cxONQdvCcNNGIG7knUOY2qfSoLKdqdQBWqb3Dv0w7ey
-	 6MNC/ejlL7VGTK8b99fU/TIZqAuWbSzhrT7295BQ=
+	b=opHcLAwtGIC0O33Q9q60m7qLFW6sGnjus7af1MCsfaSpPWUgWM+b47gkWKcAr/7BU
+	 UTrxg/3+1qboSiDxSlyFEZ1/Igqc4/00YRhAUdcnkZjPFIuS+27CK4t7R1JGpJS7G9
+	 yeM3NAORpbMfLX6KTh9GRgOhThiLT102rk4YfvOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbfCRJeB (ORCPT
+        id S1728964AbfCRJeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42288 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:34:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728921AbfCRJd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:57 -0400
+        id S1728650AbfCRJeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:34:00 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F9E82087C;
-        Mon, 18 Mar 2019 09:33:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24EDE2075C;
+        Mon, 18 Mar 2019 09:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901636;
-        bh=LLnHyaca2MKAeXBvB1Lzcq/Di26rB2NMTEV68Q6s0jI=;
+        s=default; t=1552901639;
+        bh=MWJ9JzHP3kN6wa3SIL4dpXhcPGdIY0BqUirY7m7x82I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TnYTbyz8jwT9LHre4AwtQ5QKxHEmpjrEpEgy24M9YO/iHS9K4l18+n9umPTDKewcp
-         g4WdLCXNdHbJr72Ha7eQs4Yaow8mAGARN61mqTw7hgbagj4BCXjKq3ZDxGqgcQiYHc
-         9xf4xlMIqAK5f2EC7cw8YIg23vtWOdgxzLPI6KGk=
+        b=dK9n3Z8XuvFocN6FeWdnAlRpmgmry3ZX42HbhsKdltCAwXcZzPGGFDYQhGM9EJWpa
+         zNpJla/aksbi45airFGkgdMYb80Sl78bbH/xnrd35U1S2fgjsJxpbiksuXwpMMSlu4
+         kWS7NL7/xIOHTUK75QzVTe26QxqysV4kk4vX8Qx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Menzel <pmenzel+alsa-devel@molgen.mpg.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 41/52] ALSA: hda: Extend i915 component bind timeout
-Date:   Mon, 18 Mar 2019 10:25:38 +0100
-Message-Id: <20190318084018.361079067@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Burrell <jeff.burrell@hp.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 42/52] ALSA: hda - add more quirks for HP Z2 G4 and HP Z240
+Date:   Mon, 18 Mar 2019 10:25:39 +0100
+Message-Id: <20190318084018.488787952@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -65,43 +64,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jaroslav Kysela <perex@perex.cz>
 
-commit cfc35f9c128cea8fce6a5513b1de50d36f3b209f upstream.
+commit 167897f4b32c2bc18b3b6183029a33fb420a114e upstream.
 
-I set 10 seconds for the timeout of the i915 audio component binding
-with a hope that recent machines are fast enough to handle all probe
-tasks in that period, but I was too optimistic.  The binding may take
-longer than that, and this caused a problem on the machine with both
-audio and graphics driver modules loaded in parallel, as Paul Menzel
-experienced.  This problem haven't hit so often just because the KMS
-driver is loaded in initrd on most machines.
+Apply the HP_MIC_NO_PRESENCE fixups for the more HP Z2 G4 and
+HP Z240 models.
 
-As a simple workaround, extend the timeout to 60 seconds.
-
-Fixes: f9b54e1961c7 ("ALSA: hda/i915: Allow delayed i915 audio component binding")
-Reported-by: Paul Menzel <pmenzel+alsa-devel@molgen.mpg.de>
+Reported-by: Jeff Burrell <jeff.burrell@hp.com>
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/hda/hdac_i915.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_conexant.c |    3 +++
+ sound/pci/hda/patch_realtek.c  |    6 ++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
---- a/sound/hda/hdac_i915.c
-+++ b/sound/hda/hdac_i915.c
-@@ -144,9 +144,9 @@ int snd_hdac_i915_init(struct hdac_bus *
- 		return -ENODEV;
- 	if (!acomp->ops) {
- 		request_module("i915");
--		/* 10s timeout */
-+		/* 60s timeout */
- 		wait_for_completion_timeout(&bind_complete,
--					    msecs_to_jiffies(10 * 1000));
-+					    msecs_to_jiffies(60 * 1000));
- 	}
- 	if (!acomp->ops) {
- 		dev_info(bus->dev, "couldn't bind with audio component\n");
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -936,6 +936,9 @@ static const struct snd_pci_quirk cxt506
+ 	SND_PCI_QUIRK(0x103c, 0x8299, "HP 800 G3 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x829a, "HP 800 G3 DM", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x8455, "HP Z2 G4", CXT_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x8456, "HP Z2 G4 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x8457, "HP Z2 G4 mini", CXT_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x8458, "HP Z2 G4 mini premium", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x138d, "Asus", CXT_FIXUP_HEADPHONE_MIC_PIN),
+ 	SND_PCI_QUIRK(0x152d, 0x0833, "OLPC XO-1.5", CXT_FIXUP_OLPC_XO),
+ 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Lenovo T400", CXT_PINCFG_LENOVO_TP410),
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6670,11 +6670,13 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x103c, 0x2336, "HP", ALC269_FIXUP_HP_MUTE_LED_MIC1),
+ 	SND_PCI_QUIRK(0x103c, 0x2337, "HP", ALC269_FIXUP_HP_MUTE_LED_MIC1),
+ 	SND_PCI_QUIRK(0x103c, 0x221c, "HP EliteBook 755 G2", ALC280_FIXUP_HP_HEADSET_MIC),
++	SND_PCI_QUIRK(0x103c, 0x802e, "HP Z240 SFF", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x802f, "HP Z240", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x820d, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x8256, "HP", ALC221_FIXUP_HP_FRONT_MIC),
+ 	SND_PCI_QUIRK(0x103c, 0x827e, "HP x360", ALC295_FIXUP_HP_X360),
+-	SND_PCI_QUIRK(0x103c, 0x82bf, "HP", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x103c, 0x82c0, "HP", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x82bf, "HP G3 mini", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x82c0, "HP G3 mini premium", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
 
 
