@@ -2,96 +2,139 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E680C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2D4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06E2205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5624D20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="d0gvr2as"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfCRREH (ORCPT
+        id S1726944AbfCRRIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:04:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58594 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbfCRREH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:04:07 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E2B07308219E;
-        Mon, 18 Mar 2019 17:04:06 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 03CDB5D705;
-        Mon, 18 Mar 2019 17:04:05 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 13:04:04 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 00/10] HMM updates for 5.1
-Message-ID: <20190318170404.GA6786@redhat.com>
-References: <20190129165428.3931-1-jglisse@redhat.com>
- <20190313012706.GB3402@redhat.com>
- <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
+        Mon, 18 Mar 2019 13:08:10 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38624 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbfCRRIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:08:09 -0400
+Received: by mail-it1-f195.google.com with SMTP id m18so4923029ita.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=U1NXLpFkwNjuQGqwOJzx7XpsAUPIdtZCmOYfw+18ADg=;
+        b=d0gvr2as+odTTfrhN3sKuzoC0fpqQrLXMCTXX7uL85mPz0tvD/f+UQrvmiKZZVPSM7
+         Nw/m7TRVk4HZqSdu8HvCtuM2En6xubpTJ1b14+P2hxL7DKbbamGXqdq2eybR3/n4g0tQ
+         U/zP8VagmQ5UkJaGxW5CWgG5gLn0wbliw1ho0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=U1NXLpFkwNjuQGqwOJzx7XpsAUPIdtZCmOYfw+18ADg=;
+        b=RF7smqd+ypPPCQZyThUCMhmoxA19h7QbN6hKuZbXVbHDlzuD6b0cwFwJutubguYnOB
+         vMJyn4nfbLpY2n+/1X5LeRlDVjQjBImyQD/GaPJmEf41GZk0xmhV14WetF4zTGO0I3me
+         cOWbR2PLdz4mIfZtILSZu/8q4ZK9VmcNw2GgLzl0zqVQPfDhcKo+yfxdfqBI13170+9e
+         TmmmwpiGLIoJW1iQg6spkTjHKLK5HB+nXbHIIxq2YeJg0J8yJ8YWFUvgzJ1BHCgzTU+H
+         MvzcX1ITDwD2Fjx+yYuDyNtBFstSxTuPlJB+On5nxwX3phueA1jOrrObacsx+eqGTLXd
+         16vg==
+X-Gm-Message-State: APjAAAViajQ21KnLvXEEKmx9VfyTYatN0DBUcjyJQdYzgBkH5FXyOrGJ
+        pJwq+o5JcIymCpR5vHtJS9kgW4mlYV4jOgcuscMHWg==
+X-Google-Smtp-Source: APXvYqzl1L+OnPV7AeuHYAJ9a+Yqk/9qRzdDybou+Y1sd97fO0c313O7KJ5ofprVuLlrLL5z7A4u+BGTPE2Yg85OT+A=
+X-Received: by 2002:a02:23cd:: with SMTP id u196mr11120242jau.103.1552928888279;
+ Mon, 18 Mar 2019 10:08:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
-User-Agent: Mutt/1.10.0 (2018-05-17)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 18 Mar 2019 17:04:07 +0000 (UTC)
+References: <20190315130825.9005-1-jagan@amarulasolutions.com>
+ <20190315130825.9005-2-jagan@amarulasolutions.com> <c52be751ac1bc7b1ee21e3e2a30d5b494bf95faa.camel@bootlin.com>
+ <CAMty3ZBOTOR4hHfPE4Ufhb2+VoNJfFQwiii1kti263fi7DEEaQ@mail.gmail.com> <b3f7e096c94347b7a244d5278a38d9ced99218d1.camel@bootlin.com>
+In-Reply-To: <b3f7e096c94347b7a244d5278a38d9ced99218d1.camel@bootlin.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 18 Mar 2019 22:37:57 +0530
+Message-ID: <CAMty3ZC2M=+Xb1OK0ZtU6wbKzmdYvHoTGSRouqKhMV+xk6DzRA@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 1/6] drm/bridge: Export drm_bridge_detach
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula@amarulasolutions.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 09:10:04AM -0700, Andrew Morton wrote:
-> On Tue, 12 Mar 2019 21:27:06 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
-> 
-> > Andrew you will not be pushing this patchset in 5.1 ?
-> 
-> I'd like to.  It sounds like we're converging on a plan.
-> 
-> It would be good to hear more from the driver developers who will be
-> consuming these new features - links to patchsets, review feedback,
-> etc.  Which individuals should we be asking?  Felix, Christian and
-> Jason, perhaps?
-> 
+On Mon, Mar 18, 2019 at 10:27 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi,
+>
+> Le lundi 18 mars 2019 =C3=A0 22:18 +0530, Jagan Teki a =C3=A9crit :
+> > Hi Paul,
+> >
+> > On Fri, Mar 15, 2019 at 6:58 PM Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> wrote:
+> > > Hi Jakan,
+> > >
+> > > On Fri, 2019-03-15 at 18:38 +0530, Jagan Teki wrote:
+> > > > Export drm_bridge_detach from drm bridge core so-that it
+> > > > can use on respective interface or bridge driver while
+> > > > detaching the bridge.
+> > >
+> > > I don't see why this change is required based on the commit log. The
+> > > DRM bridge code clearly indicates that drm_bridge_attach should *not*
+> > > be balanced with a drm_bridge_detach call in the driver, so this seem=
+s
+> > > quite wrong.
+> > >
+> > > The DRM core itself should handle detaching the bridge, not the drive=
+r.
+> > > Is there any reason why you need to do things differently for DSI?
+> >
+> > Yes, you are correct the detach of bridge is being taking care via
+> > drm_encoder_cleanup. This patch exported explicitly, since we need to
+> > taken care bridge detach during unbind even exynos_drm_dsi in other
+> > patch seems using detach by explicitly pointing.
+>
+> I can see that from your patches, but you are not explaining why you
+> need the change. And if the framework doesn't work for your case, you
+> should certainly try and fix the framework instead of working around
+> the issue.
 
-So i am guessing you will not send this to Linus ? Should i repost ?
-This patchset has 2 sides, first side is just reworking the HMM API
-to make something better in respect to process lifetime. AMD folks
-did find that helpful [1]. This rework is also necessary to ease up
-the convertion of ODP to HMM [2] and Jason already said that he is
-interested in seing that happening [3]. By missing 5.1 it means now
-that i can not push ODP to HMM in 5.2 and it will be postpone to 5.3
-which is also postoning other work ...
+Please see below comments.
 
-The second side is it adds 2 new helper dma map and dma unmap both
-are gonna be use by ODP and latter by nouveau (after some other
-nouveau changes are done). This new functions just do dma_map ie:
-    hmm_dma_map() {
-        existing_hmm_api()
-        for_each_page() {
-            dma_map_page()
-        }
-    }
+>
+> Anyway, you should probably look into using drm_panel_bridge_add, it
+> might fix the underlying issue on its own.
+>
+> > so I think the better approach is to use drm_encoder_cleanup in
+> > unbind, what do you say?
+>
+> I any case, you need to state what your problem is (in the commit log,
+> and not even in subsequent discussions) so that we can have a chance to
+> understand it and provide some feedback about what is an appropriate
+> fix and what is not. We can't understand the fix if we can't understand
+> the underlying issue.
 
-Do you want to see anymore justification than that ?
-
-[1] https://www.spinics.net/lists/amd-gfx/msg31048.html
-[2] https://patchwork.kernel.org/patch/10786625/
-[3] https://lkml.org/lkml/2019/3/13/591
-
-Cheers,
-Jérôme
+True, if my intentions is trying to fix some issue, but as I said in
+previous mail since the other dsi (exynos_drm_dsi) driver is
+explicitly detaching I presume it require or missed the export, not
+thought about fix and neither I mentioned on the commit head.  Anyway
+thanks for the review, will update the code accordingly in next
+version.
