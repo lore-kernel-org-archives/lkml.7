@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1CBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE62CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9BAC2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80D0217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901404;
-	bh=sjkXSgbQFsyfupN9F71/DJIbGH3SshpZUaAJ7q1I528=;
+	s=default; t=1552901410;
+	bh=QoP5RA7OD+SSaauQH84WvpEUS3udP2BYXI3SmtytCZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6W9RiUoetBr2jvjPlnUMYYWkOMV32BCHyYwpeC1W+5zbdoKdZ2NNDRh6OittLVZx
-	 0pOF8ayVkesstoHFVKN1I44haoXlITrxXNyb2FzEMN+HLW9eD6HQkNC7+LSXukCFua
-	 p7dEcVqT3FvfRumolwoIsPOSMgmRM28Ez5qi1n0I=
+	b=yUoFxu1ofDv/wxOk/x2tzKUe/Nsob82CXMdV3p9SUSvei0uTORTQ6u6LdRU6P4tVG
+	 6cWR2nwuK8NTtwhDDtMoWXToIM4Xeb76jG/01AcqHHV7PG6VeC1AH4o42wky7eoiYA
+	 wtZKBT/YA0wMp18foUlSeFXmY+ydaMrNErqTGiIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbfCRJaC (ORCPT
+        id S1728327AbfCRJaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36754 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbfCRJ35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:29:57 -0400
+        id S1727672AbfCRJaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:30:02 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3689214AF;
-        Mon, 18 Mar 2019 09:29:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4B9C214D8;
+        Mon, 18 Mar 2019 09:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901397;
-        bh=sjkXSgbQFsyfupN9F71/DJIbGH3SshpZUaAJ7q1I528=;
+        s=default; t=1552901401;
+        bh=QoP5RA7OD+SSaauQH84WvpEUS3udP2BYXI3SmtytCZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1KHIBi70a8TeCtx1cF/widIyP9Ln1Qww0b0DGbzj3mr8uYgzPoQO4tO/KRhUuZYDZ
-         tByePsRoG12CfvbXp3qvtN4UCLPuD3o735Jwh1XsFU3v4DBzoGZAmF5xmQJMKak0gh
-         Xl/bx/n+gMzyAs7qK7FWLhSqdg8pPmZOW474KXzI=
+        b=qvI62bf4I3DO15E6ArLHXWcRGl9Dwb91HfR1/tQcB4qyV+bwLUg9DxjFWGhy2vGHC
+         wQUHSbMk0w0lm/LAjHmzv2UDPx9Bfj8l6ydVsE8kWh5TJplzY0fZ31mnM5OKyk/TIQ
+         miUUxcq6WSiuMvShn1D0lWtiTAKZaDUTF0lptAVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        George Wilkie <gwilkie@vyatta.att-mail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Mahesh Bandewar <maheshb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 32/52] team: use operstate consistently for linkup
-Date:   Mon, 18 Mar 2019 10:25:19 +0100
-Message-Id: <20190318083847.179493866@linuxfoundation.org>
+Subject: [PATCH 4.20 33/52] ipvlan: disallow userns cap_net_admin to change global mode/flags
+Date:   Mon, 18 Mar 2019 10:25:20 +0100
+Message-Id: <20190318083847.274242743@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -67,45 +66,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: George Wilkie <gwilkie@vyatta.att-mail.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-[ Upstream commit 8c7a77267eec81dd81af8412f29e50c0b1082548 ]
+[ Upstream commit 7cc9f7003a969d359f608ebb701d42cafe75b84a ]
 
-When a port is added to a team, its initial state is derived
-from netif_carrier_ok rather than netif_oper_up.
-If it is carrier up but operationally down at the time of being
-added, the port state.linkup will be set prematurely.
-port state.linkup should be set consistently using
-netif_oper_up rather than netif_carrier_ok.
+When running Docker with userns isolation e.g. --userns-remap="default"
+and spawning up some containers with CAP_NET_ADMIN under this realm, I
+noticed that link changes on ipvlan slave device inside that container
+can affect all devices from this ipvlan group which are in other net
+namespaces where the container should have no permission to make changes
+to, such as the init netns, for example.
 
-Fixes: f1d22a1e0595 ("team: account for oper state")
-Signed-off-by: George Wilkie <gwilkie@vyatta.att-mail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+This effectively allows to undo ipvlan private mode and switch globally to
+bridge mode where slaves can communicate directly without going through
+hostns, or it allows to switch between global operation mode (l2/l3/l3s)
+for everyone bound to the given ipvlan master device. libnetwork plugin
+here is creating an ipvlan master and ipvlan slave in hostns and a slave
+each that is moved into the container's netns upon creation event.
+
+* In hostns:
+
+  # ip -d a
+  [...]
+  8: cilium_host@bond0: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+     link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+     ipvlan  mode l3 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+     inet 10.41.0.1/32 scope link cilium_host
+       valid_lft forever preferred_lft forever
+  [...]
+
+* Spawn container & change ipvlan mode setting inside of it:
+
+  # docker run -dt --cap-add=NET_ADMIN --network cilium-net --name client -l app=test cilium/netperf
+  9fff485d69dcb5ce37c9e33ca20a11ccafc236d690105aadbfb77e4f4170879c
+
+  # docker exec -ti client ip -d a
+  [...]
+  10: cilium0@if4: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l3 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.197.43/32 brd 10.41.197.43 scope global cilium0
+         valid_lft forever preferred_lft forever
+
+  # docker exec -ti client ip link change link cilium0 name cilium0 type ipvlan mode l2
+
+  # docker exec -ti client ip -d a
+  [...]
+  10: cilium0@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.197.43/32 brd 10.41.197.43 scope global cilium0
+         valid_lft forever preferred_lft forever
+
+* In hostns (mode switched to l2):
+
+  # ip -d a
+  [...]
+  8: cilium_host@bond0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.0.1/32 scope link cilium_host
+         valid_lft forever preferred_lft forever
+  [...]
+
+Same l3 -> l2 switch would also happen by creating another slave inside
+the container's network namespace when specifying the existing cilium0
+link to derive the actual (bond0) master:
+
+  # docker exec -ti client ip link add link cilium0 name cilium1 type ipvlan mode l2
+
+  # docker exec -ti client ip -d a
+  [...]
+  2: cilium1@if4: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+  10: cilium0@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.197.43/32 brd 10.41.197.43 scope global cilium0
+         valid_lft forever preferred_lft forever
+
+* In hostns:
+
+  # ip -d a
+  [...]
+  8: cilium_host@bond0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.0.1/32 scope link cilium_host
+         valid_lft forever preferred_lft forever
+  [...]
+
+One way to mitigate it is to check CAP_NET_ADMIN permissions of
+the ipvlan master device's ns, and only then allow to change
+mode or flags for all devices bound to it. Above two cases are
+then disallowed after the patch.
+
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Mahesh Bandewar <maheshb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/team/team.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ipvlan/ipvlan_main.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -1256,7 +1256,7 @@ static int team_port_add(struct team *te
- 	list_add_tail_rcu(&port->list, &team->port_list);
- 	team_port_enable(team, port);
- 	__team_compute_features(team);
--	__team_port_change_port_added(port, !!netif_carrier_ok(port_dev));
-+	__team_port_change_port_added(port, !!netif_oper_up(port_dev));
- 	__team_options_change_check(team);
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -494,6 +494,8 @@ static int ipvlan_nl_changelink(struct n
  
- 	netdev_info(dev, "Port device %s added\n", portname);
-@@ -2915,7 +2915,7 @@ static int team_device_event(struct noti
+ 	if (!data)
+ 		return 0;
++	if (!ns_capable(dev_net(ipvlan->phy_dev)->user_ns, CAP_NET_ADMIN))
++		return -EPERM;
  
- 	switch (event) {
- 	case NETDEV_UP:
--		if (netif_carrier_ok(dev))
-+		if (netif_oper_up(dev))
- 			team_port_change_check(port, true);
- 		break;
- 	case NETDEV_DOWN:
+ 	if (data[IFLA_IPVLAN_MODE]) {
+ 		u16 nmode = nla_get_u16(data[IFLA_IPVLAN_MODE]);
+@@ -596,6 +598,8 @@ int ipvlan_link_new(struct net *src_net,
+ 		struct ipvl_dev *tmp = netdev_priv(phy_dev);
+ 
+ 		phy_dev = tmp->phy_dev;
++		if (!ns_capable(dev_net(phy_dev)->user_ns, CAP_NET_ADMIN))
++			return -EPERM;
+ 	} else if (!netif_is_ipvlan_port(phy_dev)) {
+ 		/* Exit early if the underlying link is invalid or busy */
+ 		if (phy_dev->type != ARPHRD_ETHER ||
 
 
