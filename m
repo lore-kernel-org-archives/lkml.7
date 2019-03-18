@@ -2,116 +2,103 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDF5C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C77C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3FB2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tSAIpPkB"
+	by mail.kernel.org (Postfix) with ESMTP id 1F96520872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfCROVm (ORCPT
+        id S1727735AbfCROWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:21:42 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:34402 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfCROVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:21:42 -0400
-Received: by mail-it1-f195.google.com with SMTP id l4so9911642ite.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 07:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3+eAWS/Rmc6f7GwRJVmc9nC5CxO0UcnP7Zod6D16lqU=;
-        b=tSAIpPkB05uDR+b9SKj/vLk1S5eLFEW6C3+lscD2/hWQRnnyGnJKV8tOgvBccDQs04
-         LuMo6kTjA06s17gxwj8At93ZTi3DZUFUAfE+ax9aOCjLgy6VFiS1KUdD+Ssnu4FcEH2D
-         wRo2gaNG6GXj5q4IJTsoc9/JwJ4WsqAoEmKKqeyLZmDosq8Rq5AcqdCDST94l11KHRJU
-         RjDXY5me8VOVc0uT79cpV8pW4inrGeO7WxgSL+MhbkxEcJpY/GYgffGWq/Zfb70zvm/s
-         Jk0LaCH05tP+vlJs2b/WcPS6YZSaE4ZdvtRG9ET9WmyLJA5i0+Yt8NDDksQTT+k2aCwx
-         PakA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3+eAWS/Rmc6f7GwRJVmc9nC5CxO0UcnP7Zod6D16lqU=;
-        b=boHtvvIFmZEnEkaCkqdbZ4/NwI0nJ303QnGe6K/QbRfgWXWf58fJdFVBZnxGsle0To
-         G2rXdE9XrAhkrPmN7SFdSM8OL2WJGnFdgLAr7LnolxKdMoZpucLIKJEzucbsogO7XLBD
-         ieBczSh9sH/GObi8TKeSM9aC4CnIGWJ0HFWryjr/INqoAwq5KtiWgf+WPtvNqK40izwG
-         TeobWKcAaR7lbcFCtKGAlm75DV2G0khIe5Zo7uliBqiXDNDc0njMLk9DM/2NqjG9XUdr
-         30DyYPg+SPeK7Se76TXJvWmD1xRa1Opeajgd8YUsiNn0ABxhMg1UeD7o8jk1WRyRwRXN
-         KxJQ==
-X-Gm-Message-State: APjAAAXS+ZcvVbcEbYeC78gl/7iO62yb19iKWMdThq/m3ytlyWqf8IjL
-        BBU3LOjX/MidIPRjaTAIUodRmQ==
-X-Google-Smtp-Source: APXvYqyYuaYDqCSh8xnnjVgv6aCwNdZGp+Qz387KHmKQwg1GeVczfDKJkSVkUVLhkpe50aByitngrg==
-X-Received: by 2002:a24:1747:: with SMTP id 68mr8917990ith.62.1552918900809;
-        Mon, 18 Mar 2019 07:21:40 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id t74sm186626itb.11.2019.03.18.07.21.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 07:21:39 -0700 (PDT)
-Subject: Re: [PATCH 1/1] loop: access lo_backing_file only when the loop
- device is Lo_bound
-To:     Dongli Zhang <dongli.zhang@oracle.com>, linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, jack@suse.cz,
-        penguin-kernel@i-love.sakura.ne.jp
-References: <1552911797-20455-1-git-send-email-dongli.zhang@oracle.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2debdd71-c444-a04b-c308-097d8e51ee4c@kernel.dk>
-Date:   Mon, 18 Mar 2019 08:21:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 10:22:02 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35150 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726868AbfCROWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 10:22:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F60BEBD;
+        Mon, 18 Mar 2019 07:22:01 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B03F3F59C;
+        Mon, 18 Mar 2019 07:21:58 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 14:21:52 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 03/15] sched/core: uclamp: Add system default clamps
+Message-ID: <20190318142152.44biczhoby44xlfz@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-4-patrick.bellasi@arm.com>
+ <20190313201821.GW2482@worktop.programming.kicks-ass.net>
+ <20190318121804.tr3myhtgczvovmkq@e110439-lin>
+ <20190318131050.GQ6058@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <1552911797-20455-1-git-send-email-dongli.zhang@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318131050.GQ6058@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/19 6:23 AM, Dongli Zhang wrote:
-> Commit 758a58d0bc67 ("loop: set GENHD_FL_NO_PART_SCAN after
-> blkdev_reread_part()") separates "lo->lo_backing_file = NULL" and
-> "lo->lo_state = Lo_unbound" into different critical regions protected by
-> loop_ctl_mutex.
+On 18-Mar 14:10, Peter Zijlstra wrote:
+> On Mon, Mar 18, 2019 at 12:18:04PM +0000, Patrick Bellasi wrote:
+> > On 13-Mar 21:18, Peter Zijlstra wrote:
+> > > On Fri, Feb 08, 2019 at 10:05:42AM +0000, Patrick Bellasi wrote:
+> > > > +static void uclamp_fork(struct task_struct *p)
+> > > > +{
+> > > > +	unsigned int clamp_id;
+> > > > +
+> > > > +	if (unlikely(!p->sched_class->uclamp_enabled))
+> > > > +		return;
+> > > > +
+> > > > +	for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id)
+> > > > +		p->uclamp[clamp_id].active = false;
+> > > > +}
+> > > 
+> > > Because in that case .active == false, and copy_process() will have done
+> > > thr right thing?
+> > 
+> > Don't really get what you mean here? :/
 > 
-> However, there is below race that the NULL lo->lo_backing_file would be
-> accessed when the backend of a loop is another loop device, e.g., loop0's
-> backend is a file, while loop1's backend is loop0.
-> 
-> loop0's backend is file            loop1's backend is loop0
-> 
-> __loop_clr_fd()
->   mutex_lock(&loop_ctl_mutex);
->   lo->lo_backing_file = NULL; --> set to NULL
->   mutex_unlock(&loop_ctl_mutex);
->                                    loop_set_fd()
->                                      mutex_lock_killable(&loop_ctl_mutex);
->                                      loop_validate_file()
->                                        f = l->lo_backing_file; --> NULL
->                                          access if loop0 is not Lo_unbound
->   mutex_lock(&loop_ctl_mutex);
->   lo->lo_state = Lo_unbound;
->   mutex_unlock(&loop_ctl_mutex);
-> 
-> lo->lo_backing_file should be accessed only when the loop device is
-> Lo_bound.
-> 
-> In fact, the problem has been introduced already in commit 7ccd0791d985
-> ("loop: Push loop_ctl_mutex down into loop_clr_fd()") after which
-> loop_validate_file() could see devices in Lo_rundown state with which it
-> did not count. It was harmless at that point but still.
+> Why don't we have to set .active=false when
+> !sched_class->uclamp_enabled?
 
-Thanks, applied.
+Ok, got it.
+
+In principle because:
+- FAIR and RT will have uclamp_enabled
+- DL cannot fork
+
+... thus, yes, it seems that the check above is not necessary anyway.
+
+Moreover, as per one of your comments in another message, we still need
+to cover the "reset on fork" case for FAIR and RT. Thus, I'm going to
+completely remove the support check in uclamp_fork and we always reset
+active for all classes.
+
+Cheers!
 
 -- 
-Jens Axboe
+#include <best/regards.h>
 
+Patrick Bellasi
