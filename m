@@ -2,106 +2,224 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6EBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE04C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4E720854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8193320854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:55:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hA54bfVA"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="LUf21l/i";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="DgDpBw3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbfCRPzA (ORCPT
+        id S1727799AbfCRPzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:55:00 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39112 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbfCRPy7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:54:59 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i17so1775177pfo.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 08:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hyk2s9BcFlwoxp6C3yAA1bD4RlL7e+5dFnYps4rvzag=;
-        b=hA54bfVAEdqf5ciaOd/IOVKuGsgwpXPkm8NZaZRoRX7yws2lATXZHckOVU2aQIeiFV
-         Is9wXOd/ZjEnZy8wXZG3Was51fhxK7Txa5+XBvOMyFE1gZL7L+rrZ2o2SNshPk7NJYVg
-         v/qWMF5Xw9PT/ST4j0CO73ubXemxppRhx+tXA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hyk2s9BcFlwoxp6C3yAA1bD4RlL7e+5dFnYps4rvzag=;
-        b=lq0jDBHETUGY+jYPKvuNwqL2zIRFT1n+riS26/ePIh17y/aXTDXw910Xe47tRUmvxp
-         mBA0apX48EEaZ1E43gmMiIJvOR9yhJ4xrH+CealyOq6ncFLOAHIx2YdzlFla2igwGuMv
-         +1WsSut7GeoamRlOwzejHMpLKGBfTgmP5L5Qq8brfCswQem70zj13LWKz7a+0QcE+yH2
-         f+O2feymqAwuhZJAI6IYyX2kHALbsqJeNEuLGQvZM53pCgGhH0f/Ae9q/DT+qaOW0ZC4
-         x1TCapdodmZyqbwzLEqtF1SOzYXqzZt4Vm2dR10UUsGN9iT6heX8r+6UpcKkR9XTRCuZ
-         qfTg==
-X-Gm-Message-State: APjAAAWswLAueDcl7fR/6tGOAVKB8p79BbVTMheN3NpZvW/hYHNheqNV
-        GCzCIwDslCUJjFDhy7PBjX78PQ==
-X-Google-Smtp-Source: APXvYqyecj2wq3uUR6cZFe+csugvYp+2AONPvTISfLDyjiZ+dxbyxKHwknczf8qnGzaKYB+vHrQlXQ==
-X-Received: by 2002:a17:902:2a29:: with SMTP id i38mr19319566plb.22.1552924498772;
-        Mon, 18 Mar 2019 08:54:58 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id s6sm13328933pfm.94.2019.03.18.08.54.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 08:54:58 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Anton Vasilyev <vasilyev@ispras.ru>
-Subject: [PATCH] firmware: vpd: Drop __iomem usage for memremap() memory
-Date:   Mon, 18 Mar 2019 08:54:57 -0700
-Message-Id: <20190318155457.197339-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 18 Mar 2019 11:55:51 -0400
+Received: from node.akkea.ca ([192.155.83.177]:39658 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726788AbfCRPzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 11:55:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 821C04E204D;
+        Mon, 18 Mar 2019 15:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1552924548; bh=ZKmIXL7hZ7vrBz7fILjhXBL4biuzNFFbNx7IX9/DXkQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=LUf21l/ik2WbL/qKmuEMUXx8ZRuGjdHJdKDdiscowf7afIUJ7It478aUnfXF3VN1N
+         r6JKhnWSc1RyfzSHqZ6p8wUgXQKdiLRBvKX3TugJWHgK+xIhfei1TJVBppm1rxo0om
+         hgGPVt+ToC5TtgfB0c7Y4KF9MEsqHIy3M4pPPDRI=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Yg8XH0DzW2-W; Mon, 18 Mar 2019 15:55:47 +0000 (UTC)
+Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
+        by node.akkea.ca (Postfix) with ESMTPSA id 39A934E204B;
+        Mon, 18 Mar 2019 15:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1552924547; bh=ZKmIXL7hZ7vrBz7fILjhXBL4biuzNFFbNx7IX9/DXkQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=DgDpBw3eG0RFcr+b2a0MO8hBSYGLU0Y/o6vKYZzu603+iT6Tym3Wnyw+jWG+iTTlN
+         KrNTpPpFzNjMkLNvuHDoBM0pQZQ0il4kqfAFIJCGlCmfkSEGG+h0RiEf7kqkpXa0Ag
+         L9CtBJ+G+lc7umrsKSEi4X5AJxYDdSqh8e+OMvXQ=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     angus@akkea.ca, andrew.smirnov@gmail.com
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] arm64: dts: fsl: imx8mq: enable the thermal management unit (TMU)
+Date:   Mon, 18 Mar 2019 08:48:49 -0700
+Message-Id: <20190318154849.25456-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190311213124.29325-1-angus@akkea.ca>
+References: <20190311213124.29325-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-memremap() doesn't return an iomem pointer, so we can just use memcpy()
-and drop the __iomem annotation here. This silences a sparse warning.
+Add the TMU node for the CPU
 
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Anton Vasilyev <vasilyev@ispras.ru>
-Smgned-off-by: Stephen Boyd <swboyd@chromium.org>
+Changes since v1:
+
+Fixed the muber of sensor cells to work with or without the multi
+sensors patch.
+
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 ---
- drivers/firmware/google/vpd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 90 +++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
 
-diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/google/vpd.c
-index c0c0b4e4e281..f240946ed701 100644
---- a/drivers/firmware/google/vpd.c
-+++ b/drivers/firmware/google/vpd.c
-@@ -254,7 +254,7 @@ static int vpd_section_destroy(struct vpd_section *sec)
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 9155bd4784eb..d367aa0023c4 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/power/imx8mq-power.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
+ #include "imx8mq-pinfunc.h"
  
- static int vpd_sections_init(phys_addr_t physaddr)
- {
--	struct vpd_cbmem __iomem *temp;
-+	struct vpd_cbmem *temp;
- 	struct vpd_cbmem header;
- 	int ret = 0;
+ / {
+@@ -89,6 +90,7 @@
+ 			reg = <0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
  
-@@ -262,7 +262,7 @@ static int vpd_sections_init(phys_addr_t physaddr)
- 	if (!temp)
- 		return -ENOMEM;
+ 		A53_1: cpu@1 {
+@@ -97,6 +99,7 @@
+ 			reg = <0x1>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
  
--	memcpy_fromio(&header, temp, sizeof(struct vpd_cbmem));
-+	memcpy(&header, temp, sizeof(struct vpd_cbmem));
- 	memunmap(temp);
+ 		A53_2: cpu@2 {
+@@ -105,6 +108,7 @@
+ 			reg = <0x2>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
  
- 	if (header.magic != VPD_CBMEM_MAGIC)
+ 		A53_3: cpu@3 {
+@@ -113,6 +117,7 @@
+ 			reg = <0x3>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_L2: l2-cache0 {
+@@ -210,6 +215,91 @@
+ 				#interrupt-cells = <2>;
+ 			};
+ 
++			tmu: tmu@30260000 {
++				compatible = "fsl,imx8mq-tmu";
++				reg = <0x30260000 0x10000>;
++				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				little-endian;
++				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
++				fsl,tmu-calibration = <0x00000000 0x00000023
++						       0x00000001 0x00000029
++						       0x00000002 0x0000002f
++						       0x00000003 0x00000035
++						       0x00000004 0x0000003d
++						       0x00000005 0x00000043
++						       0x00000006 0x0000004b
++						       0x00000007 0x00000051
++						       0x00000008 0x00000057
++						       0x00000009 0x0000005f
++						       0x0000000a 0x00000067
++						       0x0000000b 0x0000006f
++
++						       0x00010000 0x0000001b
++						       0x00010001 0x00000023
++						       0x00010002 0x0000002b
++						       0x00010003 0x00000033
++						       0x00010004 0x0000003b
++						       0x00010005 0x00000043
++						       0x00010006 0x0000004b
++						       0x00010007 0x00000055
++						       0x00010008 0x0000005d
++						       0x00010009 0x00000067
++						       0x0001000a 0x00000070
++
++						       0x00020000 0x00000017
++						       0x00020001 0x00000023
++						       0x00020002 0x0000002d
++						       0x00020003 0x00000037
++						       0x00020004 0x00000041
++						       0x00020005 0x0000004b
++						       0x00020006 0x00000057
++						       0x00020007 0x00000063
++						       0x00020008 0x0000006f
++
++						       0x00030000 0x00000015
++						       0x00030001 0x00000021
++						       0x00030002 0x0000002d
++						       0x00030003 0x00000039
++						       0x00030004 0x00000045
++						       0x00030005 0x00000053
++						       0x00030006 0x0000005f
++						       0x00030007 0x00000071>;
++				#thermal-sensor-cells =  <1>;
++			};
++
++			thermal-zones {
++				cpu-thermal {
++					polling-delay-passive = <250>;
++					polling-delay = <2000>;
++					thermal-sensors = <&tmu 0>;
++
++					trips {
++						cpu_alert: cpu-alert {
++							temperature = <85000>;
++							hysteresis = <2000>;
++							type = "passive";
++						};
++
++						cpu_crit {
++							temperature = <95000>;
++							hysteresis = <2000>;
++							type = "critical";
++						};
++					};
++
++					cooling-maps {
++						map0 {
++							trip = <&cpu_alert>;
++							cooling-device =
++								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						};
++					};
++				};
++			};
++
+ 			wdog1: watchdog@30280000 {
+ 				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
+ 				reg = <0x30280000 0x10000>;
 -- 
-Sent by a computer through tubes
+2.17.1
 
