@@ -2,133 +2,155 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28418C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38705C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E868F2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F216B20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="wyQUWPUU"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="u+z5hMth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfCRQ2Z (ORCPT
+        id S1727433AbfCRQaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:28:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37775 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727697AbfCRQ2Z (ORCPT
+        Mon, 18 Mar 2019 12:30:02 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37830 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbfCRQaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:28:25 -0400
-Received: by mail-pg1-f193.google.com with SMTP id q206so11747954pgq.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:28:24 -0700 (PDT)
+        Mon, 18 Mar 2019 12:30:01 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a17so14652258ljd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:30:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I4/aNqZ3TeFwtNHzcHEcswGWbN5iU4mf8xjDmq9e6JY=;
-        b=wyQUWPUUpk3tYcZBLkT1VRICEObRlaM5LZ0u6Z0S06JP/x5G2M3wJRNECDAKSWvvv5
-         fZ1uyya7sLB5mK3VCSjqrxz5OG2eVdOF4e0QaLpcRomDTKbjFIRX+h4kmBBt+v1wlZan
-         nAs9oC04e4pKiJKxEvMhNtZ7icfNnl9MwVwpiFE+1dtwXQt/4bnbbxqGeFokLlgyCXDg
-         4oS1lwKUpn1LiYf0Srcx57FyslD7QGnreWbydi3KYWCtTj/D9+QyXtGtk67QAfI+SeD7
-         X85wt1E3QskxtCenAZ/UmRnCJq/S2j1B/oezWsSCJZhjaNYXQ3ika+tMsppyFhIoPMZ2
-         +DUg==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OokwICR1EaMWxSspcBrfTFPwSLwxOUmEBWakGxJZAeM=;
+        b=u+z5hMthuOFWRC0ETyNeEsu/8cMIWgAeFK21iQsly94vMe5cqovPCTWUYFIB9x2ALb
+         4BT/XOdfojAeow+1lk9aLElY+hPqyDq4yJbkzfr7+lmzygZeBYNZDWMrjQli5LDFP6bu
+         L2D4DiCUdE4+Drhpkeu4qEBA7Z178HdJoeBa+MVojG+OD6rPMWEUeynGH0mWJPlcgDDf
+         T2O+YKXD9WpbrYthSFxrooxO87PXNy9M7KFzzQrHAtJFrxM61i8D7vDSY9kXE/TyIg9P
+         kONxW6Vwsf0H2Q233cyjXrFxOFGJ358VN/skTOgQPMCRryasdBMyTGnECoc5lu0OP4aW
+         G7PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I4/aNqZ3TeFwtNHzcHEcswGWbN5iU4mf8xjDmq9e6JY=;
-        b=UJ000wUYcYpOgfaIeAlZMyYa3q+i5ntrflX38zDHfxTAmArHPuAG1pGL4bKiXBfA/k
-         oDs0ez3gP/QsF4k8OpkdkwcPu7ddVzaguwdrta6W9AnmOFsyD2Y4YUnSY8LjFxk1uPfj
-         GIXhi0eqMiKH0I0vTqMeoqq6hlREtTd9gyfmIF0+Gwpxc0t4qbBkch2AAx7bYUHRIhH4
-         0gqlcuKgynu1ltUj6nz3k8viIYZ4/wWgFTrN4YMdcNYjUM0xtSAD5b13RHuaqbp/Tq7y
-         vX9GT6NN2YFUNz2b6TGGQxyWQ+Ctt691JB5rp8wk7G1br6scvkcfcxZ2hqMvrjDR5Z/J
-         YEkQ==
-X-Gm-Message-State: APjAAAWhf0l+/iA69yy2OczjrqvAl9WsC3CQhM0sKvArw1b4tpzRlrm8
-        dEHLIDbDAND7uF0rYY2deC7Xrg==
-X-Google-Smtp-Source: APXvYqyOWyAEJomhgR2fk0MhgkOS5KV3rbVRY9fQebNH3xDa7+tI0mYnfdyPBKA0aab4951+8oYF+g==
-X-Received: by 2002:a63:a04c:: with SMTP id u12mr5415791pgn.131.1552926504111;
-        Mon, 18 Mar 2019 09:28:24 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id k132sm5182705pga.40.2019.03.18.09.28.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 09:28:23 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 09:28:22 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tcp: don't use __constant_cpu_to_be32
-Message-ID: <20190318162822.GB7431@mini-arch.hsd1.ca.comcast.net>
-References: <20190314061514.19586-1-sergey.senozhatsky@gmail.com>
- <CANn89iJMFfh1Pkvk9LOn3FwgAfpVjwS7q5x_8Y9zo2rzpy7w9g@mail.gmail.com>
- <20190315012012.GA748@jagdpanzerIV>
- <20190315172428.GB5481@mini-arch.hsd1.ca.comcast.net>
- <20190316051902.GA27630@tigerII.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OokwICR1EaMWxSspcBrfTFPwSLwxOUmEBWakGxJZAeM=;
+        b=lfumG+29l2ifON9VFsUX0lKHf3ba4R8cinR/vmZoq9xfpuTbHkM7/UcbjiP64Yy4hg
+         +NKBhMnBm4A9KQPZF9B3JtxApOSnsFGv29IFgRPqmPjIc983dOqhUKfio0XBfgGofqzA
+         0U57VOyXgSNF9lI2PnyOcLHJjB1Z1K/OKuX42ih1++ZD2LXVDJPBOzSVadxSzE28mILa
+         TUMwtKCJm6GfNbbXTiDGrq7LvnVj+bRhKuPjYTA4Tlq9oDga2VK95n4/T8FxwnmD08SD
+         ot2m7MmU2bovJb3Xta1fUDWl3JGjUiMY78OGm+PU8NSZbJt+BVfM6tvb3amKxh7Yvk4k
+         3+aA==
+X-Gm-Message-State: APjAAAULxx+DIz7lMT0OnDjSnuqA98pNHcjcDbt10bXUqImL9n/hspto
+        zgIsVLU/S8/RCv5s6VfsLw9B4SsCMCVmgyuyxp+g
+X-Google-Smtp-Source: APXvYqxy02BwkfP0ynSz3MUJUgC3Lc9lYU951CuozLyYfifV3mTJv4jUb0EBd8UXKohL9C4zuw2R/Y8A5S+d5wK/ctA=
+X-Received: by 2002:a2e:500d:: with SMTP id e13mr8141965ljb.169.1552926599221;
+ Mon, 18 Mar 2019 09:29:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190316051902.GA27630@tigerII.localdomain>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190317134653.26824-1-omosnace@redhat.com>
+In-Reply-To: <20190317134653.26824-1-omosnace@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 18 Mar 2019 12:29:48 -0400
+Message-ID: <CAHC9VhSkXF+u+k9b3=753GrFyhfjJNdZ0Mh8uT4j5_iJWyNTbQ@mail.gmail.com>
+Subject: Re: [PATCH] selinux: fix NULL dereference in policydb_destroy()
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     selinux@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        syzbot+a57b2aff60832666fc28@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/16, Sergey Senozhatsky wrote:
-> On (03/15/19 10:24), Stanislav Fomichev wrote:
-> > On 03/15, Sergey Senozhatsky wrote:
-> > > On (03/14/19 05:42), Eric Dumazet wrote:
-> > > > > cpu_to_be32() is capable enough to detect __builtin_constant_p()
-> > > > > and to use an appropriate compile time ___constant_swahb32()
-> > > > > function.
-> > See my recent commit a0517a0f7ef23 ("selftests/bpf: use
-> > __bpf_constant_htons in test_prog.c") where compiler was not smart
-> > enough to figure it out (you can google similar issues for GCC < 4.8).
-> 
-> Allow me to disagree.
-> 
-> The error in a0517a0f7ef23 says
-> 
-> 	error: implicit declaration of function '__builtin_bswap16'
-> 
-> which doesn't sound like "the compiler was not smart".
-> 
-> Let's look at __swab16
-> 
-> 100 #ifdef __HAVE_BUILTIN_BSWAP16__
-> 101 #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-> 102 #else
-> 103 #define __swab16(x)                             \
-> 104         (__builtin_constant_p((__u16)(x)) ?     \
-> 105         ___constant_swab16(x) :                 \
-> 106         __fswab16(x))
-> 107 #endif
-> 
-> We can call __builtin_bswap16() only when the compiler has that builtin,
-> which is what #ifdef __HAVE_BUILTIN_BSWAP16__ for.
-> 
-> But this is not what tools/testing/selftests/bpf/bpf_endian.h does
-> 
-> # define __bpf_ntohs(x)                 __builtin_bswap16(x)
-> # define __bpf_htons(x)                 __builtin_bswap16(x)
-> 
-> So I sort of suspect that what should have been done was that
-> __HAVE_BUILTIN_BSWAP16__ ifdef, just like what include/uapi/linux/swab.h
-> does.
-That sounds convincing, especially since we have the following
-in include/linux/compiler-gcc.h:
+On Sun, Mar 17, 2019 at 9:47 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+>
+> The conversion to kvmalloc() forgot to account for the possibility that
+> p->type_attr_map_array might be null in policydb_destroy().
+>
+> Fix this by destroying its contents only if it is not NULL.
+>
+> Also make sure ebitmap_init() is called on all entries before
+> policydb_destroy() can be called. Right now this is a no-op, because
+> both kvcalloc() and ebitmap_init() just zero out the whole struct, but
+> let's rather not rely on a specific implementation.
+>
+> Reported-by: syzbot+a57b2aff60832666fc28@syzkaller.appspotmail.com
+> Fixes: acdf52d97f82 ("selinux: convert to kvmalloc")
+> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+> ---
+>  security/selinux/ss/policydb.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+>
+> NOTE: This applies directly on top of current Linus' tree, since the
+> problematic commit is not present in the selinux/stable-5.1 branch.
 
-#if GCC_VERSION >= 40800
-#define __HAVE_BUILTIN_BSWAP16__
-#endif
+Thanks for fixing this; I was busy getting the libseccomp v2.4 release
+out towards the end of last week and hadn't had a chance to look at
+this yet.
 
-So it does indeed look like it's not __builtin_constant_p, but rather
-missing __builtin_bswap16 for gcc < 4.8.
+The patch looks good to me.  I just merged it into selinux/stable-5.1
+and I'll send that up to Linus later this week once I've finished
+merging/testing stuff that was waiting on the merge window to close.
 
-> 
-> 	-ss
+For those on the To/CC line who haven't followed this very closely;
+the kvmalloc() patches were posted a while ago, but I never merged the
+SELinux portions as I there were some concerns brought up that were
+never addressed (concerns around small systems and difficulty in an
+RCU conversion).  Evidently the higher ups felt these concerns were
+not significant enough and they merged the kvmalloc() changes anyway;
+this is why a non-trivial SELinux patch ended up in Linus' tree
+without going through the SELinux tree.  I'm not sure I feel strongly
+enough about the kvmalloc() change and the objections at this point to
+object to the kvmalloc() conversion now that it is in Linus' tree, so
+this is really just a FYI.
+
+> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policydb.c
+> index 6b576e588725..daecdfb15a9c 100644
+> --- a/security/selinux/ss/policydb.c
+> +++ b/security/selinux/ss/policydb.c
+> @@ -828,9 +828,11 @@ void policydb_destroy(struct policydb *p)
+>         hashtab_map(p->range_tr, range_tr_destroy, NULL);
+>         hashtab_destroy(p->range_tr);
+>
+> -       for (i = 0; i < p->p_types.nprim; i++)
+> -               ebitmap_destroy(&p->type_attr_map_array[i]);
+> -       kvfree(p->type_attr_map_array);
+> +       if (p->type_attr_map_array) {
+> +               for (i = 0; i < p->p_types.nprim; i++)
+> +                       ebitmap_destroy(&p->type_attr_map_array[i]);
+> +               kvfree(p->type_attr_map_array);
+> +       }
+>
+>         ebitmap_destroy(&p->filename_trans_ttypes);
+>         ebitmap_destroy(&p->policycaps);
+> @@ -2496,10 +2498,13 @@ int policydb_read(struct policydb *p, void *fp)
+>         if (!p->type_attr_map_array)
+>                 goto bad;
+>
+> +       /* just in case ebitmap_init() becomes more than just a memset(0): */
+> +       for (i = 0; i < p->p_types.nprim; i++)
+> +               ebitmap_init(&p->type_attr_map_array[i]);
+> +
+>         for (i = 0; i < p->p_types.nprim; i++) {
+>                 struct ebitmap *e = &p->type_attr_map_array[i];
+>
+> -               ebitmap_init(e);
+>                 if (p->policyvers >= POLICYDB_VERSION_AVTAB) {
+>                         rc = ebitmap_read(e, fp);
+>                         if (rc)
+> --
+> 2.20.1
+>
+
+
+-- 
+paul moore
+www.paul-moore.com
