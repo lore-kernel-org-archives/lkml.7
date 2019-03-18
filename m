@@ -2,173 +2,165 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391C4C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C0BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E5420863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA026205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PM9OGKhX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mqy2CcDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfCRQ7R (ORCPT
+        id S1727834AbfCRQ7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:59:17 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35403 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfCRQ7Q (ORCPT
+        Mon, 18 Mar 2019 12:59:31 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42772 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbfCRQ7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:59:16 -0400
-Received: by mail-pg1-f194.google.com with SMTP id g8so1144886pgf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:59:16 -0700 (PDT)
+        Mon, 18 Mar 2019 12:59:31 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so13812386wrr.9;
+        Mon, 18 Mar 2019 09:59:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1qSGcK0R5KM+dkjWC/kauJx8/g6gKZLlVh+46+vQTpk=;
-        b=PM9OGKhXVFOScoA0U0eJfjlATm68hBokDH3xW76dl2UrhKuLtWfcahYPG5tZzJpWHy
-         qPRj7SaRW915MTLp3nmMfjCTbwM9k49VLoIXbp7+HUtgJEDn41oJRmFHkmNkl0nGtUoV
-         uL6n5VvrW/nx/l25G3MiK/Y64jrg/oh9SDiXRheAs6X+GRPwJ/gs16ooPLZIU4YLCmlF
-         cuz29jZ/UPZ9B4rkBDhhfIYLxO4XIPmsS9g8nQNx0IIiabynJxMZ0OMey+jIZbTbZxlh
-         G7oAucvMP+3PhykgPsXecAODKhmrvPM7d48t1eWOqIDKXZrebPqEJ53C0aOsLnrMiwEC
-         GWyg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tIkCbUbQrbYd1sL06GRw5t0q5hZowRyKGfFCyoIw5x4=;
+        b=Mqy2CcDOxUGpZrDAaSKGNQ1Lar3lBBfHvuAP4K6xW4F/rfYJUqfenSbfvTqhGZsD6O
+         YjvdKHJM9/qR9A1ppz1VzHf9zscJohKxvkl9QDqw5aKpn7iGyhb5JfxBfjNp4NtUk+OT
+         Ay2+oZX7B3uDNoJbIYehMFE7vstrJ3ACygqQDvfeffE7CWVWJycz+71nbkxEvlTFvNAU
+         FdUru9S7lfhzPjvtKOVH0Q1qw/DcplSRyyB1fsb3OqNxDLKJv1URNJexZ/Sw0eXtjXNH
+         xVJMK0IDQjtc0951hdkZxsa6lGZDzc3pTy0djZMIAeHVHCzUZkES+0OuCdbmjXIHhXdJ
+         R5xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1qSGcK0R5KM+dkjWC/kauJx8/g6gKZLlVh+46+vQTpk=;
-        b=AxGpv150QEsIrZ/3wm0po+FT9V/TSAULKFRuEUy0Qfm547BcRShSP2LJVyx4MAowPG
-         De+mQCkd1ZgJdT+sI/fJJSnSwPLeWPPHAX4pk1Gdb5X4BkbhYKIcseRUgS2ETwgbhrLl
-         a7XuQuP5a8+E7iZRGH1t4qmLQPs7A0i9xTnKxcQ2AZ+Z70a8v23n/w//INEZ/QlnhEdn
-         QmU7fwv9v7lnfrO2ULjj5WzyEMFspzTUaa9MoAp8nHnWdGUrOdMsMxHFhYNEJxYoFOZn
-         MyHQORpF3yuECIgmZVSITbvTc48ArC3ERcb3oap6e8p2yI3P0HY9pxkqVu1tMwZPQwj5
-         3oYw==
-X-Gm-Message-State: APjAAAUTENzhrGFQGQqOUR7nq/m5FjK/RtRWEtceT4e27OsHUrBb4QL3
-        Zvw8eUQGL4gT2H5e+5VhIrwQIuNwY2S9Sze0odCkxQ==
-X-Google-Smtp-Source: APXvYqw/WB6apBZfCC4Z3gtQWYzVAj6LMOzybqti6+WMrkpj4eKj2bUipEWmGt4Rw1lWbJw06V7FSeVN09pOsBX0P44=
-X-Received: by 2002:a17:902:8203:: with SMTP id x3mr20736629pln.159.1552928355544;
- Mon, 18 Mar 2019 09:59:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tIkCbUbQrbYd1sL06GRw5t0q5hZowRyKGfFCyoIw5x4=;
+        b=bafKi4YECN9pTGCJ1MrfnQAuacCy99nwdVgeIVwcNc5TMakevirCvJ/LldXALYeFjv
+         bB6Lb2iJSvelCbTnpJe98e8fHbkp9ge/k78ftNe1jRXYpDNsA0tAQr5MvMZo0oClNen2
+         LynQoSy8UpaRofbft2EU/rrgkFdmXXPYscKs0SMKu/mdZn6I0xX6JS5vN9imYkYNNl8b
+         mbjgYzWX2qz3gl+TUXPsElXQc6/ou6fxxn7kswwKpyd5WNh3VZ5aVAHEN794D6u6CYvS
+         HIrAvcIwQcJjRmCTApY4oIodO8vnX4eMhlV3v5E0ExCBD6MRXlggDq26bkG5G8Fu0oHa
+         9rnw==
+X-Gm-Message-State: APjAAAUXTPWF9i3K2cfeRFV7riBTwBTqAtVBvvusWrAL9Qpw6t5L/+xE
+        gZjMR1IeGZazheD+qaqNbeE=
+X-Google-Smtp-Source: APXvYqyrgvwdnqpVqWeIrrIwntvJg9j0d/GNWIvEQQaH4PasTusSamQKr86YqCdgKqd/VaK3W/DGmA==
+X-Received: by 2002:adf:f70c:: with SMTP id r12mr13943721wrp.54.1552928367920;
+        Mon, 18 Mar 2019 09:59:27 -0700 (PDT)
+Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
+        by smtp.gmail.com with ESMTPSA id c17sm10098407wrs.17.2019.03.18.09.59.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 09:59:27 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 17:59:26 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] reset: add acquired/released state for exclusive
+ reset controls
+Message-ID: <20190318165926.GA30394@ulmo>
+References: <20190221152557.8534-1-thierry.reding@gmail.com>
+ <20190221152858.GA8652@ulmo>
+ <20190318091216.GB14465@ulmo>
+ <1552927250.7558.10.camel@pengutronix.de>
 MIME-Version: 1.0
-References: <cover.1552679409.git.andreyknvl@google.com> <bf0abceeaf32e6b9cdbc9dde45cc5966b5747ec4.1552679409.git.andreyknvl@google.com>
- <81bc3110-b638-4545-1270-26baec3d59e7@arm.com>
-In-Reply-To: <81bc3110-b638-4545-1270-26baec3d59e7@arm.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 18 Mar 2019 17:59:04 +0100
-Message-ID: <CAAeHK+yrAPOyuEyLCygrwQxCztb8P-9BBj-6RP6=iG-GGBkkQw@mail.gmail.com>
-Subject: Re: [PATCH v11 13/14] arm64: update Documentation/arm64/tagged-pointers.txt
-To:     Kevin Brodsky <kevin.brodsky@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
+Content-Disposition: inline
+In-Reply-To: <1552927250.7558.10.camel@pengutronix.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 2:26 PM Kevin Brodsky <kevin.brodsky@arm.com> wrote:
->
-> On 15/03/2019 19:51, Andrey Konovalov wrote:
-> > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > pass tagged user pointers (with the top byte set to something else other
-> > than 0x00) as syscall arguments.
-> >
-> > Document the ABI changes in Documentation/arm64/tagged-pointers.txt.
-> >
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > ---
-> >   Documentation/arm64/tagged-pointers.txt | 18 ++++++++----------
-> >   1 file changed, 8 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/Documentation/arm64/tagged-pointers.txt b/Documentation/arm64/tagged-pointers.txt
-> > index a25a99e82bb1..07fdddeacad0 100644
-> > --- a/Documentation/arm64/tagged-pointers.txt
-> > +++ b/Documentation/arm64/tagged-pointers.txt
-> > @@ -17,13 +17,15 @@ this byte for application use.
-> >   Passing tagged addresses to the kernel
-> >   --------------------------------------
-> >
-> > -All interpretation of userspace memory addresses by the kernel assumes
-> > -an address tag of 0x00.
-> > +The kernel supports tags in pointer arguments (including pointers in
-> > +structures) of syscalls, however such pointers must point to memory ranges
-> > +obtained by anonymous mmap() or brk().
-> >
-> > -This includes, but is not limited to, addresses found in:
-> > +The kernel supports tags in user fault addresses. However the fault_address
-> > +field in the sigcontext struct will contain an untagged address.
-> >
-> > - - pointer arguments to system calls, including pointers in structures
-> > -   passed to system calls,
-> > +All other interpretations of userspace memory addresses by the kernel
-> > +assume an address tag of 0x00, in particular:
-> >
-> >    - the stack pointer (sp), e.g. when interpreting it to deliver a
-> >      signal,
-> > @@ -33,11 +35,7 @@ This includes, but is not limited to, addresses found in:
-> >
-> >   Using non-zero address tags in any of these locations may result in an
-> >   error code being returned, a (fatal) signal being raised, or other modes
-> > -of failure.
-> > -
-> > -For these reasons, passing non-zero address tags to the kernel via
-> > -system calls is forbidden, and using a non-zero address tag for sp is
-> > -strongly discouraged.
-> > +of failure. Using a non-zero address tag for sp is strongly discouraged.
->
-> I don't understand why we should keep such a limitation. For MTE, tagging SP is
-> something we are definitely considering. This does bother userspace software in some
-> rare cases, but I'm not sure in what way it bothers the kernel.
 
-I don't mind allowing tagged sp as well, but it seems that it's
-another ABI relaxation that needs to be handled separately. I'm not
-sure if we want to include that into this patchset, which is supposed
-to allow tagged pointers to be passed to syscalls.
+--8t9RHnE3ZwKMSgU+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> Kevin
->
-> >
-> >   Programs maintaining a frame pointer and frame records that use non-zero
-> >   address tags may suffer impaired or inaccurate debug and profiling
->
+On Mon, Mar 18, 2019 at 05:40:50PM +0100, Philipp Zabel wrote:
+> Hi Thierry,
+>=20
+> On Mon, 2019-03-18 at 10:12 +0100, Thierry Reding wrote:
+> > On Thu, Feb 21, 2019 at 04:28:58PM +0100, Thierry Reding wrote:
+> > > On Thu, Feb 21, 2019 at 04:25:53PM +0100, Thierry Reding wrote:
+> > > > From: Philipp Zabel <p.zabel@pengutronix.de>
+> > > >=20
+> > > > There are cases where a driver needs explicit control over a reset =
+line
+> > > > that is exclusively conneted to its device, but this control has to=
+ be
+> > > > temporarily handed over to the power domain controller to handle re=
+set
+> > > > requirements during power transitions.
+> > > > Allow multiple exclusive reset controls to be requested in 'release=
+d'
+> > > > state for the same physical reset line, only one of which can be
+> > > > acquired at the same time.
+> > > >=20
+> > > > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > > > ---
+> > > >  drivers/reset/core.c  | 139 ++++++++++++++++++++++++++++++++++++++=
+----
+> > > >  include/linux/reset.h |  93 ++++++++++++++++++++++------
+> > > >  2 files changed, 200 insertions(+), 32 deletions(-)
+> > >=20
+> > > Hi Philipp,
+> > >=20
+> > > the bulk of this is unchanged relative to what you had posted
+> > > originally. I squashed in the few things that we had already discussed
+> > > earlier (EINVAL -> EPERM) and a couple of minor fixes for issues that=
+ I
+> > > found while working with this.
+> > >=20
+> > > Attached is my fixup patch which contains all the changes I made on t=
+op
+> > > of your version and that I squashed into this.
+> > >=20
+> > > Thierry
+> >=20
+> > Hi Philipp,
+> >=20
+> > do you have any further comments on this series?
+>=20
+> Sorry for the delay, I'll have a closer look tomorrow. I obviously don't
+> disagree on the implementation and I appreciate the added documentation.
+>=20
+> As for how to merge this, would you be fine with me providing a stable
+> branch that contains the first three patches? That could then go into
+> both reset/next and tegra trees.
+
+Yeah, that's fine with me.
+
+Thanks,
+Thierry
+
+--8t9RHnE3ZwKMSgU+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyPzmsACgkQ3SOs138+
+s6E60Q/8C+YV1bw2+WoXIgMelxZWByBTkvnpFMiJvB+DtpmqPo04j1H+NJjzYlNn
+1NMw/YPhjh4W5153Z1RrtOIHPyzvqs+lpm+rt8i8aT4e2AJGl7x1YcZE7Q8kuBIn
+JUpZ2Sth34ErfKemoPCWxd+rDD6YpKjGFEY4FFAlrmLyDXdfNvadbvy/FCMM6vx8
+GiX1Z1TKSf0BPvRISGJTO8iOcdZLSzn9xIzTPzcOExZI2Bdx0tsSTrnQU2fcQPbA
+/NAdRkBL+cQCnm4QTtmEPbh+ndTop2a3MUHZLkoZVnd13gGYI8kRs4VmxR9ZG/cb
+ajsLMZvs/R4xiLJ2OU30EDSLDCoSzzTFt3bhlQY04hV5cH02dwfWZCCMhfkd8WXc
+3eM9nC0pyE7PtzsT4jRu9apalWwoCLikSnB8rwAO0KjPKoLh7/jrCqpBPm7TS2/f
+FokVAh4QiCpGic3NSUbb9Ndfth1lrpPphrc+qn1sF13OH00fLNNxeqyFzalS7gd9
+CJ8b0FRjImsIOJ+c+qhUwP03bnyMdO18KcHnEmGGWo/ODguZuefeOfEanH+tlTCK
+8HHr7haJOMJ9vaBT1ZjISikUyyJ3UAzeLpeJp7P/4DjwU61ZrY7SY988QqGGbc6t
+PhpH87PXRE40ciezZhyCDPQxVTE4UErE4zUPX3qzOif5oSUj8zE=
+=kGHE
+-----END PGP SIGNATURE-----
+
+--8t9RHnE3ZwKMSgU+--
