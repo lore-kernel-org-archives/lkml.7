@@ -5,102 +5,328 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC31C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E915EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB0120854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE71420854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfCRP7H (ORCPT
+        id S1727541AbfCRQAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:59:07 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29938 "EHLO mga14.intel.com"
+        Mon, 18 Mar 2019 12:00:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48518 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbfCRP7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:59:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 08:59:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="215217709"
-Received: from unknown (HELO [10.7.201.133]) ([10.7.201.133])
-  by orsmga001.jf.intel.com with ESMTP; 18 Mar 2019 08:59:06 -0700
-Subject: Re: Kernel bug with MPX?
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Richard Biener <rguenther@suse.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <alpine.LSU.2.20.1903060944550.7898@zhemvz.fhfr.qr>
- <ba1d2d3c-e616-611d-3cff-acf6b8aaeb66@intel.com>
- <20190308071249.GJ30234@dhcp22.suse.cz>
- <20190308073949.GA5232@dhcp22.suse.cz>
- <ec2110b1-abae-4df5-fcd7-244620634a00@intel.com>
- <20190318114703.GE8924@dhcp22.suse.cz>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <3e53f808-f675-0c7f-1bb2-d429f35e75a5@intel.com>
-Date:   Mon, 18 Mar 2019 08:59:06 -0700
+        id S1726788AbfCRQAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:00:32 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A8584307D924;
+        Mon, 18 Mar 2019 16:00:31 +0000 (UTC)
+Received: from [10.18.17.32] (dhcp-17-32.bos.redhat.com [10.18.17.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 30CBF65937;
+        Mon, 18 Mar 2019 15:57:56 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
+References: <20190306155048.12868-1-nitesh@redhat.com>
+ <20190306110501-mutt-send-email-mst@kernel.org>
+ <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com>
+ <20190306130955-mutt-send-email-mst@kernel.org>
+ <ce55943e-87b6-c102-9827-2cfd45b7192c@redhat.com>
+ <CAKgT0UcGCFNQRZFmp8oMkG+wKzRtwN292vtFWgyLsdyRnO04gQ@mail.gmail.com>
+Organization: Red Hat Inc,
+Message-ID: <ed9f7c2e-a7e3-a990-bcc3-459e4f2b4a44@redhat.com>
+Date:   Mon, 18 Mar 2019 11:57:36 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190318114703.GE8924@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKgT0UcGCFNQRZFmp8oMkG+wKzRtwN292vtFWgyLsdyRnO04gQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="QgbaQ4lppI6BXRwNtGzYRYDLSXMaz7nNp"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 18 Mar 2019 16:00:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/19 4:47 AM, Michal Hocko wrote:
->> This is the most minimal and least invasive patch needed to
->> start removing MPX.
-> Is this something we _want_ to push to stable trees?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--QgbaQ4lppI6BXRwNtGzYRYDLSXMaz7nNp
+Content-Type: multipart/mixed; boundary="E1LMHVMde3o9gs1ZYzDopeTWgLh5rWpyH";
+ protected-headers="v1"
+From: Nitesh Narayan Lal <nitesh@redhat.com>
+To: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, kvm list <kvm@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+ pagupta@redhat.com, wei.w.wang@intel.com,
+ Yang Zhang <yang.zhang.wz@gmail.com>, Rik van Riel <riel@surriel.com>,
+ David Hildenbrand <david@redhat.com>, dodgen@google.com,
+ Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, dhildenb@redhat.com,
+ Andrea Arcangeli <aarcange@redhat.com>
+Message-ID: <ed9f7c2e-a7e3-a990-bcc3-459e4f2b4a44@redhat.com>
+Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
 
-For stable trees, probably not.  It might cause a kernel update to just
-break existing apps.
+--E1LMHVMde3o9gs1ZYzDopeTWgLh5rWpyH
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 3/14/19 12:58 PM, Alexander Duyck wrote:
+> On Thu, Mar 14, 2019 at 9:43 AM Nitesh Narayan Lal <nitesh@redhat.com> =
+wrote:
+>>
+>> On 3/6/19 1:12 PM, Michael S. Tsirkin wrote:
+>>> On Wed, Mar 06, 2019 at 01:07:50PM -0500, Nitesh Narayan Lal wrote:
+>>>> On 3/6/19 11:09 AM, Michael S. Tsirkin wrote:
+>>>>> On Wed, Mar 06, 2019 at 10:50:42AM -0500, Nitesh Narayan Lal wrote:=
+
+>>>>>> The following patch-set proposes an efficient mechanism for handin=
+g freed memory between the guest and the host. It enables the guests with=
+ no page cache to rapidly free and reclaims memory to and from the host r=
+espectively.
+>>>>>>
+>>>>>> Benefit:
+>>>>>> With this patch-series, in our test-case, executed on a single sys=
+tem and single NUMA node with 15GB memory, we were able to successfully l=
+aunch 5 guests(each with 5 GB memory) when page hinting was enabled and 3=
+ without it. (Detailed explanation of the test procedure is provided at t=
+he bottom under Test - 1).
+>>>>>>
+>>>>>> Changelog in v9:
+>>>>>>    * Guest free page hinting hook is now invoked after a page has =
+been merged in the buddy.
+>>>>>>         * Free pages only with order FREE_PAGE_HINTING_MIN_ORDER(c=
+urrently defined as MAX_ORDER - 1) are captured.
+>>>>>>    * Removed kthread which was earlier used to perform the scannin=
+g, isolation & reporting of free pages.
+>>>>>>    * Pages, captured in the per cpu array are sorted based on the =
+zone numbers. This is to avoid redundancy of acquiring zone locks.
+>>>>>>         * Dynamically allocated space is used to hold the isolated=
+ guest free pages.
+>>>>>>         * All the pages are reported asynchronously to the host vi=
+a virtio driver.
+>>>>>>         * Pages are returned back to the guest buddy free list onl=
+y when the host response is received.
+>>>>>>
+>>>>>> Pending items:
+>>>>>>         * Make sure that the guest free page hinting's current imp=
+lementation doesn't break hugepages or device assigned guests.
+>>>>>>    * Follow up on VIRTIO_BALLOON_F_PAGE_POISON's device side suppo=
+rt. (It is currently missing)
+>>>>>>         * Compare reporting free pages via vring with vhost.
+>>>>>>         * Decide between MADV_DONTNEED and MADV_FREE.
+>>>>>>    * Analyze overall performance impact due to guest free page hin=
+ting.
+>>>>>>    * Come up with proper/traceable error-message/logs.
+>>>>>>
+>>>>>> Tests:
+>>>>>> 1. Use-case - Number of guests we can launch
+>>>>>>
+>>>>>>    NUMA Nodes =3D 1 with 15 GB memory
+>>>>>>    Guest Memory =3D 5 GB
+>>>>>>    Number of cores in guest =3D 1
+>>>>>>    Workload =3D test allocation program allocates 4GB memory, touc=
+hes it via memset and exits.
+>>>>>>    Procedure =3D
+>>>>>>    The first guest is launched and once its console is up, the tes=
+t allocation program is executed with 4 GB memory request (Due to this th=
+e guest occupies almost 4-5 GB of memory in the host in a system without =
+page hinting). Once this program exits at that time another guest is laun=
+ched in the host and the same process is followed. We continue launching =
+the guests until a guest gets killed due to low memory condition in the h=
+ost.
+>>>>>>
+>>>>>>    Results:
+>>>>>>    Without hinting =3D 3
+>>>>>>    With hinting =3D 5
+>>>>>>
+>>>>>> 2. Hackbench
+>>>>>>    Guest Memory =3D 5 GB
+>>>>>>    Number of cores =3D 4
+>>>>>>    Number of tasks         Time with Hinting       Time without Hi=
+nting
+>>>>>>    4000                    19.540                  17.818
+>>>>>>
+>>>>> How about memhog btw?
+>>>>> Alex reported:
+>>>>>
+>>>>>     My testing up till now has consisted of setting up 4 8GB VMs on=
+ a system
+>>>>>     with 32GB of memory and 4GB of swap. To stress the memory on th=
+e system I
+>>>>>     would run "memhog 8G" sequentially on each of the guests and ob=
+serve how
+>>>>>     long it took to complete the run. The observed behavior is that=
+ on the
+>>>>>     systems with these patches applied in both the guest and on the=
+ host I was
+>>>>>     able to complete the test with a time of 5 to 7 seconds per gue=
+st. On a
+>>>>>     system without these patches the time ranged from 7 to 49 secon=
+ds per
+>>>>>     guest. I am assuming the variability is due to time being spent=
+ writing
+>>>>>     pages out to disk in order to free up space for the guest.
+>>>>>
+>>>> Here are the results:
+>>>>
+>>>> Procedure: 3 Guests of size 5GB is launched on a single NUMA node wi=
+th
+>>>> total memory of 15GB and no swap. In each of the guest, memhog is ru=
+n
+>>>> with 5GB. Post-execution of memhog, Host memory usage is monitored b=
+y
+>>>> using Free command.
+>>>>
+>>>> Without Hinting:
+>>>>                  Time of execution    Host used memory
+>>>> Guest 1:        45 seconds            5.4 GB
+>>>> Guest 2:        45 seconds            10 GB
+>>>> Guest 3:        1  minute               15 GB
+>>>>
+>>>> With Hinting:
+>>>>                 Time of execution     Host used memory
+>>>> Guest 1:        49 seconds            2.4 GB
+>>>> Guest 2:        40 seconds            4.3 GB
+>>>> Guest 3:        50 seconds            6.3 GB
+>>> OK so no improvement. OTOH Alex's patches cut time down to 5-7 second=
+s
+>>> which seems better. Want to try testing Alex's patches for comparison=
+?
+>>>
+>> I realized that the last time I reported the memhog numbers, I didn't
+>> enable the swap due to which the actual benefits of the series were no=
+t
+>> shown.
+>> I have re-run the test by including some of the changes suggested by
+>> Alexander and David:
+>>     * Reduced the size of the per-cpu array to 32 and minimum hinting
+>> threshold to 16.
+>>     * Reported length of isolated pages along with start pfn, instead =
+of
+>> the order from the guest.
+>>     * Used the reported length to madvise the entire length of address=
+
+>> instead of a single 4K page.
+>>     * Replaced MADV_DONTNEED with MADV_FREE.
+>>
+>> Setup for the test:
+>> NUMA node:1
+>> Memory: 15GB
+>> Swap: 4GB
+>> Guest memory: 6GB
+>> Number of core: 1
+>>
+>> Process: A guest is launched and memhog is run with 6GB. As its
+>> execution is over next guest is launched. Everytime memhog execution
+>> time is monitored.
+>> Results:
+>>     Without Hinting:
+>>                  Time of execution
+>>     Guest1:    22s
+>>     Guest2:    24s
+>>     Guest3: 1m29s
+>>
+>>     With Hinting:
+>>                 Time of execution
+>>     Guest1:    24s
+>>     Guest2:    25s
+>>     Guest3:    28s
+>>
+>> When hinting is enabled swap space is not used until memhog with 6GB i=
+s
+>> ran in 6th guest.
+> So one change you may want to make to your test setup would be to
+> launch the tests sequentially after all the guests all up, instead of
+> combining the test and guest bring-up. In addition you could run
+> through the guests more than once to determine a more-or-less steady
+> state in terms of the performance as you move between the guests after
+> they have hit the point of having to either swap or pull MADV_FREE
+> pages.
+I tried running memhog as you suggested, here are the results:
+Setup for the test:
+NUMA node:1
+Memory: 15GB
+Swap: 4GB
+Guest memory: 6GB
+Number of core: 1
+
+Process: 3 guests are launched and memhog is run with 6GB. Results are
+monitored after 1st-time execution of memhog. Memhog is launched
+sequentially in each of the guests and time is observed after the
+execution of all 3 memhog is over.
+
+Results:
+Without Hinting
+=C2=A0=C2=A0=C2=A0 Time of Execution=C2=A0=C2=A0=C2=A0
+1.=C2=A0=C2=A0=C2=A0 6m48s=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=
+=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0
+2.=C2=A0=C2=A0=C2=A0 6m9s=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
+=C2=A0 =C2=A0=C2=A0=C2=A0
+
+With Hinting
+Array size:16 Minimum Threshold:8
+1.=C2=A0=C2=A0=C2=A0 2m57s=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=
+=A0=C2=A0
+2.=C2=A0=C2=A0=C2=A0 2m20s=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=
+=A0=C2=A0
+
+The memhog execution time in the case of hinting is still not that low
+as we would have expected. This is due to the usage of swap space.
+Although wrt to non-hinting when swap used space is around 3.5G, with
+hinting it remains to around 1.1-1.5G.
+I did try using a zone free page barrier which prevented hinting when
+free pages of order HINTING_ORDER goes below 256. This further brings
+down the swap usage to 100-150 MB. The tricky part of this approach is
+to configure this barrier condition for different guests.
+
+Array size:16 Minimum Threshold:8
+1.=C2=A0=C2=A0=C2=A0 1m16s=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0
+2.=C2=A0=C2=A0=C2=A0 1m41s
+
+Note: Memhog time does seem to vary a little bit on every boot with or
+without hinting.
+
+--=20
+Regards
+Nitesh
+
+
+--E1LMHVMde3o9gs1ZYzDopeTWgLh5rWpyH--
+
+--QgbaQ4lppI6BXRwNtGzYRYDLSXMaz7nNp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlyPv/EACgkQo4ZA3AYy
+ozmzVRAAvpsYm1Dp878O9luUU/w6pEc5Q9hsdVKP4cwtnhznnZ7p/vhgSQky4XPs
+/sAusVdWv/Sd5RZ3uobXT22RjyNDeM12WW7R9YKRdSjtSJ1ly0oo3rdJhBU6ilJy
+JM/V92FWmVqskNW3ThbLFxtiBuia3pU0xyVXvDRRtt15IcFbeXmaDov6T6gBB9Rg
+xvq1Zo6XX62UuBE/rObbLAG9Mg2JZIfil4VdEIV8pKwH7xdFUujgodeu9J4+Rlaf
+OH00nsF9vhC9Q9Z16nc45ahFJ4eo+7Pz6M2H7W4xcnJXp2nQxlgc2fRs+xqQ9Dko
+tlk3aCXGaSN1DELFiQK0vMiP41TQrgC/Nd8RJCneDyT3z/D/YlKhvrGFPq3DFHtE
+jLHEiwmblTNBcj1lhHLY0JDZrctAb5y7cyPU5jM47suLNGNVfHOH+f1hcxXBxviw
+LNAwLkWfWOkfzaBMUqdGxFoZLVB7JARoYFn06S0Q2TUe8OoQMxAY0Dbi3RiJ/nyf
+FyIxpdYWT+ZzGtewzxrsF13xdLZNPPdo2UwSbUYC09HInYWbHTovzNIji6016tfv
+2vOVO2XnvOqKo6tLVWTiF8NnQ3togNhAbHctcMRcVZrm+4GQD31n4tVLx3JICwKc
+GVEvzved8otGZYIhb5W+yIESOgREu9TvoFPJVuqek2UsvXQBQsI=
+=i7/q
+-----END PGP SIGNATURE-----
+
+--QgbaQ4lppI6BXRwNtGzYRYDLSXMaz7nNp--
