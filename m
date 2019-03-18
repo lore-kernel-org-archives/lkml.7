@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7FBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCB8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA1A214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7D12083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901501;
-	bh=PTQFXvIU/NBu2R2GdGQbqu1lGSgDrGw4yhtLAFMPDP8=;
+	s=default; t=1552901503;
+	bh=a5JaC/CmSDQ4dX6iPSAPCrBs0D0K0/hablsVAnB2c0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B9kbEJU9tDiuYWWkaFU2TYK5XpwB2xWZz1NLT9AyA98yw9bzlgjbcRmccDOzh9D4x
-	 QfP3dKDHK4DJyYG1d6vedsKLDrv2SsK6jAS7QQNqj9TeU+S+IUBFzvcYUuNFzUEWRL
-	 iTiQzFicbj8/enf/pbc42XrKn4Ml8E60nX0LmJrU=
+	b=nCnq/GHaIZ51RzXmhz5SdtL07XJOxJluTTiXLEZDz8TaH+ggHwCY7gO4Mu23aA0dG
+	 wjCfJfkS3dou2g/q1cFD2iecdB+ESHJA76ZNmreGjilP8FWLD3LmD6s+j9SEriF2sw
+	 8rwIhSEeIzuApsqWWQI+ZkOU0YvFv0Y7lHP/Xpng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfCRJbj (ORCPT
+        id S1728613AbfCRJbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728232AbfCRJbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:31:36 -0400
+        id S1728240AbfCRJbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:39 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B96D92075C;
-        Mon, 18 Mar 2019 09:31:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64A6E2075C;
+        Mon, 18 Mar 2019 09:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901495;
-        bh=PTQFXvIU/NBu2R2GdGQbqu1lGSgDrGw4yhtLAFMPDP8=;
+        s=default; t=1552901498;
+        bh=a5JaC/CmSDQ4dX6iPSAPCrBs0D0K0/hablsVAnB2c0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fomTkjBCmDDjJeVYlg0kyPb0K6jFczcIlTbaMIUu9q+S4zjZwhn4/nRrxI3up3ZbC
-         EAeoI0lSKPMJH3nim4jtwqcSqRfiDcx/xXd2i5qgmjKONr716Uiw0v80leqB2cBovA
-         KMCTdNVEwhPkc8haOiG12MRtSp/gWYuKeSPwGbQc=
+        b=de/88kxaEK/2T3RyPUba+T9t4izoNkZ+RJb0rM/5r244vZlBxD2IEfo53/pz+vw6a
+         LhxHS5BTxYFrno6OQ+whxM0PrFDggc9K61WxcOskpb5f21B1SiO/1cDmzcsfacE2aK
+         vPRyH2QlOCxdR7X6muTtElFhpMwbDt+E1072Mrp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        andrew hendry <andrew.hendry@gmail.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 11/52] net/x25: reset state in x25_connect()
-Date:   Mon, 18 Mar 2019 10:25:08 +0100
-Message-Id: <20190318084014.897594744@linuxfoundation.org>
+Subject: [PATCH 4.19 12/52] pptp: dst_release sk_dst_cache in pptp_sock_destruct
+Date:   Mon, 18 Mar 2019 10:25:09 +0100
+Message-Id: <20190318084015.017573482@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -66,81 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit ee74d0bd4325efb41e38affe5955f920ed973f23 ]
+[ Upstream commit 9417d81f4f8adfe20a12dd1fadf73a618cbd945d ]
 
-In case x25_connect() fails and frees the socket neighbour,
-we also need to undo the change done to x25->state.
+sk_setup_caps() is called to set sk->sk_dst_cache in pptp_connect,
+so we have to dst_release(sk->sk_dst_cache) in pptp_sock_destruct,
+otherwise, the dst refcnt will leak.
 
-Before my last bug fix, we had use-after-free so this
-patch fixes a latent bug.
+It can be reproduced by this syz log:
 
-syzbot report :
+  r1 = socket$pptp(0x18, 0x1, 0x2)
+  bind$pptp(r1, &(0x7f0000000100)={0x18, 0x2, {0x0, @local}}, 0x1e)
+  connect$pptp(r1, &(0x7f0000000000)={0x18, 0x2, {0x3, @remote}}, 0x1e)
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 16137 Comm: syz-executor.1 Not tainted 5.0.0+ #117
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:x25_write_internal+0x1e8/0xdf0 net/x25/x25_subr.c:173
-Code: 00 40 88 b5 e0 fe ff ff 0f 85 01 0b 00 00 48 8b 8b 80 04 00 00 48 ba 00 00 00 00 00 fc ff df 48 8d 79 1c 48 89 fe 48 c1 ee 03 <0f> b6 34 16 48 89 fa 83 e2 07 83 c2 03 40 38 f2 7c 09 40 84 f6 0f
-RSP: 0018:ffff888076717a08 EFLAGS: 00010207
-RAX: ffff88805f2f2292 RBX: ffff8880a0ae6000 RCX: 0000000000000000
-kobject: 'loop5' (0000000018d0d0ee): kobject_uevent_env
-RDX: dffffc0000000000 RSI: 0000000000000003 RDI: 000000000000001c
-RBP: ffff888076717b40 R08: ffff8880950e0580 R09: ffffed100be5e46d
-R10: ffffed100be5e46c R11: ffff88805f2f2363 R12: ffff888065579840
-kobject: 'loop5' (0000000018d0d0ee): fill_kobj_path: path = '/devices/virtual/block/loop5'
-R13: 1ffff1100ece2f47 R14: 0000000000000013 R15: 0000000000000013
-FS:  00007fb88cf43700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9a42a41028 CR3: 0000000087a67000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- x25_release+0xd0/0x340 net/x25/af_x25.c:658
- __sock_release+0xd3/0x2b0 net/socket.c:579
- sock_close+0x1b/0x30 net/socket.c:1162
- __fput+0x2df/0x8d0 fs/file_table.c:278
- ____fput+0x16/0x20 fs/file_table.c:309
- task_work_run+0x14a/0x1c0 kernel/task_work.c:113
- get_signal+0x1961/0x1d50 kernel/signal.c:2388
- do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
- exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
- prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
- do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x457f29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb88cf42c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: fffffffffffffe00 RBX: 0000000000000003 RCX: 0000000000457f29
-RDX: 0000000000000012 RSI: 0000000020000080 RDI: 0000000000000004
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb88cf436d4
-R13: 00000000004be462 R14: 00000000004cec98 R15: 00000000ffffffff
-Modules linked in:
+Consecutive dmesg warnings will occur:
 
-Fixes: 95d6ebd53c79 ("net/x25: fix use-after-free in x25_device_event()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: andrew hendry <andrew.hendry@gmail.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+  unregister_netdevice: waiting for lo to become free. Usage count = 1
+
+v1->v2:
+  - use rcu_dereference_protected() instead of rcu_dereference_check(),
+    as suggested by Eric.
+
+Fixes: 00959ade36ac ("PPTP: PPP over IPv4 (Point-to-Point Tunneling Protocol)")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/x25/af_x25.c |    1 +
+ drivers/net/ppp/pptp.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -818,6 +818,7 @@ out_put_neigh:
- 		x25_neigh_put(x25->neighbour);
- 		x25->neighbour = NULL;
- 		read_unlock_bh(&x25_list_lock);
-+		x25->state = X25_STATE_0;
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -537,6 +537,7 @@ static void pptp_sock_destruct(struct so
+ 		pppox_unbind_sock(sk);
  	}
- out_put_route:
- 	x25_route_put(rt);
+ 	skb_queue_purge(&sk->sk_receive_queue);
++	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
+ }
+ 
+ static int pptp_create(struct net *net, struct socket *sock, int kern)
 
 
