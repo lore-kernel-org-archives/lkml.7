@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717E0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4793DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3A42083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1749421734
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901464;
-	bh=f+xI9QVZV2kePlQo//TVCGYRml+Ylu0juAOGhg5l2CM=;
+	s=default; t=1552901468;
+	bh=UEmj1EfAuH9hW36vTQnO7X1OawZGQ0jqy0hlvYbsmhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AL4JLgcOZZI1RN5pEglagu9vm1Hirr01fR86ghOTVk6cqQHlLHhDmF0Sx7Yf7Xxk5
-	 ieoWDEoTXlfhplPes6D8lPK03gxiFFdK5T+5zE9cnFVOSTeVj/s4b6k0b+celyqQmN
-	 VbfBktz91Ep/ofwBpyeA+/Xh/oa2inpKoJsj2ETU=
+	b=Dk6GBpoIPHFi7+PklfoefcXkfPg6Df6bKSbSVXmBP8a5mecmSUKsZryWQZvSVpNsi
+	 dUf+4Q8pKx+57eKHMWrIciAuEbaWABC3ojY1+UTaci0RrlbelFke5rqo1JV7YWNmq4
+	 JCYa5XOms8QJarsJ5THKocMa0XQkc5pp6JtQqabQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfCRJbD (ORCPT
+        id S1728506AbfCRJbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:31:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727512AbfCRJbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:31:00 -0400
+        id S1728494AbfCRJbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:03 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7489721734;
-        Mon, 18 Mar 2019 09:30:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3366D2087C;
+        Mon, 18 Mar 2019 09:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901460;
-        bh=f+xI9QVZV2kePlQo//TVCGYRml+Ylu0juAOGhg5l2CM=;
+        s=default; t=1552901462;
+        bh=UEmj1EfAuH9hW36vTQnO7X1OawZGQ0jqy0hlvYbsmhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OJWWmB4HRYuy26XcHoSViAcEKZmb0IGUXu1yXq9TKbP1aVy2QhKdJHY0ApM8YR3au
-         qqtQDB1nQmdYf0ms47MBt+jLR1eDWEoGuyNEYSWTq/SzLcKuwChfYQg7SVkBQFp8QC
-         lpYgQczP/zwWAndex3WLcYura/aP2sDfesh7FyPo=
+        b=CfyVSisfkAKn2QWC8WYm0YEOwjfd5UJIFyVG2X0yJgA+i2vsXQzBkUpUyqfR5f1kn
+         XICSP38TgzKkPC0Kb5kxGsw/jMdMllNfzAGw5iriezwJnHk1D/tXSMXUZMTKb4yVmi
+         jhKz7aNtWsAWsJgY5IfG5WzpqCT2PTfOcz7uUaV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.20 50/52] Its wrong to add len to sector_nr in raid10 reshape twice
-Date:   Mon, 18 Mar 2019 10:25:37 +0100
-Message-Id: <20190318083849.804316774@linuxfoundation.org>
+        stable@vger.kernel.org, linmiaohe <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.20 10/52] net: sit: fix UBSAN Undefined behaviour in check_6rd
+Date:   Mon, 18 Mar 2019 10:24:57 +0100
+Message-Id: <20190318083844.630445872@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -64,33 +65,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xiao Ni <xni@redhat.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit b761dcf1217760a42f7897c31dcb649f59b2333e upstream.
+[ Upstream commit a843dc4ebaecd15fca1f4d35a97210f72ea1473b ]
 
-In reshape_request it already adds len to sector_nr already. It's wrong to add len to
-sector_nr again after adding pages to bio. If there is bad block it can't copy one chunk
-at a time, it needs to goto read_more. Now the sector_nr is wrong. It can cause data
-corruption.
+In func check_6rd,tunnel->ip6rd.relay_prefixlen may equal to
+32,so UBSAN complain about it.
 
-Cc: stable@vger.kernel.org # v3.16+
-Signed-off-by: Xiao Ni <xni@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+UBSAN: Undefined behaviour in net/ipv6/sit.c:781:47
+shift exponent 32 is too large for 32-bit type 'unsigned int'
+CPU: 6 PID: 20036 Comm: syz-executor.0 Not tainted 4.19.27 #2
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
+04/01/2014
+Call Trace:
+__dump_stack lib/dump_stack.c:77 [inline]
+dump_stack+0xca/0x13e lib/dump_stack.c:113
+ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
+__ubsan_handle_shift_out_of_bounds+0x293/0x2e8 lib/ubsan.c:425
+check_6rd.constprop.9+0x433/0x4e0 net/ipv6/sit.c:781
+try_6rd net/ipv6/sit.c:806 [inline]
+ipip6_tunnel_xmit net/ipv6/sit.c:866 [inline]
+sit_tunnel_xmit+0x141c/0x2720 net/ipv6/sit.c:1033
+__netdev_start_xmit include/linux/netdevice.h:4300 [inline]
+netdev_start_xmit include/linux/netdevice.h:4309 [inline]
+xmit_one net/core/dev.c:3243 [inline]
+dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
+__dev_queue_xmit+0x1656/0x2500 net/core/dev.c:3829
+neigh_output include/net/neighbour.h:501 [inline]
+ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
+ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
+NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
+dst_output include/net/dst.h:444 [inline]
+ip6_local_out+0x99/0x170 net/ipv6/output_core.c:176
+ip6_send_skb+0x9d/0x2f0 net/ipv6/ip6_output.c:1697
+ip6_push_pending_frames+0xc0/0x100 net/ipv6/ip6_output.c:1717
+rawv6_push_pending_frames net/ipv6/raw.c:616 [inline]
+rawv6_sendmsg+0x2435/0x3530 net/ipv6/raw.c:946
+inet_sendmsg+0xf8/0x5c0 net/ipv4/af_inet.c:798
+sock_sendmsg_nosec net/socket.c:621 [inline]
+sock_sendmsg+0xc8/0x110 net/socket.c:631
+___sys_sendmsg+0x6cf/0x890 net/socket.c:2114
+__sys_sendmsg+0xf0/0x1b0 net/socket.c:2152
+do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: linmiaohe <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/md/raid10.c |    1 -
- 1 file changed, 1 deletion(-)
+ net/ipv6/sit.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -4692,7 +4692,6 @@ read_more:
- 	atomic_inc(&r10_bio->remaining);
- 	read_bio->bi_next = NULL;
- 	generic_make_request(read_bio);
--	sector_nr += nr_sectors;
- 	sectors_done += nr_sectors;
- 	if (sector_nr <= last)
- 		goto read_more;
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -778,8 +778,9 @@ static bool check_6rd(struct ip_tunnel *
+ 		pbw0 = tunnel->ip6rd.prefixlen >> 5;
+ 		pbi0 = tunnel->ip6rd.prefixlen & 0x1f;
+ 
+-		d = (ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
+-		    tunnel->ip6rd.relay_prefixlen;
++		d = tunnel->ip6rd.relay_prefixlen < 32 ?
++			(ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
++		    tunnel->ip6rd.relay_prefixlen : 0;
+ 
+ 		pbi1 = pbi0 - tunnel->ip6rd.relay_prefixlen;
+ 		if (pbi1 > 0)
 
 
