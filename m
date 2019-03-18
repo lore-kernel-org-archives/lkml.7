@@ -2,244 +2,266 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D271AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84614C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22E52070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9F92070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:42:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="BRuisdVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfCRRmY (ORCPT
+        id S1727764AbfCRRmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:42:24 -0400
-Received: from mga12.intel.com ([192.55.52.136]:26541 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbfCRRmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:42:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:42:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="135342565"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 18 Mar 2019 10:42:22 -0700
-Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
-        by linux.intel.com (Postfix) with ESMTP id 73D5C580238;
-        Mon, 18 Mar 2019 10:42:20 -0700 (PDT)
-Subject: [PATCH v10 05/12] perf mmap: implement dedicated memory buffer for
- data compression
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <49b31321-0f70-392b-9a4f-649d3affe090@linux.intel.com>
-Date:   Mon, 18 Mar 2019 20:42:19 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 13:42:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:56150 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfCRRme (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:42:34 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 4so13886007wmf.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zWsuY7SQLTOsW6dl9uNB44LxJ1gQojgHylmbkg8s1Qk=;
+        b=BRuisdVIf1kW41OiIv5WGiEdwMocl3Jba5WYVpX/dgWg+xzYDDiqym7oOML+NxMYs6
+         FiKb5ntQR/r666FWqNAd/tYnqGXoYgPqFwViALV2+DxG6EnBc5Ju4Oazya5qv3GY6LBF
+         i8oLjSMcj4Qfs5AP+jiVrPGDeunSnImfvLkRH32dWHilbWtkhreD+QA8bD8sO3X8Xa1P
+         3hQg+MD5Bc716UnCn6P5y5qz+Kqlpfgi2aolF2XFZmT8bxqZkXSoXs5VAnWildqaYnMh
+         vmoodNkfKHMSN2b62fF9fjEgvB5tJndbNcXa/1Yv5FyZc2wg9ApGodhgXCMFyqqxz2FQ
+         kXDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zWsuY7SQLTOsW6dl9uNB44LxJ1gQojgHylmbkg8s1Qk=;
+        b=AIqcGlDBgxPmy0jf1KazQEEQxTdHbNGMupO8r8HcfD5Zh1Ai9LfJtRG8JieJ8T1fg8
+         B8wKeSuv9viXAH1vusBX83fUPZazGgoQyJJiWmiEMhMPu1Y8GWxpMMYudR6drv4XAN0s
+         sbihF3O8EY9LGosTK0DIcwEqH5uq9A3nzQ+LDODda1EUlxdd6mBxmRE/B4Z6qMg/CCCM
+         YTmxdCm+CC5q3E6ilicMhsvIDb2V5ZEsrojJxvxhvHFvNgVeFG8FqV8GFYcrFPrdaDYH
+         kj8qW0sRRVDn6wJqIFXUdQw0TVJgLazg6lrKCmBZw/1FTzMfpyOcEms4tTd2Wwuix5GB
+         xjWQ==
+X-Gm-Message-State: APjAAAWfwSD29vyZc1+42IPXB42ueWcechWAUFNQShpBvKeoQhno9tNu
+        klS1QTWjwUr69b3IFxq+bPdPZg==
+X-Google-Smtp-Source: APXvYqxffdNCD4trvibYpq0f+tlzgjDm1TCEfigLOQVoBVWoJqKUDT2o30igKccd8z7mJjfpLATx1Q==
+X-Received: by 2002:a1c:7903:: with SMTP id l3mr76983wme.22.1552930952343;
+        Mon, 18 Mar 2019 10:42:32 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id g24sm14873909wmh.45.2019.03.18.10.42.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 10:42:31 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [RESEND PATCH v6 00/11] mfd: add support for max77650 PMIC
+Date:   Mon, 18 Mar 2019 18:42:17 +0100
+Message-Id: <20190318174228.18194-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Implemented mmap data buffer that is used as the memory to operate
-on when compressing data in case of serial trace streaming.
+This series missed the last merge window so resending rebased on top
+of v5.1-rc1 with no functional changes.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/builtin-record.c |  8 +++++++-
- tools/perf/util/evlist.c    |  8 +++++---
- tools/perf/util/evlist.h    |  2 +-
- tools/perf/util/mmap.c      | 30 ++++++++++++++++++++++++++++--
- tools/perf/util/mmap.h      |  4 +++-
- 5 files changed, 44 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 7125b780c4f4..948489cb6ff0 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -369,6 +369,8 @@ static int record__mmap_flush_parse(const struct option *opt,
- 	return 0;
- }
- 
-+static unsigned int comp_level_max = 22;
-+
- static int record__comp_enabled(struct record *rec)
- {
- 	return rec->opts.comp_level > 0;
-@@ -584,7 +586,7 @@ static int record__mmap_evlist(struct record *rec,
- 				 opts->auxtrace_mmap_pages,
- 				 opts->auxtrace_snapshot_mode,
- 				 opts->nr_cblocks, opts->affinity,
--				 opts->mmap_flush) < 0) {
-+				 opts->mmap_flush, opts->comp_level) < 0) {
- 		if (errno == EPERM) {
- 			pr_err("Permission error mapping pages.\n"
- 			       "Consider increasing "
-@@ -2258,6 +2260,10 @@ int cmd_record(int argc, const char **argv)
- 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
- 	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
- 
-+	if (rec->opts.comp_level > comp_level_max)
-+		rec->opts.comp_level = comp_level_max;
-+	pr_debug("comp level: %d\n", rec->opts.comp_level);
-+
- 	err = __cmd_record(&record, argc, argv);
- out:
- 	perf_evlist__delete(rec->evlist);
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 8858d829983b..4d8a25a12430 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1037,7 +1037,8 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
-  */
- int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 			 unsigned int auxtrace_pages,
--			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush)
-+			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush,
-+			 int comp_level)
- {
- 	struct perf_evsel *evsel;
- 	const struct cpu_map *cpus = evlist->cpus;
-@@ -1047,7 +1048,8 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 	 * Its value is decided by evsel's write_backward.
- 	 * So &mp should not be passed through const pointer.
- 	 */
--	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush };
-+	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush,
-+				  .comp_level = comp_level };
- 
- 	if (!evlist->mmap)
- 		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
-@@ -1079,7 +1081,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 
- int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages)
- {
--	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1);
-+	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1, 0);
- }
- 
- int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index edf18811e39f..77c11dac4a63 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -166,7 +166,7 @@ unsigned long perf_event_mlock_kb_in_pages(void);
- int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 			 unsigned int auxtrace_pages,
- 			 bool auxtrace_overwrite, int nr_cblocks,
--			 int affinity, int flush);
-+			 int affinity, int flush, int comp_level);
- int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages);
- void perf_evlist__munmap(struct perf_evlist *evlist);
- 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index ef3d79b2c90b..d85e73fc82e2 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -157,6 +157,10 @@ void __weak auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp __mayb
- }
- 
- #ifdef HAVE_AIO_SUPPORT
-+static int perf_mmap__aio_enabled(struct perf_mmap *map)
-+{
-+	return map->aio.nr_cblocks > 0;
-+}
- 
- #ifdef HAVE_LIBNUMA_SUPPORT
- static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
-@@ -198,7 +202,7 @@ static int perf_mmap__aio_bind(struct perf_mmap *map, int idx, int cpu, int affi
- 
- 	return 0;
- }
--#else
-+#else /* !HAVE_LIBNUMA_SUPPORT */
- static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
- {
- 	map->aio.data[idx] = malloc(perf_mmap__mmap_len(map));
-@@ -359,7 +363,12 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
- 
- 	return rc;
- }
--#else
-+#else /* !HAVE_AIO_SUPPORT */
-+static int perf_mmap__aio_enabled(struct perf_mmap *map __maybe_unused)
-+{
-+	return 0;
-+}
-+
- static int perf_mmap__aio_mmap(struct perf_mmap *map __maybe_unused,
- 			       struct mmap_params *mp __maybe_unused)
- {
-@@ -374,6 +383,10 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map __maybe_unused)
- void perf_mmap__munmap(struct perf_mmap *map)
- {
- 	perf_mmap__aio_munmap(map);
-+	if (map->data != NULL) {
-+		munmap(map->data, perf_mmap__mmap_len(map));
-+		map->data = NULL;
-+	}
- 	if (map->base != NULL) {
- 		munmap(map->base, perf_mmap__mmap_len(map));
- 		map->base = NULL;
-@@ -442,6 +455,19 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd, int c
- 
- 	map->flush = mp->flush;
- 
-+	map->comp_level = mp->comp_level;
-+
-+	if (map->comp_level && !perf_mmap__aio_enabled(map)) {
-+		map->data = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ|PROT_WRITE,
-+				 MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
-+		if (map->data == MAP_FAILED) {
-+			pr_debug2("failed to mmap data buffer, error %d\n",
-+					errno);
-+			map->data = NULL;
-+			return -1;
-+		}
-+	}
-+
- 	if (auxtrace_mmap__mmap(&map->auxtrace_mmap,
- 				&mp->auxtrace_mp, map->base, fd))
- 		return -1;
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index b82f8c2d55c4..4e2f58d95c1f 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -40,6 +40,8 @@ struct perf_mmap {
- #endif
- 	cpu_set_t	affinity_mask;
- 	u64		flush;
-+	void		*data;
-+	int		comp_level;
- };
- 
- /*
-@@ -71,7 +73,7 @@ enum bkw_mmap_state {
- };
- 
- struct mmap_params {
--	int			    prot, mask, nr_cblocks, affinity, flush;
-+	int prot, mask, nr_cblocks, affinity, flush, comp_level;
- 	struct auxtrace_mmap_params auxtrace_mp;
- };
- 
+This series adds support for max77650 ultra low-power PMIC. It provides
+the core mfd driver and a set of five sub-drivers for the regulator,
+power supply, gpio, leds and input subsystems.
+
+Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_devices().
+Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for this
+device.
+
+The regulator part is already upstream.
+
+v1 -> v2:
+=========
+
+General:
+- use C++ style comments for the SPDX license identifier and the
+  copyright header
+- s/MODULE_LICENSE("GPL")/MODULE_LICENSE("GPL v2")/
+- lookup the virtual interrupt numbers in the MFD driver, setup
+  resources for child devices and use platform_get_irq_byname()
+  in sub-drivers
+- picked up review tags
+- use devm_request_any_context_irq() for interrupt requests
+
+LEDs:
+- changed the max77650_leds_ prefix to max77650_led_
+- drop the max77650_leds structure as the only field it held was the
+  regmap pointer, move said pointer to struct max77650_led
+- change the driver name to "max77650-led"
+- drop the last return value check and return the result of
+  regmap_write() directly
+- change the labeling scheme to one consistent with other LED drivers
+
+ONKEY:
+- drop the key reporting helper and call the input functions directly
+  from interrupt handlers
+- rename the rv local variable to error
+- drop parent device asignment
+
+Regulator:
+- drop the unnecessary init_data lookup from the driver code
+- drop unnecessary include
+
+Charger:
+- disable the charger on driver remove
+- change the power supply type to POWER_SUPPLY_TYPE_USB
+
+GPIO:
+- drop interrupt support until we have correct implementation of hierarchical
+  irqs in gpiolib
+
+v2 -> v3:
+=========
+
+General:
+- dropped regulator patches as they're already in Mark Brown's branch
+
+LED:
+- fix the compatible string in the DT binding example
+- use the max_brightness property
+- use a common prefix ("MAX77650_LED") for all defines in the driver
+
+MFD:
+- add the MODULE_DEVICE_TABLE()
+- add a sentinel to the of_device_id array
+- constify the pointers to irq names
+- use an enum instead of defines for interrupt indexes
+
+v3 -> v4:
+=========
+
+GPIO:
+- as discussed with Linus Walleij: the gpio-controller is now part of
+  the core mfd module (we don't spawn a sub-node anymore), the binding
+  document for GPIO has been dropped, the GPIO properties have been
+  defined in the binding document for the mfd core, the interrupt
+  functionality has been reintroduced with the irq directly passed from
+  the mfd part
+- due to the above changes the Reviewed-by tag from Linus was dropped
+
+v4 -> v5:
+=========
+
+General:
+- add a patch documenting mfd_add_devices()
+
+MFD:
+- pass the regmap irq_chip irq domain to mfd over mfd_add_devices so that
+  the hw interrupts from resources can be correctly mapped to virtual irqs
+- remove the enum listing cell indexes
+- extend Kconfig help
+- add a link to the programming manual
+- use REGMAP_IRQ_REG() for regmap interrupts (except for GPI which has
+  is composed of two hw interrupts for rising and falling edge)
+- add error messages in probe
+- use PLATFORM_DEVID_NONE constant in devm_mfd_add_devices()
+- set irq_base to 0 in regmap_add_irq_chip() as other users to, it's only
+  relevant if it's > 0
+
+Charger:
+- use non-maxim specific property names for minimum input voltage and current
+  limit
+- code shrink by using the enable/disable charger helpers everywhere
+- use more descriptive names for constants
+
+Onkey:
+- use EV_SW event type for slide mode
+
+LED:
+- remove stray " from Kconfig help
+
+v5 -> v6:
+=========
+
+MFD:
+- remove stray spaces in the binding document
+- rename the example dt node
+- remove unnecessary interrupt-parent property from the bindings
+
+LED:
+- add a missing dependency on LEDS_CLASS to Kconfig
+
+Onkey:
+- use boolean for the slide button property
+
+Charger:
+- fix the property names in DT example
+- make constants even more readable
+
+Bartosz Golaszewski (11):
+  dt-bindings: mfd: add DT bindings for max77650
+  dt-bindings: power: supply: add DT bindings for max77650
+  dt-bindings: leds: add DT bindings for max77650
+  dt-bindings: input: add DT bindings for max77650
+  mfd: core: document mfd_add_devices()
+  mfd: max77650: new core mfd driver
+  power: supply: max77650: add support for battery charger
+  gpio: max77650: add GPIO support
+  leds: max77650: add LEDs support
+  input: max77650: add onkey support
+  MAINTAINERS: add an entry for max77650 mfd driver
+
+ .../bindings/input/max77650-onkey.txt         |  26 ++
+ .../bindings/leds/leds-max77650.txt           |  57 +++
+ .../devicetree/bindings/mfd/max77650.txt      |  46 +++
+ .../power/supply/max77650-charger.txt         |  27 ++
+ MAINTAINERS                                   |  14 +
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-max77650.c                  | 190 +++++++++
+ drivers/input/misc/Kconfig                    |   9 +
+ drivers/input/misc/Makefile                   |   1 +
+ drivers/input/misc/max77650-onkey.c           | 121 ++++++
+ drivers/leds/Kconfig                          |   6 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-max77650.c                  | 147 +++++++
+ drivers/mfd/Kconfig                           |  14 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/max77650.c                        | 234 +++++++++++
+ drivers/mfd/mfd-core.c                        |  14 +
+ drivers/power/supply/Kconfig                  |   7 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/max77650-charger.c       | 366 ++++++++++++++++++
+ include/linux/mfd/max77650.h                  |  59 +++
+ 22 files changed, 1349 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/max77650-onkey.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+ create mode 100644 drivers/gpio/gpio-max77650.c
+ create mode 100644 drivers/input/misc/max77650-onkey.c
+ create mode 100644 drivers/leds/leds-max77650.c
+ create mode 100644 drivers/mfd/max77650.c
+ create mode 100644 drivers/power/supply/max77650-charger.c
+ create mode 100644 include/linux/mfd/max77650.h
+
 -- 
 2.20.1
 
