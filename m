@@ -6,52 +6,55 @@ X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC743C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C90C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C37D420863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E39720872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfCRP0s (ORCPT
+        id S1727236AbfCRP1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:26:48 -0400
-Received: from ganesha.gnumonks.org ([213.95.27.120]:52946 "EHLO
+        Mon, 18 Mar 2019 11:27:14 -0400
+Received: from ganesha.gnumonks.org ([213.95.27.120]:57770 "EHLO
         ganesha.gnumonks.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfCRP0s (ORCPT
+        with ESMTP id S1726837AbfCRP1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:26:48 -0400
+        Mon, 18 Mar 2019 11:27:14 -0400
 Received: from [195.39.71.253] (helo=gnumonks.org)
         by ganesha.gnumonks.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.84_2)
         (envelope-from <pablo@gnumonks.org>)
-        id 1h5tld-0001cF-1A; Mon, 18 Mar 2019 16:01:34 +0100
-Date:   Mon, 18 Mar 2019 16:01:32 +0100
+        id 1h5tl4-0001bd-IU; Mon, 18 Mar 2019 16:01:04 +0100
+Date:   Mon, 18 Mar 2019 16:00:58 +0100
 From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
         Florian Westphal <fw@strlen.de>,
         "David S. Miller" <davem@davemloft.net>,
         Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ipv6: ip6t_srh: fix NULL pointer dereferences
-Message-ID: <20190318150132.3qeqvxpbygvwt237@salvia>
-References: <20190314075818.29951-1-kjlu@umn.edu>
+Subject: Re: [PATCH] netfilter: ip6t_srh: Fix potential NULL pointer
+ dereference
+Message-ID: <20190318150058.nn2cgvvid7jbvi4t@salvia>
+References: <20190311231920.26514-1-pakki001@umn.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190314075818.29951-1-kjlu@umn.edu>
+In-Reply-To: <20190311231920.26514-1-pakki001@umn.edu>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 02:58:18AM -0500, Kangjie Lu wrote:
-> skb_header_pointer may return NULL. The current code dereference
-> its return values without a NULL check.
-> 
-> The fix inserts the checks to avoid NULL pointer dereferences.
+On Mon, Mar 11, 2019 at 06:19:20PM -0500, Aditya Pakki wrote:
+> skb_header_pointer in srh_mt6 may return a NULL pointer that is
+> dereferenced in ipv6_masked_addr_cmp. This patch avoids such a scenario.
 
-Applied, thanks.
+I'll take this one instead:
+
+https://patchwork.ozlabs.org/patch/1056390/
+
+Thanks for submitting a patch anyway.
