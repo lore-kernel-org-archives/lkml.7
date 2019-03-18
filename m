@@ -2,74 +2,115 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0159C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D779DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1EB2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E592082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfCRKRG (ORCPT
+        id S1727609AbfCRKRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:17:06 -0400
-Received: from 8bytes.org ([81.169.241.247]:58202 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbfCRKRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:17:06 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id D489D327; Mon, 18 Mar 2019 11:17:04 +0100 (CET)
-Date:   Mon, 18 Mar 2019 11:17:03 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Stanislaw Gruszka <sgruszka@redhat.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Rosen Penev <rosenp@gmail.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Samuel Sieb <samuel@sieb.net>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, jan.viktorin@gmail.com
-Subject: Re: [PATCH v2] iommu/amd: fix sg->dma_address for sg->offset bigger
- than PAGE_SIZE
-Message-ID: <20190318101703.GA6100@8bytes.org>
-References: <20190228121948.GD6072@redhat.com>
- <20190228134029.GC1594@8bytes.org>
- <20190304071037.GA2787@redhat.com>
- <CAKxU2N-k-9DCYBv6W3CohL963dr3AeY3VHyt8FrUuo=BfacDsw@mail.gmail.com>
- <20190311084319.GA3310@redhat.com>
- <20190311090314.GB3310@redhat.com>
- <e0630ae9d9bee73d8a1ce3499ea9f77900e9cdfa.camel@linux.intel.com>
- <20190312070832.GA2483@redhat.com>
- <67c062b183fbd5651a9aa990e677d31673ff7580.camel@linux.intel.com>
- <20190313090316.GA2663@redhat.com>
+        Mon, 18 Mar 2019 06:17:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39753 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727413AbfCRKRx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 06:17:53 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1h5pL4-0001Ft-6b; Mon, 18 Mar 2019 10:17:50 +0000
+To:     Chas Williams <3chas3@gmail.com>,
+        linux-atm-general@lists.sourceforge.net,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Static analysis bug report: atm: idt77252
+Message-ID: <93c6dc67-9a2c-9048-b274-0d1d5b18975f@canonical.com>
+Date:   Mon, 18 Mar 2019 10:17:49 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313090316.GA2663@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanislaw,
+Hi,
 
-thanks a lot for looking into this and tracking it down!
+Static analysis with cppcheck has detected an uninitialized variable in
+the idt77252 driver:
 
-On Wed, Mar 13, 2019 at 10:03:17AM +0100, Stanislaw Gruszka wrote:
-> -		s->dma_address += address + s->offset;
-> +		/* Add in the remaining piece of the scatter-gather offset that
-> +		 * was masked out when we were determining the physical address
-> +		 * via (sg_phys(s) & PAGE_MASK) earlier.
-> +		 */
-> +		s->dma_address += address + (s->offset & ~PAGE_MASK);
->  		s->dma_length   = s->length;
+The variable linkrate is only initialized when
+CONFIG_ATM_IDT77252_USE_SUNI is enabled:
 
-Applied the patch for v5.1 (with an added Fixes-tag and a minor coding
-style change) and will send it upstream soon.
+#ifdef  CONFIG_ATM_IDT77252_USE_SUNI
+        /*
+         * this is a jhs hack to get around special functionality in the
+         * phy driver for the atecom hardware; the functionality doesn't
+         * exist in the linux atm suni driver
+         *
+         * it isn't the right way to do things, but as the guy from NIST
+         * said, talking about their measurement of the fine structure
+         * constant, "it's good enough for government work."
+         */
+        linkrate = 149760000;
+#endif
 
-Thanks again,
+        card->link_pcr = (linkrate / 8 / 53);
 
-       Joerg
+I suspect the driver is being used with CONFIG_ATM_IDT77252_USE_SUNI
+enabled, however, this probably needs fixing with the correct value
+(whatever that is) when CONFIG_ATM_IDT77252_USE_SUNI is not enabled.
+
+Colin
