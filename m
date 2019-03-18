@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21343C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06AFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8112075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F24F2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901856;
-	bh=XW2b7Oj3glPnKJbjMiauY8y0xPeXNw0/raUXVlLLazw=;
+	s=default; t=1552901861;
+	bh=WTrWvLo09Va1i4F4Dz2cvsSeHcefsr4aeyO5BlACap8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1UcLx99z6r/eni290aU5IqrHk3ojjRw92JFCIeIt7Nod+0Qn5uHz4JMfRMcyFl77U
-	 nz6SO8jk78pi+fkBvvGoivjPlxcNgK2iwNgJ+WesycRO29DZpuN/M6BLEOBt+mMsRr
-	 +d75BqundoWqwEyZKh5eLnSxV3AZzUo1wWzzgQRg=
+	b=HGZDwUhC+v0yxt+9GyGtZiuY7daUvUGaku0puHyJB2Uey1qoaTDYeK48SLdSj1Te0
+	 qNn6+Lec4q6Qo1iMnxA6LHLY+YW7KvcZHxfxGtetAKEd4GCJej7uycwZgmg8MeY/97
+	 BrpbpEUmZtkAaEyZOgI2fEj5JpokwEFujpbQi+S8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387426AbfCRJhe (ORCPT
+        id S2387925AbfCRJhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:37:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45842 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387869AbfCRJhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:37:32 -0400
+        id S2387498AbfCRJhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:37:38 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29C452075C;
-        Mon, 18 Mar 2019 09:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C48DD2075C;
+        Mon, 18 Mar 2019 09:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901850;
-        bh=XW2b7Oj3glPnKJbjMiauY8y0xPeXNw0/raUXVlLLazw=;
+        s=default; t=1552901857;
+        bh=WTrWvLo09Va1i4F4Dz2cvsSeHcefsr4aeyO5BlACap8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IrT0y3lgcAyMG8B0LHNu1mZO09fKbaMSrvadg0LjS/Q7lJih6pe6Q3f1GsR3vZ3A2
-         ZMg9a2gsBeqzz7vODVHTPMb4s0TsKci/8DmIDJXOFC3t3HDxTWFDk9FuWpzXcneMly
-         ugB+jgLvZZhCzlqSRpBFNXphwSAgAHoKWSA7C48Q=
+        b=Bs7QaSfpJ/M8zkB8WHYSVqZK5iAybHrNxISX9exA/HDpNjyKcZ9PDjBqhExmGm0I3
+         et0EmOxakpToX5AnoHftst89JD/EtgPEz+wpn7BD8PneKVVunuctWPMwQAppZFpPtT
+         KUgv9fjg4mn+Z5fiWDVGIBeI2kmr+7FM9pvQCWJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+04babcefcd396fabec37@syzkaller.appspotmail.com,
-        andrew hendry <andrew.hendry@gmail.com>,
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 07/31] net/x25: fix use-after-free in x25_device_event()
-Date:   Mon, 18 Mar 2019 10:25:42 +0100
-Message-Id: <20190318084210.690584097@linuxfoundation.org>
+Subject: [PATCH 4.9 09/31] pptp: dst_release sk_dst_cache in pptp_sock_destruct
+Date:   Mon, 18 Mar 2019 10:25:44 +0100
+Message-Id: <20190318084210.773391714@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
 References: <20190318084210.397476003@linuxfoundation.org>
@@ -67,145 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 95d6ebd53c79522bf9502dbc7e89e0d63f94dae4 ]
+[ Upstream commit 9417d81f4f8adfe20a12dd1fadf73a618cbd945d ]
 
-In case of failure x25_connect() does a x25_neigh_put(x25->neighbour)
-but forgets to clear x25->neighbour pointer, thus triggering use-after-free.
+sk_setup_caps() is called to set sk->sk_dst_cache in pptp_connect,
+so we have to dst_release(sk->sk_dst_cache) in pptp_sock_destruct,
+otherwise, the dst refcnt will leak.
 
-Since the socket is visible in x25_list, we need to hold x25_list_lock
-to protect the operation.
+It can be reproduced by this syz log:
 
-syzbot report :
+  r1 = socket$pptp(0x18, 0x1, 0x2)
+  bind$pptp(r1, &(0x7f0000000100)={0x18, 0x2, {0x0, @local}}, 0x1e)
+  connect$pptp(r1, &(0x7f0000000000)={0x18, 0x2, {0x3, @remote}}, 0x1e)
 
-BUG: KASAN: use-after-free in x25_kill_by_device net/x25/af_x25.c:217 [inline]
-BUG: KASAN: use-after-free in x25_device_event+0x296/0x2b0 net/x25/af_x25.c:252
-Read of size 8 at addr ffff8880a030edd0 by task syz-executor003/7854
+Consecutive dmesg warnings will occur:
 
-CPU: 0 PID: 7854 Comm: syz-executor003 Not tainted 5.0.0+ #97
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
- kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- x25_kill_by_device net/x25/af_x25.c:217 [inline]
- x25_device_event+0x296/0x2b0 net/x25/af_x25.c:252
- notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
- __raw_notifier_call_chain kernel/notifier.c:394 [inline]
- raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
- call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
- call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
- call_netdevice_notifiers net/core/dev.c:1765 [inline]
- __dev_notify_flags+0x1e9/0x2c0 net/core/dev.c:7607
- dev_change_flags+0x10d/0x170 net/core/dev.c:7643
- dev_ifsioc+0x2b0/0x940 net/core/dev_ioctl.c:237
- dev_ioctl+0x1b8/0xc70 net/core/dev_ioctl.c:488
- sock_do_ioctl+0x1bd/0x300 net/socket.c:995
- sock_ioctl+0x32b/0x610 net/socket.c:1096
- vfs_ioctl fs/ioctl.c:46 [inline]
- file_ioctl fs/ioctl.c:509 [inline]
- do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
- ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
- __do_sys_ioctl fs/ioctl.c:720 [inline]
- __se_sys_ioctl fs/ioctl.c:718 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4467c9
-Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fdbea222d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000006dbc58 RCX: 00000000004467c9
-RDX: 0000000020000340 RSI: 0000000000008914 RDI: 0000000000000003
-RBP: 00000000006dbc50 R08: 00007fdbea223700 R09: 0000000000000000
-R10: 00007fdbea223700 R11: 0000000000000246 R12: 00000000006dbc5c
-R13: 6000030030626669 R14: 0000000000000000 R15: 0000000030626669
+  unregister_netdevice: waiting for lo to become free. Usage count = 1
 
-Allocated by task 7843:
- save_stack+0x45/0xd0 mm/kasan/common.c:73
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc mm/kasan/common.c:495 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:468
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:509
- kmem_cache_alloc_trace+0x151/0x760 mm/slab.c:3615
- kmalloc include/linux/slab.h:545 [inline]
- x25_link_device_up+0x46/0x3f0 net/x25/x25_link.c:249
- x25_device_event+0x116/0x2b0 net/x25/af_x25.c:242
- notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
- __raw_notifier_call_chain kernel/notifier.c:394 [inline]
- raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
- call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
- call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
- call_netdevice_notifiers net/core/dev.c:1765 [inline]
- __dev_notify_flags+0x121/0x2c0 net/core/dev.c:7605
- dev_change_flags+0x10d/0x170 net/core/dev.c:7643
- dev_ifsioc+0x2b0/0x940 net/core/dev_ioctl.c:237
- dev_ioctl+0x1b8/0xc70 net/core/dev_ioctl.c:488
- sock_do_ioctl+0x1bd/0x300 net/socket.c:995
- sock_ioctl+0x32b/0x610 net/socket.c:1096
- vfs_ioctl fs/ioctl.c:46 [inline]
- file_ioctl fs/ioctl.c:509 [inline]
- do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
- ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
- __do_sys_ioctl fs/ioctl.c:720 [inline]
- __se_sys_ioctl fs/ioctl.c:718 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+v1->v2:
+  - use rcu_dereference_protected() instead of rcu_dereference_check(),
+    as suggested by Eric.
 
-Freed by task 7865:
- save_stack+0x45/0xd0 mm/kasan/common.c:73
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:457
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:465
- __cache_free mm/slab.c:3494 [inline]
- kfree+0xcf/0x230 mm/slab.c:3811
- x25_neigh_put include/net/x25.h:253 [inline]
- x25_connect+0x8d8/0xde0 net/x25/af_x25.c:824
- __sys_connect+0x266/0x330 net/socket.c:1685
- __do_sys_connect net/socket.c:1696 [inline]
- __se_sys_connect net/socket.c:1693 [inline]
- __x64_sys_connect+0x73/0xb0 net/socket.c:1693
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880a030edc0
- which belongs to the cache kmalloc-256 of size 256
-The buggy address is located 16 bytes inside of
- 256-byte region [ffff8880a030edc0, ffff8880a030eec0)
-The buggy address belongs to the page:
-page:ffffea000280c380 count:1 mapcount:0 mapping:ffff88812c3f07c0 index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea0002806788 ffffea00027f0188 ffff88812c3f07c0
-raw: 0000000000000000 ffff8880a030e000 000000010000000c 0000000000000000
-page dumped because: kasan: bad access detected
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot+04babcefcd396fabec37@syzkaller.appspotmail.com
-Cc: andrew hendry <andrew.hendry@gmail.com>
+Fixes: 00959ade36ac ("PPTP: PPP over IPv4 (Point-to-Point Tunneling Protocol)")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/x25/af_x25.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ppp/pptp.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -812,8 +812,12 @@ static int x25_connect(struct socket *so
- 	sock->state = SS_CONNECTED;
- 	rc = 0;
- out_put_neigh:
--	if (rc)
-+	if (rc) {
-+		read_lock_bh(&x25_list_lock);
- 		x25_neigh_put(x25->neighbour);
-+		x25->neighbour = NULL;
-+		read_unlock_bh(&x25_list_lock);
-+	}
- out_put_route:
- 	x25_route_put(rt);
- out:
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -541,6 +541,7 @@ static void pptp_sock_destruct(struct so
+ 		pppox_unbind_sock(sk);
+ 	}
+ 	skb_queue_purge(&sk->sk_receive_queue);
++	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
+ }
+ 
+ static int pptp_create(struct net *net, struct socket *sock, int kern)
 
 
