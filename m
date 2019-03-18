@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36BAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA752C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38D62083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99857214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901702;
-	bh=JnLhwcZY6raWV65FCiKlnWeBel6RPAlvcNYE8qE3fXQ=;
+	s=default; t=1552901707;
+	bh=h3bzZbFLs64EJcYIAhL1DXrSYCci1cQ0HOMENtEtEC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q5WyTUnn9TOp97roxx+VXqiqkT1KzEzPZobi9krdLriPLNIhTKBi6KdcaEW97rzLb
-	 3vRF6PQcx25926mZuMAqYkMQaaZeOatsoPxPxh0op2mTpZZAojKO/d44AKUtR6jpI7
-	 x24JLXWEimNrqSHk03EeTCaoK8LGByE4UifCdR84=
+	b=1s8kV9iYjxDS/9LUhAn0LB8iNFNI7rw/x2xRnFBEkAJR6n83vd5qePwDzsM/Tm/mG
+	 4NK7OBBapDISuUgKqHXkDj92oua6HKP5Gyk6a3TvLEEX1jDI6OQ6zgq22Xssp71vEm
+	 MbXKQ4oxkIWb6tF0pFdF4tHmqv86BnbTj1kWYTzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387425AbfCRJfB (ORCPT
+        id S1729062AbfCRJfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:35:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43358 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:35:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728609AbfCRJe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:59 -0400
+        id S2387417AbfCRJfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:35:01 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A01FF2083D;
-        Mon, 18 Mar 2019 09:34:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67CAA2075C;
+        Mon, 18 Mar 2019 09:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901698;
-        bh=JnLhwcZY6raWV65FCiKlnWeBel6RPAlvcNYE8qE3fXQ=;
+        s=default; t=1552901700;
+        bh=h3bzZbFLs64EJcYIAhL1DXrSYCci1cQ0HOMENtEtEC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LAcQ8ffemrMDr5DT355RbodcTkqcThugptB4fZi8wACGmXuWkn1PuGEeDFJj3f0Ji
-         d6x8DmEJoYD+haAGA3VbPNWc2Kt2QyCjxeT/HsS47o/SjF4fMWLdMHr7PurCojp8Jo
-         0IeQjf5M0EJaGt2f88/4Hd/4umkXCZW9P7WhHiBo=
+        b=b2T06KH5qsY79W5IcsqOc6gr+vtz+EdI2feQq1c8F+cqlMS14emTIfe38el6mx0r5
+         Q9B8ccYoJiD1myD+4VZDscY6S0qQVWz56HEe4d/Q0CbKqj4M467r0q7KcuQK4D/o7h
+         I28uRzSQk5Dcm9VA4MxMwlOKgjrEf0BY3TdNhPG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jack Morgenstein <jackm@dev.mellanox.co.il>,
         Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 20/34] net/mlx4_core: Fix locking in SRIOV mode when switching between events and polling
-Date:   Mon, 18 Mar 2019 10:25:44 +0100
-Message-Id: <20190318084147.497646192@linuxfoundation.org>
+Subject: [PATCH 4.14 21/34] net/mlx4_core: Fix qp mtt size calculation
+Date:   Mon, 18 Mar 2019 10:25:45 +0100
+Message-Id: <20190318084147.644306736@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -69,70 +69,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit c07d27927f2f2e96fcd27bb9fb330c9ea65612d0 ]
+[ Upstream commit 8511a653e9250ef36b95803c375a7be0e2edb628 ]
 
-In procedures mlx4_cmd_use_events() and mlx4_cmd_use_polling(), we need to
-guarantee that there are no FW commands in progress on the comm channel
-(for VFs) or wrapped FW commands (on the PF) when SRIOV is active.
+Calculation of qp mtt size (in function mlx4_RST2INIT_wrapper)
+ultimately depends on function roundup_pow_of_two.
 
-We do this by also taking the slave_cmd_mutex when SRIOV is active.
+If the amount of memory required by the QP is less than one page,
+roundup_pow_of_two is called with argument zero.  In this case, the
+roundup_pow_of_two result is undefined.
 
-This is especially important when switching from event to polling, since we
-free the command-context array during the switch.  If there are FW commands
-in progress (e.g., waiting for a completion event), the completion event
-handler will access freed memory.
+Calling roundup_pow_of_two with a zero argument resulted in the
+following stack trace:
 
-Since the decision to use comm_wait or comm_poll is taken before grabbing
-the event_sem/poll_sem in mlx4_comm_cmd_wait/poll, we must take the
-slave_cmd_mutex as well (to guarantee that the decision to use events or
-polling and the call to the appropriate cmd function are atomic).
+UBSAN: Undefined behaviour in ./include/linux/log2.h:61:13
+shift exponent 64 is too large for 64-bit type 'long unsigned int'
+CPU: 4 PID: 26939 Comm: rping Tainted: G OE 4.19.0-rc1
+Hardware name: Supermicro X9DR3-F/X9DR3-F, BIOS 3.2a 07/09/2015
+Call Trace:
+dump_stack+0x9a/0xeb
+ubsan_epilogue+0x9/0x7c
+__ubsan_handle_shift_out_of_bounds+0x254/0x29d
+? __ubsan_handle_load_invalid_value+0x180/0x180
+? debug_show_all_locks+0x310/0x310
+? sched_clock+0x5/0x10
+? sched_clock+0x5/0x10
+? sched_clock_cpu+0x18/0x260
+? find_held_lock+0x35/0x1e0
+? mlx4_RST2INIT_QP_wrapper+0xfb1/0x1440 [mlx4_core]
+mlx4_RST2INIT_QP_wrapper+0xfb1/0x1440 [mlx4_core]
 
-Fixes: a7e1f04905e5 ("net/mlx4_core: Fix deadlock when switching between polling and event fw commands")
+Fix this by explicitly testing for zero, and returning one if the
+argument is zero (assuming that the next higher power of 2 in this case
+should be one).
+
+Fixes: c82e9aa0a8bc ("mlx4_core: resource tracking for HCA resources used by guests")
 Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
 Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/cmd.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
-@@ -2642,6 +2642,8 @@ int mlx4_cmd_use_events(struct mlx4_dev
- 	if (!priv->cmd.context)
- 		return -ENOMEM;
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -2717,13 +2717,13 @@ static int qp_get_mtt_size(struct mlx4_q
+ 	int total_pages;
+ 	int total_mem;
+ 	int page_offset = (be32_to_cpu(qpc->params2) >> 6) & 0x3f;
++	int tot;
  
-+	if (mlx4_is_mfunc(dev))
-+		mutex_lock(&priv->cmd.slave_cmd_mutex);
- 	down_write(&priv->cmd.switch_sem);
- 	for (i = 0; i < priv->cmd.max_cmds; ++i) {
- 		priv->cmd.context[i].token = i;
-@@ -2667,6 +2669,8 @@ int mlx4_cmd_use_events(struct mlx4_dev
- 	down(&priv->cmd.poll_sem);
- 	priv->cmd.use_events = 1;
- 	up_write(&priv->cmd.switch_sem);
-+	if (mlx4_is_mfunc(dev))
-+		mutex_unlock(&priv->cmd.slave_cmd_mutex);
+ 	sq_size = 1 << (log_sq_size + log_sq_sride + 4);
+ 	rq_size = (srq|rss|xrc) ? 0 : (1 << (log_rq_size + log_rq_stride + 4));
+ 	total_mem = sq_size + rq_size;
+-	total_pages =
+-		roundup_pow_of_two((total_mem + (page_offset << 6)) >>
+-				   page_shift);
++	tot = (total_mem + (page_offset << 6)) >> page_shift;
++	total_pages = !tot ? 1 : roundup_pow_of_two(tot);
  
- 	return err;
+ 	return total_pages;
  }
-@@ -2679,6 +2683,8 @@ void mlx4_cmd_use_polling(struct mlx4_de
- 	struct mlx4_priv *priv = mlx4_priv(dev);
- 	int i;
- 
-+	if (mlx4_is_mfunc(dev))
-+		mutex_lock(&priv->cmd.slave_cmd_mutex);
- 	down_write(&priv->cmd.switch_sem);
- 	priv->cmd.use_events = 0;
- 
-@@ -2690,6 +2696,8 @@ void mlx4_cmd_use_polling(struct mlx4_de
- 
- 	up(&priv->cmd.poll_sem);
- 	up_write(&priv->cmd.switch_sem);
-+	if (mlx4_is_mfunc(dev))
-+		mutex_unlock(&priv->cmd.slave_cmd_mutex);
- }
- 
- struct mlx4_cmd_mailbox *mlx4_alloc_cmd_mailbox(struct mlx4_dev *dev)
 
 
