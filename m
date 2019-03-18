@@ -2,308 +2,109 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF8BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF773C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078602085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9314120872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XkZcuK+T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfCRUlh (ORCPT
+        id S1727532AbfCRUoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:41:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:61073 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727194AbfCRUlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:41:37 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 05F33308FBA9;
-        Mon, 18 Mar 2019 20:41:37 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 41D8F5D705;
-        Mon, 18 Mar 2019 20:41:36 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 16:41:34 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-mm <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH 07/10] mm/hmm: add an helper function that fault pages
- and map them to a device
-Message-ID: <20190318204134.GD6786@redhat.com>
-References: <20190129165428.3931-1-jglisse@redhat.com>
- <20190129165428.3931-8-jglisse@redhat.com>
- <CAA9_cmcN+8B_tyrxRy5MMr-AybcaDEEWB4J8dstY6h0cmFxi3g@mail.gmail.com>
+        Mon, 18 Mar 2019 16:44:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37987 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfCRUoh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 16:44:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v1so7501831pgi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QEM+jCPNC49PZRZiVaqYm+WpQE4LEimTilZJ8sg1mCo=;
+        b=XkZcuK+TrDAQ6JZobv7wI/S52f//O3rCkNQBr+RBTF5xqnDdvn/2hwqs6qMVXb1vQq
+         qhC+CFKfYx2VlteH7Fzi66bY1+2YlWp0Ib/8SkvKNsmI9TZ+dEHWG7LnRwBLPCBLSuwi
+         bVwVdWplrbzBfxEHKq6OEbdh5ZOQnCZif6LQg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QEM+jCPNC49PZRZiVaqYm+WpQE4LEimTilZJ8sg1mCo=;
+        b=F00VGjwnsl2NWoaU0sEHf+iRV/gEBqTgr3RkNfDXiCRnpMCeBhdkAxxouo3QIJo7dR
+         4BmV0euf6pMgCVoJMDVdprulGA47kogWzu2IbdKgEMZW38GJQODHxaLKzVtBhGVW/0zI
+         MekUWEu/ABfKt0GjF3mRlzF0roDJiptcVuzr7iBZOh/LRQJyLzESXg5TNxPnI0oQ6hGX
+         pzpqTeL39NHZtFscAcJRjkb/rGi8RVecHGLsCRLCKwEChqLKXB+SYqckZF/LsSrDQAHK
+         /YacO4FsjerII8aQ9OA99DYcwXNLDnmW0ql7NUx/w1WR3z74lYlydbQHuNa69lNy17vN
+         ZxZw==
+X-Gm-Message-State: APjAAAW6t4i91VWVFALcrhp/96IHbJdAF4S+SFvC5EzUiZkUyHR6pMwu
+        29loedL8lLmJeMCjVgeSbP4LhQ==
+X-Google-Smtp-Source: APXvYqzyy50/RWGfFpYtsg/UBI40gLYbjjenhyM3c+gsa8SzTwXAnit8wTXUlP9dmbpKKVXjj0iM4w==
+X-Received: by 2002:aa7:8d01:: with SMTP id j1mr21567197pfe.122.1552941876424;
+        Mon, 18 Mar 2019 13:44:36 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id e184sm16593470pfc.143.2019.03.18.13.44.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 13:44:35 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 13:44:35 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Manoj Gupta <manojgupta@chromium.org>,
+        Tiancong Wang <tcwang@chromium.org>,
+        Stephen Hines <srhines@google.com>,
+        clang-built-linux@googlegroups.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] x86/vdso: include generic __lshrdi3 in 32-bit vDSO
+Message-ID: <20190318204435.GH112750@google.com>
+References: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com>
+ <CAKwvOd=aqWvjzC1ZF5_pXx2VutAX0dneDPxU_=jroqHUGw-X6g@mail.gmail.com>
+ <20190315222906.GC112750@google.com>
+ <CAKwvOdkXobdu74Fo0fiS4xkikqZdKS=gWN61pVAFBbXRPoenRw@mail.gmail.com>
+ <20190318171604.GU6058@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA9_cmcN+8B_tyrxRy5MMr-AybcaDEEWB4J8dstY6h0cmFxi3g@mail.gmail.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 18 Mar 2019 20:41:37 +0000 (UTC)
+In-Reply-To: <20190318171604.GU6058@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 01:21:00PM -0700, Dan Williams wrote:
-> On Tue, Jan 29, 2019 at 8:55 AM <jglisse@redhat.com> wrote:
-> >
-> > From: Jérôme Glisse <jglisse@redhat.com>
-> >
-> > This is a all in one helper that fault pages in a range and map them to
-> > a device so that every single device driver do not have to re-implement
-> > this common pattern.
+Hi Peter,
+
+On Mon, Mar 18, 2019 at 06:16:04PM +0100, Peter Zijlstra wrote:
+> On Mon, Mar 18, 2019 at 10:09:37AM -0700, Nick Desaulniers wrote:
+> > On Fri, Mar 15, 2019 at 3:29 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > On Fri, Mar 15, 2019 at 02:31:09PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> > > > Is there a config I can set to reproduce this, in order to help
+> > > > test?
+> > >
+> > > I encountered it with a Chrome OS specific configuration, but a
+> > > defconfig should do.
+> > 
+> > defconfig selects CONFIG_OPTIMIZE_FOR_PERFORMANCE=y.  I needed to
+> > select CONFIG_CC_OPTIMIZE_FOR_SIZE=y to repro.  My CI is simply
+> > running defconfigs, which is why I didn't catch this.
 > 
-> Ok, correct me if I am wrong but these seem effectively be the typical
-> "get_user_pages() + dma_map_page()" pattern that non-HMM drivers would
-> follow. Could we just teach get_user_pages() to take an HMM shortcut
-> based on the range?
-> 
-> I'm interested in being able to share code across drivers and not have
-> to worry about the HMM special case at the api level.
-> 
-> And to be clear this isn't an anti-HMM critique this is a "yes, let's
-> do this, but how about a more fundamental change".
+> I suspect the right fix is to make clang use -Os and abolish that -Oz
+> madness.
 
-It is a yes and no, HMM have the synchronization with mmu notifier
-which is not common to all device driver ie you have device driver
-that do not synchronize with mmu notifier and use GUP. For instance
-see the range->valid test in below code this is HMM specific and it
-would not apply to GUP user.
+You have a point, enabling -Oz (aggressive optimization for size)
+doesn't seem a good choice for the entire kernel.
 
-Nonetheless i want to remove more HMM code and grow GUP to do some
-of this too so that HMM and non HMM driver can share the common part
-(under GUP). But right now updating GUP is a too big endeavor. I need
-to make progress on more driver with HMM before thinking of messing
-with GUP code. Making that code HMM only for now will make the GUP
-factorization easier and smaller down the road (should only need to
-update HMM helper and not each individual driver which use HMM).
+I'll send a patch to change it (back) to -Os.
 
-FYI here is my todo list:
-    - this patchset
-    - HMM ODP
-    - mmu notifier changes for optimization and device range binding
-    - device range binding (amdgpu/nouveau/...)
-    - factor out some nouveau deep inner-layer code to outer-layer for
-      more code sharing
-    - page->mapping endeavor for generic page protection for instance
-      KSM with file back page
-    - grow GUP to remove HMM code and consolidate with GUP code
-    ...
-
-Cheers,
-Jérôme
-
-> 
-> >
-> > Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Ralph Campbell <rcampbell@nvidia.com>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > ---
-> >  include/linux/hmm.h |   9 +++
-> >  mm/hmm.c            | 152 ++++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 161 insertions(+)
-> >
-> > diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> > index 4263f8fb32e5..fc3630d0bbfd 100644
-> > --- a/include/linux/hmm.h
-> > +++ b/include/linux/hmm.h
-> > @@ -502,6 +502,15 @@ int hmm_range_register(struct hmm_range *range,
-> >  void hmm_range_unregister(struct hmm_range *range);
-> >  long hmm_range_snapshot(struct hmm_range *range);
-> >  long hmm_range_fault(struct hmm_range *range, bool block);
-> > +long hmm_range_dma_map(struct hmm_range *range,
-> > +                      struct device *device,
-> > +                      dma_addr_t *daddrs,
-> > +                      bool block);
-> > +long hmm_range_dma_unmap(struct hmm_range *range,
-> > +                        struct vm_area_struct *vma,
-> > +                        struct device *device,
-> > +                        dma_addr_t *daddrs,
-> > +                        bool dirty);
-> >
-> >  /*
-> >   * HMM_RANGE_DEFAULT_TIMEOUT - default timeout (ms) when waiting for a range
-> > diff --git a/mm/hmm.c b/mm/hmm.c
-> > index 0a4ff31e9d7a..9cd68334a759 100644
-> > --- a/mm/hmm.c
-> > +++ b/mm/hmm.c
-> > @@ -30,6 +30,7 @@
-> >  #include <linux/hugetlb.h>
-> >  #include <linux/memremap.h>
-> >  #include <linux/jump_label.h>
-> > +#include <linux/dma-mapping.h>
-> >  #include <linux/mmu_notifier.h>
-> >  #include <linux/memory_hotplug.h>
-> >
-> > @@ -985,6 +986,157 @@ long hmm_range_fault(struct hmm_range *range, bool block)
-> >         return (hmm_vma_walk.last - range->start) >> PAGE_SHIFT;
-> >  }
-> >  EXPORT_SYMBOL(hmm_range_fault);
-> > +
-> > +/*
-> > + * hmm_range_dma_map() - hmm_range_fault() and dma map page all in one.
-> > + * @range: range being faulted
-> > + * @device: device against to dma map page to
-> > + * @daddrs: dma address of mapped pages
-> > + * @block: allow blocking on fault (if true it sleeps and do not drop mmap_sem)
-> > + * Returns: number of pages mapped on success, -EAGAIN if mmap_sem have been
-> > + *          drop and you need to try again, some other error value otherwise
-> > + *
-> > + * Note same usage pattern as hmm_range_fault().
-> > + */
-> > +long hmm_range_dma_map(struct hmm_range *range,
-> > +                      struct device *device,
-> > +                      dma_addr_t *daddrs,
-> > +                      bool block)
-> > +{
-> > +       unsigned long i, npages, mapped;
-> > +       long ret;
-> > +
-> > +       ret = hmm_range_fault(range, block);
-> > +       if (ret <= 0)
-> > +               return ret ? ret : -EBUSY;
-> > +
-> > +       npages = (range->end - range->start) >> PAGE_SHIFT;
-> > +       for (i = 0, mapped = 0; i < npages; ++i) {
-> > +               enum dma_data_direction dir = DMA_FROM_DEVICE;
-> > +               struct page *page;
-> > +
-> > +               /*
-> > +                * FIXME need to update DMA API to provide invalid DMA address
-> > +                * value instead of a function to test dma address value. This
-> > +                * would remove lot of dumb code duplicated accross many arch.
-> > +                *
-> > +                * For now setting it to 0 here is good enough as the pfns[]
-> > +                * value is what is use to check what is valid and what isn't.
-> > +                */
-> > +               daddrs[i] = 0;
-> > +
-> > +               page = hmm_pfn_to_page(range, range->pfns[i]);
-> > +               if (page == NULL)
-> > +                       continue;
-> > +
-> > +               /* Check if range is being invalidated */
-> > +               if (!range->valid) {
-> > +                       ret = -EBUSY;
-> > +                       goto unmap;
-> > +               }
-> > +
-> > +               /* If it is read and write than map bi-directional. */
-> > +               if (range->pfns[i] & range->values[HMM_PFN_WRITE])
-> > +                       dir = DMA_BIDIRECTIONAL;
-> > +
-> > +               daddrs[i] = dma_map_page(device, page, 0, PAGE_SIZE, dir);
-> > +               if (dma_mapping_error(device, daddrs[i])) {
-> > +                       ret = -EFAULT;
-> > +                       goto unmap;
-> > +               }
-> > +
-> > +               mapped++;
-> > +       }
-> > +
-> > +       return mapped;
-> > +
-> > +unmap:
-> > +       for (npages = i, i = 0; (i < npages) && mapped; ++i) {
-> > +               enum dma_data_direction dir = DMA_FROM_DEVICE;
-> > +               struct page *page;
-> > +
-> > +               page = hmm_pfn_to_page(range, range->pfns[i]);
-> > +               if (page == NULL)
-> > +                       continue;
-> > +
-> > +               if (dma_mapping_error(device, daddrs[i]))
-> > +                       continue;
-> > +
-> > +               /* If it is read and write than map bi-directional. */
-> > +               if (range->pfns[i] & range->values[HMM_PFN_WRITE])
-> > +                       dir = DMA_BIDIRECTIONAL;
-> > +
-> > +               dma_unmap_page(device, daddrs[i], PAGE_SIZE, dir);
-> > +               mapped--;
-> > +       }
-> > +
-> > +       return ret;
-> > +}
-> > +EXPORT_SYMBOL(hmm_range_dma_map);
-> > +
-> > +/*
-> > + * hmm_range_dma_unmap() - unmap range of that was map with hmm_range_dma_map()
-> > + * @range: range being unmapped
-> > + * @vma: the vma against which the range (optional)
-> > + * @device: device against which dma map was done
-> > + * @daddrs: dma address of mapped pages
-> > + * @dirty: dirty page if it had the write flag set
-> > + * Returns: number of page unmapped on success, -EINVAL otherwise
-> > + *
-> > + * Note that caller MUST abide by mmu notifier or use HMM mirror and abide
-> > + * to the sync_cpu_device_pagetables() callback so that it is safe here to
-> > + * call set_page_dirty(). Caller must also take appropriate locks to avoid
-> > + * concurrent mmu notifier or sync_cpu_device_pagetables() to make progress.
-> > + */
-> > +long hmm_range_dma_unmap(struct hmm_range *range,
-> > +                        struct vm_area_struct *vma,
-> > +                        struct device *device,
-> > +                        dma_addr_t *daddrs,
-> > +                        bool dirty)
-> > +{
-> > +       unsigned long i, npages;
-> > +       long cpages = 0;
-> > +
-> > +       /* Sanity check. */
-> > +       if (range->end <= range->start)
-> > +               return -EINVAL;
-> > +       if (!daddrs)
-> > +               return -EINVAL;
-> > +       if (!range->pfns)
-> > +               return -EINVAL;
-> > +
-> > +       npages = (range->end - range->start) >> PAGE_SHIFT;
-> > +       for (i = 0; i < npages; ++i) {
-> > +               enum dma_data_direction dir = DMA_FROM_DEVICE;
-> > +               struct page *page;
-> > +
-> > +               page = hmm_pfn_to_page(range, range->pfns[i]);
-> > +               if (page == NULL)
-> > +                       continue;
-> > +
-> > +               /* If it is read and write than map bi-directional. */
-> > +               if (range->pfns[i] & range->values[HMM_PFN_WRITE]) {
-> > +                       dir = DMA_BIDIRECTIONAL;
-> > +
-> > +                       /*
-> > +                        * See comments in function description on why it is
-> > +                        * safe here to call set_page_dirty()
-> > +                        */
-> > +                       if (dirty)
-> > +                               set_page_dirty(page);
-> > +               }
-> > +
-> > +               /* Unmap and clear pfns/dma address */
-> > +               dma_unmap_page(device, daddrs[i], PAGE_SIZE, dir);
-> > +               range->pfns[i] = range->values[HMM_PFN_NONE];
-> > +               /* FIXME see comments in hmm_vma_dma_map() */
-> > +               daddrs[i] = 0;
-> > +               cpages++;
-> > +       }
-> > +
-> > +       return cpages;
-> > +}
-> > +EXPORT_SYMBOL(hmm_range_dma_unmap);
-> >  #endif /* IS_ENABLED(CONFIG_HMM_MIRROR) */
-> >
-> >
-> > --
-> > 2.17.2
-> >
+Matthias
