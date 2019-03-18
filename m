@@ -2,129 +2,128 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63299C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E96EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F23A20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D50F20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:15:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RBKzrEJ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfCRROt (ORCPT
+        id S1727600AbfCRRPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:14:49 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:53824 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfCRROs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:14:48 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 0492E205CA;
-        Mon, 18 Mar 2019 18:14:46 +0100 (CET)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id D6534202A3;
-        Mon, 18 Mar 2019 18:14:45 +0100 (CET)
-Subject: [PATCH v4] PCI: qcom: Use default config space read function
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
- <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
- <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
- <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
- <7d3d788a-d6a3-a70b-adab-6c65771cacc4@free.fr>
- <3c76613e-e60d-94b8-dd6f-b8f4e1928263@linaro.org>
- <2f901228-52db-7661-8257-ca8fd2ff2a46@free.fr>
- <29664b43-535c-c4b1-a93d-18f49687f929@linaro.org>
- <b0e0dc68-4be9-1b0f-7528-fb7d143fea2b@free.fr>
- <9c5a7620-e9ed-82d6-0708-34fe33e39030@linaro.org>
- <29d33e81-fe8d-7fd9-843d-cc53ea6c9586@free.fr>
- <a53911a5-198a-5073-59cf-a61ba067bfd8@free.fr>
- <eb1d808e-00aa-5411-be03-2a1a8c8d655a@mm-sol.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <8cd24928-54d0-c320-b53f-08332d434477@free.fr>
-Date:   Mon, 18 Mar 2019 18:14:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 13:15:25 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46601 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbfCRRPY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:15:24 -0400
+Received: by mail-qk1-f194.google.com with SMTP id i5so10069922qkd.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:15:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dgaO6oHExQgqrDiT0LFdt8wcG/3033chQZa+K8pujnw=;
+        b=RBKzrEJ50lp/R82I+jL0n3zSiIRX9JrZRraTrb81XTxRtIzgwJP/U3LWTGRyULbD4n
+         VkxJcRaOUZ5Bv7k/h5Pso8esY/CFGb1OyZuR6RLwi4OxS0JdQcUidUvNBTrgbomXLjqO
+         9BitbD+3uzSiRu/GeVMzxSn6XO/KJPSfWNOToymVAj92i1F17UH1L8yHspbQ0sWpXqxh
+         PK4cQCFXR+TznumPvf/njCnOHd7+1oc51vKkAEFWHqkyvHY2+XkFRQp0fTXXJanAbatp
+         zf7Fs5UtWu987YtRjFLfgNuwg8OraLTTDTMDydRl4eChumTuSoV48HXaWMU+SlGAPwxu
+         JQJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dgaO6oHExQgqrDiT0LFdt8wcG/3033chQZa+K8pujnw=;
+        b=W5smvkc4kcxC4mzGP1LWShBWpvydbSMrsGmETBHGR5L3nm/SBM+8DNN0MJKtzcSeiX
+         Up8WWHpvrL7P1lzpUXS3koxQcIuFgiZqtsT7lP9elCv01GdTO66wPMim0aJYcfhSRxwO
+         qZX4Kw/esgq2zXp61kxMXb5nBKfCFBAkIFZpxEHlqY43/h2dHIVGrY2ltf9Eo9+s7GUH
+         GxDYJMFsFcN+7R/8jqEU90Kx+eHNZnhpNi992W1wAN9SSZ/m82d4CaG7fQ7ACB/Nyxjm
+         oE4vhnWHfw8WRjcf//H2WzMWE0rcIxsFO1jORhEjXVlOJYFVAEEeh1HWhIeUJI6XKery
+         z0Ng==
+X-Gm-Message-State: APjAAAUPSrK9WPxB4VFZvjP1K6FX9f/TER3V5qJ3etb/dr+IXP1RZ5Cs
+        1A9pSkkxBnIM5Po3O8lQI2SLFm0y
+X-Google-Smtp-Source: APXvYqw3VZT61bpyCZgr5xJmrzks4Cz21Yy6/11S7Oi66L66/ob945i2YhIgufPC33XgbtWkbJ+o1A==
+X-Received: by 2002:a37:6042:: with SMTP id u63mr12864969qkb.289.1552929323317;
+        Mon, 18 Mar 2019 10:15:23 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id w1sm6731574qtc.75.2019.03.18.10.15.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 10:15:22 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6EB634039C; Mon, 18 Mar 2019 14:15:18 -0300 (-03)
+Date:   Mon, 18 Mar 2019 14:15:18 -0300
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] perf tools: return errcode in
+ cs_etm__process_auxtrace_info
+Message-ID: <20190318171518.GH22548@kernel.org>
+References: <20190315022649.17848-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <eb1d808e-00aa-5411-be03-2a1a8c8d655a@mm-sol.com>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Mar 18 18:14:46 2019 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190315022649.17848-1-yuehaibing@huawei.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't need to fudge the device class in qcom_pcie_rd_own_conf()
-because dw_pcie_setup_rc() already does the right thing:
+Em Fri, Mar 15, 2019 at 10:26:49AM +0800, Yue Haibing escreveu:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> 'err' is set in err path, but it's not returned to callers.
+> Also fix a pass zero to PTR_ERR issue.
 
-	/* Program correct class for RC */
-	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
-
-However, the above has no effect on 8064, thus a fixup is required.
-
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
-Changes from v3 to v4: Define and use DEV_ID_8064 (not in include/linux/pci_ids.h because not shared)
----
- drivers/pci/controller/dwc/pcie-qcom.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index d185ea5fe996..712a83354f9d 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1129,25 +1129,8 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 	return ret;
- }
+Next time please submit two patches, one for the PTR_ERR and another for
+not throwing away the err = -E!INVAL and returning just -EINVAL, I'm
+doing it this time.
  
--static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
--				 u32 *val)
--{
--	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--
--	/* the device class is not reported correctly from the register */
--	if (where == PCI_CLASS_REVISION && size == 4) {
--		*val = readl(pci->dbi_base + PCI_CLASS_REVISION);
--		*val &= 0xff;	/* keep revision id */
--		*val |= PCI_CLASS_BRIDGE_PCI << 16;
--		return PCIBIOS_SUCCESSFUL;
--	}
--
--	return dw_pcie_read(pci->dbi_base + where, size, val);
--}
--
- static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
- 	.host_init = qcom_pcie_host_init,
--	.rd_own_conf = qcom_pcie_rd_own_conf,
- };
- 
- /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
-@@ -1309,6 +1292,14 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ }
- };
- 
-+#define DEV_ID_8064 0x0101
-+
-+static void qcom_fixup_class(struct pci_dev *dev)
-+{
-+	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, DEV_ID_8064, qcom_fixup_class);
-+
- static struct platform_driver qcom_pcie_driver = {
- 	.probe = qcom_pcie_probe,
- 	.driver = {
+ - Arnaldo
+
+> Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  tools/perf/util/cs-etm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 1108049..111f33c 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1908,7 +1908,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>  
+>  		/* Something went wrong, no need to continue */
+>  		if (!inode) {
+> -			err = PTR_ERR(inode);
+> +			err = -ENOMEM;
+>  			goto err_free_metadata;
+>  		}
+>  
+> @@ -2023,5 +2023,5 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>  err_free_hdr:
+>  	zfree(&hdr);
+>  
+> -	return -EINVAL;
+> +	return err;
+>  }
+> -- 
+> 2.7.0
+> 
+
 -- 
-2.17.1
+
+- Arnaldo
