@@ -2,148 +2,115 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329FAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E25C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A4B2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6273D2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u4mgO0BM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GsqNnHre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfCRBqp (ORCPT
+        id S1727698AbfCRBrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 21:46:45 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51706 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbfCRBqo (ORCPT
+        Sun, 17 Mar 2019 21:47:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49070 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbfCRBrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 21:46:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=02cVkekljglMdv9XutCx6KGjpwnrK1lV4p5gvuApm1s=; b=u4mgO0BMYzCruRkMt0W48unwMC
-        /L/qoukS8Ygujs5qMIWiyUKDL5iRpPnaJo41eEzL9JuC2FdJFtGxItdzSogh2II8kMD/n3chEbfJN
-        JHAd8migCduhhRWV5bVlswWAT83h2d743hvng+Tsbk2ECGVfA2F8/LjsCCSXB/lSQbgUQIgXc7GpY
-        9AibQmfE6vqIYXwmbiyIrsUTN5ZGWvq1nxJmRaB/h/KOd9cjaiY9jBD04TwVtG36xt6rzONBlh3kh
-        xa4Y7bq5sYt1JPms+rOSKhypB/w/1EoHKT7/oXxEHeQQiogtgPPOJnMOVZxac78UunpYJY1b8B6j7
-        zK6iKZEA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5hMQ-0006D3-MF; Mon, 18 Mar 2019 01:46:43 +0000
-Subject: Re: [PATCH 00/13] Convert vfs.txt to vfs.rst
-To:     "Tobin C. Harding" <tobin@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190313040919.6937-1-tobin@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <821449c9-e1f7-caa1-ff18-0cc1cc625596@infradead.org>
-Date:   Sun, 17 Mar 2019 18:46:40 -0700
+        Sun, 17 Mar 2019 21:47:10 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2I1ieuS033126;
+        Mon, 18 Mar 2019 01:46:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=W13ViHroDyNOovUGQfhK8z1oAhd0ebEkpUkZ7DZ2D70=;
+ b=GsqNnHrel18unqwfC9y2Bet3+EX8lP5NMzHe2jXLDUqFwez9Ffy5VGx+xD9RI9be2EK6
+ Nzn8ZKBYdsBHeT0SatwIbqfTJG9qw4UVp9iMDRjxQ0cBggXi6YrpYuNUrExRo9BHhwZu
+ Pnt5C3SKieQHUCx4qlzQ2l+GBhZv4jTWVOrh1C729bHGNaLBUMNXUAyqWXYQFO0LclYu
+ kLibDjxhqHJDRMDCvbbwx/BsuJmpsWNZeJ7JY9MbDWM314cKhU0jO46C3dXl524r5yQM
+ 7yUedWR6qnKwJvCf6kG0lzIUGaBocmSbOk7D17gr7ZAYKxHn+0tA1bqw0dSKUh+47PQq Zw== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2r8ssr3mn1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Mar 2019 01:46:32 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2I1kUNG026009
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Mar 2019 01:46:31 GMT
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2I1kRjV015488;
+        Mon, 18 Mar 2019 01:46:27 GMT
+Received: from [10.182.69.118] (/10.182.69.118)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 17 Mar 2019 18:46:27 -0700
+Subject: Re: [PATCH 2/8] blk-mq: change the method of iterating busy tags of a
+ request_queue
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "jsmart2021@gmail.com" <jsmart2021@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "josef@toxicpanda.com" <josef@toxicpanda.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "hare@suse.de" <hare@suse.de>,
+        "jthumshirn@suse.de" <jthumshirn@suse.de>,
+        "hch@lst.de" <hch@lst.de>, "sagi@grimberg.me" <sagi@grimberg.me>
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1552640264-26101-3-git-send-email-jianchao.w.wang@oracle.com>
+ <20190315161608.GB15153@localhost.localdomain>
+From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
+Message-ID: <e17f86f0-98ca-5c79-0d9b-43c628b72413@oracle.com>
+Date:   Mon, 18 Mar 2019 09:49:33 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190313040919.6937-1-tobin@kernel.org>
+In-Reply-To: <20190315161608.GB15153@localhost.localdomain>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9198 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903180012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/19 9:09 PM, Tobin C. Harding wrote:
-> Hi,
-> 
-> This set converts the VFS overview documentation to RST format.  I think
-> I'm slowly getting better at structuring these conversions to ease
-> review, if you disagree or you notice any way to further improve please
-> say so.
+Hi Keith
 
-Hi Tobin,
+On 3/16/19 12:16 AM, Keith Busch wrote:
+> There is still a window where the check may succeed, but the request is
+> being assigned to a completely different request_queue. The callback
+> then operates on a request it doesn't own.
+> 
+> Tag iteration from a driver can be safe only if the driver initiates a
+> freeze and quiesced all queues sharing the same tagset first. The nvme
+> driver does that, but I think there may need to be an additional grace
+> period to wait for the allocation's queue_enter to call queue_exit to
+> ensure the request is initialized through blk_mq_rq_ctx_init().
 
-What does this patch set apply to?  Maybe Jon's git tree?
+This patch is to avoid the use-after-free case in the comment.
+The helper interface is used in following cases,
+1. in flight request account
+   this case should not require so much accuracy
 
-I applied it to 5.1-rc1 with some forceful (minor) editing and ran
-'make htmldocs' successfully, so
+2. timeout check
+   a extra reference will be held there to avoid the request recycle
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+3. if it is used by driver, it should be enough that quiesce the request_queue
+   the driver usually wants to handle the in-flight ones, quiesce request_queue
+   could ensure all of tasks quit the hctx_lock and no one issue request any
+   more.
 
-although there is at least one new field in struct file_operations: iopoll.
-
-cheers.
-
-> Patch set introduces no new warnings/errors to the html docs build
-> 
->       $ make htmldocs 2> ../docs-pre-vfs.stderr	
-> 
-> Apply patch set
-> 
->       $ make cleandocs
->       $ make htmldocs 2> ../docs-post-vfs.stderr
->       $ diff ../docs-pre-vfs.stderr ../docs-post-vfs.stderr
-> 
-> 
-> Patch 1-4 - Whitespace fixes.
-> Patch 5 - Adds the document title adornments (above and below)
-> Patch 6 - Adds a SPDX license identifier
-> Patch 7 - Fixes some custom indentation at the top of the file that will
->     	  cause Sphinx to warn when we switch to .rst
-> Patch 8 - Converts custom list format to use RST formatted lists, this
->           is in preparation for switching to .rst 
-> Patch 9 - Adds '.. code-block:: c' and fixes indentation of code
-> 	  blocks.  We rename the file to .rst in this patch (introducing
-> 	  some new warnings).
-> Patch 10 - Adds back ticks to all the list items.  This is in
-> 	   preparation for fixing the indentation in the next patch.
-> 	   This was found to help when reading both plain text and HTML.
-> Patch 11 - Cleans up the lists, indentation and missing periods.  This
-> 	   was kept separate to assist review.  This patch is benign,
-> 	   the less meticulous reviewer could safely skip over this one
-> 	   quickly (this was the intention of separating these changes).
-> Patch 12 - Fixes a few minor grammar mistakes I notice while reading the
-> 	   file, I'm taking bonus points for actually reading every word
-> 	   of the file and not just trying to haphazardly do the
-> 	   conversion like I have previously done :)
-> Patch 13 - Fixes two remaining Sphinx warnings.
-> 
-> If/when this goes in perhaps I, or someone else, will update the content
-> to document a newer kernel version.
-> 
-> 
-> thanks,
-> Tobin.
-> 
-> 
-> Tobin C. Harding (13):
->   docs: filesystems: vfs: Remove space before tab
->   docs: filesystems: vfs: Use uniform space after period.
->   docs: filesystems: vfs: Use 72 character column width
->   docs: filesystems: vfs: Use uniform spacing around headings
->   docs: filesystems: vfs: Use correct initial heading
->   docs: filesystems: vfs: Use SPDX identifier
->   docs: filesystems: vfs: Fix pre-amble indentation
->   docs: filesystems: vfs: Use list character for lists
->   docs: filesystems: vfs: Add code-block and txt->RST
->   docs: filesystems: vfs: Use ticks for listed items
->   docs: filesystems: vfs: Clean up lists
->   docs: filesystems: vfs: Do minor grammar fixes
->   docs: filesystems: vfs: Use backticks to guard star
-> 
->  Documentation/filesystems/index.rst |    1 +
->  Documentation/filesystems/vfs.rst   | 1279 +++++++++++++++++++++++++++
->  Documentation/filesystems/vfs.txt   | 1261 --------------------------
->  3 files changed, 1280 insertions(+), 1261 deletions(-)
->  create mode 100644 Documentation/filesystems/vfs.rst
->  delete mode 100644 Documentation/filesystems/vfs.txt
-> 
-
-
--- 
-~Randy
+Thanks
+Jianchao
