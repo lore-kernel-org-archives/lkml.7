@@ -2,138 +2,133 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509E6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543A9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 04:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F2E20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5572085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 04:09:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vv2+JK0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfCRDgF (ORCPT
+        id S1726335AbfCREJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 23:36:05 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:42503 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbfCRDgF (ORCPT
+        Mon, 18 Mar 2019 00:09:27 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36135 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbfCREJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 23:36:05 -0400
-Received: by mail-io1-f71.google.com with SMTP id i1so12723439ioq.9
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 20:36:05 -0700 (PDT)
+        Mon, 18 Mar 2019 00:09:27 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p10so3542095pff.3
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 21:09:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i5EKXBALYEwdk9E9LRVZlQ6e7qbUkPvzI+TKapn/pPc=;
+        b=Vv2+JK0g+Q3XAT84IcZLW9ZhWuuBF7Ger9uIs5AEOIUsO6v0XTJPss7XXf+1HMuJzB
+         Ny/PFZ2ubwiSyCl06zztNTJEbRwBlBt59wir15qLkoXTQDZmkDJseV8rY+a9+dh5hIM1
+         lDqIip/t31OoVJNjIrBYVefSCa73QXBBCxYQU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=morH9Kcq7W+GD/BZ5/IcndI6yLmG52mfSNJ6mTI7vK4=;
-        b=s0nM3NcIiIhXWBDmpkOv1WGURnroUUrULxR2/LBqHuh8pMtCT7ZNSHkVlP7HJw9pk/
-         2l7atFZiXehELvA72D3TxbIUsoq/vYtYK+p2yDiMIpvzvBHPig9W9O6cx2tZz8TYrX51
-         ZebiGsvqMZKBS+eGpQKjSew+nSJPCOmyaKhHbQeGe59gRG4N+W3qPt19oQf0/FcHGkbr
-         66n4BkzcvHZoWbJCwlvRQRio1PcYkXCfZVZKHJGyGWRrzO7HYK8JKRa1nTKDELzJZYAY
-         NEvVCs+UvDt+xq5L4KHWUnBwg3MiaXuzBncj+VCMpqAq35BomYPoi1cz1VQGJOoxE0GH
-         f5rQ==
-X-Gm-Message-State: APjAAAW8W8bCm1Ost1mYkkZL3XcE93pN/hFqN7hRH90xrK5BoVLS0yTl
-        WwmpVyfe0xGpa2gFNTxIU52etQT2MktXUm1MCZmqWccDrvzH
-X-Google-Smtp-Source: APXvYqx57rZSIUj0MtRaGCTthqH2HN/Nyhaz4ehwiu5PtmvBW3yE6dYMMBGi8ec+dVwS5bdSr6ZwAgUrj+D8i7mgTNvjD3ozsqTw
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i5EKXBALYEwdk9E9LRVZlQ6e7qbUkPvzI+TKapn/pPc=;
+        b=nEYTd077FGwNfvmWNNak2EJlx5LCBstwPPkXdYtH3SHjvchGchC586Bs6FNtvIcGuh
+         ie2fXDHE6Ua2jLp1R/34r2C+gAaQP519ZDXi7VxGB5+HoBmua0E99ukOAwubORwyQ2aS
+         50E828QdLb9Y+pfoRJsmq3pwoUajqARH1rcO0NBPcZd35JdD0Mjt0vRPNv99DFCJeQLV
+         IgISkoXC4tuQUQysZuRL2Im/FMXgnU+D+YApaMIAeMersltLpFZZRwpWxoVAgfvsMJ7p
+         IwHv+9flH0bi3C5EU80ki2jlOMun75WCjGp4koDo2mzBJmk7mbxzT1eflDjMQrcbuVwI
+         v2Ig==
+X-Gm-Message-State: APjAAAXDdSqNuBiIopG1PW8G+rsf035xj27VOAFoonc9lN5eLV9/6Wzs
+        w4XeaCMNFyPuZfgICLreLK3RAw==
+X-Google-Smtp-Source: APXvYqzDJRpIyEqsZICxFfV0bdzLRJ6o67alJ+dyAvsWtaokWT6OL1N3yfo3KGLp5baYHDZFa7FbJQ==
+X-Received: by 2002:aa7:8186:: with SMTP id g6mr17209005pfi.138.1552882166442;
+        Sun, 17 Mar 2019 21:09:26 -0700 (PDT)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id k16sm5859126pfa.17.2019.03.17.21.09.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 17 Mar 2019 21:09:25 -0700 (PDT)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpu/drm: mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
+Date:   Mon, 18 Mar 2019 12:09:15 +0800
+Message-Id: <20190318040915.101218-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a24:78c:: with SMTP id f134mr9043752itf.30.1552880164713;
- Sun, 17 Mar 2019 20:36:04 -0700 (PDT)
-Date:   Sun, 17 Mar 2019 20:36:04 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000098bf7d05845616d7@google.com>
-Subject: general protection fault in loop_validate_file (2)
-From:   syzbot <syzbot+9bdc1adc1c55e7fe765b@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which needs
+ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is called,
+ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called after last
+irq, it will timeout with this message: "vblank wait timed out on crtc 0". This
+happens sometimes when turning off the screen.
 
-syzbot found the following crash on:
+In drm_atomic_helper.c#disable_outputs(),
+the calling sequence when turning off the screen is:
 
-HEAD commit:    9c7dc824 Merge tag '5.1-rc-smb3' of git://git.samba.org/sf..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=148a35fb200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7e1aaa1cfbfe1abf
-dashboard link: https://syzkaller.appspot.com/bug?extid=9bdc1adc1c55e7fe765b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+1. mtk_dsi_encoder_disable()
+     --> mtk_output_dsi_disable()
+       --> mtk_dsi_stop();  // sometimes make vblank timeout in atomic_disable
+         --> mtk_dsi_poweroff();
+2. mtk_drm_crtc_atomic_disable()
+     --> drm_crtc_wait_one_vblank();
+     ...
+       --> mtk_dsi_ddp_stop()
+         --> mtk_dsi_poweroff();
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Change to make mtk_dsi_stop() called in mtk_dsi_ddp_stop() instead of
+mtk_output_dsi_disable().
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9bdc1adc1c55e7fe765b@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 9499 Comm: syz-executor.4 Not tainted 5.0.0+ #25
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:loop_validate_file+0x23e/0x310 drivers/block/loop.c:652
-Code: 00 48 89 f8 48 c1 e8 03 42 80 3c 38 00 0f 85 d4 00 00 00 4d 8b a4 24  
-f0 00 00 00 49 8d bc 24 b8 01 00 00 48 89 f8 48 c1 e8 03 <42> 80 3c 38 00  
-0f 85 a8 00 00 00 4d 8b a4 24 b8 01 00 00 4c 89 e0
-RSP: 0018:ffff88804d2bfb18 EFLAGS: 00010202
-RAX: 0000000000000037 RBX: ffff888095ffa3d8 RCX: ffffc9000e657000
-RDX: 0000000000000077 RSI: ffffffff83e754ed RDI: 00000000000001b8
-RBP: ffff88804d2bfb40 R08: ffff88808eab41c0 R09: fffffbfff11d981d
-R10: ffff88804d2bfb40 R11: ffffffff88ecc0e7 R12: 0000000000000000
-R13: 0000000000000002 R14: ffff888095ffa800 R15: dffffc0000000000
-FS:  00007f04b0c91700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000625208 CR3: 00000000a7af8000 CR4: 00000000001406e0
-Call Trace:
-  loop_set_fd drivers/block/loop.c:930 [inline]
-  lo_ioctl+0x99d/0x2150 drivers/block/loop.c:1542
-  __blkdev_driver_ioctl block/ioctl.c:303 [inline]
-  blkdev_ioctl+0xee8/0x1c40 block/ioctl.c:605
-  block_ioctl+0xee/0x130 fs/block_dev.c:1931
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458079
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f04b0c90c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458079
-RDX: 0000000000000004 RSI: 0000000000004c00 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f04b0c916d4
-R13: 00000000004c1252 R14: 00000000004d3160 R15: 00000000ffffffff
-Modules linked in:
----[ end trace 81b29486bae7280a ]---
-RIP: 0010:loop_validate_file+0x23e/0x310 drivers/block/loop.c:652
-Code: 00 48 89 f8 48 c1 e8 03 42 80 3c 38 00 0f 85 d4 00 00 00 4d 8b a4 24  
-f0 00 00 00 49 8d bc 24 b8 01 00 00 48 89 f8 48 c1 e8 03 <42> 80 3c 38 00  
-0f 85 a8 00 00 00 4d 8b a4 24 b8 01 00 00 4c 89 e0
-RSP: 0018:ffff88804d2bfb18 EFLAGS: 00010202
-RAX: 0000000000000037 RBX: ffff888095ffa3d8 RCX: ffffc9000e657000
-RDX: 0000000000000077 RSI: ffffffff83e754ed RDI: 00000000000001b8
-RBP: ffff88804d2bfb40 R08: ffff88808eab41c0 R09: fffffbfff11d981d
-R10: ffff88804d2bfb40 R11: ffffffff88ecc0e7 R12: 0000000000000000
-R13: 0000000000000002 R14: ffff888095ffa800 R15: dffffc0000000000
-FS:  00007f04b0c91700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000625208 CR3: 00000000a7af8000 CR4: 00000000001406e0
-
-
+Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
-syzbot.
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index b00eb2d2e086..cdd9637dd517 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -696,7 +696,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+ 		}
+ 	}
+ 
+-	mtk_dsi_stop(dsi);
+ 	mtk_dsi_poweroff(dsi);
+ 
+ 	dsi->enabled = false;
+@@ -857,6 +856,7 @@ static void mtk_dsi_ddp_stop(struct mtk_ddp_comp *comp)
+ {
+ 	struct mtk_dsi *dsi = container_of(comp, struct mtk_dsi, ddp_comp);
+ 
++	mtk_dsi_stop(dsi);
+ 	mtk_dsi_poweroff(dsi);
+ }
+ 
+@@ -1178,6 +1178,8 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+ 	struct mtk_dsi *dsi = platform_get_drvdata(pdev);
+ 
+ 	mtk_output_dsi_disable(dsi);
++	mtk_dsi_stop(dsi);
++	mtk_dsi_poweroff(dsi);
+ 	component_del(&pdev->dev, &mtk_dsi_component_ops);
+ 
+ 	return 0;
+-- 
+2.20.1
+
