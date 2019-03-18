@@ -2,160 +2,243 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25653C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05395C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9BE820989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SqJlOsEt"
+	by mail.kernel.org (Postfix) with ESMTP id C20C52070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfCRRhS (ORCPT
+        id S1727122AbfCRRjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:37:18 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60694 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfCRRhR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:37:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8aD9+1W3V5mx6TORDEEgq4CgOe+FDRE1sNncKkZvLXM=; b=SqJlOsEtqkNQbSIzFikfwRG7J
-        NaNIRHTGFD3ED4ADeT3AJ3WeuFiEqViIf6/WufbHcpu9oMEvT+sjHT8fAWPAG5nUUxRWge4dfNs0S
-        b3PF4oYhKkeTHI4OC1AT30PyGcrD4n1Aiv8Qdtj4obphbl/EToE7WmgNmP65voKeNaTbR1+wToKFD
-        8YeEzHzaYdxPWTgFkgBRdXNS3mjk8q1CrwnFl88rTc2QdcZto2mt85tLG/+kQb3Feqimp6KIhldlO
-        lclNjzJJtFzcy1S9o+wOAhj5HqX+0kdp8KSFfi1tBjQIvVKoIax1wpeGkHXQz+rOsI5J7+EtyAMb9
-        MdMyL2zCA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5wC3-00070o-QM; Mon, 18 Mar 2019 17:37:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6A0402030E118; Mon, 18 Mar 2019 18:36:57 +0100 (CET)
-Date:   Mon, 18 Mar 2019 18:36:57 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 01/25] x86: Make SMAP 64-bit only
-Message-ID: <20190318173657.GV6058@hirez.programming.kicks-ass.net>
-References: <20190318153840.906404905@infradead.org>
- <20190318155139.963285969@infradead.org>
- <CAHk-=wgYUTJ33ANOF5=5AKafzgqCi4Xe9iRCdgUV4s05HrH_Pw@mail.gmail.com>
+        Mon, 18 Mar 2019 13:39:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:63160 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726777AbfCRRjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:39:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:39:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="153452262"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Mar 2019 10:39:53 -0700
+Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
+        by linux.intel.com (Postfix) with ESMTP id 1D44358052E;
+        Mon, 18 Mar 2019 10:39:50 -0700 (PDT)
+Subject: [PATCH v10 01/12] feature: implement libzstd check, LIBZSTD_DIR and
+ NO_LIBZSTD defines
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <9b4cd8b0-10a3-1f1e-8d6b-5922a7ca216b@linux.intel.com>
+Date:   Mon, 18 Mar 2019 20:39:49 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgYUTJ33ANOF5=5AKafzgqCi4Xe9iRCdgUV4s05HrH_Pw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 09:58:20AM -0700, Linus Torvalds wrote:
-> On Mon, Mar 18, 2019 at 8:54 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > We rely on objtool to verify AC=1 doesn't escape. However there is no
-> > objtool support for x86_32, and thus we cannot guarantee the
-> > correctness of the 32bit code.
-> 
-> Absolutely not.
-> 
-> This is just crazy. We had working SMAP long before objtool, and we
-> will have it regardless of objtool.
 
-Well, 'working', because as shown with this work, there's been a number
-of bugs around this.
+Implement libzstd feature check, NO_LIBZSTD and LIBZSTD_DIR defines
+to override Zstd library sources or disable the feature from the
+command line:
 
-Anyway, since you mentioned it, I checked, about 16 months: Broadwell
-was Oct'14, objtool was Feb'16.
+  $ make -C tools/perf LIBZSTD_DIR=/path/to/zstd/sources/ clean all
+  $ make -C tools/perf NO_LIBZSTD=1 clean all
 
-> This is like saying "ok, I don't have an oxygen sensor, so I don't
-> know that the air I'm breathing is sufficient to maintain life, so
-> I'll just stop breathing".
+Auto detection feature status is reported just before compilation starts.
+If your system has some version of the zstd library preinstalled then
+the build system finds and uses it during the build.
 
-With PTI, booting a 32bit kernel on a Broadwell or later will already
-complain about it being sub-optimal for missing out on PCID. But sure;
-if you want to enable this..
+If you still prefer to compile with some other version of zstd library
+you have capability to refer the compilation to that version using
+LIBZSTD_DIR define.
 
-> So no way in hell do we make SMAP go away on 32-bit for no sane reason
-> what-so-ever.
-
-then I'd sleep much better if we make 32bit context switch EFLAGS.
-Because, yes, x86_64 objtool validates a lot of the x86_32 code too, but
-unless we have 100% coverage, there's always the chance an AC=1 escapes.
-
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- arch/x86/entry/entry_32.S        | 2 ++
- arch/x86/include/asm/switch_to.h | 1 +
- arch/x86/kernel/process_32.c     | 5 +++++
- 3 files changed, 8 insertions(+)
+ tools/build/Makefile.feature       |  6 ++++--
+ tools/build/feature/Makefile       |  6 +++++-
+ tools/build/feature/test-all.c     |  5 +++++
+ tools/build/feature/test-libzstd.c | 12 ++++++++++++
+ tools/perf/Makefile.config         | 20 ++++++++++++++++++++
+ tools/perf/Makefile.perf           |  3 +++
+ tools/perf/builtin-version.c       |  2 ++
+ 7 files changed, 51 insertions(+), 3 deletions(-)
+ create mode 100644 tools/build/feature/test-libzstd.c
 
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index d309f30cf7af..5fc76b755510 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -650,6 +650,7 @@ ENTRY(__switch_to_asm)
- 	pushl	%ebx
- 	pushl	%edi
- 	pushl	%esi
-+	pushfl
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 61e46d54a67c..adf791cbd726 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -66,7 +66,8 @@ FEATURE_TESTS_BASIC :=                  \
+         sched_getcpu			\
+         sdt				\
+         setns				\
+-        libaio
++        libaio				\
++        libzstd
  
- 	/* switch stack */
- 	movl	%esp, TASK_threadsp(%eax)
-@@ -672,6 +673,7 @@ ENTRY(__switch_to_asm)
- #endif
+ # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+ # of all feature tests
+@@ -118,7 +119,8 @@ FEATURE_DISPLAY ?=              \
+          lzma                   \
+          get_cpuid              \
+          bpf			\
+-         libaio
++         libaio			\
++         libzstd
  
- 	/* restore callee-saved registers */
-+	popfl
- 	popl	%esi
- 	popl	%edi
- 	popl	%ebx
-diff --git a/arch/x86/include/asm/switch_to.h b/arch/x86/include/asm/switch_to.h
-index 7cf1a270d891..18a4b6890fa8 100644
---- a/arch/x86/include/asm/switch_to.h
-+++ b/arch/x86/include/asm/switch_to.h
-@@ -46,6 +46,7 @@ struct inactive_task_frame {
- 	unsigned long r13;
- 	unsigned long r12;
- #else
-+	unsigned long flags;
- 	unsigned long si;
- 	unsigned long di;
- #endif
-diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
-index e471d8e6f0b2..d28e9a74b736 100644
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -127,6 +127,11 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
- 	struct task_struct *tsk;
- 	int err;
+ # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
+ # If in the future we need per-feature checks/flags for features not
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 7ceb4441b627..4b8244ee65ce 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -62,7 +62,8 @@ FILES=                                          \
+          test-clang.bin				\
+          test-llvm.bin				\
+          test-llvm-version.bin			\
+-         test-libaio.bin
++         test-libaio.bin			\
++         test-libzstd.bin
  
-+	/*
-+	 * We start a new task with the RESET value of EFLAGS, in particular we
-+	 * context switch with IRQs disabled.
-+	 */
-+	frame->flags = X86_EFLAGS_FIXED;
- 	frame->bp = 0;
- 	frame->ret_addr = (unsigned long) ret_from_fork;
- 	p->thread.sp = (unsigned long) fork_frame;
+ FILES := $(addprefix $(OUTPUT),$(FILES))
+ 
+@@ -301,6 +302,9 @@ $(OUTPUT)test-clang.bin:
+ $(OUTPUT)test-libaio.bin:
+ 	$(BUILD) -lrt
+ 
++$(OUTPUT)test-libzstd.bin:
++	$(BUILD) -lzstd
++
+ ###############################
+ 
+ clean:
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index e903b86b742f..b0dda7db2a17 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -178,6 +178,10 @@
+ # include "test-reallocarray.c"
+ #undef main
+ 
++#define main main_test_zstd
++# include "test-libzstd.c"
++#undef main
++
+ int main(int argc, char *argv[])
+ {
+ 	main_test_libpython();
+@@ -219,6 +223,7 @@ int main(int argc, char *argv[])
+ 	main_test_setns();
+ 	main_test_libaio();
+ 	main_test_reallocarray();
++	main_test_libzstd();
+ 
+ 	return 0;
+ }
+diff --git a/tools/build/feature/test-libzstd.c b/tools/build/feature/test-libzstd.c
+new file mode 100644
+index 000000000000..55268c01b84d
+--- /dev/null
++++ b/tools/build/feature/test-libzstd.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <zstd.h>
++
++int main(void)
++{
++	ZSTD_CStream	*cstream;
++
++	cstream = ZSTD_createCStream();
++	ZSTD_freeCStream(cstream);
++
++	return 0;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 0f11d5891301..4949bdb16a66 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -152,6 +152,13 @@ endif
+ FEATURE_CHECK_CFLAGS-libbabeltrace := $(LIBBABELTRACE_CFLAGS)
+ FEATURE_CHECK_LDFLAGS-libbabeltrace := $(LIBBABELTRACE_LDFLAGS) -lbabeltrace-ctf
+ 
++ifdef LIBZSTD_DIR
++  LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
++  LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
++endif
++FEATURE_CHECK_CFLAGS-libzstd := $(LIBZSTD_CFLAGS)
++FEATURE_CHECK_LDFLAGS-libzstd := $(LIBZSTD_LDFLAGS)
++
+ FEATURE_CHECK_CFLAGS-bpf = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
+ # include ARCH specific config
+ -include $(src-perf)/arch/$(SRCARCH)/Makefile
+@@ -782,6 +789,19 @@ ifndef NO_LZMA
+   endif
+ endif
+ 
++ifndef NO_LIBZSTD
++  ifeq ($(feature-libzstd), 1)
++    CFLAGS += -DHAVE_ZSTD_SUPPORT
++    CFLAGS += $(LIBZSTD_CFLAGS)
++    LDFLAGS += $(LIBZSTD_LDFLAGS)
++    EXTLIBS += -lzstd
++    $(call detected,CONFIG_ZSTD)
++  else
++    msg := $(warning No libzstd found, disables trace compression, please install libzstd-dev[el] and/or set LIBZSTD_DIR);
++    NO_LIBZSTD := 1
++  endif
++endif
++
+ ifndef NO_BACKTRACE
+   ifeq ($(feature-backtrace), 1)
+     CFLAGS += -DHAVE_BACKTRACE_SUPPORT
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 01f7555fd933..06b927ee6ee3 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -108,6 +108,9 @@ include ../scripts/utilities.mak
+ # streaming for record mode. Currently Posix AIO trace streaming is
+ # supported only when linking with glibc.
+ #
++# Define NO_LIBZSTD if you do not want support of Zstandard based runtime
++# trace compression in record mode.
++#
+ 
+ # As per kernel Makefile, avoid funny character set dependencies
+ unexport LC_ALL
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index 50df168be326..f470144d1a70 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -78,6 +78,8 @@ static void library_status(void)
+ 	STATUS(HAVE_LZMA_SUPPORT, lzma);
+ 	STATUS(HAVE_AUXTRACE_SUPPORT, get_cpuid);
+ 	STATUS(HAVE_LIBBPF_SUPPORT, bpf);
++	STATUS(HAVE_AIO_SUPPORT, aio);
++	STATUS(HAVE_ZSTD_SUPPORT, zstd);
+ }
+ 
+ int cmd_version(int argc, const char **argv)
+-- 
+2.20.1
+
