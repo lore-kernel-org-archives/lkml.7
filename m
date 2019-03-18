@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236C2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AE7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFDF217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6303A20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WALvay8T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsRWPL6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfCRI5z (ORCPT
+        id S1727217AbfCRI54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 04:57:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42831 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbfCRI5x (ORCPT
+        Mon, 18 Mar 2019 04:57:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45099 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727169AbfCRI5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 04:57:53 -0400
-Received: by mail-pg1-f195.google.com with SMTP id b2so10894430pgl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 01:57:52 -0700 (PDT)
+        Mon, 18 Mar 2019 04:57:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y3so1690981pgk.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 01:57:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=a28sVP+44q7iWCcjuw3hwp2P++bKgYYvw2MgXjP7Hz8=;
-        b=WALvay8TF29d6RStO9aJvOGN2gEAf/t1teJIDI5Cdg4+cW8zUg2wf2O4v1I51xezRp
-         qEOEUNwjk76d+E4Hx4zbJtex8OYGxhq1+fC+IN5nvArrlD24ZrGaiMCTkWI1VkJNqPBW
-         7N7nBqxpG203906AM+NYbwsNKOh4CtXt2z7FH8nHXV51fluhr4kV8HV5D35x+/4mBj9A
-         ECIBGf4lLQW3JrWQNbVVH7uFq2mQHYbaHYjj+9XVwbydQbfcnh7vObRf4hDnFOthY8m8
-         p6SG2VbWjOvoZ+AC/F2+ubyn80iAoy9GBijZULUuw/8pWc43zqDpc3CRblLB2dhXCAqG
-         vl8w==
+        bh=3lried6XaOFyWkZmq/CgDO0B4r8ya+eoSN9YUAuR9FI=;
+        b=WsRWPL6+NI6kMq6/xXk+lseVkZjqMPPlm7wk8GcBEpTFm9fJj6hgTUXDMeFXX5lhlQ
+         jWHziyRaODcxvT+D9t/VWwDw/nvcYlHDcJLljYyusVv9o/58grVQNEaK9cb1AQ5KsDAT
+         782lf91+IuAJKEMhrpDYKlBc2scb0ADn/UItco439jGtG40+SrPrcsGxForhboOHSnuM
+         7kYVNzNonkaONFj4GURDOTjC0T4xbkpkAkglQZ1CqxjCvyxkqdzsxHrs/iLxvPjszkyG
+         Mw1BuPxSkiR0Q8YBQpwxKCP5W9c6iAqeTnYhTRz05fTuaQ4EzuUFJKSRrXaXN4lIgxuC
+         Rmfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=a28sVP+44q7iWCcjuw3hwp2P++bKgYYvw2MgXjP7Hz8=;
-        b=ZBH0MaVgdwkO/ckQJ1O9YHIq15VDIPNPWDJpDVxg+teTWWN26JfJ9jmWhGduOoJLh+
-         y4kYnGy/uf8zq2IcucEyAGzCK3QgE56N1sP74KIZ7Rsu4u2s5JPW9Mn5l5zNox9C5/Ts
-         Og594mzHWh44QbV0itum2q+uqTFAH1+RJdXauXTfHnD7nAcW5mdv5ca4/Pv/uV5Ngilc
-         VRqawcpp3GjSZuhMaTLsJmhWMXdwQQgFxp4Gei66MFBaEGkEnor1u62LON2mvC1rvlOb
-         v4vCvgt5B2DllOX5pHExlXeoT1Hyz9Au9TEZLpeAoozFi1xjYsfdXdSVm2Y+iDpcL5Ru
-         mi7A==
-X-Gm-Message-State: APjAAAXfl0uAnM7c/7ntX9gp6n5g7G8v2dWnhGtUmEXTviFqxJzuCDKV
-        fc+Bmh5lVFRq2A1hgAdxZB0=
-X-Google-Smtp-Source: APXvYqxP9hi4PR/pPgF+fZ9v1QeBzUnkx8fw/aa7I2yvenOw8h9kS9JD8QiVj/GwglbvIThETLpFmg==
-X-Received: by 2002:a65:410a:: with SMTP id w10mr16289028pgp.206.1552899471948;
-        Mon, 18 Mar 2019 01:57:51 -0700 (PDT)
+        bh=3lried6XaOFyWkZmq/CgDO0B4r8ya+eoSN9YUAuR9FI=;
+        b=qvCwkX+6smYckgSrzMVh3DNFX6YlN72+Mdj1cQrovXJyukS2LB/qMpbZOLw8B2TTvH
+         JX+xi+MzIeQI88apKd/MpWHURTiuNSrAGv/g8YJOpg/ZJTOFLpu+zPuq8sD0ZrfrvzJn
+         hUlWFnzditF/r3X8f2dbBebLkNKfUFnLeGw5PsiDGFiIFsnp09tpy9AUNF1ekGWzW8gF
+         dY9+wPyYEqA9vUpcMEozMACU7alXGVXBxg/l8QxTeZ3AKprMS7v+x2YKd8G46Ka3MeS/
+         vCHjIYeznvBNzWEwtzZ6/adPg5gCje76hvnLReKuLFMGobiCcJah/668xXjRavs+h5gE
+         QaLQ==
+X-Gm-Message-State: APjAAAXioAJMaQHJrFXNlsUcQsZw+67cyoelXTl1ILon3qCHrmpl86hv
+        ozlRKGdEDVjgS67Zh4/fmpU=
+X-Google-Smtp-Source: APXvYqwKAl+M8VP4qpLJRNzWmfIYMOw87eUMkA+wXeZOv5cNHMCFhhajS/4v85ab22O9hJS1I3kBnQ==
+X-Received: by 2002:aa7:8012:: with SMTP id j18mr18605947pfi.42.1552899474848;
+        Mon, 18 Mar 2019 01:57:54 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id k8sm11147024pgq.37.2019.03.18.01.57.49
+        by smtp.gmail.com with ESMTPSA id k8sm11147024pgq.37.2019.03.18.01.57.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 01:57:51 -0700 (PDT)
+        Mon, 18 Mar 2019 01:57:54 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com,
         linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v2 03/19] locking/lockdep: Adjust lock usage bit character checks
-Date:   Mon, 18 Mar 2019 16:57:17 +0800
-Message-Id: <20190318085733.3143-4-duyuyang@gmail.com>
+Subject: [PATCH v2 04/19] locking/lockdep: Remove useless conditional macro
+Date:   Mon, 18 Mar 2019 16:57:18 +0800
+Message-Id: <20190318085733.3143-5-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 In-Reply-To: <20190318085733.3143-1-duyuyang@gmail.com>
 References: <20190318085733.3143-1-duyuyang@gmail.com>
@@ -70,66 +70,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lock usage bit characters are defined and determined with tricks. Use a
-macro and add some explanation to make it a bit clearer. Then adjust the
-logic to check the usage, which optimizes the code a bit.
-
-No functional change.
+Since #defined(CONFIG_PROVE_LOCKING) is used in the scope of #ifdef
+CONFIG_PROVE_LOCKING, it can be removed.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c           | 21 ++++++++++++++++-----
- kernel/locking/lockdep_internals.h |  1 +
- 2 files changed, 17 insertions(+), 5 deletions(-)
+ kernel/locking/lockdep.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 1c5e947..d5b66cf 100644
+index d5b66cf..dea495b 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -514,15 +514,26 @@ static inline unsigned long lock_flag(enum lock_usage_bit bit)
- 
- static char get_usage_char(struct lock_class *class, enum lock_usage_bit bit)
- {
-+	/*
-+	 * The usage character defaults to '.' (i.e., irqs disabled and not in
-+	 * irq context), which is the safest usage category.
-+	 */
- 	char c = '.';
- 
--	if (class->usage_mask & lock_flag(bit + 2))
-+	/*
-+	 * The order of the following usage checks matters, which will
-+	 * result in the outcome character as follows:
-+	 *
-+	 * - '+': irq is enabled and not in irq context
-+	 * - '-': in irq context and irq is disabled
-+	 * - '?': in irq context and irq is enabled
-+	 */
-+	if (class->usage_mask & lock_flag(bit + LOCK_USAGE_TO_ENABLED_STEP)) {
- 		c = '+';
--	if (class->usage_mask & lock_flag(bit)) {
--		c = '-';
--		if (class->usage_mask & lock_flag(bit + 2))
-+		if (class->usage_mask & lock_flag(bit))
- 			c = '?';
--	}
-+	} else if (class->usage_mask & lock_flag(bit))
-+		c = '-';
- 
- 	return c;
+@@ -1677,7 +1677,7 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	return result;
  }
-diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index d4c1974..2fd31d5 100644
---- a/kernel/locking/lockdep_internals.h
-+++ b/kernel/locking/lockdep_internals.h
-@@ -25,6 +25,7 @@ enum lock_usage_bit {
- #define LOCK_USAGE_READ_MASK 1
- #define LOCK_USAGE_DIR_MASK  2
- #define LOCK_USAGE_STATE_MASK (~(LOCK_USAGE_READ_MASK | LOCK_USAGE_DIR_MASK))
-+#define LOCK_USAGE_TO_ENABLED_STEP 2
+ 
+-#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
++#if defined(CONFIG_TRACE_IRQFLAGS)
+ /*
+  * Forwards and backwards subgraph searching, for the purposes of
+  * proving that two subgraphs can be connected by a new dependency
+@@ -2055,7 +2055,7 @@ static inline void inc_chains(void)
+ 	nr_process_chains++;
+ }
+ 
+-#endif
++#endif /* CONFIG_TRACE_IRQFLAGS */
+ 
+ static void print_deadlock_scenario(struct held_lock *nxt,
+ 				    struct held_lock *prv)
+@@ -2737,7 +2737,7 @@ static inline int validate_chain(struct task_struct *curr,
+ {
+ 	return 1;
+ }
+-#endif
++#endif /* CONFIG_PROVE_LOCKING */
  
  /*
-  * Usage-state bitmasks:
+  * We are building curr_chain_key incrementally, so double-check
 -- 
 1.8.3.1
 
