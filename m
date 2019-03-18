@@ -2,111 +2,125 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545AEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67910C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7252087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3106921734
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="sW0wQegx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=scalemp.com header.i=@scalemp.com header.b="hiP3Cy11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfCRISt (ORCPT
+        id S1726939AbfCRISz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 04:18:49 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:35166 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfCRISt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 04:18:49 -0400
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id E16C65C013A;
-        Mon, 18 Mar 2019 09:18:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1552897126;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ie7gEvCZHt2dPtaEXOSM/yOAG6BLizHKnECPLrS9Wh4=;
-        b=sW0wQegxmWjmnhEyKdxVz0jAoBw+x8NsF00BgKchTuPHwm9DfUFtlbG22eVFYTbacFw7Pp
-        fPZuekzVctsDCbIPhh+DMepDILrDCIc4EIZ6KfUfrve7HOmIDThdq/SckLzqVrmiPS96LE
-        9ynp2qUwSc6ZXU63wUHWOhvaPdz91mo=
+        Mon, 18 Mar 2019 04:18:55 -0400
+Received: from www.scalemp.com ([169.44.78.149]:45930 "EHLO scalemp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726875AbfCRISv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 04:18:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=scalemp.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=CIQLRgXhEYZ+LxBRASvoXCmRz/2o6wCcqEisJk24XyE=; b=hiP3Cy110mH6C+q7Qlpkid1uYT
+        hyAPCrqNzaDxADwOl3rVgLBHjZijHdbE7VFTtOBvk1wBFTXbgIp44LUaXXryxmcDZ48eAiihPjqh7
+        jwMqKbHDB3hDmIW1fJTKFBbamDvMNuC7rPoxD4NoYRNjpqG8Y9KV7goTBI/RrTscKyKU=;
+Received: from bzq-80-45-146.static.bezeqint.net ([82.80.45.146]:30257 helo=[10.100.0.120])
+        by hosting.virtualsmp.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <eial@scalemp.com>)
+        id 1h5nTu-000gmN-JY; Mon, 18 Mar 2019 04:18:50 -0400
+Subject: Re: [PATCH] percpu/module resevation: change resevation size iff
+ X86_VSMP is set
+To:     paulmck@linux.ibm.com
+Cc:     Tejun Heo <tj@kernel.org>, Barret Rhoden <brho@google.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
+        Shai Fultheim <shai@scalemp.com>, Oren Twaig <oren@scalemp.com>
+References: <a7eff2ed-0e80-edae-2a97-a3fdab2d05f5@google.com>
+ <20190301203455.GA97188@dennisz-mbp.dhcp.thefacebook.com>
+ <c72402f2-967e-cd56-99d8-9139c9e7f267@google.com>
+ <010001693b404440-248fa987-624c-4587-940b-56e2ed4226d9-000000@email.amazonses.com>
+ <85726648-82f3-6b6b-a749-03c4159e78f3@google.com>
+ <20190313202640.GJ50184@devbig004.ftw2.facebook.com>
+ <20190313212255.GY13351@linux.ibm.com>
+ <20190313212912.GK50184@devbig004.ftw2.facebook.com>
+ <20190313231155.GC13351@linux.ibm.com>
+ <20190314173619.GL50184@devbig004.ftw2.facebook.com>
+ <20190314221943.GQ4102@linux.ibm.com>
+From:   Eial Czerwacki <eial@scalemp.com>
+Organization: ScaleMP
+Message-ID: <f44f1d5f-67b4-6ffd-80c1-28c48828f85b@scalemp.com>
+Date:   Mon, 18 Mar 2019 10:18:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190314221943.GQ4102@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 18 Mar 2019 09:18:46 +0100
-From:   Stefan Agner <stefan@agner.ch>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>, jan.tuerk@emtrion.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        u.kleine-koenig@pengutronix.de, dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V5 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-In-Reply-To: <1552894581-3391-2-git-send-email-Anson.Huang@nxp.com>
-References: <1552894581-3391-1-git-send-email-Anson.Huang@nxp.com>
- <1552894581-3391-2-git-send-email-Anson.Huang@nxp.com>
-Message-ID: <d1f8b006ad56e8ed4e9fb9137148d98b@agner.ch>
-X-Sender: stefan@agner.ch
-User-Agent: Roundcube Webmail/1.3.7
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hosting.virtualsmp.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - scalemp.com
+X-Get-Message-Sender-Via: hosting.virtualsmp.com: authenticated_id: eial@scalemp.com
+X-Authenticated-Sender: hosting.virtualsmp.com: eial@scalemp.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.03.2019 08:41, Anson Huang wrote:
-> Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
+Greetings Paul,
+
+On 3/15/19 12:19 AM, Paul E. McKenney wrote:
+> On Thu, Mar 14, 2019 at 10:36:19AM -0700, Tejun Heo wrote:
+>> On Wed, Mar 13, 2019 at 04:11:55PM -0700, Paul E. McKenney wrote:
+>>> commit 34f67df09cc0c6bf082a7cfca435373caeeb8d82
+>>> Author: Paul E. McKenney <paulmck@linux.ibm.com>
+>>> Date:   Wed Mar 13 16:06:22 2019 -0700
+>>>
+>>>     srcu: Forbid DEFINE{,_STATIC}_SRCU() from modules
+>>>     
+>>>     Adding DEFINE_SRCU() or DEFINE_STATIC_SRCU() to a loadable module
+>>>     requires that the size of the reserved region be increased, which is
+>>>     not something we want to be doing all that often.  Instead, loadable
+>>>     modules should define an srcu_struct and invoke init_srcu_struct()
+>>>     from their module_init function and cleanup_srcu_struct() from their
+>>>     module_exit function.  Note that modules using call_srcu() will also
+>>>     need to invoke srcu_barrier() from their module_exit function.
+>>>     
+>>>     This commit enforces this advice by refusing to define DEFINE_SRCU()
+>>>     and DEFINE_STATIC_SRCU() within loadable modules.
+>>>     
+>>>     Suggested-by: Barret Rhoden <brho@google.com>
+>>>     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+>>
+>> Looks-great-to-me-by: Tejun Heo <tj@kernel.org>
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes.
-> ---
->  Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+> Applied.  ;-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
-> b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
-> new file mode 100644
-> index 0000000..d47b8fb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
-> @@ -0,0 +1,19 @@
-> +Freescale i.MX TPM PWM controller
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,imx-tpm-pwm".
-> +- reg: Physical base address and length of the controller's registers.
-> +- #pwm-cells: Should be 2. See pwm.txt in this directory for a
-> description of the cells format.
+> 							Thanx, Paul
+> 
+>> Thanks. :)
+>>
+>> -- 
+>> tejun
+>>
+> 
+> 
 
-It seems that the driver supports polarity. Can we use 3 cells so we can
-specify the polarity in the device tree?
+when can this patch be found in the kernel mainline git repo? I'd like
+to test and see if the patch that started this mail thread still occurs.
 
-Also use 3 cells in the base device tree to enable other boards making
-use of the polarity (arch/arm/boot/dts/imx7ulp.dtsi).
+Thanks,
 
---
-Stefan
-
-> +- clocks : The clock provided by the SoC to drive the PWM.
-> +- interrupts: The interrupt for the pwm controller.
-> +
-> +Example:
-> +
-> +pwm0: tpm@40250000 {
-> +	compatible = "fsl,imx-tpm-pwm";
-> +	reg = <0x40250000 0x1000>;
-> +	assigned-clocks = <&clks IMX7ULP_CLK_LPTPM4>;
-> +	assigned-clock-parents = <&clks IMX7ULP_CLK_SOSC_BUS_CLK>;
-> +	clocks = <&clks IMX7ULP_CLK_LPTPM4>;
-> +	#pwm-cells = <2>;
-> +};
+Eial.
