@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3F2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D90C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEEA21734
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017C92087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901748;
-	bh=0qyetc7AXjmpcO9vhGnF6HXLXZfGEf7rHk3zwCUWmxs=;
+	s=default; t=1552901751;
+	bh=D5T1vFrT2qMlYWnGN5huLS65tqFi99JzKt35bf8ZcZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d6HtbXWsbn09rJG05kIkD2FOZ7g8ZExvRXWvzzP83Yv/xzW0EyumKnmBs5cs7qoUF
-	 dE8e7Uubmn7e0mk6EGoWxGDfYvcn7ST/JBPoKhycJdzwXs0N/Bs/UrrJs7d8dcTyfa
-	 44gsHVdr2/nSJoytA1NKvUfALpsvp4XtvN1WinbY=
+	b=GethG9a8gz6C6ixA785MSdhK7Ij4RIwtBwNDs0PFxiyjZULKeuwOVkadtpHXUfBY8
+	 k5DdwN04uOxwRQjr2/a+nYKlPkCoFzDdSisEeVSa7azWXDiDCGR9aD9jVhX9O7ngrk
+	 hn8AjBU938GKTR2K8ePKpEUWst8VKAcQVUOgWKZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387527AbfCRJfr (ORCPT
+        id S2387539AbfCRJft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44020 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:35:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387479AbfCRJfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:35:38 -0400
+        id S2387525AbfCRJfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:35:47 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 152052087C;
-        Mon, 18 Mar 2019 09:35:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A59E2083D;
+        Mon, 18 Mar 2019 09:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901737;
-        bh=0qyetc7AXjmpcO9vhGnF6HXLXZfGEf7rHk3zwCUWmxs=;
+        s=default; t=1552901746;
+        bh=D5T1vFrT2qMlYWnGN5huLS65tqFi99JzKt35bf8ZcZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tj1Z1Jk7eQbc3Xyao4cWQbyjoqheTGqWUyCbE/0L4hRC//VJjmXR9UwbkMPipr0TQ
-         ZryU/NSK12YMbQHVfQVREuUmPH9seTaVWOpyiLKLXjHQlYsON+3WJH9BGYIgaiz4UV
-         dI61y8EyxDPiWLr505cEuelOpQiio5tDGLfCFe7I=
+        b=KMwmwrh0sdFeYZXlcJBFGj9/ifRqJzwXmKcb57HeT6gWKc+ZAhvBNl4EngjiPTbyr
+         sh8q3MT0pG9V6aXA4HAvy+hv3vtsswscKhtqy4qdir113mxVQQM2JdnJriYolS/FDl
+         asaKe7YKAPUfKTM+0smlwYq0rjiIVVWo0I55Pey4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, kbuild-all@01.org,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 4.14 32/34] perf/x86/intel: Make dev_attr_allow_tsx_force_abort static
-Date:   Mon, 18 Mar 2019 10:25:56 +0100
-Message-Id: <20190318084149.493552873@linuxfoundation.org>
+        stable@vger.kernel.org, Tianhao Zhao <tizhao@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 04/34] ipv4/route: fail early when inet dev is missing
+Date:   Mon, 18 Mar 2019 10:25:28 +0100
+Message-Id: <20190318084145.238752150@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -70,38 +67,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: kbuild test robot <lkp@intel.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit c634dc6bdedeb0b2c750fc611612618a85639ab2 upstream.
+[ Upstream commit 22c74764aa2943ecdf9f07c900d8a9c8ba6c9265 ]
 
-Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
-Signed-off-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: kbuild-all@01.org
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190313184243.GA10820@lkp-sb-ep06
+If a non local multicast packet reaches ip_route_input_rcu() while
+the ingress device IPv4 private data (in_dev) is NULL, we end up
+doing a NULL pointer dereference in IN_DEV_MFORWARD().
+
+Since the later call to ip_route_input_mc() is going to fail if
+!in_dev, we can fail early in such scenario and avoid the dangerous
+code path.
+
+v1 -> v2:
+ - clarified the commit message, no code changes
+
+Reported-by: Tianhao Zhao <tizhao@redhat.com>
+Fixes: e58e41596811 ("net: Enable support for VRF with ipv4 multicast")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/events/intel/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/route.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3968,7 +3968,7 @@ static struct attribute *intel_pmu_caps_
-        NULL
- };
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -2123,12 +2123,13 @@ int ip_route_input_rcu(struct sk_buff *s
+ 		int our = 0;
+ 		int err = -EINVAL;
  
--DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
-+static DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
+-		if (in_dev)
+-			our = ip_check_mc_rcu(in_dev, daddr, saddr,
+-					      ip_hdr(skb)->protocol);
++		if (!in_dev)
++			return err;
++		our = ip_check_mc_rcu(in_dev, daddr, saddr,
++				      ip_hdr(skb)->protocol);
  
- static struct attribute *intel_pmu_attrs[] = {
- 	&dev_attr_freeze_on_smi.attr,
+ 		/* check l3 master if no match yet */
+-		if ((!in_dev || !our) && netif_is_l3_slave(dev)) {
++		if (!our && netif_is_l3_slave(dev)) {
+ 			struct in_device *l3_in_dev;
+ 
+ 			l3_in_dev = __in_dev_get_rcu(skb->dev);
 
 
