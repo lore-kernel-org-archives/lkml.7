@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054C7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E1CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B3620989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4910820850
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfCRKty (ORCPT
+        id S1727797AbfCRKt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:49:54 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59786 "EHLO
+        Mon, 18 Mar 2019 06:49:58 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59816 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727723AbfCRKtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:49:52 -0400
+        id S1727723AbfCRKtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 06:49:55 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD7B880D;
-        Mon, 18 Mar 2019 03:49:51 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F36CC165C;
+        Mon, 18 Mar 2019 03:49:54 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C11C13F614;
-        Mon, 18 Mar 2019 03:49:48 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 084643F614;
+        Mon, 18 Mar 2019 03:49:51 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
@@ -40,9 +40,9 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>,
         Steve Capper <Steve.Capper@arm.com>,
         Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
         Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v2 5/6] arm64: add PTRACE_SYSEMU{,SINGLESTEP} definations to uapi headers
-Date:   Mon, 18 Mar 2019 10:49:24 +0000
-Message-Id: <20190318104925.16600-6-sudeep.holla@arm.com>
+Subject: [PATCH v2 6/6] arm64: ptrace: add support for syscall emulation
+Date:   Mon, 18 Mar 2019 10:49:25 +0000
+Message-Id: <20190318104925.16600-7-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190318104925.16600-1-sudeep.holla@arm.com>
 References: <20190318104925.16600-1-sudeep.holla@arm.com>
@@ -51,38 +51,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-x86 and um use 31 and 32 for PTRACE_SYSEMU and PTRACE_SYSEMU_SINGLESTEP
-while powerpc uses different value maybe for legacy reasons.
-
-Though handling of PTRACE_SYSEMU can be made architecture independent,
-it's hard to make these definations generic. To add to this existing
-mess few architectures like arm, c6x and sh use 31 for PTRACE_GETFDPIC
-(get the ELF fdpic loadmap address). It's not possible to move the
-definations to generic headers.
-
-So we unfortunately have to duplicate the same defination to ARM64 if
-we need to support PTRACE_SYSEMU.
+Add PTRACE_SYSEMU and PTRACE_SYSEMU_SINGLESTEP support on arm64.
+We can just make sure of the generic ptrace_syscall_enter hook to
+support PTRACE_SYSEMU. We don't need any special handling for
+PTRACE_SYSEMU_SINGLESTEP.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/arm64/include/uapi/asm/ptrace.h | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/include/asm/thread_info.h | 5 ++++-
+ arch/arm64/kernel/ptrace.c           | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
-index d78623acb649..627ac57c1581 100644
---- a/arch/arm64/include/uapi/asm/ptrace.h
-+++ b/arch/arm64/include/uapi/asm/ptrace.h
-@@ -62,6 +62,9 @@
- #define PSR_x		0x0000ff00	/* Extension		*/
- #define PSR_c		0x000000ff	/* Control		*/
+diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+index eb3ef73e07cf..c285d1ce7186 100644
+--- a/arch/arm64/include/asm/thread_info.h
++++ b/arch/arm64/include/asm/thread_info.h
+@@ -75,6 +75,7 @@ void arch_release_task_struct(struct task_struct *tsk);
+  *  TIF_SYSCALL_TRACE	- syscall trace active
+  *  TIF_SYSCALL_TRACEPOINT - syscall tracepoint for ftrace
+  *  TIF_SYSCALL_AUDIT	- syscall auditing
++ *  TIF_SYSCALL_EMU     - syscall emulation active
+  *  TIF_SECOMP		- syscall secure computing
+  *  TIF_SIGPENDING	- signal pending
+  *  TIF_NEED_RESCHED	- rescheduling necessary
+@@ -91,6 +92,7 @@ void arch_release_task_struct(struct task_struct *tsk);
+ #define TIF_SYSCALL_AUDIT	9
+ #define TIF_SYSCALL_TRACEPOINT	10
+ #define TIF_SECCOMP		11
++#define TIF_SYSCALL_EMU		12
+ #define TIF_MEMDIE		18	/* is terminating due to OOM killer */
+ #define TIF_FREEZE		19
+ #define TIF_RESTORE_SIGMASK	20
+@@ -109,6 +111,7 @@ void arch_release_task_struct(struct task_struct *tsk);
+ #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
+ #define _TIF_SYSCALL_TRACEPOINT	(1 << TIF_SYSCALL_TRACEPOINT)
+ #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
++#define _TIF_SYSCALL_EMU	(1 << TIF_SYSCALL_EMU)
+ #define _TIF_UPROBE		(1 << TIF_UPROBE)
+ #define _TIF_FSCHECK		(1 << TIF_FSCHECK)
+ #define _TIF_32BIT		(1 << TIF_32BIT)
+@@ -120,7 +123,7 @@ void arch_release_task_struct(struct task_struct *tsk);
  
-+/* syscall emulation path in ptrace */
-+#define PTRACE_SYSEMU		  31
-+#define PTRACE_SYSEMU_SINGLESTEP  32
+ #define _TIF_SYSCALL_WORK	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
+ 				 _TIF_SYSCALL_TRACEPOINT | _TIF_SECCOMP | \
+-				 _TIF_NOHZ)
++				 _TIF_NOHZ | _TIF_SYSCALL_EMU)
  
- #ifndef __ASSEMBLY__
+ #define INIT_THREAD_INFO(tsk)						\
+ {									\
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index b82e0a9b3da3..cf29275cd4d9 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1819,6 +1819,9 @@ static void tracehook_report_syscall(struct pt_regs *regs,
+ 
+ int syscall_trace_enter(struct pt_regs *regs)
+ {
++	if (unlikely(ptrace_syscall_enter(regs)))
++		return -1;
++
+ 	if (test_thread_flag(TIF_SYSCALL_TRACE))
+ 		tracehook_report_syscall(regs, PTRACE_SYSCALL_ENTER);
  
 -- 
 2.17.1
