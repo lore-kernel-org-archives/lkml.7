@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD197C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECA2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23412133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204B820863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EXAkqzYX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTZPglq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfCRRTH (ORCPT
+        id S1727854AbfCRRTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:19:07 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:34294 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbfCRRSO (ORCPT
+        Mon, 18 Mar 2019 13:19:41 -0400
+Received: from mail-vs1-f74.google.com ([209.85.217.74]:35379 "EHLO
+        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbfCRRR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:18:14 -0400
-Received: by mail-qt1-f201.google.com with SMTP id x58so512153qtc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:18:14 -0700 (PDT)
+        Mon, 18 Mar 2019 13:17:56 -0400
+Received: by mail-vs1-f74.google.com with SMTP id e63so3944536vsc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:17:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=nIZeb0pZ+Rs1twP/26IxdjvHz5r8ncIzXCkOe4U4COg=;
-        b=EXAkqzYXquwoZW9zPquYoEc1VixgrJrxtJjurULtOsll9F/x8BSgkuYbNYqPNAK+sc
-         QdGu01FYNxKrm1YnjhDssa3BGmNkam/8XvRG+67blmdUDkqpgD3yiL0tqlkzvcOHlEdD
-         fz/vfMUJKMxApfo9M6ta6ANBN/hBFJ8sHT6IIlVMu94hJTj8vY7Ch6oVS78GY6mduhfg
-         Mfa3G2yUPRZbMrYKuIq4vjmPLT9/Hrg9S0x5wCC0nEBvOOrzKzgwcqVZmA0wCyKJejEO
-         fM02iW8f+3jGAOZtPgjTq3dSiMBluDfCCoyJ/neHAzTlpna8RAP9peqgVYpDqOfBkGtD
-         dYvQ==
+        bh=UykDW4hFaDHfzyUH5xSGMBQs4gGYEgUL/nC+SEDYWFU=;
+        b=eTZPglq7PxVqxdqVAjoMC4HmmCrWD8Td2oOWhHZFu/cW19YPVAKsaJLDurjgd2ljVf
+         XFoitnM7dNKXaO1X3w5n48lJ0Y+z6lMVYoHTi6MyqIKBKDduB9n8l/eQ3eoQ6ApOGJcf
+         g0Ut1Mty7B6R+MM5DXRurd3w783o+tqjI10hk93IissEzK7cyNctMDjvmU3Tdk6WDEwH
+         ffIMuMSLEoDbieTKF2ybjM0vJlmx+cWPNY/uy7bo6luMmancF6Vim1Jp4tv/8hL6d3pb
+         M2HFyE+DxIM6V89Ha75sQlU/Ar8a05rWTSWi6zpfjkxsTGWw3NraARaPUHt9My5Uw9OY
+         7lHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=nIZeb0pZ+Rs1twP/26IxdjvHz5r8ncIzXCkOe4U4COg=;
-        b=mBES11+XW5Zz+RYLk11vKLu1zmC9NG4KqgIFbmkkVrwPgwYvmZHLkHvyKSP5OXlQez
-         y68fgFkNTf84duLYc0J1eC1OEpobpJo2ql5SCAHoDIEexzXtCyxzxZP2SpR0QddMAJZD
-         kS+T0yIdyQCXsrDvVd8WLpr4Lchubmu7+y3Ea2mQq1miE+AogDzmJfWVlfLWgkT1UpzX
-         axiI9eIQxTJkLr5IMOxMs1x2QQCrK28ofXgr8LNRhDB+67A27igiUAkS0F50XkKaZ3P4
-         VzsQgjOBTu4CMajU6HbjTby7LPJ8l8X7X1CQdZ7FzHjiW6dvyjYRC5fXbEaa/MRPnOAN
-         KOmg==
-X-Gm-Message-State: APjAAAXSmG7QVijwMhqt4YGPF6tfAzB8XGPUvnQMygHrE7RMB8KCcyVA
-        vwa68TouoZOLtyLTcJj5kGAbBla3Jt8xk6n1
-X-Google-Smtp-Source: APXvYqxadZqo6uzYQyuENLgyHusNMUz8mCv/BxMvfZyt1rftgNKCVV69MZQdKa9n4B6FLFRP2mw6D3xauqnW81d3
-X-Received: by 2002:ac8:38b7:: with SMTP id f52mr10498903qtc.7.1552929493810;
- Mon, 18 Mar 2019 10:18:13 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 18:17:40 +0100
+        bh=UykDW4hFaDHfzyUH5xSGMBQs4gGYEgUL/nC+SEDYWFU=;
+        b=s9jSIDJpk4ME5RcicrAI+zK8npDzAHsrIeeMMQsBNZ3Gxs9UwVFSdbRZJQSBg3La2I
+         dzp0BxAVoUQDSnKtE4wpHQnMQ5Zh6gAJK9mzwu6kcotU3AeRmENHO19KAxYNJqBQn7Nm
+         AEjaHsCC9Qldb8KVcG5eb7kQR03yrRkIWcgA47Oiicbs34wuTukKSek2Ywx3vjFz5ns2
+         uyFJ6AI8E7dDZOyGU5LLh1RDmnx0i2NyvO0wUeo/MDQDKAUUq4gvQGpoegnhWqJF+n8G
+         ChDgrIKWwSnsfVP/U8togjWdbf27xGmY4NPNOXKyIgnac8sjqP2rTdj7/ybPV+afW+2l
+         euCg==
+X-Gm-Message-State: APjAAAX0+1i5TDWTncGKm7b/Of402ZTRAE2XUu3KF7QVBB4yX5YPPapi
+        BmoP8WBEf551TXyQiNBm/D/zuKeJrebQfK94
+X-Google-Smtp-Source: APXvYqw1yRv1Lvlj4b/qzRYNiehInvLnccniboB47LbD/6n+0FpFdxyh/c9QXVRmnP7ZYupHxKhIzMKUChtQA6Na
+X-Received: by 2002:a1f:1e4a:: with SMTP id e71mr11807432vke.2.1552929475245;
+ Mon, 18 Mar 2019 10:17:55 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 18:17:34 +0100
 In-Reply-To: <cover.1552929301.git.andreyknvl@google.com>
-Message-Id: <80e79c47dc7c5ee3572034a1d69bb724fbed2ecb.1552929301.git.andreyknvl@google.com>
+Message-Id: <f7b263a20223da2b8b26f6a5b0d84a575af28010.1552929301.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1552929301.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH v12 08/13] net, arm64: untag user pointers in tcp_zerocopy_receive
+Subject: [PATCH v12 02/13] arm64: untag user pointers in access_ok and __uaccess_mask_ptr
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -107,43 +107,60 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-tcp_zerocopy_receive() uses provided user pointers for vma lookups, which
-can only by done with untagged pointers.
+copy_from_user (and a few other similar functions) are used to copy data
+from user memory into the kernel memory or vice versa. Since a user can
+provided a tagged pointer to one of the syscalls that use copy_from_user,
+we need to correctly handle such pointers.
 
-Untag user pointers in this function.
+Do this by untagging user pointers in access_ok and in __uaccess_mask_ptr,
+before performing access validity checks.
 
+Note, that this patch only temporarily untags the pointers to perform the
+checks, but then passes them as is into the kernel internals.
+
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- net/ipv4/tcp.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/uaccess.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 6baa6dc1b13b..e76beb5ff1ff 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1749,7 +1749,7 @@ EXPORT_SYMBOL(tcp_mmap);
- static int tcp_zerocopy_receive(struct sock *sk,
- 				struct tcp_zerocopy_receive *zc)
- {
--	unsigned long address = (unsigned long)zc->address;
-+	unsigned long address;
- 	const skb_frag_t *frags = NULL;
- 	u32 length = 0, seq, offset;
- 	struct vm_area_struct *vma;
-@@ -1758,7 +1758,12 @@ static int tcp_zerocopy_receive(struct sock *sk,
- 	int inq;
- 	int ret;
+diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
+index e5d5f31c6d36..9164ecb5feca 100644
+--- a/arch/arm64/include/asm/uaccess.h
++++ b/arch/arm64/include/asm/uaccess.h
+@@ -94,7 +94,7 @@ static inline unsigned long __range_ok(const void __user *addr, unsigned long si
+ 	return ret;
+ }
  
--	if (address & (PAGE_SIZE - 1) || address != zc->address)
-+	address = (unsigned long)untagged_addr(zc->address);
-+
-+	/* The second test in this if detects if the u64->unsigned long
-+	 * conversion had any truncated bits.
-+	 */
-+	if (address & (PAGE_SIZE - 1) || address != untagged_addr(zc->address))
- 		return -EINVAL;
+-#define access_ok(addr, size)	__range_ok(addr, size)
++#define access_ok(addr, size)	__range_ok(untagged_addr(addr), size)
+ #define user_addr_max			get_fs
  
- 	if (sk->sk_state == TCP_LISTEN)
+ #define _ASM_EXTABLE(from, to)						\
+@@ -226,7 +226,8 @@ static inline void uaccess_enable_not_uao(void)
+ 
+ /*
+  * Sanitise a uaccess pointer such that it becomes NULL if above the
+- * current addr_limit.
++ * current addr_limit. In case the pointer is tagged (has the top byte set),
++ * untag the pointer before checking.
+  */
+ #define uaccess_mask_ptr(ptr) (__typeof__(ptr))__uaccess_mask_ptr(ptr)
+ static inline void __user *__uaccess_mask_ptr(const void __user *ptr)
+@@ -234,10 +235,11 @@ static inline void __user *__uaccess_mask_ptr(const void __user *ptr)
+ 	void __user *safe_ptr;
+ 
+ 	asm volatile(
+-	"	bics	xzr, %1, %2\n"
++	"	bics	xzr, %3, %2\n"
+ 	"	csel	%0, %1, xzr, eq\n"
+ 	: "=&r" (safe_ptr)
+-	: "r" (ptr), "r" (current_thread_info()->addr_limit)
++	: "r" (ptr), "r" (current_thread_info()->addr_limit),
++	  "r" (untagged_addr(ptr))
+ 	: "cc");
+ 
+ 	csdb();
 -- 
 2.21.0.225.g810b269d1ac-goog
 
