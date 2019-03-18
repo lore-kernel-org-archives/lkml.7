@@ -2,133 +2,193 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178C5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E990C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD0220863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B5220863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:17:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gjgu8vSr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o3oDtvf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfCRQQ0 (ORCPT
+        id S1727530AbfCRQRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:16:26 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38744 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbfCRQQZ (ORCPT
+        Mon, 18 Mar 2019 12:17:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46877 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbfCRQRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:16:25 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s1so18575125qte.5;
-        Mon, 18 Mar 2019 09:16:25 -0700 (PDT)
+        Mon, 18 Mar 2019 12:17:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c18so14895801otl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q3ou9Dxhuvf5KRW1H+9oyeG4WWjqEolSQ1k7nE0+tyE=;
-        b=Gjgu8vSrBe/LixfR2hHR22e+zgDVdNuyrYMR9cgkvOASYmg9LIElVQvwuOc7FGu2j8
-         830hoHwmS5HPWlAcD5iJL1P/x+V4TKwvmo99UmWqP2dR7N3leTmoU2UWYqAwJwmPx7me
-         TRoaq5swE8vSxm1f/mXaENONRJ7tcPbhiBjHZYKAAXr5/fl3hZ5Vjn180rO6JVFR5pz0
-         9pAjTM3ujHoPlVaTO10PjcwEyQcb7AAjIhsWGpdUilLjKHQWEieda1ptnrfGIa7AyqaT
-         2o9s54CZMqC6zgccEF77xNy5PR7yco9t2IFJN+aXbW2nH5U7qPJDl9O/USI3po5Qvget
-         M+Sg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oM7GzbsX6BXcI27/2wLinFMr6i84e0pxvUNOIyDhlk0=;
+        b=o3oDtvf83CZqt6RoVFvrJgraX8zxwpQgZl+XhQPBpdYxqIkuyS3O7M3v0h9IIPBKeO
+         M47sODs4f9Ip2rzcYcApveumryjwS9D5bHyRsCoG/zXCCJYE0f4+qJYaBA7yXjTNFiCO
+         JaQ6gkufwIVfhdlVoPmPj3frnaaJ5D3NSs7y2lJNry1FNoYAqpXIJ93j/EGysQn2gf5p
+         rDeOkK5vVKPraqRYnzkVmpiY5upB13Il0JAgrL/ZYyLZTRXsn+sub9te1ae2jJtOrc/T
+         KLdj1Yb0toMkewPetvXS7pl9LM4blWJZtD1TzYtRH6+fzPuGV447TVdXQDY22uKWzdPE
+         jgPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q3ou9Dxhuvf5KRW1H+9oyeG4WWjqEolSQ1k7nE0+tyE=;
-        b=Xtz2fQBApTmgNsAYtmBDmLtshzV4T7jhYUdhMveKOWA9tBuAn27+Bo/Lfd33caseDt
-         tSTZ3dko49GfKbCt68s4eyH24Pmcmxklx5dpMaYnlHavNWWlT84Q+V0myu4gl9/Sz21m
-         zy/HIEM+PLgSnYbgbAyq/DKRL+rVCvKcV3FKyw09pljEmi8EtZHznxPMJWuGAwfAKBRc
-         GKzLdRJO615L2BxSUSnjuBXn95qQRpbzJMK+4iuuzgu8kp+S898lPkaucwr8ZclK3N/V
-         N5h6mxD543qFqyTrhwEUfFzXo2NpGxh56cYD509o0pSTHgHKKbEVy4rrxSIIMCTk4Ovu
-         78Cw==
-X-Gm-Message-State: APjAAAV3M4pG8su7LzUbsPBpmJPWNFCrR+3mWoSY5ob9U6l6YaHE6eai
-        6lWLGFLuHRT5dKAWlPYwbCU=
-X-Google-Smtp-Source: APXvYqy4k1gQ20W6D/FLG3xgTZnJMtiGCp4VSgU+f7tliz6INdriTsYAkqA9uNn7zioF4s1oEMtNLQ==
-X-Received: by 2002:a0c:a424:: with SMTP id w33mr13710010qvw.5.1552925784633;
-        Mon, 18 Mar 2019 09:16:24 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (179-240-164-38.3g.claro.net.br. [179.240.164.38])
-        by smtp.gmail.com with ESMTPSA id p46sm3439639qtc.41.2019.03.18.09.16.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 09:16:23 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 833F44039C; Mon, 18 Mar 2019 13:16:19 -0300 (-03)
-Date:   Mon, 18 Mar 2019 13:16:19 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
-        namhyung@kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>, rostedt@goodmis.org,
-        Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 00/16] fix some perf issues detected by ASan
-Message-ID: <20190318161619.GD22548@kernel.org>
-References: <20190316080556.3075-1-changbin.du@gmail.com>
- <20190318100812.GC28556@krava>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oM7GzbsX6BXcI27/2wLinFMr6i84e0pxvUNOIyDhlk0=;
+        b=jR/EON+rr8iwT7O15U1fAoPx5yXX05okTNg1VykI6dphsrGkJFW8Kipudhx9UWI+io
+         p4Y4J885+GXe8O3kpF+u7+cO7rIZwfQ2vGaS6xyBF0oVXZtFsC5yuPEWlMnfOzp2GFYz
+         F5YUBY4ke+/xi5imIlNh1MSAogvi4NzBiKezk8TCjz6+WBSDbTHQQ96LFsQQOrsxeKMn
+         Rj9RemxQ1gqGexivMC0m0d09o7Xe5dvQqMdaR7zDxVrn/a1yuZP3F1mnWf4Ep4/TTtSQ
+         kW4mLzRGZasP3rcNjV1YG2zbomAlfCs/GUrXEc1hDuxYpFTh/vBwf5TPSZgopqNL0g0F
+         CR3Q==
+X-Gm-Message-State: APjAAAVd13FQ3jP9MJ3wiQJGjBZUuF6abomUZCL9OsO/R8sbGoj0uZXZ
+        Od+/v1tU64/s7SQkyLaAof0r1SFL3hCAnJtR/4hbKw==
+X-Google-Smtp-Source: APXvYqwO79bnTJ4TBihYvcX0tGkp8ZdflSJz70skZwufx+hdRQ6m22JE43NhjES2ILh5jqqFVSFPSEDcEnYsaPX7NPQ=
+X-Received: by 2002:a9d:ef4:: with SMTP id 107mr2959918otj.152.1552925844096;
+ Mon, 18 Mar 2019 09:17:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190318100812.GC28556@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190227035448.117169-1-fengc@google.com> <CAO_48GG0sW3AJNVJnydjuWUQHcmWe5aQrB=X0Wo7uBtDnPtoYg@mail.gmail.com>
+ <CAKMK7uFMj7wQQ7hVubXgbP61gmAE3zGcNQyDW5gexZO75z4sDw@mail.gmail.com>
+In-Reply-To: <CAKMK7uFMj7wQQ7hVubXgbP61gmAE3zGcNQyDW5gexZO75z4sDw@mail.gmail.com>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Mon, 18 Mar 2019 21:47:12 +0530
+Message-ID: <CAO_48GEFz99yL34NSB5TCrg1S0X00Z_UysoFugozGK3aEazGig@mail.gmail.com>
+Subject: Re: [RFC dma-buf 0/3] Improve the dma-buf tracking
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Chenbo Feng <fengc@google.com>, erickreyes@google.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 18, 2019 at 11:08:12AM +0100, Jiri Olsa escreveu:
-> On Sat, Mar 16, 2019 at 04:05:40PM +0800, Changbin Du wrote:
-> > AddressSanitizer (or ASan) and UndefinedBehaviorSanitizer (or UBSan) are
-> > very useful tools to detect program bugs. This series fixed some issues
-> > disclosed by ASan.
-> > 
-> > AddressSanitizer (or ASan) is a GCC feature that detects memory corruption bugs
-> > such as buffer overflows or memory leaks.
-> >   $ cd tools/perf
-> >   $ make DEBUG=1 EXTRA_CFLAGS='-fno-omit-frame-pointer -fsanitize=address'
-> >   $ ASAN_OPTIONS=log_path=asan.log ./perf record -a
-> > ASan outputs all detected issues into log file 'asan.log.<pid>'.
-> > 
-> > Note that this only fixes parts of the detected issues. There are many remaining
-> > to be fixed[1].
-> > 
-> > [1] http://104.238.181.70:8080/asan.log.32555.txt
-> > 
-> > Changbin Du (16):
-> >   perf: add doc for how to build perf with Asan and UBSan
-> >   perf: list: fix memory leak in function is_event_supported
-> >   perf: fix errors under optimization level '-Og'
-> >   perf: fix an error in config template
-> >   perf: fix a memory leak in collect_config
-> >   perf: fix memory leak in print_sdt_events()
-> >   perf: top: fix heap-use-after-free issue
-> >   perf: top: fix error handing in cmd_top()
-> >   perf: missed a map__put() in error case
-> >   perf: remove map from names tree in __maps__remove
-> >   perf: purge all maps from the names tree
-> >   perf: top: fix global-buffer-overflow issue
-> >   perf: free all counts in perf_evsel__exit
-> >   perf: fix a memory leak of cpu_map object
-> >   perf: fix memory leak by expr__find_other
-> >   perf: fix a memory leak in test__perf_evsel__tp_sched_test
-> 
-> awesome.. thanks a lot
-> 
-> Reviewed-by: Jiri Olsa <jolsa@redhat.com>
+Hi Daniel,
 
-Yeah, I'll go over all and apply, thanks a lot.
+On Fri, 15 Mar 2019 at 16:36, Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Thu, Mar 14, 2019 at 6:49 PM Sumit Semwal <sumit.semwal@linaro.org> wr=
+ote:
+> >
+> > Hello Chenbo,Thank you for your RFC series.
+> >
+> > On Wed, 27 Feb 2019 at 09:24, Chenbo Feng <fengc@google.com> wrote:
+> > >
+> > > Currently, all dma-bufs share the same anonymous inode. While we can =
+count
+> > > how many dma-buf fds or mappings a process has, we can't get the size=
+ of
+> > > the backing buffers or tell if two entries point to the same dma-buf.=
+ And
+> > > in debugfs, we can get a per-buffer breakdown of size and reference c=
+ount,
+> > > but can't tell which processes are actually holding the references to=
+ each
+> > > buffer.
+> > >
+> > > To resolve the issue above and provide better method for userspace to=
+ track
+> > > the dma-buf usage across different processes, the following changes a=
+re
+> > > proposed in dma-buf kernel side. First of all, replace the singleton =
+inode
+> > > inside the dma-buf subsystem with a mini-filesystem, and assign each
+> > > dma-buf a unique inode out of this filesystem.  With this change, cal=
+ling
+> > > stat(2) on each entry gives the caller a unique ID (st_ino), the buff=
+er's
+> > > size (st_size), and even the number of pages assigned to each dma-buf=
+fer.
+> > > Secoundly, add the inode information to /sys/kernel/debug/dma_buf/buf=
+info
+> > > so in the case where a buffer is mmap()ed into a process=E2=80=99s ad=
+dress space
+> > > but all remaining fds have been closed, we can still get the dma-buf
+> > > information and try to accociate it with the process by searching the
+> > > proc/pid/maps and looking for the corresponding inode number exposed =
+in
+> > > dma-buf debug fs. Thirdly, created an ioctl to assign names to dma-bu=
+fs
+> > > which lets userspace assign short names (e.g., "CAMERA") to buffers. =
+This
+> > > information can be extremely helpful for tracking and accounting shar=
+ed
+> > > buffers based on their usage and original purpose. Last but not least=
+, add
+> > > dma-buf information to /proc/pid/fdinfo by adding a show_fdinfo() han=
+dler
+> > > to dma_buf_file_operations. The handler will print the file_count and=
+ name
+> > > of each buffer.
+> >
+> > In general, I think I like the idea as it contributes to a much more
+> > relevant usage analysis of dma-buf backed buffers.
+> > I will get to doing a more detailed review soon, but immediately, we
+> > might want to think a bit about the get/set_name IOCTLS - do we need
+> > to think of disallowing multiple renaming of buffers once they start
+> > getting used? It could otherwise make the whole metrics a lot
+> > confused?
+> >
+> > >
+> > > Greg Hackmann (3):
+> > >   dma-buf: give each buffer a full-fledged inode
+> > >   dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
+> > >   dma-buf: add show_fdinfo handler
+>
+> I'm not seeing the patches, so just quick comment here: Some drivers
+> (at least vc4) already have the concept of buffer names. Would be neat
+> to integrate this between dma-buf and drm_gem in prime.
+>
+FYI, here's the patch series - https://patchwork.freedesktop.org/series/572=
+82/
 
-If you plan to work on the others, please first submit the ones that are
-not related to the exit path, i.e. leave the ones that only take place
-when exiting perf for a second batch, this way we'll get the more
-important ones, that take place in normal operation, first.
+Best,
+Sumit.
 
-- Arnaldo
+> Aside from that sounds like a good idea overall, but I can't see any deta=
+ils.
+> -Daniel
+>
+> > >
+> > >  drivers/dma-buf/dma-buf.c    | 121 ++++++++++++++++++++++++++++++++-=
+--
+> > >  include/linux/dma-buf.h      |   5 +-
+> > >  include/uapi/linux/dma-buf.h |   4 ++
+> > >  include/uapi/linux/magic.h   |   1 +
+> > >  4 files changed, 122 insertions(+), 9 deletions(-)
+> > >
+> > > --
+> > > 2.21.0.rc2.261.ga7da99ff1b-goog
+> > >
+> >
+> > Best,
+> > Sumit.
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+
+
+
+--=20
+Thanks and regards,
+
+Sumit Semwal
+Linaro Consumer Group - Kernel Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
