@@ -2,144 +2,134 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127F7C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE97C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFEF420872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB1520857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d0pRE4eL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbfCRCgr (ORCPT
+        id S1727656AbfCRCpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 22:36:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:39310 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727780AbfCRCgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 22:36:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Mar 2019 19:36:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,491,1544515200"; 
-   d="scan'208";a="155877421"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Mar 2019 19:36:04 -0700
-From:   ira.weiny@intel.com
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org
-Subject: [RESEND 4/7] mm/gup: Add FOLL_LONGTERM capability to GUP fast
-Date:   Sun, 17 Mar 2019 11:34:35 -0700
-Message-Id: <20190317183438.2057-5-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190317183438.2057-1-ira.weiny@intel.com>
-References: <20190317183438.2057-1-ira.weiny@intel.com>
+        Sun, 17 Mar 2019 22:45:23 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39974 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfCRCpX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 22:45:23 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2I2iAM4070187;
+        Mon, 18 Mar 2019 02:45:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=+H8sO4+ai3RUeaP13YotfoTwvVomwWWJy0pTcu/ByDw=;
+ b=d0pRE4eLYhZH2blv1a2LtoyvQ+bHTjlzropLO8miLwbAJ6Ah9r4vnAXp2VJhYObnQ8pw
+ 6sCNdVFNelO9W4y7TDL8b6xjYn1RmBGCNOpLP7qJ0Un3tigLymjzPGiWHePHllt5ovHZ
+ 3bg15Dfj+DP0R3so/V0vT6XSwCzEpri/JowTkhvT5pD2287oep2UC9KkheICkVTRENlT
+ Dxk1iWlVswvYUHLkM458VEbOfeJLEJW1bXHVPhZdR7o1J11WEae/ZcWdXikoGkav5x71
+ 8j9k9gCTmTIEAUoQeDoFw+6pfJCHshSdFxEqK5M/kziuNxoUogam0CzlnMpk/b7sAYgS 8Q== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2r8ssr3qrb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Mar 2019 02:45:00 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2I2ir5I008309
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Mar 2019 02:44:53 GMT
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2I2ioML005642;
+        Mon, 18 Mar 2019 02:44:50 GMT
+Received: from [10.182.69.118] (/10.182.69.118)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 17 Mar 2019 19:44:49 -0700
+Subject: Re: [PATCH 0/8]: blk-mq: use static_rqs to iterate busy tags
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, jsmart2021@gmail.com,
+        josef@toxicpanda.com, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org, keith.busch@intel.com, hare@suse.de,
+        jthumshirn@suse.de, sagi@grimberg.me
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+ <20190315092020.GA2405@lst.de>
+ <a36be8bd-bb9c-745e-cfdb-018cf0a96d42@oracle.com>
+ <1552666744.45180.135.camel@acm.org>
+From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
+Message-ID: <8cff92a3-2f25-18a7-265f-9bff7d8cc3fc@oracle.com>
+Date:   Mon, 18 Mar 2019 10:47:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1552666744.45180.135.camel@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9198 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903180020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Hi Bart
 
-DAX pages were previously unprotected from longterm pins when users
-called get_user_pages_fast().
+On 3/16/19 12:19 AM, Bart Van Assche wrote:
+>> This stale request maybe something that has been freed due to io scheduler
+>> is detached or a q using a shared tagset is gone.
+>>
+>> And also the blk_mq_timeout_work could use it to pick up the expired request.
+>> The driver would also use it to requeue the in-flight requests when the device is dead.
+>>
+>> Compared with adding more synchronization, using static_rqs[] directly maybe simpler :)
+> Hi Jianchao,
+> 
+> Although I appreciate your work: I agree with Christoph that we should avoid races
+> like this rather than modifying the block layer to make sure that such races are
+> handled safely.
 
-Use the new FOLL_LONGTERM flag to check for DEVMAP pages and fall
-back to regular GUP processing if a DEVMAP page is encountered.
+The root cause here is that there is window between set tag sbitmap and set tags->rqs[]
+, and we don't clear the tags->rqs[] in free tags path. So when we iterate the busy
+tags, we could see stale requests in tags->rqs[] and this stale requests maybe freed.
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- mm/gup.c | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+Looks like it is difficult to close the window above, so we used to try to clear the
+tags->rqs[] in two ways,
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 0684a9536207..173db0c44678 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1600,6 +1600,9 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
- 			goto pte_unmap;
- 
- 		if (pte_devmap(pte)) {
-+			if (unlikely(flags & FOLL_LONGTERM))
-+				goto pte_unmap;
-+
- 			pgmap = get_dev_pagemap(pte_pfn(pte), pgmap);
- 			if (unlikely(!pgmap)) {
- 				undo_dev_pagemap(nr, nr_start, pages);
-@@ -1739,8 +1742,11 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
- 	if (!pmd_access_permitted(orig, flags & FOLL_WRITE))
- 		return 0;
- 
--	if (pmd_devmap(orig))
-+	if (pmd_devmap(orig)) {
-+		if (unlikely(flags & FOLL_LONGTERM))
-+			return 0;
- 		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
-+	}
- 
- 	refs = 0;
- 	page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
-@@ -1777,8 +1783,11 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
- 	if (!pud_access_permitted(orig, flags & FOLL_WRITE))
- 		return 0;
- 
--	if (pud_devmap(orig))
-+	if (pud_devmap(orig)) {
-+		if (unlikely(flags & FOLL_LONGTERM))
-+			return 0;
- 		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
-+	}
- 
- 	refs = 0;
- 	page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
-@@ -2066,8 +2075,20 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
- 		start += nr << PAGE_SHIFT;
- 		pages += nr;
- 
--		ret = get_user_pages_unlocked(start, nr_pages - nr, pages,
--					      gup_flags);
-+		if (gup_flags & FOLL_LONGTERM) {
-+			down_read(&current->mm->mmap_sem);
-+			ret = __gup_longterm_locked(current, current->mm,
-+						    start, nr_pages - nr,
-+						    pages, NULL, gup_flags);
-+			up_read(&current->mm->mmap_sem);
-+		} else {
-+			/*
-+			 * retain FAULT_FOLL_ALLOW_RETRY optimization if
-+			 * possible
-+			 */
-+			ret = get_user_pages_unlocked(start, nr_pages - nr,
-+						      pages, gup_flags);
-+		}
- 
- 		/* Have to be a bit careful with return values */
- 		if (nr > 0) {
--- 
-2.20.1
+1. clear the tags->rqs[] in the request free path
+Jens doesn't like it
+https://marc.info/?l=linux-block&m=154515671524877&w=2
+"
+It's an extra store, and it's a store to an area that's then now shared
+between issue and completion. Those are never a good idea. Besides, it's
+the kind of issue you solve in the SLOW path, not in the fast path. Since
+that's doable, it would be silly to do it for every IO.
+"
 
+2. clear the associated slots in tags->tags[] when blk_mq_free_rqs
+https://marc.info/?l=linux-block&m=154534605914798&w=2
+
++	rcu_read_lock();
+ 	sbitmap_for_each_set(&bt->sb, bt_iter, &iter_data);
++	rcu_read_unlock();
+
+The busy_iter_fn could sleep
+blk_mq_check_expired
+  -> blk_mq_rq_timed_out
+    -> q->mq_ops->timeout
+       nvme_timeout
+         -> nvme_dev_disable
+            -> mutex_lock dev->shutdown_lock
+
+Since it is not so flexible to fix on tags->rqs[], why not try to use tags->static_rqs[] ?
+Then we wound never care about the stable requests any more.
+
+Thanks
+Jianchao
