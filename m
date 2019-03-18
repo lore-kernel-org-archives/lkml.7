@@ -2,201 +2,177 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89ADC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C919FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795972075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902244;
-	bh=VxGKjELqylB1CafHCRrZjCUSaDH9kfRY+hF08Yi31vs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ny2V4JF6Vae0AKluMIn4qieF7qFN8wdvJ81741LKSXHTgXHuN2m20qcS55p1I3Rf7
-	 q4D/PL2v6JQaqR59mCT14bWjrUaeke5D45oICYFBSmPgCT2gRKqK2MQwfYCHYZgzaj
-	 yKE84WesNXdV1KgiZ3KJhZkGccGFCwLZfEssJFNc=
+	by mail.kernel.org (Postfix) with ESMTP id 9A4E42075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfCRJoD (ORCPT
+        id S1728537AbfCRJbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:44:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38906 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:31:15 -0400
+Received: from mga14.intel.com ([192.55.52.115]:6796 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727722AbfCRJbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:31:20 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EACF42087C;
-        Mon, 18 Mar 2019 09:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901479;
-        bh=VxGKjELqylB1CafHCRrZjCUSaDH9kfRY+hF08Yi31vs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bT8qlDiCDOy/dbhP3wOYbo9zbpUeAGFCugH+Dgw98dB4RU01Ms396El9cdw5ZdCc5
-         t7hVlcQqGuG/fTYAKzuABIZKUhxn3LK70OnRVo8B9LowswHo0qCBLMztLTedleeBte
-         hyfmj/Wivo93zmQQYGwgyvV9CKw+17jHwlVZpkTk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bryan Whitehead <Bryan.Whitehead@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 05/52] lan743x: Fix RX Kernel Panic
-Date:   Mon, 18 Mar 2019 10:24:52 +0100
-Message-Id: <20190318083844.043670554@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
-References: <20190318083843.398913295@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        id S1728510AbfCRJbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 02:31:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,493,1544515200"; 
+   d="scan'208";a="132518352"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Mar 2019 02:31:09 -0700
+Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 18 Mar 2019 02:31:08 -0700
+Received: from bgsmsx106.gar.corp.intel.com (10.223.43.196) by
+ FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 18 Mar 2019 02:31:08 -0700
+Received: from bgsmsx102.gar.corp.intel.com ([169.254.2.2]) by
+ BGSMSX106.gar.corp.intel.com ([169.254.1.47]) with mapi id 14.03.0415.000;
+ Mon, 18 Mar 2019 15:01:05 +0530
+From:   "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>
+To:     Rajat Jain <rajatja@google.com>,
+        "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        "Andy Shevchenko" <andy@infradead.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "furquan@google.com" <furquan@google.com>,
+        "evgreen@google.com" <evgreen@google.com>,
+        "rajatxjain@gmail.com" <rajatxjain@gmail.com>
+Subject: RE: [PATCH 2/2] platform/x86: intel_pmc_core: Allow to dump debug
+ registers on S0ix failure
+Thread-Topic: [PATCH 2/2] platform/x86: intel_pmc_core: Allow to dump debug
+ registers on S0ix failure
+Thread-Index: AQHU2esnCyJQ6fNiTU+MZgGQUSomiqYRJIxQ
+Date:   Mon, 18 Mar 2019 09:31:05 +0000
+Message-ID: <219AAEFC072D3A42B064BBBC1181F9BF65C25C8E@BGSMSX102.gar.corp.intel.com>
+References: <20190313222124.229371-1-rajatja@google.com>
+ <20190313222124.229371-2-rajatja@google.com>
+In-Reply-To: <20190313222124.229371-2-rajatja@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOGIwNWNhNjgtNzE5Mi00NWExLThlMDctMjA4ZTMyY2Y4ZjIwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNFNPRzBpWndDOWNUanZFcXpvU1Zsa1NUSXJ5OGVuenlmd0hBcjBhdEkwc3FcL3RubnpSYjYrWTdzWTAyMHlNN2MifQ==
+x-originating-ip: [10.223.10.10]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-From: Bryan Whitehead <Bryan.Whitehead@microchip.com>
-
-[ Upstream commit dd9d9f5907bb475f8b1796c47d4ecc7fb9b72136 ]
-
-It has been noticed that running the speed test at
-www.speedtest.net occasionally causes a kernel panic.
-
-Investigation revealed that under this test RX buffer allocation
-sometimes fails and returns NULL. But the lan743x driver did
-not handle this case.
-
-This patch fixes this issue by attempting to allocate a buffer
-before sending the new rx packet to the OS. If the allocation
-fails then the new rx packet is dropped and the existing buffer
-is reused in the DMA ring.
-
-Updates for v2:
-    Additional 2 locations where allocation was not checked,
-        has been changed to reuse existing buffer.
-
-Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
-Signed-off-by: Bryan Whitehead <Bryan.Whitehead@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/microchip/lan743x_main.c |   46 ++++++++++++++++++--------
- 1 file changed, 32 insertions(+), 14 deletions(-)
-
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -1902,7 +1902,17 @@ static int lan743x_rx_next_index(struct
- 	return ((++index) % rx->ring_size);
- }
- 
--static int lan743x_rx_allocate_ring_element(struct lan743x_rx *rx, int index)
-+static struct sk_buff *lan743x_rx_allocate_skb(struct lan743x_rx *rx)
-+{
-+	int length = 0;
-+
-+	length = (LAN743X_MAX_FRAME_SIZE + ETH_HLEN + 4 + RX_HEAD_PADDING);
-+	return __netdev_alloc_skb(rx->adapter->netdev,
-+				  length, GFP_ATOMIC | GFP_DMA);
-+}
-+
-+static int lan743x_rx_init_ring_element(struct lan743x_rx *rx, int index,
-+					struct sk_buff *skb)
- {
- 	struct lan743x_rx_buffer_info *buffer_info;
- 	struct lan743x_rx_descriptor *descriptor;
-@@ -1911,9 +1921,7 @@ static int lan743x_rx_allocate_ring_elem
- 	length = (LAN743X_MAX_FRAME_SIZE + ETH_HLEN + 4 + RX_HEAD_PADDING);
- 	descriptor = &rx->ring_cpu_ptr[index];
- 	buffer_info = &rx->buffer_info[index];
--	buffer_info->skb = __netdev_alloc_skb(rx->adapter->netdev,
--					      length,
--					      GFP_ATOMIC | GFP_DMA);
-+	buffer_info->skb = skb;
- 	if (!(buffer_info->skb))
- 		return -ENOMEM;
- 	buffer_info->dma_ptr = dma_map_single(&rx->adapter->pdev->dev,
-@@ -2060,8 +2068,19 @@ static int lan743x_rx_process_packet(str
- 		/* packet is available */
- 		if (first_index == last_index) {
- 			/* single buffer packet */
-+			struct sk_buff *new_skb = NULL;
- 			int packet_length;
- 
-+			new_skb = lan743x_rx_allocate_skb(rx);
-+			if (!new_skb) {
-+				/* failed to allocate next skb.
-+				 * Memory is very low.
-+				 * Drop this packet and reuse buffer.
-+				 */
-+				lan743x_rx_reuse_ring_element(rx, first_index);
-+				goto process_extension;
-+			}
-+
- 			buffer_info = &rx->buffer_info[first_index];
- 			skb = buffer_info->skb;
- 			descriptor = &rx->ring_cpu_ptr[first_index];
-@@ -2081,7 +2100,7 @@ static int lan743x_rx_process_packet(str
- 			skb_put(skb, packet_length - 4);
- 			skb->protocol = eth_type_trans(skb,
- 						       rx->adapter->netdev);
--			lan743x_rx_allocate_ring_element(rx, first_index);
-+			lan743x_rx_init_ring_element(rx, first_index, new_skb);
- 		} else {
- 			int index = first_index;
- 
-@@ -2094,26 +2113,23 @@ static int lan743x_rx_process_packet(str
- 			if (first_index <= last_index) {
- 				while ((index >= first_index) &&
- 				       (index <= last_index)) {
--					lan743x_rx_release_ring_element(rx,
--									index);
--					lan743x_rx_allocate_ring_element(rx,
--									 index);
-+					lan743x_rx_reuse_ring_element(rx,
-+								      index);
- 					index = lan743x_rx_next_index(rx,
- 								      index);
- 				}
- 			} else {
- 				while ((index >= first_index) ||
- 				       (index <= last_index)) {
--					lan743x_rx_release_ring_element(rx,
--									index);
--					lan743x_rx_allocate_ring_element(rx,
--									 index);
-+					lan743x_rx_reuse_ring_element(rx,
-+								      index);
- 					index = lan743x_rx_next_index(rx,
- 								      index);
- 				}
- 			}
- 		}
- 
-+process_extension:
- 		if (extension_index >= 0) {
- 			descriptor = &rx->ring_cpu_ptr[extension_index];
- 			buffer_info = &rx->buffer_info[extension_index];
-@@ -2290,7 +2306,9 @@ static int lan743x_rx_ring_init(struct l
- 
- 	rx->last_head = 0;
- 	for (index = 0; index < rx->ring_size; index++) {
--		ret = lan743x_rx_allocate_ring_element(rx, index);
-+		struct sk_buff *new_skb = lan743x_rx_allocate_skb(rx);
-+
-+		ret = lan743x_rx_init_ring_element(rx, index, new_skb);
- 		if (ret)
- 			goto cleanup;
- 	}
-
-
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFJhamF0IEphaW4gPHJhamF0
+amFAZ29vZ2xlLmNvbT4NCj5TZW50OiBUaHVyc2RheSwgTWFyY2ggMTQsIDIwMTkgMzo1MSBBTQ0K
+PlRvOiBCaGFyZHdhaiwgUmFqbmVlc2ggPHJham5lZXNoLmJoYXJkd2FqQGludGVsLmNvbT47IFNv
+bWF5YWppLCBWaXNod2FuYXRoDQo+PHZpc2h3YW5hdGguc29tYXlhamlAaW50ZWwuY29tPjsgRGFy
+cmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgQW5keQ0KPlNoZXZjaGVua28gPGFuZHlA
+aW5mcmFkZWFkLm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC0NCj5rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+Q2M6IFJhamF0IEphaW4gPHJhamF0amFAZ29v
+Z2xlLmNvbT47IGZ1cnF1YW5AZ29vZ2xlLmNvbTsNCj5ldmdyZWVuQGdvb2dsZS5jb207IHJhamF0
+eGphaW5AZ21haWwuY29tDQo+U3ViamVjdDogW1BBVENIIDIvMl0gcGxhdGZvcm0veDg2OiBpbnRl
+bF9wbWNfY29yZTogQWxsb3cgdG8gZHVtcCBkZWJ1Zw0KPnJlZ2lzdGVycyBvbiBTMGl4IGZhaWx1
+cmUNCj4NCj5BZGQgYSBtb2R1bGUgcGFyYW1ldGVyIHdoaWNoIHdoZW4gZW5hYmxlZCwgd2lsbCBj
+aGVjayBvbiByZXN1bWUsIGlmIHRoZQ0KPmxhc3QgUzBpeCBhdHRlbXB0IHdhcyBzdWNjZXNzZnVs
+LiBJZiBub3QsIHRoZSBkcml2ZXIgd291bGQgcHJvdmlkZQ0KPmhlbHBmdWwgZGVidWcgaW5mb3Jt
+YXRpb24gKHdoaWNoIGdldHMgbGF0Y2hlZCBkdXJpbmcgdGhlIGZhaWxlZCBzdXNwZW5kDQo+YXR0
+ZW1wdCkgdG8gZGVidWcgdGhlIFMwaXggZmFpbHVyZS4NCj4NCj5UaGlzIGluZm9ybWF0aW9uIGlz
+IHZlcnkgdXNlZnVsIHRvIGRlYnVnIFMwaXggZmFpbHVyZXMuIFNwZWNpYWxseSBzaW5jZQ0KPnRo
+ZSBsYXRjaGVkIGRlYnVnIGluZm9ybWF0aW9uIHdpbGwgYmUgbG9zdCAob3Zlci13cml0dGVuKSBp
+ZiB0aGUgc3lzdGVtDQo+YXR0ZW1wdHMgdG8gZ28gaW50byBydW50aW1lIChvciBpbW1pbmVudCkg
+UzBpeCBhZ2FpbiBhZnRlciB0aGF0IGZhaWxlZA0KPnN1c3BlbmQgYXR0ZW1wdC4NCj4NCj5TaWdu
+ZWQtb2ZmLWJ5OiBSYWphdCBKYWluIDxyYWphdGphQGdvb2dsZS5jb20+DQo+LS0tDQo+IGRyaXZl
+cnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMgfCA4NiArKysrKysrKysrKysrKysrKysr
+KysrKysrKysNCj4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuaCB8ICA3ICsr
+Kw0KPiAyIGZpbGVzIGNoYW5nZWQsIDkzIGluc2VydGlvbnMoKykNCj4NCj5kaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuYw0KPmIvZHJpdmVycy9wbGF0Zm9y
+bS94ODYvaW50ZWxfcG1jX2NvcmUuYw0KPmluZGV4IDU1NTc4ZDA3NjEwYy4uYjFmNDQwNWEyN2Nl
+IDEwMDY0NA0KPi0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMNCj4r
+KysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5jDQo+QEAgLTIwLDYgKzIw
+LDcgQEANCj4gI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiAjaW5jbHVkZSA8bGludXgvcGNp
+Lmg+DQo+ICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4rI2luY2x1ZGUgPGxp
+bnV4L3N1c3BlbmQuaD4NCj4gI2luY2x1ZGUgPGxpbnV4L3VhY2Nlc3MuaD4NCj4NCj4gI2luY2x1
+ZGUgPGFzbS9jcHVfZGV2aWNlX2lkLmg+DQo+QEAgLTg5MCw5ICs4OTEsOTQgQEAgc3RhdGljIGlu
+dCBwbWNfY29yZV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPipwZGV2KQ0KPiAJcmV0
+dXJuIDA7DQo+IH0NCj4NCj4rI2lmZGVmIENPTkZJR19QTV9TTEVFUA0KPisNCj4rc3RhdGljIGJv
+b2wgd2Fybl9vbl9zMGl4X2ZhaWx1cmVzOw0KPittb2R1bGVfcGFyYW0od2Fybl9vbl9zMGl4X2Zh
+aWx1cmVzLCBib29sLCAwNjQ0KTsNCj4rTU9EVUxFX1BBUk1fREVTQyh3YXJuX29uX3MwaXhfZmFp
+bHVyZXMsICJDaGVjayBhbmQgd2FybiBmb3IgUzBpeA0KPmZhaWx1cmVzIik7DQo+Kw0KPitzdGF0
+aWMgaW50IHBtY19jb3JlX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KPit7DQo+KwlzdHJ1
+Y3QgcG1jX2RldiAqcG1jZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+Kw0KPisJLyogU2F2
+ZSBQQzEwIGFuZCBTMGl4IHJlc2lkZW5jeSBmb3IgY2hlY2tpbmcgbGF0ZXIgKi8NCj4rCWlmICh3
+YXJuX29uX3MwaXhfZmFpbHVyZXMgJiYNCj4rCSAgICAhcmRtc3JsX3NhZmUoTVNSX1BLR19DMTBf
+UkVTSURFTkNZLCAmcG1jZGV2LT5wYzEwX2NvdW50ZXIpDQo+JiYNCj4rCSAgICAhcG1jX2NvcmVf
+ZGV2X3N0YXRlX2dldChwbWNkZXYsICZwbWNkZXYtPnMwaXhfY291bnRlcikpDQo+KwkJcG1jZGV2
+LT5jaGVja19jb3VudGVycyA9IHRydWU7DQo+KwllbHNlDQo+KwkJcG1jZGV2LT5jaGVja19jb3Vu
+dGVycyA9IGZhbHNlOw0KPisNCj4rCXJldHVybiAwOw0KPit9DQo+Kw0KPitzdGF0aWMgaW5saW5l
+IGJvb2wgcGMxMF9mYWlsZWQoc3RydWN0IHBtY19kZXYgKnBtY2RldikNCj4rew0KPisJdTY0IHBj
+MTBfY291bnRlcjsNCj4rDQo+KwlpZiAoIXJkbXNybF9zYWZlKE1TUl9QS0dfQzEwX1JFU0lERU5D
+WSwgJnBjMTBfY291bnRlcikgJiYNCj4rCSAgICBwYzEwX2NvdW50ZXIgPT0gcG1jZGV2LT5wYzEw
+X2NvdW50ZXIpDQo+KwkJcmV0dXJuIHRydWU7DQo+KwllbHNlDQo+KwkJcmV0dXJuIGZhbHNlOw0K
+Pit9DQo+Kw0KPitzdGF0aWMgaW5saW5lIGJvb2wgczBpeF9mYWlsZWQoc3RydWN0IHBtY19kZXYg
+KnBtY2RldikNCj4rew0KPisJdTY0IHMwaXhfY291bnRlcjsNCj4rDQo+KwlpZiAoIXBtY19jb3Jl
+X2Rldl9zdGF0ZV9nZXQocG1jZGV2LCAmczBpeF9jb3VudGVyKSAmJg0KPisJICAgIHMwaXhfY291
+bnRlciA9PSBwbWNkZXYtPnMwaXhfY291bnRlcikNCj4rCQlyZXR1cm4gdHJ1ZTsNCj4rCWVsc2UN
+Cj4rCQlyZXR1cm4gZmFsc2U7DQo+K30NCj4rDQo+K3N0YXRpYyBpbnQgcG1jX2NvcmVfcmVzdW1l
+KHN0cnVjdCBkZXZpY2UgKmRldikNCj4rew0KPisJc3RydWN0IHBtY19kZXYgKnBtY2RldiA9IGRl
+dl9nZXRfZHJ2ZGF0YShkZXYpOw0KPisNCj4rCWlmICghcG1jZGV2LT5jaGVja19jb3VudGVycykN
+Cj4rCQlyZXR1cm4gMDsNCj4rDQo+KwlpZiAocGMxMF9mYWlsZWQocG1jZGV2KSkgew0KPisJCWRl
+dl9pbmZvKGRldiwgIlBDMTAgZW50cnkgaGFkIGZhaWxlZCAoUEMxMCBjbnQ9MHglbGx4KVxuIiwN
+Cj4rCQkJIHBtY2Rldi0+cGMxMF9jb3VudGVyKTsNCj4rCX0gZWxzZSBpZiAoczBpeF9mYWlsZWQo
+cG1jZGV2KSkgew0KPisNCj4rCQljb25zdCBzdHJ1Y3QgcG1jX2JpdF9tYXAgKiptYXBzID0gcG1j
+ZGV2LT5tYXAtDQo+PnNscHMwX2RiZ19tYXBzOw0KPisJCWNvbnN0IHN0cnVjdCBwbWNfYml0X21h
+cCAqbWFwOw0KPisJCWludCBvZmZzZXQgPSBwbWNkZXYtPm1hcC0+c2xwczBfZGJnX29mZnNldDsN
+Cj4rCQl1MzIgZGF0YTsNCj4rDQo+KwkJZGV2X3dhcm4oZGV2LCAiUzBpeCBlbnRyeSBoYWQgZmFp
+bGVkIChTMGl4IGNudD0lbGx1KVxuIiwNCj4rCQkJIHBtY2Rldi0+czBpeF9jb3VudGVyKTsNCj4r
+CQl3aGlsZSAoKm1hcHMpIHsNCj4rCQkJbWFwID0gKm1hcHM7DQo+KwkJCWRhdGEgPSBwbWNfY29y
+ZV9yZWdfcmVhZChwbWNkZXYsIG9mZnNldCk7DQo+KwkJCW9mZnNldCArPSA0Ow0KPisJCQl3aGls
+ZSAobWFwLT5uYW1lKSB7DQo+KwkJCQlkZXZfd2FybihkZXYsICJTTFBfUzBfREJHOiAlLTMyc1x0
+U3RhdGU6DQo+JXNcbiIsDQo+KwkJCQkJIG1hcC0+bmFtZSwNCj4rCQkJCQkgZGF0YSAmIG1hcC0+
+Yml0X21hc2sgPyAiWWVzIiA6ICJObyIpOw0KPisJCQkJKyttYXA7DQo+KwkJCX0NCj4rCQkJKytt
+YXBzOw0KPisJCX0NCj4rCX0NCj4rCXJldHVybiAwOw0KPit9DQo+Kw0KPisjZW5kaWYNCj4rDQo+
+K2NvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIHBtY19jb3JlX3BtX29wcyA9IHsNCj4rCVNFVF9MQVRF
+X1NZU1RFTV9TTEVFUF9QTV9PUFMocG1jX2NvcmVfc3VzcGVuZCwNCj5wbWNfY29yZV9yZXN1bWUp
+DQpUaGVzZSBQTSBPcHMgcm91dGluZXMgd2lsbCBiZSBjYWxsZWQgbm90IGp1c3QgaW4gczJpZGxl
+IHNjZW5hcmlvLCBidXQgYWxzbyBpbiBvdGhlciBzdXNwZW5kIHNjZW5hcmlvcyBsaWtlIHMycmFt
+LCBzMmRpc2suIEhvd2V2ZXIgYWN0dWFsIGZ1bmN0aW9uYWxpdGllcyBzZXJ2ZWQgYnkgdGhlc2Ug
+cm91dGluZXMgYXJlIHJlbGV2YW50IG9ubHkgZm9yIHMyaWRsZS4NClRoYXQgbWVhbnMgd2Ugd2ls
+bCBlbmQgdXAgaGF2aW5nIGZhbHNlIGVycm9ycyBpbiBzMnJhbS9zMmRpc2sgc2NlbmFyaW9zIGFz
+IFBDMTAvczBpeCBjb3VudGVycyB3b250IGluY3JlbWVudCBpbiB0aG9zZSBzY2VuYXJpb3MuIA0K
+DQpWaXNod2ENCj4rfTsNCj4rDQo+IHN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIHBtY19j
+b3JlX2RyaXZlciA9IHsNCj4gCS5kcml2ZXIgPSB7DQo+IAkJLm5hbWUgPSAicG1jX2NvcmUiLA0K
+PisJCS5wbSA9ICZwbWNfY29yZV9wbV9vcHMNCj4gCX0sDQo+IAkucHJvYmUgPSBwbWNfY29yZV9w
+cm9iZSwNCj4gCS5yZW1vdmUgPSBwbWNfY29yZV9yZW1vdmUsDQo+ZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmgNCj5iL2RyaXZlcnMvcGxhdGZvcm0veDg2
+L2ludGVsX3BtY19jb3JlLmgNCj5pbmRleCA4OGQ5YzA2NTNhNWYuLmZkZWU1NzcyZTUzMiAxMDA2
+NDQNCj4tLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5oDQo+KysrIGIv
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuaA0KPkBAIC0yNDEsNiArMjQxLDkg
+QEAgc3RydWN0IHBtY19yZWdfbWFwIHsNCj4gICogQHBtY194cmFtX3JlYWRfYml0OglmbGFnIHRv
+IGluZGljYXRlIHdoZXRoZXIgUE1DIFhSQU0gc2hhZG93DQo+cmVnaXN0ZXJzDQo+ICAqCQkJdXNl
+ZCB0byByZWFkIE1QSFkgUEcgYW5kIFBMTCBzdGF0dXMgYXJlIGF2YWlsYWJsZQ0KPiAgKiBAbXV0
+ZXhfbG9jazoJCW11dGV4IHRvIGNvbXBsZXRlIG9uZSB0cmFuc2NhdGlvbg0KPisgKiBAY2hlY2tf
+Y291bnRlcnM6CU9uIHJlc3VtZSwgY2hlY2sgaWYgY291bnRlcnMgYXJlIGdldHRpbmcgaW5jcmVt
+ZW50ZWQNCj4rICogQHBjMTBfY291bnRlcjoJUEMxMCByZXNpZGVuY3kgY291bnRlcg0KPisgKiBA
+czBpeF9jb3VudGVyOglTMGl4IHJlc2lkZW5jeSAoc3RlcCBhZGp1c3RlZCkNCj4gICoNCj4gICog
+cG1jX2RldiBjb250YWlucyBpbmZvIGFib3V0IHBvd2VyIG1hbmFnZW1lbnQgY29udHJvbGxlciBk
+ZXZpY2UuDQo+ICAqLw0KPkBAIC0yNTMsNiArMjU2LDEwIEBAIHN0cnVjdCBwbWNfZGV2IHsNCj4g
+I2VuZGlmIC8qIENPTkZJR19ERUJVR19GUyAqLw0KPiAJaW50IHBtY194cmFtX3JlYWRfYml0Ow0K
+PiAJc3RydWN0IG11dGV4IGxvY2s7IC8qIGdlbmVyaWMgbXV0ZXggbG9jayBmb3IgUE1DIENvcmUg
+Ki8NCj4rDQo+Kwlib29sIGNoZWNrX2NvdW50ZXJzOyAvKiBDaGVjayBmb3IgY291bnRlciBpbmNy
+ZW1lbnRzIG9uIHJlc3VtZSAqLw0KPisJdTY0IHBjMTBfY291bnRlcjsNCj4rCXU2NCBzMGl4X2Nv
+dW50ZXI7DQo+IH07DQo+DQo+ICNlbmRpZiAvKiBQTUNfQ09SRV9IICovDQo+LS0NCj4yLjIxLjAu
+MzYwLmc0NzFjMzA4ZjkyOC1nb29nDQoNCg==
