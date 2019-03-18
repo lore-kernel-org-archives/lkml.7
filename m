@@ -2,84 +2,144 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB3EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AA1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5CC20872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C306720872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:08:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="JrDwC/Oy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhLGJfu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfCRUHU (ORCPT
+        id S1727517AbfCRUIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:07:20 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45403 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfCRUHU (ORCPT
+        Mon, 18 Mar 2019 16:08:20 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45545 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbfCRUIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:07:20 -0400
-Received: by mail-ot1-f68.google.com with SMTP id i12so15565839otp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:07:19 -0700 (PDT)
+        Mon, 18 Mar 2019 16:08:19 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v20so19510374qtv.12;
+        Mon, 18 Mar 2019 13:08:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ygUaR7GiYrQw12EOQDMxY7EWNNS00Ue7tqp1hNhMuCA=;
-        b=JrDwC/OyTzjt1oikQlIpcbuBZqSW+C9CV1Dm3ASNk1fhv1T6mGPpmukmAfy7O8/o/x
-         RzeTxutE7vMA5uOHPPoqgnwh1lVJ6GQwqgbP9Y5BE9pRiAzYg5lAngaf2UzQ0NSejm/C
-         jRH3pdtLFKL1Fsaq4Mr3eJ/bm/yVzMbJ9Tr4jTv+SUPZMPEfLQQjI+ASWORQvJRyqlrq
-         YtlM18Ah5la8nEmWYqFC4Ag0YmZDSlaGY6PEZlusAbt+ush+04E3IG5BAf7SFiGIoVzY
-         E08rEwc2ORe5MLrLm1iALMGV22qhtHggJIVcECo5WvlnzDC9Gi9ZHURI7pjDV+qXPKYt
-         I6KA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ia36LD3bZfC9hmzTwGqx9+Mb5Jx8fVZmBcI2d4uY9ak=;
+        b=nhLGJfu9eZ4gjz2WMb4+0foBcVZdyJ5Bv29AhHJFGyUZAmImQ1IHW4g0pltxtDJKdM
+         ZEF15hshXGoDiStzbHRFiACbNyYHdSKQ0Jg2H+NmH8MYCyteVh5UMlb2GF2SScnuXKto
+         iNKzQ2CeRBH6K+S9bQfZ62koPSvUR2N5gdpTZicX/0PzZnRxpDu1CcLzF0+7Lb/voIKP
+         PDhdjVwEQZ32kKJFAUm8Mp9gZXsE3xxEL1AmLJ/Uaas0Y+z1IuHgl5Y4BLgAUkvZjgDo
+         TNCDqqeWH94kvfCvrFtu9AtCDosO93DwasOAccmoo9E4JNl2WlPMnOS+QBTD1/8qXlwP
+         pTPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ygUaR7GiYrQw12EOQDMxY7EWNNS00Ue7tqp1hNhMuCA=;
-        b=nuV0vhNkrQATFrcEaHJPi+IFHGtQlZl2L3/E2hBgRqxt+jG+5b3FPqd0Y/LmTx4O1F
-         h3+bbyCOw9Nys6riS7hbnRUW1d8t0AW58v4CkM2+eDOoOb9sDRV8kFZswTqpUCW0dfh4
-         9RNV+qYO9hdaX8WBbv2vMdkt6Rd6B9jkihPVM7aewZHNskgT/xWaWnkMoRKhBY+F4Aor
-         WbqqkYJEnoxV6DxQqv9gJj/eBYlonISsShM74kCE22W27tA9tCWaFXuHlLTYNwARheZB
-         tKmio+huzVhnuu8WDmJK2djLjPeYPX2iI6YnigtCJGe3i+VDYyZ8EtEX52YgGZ5lCxk3
-         fX1g==
-X-Gm-Message-State: APjAAAWMp2P7opjq6xXq8OwlHokfPnagAR9t2pr+URIbnf74bZxeGKvL
-        HqPjN0113Z4zX/moHotmexWJNe6cFwQ9He4bTs0bcBuO
-X-Google-Smtp-Source: APXvYqyikuKV8prgrvcnBwE28bAN24G4srbVqNtWicPnEsu99gsfPhP+/y0kY4F8CO22zm3KsHt3vjK5DT/T4briXEE=
-X-Received: by 2002:a9d:5906:: with SMTP id t6mr12035998oth.308.1552939639256;
- Mon, 18 Mar 2019 13:07:19 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ia36LD3bZfC9hmzTwGqx9+Mb5Jx8fVZmBcI2d4uY9ak=;
+        b=lT9iXfAEHeAqjCXpl/scy2S+scRvOJ70ikXJkI1a0tAA4GtLgI76/2S6EnOzOgLBz3
+         SzPT+X7I3ZiiDBREuB/FmBipnvk7qusvQissGpeshUDbsmCz5i07h1hUu7U+WwXnUjvQ
+         9YR4XSnRIS9uLbOqUBQ0gPG7hFbQRec8tAdlG2nzNn5DoXv7++87eqdQGTsdOC9gFedd
+         FFnqTBg7fwkVDuRNBu8ZdnlwU5z3+ceWy+SojSHSYYwNIlSm+0g3wPLy40PPUlsX19FK
+         a3ZZzh+eLWBLagGK4UuhBJuJ3PeFQ8h2HPqIrpMNABK5RPRfYsA7J+gqS6xvFSTS2vjP
+         8V9Q==
+X-Gm-Message-State: APjAAAUYeW2tZKCKdGUuzE6xToOJ9JELUMDTkMGHPgRoLimICkirYsBm
+        gswykvL2TFFVstSxKImPpEfuMjAY
+X-Google-Smtp-Source: APXvYqyosVeAPBmJFMhEAsr7+U2jMcwAFl/u4TpGwWiqIW6oQzDtKy+JMlZrLVCxC9jBHtpgZLp2WQ==
+X-Received: by 2002:a0c:89a3:: with SMTP id 32mr2570162qvr.116.1552939698655;
+        Mon, 18 Mar 2019 13:08:18 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([2804:1b1:210a:504f:5027:31fa:e70e:3668])
+        by smtp.gmail.com with ESMTPSA id i65sm15067250qki.32.2019.03.18.13.08.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 13:08:17 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BD8FA4039C; Mon, 18 Mar 2019 17:08:14 -0300 (-03)
+Date:   Mon, 18 Mar 2019 17:08:14 -0300
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        namhyung@kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>, rostedt@goodmis.org,
+        Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 01/16] perf: add doc for how to build perf with Asan and
+ UBSan
+Message-ID: <20190318200814.GD3967@kernel.org>
+References: <20190316080556.3075-1-changbin.du@gmail.com>
+ <20190316080556.3075-2-changbin.du@gmail.com>
+ <20190318100758.GA28556@krava>
 MIME-Version: 1.0
-References: <20190318100458.5619-1-narmstrong@baylibre.com> <20190318100458.5619-5-narmstrong@baylibre.com>
-In-Reply-To: <20190318100458.5619-5-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 18 Mar 2019 21:07:08 +0100
-Message-ID: <CAFBinCAT848_qGPuERj+nAc3B+2y4kN5gbF3k4JYYWEu5maDDg@mail.gmail.com>
-Subject: Re: [PATCH v2 04/11] arm64: dts: meson-g12a-u200: add regulators
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Jerome Brunet <jbrunet@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318100758.GA28556@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> From: Jerome Brunet <jbrunet@baylibre.com>
->
-> Add system regulators for the S905D U200 reference design.
->
-> Add some regulators. Still missing
-> * VDD_EE (0.8V - PWM controlled)
-> * VDD_CPU (PWM controlled)
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-I have no details about this board but the changes look sane, so:
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Em Mon, Mar 18, 2019 at 11:07:58AM +0100, Jiri Olsa escreveu:
+> On Sat, Mar 16, 2019 at 04:05:41PM +0800, Changbin Du wrote:
+> > AddressSanitizer (or ASan) and UndefinedBehaviorSanitizer (or UBSan) are
+> > very useful tools to detect program bugs.
+> >  o AddressSanitizer (or ASan) is a GCC feature that detects memory
+> >    corruption bugs such as buffer overflows or memory leaks.
+> >  o UndefinedBehaviorSanitizer (or UBSan) is a fast undefined behavior
+> >    detector supprted by GCC. UBSan detect undefined behavior of programs
+> >    at runtime.
+> > 
+> > This patch adds doc for how to use them on perf. Later patches will fix
+> > some of the issues disclosed by them.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  tools/perf/Documentation/Build.txt | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/tools/perf/Documentation/Build.txt b/tools/perf/Documentation/Build.txt
+> > index f6fc6507ba55..cae6e1d9b901 100644
+> > --- a/tools/perf/Documentation/Build.txt
+> > +++ b/tools/perf/Documentation/Build.txt
+> > @@ -47,3 +47,23 @@ Those objects are then used in final linking:
+> >  
+> >  NOTE this description is omitting other libraries involved, only
+> >       focusing on build framework outcomes
+> 
+> thanks for adding doc, one nit:
+> 
+> > +
+> > +3) buld and install perf
+> 
+> there's already:
+>  2) perf build
+>  =============
+> 
+> please use something like 
+> 
+>  3) perf build for ASan/UBSan
+>  ============================
+> 
+> > +  $ cd tools/perf
+> > +  $ make DESTDIR=/usr
+> > +  $ make DESTDIR=/usr install
+> > +
+> > +4) build with ASan or UBSan
+> 
+> no need for this label
+
+Did this and appart from the evsel->counts one that I fixed up, all
+applied as-is, I added all the Fixes: tags, please consider doing it
+next time.
+
+Please take a look after I push it to my perf/core branch.
+
+Thanks,
+
+- Arnaldo
