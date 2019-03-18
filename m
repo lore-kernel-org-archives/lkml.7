@@ -2,89 +2,101 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE466C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EA2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F382133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD482133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfCRRa3 (ORCPT
+        id S1727397AbfCRRac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:30:29 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:55298 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbfCRRa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:30:28 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 0F61E20723;
-        Mon, 18 Mar 2019 18:30:27 +0100 (CET)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id E392A1FF12;
-        Mon, 18 Mar 2019 18:30:26 +0100 (CET)
-Subject: Re: [PATCH] arm64/io: Don't use WZR in writel
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <68b71c15f32341468a868f6418e4fcb375bc49ba.camel@gmail.com>
- <20190211105755.GB30880@fuggles.cambridge.arm.com>
- <38d8965a-cd41-17cf-1b95-8dd58c079be4@arm.com>
- <874c702b8af760aa8fae38d478c79e3ecba00515.camel@gmail.com>
- <235d20ef-3054-69d9-975d-25aebf32aad3@arm.com>
- <20190223181254.GC572@tuxbook-pro> <86zhqm8i6d.wl-marc.zyngier@arm.com>
- <20190224035356.GD572@tuxbook-pro>
- <33d765b5-1807-fa6c-1ceb-99f09f7c8d5a@free.fr>
- <8eb4f446-6152-ffb6-9529-77fb0bcc307f@arm.com>
- <20190318170041.qu4x2565fmno6sei@shell.armlinux.org.uk>
- <5ba7c4d0-30ec-e38d-41dc-653fd5cb7f05@arm.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <fbacd3df-41c4-f98a-8875-db654aff3a5c@free.fr>
-Date:   Mon, 18 Mar 2019 18:30:26 +0100
+        Mon, 18 Mar 2019 13:30:32 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42544 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfCRRaa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:30:30 -0400
+Received: by mail-ed1-f68.google.com with SMTP id j89so14236421edb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:30:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ft4dh/J1aLEtnBlSvjpPS85uhaQolaIi/oFVoENU5wQ=;
+        b=Onb4dD9hd1Qkp3ynXnX6r/BnSyHfHYRmsjLgjSIFDlQivk+C4Ve/go17pfszFMwuT8
+         VtiD0gUsV0fhdEPtqyyAovZDSpdRLJzNoOg4xEELFzImLbG2pyoRLSKvbbejW8L7r2Qc
+         hxHI4Qtb6Pn01ghKNn9gYy2RfsmFWHXSCyXCKonGVIn9DFzSWgiceVs4J4wH3o3ydOMk
+         tUk526cAJ4Xl4qtQMGgyDRB7ecUm8A5NUxiLiuOamHJaNeWbCuHBUk63RyuLWUrS6C6M
+         y/I8AnD+vyqbZT+YOPGlBL1gRT+nJazEg3a2Io2KEd7Yx1R4/er1RiHmQMTwBAUbESs3
+         vGVg==
+X-Gm-Message-State: APjAAAVe3Aj/ERODMdeEzXnK2sQZvtQwgqxcO6mLRNIY2YpIT8/THyVM
+        KCmUblEuBJ/1FmkDmHGegkEhCgpsNxw=
+X-Google-Smtp-Source: APXvYqxIn02n7hN+0pc6yQ/CxB0ohrI8dEnz87JfvFmHcQcTsM1Bhcq0cBB3lYkhqfrAX4pam5WaVg==
+X-Received: by 2002:a50:ec93:: with SMTP id e19mr2337555edr.169.1552930228744;
+        Mon, 18 Mar 2019 10:30:28 -0700 (PDT)
+Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id o42sm3634462edc.49.2019.03.18.10.30.27
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 10:30:27 -0700 (PDT)
+Subject: Re: [PATCH] extcon: fix a missing check of regmap_read
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org
+References: <20190318164121.13838-1-kjlu@umn.edu>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c2c7685a-fb11-5b31-05f4-e3938efba08b@redhat.com>
+Date:   Mon, 18 Mar 2019 18:30:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <5ba7c4d0-30ec-e38d-41dc-653fd5cb7f05@arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190318164121.13838-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Mar 18 18:30:27 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/2019 18:19, Robin Murphy wrote:
+Hi,
 
-> For the context bank reset, yes, I am assuming that no complier will
-> ever be perverse enough to detect that cfg is not written after the
-> NULL check and immediately reallocate it to XZR for no good reason.
-> I'd like to think that assumption is going to hold for the reasonable
-> scope of this particular workaround, though.
+On 18-03-19 17:41, Kangjie Lu wrote:
+> When regmap_read fails, it doesn't make sense to use the read
+> value "val" because it can be uninitialized.
+> 
+> The fix returns if regmap_read fails.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>   drivers/extcon/extcon-axp288.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
+> index a983708b77a6..b2ba5f073aa7 100644
+> --- a/drivers/extcon/extcon-axp288.c
+> +++ b/drivers/extcon/extcon-axp288.c
+> @@ -143,6 +143,10 @@ static void axp288_extcon_log_rsi(struct axp288_extcon_info *info)
+>   	int ret;
+>   
+>   	ret = regmap_read(info->regmap, AXP288_PS_BOOT_REASON_REG, &val);
+> +	if (ret) {
+> +		dev_dbg(info->dev, "regmap_read error %d\n", ret);
+> +		return;
+> +	}
+>   	for (i = 0, rsi = axp288_pwr_up_down_info; *rsi; rsi++, i++) {
+>   		if (val & BIT(i)) {
+>   			dev_dbg(info->dev, "%s\n", *rsi);
 
-I'm not sure I understand the above paragraph.
+Patch looks good to me:
 
-In code such as:
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-	if (val == 0) foo(val);
+Regards,
 
-gcc's algorithm is likely to figure out that the code is equivalent to
-
-	if (val == 0) foo(0)
-
-and perform constant-propagation, etc.
-
-Is that what we're talking about?
-
-Regards.
+Hans
