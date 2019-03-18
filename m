@@ -2,31 +2,30 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA8CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A61C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386C92133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F197D2133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbfCRVp0 (ORCPT
+        id S1728026AbfCRVpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 17:45:26 -0400
+        Mon, 18 Mar 2019 17:45:32 -0400
 Received: from mga04.intel.com ([192.55.52.120]:57595 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727767AbfCRVoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 17:44:22 -0400
+        id S1727717AbfCRVoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 17:44:20 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 14:44:20 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 14:44:19 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,495,1544515200"; 
-   d="scan'208";a="308301800"
+   d="scan'208";a="308301799"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
   by orsmga005.jf.intel.com with ESMTP; 18 Mar 2019 14:44:20 -0700
 From:   kan.liang@linux.intel.com
@@ -35,9 +34,9 @@ To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 10/22] perf/x86/intel/uncore: Add Intel Icelake uncore support
-Date:   Mon, 18 Mar 2019 14:41:32 -0700
-Message-Id: <20190318214144.4639-11-kan.liang@linux.intel.com>
+Subject: [PATCH 09/22] perf/x86/msr: Add Icelake support
+Date:   Mon, 18 Mar 2019 14:41:31 -0700
+Message-Id: <20190318214144.4639-10-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190318214144.4639-1-kan.liang@linux.intel.com>
 References: <20190318214144.4639-1-kan.liang@linux.intel.com>
@@ -48,193 +47,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Add Intel Icelake uncore support,
- - The init code is based on Skylake
- - Add new pci id for IMC
- - New MSR address for CBOX
- - Get CBOX# from CNL_UNC_CBO_CONFIG MSR directly
- - Create a new PMU for fixed clocktick counter
+Icelake is the same as the existing Skylake parts.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/uncore.c     |  6 ++
- arch/x86/events/intel/uncore.h     |  1 +
- arch/x86/events/intel/uncore_snb.c | 91 ++++++++++++++++++++++++++++++
- 3 files changed, 98 insertions(+)
+ arch/x86/events/msr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index d516161c00c4..dcf87fbbce9d 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1366,6 +1366,11 @@ static const struct intel_uncore_init_fun skx_uncore_init __initconst = {
- 	.pci_init = skx_uncore_pci_init,
- };
- 
-+static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
-+	.cpu_init = icl_uncore_cpu_init,
-+	.pci_init = skl_uncore_pci_init,
-+};
-+
- static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM_EP,	  nhm_uncore_init),
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM,	  nhm_uncore_init),
-@@ -1392,6 +1397,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,      skx_uncore_init),
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
- 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_uncore_init),
-+	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
- 	{},
- };
- 
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index cb46d602a6b8..1b5099a48ba9 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -512,6 +512,7 @@ int skl_uncore_pci_init(void);
- void snb_uncore_cpu_init(void);
- void nhm_uncore_cpu_init(void);
- void skl_uncore_cpu_init(void);
-+void icl_uncore_cpu_init(void);
- int snb_pci2phy_map_init(int devid);
- 
- /* uncore_snbep.c */
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index b12517fae77a..97fbbc91aa29 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -34,6 +34,8 @@
- #define PCI_DEVICE_ID_INTEL_CFL_4S_S_IMC	0x3e33
- #define PCI_DEVICE_ID_INTEL_CFL_6S_S_IMC	0x3eca
- #define PCI_DEVICE_ID_INTEL_CFL_8S_S_IMC	0x3e32
-+#define PCI_DEVICE_ID_INTEL_ICL_U_IMC		0x8a02
-+#define PCI_DEVICE_ID_INTEL_ICL_U2_IMC		0x8a12
- 
- /* SNB event control */
- #define SNB_UNC_CTL_EV_SEL_MASK			0x000000ff
-@@ -93,6 +95,12 @@
- #define SKL_UNC_PERF_GLOBAL_CTL			0xe01
- #define SKL_UNC_GLOBAL_CTL_CORE_ALL		((1 << 5) - 1)
- 
-+/* ICL Cbo register */
-+#define ICL_UNC_CBO_CONFIG			0x396
-+#define ICL_UNC_NUM_CBO_MASK			0xf
-+#define ICL_UNC_CBO_0_PER_CTR0			0x702
-+#define ICL_UNC_CBO_MSR_OFFSET			0x8
-+
- DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
- DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
- DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
-@@ -280,6 +288,70 @@ void skl_uncore_cpu_init(void)
- 	snb_uncore_arb.ops = &skl_uncore_msr_ops;
- }
- 
-+static struct intel_uncore_type icl_uncore_cbox = {
-+	.name		= "cbox",
-+	.num_counters   = 4,
-+	.perf_ctr_bits	= 44,
-+	.perf_ctr	= ICL_UNC_CBO_0_PER_CTR0,
-+	.event_ctl	= SNB_UNC_CBO_0_PERFEVTSEL0,
-+	.event_mask	= SNB_UNC_RAW_EVENT_MASK,
-+	.msr_offset	= ICL_UNC_CBO_MSR_OFFSET,
-+	.ops		= &skl_uncore_msr_ops,
-+	.format_group	= &snb_uncore_format_group,
-+};
-+
-+static struct uncore_event_desc icl_uncore_events[] = {
-+	INTEL_UNCORE_EVENT_DESC(clockticks, "event=0xff"),
-+	{ /* end: all zeroes */ },
-+};
-+
-+static struct attribute *icl_uncore_clock_formats_attr[] = {
-+	&format_attr_event.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group icl_uncore_clock_format_group = {
-+	.name = "format",
-+	.attrs = icl_uncore_clock_formats_attr,
-+};
-+
-+static struct intel_uncore_type icl_uncore_clockbox = {
-+	.name		= "clock",
-+	.num_counters	= 1,
-+	.num_boxes	= 1,
-+	.fixed_ctr_bits	= 48,
-+	.fixed_ctr	= SNB_UNC_FIXED_CTR,
-+	.fixed_ctl	= SNB_UNC_FIXED_CTR_CTRL,
-+	.single_fixed	= 1,
-+	.event_mask	= SNB_UNC_CTL_EV_SEL_MASK,
-+	.format_group	= &icl_uncore_clock_format_group,
-+	.ops		= &skl_uncore_msr_ops,
-+	.event_descs	= icl_uncore_events,
-+};
-+
-+static struct intel_uncore_type *icl_msr_uncores[] = {
-+	&icl_uncore_cbox,
-+	&snb_uncore_arb,
-+	&icl_uncore_clockbox,
-+	NULL,
-+};
-+
-+static int icl_get_cbox_num(void)
-+{
-+	u64 num_boxes;
-+
-+	rdmsrl(ICL_UNC_CBO_CONFIG, num_boxes);
-+
-+	return num_boxes & ICL_UNC_NUM_CBO_MASK;
-+}
-+
-+void icl_uncore_cpu_init(void)
-+{
-+	uncore_msr_uncores = icl_msr_uncores;
-+	icl_uncore_cbox.num_boxes = icl_get_cbox_num();
-+	snb_uncore_arb.ops = &skl_uncore_msr_ops;
-+}
-+
- enum {
- 	SNB_PCI_UNCORE_IMC,
- };
-@@ -666,6 +738,18 @@ static const struct pci_device_id skl_uncore_pci_ids[] = {
- 	{ /* end: all zeroes */ },
- };
- 
-+static const struct pci_device_id icl_uncore_pci_ids[] = {
-+	{ /* IMC */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICL_U_IMC),
-+		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
-+	},
-+	{ /* IMC */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICL_U2_IMC),
-+		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
-+	},
-+	{ /* end: all zeroes */ },
-+};
-+
- static struct pci_driver snb_uncore_pci_driver = {
- 	.name		= "snb_uncore",
- 	.id_table	= snb_uncore_pci_ids,
-@@ -691,6 +775,11 @@ static struct pci_driver skl_uncore_pci_driver = {
- 	.id_table	= skl_uncore_pci_ids,
- };
- 
-+static struct pci_driver icl_uncore_pci_driver = {
-+	.name		= "icl_uncore",
-+	.id_table	= icl_uncore_pci_ids,
-+};
-+
- struct imc_uncore_pci_dev {
- 	__u32 pci_id;
- 	struct pci_driver *driver;
-@@ -730,6 +819,8 @@ static const struct imc_uncore_pci_dev desktop_imc_pci_ids[] = {
- 	IMC_DEV(CFL_4S_S_IMC, &skl_uncore_pci_driver),  /* 8th Gen Core S 4 Cores Server */
- 	IMC_DEV(CFL_6S_S_IMC, &skl_uncore_pci_driver),  /* 8th Gen Core S 6 Cores Server */
- 	IMC_DEV(CFL_8S_S_IMC, &skl_uncore_pci_driver),  /* 8th Gen Core S 8 Cores Server */
-+	IMC_DEV(ICL_U_IMC, &icl_uncore_pci_driver),	/* 10th Gen Core Mobile */
-+	IMC_DEV(ICL_U2_IMC, &icl_uncore_pci_driver),	/* 10th Gen Core Mobile */
- 	{  /* end marker */ }
- };
- 
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index a878e6286e4a..f3f4c2263501 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -89,6 +89,7 @@ static bool test_intel(int idx)
+ 	case INTEL_FAM6_SKYLAKE_X:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+ 	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_ICELAKE_MOBILE:
+ 		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
+ 			return true;
+ 		break;
 -- 
 2.17.1
 
