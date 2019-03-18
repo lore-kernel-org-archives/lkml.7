@@ -2,115 +2,140 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E25C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A51DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6273D2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:47:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GsqNnHre"
+	by mail.kernel.org (Postfix) with ESMTP id 1961420857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfCRBrL (ORCPT
+        id S1727614AbfCRCKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 21:47:11 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49070 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbfCRBrK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 21:47:10 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2I1ieuS033126;
-        Mon, 18 Mar 2019 01:46:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=W13ViHroDyNOovUGQfhK8z1oAhd0ebEkpUkZ7DZ2D70=;
- b=GsqNnHrel18unqwfC9y2Bet3+EX8lP5NMzHe2jXLDUqFwez9Ffy5VGx+xD9RI9be2EK6
- Nzn8ZKBYdsBHeT0SatwIbqfTJG9qw4UVp9iMDRjxQ0cBggXi6YrpYuNUrExRo9BHhwZu
- Pnt5C3SKieQHUCx4qlzQ2l+GBhZv4jTWVOrh1C729bHGNaLBUMNXUAyqWXYQFO0LclYu
- kLibDjxhqHJDRMDCvbbwx/BsuJmpsWNZeJ7JY9MbDWM314cKhU0jO46C3dXl524r5yQM
- 7yUedWR6qnKwJvCf6kG0lzIUGaBocmSbOk7D17gr7ZAYKxHn+0tA1bqw0dSKUh+47PQq Zw== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2120.oracle.com with ESMTP id 2r8ssr3mn1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Mar 2019 01:46:32 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2I1kUNG026009
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Mar 2019 01:46:31 GMT
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2I1kRjV015488;
-        Mon, 18 Mar 2019 01:46:27 GMT
-Received: from [10.182.69.118] (/10.182.69.118)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 17 Mar 2019 18:46:27 -0700
-Subject: Re: [PATCH 2/8] blk-mq: change the method of iterating busy tags of a
- request_queue
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "jsmart2021@gmail.com" <jsmart2021@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "hare@suse.de" <hare@suse.de>,
-        "jthumshirn@suse.de" <jthumshirn@suse.de>,
-        "hch@lst.de" <hch@lst.de>, "sagi@grimberg.me" <sagi@grimberg.me>
-References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
- <1552640264-26101-3-git-send-email-jianchao.w.wang@oracle.com>
- <20190315161608.GB15153@localhost.localdomain>
-From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
-Message-ID: <e17f86f0-98ca-5c79-0d9b-43c628b72413@oracle.com>
-Date:   Mon, 18 Mar 2019 09:49:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sun, 17 Mar 2019 22:10:49 -0400
+Received: from mga01.intel.com ([192.55.52.88]:41962 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726906AbfCRCKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 22:10:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Mar 2019 19:10:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,491,1544515200"; 
+   d="scan'208";a="152578102"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Mar 2019 19:10:47 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1h5hjg-0009Ya-TU; Mon, 18 Mar 2019 10:10:44 +0800
+Date:   Mon, 18 Mar 2019 10:10:20 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Jacky Hu <hengqing.hu@gmail.com>
+Cc:     kbuild-all@01.org, hengqing.hu@gmail.com, jacky.hu@walmart.com,
+        jason.niesz@walmart.com, Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH v4] ipvs: allow tunneling with gue encapsulation
+Message-ID: <201903181001.7czsRhlB%lkp@intel.com>
+References: <20190317155200.16586-1-hengqing.hu@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190315161608.GB15153@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9198 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903180012
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190317155200.16586-1-hengqing.hu@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Keith
+Hi Jacky,
 
-On 3/16/19 12:16 AM, Keith Busch wrote:
-> There is still a window where the check may succeed, but the request is
-> being assigned to a completely different request_queue. The callback
-> then operates on a request it doesn't own.
-> 
-> Tag iteration from a driver can be safe only if the driver initiates a
-> freeze and quiesced all queues sharing the same tagset first. The nvme
-> driver does that, but I think there may need to be an additional grace
-> period to wait for the allocation's queue_enter to call queue_exit to
-> ensure the request is initialized through blk_mq_rq_ctx_init().
+Thank you for the patch! Perhaps something to improve:
 
-This patch is to avoid the use-after-free case in the comment.
-The helper interface is used in following cases,
-1. in flight request account
-   this case should not require so much accuracy
+[auto build test WARNING on ipvs-next/master]
+[also build test WARNING on v5.1-rc1 next-20190306]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-2. timeout check
-   a extra reference will be held there to avoid the request recycle
+url:    https://github.com/0day-ci/linux/commits/Jacky-Hu/ipvs-allow-tunneling-with-gue-encapsulation/20190318-070156
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/horms/ipvs-next.git master
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-3. if it is used by driver, it should be enough that quiesce the request_queue
-   the driver usually wants to handle the in-flight ones, quiesce request_queue
-   could ensure all of tasks quit the hctx_lock and no one issue request any
-   more.
 
-Thanks
-Jianchao
+sparse warnings: (new ones prefixed by >>)
+
+   net/netfilter/ipvs/ip_vs_ctl.c:835:42: sparse: incorrect type in argument 2 (different base types) @@    expected int [signed] i @@    got restricted __be1int [signed] i @@
+   net/netfilter/ipvs/ip_vs_ctl.c:835:42:    expected int [signed] i
+   net/netfilter/ipvs/ip_vs_ctl.c:835:42:    got restricted __be16 [usertype] tun_port
+   net/netfilter/ipvs/ip_vs_ctl.c:1197:44: sparse: expression using sizeof(void)
+>> net/netfilter/ipvs/ip_vs_ctl.c:3207:37: sparse: incorrect type in argument 3 (different base types) @@    expected restricted __be16 [usertype] value @@    got e] value @@
+   net/netfilter/ipvs/ip_vs_ctl.c:3207:37:    expected restricted __be16 [usertype] value
+   net/netfilter/ipvs/ip_vs_ctl.c:3207:37:    got int
+   net/netfilter/ipvs/ip_vs_ctl.c:1313:27: sparse: dereference of noderef expression
+
+vim +3207 net/netfilter/ipvs/ip_vs_ctl.c
+
+  3187	
+  3188	static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
+  3189	{
+  3190		struct nlattr *nl_dest;
+  3191		struct ip_vs_kstats kstats;
+  3192	
+  3193		nl_dest = nla_nest_start(skb, IPVS_CMD_ATTR_DEST);
+  3194		if (!nl_dest)
+  3195			return -EMSGSIZE;
+  3196	
+  3197		if (nla_put(skb, IPVS_DEST_ATTR_ADDR, sizeof(dest->addr), &dest->addr) ||
+  3198		    nla_put_be16(skb, IPVS_DEST_ATTR_PORT, dest->port) ||
+  3199		    nla_put_u32(skb, IPVS_DEST_ATTR_FWD_METHOD,
+  3200				(atomic_read(&dest->conn_flags) &
+  3201				 IP_VS_CONN_F_FWD_MASK)) ||
+  3202		    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
+  3203				atomic_read(&dest->weight)) ||
+  3204		    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
+  3205			       atomic_read(&dest->tun_type)) ||
+  3206		    nla_put_be16(skb, IPVS_DEST_ATTR_TUN_PORT,
+> 3207				 atomic_read(&dest->tun_port)) ||
+  3208		    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
+  3209		    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
+  3210		    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
+  3211				atomic_read(&dest->activeconns)) ||
+  3212		    nla_put_u32(skb, IPVS_DEST_ATTR_INACT_CONNS,
+  3213				atomic_read(&dest->inactconns)) ||
+  3214		    nla_put_u32(skb, IPVS_DEST_ATTR_PERSIST_CONNS,
+  3215				atomic_read(&dest->persistconns)) ||
+  3216		    nla_put_u16(skb, IPVS_DEST_ATTR_ADDR_FAMILY, dest->af))
+  3217			goto nla_put_failure;
+  3218		ip_vs_copy_stats(&kstats, &dest->stats);
+  3219		if (ip_vs_genl_fill_stats(skb, IPVS_DEST_ATTR_STATS, &kstats))
+  3220			goto nla_put_failure;
+  3221		if (ip_vs_genl_fill_stats64(skb, IPVS_DEST_ATTR_STATS64, &kstats))
+  3222			goto nla_put_failure;
+  3223	
+  3224		nla_nest_end(skb, nl_dest);
+  3225	
+  3226		return 0;
+  3227	
+  3228	nla_put_failure:
+  3229		nla_nest_cancel(skb, nl_dest);
+  3230		return -EMSGSIZE;
+  3231	}
+  3232	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
