@@ -2,326 +2,126 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C942C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30AAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A27420872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F362133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfCRU4t (ORCPT
+        id S1727793AbfCRU6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:56:49 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:59720 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727422AbfCRU4t (ORCPT
+        Mon, 18 Mar 2019 16:58:42 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:37104 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726944AbfCRU6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:56:49 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h5zJG-0001KZ-M1; Mon, 18 Mar 2019 16:56:42 -0400
-Date:   Mon, 18 Mar 2019 16:56:11 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
- network namespaces
-Message-ID: <20190318205611.GF4111@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
+        Mon, 18 Mar 2019 16:58:42 -0400
+X-UUID: c5318549fbdd484099700d7b3d543ff9-20190319
+X-UUID: c5318549fbdd484099700d7b3d543ff9-20190319
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1711926507; Tue, 19 Mar 2019 04:58:36 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 19 Mar 2019 04:58:33 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 19 Mar 2019 04:58:33 +0800
+From:   <sean.wang@mediatek.com>
+To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>
+CC:     <linux-bluetooth@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>
+Subject: [PATCH v2] Bluetooth: btmtksdio: fix uninitialized symbol errors in btmtksdio_rx_packet
+Date:   Tue, 19 Mar 2019 04:58:33 +0800
+Message-ID: <741bf172b7d0b77e664e7edeab1bd798c955cc5b.1552942432.git.sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 0F17E529B19880F66F5DD48C42861FFE95E7862658AB986D9949304E5BF6F5182000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 02:29:57PM -0400, Richard Guy Briggs wrote:
-> Audit events could happen in a network namespace outside of a task
-> context due to packets received from the net that trigger an auditing
-> rule prior to being associated with a running task.  The network
-> namespace could be in use by multiple containers by association to the
-> tasks in that network namespace.  We still want a way to attribute
-> these events to any potential containers.  Keep a list per network
-> namespace to track these audit container identifiiers.
-> 
-> Add/increment the audit container identifier on:
-> - initial setting of the audit container identifier via /proc
-> - clone/fork call that inherits an audit container identifier
-> - unshare call that inherits an audit container identifier
-> - setns call that inherits an audit container identifier
-> Delete/decrement the audit container identifier on:
-> - an inherited audit container identifier dropped when child set
-> - process exit
-> - unshare call that drops a net namespace
-> - setns call that drops a net namespace
-> 
-> See: https://github.com/linux-audit/audit-kernel/issues/92
-> See: https://github.com/linux-audit/audit-testsuite/issues/64
-> See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  include/linux/audit.h | 19 ++++++++++++
->  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
->  kernel/nsproxy.c      |  4 +++
->  3 files changed, 106 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index fa19fa408931..70255c2dfb9f 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -27,6 +27,7 @@
->  #include <linux/ptrace.h>
->  #include <linux/namei.h>  /* LOOKUP_* */
->  #include <uapi/linux/audit.h>
-> +#include <linux/refcount.h>
->  
->  #define AUDIT_INO_UNSET ((unsigned long)-1)
->  #define AUDIT_DEV_UNSET ((dev_t)-1)
-> @@ -99,6 +100,13 @@ struct audit_task_info {
->  
->  extern struct audit_task_info init_struct_audit;
->  
-> +struct audit_contid {
-> +	struct list_head	list;
-> +	u64			id;
-> +	refcount_t		refcount;
-> +	struct rcu_head		rcu;
-> +};
-> +
->  extern int is_audit_feature_set(int which);
->  
->  extern int __init audit_register_class(int class, unsigned *list);
-> @@ -202,6 +210,10 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
->  }
->  
->  extern void audit_log_contid(struct audit_context *context, u64 contid);
-> +extern void audit_netns_contid_add(struct net *net, u64 contid);
-> +extern void audit_netns_contid_del(struct net *net, u64 contid);
-> +extern void audit_switch_task_namespaces(struct nsproxy *ns,
-> +					 struct task_struct *p);
->  
->  extern u32 audit_enabled;
->  #else /* CONFIG_AUDIT */
-> @@ -271,6 +283,13 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
->  
->  static inline void audit_log_contid(struct audit_context *context, u64 contid)
->  { }
-> +static inline void audit_netns_contid_add(struct net *net, u64 contid)
-> +{ }
-> +static inline void audit_netns_contid_del(struct net *net, u64 contid)
-> +{ }
-> +static inline void audit_switch_task_namespaces(struct nsproxy *ns,
-> +						struct task_struct *p)
-> +{ }
->  
->  #define audit_enabled AUDIT_OFF
->  #endif /* CONFIG_AUDIT */
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index cf448599ef34..7fa3194f5342 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -72,6 +72,7 @@
->  #include <linux/freezer.h>
->  #include <linux/pid_namespace.h>
->  #include <net/netns/generic.h>
-> +#include <net/net_namespace.h>
->  
->  #include "audit.h"
->  
-> @@ -99,9 +100,13 @@
->  /**
->   * struct audit_net - audit private network namespace data
->   * @sk: communication socket
-> + * @contid_list: audit container identifier list
-> + * @contid_list_lock audit container identifier list lock
->   */
->  struct audit_net {
->  	struct sock *sk;
-> +	struct list_head contid_list;
-> +	spinlock_t contid_list_lock;
->  };
->  
->  /**
-> @@ -275,8 +280,11 @@ struct audit_task_info init_struct_audit = {
->  void audit_free(struct task_struct *tsk)
->  {
->  	struct audit_task_info *info = tsk->audit;
-> +	struct nsproxy *ns = tsk->nsproxy;
->  
->  	audit_free_syscall(tsk);
-> +	if (ns)
-> +		audit_netns_contid_del(ns->net_ns, audit_get_contid(tsk));
->  	/* Freeing the audit_task_info struct must be performed after
->  	 * audit_log_exit() due to need for loginuid and sessionid.
->  	 */
-> @@ -376,6 +384,73 @@ static struct sock *audit_get_sk(const struct net *net)
->  	return aunet->sk;
->  }
->  
-> +void audit_netns_contid_add(struct net *net, u64 contid)
-> +{
-> +	struct audit_net *aunet = net_generic(net, audit_net_id);
-> +	struct list_head *contid_list = &aunet->contid_list;
-> +	struct audit_contid *cont;
-> +
-> +	if (!audit_contid_valid(contid))
-> +		return;
-> +	if (!aunet)
-> +		return;
-> +	spin_lock(&aunet->contid_list_lock);
-> +	if (!list_empty(contid_list))
-> +		list_for_each_entry_rcu(cont, contid_list, list)
-> +			if (cont->id == contid) {
-> +				refcount_inc(&cont->refcount);
-> +				goto out;
-> +			}
-> +	cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
-> +	if (cont) {
-> +		INIT_LIST_HEAD(&cont->list);
-> +		cont->id = contid;
-> +		refcount_set(&cont->refcount, 1);
-> +		list_add_rcu(&cont->list, contid_list);
-> +	}
-> +out:
-> +	spin_unlock(&aunet->contid_list_lock);
-> +}
-> +
-> +void audit_netns_contid_del(struct net *net, u64 contid)
-> +{
-> +	struct audit_net *aunet;
-> +	struct list_head *contid_list;
-> +	struct audit_contid *cont = NULL;
-> +
-> +	if (!net)
-> +		return;
-> +	if (!audit_contid_valid(contid))
-> +		return;
-> +	aunet = net_generic(net, audit_net_id);
-> +	if (!aunet)
-> +		return;
-> +	contid_list = &aunet->contid_list;
-> +	spin_lock(&aunet->contid_list_lock);
-> +	if (!list_empty(contid_list))
-> +		list_for_each_entry_rcu(cont, contid_list, list)
-> +			if (cont->id == contid) {
-> +				if (refcount_dec_and_test(&cont->refcount)) {
-> +					list_del_rcu(&cont->list);
-> +					kfree_rcu(cont, rcu);
-> +				}
-> +				break;
-> +			}
-> +	spin_unlock(&aunet->contid_list_lock);
-> +}
-> +
-> +void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
-> +{
-> +	u64 contid = audit_get_contid(p);
-> +	struct nsproxy *new = p->nsproxy;
-> +
-> +	if (!audit_contid_valid(contid))
-> +		return;
-> +	audit_netns_contid_del(ns->net_ns, contid);
-> +	if (new)
-> +		audit_netns_contid_add(new->net_ns, contid);
-> +}
-> +
->  void audit_panic(const char *message)
->  {
->  	switch (audit_failure) {
-> @@ -1619,7 +1694,6 @@ static int __net_init audit_net_init(struct net *net)
->  		.flags	= NL_CFG_F_NONROOT_RECV,
->  		.groups	= AUDIT_NLGRP_MAX,
->  	};
-> -
->  	struct audit_net *aunet = net_generic(net, audit_net_id);
->  
->  	aunet->sk = netlink_kernel_create(net, NETLINK_AUDIT, &cfg);
-> @@ -1628,7 +1702,8 @@ static int __net_init audit_net_init(struct net *net)
->  		return -ENOMEM;
->  	}
->  	aunet->sk->sk_sndtimeo = MAX_SCHEDULE_TIMEOUT;
-> -
-> +	INIT_LIST_HEAD(&aunet->contid_list);
-> +	spin_lock_init(&aunet->contid_list_lock);
->  	return 0;
->  }
->  
-> @@ -2380,6 +2455,7 @@ int audit_set_contid(struct task_struct *task, u64 contid)
->  	uid_t uid;
->  	struct tty_struct *tty;
->  	char comm[sizeof(current->comm)];
-> +	struct net *net = task->nsproxy->net_ns;
->  
->  	task_lock(task);
->  	/* Can't set if audit disabled */
-> @@ -2401,8 +2477,12 @@ int audit_set_contid(struct task_struct *task, u64 contid)
->  	else if (!(thread_group_leader(task) && thread_group_empty(task)))
->  		rc = -EALREADY;
->  	read_unlock(&tasklist_lock);
-> -	if (!rc)
-> +	if (!rc) {
-> +		if (audit_contid_valid(oldcontid))
-> +			audit_netns_contid_del(net, oldcontid);
->  		task->audit->contid = contid;
-> +		audit_netns_contid_add(net, contid);
-> +	}
->  	task_unlock(task);
->  
->  	if (!audit_enabled)
-> diff --git a/kernel/nsproxy.c b/kernel/nsproxy.c
-> index f6c5d330059a..718b1201ae70 100644
-> --- a/kernel/nsproxy.c
-> +++ b/kernel/nsproxy.c
-> @@ -27,6 +27,7 @@
->  #include <linux/syscalls.h>
->  #include <linux/cgroup.h>
->  #include <linux/perf_event.h>
-> +#include <linux/audit.h>
->  
->  static struct kmem_cache *nsproxy_cachep;
->  
-> @@ -140,6 +141,7 @@ int copy_namespaces(unsigned long flags, struct task_struct *tsk)
->  	struct nsproxy *old_ns = tsk->nsproxy;
->  	struct user_namespace *user_ns = task_cred_xxx(tsk, user_ns);
->  	struct nsproxy *new_ns;
-> +	u64 contid = audit_get_contid(tsk);
->  
->  	if (likely(!(flags & (CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC |
->  			      CLONE_NEWPID | CLONE_NEWNET |
-> @@ -167,6 +169,7 @@ int copy_namespaces(unsigned long flags, struct task_struct *tsk)
->  		return  PTR_ERR(new_ns);
->  
->  	tsk->nsproxy = new_ns;
-> +	audit_netns_contid_add(new_ns->net_ns, contid);
->  	return 0;
->  }
->  
-> @@ -224,6 +227,7 @@ void switch_task_namespaces(struct task_struct *p, struct nsproxy *new)
->  	ns = p->nsproxy;
->  	p->nsproxy = new;
->  	task_unlock(p);
-> +	audit_switch_task_namespaces(ns, p);
->  
->  	if (ns && atomic_dec_and_test(&ns->count))
->  		free_nsproxy(ns);
-> -- 
-> 1.8.3.1
-> 
-> 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+From: Sean Wang <sean.wang@mediatek.com>
+
+Fixed all the below warnings. They would probably cause the following
+error handling path would use the uninitialized value and then produce
+unexpected behavior.
+
+drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_len’ may be used
+uninitialized in this function [-Wmaybe-uninitialized]
+  print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          old_data, old_len, true);
+          ~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/bluetooth/btmtksdio.c:376:15: note: ‘old_len’ was declared here
+  unsigned int old_len;
+               ^~~~~~~
+drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_data’ may be used
+uninitialized in this function [-Wmaybe-uninitialized]
+  print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          old_data, old_len, true);
+          ~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/bluetooth/btmtksdio.c:375:17: note: ‘old_data’ was declared here
+  unsigned char *old_data;
+                 ^~~~~~~~
+
+v2: Remove old_len and old_data because the error path for sdio_readsb also
+    seems wrong. And change the prefix from "mediatek" to "btmtksdio".
+
+Fixes: d74eef2834b5 ("Bluetooth: mediatek: add support for MediaTek MT7663S and MT7668S SDIO devices")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reported-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ drivers/bluetooth/btmtksdio.c | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
+index befe43f9a34a..7d0d1cb93b0e 100644
+--- a/drivers/bluetooth/btmtksdio.c
++++ b/drivers/bluetooth/btmtksdio.c
+@@ -372,8 +372,6 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
+ 	const struct h4_recv_pkt *pkts = mtk_recv_pkts;
+ 	int pkts_count = ARRAY_SIZE(mtk_recv_pkts);
+ 	struct mtkbtsdio_hdr *sdio_hdr;
+-	unsigned char *old_data;
+-	unsigned int old_len;
+ 	int err, i, pad_size;
+ 	struct sk_buff *skb;
+ 	u16 dlen;
+@@ -392,12 +390,6 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
+ 	if (err < 0)
+ 		goto err_kfree_skb;
+ 
+-	/* Keep old data for dump the content in case of some error is
+-	 * caught in the following packet parsing.
+-	 */
+-	old_data = skb->data;
+-	old_len = skb->len;
+-
+ 	bdev->hdev->stat.byte_rx += rx_size;
+ 
+ 	sdio_hdr = (void *)skb->data;
+@@ -467,8 +459,6 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
+ 	return 0;
+ 
+ err_kfree_skb:
+-	print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
+-		       old_data, old_len, true);
+ 	kfree_skb(skb);
+ 
+ 	return err;
+-- 
+2.18.0
+
