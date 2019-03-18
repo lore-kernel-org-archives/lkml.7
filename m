@@ -2,142 +2,99 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FB9C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 233B9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 232CA205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="G4ryAm9H"
+	by mail.kernel.org (Postfix) with ESMTP id F0C8A2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfCRQfi (ORCPT
+        id S1727553AbfCRQft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:35:38 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:55087 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfCRQfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:35:38 -0400
-Received: from [192.168.27.209] (unknown [37.157.136.206])
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 8AFEACE2F;
-        Mon, 18 Mar 2019 18:35:34 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1552926934; bh=Ex+bvQnn3N8ObKZHxEH7aCjGf6wu/IabshZFiQUe4WY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=G4ryAm9HLd42iCwtO24qyH9OJO2a/c975lDbOqdWwADxkLY3gg3u5pzGumFw/Q56w
-         kAJQDbhpzBcSrOskTJCxDEonxN6CLIe0VFIUNjrQka+moCGwfEkJcoBQl4ZmtZrV+l
-         OOZcKipPlx3Bk1EPul0nMS7E++OhB4x2tpWc5JH91+boAUUmAhF2pod7HRTEtpkTec
-         aBPBF2hSaHVTlX0bdrm+GlYL9vN9FivOlpUZOM2jB56DZvbTYMDGO0R5HLiPdKDmw4
-         19cH/+aAiKkLrFRn6tbR9lbYijcLA7vd2V3FKbSs0+w3u1tJOwbaRTfQl0BUBhu8M1
-         bDVv/IRglhbKg==
-Subject: Re: [PATCH v3] PCI: qcom: Use default config space read function
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
- <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
- <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
- <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
- <7d3d788a-d6a3-a70b-adab-6c65771cacc4@free.fr>
- <3c76613e-e60d-94b8-dd6f-b8f4e1928263@linaro.org>
- <2f901228-52db-7661-8257-ca8fd2ff2a46@free.fr>
- <29664b43-535c-c4b1-a93d-18f49687f929@linaro.org>
- <b0e0dc68-4be9-1b0f-7528-fb7d143fea2b@free.fr>
- <9c5a7620-e9ed-82d6-0708-34fe33e39030@linaro.org>
- <29d33e81-fe8d-7fd9-843d-cc53ea6c9586@free.fr>
- <a53911a5-198a-5073-59cf-a61ba067bfd8@free.fr>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <eb1d808e-00aa-5411-be03-2a1a8c8d655a@mm-sol.com>
-Date:   Mon, 18 Mar 2019 18:35:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 12:35:49 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:57661 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfCRQft (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:35:49 -0400
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MEVFi-1hGPtR490s-00FxTQ; Mon, 18 Mar 2019 17:35:40 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vadim Pasternak <vadimp@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mlxsw: core: mlxsw: core: avoid -Wint-in-bool-context warning
+Date:   Mon, 18 Mar 2019 17:35:11 +0100
+Message-Id: <20190318163536.2171073-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <a53911a5-198a-5073-59cf-a61ba067bfd8@free.fr>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:c1w42up200TKqjRrYRKgUK7VltNjESreqJ1xLouMC+e16xKdPCL
+ kfeA8SlqwOU88vSFl5dNJq4clnmkRFZCBr/LcNxvuYdsJrGMQBWksMR4zaDMB37X0WJhsxW
+ /72pf9IcvEK+7gCsQ9MIQyVHRZDYEnhf2CP0BpWAu5pnzLoW+ChIeOrdzrZ/x5Cx9l6IAAS
+ TeJg8YtVI0W8aF49P6TTg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+fZ6XtPWBuU=:ameA70zY4LCt+vQyVQtj0v
+ VRLcDD9U1/wppek0CFKSdWV5q0Jx2ofEdjPhG3+XiDWzQ3Dk3T9Tb0M1Dh374ezoook18X7Pk
+ i7Y0yER4BvDNSzeq5o48o1g08g3AVzJ9jfFBjNOC6FmjArMpbdp92d7fSXls7GBv1ckH/sM3L
+ sOCvx8SL8+oOisPrEpZrY1cpNSyi4emzJHsjJNUOf9zqMCctn1bE2Gc0F1sqTwyVxAPgii0oC
+ mj9k9s8/la+Evp8IPXiFR+ydiLJc4eKz7bvJC0lXMRG64NMbPNNL7yJtr6ix3bNW8NDyZ+uRl
+ fyox+DudUvi965aiETANVYDfli+v84Nl4DaCQbRiY1wFoS8rm4UlHAdOXfweWt3yNd8m/mrXA
+ 2WnFRfq/I0wNeQ8ZduE75rQ2eeWXg5HIqJzlai+M4waTpj2snocuGT0A/IllLuFrxPUaJnOHS
+ 7NCwbENz2J0Xx0nadfrdHpzP6nh0/PUbUmL+lbBrOUeJSNJNJLC7BFF1ozsPw9huS15EkbjqH
+ 5GBvaeOFevscbi0HT3K2bCe9QeJv2c73yyeCg4MzFRL3MG86zm2x7/P6laX2kUCIsnggDTwh5
+ H/40T9lsHCOwVUzGVLQtzArXEla/Zgw/heddlsy8pMJQP7MsHmAUYg5KKwN7/8D7ANuv9fvCw
+ RDNxekrlcGtSmPhuAw9NbmSasQMLiVabH546ibC3N2MV2lbx6SD0Dzq3bYDYun5CJd2oh/ubS
+ pZ0kfCNZuiSw3PzGTARCQrpRBbCpJ61bnVD1YA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+A recently added function in mlxsw triggers a harmless compiler warning:
 
-Thanks for the patch!
+In file included from drivers/net/ethernet/mellanox/mlxsw/core.h:17,
+                 from drivers/net/ethernet/mellanox/mlxsw/core_env.c:7:
+drivers/net/ethernet/mellanox/mlxsw/core_env.c: In function 'mlxsw_env_module_temp_thresholds_get':
+drivers/net/ethernet/mellanox/mlxsw/reg.h:8015:45: error: '*' in boolean context, suggest '&&' instead [-Werror=int-in-bool-context]
+ #define MLXSW_REG_MTMP_TEMP_TO_MC(val) (val * 125)
+                                        ~~~~~^~~~~~
+drivers/net/ethernet/mellanox/mlxsw/core_env.c:116:8: note: in expansion of macro 'MLXSW_REG_MTMP_TEMP_TO_MC'
+   if (!MLXSW_REG_MTMP_TEMP_TO_MC(module_temp)) {
+        ^~~~~~~~~~~~~~~~~~~~~~~~~
 
-On 3/18/19 4:28 PM, Marc Gonzalez wrote:
-> We don't need to fudge the device class in qcom_pcie_rd_own_conf()
-> because dw_pcie_setup_rc() already does the right thing:
-> 
-> 	/* Program correct class for RC */
-> 	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
-> 
-> However, the above has no effect on 8064, thus a fixup is required.
-> 
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> ---
-> Changes from v2 to v3: Add fixup for 8064 quirk
-> Changes from v1 to v2: Completely drop qcom_pcie_rd_own_conf
-> 
-> Stanimir, could you test this submission and send a Tested-by if it works?
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 23 ++++++-----------------
->  1 file changed, 6 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index d185ea5fe996..6fefff106b87 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1129,25 +1129,8 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
->  	return ret;
->  }
->  
-> -static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
-> -				 u32 *val)
-> -{
-> -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> -
-> -	/* the device class is not reported correctly from the register */
-> -	if (where == PCI_CLASS_REVISION && size == 4) {
-> -		*val = readl(pci->dbi_base + PCI_CLASS_REVISION);
-> -		*val &= 0xff;	/* keep revision id */
-> -		*val |= PCI_CLASS_BRIDGE_PCI << 16;
-> -		return PCIBIOS_SUCCESSFUL;
-> -	}
-> -
-> -	return dw_pcie_read(pci->dbi_base + where, size, val);
-> -}
-> -
->  static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
->  	.host_init = qcom_pcie_host_init,
-> -	.rd_own_conf = qcom_pcie_rd_own_conf,
->  };
->  
->  /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
-> @@ -1299,6 +1282,12 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static void qcom_fixup_class(struct pci_dev *dev)
-> +{
-> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class); // 8064
+The warning is normally disabled, but it would be nice to enable
+it to find real bugs, and there are no other known instances at
+the moment.
 
-Please make 0x101 a define, and drop //
+Replace the negation with a zero-comparison, which also matches
+the comment above it.
 
-I will try to find device IDs for ipq8064 and ipq4019.
+Fixes: d93c19a1d95c ("mlxsw: core: Add API for QSFP module temperature thresholds reading")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/mellanox/mlxsw/core_env.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_env.c b/drivers/net/ethernet/mellanox/mlxsw/core_env.c
+index 7a15e932ed2f..c1c1965d7acc 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_env.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_env.c
+@@ -113,7 +113,7 @@ int mlxsw_env_module_temp_thresholds_get(struct mlxsw_core *core, int module,
+ 		return 0;
+ 	default:
+ 		/* Do not consider thresholds for zero temperature. */
+-		if (!MLXSW_REG_MTMP_TEMP_TO_MC(module_temp)) {
++		if (MLXSW_REG_MTMP_TEMP_TO_MC(module_temp) == 0) {
+ 			*temp = 0;
+ 			return 0;
+ 		}
 -- 
-regards,
-Stan
+2.20.0
+
