@@ -2,131 +2,136 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7BFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FF6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39BEA20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:06:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UBFUBm55"
+	by mail.kernel.org (Postfix) with ESMTP id 509512085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfCRLGG (ORCPT
+        id S1727148AbfCRLGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:06:06 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37934 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfCRLGG (ORCPT
+        Mon, 18 Mar 2019 07:06:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43482 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726452AbfCRLGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:06:06 -0400
-Received: by mail-qk1-f196.google.com with SMTP id g1so5074212qki.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 04:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jUm0O90pdg0obPx/pFCJHgoAf1NtMJ+2lalb3fWgBuA=;
-        b=UBFUBm55T5kRA+jGk3ab/GC6HCwn52Y4ATq1pUAjhAvetKsaCmKWZ/o73cJu3xqp9Y
-         BE/6fYQzcXVW6Fxpqi2RjTyVwNaagPVAofVa9kTRhk0R0va1rFeblvZbomwEOhFcILCx
-         i4FtoRDfs4sGRjkap9frKj+xYoQviDyuv4QQmHsDnSpRDHKxF/fXsT++EKzv7q1mgyqY
-         hxtoWfr42FypKK1t20we3x7ti80zO7s6adz6C8VkyrwKrmZQOPluxb3nAEe9ohHEEpK7
-         c7vlPplcdEVP3dn7OGjAUg7oxFC0ddrIFNHq8/FEGMkZLW47uZItXDw4kSG7sKEvBRdj
-         rlGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jUm0O90pdg0obPx/pFCJHgoAf1NtMJ+2lalb3fWgBuA=;
-        b=sZS6DUHfm1VEUaxVZ6lZ+dbRHSwDilBEtsCHyTX+3gGYvwpp+3j3PvK9EOgsR+wRkm
-         2wHO0u2UyiMo0K7MRpWBxSVm3lTCW9OP6FHocJ/Vu2J5TYExZ3++q0gGYJHeq4bIIWik
-         JWduj5SHCNj/grTB0yXffs2EsOyU+klIZysK1YzGVEEu4amnS8pqCs6LRxt4hijiXRPo
-         ZQ79hAs3nagd4fYaAnPU/DrMnOxEVkUUvfsQZwZpHbQfs9iCr7M4HPdqpWqGNN0V0/8n
-         0qvPU50Bk892CO7iyo3CodfJ6qdLLY56zB8V/4hreoY4j1zlDAsPlhsFXlkLqRH36zH6
-         gKbQ==
-X-Gm-Message-State: APjAAAV5UvPf4GE7mFf5+99mLddXLqsHCsEOOZWxaS3sktEWfNZdYjp8
-        pbj9dI741aCaxqBbBd7sgNSdezLbKhqxyKsnOvISww==
-X-Google-Smtp-Source: APXvYqxRbRNk5dEDVUg1IRc43lm92Y2NflR/+89h14A3QVA73KUE02SyPrGHyXIsejDt0U4rDNqXFaj4t9vOw5y83MA=
-X-Received: by 2002:a05:620a:1315:: with SMTP id o21mr1351443qkj.228.1552907165314;
- Mon, 18 Mar 2019 04:06:05 -0700 (PDT)
+        Mon, 18 Mar 2019 07:06:21 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IB4ERm092014
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 07:06:20 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2raa1c0ev9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 07:06:19 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Mon, 18 Mar 2019 11:06:17 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 18 Mar 2019 11:06:14 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2IB6Ej135455214
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 Mar 2019 11:06:14 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 22AB811C05B;
+        Mon, 18 Mar 2019 11:06:14 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2517B11C04C;
+        Mon, 18 Mar 2019 11:06:11 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 18 Mar 2019 11:06:10 +0000 (GMT)
+Date:   Mon, 18 Mar 2019 16:36:10 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Laurent Vivier <lvivier@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC v3] sched/topology: fix kernel crash when a CPU is
+ hotplugged in a memoryless node
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20190304195952.16879-1-lvivier@redhat.com>
+ <77b142fe-0886-1510-28bd-d432ea2c796a@redhat.com>
 MIME-Version: 1.0
-References: <20190318100605.29120-1-benjamin.gaignard@st.com> <20190318104343.GA15574@e107155-lin>
-In-Reply-To: <20190318104343.GA15574@e107155-lin>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Mon, 18 Mar 2019 12:05:54 +0100
-Message-ID: <CA+M3ks6bsiGXCKEQmaFmzBRhWPVhV5wBjVhgyfCa-25DohnsOg@mail.gmail.com>
-Subject: Re: [RESEND PATCH 0/7] Introduce bus domains controller framework
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>,
-        s.hauer@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <77b142fe-0886-1510-28bd-d432ea2c796a@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19031811-0028-0000-0000-0000035561FD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031811-0029-0000-0000-00002413F9B0
+Message-Id: <20190318110610.GB4450@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903180085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lun. 18 mars 2019 =C3=A0 11:43, Sudeep Holla <sudeep.holla@arm.com> a =
-=C3=A9crit :
->
-> On Mon, Mar 18, 2019 at 11:05:58AM +0100, Benjamin Gaignard wrote:
-> > Bus domains controllers allow to divided system on chip into multiple d=
-omains
-> > that can be used to select by who hardware blocks could be accessed.
-> > A domain could be a cluster of CPUs (or coprocessors), a range of addre=
-sses or
-> > a group of hardware blocks.
-> >
-> > Framework architecture is inspirated by pinctrl framework:
-> > - a default configuration could be applied before bind the driver
-> > - configurations could be apllied dynamically by drivers
-> > - device node provides the bus domains configurations
-> >
-> > An example of bus domains controller is STM32 ETZPC hardware block
-> > which got 3 domains:
-> > - secure: hardware blocks are only accessible by software running on tr=
-ust
-> >   zone.
-> > - non-secure: hardware blocks are accessible by non-secure software (i.=
-e.
-> >   linux kernel).
-> > - coprocessor: hardware blocks are only accessible by the corpocessor.
-> > Up to 94 hardware blocks of the soc could be managed by ETZPC and
-> > assigned to one of the three domains.
-> >
->
-> You fail to explain why do we need this in non-secure Linux ?
-> You need to have solid reasons as why this can't be done in secure
-> firmware. And yes I mean even on arm32. On platforms with such hardware
-> capabilities you will need some secure firmware to be running and these
-> things can be done there. I don't want this enabled for ARM64 at all,
-> firmware *has to deal* with this.
+* Laurent Vivier <lvivier@redhat.com> [2019-03-15 12:12:45]:
 
-We use ETZPC to define if hardware blocks can be used by Cortex A7 or Corte=
-x M4
-(both non-secure) on STM32MP1 SoC, this new framework allow to change hardw=
-are
-block split at runtime. This could be done even on non-secure world
-because their is
-nothing critical to change hardware blocks users.
-For example you can do "complex" tasks like display pipe configuration
-on Cortex A7
-where linux is running and handover the control of this hardware block
-to Cortex M4 to
-offload drawing on framebuffer.
+> 
+> Another way to avoid the nodes overlapping for the offline nodes at
+> startup is to ensure the default values don't define a distance that
+> merge all offline nodes into node 0.
+> 
+> A powerpc specific patch can workaround the kernel crash by doing this:
+> 
+> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> index 87f0dd0..3ba29bb 100644
+> --- a/arch/powerpc/mm/numa.c
+> +++ b/arch/powerpc/mm/numa.c
+> @@ -623,6 +623,7 @@ static int __init parse_numa_properties(void)
+>         struct device_node *memory;
+>         int default_nid = 0;
+>         unsigned long i;
+> +       int nid, dist;
+> 
+>         if (numa_enabled == 0) {
+>                 printk(KERN_WARNING "NUMA disabled by user\n");
+> @@ -636,6 +637,10 @@ static int __init parse_numa_properties(void)
+> 
+>         dbg("NUMA associativity depth for CPU/Memory: %d\n",
+> min_common_depth);
+> 
+> +       for (nid = 0; nid < MAX_NUMNODES; nid ++)
+> +               for (dist = 0; dist < MAX_DISTANCE_REF_POINTS; dist++)
+> +                       distance_lookup_table[nid][dist] = nid;
+> +
 
-Benjamin
+The only reason, this would have worked in the specific case, is because we
+are overriding the distance_lookup_table with a unique distance.
+So node_distance for any other node other than itself will return max
+distance which is 40 in this case. (since distance_ref_points_depth is 2)
 
->
-> --
-> Regards,
-> Sudeep
+I am not sure if  this will work if the node distance between the two nodes
+happens to be 20.
+
+>         /*
+>          * Even though we connect cpus to numa domains later in SMP
+>          * init, we need to know the node ids now. This is because
+> 
+
+-- 
+Thanks and Regards
+Srikar Dronamraju
+
