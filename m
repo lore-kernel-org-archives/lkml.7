@@ -2,162 +2,136 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B817C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DB6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7586420811
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8D920811
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfCRMq5 (ORCPT
+        id S1727529AbfCRMrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 08:46:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:58428 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725973AbfCRMq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 08:46:56 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 05:46:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,493,1544515200"; 
-   d="scan'208";a="283638091"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga004.jf.intel.com with ESMTP; 18 Mar 2019 05:46:54 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h5rfJ-0001xi-JY; Mon, 18 Mar 2019 14:46:53 +0200
-Date:   Mon, 18 Mar 2019 14:46:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 2/2] extcon: mrfld: Introduce extcon driver for Basin
- Cove PMIC
-Message-ID: <20190318124653.GS9224@smile.fi.intel.com>
-References: <20190318095225.69200-1-andriy.shevchenko@linux.intel.com>
- <20190318095225.69200-2-andriy.shevchenko@linux.intel.com>
- <CGME20190318101117epcas2p246ba2571549569d1ce18b829d6579bd3@epcas2p2.samsung.com>
- <20190318101109.GP9224@smile.fi.intel.com>
- <3af26666-8913-c8bb-d2fb-64bd9ea0ec69@samsung.com>
+        Mon, 18 Mar 2019 08:47:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59444 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfCRMrg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 08:47:36 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tomeu)
+        with ESMTPSA id 9EE34268B3F
+Subject: Re: [PATCH v3 1/2] drm/virtio: Add window server support
+From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Zach Reizner <zachr@google.com>,
+        kernel@collabora.com, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Jason Wang <jasowang@redhat.com>
+References: <20180126135803.29781-1-tomeu.vizoso@collabora.com>
+ <20180126135803.29781-2-tomeu.vizoso@collabora.com>
+ <20180201163623.5cs2ysykg5wgulf4@sirius.home.kraxel.org>
+ <49785e0d-936a-c3b4-62dd-aafc7083a942@collabora.com>
+Message-ID: <a777160f-5191-3808-7003-774df6d21f0e@collabora.com>
+Date:   Mon, 18 Mar 2019 13:47:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3af26666-8913-c8bb-d2fb-64bd9ea0ec69@samsung.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <49785e0d-936a-c3b4-62dd-aafc7083a942@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 07:38:26PM +0900, Chanwoo Choi wrote:
+[Tomasz wants to comment, adding him to CC]
 
-> Thanks for comment. I add my comments
-> and then you have to rebase it on latest v5.0-rc1
-> because the merge conflict happen on v5.0-rc1.
-
-Thanks for review, see my answers below.
-Non-answered items will be fixed accordingly.
-
-> >> +config EXTCON_INTEL_MRFLD
-> > 
-> >> +	tristate "Intel MErrifield Basin Cove PMIC extcon driver"
-> > 
-> > ME -> Me (will be fixed)
-> > 
-> >> +	depends on INTEL_SOC_PMIC_MRFLD
+On 2/5/18 9:19 AM, Tomeu Vizoso wrote:
+> On 1 February 2018 at 17:36, Gerd Hoffmann <kraxel@redhat.com> wrote:
+>> Hi,
+>>
+>> Sorry for joining the party late. Had a broken finger and was
+>> offline for a bunch of weeks (and a buif backlog afterwards ...).
 > 
-> This driver uses the regmap interface. So, you better to add
-> following dependency?
-
-> - select REGMAP_I2C or REGMAP_SPI
-
-None of them fits this or MFD driver. See below.
-
-> But, if 'INTEL_SOC_PMIC_MRFLE' selects already REGMAP_*
-> configuration. It is not necessary.
-
-https://lore.kernel.org/lkml/20190318095316.69278-1-andriy.shevchenko@linux.intel.com/
-
-It selects REGMAP_IRQ which selects necessary bits from regmap API.
-
-> >> +	help
-> >> +	  Say Y here to enable extcon support for charger detection / control
-> >> +	  on the Intel Merrifiel Basin Cove PMIC.
+> Hi, no problem, hope it's fine now.
 > 
-> What is correct word?
-> - Merrifield? is used on above
-> - Merrifiel?
-
-Merrifield is a correct one. Thanks for spotting this.
-
-> >> +static int mrfld_extcon_set(struct mrfld_extcon_data *data, unsigned int reg,
-> >> +			    unsigned int mask)
-> >> +{
-> >> +	return regmap_update_bits(data->regmap, reg, mask, 0xff);
-> >> +}
+>>> This is to allow clients running within VMs to be able to
+>>> communicate with a compositor in the host. Clients will use the
+>>> communication protocol that the compositor supports, and virtio-gpu
+>>> will assist with making buffers available in both sides, and
+>>> copying content as needed.
+>>
+>> Why not use virtio-vsock to run the wayland protocol? I don't like
+>> the idea to duplicate something with very simliar functionality in 
+>> virtio-gpu.
 > 
-> mrfld_extcon_clear() and mrfld_extcon_set() are just wrapper function
-> for regmap interface. I think that you better to define
-> the meaningful defintion for '0x00' and '0xff' as following:
+> The reason for abandoning that approach was the type of objects that
+> could be shared via virtio-vsock would be extremely limited. Besides
+> that being potentially confusing to users, it would mean from the
+> implementation side that either virtio-vsock would gain a dependency on
+> the drm subsystem, or an appropriate abstraction for shareable buffers
+> would need to be added for little gain.
 > 
-> (just example, you may make the more correct name)
-> #define INTEL_MRFLD_RESET	0x00
-> #define INTEL_MRFLD_SET		0xff
-
-It makes a little sense here, the idea is to reduce parameters.
-
-I could ideally write
-(..., mask, ~mask) for clear
-and
-(..., mask, mask) for set
-
-> And then you better to use the 'regmap_update_bits()' function
-> directly instead of mrfld_extcon_clear/set'.
-
-It will bring duplication of long definitions and reduce readability of the
-code.
-
-> >> +	/*
-> >> +	 * It seems SCU firmware clears the content of BCOVE_CHGRIRQ1
-> >> +	 * and makes it useless for OS. Instead we compare a previously
-> >> +	 * stored status to the current one, provided by BCOVE_SCHGRIRQ1.
-> >> +	 */
-> >> +	ret = regmap_read(regmap, BCOVE_SCHGRIRQ1, &status);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >> +	if (!(status ^ data->status))
-> >> +		return -ENODATA;
-> >> +
-> >> +	if ((status ^ data->status) & BCOVE_CHGRIRQ_USBIDDET)
-> >> +		ret = mrfld_extcon_role_detect(data);
-> This line gets the return value from mrfld_extcon_role_detect(data)
-> without any error handling and then the below line just saves 'status'
-> to 'data->status' regardless of 'ret' value.
+> Another factor that was taken into account was that the complexity
+> required for implementing passing protocol data around was very small
+> when compared with the buffer sharing mechanism.
 > 
-> I think that you have to handle the error case of
-> 'ret = mrfld_extcon_role_detect(data)'.
-
-I'm not sure of the consequences of such change.
-I will give it some tests, and then will proceed accordingly.
-
-> >> +		.name	= KBUILD_MODNAME,
+>>> It is expected that a service in the guest will act as a proxy, 
+>>> interacting with virtio-gpu to support unmodified clients.
+>>
+>> If you have a guest proxy anyway using virtio-sock for the protocol 
+>> stream and virtio-gpu for buffer sharing (and some day 3d rendering
+>> too) should work fine I think.
 > 
-> Where is the definition of KBUILD_MODNAME? Are you missing?
-
-In the Makefile.
-Nothing is missed here.
-
-But I could put its content explicitly here.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> If I understand correctly your proposal, virtio-gpu would be used for
+> creating buffers that could be shared across domains, but something
+> equivalent to SCM_RIGHTS would still be needed in virtio-vsock?
+> 
+> If so, that's what was planned initially, with the concern being that we
+> would be adding a bunch of complexity to virtio-vsock that would be only
+> used in this specific use case. Then we would also need to figure out
+> how virtio-vsock would be able to work with buffers from virtio-gpu
+> (either direct dependency or a new abstraction).
+> 
+> If the mechanics of passing presentation data were very complex, I think
+> this approach would have more merit. But as you can see from the code,
+> it isn't that bad.
+> 
+>>> When the client notifies the compositor that it can read from that
+> buffer,
+>>> the proxy should copy the contents from the SHM region to the
+>>> virtio-gpu resource and call DRM_VIRTGPU_TRANSFER_TO_HOST.
+>>
+>> What is the plan for the host side? I see basically two options. Either 
+>> implement the host wayland proxy directly in qemu. Or
+>> implement it as separate process, which then needs some help from
+>> qemu to get access to the buffers. The later would allow qemu running
+>> independant from the desktop session.
+> 
+> Regarding synchronizing buffers, this will stop becoming needed in
+> subsequent commits as all shared memory is allocated in the host and
+> mapped to the guest via KVM_SET_USER_MEMORY_REGION.
+> 
+> This is already the case for buffers passed from the compositor to the
+> clients (see patch 2/2), and I'm working on the equivalent for buffers
+> from the guest to the host (clients still have to create buffers with
+> DRM_VIRTGPU_RESOURCE_CREATE but they will be only backend by host memory
+> so no calls to DRM_VIRTGPU_TRANSFER_TO_HOST are needed).
+> 
+> But in the case that we still need a proxy for some reason on the host
+> side, I think it would be better to have it in the same process where
+> virtio-gpu is implemented. In crosvm's case it would be in a process
+> separate from the main VMM, as device processes are isolated from each
+> other with minijail (see
+> https://chromium.googlesource.com/chromiumos/platform/crosvm/ ).
+> 
+> Regards,
+> 
+> Tomeu
+> 
