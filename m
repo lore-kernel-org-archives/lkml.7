@@ -2,69 +2,74 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8860BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF167C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546CE2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E35F2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:12:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eW+k4b5D"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NbOqExCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfCRKL7 (ORCPT
+        id S1727845AbfCRKMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:11:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38595 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfCRKL6 (ORCPT
+        Mon, 18 Mar 2019 06:12:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53309 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727696AbfCRKMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:11:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g12so16322540wrm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:11:56 -0700 (PDT)
+        Mon, 18 Mar 2019 06:12:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id e74so12306458wmg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:12:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ld3J54sxdg0UMOT5kawtLOALpYru6XDyZnBywhjdwFY=;
-        b=eW+k4b5DdsCuGskaXhzPaxWlByaOtCJFvGhk1DYz8aOqEygOu4FbcZJExlTVMeevMS
-         smM3oVK3dIxxalrP3VOvj/5+4BtrLyITf5w6CGlMNTlSAG7M19rowZIdKGNDjnY71Fh7
-         yRVo0x9UbozVoXRKBgdAimdqBbSVMPQnGKDC1ULMv6C1LewlQ5vCOQPLsrMytyogfB1z
-         G6Ob3upkSeHwD4kS1rOl+Vl+QAIlCjjA9sw+ErqHnVkT38y3SJRMEQj8xeRjFbJuJVMT
-         DP6QusY5JESCt0XOYEDZnLdANb2sIWv4oSTFGb7YGDga16SwiCERucHOfNO83r4naaBw
-         ex+g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CUW/0oX1GPWgNe1zd7vEv15Hxq4TFiRMZCgKm/8ULe4=;
+        b=NbOqExCGZ0ZWcv6OK56p0ISNDwMEj+I7eqERXUL9LeI4+57DTlyMcCnT8+bf1VatR7
+         ENDvdMHT9j90jipmnxLmGn46t0eIFP4pS8oQLLpgIM8ts7+qtofkedOAPjF0q+eFJn3a
+         3dzD6DPrJx+I2rSm+A5qvuYy7HOAVbF6gfqR/NkyIpItSS04bd75RRx7Fl7Cxd7pGzWY
+         0xHDS8sgMCV6I+Qk6OSieye5gLU+PH0U92NkxBgmJK35GRgf2FDsA2NVC9O5P1nUGY+2
+         GX+BT2DvBGkDwgFBsIzmPd5AWUr+0NRV+V40/Wcvr12pV8tUEE/Tnx6fscyZ1xY+LnA4
+         LwWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ld3J54sxdg0UMOT5kawtLOALpYru6XDyZnBywhjdwFY=;
-        b=JetnLcoPm00TxYtL5d/Q7RuiYBPKA12/biX7xZcAVWHGcTN0yJSBTKn/lCeFpLgfUY
-         aQhbrN5l0nSJXybL+FxlEppEb3utFDudSUywBfiA2KfazxLb1Xnj4gqfawelL5l59Ymp
-         jBJs8kSTz5fqD3teT9ilFNpWRiQq966oCuCqOiY+eBoCHlejpjkmuoAVbychXTC+WUqG
-         jMHNswmbCGnx2ZIjystqzRdQXQhpw2OUgGM7RYDj6B4AoNvWQ/0Yo8qb2U82teewT8NN
-         yinwLdp9k4uDarIoPXBuOm8SnKrJZHwtX96/AFJLf9l1aGArwwIJjTd653dpd368tSnU
-         n3pg==
-X-Gm-Message-State: APjAAAWvc5tgCm1Q3/BSnt5Luay1bWrConp990jhGYMKKQOxlkdifHPX
-        HfgutogttwSzFzPWpahellIOLg==
-X-Google-Smtp-Source: APXvYqyTCPSUV43gmVFixqzLHYM7X1XcD29QDt16ivjitPCf1YsDRCNP86SM+hdy4s7Y1nODBCjfRw==
-X-Received: by 2002:adf:eb8f:: with SMTP id t15mr4506723wrn.119.1552903916098;
-        Mon, 18 Mar 2019 03:11:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CUW/0oX1GPWgNe1zd7vEv15Hxq4TFiRMZCgKm/8ULe4=;
+        b=J1d6Y3sv+6EUrxqVgOHHKgO5MzUPeQoukXLfh5pJ+MVMeVnxFEkEmRMWDtkF6y2m1x
+         EEEVRnPeJ18mZLU85hHxTR5P6SQtyI7aZ83Ypdjl0TzqgoaZKvxhmoMzDphybiEGHkYa
+         c4JLi8CnjoTKVtkOqNbL58bDgu4btFekiWIegxRxV3yhdXrPuHZlOMAdTLE7bMwOP8yP
+         NwtfIU38/FO/zWSSYVWmwhRn/lJJi/6CysxAJhkao9MuRISmwkwdFe09d9XAzTHEtR3D
+         158XophTVcAlXufSO9CzNQcpNV7Fl8gXxAfb4Ez6lkLv9EW9px98iZLS7hFCxwNwRxsz
+         jFkg==
+X-Gm-Message-State: APjAAAWyMhpXA7dIK2G9qBcc9ngakLiOSXxZtTsPhT58hbSpF+BeDXdd
+        zYHolwmRjSTlsuSXZpEkTcl00w==
+X-Google-Smtp-Source: APXvYqx6NYeyh64Qt5sdHoPOjHpVXK780Jxx0ATdpoL2SKpw8hLl8FQkmM1vyuXbv6ErBoD+z5PQgA==
+X-Received: by 2002:a1c:6c08:: with SMTP id h8mr3810546wmc.146.1552903919268;
+        Mon, 18 Mar 2019 03:11:59 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z8sm6697855wrl.59.2019.03.18.03.11.55
+        by smtp.gmail.com with ESMTPSA id z8sm6697855wrl.59.2019.03.18.03.11.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 18 Mar 2019 03:11:55 -0700 (PDT)
+        Mon, 18 Mar 2019 03:11:58 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
-        kishon@ti.com
+        kishon@ti.com, devicetree@vger.kernel.org
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/8] arm64: meson: Add support for USB on Amlogic G12A
-Date:   Mon, 18 Mar 2019 11:11:45 +0100
-Message-Id: <20190318101153.7531-1-narmstrong@baylibre.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 3/8] dt-bindings: usb: dwc2: Add Amlogic G12A DWC2 Compatible
+Date:   Mon, 18 Mar 2019 11:11:48 +0100
+Message-Id: <20190318101153.7531-4-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190318101153.7531-1-narmstrong@baylibre.com>
+References: <20190318101153.7531-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,96 +77,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for USB on Amlogic G12A SoCs.
+Adds the specific compatible string for the DWC2 IP found in the
+Amlogic G12A SoC Family.
 
-This patchset is composed with :
-- bindings of the PHYs
-- bindings of the USB Control Glue
-- PHY Drivers
-- USB Control Glue driver
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Device Tree nodes will be added in a separate patchset.
-
-The Amlogic G12A USB Complex is composed of :
-- 2 USB Controllers :
- * DWC3 for USB2 and USB3 Host functionality
- * DWC2 for USB2 Peripheral functionality
-- 2 USB2 OTG PHYs, only a single one will be routed to either DWC2 to DWC3
-- 1 USB3 PHY shared with PCIE funcionnality
-- A Glue to control PHY routing, setup and OTG detection
-
-The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
-routing of the OTG PHY between the DWC3 and DWC2 controllers, and
-setups the on-chip OTG mode selection for this PHY.
-
-This drivers supports the on-probe setup of the OTG mode, and manually
-via the USB Role interface. The IRQ mode change detect is yet to be added
-in a future patchset, mainly due to lack of hardware to validate on.
-
-Changes since v2 at [1]:
-- Collected review tags
-- Removed syscon.h in usb2 phy driver
-- Added comment on the USB3/PCIe switch
-- Renamed dwc3_meson_g12a_usb_init_mode in glue driver
-- Changed indentation in dwc3_meson_g12a_role_set
-- Switched to of_get_compatible_child in glue code
-- Added devm_add_action_or_reset() to disable clock in case of probe failure
-- Checks priv->vbus before enabling regulator
-- Switched phy_init/phy_power_on
-- Removed priv->phys[i] NULL checks in suspend code
-- Removed clk_disable_unprepare/clk_put in remove code
-
-Changes since v1 at [0]:
- - USB2 PHY Bindings: collected tags and updated commit log
- - USB3/PCIE PHY Bindings: collected tag and updated reset list
- - DWC2 Compatible: collected tags
- - DWC3 Glue Bindings:
-   - removed clock-names and reset-names for single entries
-   - removed ports graph for PHYs and replaced by phys list with phy-names
-   - added dr_mode and optional vbus-supply
-   - fixed example
- - USB2 PHY Driver: removed USB_SUPPORT and otg.h include
- - USB3/PCIE PHY Driver: removed USB_SUPPORT, fixed comment and unused reg variable
- - USB Glue Driver:
-   - Moved debugfs I/F to USB_ROLE_SWITCH framework
-   - Integrated USB Glue Control Registers offset
-   - Removed of graph parsing to use devm_phy_optional_get()
-   - Fixed PHY mode handling and OTG switching
-   - Simplified PHY calls by removing the NULL test
-   - Added optional vbus regulator handling
-
-[1] https://lkml.kernel.org/r/20190212151413.24632-1-narmstrong@baylibre.com
-[2] https://lkml.kernel.org/r/20190304103846.2060-1-narmstrong@baylibre.com
-
-Neil Armstrong (8):
-  dt-bindings: phy: Add Amlogic G12A USB2 PHY Bindings
-  dt-bindings: phy: Add Amlogic G12A USB3+PCIE Combo PHY Bindings
-  dt-bindings: usb: dwc2: Add Amlogic G12A DWC2 Compatible
-  dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue Bindings
-  phy: amlogic: add Amlogic G12A USB2 PHY Driver
-  phy: amlogic: Add Amlogic G12A USB3 + PCIE Combo PHY Driver
-  usb: dwc2: Add Amlogic G12A DWC2 Params
-  usb: dwc3: Add Amlogic G12A DWC3 glue
-
- .../bindings/phy/meson-g12a-usb2-phy.txt      |  22 +
- .../bindings/phy/meson-g12a-usb3-pcie-phy.txt |  22 +
- .../devicetree/bindings/usb/amlogic,dwc3.txt  |  88 +++
- .../devicetree/bindings/usb/dwc2.txt          |   1 +
- drivers/phy/amlogic/Kconfig                   |  22 +
- drivers/phy/amlogic/Makefile                  |   2 +
- drivers/phy/amlogic/phy-meson-g12a-usb2.c     | 189 ++++++
- .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    | 413 ++++++++++++
- drivers/usb/dwc2/params.c                     |  12 +
- drivers/usb/dwc3/Kconfig                      |  10 +
- drivers/usb/dwc3/Makefile                     |   1 +
- drivers/usb/dwc3/dwc3-meson-g12a.c            | 602 ++++++++++++++++++
- 12 files changed, 1384 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
- create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
- create mode 100644 drivers/phy/amlogic/phy-meson-g12a-usb2.c
- create mode 100644 drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
- create mode 100644 drivers/usb/dwc3/dwc3-meson-g12a.c
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index 6dc3c4a34483..e150b7b227c9 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -14,6 +14,7 @@ Required properties:
+   - "amlogic,meson8-usb": The DWC2 USB controller instance in Amlogic Meson8 SoCs;
+   - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
+   - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
++  - "amlogic,meson-g12a-usb": The DWC2 USB controller instance in Amlogic G12A SoCs;
+   - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
+   - snps,dwc2: A generic DWC2 USB controller with default parameters.
+   - "st,stm32f4x9-fsotg": The DWC2 USB FS/HS controller instance in STM32F4x9 SoCs
 -- 
 2.20.1
 
