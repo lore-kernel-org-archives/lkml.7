@@ -2,236 +2,109 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84BAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C241C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A136020850
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uWW2Eai6"
+	by mail.kernel.org (Postfix) with ESMTP id 2146A20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfCRNMe (ORCPT
+        id S1727623AbfCRNNF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 09:12:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33903 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfCRNMe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 09:12:34 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k1so16518921wre.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 06:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Q/JQhFJ5Svuh20tw7qoSD6HJZGagg4+WAnpmNurNylc=;
-        b=uWW2Eai6mpmcWK7nVjsU1jCFqn2qTWPYFQi7Vi3jvx+H+EKjqeGQgwY40QThK/LvDO
-         bhMdZe5N7NQLW0GCVwKUT+qL6oFx0iZFCZo5LRo3rlarfIFpDG4ViXvKXrSJ5uHFdDkH
-         BqilEZjRcvse7b+SO2ehHQ2FakekKgdn4SOB/myFE+N3rXy3QWggMbvT9b7ng1u7KHD1
-         hEZ5oGx695YPuws0+HVBZ1htWESrgoUTvFRTlT91asNL2brgu45SbSWXZBDVzmMFTgyP
-         MUGl8D1ZvLSTfqicaevg0GpUKMRmReyZi88F1K39KF8bmkkPSGi2zh8wZug72Sa415dh
-         9XHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Q/JQhFJ5Svuh20tw7qoSD6HJZGagg4+WAnpmNurNylc=;
-        b=c5o+7KbGAwdxbMQRwIHthOkGB98Dm6KZAK5mXp6gb9mEl2Wazj6htxWA/2HVWDT5MW
-         ca3xqpCDn6jT1xENz33isOmOUqdnZ/3e3hJvsyLCeCk6QXx3zaV3rIyp2ZdNq5vALYmm
-         6k6q1MeGbw/MllYhRwwodX4Ffbz7uygbuk+sepIkRjiQxtjldaIJRoTAQB1wu+qyy5XK
-         ewUjuOMRlFPZGzHDXzSnXouengJcMj1dRS5ZHrInWW/yfrBEpVwA6m6VFV5fKGCTQVff
-         V9TMq7uOrWvBPYCNL5j5dzwm8ad7jvvtShLqEPyXAdWYnQ/5dMfW5kvs2W8YrgvmUGZp
-         IADg==
-X-Gm-Message-State: APjAAAW9P0c96G1FQuspVc//TDWHbf0ni0mPQcg/p3rMEMB9Zo3AkGym
-        ovyeSUelmfWNAhZIK/Ka/f/s6A==
-X-Google-Smtp-Source: APXvYqzh8oVuwdWQjvJTRTCoDXD1wz9XY4WbNN8/4aASEDbeCEkorEeaL4kKPLMOU3EH25Kq8k5sWw==
-X-Received: by 2002:a5d:644a:: with SMTP id d10mr11581876wrw.308.1552914751271;
-        Mon, 18 Mar 2019 06:12:31 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z20sm15550138wma.9.2019.03.18.06.12.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 06:12:29 -0700 (PDT)
-Subject: Re: [PATCH 2/2] pinctrl: meson: add support of drive-strength
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        linux-amlogic@lists.infradead.org
-References: <20190314163725.7918-1-jbrunet@baylibre.com>
- <20190314163725.7918-3-jbrunet@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <544af6b6-acf4-9904-3b32-9a99567e6ac9@baylibre.com>
-Date:   Mon, 18 Mar 2019 14:12:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 09:13:05 -0400
+Received: from albireo.enyo.de ([5.158.152.32]:56212 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726692AbfCRNNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 09:13:04 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1h5s4X-0002x0-Ef; Mon, 18 Mar 2019 13:12:57 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1h5s4X-0002Xc-CH; Mon, 18 Mar 2019 14:12:57 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Willem de Bruijn <willemb@google.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Law <law@redhat.com>
+Subject: Re: [PATCH] y2038: fix socket.h header inclusion
+References: <20190311153857.563743-1-arnd@arndb.de>
+        <87k1h1fgkk.fsf@mid.deneb.enyo.de>
+        <CAK8P3a1r8GRC7GTHHqWY-PUn=9rWB-7+Qo=7txanbEjGZ-wppw@mail.gmail.com>
+        <87a7hvded7.fsf@mid.deneb.enyo.de>
+        <CABeXuvrEecSAkBuN-SmAbGwhLWNCC+bA1=X78fm8xMyw8=hm6Q@mail.gmail.com>
+        <CAK8P3a22n5L45Gknqd=2zinVGqRovkk0OABmGLJbGcmg8xXd+A@mail.gmail.com>
+        <87o968y1uv.fsf@mid.deneb.enyo.de>
+        <CAK8P3a1DzRhiuNxBeQaTYSX1NhCaN6+B0Ya7aeGfxUGj35LFhw@mail.gmail.com>
+Date:   Mon, 18 Mar 2019 14:12:57 +0100
+In-Reply-To: <CAK8P3a1DzRhiuNxBeQaTYSX1NhCaN6+B0Ya7aeGfxUGj35LFhw@mail.gmail.com>
+        (Arnd Bergmann's message of "Mon, 18 Mar 2019 13:56:37 +0100")
+Message-ID: <877ecwwckm.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-In-Reply-To: <20190314163725.7918-3-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 17:37, Jerome Brunet wrote:
-> From: Guillaume La Roque <glaroque@baylibre.com>
-> 
-> drive-strength is a new feature needed for G12A SoC.
-> the default DS setting after boot is usually 0.5mA and it is not enough for
-> many functions. We need to be able to set the drive strength to reliably
-> enable things like MMC, I2C, etc ...
-> 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/pinctrl/meson/pinctrl-meson-g12a.c |  36 ++---
->  drivers/pinctrl/meson/pinctrl-meson.c      | 166 ++++++++++++++++-----
->  drivers/pinctrl/meson/pinctrl-meson.h      |  20 ++-
->  3 files changed, 162 insertions(+), 60 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-> index d494492e98e9..3475cd7bd2af 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+* Arnd Bergmann:
 
-[...]
+> On Mon, Mar 18, 2019 at 10:25 AM Florian Weimer <fw@deneb.enyo.de> wrote:
+>>
+>> * Arnd Bergmann:
+>>
+>> > Should we just remove __kernel_fd_set from the exported headers and
+>> > define the internal fd_set directly in include/linux/types.h? (Adding the
+>> > folks from the old thread to Cc).
+>>
+>> The type is used in the sanitizers, but incorrectly.  They assume that
+>> FD_SETSIZE is always 1024.  (The existence of __kernel_fd_set is
+>> itself somewhat questionable because it leads to such bugs.)
+>> Moving around the type could cause a build failure in the sanitizers, but I'm
+>> not entirely clear how the UAPI headers are included there.
+>
+> It looks like sanitizer_platform_limits_posix.cc includes
+> linux/posix_types.h to ensure that __kernel_fd_set is the same
+> size as __sanitizer___kernel_fd_set, and then it uses the
+> latter afterwards.
+>
+> What I don't see here is what kind of operation is actually done
+> on the data, I only see a cast to void.
 
->  static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
->  			     unsigned long *config)
->  {
->  	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
->  	enum pin_config_param param = pinconf_to_config_param(*config);
->  	u16 arg;
-> +	int ret;
->  
->  	switch (param) {
->  	case PIN_CONFIG_BIAS_DISABLE:
-> @@ -291,6 +373,10 @@ static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
->  		else
->  			return -EINVAL;
->  		break;
-> +	case PIN_CONFIG_DRIVE_STRENGTH:
-> +		ret = meson_pinconf_get_drive_strength(pc, pin, &arg);
-> +		if (ret)
-> +			return ret;
+I think it is used to assert that the select family of system calls
+writes to the 1024 bits for each of the passed pointers.  Which is not
+actually true—the write size is controlled by the file descriptor
+count argument.
 
-Missing break here !
+> If libsanitizer actually does
+> anything interesting here, we should definitely fix it to use the
+> correct size, especially since this is actually something that
+> can trigger a buffer overflow in subtle ways when used carelessly.
+> See for example [1], which we still have not addressed
 
-Neil
+The footnote is missing.
 
+> For this specific use (and probably others like it), renaming the
+> fds_bits member to __kernel_fds_bits or something like that
+> would keep user space still compiling. That would only break
+> if someone was using __kernel_fd_set, and actually doing
+> bit operations on it. glibc uses '__fds_bits' unless __USE_XOPEN
+> is set, so maybe we should use use that name unconditionally.
 
->  	default:
->  		return -ENOTSUPP;
->  	}
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-> index 5eaab925f427..1a88103dcb9b 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.h
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
-> @@ -71,9 +71,20 @@ enum meson_reg_type {
->  	REG_DIR,
->  	REG_OUT,
->  	REG_IN,
-> +	REG_DS,
->  	NUM_REG,
->  };
->  
-> +/**
-> + * enum meson_pinconf_drv - value of drive-strength supported
-> + */
-> +enum meson_pinconf_drv {
-> +	MESON_PINCONF_DRV_500UA,
-> +	MESON_PINCONF_DRV_2500UA,
-> +	MESON_PINCONF_DRV_3000UA,
-> +	MESON_PINCONF_DRV_4000UA,
-> +};
-> +
->  /**
->   * struct meson bank
->   *
-> @@ -132,7 +143,8 @@ struct meson_pinctrl {
->  		.num_groups = ARRAY_SIZE(fn ## _groups),		\
->  	}
->  
-> -#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib)	\
-> +#define BANK_DS(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib,     \
-> +		dsr, dsb)                                                      \
->  	{								\
->  		.name		= n,					\
->  		.first		= f,					\
-> @@ -145,8 +157,12 @@ struct meson_pinctrl {
->  			[REG_DIR]	= { dr, db },			\
->  			[REG_OUT]	= { or, ob },			\
->  			[REG_IN]	= { ir, ib },			\
-> +			[REG_DS]	= { dsr, dsb },			\
->  		},							\
-> -	 }
-> +	}
-> +
-> +#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib) \
-> +	BANK_DS(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib, 0, 0)
->  
->  #define MESON_PIN(x) PINCTRL_PIN(x, #x)
->  
-> 
-
+Please use something that is more obviously Linux-specific.
