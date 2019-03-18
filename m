@@ -2,139 +2,156 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE64C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02934C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A772420854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C507F20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:47:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SAbwpz8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfCRLrZ (ORCPT
+        id S1727572AbfCRLrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:47:25 -0400
-Received: from foss.arm.com ([217.140.101.70]:60942 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbfCRLrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:47:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02AC81650;
-        Mon, 18 Mar 2019 04:47:24 -0700 (PDT)
-Received: from [10.1.199.35] (e107154-lin.cambridge.arm.com [10.1.199.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D824F3F614;
-        Mon, 18 Mar 2019 04:47:17 -0700 (PDT)
-Subject: Re: [PATCH v11 09/14] kernel, arm64: untag user pointers in
- prctl_set_mm*
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-References: <cover.1552679409.git.andreyknvl@google.com>
- <c4d65de9867cb3349af6800242da0de751260c6c.1552679409.git.andreyknvl@google.com>
-From:   Kevin Brodsky <kevin.brodsky@arm.com>
-Message-ID: <96675b72-d325-0682-4864-b6a96f63f8fd@arm.com>
-Date:   Mon, 18 Mar 2019 11:47:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <c4d65de9867cb3349af6800242da0de751260c6c.1552679409.git.andreyknvl@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+        Mon, 18 Mar 2019 07:47:39 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44549 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfCRLrj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 07:47:39 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a3so11067866pff.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 04:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3IvVN6bHe9Zm36t3Y+tbmGkwIFb1zRc7DMqJgbAOWIQ=;
+        b=SAbwpz8rOcLIu5bx6r3dCXj/pOctJyfExLq1swAZVP0Gg/afhCsdwFBEC68cHHfws3
+         4gIlpQR+y7D0Cj+Z19yZyBeeu5UOdVi+MpCGr8jqYVea4uGUvHtU6Ya/vhodAhrUUD1g
+         yt3spZlW/oYCRxNbSeMrxWbbFSOfpj/SeT/mBhepvVERzQY3cRoj5asKQzHZ2/o+YqGD
+         RGMNNWmNZxFxcL4GWUMCyw5BVC28A94swCZsKo1Q14k5Mgu7XPN5rbYl9wk+1MuZHh22
+         UfVIjtUi7HiNvdqFHr+AC6ae/nwHrsfmODM51aEkAdN/nvmqaqakLh8Fmnv+dNSLX8Z0
+         2/6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3IvVN6bHe9Zm36t3Y+tbmGkwIFb1zRc7DMqJgbAOWIQ=;
+        b=EeMnAV2yY7C8kMRD1M13ZBgu8l6gzEtpZEOXX6a2nRUUVrlb/aloRvkJ5fuNNlPNZj
+         /byyz5OxUNbZQ8zzB6laZ2NBYY9dI+ggQ93MOqFPY0GgQHbcNFVBqR+6y+SiGzw2D3eh
+         MGhrcJnuPW8xSyltj/jzvajR0G8LhRn/BOkXmsjW/oGm+t3YASpFBSDlEqZ07LoHynj3
+         2nWpOE+k6iWHV2+cU+ddKh6u1hjVjDT+6qhg8UbvI4YWjXCL1/LdqOnxWvBvAX2OmpOZ
+         DoA6tWOmUoPOnQsYHYsYZM8CBNnczMSojxuEVDk1CY08weeuTlTXOWQ7Bhfa1ooQOIo4
+         zIhA==
+X-Gm-Message-State: APjAAAVYANdIcJg52oOvr7N1kIJzPagRsxyTt5nk0+j/RRhjzJoOCZG9
+        +TprGeMZOR//LhfpZNeKZFpF6A==
+X-Google-Smtp-Source: APXvYqwQoKz34wHhI/asX2cwSEGbZL6lTCuSL0ONgq7n8XuOeOQKjEhc92X46BFGGs+3RtTdr/cCpg==
+X-Received: by 2002:a63:7843:: with SMTP id t64mr17366051pgc.178.1552909657742;
+        Mon, 18 Mar 2019 04:47:37 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id p5sm14403911pfn.154.2019.03.18.04.47.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 18 Mar 2019 04:47:36 -0700 (PDT)
+From:   Yash Shah <yash.shah@sifive.com>
+To:     palmer@sifive.com, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com, paul.walmsley@sifive.com,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v10 0/2] PWM support for HiFive Unleashed
+Date:   Mon, 18 Mar 2019 17:17:12 +0530
+Message-Id: <1552909634-18757-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/03/2019 19:51, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
->
-> prctl_set_mm() and prctl_set_mm_map() use provided user pointers for vma
-> lookups, which can only by done with untagged pointers.
->
-> Untag user pointers in these functions.
->
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->   kernel/sys.c | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
->
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index 12df0e5434b8..8e56d87cc6db 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -1993,6 +1993,18 @@ static int prctl_set_mm_map(int opt, const void __user *addr, unsigned long data
->   	if (copy_from_user(&prctl_map, addr, sizeof(prctl_map)))
->   		return -EFAULT;
->   
-> +	prctl_map->start_code	= untagged_addr(prctl_map.start_code);
-> +	prctl_map->end_code	= untagged_addr(prctl_map.end_code);
-> +	prctl_map->start_data	= untagged_addr(prctl_map.start_data);
-> +	prctl_map->end_data	= untagged_addr(prctl_map.end_data);
-> +	prctl_map->start_brk	= untagged_addr(prctl_map.start_brk);
-> +	prctl_map->brk		= untagged_addr(prctl_map.brk);
-> +	prctl_map->start_stack	= untagged_addr(prctl_map.start_stack);
-> +	prctl_map->arg_start	= untagged_addr(prctl_map.arg_start);
-> +	prctl_map->arg_end	= untagged_addr(prctl_map.arg_end);
-> +	prctl_map->env_start	= untagged_addr(prctl_map.env_start);
-> +	prctl_map->env_end	= untagged_addr(prctl_map.env_end);
+This patch series adds a PWM driver and DT documentation
+for HiFive Unleashed board. The patches are mostly based on
+Wesley's patch.
 
-As the buildbot suggests, those -> should be . instead :) You might want to check 
-your local build with CONFIG_CHECKPOINT_RESTORE=y.
+v10
+- Use DIV_ROUND_CLOSEST_ULL instead of div_u64_round
+- Change 'num' defination to u64 bit (in pwm_sifive_apply).
+- Remove the usage of pwm_get_state()
 
-> +
->   	error = validate_prctl_map(&prctl_map);
->   	if (error)
->   		return error;
-> @@ -2106,6 +2118,8 @@ static int prctl_set_mm(int opt, unsigned long addr,
->   			      opt != PR_SET_MM_MAP_SIZE)))
->   		return -EINVAL;
->   
-> +	addr = untagged_addr(addr);
+v9
+- Use appropriate bitfield macros
+- Add approx_period in pwm_sifive_ddata struct and related changes
+- Correct the eqn for calculation of frac (in pwm_sifive_apply)
+- Other minor fixes
 
-This is a bit too coarse, addr is indeed used for find_vma() later on, but it is also 
-used to access memory, by prctl_set_mm_mmap() and prctl_set_auxv().
+v8
+- Typo corrections
+- Remove active_user and related code
+- Do not clear PWM_SIFIVE_PWMCFG_EN_ALWAYS
+- Other minor fixes
 
-Kevin
+v7
+- Modify description of compatible property in DT documentation
+- Use mutex locks at appropriate places
+- Fix all bad line breaks
+- Allow enabling/disabling PWM only when the user is the only active user
+- Remove Deglitch logic
+- Other minor fixes
 
-> +
->   #ifdef CONFIG_CHECKPOINT_RESTORE
->   	if (opt == PR_SET_MM_MAP || opt == PR_SET_MM_MAP_SIZE)
->   		return prctl_set_mm_map(opt, (const void __user *)addr, arg4);
+v6
+- Remove the global property 'sifive,period-ns'
+- Implement free and request callbacks to maintain user counts.
+- Add user_count member to struct pwm_sifive_ddata
+- Allow period change only if user_count is one
+- Add pwm_sifive_enable function to enable/disable PWM
+- Change calculation logic of frac (in pwm_sifive_apply)
+- Remove state correction
+- Remove pwm_sifive_xlate function
+- Clock to be enabled only when PWM is enabled
+- Other minor fixes
+
+v5
+- Correct the order of compatible string properties
+- PWM state correction to be done always
+- Other minor fixes based upon feedback on v4
+
+v4
+- Rename macros with appropriate names
+- Remove unused macros
+- Rename struct sifive_pwm_device to struct pwm_sifive_ddata
+- Rename function prefix as per driver name
+- Other minor fixes based upon feedback on v3
+
+v3
+- Add a link to the reference manaul
+- Use appropriate apis for division operation
+- Add check for polarity
+- Enable clk before calling clk_get_rate
+- Other minor fixes based upon feedback on v2
+
+V2 changed from V1:
+- Remove inclusion of dt-bindings/pwm/pwm.h
+- Remove artificial alignments
+- Replace ioread32/iowrite32 with readl/writel
+- Remove camelcase
+- Change dev_info to dev_dbg for unnecessary log
+- Correct typo in driver name
+- Remove use of of_match_ptr macro
+- Update the DT compatible strings and Add reference to a common
+  versioning document
+
+Yash Shah (2):
+  pwm: sifive: Add DT documentation for SiFive PWM Controller
+  pwm: sifive: Add a driver for SiFive SoC PWM
+
+ .../devicetree/bindings/pwm/pwm-sifive.txt         |  33 ++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sifive.c                           | 334 +++++++++++++++++++++
+ 4 files changed, 379 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+ create mode 100644 drivers/pwm/pwm-sifive.c
+
+-- 
+1.9.1
 
