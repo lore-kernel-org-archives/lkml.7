@@ -2,224 +2,156 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE04C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF1DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8193320854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE7920854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:57:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="LUf21l/i";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="DgDpBw3e"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="yOhSWUSi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfCRPzv (ORCPT
+        id S1727553AbfCRP52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:55:51 -0400
-Received: from node.akkea.ca ([192.155.83.177]:39658 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbfCRPzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:55:49 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 821C04E204D;
-        Mon, 18 Mar 2019 15:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1552924548; bh=ZKmIXL7hZ7vrBz7fILjhXBL4biuzNFFbNx7IX9/DXkQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=LUf21l/ik2WbL/qKmuEMUXx8ZRuGjdHJdKDdiscowf7afIUJ7It478aUnfXF3VN1N
-         r6JKhnWSc1RyfzSHqZ6p8wUgXQKdiLRBvKX3TugJWHgK+xIhfei1TJVBppm1rxo0om
-         hgGPVt+ToC5TtgfB0c7Y4KF9MEsqHIy3M4pPPDRI=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Yg8XH0DzW2-W; Mon, 18 Mar 2019 15:55:47 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id 39A934E204B;
-        Mon, 18 Mar 2019 15:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1552924547; bh=ZKmIXL7hZ7vrBz7fILjhXBL4biuzNFFbNx7IX9/DXkQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=DgDpBw3eG0RFcr+b2a0MO8hBSYGLU0Y/o6vKYZzu603+iT6Tym3Wnyw+jWG+iTTlN
-         KrNTpPpFzNjMkLNvuHDoBM0pQZQ0il4kqfAFIJCGlCmfkSEGG+h0RiEf7kqkpXa0Ag
-         L9CtBJ+G+lc7umrsKSEi4X5AJxYDdSqh8e+OMvXQ=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus@akkea.ca, andrew.smirnov@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: fsl: imx8mq: enable the thermal management unit (TMU)
-Date:   Mon, 18 Mar 2019 08:48:49 -0700
-Message-Id: <20190318154849.25456-1-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190311213124.29325-1-angus@akkea.ca>
-References: <20190311213124.29325-1-angus@akkea.ca>
+        Mon, 18 Mar 2019 11:57:28 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41848 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfCRP51 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 11:57:27 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d25so11538218pfn.8
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 08:57:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=73neePHYxnIx8mNTuN3AVRRd7JTVJvcJ7Cuz7PoGXJ4=;
+        b=yOhSWUSiIL7f5nCVPd/Q9JQ+xoA8wIH+9AOh74N96juDKdF7NWDNUIJaJZWV5Wj+jh
+         gKlsMKLAYaWtSXXoeu6A2xV/ZzkU6F7XYIiCauaGQd9WSo8F98yTfQViKY2k/pQ4Ea2D
+         n9+McDVssdUpT53Gm5CgU8VDLM2dNFZGOZGLiGvUmcrW2dlQPlAINZH+EJ5M7Cw2IS3H
+         BMOrqS2Jm12DC6p509Hy3lDeXrs6b6iHG3piB5Egdu9OPffcRJ5+K02Cysc4WqJspCt6
+         YTqfD1KKJmRXWtOXsDjFSKBuTuqlOFH64kV84GAX7o8geeVXNyl4LVehCnV3Y6Yfo/xM
+         u4kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=73neePHYxnIx8mNTuN3AVRRd7JTVJvcJ7Cuz7PoGXJ4=;
+        b=da0NT2jvuVIxhQRh8x9c2r1GkYoMbIcfnJeYPA26iJ+DcMxcChZMWTMLS5zF6kA+aZ
+         B00P11XOkkn59h2/Tj5QgFVBuJa7EfMz/wO3WSgRxjmAa6RuU/cwF0sWakw0AK/mwy5F
+         aWZpavUzd2IaPr0mhTn3NubTncChQmaBcnVGnjpLD1bidbjSYbREiKQc/oPPedy0l5mR
+         iiIfU7NwjlTKftapnA7tjdchSP+4wBNU3cYjYEF7K4h5x1WaVjBbRq1NoTNRaCc0Uoix
+         +Xd1QzMTAzArEE7rXUKHj6vqFtSFpTTG9FZbzjyZ/8iM5BqomudAkYFWyZrWUk4VDuI0
+         2qQQ==
+X-Gm-Message-State: APjAAAVtIsL8Fa1g6svpmQRVCNqrYRdQoltONwr9DrGRZzF2UiJXkWVH
+        mqwfJ9yLo/oIRPA6fTaFDuoVUg==
+X-Google-Smtp-Source: APXvYqwTOnRQqdxRu3C/qdMsG1EYVh1bCt+WaJgZ58I/txNIJM/3+tq4Q2EJhQGCKWholqIIXGMNrQ==
+X-Received: by 2002:a63:a109:: with SMTP id b9mr18077513pgf.328.1552924646890;
+        Mon, 18 Mar 2019 08:57:26 -0700 (PDT)
+Received: from shemminger-XPS-13-9360 (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id l184sm18776155pfc.41.2019.03.18.08.57.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 08:57:26 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 08:57:24 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Wang Hai <wanghai26@huawei.com>
+Cc:     <davem@davemloft.net>, <idosch@mellanox.com>,
+        <alexander.h.duyck@intel.com>, <tyhicks@canonical.com>,
+        <f.fainelli@gmail.com>, <amritha.nambiar@intel.com>,
+        <joe@perches.com>, <dmitry.torokhov@gmail.com>,
+        <andriy.shevchenko@linux.intel.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net-sysfs: Fix memory leak in netdev_register_kobject
+Message-ID: <20190318085724.1e0c017b@shemminger-XPS-13-9360>
+In-Reply-To: <20190319050657.61327-1-wanghai26@huawei.com>
+References: <20190319050657.61327-1-wanghai26@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the TMU node for the CPU
+On Tue, 19 Mar 2019 01:06:57 -0400
+Wang Hai <wanghai26@huawei.com> wrote:
 
-Changes since v1:
+> When registering struct net_device, it will call
+> 	register_netdevice ->
+> 		netdev_register_kobject ->
+> 			device_add(dev)
+> 			register_queue_kobjects(ndev)
+> 
+> If device_add(dev) or register_queue_kobjects(ndev) fails.
+> Register_netdevice() will return error, causing netdev_freemem(ndev)
+> to be called to free net_device, however (&ndev->dev)->kobj.name will
+> not be freed, resulting in a memory leak.
+> 
+> syzkaller report this:
+> BUG: memory leak
+> unreferenced object 0xffff8881f4fad168 (size 8):
+> comm "syz-executor.0", pid 3575, jiffies 4294778002 (age 20.134s)
+> hex dump (first 8 bytes):
+>   77 70 61 6e 30 00 ff ff                          wpan0...
+> backtrace:
+>   [<000000006d2d91d7>] kstrdup_const+0x3d/0x50 mm/util.c:73
+>   [<00000000ba9ff953>] kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
+>   [<000000005555ec09>] kobject_set_name_vargs+0x55/0x130 lib/kobject.c:281
+>   [<0000000098d28ec3>] dev_set_name+0xbb/0xf0 drivers/base/core.c:1915
+>   [<00000000b7553017>] netdev_register_kobject+0xc0/0x410 net/core/net-sysfs.c:1727
+>   [<00000000c826a797>] register_netdevice+0xa51/0xeb0 net/core/dev.c:8711
+>   [<00000000857bfcfd>] cfg802154_update_iface_num.isra.2+0x13/0x90 [ieee802154]
+>   [<000000003126e453>] ieee802154_llsec_fill_key_id+0x1d5/0x570 [ieee802154]
+>   [<00000000e4b3df51>] 0xffffffffc1500e0e
+>   [<00000000b4319776>] platform_drv_probe+0xc6/0x180 drivers/base/platform.c:614
+>   [<0000000037669347>] really_probe+0x491/0x7c0 drivers/base/dd.c:509
+>   [<000000008fed8862>] driver_probe_device+0xdc/0x240 drivers/base/dd.c:671
+>   [<00000000baf52041>] device_driver_attach+0xf2/0x130 drivers/base/dd.c:945
+>   [<00000000c7cc8dec>] __driver_attach+0x10e/0x210 drivers/base/dd.c:1022
+>   [<0000000057a757c2>] bus_for_each_dev+0x154/0x1e0 drivers/base/bus.c:304
+>   [<000000005f5ae04b>] bus_add_driver+0x427/0x5e0 drivers/base/bus.c:645
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
+> Signed-off-by: Wang Hai <wanghai26@huawei.com>
+> ---
+>  net/core/net-sysfs.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> index 4ff661f..f0e53dc 100644
+> --- a/net/core/net-sysfs.c
+> +++ b/net/core/net-sysfs.c
+> @@ -1745,17 +1745,22 @@ int netdev_register_kobject(struct net_device *ndev)
+>  
+>  	error = device_add(dev);
+>  	if (error)
+> -		return error;
+> +		goto device_add_error;
+>  
+>  	error = register_queue_kobjects(ndev);
+> -	if (error) {
+> -		device_del(dev);
+> -		return error;
+> -	}
+> +	if (error)
+> +		goto register_error;
+>  
+>  	pm_runtime_set_memalloc_noio(dev, true);
+>  
+> +out:
+>  	return error;
+> +
+> +register_error:
+> +	device_del(dev);
+> +device_add_error:
+> +	kfree_const(dev->kobj.name);
 
-Fixed the muber of sensor cells to work with or without the multi
-sensors patch.
-
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 90 +++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 9155bd4784eb..d367aa0023c4 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/power/imx8mq-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
- #include "imx8mq-pinfunc.h"
- 
- / {
-@@ -89,6 +90,7 @@
- 			reg = <0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_1: cpu@1 {
-@@ -97,6 +99,7 @@
- 			reg = <0x1>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_2: cpu@2 {
-@@ -105,6 +108,7 @@
- 			reg = <0x2>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_3: cpu@3 {
-@@ -113,6 +117,7 @@
- 			reg = <0x3>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_L2: l2-cache0 {
-@@ -210,6 +215,91 @@
- 				#interrupt-cells = <2>;
- 			};
- 
-+			tmu: tmu@30260000 {
-+				compatible = "fsl,imx8mq-tmu";
-+				reg = <0x30260000 0x10000>;
-+				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				little-endian;
-+				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
-+				fsl,tmu-calibration = <0x00000000 0x00000023
-+						       0x00000001 0x00000029
-+						       0x00000002 0x0000002f
-+						       0x00000003 0x00000035
-+						       0x00000004 0x0000003d
-+						       0x00000005 0x00000043
-+						       0x00000006 0x0000004b
-+						       0x00000007 0x00000051
-+						       0x00000008 0x00000057
-+						       0x00000009 0x0000005f
-+						       0x0000000a 0x00000067
-+						       0x0000000b 0x0000006f
-+
-+						       0x00010000 0x0000001b
-+						       0x00010001 0x00000023
-+						       0x00010002 0x0000002b
-+						       0x00010003 0x00000033
-+						       0x00010004 0x0000003b
-+						       0x00010005 0x00000043
-+						       0x00010006 0x0000004b
-+						       0x00010007 0x00000055
-+						       0x00010008 0x0000005d
-+						       0x00010009 0x00000067
-+						       0x0001000a 0x00000070
-+
-+						       0x00020000 0x00000017
-+						       0x00020001 0x00000023
-+						       0x00020002 0x0000002d
-+						       0x00020003 0x00000037
-+						       0x00020004 0x00000041
-+						       0x00020005 0x0000004b
-+						       0x00020006 0x00000057
-+						       0x00020007 0x00000063
-+						       0x00020008 0x0000006f
-+
-+						       0x00030000 0x00000015
-+						       0x00030001 0x00000021
-+						       0x00030002 0x0000002d
-+						       0x00030003 0x00000039
-+						       0x00030004 0x00000045
-+						       0x00030005 0x00000053
-+						       0x00030006 0x0000005f
-+						       0x00030007 0x00000071>;
-+				#thermal-sensor-cells =  <1>;
-+			};
-+
-+			thermal-zones {
-+				cpu-thermal {
-+					polling-delay-passive = <250>;
-+					polling-delay = <2000>;
-+					thermal-sensors = <&tmu 0>;
-+
-+					trips {
-+						cpu_alert: cpu-alert {
-+							temperature = <85000>;
-+							hysteresis = <2000>;
-+							type = "passive";
-+						};
-+
-+						cpu_crit {
-+							temperature = <95000>;
-+							hysteresis = <2000>;
-+							type = "critical";
-+						};
-+					};
-+
-+					cooling-maps {
-+						map0 {
-+							trip = <&cpu_alert>;
-+							cooling-device =
-+								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						};
-+					};
-+				};
-+			};
-+
- 			wdog1: watchdog@30280000 {
- 				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
- 				reg = <0x30280000 0x10000>;
--- 
-2.17.1
-
+This looks a bug in device_add() not here.
+In general, it is better for an api to clean up after itself.
+Since dev->kobj.name is created in device_add and normally freed
+in device_del; why is device_add leaving it behind?
