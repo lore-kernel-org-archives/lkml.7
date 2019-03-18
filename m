@@ -6,116 +6,88 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957B0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA92C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7192064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F5E2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfCRRpi (ORCPT
+        id S1727966AbfCRRpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:45:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37156 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727933AbfCRRpf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:45:35 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IHjUYo071343
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:45:33 -0400
-Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2raefk4fd0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:45:31 -0400
-Received: from localhost
-        by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <jejb@linux.ibm.com>;
-        Mon, 18 Mar 2019 17:44:57 -0000
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e36.co.us.ibm.com (192.168.1.136) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 18 Mar 2019 17:44:54 -0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2IHitDp27656268
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Mar 2019 17:44:55 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 68FB96E04E;
-        Mon, 18 Mar 2019 17:44:55 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2174C6E04C;
-        Mon, 18 Mar 2019 17:44:54 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.131.215])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 18 Mar 2019 17:44:53 +0000 (GMT)
-Subject: Re: [PATCH] scsi: lpfc_nvme: Fix wrong sizeof argument
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 18 Mar 2019 10:44:53 -0700
-In-Reply-To: <20190318171505.GA8748@embeddedor>
-References: <20190318171505.GA8748@embeddedor>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Mon, 18 Mar 2019 13:45:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42008 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727298AbfCRRpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:45:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:45:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="308245987"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2019 10:45:47 -0700
+Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
+        by linux.intel.com (Postfix) with ESMTP id B612358052E;
+        Mon, 18 Mar 2019 10:45:45 -0700 (PDT)
+Subject: [PATCH v10 11/12] perf inject: enable COMPRESSED records
+ decompression
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <c27d7500-ecdd-3569-cab5-8f70bbed5ea4@linux.intel.com>
+Date:   Mon, 18 Mar 2019 20:45:44 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031817-0020-0000-0000-00000ECA4318
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010780; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01176223; UDB=6.00615206; IPR=6.00956908;
- MB=3.00026037; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-18 17:44:56
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031817-0021-0000-0000-000065220FDC
-Message-Id: <1552931093.3203.25.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903180131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-18 at 12:15 -0500, Gustavo A. R. Silva wrote:
-> sizeof() is currently using the wrong argument when used in a call to
-> memset().  Notice that wqe is a pointer to union lpfc_wqe128, not to
-> union lpfc_wqe.
-> 
-> Fix this by using union lpfc_wqe128 instead of lpfc_wqe as argument
-> of sizeof().
-> 
-> Addresses-Coverity-ID: 1443938 ("Wrong sizeof argument")
-> Fixes: 5fd1108517d9 ("scsi: lpfc: Streamline NVME Initiator WQE
-> setup")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/scsi/lpfc/lpfc_nvme.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/lpfc/lpfc_nvme.c
-> b/drivers/scsi/lpfc/lpfc_nvme.c
-> index d16ca413110d..3dc0c85c7d50 100644
-> --- a/drivers/scsi/lpfc/lpfc_nvme.c
-> +++ b/drivers/scsi/lpfc/lpfc_nvme.c
-> @@ -1981,7 +1981,7 @@ lpfc_get_nvme_buf(struct lpfc_hba *phba, struct
-> lpfc_nodelist *ndlp,
->  		/* Fill in word 3 / sgl_len during cmd submission */
->  
->  		/* Initialize WQE */
-> -		memset(wqe, 0, sizeof(union lpfc_wqe));
-> +		memset(wqe, 0, sizeof(union lpfc_wqe128));
 
-Actually the correct way to avoid potential problems like this is
+Initialized decompression part of Zstd based API so COMPRESSED records
+would be decompressed into the resulting output data file.
 
-	memset(wqe, 0, sizeof(*wqe));
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/builtin-inject.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-James
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 24086b7f1b14..8e0e06d3edfc 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -837,6 +837,9 @@ int cmd_inject(int argc, const char **argv)
+ 	if (inject.session == NULL)
+ 		return -1;
+ 
++	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
++		pr_warning("Decompression initialization failed.\n");
++
+ 	if (inject.build_ids) {
+ 		/*
+ 		 * to make sure the mmap records are ordered correctly
+@@ -867,6 +870,7 @@ int cmd_inject(int argc, const char **argv)
+ 	ret = __cmd_inject(&inject);
+ 
+ out_delete:
++	zstd_fini(&(inject.session->zstd_data));
+ 	perf_session__delete(inject.session);
+ 	return ret;
+ }
+-- 
+2.20.1
 
