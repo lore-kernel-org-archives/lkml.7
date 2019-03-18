@@ -2,170 +2,88 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CA2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C454FC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1A920850
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9632120863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:38:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552934306;
+	bh=s91BsIfTGiC9zXegJ6Tw4HMNjINgGzjfkAwn1RMmiKI=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=ts/i7MRlqHk/rTXccpupSeuWDmCZzwCP63eYd6lnYwX5tS3+pX+I2J+AuQ9xnI54e
+	 KM8VzRxBAz4wblST5XICwbV/S+Hl6So0J+cXzjUt0CEEKVREcxyZC7kG5Qm7hDlWW3
+	 6JR/43SXd85Rjv+WPiD649T9Sg9UMtJxXLrbht3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfCRShm convert rfc822-to-8bit (ORCPT
+        id S1727378AbfCRSiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:37:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55630 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbfCRShl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:37:41 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A89788B947;
-        Mon, 18 Mar 2019 18:37:41 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5686860C7F;
-        Mon, 18 Mar 2019 18:37:40 +0000 (UTC)
-Subject: Re: [PATCH v12 3/3] ipc: Do cyclic id allocation with ipcmni_extend
- mode
-To:     Manfred Spraul <manfred@colorfullife.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>
-References: <1551379645-819-1-git-send-email-longman@redhat.com>
- <1551379645-819-4-git-send-email-longman@redhat.com>
- <e780cb59-ef1b-5f56-1e92-394dff5d4e32@colorfullife.com>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <eaee3fad-937b-9776-5ff4-874475acc162@redhat.com>
-Date:   Mon, 18 Mar 2019 14:37:39 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 18 Mar 2019 14:38:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42910 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbfCRSiZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 14:38:25 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so14163072wrr.9;
+        Mon, 18 Mar 2019 11:38:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f4z6tXM76JhG3eUGSwIrcOrox0AugsjGgYBZnS+uayY=;
+        b=IU0p81HlwBZwUBb76t6gb3rL8aY21QAIcI8a15n+tvzHeJXFiS77c0u9/3hbGcBZw/
+         mMLWJTuYr5U2/2Ma3diYnzAzjCtpGbnsrGQ0dxcxFiH07HhrnRGSzcAVZnU92f168qGe
+         NEGokv1BBaFgoQE63FiTpfxBsz12wjyG/cmrTqrCbyS0X40UEcCs388wCtWh/fhpWu4I
+         Jq2ck3RmVqzmY/SfDs3k/Xq9IVty7bnnNgTfHdVEopNaUAWzKEdFr6OeVkvQnP3+aMGh
+         5eSWHWNOMpDgQX3jhqbvabUaZhsiNjA18nRUir7/KY820i8N8iNciy6Ok9apz0gFINid
+         6KlQ==
+X-Gm-Message-State: APjAAAWF+Tl8wtx8HnwKI1a9i/H2YPlaMIM0cWwigo3sO6WjlTEPjuR0
+        289S2SqERMXKBY/EbWX4zjIUaF+W
+X-Google-Smtp-Source: APXvYqwVeQFDNKPfI0IZk76UoZNeHVTEvIJYOYc4AOvS7VdO4FNVhiHYm7TuyDk/UDykBm3xV9ijFA==
+X-Received: by 2002:a5d:5506:: with SMTP id b6mr12766845wrv.33.1552934302727;
+        Mon, 18 Mar 2019 11:38:22 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.153])
+        by smtp.googlemail.com with ESMTPSA id z20sm205926wma.9.2019.03.18.11.38.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 11:38:21 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 19:38:19 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Use ADC for Exynos4x12 on Exyno4412
+Message-ID: <20190318183819.GA4730@kozik-lap>
+References: <20190212174550.4383-1-krzk@kernel.org>
+ <20190212174550.4383-3-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <e780cb59-ef1b-5f56-1e92-394dff5d4e32@colorfullife.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 18 Mar 2019 18:37:41 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <20190212174550.4383-3-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/17/2019 02:27 PM, Manfred Spraul wrote:
-> Hi Waiman,
->
-> On 2/28/19 7:47 PM, Waiman Long wrote:
->> For ipcmni_extend mode, the sequence number space is only 7 bits. So
->> the chance of id reuse is relatively high compared with the non-extended
->> mode.
->>
->> To alleviate this id reuse problem, the id allocation will be done
->> cyclically to cycle through all the 24-bit id space before wrapping
->> around when in ipcmni_extend mode. This may cause the use of more memory
->> in term of the number of xa_nodes allocated as well as potentially more
->> cachelines used as the xa_nodes may be spread more sparsely in this
->> case.
->>
->> There is probably a slight memory and performance cost in doing cyclic
->> id allocation. For applications that really need more than 32k unique
->> IPC
->> identifiers, this is a small price to pay to avoid the id reuse problem.
->
-> Have you measured it?
->
-> I have observed -3% for semop() for a 4 level radix tree compared to a
-> 1-level radix tree, and I'm a bit reluctant to accept that.
-> Especially as the percentage will increase if the syscall overhead
-> goes down again (-> less spectre impact).
->
+On Tue, Feb 12, 2019 at 06:45:50PM +0100, Krzysztof Kozlowski wrote:
+> Exynos4412 should use "samsung,exynos4212-adc" compatible to report
+> proper number of (four) channels.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos4412.dtsi | 2 +-
 
-It is both Spectre (retpoline) and Meltdown (PTI). PTI is not needed in
-AMD CPU and so you may see a bit higher slowdown.
+Applied.
 
-> [...]
->
->> --- a/ipc/util.c
->> +++ b/ipc/util.c
->> @@ -221,7 +221,12 @@ static inline int ipc_idr_alloc(struct ipc_ids
->> *ids, struct kern_ipc_perm *new)
->>        */
->>         if (next_id < 0) { /* !CHECKPOINT_RESTORE or next_id is unset */
->> -        idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
->> +        if (ipc_mni_extended)
->> +            idx = idr_alloc_cyclic(&ids->ipcs_idr, new, 0, ipc_mni,
->> +                        GFP_NOWAIT);
->> +        else
->> +            idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
->> +
->>           if ((idx <= ids->last_idx) && (++ids->seq > IPCID_SEQ_MAX))
->>               ids->seq = 0;
->
-> I don't like it that there are two different codepaths.
->
-> Attached is a different proposal:
->
-> Always use cyclic allocation, with some logic to minimize the
-> additional radix tree levels.
->
-> What do you think?
-
-Your proposed patch look good. I saw that you use the max_idx to limit
-radix tree nesting level which mitigate my concern of using more memory
-and slower performance. I do have some minor comments about the patch in
-a later email.
-
--Longman
-
+Best regards,
+Krzysztof
 
