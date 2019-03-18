@@ -2,171 +2,133 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FC6C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28418C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2C420989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E868F2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:28:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CcRhjn79"
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="wyQUWPUU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfCRQ14 (ORCPT
+        id S1727762AbfCRQ2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:27:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37644 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfCRQ1z (ORCPT
+        Mon, 18 Mar 2019 12:28:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37775 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727697AbfCRQ2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:27:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a17so14645771ljd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:27:53 -0700 (PDT)
+        Mon, 18 Mar 2019 12:28:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id q206so11747954pgq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:28:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3wLKH0zWKt4beR4KW2vWKa5yYTIq2Uu9RSPCyuHogOc=;
-        b=CcRhjn79xXLf0lgkJyFodkrzMu4Q5UCAW21Tck17fbIg+Mwi28IWmXi7uVkZDQvuM+
-         t7juktTO3phrVskjtdAAWI07d0JIU2HCXSmLS0nz9PZg7NqS+lsD/Krfx43xRmrRYOJJ
-         VNIZ9GAefH+YBqZkxTqKOra1kwgiXoeDvwePAViufn/7YFMAKEFpOPuXMRIC2tDRKd0j
-         +nxwmrIXpjVvU4Uq/HPiyMesUaeae49mpJlAni2ZHuzRJgTxGUuSI58bQ0Vq0lK42LeF
-         GXCzsKrT8O22vtQC++rttDM5i1AM0zEFCdjW9c2e33tpbziG2Ibu6CVg2HSdn6lf550X
-         IXWA==
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I4/aNqZ3TeFwtNHzcHEcswGWbN5iU4mf8xjDmq9e6JY=;
+        b=wyQUWPUUpk3tYcZBLkT1VRICEObRlaM5LZ0u6Z0S06JP/x5G2M3wJRNECDAKSWvvv5
+         fZ1uyya7sLB5mK3VCSjqrxz5OG2eVdOF4e0QaLpcRomDTKbjFIRX+h4kmBBt+v1wlZan
+         nAs9oC04e4pKiJKxEvMhNtZ7icfNnl9MwVwpiFE+1dtwXQt/4bnbbxqGeFokLlgyCXDg
+         4oS1lwKUpn1LiYf0Srcx57FyslD7QGnreWbydi3KYWCtTj/D9+QyXtGtk67QAfI+SeD7
+         X85wt1E3QskxtCenAZ/UmRnCJq/S2j1B/oezWsSCJZhjaNYXQ3ika+tMsppyFhIoPMZ2
+         +DUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3wLKH0zWKt4beR4KW2vWKa5yYTIq2Uu9RSPCyuHogOc=;
-        b=PMjtxN0IOEHs/hFMTKVJnNW5tTBE9CbyQ5tMgPcpH6nZHJRo0PQXQnSMsmDkIVJrbc
-         g0HMRD+fQkj8dLYg8/nZzuMQ27wqlOGP9KchqWCRMpj2D0fyR/rbspsCx0a7PHC4UI+4
-         TQyxhNK+i47/rKaZtdXOtzvI/pAnxX1VgBqyBsEVfmuD+kc0/+fPOBNXvrosdqctpGNp
-         is2CT+hTIjOTOS8fmMG57jKT67nEnnhYc4nbKin0wdE9na+JSJxg8ESzYn2MOa/rWog7
-         pPkwT5RHBYkPdB0zjRI/VcFW3n5P6H9y/5q5tdaTSSiadvxHWyRJm8h34GUPvin9IUCN
-         BxDQ==
-X-Gm-Message-State: APjAAAWVbkuUzq3eudKW8ae92p8izUkB7Bjj2VKrnrJ+wUtvAiwjdnok
-        KpUlXguIDvXDZOFILC2r0mtt9ffHYy6N8bmYq/KGMQ==
-X-Google-Smtp-Source: APXvYqyGNWIhCqQ0TV2saUVwpB9ySlRq/EmZnkLew7nlxCDHrrZBC2p1rahTnrDmtc0whqUwJRwlMwK3QTPiDeRI1d4=
-X-Received: by 2002:a2e:6309:: with SMTP id x9mr10936534ljb.75.1552926472840;
- Mon, 18 Mar 2019 09:27:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I4/aNqZ3TeFwtNHzcHEcswGWbN5iU4mf8xjDmq9e6JY=;
+        b=UJ000wUYcYpOgfaIeAlZMyYa3q+i5ntrflX38zDHfxTAmArHPuAG1pGL4bKiXBfA/k
+         oDs0ez3gP/QsF4k8OpkdkwcPu7ddVzaguwdrta6W9AnmOFsyD2Y4YUnSY8LjFxk1uPfj
+         GIXhi0eqMiKH0I0vTqMeoqq6hlREtTd9gyfmIF0+Gwpxc0t4qbBkch2AAx7bYUHRIhH4
+         0gqlcuKgynu1ltUj6nz3k8viIYZ4/wWgFTrN4YMdcNYjUM0xtSAD5b13RHuaqbp/Tq7y
+         vX9GT6NN2YFUNz2b6TGGQxyWQ+Ctt691JB5rp8wk7G1br6scvkcfcxZ2hqMvrjDR5Z/J
+         YEkQ==
+X-Gm-Message-State: APjAAAWhf0l+/iA69yy2OczjrqvAl9WsC3CQhM0sKvArw1b4tpzRlrm8
+        dEHLIDbDAND7uF0rYY2deC7Xrg==
+X-Google-Smtp-Source: APXvYqyOWyAEJomhgR2fk0MhgkOS5KV3rbVRY9fQebNH3xDa7+tI0mYnfdyPBKA0aab4951+8oYF+g==
+X-Received: by 2002:a63:a04c:: with SMTP id u12mr5415791pgn.131.1552926504111;
+        Mon, 18 Mar 2019 09:28:24 -0700 (PDT)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id k132sm5182705pga.40.2019.03.18.09.28.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 09:28:23 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 09:28:22 -0700
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tcp: don't use __constant_cpu_to_be32
+Message-ID: <20190318162822.GB7431@mini-arch.hsd1.ca.comcast.net>
+References: <20190314061514.19586-1-sergey.senozhatsky@gmail.com>
+ <CANn89iJMFfh1Pkvk9LOn3FwgAfpVjwS7q5x_8Y9zo2rzpy7w9g@mail.gmail.com>
+ <20190315012012.GA748@jagdpanzerIV>
+ <20190315172428.GB5481@mini-arch.hsd1.ca.comcast.net>
+ <20190316051902.GA27630@tigerII.localdomain>
 MIME-Version: 1.0
-References: <20190318084144.657740413@linuxfoundation.org>
-In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 18 Mar 2019 21:57:41 +0530
-Message-ID: <CA+G9fYs-F9cYytGjfmucE6oqPGDKaKMfJhS7KZEEHa+vKF9cLQ@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/34] 4.14.107-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190316051902.GA27630@tigerII.localdomain>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019 at 15:06, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.107 release.
-> There are 34 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed Mar 20 08:41:26 UTC 2019.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.107-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On 03/16, Sergey Senozhatsky wrote:
+> On (03/15/19 10:24), Stanislav Fomichev wrote:
+> > On 03/15, Sergey Senozhatsky wrote:
+> > > On (03/14/19 05:42), Eric Dumazet wrote:
+> > > > > cpu_to_be32() is capable enough to detect __builtin_constant_p()
+> > > > > and to use an appropriate compile time ___constant_swahb32()
+> > > > > function.
+> > See my recent commit a0517a0f7ef23 ("selftests/bpf: use
+> > __bpf_constant_htons in test_prog.c") where compiler was not smart
+> > enough to figure it out (you can google similar issues for GCC < 4.8).
+> 
+> Allow me to disagree.
+> 
+> The error in a0517a0f7ef23 says
+> 
+> 	error: implicit declaration of function '__builtin_bswap16'
+> 
+> which doesn't sound like "the compiler was not smart".
+> 
+> Let's look at __swab16
+> 
+> 100 #ifdef __HAVE_BUILTIN_BSWAP16__
+> 101 #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+> 102 #else
+> 103 #define __swab16(x)                             \
+> 104         (__builtin_constant_p((__u16)(x)) ?     \
+> 105         ___constant_swab16(x) :                 \
+> 106         __fswab16(x))
+> 107 #endif
+> 
+> We can call __builtin_bswap16() only when the compiler has that builtin,
+> which is what #ifdef __HAVE_BUILTIN_BSWAP16__ for.
+> 
+> But this is not what tools/testing/selftests/bpf/bpf_endian.h does
+> 
+> # define __bpf_ntohs(x)                 __builtin_bswap16(x)
+> # define __bpf_htons(x)                 __builtin_bswap16(x)
+> 
+> So I sort of suspect that what should have been done was that
+> __HAVE_BUILTIN_BSWAP16__ ifdef, just like what include/uapi/linux/swab.h
+> does.
+That sounds convincing, especially since we have the following
+in include/linux/compiler-gcc.h:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+#if GCC_VERSION >= 40800
+#define __HAVE_BUILTIN_BSWAP16__
+#endif
 
-Summary
-------------------------------------------------------------------------
+So it does indeed look like it's not __builtin_constant_p, but rather
+missing __builtin_bswap16 for gcc < 4.8.
 
-kernel: 4.14.107-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 6fdcb56d3713e8abec18669625bc170613795f5d
-git describe: v4.14.106-35-g6fdcb56d3713
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.106-35-g6fdcb56d3713
-
-No regressions (compared to build v4.14.106)
-
-No fixes (compared to build v4.14.106)
-
-Ran 22876 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* spectre-meltdown-checker-test
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> 
+> 	-ss
