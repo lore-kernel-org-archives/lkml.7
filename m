@@ -2,176 +2,280 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C54C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371A0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF932171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E327A2173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfCRXoa convert rfc822-to-8bit (ORCPT
+        id S1727163AbfCRXrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 19:44:30 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52875 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbfCRXo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 19:44:29 -0400
-Received: from [IPv6:2601:646:8680:2bb1:d50a:5387:1d42:6a6b] ([IPv6:2601:646:8680:2bb1:d50a:5387:1d42:6a6b])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2INiCEo3182440
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 18 Mar 2019 16:44:14 -0700
-Date:   Mon, 18 Mar 2019 16:44:03 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190318221639.GK112750@google.com>
-References: <CAG5bF+S6OvBnsaR6UpMCqjDR9_hMo6qRMHGiW+iCaRYQW4C3YA@mail.gmail.com> <20190318213113.GI112750@google.com> <25133BBA-9121-4B3A-865B-085BFC5F154C@zytor.com> <20190318221639.GK112750@google.com>
+        Mon, 18 Mar 2019 19:47:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36722 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726575AbfCRXrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 19:47:32 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D808136899;
+        Mon, 18 Mar 2019 23:47:30 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-22.phx2.redhat.com [10.3.112.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5D21019C67;
+        Mon, 18 Mar 2019 23:47:19 +0000 (UTC)
+Date:   Mon, 18 Mar 2019 19:47:16 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        David Howells <dhowells@redhat.com>, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V5 08/10] audit: add containerid filtering
+Message-ID: <20190318234716.4moownrpylloiu3g@madcap2.tricolour.ca>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <3f02f7b56d2fba2918ff6fe90fcfa3ae558faff8.1552665316.git.rgb@redhat.com>
+ <CAFqZXNt0O8b54isxuXv1fbtv+UKRw0Lnyut2n0FGFEMme-SdkQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH] lib: Add shared copy of __lshrti3 from libgcc
-To:     Matthias Kaehlcke <mka@chromium.org>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Manoj Gupta <manojgupta@chromium.org>,
-        Tiancong Wang <tcwang@chromium.org>,
-        Stephen Hines <srhines@google.com>,
-        clang-built-linux@googlegroups.com
-From:   hpa@zytor.com
-Message-ID: <278CBEF0-9D09-4091-A630-73D912587383@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFqZXNt0O8b54isxuXv1fbtv+UKRw0Lnyut2n0FGFEMme-SdkQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 18 Mar 2019 23:47:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 18, 2019 3:16:39 PM PDT, Matthias Kaehlcke <mka@chromium.org> wrote:
->On Mon, Mar 18, 2019 at 02:50:44PM -0700, hpa@zytor.com wrote:
->> On March 18, 2019 2:31:13 PM PDT, Matthias Kaehlcke
-><mka@chromium.org> wrote:
->> >On Fri, Mar 15, 2019 at 01:54:50PM -0700, Matthias Kaehlcke wrote:
->> >> The compiler may emit calls to __lshrti3 from the compiler runtime
->> >> library, which results in undefined references:
->> >> 
->> >> arch/x86/kvm/x86.o: In function `mul_u64_u64_shr':
->> >>   include/linux/math64.h:186: undefined reference to `__lshrti3'
->> >> 
->> >> Add a copy of the __lshrti3 libgcc routine (from gcc v4.9.2).
->> >> 
->> >> Include the function for x86 builds with clang, which is the
->> >> environment where the above error was observed.
->> >> 
->> >> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->> >
->> >With "Revert "kbuild: use -Oz instead of -Os when using clang"
->> >(https://lore.kernel.org/patchwork/patch/1051932/) the above
->> >error is fixed, a few comments inline for if the patch is
->> >resurrected in the future because __lshrti3 is emitted in a
->> >different context.
->> >
->> >> diff --git a/include/linux/libgcc.h b/include/linux/libgcc.h
->> >> index 32e1e0f4b2d0..a71036471838 100644
->> >> --- a/include/linux/libgcc.h
->> >> +++ b/include/linux/libgcc.h
->> >> @@ -22,15 +22,26 @@
->> >>  #include <asm/byteorder.h>
->> >> 
->> >>  typedef int word_type __attribute__ ((mode (__word__)));
->> >> +typedef int TItype __attribute__ ((mode (TI)));
->> >
->> >Consider using __int128 instead. Definition and use need a
->> >'defined(__SIZEOF_INT128__)' guard  (similar for mode (TI)), since
->> >these 128 bit types aren't supported on all platforms.
->> >
->> >>  #ifdef __BIG_ENDIAN
->> >>  struct DWstruct {
->> >>  	int high, low;
->> >>  };
->> >> +
->> >> +struct DWstruct128 {
->> >> +	long long high, low;
->> >> +};
->> >
->> >This struct isn't needed, struct DWstruct can be used.
->> >
->> >> diff --git a/lib/lshrti3.c b/lib/lshrti3.c
->> >> new file mode 100644
->> >> index 000000000000..2d2123bb3030
->> >> --- /dev/null
->> >> +++ b/lib/lshrti3.c
->> >> @@ -0,0 +1,31 @@
->> >> +// SPDX-License-Identifier: GPL-2.0
->> >> +
->> >> +#include <linux/export.h>
->> >> +#include <linux/libgcc.h>
->> >> +
->> >> +long long __lshrti3(long long u, word_type b)
->> >
->> >use TItype for input/output, which is what gcc does, though the
->above
->> >matches the interface in the documentation.
->> >
->> >> +{
->> >> +	DWunion128 uu, w;
->> >> +	word_type bm;
->> >> +
->> >> +	if (b == 0)
->> >> +		return u;
->> >> +
->> >> +	uu.ll = u;
->> >> +	bm = 64 - b;
->> >> +
->> >> +	if (bm <= 0) {
->> >> +		w.s.high = 0;
->> >> +		w.s.low = (unsigned long long) uu.s.high >> -bm;
->> >
->> >include <linux/types.h> and use u64 instead of unsigned long long.
->> 
->> Ok, now I'm really puzzled.
->> 
->> How could we need a 128-bit shift when the prototype only has 64 bits
->of input?!
->
->Good question, this is the code from libgcc:
->
->TItype
->__lshrti3 (TItype u, shift_count_type b)
->{
->  if (b == 0)
->    return u;
->
->  const DWunion uu = {.ll = u};
->  const shift_count_type bm = (8 * (8)) - b;
->  DWunion w;
->
->  if (bm <= 0)
->    {
->      w.s.high = 0;
->      w.s.low = (UDItype) uu.s.high >> -bm;
->    }
->  else
->    {
->      const UDItype carries = (UDItype) uu.s.high << bm;
->
->      w.s.high = (UDItype) uu.s.high >> b;
->      w.s.low = ((UDItype) uu.s.low >> b) | carries;
->    }
->
->  return w.ll;
->}
->
->
->My compiler knowledge is limited, my guess is that the function is a
->generic implementation, and while a long long is 64-bit wide under
->Linux it could be 128-bit on other platforms.
+On 2019-03-18 21:02, Ondrej Mosnacek wrote:
+> On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > Implement audit container identifier filtering using the AUDIT_CONTID
+> > field name to send an 8-character string representing a u64 since the
+> > value field is only u32.
+> >
+> > Sending it as two u32 was considered, but gathering and comparing two
+> > fields was more complex.
+> >
+> > The feature indicator is AUDIT_FEATURE_BITMAP_CONTAINERID.
+> >
+> > See: https://github.com/linux-audit/audit-kernel/issues/91
+> > See: https://github.com/linux-audit/audit-userspace/issues/40
+> > See: https://github.com/linux-audit/audit-testsuite/issues/64
+> > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > ---
+> >  include/linux/audit.h      |  1 +
+> >  include/uapi/linux/audit.h |  5 ++++-
+> >  kernel/audit.h             |  1 +
+> >  kernel/auditfilter.c       | 47 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  kernel/auditsc.c           |  3 +++
+> >  5 files changed, 56 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > index 6db5aba7cc01..fa19fa408931 100644
+> > --- a/include/linux/audit.h
+> > +++ b/include/linux/audit.h
+> > @@ -77,6 +77,7 @@ struct audit_field {
+> >         u32                             type;
+> >         union {
+> >                 u32                     val;
+> > +               u64                     val64;
+> >                 kuid_t                  uid;
+> >                 kgid_t                  gid;
+> >                 struct {
+> > diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+> > index a6383e28b2c8..741ab6f38294 100644
+> > --- a/include/uapi/linux/audit.h
+> > +++ b/include/uapi/linux/audit.h
+> > @@ -265,6 +265,7 @@
+> >  #define AUDIT_LOGINUID_SET     24
+> >  #define AUDIT_SESSIONID        25      /* Session ID */
+> >  #define AUDIT_FSTYPE   26      /* FileSystem Type */
+> > +#define AUDIT_CONTID   27      /* Container ID */
+> >
+> >                                 /* These are ONLY useful when checking
+> >                                  * at syscall exit time (AUDIT_AT_EXIT). */
+> > @@ -345,6 +346,7 @@ enum {
+> >  #define AUDIT_FEATURE_BITMAP_SESSIONID_FILTER  0x00000010
+> >  #define AUDIT_FEATURE_BITMAP_LOST_RESET                0x00000020
+> >  #define AUDIT_FEATURE_BITMAP_FILTER_FS         0x00000040
+> > +#define AUDIT_FEATURE_BITMAP_CONTAINERID       0x00000080
+> >
+> >  #define AUDIT_FEATURE_BITMAP_ALL (AUDIT_FEATURE_BITMAP_BACKLOG_LIMIT | \
+> >                                   AUDIT_FEATURE_BITMAP_BACKLOG_WAIT_TIME | \
+> > @@ -352,7 +354,8 @@ enum {
+> >                                   AUDIT_FEATURE_BITMAP_EXCLUDE_EXTEND | \
+> >                                   AUDIT_FEATURE_BITMAP_SESSIONID_FILTER | \
+> >                                   AUDIT_FEATURE_BITMAP_LOST_RESET | \
+> > -                                 AUDIT_FEATURE_BITMAP_FILTER_FS)
+> > +                                 AUDIT_FEATURE_BITMAP_FILTER_FS | \
+> > +                                 AUDIT_FEATURE_BITMAP_CONTAINERID)
+> >
+> >  /* deprecated: AUDIT_VERSION_* */
+> >  #define AUDIT_VERSION_LATEST           AUDIT_FEATURE_BITMAP_ALL
+> > diff --git a/kernel/audit.h b/kernel/audit.h
+> > index 2a1a8b8a8019..3a40b608bf8d 100644
+> > --- a/kernel/audit.h
+> > +++ b/kernel/audit.h
+> > @@ -230,6 +230,7 @@ static inline int audit_hash_ino(u32 ino)
+> >
+> >  extern int audit_match_class(int class, unsigned syscall);
+> >  extern int audit_comparator(const u32 left, const u32 op, const u32 right);
+> > +extern int audit_comparator64(const u64 left, const u32 op, const u64 right);
+> >  extern int audit_uid_comparator(kuid_t left, u32 op, kuid_t right);
+> >  extern int audit_gid_comparator(kgid_t left, u32 op, kgid_t right);
+> >  extern int parent_len(const char *path);
+> > diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+> > index add360b46b38..516b8e58959e 100644
+> > --- a/kernel/auditfilter.c
+> > +++ b/kernel/auditfilter.c
+> > @@ -410,6 +410,7 @@ static int audit_field_valid(struct audit_entry *entry, struct audit_field *f)
+> >         /* FALL THROUGH */
+> >         case AUDIT_ARCH:
+> >         case AUDIT_FSTYPE:
+> > +       case AUDIT_CONTID:
+> >                 if (f->op != Audit_not_equal && f->op != Audit_equal)
+> >                         return -EINVAL;
+> >                 break;
+> > @@ -582,6 +583,14 @@ static struct audit_entry *audit_data_to_entry(struct audit_rule_data *data,
+> >                         }
+> >                         entry->rule.exe = audit_mark;
+> >                         break;
+> > +               case AUDIT_CONTID:
+> > +                       if (f->val != sizeof(u64))
+> > +                               goto exit_free;
+> > +                       str = audit_unpack_string(&bufp, &remain, f->val);
+> > +                       if (IS_ERR(str))
+> > +                               goto exit_free;
+> > +                       f->val64 = ((u64 *)str)[0];
+> > +                       break;
+> >                 }
+> >         }
+> >
+> > @@ -664,6 +673,11 @@ static struct audit_rule_data *audit_krule_to_data(struct audit_krule *krule)
+> >                         data->buflen += data->values[i] =
+> >                                 audit_pack_string(&bufp, audit_mark_path(krule->exe));
+> >                         break;
+> > +               case AUDIT_CONTID:
+> > +                       data->buflen += data->values[i] = sizeof(u64);
+> > +                       for (i = 0; i < sizeof(u64); i++)
+> > +                               ((char *)bufp)[i] = ((char *)&f->val64)[i];
+> 
+> How about just:
+> 
+> memcpy(bufp, &f->val64, sizeof(u64));
+> 
+> instead of the awkward for loop? It is simpler and also more in line
+> with the code in audit_pack_string().
 
-Yes, long long is just plain wrong.
+I'll grant you that.  I'll use that instead.
 
-How could we end up calling this function on 32 bits?!
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+> Also, doesn't this loop interfere with the outer loop that also uses
+> 'i' as the control variable?
+
+Yes, it does.  Thank you for catching that.  Doing a auditctl -l reveals
+this.
+
+> > +                       break;
+> >                 case AUDIT_LOGINUID_SET:
+> >                         if (krule->pflags & AUDIT_LOGINUID_LEGACY && !f->val) {
+> >                                 data->fields[i] = AUDIT_LOGINUID;
+> > @@ -750,6 +764,10 @@ static int audit_compare_rule(struct audit_krule *a, struct audit_krule *b)
+> >                         if (!gid_eq(a->fields[i].gid, b->fields[i].gid))
+> >                                 return 1;
+> >                         break;
+> > +               case AUDIT_CONTID:
+> > +                       if (a->fields[i].val64 != b->fields[i].val64)
+> > +                               return 1;
+> > +                       break;
+> >                 default:
+> >                         if (a->fields[i].val != b->fields[i].val)
+> >                                 return 1;
+> > @@ -1206,6 +1224,31 @@ int audit_comparator(u32 left, u32 op, u32 right)
+> >         }
+> >  }
+> >
+> > +int audit_comparator64(u64 left, u32 op, u64 right)
+> > +{
+> > +       switch (op) {
+> > +       case Audit_equal:
+> > +               return (left == right);
+> > +       case Audit_not_equal:
+> > +               return (left != right);
+> > +       case Audit_lt:
+> > +               return (left < right);
+> > +       case Audit_le:
+> > +               return (left <= right);
+> > +       case Audit_gt:
+> > +               return (left > right);
+> > +       case Audit_ge:
+> > +               return (left >= right);
+> > +       case Audit_bitmask:
+> > +               return (left & right);
+> > +       case Audit_bittest:
+> > +               return ((left & right) == right);
+> > +       default:
+> > +               BUG();
+> > +               return 0;
+> > +       }
+> > +}
+> > +
+> >  int audit_uid_comparator(kuid_t left, u32 op, kuid_t right)
+> >  {
+> >         switch (op) {
+> > @@ -1344,6 +1387,10 @@ int audit_filter(int msgtype, unsigned int listtype)
+> >                                 result = audit_comparator(audit_loginuid_set(current),
+> >                                                           f->op, f->val);
+> >                                 break;
+> > +                       case AUDIT_CONTID:
+> > +                               result = audit_comparator64(audit_get_contid(current),
+> > +                                                             f->op, f->val64);
+> > +                               break;
+> >                         case AUDIT_MSGTYPE:
+> >                                 result = audit_comparator(msgtype, f->op, f->val);
+> >                                 break;
+> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > index aa5d13b4fbbb..2d74238e9638 100644
+> > --- a/kernel/auditsc.c
+> > +++ b/kernel/auditsc.c
+> > @@ -616,6 +616,9 @@ static int audit_filter_rules(struct task_struct *tsk,
+> >                 case AUDIT_LOGINUID_SET:
+> >                         result = audit_comparator(audit_loginuid_set(tsk), f->op, f->val);
+> >                         break;
+> > +               case AUDIT_CONTID:
+> > +                       result = audit_comparator64(audit_get_contid(tsk), f->op, f->val64);
+> > +                       break;
+> >                 case AUDIT_SUBJ_USER:
+> >                 case AUDIT_SUBJ_ROLE:
+> >                 case AUDIT_SUBJ_TYPE:
+> > --
+> > 1.8.3.1
+> >
+> 
+> 
+> -- 
+> Ondrej Mosnacek <omosnace at redhat dot com>
+> Associate Software Engineer, Security Technologies
+> Red Hat, Inc.
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
