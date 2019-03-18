@@ -2,127 +2,96 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE3EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89C4C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E507217D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dvq0o8MZ"
+	by mail.kernel.org (Postfix) with ESMTP id 98EAE2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbfCRJrb (ORCPT
+        id S1727979AbfCRJ2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:47:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56890 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727246AbfCRJr2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:47:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HEGuI18hqh5frPWqUe6FxZWpHjMFVsQ6h+RIMt/o4ls=; b=Dvq0o8MZQ+YLi/ccMuFsGs4dL
-        gUTqN/YuXqND7ULu8fuY026cbG+mwStnBCFv2nEUjg2B+3L5+1Zttc4ckd48tJRX+2olYW0K1Z34K
-        3JLJopKo2njoqX3AQwbqFmROaCTjHRhJaobim7FFAyl++NrlXcYICsVqr4h/loDCtkDiP81+Qa0By
-        GV4z9Ky2ELMRrudCg7hBeGVLUXopDUe0s/Ryfwwy74Qw+7HhLy4+sdX/MjUIfM5pHCm5X1fx8TKt1
-        tJhuaJ8DqJmqszpyggPwceE/YL7v1aD2zbIWyj4lAhkuWOCr14JjG/QdjNOvTt2fdFdUmw6JMK9HZ
-        k+IfPCSsw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5ora-0006cP-Ge; Mon, 18 Mar 2019 09:47:22 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C9FC520A0FF88; Mon, 18 Mar 2019 10:47:19 +0100 (CET)
-Date:   Mon, 18 Mar 2019 10:47:19 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [RFC PATCH 2/2] x86/perf/amd: Resolve NMI latency issues when
- multiple PMCs are active
-Message-ID: <20190318094719.GD6521@hirez.programming.kicks-ass.net>
-References: <155232291547.21417.2499429555505085131.stgit@tlendack-t1.amdoffice.net>
- <155232292961.21417.3665243457569518550.stgit@tlendack-t1.amdoffice.net>
- <20190315120311.GX5996@hirez.programming.kicks-ass.net>
+        Mon, 18 Mar 2019 05:28:03 -0400
+Received: from skyboo.net ([94.40.87.198]:39050 "EHLO skyboo.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727954AbfCRJ16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:27:58 -0400
+Received: from manio by skyboo.net with local (Exim 4.91)
+        (envelope-from <manio@skyboo.net>)
+        id 1h5oYl-0002IU-JA; Mon, 18 Mar 2019 10:27:56 +0100
+From:   Mariusz Bialonczyk <manio@skyboo.net>
+To:     linux-kernel@vger.kernel.org, Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Cc:     Mariusz Bialonczyk <manio@skyboo.net>
+Date:   Mon, 18 Mar 2019 10:27:36 +0100
+Message-Id: <20190318092737.8170-2-manio@skyboo.net>
+X-Mailer: git-send-email 2.19.0.rc1
+In-Reply-To: <20190318092737.8170-1-manio@skyboo.net>
+References: <20190318092737.8170-1-manio@skyboo.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315120311.GX5996@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, zbr@ioremap.net, greg@kroah.com, jeff.dagenais@gmail.com, manio@skyboo.net
+X-SA-Exim-Mail-From: manio@skyboo.net
+Subject: [PATCH 1/2] w1: ds2408: add a missing reset when retrying in output_write()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on skyboo.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 01:03:11PM +0100, Peter Zijlstra wrote:
+When we have success in 'Channel Access Write' but reading back the latch
+state has failed, then the code continues but without doing a proper
+slave reset. This was leading to protocol errors as the slave treats
+the next 'Channel Access Write' as the continuation of previous command.
 
-> Anyway, we already had code to deal with spurious NMIs from AMD; see
-> commit:
-> 
->   63e6be6d98e1 ("perf, x86: Catch spurious interrupts after disabling counters")
-> 
-> And that looks to be doing something very much the same. Why then do you
-> still need this on top?
+This commit is fixing this, and because we have to reset no matter if
+the actual write or the readback checking is failing then the resetting
+is done on the beginning of the loop.
 
-And I think I've spotted a bug there; consider the case where only PMC3
-has an active event left, then the interrupt would consume the running
-state for PMC0-2, not leaving it for the spurious interrupt that might
-come after it.
+Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
+Cc: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+---
+ drivers/w1/slaves/w1_ds2408.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Similarly, if there's nothing running anymore, a single spurious
-interrupt will clear the entire state.
-
-It effectively is a single state, not a per-pmc one.
-
-Something like the below would cure that... would that help with
-something? Or were we going to get get rid of this entirely with your
-patches...
-
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index e2b1447192a8..a8b5535f7888 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1432,6 +1432,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 	struct cpu_hw_events *cpuc;
- 	struct perf_event *event;
- 	int idx, handled = 0;
-+	int ridx = -1;
- 	u64 val;
+diff --git a/drivers/w1/slaves/w1_ds2408.c b/drivers/w1/slaves/w1_ds2408.c
+index b535d5ec35b6..562ee2d861e8 100644
+--- a/drivers/w1/slaves/w1_ds2408.c
++++ b/drivers/w1/slaves/w1_ds2408.c
+@@ -158,6 +158,13 @@ static ssize_t output_write(struct file *filp, struct kobject *kobj,
+ 		goto error;
  
- 	cpuc = this_cpu_ptr(&cpu_hw_events);
-@@ -1453,8 +1454,8 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 			 * might still deliver spurious interrupts still
- 			 * in flight. Catch them:
- 			 */
--			if (__test_and_clear_bit(idx, cpuc->running))
--				handled++;
-+			if (test_bit(idx, cpuc->running))
-+				ridx = idx;
- 			continue;
- 		}
- 
-@@ -1477,6 +1478,11 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 			x86_pmu_stop(event, 0);
- 	}
- 
-+	if (!handled && ridx >= 0) {
-+		__clear_bit(ridx, cpuc->running);
-+		handled++;
-+	}
+ 	while (retries--) {
++		/* do a reset/resume on every new retry call
++		   except the first one */
++		if (retries < W1_F29_RETRIES - 1) {
++			if (w1_reset_resume_command(sl->master))
++				goto error;
++		}
 +
- 	if (handled)
- 		inc_irq_stat(apic_perf_irqs);
+ 		w1_buf[0] = W1_F29_FUNC_CHANN_ACCESS_WRITE;
+ 		w1_buf[1] = *buf;
+ 		w1_buf[2] = ~(*buf);
+@@ -165,12 +172,8 @@ static ssize_t output_write(struct file *filp, struct kobject *kobj,
  
+ 		readBack = w1_read_8(sl->master);
+ 
+-		if (readBack != W1_F29_SUCCESS_CONFIRM_BYTE) {
+-			if (w1_reset_resume_command(sl->master))
+-				goto error;
+-			/* try again, the slave is ready for a command */
++		if (readBack != W1_F29_SUCCESS_CONFIRM_BYTE)
+ 			continue;
+-		}
+ 
+ #ifdef CONFIG_W1_SLAVE_DS2408_READBACK
+ 		/* here the master could read another byte which
+-- 
+2.19.0.rc1
+
