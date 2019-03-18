@@ -2,85 +2,96 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A9EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BCBC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C08E420863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:16:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="re7e79YQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3CC6820863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfCRRQO (ORCPT
+        id S1727688AbfCRRQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:16:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36650 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfCRRQO (ORCPT
+        Mon, 18 Mar 2019 13:16:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46648 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfCRRQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:16:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zd2PatB3kgJ3fmUKExcsxWAv3pQUnPPizAMl6bLC1eM=; b=re7e79YQYePtoWPqedXK6ezH6
-        7uXj7dawFXhCd2KS7YojxGWsNRsG4NuScRH2puIqpQAYP+Cxh8Q6qGRdxpfltf5XkDg5vWgoCT7kt
-        8VcpouNZ1eSH6wuWX2kDoc/R6ZhVsiZZFORVUynajfNvyw+3j7Ii7DQg37YTEAiR1hFKu5m97t73y
-        7pSf8GIseeg+nwHC5GmOFn3p2cpHl6OSHwI7mqbN5C8h+0V+iHiN+ed0+i0gGoiUCkzYx4I+86W5r
-        oIWQAXxY0+/S0nFWmBFkwY+Fc7wmpX/Ie+JgjX1aehUOgDRIwm4Rh9o0tRqCA8xyphKGYaPvikE2O
-        2VbSmObZQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5vrq-0002NV-TJ; Mon, 18 Mar 2019 17:16:07 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 317F5238A0165; Mon, 18 Mar 2019 18:16:04 +0100 (CET)
-Date:   Mon, 18 Mar 2019 18:16:04 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Manoj Gupta <manojgupta@chromium.org>,
-        Tiancong Wang <tcwang@chromium.org>,
-        Stephen Hines <srhines@google.com>,
-        clang-built-linux@googlegroups.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] x86/vdso: include generic __lshrdi3 in 32-bit vDSO
-Message-ID: <20190318171604.GU6058@hirez.programming.kicks-ass.net>
-References: <CAG5bF+SSMTvkgnQwHC1gx0pzysXhmMJ_+hUci_SJDPSteL4BcQ@mail.gmail.com>
- <CAKwvOd=aqWvjzC1ZF5_pXx2VutAX0dneDPxU_=jroqHUGw-X6g@mail.gmail.com>
- <20190315222906.GC112750@google.com>
- <CAKwvOdkXobdu74Fo0fiS4xkikqZdKS=gWN61pVAFBbXRPoenRw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdkXobdu74Fo0fiS4xkikqZdKS=gWN61pVAFBbXRPoenRw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 18 Mar 2019 13:16:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a22so11805562pgg.13;
+        Mon, 18 Mar 2019 10:16:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=V4E1evcqLqxZDwrDpf1S27x2FhHzdkvtC33qAjLzojw=;
+        b=k70YN2MjuvxTsPlE+Ntb4dm/K0jBmhHpFBds3jpqqLYMrCFz3yk/1FLMyHcSZiV+fa
+         gX1ukPmpLrEfSHv+CjjahlsgpICTBVcgNvnekY1TRsi33srN4NPOR1sDbgeCE01Fka99
+         BGD8pI8oYJP++elbbuNdnfAc099sVtbWMxGT+NYO9Vbutf0d83r1W5RSQqtZrr8b4Nmz
+         FtLwsHuyf6Z7cCugWsglxSFQWFgfsGAEA9LhxMuUCPB0yGu10glfCwYe3oFEc5KchJbh
+         kbYNzFr+ELqjdls2GPwJT6onJOWMoUxtcbiOa6vDqjwws/9Ejv0NRRcJsOxmXPTm0K8Z
+         9OtA==
+X-Gm-Message-State: APjAAAWkfOaEd2opYf1CddOaKJqN/MYcZL1xxuSp24iHRo1c6Ydzc1f1
+        PpXSmDVT9yLvyOP4EXwy4es1QadJo1w=
+X-Google-Smtp-Source: APXvYqxUm3w2rctlqHvfzCxw5PpFZYfXdmB7cCThe5p5W3sSylHV9U4SRMmLhsnxCXJG82eEKv71YQ==
+X-Received: by 2002:a65:6210:: with SMTP id d16mr18684648pgv.189.1552929386882;
+        Mon, 18 Mar 2019 10:16:26 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
+        by smtp.gmail.com with ESMTPSA id z6sm47644372pgo.31.2019.03.18.10.16.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 10:16:25 -0700 (PDT)
+Message-ID: <1552929384.152266.27.camel@acm.org>
+Subject: Re: [PATCH 5/8] nbd: use blk_mq_queue_tag_busy_iter
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Jianchao Wang <jianchao.w.wang@oracle.com>, axboe@kernel.dk
+Cc:     hch@lst.de, jthumshirn@suse.de, hare@suse.de, josef@toxicpanda.com,
+        sagi@grimberg.me, keith.busch@intel.com, jsmart2021@gmail.com,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 18 Mar 2019 10:16:24 -0700
+In-Reply-To: <1552640264-26101-6-git-send-email-jianchao.w.wang@oracle.com>
+References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
+         <1552640264-26101-6-git-send-email-jianchao.w.wang@oracle.com>
+Content-Type: text/plain; charset="UTF-7"
+X-Mailer: Evolution 3.26.2-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 10:09:37AM -0700, Nick Desaulniers wrote:
-> On Fri, Mar 15, 2019 at 3:29 PM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > On Fri, Mar 15, 2019 at 02:31:09PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> > > Is there a config I can set to reproduce this, in order to help
-> > > test?
-> >
-> > I encountered it with a Chrome OS specific configuration, but a
-> > defconfig should do.
-> 
-> defconfig selects CONFIG_OPTIMIZE_FOR_PERFORMANCE=y.  I needed to
-> select CONFIG_CC_OPTIMIZE_FOR_SIZE=y to repro.  My CI is simply
-> running defconfigs, which is why I didn't catch this.
+On Fri, 2019-03-15 at 16:57 +-0800, Jianchao Wang wrote:
++AD4 blk+AF8-mq+AF8-tagset+AF8-busy+AF8-iter is not safe that it could get stale request
++AD4 in tags-+AD4-rqs+AFsAXQ. Use blk+AF8-mq+AF8-queue+AF8-tag+AF8-busy+AF8-iter here.
++AD4 
++AD4 Signed-off-by: Jianchao Wang +ADw-jianchao.w.wang+AEA-oracle.com+AD4
++AD4 ---
++AD4  drivers/block/nbd.c +AHw 2 +-
++AD4  1 file changed, 1 insertion(), 1 deletion(-)
++AD4 
++AD4 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
++AD4 index 7c9a949..9e7e828 100644
++AD4 --- a/drivers/block/nbd.c
++AD4 +-+-+- b/drivers/block/nbd.c
++AD4 +AEAAQA -747,7 +-747,7 +AEAAQA static bool nbd+AF8-clear+AF8-req(struct request +ACo-req, void +ACo-data, bool reserved)
++AD4  static void nbd+AF8-clear+AF8-que(struct nbd+AF8-device +ACo-nbd)
++AD4  +AHs
++AD4         blk+AF8-mq+AF8-quiesce+AF8-queue(nbd-+AD4-disk-+AD4-queue)+ADs
++AD4 -       blk+AF8-mq+AF8-tagset+AF8-busy+AF8-iter(+ACY-nbd-+AD4-tag+AF8-set, nbd+AF8-clear+AF8-req, NULL)+ADs
++AD4 +-       blk+AF8-mq+AF8-queue+AF8-tag+AF8-busy+AF8-iter(nbd-+AD4-disk-+AD4-queue, nbd+AF8-clear+AF8-req, NULL, true)+ADs
++AD4         blk+AF8-mq+AF8-unquiesce+AF8-queue(nbd-+AD4-disk-+AD4-queue)+ADs
++AD4         dev+AF8-dbg(disk+AF8-to+AF8-dev(nbd-+AD4-disk), +ACI-queue cleared+AFw-n+ACI)+ADs
++AD4  +AH0
 
-I suspect the right fix is to make clang use -Os and abolish that -Oz
-madness.
+Hi Jianchao,
+
+The nbd driver calls nbd+AF8-clear+AF8-que() after having called sock+AF8-shutdown(). So
+what makes you think that it's not safe to call blk+AF8-mq+AF8-tagset+AF8-busy+AF8-iter()
+from nbd+AF8-clear+AF8-que()?
+
+Thanks,
+
+Bart.
