@@ -2,103 +2,111 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB945C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545AEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43DB20811
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7252087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="sW0wQegx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfCRIPy (ORCPT
+        id S1726872AbfCRISt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 04:15:54 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:55306 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726291AbfCRIPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 04:15:54 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x2I8EKDx008068;
-        Mon, 18 Mar 2019 10:14:20 +0200
-Date:   Mon, 18 Mar 2019 10:14:20 +0200 (EET)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Jacky Hu <hengqing.hu@gmail.com>
-cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        jacky.hu@walmart.com, jason.niesz@walmart.com,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH v4] ipvs: allow tunneling with gue encapsulation
-In-Reply-To: <20190318032256.GA21124@i716>
-Message-ID: <alpine.LFD.2.21.1903181000070.2986@ja.home.ssi.bg>
-References: <20190317155200.16586-1-hengqing.hu@gmail.com> <201903181001.7czsRhlB%lkp@intel.com> <20190318032256.GA21124@i716>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Mon, 18 Mar 2019 04:18:49 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:35166 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfCRISt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 04:18:49 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id E16C65C013A;
+        Mon, 18 Mar 2019 09:18:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1552897126;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ie7gEvCZHt2dPtaEXOSM/yOAG6BLizHKnECPLrS9Wh4=;
+        b=sW0wQegxmWjmnhEyKdxVz0jAoBw+x8NsF00BgKchTuPHwm9DfUFtlbG22eVFYTbacFw7Pp
+        fPZuekzVctsDCbIPhh+DMepDILrDCIc4EIZ6KfUfrve7HOmIDThdq/SckLzqVrmiPS96LE
+        9ynp2qUwSc6ZXU63wUHWOhvaPdz91mo=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 18 Mar 2019 09:18:46 +0100
+From:   Stefan Agner <stefan@agner.ch>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>, jan.tuerk@emtrion.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        u.kleine-koenig@pengutronix.de, dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V5 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
+In-Reply-To: <1552894581-3391-2-git-send-email-Anson.Huang@nxp.com>
+References: <1552894581-3391-1-git-send-email-Anson.Huang@nxp.com>
+ <1552894581-3391-2-git-send-email-Anson.Huang@nxp.com>
+Message-ID: <d1f8b006ad56e8ed4e9fb9137148d98b@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-	Hello,
-
-On Mon, 18 Mar 2019, Jacky Hu wrote:
-
-> On Mon, Mar 18, 2019 at 10:10:20AM +0800, kbuild test robot wrote:
-> > Hi Jacky,
-> > 
-> > Thank you for the patch! Perhaps something to improve:
-> > 
-> > [auto build test WARNING on ipvs-next/master]
-> > [also build test WARNING on v5.1-rc1 next-20190306]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> > 
-> > url:    https://github.com/0day-ci/linux/commits/Jacky-Hu/ipvs-allow-tunneling-with-gue-encapsulation/20190318-070156
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/horms/ipvs-next.git master
-> > reproduce:
-> >         # apt-get install sparse
-> >         make ARCH=x86_64 allmodconfig
-> >         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-> > 
-> > 
-> > sparse warnings: (new ones prefixed by >>)
-> > 
-> >    net/netfilter/ipvs/ip_vs_ctl.c:835:42: sparse: incorrect type in argument 2 (different base types) @@    expected int [signed] i @@    got restricted __be1int [signed] i @@
-> >    net/netfilter/ipvs/ip_vs_ctl.c:835:42:    expected int [signed] i
-> >    net/netfilter/ipvs/ip_vs_ctl.c:835:42:    got restricted __be16 [usertype] tun_port
-> >    net/netfilter/ipvs/ip_vs_ctl.c:1197:44: sparse: expression using sizeof(void)
-> > >> net/netfilter/ipvs/ip_vs_ctl.c:3207:37: sparse: incorrect type in argument 3 (different base types) @@    expected restricted __be16 [usertype] value @@    got e] value @@
-> >    net/netfilter/ipvs/ip_vs_ctl.c:3207:37:    expected restricted __be16 [usertype] value
-> >    net/netfilter/ipvs/ip_vs_ctl.c:3207:37:    got int
-> >    net/netfilter/ipvs/ip_vs_ctl.c:1313:27: sparse: dereference of noderef expression
-> > 
-> > vim +3207 net/netfilter/ipvs/ip_vs_ctl.c
-> > 
-
-> > > 3207				 atomic_read(&dest->tun_port)) ||
+On 18.03.2019 08:41, Anson Huang wrote:
+> Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
 > 
->     Should I change the type of tun_port from __be16 to u16?
->     Looks like kbuild bugs a lot on this.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No changes.
+> ---
+>  Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+> b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+> new file mode 100644
+> index 0000000..d47b8fb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+> @@ -0,0 +1,19 @@
+> +Freescale i.MX TPM PWM controller
+> +
+> +Required properties:
+> +- compatible : Should be "fsl,imx-tpm-pwm".
+> +- reg: Physical base address and length of the controller's registers.
+> +- #pwm-cells: Should be 2. See pwm.txt in this directory for a
+> description of the cells format.
 
-	In struct ip_vs_dest you should use __be16 for tun_port and
-__u16 for tun_type and avoid any atomic_t usage. To test it with sparse:
+It seems that the driver supports polarity. Can we use 3 cells so we can
+specify the polarity in the device tree?
 
-make C=2 CF="-D__CHECK_ENDIAN__" net/netfilter/ipvs/
-
-	And this is the only problem in v4 of the patch. Then may be
-you should wait when net-next opens again before submitting v5.
-
-Regards
+Also use 3 cells in the base device tree to enable other boards making
+use of the polarity (arch/arm/boot/dts/imx7ulp.dtsi).
 
 --
-Julian Anastasov <ja@ssi.bg>
+Stefan
+
+> +- clocks : The clock provided by the SoC to drive the PWM.
+> +- interrupts: The interrupt for the pwm controller.
+> +
+> +Example:
+> +
+> +pwm0: tpm@40250000 {
+> +	compatible = "fsl,imx-tpm-pwm";
+> +	reg = <0x40250000 0x1000>;
+> +	assigned-clocks = <&clks IMX7ULP_CLK_LPTPM4>;
+> +	assigned-clock-parents = <&clks IMX7ULP_CLK_SOSC_BUS_CLK>;
+> +	clocks = <&clks IMX7ULP_CLK_LPTPM4>;
+> +	#pwm-cells = <2>;
+> +};
