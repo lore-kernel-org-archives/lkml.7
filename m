@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53487C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8773AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F08521734
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D90214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901345;
-	bh=sszEFTP1oQwKVWisPxgocJBAjbYZDjfSbmUy0iJ3ILc=;
+	s=default; t=1552901347;
+	bh=q+rztsWH+IacQFsnmGrmXwqJSGtzJItBrN5o5C7IeW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q8xxqqGS+G3/x52TKnVpHaQ+oI3i4RpeFrxzsL6e0SX1DlL3Be4XSh8x9dnLonZ/I
-	 lbvYY+nAnlu2eZL+1w/TLJPm2fSlV4PRDwOrUu6uePJJzE4ECL3XOUBH7Cii1GOoS5
-	 wYLEYVhbTeRnLfWIoaOIptjr2o+eHaU7ag0LdQeM=
+	b=UtDUwOQGOP4EHRC5YyobxmmQeOQre6Gx7RByoYoAaD53WNo48gl/DpY0c+QaB9UpZ
+	 YfMY0YfjA0XI2pdnH/0tP1p4jKmgEEsrAuit7A8VdF5/wl4hHhzHIsnw76EP1tDIvn
+	 w7PFfnYqhj4dK7PD0qXXVG+10v6iGyn5Pe2/qRBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbfCRJ3D (ORCPT
+        id S1728181AbfCRJ3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:29:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:29:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbfCRJ24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:28:56 -0400
+        id S1728169AbfCRJ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:29:02 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17CEF2075C;
-        Mon, 18 Mar 2019 09:28:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D04B2075C;
+        Mon, 18 Mar 2019 09:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901335;
-        bh=sszEFTP1oQwKVWisPxgocJBAjbYZDjfSbmUy0iJ3ILc=;
+        s=default; t=1552901342;
+        bh=q+rztsWH+IacQFsnmGrmXwqJSGtzJItBrN5o5C7IeW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aglTV0UoNadiBpoj0g4ZBY8FJvtpD5tf94rGR2U8zafqapVlZ+J9FgKD67QHqfWRI
-         uYfAG6Ww0tj+IxfY8pgogmUd0CE56Aav/BQnl9EqvLRnB3TbOeut6JRTKZND3YG4N1
-         XL8hvhNdqRnPxYF2eQs2vf1MRgSnWXWLK8xrY/oo=
+        b=kUL1FLMDcq9Ot5rRyfJoeEHHMwwicsUios0Tw90NzdsWvPlLwZVSP0KaoqRWnQmM7
+         KiLEyfVbYUfPx7Kwy3uH6L1F6PQeqUnAQaqatPD7fBLateS2eBHVC/H5JuX5NfIyh7
+         UAgsP8W4krI9F5RELBbNr6h3jT1ZMHe35v7xFEeM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bryan Whitehead <Bryan.Whitehead@microchip.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 06/52] lan743x: Fix TX Stall Issue
-Date:   Mon, 18 Mar 2019 10:24:53 +0100
-Message-Id: <20190318083844.162308248@linuxfoundation.org>
+Subject: [PATCH 4.20 16/52] rxrpc: Fix client call queueing, waiting for channel
+Date:   Mon, 18 Mar 2019 10:25:03 +0100
+Message-Id: <20190318083845.369418065@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -65,67 +65,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bryan Whitehead <Bryan.Whitehead@microchip.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit deb6bfabdbb634e91f36a4e9cb00a7137d72d886 ]
+[ Upstream commit 69ffaebb90369ce08657b5aea4896777b9d6e8fc ]
 
-It has been observed that tx queue may stall while downloading
-from certain web sites (example www.speedtest.net)
+rxrpc_get_client_conn() adds a new call to the front of the waiting_calls
+queue if the connection it's going to use already exists.  This is bad as
+it allows calls to get starved out.
 
-The cause has been tracked down to a corner case where
-the tx interrupt vector was disabled automatically, but
-was not re enabled later.
+Fix this by adding to the tail instead.
 
-The lan743x has two mechanisms to enable/disable individual
-interrupts. Interrupts can be enabled/disabled by individual
-source, and they can also be enabled/disabled by individual
-vector which has been mapped to the source. Both must be
-enabled for interrupts to work properly.
+Also change the other enqueue point in the same function to put it on the
+front (ie. when we have a new connection).  This makes the point that in
+the case of a new connection the new call goes at the front (though it
+doesn't actually matter since the queue should be unoccupied).
 
-The TX code path, primarily uses the interrupt enable/disable of
-the TX source bit, while leaving the vector enabled all the time.
-
-However, while investigating this issue it was noticed that
-the driver requested the use of the vector auto clear feature.
-
-The test above revealed a case where the vector enable was
-cleared unintentionally.
-
-This patch fixes the issue by deleting the lines that request
-the vector auto clear feature to be used.
-
-Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
-Signed-off-by: Bryan Whitehead <Bryan.Whitehead@microchip.com>
+Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/microchip/lan743x_main.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ net/rxrpc/conn_client.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -585,8 +585,7 @@ static int lan743x_intr_open(struct lan7
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -353,7 +353,7 @@ static int rxrpc_get_client_conn(struct
+ 	 * normally have to take channel_lock but we do this before anyone else
+ 	 * can see the connection.
+ 	 */
+-	list_add_tail(&call->chan_wait_link, &candidate->waiting_calls);
++	list_add(&call->chan_wait_link, &candidate->waiting_calls);
  
- 		if (adapter->csr.flags &
- 		   LAN743X_CSR_FLAG_SUPPORTS_INTR_AUTO_SET_CLR) {
--			flags = LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_CLEAR |
--				LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_SET |
-+			flags = LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_SET |
- 				LAN743X_VECTOR_FLAG_SOURCE_ENABLE_AUTO_SET |
- 				LAN743X_VECTOR_FLAG_SOURCE_ENABLE_AUTO_CLEAR |
- 				LAN743X_VECTOR_FLAG_SOURCE_STATUS_AUTO_CLEAR;
-@@ -599,12 +598,6 @@ static int lan743x_intr_open(struct lan7
- 			/* map TX interrupt to vector */
- 			int_vec_map1 |= INT_VEC_MAP1_TX_VEC_(index, vector);
- 			lan743x_csr_write(adapter, INT_VEC_MAP1, int_vec_map1);
--			if (flags &
--			    LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_CLEAR) {
--				int_vec_en_auto_clr |= INT_VEC_EN_(vector);
--				lan743x_csr_write(adapter, INT_VEC_EN_AUTO_CLR,
--						  int_vec_en_auto_clr);
--			}
- 
- 			/* Remove TX interrupt from shared mask */
- 			intr->vector_list[0].int_mask &= ~int_bit;
+ 	if (cp->exclusive) {
+ 		call->conn = candidate;
+@@ -432,7 +432,7 @@ found_extant_conn:
+ 	call->conn = conn;
+ 	call->security_ix = conn->security_ix;
+ 	call->service_id = conn->service_id;
+-	list_add(&call->chan_wait_link, &conn->waiting_calls);
++	list_add_tail(&call->chan_wait_link, &conn->waiting_calls);
+ 	spin_unlock(&conn->channel_lock);
+ 	_leave(" = 0 [extant %d]", conn->debug_id);
+ 	return 0;
 
 
