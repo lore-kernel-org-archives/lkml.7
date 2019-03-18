@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094A4C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A38C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00A920863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A5220863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OVRG0jDx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oy4XANA3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfCRRSb (ORCPT
+        id S1728087AbfCRRSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:18:31 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:40712 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728035AbfCRRS1 (ORCPT
+        Mon, 18 Mar 2019 13:18:34 -0400
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:38519 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728059AbfCRRSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:18:27 -0400
-Received: by mail-yw1-f73.google.com with SMTP id x2so3173757ywc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:18:26 -0700 (PDT)
+        Mon, 18 Mar 2019 13:18:30 -0400
+Received: by mail-yw1-f74.google.com with SMTP id i203so8401079ywa.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:18:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=hfuKek+o8vy+53O51p2MPtj2JUyumu3LZdujtPFxXko=;
-        b=OVRG0jDx+a4bA2Xe0x2W0QLSaeWfLl/IABe0xhS3IFP8diCvylSVwKQWoIigEjNHVc
-         yxjFs3rDXFN+YQZXXdBXqzoVuEhq+g8HP9vfnj/K/jnMV093FMqmv6YIj0itG5FlZbO1
-         ke03j95r0/PkzmDHuCN3H9fGFOQlTbWpbvmuT2QemWXQk/lZDOT0fPG1qeBd7bYvwCAL
-         AE3Z9++g1iD+M29C/0LdG7U5gglyxyekWqwWKO87UeLRgDFAy26KL+NKf1x9Z+3nMGJh
-         HWwxBBm2ki5StK4NVq41umliE7Ge0hSfeTd7JwuOJHWr+3LKBGyWEd26Ba9MwuaG3MTr
-         +/EQ==
+        bh=SY+rnApq6/oVhWiUcTCOnBf6TcIl5V0rPtZOMhbp5Gs=;
+        b=oy4XANA3tbe0/ZzrN3csQScarn1wlppfqaNsYi+hu9yuogoof3toGpiFXztOXvuSIL
+         sBMFi0kVcDXhngeXsQ7F8TmpGE5J+YQspuv0IpgE54s+w7Cg2pGhzbc2pvAhwbRlgRSf
+         xxwSPdpD5FpRcK2p/HjiDpbPI1EyCU7DiI66uatDv7wNJCkN8c1ymIFnrzCAUJy1zI9w
+         EBzcRuRAINzPha2QHRdT3Y/yumtuj6+oKyiMBKvPeEcFGxcVQSEWK2xmW+D8MpHwLMzD
+         P1fusntFSsCEjlr/dNu9pSGP243BnVEPFZOFUAmm90Toh6sJXriJra44fSRj/3Svjc/P
+         //6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=hfuKek+o8vy+53O51p2MPtj2JUyumu3LZdujtPFxXko=;
-        b=e1KZNpt9//t/EARekqt+SYrAtWZET71/83sS1Qmb6MzwXqWbNN2ATzSSTTHeuSr6qJ
-         LhoUd7lIdPCSwRoqyMg9dy6pq3yA4QfLmVbmT0+g+WC6EtLmXcvD0854pwATASySruub
-         xGVa1QlBGRb1Bi6e/JbwJWE4UsCyWDDaEJX+YvLe44y9cSHHRO3XygDr2hNTWrL0l8Ck
-         98gc/3OpoNOG2iIUgcMHFhsE6w9YxrhIayO4mH+eP6F1eFjCYq2FGA39KavWRhG8jiiA
-         +heiVZ+I4I/B6GCFnBrKJl6NOGHmvS0wBWtVkMwy/KQCBgdYZwo5F5ZTfVHJ7LqB2xv8
-         GvTg==
-X-Gm-Message-State: APjAAAWedK5+3dMdJkbUun1xcs/HnzOGGWjnqlGo86eKcgDj2XjoYycO
-        /vSUN5FZqAGl1ufaR3+9C7c+Kbur7hnS0qKT
-X-Google-Smtp-Source: APXvYqyE9Hf1UP7XaN3S1ukCc+WMyyJkC7y8Hk/2DK6LClASlL+h1czCzSFlt0sWM+JMT6cpK2e3Il7FKfoAeEtz
-X-Received: by 2002:a25:e648:: with SMTP id d69mr9320791ybh.95.1552929506037;
- Mon, 18 Mar 2019 10:18:26 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 18:17:44 +0100
+        bh=SY+rnApq6/oVhWiUcTCOnBf6TcIl5V0rPtZOMhbp5Gs=;
+        b=ctdX8EAWwGrQ6ONP8I3ghokOz9KNgZ8qg4ScHOSXtGPdZbQ/+jD7+WXIYTaVqR4sHs
+         H8j2qMZ5lD2/rNwtNLwIliKEKGr9E5pjE6knxN0nvglW2hWNv/xGIqLdePibZf6TEpOQ
+         l+vBUzvUuhTvwwsrdsPg4GvZR+64xG3NJVT807QgqfCTdCQQd5ELwH8BwzULhefwy5+J
+         qapbNTKG8Hl4mOed6mCg5/DY7jpUXCkpNysx0ZAnHkHZc1sAhnPF31eQ2sNcBE2NRqvs
+         3pCnqz6KgLOtif6fDeZ6YBUscQMH5iyO2b4RZeoRntQSA/f6h/Fdxw5Ihp4r1HYod+8F
+         cxcQ==
+X-Gm-Message-State: APjAAAV/CpmwdnLHdQFX0eHmGjAI/0O5NvKgs1XgUhhW0VdhuzLZSp4H
+        c+CC01tjlDm9s05FsSP5bTSqueCvzaAjjtGS
+X-Google-Smtp-Source: APXvYqzr9z29O2HnZauXqiNwIgfSTj1CVWyp96d9Efuk7E9e9YiyE5NAQn/RDJZ9P2HjA7rm0gHQWomDM7zPkQh8
+X-Received: by 2002:a81:6184:: with SMTP id v126mr9643066ywb.17.1552929509203;
+ Mon, 18 Mar 2019 10:18:29 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 18:17:45 +0100
 In-Reply-To: <cover.1552929301.git.andreyknvl@google.com>
-Message-Id: <7883ff7cbe2e8075c3a0f450eade08587f49f3bc.1552929301.git.andreyknvl@google.com>
+Message-Id: <0b4d5fb8364a30a51868b6691fff503878d3d82b.1552929301.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1552929301.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH v12 12/13] bpf, arm64: untag user pointers in stack_map_get_build_id_offset
+Subject: [PATCH v12 13/13] selftests, arm64: add a selftest for passing tagged
+ pointers to kernel
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -107,42 +108,91 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-stack_map_get_build_id_offset() uses provided user pointers for vma
-lookups, which can only by done with untagged pointers.
-
-Untag the user pointer in this function for doing the lookup and
-calculating the offset, but save as is into the bpf_stack_build_id
-struct.
+This patch adds a simple test, that calls the uname syscall with a
+tagged user pointer as an argument. Without the kernel accepting tagged
+user pointers the test fails with EFAULT.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- kernel/bpf/stackmap.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/testing/selftests/arm64/.gitignore      |  1 +
+ tools/testing/selftests/arm64/Makefile        | 11 ++++++++++
+ .../testing/selftests/arm64/run_tags_test.sh  | 12 +++++++++++
+ tools/testing/selftests/arm64/tags_test.c     | 21 +++++++++++++++++++
+ 4 files changed, 45 insertions(+)
+ create mode 100644 tools/testing/selftests/arm64/.gitignore
+ create mode 100644 tools/testing/selftests/arm64/Makefile
+ create mode 100755 tools/testing/selftests/arm64/run_tags_test.sh
+ create mode 100644 tools/testing/selftests/arm64/tags_test.c
 
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 950ab2f28922..bb89341d3faf 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -320,7 +320,9 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- 	}
- 
- 	for (i = 0; i < trace_nr; i++) {
--		vma = find_vma(current->mm, ips[i]);
-+		u64 untagged_ip = untagged_addr(ips[i]);
+diff --git a/tools/testing/selftests/arm64/.gitignore b/tools/testing/selftests/arm64/.gitignore
+new file mode 100644
+index 000000000000..e8fae8d61ed6
+--- /dev/null
++++ b/tools/testing/selftests/arm64/.gitignore
+@@ -0,0 +1 @@
++tags_test
+diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/selftests/arm64/Makefile
+new file mode 100644
+index 000000000000..a61b2e743e99
+--- /dev/null
++++ b/tools/testing/selftests/arm64/Makefile
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+		vma = find_vma(current->mm, untagged_ip);
- 		if (!vma || stack_map_get_build_id(vma, id_offs[i].build_id)) {
- 			/* per entry fall back to ips */
- 			id_offs[i].status = BPF_STACK_BUILD_ID_IP;
-@@ -328,7 +330,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- 			memset(id_offs[i].build_id, 0, BPF_BUILD_ID_SIZE);
- 			continue;
- 		}
--		id_offs[i].offset = (vma->vm_pgoff << PAGE_SHIFT) + ips[i]
-+		id_offs[i].offset = (vma->vm_pgoff << PAGE_SHIFT) + untagged_ip
- 			- vma->vm_start;
- 		id_offs[i].status = BPF_STACK_BUILD_ID_VALID;
- 	}
++# ARCH can be overridden by the user for cross compiling
++ARCH ?= $(shell uname -m 2>/dev/null || echo not)
++
++ifneq (,$(filter $(ARCH),aarch64 arm64))
++TEST_GEN_PROGS := tags_test
++TEST_PROGS := run_tags_test.sh
++endif
++
++include ../lib.mk
+diff --git a/tools/testing/selftests/arm64/run_tags_test.sh b/tools/testing/selftests/arm64/run_tags_test.sh
+new file mode 100755
+index 000000000000..745f11379930
+--- /dev/null
++++ b/tools/testing/selftests/arm64/run_tags_test.sh
+@@ -0,0 +1,12 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++
++echo "--------------------"
++echo "running tags test"
++echo "--------------------"
++./tags_test
++if [ $? -ne 0 ]; then
++	echo "[FAIL]"
++else
++	echo "[PASS]"
++fi
+diff --git a/tools/testing/selftests/arm64/tags_test.c b/tools/testing/selftests/arm64/tags_test.c
+new file mode 100644
+index 000000000000..2bd1830a7ebe
+--- /dev/null
++++ b/tools/testing/selftests/arm64/tags_test.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <stdint.h>
++#include <sys/utsname.h>
++
++#define SHIFT_TAG(tag)		((uint64_t)(tag) << 56)
++#define SET_TAG(ptr, tag)	(((uint64_t)(ptr) & ~SHIFT_TAG(0xff)) | \
++					SHIFT_TAG(tag))
++
++int main(void)
++{
++	struct utsname *ptr = (struct utsname *)malloc(sizeof(*ptr));
++	void *tagged_ptr = (void *)SET_TAG(ptr, 0x42);
++	int err = uname(tagged_ptr);
++
++	free(ptr);
++	return err;
++}
 -- 
 2.21.0.225.g810b269d1ac-goog
 
