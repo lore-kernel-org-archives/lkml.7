@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C7CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E375C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E5D2133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3665B2133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="dOIYfjg/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Gi8/vuU6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfCRUjp (ORCPT
+        id S1727878AbfCRUkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:39:45 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:31288 "EHLO
+        Mon, 18 Mar 2019 16:40:02 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:28375 "EHLO
         mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbfCRUjo (ORCPT
+        with ESMTP id S1727269AbfCRUjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:39:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1552941582;
+        Mon, 18 Mar 2019 16:39:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1552941583;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=FpLcXXgjhB0Nq7Ef4DEJHTwPb2IbK1p9ddEH3G+5TaQ=;
-        b=dOIYfjg/yEcLQIFe/ngIvXgSR/hJdvHy9JoXjV4sP3hwkxtSeTF+9Ey36eL0hBqd3l
-        x9V0cF8ibUrdn0DlrbE1uAUuysjyvLmA+S4Jq/yHnEMOG47DFuX+y/btbSAyqsldP9TV
-        G8pTEeLHBVoF5WOISyhwkBEUxaPpBgmmYJRRX0hHhDgKJSl/YpqS/Fcm3UdfsUetZlVo
-        ST+8dY75ZaOPARjQu+YF/j3CfxaBxeXvBNnqeZRmKOqqBj17LxVmAYFfjWY0vT1d7c0E
-        CmVgkSxIOL4ls7YJBpgu930lXN7KM+YW8656wCWLaIviJQg9RKg3IAWYsjLerUh8wo5Z
-        VLiw==
+        bh=PZ2Eo8d+YhwTy/BkqIPSZ4MMMCqG6vW1xSs6GtuCSkk=;
+        b=Gi8/vuU6n3tAyPUtZgmwCP+KIESdyNN0NjHpeS/vn8fD+BPI/bfsrKXuf7T7IioOxb
+        rTYmF40G8nPbsq6Iiyubzt/p95Ahzt3cQIfxViKVLz1mSRcNsVr43a5y7T6L5mrXJbx2
+        bFShR7qF+o7YSMQf1H/Eg+a52cSOZMZkOR8dluVthU/G9VvP+Qxh7fzb+qQGvH8j48c2
+        k6stOdCphG8pZHnFtgOsJqSXvtqPCWi3I2dhDAswLDTA7+WHcIiJ2v/TIthvoSJQPPse
+        wmcbZCUekbtv0s2Wwz90M8WaGvmbCTXbJvHPUo1SiqujPyFo+XNN4itSCmkXd2aJAywp
+        +1eg==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7O2CKNdGj"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.16 DYNA|AUTH)
-        with ESMTPSA id h04075v2IKdZFyl
+        with ESMTPSA id h04075v2IKdZFym
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
         Mon, 18 Mar 2019 21:39:35 +0100 (CET)
@@ -49,9 +49,9 @@ Cc:     letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
         "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [RFC 3/4] iio: input-bridge: add IIO_INPUT_BRIDGE kernel config option
-Date:   Mon, 18 Mar 2019 21:39:33 +0100
-Message-Id: <290e3d7ff2a55281cd29bc48ac75cce0bd4e9af0.1552941573.git.hns@goldelico.com>
+Subject: [RFC 4/4] iio: input-bridge: make the iio-input-bridge driver called by iio-core
+Date:   Mon, 18 Mar 2019 21:39:34 +0100
+Message-Id: <f5c1baba29b0b1e82d49190c96a83cbef3a1cd6f.1552941573.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1552941573.git.hns@goldelico.com>
 References: <cover.1552941573.git.hns@goldelico.com>
@@ -62,31 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the iio-input-bridge to the Kconfig.
+This adds the iio-input-bridge to iio device (un)registering so
+that accelerometers are located and made present an input event
+device.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/iio/Kconfig | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/iio/industrialio-core.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index d08aeb41cd07..d85afe002613 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -68,6 +68,13 @@ config IIO_TRIGGERED_EVENT
- 	help
- 	  Provides helper functions for setting up triggered events.
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 4700fd5d8c90..81f412b41a78 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -29,6 +29,7 @@
+ #include <linux/iio/iio.h>
+ #include "iio_core.h"
+ #include "iio_core_trigger.h"
++#include "industrialio-inputbridge.h"
+ #include <linux/iio/sysfs.h>
+ #include <linux/iio/events.h>
+ #include <linux/iio/buffer.h>
+@@ -1723,6 +1724,15 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+ 	if (ret < 0)
+ 		goto error_unreg_eventset;
  
-+config IIO_INPUT_BRIDGE
-+	bool "Enable accelerometer bridge to input driver"
-+	help
-+	  Provides a /dev/input/event* device for accelerometers
-+	  to use as a 3D input device, e.g. for gaming or auto-rotation
-+	  of screen contents.
++	ret = iio_device_register_inputbridge(indio_dev);
++	if (ret) {
++		dev_err(indio_dev->dev.parent,
++			"Failed to register as input driver\n");
++		device_del(&indio_dev->dev);
 +
- source "drivers/iio/accel/Kconfig"
- source "drivers/iio/adc/Kconfig"
- source "drivers/iio/afe/Kconfig"
++		return ret;
++	}
++
+ 	return 0;
+ 
+ error_unreg_eventset:
+@@ -1745,6 +1755,8 @@ void iio_device_unregister(struct iio_dev *indio_dev)
+ {
+ 	mutex_lock(&indio_dev->info_exist_lock);
+ 
++	iio_device_unregister_inputbridge(indio_dev);
++
+ 	cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
+ 
+ 	iio_device_unregister_debugfs(indio_dev);
 -- 
 2.19.1
 
