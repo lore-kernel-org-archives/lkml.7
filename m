@@ -2,219 +2,94 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36FDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39624C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7BF2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gP0WtdT7"
+	by mail.kernel.org (Postfix) with ESMTP id 07D4E2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfCRKTv (ORCPT
+        id S1727657AbfCRKUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:19:51 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57808 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbfCRKTv (ORCPT
+        Mon, 18 Mar 2019 06:20:07 -0400
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:13752 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727470AbfCRKUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:19:51 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2IAJfBw031022;
-        Mon, 18 Mar 2019 05:19:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552904381;
-        bh=6+j+kqzqo1HGfZTudS2meYG+2rbederFln7vA7aDkTY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gP0WtdT7meXhvdf+pq/54B4LOhYJhqX7RE5l86w4kZ+1Vo52dci5qYaa9brb2gxjH
-         d8E5sW6Dhlhbw3Buqcgqa9b7CXkEwi89dhufGdB1jBSLqqyvDTdacwQTTQ6W8qRwNs
-         37q1kduW8F6h7nrhKx5LKvm2KYFNismytuo1R4AI=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2IAJfxm073482
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Mar 2019 05:19:41 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 18
- Mar 2019 05:19:40 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 18 Mar 2019 05:19:40 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2IAJbjI007571;
-        Mon, 18 Mar 2019 05:19:38 -0500
-Subject: Re: [PATCH v3 5/8] phy: amlogic: add Amlogic G12A USB2 PHY Driver
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        <gregkh@linuxfoundation.org>, <hminas@synopsys.com>,
-        <balbi@kernel.org>
-CC:     <linux-amlogic@lists.infradead.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-References: <20190318101153.7531-1-narmstrong@baylibre.com>
- <20190318101153.7531-6-narmstrong@baylibre.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <a0001535-350a-6f3b-a8f4-3b853e4bc990@ti.com>
-Date:   Mon, 18 Mar 2019 15:48:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190318101153.7531-6-narmstrong@baylibre.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 18 Mar 2019 06:20:06 -0400
+X-Greylist: delayed 3193 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 Mar 2019 06:20:04 EDT
+Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
+        by www3345.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2I9QbCV000983;
+        Mon, 18 Mar 2019 18:26:37 +0900 (JST)
+        (envelope-from na-hoan@jinso.co.jp)
+Received: from www3345.sakura.ne.jp (49.212.235.55)
+ by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp);
+ Mon, 18 Mar 2019 18:26:37 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp)
+Received: from localhost (p14010-ipadfx41marunouchi.tokyo.ocn.ne.jp [61.118.107.10])
+        (authenticated bits=0)
+        by www3345.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2I9QW9d000938
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 18 Mar 2019 18:26:36 +0900 (JST)
+        (envelope-from na-hoan@jinso.co.jp)
+From:   Nguyen An Hoan <na-hoan@jinso.co.jp>
+To:     linux-renesas-soc@vger.kernel.org, geert+renesas@glider.be
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        ulrich.hecht+renesas@gmail.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kuninori.morimoto.gx@renesas.com,
+        magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com,
+        h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp,
+        cv-dong@jinso.co.jp
+Subject: [PATCH] serial: sh-sci: Fix setting SCSCR_TIE while transferring data
+Date:   Mon, 18 Mar 2019 18:26:32 +0900
+Message-Id: <1552901192-29748-1-git-send-email-na-hoan@jinso.co.jp>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Hoan Nguyen An <na-hoan@jinso.co.jp>
 
-On 18/03/19 3:41 PM, Neil Armstrong wrote:
-> This adds support for the USB2 PHY found in the Amlogic G12A SoC Family.
-> 
-> It supports Host and/or Peripheral mode, depending on it's position.
-> The first PHY is only used as Host, but the second supports Dual modes
-> defined by the USB Control Glue HW in front of the USB Controllers.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  drivers/phy/amlogic/Kconfig               |  11 ++
->  drivers/phy/amlogic/Makefile              |   1 +
->  drivers/phy/amlogic/phy-meson-g12a-usb2.c | 189 ++++++++++++++++++++++
->  3 files changed, 201 insertions(+)
->  create mode 100644 drivers/phy/amlogic/phy-meson-g12a-usb2.c
-> 
-> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> index 23fe1cda2f70..560ff0f1ed4c 100644
-> --- a/drivers/phy/amlogic/Kconfig
-> +++ b/drivers/phy/amlogic/Kconfig
-> @@ -36,3 +36,14 @@ config PHY_MESON_GXL_USB3
->  	  Enable this to support the Meson USB3 PHY and OTG detection
->  	  IP block found in Meson GXL and GXM SoCs.
->  	  If unsure, say N.
-> +
-> +config PHY_MESON_G12A_USB2
-> +	tristate "Meson G12A USB2 PHY driver"
-> +	default ARCH_MESON
-> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> +	select GENERIC_PHY
-> +	select REGMAP_MMIO
-> +	help
-> +	  Enable this to support the Meson USB2 PHYs found in Meson
-> +	  G12A SoCs.
-> +	  If unsure, say N.
-> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> index 4fd8848c194d..7d4d10f5a6b3 100644
-> --- a/drivers/phy/amlogic/Makefile
-> +++ b/drivers/phy/amlogic/Makefile
-> @@ -1,3 +1,4 @@
->  obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
->  obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
-> +obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
->  obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
-> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb2.c b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
-> new file mode 100644
-> index 000000000000..9f35259f237f
-> --- /dev/null
-> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
-> @@ -0,0 +1,189 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Meson G12A USB2 PHY driver
-> + *
-> + * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> + * Copyright (C) 2017 Amlogic, Inc. All rights reserved
-> + * Copyright (C) 2019 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define PHY_CTRL_R0						0x0
-> +#define PHY_CTRL_R1						0x4
-> +#define PHY_CTRL_R2						0x8
-> +#define PHY_CTRL_R3						0xc
-> +#define PHY_CTRL_R4						0x10
-> +#define PHY_CTRL_R5						0x14
-> +#define PHY_CTRL_R6						0x18
-> +#define PHY_CTRL_R7						0x1c
-> +#define PHY_CTRL_R8						0x20
-> +#define PHY_CTRL_R9						0x24
-> +#define PHY_CTRL_R10						0x28
-> +#define PHY_CTRL_R11						0x2c
-> +#define PHY_CTRL_R12						0x30
-> +#define PHY_CTRL_R13						0x34
-> +#define PHY_CTRL_R14						0x38
-> +#define PHY_CTRL_R15						0x3c
-> +#define PHY_CTRL_R16						0x40
-> +#define PHY_CTRL_R17						0x44
-> +#define PHY_CTRL_R18						0x48
-> +#define PHY_CTRL_R19						0x4c
-> +#define PHY_CTRL_R20						0x50
-> +#define PHY_CTRL_R21						0x54
-> +#define PHY_CTRL_R22						0x58
-> +#define PHY_CTRL_R23						0x5c
-> +
-> +#define RESET_COMPLETE_TIME					1000
-> +#define PLL_RESET_COMPLETE_TIME					100
-> +
-> +struct phy_meson_g12a_usb2_priv {
-> +	struct device		*dev;
-> +	struct regmap		*regmap;
-> +	struct clk		*clk;
-> +	struct reset_control	*reset;
-> +};
-> +
-> +static const struct regmap_config phy_meson_g12a_usb2_regmap_conf = {
-> +	.reg_bits = 8,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.max_register = PHY_CTRL_R23,
-> +};
-> +
-> +static int phy_meson_g12a_usb2_init(struct phy *phy)
-> +{
-> +	struct phy_meson_g12a_usb2_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = reset_control_reset(priv->reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	udelay(RESET_COMPLETE_TIME);
-> +
-> +	/* usb2_otg_aca_en == 0 */
-> +	regmap_update_bits(priv->regmap, PHY_CTRL_R21, BIT(2), 0);
-> +
-> +	/* PLL Setup : 24MHz * 20 / 1 = 480MHz */
-> +	regmap_write(priv->regmap, PHY_CTRL_R16, 0x39400414);
-> +	regmap_write(priv->regmap, PHY_CTRL_R17, 0x927e0000);
-> +	regmap_write(priv->regmap, PHY_CTRL_R18, 0xac5f49e5);
+We disable transmission interrupt (clear SCSCR_TIE) after all data has been transmitted
+(if uart_circ_empty(xmit)). While transmitting, if the data is still in the tty buffer,
+re-enable the SCSCR_TIE bit, which was done at sci_start_tx().
+This is unnecessary processing, wasting CPU operation if the data transmission length is large.
+And further, transmit end, FIFO empty bits disabling have also been performed in the step above.
 
-Please add macros for each of the individual bit-fields.
-> +
-> +	udelay(PLL_RESET_COMPLETE_TIME);
-> +
-> +	/* UnReset PLL */
-> +	regmap_write(priv->regmap, PHY_CTRL_R16, 0x19400414);
+Signed-off-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
+---
+ drivers/tty/serial/sh-sci.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-Here too..
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 64bbeb7..93bd90f 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -838,19 +838,9 @@ static void sci_transmit_chars(struct uart_port *port)
+ 
+ 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+ 		uart_write_wakeup(port);
+-	if (uart_circ_empty(xmit)) {
++	if (uart_circ_empty(xmit))
+ 		sci_stop_tx(port);
+-	} else {
+-		ctrl = serial_port_in(port, SCSCR);
+-
+-		if (port->type != PORT_SCI) {
+-			serial_port_in(port, SCxSR); /* Dummy read */
+-			sci_clear_SCxSR(port, SCxSR_TDxE_CLEAR(port));
+-		}
+ 
+-		ctrl |= SCSCR_TIE;
+-		serial_port_out(port, SCSCR, ctrl);
+-	}
+ }
+ 
+ /* On SH3, SCIF may read end-of-break as a space->mark char */
+-- 
+2.7.4
 
-Thanks
-Kishon
