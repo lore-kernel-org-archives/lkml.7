@@ -4,54 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A156C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717E0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6B52175B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3A42083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901460;
-	bh=I7AXy9UV/KeUPemLcF3/ot5UNbQROtP2kNZVc3tTkKQ=;
+	s=default; t=1552901464;
+	bh=f+xI9QVZV2kePlQo//TVCGYRml+Ylu0juAOGhg5l2CM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=001QJwOB6coh1XNIgC+Icx/1jzMu6lF31USAScahVnjCijmWKhq9K1lnfyh5/PTUs
-	 PtQ8jeXlbjl6oztZTF62Myf5i4WZnxkM4y4XMMLEkoVfBza1dd+Qpr2OgVO5M0P3d0
-	 SNYAkKYr33ne7K9ir4lMaW+zaKTY/ARYU3C9bi+c=
+	b=AL4JLgcOZZI1RN5pEglagu9vm1Hirr01fR86ghOTVk6cqQHlLHhDmF0Sx7Yf7Xxk5
+	 ieoWDEoTXlfhplPes6D8lPK03gxiFFdK5T+5zE9cnFVOSTeVj/s4b6k0b+celyqQmN
+	 VbfBktz91Ep/ofwBpyeA+/Xh/oa2inpKoJsj2ETU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfCRJa6 (ORCPT
+        id S1727916AbfCRJbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38296 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727655AbfCRJa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:30:56 -0400
+        id S1727512AbfCRJbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:00 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E6C22075C;
-        Mon, 18 Mar 2019 09:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7489721734;
+        Mon, 18 Mar 2019 09:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901455;
-        bh=I7AXy9UV/KeUPemLcF3/ot5UNbQROtP2kNZVc3tTkKQ=;
+        s=default; t=1552901460;
+        bh=f+xI9QVZV2kePlQo//TVCGYRml+Ylu0juAOGhg5l2CM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VxyJyVAnlPYsXrlSrtSw1t1xyd+kCS9YaErhDqkDZx8lNthqoMg45ye2vfnPRY3kX
-         KuO39CQCB5YviPT/Q+x6mMpn59FfCDo4qEACkws7JeJ8UMBuePbhrh5E9fX3y8Louv
-         KFDOwi7hOTF9RGZkL7oSAqY7O8gnVlSLuTivyHqE=
+        b=OJWWmB4HRYuy26XcHoSViAcEKZmb0IGUXu1yXq9TKbP1aVy2QhKdJHY0ApM8YR3au
+         qqtQDB1nQmdYf0ms47MBt+jLR1eDWEoGuyNEYSWTq/SzLcKuwChfYQg7SVkBQFp8QC
+         lpYgQczP/zwWAndex3WLcYura/aP2sDfesh7FyPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, kbuild-all@01.org,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 4.20 49/52] perf/x86/intel: Make dev_attr_allow_tsx_force_abort static
-Date:   Mon, 18 Mar 2019 10:25:36 +0100
-Message-Id: <20190318083849.602839125@linuxfoundation.org>
+        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.20 50/52] Its wrong to add len to sector_nr in raid10 reshape twice
+Date:   Mon, 18 Mar 2019 10:25:37 +0100
+Message-Id: <20190318083849.804316774@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -70,38 +64,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: kbuild test robot <lkp@intel.com>
+From: Xiao Ni <xni@redhat.com>
 
-commit c634dc6bdedeb0b2c750fc611612618a85639ab2 upstream.
+commit b761dcf1217760a42f7897c31dcb649f59b2333e upstream.
 
-Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
-Signed-off-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: kbuild-all@01.org
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190313184243.GA10820@lkp-sb-ep06
+In reshape_request it already adds len to sector_nr already. It's wrong to add len to
+sector_nr again after adding pages to bio. If there is bad block it can't copy one chunk
+at a time, it needs to goto read_more. Now the sector_nr is wrong. It can cause data
+corruption.
+
+Cc: stable@vger.kernel.org # v3.16+
+Signed-off-by: Xiao Ni <xni@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/intel/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/raid10.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4142,7 +4142,7 @@ static struct attribute *intel_pmu_caps_
-        NULL
- };
- 
--DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
-+static DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
- 
- static struct attribute *intel_pmu_attrs[] = {
- 	&dev_attr_freeze_on_smi.attr,
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -4692,7 +4692,6 @@ read_more:
+ 	atomic_inc(&r10_bio->remaining);
+ 	read_bio->bi_next = NULL;
+ 	generic_make_request(read_bio);
+-	sector_nr += nr_sectors;
+ 	sectors_done += nr_sectors;
+ 	if (sector_nr <= last)
+ 		goto read_more;
 
 
