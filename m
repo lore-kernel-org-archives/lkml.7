@@ -2,156 +2,239 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C1FC10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C336C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D44D20872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9CD20872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:23:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727643AbfCRQW3 (ORCPT
+        id S1727685AbfCRQXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:22:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51024 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726719AbfCRQW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:22:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E7205AFAC;
-        Mon, 18 Mar 2019 16:22:26 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Yan\, Zheng" <ukernel@gmail.com>
-Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
-References: <20190315111107.15154-1-lhenriques@suse.com>
-        <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
-        <87r2b4zd2q.fsf@suse.com>
-        <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
-Date:   Mon, 18 Mar 2019 16:22:25 +0000
-In-Reply-To: <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
-        (Zheng Yan's message of "Mon, 18 Mar 2019 19:42:51 +0800")
-Message-ID: <87lg1c17b2.fsf@suse.com>
+        Mon, 18 Mar 2019 12:23:39 -0400
+Received: from mga04.intel.com ([192.55.52.120]:35540 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726719AbfCRQXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:23:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 09:23:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="328346727"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Mar 2019 09:23:36 -0700
+Date:   Mon, 18 Mar 2019 09:23:36 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        chao.gao@intel.com
+Subject: Re: [PATCH v2 1/2] kvm/vmx: avoid CPUID faulting leaking to guest
+Message-ID: <20190318162336.GA13528@linux.intel.com>
+References: <20190318114324.14198-1-xiaoyao.li@linux.intel.com>
+ <20190318114324.14198-2-xiaoyao.li@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318114324.14198-2-xiaoyao.li@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Yan, Zheng" <ukernel@gmail.com> writes:
+On Mon, Mar 18, 2019 at 07:43:23PM +0800, Xiaoyao Li wrote:
+> cpuid faulting is a feature about CPUID instruction. When cpuif faulting
+                                                            ^^^^^
+                                                            cpuid
+> is enabled, all execution of the CPUID instruction outside system-management
+> mode (SMM) cause a general-protection (#GP) if the CPL > 0.
+> 
+> About this feature, detailed information can be found at
+> https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
+> 
+> Current KVM provides software emulation of this feature for guest.
+> However, because cpuid faulting takes higher priority over CPUID vm exit (Intel
+> SDM vol3.25.1.1), there is a risk of leaking cpuid faulting to guest when host
+> enables it. If host enables cpuid faulting by setting the bit 0 of
+> MSR_MISC_FEATURES_ENABLES, it will pass to guest since there is no handling of
+> MSR_MISC_FEATURES_ENABLES yet. As a result, when guest calls CPUID instruction
+> in CPL > 0, it will generate a #GP instead of CPUID vm eixt.
+> 
+> This issue will cause guest boot failure when guest uses *modprobe*
+> to load modules. *modprobe* calls CPUID instruction, thus causing #GP in
+> guest. Since there is no handling of cpuid faulting in #GP handler, guest
+> fails boot.
+> 
+> To fix this issue, we should switch cpuid faulting bit between host and guest.
+> Since MSR_MISC_FEATURES_ENABLES is intel-specific, this patch implement the
+> switching only in vmx. It clears the cpuid faulting bit and save host's
+> value before switching to guest, and restores the cpuid faulting settings of
+> host before switching to host.
+> 
+> Because kvm provides the software emulation of cpuid faulting, we can
+> just clear the cpuid faulting bit in hardware MSR when switching to
+> guest.
+> 
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> ---
+> Changes in v2:
+> - move the save/restore of cpuid faulting bit to
+> vmx_prepare_swich_to_guest/vmx_prepare_swich_to_host to avoid every
+> vmentry RDMSR, based on Paolo's comment.
+> 
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 34 ++++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/vmx/vmx.h |  2 ++
+>  2 files changed, 36 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 541d442edd4e..2c59e0209e36 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1035,6 +1035,23 @@ static void pt_guest_exit(struct vcpu_vmx *vmx)
+>  	wrmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
+>  }
+>  
+> +static void vmx_save_host_cpuid_fault(struct vcpu_vmx *vmx)
 
-> On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
->>
->> "Yan, Zheng" <ukernel@gmail.com> writes:
->>
->> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
->> >>
->> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
->> >>
->> >> unreferenced object 0xffff8881fccca940 (size 32):
->> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
->> >>   hex dump (first 32 bytes):
->> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
->> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->> >>   backtrace:
->> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
->> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
->> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
->> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
->> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
->> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
->> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
->> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
->> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
->> >>     [<00000000b593e4b3>] kthread+0x112/0x130
->> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
->> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
->> >>
->> >> It looks like it is possible that we miss a flush_ack from the MDS when,
->> >> for example, umounting the filesystem.  In that case, we can simply drop
->> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
->> >>
->> >> Link: https://tracker.ceph.com/issues/38224
->> >> Cc: stable@vger.kernel.org
->> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
->> >> ---
->> >>  fs/ceph/caps.c | 7 +++++++
->> >>  1 file changed, 7 insertions(+)
->> >>
->> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
->> >> index 36a8dc699448..208f4dc6f574 100644
->> >> --- a/fs/ceph/caps.c
->> >> +++ b/fs/ceph/caps.c
->> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
->> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->> >>  {
->> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
->> >> +
->> >>         spin_lock(&realm->inodes_with_caps_lock);
->> >>         list_del_init(&ci->i_snap_realm_item);
->> >>         ci->i_snap_realm_counter++;
->> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->> >>         spin_unlock(&realm->inodes_with_caps_lock);
->> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
->> >>                             realm);
->> >> +       /*
->> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
->> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
->> >> +        * ceph_snap_context and we need to drop it.
->> >> +        */
->> >> +       ceph_put_snap_context(ci->i_head_snapc);
->> >>  }
->> >>
->> >>  /*
->> >
->> > This does not seem right.  i_head_snapc is cleared when
->> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
->> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
->> > Did you see 'reconnect denied' during the test? If you did, the fix
->> > should be in iterate_session_caps()
->> >
->>
->> No, I didn't saw any 'reconnect denied' in the test.  The test actually
->> seems to execute fine, except from the memory leak.
->>
->> It's very difficult to reproduce this issue, but last time I managed to
->> get this memory leak to trigger I actually had some debugging code in
->> drop_inode_snap_realm, something like:
->>
->>   if (ci->i_head_snapc)
->>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
->
-> please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
-> i_flushing_caps. and try reproducing it again.
->
+Maybe vmx_load_guest_misc_features_enables()?  See below for reasoning.
+Alternatively you can drop the helpers altogether.
 
-Ok, it took me a few hours, but I managed to reproduce the bug, with
-those extra printks.  All those values are set to 0 when the bug
-triggers (and i_head_snapc != NULL).
+> +{
+> +	u64 host_val;
+> +
+> +	if (!boot_cpu_has(X86_FEATURE_CPUID_FAULT))
+> +		return;
+> +
+> +	rdmsrl(MSR_MISC_FEATURES_ENABLES, host_val);
+> +	vmx->host_msr_misc_features_enables = host_val;
 
-Cheers,
--- 
-Luis
+There's no need to cache the host value in struct vcpu_vmx, just use the
+kernel's shadow value.
+
+> +
+> +	/* clear cpuid fault bit to avoid it leak to guest */
+
+Personally I find the comment unnecessary and somewhat misleading.
+
+> +	if (host_val & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
+> +		wrmsrl(MSR_MISC_FEATURES_ENABLES,
+> +		       host_val & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
+
+I think we can also skip WRMSR if CPUID faulting is also enabled in the
+guest.  It probably doesn't make sense to install the guest's value if
+CPUID faulting is enabled in the guest and not host since intercepting
+CPUID likely provides better overall performance than switching the MSR
+on entry and exit.  And last but not least, since there are other bits
+in the MSR that we don't want to expose to the guest, e.g. RING3MWAIT,
+checking for a non-zero host value is probably better than checking for
+individual feature bits.  Same reasoning for writing the guest's value
+instead of clearing just the CPUID faulting bit.
+
+So something like:
+
+	u64 msrval = this_cpu_read(msr_misc_features_shadow);
+
+	if (!msrval || msrval == vcpu->arch.msr_misc_features_enables)
+		return;
+
+	wrmsrl(MSR_MISC_FEATURES_ENABLES, vcpu->arch.msr_misc_features_enables);
 
 
->
->>
->> This printk was only executed when the bug triggered (during a
->> filesystem umount) and the address shown was the same as in the kmemleak
->> warning.
->>
->> After spending some time looking, I assumed this to be a missing call to
->> handle_cap_flush_ack, which would do the i_head_snapc cleanup.
->>
->> Cheers,
->> --
->> Luis
->
+or if you drop the helpers:
+
+	msrval = this_cpu_read(msr_misc_features_shadow);
+	if (msrval && msrval != vcpu->arch.msr_misc_features_enables)
+		wrmsrl(MSR_MISC_FEATURES_ENABLES,
+		       vcpu->arch.msr_misc_features_enables);
+
+> +	}
+> +}
+> +
+>  void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> @@ -1068,6 +1085,8 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+>  	vmx->loaded_cpu_state = vmx->loaded_vmcs;
+>  	host_state = &vmx->loaded_cpu_state->host_state;
+>  
+> +	vmx_save_host_cpuid_fault(vmx);
+> +
+>  	/*
+>  	 * Set host fs and gs selectors.  Unfortunately, 22.2.3 does not
+>  	 * allow segment selectors with cpl > 0 or ti == 1.
+> @@ -1124,6 +1143,19 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+>  	}
+>  }
+>  
+> +static void vmx_restore_host_cpuid_fault(struct vcpu_vmx *vmx)
+
+If you keep the helpers, maybe vmx_load_host_misc_features_enables()
+to pair with the new function name for loading guest state?
+
+> +{
+> +	u64 msrval;
+> +
+> +	if (!boot_cpu_has(X86_FEATURE_CPUID_FAULT))
+> +		return;
+> +
+> +	rdmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
+
+> +	msrval |= vmx->host_msr_misc_features_enables &
+> +		MSR_MISC_FEATURES_ENABLES_CPUID_FAULT;
+
+Again, there's no need for RDMSR, the host's value can be pulled from
+msr_misc_features_shadow, and the WRMSR can be skipped if the host and
+guest have the same value, i.e. we didn't install the guest's value.
+
+	u64 msrval = this_cpu_read(msr_misc_features_shadow);
+
+	if (!msrval || msrval == vcpu->arch.msr_misc_features_enables)
+		return;
+
+	wrmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
+	
+> +	wrmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
+> +}
+> +
+>  static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
+>  {
+>  	struct vmcs_host_state *host_state;
+> @@ -1137,6 +1169,8 @@ static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
+>  	++vmx->vcpu.stat.host_state_reload;
+>  	vmx->loaded_cpu_state = NULL;
+>  
+> +	vmx_restore_host_cpuid_fault(vmx);
+> +
+>  #ifdef CONFIG_X86_64
+>  	rdmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+>  #endif
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index 5df73b36fa49..ba867bbc5676 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -268,6 +268,8 @@ struct vcpu_vmx {
+>  	u64 msr_ia32_feature_control_valid_bits;
+>  	u64 ept_pointer;
+>  
+> +	u64 host_msr_misc_features_enables;
+
+As mentioned above, this isn't needed.
+
+> +
+>  	struct pt_desc pt_desc;
+>  };
+>  
+> -- 
+> 2.19.1
+> 
