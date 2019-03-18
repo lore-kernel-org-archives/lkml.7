@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE1AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53487C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB73D214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F08521734
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901335;
-	bh=QyV6D9m5d/i+f2kGy6TaB9r8UYBsmAHfqlibIwu2GqU=;
+	s=default; t=1552901345;
+	bh=sszEFTP1oQwKVWisPxgocJBAjbYZDjfSbmUy0iJ3ILc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q1QsznPc15Hp6/Lz4seQyK2EaJxRqKtxlCXbCroA6x1TZx9TYZoeUc+BjUSuqmBqQ
-	 8q/omsUi/v6yVCCC4D4nyARqpYjZYOjBpWv4XU6laZQd3uIj7/grC9pD9zMCFGj2vF
-	 wM5GnSFlQeNhaUHXrVCgBrw1skVQO4BvTUVVNIY4=
+	b=q8xxqqGS+G3/x52TKnVpHaQ+oI3i4RpeFrxzsL6e0SX1DlL3Be4XSh8x9dnLonZ/I
+	 lbvYY+nAnlu2eZL+1w/TLJPm2fSlV4PRDwOrUu6uePJJzE4ECL3XOUBH7Cii1GOoS5
+	 wYLEYVhbTeRnLfWIoaOIptjr2o+eHaU7ag0LdQeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfCRJ2y (ORCPT
+        id S1728172AbfCRJ3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:28:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34878 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:29:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727674AbfCRJ2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:28:50 -0400
+        id S1727632AbfCRJ24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:28:56 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0FD62083D;
-        Mon, 18 Mar 2019 09:28:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17CEF2075C;
+        Mon, 18 Mar 2019 09:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901329;
-        bh=QyV6D9m5d/i+f2kGy6TaB9r8UYBsmAHfqlibIwu2GqU=;
+        s=default; t=1552901335;
+        bh=sszEFTP1oQwKVWisPxgocJBAjbYZDjfSbmUy0iJ3ILc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jd1BYmb0YsHkop7hB7yZBupW89U0NLFcc9MVUdc7/WqKEo0m0Po328NCZBs2hkrl+
-         yMfOT0rOnXiXnrS/uCrWwL9WhoLWOXeJLjc0GKjD3uAOP4v8K0U1dZJRFY8yKpQZrv
-         JEIjPGMmZYlsobzC3H8wdIJBBa3NM4INkTkfFygY=
+        b=aglTV0UoNadiBpoj0g4ZBY8FJvtpD5tf94rGR2U8zafqapVlZ+J9FgKD67QHqfWRI
+         uYfAG6Ww0tj+IxfY8pgogmUd0CE56Aav/BQnl9EqvLRnB3TbOeut6JRTKZND3YG4N1
+         XL8hvhNdqRnPxYF2eQs2vf1MRgSnWXWLK8xrY/oo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org,
+        Bryan Whitehead <Bryan.Whitehead@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 04/52] l2tp: fix infoleak in l2tp_ip6_recvmsg()
-Date:   Mon, 18 Mar 2019 10:24:51 +0100
-Message-Id: <20190318083843.917472386@linuxfoundation.org>
+Subject: [PATCH 4.20 06/52] lan743x: Fix TX Stall Issue
+Date:   Mon, 18 Mar 2019 10:24:53 +0100
+Message-Id: <20190318083844.162308248@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -65,83 +65,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Bryan Whitehead <Bryan.Whitehead@microchip.com>
 
-[ Upstream commit 163d1c3d6f17556ed3c340d3789ea93be95d6c28 ]
+[ Upstream commit deb6bfabdbb634e91f36a4e9cb00a7137d72d886 ]
 
-Back in 2013 Hannes took care of most of such leaks in commit
-bceaa90240b6 ("inet: prevent leakage of uninitialized memory to user in recv syscalls")
+It has been observed that tx queue may stall while downloading
+from certain web sites (example www.speedtest.net)
 
-But the bug in l2tp_ip6_recvmsg() has not been fixed.
+The cause has been tracked down to a corner case where
+the tx interrupt vector was disabled automatically, but
+was not re enabled later.
 
-syzbot report :
+The lan743x has two mechanisms to enable/disable individual
+interrupts. Interrupts can be enabled/disabled by individual
+source, and they can also be enabled/disabled by individual
+vector which has been mapped to the source. Both must be
+enabled for interrupts to work properly.
 
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-CPU: 1 PID: 10996 Comm: syz-executor362 Not tainted 5.0.0+ #11
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x173/0x1d0 lib/dump_stack.c:113
- kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
- kmsan_internal_check_memory+0x9f4/0xb10 mm/kmsan/kmsan.c:694
- kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:601
- _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
- copy_to_user include/linux/uaccess.h:174 [inline]
- move_addr_to_user+0x311/0x570 net/socket.c:227
- ___sys_recvmsg+0xb65/0x1310 net/socket.c:2283
- do_recvmmsg+0x646/0x10c0 net/socket.c:2390
- __sys_recvmmsg net/socket.c:2469 [inline]
- __do_sys_recvmmsg net/socket.c:2492 [inline]
- __se_sys_recvmmsg+0x1d1/0x350 net/socket.c:2485
- __x64_sys_recvmmsg+0x62/0x80 net/socket.c:2485
- do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x445819
-Code: e8 6c b6 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f64453eddb8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
-RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 0000000000445819
-RDX: 0000000000000005 RSI: 0000000020002f80 RDI: 0000000000000003
-RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
-R13: 00007ffeba8f87af R14: 00007f64453ee9c0 R15: 20c49ba5e353f7cf
+The TX code path, primarily uses the interrupt enable/disable of
+the TX source bit, while leaving the vector enabled all the time.
 
-Local variable description: ----addr@___sys_recvmsg
-Variable was created at:
- ___sys_recvmsg+0xf6/0x1310 net/socket.c:2244
- do_recvmmsg+0x646/0x10c0 net/socket.c:2390
+However, while investigating this issue it was noticed that
+the driver requested the use of the vector auto clear feature.
 
-Bytes 0-31 of 32 are uninitialized
-Memory access of size 32 starts at ffff8880ae62fbb0
-Data copied to user address 0000000020000000
+The test above revealed a case where the vector enable was
+cleared unintentionally.
 
-Fixes: a32e0eec7042 ("l2tp: introduce L2TPv3 IP encapsulation support for IPv6")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+This patch fixes the issue by deleting the lines that request
+the vector auto clear feature to be used.
+
+Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
+Signed-off-by: Bryan Whitehead <Bryan.Whitehead@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_ip6.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/microchip/lan743x_main.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/net/l2tp/l2tp_ip6.c
-+++ b/net/l2tp/l2tp_ip6.c
-@@ -674,9 +674,6 @@ static int l2tp_ip6_recvmsg(struct sock
- 	if (flags & MSG_OOB)
- 		goto out;
+--- a/drivers/net/ethernet/microchip/lan743x_main.c
++++ b/drivers/net/ethernet/microchip/lan743x_main.c
+@@ -585,8 +585,7 @@ static int lan743x_intr_open(struct lan7
  
--	if (addr_len)
--		*addr_len = sizeof(*lsa);
--
- 	if (flags & MSG_ERRQUEUE)
- 		return ipv6_recv_error(sk, msg, len, addr_len);
+ 		if (adapter->csr.flags &
+ 		   LAN743X_CSR_FLAG_SUPPORTS_INTR_AUTO_SET_CLR) {
+-			flags = LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_CLEAR |
+-				LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_SET |
++			flags = LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_SET |
+ 				LAN743X_VECTOR_FLAG_SOURCE_ENABLE_AUTO_SET |
+ 				LAN743X_VECTOR_FLAG_SOURCE_ENABLE_AUTO_CLEAR |
+ 				LAN743X_VECTOR_FLAG_SOURCE_STATUS_AUTO_CLEAR;
+@@ -599,12 +598,6 @@ static int lan743x_intr_open(struct lan7
+ 			/* map TX interrupt to vector */
+ 			int_vec_map1 |= INT_VEC_MAP1_TX_VEC_(index, vector);
+ 			lan743x_csr_write(adapter, INT_VEC_MAP1, int_vec_map1);
+-			if (flags &
+-			    LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_CLEAR) {
+-				int_vec_en_auto_clr |= INT_VEC_EN_(vector);
+-				lan743x_csr_write(adapter, INT_VEC_EN_AUTO_CLR,
+-						  int_vec_en_auto_clr);
+-			}
  
-@@ -706,6 +703,7 @@ static int l2tp_ip6_recvmsg(struct sock
- 		lsa->l2tp_conn_id = 0;
- 		if (ipv6_addr_type(&lsa->l2tp_addr) & IPV6_ADDR_LINKLOCAL)
- 			lsa->l2tp_scope_id = inet6_iif(skb);
-+		*addr_len = sizeof(*lsa);
- 	}
- 
- 	if (np->rxopt.all)
+ 			/* Remove TX interrupt from shared mask */
+ 			intr->vector_list[0].int_mask &= ~int_bit;
 
 
