@@ -2,179 +2,191 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C46CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCA2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4844720857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055B720857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCuw0CXI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHiScq5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfCRD1I (ORCPT
+        id S1727835AbfCRDeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 23:27:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42649 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727699AbfCRD1I (ORCPT
+        Sun, 17 Mar 2019 23:34:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40605 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfCRDeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 23:27:08 -0400
-Received: by mail-pg1-f195.google.com with SMTP id b2so10370282pgl.9
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 20:27:07 -0700 (PDT)
+        Sun, 17 Mar 2019 23:34:08 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t5so15365961wri.7;
+        Sun, 17 Mar 2019 20:34:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=p+4/obst91yE3W9s18pW/2gILbG+hmYGbmJadmhDXFA=;
-        b=qCuw0CXICsVj+J9u3EJagsHPR6yPv0i24BBaQuglperlznQGIgjscbP9TUlcTsA4Pq
-         epVSYE8Y2o0m/On+TOJjHAhXNy2mviar8e2HMcyAvMndPksppn7Y9NWCeU4tv2nOH6bX
-         2PUR6IXeaEQHG66/+p0HmyEQwAMxWu8ZWD+oPxWsnWKKUA2nHzoUGa+fxi+p3QV3ohIZ
-         Z3RiIUSa0+A+im0tWpzg0h/Qx2+zxKOZymCRBXNti5uu/dAP6bcL/eMCZhwTkdoe4peM
-         /hE8wdwbhZoSi8Goaq5Lfcv782Jqtu6B+uRyiJppHT551ZJuY+CdrGnU75h+/vKBFtaU
-         ihGA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LeP+el6bzDYdXLZZ4sPZcEyRGv5NN81j7a+/08GHHMg=;
+        b=QHiScq5Xqm/WV/2efsqU9mn7XevoLFKf1TxUSyeh0zczPi+tY6n+OdCpjQT5YR3eg0
+         DV+KPcUmvFtd+ALOu+0ezzfH2FdU1qlxzvHn8NxLnf8RQnINAc1YCWPnVeQK8QNKjm1f
+         QI2HXzJX3e0kaBhvlOA1mu5guSWSCIKWL6kMJYNiaxi/O7noWptPmcUs/kHLpruN+p0m
+         uiX5nsB2R8/LrC4tegJSKptiBVQ3RNmz9vqRmQ2jSLoCIm6dZtETzFMEYmFltpFwz+iH
+         9HlTnFBddeHOg9w+jfIxtAVmk9iMZwB4+mk4eioN8hTlXlwCB0f0tZxSjK+E9eCA3eRX
+         3x+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=p+4/obst91yE3W9s18pW/2gILbG+hmYGbmJadmhDXFA=;
-        b=fBjk9yQhqyDrkOQNdXIDMLe3qCCmvHr1sNhwzt3YL3yMdDRogc1q2E2wQFcbw1cOv0
-         EOdTq1UbrkqqFnXKEFqjmwnddbUXw8pjDyWTif1Ej+/J9K8hANgMnnfIXBv9TKQ+JQt8
-         annR83LedSNU8HZQ8RZeON0yLGL1LqI7pX35i8c7/u6OuvuKkQUMXcSaJpji/1SgAiey
-         bW0tP51EdnyX53AlXOfX9kgQcm5EJ0usLMz6Fstut/sWnS8efW6vpzvUkQ8Dp0ZmA5i1
-         9ivNu8OIryXu1JangKecJjcqCfpy96gdWxJJGk6Zg65bbvTJhO6/y3Askf1fva2vsAGu
-         O9nA==
-X-Gm-Message-State: APjAAAX594Ujkf7j2jPvcrJsZMHWGYrl2P1x+4v9PeVeS8AF8yirfdvX
-        JWN70FqbrZuUvWQDxr5wRyAoIA==
-X-Google-Smtp-Source: APXvYqyQkxaaxDAVYaq1rnq8U+IU565qNs/YVtCLsGXmNeB5Hghqhnga0dq7BvQk7KZeqEpOUi9hQg==
-X-Received: by 2002:a62:3347:: with SMTP id z68mr9713827pfz.76.1552879627071;
-        Sun, 17 Mar 2019 20:27:07 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id m79sm27477907pfi.60.2019.03.17.20.27.04
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 17 Mar 2019 20:27:06 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     lee.jones@linaro.org
-Cc:     arnd@arndb.de, broonie@kernel.org, orsonzhai@gmail.com,
-        baolin.wang@linaro.org, zhang.lyra@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] mfd: sc27xx: Use SoC compatible string for PMIC devices
-Date:   Mon, 18 Mar 2019 11:26:51 +0800
-Message-Id: <af33f66a602462f14431e99433324b8523f74f78.1552879519.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LeP+el6bzDYdXLZZ4sPZcEyRGv5NN81j7a+/08GHHMg=;
+        b=VeV07TEtXRmJjG4n+xs8ZJuqcSaDEi2mdAX0JIICE/6DxnfBxg4vkdHqgkg1t2E5aQ
+         QfsfBlAi2B4Moypm2Rpu6w4xVNSBJi+KuCla1lxs5vR4/cy8YmKDbhhvJghypjiQ3gNN
+         XiRQCelor61mnWF6bOg8DgnaPDZUHBgU/QMggmK9plIB4Xwg6XDLEzQI2OY5PHKJ+LL/
+         F2a00y4DAncA0JZt3AvSheZFU0dJ4/+wUiDV/uINz8u5EBsQ/l91KV9I8O8kgPR5YDuv
+         GnHwXB1aBYQDSfhd3cdTTYkpOaRpDwpSmBRyncxHk9GeQfbPSun745nRRmGdopVoVK71
+         SMag==
+X-Gm-Message-State: APjAAAVVEWicQx8znVidfFG5Psxkzp+hAF3MEaEY/iSOC9vzBwOXsHnh
+        FTIGqVP2Hy4is3/H15GhH1L4eVuvedLqTrTDSgg=
+X-Google-Smtp-Source: APXvYqxkmSe2BF5oKiSCGrP5er3q8yb30u0J8GWY5U07NbBc4FUxvaFVo2FggGb1eNLcl8ItS04kOVUNZGg+mpzDK1g=
+X-Received: by 2002:adf:db02:: with SMTP id s2mr10722693wri.206.1552880046106;
+ Sun, 17 Mar 2019 20:34:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190316020905.14962-1-yanaijie@huawei.com>
+In-Reply-To: <20190316020905.14962-1-yanaijie@huawei.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Mon, 18 Mar 2019 11:33:54 +0800
+Message-ID: <CACVXFVPWfng1ukgMEjBsjBMbMfWkUuTuiAbi2w+WDZ95wA70Mg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] scsi: fix oops in scsi_uninit_cmd()
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <jejb@linux.vnet.ibm.com>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should use SoC compatible string in stead of wildcard string for
-PMIC child devices.
+On Sat, Mar 16, 2019 at 10:11 AM Jason Yan <yanaijie@huawei.com> wrote:
+>
+> If we remove the scsi disk when running io with fio, oops occured with
+> the following condition.
+>
+> [scsi_eh_0]                              [fio]
+> scsi_end_request
+>   ->blk_update_request
+>     ->end_bio(io returned to userspace)
+>                                          close
+>                                            ->sd_release
+>                                               ->scsi_disk_put
+>                                                  ->scsi_disk_release
+>                                                      ->disk->private_data = NULL;
+>
+>   ->scsi_mq_uninit_cmd
+>     ->scsi_uninit_cmd
+>       ->scsi_cmd_to_driver
+>     ->drv is NULL, Oops
+>
+> There is a small window between blk_update_request() and
+> scsi_mq_uninit_cmd() that scsi disk may have been released. This will
+> cause a oops like below:
+>
+> Unable to handle kernel NULL pointer dereference at virtual address
+> 0000000000000000
+> s/sync.c:67, func=xfer, error=In[11347.116050] Mem abort info:
+> put/output error
+> [11347.121598]   ESR = 0x96000006
+> [11347.126200]   Exception class = DABT (current EL), IL = 32 bits
+> [11347.132117]   SET = 0, FnV = 0
+> [11347.135170]   EA = 0, S1PTW = 0
+> [11347.138308] Data abort info:
+> [11347.141186]   ISV = 0, ISS = 0x00000006
+> [11347.145019]   CM = 0, WnR = 0
+> [11347.147977] user pgtable: 4k pages, 48-bit VAs, pgdp =
+> 00000000a67aece2
+> [11347.154591] [0000000000000000] pgd=0000002f90774003,
+> pud=0000002fab098003, pmd=0000000000000000
+> [11347.163304] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+> [11347.168870] Modules linked in: hisi_sas_v3_hw hisi_sas_main libsas
+> [11347.175044] CPU: 56 PID: 4294 Comm: scsi_eh_2 Not tainted
+> 4.19.0-g8052059-dirty #2
+> [11347.182600] Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
+> RC0 - B601 (V6.01) 11/08/2018
+> [11347.191370] pstate: a0c00009 (NzCv daif +PAN +UAO)
+> [11347.196155] pc : scsi_uninit_cmd+0x24/0x3c
+> [11347.200240] lr : scsi_mq_uninit_cmd+0x1c/0x30
+> [11347.204583] sp : ffff000024dabb60
+> [11347.207884] x29: ffff000024dabb60 x28: ffff000024dabd38
+> [11347.213184] x27: ffff000000f5b3a8 x26: ffff7df3b0181600
+> [11347.218484] x25: 0000000000000000 x24: ffff803bc5d36778
+> [11347.223783] x23: 000000000000000a x22: 0000000000000000
+> [11347.229082] x21: ffff803bc7397000 x20: ffff802f9148e530
+> [11347.234381] x19: ffff802f9148e530 x18: ffff7e0000000000
+> [11347.239679] x17: 0000000000000000 x16: 0000002f9e37d000
+> [11347.244979] x15: ffff7e0000000000 x14: 3863206336203839
+> [11347.250278] x13: 2036302030302038 x12: a46fac3d0d363d00
+> [11347.255578] x11: ffffffffffffffff x10: a46fac3d0d363d00
+> [11347.260877] x9 : 0000000040040000 x8 : 000000000000eb4b
+> [11347.266177] x7 : ffff000009771000 x6 : 0000000000210d00
+> [11347.271476] x5 : ffff803bc9f50000 x4 : 0000000000000000
+> [11347.276775] x3 : ffff802fb02b4380 x2 : ffff802f9148e400
+> [11347.282075] x1 : 0000000000000000 x0 : ffff802f9148e530
+> [11347.287375] Process scsi_eh_2 (pid: 4294, stack limit =
+> 0x000000007d2257f8)
+> [11347.294323] Call trace:
+> Jobs: 6 (f=6): [R[RRR1XXX1XRR3] 47.296758]  scsi_uninit_cmd+0x24/0x3c
+> [22.7% done] [1516MB/0KB/0KB /s] [754/0/0 iops] [eta 08m:39s]
+> [11347.308390]  scsi_mq_uninit_cmd+0x1c/0x30
+> [11347.312387]  scsi_end_request+0x7c/0x1b8
+> [11347.316297]  scsi_io_completion+0x464/0x668
+> [11347.320467]  scsi_finish_command+0xbc/0x160
+> [11347.324636]  scsi_eh_flush_done_q+0x10c/0x170
+> [11347.328990]  sas_scsi_recover_host+0x84c/0xa98 [libsas]
+> [11347.334202]  scsi_error_handler+0x140/0x5b0
+> [11347.338374]  kthread+0x100/0x12c
+> [11347.341590]  ret_from_fork+0x10/0x18
+> [11347.345153] Code: 71000c3f 540000e9 f9404c41 f941f421 (f9400021)
+> [11347.351234] ---[ end trace f496aacdaa1dcc51 ]---
+>
+> To fix this, move the bio_endio() action from blk_update_request() to
+> __blk_mq_end_request().
+>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  block/blk-core.c       | 6 ++++--
+>  block/blk-mq.c         | 7 +++++++
+>  include/linux/blkdev.h | 1 +
+>  3 files changed, 12 insertions(+), 2 deletions(-)
+>
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index 4673ebe42255..f39ea78c0535 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -192,8 +192,10 @@ static void req_bio_endio(struct request *rq, struct bio *bio,
+>         bio_advance(bio, nbytes);
+>
+>         /* don't actually finish bio if it's part of flush sequence */
+> -       if (bio->bi_iter.bi_size == 0 && !(rq->rq_flags & RQF_FLUSH_SEQ))
+> -               bio_endio(bio);
+> +       if (bio->bi_iter.bi_size == 0 && !(rq->rq_flags & RQF_FLUSH_SEQ)) {
+> +               bio->bi_next = rq->bio_to_release;
+> +               rq->bio_to_release = bio;
+> +       }
+>  }
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
-Hi Lee,
+In case of partial completion, the completed bios should have been
+done immediately, instead that their .end_io is called after the whole
+request is completed.
 
-Could you merge this patch into v5.1-rc if no objection from you?
-Since our DTS patches had been merged into v5.1, our PMIC can not
-work without this patch. Thanks.
----
- drivers/mfd/sprd-sc27xx-spi.c |   42 ++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+Also rq->bio may be reused to hold the bios to be ended.
 
-diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
-index 69df277..43ac716 100644
---- a/drivers/mfd/sprd-sc27xx-spi.c
-+++ b/drivers/mfd/sprd-sc27xx-spi.c
-@@ -53,67 +53,67 @@ struct sprd_pmic_data {
- static const struct mfd_cell sprd_pmic_devs[] = {
- 	{
- 		.name = "sc27xx-wdt",
--		.of_compatible = "sprd,sc27xx-wdt",
-+		.of_compatible = "sprd,sc2731-wdt",
- 	}, {
- 		.name = "sc27xx-rtc",
--		.of_compatible = "sprd,sc27xx-rtc",
-+		.of_compatible = "sprd,sc2731-rtc",
- 	}, {
- 		.name = "sc27xx-charger",
--		.of_compatible = "sprd,sc27xx-charger",
-+		.of_compatible = "sprd,sc2731-charger",
- 	}, {
- 		.name = "sc27xx-chg-timer",
--		.of_compatible = "sprd,sc27xx-chg-timer",
-+		.of_compatible = "sprd,sc2731-chg-timer",
- 	}, {
- 		.name = "sc27xx-fast-chg",
--		.of_compatible = "sprd,sc27xx-fast-chg",
-+		.of_compatible = "sprd,sc2731-fast-chg",
- 	}, {
- 		.name = "sc27xx-chg-wdt",
--		.of_compatible = "sprd,sc27xx-chg-wdt",
-+		.of_compatible = "sprd,sc2731-chg-wdt",
- 	}, {
- 		.name = "sc27xx-typec",
--		.of_compatible = "sprd,sc27xx-typec",
-+		.of_compatible = "sprd,sc2731-typec",
- 	}, {
- 		.name = "sc27xx-flash",
--		.of_compatible = "sprd,sc27xx-flash",
-+		.of_compatible = "sprd,sc2731-flash",
- 	}, {
- 		.name = "sc27xx-eic",
--		.of_compatible = "sprd,sc27xx-eic",
-+		.of_compatible = "sprd,sc2731-eic",
- 	}, {
- 		.name = "sc27xx-efuse",
--		.of_compatible = "sprd,sc27xx-efuse",
-+		.of_compatible = "sprd,sc2731-efuse",
- 	}, {
- 		.name = "sc27xx-thermal",
--		.of_compatible = "sprd,sc27xx-thermal",
-+		.of_compatible = "sprd,sc2731-thermal",
- 	}, {
- 		.name = "sc27xx-adc",
--		.of_compatible = "sprd,sc27xx-adc",
-+		.of_compatible = "sprd,sc2731-adc",
- 	}, {
- 		.name = "sc27xx-audio-codec",
--		.of_compatible = "sprd,sc27xx-audio-codec",
-+		.of_compatible = "sprd,sc2731-audio-codec",
- 	}, {
- 		.name = "sc27xx-regulator",
--		.of_compatible = "sprd,sc27xx-regulator",
-+		.of_compatible = "sprd,sc2731-regulator",
- 	}, {
- 		.name = "sc27xx-vibrator",
--		.of_compatible = "sprd,sc27xx-vibrator",
-+		.of_compatible = "sprd,sc2731-vibrator",
- 	}, {
- 		.name = "sc27xx-keypad-led",
--		.of_compatible = "sprd,sc27xx-keypad-led",
-+		.of_compatible = "sprd,sc2731-keypad-led",
- 	}, {
- 		.name = "sc27xx-bltc",
--		.of_compatible = "sprd,sc27xx-bltc",
-+		.of_compatible = "sprd,sc2731-bltc",
- 	}, {
- 		.name = "sc27xx-fgu",
--		.of_compatible = "sprd,sc27xx-fgu",
-+		.of_compatible = "sprd,sc2731-fgu",
- 	}, {
- 		.name = "sc27xx-7sreset",
--		.of_compatible = "sprd,sc27xx-7sreset",
-+		.of_compatible = "sprd,sc2731-7sreset",
- 	}, {
- 		.name = "sc27xx-poweroff",
--		.of_compatible = "sprd,sc27xx-poweroff",
-+		.of_compatible = "sprd,sc2731-poweroff",
- 	}, {
- 		.name = "sc27xx-syscon",
--		.of_compatible = "sprd,sc27xx-syscon",
-+		.of_compatible = "sprd,sc2731-syscon",
- 	},
- };
- 
--- 
-1.7.9.5
+Jason, sorry for not Cc list in previous reply.
 
+Thanks,
+Ming Lei
