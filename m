@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F405C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7B7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11112083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACFC52083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901425;
-	bh=VfOIRlScPlw+U+QJlD6irIGQkWMMIXaRm61RkhSsQgo=;
+	s=default; t=1552901429;
+	bh=sgJn+lSlcdal580iYbXK8z+MEiZ96f0R5XAWCcEvZHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2B6Uhv9og+bG7ceB6HcgLX7eGZHjwBcsWI1aGSBSvbJ5PnXdUfM/J3wDPycjHdakK
-	 FM2My5xpdVSc/wMtiOzfxiEcVMYiPuYeWoM3IbKZP53kQTmwFDp25rMscs+UJ73Ha9
-	 x5AEc/3b8/9yqCL/WijxZPcxGUhmua2lNF/Be0yc=
+	b=eCf6UYWhUpLTPj6yWcX/xN6ubLTdBfBXFUh3L0AIlJ1iZ3CZeiNGbeUAsvdEYBhPn
+	 tzDzwte5/xsE582rVap6nQQaknOXvbk2uKzoi58zqGDHf+vbAX6eugc8tREKyUZQF/
+	 FnfPmeX46kuUkvIF2d+2Vts5EE8nfQZ49Sxnq7+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfCRJaY (ORCPT
+        id S1728402AbfCRJa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37412 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:30:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbfCRJaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:30:22 -0400
+        id S1728384AbfCRJaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:30:25 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D301D2083D;
-        Mon, 18 Mar 2019 09:30:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A3D5214AF;
+        Mon, 18 Mar 2019 09:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901422;
-        bh=VfOIRlScPlw+U+QJlD6irIGQkWMMIXaRm61RkhSsQgo=;
+        s=default; t=1552901425;
+        bh=sgJn+lSlcdal580iYbXK8z+MEiZ96f0R5XAWCcEvZHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hme4MGhJ2Ifb9iKVPKFkduLbidwbQ0ZlFg+gYbSvzqIP3nV3UC71VF1Q2rp1CpIEi
-         V99/3kKeldoYSxlVNwE0QLH92PiXyJKo0s1xHv5aPe5jDaoeScyRNPjYyyTM4JlsSi
-         AC+nABoznTI6JsjtStps0YeixY63sPYwPIP9VcLA=
+        b=eNnkpCjMIl/FxSlVcaCWRTJGhcmBx5zqWWl3+noYsDxKoTY5Ot4LQSWpfRzDr+3vd
+         4gZ7b6/AubKKKPMio5TNBVjLwPCrLv7CFb90sXJ53hh9lv7XhVr4kBCs2pgKHX3QFB
+         0qJx+Y61LdVtnAUX0NMylJXA0+RTqijN+5XciPco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 4.20 39/52] f2fs: wait on atomic writes to count F2FS_CP_WB_DATA
-Date:   Mon, 18 Mar 2019 10:25:26 +0100
-Message-Id: <20190318083847.881394513@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.20 40/52] perf/x86: Fixup typo in stub functions
+Date:   Mon, 18 Mar 2019 10:25:27 +0100
+Message-Id: <20190318083847.975535822@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -64,63 +68,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 31867b23d7d1ee3535136c6a410a6cf56f666bfc upstream.
+commit f764c58b7faa26f5714e6907f892abc2bc0de4f8 upstream.
 
-Otherwise, we can get wrong counts incurring checkpoint hang.
+Guenter reported a build warning for CONFIG_CPU_SUP_INTEL=n:
 
-IO_W (CP:  -24, Data:   24, Flush: (   0    0    1), Discard: (   0    0))
+  > With allmodconfig-CONFIG_CPU_SUP_INTEL, this patch results in:
+  >
+  > In file included from arch/x86/events/amd/core.c:8:0:
+  > arch/x86/events/amd/../perf_event.h:1036:45: warning: ‘struct cpu_hw_event’ declared inside parameter list will not be visible outside of this definition or declaration
+  >  static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
 
-Thread A                        Thread B
-- f2fs_write_data_pages
- -  __write_data_page
-  - f2fs_submit_page_write
-   - inc_page_count(F2FS_WB_DATA)
-     type is F2FS_WB_DATA due to file is non-atomic one
-- f2fs_ioc_start_atomic_write
- - set_inode_flag(FI_ATOMIC_FILE)
-                                - f2fs_write_end_io
-                                 - dec_page_count(F2FS_WB_CP_DATA)
-                                   type is F2FS_WB_DATA due to file becomes
-                                   atomic one
+While harmless (an unsed pointer is an unused pointer, no matter the type)
+it needs fixing.
 
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Fixes: d01b1f96a82e ("perf/x86/intel: Make cpuc allocations consistent")
+Link: http://lkml.kernel.org/r/20190315081410.GR5996@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/file.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/x86/events/perf_event.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1749,10 +1749,12 @@ static int f2fs_ioc_start_atomic_write(s
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1032,12 +1032,12 @@ static inline int intel_pmu_init(void)
+ 	return 0;
+ }
  
- 	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+-static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
++static inline int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
+ {
+ 	return 0;
+ }
  
--	if (!get_dirty_pages(inode))
--		goto skip_flush;
--
--	f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
-+	/*
-+	 * Should wait end_io to count F2FS_WB_CP_DATA correctly by
-+	 * f2fs_is_atomic_file.
-+	 */
-+	if (get_dirty_pages(inode))
-+		f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
- 		"Unexpected flush for atomic writes: ino=%lu, npages=%u",
- 					inode->i_ino, get_dirty_pages(inode));
- 	ret = filemap_write_and_wait_range(inode->i_mapping, 0, LLONG_MAX);
-@@ -1760,7 +1762,7 @@ static int f2fs_ioc_start_atomic_write(s
- 		up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
- 		goto out;
- 	}
--skip_flush:
-+
- 	set_inode_flag(inode, FI_ATOMIC_FILE);
- 	clear_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
- 	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+-static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
++static inline void intel_cpuc_finish(struct cpu_hw_events *cpuc)
+ {
+ }
+ 
 
 
