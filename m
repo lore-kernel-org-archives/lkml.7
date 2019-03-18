@@ -2,109 +2,115 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C89C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4AFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12A520863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8E320863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:22:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAra5kYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfCRRUi (ORCPT
+        id S1727118AbfCRRWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:20:38 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39396 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfCRRUi (ORCPT
+        Mon, 18 Mar 2019 13:22:51 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40190 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbfCRRWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:20:38 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i17so1939273pfo.6;
-        Mon, 18 Mar 2019 10:20:37 -0700 (PDT)
+        Mon, 18 Mar 2019 13:22:50 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u10so11214523wmj.5;
+        Mon, 18 Mar 2019 10:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CPXlzC3Qw3vb1vwaN6qwSjYHpa7TmPwsAtN0D0aIOMo=;
+        b=mAra5kYkbq2DRq/QHrHQj9tgXw2hKQ+Vdmy4yx+fsBSFv7n7J3l8fwaWmK9zOAC0cP
+         HRu92PmKUD8LryYeWDTtcGWRE/iUQI4qSFPuiuib7zxXjIgtmffXnF0z+sOpGDrCbDrk
+         5iD82XWF5XJuH3RjPy/4z3ETnn5qUnKXlsdrO5olrf+QXhk95onXStYLT54Wg4ur0trg
+         Mhw4WJWbht0PCct81g7yb4oQCO+bOfugPhTeSykzbHcOoKpdTgU2QeApDeinijp62erU
+         wFftVKio56kINCYIfgSJgyvDmTIZwyOxhS+hmPC8hwI3PbSAku7kb/3CKJlxC+2bMKWa
+         yyFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NbHAd3+VvwXsq8BBp+6aJ+dj6lwQXqlV8Q8gIb5K+Oc=;
-        b=SkMk4A7k5tISUEmGqVZEeVlWHSDo/iiOSRMrS2zrIAW8WHTXi/mx4JxYVC48u2Ng71
-         kbcyrnu+GnTVJHw3/YosfTfZ42k7xR80wY214hKNoTRC2xZO/UB8fOe8wW0xl6+4QyEP
-         2hTMsK4yBSJL8bdwuBcj9t3qmtyEPjMiByVeeAzP3Dl6QvGnSEHaqOJHtqZPZQC/oQDo
-         4tfA05CjZKPN4nO0b8HViXAnbjfEtIB3mZ8hfA+8XZz0w0vznz8wqO75du2qCLvzwDAl
-         p7N5BgFxtYteKyeQyqU2LXMmjf4VBz8iJpQLiMmWclxSuBrjM1eE4KSw/lAiGgF1Jux9
-         q7WQ==
-X-Gm-Message-State: APjAAAWQahCG/GVGrCFTeeWoKSrya3+vAibQCTp9wM2hLNIiHmUdU5zY
-        HFwsNeoIison/DpDqbK7syixAW4XAUo=
-X-Google-Smtp-Source: APXvYqzJtZgRX2yyQC7iRHWhjVEHwQzKMv+1ggwlJbrumwsJB3wlmJ5Qb83J+qgzjA2v5OykY450mg==
-X-Received: by 2002:a17:902:2989:: with SMTP id h9mr21061927plb.26.1552929637160;
-        Mon, 18 Mar 2019 10:20:37 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id w2sm12964184pgp.81.2019.03.18.10.20.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 10:20:36 -0700 (PDT)
-Message-ID: <1552929635.152266.30.camel@acm.org>
-Subject: Re: [PATCH 6/8] skd: use blk_mq_queue_tag_busy_iter
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Jianchao Wang <jianchao.w.wang@oracle.com>, axboe@kernel.dk
-Cc:     hch@lst.de, jthumshirn@suse.de, hare@suse.de, josef@toxicpanda.com,
-        sagi@grimberg.me, keith.busch@intel.com, jsmart2021@gmail.com,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CPXlzC3Qw3vb1vwaN6qwSjYHpa7TmPwsAtN0D0aIOMo=;
+        b=etzQyIag62wHrDexwKRaG//ffrRcEjDJgJtmfUfCxFOHpudw8uPpnSnRrN7k1iGhWW
+         hlR9+UW++S1mp67wADWaT7+ZX6+JTh67ysSwbUYJsO0RmV9vdoRTxYVaFolN5dYPwlv4
+         Pyff27eMVEVfQ2Ij6KkOOiQBP36oOjvC/Z1O6tYc0ExsS0mxknkHYwXUNQXaMSKtXTNY
+         0vP8uQY7chn1ANhk0TMYx5lFo/7d9EJw5f5wL6/6uYwGvC/9TB8aUqCvAylPUh9hDPPL
+         BMaALBnlHanny+8Y8vWwUAtIRNKKZRdzp9gQYmNIEHX0H2xlkcAF938jHDCGU71m9+9E
+         ePcA==
+X-Gm-Message-State: APjAAAUeHjyF2WLYBfJYLEuYYarBof3HNSfB+wbtLhiDek9YylRqFwms
+        Ik+MAPy7AChxi58TNP2430z7Zoy1
+X-Google-Smtp-Source: APXvYqwatZZUTuNOWwUKf/rJAx0ib0fRawf0fh//UqJglg/t2rDQXm3cm4AH9tCzaOVRXY62Xz68OQ==
+X-Received: by 2002:a1c:f610:: with SMTP id w16mr3416wmc.42.1552929768645;
+        Mon, 18 Mar 2019 10:22:48 -0700 (PDT)
+Received: from [172.31.96.190] ([195.39.71.253])
+        by smtp.gmail.com with ESMTPSA id w13sm10918961wrr.21.2019.03.18.10.22.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 10:22:47 -0700 (PDT)
+Subject: Re: [PATCH v3] net: xfrm: Add '_rcu' tag for rcu protected pointer in
+ netns_xfrm
+To:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Cc:     davem@davemloft.net, fw@strlen.de, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Mon, 18 Mar 2019 10:20:35 -0700
-In-Reply-To: <1552640264-26101-7-git-send-email-jianchao.w.wang@oracle.com>
-References: <1552640264-26101-1-git-send-email-jianchao.w.wang@oracle.com>
-         <1552640264-26101-7-git-send-email-jianchao.w.wang@oracle.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
+References: <1551923648-17656-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+ <20190311101006.GK3758@gauss3.secunet.de>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <b2beff03-f789-5c8b-bd69-57ece92372f8@gmail.com>
+Date:   Mon, 18 Mar 2019 10:22:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190311101006.GK3758@gauss3.secunet.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-15 at 16:57 +-0800, Jianchao Wang wrote:
-+AD4 blk+AF8-mq+AF8-tagset+AF8-busy+AF8-iter is not safe that it could get stale request
-+AD4 in tags-+AD4-rqs+AFsAXQ. Use blk+AF8-mq+AF8-queue+AF8-tag+AF8-busy+AF8-iter here.
-+AD4 
-+AD4 Signed-off-by: Jianchao Wang +ADw-jianchao.w.wang+AEA-oracle.com+AD4
-+AD4 ---
-+AD4  drivers/block/skd+AF8-main.c +AHw 4 ++1filechanged2insertions(), 2 deletions(-)
-+AD4 
-+AD4 diff --git a/drivers/block/skd+AF8-main.c b/drivers/block/skd+AF8-main.c
-+AD4 index ab893a7..60c34ff 100644
-+AD4 --- a/drivers/block/skd+AF8-main.c
-+AD4 diff --git a/drivers/block/skd+AF8-main.c b/drivers/block/skd+AF8-main.c
-+AD4 index ab893a7..60c34ff 100644
-+AD4 --- a/drivers/block/skd+AF8-main.c
-+AD4 +-+-+- b/drivers/block/skd+AF8-main.c
-+AD4 +AEAAQA -395,7 +-395,7 +AEAAQA static int skd+AF8-in+AF8-flight(struct skd+AF8-device +ACo-skdev)
-+AD4  +AHs
-+AD4         int count +AD0 0+ADs
-+AD4  
-+AD4 -       blk+AF8-mq+AF8-tagset+AF8-busy+AF8-iter(+ACY-skdev-+AD4-tag+AF8-set, skd+AF8-inc+AF8-in+AF8-flight, +ACY-count)+ADs
-+AD4 +-       blk+AF8-mq+AF8-queue+AF8-tag+AF8-busy+AF8-iter(skdev-+AD4-queue, skd+AF8-inc+AF8-in+AF8-flight, +ACY-count, true)+ADs
-+AD4  
-+AD4         return count+ADs
-+AD4  +AH0
 
-Hi Jianchao,
 
-If you have a look at the skd+AF8-in+AF8-flight() callers you will see that the above
-change is not necessary.
+On 03/11/2019 03:10 AM, Steffen Klassert wrote:
+> On Wed, Mar 06, 2019 at 08:54:08PM -0500, Su Yanjun wrote:
+>> For rcu protected pointers, we'd better add '__rcu' for them.
+>>
+>> Once added '__rcu' tag for rcu protected pointer, the sparse tool reports
+>> warnings.
+>>
+>> net/xfrm/xfrm_user.c:1198:39: sparse:    expected struct sock *sk
+>> net/xfrm/xfrm_user.c:1198:39: sparse:    got struct sock [noderef] <asn:4> *nlsk
+>> [...]
+>>
+>> So introduce a new wrapper function of nlmsg_unicast  to handle type
+>> conversions.
+>>
+>> This patch also fixes a direct access of a rcu protected socket.
+>>
+>> Fixes: be33690d8fcf("[XFRM]: Fix aevent related crash")
+>> Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+> 
+> Patch applied, thanks!
+> 
 
-+AD4 +AEAAQA -1916,7 +-1916,7 +AEAAQA static bool skd+AF8-recover+AF8-request(struct request +ACo-req, void +ACo-data, bool reserved)
-+AD4  
-+AD4  static void skd+AF8-recover+AF8-requests(struct skd+AF8-device +ACo-skdev)
-+AD4  +AHs
-+AD4 -	blk+AF8-mq+AF8-tagset+AF8-busy+AF8-iter(+ACY-skdev-+AD4-tag+AF8-set, skd+AF8-recover+AF8-request, skdev)+ADs
-+AD4 +-	blk+AF8-mq+AF8-queue+AF8-tag+AF8-busy+AF8-iter(skdev-+AD4-queue, skd+AF8-recover+AF8-request, skdev, true)+ADs
-+AD4  +AH0
+Has this patch ever been tested ?
 
-Same comment here. If you have a look at the callers of this function you will
-see that this change is not necessary.
+I do not see the needed rcu_read_lock() / rcu_read_unlock() that are mandated for
+rcu_dereference() correctness.
 
-Thanks,
+All changes like that should be tested with :
 
-Bart.
+CONFIG_LOCKDEP=y
+CONFIG_PROVE_RCU=y
 
