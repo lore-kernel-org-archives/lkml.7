@@ -2,138 +2,153 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1B1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD6BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F5D2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE402085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfCROav (ORCPT
+        id S1727550AbfCRObz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:30:51 -0400
-Received: from mout01.posteo.de ([185.67.36.141]:59085 "EHLO mout01.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbfCROau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:30:50 -0400
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout01.posteo.de (Postfix) with ESMTPS id EFDE4160060
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 15:30:47 +0100 (CET)
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 44NJWT3PTtz6tmQ;
-        Mon, 18 Mar 2019 15:30:45 +0100 (CET)
-Subject: Re: [PATCH 2/2] tty/serial: atmel: RS485 HD w/DMA: enable RX after TX
- is stopped
-To:     Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     Gil Weber <webergil@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190315092334.13246-1-razvan.stefanescu@microchip.com>
- <20190315092334.13246-3-razvan.stefanescu@microchip.com>
-From:   Richard Genoud <richard.genoud@gmail.com>
-Message-ID: <cb09f654-1c42-4f0c-25d3-5cb1708d6080@sorico.fr>
-Date:   Mon, 18 Mar 2019 15:30:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 10:31:55 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:42854 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727858AbfCRObv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 10:31:51 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id EA69172CC8C;
+        Mon, 18 Mar 2019 17:31:47 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id C662E7CC74C; Mon, 18 Mar 2019 17:31:47 +0300 (MSK)
+Date:   Mon, 18 Mar 2019 17:31:47 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2 2/6] ptrace: introduce ptrace_syscall_enter to
+ consolidate PTRACE_SYSEMU handling
+Message-ID: <20190318143147.GB27941@altlinux.org>
+References: <20190318104925.16600-1-sudeep.holla@arm.com>
+ <20190318104925.16600-3-sudeep.holla@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190315092334.13246-3-razvan.stefanescu@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="98e8jtXdkpgskNou"
+Content-Disposition: inline
+In-Reply-To: <20190318104925.16600-3-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ adding Gil Weber in Cc: ]
-Le 15/03/2019 à 10:23, Razvan Stefanescu a écrit :
-> In half-duplex operation, RX should be started after TX completes.
-> 
-> If DMA is used, there is a case when the DMA transfer completes but the
-> TX FIFO is not emptied, so the RX cannot be restarted just yet.
-> 
-> Use a boolean variable to store this state and rearm TX interrupt mask
-> to be signaled again that the transfer finished. In interrupt transmit
-> handler this variable is used to start RX.
 
-I was sure I've already seen something like that.
-Gil, could you give it a test ?
+--98e8jtXdkpgskNou
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-you can add :
-Cc: stable@vger.kernel.org
-Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable RX after TX is done")
-
-Since patch 1/2 is needed for this one, I think you should add also
-Cc:stable / Fixes: to the previous patch.
-
-> Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+On Mon, Mar 18, 2019 at 10:49:21AM +0000, Sudeep Holla wrote:
+> Currently each architecture handles PTRACE_SYSEMU in very similar way.
+> It's completely arch independent and can be handled in the code helping
+> to consolidate PTRACE_SYSEMU handling.
+>=20
+> Let's introduce a hook 'ptrace_syscall_enter' that arch specific syscall
+> entry code can call.
+>=20
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > ---
->  drivers/tty/serial/atmel_serial.c | 25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> index a6577b1c4461..b0141dcbbb61 100644
-> --- a/drivers/tty/serial/atmel_serial.c
-> +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -166,6 +166,8 @@ struct atmel_uart_port {
->  	unsigned int		pending_status;
->  	spinlock_t		lock_suspended;
->  
-> +	bool			hd_start_rx;	/* can start RX during half-duplex operation */
-> +
->  	/* ISO7816 */
->  	unsigned int		fidi_min;
->  	unsigned int		fidi_max;
-> @@ -934,8 +936,13 @@ static void atmel_complete_tx_dma(void *arg)
->  	if (!uart_circ_empty(xmit))
->  		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
->  	else if (atmel_uart_is_half_duplex(port)) {
-> -		/* DMA done, stop TX, start RX for RS485 */
-> -		atmel_start_rx(port);
-> +		/*
-> +		 * DMA done, re-enable TXEMPTY and signal that we can stop
-> +		 * TX and start RX for RS485
-> +		 */
-> +		atmel_port->hd_start_rx = true;
-> +		atmel_uart_writel(port, ATMEL_US_IER,
-> +				  atmel_port->tx_done_mask);
->  	}
->  
->  	spin_unlock_irqrestore(&port->lock, flags);
-> @@ -1379,9 +1386,21 @@ atmel_handle_transmit(struct uart_port *port, unsigned int pending)
->  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
->  
->  	if (pending & atmel_port->tx_done_mask) {
-> -		/* Either PDC or interrupt transmission */
->  		atmel_uart_writel(port, ATMEL_US_IDR,
->  				  atmel_port->tx_done_mask);
-> +
-> +		/* Start RX if flag was set and FIFO is empty */
-> +		if (atmel_port->hd_start_rx) {
-> +			if (atmel_uart_readl(port, ATMEL_US_CSR)
-> +					& ATMEL_US_TXEMPTY) {
-> +				atmel_port->hd_start_rx = false;
-> +				atmel_start_rx(port);
-> +			} else {
-> +				dev_warn(port->dev, "Should start RX, but TX fifo is not empty\n");
-What will happen in this case ?
-
-> +			}
-> +			return;
-> +		}
-> +
->  		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
->  	}
+>  include/linux/ptrace.h |  1 +
+>  kernel/ptrace.c        | 22 ++++++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+>=20
+> diff --git a/include/linux/ptrace.h b/include/linux/ptrace.h
+> index edb9b040c94c..e30f51e3363e 100644
+> --- a/include/linux/ptrace.h
+> +++ b/include/linux/ptrace.h
+> @@ -407,6 +407,7 @@ static inline void user_single_step_report(struct pt_=
+regs *regs)
+>  #define current_user_stack_pointer() user_stack_pointer(current_pt_regs(=
+))
+>  #endif
+> =20
+> +extern long ptrace_syscall_enter(struct pt_regs *regs);
+>  extern int task_current_syscall(struct task_struct *target, long *callno,
+>  				unsigned long args[6], unsigned int maxargs,
+>  				unsigned long *sp, unsigned long *pc);
+> diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+> index 4fa3b7f4c3c7..c9c505c483df 100644
+> --- a/kernel/ptrace.c
+> +++ b/kernel/ptrace.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/hw_breakpoint.h>
+>  #include <linux/cn_proc.h>
+>  #include <linux/compat.h>
+> +#include <linux/tracehook.h>
+> =20
+>  /*
+>   * Access another process' address space via ptrace.
+> @@ -557,6 +558,27 @@ static int ptrace_detach(struct task_struct *child, =
+unsigned int data)
+>  	return 0;
 >  }
-> 
+> =20
+> +/*
+> + * Hook to check and report for PTRACE_SYSEMU, can be called from arch
+> + * arch syscall entry code
+> + */
+> +long ptrace_syscall_enter(struct pt_regs *regs)
+> +{
+> +#ifdef TIF_SYSCALL_EMU
+> +	if (test_thread_flag(TIF_SYSCALL_EMU)) {
+> +		if (tracehook_report_syscall_entry(regs))
+> +			/*
+> +			 * We can ignore the return code here as we need
+> +			 * return -1 always for syscall emulation irrespective
+> +			 * of whether the tracehook report fails or succeed.
+> +			 */
+> +			;
 
-Thanks !
+This is problematic as it causes build errors with -Werror=3Dempty-body,
+see https://lore.kernel.org/lkml/20181218205305.26647-1-malat@debian.org/
+
+
+--=20
+ldv
+
+--98e8jtXdkpgskNou
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJcj6vTAAoJEAVFT+BVnCUIZdoQAMNcDIAbaXHLJT0H192POtdF
+rRwlBaKZeLHo9YKsCNI0YJWD5L6mrw6pzKrIb+O7w3fkel4k/BYhKJj0VKMriGWv
+ZhB0qOsRMRj8ytIGzBP+g0EjB+OVO0KBDrR9aKa1Kh3lRIL95sECaoZkcI4xv3dw
+5Gs46YNIHaKzXg/0kdAmKb6/FmTqC+0x7dB1KdvuIP8uKFNKOAaLwopTS6fmTVvd
+SZPBuzeOhTvSvm73avmwwsLf2agniq9nFRiw1Q/3JWPxoRcJToRSozwudkm64z7J
+OClyRZiOsFTvtXd/tiPZVPr17YhNR2f6XQYtqpWCMzSsbLpvO86cTFJcFIzpWfJr
+ly+oeURC24KQK2jPjVLBeisugW074Kva0CqGYu/tKAUScWcvoXs6miNYv5/VoiIe
+yZWr4WlJ5God4Tnk5Y/BFvm3fhwShy+u56VpLy1hX8QaEZUC+jSp0N9YrS5ufx7U
+WMhdEHfXwfuoMtyAUSINxINFabH15RfC9P818lXmBs4tbKJs51OUQZ5OsyPF0MQn
++iPj1Ups+D+1m788lrQE6RsyC4/3piJNehIt7S+5K73UeMek/f2LA5rq+BSjjzBO
+iJD6xpWwvqLg5mpAAn7Jdq0Wzz7g16auC2m+6F5pXeTA/a5Ju7qrPh1i1Xwx6qqH
+osPsh+YtCIqvfsZn9TSQ
+=fKg4
+-----END PGP SIGNATURE-----
+
+--98e8jtXdkpgskNou--
