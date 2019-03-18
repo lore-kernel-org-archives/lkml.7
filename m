@@ -2,172 +2,106 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0ACC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6952AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7323D21741
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:21:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552933313;
-	bh=InnitQUS+8IGHt8AMsJ2Kn/446l7NGZadnGs75bqMsQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M2PIwgXI7ftI5GjlKUENwOnBSiH6VUkVMxTodXxdwEELVaKFIWtjP1ZJ0UsOBF+nk
-	 iRYSGY840bQUBeY0eV0Zh1T5ADuRp9lqu3sLV1rwNI9gYLNVGR2IKHVCze2HlO92pU
-	 wCCQ9fxoY8J1i9nkaL32teddqlZNYwzsba9RG2TQ=
+	by mail.kernel.org (Postfix) with ESMTP id 35A232064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ffVuWB+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfCRSVi (ORCPT
+        id S1727135AbfCRSXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:21:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55346 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727446AbfCRSVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:21:34 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A0921308FB8A;
-        Mon, 18 Mar 2019 18:21:33 +0000 (UTC)
-Received: from krava.brq.redhat.com (unknown [10.43.17.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3151B605CA;
-        Mon, 18 Mar 2019 18:21:31 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5/8] perf/x86/rapl: Get rapl_cntr_mask from new probe framework
-Date:   Mon, 18 Mar 2019 19:21:13 +0100
-Message-Id: <20190318182116.17388-6-jolsa@kernel.org>
-In-Reply-To: <20190318182116.17388-1-jolsa@kernel.org>
-References: <20190318182116.17388-1-jolsa@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 18 Mar 2019 18:21:33 +0000 (UTC)
+        Mon, 18 Mar 2019 14:23:37 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39615 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfCRSXh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 14:23:37 -0400
+Received: by mail-lj1-f194.google.com with SMTP id l7so5174739ljg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4b/JKrTcJBBqwU4hv1f+Qtxhzo5mF/Q9o6zvm0V0Ihs=;
+        b=ffVuWB+AkayioDUscm8Vn+XMNDcLDPWvg5fNDaKk2NGkMwq6mv32dWfUMUQOF9ndUj
+         Y+PeBYrlka+UPYNIz7fMelxtW3LiyiERdlXS2/ULyslplGGhGDrolw2x9A6JdzoIJS0e
+         xShsDxAzBS5hBzp79Td77v+3WniN+UBRm7wXg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4b/JKrTcJBBqwU4hv1f+Qtxhzo5mF/Q9o6zvm0V0Ihs=;
+        b=CUcXqdmwOIM253/qHkWO0ku4yY+KqWUcaJShdv95MRb6WI3TYXWB+qhBmbeVW+qxdL
+         0wRoGZ2iDSft1BxnkSTo9BRV8Pg/XAeiYcKS9dXAkztvOLtB8Y3Fu3Xj6xAXGzio40N6
+         +HnZwN/lTF+2M/7mFqNE19aEDr+GAbCw7pZnVYOrRuHDtzkEWaLlAwAGMRHwjwMQPtBo
+         NvV/XwnORvUFaYG+V3htBisPOhOjEFOZkYqKLIgnuHxpfgbTtjvQO7xBkT8rY4yXcyrI
+         +RWg1nZRAWNj+R6mjt/d9EVGrMuHqbahcHHvAJ2OGqBOCSlEg803GPcDyEkmIGlGe0K8
+         ZC5A==
+X-Gm-Message-State: APjAAAXbbBEEaT7pb47nY47m4+RG+m/wrk+NfdD2Bi1zYBAEJQM/D1pD
+        S8+QK6G2gH083GxkGJ7FKoyhC939Z4E=
+X-Google-Smtp-Source: APXvYqyAgbW5ZdwR0mGPgvuUwc5W5Bq3BzchBNNmptNFEja2UsZE+zOdUJcDlWGs1F0sqN/Ftn91fQ==
+X-Received: by 2002:a2e:a312:: with SMTP id l18mr5945306lje.197.1552933414940;
+        Mon, 18 Mar 2019 11:23:34 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id v11sm718935ljd.3.2019.03.18.11.23.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 11:23:34 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id u9so12363166lfe.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:23:34 -0700 (PDT)
+X-Received: by 2002:a19:4b14:: with SMTP id y20mr10319263lfa.36.1552933413777;
+ Mon, 18 Mar 2019 11:23:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190306214730.6545-1-valleau@chromium.org> <44e151af-b6c4-d0af-3ef1-a5632d079915@kernel.org>
+In-Reply-To: <44e151af-b6c4-d0af-3ef1-a5632d079915@kernel.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Mon, 18 Mar 2019 11:23:22 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXMcnEfZzTjDGsDbZxX2Xknv6dt3H-3kN79WdKFzif2zsA@mail.gmail.com>
+Message-ID: <CA+ASDXMcnEfZzTjDGsDbZxX2Xknv6dt3H-3kN79WdKFzif2zsA@mail.gmail.com>
+Subject: Re: [PATCH] tools: usb: usbip: adding support for older kernel versions
+To:     shuah <shuah@kernel.org>
+Cc:     David Valleau <valleau@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get rapl_cntr_mask from perf_msr_probe call, as a replacement
-for current intel_rapl_init_fun::cntr_mask value for each model.
+On Sat, Mar 16, 2019 at 4:40 PM shuah <shuah@kernel.org> wrote:
+> usbip tool is tied to the kernel version. This is reason why it is
+> co-located with the usbip driver in the kernel sources. This is not
+> a typical tool scenario to be able to use new tool on old kernels.
+>
+> I would like to understand the reasons for wanting to run new tool on
+> old kernels.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- arch/x86/events/intel/rapl.c | 39 ++----------------------------------
- 1 file changed, 2 insertions(+), 37 deletions(-)
+On Chromium OS, we ship more or less the same user space for a variety
+of systems, but not all of those run the same kernel. That's not
+exactly a novel concept -- many good tools are written such that they
+degrade gracefully when running with reduced feature sets (e.g., older
+kernels). While we are working on reducing the divergence and number
+of kernels we ship, it's currently a fact of life that we have to
+support multiple target kernel versions.
 
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 5bd6c3d963fb..bef547583338 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -95,33 +95,6 @@ static const char *const rapl_domain_names[NR_RAPL_DOMAINS] __initconst = {
- 	"psys",
- };
- 
--/* Clients have PP0, PKG */
--#define RAPL_IDX_CLN	(1<<RAPL_IDX_PP0_NRG_STAT|\
--			 1<<RAPL_IDX_PKG_NRG_STAT|\
--			 1<<RAPL_IDX_PP1_NRG_STAT)
--
--/* Servers have PP0, PKG, RAM */
--#define RAPL_IDX_SRV	(1<<RAPL_IDX_PP0_NRG_STAT|\
--			 1<<RAPL_IDX_PKG_NRG_STAT|\
--			 1<<RAPL_IDX_RAM_NRG_STAT)
--
--/* Servers have PP0, PKG, RAM, PP1 */
--#define RAPL_IDX_HSW	(1<<RAPL_IDX_PP0_NRG_STAT|\
--			 1<<RAPL_IDX_PKG_NRG_STAT|\
--			 1<<RAPL_IDX_RAM_NRG_STAT|\
--			 1<<RAPL_IDX_PP1_NRG_STAT)
--
--/* SKL clients have PP0, PKG, RAM, PP1, PSYS */
--#define RAPL_IDX_SKL_CLN (1<<RAPL_IDX_PP0_NRG_STAT|\
--			  1<<RAPL_IDX_PKG_NRG_STAT|\
--			  1<<RAPL_IDX_RAM_NRG_STAT|\
--			  1<<RAPL_IDX_PP1_NRG_STAT|\
--			  1<<RAPL_IDX_PSYS_NRG_STAT)
--
--/* Knights Landing has PKG, RAM */
--#define RAPL_IDX_KNL	(1<<RAPL_IDX_PKG_NRG_STAT|\
--			 1<<RAPL_IDX_RAM_NRG_STAT)
--
- /*
-  * event code: LSB 8 bits, passed in attr->config
-  * any other bit is reserved
-@@ -767,43 +740,36 @@ static int __init init_rapl_pmus(void)
- 
- struct intel_rapl_init_fun {
- 	bool apply_quirk;
--	int cntr_mask;
- 	struct attribute **attrs;
- };
- 
- static const struct intel_rapl_init_fun snb_rapl_init __initconst = {
- 	.apply_quirk = false,
--	.cntr_mask = RAPL_IDX_CLN,
- 	.attrs = rapl_events_cln_attr,
- };
- 
- static const struct intel_rapl_init_fun hsx_rapl_init __initconst = {
- 	.apply_quirk = true,
--	.cntr_mask = RAPL_IDX_SRV,
- 	.attrs = rapl_events_srv_attr,
- };
- 
- static const struct intel_rapl_init_fun hsw_rapl_init __initconst = {
- 	.apply_quirk = false,
--	.cntr_mask = RAPL_IDX_HSW,
- 	.attrs = rapl_events_hsw_attr,
- };
- 
- static const struct intel_rapl_init_fun snbep_rapl_init __initconst = {
- 	.apply_quirk = false,
--	.cntr_mask = RAPL_IDX_SRV,
- 	.attrs = rapl_events_srv_attr,
- };
- 
- static const struct intel_rapl_init_fun knl_rapl_init __initconst = {
- 	.apply_quirk = true,
--	.cntr_mask = RAPL_IDX_KNL,
- 	.attrs = rapl_events_knl_attr,
- };
- 
- static const struct intel_rapl_init_fun skl_rapl_init __initconst = {
- 	.apply_quirk = false,
--	.cntr_mask = RAPL_IDX_SKL_CLN,
- 	.attrs = rapl_events_skl_attr,
- };
- 
-@@ -933,8 +899,8 @@ static int __init rapl_pmu_init(void)
- 		return -ENODEV;
- 
- 	rm = (struct rapl_model *)id->driver_data;
--	perf_msr_probe(rapl_msrs, PERF_RAPL_MAX,
--		       rapl_events_attrs, (void *) &rm->events);
-+	rapl_cntr_mask = perf_msr_probe(rapl_msrs, PERF_RAPL_MAX,
-+					rapl_events_attrs, (void *) &rm->events);
- 
- 	id = x86_match_cpu(rapl_cpu_match);
- 	if (!id)
-@@ -942,7 +908,6 @@ static int __init rapl_pmu_init(void)
- 
- 	rapl_init = (struct intel_rapl_init_fun *)id->driver_data;
- 	apply_quirk = rapl_init->apply_quirk;
--	rapl_cntr_mask = rapl_init->cntr_mask;
- 	rapl_pmu_events_group.attrs = rapl_init->attrs;
- 
- 	ret = rapl_check_hw_unit(apply_quirk);
--- 
-2.17.2
+Is there a fundamental problem with VHCI such that it doesn't have a
+stable ABI that tools can be written against?
 
+If stability is possible but you just don't care, then I guess we can
+fork our own version...
+
+Or even worse, we could build N copies of usbip for N kernels. But we
+don't do that for any other user space component.
+
+Brian
