@@ -2,105 +2,139 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54BEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB80C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A01AF20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:32:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTZfOCZ7"
+	by mail.kernel.org (Postfix) with ESMTP id 65D7620872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfCRPcd (ORCPT
+        id S1727239AbfCRPd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:32:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38803 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfCRPcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:32:33 -0400
-Received: by mail-pf1-f193.google.com with SMTP id n125so11501688pfn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 08:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+9zt60K093esvtZZtsA9kTSLmDXawvTkygGyefLtMGw=;
-        b=cTZfOCZ7M06MfnT8VBQl6KgKOXn73ZD/jLg2lb0Mt3cuhlGeefWe51vPz1HU/Shslx
-         Mijtv/TZeujHrg8E9g3uPo80LfQ8Nx/N1vEc5B+wNQdOU+b/gf6375KgfGJOG827tzlf
-         n+Hzy2CsXph4oPrjWQdy4xcNbbKAiBkKfzAUlMFIVtjqk4j4O66+T3ANVO3UZrBLMj+P
-         YmuGLcxf039i5TRfMBO0bAnRwvZ3UFYRgn/KTHe9tpY3EmJI/QoQ1Vz1qPFtg6t3X1hc
-         6wT5deQom+jU3sBidbPFzSTN7IGYYDa96CyNK4a5aK0ie+K4WDiq3p7xGhS1kTGTkqCE
-         1GLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+9zt60K093esvtZZtsA9kTSLmDXawvTkygGyefLtMGw=;
-        b=VG33u08NctA4XKppOhClujFnoP8MSkib3sD2cusXRLeGcVAt2AQLqx8qEy0Am8kmPP
-         adHAMxqZhB7Y3X3X4aEVTR9wbtVfLfXp/fvxJL5Yt1Q4cvGoGtuGyW2MZ/5pYk6mFsGX
-         BWkZ9dud2yDyTdhueL6kniGSLZeKbBOhJuMGIUV8GiGRWiVbZjgdjvb0K1kj/MdXJg6o
-         k1cZ8OxQZglmLbGniuAfWFedmYs9FjOKGxLNr8aPIn5hRhZKrNXINGxGnfxk+lh2m5Bb
-         bQ5bXmU+ZaUmfhUHas96gBA+GcGe7WixUnq9k6UfzzCMv/wJWIdeI8J7de85d2tNBY4X
-         XcPQ==
-X-Gm-Message-State: APjAAAXEMBoUjo2XcIR+9DqR+RxwC9Pizk/mb+bWS8ei+oMtyqKDenTq
-        5Gr3hveUHj1q9kCNsYL6tnA=
-X-Google-Smtp-Source: APXvYqyavAQfWVFFCoBN3doTywWm8oGl5IGXLQsxXckfAFI/tCRpQ02cqsazsqXgxncN401dDQWtSA==
-X-Received: by 2002:a17:902:6b49:: with SMTP id g9mr20670209plt.291.1552923152781;
-        Mon, 18 Mar 2019 08:32:32 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.32])
-        by smtp.gmail.com with ESMTPSA id m20sm35617427pfj.142.2019.03.18.08.32.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 08:32:32 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 21:02:24 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     gaoxiang25@huawei.com, yuchao0@huawei.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] staging: erofs: Add whitespace after declaration
-Message-ID: <20190318153224.GA3596@bharath12345-Inspiron-5559>
+        Mon, 18 Mar 2019 11:33:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34892 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726678AbfCRPd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 11:33:27 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 988863083391;
+        Mon, 18 Mar 2019 15:33:26 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.34])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C77CE5D704;
+        Mon, 18 Mar 2019 15:33:22 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 18 Mar 2019 16:33:26 +0100 (CET)
+Date:   Mon, 18 Mar 2019 16:33:22 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Message-ID: <20190318153321.GA23521@redhat.com>
+References: <20190318104925.16600-1-sudeep.holla@arm.com>
+ <20190318104925.16600-4-sudeep.holla@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190318104925.16600-4-sudeep.holla@arm.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 18 Mar 2019 15:33:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add whitespace after declaration. Fixed the checkpatch.pl warning.
+On 03/18, Sudeep Holla wrote:
+>
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -70,22 +70,16 @@ static long syscall_trace_enter(struct pt_regs *regs)
+>  
+>  	struct thread_info *ti = current_thread_info();
+>  	unsigned long ret = 0;
+> -	bool emulated = false;
+>  	u32 work;
+>  
+>  	if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+>  		BUG_ON(regs != task_pt_regs(current));
+>  
+> -	work = READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY;
+> -
+> -	if (unlikely(work & _TIF_SYSCALL_EMU))
+> -		emulated = true;
+> -
+> -	if ((emulated || (work & _TIF_SYSCALL_TRACE)) &&
+> -	    tracehook_report_syscall_entry(regs))
+> +	if (unlikely(ptrace_syscall_enter(regs)))
+>  		return -1L;
+>  
+> -	if (emulated)
+> +	work = READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY;
+> +	if ((work & _TIF_SYSCALL_TRACE) && tracehook_report_syscall_entry(regs))
+>  		return -1L;
 
----
-changes since v2
-	- mutt gave me a lot of problems. Hence 3 patches for a really
-	  small problem.
-	- Fixed the extra missing line.
+Well, I won't really argue, but to be honest I think this change doesn't make
+the code better... With this patch tracehook_report_syscall_entry() has 2 callers,
+to me this just adds some confusion.
 
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
----
- drivers/staging/erofs/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I agree that the usage of emulated/_TIF_SYSCALL_EMU looks a bit overcomplicated,
+I'd suggest a simple cleanup below.
 
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 924b8df..e09d29f 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -270,8 +270,8 @@ struct inode *erofs_iget(struct super_block *sb,
- 	if (inode->i_state & I_NEW) {
- 		int err;
- 		struct erofs_vnode *vi = EROFS_V(inode);
--		vi->nid = nid;
+And it seems that _TIF_WORK_SYSCALL_ENTRY needs some cleanups too... We don't need
+"& _TIF_WORK_SYSCALL_ENTRY" in syscall_trace_enter, and _TIF_WORK_SYSCALL_ENTRY
+should not include _TIF_NOHZ?
+
+Oleg.
+
+
+--- x/arch/x86/entry/common.c
++++ x/arch/x86/entry/common.c
+@@ -70,23 +70,18 @@ static long syscall_trace_enter(struct pt_regs *regs)
  
-+		vi->nid = nid;
- 		err = fill_inode(inode, isdir);
- 		if (likely(!err))
- 			unlock_new_inode(inode);
--- 
-2.7.4
+ 	struct thread_info *ti = current_thread_info();
+ 	unsigned long ret = 0;
+-	bool emulated = false;
+ 	u32 work;
+ 
+ 	if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+ 		BUG_ON(regs != task_pt_regs(current));
+ 
+-	work = READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY;
++	work = READ_ONCE(ti->flags);
+ 
+-	if (unlikely(work & _TIF_SYSCALL_EMU))
+-		emulated = true;
+-
+-	if ((emulated || (work & _TIF_SYSCALL_TRACE)) &&
+-	    tracehook_report_syscall_entry(regs))
+-		return -1L;
+-
+-	if (emulated)
+-		return -1L;
++	if (work & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE)) {
++		ret = tracehook_report_syscall_entry(regs);
++		if (ret || (work & _TIF_SYSCALL_EMU))
++			return -1L;
++	}
+ 
+ #ifdef CONFIG_SECCOMP
+ 	/*
 
