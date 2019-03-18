@@ -2,139 +2,155 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD03C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FBAC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFDC520857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:34:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="PlBpEdHk"
+	by mail.kernel.org (Postfix) with ESMTP id 9B0AA2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:34:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfCRLdZ (ORCPT
+        id S1727735AbfCRLeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:33:25 -0400
-Received: from mail-eopbgr720080.outbound.protection.outlook.com ([40.107.72.80]:48328
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727276AbfCRLdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:33:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iQgmK2MtkXRhV0wbfhSCQ6YDSTfd0/j3kCjjaT2iHDw=;
- b=PlBpEdHkYWJEOuxiYheG5x9tTvw/S/wMyEKKVSlRZvRGMAOetiBInwSj87Nwt0tt6DkuSuy0g2yk0JBC9NcKmw9HClX0/F3kIXRK8b7jmvOck6cDAT57iA+w8fa095HiusgATDQoDZJwrDx72HAmbB6sgxiE22UhBi27QtcxNbE=
-Received: from DM6PR02CA0074.namprd02.prod.outlook.com (10.141.168.143) by
- BYAPR02MB4056.namprd02.prod.outlook.com (20.176.248.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Mon, 18 Mar 2019 11:33:20 +0000
-Received: from BL2NAM02FT037.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::208) by DM6PR02CA0074.outlook.office365.com
- (2603:10b6:5:1f4::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1709.13 via Frontend
- Transport; Mon, 18 Mar 2019 11:33:20 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; grandegger.com; dkim=none (message not signed)
- header.d=none;grandegger.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT037.mail.protection.outlook.com (10.152.77.11) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1730.9
- via Frontend Transport; Mon, 18 Mar 2019 11:33:19 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1h5qW7-0007ip-34; Mon, 18 Mar 2019 04:33:19 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1h5qW1-0008WO-VL; Mon, 18 Mar 2019 04:33:14 -0700
-Received: from [172.23.37.94] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1h5qVv-0008M3-8F; Mon, 18 Mar 2019 04:33:07 -0700
-From:   Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <michal.simek@xilinx.com>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Subject: [PATCH 5/6] net: can: xilinx_can: Add SPDX license
-Date:   Mon, 18 Mar 2019 17:02:45 +0530
-Message-ID: <1552908766-26753-6-git-send-email-appana.durga.rao@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1552908766-26753-1-git-send-email-appana.durga.rao@xilinx.com>
-References: <1552908766-26753-1-git-send-email-appana.durga.rao@xilinx.com>
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(346002)(39860400002)(2980300002)(189003)(199004)(336012)(486006)(2616005)(426003)(2201001)(446003)(126002)(476003)(11346002)(5660300002)(36756003)(106002)(16586007)(54906003)(110136005)(14444005)(6636002)(50226002)(9786002)(8936002)(8676002)(81156014)(81166006)(2906002)(36386004)(356004)(305945005)(6666004)(50466002)(186003)(48376002)(4326008)(106466001)(76176011)(7696005)(316002)(478600001)(51416003)(63266004)(107886003)(77096007)(47776003)(26005)(2004002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4056;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        Mon, 18 Mar 2019 07:34:20 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60584 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727378AbfCRLdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 07:33:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDA741650;
+        Mon, 18 Mar 2019 04:33:23 -0700 (PDT)
+Received: from [10.1.199.35] (e107154-lin.cambridge.arm.com [10.1.199.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 973303F614;
+        Mon, 18 Mar 2019 04:33:17 -0700 (PDT)
+Subject: Re: [PATCH v11 03/14] lib, arm64: untag user pointers in strn*_user
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1552679409.git.andreyknvl@google.com>
+ <f7fa36ec55ed4b45f61d841f9b726772a04cc0a5.1552679409.git.andreyknvl@google.com>
+From:   Kevin Brodsky <kevin.brodsky@arm.com>
+Message-ID: <5de82e7d-6091-e694-8397-fbcfd59f9d0b@arm.com>
+Date:   Mon, 18 Mar 2019 11:33:14 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c3ced3c2-bd2b-47ef-3ff9-08d6ab958589
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:BYAPR02MB4056;
-X-MS-TrafficTypeDiagnostic: BYAPR02MB4056:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <BYAPR02MB4056D95B4A25D1E7F4581D4CDC470@BYAPR02MB4056.namprd02.prod.outlook.com>
-X-Forefront-PRVS: 098076C36C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: AtEs3Y8Se0tigJ4wc1nxEGgB6hI6TZTZaPtHv4a3hmIA+EQfSClcEy5X6/F1XiDdWEHSOaZaSsnTkG2YQH/RmBjeRuqC4gFEZOaVM+cdJ4+YdYVnw4p7YnTtHZJc/Zo4DQGmTxVaONemo1c13mUlFgZ269nTh+XPaO3O3GxxK0AAM/DLtWKQWVcUmgmUbepGdGIFgsYA9YCu7aLFEsWfbnlk3AxbQ5m5FOKQiyojrtSSXDbCLSjjVd7pGkgSCU1F/Vyizb2jQxgErsbWfUmcCX22zuRfuj08fP3ZAcp3WKVfWNMKwpJpDGqFQPc0nSSb+YF7DdxL2Jq3M9+JlHn5u0BvaBk6gfnfMHVCeQX/8EPRvjEKotH3TXw+SCQLiiqv2hByvA3DLWHppORGtMW/sAOARhA2b6szJAdCKxOw48s=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2019 11:33:19.6593
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3ced3c2-bd2b-47ef-3ff9-08d6ab958589
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4056
+In-Reply-To: <f7fa36ec55ed4b45f61d841f9b726772a04cc0a5.1552679409.git.andreyknvl@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update driver to have SPDX identifiers.
+On 15/03/2019 19:51, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
+>
+> strncpy_from_user and strnlen_user accept user addresses as arguments, and
+> do not go through the same path as copy_from_user and others, so here we
+> need to handle the case of tagged user addresses separately.
+>
+> Untag user pointers passed to these functions.
+>
+> Note, that this patch only temporarily untags the pointers to perform
+> validity checks, but then uses them as is to perform user memory accesses.
 
-Signed-off-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
----
- drivers/net/can/xilinx_can.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+Thank you for this new version, looks good to me.
 
-diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-index 3d75a28..e1544e0 100644
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -1,20 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /* Xilinx CAN device driver
-  *
-  * Copyright (C) 2012 - 2014 Xilinx, Inc.
-  * Copyright (C) 2009 PetaLogix. All rights reserved.
-  * Copyright (C) 2017 - 2018 Sandvik Mining and Construction Oy
-  *
-- * Description:
-- * This driver is developed for Axi CAN IP and for Zynq CANPS Controller.
-- * This program is free software: you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation, either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #include <linux/clk.h>
--- 
-2.7.4
+To give a bit of context to the readers, I asked Andrey to make this change, because 
+it makes a difference with hardware memory tagging. Indeed, in that situation, it is 
+always preferable to access the memory using the user-provided tag, so that tag 
+checking can take place; if there is a mismatch, a tag fault will occur (which is 
+handled in a way similar to a page fault). It is also preferable not to assume that 
+an untagged user pointer (tag 0x0) bypasses tag checks.
+
+Kevin
+
+>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>   lib/strncpy_from_user.c | 3 ++-
+>   lib/strnlen_user.c      | 3 ++-
+>   2 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
+> index 58eacd41526c..6209bb9507c7 100644
+> --- a/lib/strncpy_from_user.c
+> +++ b/lib/strncpy_from_user.c
+> @@ -6,6 +6,7 @@
+>   #include <linux/uaccess.h>
+>   #include <linux/kernel.h>
+>   #include <linux/errno.h>
+> +#include <linux/mm.h>
+>   
+>   #include <asm/byteorder.h>
+>   #include <asm/word-at-a-time.h>
+> @@ -107,7 +108,7 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
+>   		return 0;
+>   
+>   	max_addr = user_addr_max();
+> -	src_addr = (unsigned long)src;
+> +	src_addr = (unsigned long)untagged_addr(src);
+>   	if (likely(src_addr < max_addr)) {
+>   		unsigned long max = max_addr - src_addr;
+>   		long retval;
+> diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+> index 1c1a1b0e38a5..8ca3d2ac32ec 100644
+> --- a/lib/strnlen_user.c
+> +++ b/lib/strnlen_user.c
+> @@ -2,6 +2,7 @@
+>   #include <linux/kernel.h>
+>   #include <linux/export.h>
+>   #include <linux/uaccess.h>
+> +#include <linux/mm.h>
+>   
+>   #include <asm/word-at-a-time.h>
+>   
+> @@ -109,7 +110,7 @@ long strnlen_user(const char __user *str, long count)
+>   		return 0;
+>   
+>   	max_addr = user_addr_max();
+> -	src_addr = (unsigned long)str;
+> +	src_addr = (unsigned long)untagged_addr(str);
+>   	if (likely(src_addr < max_addr)) {
+>   		unsigned long max = max_addr - src_addr;
+>   		long retval;
 
