@@ -2,85 +2,115 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CBAC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68353C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA4D20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C532085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552895948;
+	bh=673SMqkAlXA8cblGV2cyAlD79kgMIFkPnnhL+OUh9L8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Z4sYgR36VgNAz7A+saSTxA8WClAYdM9cyzgadK8WtZA1wvnoG0ItGZwnOaaEIkPMC
+	 HG65oaI6ei7vD6MVROXbNuU/Ax9yCd4VFuWVKKcgZXEYeQsIvCk+mcj6Uuj9ZUvkDK
+	 SqFaP3LiQlre6roFpLxv8x1ZrxSmykKgdyXfC7pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfCRHrd (ORCPT
+        id S1726704AbfCRH7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 03:47:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39890 "EHLO mx1.redhat.com"
+        Mon, 18 Mar 2019 03:59:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726678AbfCRHrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 03:47:33 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726291AbfCRH7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 03:59:06 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 72DE3308FBAF;
-        Mon, 18 Mar 2019 07:47:33 +0000 (UTC)
-Received: from [10.72.12.98] (ovpn-12-98.pek2.redhat.com [10.72.12.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DBDD55D705;
-        Mon, 18 Mar 2019 07:47:27 +0000 (UTC)
-Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Dongli Zhang <dongli.zhang@oracle.com>, mst@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, axboe@kernel.dk,
-        linux-kernel@vger.kernel.org
-References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
- <20190312183351.74764f4f.cohuck@redhat.com>
- <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
- <20190313103900.1ea7f996.cohuck@redhat.com>
- <a3f24cfa-5160-0ccc-decc-a48362c8de19@oracle.com>
- <537e6420-8994-43d6-1d4d-ccb6e0fafa0b@redhat.com>
- <20190315134112.7d63348c.cohuck@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <1df52766-88fb-6b23-d160-b891c3017133@redhat.com>
-Date:   Mon, 18 Mar 2019 15:47:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 8669B20835;
+        Mon, 18 Mar 2019 07:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552895945;
+        bh=673SMqkAlXA8cblGV2cyAlD79kgMIFkPnnhL+OUh9L8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lsBGQbEDhW3pXZVrhWEEE2thxVdaCWqiX1o+Eno5RlYa/YPmlTf9gVIDDH0dWi3D+
+         U3rBHsNjm/hpFoYA8PNjfZlBNRrXwbwa2eBIPnY1uO0gq71TowJw/MqRPq16fSCRpn
+         w/424whUBcCviOPpYxVDUi3AGNEcAzIIOrktCP5c=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: ptrace: Add function argument access API
+Date:   Mon, 18 Mar 2019 16:59:02 +0900
+Message-Id: <155289594227.10570.1879705446198840331.stgit@devnote2>
+X-Mailer: git-send-email 2.17.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <20190315134112.7d63348c.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 18 Mar 2019 07:47:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add regs_get_argument() which returns N th argument of the function
+call. On arm64, it supports up to 8th argument.
+Note that this chooses most probably assignment, in some case
+it can be incorrect (e.g. passing data structure or floating
+point etc.)
 
-On 2019/3/15 下午8:41, Cornelia Huck wrote:
-> On Fri, 15 Mar 2019 12:50:11 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> Or something like I proposed several years ago?
->> https://do-db2.lkml.org/lkml/2014/12/25/169
->>
->> Btw, for virtio-net, I think we actually want to go for having a maximum
->> number of supported queues like what hardware did. This would be useful
->> for e.g cpu hotplug or XDP (requires per cpu TX queue). But the current
->> vector allocation doesn't support this which will results all virtqueues
->> to share a single vector. We may indeed need more flexible policy here.
-> I think it should be possible for the driver to give the transport
-> hints how to set up their queues/interrupt structures. (The driver
-> probably knows best about its requirements.) Perhaps whether a queue is
-> high or low frequency, or whether it should be low latency, or even
-> whether two queues could share a notification mechanism without
-> drawbacks. It's up to the transport to make use of that information, if
-> possible.
+This enables ftrace kprobe events to access kernel function
+arguments via $argN syntax.
 
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ arch/arm64/Kconfig              |    1 +
+ arch/arm64/include/asm/ptrace.h |   18 ++++++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-Exactly and it was what the above series tried to do by providing hints 
-of e.g which queues want to share a notification.
-
-Thanks
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 117b2541ef3d..6ba0da4be73c 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -148,6 +148,7 @@ config ARM64
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
++	select HAVE_FUNCTION_ARG_ACCESS_API
+ 	select HAVE_RCU_TABLE_FREE
+ 	select HAVE_RCU_TABLE_INVALIDATE
+ 	select HAVE_RSEQ
+diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+index ec60174c8c18..cfa1bc9b8b70 100644
+--- a/arch/arm64/include/asm/ptrace.h
++++ b/arch/arm64/include/asm/ptrace.h
+@@ -305,6 +305,24 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
+ 	return regs->regs[0];
+ }
+ 
++/**
++ * regs_get_kernel_argument() - get Nth function argument in kernel
++ * @regs:	pt_regs of that context
++ * @n:		function argument number (start from 0)
++ *
++ * regs_get_argument() returns @n th argument of the function call.
++ * Note that this chooses most probably assignment, in some case
++ * it can be incorrect.
++ */
++static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
++						     unsigned int n)
++{
++#define NR_REG_ARGUMENTS 8
++	if (n < NR_REG_ARGUMENTS)
++		return regs_get_register(regs, n << 3);
++	return 0;
++}
++
+ /* We must avoid circular header include via sched.h */
+ struct task_struct;
+ int valid_user_regs(struct user_pt_regs *regs, struct task_struct *task);
 
