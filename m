@@ -2,140 +2,155 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929D5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0B5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689C42084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5A02084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfCRLKw (ORCPT
+        id S1726771AbfCRLPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:10:52 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:52658 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfCRLKv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:10:51 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h5qA9-0004ZV-St; Mon, 18 Mar 2019 07:10:44 -0400
-Date:   Mon, 18 Mar 2019 07:10:03 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V5 03/10] audit: read container ID of a process
-Message-ID: <20190318111003.GA7364@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <25543e3db4d8f3853119f92c09a60664555249a2.1552665316.git.rgb@redhat.com>
+        Mon, 18 Mar 2019 07:15:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47232 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726202AbfCRLPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 07:15:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E504DACFA;
+        Mon, 18 Mar 2019 11:15:43 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Len Brown <lenb@kernel.org>, Hannes Reinecke <hare@suse.de>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Simon Schricker <sschricker@suse.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Len Brown <len.brown@intel.com>
+Subject: Re: [PATCH] [RESEND] Do not modify perf bias performance setting by default at boot
+Date:   Mon, 18 Mar 2019 12:15:43 +0100
+Message-ID: <2616815.TtRSCVe66q@house>
+In-Reply-To: <CAJZ5v0jS=9+O1J9w=a1K4U5UbXPKegVM-xKKwZN9XY4ObkQJkQ@mail.gmail.com>
+References: <6369897.qxlu8PgE1t@house> <2947538.dvgdW3vLlg@house> <CAJZ5v0jS=9+O1J9w=a1K4U5UbXPKegVM-xKKwZN9XY4ObkQJkQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25543e3db4d8f3853119f92c09a60664555249a2.1552665316.git.rgb@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 02:29:51PM -0400, Richard Guy Briggs wrote:
-> Add support for reading the audit container identifier from the proc
-> filesystem.
-> 
-> This is a read from the proc entry of the form
-> /proc/PID/audit_containerid where PID is the process ID of the task
-> whose audit container identifier is sought.
-> 
-> The read expects up to a u64 value (unset: 18446744073709551615).
-> 
-> This read requires CAP_AUDIT_CONTROL.
-> 
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> ---
->  fs/proc/base.c | 23 +++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 2505c46c8701..0b833cbdf5b6 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -1295,6 +1295,24 @@ static ssize_t proc_sessionid_read(struct file * file, char __user * buf,
->  	.llseek		= generic_file_llseek,
->  };
->  
-> +static ssize_t proc_contid_read(struct file *file, char __user *buf,
-> +				  size_t count, loff_t *ppos)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +	struct task_struct *task = get_proc_task(inode);
-> +	ssize_t length;
-> +	char tmpbuf[TMPBUFLEN*2];
-> +
-Sorry, didn't notice this previously, but..
-Why *2 here?  Its not wrong per-se, but would it be better to just change
-TMPBUFLEN to be 22 bytes unilaterally?  Its only ever used on stack calls that
-arent that deep, and then you won't have to think about adjusting this call site
-if you ever change the value of TMPBUFLEN in the future.
+On Monday, March 18, 2019 11:26:10 AM CET Rafael J. Wysocki wrote:
+> On Fri, Mar 15, 2019 at 4:36 PM Thomas Renninger <trenn@suse.de> wrote:
+> > Hi Rafael,
+> >
+ 
+...
 
-I'm fine with doing this in another patch later, but it seems like a worthwhile
-cleanup
+> > On my workstation the BIOS initializes perf bias to:
+> > cpupower info
+> > analyzing CPU 0:
+> > perf-bias: 7
+> > 
+> > I could grep through quite some dozens of machines..., but these are
+> > mostly
+> > servers and probably show either "zero"/"performance" or "6"/"normal"
+> > because the Linux kernel overrides the INTENDED performance perf bias
+> > value to 6.
+> The perf bias Intended by whom?
 
-functionality looks good beyond that nit.
+The instance who should be in charge to set/init such a value:
+BIOS?
+ 
+> Yes, the kernel replaces whatever the original BIOS setting is with
+> its own one.
 
-> +	if (!task)
-> +		return -ESRCH;
-> +	/* if we don't have caps, reject */
-> +	if (!capable(CAP_AUDIT_CONTROL))
-> +		return -EPERM;
-> +	length = scnprintf(tmpbuf, TMPBUFLEN*2, "%llu", audit_get_contid(task));
-> +	put_task_struct(task);
-> +	return simple_read_from_buffer(buf, count, ppos, tmpbuf, length);
-> +}
-> +
->  static ssize_t proc_contid_write(struct file *file, const char __user *buf,
->  				   size_t count, loff_t *ppos)
->  {
-> @@ -1325,6 +1343,7 @@ static ssize_t proc_contid_write(struct file *file, const char __user *buf,
->  }
->  
->  static const struct file_operations proc_contid_operations = {
-> +	.read		= proc_contid_read,
->  	.write		= proc_contid_write,
->  	.llseek		= generic_file_llseek,
->  };
-> @@ -3039,7 +3058,7 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
->  #ifdef CONFIG_AUDIT
->  	REG("loginuid",   S_IWUSR|S_IRUGO, proc_loginuid_operations),
->  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
-> -	REG("audit_containerid", S_IWUSR, proc_contid_operations),
-> +	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
->  #endif
->  #ifdef CONFIG_FAULT_INJECTION
->  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
-> @@ -3428,7 +3447,7 @@ static int proc_tid_comm_permission(struct inode *inode, int mask)
->  #ifdef CONFIG_AUDIT
->  	REG("loginuid",  S_IWUSR|S_IRUGO, proc_loginuid_operations),
->  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
-> -	REG("audit_containerid", S_IWUSR, proc_contid_operations),
-> +	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
->  #endif
->  #ifdef CONFIG_FAULT_INJECTION
->  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
-> -- 
-> 1.8.3.1
+No, it only replaces the "performance" (0) value with "normal" (6).
+This does not makes sense and is broken.
+
+> It may not match every setup perfectly, but at least it
+> is consistent.  Why exactly is it worse than whatever the BIOS has
+> set?
+
+Because there may be BIOS settings for the CPU which justify initialization
+of the Perf BIAS value by BIOS.
+
+What sense does it make to unconditionally set perf BIAS value from
+performance to balanced?
+Why is this done?
+ 
+> > So we (SUSE) are going with this patch forever.
+> > 
+> > Otherwise we would run into a similar support nightmare we ran into, when
+> > Intel decided to ignore CPU idle states as exported by BIOS through ACPI.
+> > BIOS documentation of all big server vendors mentioned "performance"
+> > settings. With a kernel update these BIOS C states settings have been
+> > ignored (some long latency once were not exported on purpose).
+> > 
+> > The list of breaking conventions and specifications is long...
+> > People mostly blame the "bad BIOS developer". In this case things have
+> > been
+> > broke by the kernel.
 > 
+> I agree that the kernel should not modify the EPB on system-wide
+> resume and on CPU online, but I don't see why changing the BIOS
+> setting at init time is a problem really.
+
+I would agree if we differ a tablet/laptop system and set the performance
+value to normal/powersave.
+And on a server we set it from normal/powersave to performance.
+
+But we should not touch this value anyway.
+Again: Why should the kernel touch it?
+
+There may be BIOSes initialzing it via BIOS options. And this is a very valid 
+thing to do.
+
+> > It's now (with the resume patch) broken in way, that "performance" setting
 > 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> So the point seems to be that the BIOS setting should be preserved or
+> people are not able to configure the systems for performance through
+> setting things in the BIOS.
+> However, that only means that setting
+> things in the BIOS is not sufficient to configure a system for
+> performance and that has always been the case AFAICS, with or without
+> the EPB.
+
+?!?
+If the kernel unconditionally, without documentation overrides such values...
+(and in this case only because of a workaround of some buggy BIOSes not 
+initialzing this value)...
+
+> If you want to configure a system for performance, you need to do that
+> not just in the BIOS, but also in the OS (and, quite arguably, I would
+> expect the latter to be sufficient).
+
+No. You must not ignore BIOS settings. Even worse, you must not override
+these without any sane reason.
+
+Your assumption above might be right. But we want to do it better, right?
+
+...
+ 
+> The system-wide resume part will still not be working properly after
+> the reverts.
+
+But it must never blindly (unconditionally) be set to specific value.
+Correct?
+
+You mean the kernel should store the pre-hibernation perf BIAS value
+in NVRAM and write it back when waking up again?
+This would make sense.
+
+It would also mean perf BIAS never really worked, at least did not survive
+suspend. On servers (no hibernation) it would works but is overridden
+to a value you typically do not want to have on a server...
+So the current situation is rather broken in the kernel.
+
+
+      Thomas
 
