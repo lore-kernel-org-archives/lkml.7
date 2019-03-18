@@ -2,450 +2,256 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29416C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68947C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E358E2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC902064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:45:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="k7aJQGIW";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="NpJreZ5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfCRRpY (ORCPT
+        id S1728141AbfCRRp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 Mar 2019 13:45:28 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:51944 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728043AbfCRRpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Mar 2019 13:45:24 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48089 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbfCRRpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:45:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:45:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="132632082"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Mar 2019 10:45:15 -0700
-Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
-        by linux.intel.com (Postfix) with ESMTP id 519D5580238;
-        Mon, 18 Mar 2019 10:45:12 -0700 (PDT)
-Subject: [PATCH v10 10/12] perf report: implement record trace decompression
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <304b0a59-942c-3fe1-da02-aa749f87108b@linux.intel.com>
-Date:   Mon, 18 Mar 2019 20:45:11 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IHXvmV013524;
+        Mon, 18 Mar 2019 10:43:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=w3ID/WW2ceIwQBMbElRCxOJkcpTWV2d6zvfaHD2krXc=;
+ b=k7aJQGIWBlxJQGsRGpidUBwcrrhzqJiwPNtjNSLbXMxIntJfj225Zy1bR3ljRbwrzfNU
+ LJccj3E5CX5gnctfwbD0I0ZjeQTk2RiBZLZ+7hqvPB+/zn4eBd1ksBsWebVyb/KTVnC2
+ O9dTGIuIdAqeDn4cfVgejyJ41rxTl53Y2NW5iAcc0IJzGLEemxu5jhTb5Y+jMrcAQtYT
+ Hb+N9CoA6Ai2PYiqQpOcs9q+1qMhdcnW2POy1MW2fkQt+pN+YV1EOoq08T8UlMEQxYPP
+ WP8agBtCWm6ZR+mqKXLTXSIvgfHwN4Iw7cBJK37rjwOUNXdZXu1wuDA0tJax8QY8m0v2 cA== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2054.outbound.protection.outlook.com [104.47.41.54])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2r8vqx1k1p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 18 Mar 2019 10:43:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w3ID/WW2ceIwQBMbElRCxOJkcpTWV2d6zvfaHD2krXc=;
+ b=NpJreZ5DwaaVGWl8EXiV2Ll2/OvTqfTj7awLAG+5w3x07Dk7QEsAJYaynXNQOKLfRb9qH7D/RxBT6ZH39EWNHVWAfwYnIKgx0kpZm+1fqDvORXMa1xwqi6DvxjIxylQ8UwtrqxUQ1CKh4zpboecgJaE2YBsNKLdgDBn9It3ABNg=
+Received: from SN4PR0701CA0014.namprd07.prod.outlook.com
+ (2603:10b6:803:28::24) by SN1PR07MB2303.namprd07.prod.outlook.com
+ (2a01:111:e400:7a45::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1709.14; Mon, 18 Mar
+ 2019 17:43:15 +0000
+Received: from BY2NAM05FT013.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e52::203) by SN4PR0701CA0014.outlook.office365.com
+ (2603:10b6:803:28::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1709.13 via Frontend
+ Transport; Mon, 18 Mar 2019 17:43:14 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 199.43.4.28 as permitted sender)
+Received: from rmmaillnx1.cadence.com (199.43.4.28) by
+ BY2NAM05FT013.mail.protection.outlook.com (10.152.100.150) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1730.2 via Frontend Transport; Mon, 18 Mar 2019 17:43:14 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x2IHh8mZ026513
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 18 Mar 2019 13:43:10 -0400
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Mon, 18 Mar 2019 18:43:07 +0100
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 18 Mar 2019 18:43:07 +0100
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x2IHh3Jl008198;
+        Mon, 18 Mar 2019 17:43:05 GMT
+From:   Parshuram Thombare <pthombar@cadence.com>
+To:     <andrew@lunn.ch>
+CC:     <nicolas.ferre@microchip.com>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <rafalc@cadence.com>, <piotrs@cadence.com>, <jank@cadence.com>,
+        Parshuram Thombare <pthombar@cadence.com>
+Subject: [PATCH v2 2/3] net: ethernet: cadence: add c45 PHY support in MDIO read/write functions.
+Date:   Mon, 18 Mar 2019 17:42:28 +0000
+Message-ID: <1552930948-6755-1-git-send-email-pthombar@cadence.com>
+X-Mailer: git-send-email 2.2.2
+In-Reply-To: <20190223152540.GE10693@lunn.ch>
+References: <20190223152540.GE10693@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(376002)(136003)(2980300002)(36092001)(199004)(189003)(6666004)(54906003)(356004)(336012)(50226002)(2616005)(68736007)(7126003)(476003)(126002)(11346002)(446003)(86362001)(81156014)(81166006)(305945005)(53936002)(426003)(486006)(47776003)(53416004)(105596002)(76176011)(316002)(186003)(8676002)(16586007)(5660300002)(77096007)(26005)(2351001)(50466002)(106466001)(48376002)(107886003)(2906002)(7696005)(36756003)(26826003)(51416003)(97736004)(69596002)(8936002)(478600001)(6916009)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR07MB2303;H:rmmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cc83f99c-e13e-494e-99c2-08d6abc932b3
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060);SRVR:SN1PR07MB2303;
+X-MS-TrafficTypeDiagnostic: SN1PR07MB2303:
+X-Microsoft-Antispam-PRVS: <SN1PR07MB23039F38B08DE8525AA27A47C1470@SN1PR07MB2303.namprd07.prod.outlook.com>
+X-Forefront-PRVS: 098076C36C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: dtJpvEgViCyA38J7xGkhG6EA0jvUynDHr+j+AaFwLfmxbsiKgVOfZIUZ7rxC+y5G+G7yJTYTh2p9QqZeg3nIoAWWa5dGSQxvCF6kJHxfFdlntrf4b3cvojdwRl6UMP1kiplfhlHOwb476cAiTXiE7v7GcL6m4X/DwVgruMwVeTI9bN6K7R8dnwugKy8UJFW6/3ze2WasjBi68R868ohk1orf4WmfLWRsqSIHw0j8Hz9y4M0o4V1pOSLr8umgy0XOZUL9Qq30FTUDFercODvCpOc0tEWShGxIioZXc8TF5S2h7ApmIpwLAeve5/iuWjMckglVBUER6UdqQ+GuffHORvGcOXWf/W4FYAyT2PKlWyn+iTW/iBJWAqTSjRBWgNJjjAZcSQDbz/QCyREdAY8+8rDJgLK961X1HfPyWoJc4JU=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2019 17:43:14.4399
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc83f99c-e13e-494e-99c2-08d6abc932b3
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR07MB2303
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:_spf.salesforce.com include:mktomail.com
+ include:spf-0014ca01.pphosted.com include:spf.protection.outlook.com
+ include:auth.msgapp.com include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=969 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903180130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sorry for sending this patch again, but I didn't sent previous
+email --in-reply-to last comment on v1 of this patch. So
+rectifying this mistake.
 
-zstd_init(, comp_level = 0) initializes decompression part of API only
-that now consists of zstd_decompress_stream() function.
+This version 2 of patch to modify MDIO read/write functions to support
+communication with C45 PHY in Cadence ethernet controller driver.
 
-Trace frames containing PERF_RECORD_COMPRESSED records are decompressed
-using zstd_decompress_stream() function into a linked list of mmaped
-memory regions of mmap_comp_len size (struct decomp).
+Changes:
+	1. Added timeout
+	2. Removed unused operation macro MACB_MAN_C45_POST_READ_INCR
 
-After decompression of one COMPRESSED record its content is iterated and
-fetched for usual processing. The mmaped memory regions with decompressed
-events are kept in the linked list till the tool process termination.
+I thought of starting with relatively smaller, independant and simpler changes.
+This patch is independant of patch series and looks relatively straight forward
+with aim of supporting C45 PHY for support of high speed PHY's.
 
-When dumping raw trace (e.g., perf report -D --header) file offsets of
-events from compressed records are printed as zero.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
 ---
- tools/perf/builtin-report.c |   5 +-
- tools/perf/util/compress.h  |  11 +++
- tools/perf/util/session.c   | 129 +++++++++++++++++++++++++++++++++++-
- tools/perf/util/session.h   |  10 +++
- tools/perf/util/tool.h      |   2 +
- tools/perf/util/zstd.c      |  40 +++++++++++
- 6 files changed, 195 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cadence/macb.h      |   14 +++++--
+ drivers/net/ethernet/cadence/macb_main.c |   61 ++++++++++++++++++++++++-----
+ 2 files changed, 60 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1921aaa9cece..f8f899245289 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1260,6 +1260,9 @@ int cmd_report(int argc, const char **argv)
- 	if (session == NULL)
- 		return -1;
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index acc66a7..d25fa03 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -629,10 +629,16 @@
+ #define GEM_CLK_DIV96				5
  
-+	if (zstd_init(&(session->zstd_data), 0) < 0)
-+		pr_warning("Decompression initialization failed. Reported data may be incomplete.\n");
+ /* Constants for MAN register */
+-#define MACB_MAN_SOF				1
+-#define MACB_MAN_WRITE				1
+-#define MACB_MAN_READ				2
+-#define MACB_MAN_CODE				2
++#define MACB_MAN_C22_SOF                        1
++#define MACB_MAN_C22_WRITE                      1
++#define MACB_MAN_C22_READ                       2
++#define MACB_MAN_C22_CODE                       2
 +
- 	if (report.queue_size) {
- 		ordered_events__set_alloc_size(&session->ordered_events,
- 					       report.queue_size);
-@@ -1450,7 +1453,7 @@ int cmd_report(int argc, const char **argv)
- error:
- 	if (report.ptime_range)
- 		zfree(&report.ptime_range);
--
-+	zstd_fini(&(session->zstd_data));
- 	perf_session__delete(session);
- 	return ret;
- }
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index d00d7cb095aa..46127f7e4563 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -20,6 +20,7 @@ bool lzma_is_compressed(const char *input);
- struct zstd_data {
- #ifdef HAVE_ZSTD_SUPPORT
- 	ZSTD_CStream	*cstream;
-+	ZSTD_DStream	*dstream;
- #endif
- };
++#define MACB_MAN_C45_SOF                        0
++#define MACB_MAN_C45_ADDR                       0
++#define MACB_MAN_C45_WRITE                      1
++#define MACB_MAN_C45_READ                       3
++#define MACB_MAN_C45_CODE                       2
  
-@@ -32,6 +33,9 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data,
- 	void *dst, size_t dst_size, void *src, size_t src_size,	size_t max_record_size,
- 	size_t process_header(void *record, size_t increment));
+ /* Capability mask bits */
+ #define MACB_CAPS_ISR_CLEAR_ON_WRITE		0x00000001
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index ad099fd..17072fd 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -345,11 +345,30 @@ static int macb_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
+ 	if (status < 0)
+ 		goto mdio_read_exit;
  
-+size_t zstd_decompress_stream(struct zstd_data *data,
-+	void *src, size_t src_size, void *dst, size_t dst_size);
+-	macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_SOF)
+-			      | MACB_BF(RW, MACB_MAN_READ)
+-			      | MACB_BF(PHYA, mii_id)
+-			      | MACB_BF(REGA, regnum)
+-			      | MACB_BF(CODE, MACB_MAN_CODE)));
++	if (regnum & MII_ADDR_C45) {
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
++			    | MACB_BF(RW, MACB_MAN_C45_ADDR)
++			    | MACB_BF(PHYA, mii_id)
++			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
++			    | MACB_BF(DATA, regnum & 0xFFFF)
++			    | MACB_BF(CODE, MACB_MAN_C45_CODE)));
 +
- #else /* !HAVE_ZSTD_SUPPORT */
- 
- static inline int zstd_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
-@@ -53,6 +57,13 @@ static inline size_t zstd_compress_stream_to_records(struct zstd_data *data __ma
- 	return 0;
- }
- 
-+static inline size_t zstd_decompress_stream(struct zstd_data *data __maybe_unused, void *src __maybe_unused,
-+		size_t src_size __maybe_unused, void *dst __maybe_unused,
-+		size_t dst_size __maybe_unused)
-+{
-+	return 0;
-+}
++		status = macb_mdio_wait_for_idle(bp);
++		if (status < 0)
++			goto mdio_read_exit;
 +
- #endif
- 
- #endif /* PERF_COMPRESS_H */
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 0ec34227bd60..81b7c09a97d1 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -29,6 +29,67 @@
- #include "stat.h"
- #include "arch/common.h"
- 
-+#ifdef HAVE_ZSTD_SUPPORT
-+static int perf_session__process_compressed_event(struct perf_session *session,
-+					union perf_event *event, u64 file_offset)
-+{
-+	void *src;
-+	size_t decomp_size, src_size;
-+	u64 decomp_last_rem = 0;
-+	size_t decomp_len = session->header.env.comp_mmap_len;
-+	struct decomp *decomp, *decomp_last = session->decomp_last;
-+
-+	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
-+		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
-+	if (decomp == MAP_FAILED) {
-+		pr_err("Couldn't allocate memory for decompression\n");
-+		return -1;
-+	}
-+
-+	decomp->file_pos = file_offset;
-+	decomp->head = 0;
-+
-+	if (decomp_last) {
-+		decomp_last_rem = decomp_last->size - decomp_last->head;
-+		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
-+		decomp->size = decomp_last_rem;
-+	}
-+
-+	src = (void *)event + sizeof(struct compressed_event);
-+	src_size = event->pack.header.size - sizeof(struct compressed_event);
-+
-+	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
-+				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
-+	if (!decomp_size) {
-+		munmap(decomp, sizeof(struct decomp) + decomp_len);
-+		pr_err("Couldn't decompress data\n");
-+		return -1;
-+	}
-+
-+	decomp->size += decomp_size;
-+
-+	if (session->decomp == NULL) {
-+		session->decomp = decomp;
-+		session->decomp_last = decomp;
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
++			    | MACB_BF(RW, MACB_MAN_C45_READ)
++			    | MACB_BF(PHYA, mii_id)
++			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
++			    | MACB_BF(CODE, MACB_MAN_C45_CODE)));
 +	} else {
-+		session->decomp_last->next = decomp;
-+		session->decomp_last = decomp;
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C22_SOF)
++				| MACB_BF(RW, MACB_MAN_C22_READ)
++				| MACB_BF(PHYA, mii_id)
++				| MACB_BF(REGA, regnum)
++				| MACB_BF(CODE, MACB_MAN_C22_CODE)));
 +	}
-+
-+	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
-+
-+	return 0;
-+}
-+#else /* !HAVE_ZSTD_SUPPORT */
-+static int perf_session__process_compressed_event(struct perf_session *session __maybe_unused,
-+				union perf_event *event __maybe_unused,
-+				u64 file_offset __maybe_unused)
-+{
-+	dump_printf(": unhandled!\n");
-+	return 0;
-+}
-+#endif
-+
- static int perf_session__deliver_event(struct perf_session *session,
- 				       union perf_event *event,
- 				       struct perf_tool *tool,
-@@ -196,6 +257,21 @@ static void perf_session__delete_threads(struct perf_session *session)
- 	machine__delete_threads(&session->machines.host);
- }
  
-+static void perf_session__release_decomp_events(struct perf_session *session)
-+{
-+	struct decomp *next, *decomp;
-+	size_t decomp_len;
-+	next = session->decomp;
-+	decomp_len = session->header.env.comp_mmap_len;
-+	do {
-+		decomp = next;
-+		if (decomp == NULL)
-+			break;
-+		next = decomp->next;
-+		munmap(decomp, decomp_len + sizeof(struct decomp));
-+	} while (1);
-+}
-+
- void perf_session__delete(struct perf_session *session)
- {
- 	if (session == NULL)
-@@ -204,6 +280,7 @@ void perf_session__delete(struct perf_session *session)
- 	auxtrace_index__free(&session->auxtrace_index);
- 	perf_session__destroy_kernel_maps(session);
- 	perf_session__delete_threads(session);
-+	perf_session__release_decomp_events(session);
- 	perf_env__exit(&session->header.env);
- 	machines__exit(&session->machines);
- 	if (session->data)
-@@ -429,6 +506,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
- 		tool->time_conv = process_event_op2_stub;
- 	if (tool->feature == NULL)
- 		tool->feature = process_event_op2_stub;
-+	if (tool->compressed == NULL)
-+		tool->compressed = perf_session__process_compressed_event;
- }
+ 	status = macb_mdio_wait_for_idle(bp);
+ 	if (status < 0)
+@@ -378,12 +397,32 @@ static int macb_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+ 	if (status < 0)
+ 		goto mdio_write_exit;
  
- static void swap_sample_id_all(union perf_event *event, void *data)
-@@ -1372,7 +1451,8 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 	int fd = perf_data__fd(session->data);
- 	int err;
- 
--	dump_event(session->evlist, event, file_offset, &sample);
-+	if (event->header.type != PERF_RECORD_COMPRESSED)
-+		dump_event(session->evlist, event, file_offset, &sample);
- 
- 	/* These events are processed right away */
- 	switch (event->header.type) {
-@@ -1425,6 +1505,11 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		return tool->time_conv(session, event);
- 	case PERF_RECORD_HEADER_FEATURE:
- 		return tool->feature(session, event);
-+	case PERF_RECORD_COMPRESSED:
-+		err = tool->compressed(session, event, file_offset);
-+		if (err)
-+			dump_event(session->evlist, event, file_offset, &sample);
-+		return 0;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1707,6 +1792,8 @@ static int perf_session__flush_thread_stacks(struct perf_session *session)
- 
- volatile int session_done;
- 
-+static int __perf_session__process_decomp_events(struct perf_session *session);
+-	macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_SOF)
+-			      | MACB_BF(RW, MACB_MAN_WRITE)
+-			      | MACB_BF(PHYA, mii_id)
+-			      | MACB_BF(REGA, regnum)
+-			      | MACB_BF(CODE, MACB_MAN_CODE)
+-			      | MACB_BF(DATA, value)));
++	if (regnum & MII_ADDR_C45) {
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
++			    | MACB_BF(RW, MACB_MAN_C45_ADDR)
++			    | MACB_BF(PHYA, mii_id)
++			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
++			    | MACB_BF(DATA, regnum & 0xFFFF)
++			    | MACB_BF(CODE, MACB_MAN_C45_CODE)));
 +
- static int __perf_session__process_pipe_events(struct perf_session *session)
- {
- 	struct ordered_events *oe = &session->ordered_events;
-@@ -1787,6 +1874,10 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- 	if (skip > 0)
- 		head += skip;
- 
-+	err = __perf_session__process_decomp_events(session);
-+	if (err)
-+		goto out_err;
++		status = macb_mdio_wait_for_idle(bp);
++		if (status < 0)
++			goto mdio_write_exit;
 +
- 	if (!session_done())
- 		goto more;
- done:
-@@ -1835,6 +1926,38 @@ fetch_mmaped_event(struct perf_session *session,
- 	return event;
- }
- 
-+static int __perf_session__process_decomp_events(struct perf_session *session)
-+{
-+	s64 skip;
-+	u64 size, file_pos = 0;
-+	union perf_event *event;
-+	struct decomp *decomp = session->decomp_last;
-+
-+	if (!decomp)
-+		return 0;
-+
-+	while (decomp->head < decomp->size && !session_done()) {
-+		event = fetch_mmaped_event(session, decomp->head, decomp->size, decomp->data);
-+		if (!event)
-+			break;
-+
-+		size = event->header.size;
-+		if (size < sizeof(struct perf_event_header) ||
-+		    (skip = perf_session__process_event(session, event, file_pos)) < 0) {
-+			pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-+				decomp->file_pos + decomp->head, event->header.size, event->header.type);
-+			return -EINVAL;
-+		}
-+
-+		if (skip)
-+			size += skip;
-+
-+		decomp->head += size;
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
++			    | MACB_BF(RW, MACB_MAN_C45_WRITE)
++			    | MACB_BF(PHYA, mii_id)
++			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
++			    | MACB_BF(CODE, MACB_MAN_C45_CODE)
++			    | MACB_BF(DATA, value)));
++	} else {
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C22_SOF)
++				| MACB_BF(RW, MACB_MAN_C22_WRITE)
++				| MACB_BF(PHYA, mii_id)
++				| MACB_BF(REGA, regnum)
++				| MACB_BF(CODE, MACB_MAN_C22_CODE)
++				| MACB_BF(DATA, value)));
 +	}
-+
-+	return 0;
-+}
-+
- /*
-  * On 64bit we can mmap the data file in one go. No need for tiny mmap
-  * slices. On 32bit we use 32MB.
-@@ -1942,6 +2065,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
- 	head += size;
- 	file_pos += size;
  
-+	err = __perf_session__process_decomp_events(session);
-+	if (err)
-+		goto out;
-+
- 	ui_progress__update(prog, size);
- 
- 	if (session_done())
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 6c984c895924..dd8920b745bc 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -39,6 +39,16 @@ struct perf_session {
- 	u64			bytes_transferred;
- 	u64			bytes_compressed;
- 	struct zstd_data	zstd_data;
-+	struct decomp		*decomp;
-+	struct decomp		*decomp_last;
-+};
-+
-+struct decomp {
-+	struct decomp *next;
-+	u64 file_pos;
-+	u64 head;
-+	size_t size;
-+	char data[];
- };
- 
- struct perf_tool;
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 250391672f9f..9096a6e3de59 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -28,6 +28,7 @@ typedef int (*event_attr_op)(struct perf_tool *tool,
- 
- typedef int (*event_op2)(struct perf_session *session, union perf_event *event);
- typedef s64 (*event_op3)(struct perf_session *session, union perf_event *event);
-+typedef int (*event_op4)(struct perf_session *session, union perf_event *event, u64 data);
- 
- typedef int (*event_oe)(struct perf_tool *tool, union perf_event *event,
- 			struct ordered_events *oe);
-@@ -72,6 +73,7 @@ struct perf_tool {
- 			stat,
- 			stat_round,
- 			feature;
-+	event_op4	compressed;
- 	event_op3	auxtrace;
- 	bool		ordered_events;
- 	bool		ordering_requires_timestamps;
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 6d4f69d57567..15aa02c933ef 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -9,6 +9,21 @@ int zstd_init(struct zstd_data *data, int level)
- {
- 	size_t ret;
- 
-+	data->dstream = ZSTD_createDStream();
-+	if (data->dstream == NULL) {
-+		pr_err("Couldn't create decompression stream.\n");
-+		return -1;
-+	}
-+
-+	ret = ZSTD_initDStream(data->dstream);
-+	if (ZSTD_isError(ret)) {
-+		pr_err("Failed to initialize decompression stream: %s\n", ZSTD_getErrorName(ret));
-+		return -1;
-+	}
-+
-+	if (!level)
-+		return 0;
-+
- 	data->cstream = ZSTD_createCStream();
- 	if (data->cstream == NULL) {
- 		pr_err("Couldn't create compression stream.\n");
-@@ -26,6 +41,11 @@ int zstd_init(struct zstd_data *data, int level)
- 
- int zstd_fini(struct zstd_data *data)
- {
-+	if (data->dstream) {
-+		ZSTD_freeDStream(data->dstream);
-+		data->dstream = NULL;
-+	}
-+
- 	if (data->cstream) {
- 		ZSTD_freeCStream(data->cstream);
- 		data->cstream = NULL;
-@@ -69,3 +89,23 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data,
- 	return compressed;
- }
- 
-+size_t zstd_decompress_stream(struct zstd_data *data,
-+		void *src, size_t src_size, void *dst, size_t dst_size)
-+{
-+	size_t ret;
-+	ZSTD_inBuffer input = { src, src_size, 0 };
-+	ZSTD_outBuffer output = { dst, dst_size, 0 };
-+
-+	while (input.pos < input.size) {
-+		ret = ZSTD_decompressStream(data->dstream, &output, &input);
-+		if (ZSTD_isError(ret)) {
-+			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
-+				src_size, output.size, ZSTD_getErrorName(ret));
-+			break;
-+		}
-+		output.dst  = dst + output.pos;
-+		output.size = dst_size - output.pos;
-+	}
-+
-+	return output.pos;
-+}
+ 	status = macb_mdio_wait_for_idle(bp);
+ 	if (status < 0)
 -- 
-2.20.1
+1.7.1
 
