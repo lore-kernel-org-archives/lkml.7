@@ -2,144 +2,223 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AEBC10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240D3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A36F2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40A42085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:00:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9rJGLTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfCRL5j (ORCPT
+        id S1727246AbfCRMAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:57:39 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:44185 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfCRL5i (ORCPT
+        Mon, 18 Mar 2019 08:00:38 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33099 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfCRMAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:57:38 -0400
-X-Originating-IP: 90.88.22.102
-Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 7368DC0006;
-        Mon, 18 Mar 2019 11:57:34 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 12:57:33 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     icenowy@aosc.io, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        linux-clk@vger.kernel.org
-Subject: Re: [linux-sunxi] Re: [PATCH 04/14] pinctrl: sunxi: v3: really
- introduce support for V3
-Message-ID: <20190318115733.4onedngeaqbm4txp@flea>
-References: <20190312152256.35574-1-icenowy@aosc.io>
- <20190312152256.35574-5-icenowy@aosc.io>
- <20190312153654.25r5orlw7qjtlhbt@flea>
- <7B6C1341-BAB5-48C5-9E60-11BCEAC3D0CD@aosc.io>
- <ef0c3061986b7456605a61f835f2a2003cf4c678.camel@bootlin.com>
+        Mon, 18 Mar 2019 08:00:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q1so1047476wrp.0;
+        Mon, 18 Mar 2019 05:00:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=RWLvj6BvmRHa+gfXxUxVZaw138Eds7RyjO9653Aw53U=;
+        b=Y9rJGLTig/2aIPazRnMZLBAz71HpyVLzMOYf5efxOt9UYS67K8ZOpjWWTIPdOP1LDN
+         8k/wYSqNi3p18er8wRLmwKVge5xcgb2aYDnaKknX3cxPW1O40OQDlCwJDXyPIInW+SnZ
+         UkYzHGj597RY3hy2kOFvbl9QK3uFNS61iX9Ccj4lTyTMnrRjK/urUluta3PXcz0k1mGF
+         z2i0Vv2lVN2wMtcifYmbCLJMdcOEruqNQq2jlJcTbCoX6H0F05qgdWiM4mMNNMRpAMhp
+         AfSGC3FumdAzxgwFYKrO7eZPv4WNbD8y3QOGhAAGqHuMfVbSvf12rtezjmg5yq/OHYqN
+         XrzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=RWLvj6BvmRHa+gfXxUxVZaw138Eds7RyjO9653Aw53U=;
+        b=oQTD5kAsWgZGHjlJuH7khWstawM9KVw5NUNvsaDhvJ67Bg+T9mgfF6AgDtE6eiTNbL
+         zoYZ3T6nX+pfIT98JDwQF9xcU3lQt32mQOeA3I4M4sPB3TIsph1+jpMPuwsiQYutSSRW
+         Qc3JciiILbBjXRzXhVLtOU6Ai0I7Vr7xK9uSwbSnzh6Tq/k9N7mU8dP0VOZaHE2aL5GT
+         FFCL5eOYLPhrxm6FN5qp/cvH315uMY8x2O3Li04R0Wx8XLoIIOA/1PzP2QIYbBfCkQ0o
+         TzsBMYufQk0gtomMxbk6Cm27A/E1sCvhxBqO8u3fDtsAxOgCFPKr0xN3THPNtZgQCb2I
+         1yiw==
+X-Gm-Message-State: APjAAAUwV/5Y5VL6uAJDRuoQSYhgv3H7zNmwNvfn430JRs8DEz9ZoBv6
+        f8/Oo9gm1BkmcuTPrB90NHc=
+X-Google-Smtp-Source: APXvYqzG89SWJzfYW93CAjsIUGJOCbcRQ1J3UwPM3irSPqrkrsDFYZQNh0lfPkMrywmgncZ9CGLH+g==
+X-Received: by 2002:adf:ebce:: with SMTP id v14mr11440202wrn.69.1552910434915;
+        Mon, 18 Mar 2019 05:00:34 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id e12sm3969079wrt.94.2019.03.18.05.00.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 05:00:33 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 13:00:32 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Renato Soma <renatoys08@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        mistave@countermail.com
+Subject: Re: [PATCH 0/1] platform/x86: dell-wmi: Uncomment events that were
+Message-ID: <20190318120032.nynbshqudmlslxxz@pali>
+References: <20190316010942.6448-1-renatoys08@gmail.com>
+ <20190316091756.2zfccpnhfnjogktp@pali>
+ <20190317183049.GA5989@rys-Inspiron-5420>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kfiqbz764gzlm462"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ef0c3061986b7456605a61f835f2a2003cf4c678.camel@bootlin.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190317183049.GA5989@rys-Inspiron-5420>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello!
 
---kfiqbz764gzlm462
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sunday 17 March 2019 15:30:49 Renato Soma wrote:
+> Hello,
+> 
+> On Sat, Mar 16, 2019 at 10:17:56AM +0100, Pali Rohár wrote:
+> > 
+> > Looks like that those keys are not as obvious as you wrote. Look at my
+> > email with some investigation about Dell Audio With Preset Switch key:
+> > https://www.spinics.net/lists/platform-driver-x86/msg15593.html
+> > 
+> > Also there is another user who wrote about 0xe02c key generated by
+> > Inspirion 7520: https://ubuntuforum-br.org/index.php?topic=105434.0
+> > 
+> > You can a testing machine 5420, can you prove that behavior described in
+> > my previous email match also your machine?
+> > 
+> 
+> Thanks for the feedback, I was unaware of this issue.
+> I've performed some tests in my machine and this is what I've found so far:
+> 
+> =====================================================================
+> 
+> ----------------------------------------
+> Left WMI key: Windows Mobility Center
+> Press:    'x'
+> Hold:     -
+> Release:  -
+> 
+> In my machine (Inspiron 5420), whenever I press this key, the key
+> outputs the character "x". I've seen nothing on dmesg even if I
+> keep this key pressed for longer amounts of time. I'm still trying
+> to understand why this is hapenning.
 
-On Mon, Mar 18, 2019 at 12:05:12PM +0100, Paul Kocialkowski wrote:
-> Hi,
->
-> Le mardi 12 mars 2019 =C3=A0 23:45 +0800, Icenowy Zheng a =C3=A9crit :
-> >
-> > =E4=BA=8E 2019=E5=B9=B43=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=8811:36:54, Maxime Ripard <maxime.ripard@bootlin.com> =E5=86=99=E5=88=B0:
-> > > On Tue, Mar 12, 2019 at 11:22:46PM +0800, Icenowy Zheng wrote:
-> > > > Introduce the GPIO pins that is only available on V3 (not on V3s) to
-> > > the
-> > > > V3 pinctrl driver.
-> > > >
-> > > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > > > ---
-> > > >  drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c | 291
-> > > +++++++++++++++++++++--
-> > > >  drivers/pinctrl/sunxi/pinctrl-sunxi.h    |   2 +
-> > > >  2 files changed, 275 insertions(+), 18 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> > > b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> > > > index 6704ce8e5e3d..54c210871a95 100644
-> > > > --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> > > > +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
-> > > > @@ -1,5 +1,5 @@
-> > > >  /*
-> > > > - * Allwinner V3s SoCs pinctrl driver.
-> > > > + * Allwinner V3/V3s SoCs pinctrl driver.
-> > > >   *
-> > > >   * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
-> > > >   *
-> > > > @@ -23,7 +23,7 @@
-> > > >
-> > > >  #include "pinctrl-sunxi.h"
-> > > >
-> > > > -static const struct sunxi_desc_pin sun8i_v3s_pins[] =3D {
-> > > > +static const struct sunxi_desc_pin sun8i_v3_v3s_pins[] =3D {
-> > >
-> > > I'm not sure all that remaining is worth it to be honest. It adds a
-> > > lot of noise for no particular reason (and the same goes for renaming
-> > > the file itself)
-> >
-> > Maybe keeping names is okay "for historial reasons".
-> >
-> > In fact I want to keep them.
->
-> My two cents about this: kernel development is plagued by the unability
-> to rename and rework things as soon as backward compatibility is
-> involved. I believe that renaming and reworking things is quite a good
-> thing to do when it leads to a situation that is easier to understand
-> and makes more sense.
->
-> In this case, I don't see any blockers that would prevent us from doing
-> this, so I am strongly in favor of it. I really don't see how increased
-> noise and "historical reasons" make up for better clarity.
+This is strange. Is not also some Alt/Meta/Ctrl or other modifier sent
+too? Because Meta+X could be some windows shortcut...
 
-It simplifies the git history, for once, which has the side effect of
-reducing conflicts too.
+> 
+> ----------------------------------------
+> Middle WMI key: Dell Audio With Preset Switch
+> Press:    Key with type 0x0000 and code 0xe02a pressed
+> Hold:     -
+> Release:  Key with type 0x0000 and code 0xe02b pressed
+> 
+> Differently from what you saw on a Inspiron 7520, I could not
+> reproduce the behavior that you reported on the first link above.
+> In my case, when I press the key, the code 0xe02a is shown at dmesg
+> only once. Also, even though I keep it pressed for longer than ~30
+> seconds or so, I could not see the entry 0xe02c apper. More on that
+> behavior later on. When releasing the key, I can see the code 0xe02b
+> show up at dmesg.
+> 
+> ----------------------------------------
+> Right WMI key: Dell Instant Launch
+> Press:    -
+> Hold:     -
+> Release:  -
+> 
+> This key is with a really weird behavior on my machine.
+> When testing, I would normally press and relase so that the following
+> messages would pop-up:
+> 
+> [ 2830.499420] atkbd serio0: Unknown key pressed (translated set 2,
+> code 0x60 on isa0060/serio0).
+> [ 2830.499422] atkbd serio0: Use 'setkeycodes 60 <keycode>'
+> to make it known.
 
-A second one is: Do you prefer to review patches that have some
-significant value (like a new feature, a bugfix, a new SoC support,
-etc) or one that renames files and / or symbols?
+This means that you have not configured atkbd keycodes yet. Run
+setkeycodecs and assign some keycode for that scancode 60. After that
+kernel atkbd (PS/2 keyboard) starts sending events to userspace.
 
-Maxime
+> But what I realized was that, if I kept this button pressed for about
+> ~3 seconds or so (like when your experiment in the link above), dmesg
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+That experiment is not my, Mistave did it. Now I'm CCing.
 
---kfiqbz764gzlm462
-Content-Type: application/pgp-signature; name="signature.asc"
+> would not ouput anything untill those ~3 seconds elapsed. When they
+> did, then dmesg log would have the following entries:
+> 
+> [ 3058.494003] atkbd serio0: Unknown key pressed (translated set 2,
+> code 0x60 on isa0060/serio0).
+> [ 3058.494008] atkbd serio0: Use 'setkeycodes 60 <keycode>'
+> to make it known.
+> [ 3058.501494] dell_wmi: Unknown key with type 0x0000 and code
+> 0xe028 pressed
+> 
+> The last message being the weirdest, It would seem that only after
+> about 3 seconds or so, the driver is being notified of it.
 
------BEGIN PGP SIGNATURE-----
+There are two ways how Dell firmware can inform operating system that
+key was pressed. Notebook keyboard is connected to motherboard via
+classic PS/2 port (of PS/2 port is emulated for OS). So operating system
+sees PS/2 keyboard and key pressed are received by PS/2 atkbd driver.
+For some (unknown/strange?) reasons firmware send some keys not via PS/2
+keyboard port, but via ACPI interface, hence needs for dell_wmi driver
+which handle them.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXI+HnwAKCRDj7w1vZxhR
-xfbaAP4tTPJsX9kjGgO2E96g98P/Y+TcQb27RkXk4LjnteSexAEAw1P3kGgeQQ04
-LmZksUSSEkd+Gy4cLhehmv11w/aPWAo=
-=CCMo
------END PGP SIGNATURE-----
+So some keypress events come via PS/2, some via ACPI-WMI. Linux kernel
+then send all keypress events to userspace.
 
---kfiqbz764gzlm462--
+When debugging problems with hot keys, you always need to look at all
+possible sources...
+
+> =====================================================================
+> 
+> Anyway, It's clear now that this patch trully makes no sense since the
+> hardwares (Inspiron 7520 x Inspiron 5420) are behaving somewhat
+> differently on these keys.
+> 
+> Either way, It seems that at both of them, there are three behaviors
+> that are strange. I'm still trying to learn kernel development (I'm a
+> newbie) so could you please point out whether this is worth it to
+> investigate, or if should I leave this as is?
+
+dell-wmi.c is a driver for receiving APCI-WMI events; atkbd.c is a PS/2
+keyboard driver.
+
+In dell-wmi.c is a function dell_wmi_events_set_enabled which is needed
+to call on some Dell machines to start receiving those ACPI-WMI events.
+You can try to call it for your laptop, maybe it is needed too.
+Currently it is called only for two laptop models, see table
+dell_wmi_smbios_list.
+
+> In the meantime, I'll try to find out why the first button is outputting
+> an "x" character on my machine.
+
+Check that you caught all keypresses. X11 tools just print keys known to
+X server, not all which are supported by Linux kernel.
+
+You can use e.g. input-events utility. And also check all input devices,
+as wrote some keys are send via PS/2 keyboard input device, some via
+ACPI-WMI input device.
+
+> Thanks!
+> Renato
+
+Also I added Mario from Dell to list of receivers, maybe he could have
+more details about this problem...
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
