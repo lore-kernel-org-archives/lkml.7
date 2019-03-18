@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7A8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589AAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19CC32083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285C52075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901910;
-	bh=bupNWLf220FyMFJhBZYvxcQCePHCOtj5i6/h7g15GRM=;
+	s=default; t=1552901924;
+	bh=oYoYZV8mqzlxaxx93XOfSMg83lepof+eqoLletY2qOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y0jWG22S36RCsM66/xDCQ6ZYJVRuyGI3+zc+ccWUHsaxvVp+5tc4JP7LCAM66qKbu
-	 6OSyhpI9cAkmcRsfQPFlCfQXNqRS7OGS0cSIYL9i5hjWPBTCTMyuD9xHH5FeGklpit
-	 gLWxbXruEw+zhTiMF4yE8yzPf2cu07xR36cQRXWg=
+	b=K/PrNkjxfpnrkCCPHGgGQGsb8G/HXOOpWoezoJcqQ44UnEX02lfZJj0d9oIJRG1nM
+	 to0DTlc45hKgRALXWJkzTY7gXO+h2f4nifELxY5eaKzUh9ShfGfFWdq1Evbp3A+8N6
+	 Ecp/jOjLr93KptRHwf+F+xdO5nYFmR+v/ECT8hUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387568AbfCRJi3 (ORCPT
+        id S2387778AbfCRJhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45660 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:37:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387831AbfCRJhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:37:20 -0400
+        id S2387757AbfCRJhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:37:00 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B1582175B;
-        Mon, 18 Mar 2019 09:37:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 880B62075C;
+        Mon, 18 Mar 2019 09:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901839;
-        bh=bupNWLf220FyMFJhBZYvxcQCePHCOtj5i6/h7g15GRM=;
+        s=default; t=1552901820;
+        bh=oYoYZV8mqzlxaxx93XOfSMg83lepof+eqoLletY2qOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mq2gy0ZQ2IsIzXgfUchyoTSbOhC/wTzvl0DYFf6/KD9wNKvRcxJsT7Lghqk7rUSbM
-         mxy9vp4mIJhSrLG3eMwFfW5yIr3XTAejr4VO+0oVQHM9CDSGSQi1upXOSxV5rmzhEW
-         PwsgxshPw1SG/EQWFG3Bz8+vBqLK2K5GckG1oeOs=
+        b=PcxdW74coIPwwfsawUxCwC7O8Q+K0vYtUoEmKxPKtOBCnVwP52f/fcLHkReK8u63W
+         eFdXIPKhJe6mtDhGsy+0p+vOAFQbBob7sGRMI1xRmkO3TilwTvdACY6yazyvtFl0L2
+         D7A6wm0O+/z9EjK8NfkFu6T2SlZDmiYN4trQK2TM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 03/31] l2tp: fix infoleak in l2tp_ip6_recvmsg()
-Date:   Mon, 18 Mar 2019 10:25:38 +0100
-Message-Id: <20190318084210.527455494@linuxfoundation.org>
+Subject: [PATCH 4.9 23/31] rxrpc: Fix client call queueing, waiting for channel
+Date:   Mon, 18 Mar 2019 10:25:58 +0100
+Message-Id: <20190318084211.344832305@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
 References: <20190318084210.397476003@linuxfoundation.org>
@@ -65,83 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 163d1c3d6f17556ed3c340d3789ea93be95d6c28 ]
+[ Upstream commit 69ffaebb90369ce08657b5aea4896777b9d6e8fc ]
 
-Back in 2013 Hannes took care of most of such leaks in commit
-bceaa90240b6 ("inet: prevent leakage of uninitialized memory to user in recv syscalls")
+rxrpc_get_client_conn() adds a new call to the front of the waiting_calls
+queue if the connection it's going to use already exists.  This is bad as
+it allows calls to get starved out.
 
-But the bug in l2tp_ip6_recvmsg() has not been fixed.
+Fix this by adding to the tail instead.
 
-syzbot report :
+Also change the other enqueue point in the same function to put it on the
+front (ie. when we have a new connection).  This makes the point that in
+the case of a new connection the new call goes at the front (though it
+doesn't actually matter since the queue should be unoccupied).
 
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-CPU: 1 PID: 10996 Comm: syz-executor362 Not tainted 5.0.0+ #11
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x173/0x1d0 lib/dump_stack.c:113
- kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
- kmsan_internal_check_memory+0x9f4/0xb10 mm/kmsan/kmsan.c:694
- kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:601
- _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
- copy_to_user include/linux/uaccess.h:174 [inline]
- move_addr_to_user+0x311/0x570 net/socket.c:227
- ___sys_recvmsg+0xb65/0x1310 net/socket.c:2283
- do_recvmmsg+0x646/0x10c0 net/socket.c:2390
- __sys_recvmmsg net/socket.c:2469 [inline]
- __do_sys_recvmmsg net/socket.c:2492 [inline]
- __se_sys_recvmmsg+0x1d1/0x350 net/socket.c:2485
- __x64_sys_recvmmsg+0x62/0x80 net/socket.c:2485
- do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x445819
-Code: e8 6c b6 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f64453eddb8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
-RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 0000000000445819
-RDX: 0000000000000005 RSI: 0000000020002f80 RDI: 0000000000000003
-RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
-R13: 00007ffeba8f87af R14: 00007f64453ee9c0 R15: 20c49ba5e353f7cf
-
-Local variable description: ----addr@___sys_recvmsg
-Variable was created at:
- ___sys_recvmsg+0xf6/0x1310 net/socket.c:2244
- do_recvmmsg+0x646/0x10c0 net/socket.c:2390
-
-Bytes 0-31 of 32 are uninitialized
-Memory access of size 32 starts at ffff8880ae62fbb0
-Data copied to user address 0000000020000000
-
-Fixes: a32e0eec7042 ("l2tp: introduce L2TPv3 IP encapsulation support for IPv6")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_ip6.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/rxrpc/conn_client.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/l2tp/l2tp_ip6.c
-+++ b/net/l2tp/l2tp_ip6.c
-@@ -680,9 +680,6 @@ static int l2tp_ip6_recvmsg(struct sock
- 	if (flags & MSG_OOB)
- 		goto out;
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -355,7 +355,7 @@ static int rxrpc_get_client_conn(struct
+ 	 * normally have to take channel_lock but we do this before anyone else
+ 	 * can see the connection.
+ 	 */
+-	list_add_tail(&call->chan_wait_link, &candidate->waiting_calls);
++	list_add(&call->chan_wait_link, &candidate->waiting_calls);
  
--	if (addr_len)
--		*addr_len = sizeof(*lsa);
--
- 	if (flags & MSG_ERRQUEUE)
- 		return ipv6_recv_error(sk, msg, len, addr_len);
- 
-@@ -712,6 +709,7 @@ static int l2tp_ip6_recvmsg(struct sock
- 		lsa->l2tp_conn_id = 0;
- 		if (ipv6_addr_type(&lsa->l2tp_addr) & IPV6_ADDR_LINKLOCAL)
- 			lsa->l2tp_scope_id = inet6_iif(skb);
-+		*addr_len = sizeof(*lsa);
- 	}
- 
- 	if (np->rxopt.all)
+ 	if (cp->exclusive) {
+ 		call->conn = candidate;
+@@ -430,7 +430,7 @@ found_extant_conn:
+ 	spin_lock(&conn->channel_lock);
+ 	call->conn = conn;
+ 	call->security_ix = conn->security_ix;
+-	list_add(&call->chan_wait_link, &conn->waiting_calls);
++	list_add_tail(&call->chan_wait_link, &conn->waiting_calls);
+ 	spin_unlock(&conn->channel_lock);
+ 	_leave(" = 0 [extant %d]", conn->debug_id);
+ 	return 0;
 
 
