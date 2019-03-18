@@ -2,148 +2,162 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC62C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26C9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34DC204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99378204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ENBhy1Ul"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAUo0nfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfCRJuT (ORCPT
+        id S1727392AbfCRJvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:50:19 -0400
-Received: from mail-eopbgr40067.outbound.protection.outlook.com ([40.107.4.67]:29825
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727022AbfCRJuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:50:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RMvC5JkqiyTBm8ny3zVe1+ccnpmi4XitE626onBKKvg=;
- b=ENBhy1UlcCNiD2+38DYvrB+5SHJiPA9YN8obqO9WU6hmnc26SICPAtPpwVUu8ZaR8K4jBmq+0HYzh3/d4C3av42oEj+nAA2jaxliLlmpu0DFrLVXfYxq5RKizuKAG25fXbVr54zYA0ykz93kfdwMjCrorTKIYKyzdfcpdi/WYgA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3673.eurprd04.prod.outlook.com (52.134.70.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Mon, 18 Mar 2019 09:50:01 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%6]) with mapi id 15.20.1709.015; Mon, 18 Mar 2019
- 09:50:01 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Stefan Agner <stefan@agner.ch>
-CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V5 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Thread-Topic: [PATCH V5 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Thread-Index: AQHU3V4B0+Op6lebhUq7cDF33YTb6qYRC60AgAAZROA=
-Date:   Mon, 18 Mar 2019 09:50:01 +0000
-Message-ID: <DB3PR0402MB3916ABEA308378751FE54D21F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1552894581-3391-1-git-send-email-Anson.Huang@nxp.com>
- <1552894581-3391-2-git-send-email-Anson.Huang@nxp.com>
- <d1f8b006ad56e8ed4e9fb9137148d98b@agner.ch>
-In-Reply-To: <d1f8b006ad56e8ed4e9fb9137148d98b@agner.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.69]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d3eb431a-e644-4761-5538-08d6ab871707
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3673;
-x-ms-traffictypediagnostic: DB3PR0402MB3673:
-x-microsoft-antispam-prvs: <DB3PR0402MB3673DE2661183C173D48FC6DF5470@DB3PR0402MB3673.eurprd04.prod.outlook.com>
-x-forefront-prvs: 098076C36C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(396003)(39860400002)(366004)(346002)(376002)(136003)(199004)(189003)(13464003)(54906003)(71190400001)(74316002)(44832011)(7736002)(71200400001)(316002)(33656002)(305945005)(68736007)(53936002)(478600001)(8676002)(52536014)(229853002)(66066001)(256004)(5660300002)(81156014)(486006)(6116002)(97736004)(3846002)(11346002)(86362001)(446003)(81166006)(6436002)(186003)(476003)(6246003)(6916009)(7696005)(7416002)(14454004)(25786009)(76176011)(2906002)(106356001)(55016002)(9686003)(105586002)(4326008)(8936002)(102836004)(6506007)(53546011)(99286004)(26005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3673;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xm4mLAIAInjrgMfuPEKwAUPBbkkaduYIIBqIAj+wSE37IDLA/CTA10wdjw1lCFQUAiU/02zBsmtpvu989z9OnaJXvBYmz2ZIQzWWBk042kpCxj3ct0WQwVRyy7Ok/19UcT5/er3xeUcoJe/GPmM4dPAVBSWNrzbdKdln8NMsqMGGgUGDtP1lasXPwKFrYGwbRTqEqOjA2rTW1KGA7vlnEhELNgWfoR4j/hcJgcT8zJ/6DyyFkLv3hg9nr9DEUaplUWRouheR7Myd4r47wUWkTdtvyE//zSCG1hz/mZyarMppwfIkvpp5s3cJ8mjMv6hjBuqTJXpyEp5TdpvG04ga+SQH5sjIERz3cYD/noaKkah39FqHLs20xIT4TcxsiSr60BGapnhhC8YE0wwakvpqZMwUTfVp4JDlgVHYyo8yKhE=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Mon, 18 Mar 2019 05:51:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52229 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfCRJvP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:51:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f65so12268057wma.2;
+        Mon, 18 Mar 2019 02:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jn9DbH2H05TIFixZN45OK52MBjhjC+Xl13SJV9EtboY=;
+        b=oAUo0nfHX+N4/6+NvVwzquYLJKEcb31ZB+ckJO3P2YvZYAssYlbdooN+/OJtIYRvCL
+         ygEB5Z61nXn/70hUdBpYvfjOlJ/rpD5P+d/d8VGMKzQCQzcvpUxHhAO5PCGSU7BrK0C2
+         ROSD87WZ1THksPyqZ2CaoC6sPiibmzmMoDe80XoCaRNeb+F8/ysVUHDlJOrG9dLCBznG
+         dEOtvvUU3dHpzmSwc660+o/6OTYguzI2ftGo3qrbJdia32lJsm8oW0ntlJxMfZNBVy8e
+         +uO8SVXFlRrCQh2UC8F4b44qYaIwBOLOvHTTZt6/P7rUtVADiFMbdft8nfa5HRJBZtKS
+         92Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jn9DbH2H05TIFixZN45OK52MBjhjC+Xl13SJV9EtboY=;
+        b=F+8KpBTc4a/MlIRNEyi3NXazAHWRx+bwDInWxeomBlyBUUgF6uo2nRXrbcykfM7zy+
+         eeNQ9u2SSQKqdYFOkxP4bLRWYOtp+ph/2wBvG8wyNZb4aYlIW0sjZwnRxjOXI96n1D+m
+         EqiI8fUkiXZjlCoSUSGzoaVobAoiaofbdQW5KWCKPi1t3/B8oWYTUk5MQt0DgDacaOvF
+         fnB3bv8NB2eu0nWI+siHdJ/Aosd9jITnM+m0Lb8IaTXMcoLgS0Lir+eBeuVoHZBfDW7J
+         9goMm2BEvj847yfgKxuqTsjGnYrvsxPinnYqcMLyW2+ukg0fqFHmXI/KISCxgpOjXK+H
+         mqWA==
+X-Gm-Message-State: APjAAAX2qsce6wIQ0RE+j3JD7gm6nF+PuAp9VibZU4MKuSeXMW+q70Zv
+        c4e3ALeMUsPoxEWlkRXQCM8=
+X-Google-Smtp-Source: APXvYqxPvohcsuUKTFfOBbe5UQllEd/5lqU8yoROkuXap4g34hmtQwz25yxBbcWcyQGselDm45zTSw==
+X-Received: by 2002:a1c:b783:: with SMTP id h125mr9855694wmf.119.1552902673216;
+        Mon, 18 Mar 2019 02:51:13 -0700 (PDT)
+Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
+        by smtp.gmail.com with ESMTPSA id b134sm7746307wmd.26.2019.03.18.02.51.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 02:51:12 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 10:51:11 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Yash Shah <yash.shah@sifive.com>, palmer@sifive.com,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com, paul.walmsley@sifive.com
+Subject: Re: [PATCH v9 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Message-ID: <20190318095111.GA17565@ulmo>
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+ <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
+ <20190312091739.fhv2hb2ll2eamdsn@pengutronix.de>
+ <20190312121218.GM31026@ulmo>
+ <20190312131712.rxiarnthcfrsgdqn@pengutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3eb431a-e644-4761-5538-08d6ab871707
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 09:50:01.3284
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3673
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
+Content-Disposition: inline
+In-Reply-To: <20190312131712.rxiarnthcfrsgdqn@pengutronix.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFN0ZWZhbg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN0ZWZhbiBBZ25lciBbbWFpbHRvOnN0ZWZhbkBhZ25l
-ci5jaF0NCj4gU2VudDogMjAxOcTqM9TCMTjI1SAxNjoxOQ0KPiBUbzogQW5zb24gSHVhbmcgPGFu
-c29uLmh1YW5nQG54cC5jb20+DQo+IENjOiB0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb207IHJvYmgr
-ZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXduZ3VvQGtlcm5lbC5v
-cmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZmVz
-dGV2YW1AZ21haWwuY29tOyBsaW51eEBhcm1saW51eC5vcmcudWs7IG90YXZpb0Bvc3N5c3RlbXMu
-Y29tLmJyOw0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsgUm9i
-aW4gR29uZw0KPiA8eWliaW4uZ29uZ0BueHAuY29tPjsgamFuLnR1ZXJrQGVtdHJpb24uY29tOyBs
-aW51eC0NCj4gcHdtQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IHUua2xlaW5lLQ0KPiBrb2VuaWdAcGVuZ3V0cm9uaXguZGU7IGRsLWxp
-bnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjUgMS81
-XSBkdC1iaW5kaW5nczogcHdtOiBBZGQgaS5NWCBUUE0gUFdNIGJpbmRpbmcNCj4gDQo+IE9uIDE4
-LjAzLjIwMTkgMDg6NDEsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IEFkZCBpLk1YIFRQTShMb3cg
-UG93ZXIgVGltZXIvUHVsc2UgV2lkdGggTW9kdWxhdGlvbiBNb2R1bGUpIFBXTQ0KPiBiaW5kaW5n
-Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5j
-b20+DQo+ID4gLS0tDQo+ID4gTm8gY2hhbmdlcy4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBtLXB3bS50eHQgfCAxOQ0KPiA+ICsrKysr
-KysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykNCj4g
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3B3bS9pbXgtdHBtLXB3bS50eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2lteC10cG0tcHdtLnR4dA0KPiA+IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtdHBtLXB3bS50eHQNCj4gPiBuZXcg
-ZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLmQ0N2I4ZmINCj4gPiAtLS0gL2Rl
-di9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9p
-bXgtdHBtLXB3bS50eHQNCj4gPiBAQCAtMCwwICsxLDE5IEBADQo+ID4gK0ZyZWVzY2FsZSBpLk1Y
-IFRQTSBQV00gY29udHJvbGxlcg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
-PiArLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2wsaW14LXRwbS1wd20iLg0KPiA+ICstIHJl
-ZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyBy
-ZWdpc3RlcnMuDQo+ID4gKy0gI3B3bS1jZWxsczogU2hvdWxkIGJlIDIuIFNlZSBwd20udHh0IGlu
-IHRoaXMgZGlyZWN0b3J5IGZvciBhDQo+ID4gZGVzY3JpcHRpb24gb2YgdGhlIGNlbGxzIGZvcm1h
-dC4NCj4gDQo+IEl0IHNlZW1zIHRoYXQgdGhlIGRyaXZlciBzdXBwb3J0cyBwb2xhcml0eS4gQ2Fu
-IHdlIHVzZSAzIGNlbGxzIHNvIHdlIGNhbg0KPiBzcGVjaWZ5IHRoZSBwb2xhcml0eSBpbiB0aGUg
-ZGV2aWNlIHRyZWU/DQo+IA0KPiBBbHNvIHVzZSAzIGNlbGxzIGluIHRoZSBiYXNlIGRldmljZSB0
-cmVlIHRvIGVuYWJsZSBvdGhlciBib2FyZHMgbWFraW5nIHVzZSBvZg0KPiB0aGUgcG9sYXJpdHkg
-KGFyY2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAuZHRzaSkuDQoNCkl0IG1ha2VzIHNlbnNlLCBJIHdp
-bGwgY2hhbmdlIGl0IHRvIDMgY2VsbHMgYW5kIHNwZWNpZnkgdGhlIHBvbGFyaXR5IGluIGJhY2ts
-aWdodCBub2RlLg0KDQpBbnNvbi4NCg0KPiANCj4gLS0NCj4gU3RlZmFuDQo+IA0KPiA+ICstIGNs
-b2NrcyA6IFRoZSBjbG9jayBwcm92aWRlZCBieSB0aGUgU29DIHRvIGRyaXZlIHRoZSBQV00uDQo+
-ID4gKy0gaW50ZXJydXB0czogVGhlIGludGVycnVwdCBmb3IgdGhlIHB3bSBjb250cm9sbGVyLg0K
-PiA+ICsNCj4gPiArRXhhbXBsZToNCj4gPiArDQo+ID4gK3B3bTA6IHRwbUA0MDI1MDAwMCB7DQo+
-ID4gKwljb21wYXRpYmxlID0gImZzbCxpbXgtdHBtLXB3bSI7DQo+ID4gKwlyZWcgPSA8MHg0MDI1
-MDAwMCAweDEwMDA+Ow0KPiA+ICsJYXNzaWduZWQtY2xvY2tzID0gPCZjbGtzIElNWDdVTFBfQ0xL
-X0xQVFBNND47DQo+ID4gKwlhc3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPCZjbGtzIElNWDdVTFBf
-Q0xLX1NPU0NfQlVTX0NMSz47DQo+ID4gKwljbG9ja3MgPSA8JmNsa3MgSU1YN1VMUF9DTEtfTFBU
-UE00PjsNCj4gPiArCSNwd20tY2VsbHMgPSA8Mj47DQo+ID4gK307DQo=
+
+--gKMricLos+KVdGMg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 12, 2019 at 02:17:12PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> On Tue, Mar 12, 2019 at 01:12:18PM +0100, Thierry Reding wrote:
+> > On Tue, Mar 12, 2019 at 10:17:39AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+[...]
+> > > There are a few other things that could be improved, but I think they
+> > > could be addressed later. For some of these I don't even know what to
+> > > suggest, for some Thierry might not agree it is worth fixing:
+> > >=20
+> > >  - rounding
+> > >    how to round? When should a request declined, when is rounding ok?
+> > >    There is still "if (state->period !=3D pwm->approx_period) return =
+-EBUSY"
+> > >    in this driver. This is better than before, but if state-period =
+=3D=3D
+> > >    pwm->approx_period + 1 the result (if accepted) might be the same =
+as
+> > >    without the +1 and so returning -EBUSY for one case and accepting =
+the
+> > >    other is strange.
+> >=20
+> > Perhaps a good idea would be to reject a configuration only after we've
+> > determined that it is incompatible? If we're really going to end up with
+> > the same configuration within a given margin of period or duty cycle and
+> > we can't do much about it, there's little point in rejecting such
+> > configurations.
+>=20
+> It seems we agree here. Is this important enough to delay taking this
+> driver further? Currently the driver rejects too broad so if it annoys
+> someone this can still be fixed later and there is only little harm
+> (assuming correct error handling in the consumers).
+
+I don't think it has to be a blocker. As you said, we'd be giving users
+more flexibility, not restricting them, so it should be fine to do later
+on.
+
+> > >  - don't call PWM API functions designed for consumers (here: pwm_get=
+_state)
+> >=20
+> > Agreed. The driver can just access pwm_device.state directly.
+>=20
+> I wouldn't do this either. IMHO the driver should only look into its
+> hardware registers instead of using framework interna (or consumer API
+> calls).
+
+The current hardware state is already the software representation of
+what the hardware has programmed. I think it's fair for drivers to make
+use of that in order to avoid having to read back from hardware.
+Especially if reading back from hardware might require switching on the
+module to access registers.
+
+Thierry
+
+--gKMricLos+KVdGMg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyPagwACgkQ3SOs138+
+s6H2nxAArlQ9omVBBACn60oV5Ix/6fZlOeffFJBYaCFea3XjU38SSI1hS3QM75JQ
+B55cEC2AKQy4vQykZmTBPGWhit09tKv2MXwLMwKRxEXktC/wxNc1MTh7h9MeiH9M
+LJ5iL7wwGjyHlzTTVA5r+lgU2Avg8LdXeex7hgo5rYrDEPu9sDglU7eO7YUKhHX1
+QsTeKgLoFE1Ne38PbMBKA3nA9llcm6rdrhLLzss6Q9+wQQSYuPYToSH/pHWqo3BL
+86JqYuja7EQf26BJMiA5aOdyq56IdMtD286XDV0+VGEiih9WQZbKuhUKMIHSLH9C
+YgN3oPonjvVI6xq1aEHvp1n6sma2vbFKX+nvOeOGmCizRAY/gx/UzC3M44y9JQWO
+o0jKCgtnJr+kYn8GFDqgQBNwhwN9GtQ7Bjv+lXqPIdnCUjxgtzLW1VxsXccz5w9+
+o1SmJOAmBIfV/bnwhZpMiSoSCl3pnm+ohjBh3Qom2nIJxgmkV5xesPB06phijNZS
+ZEzh2hUcpvAr5+tH+WxRysRp7Ee6w0KVzsyrAsezgxth5f78Pw9XRJyPnQy415Pz
+4IlmHDoinYvDcOn0ZL6odF8rirlBqZ7lmOK2av0LRix0XVV02Y8FTZ2LPepHOZSV
+wXcHzBhpezIG65ICYL6SFBDfiIDLzWuaDr9WIRJn0RYu1LxpdGs=
+=X4jv
+-----END PGP SIGNATURE-----
+
+--gKMricLos+KVdGMg--
