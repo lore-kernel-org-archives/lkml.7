@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3F0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFB6C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0572075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBAAE2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901879;
-	bh=OZJ5IHnoXbgwtayRjLqWOSDr/fkquP7Z016tsh7le5Q=;
+	s=default; t=1552901887;
+	bh=GrV9C3xVM3x4DVkNI01T4Q7+yrIACjCNSIwfQfLiOXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=whrQXhe1NukhaCec9rWE5K8PnwYXm6sdGwEOMPlR77lexzgs3uLoSuvZtDMUkhnkL
-	 jN+NrzRjP6nyaUnUGD70WdDva8Wewpij6ALzRLnclimCIVtoheMtIhjYCrL1Jmf4Mu
-	 +xW0Fs+5aEbS3zPJ2ZVF+8Z8ITXC5rWb9Wp89cWk=
+	b=feUP6OCAQy+FY/kRTU/+yDA90RCDLoyPMNMzrO9/QkDCJsD/17yGFetVxsVDzEDY8
+	 1xM6BKYzx4yoPhWaRN1yCW8ZyKA3+ea3HPiIFk+lApPMllA7V8i7qQada3Xw5nN+Jw
+	 uXN7gItHEDAcwXCaOBnamwQJbsBIORZhujU/K9ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387947AbfCRJhr (ORCPT
+        id S2387914AbfCRJhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46070 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387936AbfCRJho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:37:44 -0400
+        id S2387901AbfCRJhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:37:34 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88F322087C;
-        Mon, 18 Mar 2019 09:37:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8DDC214AF;
+        Mon, 18 Mar 2019 09:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901864;
-        bh=OZJ5IHnoXbgwtayRjLqWOSDr/fkquP7Z016tsh7le5Q=;
+        s=default; t=1552901853;
+        bh=GrV9C3xVM3x4DVkNI01T4Q7+yrIACjCNSIwfQfLiOXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hHjbjGu/WlaQgjRTVgJleAl09IAV1wh4ldNkrzzbwMFh7uk0oZpNLbOGDVlep7yWc
-         qhfsizPTZ6GbwTmKFVnuQPNWrMsLZCDvLEBwHPmoX4y35Mq57nYNXM7deQnp2W+jpN
-         2wRWMT9IURwxnDhoYksbhBVhuPNnMNYIwfIipTyw=
+        b=rBasJav8BMk9HlLtXcWJE0y8LSQyn2y/2qLe/8ejJTokYzRzSV30784KLkeVH/FFE
+         STOa+8ZOP3RQz7S2ECiQfqceOzSjnVzGrwXnLS65t2F803fERby+cPkhm/7eE6nYj0
+         quVO5DSmYStVUBXd2b1L5IDDb4LqGLaRNKprIK5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 4.9 30/31] of: Support const and non-const use for to_of_node()
-Date:   Mon, 18 Mar 2019 10:26:05 +0100
-Message-Id: <20190318084211.641869720@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        andrew hendry <andrew.hendry@gmail.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 08/31] net/x25: reset state in x25_connect()
+Date:   Mon, 18 Mar 2019 10:25:43 +0100
+Message-Id: <20190318084210.731183354@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
 References: <20190318084210.397476003@linuxfoundation.org>
@@ -68,67 +67,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit d20dc1493db438fbbfb7733adc82f472dd8a0789 upstream.
+[ Upstream commit ee74d0bd4325efb41e38affe5955f920ed973f23 ]
 
-Turn to_of_node() into a macro in order to support both const and
-non-const use. Additionally make the fwnode argument to is_of_node() const
-as well.
+In case x25_connect() fails and frees the socket neighbour,
+we also need to undo the change done to x25->state.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Nathan Chancellor <natechancellor@gmail.com>
+Before my last bug fix, we had use-after-free so this
+patch fixes a latent bug.
+
+syzbot report :
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 16137 Comm: syz-executor.1 Not tainted 5.0.0+ #117
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:x25_write_internal+0x1e8/0xdf0 net/x25/x25_subr.c:173
+Code: 00 40 88 b5 e0 fe ff ff 0f 85 01 0b 00 00 48 8b 8b 80 04 00 00 48 ba 00 00 00 00 00 fc ff df 48 8d 79 1c 48 89 fe 48 c1 ee 03 <0f> b6 34 16 48 89 fa 83 e2 07 83 c2 03 40 38 f2 7c 09 40 84 f6 0f
+RSP: 0018:ffff888076717a08 EFLAGS: 00010207
+RAX: ffff88805f2f2292 RBX: ffff8880a0ae6000 RCX: 0000000000000000
+kobject: 'loop5' (0000000018d0d0ee): kobject_uevent_env
+RDX: dffffc0000000000 RSI: 0000000000000003 RDI: 000000000000001c
+RBP: ffff888076717b40 R08: ffff8880950e0580 R09: ffffed100be5e46d
+R10: ffffed100be5e46c R11: ffff88805f2f2363 R12: ffff888065579840
+kobject: 'loop5' (0000000018d0d0ee): fill_kobj_path: path = '/devices/virtual/block/loop5'
+R13: 1ffff1100ece2f47 R14: 0000000000000013 R15: 0000000000000013
+FS:  00007fb88cf43700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9a42a41028 CR3: 0000000087a67000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ x25_release+0xd0/0x340 net/x25/af_x25.c:658
+ __sock_release+0xd3/0x2b0 net/socket.c:579
+ sock_close+0x1b/0x30 net/socket.c:1162
+ __fput+0x2df/0x8d0 fs/file_table.c:278
+ ____fput+0x16/0x20 fs/file_table.c:309
+ task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+ get_signal+0x1961/0x1d50 kernel/signal.c:2388
+ do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
+ exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
+ prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+ do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x457f29
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb88cf42c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: fffffffffffffe00 RBX: 0000000000000003 RCX: 0000000000457f29
+RDX: 0000000000000012 RSI: 0000000020000080 RDI: 0000000000000004
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb88cf436d4
+R13: 00000000004be462 R14: 00000000004cec98 R15: 00000000ffffffff
+Modules linked in:
+
+Fixes: 95d6ebd53c79 ("net/x25: fix use-after-free in x25_device_event()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: andrew hendry <andrew.hendry@gmail.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- include/linux/of.h |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ net/x25/af_x25.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -148,16 +148,20 @@ extern raw_spinlock_t devtree_lock;
- #ifdef CONFIG_OF
- void of_core_init(void);
- 
--static inline bool is_of_node(struct fwnode_handle *fwnode)
-+static inline bool is_of_node(const struct fwnode_handle *fwnode)
- {
- 	return !IS_ERR_OR_NULL(fwnode) && fwnode->type == FWNODE_OF;
- }
- 
--static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
--{
--	return is_of_node(fwnode) ?
--		container_of(fwnode, struct device_node, fwnode) : NULL;
--}
-+#define to_of_node(__fwnode)						\
-+	({								\
-+		typeof(__fwnode) __to_of_node_fwnode = (__fwnode);	\
-+									\
-+		is_of_node(__to_of_node_fwnode) ?			\
-+			container_of(__to_of_node_fwnode,		\
-+				     struct device_node, fwnode) :	\
-+			NULL;						\
-+	})
- 
- static inline bool of_have_populated_dt(void)
- {
-@@ -529,12 +533,12 @@ static inline void of_core_init(void)
- {
- }
- 
--static inline bool is_of_node(struct fwnode_handle *fwnode)
-+static inline bool is_of_node(const struct fwnode_handle *fwnode)
- {
- 	return false;
- }
- 
--static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
-+static inline struct device_node *to_of_node(const struct fwnode_handle *fwnode)
- {
- 	return NULL;
- }
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -817,6 +817,7 @@ out_put_neigh:
+ 		x25_neigh_put(x25->neighbour);
+ 		x25->neighbour = NULL;
+ 		read_unlock_bh(&x25_list_lock);
++		x25->state = X25_STATE_0;
+ 	}
+ out_put_route:
+ 	x25_route_put(rt);
 
 
