@@ -2,144 +2,152 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D325AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F6BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B084C2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3039E20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:41:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JxUL12pQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfCRRlJ (ORCPT
+        id S1727835AbfCRRlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:41:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:47808 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727808AbfCRRlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:41:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:41:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="123687196"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 18 Mar 2019 10:41:06 -0700
-Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
-        by linux.intel.com (Postfix) with ESMTP id B05D758052E;
-        Mon, 18 Mar 2019 10:41:03 -0700 (PDT)
-Subject: [PATCH v10 03/12] perf session: define bytes_transferred and
- bytes_compressed metrics
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <1d4bf499-cb03-26dc-6fc6-f14fec7622ce@linux.intel.com>
-Date:   Mon, 18 Mar 2019 20:41:02 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 13:41:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35933 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfCRRkx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:40:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y13so13541822wrd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ed0hAf8WZbtq4MmRoK//lOwdefFE9pMkHjk9cFK24Ko=;
+        b=JxUL12pQlaIO5TNX8dVKqnZ0lXofUYGBvKkE0BNJDt2U9aRuyhF+YqNTEwCsUNOfFD
+         6apCD7352gr6JAnF3nMdnUGlV0/5Aky3HLxDy4t07qCsKvvXh6kM2DFIY6yWG9GWiQFA
+         C+FT+S2/pXO0Ipm2Ky5YGWok8xSQtEKzwRgR2fBgfn7MY7OJWqT3WOamXReZG21m1I/L
+         VJaVipjN4Q9ra1+q1wPfWEPTY2fVTd+0IPMmy7wfwzk2vqXMYVv+obFFoBEDMKvn5Nw3
+         YVow2bLk3kg9kzhJYNLStR6e0tVSenXpYfWM6pu/mXpKGqFQ+MezcNGxSRO5snhh4AeE
+         Fh1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ed0hAf8WZbtq4MmRoK//lOwdefFE9pMkHjk9cFK24Ko=;
+        b=twAwbJv4kWSnODLFE45FZKRTihfrycnGR2zmbRyHJ5bP0vxUegul/ecSY49+ReGEbp
+         GvAK6gVY/mGXsnvZo7a+YyLQJhUWAXiqp4HTJITV8wiHthDHwUrkbbSI8VB/lH+WW8Eo
+         /+DNYQsvv4X1MdH0r9WuSJ0E25Lals3pVcEaiTuCbTmgHRkQ/envVkHJxUpjJJNXEZ0Z
+         A7SWuWErvMu2ApI95B0OCMvNKeCbjiSugVjy7Jf3FMViza5jXs10Wcw0v5gSVIDmVCbx
+         EnTT4dcJhvyi/IHXPphDcy+EC5gnAHBKSbXvr0o7uhGKZGMrt0G83c2AFUJ9pKRvztqs
+         T1RQ==
+X-Gm-Message-State: APjAAAWX5xoB86jwa1EoILtCHZa+521QzcUvi1bT6KkysE9j3WlXb74k
+        rQnsJAWed9uRVwu4TbYgkegGbQ==
+X-Google-Smtp-Source: APXvYqx01qIhnlIcrj3nuT5ifZorgpxn9tT4Uwtl7wftmlPwJurrNtiNjZNDIPXIfGEEp0v1jq2r4g==
+X-Received: by 2002:adf:9cc4:: with SMTP id h4mr12660115wre.327.1552930851574;
+        Mon, 18 Mar 2019 10:40:51 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id y140sm41436988wmd.18.2019.03.18.10.40.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 10:40:50 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [RESEND PATCH v6 01/11] dt-bindings: mfd: add DT bindings for max77650
+Date:   Mon, 18 Mar 2019 18:40:30 +0100
+Message-Id: <20190318174040.17899-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190318174040.17899-1-brgl@bgdev.pl>
+References: <20190318174040.17899-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Define bytes_transferred and bytes_compressed metrics to calculate ratio
-in the end of the data collection:
+Add a DT binding document for max77650 ultra-low power PMIC. This
+describes the core mfd device and the GPIO module.
 
-	compression ratio = bytes_transferred / bytes_compressed
-
-bytes_transferred accumulates the amount of bytes that was extracted from
-the mmaped kernel buffers for compression. bytes_compressed accumulates
-the amount of bytes that was received after applying compression.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- tools/perf/builtin-record.c | 14 +++++++++++++-
- tools/perf/util/env.h       |  1 +
- tools/perf/util/session.h   |  2 ++
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/mfd/max77650.txt      | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index f55302dec440..51b7f23a0c7a 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1166,6 +1166,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	struct perf_session *session;
- 	bool disabled = false, draining = false;
- 	int fd;
-+	float ratio = 0;
- 
- 	atexit(record__sig_exit);
- 	signal(SIGCHLD, sig_handler);
-@@ -1463,6 +1464,11 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	record__mmap_read_all(rec, true);
- 	record__aio_mmap_read_sync(rec);
- 
-+	if (rec->session->bytes_transferred && rec->session->bytes_compressed) {
-+		ratio = (float)rec->session->bytes_transferred/(float)rec->session->bytes_compressed;
-+		session->header.env.comp_ratio = ratio + 0.5;
-+	}
+diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
+new file mode 100644
+index 000000000000..b529d8d19335
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max77650.txt
+@@ -0,0 +1,46 @@
++MAX77650 ultra low-power PMIC from Maxim Integrated.
 +
- 	if (forks) {
- 		int exit_status;
- 
-@@ -1509,9 +1515,15 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		else
- 			samples[0] = '\0';
- 
--		fprintf(stderr,	"[ perf record: Captured and wrote %.3f MB %s%s%s ]\n",
-+		fprintf(stderr,	"[ perf record: Captured and wrote %.3f MB %s%s%s",
- 			perf_data__size(data) / 1024.0 / 1024.0,
- 			data->path, postfix, samples);
-+		if (ratio) {
-+			fprintf(stderr,	", compressed (original %.3f MB, ratio is %.3f)",
-+					rec->session->bytes_transferred / 1024.0 / 1024.0,
-+					ratio);
-+		}
-+		fprintf(stderr, " ]\n");
- 	}
- 
- out_delete_session:
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index d01b8355f4ca..fb39e9af128f 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -64,6 +64,7 @@ struct perf_env {
- 	struct memory_node	*memory_nodes;
- 	unsigned long long	 memory_bsize;
- 	u64                     clockid_res_ns;
-+	u32                     comp_ratio;
- };
- 
- extern struct perf_env perf_env;
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index d96eccd7d27f..0e14884f28b2 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -35,6 +35,8 @@ struct perf_session {
- 	struct ordered_events	ordered_events;
- 	struct perf_data	*data;
- 	struct perf_tool	*tool;
-+	u64			bytes_transferred;
-+	u64			bytes_compressed;
- };
- 
- struct perf_tool;
++Required properties:
++-------------------
++- compatible:		Must be "maxim,max77650"
++- reg:			I2C device address.
++- interrupts:		The interrupt on the parent the controller is
++			connected to.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells:	Must be <2>.
++
++- gpio-controller:	Marks the device node as a gpio controller.
++- #gpio-cells:		Must be <2>. The first cell is the pin number and
++			the second cell is used to specify the gpio active
++			state.
++
++Optional properties:
++--------------------
++gpio-line-names:	Single string containing the name of the GPIO line.
++
++The GPIO-controller module is represented as part of the top-level PMIC
++node. The device exposes a single GPIO line.
++
++For device-tree bindings of other sub-modules (regulator, power supply,
++LEDs and onkey) refer to the binding documents under the respective
++sub-system directories.
++
++For more details on GPIO bindings, please refer to the generic GPIO DT
++binding document <devicetree/bindings/gpio/gpio.txt>.
++
++Example:
++--------
++
++	pmic@48 {
++		compatible = "maxim,max77650";
++		reg = <0x48>;
++
++		interrupt-controller;
++		interrupt-parent = <&gpio2>;
++		#interrupt-cells = <2>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "max77650-charger";
++	};
 -- 
 2.20.1
 
