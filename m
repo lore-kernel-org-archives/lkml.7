@@ -3,100 +3,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7BDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6DCC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F25320863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E09520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="W0rIAfQB";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gHKHTmgH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jDPYNyak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfCROTS (ORCPT
+        id S1727688AbfCROTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:19:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54172 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbfCROTR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:19:17 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 98B9E60AA3; Mon, 18 Mar 2019 14:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552918756;
-        bh=TBOXXb7BXAwhtYLQC/HNvQrmp7KPq6Cv1wVQoZ0pAJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W0rIAfQB592L6spWhzvDkjsvxMHeY81RxVFlKYAlUwdWhVY2lkLYHvQEId7TasYyd
-         jj+zbByb/up0hsTDFPz3GheZelwX313k0+UNhKFLAPEvCXtbs9kNRpmbHyKGE/uifL
-         f4Rh2BgPs+tIVoyKRqhhwPpU5Rh8DZm/59C81X2E=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D24160850;
-        Mon, 18 Mar 2019 14:19:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552918755;
-        bh=TBOXXb7BXAwhtYLQC/HNvQrmp7KPq6Cv1wVQoZ0pAJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gHKHTmgHjrbUegHGgEN6GxqEfE3yvAu9h/2z1VwsL6iusVcSbceyXgNy7Wtdms6Jv
-         wUccaVAHEngP33QVC3vKC+1K4n3JeeWxD6w3gVFwBEVlYHk57M7M5cntT8gbA2FEP+
-         fuGZ7hWY9JBJppPr0QahEjfpxA/dB9TNyhmmAG00=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D24160850
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 18 Mar 2019 08:19:12 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     freedreno@lists.freedesktop.org, jean-philippe.brucker@arm.com,
-        linux-arm-msm@vger.kernel.org, dianders@chromium.org,
-        hoegsberg@google.com, baolu.lu@linux.intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 04/15] iommu: Add DOMAIN_ATTR_PTBASE
-Message-ID: <20190318141912.GA10168@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
-        freedreno@lists.freedesktop.org, jean-philippe.brucker@arm.com,
-        linux-arm-msm@vger.kernel.org, dianders@chromium.org,
-        hoegsberg@google.com, baolu.lu@linux.intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org>
- <1551469117-3404-5-git-send-email-jcrouse@codeaurora.org>
- <20190318095321.GA5417@8bytes.org>
+        Mon, 18 Mar 2019 10:19:20 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57486 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727146AbfCROTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 10:19:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=+L3QjrqFC6cIDJwwlnq/wbic5OOexHViJmER9wU/Dsk=; b=jDPYNyakZqIhZlt8q5IL9bz3gV
+        I6zfgKbmLsAoNDH/TIr0yOU/QcmfJoXtA8GOsRNl9qiOH1ZR9S9nFyDSLbWwTYKKltmGC8BlMVZFr
+        Fo+8j1RjilwmhZYKs1lJCElsubuL72VAALsmn9T5tk4bRF4SalH9/KBtMzH4jZrDT2bA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1h5t6f-0005Sw-7k; Mon, 18 Mar 2019 15:19:13 +0100
+Date:   Mon, 18 Mar 2019 15:19:13 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jose Abreu <jose.abreu@synopsys.com>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Joao Pinto <joao.pinto@synopsys.com>
+Subject: Re: [PATCH net] net: phy: Don't assume loopback is supported
+Message-ID: <20190318141913.GJ30224@lunn.ch>
+References: <eeea080649153eefafef8ff93274733fe8f25b01.1552559796.git.joabreu@synopsys.com>
+ <19c8d2b3-bffe-b3b2-6e91-e878f89e5247@gmail.com>
+ <20190317183843.GE22226@lunn.ch>
+ <07dd8427-4779-1706-3c0a-17ae58939c41@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190318095321.GA5417@8bytes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <07dd8427-4779-1706-3c0a-17ae58939c41@synopsys.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 10:53:21AM +0100, Joerg Roedel wrote:
-> On Fri, Mar 01, 2019 at 12:38:26PM -0700, Jordan Crouse wrote:
-> > Add an attribute to return the base address of the pagetable. This is used
-> > by auxiliary domains from arm-smmu to return the address of the pagetable
-> > to the leaf driver so that it can set the appropriate pagetable through
-> > it's own means.
+> We provide PHYs to our customers and in the documentation I have
+> this can be an optional feature that HW team can choose to have
+> or not, making the bit read-only or r/w.
 > 
-> What is this going to be used for? Page-table management is supposed to
-> happen in the arm-smmu driver and the gpu driver only makes changes
-> through iommu_map/iommu_unmap calls.
+> Heiner, can you please confirm there is no Clause 22 "pitfalls" /
+> "hidden comments" that allow this bitfield to be read-only ?
 
-Adreno GPUs can an internal mechanism to switch the pagetable address in the
-attached arm-smmu v2 IOMMU so that each individual rendering process can have
-their own pagetable. The driver uses iommu_map and iommu_unmap to write
-the pagetable but the address for each individual pagetable needs to be queried
-so it can be sent to the hardware. You can see the driver specific code that
-does this here:
+Hi Jose
 
-https://patchwork.freedesktop.org/patch/289507/?series=57441&rev=1
+I have the 802.3 standard from 2015. It should be free to download
+from the IEEE. So you can go get it yourself.
 
-Jordan
+Section 22.2.4.1.2 defines loopback. I don't see anything which makes
+it optional. The only wiggle room you have is where in the PHY the
+loopback actually takes place. That is implementation specific, but it
+recommends you make it as late as possible in the path so as to test
+as much as possible.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+If your PHY does not implement loopback, i would say it breaks the
+standard. We try to keep workarounds for brokenness in the specific
+PHY driver, not the generic code.
+
+    Andrew
+
