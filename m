@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2BDC10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F189DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 136B62075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29612075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902009;
-	bh=u5IVvzXGqPIhzKQOMUSaGZFSjHllED9buaPoSgR9D+U=;
+	s=default; t=1552902017;
+	bh=iFiV1AGUP7u5BsPLAH1PO5B1eLQlX8zo4cMsSoZGVOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C0BRKT2dcTKmxxVA+6f8Q1oruyNHoKFmswLiNiIXVH5t/0iAywD0aun5szy/Yt4/4
-	 fJzXiSEbFECUO7EHGsUaS6SPMSpWq8Az6cvA24fQA4dzpb7vGlBL7C1/g2ICBcSB+/
-	 wzd94XRbzOt6ftpgpcUpLupU7IUhwq2WKManApi4=
+	b=Ug61Y2RP4Ehm11q+j7JtNkhIPN1x8J3LPTCZTiuzmr8Er3JlS6d8NNS3akUkaDbH9
+	 0gyRUEJWyEw9sL9X7ZkXxUM16TcB9LOaSZ6OIr1r8g4bUn7A/rbvX455QXAXyiJiuy
+	 TnV4Ff28wqcP9qlA+vmuEY8cm2Od8T4Ogdh4BdtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387453AbfCRJfa (ORCPT
+        id S2387429AbfCRJfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:35:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728678AbfCRJf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:35:26 -0400
+        id S1729077AbfCRJfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:35:18 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28FE221773;
-        Mon, 18 Mar 2019 09:35:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE7402075C;
+        Mon, 18 Mar 2019 09:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901725;
-        bh=u5IVvzXGqPIhzKQOMUSaGZFSjHllED9buaPoSgR9D+U=;
+        s=default; t=1552901717;
+        bh=iFiV1AGUP7u5BsPLAH1PO5B1eLQlX8zo4cMsSoZGVOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CZJzn+DzZUYyeKDOp3tCAJeAWD+nR2Ifk+iu5R6oKH9WregReMEuKtFpeZ2ScNf+4
-         lPsF07GZk/d4gKHV7LJnHOVa4oBjsgf6cZD2ymk6JxyUs5LpfQvR9+X1RZrb4tsGjL
-         7Wb/LJYSA0nyr5TaSFGa1CJBUAk+NY2Yb6b6JxxA=
+        b=rdwUZRDEw5AdOCTS6IO+1DzyCNZ06g2lPnTbxu8KnjWoz9HtXypTLvFoXxgFAIW7Z
+         LPUuz/TC0dzA0obhcnbRkwFu0xqbv9q/LUR56EmMipKjAUxiHw1MTzGDv36vidPTYU
+         IHFRU8IC1O9vcJ+V6O17DJOBdFzF6a7i6cvzK+88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 29/34] ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O against Liquid Saffire 56
-Date:   Mon, 18 Mar 2019 10:25:53 +0100
-Message-Id: <20190318084148.838042547@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH 4.14 26/34] missing barriers in some of unix_sock ->addr and ->path accesses
+Date:   Mon, 18 Mar 2019 10:25:50 +0100
+Message-Id: <20190318084148.357292112@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -65,180 +66,233 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 7dc661bd8d3261053b69e4e2d0050cd1ee540fc1 upstream.
+[ Upstream commit ae3b564179bfd06f32d051b9e5d72ce4b2a07c37 ]
 
-ALSA bebob driver has an entry for Focusrite Saffire Pro 10 I/O. The
-entry matches vendor_id in root directory and model_id in unit
-directory of configuration ROM for IEEE 1394 bus.
+Several u->addr and u->path users are not holding any locks in
+common with unix_bind().  unix_state_lock() is useless for those
+purposes.
 
-On the other hand, configuration ROM of Focusrite Liquid Saffire 56
-has the same vendor_id and model_id. This device is an application of
-TCAT Dice (TCD2220 a.k.a Dice Jr.) however ALSA bebob driver can be
-bound to it randomly instead of ALSA dice driver. At present, drivers
-in ALSA firewire stack can not handle this situation appropriately.
+u->addr is assign-once and *(u->addr) is fully set up by the time
+we set u->addr (all under unix_table_lock).  u->path is also
+set in the same critical area, also before setting u->addr, and
+any unix_sock with ->path filled will have non-NULL ->addr.
 
-This commit uses more identical mod_alias for Focusrite Saffire Pro 10
-I/O in ALSA bebob driver.
+So setting ->addr with smp_store_release() is all we need for those
+"lockless" users - just have them fetch ->addr with smp_load_acquire()
+and don't even bother looking at ->path if they see NULL ->addr.
 
-$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  042a829d  bus_info_length 4, crc_length 42, crc 33437
-404  31333934  bus_name "1394"
-408  f0649222  irmc 1, cmc 1, isc 1, bmc 1, pmc 0, cyc_clk_acc 100,
-               max_rec 9 (1024), max_rom 2, gen 2, spd 2 (S400)
-40c  00130e01  company_id 00130e     |
-410  000606e0  device_id 01000606e0  | EUI-64 00130e01000606e0
+Users of ->addr and ->path fall into several classes now:
+    1) ones that do smp_load_acquire(u->addr) and access *(u->addr)
+and u->path only if smp_load_acquire() has returned non-NULL.
+    2) places holding unix_table_lock.  These are guaranteed that
+*(u->addr) is seen fully initialized.  If unix_sock is in one of the
+"bound" chains, so's ->path.
+    3) unix_sock_destructor() using ->addr is safe.  All places
+that set u->addr are guaranteed to have seen all stores *(u->addr)
+while holding a reference to u and unix_sock_destructor() is called
+when (atomic) refcount hits zero.
+    4) unix_release_sock() using ->path is safe.  unix_bind()
+is serialized wrt unix_release() (normally - by struct file
+refcount), and for the instances that had ->path set by unix_bind()
+unix_release_sock() comes from unix_release(), so they are fine.
+Instances that had it set in unix_stream_connect() either end up
+attached to a socket (in unix_accept()), in which case the call
+chain to unix_release_sock() and serialization are the same as in
+the previous case, or they never get accept'ed and unix_release_sock()
+is called when the listener is shut down and its queue gets purged.
+In that case the listener's queue lock provides the barriers needed -
+unix_stream_connect() shoves our unix_sock into listener's queue
+under that lock right after having set ->path and eventual
+unix_release_sock() caller picks them from that queue under the
+same lock right before calling unix_release_sock().
+    5) unix_find_other() use of ->path is pointless, but safe -
+it happens with successful lookup by (abstract) name, so ->path.dentry
+is guaranteed to be NULL there.
 
-               root directory
-               -----------------------------------------------------------------
-414  0009d31c  directory_length 9, crc 54044
-418  04000014  hardware version
-41c  0c0083c0  node capabilities per IEEE 1394
-420  0300130e  vendor
-424  81000012  --> descriptor leaf at 46c
-428  17000006  model
-42c  81000016  --> descriptor leaf at 484
-430  130120c2  version
-434  d1000002  --> unit directory at 43c
-438  d4000006  --> dependent info directory at 450
-
-               unit directory at 43c
-               -----------------------------------------------------------------
-43c  0004707c  directory_length 4, crc 28796
-440  1200a02d  specifier id: 1394 TA
-444  13010001  version: AV/C
-448  17000006  model
-44c  81000013  --> descriptor leaf at 498
-
-               dependent info directory at 450
-               -----------------------------------------------------------------
-450  000637c7  directory_length 6, crc 14279
-454  120007f5  specifier id
-458  13000001  version
-45c  3affffc7  (immediate value)
-460  3b100000  (immediate value)
-464  3cffffc7  (immediate value)
-468  3d600000  (immediate value)
-
-               descriptor leaf at 46c
-               -----------------------------------------------------------------
-46c  00056f3b  leaf_length 5, crc 28475
-470  00000000  textual descriptor
-474  00000000  minimal ASCII
-478  466f6375  "Focu"
-47c  73726974  "srit"
-480  65000000  "e"
-
-               descriptor leaf at 484
-               -----------------------------------------------------------------
-484  0004a165  leaf_length 4, crc 41317
-488  00000000  textual descriptor
-48c  00000000  minimal ASCII
-490  50726f31  "Pro1"
-494  30494f00  "0IO"
-
-               descriptor leaf at 498
-               -----------------------------------------------------------------
-498  0004a165  leaf_length 4, crc 41317
-49c  00000000  textual descriptor
-4a0  00000000  minimal ASCII
-4a4  50726f31  "Pro1"
-4a8  30494f00  "0IO"
-
-$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  040442e4  bus_info_length 4, crc_length 4, crc 17124
-404  31333934  bus_name "1394"
-408  e0ff8112  irmc 1, cmc 1, isc 1, bmc 0, pmc 0, cyc_clk_acc 255,
-               max_rec 8 (512), max_rom 1, gen 1, spd 2 (S400)
-40c  00130e04  company_id 00130e     |
-410  018001e9  device_id 04018001e9  | EUI-64 00130e04018001e9
-
-               root directory
-               -----------------------------------------------------------------
-414  00065612  directory_length 6, crc 22034
-418  0300130e  vendor
-41c  8100000a  --> descriptor leaf at 444
-420  17000006  model
-424  8100000e  --> descriptor leaf at 45c
-428  0c0087c0  node capabilities per IEEE 1394
-42c  d1000001  --> unit directory at 430
-
-               unit directory at 430
-               -----------------------------------------------------------------
-430  000418a0  directory_length 4, crc 6304
-434  1200130e  specifier id
-438  13000001  version
-43c  17000006  model
-440  8100000f  --> descriptor leaf at 47c
-
-               descriptor leaf at 444
-               -----------------------------------------------------------------
-444  00056f3b  leaf_length 5, crc 28475
-448  00000000  textual descriptor
-44c  00000000  minimal ASCII
-450  466f6375  "Focu"
-454  73726974  "srit"
-458  65000000  "e"
-
-               descriptor leaf at 45c
-               -----------------------------------------------------------------
-45c  000762c6  leaf_length 7, crc 25286
-460  00000000  textual descriptor
-464  00000000  minimal ASCII
-468  4c495155  "LIQU"
-46c  49445f53  "ID_S"
-470  41464649  "AFFI"
-474  52455f35  "RE_5"
-478  36000000  "6"
-
-               descriptor leaf at 47c
-               -----------------------------------------------------------------
-47c  000762c6  leaf_length 7, crc 25286
-480  00000000  textual descriptor
-484  00000000  minimal ASCII
-488  4c495155  "LIQU"
-48c  49445f53  "ID_S"
-490  41464649  "AFFI"
-494  52455f35  "RE_5"
-498  36000000  "6"
-
-Cc: <stable@vger.kernel.org> # v3.16+
-Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+earlier-variant-reviewed-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/firewire/bebob/bebob.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ net/unix/af_unix.c   |   57 +++++++++++++++++++++++++++++----------------------
+ net/unix/diag.c      |    3 +-
+ security/lsm_audit.c |   10 +++++---
+ 3 files changed, 41 insertions(+), 29 deletions(-)
 
---- a/sound/firewire/bebob/bebob.c
-+++ b/sound/firewire/bebob/bebob.c
-@@ -474,7 +474,19 @@ static const struct ieee1394_device_id b
- 	/* Focusrite, SaffirePro 26 I/O */
- 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000003, &saffirepro_26_spec),
- 	/* Focusrite, SaffirePro 10 I/O */
--	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000006, &saffirepro_10_spec),
-+	{
-+		// The combination of vendor_id and model_id is the same as the
-+		// same as the one of Liquid Saffire 56.
-+		.match_flags	= IEEE1394_MATCH_VENDOR_ID |
-+				  IEEE1394_MATCH_MODEL_ID |
-+				  IEEE1394_MATCH_SPECIFIER_ID |
-+				  IEEE1394_MATCH_VERSION,
-+		.vendor_id	= VEN_FOCUSRITE,
-+		.model_id	= 0x000006,
-+		.specifier_id	= 0x00a02d,
-+		.version	= 0x010001,
-+		.driver_data	= (kernel_ulong_t)&saffirepro_10_spec,
-+	},
- 	/* Focusrite, Saffire(no label and LE) */
- 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, MODEL_FOCUSRITE_SAFFIRE_BOTH,
- 			    &saffire_spec),
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -892,7 +892,7 @@ retry:
+ 	addr->hash ^= sk->sk_type;
+ 
+ 	__unix_remove_socket(sk);
+-	u->addr = addr;
++	smp_store_release(&u->addr, addr);
+ 	__unix_insert_socket(&unix_socket_table[addr->hash], sk);
+ 	spin_unlock(&unix_table_lock);
+ 	err = 0;
+@@ -1062,7 +1062,7 @@ static int unix_bind(struct socket *sock
+ 
+ 	err = 0;
+ 	__unix_remove_socket(sk);
+-	u->addr = addr;
++	smp_store_release(&u->addr, addr);
+ 	__unix_insert_socket(list, sk);
+ 
+ out_unlock:
+@@ -1333,15 +1333,29 @@ restart:
+ 	RCU_INIT_POINTER(newsk->sk_wq, &newu->peer_wq);
+ 	otheru = unix_sk(other);
+ 
+-	/* copy address information from listening to new sock*/
+-	if (otheru->addr) {
+-		refcount_inc(&otheru->addr->refcnt);
+-		newu->addr = otheru->addr;
+-	}
++	/* copy address information from listening to new sock
++	 *
++	 * The contents of *(otheru->addr) and otheru->path
++	 * are seen fully set up here, since we have found
++	 * otheru in hash under unix_table_lock.  Insertion
++	 * into the hash chain we'd found it in had been done
++	 * in an earlier critical area protected by unix_table_lock,
++	 * the same one where we'd set *(otheru->addr) contents,
++	 * as well as otheru->path and otheru->addr itself.
++	 *
++	 * Using smp_store_release() here to set newu->addr
++	 * is enough to make those stores, as well as stores
++	 * to newu->path visible to anyone who gets newu->addr
++	 * by smp_load_acquire().  IOW, the same warranties
++	 * as for unix_sock instances bound in unix_bind() or
++	 * in unix_autobind().
++	 */
+ 	if (otheru->path.dentry) {
+ 		path_get(&otheru->path);
+ 		newu->path = otheru->path;
+ 	}
++	refcount_inc(&otheru->addr->refcnt);
++	smp_store_release(&newu->addr, otheru->addr);
+ 
+ 	/* Set credentials */
+ 	copy_peercred(sk, other);
+@@ -1455,7 +1469,7 @@ out:
+ static int unix_getname(struct socket *sock, struct sockaddr *uaddr, int *uaddr_len, int peer)
+ {
+ 	struct sock *sk = sock->sk;
+-	struct unix_sock *u;
++	struct unix_address *addr;
+ 	DECLARE_SOCKADDR(struct sockaddr_un *, sunaddr, uaddr);
+ 	int err = 0;
+ 
+@@ -1470,19 +1484,15 @@ static int unix_getname(struct socket *s
+ 		sock_hold(sk);
+ 	}
+ 
+-	u = unix_sk(sk);
+-	unix_state_lock(sk);
+-	if (!u->addr) {
++	addr = smp_load_acquire(&unix_sk(sk)->addr);
++	if (!addr) {
+ 		sunaddr->sun_family = AF_UNIX;
+ 		sunaddr->sun_path[0] = 0;
+ 		*uaddr_len = sizeof(short);
+ 	} else {
+-		struct unix_address *addr = u->addr;
+-
+ 		*uaddr_len = addr->len;
+ 		memcpy(sunaddr, addr->name, *uaddr_len);
+ 	}
+-	unix_state_unlock(sk);
+ 	sock_put(sk);
+ out:
+ 	return err;
+@@ -2075,11 +2085,11 @@ static int unix_seqpacket_recvmsg(struct
+ 
+ static void unix_copy_addr(struct msghdr *msg, struct sock *sk)
+ {
+-	struct unix_sock *u = unix_sk(sk);
++	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
+ 
+-	if (u->addr) {
+-		msg->msg_namelen = u->addr->len;
+-		memcpy(msg->msg_name, u->addr->name, u->addr->len);
++	if (addr) {
++		msg->msg_namelen = addr->len;
++		memcpy(msg->msg_name, addr->name, addr->len);
+ 	}
+ }
+ 
+@@ -2583,15 +2593,14 @@ static int unix_open_file(struct sock *s
+ 	if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
+ 		return -EPERM;
+ 
+-	unix_state_lock(sk);
++	if (!smp_load_acquire(&unix_sk(sk)->addr))
++		return -ENOENT;
++
+ 	path = unix_sk(sk)->path;
+-	if (!path.dentry) {
+-		unix_state_unlock(sk);
++	if (!path.dentry)
+ 		return -ENOENT;
+-	}
+ 
+ 	path_get(&path);
+-	unix_state_unlock(sk);
+ 
+ 	fd = get_unused_fd_flags(O_CLOEXEC);
+ 	if (fd < 0)
+@@ -2831,7 +2840,7 @@ static int unix_seq_show(struct seq_file
+ 			(s->sk_state == TCP_ESTABLISHED ? SS_CONNECTING : SS_DISCONNECTING),
+ 			sock_i_ino(s));
+ 
+-		if (u->addr) {
++		if (u->addr) {	// under unix_table_lock here
+ 			int i, len;
+ 			seq_putc(seq, ' ');
+ 
+--- a/net/unix/diag.c
++++ b/net/unix/diag.c
+@@ -10,7 +10,8 @@
+ 
+ static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
+ {
+-	struct unix_address *addr = unix_sk(sk)->addr;
++	/* might or might not have unix_table_lock */
++	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
+ 
+ 	if (!addr)
+ 		return 0;
+--- a/security/lsm_audit.c
++++ b/security/lsm_audit.c
+@@ -321,6 +321,7 @@ static void dump_common_audit_data(struc
+ 		if (a->u.net->sk) {
+ 			struct sock *sk = a->u.net->sk;
+ 			struct unix_sock *u;
++			struct unix_address *addr;
+ 			int len = 0;
+ 			char *p = NULL;
+ 
+@@ -351,14 +352,15 @@ static void dump_common_audit_data(struc
+ #endif
+ 			case AF_UNIX:
+ 				u = unix_sk(sk);
++				addr = smp_load_acquire(&u->addr);
++				if (!addr)
++					break;
+ 				if (u->path.dentry) {
+ 					audit_log_d_path(ab, " path=", &u->path);
+ 					break;
+ 				}
+-				if (!u->addr)
+-					break;
+-				len = u->addr->len-sizeof(short);
+-				p = &u->addr->name->sun_path[0];
++				len = addr->len-sizeof(short);
++				p = &addr->name->sun_path[0];
+ 				audit_log_format(ab, " path=");
+ 				if (*p)
+ 					audit_log_untrustedstring(ab, p);
 
 
