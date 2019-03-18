@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A792BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE26C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7222087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4301D2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902120;
-	bh=JWTTEYPO//BjKEXP/2qVtuiPMHNr8Agaqkz7sM/RNeI=;
+	s=default; t=1552902123;
+	bh=x+kC1OEIt1L2YBCLpo16nz0Tll3Vd7dpPtOIuXjZGwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bp76sGdhrIAlftM81VnNJNHXReCZUjPuJhIS6VLvmHxklmblpLjYPPgAwDWRZ62CM
-	 FC/QURtoK3yCrkPUqljcFdT0Muoj7Y9TlGIxKyu5Rc1YEwVUX4anNeHq7Xdl7egnnx
-	 cV8LnTaZfKCQeug+CPVDnVZCkRXC81F1klBQnLXQ=
+	b=nWWeDQT8ypS8Nu9j0/JvH6xmOTWk62tHGHNNHTJU7h0igRaNtEzQKY5ksQrLn9TKt
+	 yXKb88bS+rcakr0wf2DUf5QE/VBp4jMTQ5QgTdNimR5HDjhNwRWhg7pMzrQVmQeTJ3
+	 nZ0ZRWRnXxDG3vMVAFjlg72SM4g9Pw7UJ3CFo78M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfCRJl7 (ORCPT
+        id S1728853AbfCRJmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:41:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41652 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:42:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728544AbfCRJd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:26 -0400
+        id S1728085AbfCRJd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:33:28 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304A62087C;
-        Mon, 18 Mar 2019 09:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6D3D2175B;
+        Mon, 18 Mar 2019 09:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901605;
-        bh=JWTTEYPO//BjKEXP/2qVtuiPMHNr8Agaqkz7sM/RNeI=;
+        s=default; t=1552901608;
+        bh=x+kC1OEIt1L2YBCLpo16nz0Tll3Vd7dpPtOIuXjZGwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DGXqrg46erBbEripe1ljGkfpNN8oHAbs72r1XJGm251zQI54mwxqUqEMtuD7boFLm
-         KeTZosvxM3MUvTXdC/Xl6eRq1UTEJJtsx+yyLmDH16xXCOWeDQP3yiN7zjeSW1y14z
-         Tow6TKYvFW1LQTC6NpozuX7GMS50tyVIX9NWfO8g=
+        b=BavhWlwe/Q6OuJeRLtc7ElQLFgMookGy1tNq+AhoVR10QWojz16Ad+TI2drJzeyEr
+         Upupoy61Y1txKdplPhehcG6C9GLA3L5l+zwufMSumlxoR6uCUgXHncX4Tnvx0b6YgD
+         hYpVbJRRZL2kC5DrWcTe35teN5C1+FP2muwIa/Zs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Jones <tonyj@suse.com>,
-        "DSouza, Nelson" <nelson.dsouza@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, eranian@google.com,
-        jolsa@redhat.com, stable@kernel.org
-Subject: [PATCH 4.19 46/52] perf/x86/intel: Fix memory corruption
-Date:   Mon, 18 Mar 2019 10:25:43 +0100
-Message-Id: <20190318084018.944241940@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, kbuild-all@01.org,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 4.19 47/52] perf/x86/intel: Make dev_attr_allow_tsx_force_abort static
+Date:   Mon, 18 Mar 2019 10:25:44 +0100
+Message-Id: <20190318084019.078727631@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -68,34 +70,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: kbuild test robot <lkp@intel.com>
 
-commit ede271b059463731cbd6dffe55ffd70d7dbe8392 upstream.
-
-Through:
-
-  validate_event()
-    x86_pmu.get_event_constraints(.idx=-1)
-      tfa_get_event_constraints()
-        dyn_constraint()
-
-cpuc->constraint_list[-1] is used, which is an obvious out-of-bound access.
-
-In this case, simply skip the TFA constraint code, there is no event
-constraint with just PMC3, therefore the code will never result in the
-empty set.
+commit c634dc6bdedeb0b2c750fc611612618a85639ab2 upstream.
 
 Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
-Reported-by: Tony Jones <tonyj@suse.com>
-Reported-by: "DSouza, Nelson" <nelson.dsouza@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Tony Jones <tonyj@suse.com>
-Tested-by: "DSouza, Nelson" <nelson.dsouza@intel.com>
-Cc: eranian@google.com
-Cc: jolsa@redhat.com
-Cc: stable@kernel.org
-Link: https://lkml.kernel.org/r/20190314130705.441549378@infradead.org
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: kbuild-all@01.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190313184243.GA10820@lkp-sb-ep06
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
@@ -104,14 +94,14 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3282,7 +3282,7 @@ tfa_get_event_constraints(struct cpu_hw_
- 	/*
- 	 * Without TFA we must not use PMC3.
- 	 */
--	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk)) {
-+	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk) && idx >= 0) {
- 		c = dyn_constraint(cpuc, c, idx);
- 		c->idxmsk64 &= ~(1ULL << 3);
- 		c->weight--;
+@@ -3989,7 +3989,7 @@ static struct attribute *intel_pmu_caps_
+        NULL
+ };
+ 
+-DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
++static DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
+ 
+ static struct attribute *intel_pmu_attrs[] = {
+ 	&dev_attr_freeze_on_smi.attr,
 
 
