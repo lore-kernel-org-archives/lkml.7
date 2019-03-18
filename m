@@ -2,127 +2,149 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A23C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4607AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4D62085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4802085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QpSb4BYy"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="xSv6UGHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfCRV6I (ORCPT
+        id S1727648AbfCRV7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 17:58:08 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42611 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbfCRV6H (ORCPT
+        Mon, 18 Mar 2019 17:59:06 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43631 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfCRV7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 17:58:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r15so9434588pfn.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 14:58:07 -0700 (PDT)
+        Mon, 18 Mar 2019 17:59:06 -0400
+Received: by mail-qt1-f194.google.com with SMTP id v32so19881079qtc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 14:59:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=oOoGoGfRPT3mRse49s3/zc4aL6pQ4YO//onrsS8nP9U=;
-        b=QpSb4BYys1mBZkzz7QB+tzlVBl//xoDpo59FtObNBEmOx1qecVkKqiLaOa3GavsofY
-         31F4RrTdRJTlYYywmlh6JVagA0GiRQo+xkdCPGiKl/R3pNUbyQQkxXbm2wO8HLMAn9Xe
-         LWEqL/SvKV6QuKhSZEJ+vDf8r9l6ZDFwFxfwQ=
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PEI+LxvFMjJUALRi9owyWOI0fihbE6C/e9+itd739GM=;
+        b=xSv6UGHKeSYnwqQPFStQfIJtPVqrIdfYYhnL+QBdxApMC29BAC/fsbftKLQKQkoDCF
+         3F0HhBNpMHXbPVAMb1jfRLAHDFuSw2Ra/C5HFypQy3pq6Bw931kOjfuGochv4wG95dW0
+         LklgQjScV/7/2vC0QpOWwTPnJcJxKh3am6wxbWXM6+eNweYFjOA5QkjUbuJ+dKXbGtQ9
+         7ujt4QIRF16jtClBQjOHU+/bMMLPbWAhh98nqp4JM9ZoHtYwM+MNWIsBJErzdXuMeJ7m
+         IDMUujPD7do0VpNf+FcjmImViWNv7yOJd6w1tYMkrVUthn602QzlzN/TTnhiu+jWUJjY
+         BUYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=oOoGoGfRPT3mRse49s3/zc4aL6pQ4YO//onrsS8nP9U=;
-        b=hYe9hfY7qou++OpzQjDV7XZAmZ/vcPb6/JDA+n5NYrTTN3n1kqyiSn23qkN//l76yw
-         /j/iuzixUWn+nii5YM1mlBpVsybCTDg75fQS25FBf/ljLEhJMoRxQ4ewe8PBmkoWL2eI
-         gzvUrMSD8R4F28iHL6+0+ptR8yXdu48QhTTbpnO0UWbx0D0Ed3c+z2mhTxuDknQ+tthK
-         a9DEs1iwHBZJ12oBpoULkCzvXdj3sqdUJsk8fLS/1PxCKLzQW+XkBmuyK3ETL5DU/4sX
-         5kPE4rRPLjFEQIcWz9cKGXdiA8cKJ9hmDmkv3ZuPjVcqmcVP65L+aYY5B2VfRJXkh7oz
-         zTsA==
-X-Gm-Message-State: APjAAAV1w9tTOsXg4FVJfKo8xYebyx/Uh68VbxPG8J1TXUjq28bJQBP8
-        l1xGUjYXv9Yvq/wL94mIiEgTuhSt6ifFELjDK0ZP28WFH7En0CYVpdhrqDuHknML+KRFlVgPfZI
-        OTfp/vAt8BL21xWIVrvXHMEGRgTyZ3hVSWe1VVzFrHPePlGSdllFiQjhQNBMyKmmpW7ypxHtofX
-        Bwhug=
-X-Google-Smtp-Source: APXvYqwGpNPDj9d2tbmFVNDc0Mse6npvVxMgHqYtRW5m1kyfXsMR514/dwUlulelRs6fp1pu9ymXjw==
-X-Received: by 2002:a17:902:266:: with SMTP id 93mr22355724plc.161.1552946286484;
-        Mon, 18 Mar 2019 14:58:06 -0700 (PDT)
-Received: from [10.69.37.149] ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id p86sm21177292pfa.104.2019.03.18.14.58.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PEI+LxvFMjJUALRi9owyWOI0fihbE6C/e9+itd739GM=;
+        b=QUFEh0eIOC/I7yQkJvuH5d8o0PYC770aG9bwBluIJzfj0ewyAlVKjeeI32MrPiEXKi
+         bpCLkHwgdDS//NWywCkVgs4uM+tgAt87gANWnRuPAMlBmK1x+wpZfLr6dFqVx1jOrb+N
+         nORvOwqlMsspQHdHPeAyzxayhwPLCG2qI1v83i8UdpKYIKWUMm9RUMbjYMaiaTuSydFT
+         TdeatVKhV6CS7nTKZWpV4wTgUzICjBN6OluhoTc4385kw/QucdFxJz0Cx4HAs3bgn4WX
+         NwlT6AA50k31uydYIwxdg2MaSOo4z4CHECzSbm9YY0BXmZLf5ATFJAO1ZYi7NItFmzsv
+         lSKQ==
+X-Gm-Message-State: APjAAAUFfZRo7tqrtL2aOcJW4sd9jYPlAuKMk9z7saD3webNiLh3Yx4E
+        OXnkCCdvAXP8OiHCR9tBt5HJbg==
+X-Google-Smtp-Source: APXvYqzkWXqFSxILOE7RAHR60Jl9OeAWUAL4Ianp0fHwLW+RC6He2WPAWHgd5g1vLM9ptb1W7sKbUg==
+X-Received: by 2002:a0c:8a61:: with SMTP id 30mr14625001qvu.110.1552946345528;
+        Mon, 18 Mar 2019 14:59:05 -0700 (PDT)
+Received: from jkicinski-Precision-T1700.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id k68sm6638264qkf.16.2019.03.18.14.59.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 14:58:05 -0700 (PDT)
-Subject: Re: [PATCH] scsi: lpfc_nvme: Fix wrong sizeof argument
-To:     James Bottomley <jejb@linux.ibm.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190318171505.GA8748@embeddedor>
- <1552931093.3203.25.camel@linux.ibm.com>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <872b6dcf-929c-9e2c-3c71-0b2943191c9f@broadcom.com>
-Date:   Mon, 18 Mar 2019 14:58:03 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Mon, 18 Mar 2019 14:59:04 -0700 (PDT)
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     peterz@infradead.org
+Cc:     pbonzini@redhat.com, ard.biesheuvel@linaro.org, tglx@linutronix.de,
+        mingo@kernel.org, linux-kernel@vger.kernel.org,
+        oss-drivers@netronome.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH] locking/static_key: Fix false positive warnings on concurrent dec/inc
+Date:   Mon, 18 Mar 2019 14:58:14 -0700
+Message-Id: <20190318215814.3724-1-jakub.kicinski@netronome.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-In-Reply-To: <1552931093.3203.25.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Even though the atomic_dec_and_mutex_lock() in
+__static_key_slow_dec_cpuslocked() can never see a negative
+value in key->enabled the subsequent sanity check is re-reading
+key->enabled, which may have been set to -1 in the meantime by
+static_key_slow_inc_cpuslocked().
 
+Instead of using -1 as a "enable in progress" constant use
+-0xffff, this way we can still treat smaller negative values
+as errors.
 
-On 3/18/2019 10:44 AM, James Bottomley wrote:
-> On Mon, 2019-03-18 at 12:15 -0500, Gustavo A. R. Silva wrote:
->> sizeof() is currently using the wrong argument when used in a call to
->> memset().  Notice that wqe is a pointer to union lpfc_wqe128, not to
->> union lpfc_wqe.
->>
->> Fix this by using union lpfc_wqe128 instead of lpfc_wqe as argument
->> of sizeof().
->>
->> Addresses-Coverity-ID: 1443938 ("Wrong sizeof argument")
->> Fixes: 5fd1108517d9 ("scsi: lpfc: Streamline NVME Initiator WQE
->> setup")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>   drivers/scsi/lpfc/lpfc_nvme.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/scsi/lpfc/lpfc_nvme.c
->> b/drivers/scsi/lpfc/lpfc_nvme.c
->> index d16ca413110d..3dc0c85c7d50 100644
->> --- a/drivers/scsi/lpfc/lpfc_nvme.c
->> +++ b/drivers/scsi/lpfc/lpfc_nvme.c
->> @@ -1981,7 +1981,7 @@ lpfc_get_nvme_buf(struct lpfc_hba *phba, struct
->> lpfc_nodelist *ndlp,
->>   		/* Fill in word 3 / sgl_len during cmd submission */
->>   
->>   		/* Initialize WQE */
->> -		memset(wqe, 0, sizeof(union lpfc_wqe));
->> +		memset(wqe, 0, sizeof(union lpfc_wqe128));
-> Actually the correct way to avoid potential problems like this is
->
-> 	memset(wqe, 0, sizeof(*wqe));
->
-> James
->
+Alternatively we could implement atomic_dec_and_mutex_lock_return().
 
-Agree with James on style.   This one reference was a little 
-interesting. It purposely was something smaller than the whole structure 
-as the latter end of the structure ends up getting set later.  But not a 
-big deal to correct as indicated.
+Fixes: 4c5ea0a9cd02 ("locking/static_key: Fix concurrent static_key_slow_inc()")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+---
+ kernel/jump_label.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---james
-
+diff --git a/kernel/jump_label.c b/kernel/jump_label.c
+index bad96b476eb6..4a227e70a8f3 100644
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -89,7 +89,7 @@ static void jump_label_update(struct static_key *key);
+ int static_key_count(struct static_key *key)
+ {
+ 	/*
+-	 * -1 means the first static_key_slow_inc() is in progress.
++	 * -0xffff means the first static_key_slow_inc() is in progress.
+ 	 *  static_key_enabled() must return true, so return 1 here.
+ 	 */
+ 	int n = atomic_read(&key->enabled);
+@@ -125,7 +125,10 @@ void static_key_slow_inc_cpuslocked(struct static_key *key)
+ 
+ 	jump_label_lock();
+ 	if (atomic_read(&key->enabled) == 0) {
+-		atomic_set(&key->enabled, -1);
++		/* Use a large enough negative number so we can still
++		 * catch underflow bugs in static_key_slow_dec().
++		 */
++		atomic_set(&key->enabled, -0xffff);
+ 		jump_label_update(key);
+ 		/*
+ 		 * Ensure that if the above cmpxchg loop observes our positive
+@@ -158,7 +161,7 @@ void static_key_enable_cpuslocked(struct static_key *key)
+ 
+ 	jump_label_lock();
+ 	if (atomic_read(&key->enabled) == 0) {
+-		atomic_set(&key->enabled, -1);
++		atomic_set(&key->enabled, -0xffff);
+ 		jump_label_update(key);
+ 		/*
+ 		 * See static_key_slow_inc().
+@@ -208,15 +211,11 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
+ {
+ 	lockdep_assert_cpus_held();
+ 
+-	/*
+-	 * The negative count check is valid even when a negative
+-	 * key->enabled is in use by static_key_slow_inc(); a
+-	 * __static_key_slow_dec() before the first static_key_slow_inc()
+-	 * returns is unbalanced, because all other static_key_slow_inc()
+-	 * instances block while the update is in progress.
+-	 */
+ 	if (!atomic_dec_and_mutex_lock(&key->enabled, &jump_label_mutex)) {
+-		WARN(atomic_read(&key->enabled) < 0,
++		int v;
++
++		v = atomic_read(&key->enabled);
++		WARN(v < 0 && v != -0xffff,
+ 		     "jump label: negative count!\n");
+ 		return;
+ 	}
+-- 
+2.19.2
 
