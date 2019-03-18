@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDF2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C64C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CB220850
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AFE20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfCRKtr (ORCPT
+        id S1727717AbfCRKtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:49:47 -0400
-Received: from foss.arm.com ([217.140.101.70]:59722 "EHLO foss.arm.com"
+        Mon, 18 Mar 2019 06:49:51 -0400
+Received: from foss.arm.com ([217.140.101.70]:59758 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbfCRKtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:49:45 -0400
+        id S1727632AbfCRKts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 06:49:48 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E6271A25;
-        Mon, 18 Mar 2019 03:49:45 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 816E4174E;
+        Mon, 18 Mar 2019 03:49:48 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 372653F614;
-        Mon, 18 Mar 2019 03:49:42 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8D41B3F614;
+        Mon, 18 Mar 2019 03:49:45 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
@@ -39,11 +39,10 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>,
         Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
         Steve Capper <Steve.Capper@arm.com>,
         Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v2 3/6] x86: clean up _TIF_SYSCALL_EMU handling using ptrace_syscall_enter hook
-Date:   Mon, 18 Mar 2019 10:49:22 +0000
-Message-Id: <20190318104925.16600-4-sudeep.holla@arm.com>
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v2 4/6] powerpc: use common ptrace_syscall_enter hook to handle _TIF_SYSCALL_EMU
+Date:   Mon, 18 Mar 2019 10:49:23 +0000
+Message-Id: <20190318104925.16600-5-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190318104925.16600-1-sudeep.holla@arm.com>
 References: <20190318104925.16600-1-sudeep.holla@arm.com>
@@ -54,50 +53,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Now that we have a new hook ptrace_syscall_enter that can be called from
 syscall entry code and it handles PTRACE_SYSEMU in generic code, we
-can do some cleanup using the same in syscall_trace_enter.
+can do some cleanup using the same in do_syscall_trace_enter.
 
-Further the extra logic to find single stepping PTRACE_SYSEMU_SINGLESTEP
-in syscall_slow_exit_work seems unnecessary. Let's remove the same.
-
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/x86/entry/common.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ arch/powerpc/kernel/ptrace.c | 48 ++++++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 27 deletions(-)
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 7bc105f47d21..5d7590994964 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -70,22 +70,16 @@ static long syscall_trace_enter(struct pt_regs *regs)
+diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
+index 2e2183b800a8..05579a5dcb12 100644
+--- a/arch/powerpc/kernel/ptrace.c
++++ b/arch/powerpc/kernel/ptrace.c
+@@ -3278,35 +3278,29 @@ long do_syscall_trace_enter(struct pt_regs *regs)
  
- 	struct thread_info *ti = current_thread_info();
- 	unsigned long ret = 0;
--	bool emulated = false;
- 	u32 work;
+ 	user_exit();
  
- 	if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
- 		BUG_ON(regs != task_pt_regs(current));
- 
--	work = READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY;
+-	flags = READ_ONCE(current_thread_info()->flags) &
+-		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
 -
--	if (unlikely(work & _TIF_SYSCALL_EMU))
--		emulated = true;
--
--	if ((emulated || (work & _TIF_SYSCALL_TRACE)) &&
--	    tracehook_report_syscall_entry(regs))
-+	if (unlikely(ptrace_syscall_enter(regs)))
- 		return -1L;
+-	if (flags) {
+-		int rc = tracehook_report_syscall_entry(regs);
++	if (unlikely(ptrace_syscall_enter(regs))) {
++		/*
++		 * A nonzero return code from tracehook_report_syscall_entry()
++		 * tells us to prevent the syscall execution, but we are not
++		 * going to execute it anyway.
++		 *
++		 * Returning -1 will skip the syscall execution. We want to
++		 * avoid clobbering any registers, so we don't goto the skip
++		 * label below.
++		 */
++		return -1;
++	}
  
--	if (emulated)
-+	work = READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY;
-+	if ((work & _TIF_SYSCALL_TRACE) && tracehook_report_syscall_entry(regs))
- 		return -1L;
+-		if (unlikely(flags & _TIF_SYSCALL_EMU)) {
+-			/*
+-			 * A nonzero return code from
+-			 * tracehook_report_syscall_entry() tells us to prevent
+-			 * the syscall execution, but we are not going to
+-			 * execute it anyway.
+-			 *
+-			 * Returning -1 will skip the syscall execution. We want
+-			 * to avoid clobbering any registers, so we don't goto
+-			 * the skip label below.
+-			 */
+-			return -1;
+-		}
++	flags = READ_ONCE(current_thread_info()->flags) & _TIF_SYSCALL_TRACE;
  
- #ifdef CONFIG_SECCOMP
+-		if (rc) {
+-			/*
+-			 * The tracer decided to abort the syscall. Note that
+-			 * the tracer may also just change regs->gpr[0] to an
+-			 * invalid syscall number, that is handled below on the
+-			 * exit path.
+-			 */
+-			goto skip;
+-		}
++	if (flags && tracehook_report_syscall_entry(regs)) {
++		/*
++		 * The tracer decided to abort the syscall. Note that
++		 * the tracer may also just change regs->gpr[0] to an
++		 * invalid syscall number, that is handled below on the
++		 * exit path.
++		 */
++		goto skip;
+ 	}
+ 
+ 	/* Run seccomp after ptrace; allow it to set gpr[3]. */
 -- 
 2.17.1
 
