@@ -2,165 +2,237 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECA2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22809C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204B820863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:19:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTZPglq7"
+	by mail.kernel.org (Postfix) with ESMTP id E750520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfCRRTl (ORCPT
+        id S1727940AbfCRRUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:19:41 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:35379 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfCRRR4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:17:56 -0400
-Received: by mail-vs1-f74.google.com with SMTP id e63so3944536vsc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:17:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=UykDW4hFaDHfzyUH5xSGMBQs4gGYEgUL/nC+SEDYWFU=;
-        b=eTZPglq7PxVqxdqVAjoMC4HmmCrWD8Td2oOWhHZFu/cW19YPVAKsaJLDurjgd2ljVf
-         XFoitnM7dNKXaO1X3w5n48lJ0Y+z6lMVYoHTi6MyqIKBKDduB9n8l/eQ3eoQ6ApOGJcf
-         g0Ut1Mty7B6R+MM5DXRurd3w783o+tqjI10hk93IissEzK7cyNctMDjvmU3Tdk6WDEwH
-         ffIMuMSLEoDbieTKF2ybjM0vJlmx+cWPNY/uy7bo6luMmancF6Vim1Jp4tv/8hL6d3pb
-         M2HFyE+DxIM6V89Ha75sQlU/Ar8a05rWTSWi6zpfjkxsTGWw3NraARaPUHt9My5Uw9OY
-         7lHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=UykDW4hFaDHfzyUH5xSGMBQs4gGYEgUL/nC+SEDYWFU=;
-        b=s9jSIDJpk4ME5RcicrAI+zK8npDzAHsrIeeMMQsBNZ3Gxs9UwVFSdbRZJQSBg3La2I
-         dzp0BxAVoUQDSnKtE4wpHQnMQ5Zh6gAJK9mzwu6kcotU3AeRmENHO19KAxYNJqBQn7Nm
-         AEjaHsCC9Qldb8KVcG5eb7kQR03yrRkIWcgA47Oiicbs34wuTukKSek2Ywx3vjFz5ns2
-         uyFJ6AI8E7dDZOyGU5LLh1RDmnx0i2NyvO0wUeo/MDQDKAUUq4gvQGpoegnhWqJF+n8G
-         ChDgrIKWwSnsfVP/U8togjWdbf27xGmY4NPNOXKyIgnac8sjqP2rTdj7/ybPV+afW+2l
-         euCg==
-X-Gm-Message-State: APjAAAX0+1i5TDWTncGKm7b/Of402ZTRAE2XUu3KF7QVBB4yX5YPPapi
-        BmoP8WBEf551TXyQiNBm/D/zuKeJrebQfK94
-X-Google-Smtp-Source: APXvYqw1yRv1Lvlj4b/qzRYNiehInvLnccniboB47LbD/6n+0FpFdxyh/c9QXVRmnP7ZYupHxKhIzMKUChtQA6Na
-X-Received: by 2002:a1f:1e4a:: with SMTP id e71mr11807432vke.2.1552929475245;
- Mon, 18 Mar 2019 10:17:55 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 18:17:34 +0100
-In-Reply-To: <cover.1552929301.git.andreyknvl@google.com>
-Message-Id: <f7b263a20223da2b8b26f6a5b0d84a575af28010.1552929301.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1552929301.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
-Subject: [PATCH v12 02/13] arm64: untag user pointers in access_ok and __uaccess_mask_ptr
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mon, 18 Mar 2019 13:20:03 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38310 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727658AbfCRRUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:20:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7AF4F1650;
+        Mon, 18 Mar 2019 10:20:02 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 884503F614;
+        Mon, 18 Mar 2019 10:20:00 -0700 (PDT)
+Subject: Re: [PATCH] arm64/io: Don't use WZR in writel
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jens Axboe <axboe@kernel.dk>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <68b71c15f32341468a868f6418e4fcb375bc49ba.camel@gmail.com>
+ <20190211105755.GB30880@fuggles.cambridge.arm.com>
+ <38d8965a-cd41-17cf-1b95-8dd58c079be4@arm.com>
+ <874c702b8af760aa8fae38d478c79e3ecba00515.camel@gmail.com>
+ <235d20ef-3054-69d9-975d-25aebf32aad3@arm.com>
+ <20190223181254.GC572@tuxbook-pro> <86zhqm8i6d.wl-marc.zyngier@arm.com>
+ <20190224035356.GD572@tuxbook-pro>
+ <33d765b5-1807-fa6c-1ceb-99f09f7c8d5a@free.fr>
+ <8eb4f446-6152-ffb6-9529-77fb0bcc307f@arm.com>
+ <20190318170041.qu4x2565fmno6sei@shell.armlinux.org.uk>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5ba7c4d0-30ec-e38d-41dc-653fd5cb7f05@arm.com>
+Date:   Mon, 18 Mar 2019 17:19:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190318170041.qu4x2565fmno6sei@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a part of a series that extends arm64 kernel ABI to allow to
-pass tagged user pointers (with the top byte set to something else other
-than 0x00) as syscall arguments.
+On 18/03/2019 17:00, Russell King - ARM Linux admin wrote:
+> On Mon, Mar 18, 2019 at 04:04:03PM +0000, Robin Murphy wrote:
+>> On 12/03/2019 12:36, Marc Gonzalez wrote:
+>>> On 24/02/2019 04:53, Bjorn Andersson wrote:
+>>>
+>>>> On Sat 23 Feb 10:37 PST 2019, Marc Zyngier wrote:
+>>>>
+>>>>> On Sat, 23 Feb 2019 18:12:54 +0000, Bjorn Andersson wrote:
+>>>>>>
+>>>>>> On Mon 11 Feb 06:59 PST 2019, Marc Zyngier wrote:
+>>>>>>
+>>>>>>> On 11/02/2019 14:29, AngeloGioacchino Del Regno wrote:
+>>>>>>>
+>>>>>>>> Also, just one more thing: yes this thing is going ARM64-wide and
+>>>>>>>> - from my findings - it's targeting certain Qualcomm SoCs, but...
+>>>>>>>> I'm not sure that only QC is affected by that, others may as well
+>>>>>>>> have the same stupid bug.
+>>>>>>>
+>>>>>>> At the moment, only QC SoCs seem to be affected, probably because
+>>>>>>> everyone else has debugged their hypervisor (or most likely doesn't
+>>>>>>> bother with shipping one).
+>>>>>>>
+>>>>>>> In all honesty, we need some information from QC here: which SoCs are
+>>>>>>> affected, what is the exact nature of the bug, can it be triggered from
+>>>>>>> EL0. Randomly papering over symptoms is not something I really like
+>>>>>>> doing, and is likely to generate problems on unaffected systems.
+>>>>>>
+>>>>>> The bug at hand is that the XZR is not deemed a valid source in the
+>>>>>> virtualization of the SMMU registers. It was identified and fixed for
+>>>>>> all platforms that are shipping kernels based on v4.9 or later.
+>>>>>
+>>>>> When you say "fixed": Do you mean fixed in the firmware? Or by adding
+>>>>> a workaround in the shipped kernel?
+>>>>
+>>>> I mean that it's fixed in the firmware.
+>>>>
+>>>>> If the former, is this part of an official QC statement, with an
+>>>>> associated erratum number?
+>>>>
+>>>> I don't know, will get back to you on this one.
+>>>>
+>>>>> Is this really limited to the SMMU accesses?
+>>>>
+>>>> Yes.
+>>>>
+>>>>>> As such Angelo's list of affected platforms covers the high-profile
+>>>>>> ones. In particular MSM8996 and MSM8998 is getting pretty good support
+>>>>>> upstream, if we can figure out a way around this issue.
+>>>>>
+>>>>> We'd need an exhaustive list of the affected SoCs, and work out if we
+>>>>> can limit the hack to the SMMU driver (cc'ing Robin, who's the one
+>>>>> who'd know about it).
+>>>>
+>>>> I will try to compose a list.
+>>>
+>>> FWIW, I have just been bitten by this issue. I needed to enable an SMMU to
+>>> filter PCIe EP accesses to system RAM (or something). I'm using an APQ8098
+>>> MEDIABOX dev board. My system hangs in arm_smmu_device_reset() doing:
+>>>
+>>> 	/* Invalidate the TLB, just in case */
+>>> 	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+>>> 	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+>>>
+>>>
+>>> With the 'Z' constraint, gcc generates:
+>>>
+>>> 	str wzr, [x0]
+>>>
+>>> without the 'Z' constraint, gcc generates:
+>>>
+>>> 	mov	w1, 0
+>>> 	str w1, [x0]
+>>>
+>>>
+>>> I can work around the problem using the following patch:
+>>>
+>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>>> index 045d93884164..93117519aed8 100644
+>>> --- a/drivers/iommu/arm-smmu.c
+>>> +++ b/drivers/iommu/arm-smmu.c
+>>> @@ -59,6 +59,11 @@
+>>>    #include "arm-smmu-regs.h"
+>>> +static inline void qcom_writel(u32 val, volatile void __iomem *addr)
+>>> +{
+>>> +	asm volatile("str %w0, [%1]" : : "r" (val), "r" (addr));
+>>> +}
+>>> +
+>>>    #define ARM_MMU500_ACTLR_CPRE		(1 << 1)
+>>>    #define ARM_MMU500_ACR_CACHE_LOCK	(1 << 26)
+>>> @@ -422,7 +427,7 @@ static void __arm_smmu_tlb_sync(struct arm_smmu_device *smmu,
+>>>    {
+>>>    	unsigned int spin_cnt, delay;
+>>> -	writel_relaxed(0, sync);
+>>> +	qcom_writel(0, sync);
+>>>    	for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
+>>>    		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+>>>    			if (!(readl_relaxed(status) & sTLBGSTATUS_GSACTIVE))
+>>> @@ -1760,8 +1765,8 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
+>>>    	}
+>>>    	/* Invalidate the TLB, just in case */
+>>> -	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+>>> -	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+>>> +	qcom_writel(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+>>> +	qcom_writel(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+>>>    	reg = readl_relaxed(ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+>>>
+>>>
+>>>
+>>> Can a quirk be used to work around the issue?
+>>> Or can we just "pessimize" the 3 writes for everybody?
+>>> (Might be cheaper than a test anyway)
+>>
+>> If it really is just the SMMU driver which is affected, we can work around
+>> it for free (not counting the 'cost' of slightly-weird-looking code, of
+>> course). If the diff below works as expected, I'll write it up properly.
+>>
+>> Robin.
+>> ----->8-----
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 045d93884164..7ff29e33298f 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -422,7 +422,7 @@ static void __arm_smmu_tlb_sync(struct arm_smmu_device
+>> *smmu,
+>>   {
+>>   	unsigned int spin_cnt, delay;
+>>
+>> -	writel_relaxed(0, sync);
+>> +	writel_relaxed((unsigned long)sync, sync);
+>>   	for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
+>>   		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+>>   			if (!(readl_relaxed(status) & sTLBGSTATUS_GSACTIVE))
+>> @@ -681,7 +681,12 @@ static void arm_smmu_write_context_bank(struct
+>> arm_smmu_device *smmu, int idx)
+>>
+>>   	/* Unassigned context banks only need disabling */
+>>   	if (!cfg) {
+>> -		writel_relaxed(0, cb_base + ARM_SMMU_CB_SCTLR);
+>> +		/*
+>> +		 * For Qualcomm reasons, we want to guarantee that we write a
+>> +		 * zero from a register which is not WZR. Fortunately, the cfg
+>> +		 * logic here plays right into our hands...
+>> +		 */
+>> +		writel_relaxed((unsigned long)cfg, cb_base + ARM_SMMU_CB_SCTLR);
+>>   		return;
+>>   	}
+>>
+>> @@ -1760,8 +1765,8 @@ static void arm_smmu_device_reset(struct
+>> arm_smmu_device *smmu)
+>>   	}
+>>
+>>   	/* Invalidate the TLB, just in case */
+>> -	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+>> -	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+>> +	writel_relaxed(reg, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+>> +	writel_relaxed(reg, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+>>
+>>   	reg = readl_relaxed(ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+>>
+> 
+> Given what we've seen from Clang for futex stuff in 32-bit ARM, are
+> you really sure that the above will not result in Clang still spotting
+> that the value is zero and using a wzr for all these cases?
 
-copy_from_user (and a few other similar functions) are used to copy data
-from user memory into the kernel memory or vice versa. Since a user can
-provided a tagged pointer to one of the syscalls that use copy_from_user,
-we need to correctly handle such pointers.
+The trick is that in the write-only TLBI cases the variable we're 
+passing in really is nonzero, so that can't possibly happen. For the 
+context bank reset, yes, I am assuming that no complier will ever be 
+perverse enough to detect that cfg is not written after the NULL check 
+and immediately reallocate it to XZR for no good reason. I'd like to 
+think that assumption is going to hold for the reasonable scope of this 
+particular workaround, though.
 
-Do this by untagging user pointers in access_ok and in __uaccess_mask_ptr,
-before performing access validity checks.
-
-Note, that this patch only temporarily untags the pointers to perform the
-checks, but then passes them as is into the kernel internals.
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- arch/arm64/include/asm/uaccess.h | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
-index e5d5f31c6d36..9164ecb5feca 100644
---- a/arch/arm64/include/asm/uaccess.h
-+++ b/arch/arm64/include/asm/uaccess.h
-@@ -94,7 +94,7 @@ static inline unsigned long __range_ok(const void __user *addr, unsigned long si
- 	return ret;
- }
- 
--#define access_ok(addr, size)	__range_ok(addr, size)
-+#define access_ok(addr, size)	__range_ok(untagged_addr(addr), size)
- #define user_addr_max			get_fs
- 
- #define _ASM_EXTABLE(from, to)						\
-@@ -226,7 +226,8 @@ static inline void uaccess_enable_not_uao(void)
- 
- /*
-  * Sanitise a uaccess pointer such that it becomes NULL if above the
-- * current addr_limit.
-+ * current addr_limit. In case the pointer is tagged (has the top byte set),
-+ * untag the pointer before checking.
-  */
- #define uaccess_mask_ptr(ptr) (__typeof__(ptr))__uaccess_mask_ptr(ptr)
- static inline void __user *__uaccess_mask_ptr(const void __user *ptr)
-@@ -234,10 +235,11 @@ static inline void __user *__uaccess_mask_ptr(const void __user *ptr)
- 	void __user *safe_ptr;
- 
- 	asm volatile(
--	"	bics	xzr, %1, %2\n"
-+	"	bics	xzr, %3, %2\n"
- 	"	csel	%0, %1, xzr, eq\n"
- 	: "=&r" (safe_ptr)
--	: "r" (ptr), "r" (current_thread_info()->addr_limit)
-+	: "r" (ptr), "r" (current_thread_info()->addr_limit),
-+	  "r" (untagged_addr(ptr))
- 	: "cc");
- 
- 	csdb();
--- 
-2.21.0.225.g810b269d1ac-goog
-
+Robin.
