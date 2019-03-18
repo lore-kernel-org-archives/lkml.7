@@ -2,169 +2,144 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4025C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FF0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3912077B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9275120989
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfCRSth (ORCPT
+        id S1727163AbfCRSxO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:49:37 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:58695 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfCRStg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:49:36 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h5xK9-0000L0-KO; Mon, 18 Mar 2019 14:49:29 -0400
-Date:   Mon, 18 Mar 2019 14:48:56 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V5 03/10] audit: read container ID of a process
-Message-ID: <20190318184856.GA4111@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <25543e3db4d8f3853119f92c09a60664555249a2.1552665316.git.rgb@redhat.com>
- <20190318111003.GA7364@hmswarspite.think-freely.org>
- <20190318181721.6e5jxqwvmifduzvq@madcap2.tricolour.ca>
+        Mon, 18 Mar 2019 14:53:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36128 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726677AbfCRSxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 14:53:14 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 44C2CC1306F1;
+        Mon, 18 Mar 2019 18:53:13 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDDD6620DF;
+        Mon, 18 Mar 2019 18:53:11 +0000 (UTC)
+Subject: Re: [PATCH v12 3/3] ipc: Do cyclic id allocation with ipcmni_extend
+ mode
+From:   Waiman Long <longman@redhat.com>
+To:     Manfred Spraul <manfred@colorfullife.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>
+References: <1551379645-819-1-git-send-email-longman@redhat.com>
+ <1551379645-819-4-git-send-email-longman@redhat.com>
+ <e780cb59-ef1b-5f56-1e92-394dff5d4e32@colorfullife.com>
+ <eaee3fad-937b-9776-5ff4-874475acc162@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <35482058-12e3-b528-fc97-50c7f011dd15@redhat.com>
+Date:   Mon, 18 Mar 2019 14:53:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190318181721.6e5jxqwvmifduzvq@madcap2.tricolour.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <eaee3fad-937b-9776-5ff4-874475acc162@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 18 Mar 2019 18:53:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 02:17:21PM -0400, Richard Guy Briggs wrote:
-> On 2019-03-18 07:10, Neil Horman wrote:
-> > On Fri, Mar 15, 2019 at 02:29:51PM -0400, Richard Guy Briggs wrote:
-> > > Add support for reading the audit container identifier from the proc
-> > > filesystem.
-> > > 
-> > > This is a read from the proc entry of the form
-> > > /proc/PID/audit_containerid where PID is the process ID of the task
-> > > whose audit container identifier is sought.
-> > > 
-> > > The read expects up to a u64 value (unset: 18446744073709551615).
-> > > 
-> > > This read requires CAP_AUDIT_CONTROL.
-> > > 
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > Acked-by: Serge Hallyn <serge@hallyn.com>
-> > > ---
-> > >  fs/proc/base.c | 23 +++++++++++++++++++++--
-> > >  1 file changed, 21 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/fs/proc/base.c b/fs/proc/base.c
-> > > index 2505c46c8701..0b833cbdf5b6 100644
-> > > --- a/fs/proc/base.c
-> > > +++ b/fs/proc/base.c
-> > > @@ -1295,6 +1295,24 @@ static ssize_t proc_sessionid_read(struct file * file, char __user * buf,
-> > >  	.llseek		= generic_file_llseek,
-> > >  };
-> > >  
-> > > +static ssize_t proc_contid_read(struct file *file, char __user *buf,
-> > > +				  size_t count, loff_t *ppos)
-> > > +{
-> > > +	struct inode *inode = file_inode(file);
-> > > +	struct task_struct *task = get_proc_task(inode);
-> > > +	ssize_t length;
-> > > +	char tmpbuf[TMPBUFLEN*2];
-> > > +
-> > Sorry, didn't notice this previously, but..
-> > Why *2 here?  Its not wrong per-se, but would it be better to just change
-> > TMPBUFLEN to be 22 bytes unilaterally?  Its only ever used on stack calls that
-> > arent that deep, and then you won't have to think about adjusting this call site
-> > if you ever change the value of TMPBUFLEN in the future.
-> 
-> TMPBUFLEN is 11 to accomodate a decimal representation of a u32 with
-> terminating NULL.  Since the contid is a u64, it was least disruptive
-> and made sense to me to just double it.  I could define a TMPBUFLEN2 to
-> be 21 if you prefer?
-> 
-I'm not adamant on any particular change, just noticing the inconsistency.  I
-usually write macro buffer sizes to accomodate the largest string I plan to
-hold, so it can be used ubiquitously when the overage is small and transiently
-allocated, but if you feel like the space would be better conserved a TMPBUFLEN/
-TMPBUFLEN2 approach would be fine (or a TMPBUFLENU32 / TMPBUFLENU64 macro set).
+On 03/18/2019 02:37 PM, Waiman Long wrote:
+> On 03/17/2019 02:27 PM, Manfred Spraul wrote:
+>> Hi Waiman,
+>>
+>> On 2/28/19 7:47 PM, Waiman Long wrote:
+>>> For ipcmni_extend mode, the sequence number space is only 7 bits. So
+>>> the chance of id reuse is relatively high compared with the non-extended
+>>> mode.
+>>>
+>>> To alleviate this id reuse problem, the id allocation will be done
+>>> cyclically to cycle through all the 24-bit id space before wrapping
+>>> around when in ipcmni_extend mode. This may cause the use of more memory
+>>> in term of the number of xa_nodes allocated as well as potentially more
+>>> cachelines used as the xa_nodes may be spread more sparsely in this
+>>> case.
+>>>
+>>> There is probably a slight memory and performance cost in doing cyclic
+>>> id allocation. For applications that really need more than 32k unique
+>>> IPC
+>>> identifiers, this is a small price to pay to avoid the id reuse problem.
+>> Have you measured it?
+>>
+>> I have observed -3% for semop() for a 4 level radix tree compared to a
+>> 1-level radix tree, and I'm a bit reluctant to accept that.
+>> Especially as the percentage will increase if the syscall overhead
+>> goes down again (-> less spectre impact).
+>>
+> It is both Spectre (retpoline) and Meltdown (PTI). PTI is not needed in
+> AMD CPU and so you may see a bit higher slowdown.
 
-Its not anything that needs fixing now, just an observation for clean up at some
-future point.
-Neil
+The use of idr_replace() in your previous patch may also slow the code
+path a bit to reduce the performance difference that you saw. This is
+actually my main concern with using idr_replace() as suggested by
+Matthew, but I am OK to use it if people think absolute correctness is
+more important.
 
-> > I'm fine with doing this in another patch later, but it seems like a worthwhile
-> > cleanup
-> > 
-> > functionality looks good beyond that nit.
-> > 
-> > > +	if (!task)
-> > > +		return -ESRCH;
-> > > +	/* if we don't have caps, reject */
-> > > +	if (!capable(CAP_AUDIT_CONTROL))
-> > > +		return -EPERM;
-> > > +	length = scnprintf(tmpbuf, TMPBUFLEN*2, "%llu", audit_get_contid(task));
-> > > +	put_task_struct(task);
-> > > +	return simple_read_from_buffer(buf, count, ppos, tmpbuf, length);
-> > > +}
-> > > +
-> > >  static ssize_t proc_contid_write(struct file *file, const char __user *buf,
-> > >  				   size_t count, loff_t *ppos)
-> > >  {
-> > > @@ -1325,6 +1343,7 @@ static ssize_t proc_contid_write(struct file *file, const char __user *buf,
-> > >  }
-> > >  
-> > >  static const struct file_operations proc_contid_operations = {
-> > > +	.read		= proc_contid_read,
-> > >  	.write		= proc_contid_write,
-> > >  	.llseek		= generic_file_llseek,
-> > >  };
-> > > @@ -3039,7 +3058,7 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
-> > >  #ifdef CONFIG_AUDIT
-> > >  	REG("loginuid",   S_IWUSR|S_IRUGO, proc_loginuid_operations),
-> > >  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
-> > > -	REG("audit_containerid", S_IWUSR, proc_contid_operations),
-> > > +	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
-> > >  #endif
-> > >  #ifdef CONFIG_FAULT_INJECTION
-> > >  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
-> > > @@ -3428,7 +3447,7 @@ static int proc_tid_comm_permission(struct inode *inode, int mask)
-> > >  #ifdef CONFIG_AUDIT
-> > >  	REG("loginuid",  S_IWUSR|S_IRUGO, proc_loginuid_operations),
-> > >  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
-> > > -	REG("audit_containerid", S_IWUSR, proc_contid_operations),
-> > > +	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
-> > >  #endif
-> > >  #ifdef CONFIG_FAULT_INJECTION
-> > >  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
-> > > -- 
-> > > 1.8.3.1
-> > > 
-> > > 
-> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> > 
-> 
-> - RGB
-> 
-> --
-> Richard Guy Briggs <rgb@redhat.com>
-> Sr. S/W Engineer, Kernel Security, Base Operating Systems
-> Remote, Ottawa, Red Hat Canada
-> IRC: rgb, SunRaycer
-> Voice: +1.647.777.2635, Internal: (81) 32635
-> 
+Cheers,
+Longman
+
