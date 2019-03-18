@@ -2,75 +2,144 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273ECC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AEBC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7DE2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:57:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K4xDAq9i"
+	by mail.kernel.org (Postfix) with ESMTP id 6A36F2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfCRL5c (ORCPT
+        id S1727383AbfCRL5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:57:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33178 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbfCRL5c (ORCPT
+        Mon, 18 Mar 2019 07:57:39 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:44185 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfCRL5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:57:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JAz+Eu34UwsmzIzg1ee3czANBIDalcEvehwlmxNHZZ4=; b=K4xDAq9i1XlK0BR03pv2D4au+F
-        fC1v6Ffc9q1M4k9lN2Fgc7gr19Gk5Mmi6/t0Tj0GZNZKA1MUz3s5a+ay1Rpz6PH9PL7VSp8Ft2Nda
-        DJobNWPhrwalFpJvlUyVpR/OLwYBQnViwvu6KJUUVwrBcLX15jDUw7a7ekzSFJFgg2wnRWkR2i+Op
-        6yKGHzsRZTMEvyqA2i/7Na0dGRmWjSCDs/srHyyVGo8I2ISA66Ez49jmZXN8btA1U46qKFafaTYt/
-        9KBcKwVQ5llWVbyVrPQBTR82sFe0VyjUTc9Al0s/XgQZgTWby3LCVAwPopk7r10vnA19by8ChjSGn
-        4Le3Ga9w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5qtX-0008Ka-IP; Mon, 18 Mar 2019 11:57:31 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DD84F202194F4; Mon, 18 Mar 2019 12:57:28 +0100 (CET)
-Date:   Mon, 18 Mar 2019 12:57:28 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas =?iso-8859-1?Q?M=FCller?= <thomas@mathtm.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: disabling secondary CPU hangs / system fails to suspend with
- kernel 4.19+
-Message-ID: <20190318115728.GP6058@hirez.programming.kicks-ass.net>
-References: <5c48095e-028a-404f-aaa1-964f83c83817@mathtm.de>
- <20190315090950.GT5996@hirez.programming.kicks-ass.net>
- <cbaafd35-a17d-8331-4cef-281a562b91b5@mathtm.de>
- <20190315121541.GD6058@hirez.programming.kicks-ass.net>
- <2b1c85d3-d94b-1593-e30a-a32d97043579@mathtm.de>
+        Mon, 18 Mar 2019 07:57:38 -0400
+X-Originating-IP: 90.88.22.102
+Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 7368DC0006;
+        Mon, 18 Mar 2019 11:57:34 +0000 (UTC)
+Date:   Mon, 18 Mar 2019 12:57:33 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     icenowy@aosc.io, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        linux-clk@vger.kernel.org
+Subject: Re: [linux-sunxi] Re: [PATCH 04/14] pinctrl: sunxi: v3: really
+ introduce support for V3
+Message-ID: <20190318115733.4onedngeaqbm4txp@flea>
+References: <20190312152256.35574-1-icenowy@aosc.io>
+ <20190312152256.35574-5-icenowy@aosc.io>
+ <20190312153654.25r5orlw7qjtlhbt@flea>
+ <7B6C1341-BAB5-48C5-9E60-11BCEAC3D0CD@aosc.io>
+ <ef0c3061986b7456605a61f835f2a2003cf4c678.camel@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kfiqbz764gzlm462"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2b1c85d3-d94b-1593-e30a-a32d97043579@mathtm.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ef0c3061986b7456605a61f835f2a2003cf4c678.camel@bootlin.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 09:21:02PM +0100, Thomas Müller wrote:
-> I've just re-tested with runlevel 3.
-> Not a real VGA console, but at least no Wayland or Gnome to interfere...
-> 
-> `echo 0 > /sys/...` just blocks and no message whatsoever is visible in dmesg.
-> 
-> I've executed `echo 0 > ...` in the background to keep my console functional and I can e.g. echo
-> something to /dev/kmsg and it shows up, so reading/updating the log buffer appears to be working
-> just fine.
 
-Damn.. Thanks for trying. I'll see if I can come up with something, but
-I'm out of idea for now :/
+--kfiqbz764gzlm462
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Mar 18, 2019 at 12:05:12PM +0100, Paul Kocialkowski wrote:
+> Hi,
+>
+> Le mardi 12 mars 2019 =C3=A0 23:45 +0800, Icenowy Zheng a =C3=A9crit :
+> >
+> > =E4=BA=8E 2019=E5=B9=B43=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=8811:36:54, Maxime Ripard <maxime.ripard@bootlin.com> =E5=86=99=E5=88=B0:
+> > > On Tue, Mar 12, 2019 at 11:22:46PM +0800, Icenowy Zheng wrote:
+> > > > Introduce the GPIO pins that is only available on V3 (not on V3s) to
+> > > the
+> > > > V3 pinctrl driver.
+> > > >
+> > > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > > ---
+> > > >  drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c | 291
+> > > +++++++++++++++++++++--
+> > > >  drivers/pinctrl/sunxi/pinctrl-sunxi.h    |   2 +
+> > > >  2 files changed, 275 insertions(+), 18 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> > > b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> > > > index 6704ce8e5e3d..54c210871a95 100644
+> > > > --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> > > > +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> > > > @@ -1,5 +1,5 @@
+> > > >  /*
+> > > > - * Allwinner V3s SoCs pinctrl driver.
+> > > > + * Allwinner V3/V3s SoCs pinctrl driver.
+> > > >   *
+> > > >   * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+> > > >   *
+> > > > @@ -23,7 +23,7 @@
+> > > >
+> > > >  #include "pinctrl-sunxi.h"
+> > > >
+> > > > -static const struct sunxi_desc_pin sun8i_v3s_pins[] =3D {
+> > > > +static const struct sunxi_desc_pin sun8i_v3_v3s_pins[] =3D {
+> > >
+> > > I'm not sure all that remaining is worth it to be honest. It adds a
+> > > lot of noise for no particular reason (and the same goes for renaming
+> > > the file itself)
+> >
+> > Maybe keeping names is okay "for historial reasons".
+> >
+> > In fact I want to keep them.
+>
+> My two cents about this: kernel development is plagued by the unability
+> to rename and rework things as soon as backward compatibility is
+> involved. I believe that renaming and reworking things is quite a good
+> thing to do when it leads to a situation that is easier to understand
+> and makes more sense.
+>
+> In this case, I don't see any blockers that would prevent us from doing
+> this, so I am strongly in favor of it. I really don't see how increased
+> noise and "historical reasons" make up for better clarity.
+
+It simplifies the git history, for once, which has the side effect of
+reducing conflicts too.
+
+A second one is: Do you prefer to review patches that have some
+significant value (like a new feature, a bugfix, a new SoC support,
+etc) or one that renames files and / or symbols?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--kfiqbz764gzlm462
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXI+HnwAKCRDj7w1vZxhR
+xfbaAP4tTPJsX9kjGgO2E96g98P/Y+TcQb27RkXk4LjnteSexAEAw1P3kGgeQQ04
+LmZksUSSEkd+Gy4cLhehmv11w/aPWAo=
+=CCMo
+-----END PGP SIGNATURE-----
+
+--kfiqbz764gzlm462--
