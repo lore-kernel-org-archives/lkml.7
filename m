@@ -2,126 +2,212 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30AAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82161C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F362133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ACB92133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfCRU6m (ORCPT
+        id S1727846AbfCRU7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:58:42 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37104 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726944AbfCRU6m (ORCPT
+        Mon, 18 Mar 2019 16:59:46 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:59750 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfCRU7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:58:42 -0400
-X-UUID: c5318549fbdd484099700d7b3d543ff9-20190319
-X-UUID: c5318549fbdd484099700d7b3d543ff9-20190319
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <sean.wang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1711926507; Tue, 19 Mar 2019 04:58:36 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 19 Mar 2019 04:58:33 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 19 Mar 2019 04:58:33 +0800
-From:   <sean.wang@mediatek.com>
-To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>
-CC:     <linux-bluetooth@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>
-Subject: [PATCH v2] Bluetooth: btmtksdio: fix uninitialized symbol errors in btmtksdio_rx_packet
-Date:   Tue, 19 Mar 2019 04:58:33 +0800
-Message-ID: <741bf172b7d0b77e664e7edeab1bd798c955cc5b.1552942432.git.sean.wang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Mon, 18 Mar 2019 16:59:45 -0400
+Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1h5zM8-0001Lp-Jq; Mon, 18 Mar 2019 16:59:39 -0400
+Date:   Mon, 18 Mar 2019 16:58:59 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com
+Subject: Re: [PATCH ghak90 V5 10/10] audit: NETFILTER_PKT: record each
+ container ID associated with a netNS
+Message-ID: <20190318205859.GG4111@hmswarspite.think-freely.org>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <56127b2a5b82f15cb0d0f040502c2e3bb6945f30.1552665316.git.rgb@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-TM-SNTS-SMTP: 0F17E529B19880F66F5DD48C42861FFE95E7862658AB986D9949304E5BF6F5182000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56127b2a5b82f15cb0d0f040502c2e3bb6945f30.1552665316.git.rgb@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
-
-Fixed all the below warnings. They would probably cause the following
-error handling path would use the uninitialized value and then produce
-unexpected behavior.
-
-drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_len’ may be used
-uninitialized in this function [-Wmaybe-uninitialized]
-  print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          old_data, old_len, true);
-          ~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/bluetooth/btmtksdio.c:376:15: note: ‘old_len’ was declared here
-  unsigned int old_len;
-               ^~~~~~~
-drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_data’ may be used
-uninitialized in this function [-Wmaybe-uninitialized]
-  print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          old_data, old_len, true);
-          ~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/bluetooth/btmtksdio.c:375:17: note: ‘old_data’ was declared here
-  unsigned char *old_data;
-                 ^~~~~~~~
-
-v2: Remove old_len and old_data because the error path for sdio_readsb also
-    seems wrong. And change the prefix from "mediatek" to "btmtksdio".
-
-Fixes: d74eef2834b5 ("Bluetooth: mediatek: add support for MediaTek MT7663S and MT7668S SDIO devices")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reported-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- drivers/bluetooth/btmtksdio.c | 10 ----------
- 1 file changed, 10 deletions(-)
-
-diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
-index befe43f9a34a..7d0d1cb93b0e 100644
---- a/drivers/bluetooth/btmtksdio.c
-+++ b/drivers/bluetooth/btmtksdio.c
-@@ -372,8 +372,6 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
- 	const struct h4_recv_pkt *pkts = mtk_recv_pkts;
- 	int pkts_count = ARRAY_SIZE(mtk_recv_pkts);
- 	struct mtkbtsdio_hdr *sdio_hdr;
--	unsigned char *old_data;
--	unsigned int old_len;
- 	int err, i, pad_size;
- 	struct sk_buff *skb;
- 	u16 dlen;
-@@ -392,12 +390,6 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
- 	if (err < 0)
- 		goto err_kfree_skb;
- 
--	/* Keep old data for dump the content in case of some error is
--	 * caught in the following packet parsing.
--	 */
--	old_data = skb->data;
--	old_len = skb->len;
--
- 	bdev->hdev->stat.byte_rx += rx_size;
- 
- 	sdio_hdr = (void *)skb->data;
-@@ -467,8 +459,6 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
- 	return 0;
- 
- err_kfree_skb:
--	print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
--		       old_data, old_len, true);
- 	kfree_skb(skb);
- 
- 	return err;
--- 
-2.18.0
+On Fri, Mar 15, 2019 at 02:29:58PM -0400, Richard Guy Briggs wrote:
+> Add audit container identifier auxiliary record(s) to NETFILTER_PKT
+> event standalone records.  Iterate through all potential audit container
+> identifiers associated with a network namespace.
+> 
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+>  include/linux/audit.h    |  5 +++++
+>  kernel/audit.c           | 41 +++++++++++++++++++++++++++++++++++++++++
+>  net/netfilter/nft_log.c  | 11 +++++++++--
+>  net/netfilter/xt_AUDIT.c | 11 +++++++++--
+>  4 files changed, 64 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index 70255c2dfb9f..723e2d020228 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -214,6 +214,8 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
+>  extern void audit_netns_contid_del(struct net *net, u64 contid);
+>  extern void audit_switch_task_namespaces(struct nsproxy *ns,
+>  					 struct task_struct *p);
+> +extern void audit_log_netns_contid_list(struct net *net,
+> +					struct audit_context *context);
+>  
+>  extern u32 audit_enabled;
+>  #else /* CONFIG_AUDIT */
+> @@ -290,6 +292,9 @@ static inline void audit_netns_contid_del(struct net *net, u64 contid)
+>  static inline void audit_switch_task_namespaces(struct nsproxy *ns,
+>  						struct task_struct *p)
+>  { }
+> +static inline void audit_log_netns_contid_list(struct net *net,
+> +					       struct audit_context *context)
+> +{ }
+>  
+>  #define audit_enabled AUDIT_OFF
+>  #endif /* CONFIG_AUDIT */
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index 7fa3194f5342..80ed323feeb5 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -451,6 +451,47 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
+>  		audit_netns_contid_add(new->net_ns, contid);
+>  }
+>  
+> +/**
+> + * audit_log_netns_contid_list - List contids for the given network namespace
+> + * @net: the network namespace of interest
+> + * @context: the audit context to use
+> + *
+> + * Description:
+> + * Issues a CONTAINER_ID record with a CSV list of contids associated
+> + * with a network namespace to accompany a NETFILTER_PKT record.
+> + */
+> +void audit_log_netns_contid_list(struct net *net, struct audit_context *context)
+> +{
+> +	struct audit_buffer *ab = NULL;
+> +	struct audit_contid *cont;
+> +	bool first = true;
+> +	struct audit_net *aunet;
+> +
+> +	/* Generate AUDIT_CONTAINER_ID record with container ID CSV list */
+> +	rcu_read_lock();
+> +	aunet = net_generic(net, audit_net_id);
+> +	if (!aunet)
+> +		goto out;
+> +	list_for_each_entry_rcu(cont, &aunet->contid_list, list) {
+> +		if (first) {
+> +			ab = audit_log_start(context, GFP_ATOMIC,
+> +					     AUDIT_CONTAINER_ID);
+> +			if (!ab) {
+> +				audit_log_lost("out of memory in audit_log_netns_contid_list");
+> +				goto out;
+> +			}
+> +			audit_log_format(ab, "contid=");
+> +		} else 
+> +			audit_log_format(ab, ",");
+> +		audit_log_format(ab, "%llu", cont->id);
+> +		first = false;
+> +	}
+> +	audit_log_end(ab);
+> +out:
+> +	rcu_read_unlock();
+> +}
+> +EXPORT_SYMBOL(audit_log_netns_contid_list);
+> +
+>  void audit_panic(const char *message)
+>  {
+>  	switch (audit_failure) {
+> diff --git a/net/netfilter/nft_log.c b/net/netfilter/nft_log.c
+> index 655187bed5d8..bdb1ec2368a7 100644
+> --- a/net/netfilter/nft_log.c
+> +++ b/net/netfilter/nft_log.c
+> @@ -69,13 +69,16 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
+>  	struct sk_buff *skb = pkt->skb;
+>  	struct audit_buffer *ab;
+>  	int fam = -1;
+> +	struct audit_context *context;
+> +	struct net *net;
+>  
+>  	if (!audit_enabled)
+>  		return;
+>  
+> -	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
+> +	context = audit_alloc_local(GFP_ATOMIC);
+> +	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
+>  	if (!ab)
+> -		return;
+> +		goto errout;
+>  
+>  	audit_log_format(ab, "mark=%#x", skb->mark);
+>  
+> @@ -102,6 +105,10 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
+>  		audit_log_format(ab, " saddr=? daddr=? proto=-1");
+>  
+>  	audit_log_end(ab);
+> +	net = xt_net(&pkt->xt);
+> +	audit_log_netns_contid_list(net, context);
+> +errout:
+> +	audit_free_context(context);
+>  }
+>  
+>  static void nft_log_eval(const struct nft_expr *expr,
+> diff --git a/net/netfilter/xt_AUDIT.c b/net/netfilter/xt_AUDIT.c
+> index af883f1b64f9..a3e547435f13 100644
+> --- a/net/netfilter/xt_AUDIT.c
+> +++ b/net/netfilter/xt_AUDIT.c
+> @@ -71,10 +71,13 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
+>  {
+>  	struct audit_buffer *ab;
+>  	int fam = -1;
+> +	struct audit_context *context;
+> +	struct net *net;
+>  
+>  	if (audit_enabled == AUDIT_OFF)
+> -		goto errout;
+> -	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
+> +		goto out;
+> +	context = audit_alloc_local(GFP_ATOMIC);
+> +	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
+>  	if (ab == NULL)
+>  		goto errout;
+>  
+> @@ -104,7 +107,11 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
+>  
+>  	audit_log_end(ab);
+>  
+> +	net = xt_net(par);
+> +	audit_log_netns_contid_list(net, context);
+>  errout:
+> +	audit_free_context(context);
+> +out:
+>  	return XT_CONTINUE;
+>  }
+>  
+> -- 
+> 1.8.3.1
+> 
+> 
+minus the whitespace fix
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 
