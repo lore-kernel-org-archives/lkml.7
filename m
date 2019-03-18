@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF32C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C55C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564BA21738
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043D02083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901416;
-	bh=ro1Xtcj9HfzBPgdoCDOFixRpgXl1J3d8CV8CVeofE54=;
+	s=default; t=1552901420;
+	bh=9kQ6HOeyD2H6qsaYinfpovhWXY6TQ9mJID5vVpXXplA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TUMM8WixFpU9AkCfT4Mgtwcl71hG0wfYjPHGZaMkpkSoYWQMREdFAjcHthVEDYtbL
-	 NnvqGWoUW3nQAmCMdFMumkw+iRizgQSSjVhLJ21oOAOkCVZ+Cj6vtMlkwWEGvqZbFo
-	 LCKKGoYuUxhLtbRTwpHoCBwtGmlWMYx21MoUO+Gg=
+	b=E7YH8JQf4R1TjZVxopCl6QY/8omYv11PV6nFJL/SNtA6A/V6uV3BMEylogz7XC9sj
+	 mIFwUYtSzItSGhUB4O9DvkJe1idj9wVknxgnbZa7rZ55DT7NdXBFgywU/b8KRRpkKE
+	 pTudB2KdMIAWfvNodWF89xT6V3D1UjS6Cn+eBmow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbfCRJaO (ORCPT
+        id S1728023AbfCRJaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:30:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727672AbfCRJaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:30:10 -0400
+        id S1728025AbfCRJaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:30:17 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2472083D;
-        Mon, 18 Mar 2019 09:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06CB2214AF;
+        Mon, 18 Mar 2019 09:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901407;
-        bh=ro1Xtcj9HfzBPgdoCDOFixRpgXl1J3d8CV8CVeofE54=;
+        s=default; t=1552901416;
+        bh=9kQ6HOeyD2H6qsaYinfpovhWXY6TQ9mJID5vVpXXplA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OPwJLrctrVSEj2aWzDgGU9a+dFaXsga2/IA3YxL0E2Ha/gkYVi1uX2FxcX5v7rqGJ
-         PLV9S4iT8BvJQbcU8/7HC2o2C3d8U/deBhKcDw4zf375L2+aVbWYwNmh8H+JBi/v00
-         SgK20/V9Lm7NhgXkHbtqSR2TvP9uTFD19SbYeD5I=
+        b=A7rgzbbMoOJu5+wA2TXjKA94ztx28mATQh3wn+268dPMsdJmvxP/yJdNWlhBul7ye
+         //KXoSjnFvHA4rP9PtulHYoCC/HKUXNvTcxl/hBPPH9PW4LgTWmBCyEzsU0sOhQ/+5
+         wAuK7bzRrsz00oy5pk4YlzIbpCMS25Eoem/s5j+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org, Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 08/52] net: hsr: fix memory leak in hsr_dev_finalize()
-Date:   Mon, 18 Mar 2019 10:24:55 +0100
-Message-Id: <20190318083844.401518713@linuxfoundation.org>
+Subject: [PATCH 4.20 37/52] net/smc: fix smc_poll in SMC_INIT state
+Date:   Mon, 18 Mar 2019 10:25:24 +0100
+Message-Id: <20190318083847.666498466@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -66,102 +65,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-[ Upstream commit 3dc6da493a29dbeda9f13b637bd9c02c414b2261 ]
+[ Upstream commit d7cf4a3bf3a83c977a29055e1c4ffada7697b31f ]
 
-If hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER) failed to
-add port, it directly returns res and forgets to free the node
-that allocated in hsr_create_self_node(), and forgets to delete
-the node->mac_list linked in hsr->self_node_db.
+smc_poll() returns with mask bit EPOLLPRI if the connection urg_state
+is SMC_URG_VALID. Since SMC_URG_VALID is zero, smc_poll signals
+EPOLLPRI errorneously if called in state SMC_INIT before the connection
+is created, for instance in a non-blocking connect scenario.
 
-BUG: memory leak
-unreferenced object 0xffff8881cfa0c780 (size 64):
-  comm "syz-executor.0", pid 2077, jiffies 4294717969 (age 2415.377s)
-  hex dump (first 32 bytes):
-    e0 c7 a0 cf 81 88 ff ff 00 02 00 00 00 00 ad de  ................
-    00 e6 49 cd 81 88 ff ff c0 9b 87 d0 81 88 ff ff  ..I.............
-  backtrace:
-    [<00000000e2ff5070>] hsr_dev_finalize+0x736/0x960 [hsr]
-    [<000000003ed2e597>] hsr_newlink+0x2b2/0x3e0 [hsr]
-    [<000000003fa8c6b6>] __rtnl_newlink+0xf1f/0x1600 net/core/rtnetlink.c:3182
-    [<000000001247a7ad>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3240
-    [<00000000e7d1b61d>] rtnetlink_rcv_msg+0x54e/0xb90 net/core/rtnetlink.c:5130
-    [<000000005556bd3a>] netlink_rcv_skb+0x129/0x340 net/netlink/af_netlink.c:2477
-    [<00000000741d5ee6>] netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
-    [<00000000741d5ee6>] netlink_unicast+0x49a/0x650 net/netlink/af_netlink.c:1336
-    [<000000009d56f9b7>] netlink_sendmsg+0x88b/0xdf0 net/netlink/af_netlink.c:1917
-    [<0000000046b35c59>] sock_sendmsg_nosec net/socket.c:621 [inline]
-    [<0000000046b35c59>] sock_sendmsg+0xc3/0x100 net/socket.c:631
-    [<00000000d208adc9>] __sys_sendto+0x33e/0x560 net/socket.c:1786
-    [<00000000b582837a>] __do_sys_sendto net/socket.c:1798 [inline]
-    [<00000000b582837a>] __se_sys_sendto net/socket.c:1794 [inline]
-    [<00000000b582837a>] __x64_sys_sendto+0xdd/0x1b0 net/socket.c:1794
-    [<00000000c866801d>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
-    [<00000000fea382d9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e01dacb3>] 0xffffffffffffffff
+This patch switches to non-zero values for the urg states.
 
-Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Reviewed-by: Karsten Graul <kgraul@linux.ibm.com>
+Fixes: de8474eb9d50 ("net/smc: urgent data support")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_device.c   |    4 +++-
- net/hsr/hsr_framereg.c |   12 ++++++++++++
- net/hsr/hsr_framereg.h |    1 +
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ net/smc/smc.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -486,7 +486,7 @@ int hsr_dev_finalize(struct net_device *
+--- a/net/smc/smc.h
++++ b/net/smc/smc.h
+@@ -113,9 +113,9 @@ struct smc_host_cdc_msg {		/* Connection
+ } __aligned(8);
  
- 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
- 	if (res)
--		return res;
-+		goto err_add_port;
+ enum smc_urg_state {
+-	SMC_URG_VALID,			/* data present */
+-	SMC_URG_NOTYET,			/* data pending */
+-	SMC_URG_READ			/* data was already read */
++	SMC_URG_VALID	= 1,			/* data present */
++	SMC_URG_NOTYET	= 2,			/* data pending */
++	SMC_URG_READ	= 3,			/* data was already read */
+ };
  
- 	res = register_netdevice(hsr_dev);
- 	if (res)
-@@ -506,6 +506,8 @@ int hsr_dev_finalize(struct net_device *
- fail:
- 	hsr_for_each_port(hsr, port)
- 		hsr_del_port(port);
-+err_add_port:
-+	hsr_del_node(&hsr->self_node_db);
- 
- 	return res;
- }
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -124,6 +124,18 @@ int hsr_create_self_node(struct list_hea
- 	return 0;
- }
- 
-+void hsr_del_node(struct list_head *self_node_db)
-+{
-+	struct hsr_node *node;
-+
-+	rcu_read_lock();
-+	node = list_first_or_null_rcu(self_node_db, struct hsr_node, mac_list);
-+	rcu_read_unlock();
-+	if (node) {
-+		list_del_rcu(&node->mac_list);
-+		kfree(node);
-+	}
-+}
- 
- /* Allocate an hsr_node and add it to node_db. 'addr' is the node's AddressA;
-  * seq_out is used to initialize filtering of outgoing duplicate frames
---- a/net/hsr/hsr_framereg.h
-+++ b/net/hsr/hsr_framereg.h
-@@ -16,6 +16,7 @@
- 
- struct hsr_node;
- 
-+void hsr_del_node(struct list_head *self_node_db);
- struct hsr_node *hsr_add_node(struct list_head *node_db, unsigned char addr[],
- 			      u16 seq_out);
- struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
+ struct smc_connection {
 
 
