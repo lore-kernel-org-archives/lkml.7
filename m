@@ -2,71 +2,92 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7295C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0E8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9656E20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SRscWw6y"
+	by mail.kernel.org (Postfix) with ESMTP id 3657620850
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfCRKtC (ORCPT
+        id S1727392AbfCRKtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:49:02 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55094 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfCRKtB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:49:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=37iKTTycHgymG5vLs1/cC5jMxScUAYgMDd+1fPYQgiI=; b=SRscWw6yzfrhbqlbVoToNhpKL
-        QW9CUhFZ41g19HDiiyvQ+3jtMH7RMOQ2sDS/pBthA4ta3cTSbuvkJlHmioW7vvNjjqx/2wnpO2xHn
-        zyiBGJZ9VVD6Guu2bpETfQThsYOhRh0uYk2ufzM+SkPL8H6fK2jICB7k64LIwUmN7gH4If/hjRA9P
-        /xFqXk9Nf7BLdX36iOrQdwd+C2qH+Wp9Emy9K0gVA2jh1uVnshmhHbr9Z0346rV/3kOvgddLwxCW3
-        2tLezhKTUqUDSj77nSk3Pwgy4RT3ugqN6UnebrCa/O0a3oLrlM+qKrG+5hJpHrguMEadgdxyR8H8Q
-        lDTSQ0y3g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5pp8-0001bW-3L; Mon, 18 Mar 2019 10:48:54 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 988BA20A0FF8B; Mon, 18 Mar 2019 11:48:52 +0100 (CET)
-Date:   Mon, 18 Mar 2019 11:48:52 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     chenjie6@huawei.com, linux-kernel@vger.kernel.org,
-        dvhart@infradead.org, mingo@redhat.com, zengweilin@huawei.com
-Subject: Re: [PATCH] futex:fix robust futex alignment exception
-Message-ID: <20190318104852.GL6058@hirez.programming.kicks-ass.net>
-References: <1552621478-119787-1-git-send-email-chenjie6@huawei.com>
- <20190315084131.GS5996@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1903171534590.9068@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903171534590.9068@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 18 Mar 2019 06:49:36 -0400
+Received: from foss.arm.com ([217.140.101.70]:59636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726449AbfCRKtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 06:49:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84F9980D;
+        Mon, 18 Mar 2019 03:49:35 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8FC6F3F614;
+        Mon, 18 Mar 2019 03:49:32 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v2 0/6] ptrace: consolidate PTRACE_SYSEMU handling and add support for arm64
+Date:   Mon, 18 Mar 2019 10:49:19 +0000
+Message-Id: <20190318104925.16600-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 03:36:35PM +0100, Thomas Gleixner wrote:
-> On Fri, 15 Mar 2019, Peter Zijlstra wrote:
+Hi,
 
-> > That is; why aren't there any alignment tests anywhere? Or am I just
-> > gone blind?
-> 
-> uaddrs for the futex syscalls are checked in get_futex_key().
+This patchset evolved from the discussion in the thread[0][1]. When we
+wanted to add PTRACE_SYSEMU support to ARM64, we thought instead of
+duplicating what other architectures like x86 and powerpc have done,
+let consolidate the existing support and move it to the core as there's
+nothing arch specific in it.
 
-blind it is...
+v1->v2:
+	- added comment for empty statement after tracehook_report_syscall_entry
+	- dropped x86 change in syscall_slow_exit_work as I had ended
+	  up changing logic unintentionally
+	- removed spurious change in powerpc moving user_exit()
 
-Thanks!
+Regards,
+Sudeep
+
+[0] https://patchwork.kernel.org/patch/10585505/
+[1] https://patchwork.kernel.org/patch/10675237/
+
+
+Sudeep Holla (6):
+  ptrace: move clearing of TIF_SYSCALL_EMU flag to core
+  ptrace: introduce ptrace_syscall_enter to consolidate PTRACE_SYSEMU handling
+  x86: clean up _TIF_SYSCALL_EMU handling using ptrace_syscall_enter hook
+  powerpc: use common ptrace_syscall_enter hook to handle _TIF_SYSCALL_EMU
+  arm64: add PTRACE_SYSEMU{,SINGLESTEP} definations to uapi headers
+  arm64: ptrace: add support for syscall emulation
+
+ arch/arm64/include/asm/thread_info.h |  5 ++-
+ arch/arm64/include/uapi/asm/ptrace.h |  3 ++
+ arch/arm64/kernel/ptrace.c           |  3 ++
+ arch/powerpc/kernel/ptrace.c         | 49 ++++++++++++----------------
+ arch/x86/entry/common.c              | 12 ++-----
+ arch/x86/kernel/ptrace.c             |  3 --
+ include/linux/ptrace.h               |  1 +
+ kernel/ptrace.c                      | 26 +++++++++++++++
+ 8 files changed, 61 insertions(+), 41 deletions(-)
+
+--
+2.17.1
+
