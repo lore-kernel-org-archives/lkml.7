@@ -6,283 +6,161 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B614C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 00:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E28C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EE02085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 00:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918272085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfCRA6E (ORCPT
+        id S1727683AbfCRBA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 20:58:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56382 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726122AbfCRA6D (ORCPT
+        Sun, 17 Mar 2019 21:00:29 -0400
+Received: from icp-osb-irony-out8.external.iinet.net.au ([203.59.1.225]:8677
+        "EHLO icp-osb-irony-out8.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726122AbfCRBA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 20:58:03 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2I0mPQF119370
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 20:58:03 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r9unn7xgm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 20:58:02 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
-        Mon, 18 Mar 2019 00:57:58 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 18 Mar 2019 00:57:55 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2I0vulg27328764
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Mar 2019 00:57:56 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C907AE055;
-        Mon, 18 Mar 2019 00:57:56 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1F32AE045;
-        Mon, 18 Mar 2019 00:57:55 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 18 Mar 2019 00:57:55 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0A0CCA010B;
-        Mon, 18 Mar 2019 11:57:54 +1100 (AEDT)
-Subject: Re: [PATCH 1/5] ocxl: Rename struct link to ocxl_link
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
-        Greg Kurz <groug@kaod.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190227045741.21412-1-alastair@au1.ibm.com>
- <20190313040702.14276-1-alastair@au1.ibm.com>
- <20190313040702.14276-2-alastair@au1.ibm.com>
-From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Date:   Fri, 15 Mar 2019 17:58:27 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sun, 17 Mar 2019 21:00:28 -0400
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2CGBAAv7I5c/44x0HZZCoIXghGBOCE?=
+ =?us-ascii?q?SJ4QLlAkBAQIBAQaBEDiJLY5xFIFnIBgBhECEUiI0CQ0BAQMBAQEIAQMCbSi?=
+ =?us-ascii?q?FdARSKAEMAhgOAkkWE4ULDKlRfDMaAooJgQskizAXeIEHgUSCKoULE4Miglc?=
+ =?us-ascii?q?DigMkgjGELUw7kkkJkyUZiyQDiDCDPpwzOIFWTS4KgyeQWDUwgQUBAY1LAQE?=
+X-IPAS-Result: =?us-ascii?q?A2CGBAAv7I5c/44x0HZZCoIXghGBOCESJ4QLlAkBAQIBA?=
+ =?us-ascii?q?QaBEDiJLY5xFIFnIBgBhECEUiI0CQ0BAQMBAQEIAQMCbSiFdARSKAEMAhgOA?=
+ =?us-ascii?q?kkWE4ULDKlRfDMaAooJgQskizAXeIEHgUSCKoULE4MiglcDigMkgjGELUw7k?=
+ =?us-ascii?q?kkJkyUZiyQDiDCDPpwzOIFWTS4KgyeQWDUwgQUBAY1LAQE?=
+X-IronPort-AV: E=Sophos;i="5.58,491,1544457600"; 
+   d="scan'208";a="206152835"
+Received: from unknown (HELO pluto.themaw.net) ([118.208.49.142])
+  by icp-osb-irony-out8.iinet.net.au with ESMTP; 18 Mar 2019 09:00:24 +0800
+Subject: [PATCH 1/5] autofs - fix some word usage odities in autofs.txt
+From:   Ian Kent <raven@themaw.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        autofs mailing list <autofs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Date:   Mon, 18 Mar 2019 09:00:24 +0800
+Message-ID: <155287082394.12593.6506084453911662450.stgit@pluto.themaw.net>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-In-Reply-To: <20190313040702.14276-2-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031800-0016-0000-0000-000002640ADC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031800-0017-0000-0000-000032BF1490
-Message-Id: <637a5ce8-3359-9c5b-ed3a-28456b807421@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903180005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/3/19 3:06 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> The term 'link' is ambiguous (especially when the struct is used for a
-> list), so rename it for clarity.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Reviewed-by: Greg Kurz <groug@kaod.org>
+Alter a few word usages in Documentation/filesystems/autofs.txt
+and correct some spelling mistakes.
 
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ Documentation/filesystems/autofs.txt |   25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-(In future please include a changelog to explain what's changed from v1->v2)
-
-> ---
->   drivers/misc/ocxl/file.c |  5 ++---
->   drivers/misc/ocxl/link.c | 36 ++++++++++++++++++------------------
->   2 files changed, 20 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
-> index e6a607488f8a..009e09b7ded5 100644
-> --- a/drivers/misc/ocxl/file.c
-> +++ b/drivers/misc/ocxl/file.c
-> @@ -151,10 +151,9 @@ static long afu_ioctl_enable_p9_wait(struct ocxl_context *ctx,
->   		mutex_unlock(&ctx->status_mutex);
->   
->   		if (status == ATTACHED) {
-> -			int rc;
-> -			struct link *link = ctx->afu->fn->link;
-> +			int rc = ocxl_link_update_pe(ctx->afu->fn->link,
-> +				ctx->pasid, ctx->tidr);
->   
-> -			rc = ocxl_link_update_pe(link, ctx->pasid, ctx->tidr);
->   			if (rc)
->   				return rc;
->   		}
-> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-> index d50b861d7e57..8d2690a1a9de 100644
-> --- a/drivers/misc/ocxl/link.c
-> +++ b/drivers/misc/ocxl/link.c
-> @@ -76,7 +76,7 @@ struct spa {
->    * limited number of opencapi slots on a system and lookup is only
->    * done when the device is probed
->    */
-> -struct link {
-> +struct ocxl_link {
->   	struct list_head list;
->   	struct kref ref;
->   	int domain;
-> @@ -179,7 +179,7 @@ static void xsl_fault_handler_bh(struct work_struct *fault_work)
->   
->   static irqreturn_t xsl_fault_handler(int irq, void *data)
->   {
-> -	struct link *link = (struct link *) data;
-> +	struct ocxl_link *link = (struct ocxl_link *) data;
->   	struct spa *spa = link->spa;
->   	u64 dsisr, dar, pe_handle;
->   	struct pe_data *pe_data;
-> @@ -256,7 +256,7 @@ static int map_irq_registers(struct pci_dev *dev, struct spa *spa)
->   				&spa->reg_tfc, &spa->reg_pe_handle);
->   }
->   
-> -static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
-> +static int setup_xsl_irq(struct pci_dev *dev, struct ocxl_link *link)
->   {
->   	struct spa *spa = link->spa;
->   	int rc;
-> @@ -311,7 +311,7 @@ static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
->   	return rc;
->   }
->   
-> -static void release_xsl_irq(struct link *link)
-> +static void release_xsl_irq(struct ocxl_link *link)
->   {
->   	struct spa *spa = link->spa;
->   
-> @@ -323,7 +323,7 @@ static void release_xsl_irq(struct link *link)
->   	unmap_irq_registers(spa);
->   }
->   
-> -static int alloc_spa(struct pci_dev *dev, struct link *link)
-> +static int alloc_spa(struct pci_dev *dev, struct ocxl_link *link)
->   {
->   	struct spa *spa;
->   
-> @@ -350,7 +350,7 @@ static int alloc_spa(struct pci_dev *dev, struct link *link)
->   	return 0;
->   }
->   
-> -static void free_spa(struct link *link)
-> +static void free_spa(struct ocxl_link *link)
->   {
->   	struct spa *spa = link->spa;
->   
-> @@ -364,12 +364,12 @@ static void free_spa(struct link *link)
->   	}
->   }
->   
-> -static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
-> +static int alloc_link(struct pci_dev *dev, int PE_mask, struct ocxl_link **out_link)
->   {
-> -	struct link *link;
-> +	struct ocxl_link *link;
->   	int rc;
->   
-> -	link = kzalloc(sizeof(struct link), GFP_KERNEL);
-> +	link = kzalloc(sizeof(struct ocxl_link), GFP_KERNEL);
->   	if (!link)
->   		return -ENOMEM;
->   
-> @@ -405,7 +405,7 @@ static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
->   	return rc;
->   }
->   
-> -static void free_link(struct link *link)
-> +static void free_link(struct ocxl_link *link)
->   {
->   	release_xsl_irq(link);
->   	free_spa(link);
-> @@ -415,7 +415,7 @@ static void free_link(struct link *link)
->   int ocxl_link_setup(struct pci_dev *dev, int PE_mask, void **link_handle)
->   {
->   	int rc = 0;
-> -	struct link *link;
-> +	struct ocxl_link *link;
->   
->   	mutex_lock(&links_list_lock);
->   	list_for_each_entry(link, &links_list, list) {
-> @@ -442,7 +442,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_setup);
->   
->   static void release_xsl(struct kref *ref)
->   {
-> -	struct link *link = container_of(ref, struct link, ref);
-> +	struct ocxl_link *link = container_of(ref, struct ocxl_link, ref);
->   
->   	list_del(&link->list);
->   	/* call platform code before releasing data */
-> @@ -452,7 +452,7 @@ static void release_xsl(struct kref *ref)
->   
->   void ocxl_link_release(struct pci_dev *dev, void *link_handle)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   
->   	mutex_lock(&links_list_lock);
->   	kref_put(&link->ref, release_xsl);
-> @@ -488,7 +488,7 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
->   		void *xsl_err_data)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	struct spa *spa = link->spa;
->   	struct ocxl_process_element *pe;
->   	int pe_handle, rc = 0;
-> @@ -558,7 +558,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_add_pe);
->   
->   int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	struct spa *spa = link->spa;
->   	struct ocxl_process_element *pe;
->   	int pe_handle, rc;
-> @@ -594,7 +594,7 @@ int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
->   
->   int ocxl_link_remove_pe(void *link_handle, int pasid)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	struct spa *spa = link->spa;
->   	struct ocxl_process_element *pe;
->   	struct pe_data *pe_data;
-> @@ -666,7 +666,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_remove_pe);
->   
->   int ocxl_link_irq_alloc(void *link_handle, int *hw_irq, u64 *trigger_addr)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	int rc, irq;
->   	u64 addr;
->   
-> @@ -687,7 +687,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_irq_alloc);
->   
->   void ocxl_link_free_irq(void *link_handle, int hw_irq)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   
->   	pnv_ocxl_free_xive_irq(hw_irq);
->   	atomic_inc(&link->irq_available);
-> 
-
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-andrew.donnellan@au1.ibm.com  IBM Australia Limited
+diff --git a/Documentation/filesystems/autofs.txt b/Documentation/filesystems/autofs.txt
+index 373ad25852d3..05da806b1e88 100644
+--- a/Documentation/filesystems/autofs.txt
++++ b/Documentation/filesystems/autofs.txt
+@@ -116,7 +116,7 @@ that purpose there is another flag.
+ **DCACHE_MANAGE_TRANSIT**
+ 
+ If a dentry has DCACHE_MANAGE_TRANSIT set then two very different but
+-related behaviors are invoked, both using the `d_op->d_manage()`
++related behaviours are invoked, both using the `d_op->d_manage()`
+ dentry operation.
+ 
+ Firstly, before checking to see if any filesystem is mounted on the
+@@ -193,8 +193,8 @@ VFS remain in RCU-walk mode, but can only tell it to get out of
+ RCU-walk mode by returning `-ECHILD`.
+ 
+ So `d_manage()`, when called with `rcu_walk` set, should either return
+--ECHILD if there is any reason to believe it is unsafe to end the
+-mounted filesystem, and otherwise should return 0.
++-ECHILD if there is any reason to believe it is unsafe to enter the
++mounted filesystem, otherwise it should return 0.
+ 
+ autofs will return `-ECHILD` if an expiry of the filesystem has been
+ initiated or is being considered, otherwise it returns 0.
+@@ -210,7 +210,7 @@ mounts that were created by `d_automount()` returning a filesystem to be
+ mounted.  As autofs doesn't return such a filesystem but leaves the
+ mounting to the automount daemon, it must involve the automount daemon
+ in unmounting as well.  This also means that autofs has more control
+-of expiry.
++over expiry.
+ 
+ The VFS also supports "expiry" of mounts using the MNT_EXPIRE flag to
+ the `umount` system call.  Unmounting with MNT_EXPIRE will fail unless
+@@ -225,7 +225,7 @@ unmount any filesystems mounted on the autofs filesystem or remove any
+ symbolic links or empty directories any time it likes.  If the unmount
+ or removal is successful the filesystem will be returned to the state
+ it was before the mount or creation, so that any access of the name
+-will trigger normal auto-mount processing.  In particlar, `rmdir` and
++will trigger normal auto-mount processing.  In particular, `rmdir` and
+ `unlink` do not leave negative entries in the dcache as a normal
+ filesystem would, so an attempt to access a recently-removed object is
+ passed to autofs for handling.
+@@ -242,7 +242,7 @@ time stamp on each directory or symlink.  For symlinks it genuinely
+ does record the last time the symlink was "used" or followed to find
+ out where it points to.  For directories the field is a slight
+ misnomer.  It actually records the last time that autofs checked if
+-the directory or one of its descendents was busy and found that it
++the directory or one of its descendants was busy and found that it
+ was.  This is just as useful and doesn't require updating the field so
+ often.
+ 
+@@ -255,7 +255,7 @@ up.
+ 
+ There is an option with indirect mounts to consider each of the leaves
+ that has been mounted on instead of considering the top-level names.
+-This is intended for compatability with version 4 of autofs and should
++This is intended for compatibility with version 4 of autofs and should
+ be considered as deprecated.
+ 
+ When autofs considers a directory it checks the `last_used` time and
+@@ -273,7 +273,7 @@ mounts.  If it finds something in the root directory to expire it will
+ return the name of that thing.  Once a name has been returned the
+ automount daemon needs to unmount any filesystems mounted below the
+ name normally.  As described above, this is unsafe for non-toplevel
+-mounts in a version-5 autofs.  For this reason the current `automountd`
++mounts in a version-5 autofs.  For this reason the current `automount(8)`
+ does not use this ioctl.
+ 
+ The second mechanism uses either the **AUTOFS_DEV_IOCTL_EXPIRE_CMD** or
+@@ -345,7 +345,7 @@ The `wait_queue_token` is a unique number which can identify a
+ particular request to be acknowledged.  When a message is sent over
+ the pipe the affected dentry is marked as either "active" or
+ "expiring" and other accesses to it block until the message is
+-acknowledged using one of the ioctls below and the relevant
++acknowledged using one of the ioctls below with the relevant
+ `wait_queue_token`.
+ 
+ Communicating with autofs: root directory ioctls
+@@ -367,15 +367,14 @@ The available ioctl commands are:
+     This mode is also entered if a write to the pipe fails.
+ - **AUTOFS_IOC_PROTOVER**:  This returns the protocol version in use.
+ - **AUTOFS_IOC_PROTOSUBVER**: Returns the protocol sub-version which
+-    is really a version number for the implementation.  It is
+-    currently 2.
++    is really a version number for the implementation.
+ - **AUTOFS_IOC_SETTIMEOUT**:  This passes a pointer to an unsigned
+     long.  The value is used to set the timeout for expiry, and
+     the current timeout value is stored back through the pointer.
+ - **AUTOFS_IOC_ASKUMOUNT**:  Returns, in the pointed-to `int`, 1 if
+     the filesystem could be unmounted.  This is only a hint as
+     the situation could change at any instant.  This call can be
+-    use to avoid a more expensive full unmount attempt.
++    used to avoid a more expensive full unmount attempt.
+ - **AUTOFS_IOC_EXPIRE**: as described above, this asks if there is
+     anything suitable to expire.  A pointer to a packet:
+ 
+@@ -415,7 +414,7 @@ which can be used to communicate directly with the autofs filesystem.
+ It requires CAP_SYS_ADMIN for access.
+ 
+ The `ioctl`s that can be used on this device are described in a separate
+-document `autofs-mount-control.txt`, and are summarized briefly here.
++document `autofs-mount-control.txt`, and are summarised briefly here.
+ Each ioctl is passed a pointer to an `autofs_dev_ioctl` structure:
+ 
+         struct autofs_dev_ioctl {
 
