@@ -2,106 +2,139 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6952AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0091AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A232064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C635F2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ffVuWB+A"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="I4WPNbtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfCRSXh (ORCPT
+        id S1727239AbfCRSY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:23:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39615 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfCRSXh (ORCPT
+        Mon, 18 Mar 2019 14:24:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36827 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfCRSY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:23:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id l7so5174739ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:23:35 -0700 (PDT)
+        Mon, 18 Mar 2019 14:24:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id f6so15382648iop.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:24:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=amarulasolutions.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4b/JKrTcJBBqwU4hv1f+Qtxhzo5mF/Q9o6zvm0V0Ihs=;
-        b=ffVuWB+AkayioDUscm8Vn+XMNDcLDPWvg5fNDaKk2NGkMwq6mv32dWfUMUQOF9ndUj
-         Y+PeBYrlka+UPYNIz7fMelxtW3LiyiERdlXS2/ULyslplGGhGDrolw2x9A6JdzoIJS0e
-         xShsDxAzBS5hBzp79Td77v+3WniN+UBRm7wXg=
+        bh=40KwwJTreUr7SrlhIboEHgMAtXuwNdUA9TdB84CMBq0=;
+        b=I4WPNbttg47zfiGrm5quGozOpx0FlbzWFxGENkVdtsZpdjAc8cWv2MsAAtbEzDkb+N
+         VvBaXDFHXy9XrpRjlc30ysNVeX+VY1RgB6cUH2G9q5821V43fZmAfxCbZ7dYyblwXK1K
+         exZHSfGU3E2EpBAWCR5N5nYYtJ/ritD+zx+RE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4b/JKrTcJBBqwU4hv1f+Qtxhzo5mF/Q9o6zvm0V0Ihs=;
-        b=CUcXqdmwOIM253/qHkWO0ku4yY+KqWUcaJShdv95MRb6WI3TYXWB+qhBmbeVW+qxdL
-         0wRoGZ2iDSft1BxnkSTo9BRV8Pg/XAeiYcKS9dXAkztvOLtB8Y3Fu3Xj6xAXGzio40N6
-         +HnZwN/lTF+2M/7mFqNE19aEDr+GAbCw7pZnVYOrRuHDtzkEWaLlAwAGMRHwjwMQPtBo
-         NvV/XwnORvUFaYG+V3htBisPOhOjEFOZkYqKLIgnuHxpfgbTtjvQO7xBkT8rY4yXcyrI
-         +RWg1nZRAWNj+R6mjt/d9EVGrMuHqbahcHHvAJ2OGqBOCSlEg803GPcDyEkmIGlGe0K8
-         ZC5A==
-X-Gm-Message-State: APjAAAXbbBEEaT7pb47nY47m4+RG+m/wrk+NfdD2Bi1zYBAEJQM/D1pD
-        S8+QK6G2gH083GxkGJ7FKoyhC939Z4E=
-X-Google-Smtp-Source: APXvYqyAgbW5ZdwR0mGPgvuUwc5W5Bq3BzchBNNmptNFEja2UsZE+zOdUJcDlWGs1F0sqN/Ftn91fQ==
-X-Received: by 2002:a2e:a312:: with SMTP id l18mr5945306lje.197.1552933414940;
-        Mon, 18 Mar 2019 11:23:34 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id v11sm718935ljd.3.2019.03.18.11.23.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 11:23:34 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id u9so12363166lfe.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:23:34 -0700 (PDT)
-X-Received: by 2002:a19:4b14:: with SMTP id y20mr10319263lfa.36.1552933413777;
- Mon, 18 Mar 2019 11:23:33 -0700 (PDT)
+        bh=40KwwJTreUr7SrlhIboEHgMAtXuwNdUA9TdB84CMBq0=;
+        b=qdC9SLasWGPCX/Jc9i5p9GNvTqsZ73E4eG5sa4o2aOrodNJ81FG3jOGxdiwl7hEKrL
+         eVO6hJL+3nt+JQONCd8hG+yivFo0mKPH8y46FtTDdHgtJtUfHixjIuH6lYkeK54ePjwO
+         dVcGg0pIrgFFz6uvYzfPqAOaPGLSTwwWcJjhCO23+FZVbBXc/R4FVpdOhlsfR3GrpVbe
+         vZsFvWbCcBu42/AnI2AQp0u6cOVGihB1znt6diH7LG06SCysnEnL8Q9EesxuzO03+yKi
+         c/pdFRvMxsWNHBTuQu2S6zK49ZuN6fMkq90C5vS62vldb91i2x3Y0DOUzklKYVAhofVo
+         LY3w==
+X-Gm-Message-State: APjAAAWghM5wm73Wns+LJLEXxlRA3VhqWnmIkqk9fB5xqMszR0Axp0l1
+        zTkmYu6hDiptOrSF2Jke6LCO3lhq9v3HL7JmEZpfdw==
+X-Google-Smtp-Source: APXvYqxYqD0aZLB9hBkLVdZqLnVaPTv9c5ALFTgs89uQqO7nn0GZ4egTAaKxg7v2cFKuYzB2cy26MeXWCLByUIynQK8=
+X-Received: by 2002:a5d:97c8:: with SMTP id k8mr12627122ios.267.1552933496448;
+ Mon, 18 Mar 2019 11:24:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190306214730.6545-1-valleau@chromium.org> <44e151af-b6c4-d0af-3ef1-a5632d079915@kernel.org>
-In-Reply-To: <44e151af-b6c4-d0af-3ef1-a5632d079915@kernel.org>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Mon, 18 Mar 2019 11:23:22 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMcnEfZzTjDGsDbZxX2Xknv6dt3H-3kN79WdKFzif2zsA@mail.gmail.com>
-Message-ID: <CA+ASDXMcnEfZzTjDGsDbZxX2Xknv6dt3H-3kN79WdKFzif2zsA@mail.gmail.com>
-Subject: Re: [PATCH] tools: usb: usbip: adding support for older kernel versions
-To:     shuah <shuah@kernel.org>
-Cc:     David Valleau <valleau@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>
+References: <20190311133637.18334-1-jagan@amarulasolutions.com>
+ <20190311133637.18334-3-jagan@amarulasolutions.com> <20190311153847.oz6ruqmptaq2befn@flea>
+ <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q@mail.gmail.com>
+In-Reply-To: <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q@mail.gmail.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 18 Mar 2019 23:54:45 +0530
+Message-ID: <CAMty3ZBteruXzMNkyUKv5VmDVzmN1E6zKL0+o7PYo_bFc7gq9g@mail.gmail.com>
+Subject: Re: [PATCH v8 02/15] drm/sun4i: tcon: Compute DCLK dividers based on
+ format, lanes
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula@amarulasolutions.com,
+        linux-sunxi <linux-sunxi@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 4:40 PM shuah <shuah@kernel.org> wrote:
-> usbip tool is tied to the kernel version. This is reason why it is
-> co-located with the usbip driver in the kernel sources. This is not
-> a typical tool scenario to be able to use new tool on old kernels.
+On Mon, Mar 11, 2019 at 9:36 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
-> I would like to understand the reasons for wanting to run new tool on
-> old kernels.
+> On Mon, Mar 11, 2019 at 9:08 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
+> > > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
+> > > MIPI clock topology in Allwinner DSI controller.
+> > >
+> > > TCON dotclock driver is computing the desired DCLK divider based on
+> > > panel pixel clock along with input DCLK min, max divider values from
+> > > tcon driver and that would eventually set the pll-mipi clock rate.
+> > >
+> > > The current code allows the TCON clock divider to have a default 4
+> > > for min, max ranges that would fail to compute the desired pll-mipi
+> > > rate while supporting new panels.
+> > >
+> > > So, add the computation logic 'format/lanes' to dclk min and max dividers
+> > > and instead of default 4. This computation logic align with Allwinner A64
+> > > BSP, hoping that would work even for A33.
+> >
+> > Last time we discussed this, we found out that this wasn't the case,
+> > even in the BSP.
+>
+> This was the case for BSP to compute pll-mipi not for TCON_DSI clock
+> register, SUN4I_TCON0_DCLK_REG, which marked the divider 4 by default.
+>
+> >
+> > What compelling evidence have you found that makes you say otherwise?
+>
+> divider 4 isn't worked, this I would mentioned before as well.
+>
+> Tested this on 4 different panels, and below are the desired divider values
+> and pll-mipi clock rate with respect to pixel clock frequency.
+>
+> - 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
+>   is 6 with the output parent clock rate of 330MHz.
+> - 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
+>   is 6 with parent clock rate of 180MHz.
+> - 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
+>   is 12 with the output parent clock rate of 330MHz.
+> - 147MHz pixel clock with 4-lane panel, and the desired DSI clock divider
+>   is 6 with the output parent clock rate of 882MHz.
+>
+> BSP trying to use this format/lane to compute dsi divider that in-turn
+> using pll-mipi set_rate but TCON0_DCLK_REG keep constant 4.
 
-On Chromium OS, we ship more or less the same user space for a variety
-of systems, but not all of those run the same kernel. That's not
-exactly a novel concept -- many good tools are written such that they
-degrade gracefully when running with reduced feature sets (e.g., older
-kernels). While we are working on reducing the divergence and number
-of kernels we ship, it's currently a fact of life that we have to
-support multiple target kernel versions.
+Any comments?
 
-Is there a fundamental problem with VHCI such that it doesn't have a
-stable ABI that tools can be written against?
+For more information, I have even tying to get the dump here to show
+the pll_rate set in BSP code [1], please have a look at this gist[2]
+where the bpp/lanes value of 6 is computed for pll_rate and let me
+know what do you think?
 
-If stability is possible but you just don't care, then I guess we can
-fork our own version...
+DSI rate is 148.5Mhz
+Panel Pixel clock is 148Mhz
+PLL set rate is 888Mhz (which is bpp/lanes = 6 * 148 Mhz)
 
-Or even worse, we could build N copies of usbip for N kernels. But we
-don't do that for any other user space component.
-
-Brian
+[1] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L793
+[2] https://gist.github.com/openedev/9bae2d87d2fcc06b999fe48c998b7043
+     https://gist.github.com/openedev/700de2e3701b2bf3ad1aa0f0fa862c9a
