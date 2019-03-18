@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4793DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80417C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1749421734
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F082087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901468;
-	bh=UEmj1EfAuH9hW36vTQnO7X1OawZGQ0jqy0hlvYbsmhg=;
+	s=default; t=1552901478;
+	bh=gHApELAjtZY4ph6fvAiGe/UgCBRdj5qPVmiEp2yoPxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dk6GBpoIPHFi7+PklfoefcXkfPg6Df6bKSbSVXmBP8a5mecmSUKsZryWQZvSVpNsi
-	 dUf+4Q8pKx+57eKHMWrIciAuEbaWABC3ojY1+UTaci0RrlbelFke5rqo1JV7YWNmq4
-	 JCYa5XOms8QJarsJ5THKocMa0XQkc5pp6JtQqabQ=
+	b=i9iGHQ2ksFKRh9W6+5K92rbz/qBS8ASi8GwugecYXBdICrKk+A42i4WKMzvJF5pTf
+	 JXHQd7NnAL3ieJPjGE6dxUK2pOBOeOEX1rhANdExCBSieDhFm6tm8jeLiJWSqIBwda
+	 v/Lp7CoYaWla1122rXdfNKEFfQgBplemfOefkpyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbfCRJbG (ORCPT
+        id S1728548AbfCRJbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:31:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38502 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728494AbfCRJbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:31:03 -0400
+        id S1728530AbfCRJbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:13 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3366D2087C;
-        Mon, 18 Mar 2019 09:31:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72F432087C;
+        Mon, 18 Mar 2019 09:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901462;
-        bh=UEmj1EfAuH9hW36vTQnO7X1OawZGQ0jqy0hlvYbsmhg=;
+        s=default; t=1552901473;
+        bh=gHApELAjtZY4ph6fvAiGe/UgCBRdj5qPVmiEp2yoPxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CfyVSisfkAKn2QWC8WYm0YEOwjfd5UJIFyVG2X0yJgA+i2vsXQzBkUpUyqfR5f1kn
-         XICSP38TgzKkPC0Kb5kxGsw/jMdMllNfzAGw5iriezwJnHk1D/tXSMXUZMTKb4yVmi
-         jhKz7aNtWsAWsJgY5IfG5WzpqCT2PTfOcz7uUaV8=
+        b=gDraYYVX2LxLlILyRDgYNE12mJa5td6SAtNi0Qnw/IjFQ1q5So5yAO32mQs79G+OI
+         /ez4gyncyIJa0b8frR1NnuL8HWHSH9QSRHk1sV/1SR1CUYLbiH0m9XJJn7AIMkeHHz
+         SCrz4SClyREGNszrDRSg9g78czcHssTjy9GiKqRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linmiaohe <linmiaohe@huawei.com>,
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 10/52] net: sit: fix UBSAN Undefined behaviour in check_6rd
-Date:   Mon, 18 Mar 2019 10:24:57 +0100
-Message-Id: <20190318083844.630445872@linuxfoundation.org>
+Subject: [PATCH 4.20 13/52] pptp: dst_release sk_dst_cache in pptp_sock_destruct
+Date:   Mon, 18 Mar 2019 10:25:00 +0100
+Message-Id: <20190318083844.987964172@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -65,71 +66,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit a843dc4ebaecd15fca1f4d35a97210f72ea1473b ]
+[ Upstream commit 9417d81f4f8adfe20a12dd1fadf73a618cbd945d ]
 
-In func check_6rd,tunnel->ip6rd.relay_prefixlen may equal to
-32,so UBSAN complain about it.
+sk_setup_caps() is called to set sk->sk_dst_cache in pptp_connect,
+so we have to dst_release(sk->sk_dst_cache) in pptp_sock_destruct,
+otherwise, the dst refcnt will leak.
 
-UBSAN: Undefined behaviour in net/ipv6/sit.c:781:47
-shift exponent 32 is too large for 32-bit type 'unsigned int'
-CPU: 6 PID: 20036 Comm: syz-executor.0 Not tainted 4.19.27 #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
-04/01/2014
-Call Trace:
-__dump_stack lib/dump_stack.c:77 [inline]
-dump_stack+0xca/0x13e lib/dump_stack.c:113
-ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
-__ubsan_handle_shift_out_of_bounds+0x293/0x2e8 lib/ubsan.c:425
-check_6rd.constprop.9+0x433/0x4e0 net/ipv6/sit.c:781
-try_6rd net/ipv6/sit.c:806 [inline]
-ipip6_tunnel_xmit net/ipv6/sit.c:866 [inline]
-sit_tunnel_xmit+0x141c/0x2720 net/ipv6/sit.c:1033
-__netdev_start_xmit include/linux/netdevice.h:4300 [inline]
-netdev_start_xmit include/linux/netdevice.h:4309 [inline]
-xmit_one net/core/dev.c:3243 [inline]
-dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
-__dev_queue_xmit+0x1656/0x2500 net/core/dev.c:3829
-neigh_output include/net/neighbour.h:501 [inline]
-ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
-ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
-NF_HOOK_COND include/linux/netfilter.h:278 [inline]
-ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
-dst_output include/net/dst.h:444 [inline]
-ip6_local_out+0x99/0x170 net/ipv6/output_core.c:176
-ip6_send_skb+0x9d/0x2f0 net/ipv6/ip6_output.c:1697
-ip6_push_pending_frames+0xc0/0x100 net/ipv6/ip6_output.c:1717
-rawv6_push_pending_frames net/ipv6/raw.c:616 [inline]
-rawv6_sendmsg+0x2435/0x3530 net/ipv6/raw.c:946
-inet_sendmsg+0xf8/0x5c0 net/ipv4/af_inet.c:798
-sock_sendmsg_nosec net/socket.c:621 [inline]
-sock_sendmsg+0xc8/0x110 net/socket.c:631
-___sys_sendmsg+0x6cf/0x890 net/socket.c:2114
-__sys_sendmsg+0xf0/0x1b0 net/socket.c:2152
-do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-entry_SYSCALL_64_after_hwframe+0x49/0xbe
+It can be reproduced by this syz log:
 
-Signed-off-by: linmiaohe <linmiaohe@huawei.com>
+  r1 = socket$pptp(0x18, 0x1, 0x2)
+  bind$pptp(r1, &(0x7f0000000100)={0x18, 0x2, {0x0, @local}}, 0x1e)
+  connect$pptp(r1, &(0x7f0000000000)={0x18, 0x2, {0x3, @remote}}, 0x1e)
+
+Consecutive dmesg warnings will occur:
+
+  unregister_netdevice: waiting for lo to become free. Usage count = 1
+
+v1->v2:
+  - use rcu_dereference_protected() instead of rcu_dereference_check(),
+    as suggested by Eric.
+
+Fixes: 00959ade36ac ("PPTP: PPP over IPv4 (Point-to-Point Tunneling Protocol)")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/sit.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ppp/pptp.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -778,8 +778,9 @@ static bool check_6rd(struct ip_tunnel *
- 		pbw0 = tunnel->ip6rd.prefixlen >> 5;
- 		pbi0 = tunnel->ip6rd.prefixlen & 0x1f;
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -537,6 +537,7 @@ static void pptp_sock_destruct(struct so
+ 		pppox_unbind_sock(sk);
+ 	}
+ 	skb_queue_purge(&sk->sk_receive_queue);
++	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
+ }
  
--		d = (ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
--		    tunnel->ip6rd.relay_prefixlen;
-+		d = tunnel->ip6rd.relay_prefixlen < 32 ?
-+			(ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
-+		    tunnel->ip6rd.relay_prefixlen : 0;
- 
- 		pbi1 = pbi0 - tunnel->ip6rd.relay_prefixlen;
- 		if (pbi1 > 0)
+ static int pptp_create(struct net *net, struct socket *sock, int kern)
 
 
