@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6B1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C45C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28756217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913122085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552894461;
-	bh=1t2iTow1jWWzEIUUmLUValaVq5HqCn9BcfMJ6B9N2So=;
+	s=default; t=1552894464;
+	bh=NR5fA426N6ri7El5Amha0pSFo/RnlLKqNKjOwMAKwrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ouypy/f2m02KMCqawMsNhf9kIVAUQgtXxNPqxp2GLr5E5TGhLV+LeYKNjs+1TfB+h
-	 XLpg6IDzu6iPrYlLZ4ecgRn4MncXZHokpuyO/3y3ABjiUGpoAHU38EOTsmvmtyITIZ
-	 RfN0jkASyHcD4M8ov+9VBMLTCc8SpbJ90cLfsf0s=
+	b=N4ioslcqnJtGblP65fnM8lkpLnO1hQNFj28ECNf9L1oDbNkkqNDljtvr7d5aSON/A
+	 WKVdYiZFrcVf6RWAGjeCT9l4JVZVIz0qdg7ezQa/4VXrqUyiOw+2StzSLgQLNQDAlq
+	 36MP3NyD1JVexhc3cAmXmAbh7BGjWj2fjsxhoVtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfCRHeU (ORCPT
+        id S1727469AbfCRHeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 03:34:20 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:40926 "EHLO
+        Mon, 18 Mar 2019 03:34:19 -0400
+Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:40894 "EHLO
         wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727202AbfCRHeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 03:34:16 -0400
+        id S1726846AbfCRHeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 03:34:14 -0400
 Received: by wens.csie.org (Postfix, from userid 1000)
-        id 142AE5FF03; Mon, 18 Mar 2019 15:34:12 +0800 (CST)
+        id F3F3C5FD69; Mon, 18 Mar 2019 15:34:11 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>
 Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] nvmem: sunxi_sid: Support SID on A83T and H5
-Date:   Mon, 18 Mar 2019 15:33:53 +0800
-Message-Id: <20190318073354.12151-6-wens@kernel.org>
+Subject: [PATCH 2/6] nvmem: sunxi_sid: Optimize register read-out method
+Date:   Mon, 18 Mar 2019 15:33:50 +0800
+Message-Id: <20190318073354.12151-3-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190318073354.12151-1-wens@kernel.org>
 References: <20190318073354.12151-1-wens@kernel.org>
@@ -49,34 +49,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-The device tree binding already lists compatible strings for these two
-SoCs. They don't have the defect as seen on the H3, and the size and
-register layout is the same as the A64. Furthermore, the driver does
-not include nvmem cell definitions.
+SID cells are 32-bit aligned, and a multiple of 32 bits in length. The
+only outlier is the thermal sensor calibration data, which is 16 bits
+per sensor. However a whole 64 bits is allocated for this purpose, so
+we could consider it conforming to the rule above.
 
-Add support for these two compatible strings, re-using the config for
-the A64.
+Also, the register read-out method assumes native endian, unlike the
+direct MMIO method, which assumes big endian. Thus no endian conversion
+is involved.
+
+Under these assumptions, the register read-out method can be slightly
+optimized. Instead of reading one word then discarding 3 bytes, read
+the whole word directly into the buffer. However, for reads under 4
+bytes or trailing bytes, we still use a scratch buffer to extract the
+requested bytes.
+
+We could go one step further if .word_size was 4, but changing that
+would affect the sysfs interface's behavior.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/nvmem/sunxi_sid.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvmem/sunxi_sid.c | 38 ++++++++++++++++++--------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-index 14c114620ed6..e7936380ce89 100644
+index 704c35edf796..15fbfab62595 100644
 --- a/drivers/nvmem/sunxi_sid.c
 +++ b/drivers/nvmem/sunxi_sid.c
-@@ -200,8 +200,10 @@ static const struct sunxi_sid_cfg sun50i_a64_cfg = {
- static const struct of_device_id sunxi_sid_of_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
- 	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
-+	{ .compatible = "allwinner,sun8i-a83t-sid", .data = &sun50i_a64_cfg },
- 	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
- 	{ .compatible = "allwinner,sun50i-a64-sid", .data = &sun50i_a64_cfg },
-+	{ .compatible = "allwinner,sun50i-h5-sid", .data = &sun50i_a64_cfg },
- 	{/* sentinel */},
- };
- MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
+@@ -115,36 +115,34 @@ static int sun8i_sid_register_readout(const struct sunxi_sid *sid,
+  * to be not reliable at all.
+  * Read by the registers instead.
+  */
+-static int sun8i_sid_read_byte_by_reg(const struct sunxi_sid *sid,
+-				      const unsigned int offset,
+-				      u8 *out)
+-{
+-	u32 word;
+-	int ret;
+-
+-	ret = sun8i_sid_register_readout(sid, offset & ~0x03, &word);
+-
+-	if (ret)
+-		return ret;
+-
+-	*out = (word >> ((offset & 0x3) * 8)) & 0xff;
+-
+-	return 0;
+-}
+-
+ static int sun8i_sid_read_by_reg(void *context, unsigned int offset,
+ 				 void *val, size_t bytes)
+ {
+ 	struct sunxi_sid *sid = context;
+-	u8 *buf = val;
++	u32 word;
+ 	int ret;
+ 
+-	while (bytes--) {
+-		ret = sun8i_sid_read_byte_by_reg(sid, offset++, buf++);
++	/* .stride = 4 so offset is guaranteed to be aligned */
++	while (bytes >= 4) {
++		ret = sun8i_sid_register_readout(sid, offset, val);
+ 		if (ret)
+ 			return ret;
++
++		val += 4;
++		offset += 4;
++		bytes -= 4;
+ 	}
+ 
++	if (!bytes)
++		return 0;
++
++	/* Handle any trailing bytes */
++	ret = sun8i_sid_register_readout(sid, offset, &word);
++	if (ret)
++		return ret;
++
++	memcpy(val, &word, bytes);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
