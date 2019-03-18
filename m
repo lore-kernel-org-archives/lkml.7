@@ -2,71 +2,74 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E488FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CA9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF422064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42FE42064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552950919;
-	bh=7KPP+qvG/eHzgeW+EKO3a2k7gT1Hi3LfqWiOkr0+AJc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rpyHnNIaDM+aC2Ij56rIn1bdTqbX1TjFZNqPlGaKV1X6UnHdKyc2PNyZsb9JYmWld
-	 BAIHHhfGKLb8kdWNH/M9eB8D7igP/FQWxKZWNvk0Ah19rI16QEvXsBhpoopA4/O9x6
-	 DCl635mHuYqtG/ODgI1mLDTV9daAu7ojJXUrqHZ0=
+	s=default; t=1552950928;
+	bh=jizOMrDIyHbaSvrAkRQU4ljy3CliYEbOkUnHDzdj+Po=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EMg0SyFUqXRNLFsRF/G+RSHZjhoTOgN3pVkx4GCUGTD5DA0cjpdrVE6FCOZkByy3H
+	 WEd5xwAQ0cErxgJXddnigyn9UvQQxmF4l9dOMR6Id+KguRAT34nIwtrkNr1LygoeSd
+	 NAzL/O3UtHBoVeHZPWaDILjTq/W9EmxXcGDJZmxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfCRXPS (ORCPT
+        id S1727099AbfCRXPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 19:15:18 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:49109 "EHLO
+        Mon, 18 Mar 2019 19:15:21 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:39175 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726303AbfCRXPS (ORCPT
+        by vger.kernel.org with ESMTP id S1726824AbfCRXPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 19:15:18 -0400
+        Mon, 18 Mar 2019 19:15:20 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4723522B1A;
-        Mon, 18 Mar 2019 19:15:17 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 5D2DE2269F;
+        Mon, 18 Mar 2019 19:15:18 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 18 Mar 2019 19:15:17 -0400
+  by compute3.internal (MEProxy); Mon, 18 Mar 2019 19:15:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ZqGykYVH77djLZne5
-        01caV0WFSaOMDiHjm0OWGztsTI=; b=k5cIjSmcJJmizGgRPpbxCqmDEmWSjNnrG
-        FIvGrDIZR6Kabx+IyvYo6muZGyyGCNrsoma0H8o4+S40m9w1pYgUzuEcNP/tVC3L
-        rqf9feIMeDHS1qbt9NPtpqqgjl1WoeyuwNxxMwTohTDLH5WyBiumWpTf50gjDRzu
-        qRI3kxg/oZj2pN1a2GSGjP1RWAXOc1BzU1gnhMr6DwXo0wOp6GPgAEr6FJm7ZRCq
-        27yV7icg/iA3QTbEMN93THL/y5yiw12kFKGO1PqIxD8sFbumA8RCeLxZ3syf0mQq
-        WaJBqHdJ4hpxgRhjXbcvHLCZ5yw3hNfPF+nPE+YiyautPYifo/O0Q==
-X-ME-Sender: <xms:giaQXL7TJx83zgdsFg0IE5g2JzqQGtmvP9bRRArEVtK8Z0_U1lNy9A>
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=tW0q9IQpvRjf2lFt9FhXqPU4hPqJ6KhlCo7abxwmD6c=; b=FfUc10fA
+        ksPcNx1UIbaJL7msp2w5Jp78qh7sF/87NZhR02vjBfSXKo64JblsH36lG8sos9nN
+        tG8IkEBMBvsvtmUEDcSwTBxjKWMqOwva2KYS+Hf7CuvaLfKLotSEtBOitCTj0N0O
+        B/22PllBScgewohBZDU5/lvdIMhF+JF/WbwGD2NgLiMXRKF7kbDE9nhM3wjyijwP
+        pkXgPkW22ZxeM6t2V9GW0LSJkp2hAU/Fz9DFsA9rXaTtpmkeZGQKGy5yUK4T+AhF
+        odgi7LIF76XRbTfR6zPuaaulcQ/aWvnP82Uh2SnZG5UNWFby1OPOFcC4yeeZoJmm
+        FJpZAlZYIHjRCA==
+X-ME-Sender: <xms:hiaQXD2kbxP2vPzK9plycK0PNHka6xmgOF9fzv476M8e4msq_rL3Tg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddriedvgddtfecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
-    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
-    dvgedrudeiledrudegledrgedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
-    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:giaQXMbiMVq9FxLc4HIXkuRwa0W05KJqPKh_IAznx2qV76kCSMi0gQ>
-    <xmx:giaQXIcpNOOhIhoNSca32RUJ2bOQ82Jp4fGjwxr4FcHsAebLI62LnQ>
-    <xmx:giaQXJ7NgCusYRX777KSnKXxSln0T56fHQvuFDqTUzzkE5gUqfM-eQ>
-    <xmx:hSaQXGwU-8fYiYpWc2Gqhtb62mN9p0Mwsu8KwlSpvQo7WNTNNMj9Kg>
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
+    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
+    epuddvgedrudeiledrudegledrgedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
+    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:hiaQXNzygrCygK4fphBj9yKL1hUecJp9aHxgZLk73pfcuADHdd62Gw>
+    <xmx:hiaQXL4Dc-kR4owqQm_N6LpeuI3CnAr_7coLhP4r2OD-5dauvwZpqQ>
+    <xmx:hiaQXG_bNzfRfVKZaQvuu2rnP7shl5UOS3lx__nnaCJPS8dIdFEf9Q>
+    <xmx:hiaQXMTYfEgTqoQXXr9oL7vIWG80TJpTyhJRJ7zk5hTntcmyrwyY6A>
 Received: from eros.localdomain (124-169-149-40.dyn.iinet.net.au [124.169.149.40])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0D31110315;
-        Mon, 18 Mar 2019 19:15:11 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id ACC6110288;
+        Mon, 18 Mar 2019 19:15:15 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/13] Convert vfs.txt to vfs.rst
-Date:   Tue, 19 Mar 2019 10:14:24 +1100
-Message-Id: <20190318231437.1666-1-tobin@kernel.org>
+Subject: [PATCH v2 01/13] docs: filesystems: vfs: Remove space before tab
+Date:   Tue, 19 Mar 2019 10:14:25 +1100
+Message-Id: <20190318231437.1666-2-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190318231437.1666-1-tobin@kernel.org>
+References: <20190318231437.1666-1-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,82 +77,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jon,
+Currently the file has a bunch of spaces before tabspaces.  This is a
+nuisance when patching the file because they show up whenever we touch
+these lines.  Let's just fix them all now in preparation for doing the
+RST conversion.
 
-v2 Re-based and tagged for your merging pleasure!
+Remove spaces before tabspaces.
 
-This set converts the VFS overview documentation to RST format.
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+---
+ Documentation/filesystems/vfs.txt | 78 +++++++++++++++----------------
+ 1 file changed, 39 insertions(+), 39 deletions(-)
 
-Patch set introduces no new warnings/errors to the html docs build
-
-      $ make htmldocs 2> ../docs-pre-vfs.stderr	
-
-	Apply patch set  ...
-
-      $ make cleandocs
-      $ make htmldocs 2> ../docs-post-vfs.stderr
-      $ diff ../docs-pre-vfs.stderr ../docs-post-vfs.stderr
-
-
-Patch 1-4 - Whitespace fixes.
-Patch 5 - Adds the document title adornments (above and below)
-Patch 6 - Adds a SPDX license identifier
-Patch 7 - Fixes some custom indentation at the top of the file that will
-    	  cause Sphinx to warn when we switch to .rst
-Patch 8 - Converts custom list format to use RST formatted lists, this
-          is in preparation for switching to .rst 
-Patch 9 - Adds '.. code-block:: c' and fixes indentation of code
-	  blocks.  We rename the file to .rst in this patch (introducing
-	  some new warnings).
-Patch 10 - Adds back ticks to all the list items.  This is in
-	   preparation for fixing the indentation in the next patch.
-	   This was found to help when reading both plain text and HTML.
-Patch 11 - Cleans up the lists, indentation and missing periods.  This
-	   was kept separate to assist review.  This patch is benign,
-	   the less meticulous reviewer could safely skip over this one
-	   quickly (this was the intention of separating these changes).
-Patch 12 - Fixes a few minor grammar mistakes I notice while reading the
-	   file, I'm taking bonus points for actually reading every word
-	   of the file and not just trying to haphazardly do the
-	   conversion like I have previously done :)
-Patch 13 - Fixes two remaining Sphinx warnings.
-
-If/when this goes in perhaps I, or someone else, will update the content
-to document a newer kernel version.
-
-
-thanks,
-Tobin.
-
-
-Changes since v1:
-
- - Re-base onto commit 9834857754ff ("doc:it_IT: translations for documents in process/")
- - Add 'Tested-by:' tag for Randy (thanks!)
-
-
-Tobin C. Harding (13):
-  docs: filesystems: vfs: Remove space before tab
-  docs: filesystems: vfs: Use uniform space after period.
-  docs: filesystems: vfs: Use 72 character column width
-  docs: filesystems: vfs: Use uniform spacing around headings
-  docs: filesystems: vfs: Use correct initial heading
-  docs: filesystems: vfs: Use SPDX identifier
-  docs: filesystems: vfs: Fix pre-amble indentation
-  docs: filesystems: vfs: Use list character for lists
-  docs: filesystems: vfs: Add code-block and txt->RST
-  docs: filesystems: vfs: Use ticks for listed items
-  docs: filesystems: vfs: Clean up lists
-  docs: filesystems: vfs: Do minor grammar fixes
-  docs: filesystems: vfs: Use backticks to guard star
-
- Documentation/filesystems/index.rst |    1 +
- Documentation/filesystems/vfs.rst   | 1283 +++++++++++++++++++++++++++
- Documentation/filesystems/vfs.txt   | 1264 --------------------------
- 3 files changed, 1284 insertions(+), 1264 deletions(-)
- create mode 100644 Documentation/filesystems/vfs.rst
- delete mode 100644 Documentation/filesystems/vfs.txt
-
+diff --git a/Documentation/filesystems/vfs.txt b/Documentation/filesystems/vfs.txt
+index 761c6fd24a53..637fd1756b89 100644
+--- a/Documentation/filesystems/vfs.txt
++++ b/Documentation/filesystems/vfs.txt
+@@ -136,7 +136,7 @@ struct file_system_type {
+ 	should be shut down
+ 
+   owner: for internal VFS use: you should initialize this to THIS_MODULE in
+-  	most cases.
++	most cases.
+ 
+   next: for internal VFS use: you should initialize this to NULL
+ 
+@@ -145,7 +145,7 @@ struct file_system_type {
+ The mount() method has the following arguments:
+ 
+   struct file_system_type *fs_type: describes the filesystem, partly initialized
+-  	by the specific filesystem code
++	by the specific filesystem code
+ 
+   int flags: mount flags
+ 
+@@ -182,12 +182,12 @@ and provides a fill_super() callback instead. The generic variants are:
+   mount_nodev: mount a filesystem that is not backed by a device
+ 
+   mount_single: mount a filesystem which shares the instance between
+-  	all mounts
++	all mounts
+ 
+ A fill_super() callback implementation has the following arguments:
+ 
+   struct super_block *sb: the superblock structure. The callback
+-  	must initialize this properly.
++	must initialize this properly.
+ 
+   void *data: arbitrary mount options, usually comes as an ASCII
+ 	string (see "Mount Options" section)
+@@ -238,14 +238,14 @@ only called from a process context (i.e. not from an interrupt handler
+ or bottom half).
+ 
+   alloc_inode: this method is called by alloc_inode() to allocate memory
+- 	for struct inode and initialize it.  If this function is not
+- 	defined, a simple 'struct inode' is allocated.  Normally
+- 	alloc_inode will be used to allocate a larger structure which
+- 	contains a 'struct inode' embedded within it.
++	for struct inode and initialize it.  If this function is not
++	defined, a simple 'struct inode' is allocated.  Normally
++	alloc_inode will be used to allocate a larger structure which
++	contains a 'struct inode' embedded within it.
+ 
+   destroy_inode: this method is called by destroy_inode() to release
+-  	resources allocated for struct inode.  It is only required if
+-  	->alloc_inode was defined and simply undoes anything done by
++	resources allocated for struct inode.  It is only required if
++	->alloc_inode was defined and simply undoes anything done by
+ 	->alloc_inode.
+ 
+   dirty_inode: this method is called by the VFS to mark an inode dirty.
+@@ -273,15 +273,15 @@ or bottom half).
+ 	(i.e. unmount). This is called with the superblock lock held
+ 
+   sync_fs: called when VFS is writing out all dirty data associated with
+-  	a superblock. The second parameter indicates whether the method
++	a superblock. The second parameter indicates whether the method
+ 	should wait until the write out has been completed. Optional.
+ 
+   freeze_fs: called when VFS is locking a filesystem and
+-  	forcing it into a consistent state.  This method is currently
+-  	used by the Logical Volume Manager (LVM).
++	forcing it into a consistent state.  This method is currently
++	used by the Logical Volume Manager (LVM).
+ 
+   unfreeze_fs: called when VFS is unlocking a filesystem and making it writable
+-  	again.
++	again.
+ 
+   statfs: called when the VFS needs to get filesystem statistics.
+ 
+@@ -472,30 +472,30 @@ otherwise noted.
+ 	that.
+ 
+   permission: called by the VFS to check for access rights on a POSIX-like
+-  	filesystem.
++	filesystem.
+ 
+ 	May be called in rcu-walk mode (mask & MAY_NOT_BLOCK). If in rcu-walk
+-        mode, the filesystem must check the permission without blocking or
++	mode, the filesystem must check the permission without blocking or
+ 	storing to the inode.
+ 
+ 	If a situation is encountered that rcu-walk cannot handle, return
+ 	-ECHILD and it will be called again in ref-walk mode.
+ 
+   setattr: called by the VFS to set attributes for a file. This method
+-  	is called by chmod(2) and related system calls.
++	is called by chmod(2) and related system calls.
+ 
+   getattr: called by the VFS to get attributes of a file. This method
+-  	is called by stat(2) and related system calls.
++	is called by stat(2) and related system calls.
+ 
+   listxattr: called by the VFS to list all extended attributes for a
+ 	given file. This method is called by the listxattr(2) system call.
+ 
+   update_time: called by the VFS to update a specific time or the i_version of
+-  	an inode.  If this is not defined the VFS will update the inode itself
+-  	and call mark_inode_dirty_sync.
++	an inode.  If this is not defined the VFS will update the inode itself
++	and call mark_inode_dirty_sync.
+ 
+   atomic_open: called on the last component of an open.  Using this optional
+-  	method the filesystem can look up, possibly create and open the file in
++	method the filesystem can look up, possibly create and open the file in
+ 	one atomic operation.  If it wants to leave actual opening to the
+ 	caller (e.g. if the file turned out to be a symlink, device, or just
+ 	something filesystem won't do atomic open for), it may signal this by
+@@ -683,13 +683,13 @@ struct address_space_operations {
+        that all succeeds, ->readpage will be called again.
+ 
+   writepages: called by the VM to write out pages associated with the
+-  	address_space object.  If wbc->sync_mode is WBC_SYNC_ALL, then
+-  	the writeback_control will specify a range of pages that must be
+-  	written out.  If it is WBC_SYNC_NONE, then a nr_to_write is given
++	address_space object.  If wbc->sync_mode is WBC_SYNC_ALL, then
++	the writeback_control will specify a range of pages that must be
++	written out.  If it is WBC_SYNC_NONE, then a nr_to_write is given
+ 	and that many pages should be written if possible.
+ 	If no ->writepages is given, then mpage_writepages is used
+-  	instead.  This will choose pages from the address space that are
+-  	tagged as DIRTY and will pass them to ->writepage.
++	instead.  This will choose pages from the address space that are
++	tagged as DIRTY and will pass them to ->writepage.
+ 
+   set_page_dirty: called by the VM to set a page dirty.
+         This is particularly needed if an address space attaches
+@@ -700,11 +700,11 @@ struct address_space_operations {
+         PAGECACHE_TAG_DIRTY tag in the radix tree.
+ 
+   readpages: called by the VM to read pages associated with the address_space
+-  	object. This is essentially just a vector version of
+-  	readpage.  Instead of just one page, several pages are
+-  	requested.
++	object. This is essentially just a vector version of
++	readpage.  Instead of just one page, several pages are
++	requested.
+ 	readpages is only used for read-ahead, so read errors are
+-  	ignored.  If anything goes wrong, feel free to give up.
++	ignored.  If anything goes wrong, feel free to give up.
+ 
+   write_begin:
+ 	Called by the generic buffered write code to ask the filesystem to
+@@ -741,12 +741,12 @@ struct address_space_operations {
+         that were able to be copied into pagecache.
+ 
+   bmap: called by the VFS to map a logical block offset within object to
+-  	physical block number. This method is used by the FIBMAP
+-  	ioctl and for working with swap-files.  To be able to swap to
+-  	a file, the file must have a stable mapping to a block
+-  	device.  The swap system does not go through the filesystem
+-  	but instead uses bmap to find out where the blocks in the file
+-  	are and uses those addresses directly.
++	physical block number. This method is used by the FIBMAP
++	ioctl and for working with swap-files.  To be able to swap to
++	a file, the file must have a stable mapping to a block
++	device.  The swap system does not go through the filesystem
++	but instead uses bmap to find out where the blocks in the file
++	are and uses those addresses directly.
+ 
+   invalidatepage: If a page has PagePrivate set, then invalidatepage
+         will be called when part or all of the page is to be removed
+@@ -806,7 +806,7 @@ struct address_space_operations {
+   putback_page: Called by the VM when isolated page's migration fails.
+ 
+   launder_page: Called before freeing a page - it writes back the dirty page. To
+-  	prevent redirtying the page, it is kept locked during the whole
++	prevent redirtying the page, it is kept locked during the whole
+ 	operation.
+ 
+   is_partially_uptodate: Called by the VM when reading a file through the
+@@ -917,7 +917,7 @@ otherwise noted.
+   unlocked_ioctl: called by the ioctl(2) system call.
+ 
+   compat_ioctl: called by the ioctl(2) system call when 32 bit system calls
+- 	 are used on 64 bit kernels.
++	 are used on 64 bit kernels.
+ 
+   mmap: called by the mmap(2) system call
+ 
+@@ -942,7 +942,7 @@ otherwise noted.
+ 	(non-blocking) mode is enabled for a file
+ 
+   lock: called by the fcntl(2) system call for F_GETLK, F_SETLK, and F_SETLKW
+-  	commands
++	commands
+ 
+   get_unmapped_area: called by the mmap(2) system call
+ 
 -- 
 2.21.0
 
