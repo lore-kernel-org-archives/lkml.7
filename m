@@ -2,212 +2,114 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82161C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4095BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACB92133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068452133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:08:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LC0eWcDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfCRU7q (ORCPT
+        id S1727408AbfCRVIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:59:46 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:59750 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfCRU7p (ORCPT
+        Mon, 18 Mar 2019 17:08:14 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:46658 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbfCRVIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:59:45 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h5zM8-0001Lp-Jq; Mon, 18 Mar 2019 16:59:39 -0400
-Date:   Mon, 18 Mar 2019 16:58:59 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V5 10/10] audit: NETFILTER_PKT: record each
- container ID associated with a netNS
-Message-ID: <20190318205859.GG4111@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <56127b2a5b82f15cb0d0f040502c2e3bb6945f30.1552665316.git.rgb@redhat.com>
+        Mon, 18 Mar 2019 17:08:14 -0400
+Received: by mail-vs1-f68.google.com with SMTP id w26so7922008vsk.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 14:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ewue4iLQcqCU/D+3xpcgmp49XIxCEkCpFULXlCGIWEc=;
+        b=LC0eWcDsrQESkH+odyGHuaL+lmflxcBH7qIQ9x6gQISH5E07dD84iwjAQ2pEkpolsa
+         yHnodbzKBVRzB66kgAc2/uz9WzUphHHMdDmXSMb4CzOsb2e6G+CX74QVV8iO4Ac766mc
+         lgQ0dGvL9eYmqFZzxBZdl/ohGu21kOYKf0uaU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ewue4iLQcqCU/D+3xpcgmp49XIxCEkCpFULXlCGIWEc=;
+        b=IqRiAgaNpaXc1XbQygE5VB6yXQqs59agUuBbh7hrMi6t12IW33ivt12eJivVKH70ib
+         aFmR4mhDNJLeMfH7Ns/oCdyZZ4kcJ5bfHQqfZpvq+LWzy82LUKrh2mmRU1Vw5cdhPshr
+         /xDM2jDi6lj8qX8rpxHWvhHBL0lNYk4CRaESRAuXF5Yxpm1NTYfvyQdopqJsuawbd7wd
+         +DTXjYFrDLfP+oyJRL1N9kA+2vrX/mfvMP8TxF9Zz+KPuNwcb2qVqFOZrW/MX6FrY1/m
+         HpSZAdJiaHn3fLD81cmCERzUjyJ8+Bi5U8/LpTbsbFnkVJQfPTjFqUKf8JFqwGFuf1r2
+         geeQ==
+X-Gm-Message-State: APjAAAUIvHc9wBINzc1F9fwAdwzuCLz/bPRVNSOqlK+8j0laQ+r83nyt
+        DaS+YDFeYWx9sNHGj1uDSAzv/Bgo5wk=
+X-Google-Smtp-Source: APXvYqwyJhRAEi3KelZADIuS05Uu7kc013A6a1MJjfaLO7FF3FGZRVLbu3l61IB1NTO0nJv0Sba06g==
+X-Received: by 2002:a67:76d7:: with SMTP id r206mr6263962vsc.25.1552943291796;
+        Mon, 18 Mar 2019 14:08:11 -0700 (PDT)
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
+        by smtp.gmail.com with ESMTPSA id b186sm4029346vke.17.2019.03.18.14.08.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 14:08:10 -0700 (PDT)
+Received: by mail-vk1-f169.google.com with SMTP id k64so4135485vke.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 14:08:09 -0700 (PDT)
+X-Received: by 2002:a1f:2acb:: with SMTP id q194mr9920042vkq.92.1552943289236;
+ Mon, 18 Mar 2019 14:08:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56127b2a5b82f15cb0d0f040502c2e3bb6945f30.1552665316.git.rgb@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190318094128.1488-1-elena.reshetova@intel.com> <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
+In-Reply-To: <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Mon, 18 Mar 2019 14:07:57 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
+Message-ID: <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Elena Reshetova <elena.reshetova@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 02:29:58PM -0400, Richard Guy Briggs wrote:
-> Add audit container identifier auxiliary record(s) to NETFILTER_PKT
-> event standalone records.  Iterate through all potential audit container
-> identifiers associated with a network namespace.
-> 
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  include/linux/audit.h    |  5 +++++
->  kernel/audit.c           | 41 +++++++++++++++++++++++++++++++++++++++++
->  net/netfilter/nft_log.c  | 11 +++++++++--
->  net/netfilter/xt_AUDIT.c | 11 +++++++++--
->  4 files changed, 64 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index 70255c2dfb9f..723e2d020228 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -214,6 +214,8 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
->  extern void audit_netns_contid_del(struct net *net, u64 contid);
->  extern void audit_switch_task_namespaces(struct nsproxy *ns,
->  					 struct task_struct *p);
-> +extern void audit_log_netns_contid_list(struct net *net,
-> +					struct audit_context *context);
->  
->  extern u32 audit_enabled;
->  #else /* CONFIG_AUDIT */
-> @@ -290,6 +292,9 @@ static inline void audit_netns_contid_del(struct net *net, u64 contid)
->  static inline void audit_switch_task_namespaces(struct nsproxy *ns,
->  						struct task_struct *p)
->  { }
-> +static inline void audit_log_netns_contid_list(struct net *net,
-> +					       struct audit_context *context)
-> +{ }
->  
->  #define audit_enabled AUDIT_OFF
->  #endif /* CONFIG_AUDIT */
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index 7fa3194f5342..80ed323feeb5 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -451,6 +451,47 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
->  		audit_netns_contid_add(new->net_ns, contid);
->  }
->  
-> +/**
-> + * audit_log_netns_contid_list - List contids for the given network namespace
-> + * @net: the network namespace of interest
-> + * @context: the audit context to use
-> + *
-> + * Description:
-> + * Issues a CONTAINER_ID record with a CSV list of contids associated
-> + * with a network namespace to accompany a NETFILTER_PKT record.
-> + */
-> +void audit_log_netns_contid_list(struct net *net, struct audit_context *context)
-> +{
-> +	struct audit_buffer *ab = NULL;
-> +	struct audit_contid *cont;
-> +	bool first = true;
-> +	struct audit_net *aunet;
-> +
-> +	/* Generate AUDIT_CONTAINER_ID record with container ID CSV list */
-> +	rcu_read_lock();
-> +	aunet = net_generic(net, audit_net_id);
-> +	if (!aunet)
-> +		goto out;
-> +	list_for_each_entry_rcu(cont, &aunet->contid_list, list) {
-> +		if (first) {
-> +			ab = audit_log_start(context, GFP_ATOMIC,
-> +					     AUDIT_CONTAINER_ID);
-> +			if (!ab) {
-> +				audit_log_lost("out of memory in audit_log_netns_contid_list");
-> +				goto out;
-> +			}
-> +			audit_log_format(ab, "contid=");
-> +		} else 
-> +			audit_log_format(ab, ",");
-> +		audit_log_format(ab, "%llu", cont->id);
-> +		first = false;
-> +	}
-> +	audit_log_end(ab);
-> +out:
-> +	rcu_read_unlock();
-> +}
-> +EXPORT_SYMBOL(audit_log_netns_contid_list);
-> +
->  void audit_panic(const char *message)
->  {
->  	switch (audit_failure) {
-> diff --git a/net/netfilter/nft_log.c b/net/netfilter/nft_log.c
-> index 655187bed5d8..bdb1ec2368a7 100644
-> --- a/net/netfilter/nft_log.c
-> +++ b/net/netfilter/nft_log.c
-> @@ -69,13 +69,16 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
->  	struct sk_buff *skb = pkt->skb;
->  	struct audit_buffer *ab;
->  	int fam = -1;
-> +	struct audit_context *context;
-> +	struct net *net;
->  
->  	if (!audit_enabled)
->  		return;
->  
-> -	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
-> +	context = audit_alloc_local(GFP_ATOMIC);
-> +	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
->  	if (!ab)
-> -		return;
-> +		goto errout;
->  
->  	audit_log_format(ab, "mark=%#x", skb->mark);
->  
-> @@ -102,6 +105,10 @@ static void nft_log_eval_audit(const struct nft_pktinfo *pkt)
->  		audit_log_format(ab, " saddr=? daddr=? proto=-1");
->  
->  	audit_log_end(ab);
-> +	net = xt_net(&pkt->xt);
-> +	audit_log_netns_contid_list(net, context);
-> +errout:
-> +	audit_free_context(context);
->  }
->  
->  static void nft_log_eval(const struct nft_expr *expr,
-> diff --git a/net/netfilter/xt_AUDIT.c b/net/netfilter/xt_AUDIT.c
-> index af883f1b64f9..a3e547435f13 100644
-> --- a/net/netfilter/xt_AUDIT.c
-> +++ b/net/netfilter/xt_AUDIT.c
-> @@ -71,10 +71,13 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
->  {
->  	struct audit_buffer *ab;
->  	int fam = -1;
-> +	struct audit_context *context;
-> +	struct net *net;
->  
->  	if (audit_enabled == AUDIT_OFF)
-> -		goto errout;
-> -	ab = audit_log_start(NULL, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
-> +		goto out;
-> +	context = audit_alloc_local(GFP_ATOMIC);
-> +	ab = audit_log_start(context, GFP_ATOMIC, AUDIT_NETFILTER_PKT);
->  	if (ab == NULL)
->  		goto errout;
->  
-> @@ -104,7 +107,11 @@ static bool audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
->  
->  	audit_log_end(ab);
->  
-> +	net = xt_net(par);
-> +	audit_log_netns_contid_list(net, context);
->  errout:
-> +	audit_free_context(context);
-> +out:
->  	return XT_CONTINUE;
->  }
->  
-> -- 
-> 1.8.3.1
-> 
-> 
-minus the whitespace fix
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+On Mon, Mar 18, 2019 at 1:16 PM Andy Lutomirski <luto@kernel.org> wrote:
+> On Mon, Mar 18, 2019 at 2:41 AM Elena Reshetova
+> <elena.reshetova@intel.com> wrote:
+> > Performance:
+> >
+> > 1) lmbench: ./lat_syscall -N 1000000 null
+> >     base:                     Simple syscall: 0.1774 microseconds
+> >     random_offset (rdtsc):     Simple syscall: 0.1803 microseconds
+> >     random_offset (rdrand): Simple syscall: 0.3702 microseconds
+> >
+> > 2)  Andy's tests, misc-tests: ./timing_test_64 10M sys_enosys
+> >     base:                     10000000 loops in 1.62224s = 162.22 nsec / loop
+> >     random_offset (rdtsc):     10000000 loops in 1.64660s = 164.66 nsec / loop
+> >     random_offset (rdrand): 10000000 loops in 3.51315s = 351.32 nsec / loop
+> >
+>
+> Egads!  RDTSC is nice and fast but probably fairly easy to defeat.
+> RDRAND is awful.  I had hoped for better.
 
+RDRAND can also fail.
+
+> So perhaps we need a little percpu buffer that collects 64 bits of
+> randomness at a time, shifts out the needed bits, and refills the
+> buffer when we run out.
+
+I'd like to avoid saving the _exact_ details of where the next offset
+will be, but if nothing else works, this should be okay. We can use 8
+bits at a time and call prandom_u32() every 4th call. Something like
+prandom_bytes(), but where it doesn't throw away the unused bytes.
+
+-- 
+Kees Cook
