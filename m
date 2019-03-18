@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A34C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D75C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A58B820989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA862133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="WxRtEip4"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="HpF4Ppj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfCRRmr (ORCPT
+        id S1728001AbfCRRmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:42:47 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44743 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727916AbfCRRmo (ORCPT
+        Mon, 18 Mar 2019 13:42:51 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54254 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727719AbfCRRmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:42:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w2so18028069wrt.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:42:42 -0700 (PDT)
+        Mon, 18 Mar 2019 13:42:47 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e74so13897356wmg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:42:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jDsQaX0AKNXb2pvp7Sr8XJyRrZX4/E/hqKvswBjc0ZU=;
-        b=WxRtEip4d260ndPejp6ErvD70VvoaMnWlyTAvihFGM83mZ3T1DOXnNT7mDQwjPRedG
-         8av5JoV8jrdRgxR0UEAF8CwOsuxQ/U01obssMX+gSoiuK3WwmlN64R6c2PQvPBdCLODl
-         rRQTkckEqVLTBLAqX6tIVm5twMm6KwSow70zMm4GepOosb22VUIQfe5aL8MwKgMtSbhz
-         8MmH3qCghGVmhV/S3Kit6JwNieyGciol7qSzaN9VIhNRAoO7rt69pQFF0jlZJOZv+kqn
-         irpKRK5NNm+MWfESVRqzsQS7+Pvc48zYIpJKHkb7UgZINhO8GzdmIUv2sfAF7h6WD/9q
-         OJXA==
+        bh=krSRy2BR7/lBUSfBkF8HPbKkzTxQSpgqYzJEmOcZcLg=;
+        b=HpF4Ppj2gWKAXM1eaXteQAJ9Q2z6w6YrIa2mhmnAM2/AitD1lhMsyAJs0nopvEpTDN
+         WC0VSQi7Zk7nlslM2kkoj78iegp037n1losP15rWKnUdEEvOGFpafvMqwzj5gvUuJHSF
+         002Dew+zdI8Mn3CcSA9fPYWMRqumz0gcT+46a0b2fnKFyY/d7hBeHUViFgCbIzTDbW1o
+         cbqgH9HnELutJNtcf9TUVOkvdElFZSP0qRSpbuB9nIjTCDhc1VMluI7mv9Owj1g2PWhK
+         Zkvr/25NyyJQLsZ1ShiYbDS9+RVKooE8F2qgsAFGqpWQRP933ShmulXaWyAtYm9N/Ab8
+         XjTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jDsQaX0AKNXb2pvp7Sr8XJyRrZX4/E/hqKvswBjc0ZU=;
-        b=NwRxUUn+TIxBUxsZza6uPvXBIg0rzfgcPwT/JVhs7K6upTrAeuYRgyGPXHOhXLkWWb
-         UCJbWL84B1krMwG48pwQtlumMT9W5xex7EFNHZVbKlgY1YnpWSYtlMQX6ZpCdnxDyI7i
-         NTYw5RNP93C6s3387Fb9I6YjJfeytePQcdWZgfjxRoHDLBhGQG6CFIqo1vwf6o0pE19G
-         8BbOLgtYSJRkb58ZFqGfWwXi1NxqELbs/2BVPQm5lkWivk+DsR4lcl7dFH2i5+U54EtD
-         Sb370acycoes26cp2lRxOz3cRke26R9AOAdwhx70wAjjMymBe8W5ZrDVv1oVYuuBbLjp
-         9WTA==
-X-Gm-Message-State: APjAAAU0Q/wowL+JdRrTB0vlgLYeKH10TSXSAkf8OQVjo5lzvBpHq26d
-        WzMp6rzoTaaZdZCQbtZZLPnHWQ==
-X-Google-Smtp-Source: APXvYqwIegnwMcUr6xDtXYlKFWRdvX8O+7bw2BMfvjoIbVAPp3JB8mwejpGFoj7Ds3LBCx6n4iSA3g==
-X-Received: by 2002:adf:d84d:: with SMTP id k13mr14480069wrl.154.1552930961582;
-        Mon, 18 Mar 2019 10:42:41 -0700 (PDT)
+        bh=krSRy2BR7/lBUSfBkF8HPbKkzTxQSpgqYzJEmOcZcLg=;
+        b=Owjoa7Erh12N/zw9suQAwA7HBx/GUEwJvqWn5wzbzkSlI1FPgwIT0ZuJy2QCvWGDIu
+         wDDvqRPAvED3pW1dT1o1sBua+dZD06FFH2T864ognqIdIx0Fpd4istRxAILpFPG54qqD
+         3WHwlt1569fxh5hBud7/Bt59XCqruyZnfOPbdSOzUBm3R8dJZX89XVAkctaPNnDAcWRy
+         klUERoPHSdeh2t7611FQgcnErIYNSfjVkyiA56yQzISulshlXHs6lG83zYvD19UPMGV2
+         y8zvs6gYfRRw9ASUML8go5hbzzA62pUngCslBXUp5zI+YjopczHpKtcWE7Jm4Ws4OR++
+         xsJg==
+X-Gm-Message-State: APjAAAVn2WlaW9RfYlMkDHW4/weiarGnvdkfUypQgqP2pFWaOU43YLag
+        3X5heGljLxVd+hHGfOUcTayqpQ==
+X-Google-Smtp-Source: APXvYqyNkaFZQJZ8doT4BJe2mtlGTQs/c1/lVJ6VRongMFS6qbY5jRkOSNnoP/WTrR8nDsu85J0C7g==
+X-Received: by 2002:a1c:3c02:: with SMTP id j2mr62642wma.72.1552930966158;
+        Mon, 18 Mar 2019 10:42:46 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id g24sm14873909wmh.45.2019.03.18.10.42.40
+        by smtp.gmail.com with ESMTPSA id g24sm14873909wmh.45.2019.03.18.10.42.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 10:42:40 -0700 (PDT)
+        Mon, 18 Mar 2019 10:42:45 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -70,9 +70,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-input@vger.kernel.org,
         linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [RESEND PATCH v6 06/11] mfd: max77650: new core mfd driver
-Date:   Mon, 18 Mar 2019 18:42:23 +0100
-Message-Id: <20190318174228.18194-7-brgl@bgdev.pl>
+Subject: [RESEND PATCH v6 09/11] leds: max77650: add LEDs support
+Date:   Mon, 18 Mar 2019 18:42:26 +0100
+Message-Id: <20190318174228.18194-10-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190318174228.18194-1-brgl@bgdev.pl>
 References: <20190318174228.18194-1-brgl@bgdev.pl>
@@ -85,361 +85,200 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add the core mfd driver for max77650 PMIC. We define five sub-devices
-for which the drivers will be added in subsequent patches.
+This adds basic support for LEDs for the max77650 PMIC. The device has
+three current sinks for driving LEDs.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 ---
- drivers/mfd/Kconfig          |  14 +++
- drivers/mfd/Makefile         |   1 +
- drivers/mfd/max77650.c       | 234 +++++++++++++++++++++++++++++++++++
- include/linux/mfd/max77650.h |  59 +++++++++
- 4 files changed, 308 insertions(+)
- create mode 100644 drivers/mfd/max77650.c
- create mode 100644 include/linux/mfd/max77650.h
+ drivers/leds/Kconfig         |   6 ++
+ drivers/leds/Makefile        |   1 +
+ drivers/leds/leds-max77650.c | 147 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 154 insertions(+)
+ create mode 100644 drivers/leds/leds-max77650.c
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 0ce2d8dfc5f1..ade04e124aa0 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -733,6 +733,20 @@ config MFD_MAX77620
- 	  provides common support for accessing the device; additional drivers
- 	  must be enabled in order to use the functionality of the device.
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index a72f97fca57b..d8c70cc6a714 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -608,6 +608,12 @@ config LEDS_TLC591XX
+ 	  This option enables support for Texas Instruments TLC59108
+ 	  and TLC59116 LED controllers.
  
-+config MFD_MAX77650
-+	tristate "Maxim MAX77650/77651 PMIC Support"
-+	depends on I2C
-+	depends on OF || COMPILE_TEST
-+	select MFD_CORE
-+	select REGMAP_I2C
++config LEDS_MAX77650
++	tristate "LED support for Maxim MAX77650 PMIC"
++	depends on LEDS_CLASS && MFD_MAX77650
 +	help
-+	  Say Y here to add support for Maxim Semiconductor MAX77650 and
-+	  MAX77651 Power Management ICs. This is the core multifunction
-+	  driver for interacting with the device. The module name is
-+	  'max77650'. Additional drivers can be enabled in order to use
-+	  the following functionalities of the device: GPIO, regulator,
-+	  charger, LED, onkey.
++	  LEDs driver for MAX77650 family of PMICs from Maxim Integrated.
 +
- config MFD_MAX77686
- 	tristate "Maxim Semiconductor MAX77686/802 PMIC Support"
- 	depends on I2C
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index b4569ed7f3f3..5727d099c16f 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -155,6 +155,7 @@ obj-$(CONFIG_MFD_DA9150)	+= da9150-core.o
- 
- obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
- obj-$(CONFIG_MFD_MAX77620)	+= max77620.o
-+obj-$(CONFIG_MFD_MAX77650)	+= max77650.o
- obj-$(CONFIG_MFD_MAX77686)	+= max77686.o
- obj-$(CONFIG_MFD_MAX77693)	+= max77693.o
- obj-$(CONFIG_MFD_MAX77843)	+= max77843.o
-diff --git a/drivers/mfd/max77650.c b/drivers/mfd/max77650.c
+ config LEDS_MAX77693
+ 	tristate "LED support for MAX77693 Flash"
+ 	depends on LEDS_CLASS_FLASH
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 4c1b0054f379..f48b2404dbb7 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -61,6 +61,7 @@ obj-$(CONFIG_LEDS_MC13783)		+= leds-mc13783.o
+ obj-$(CONFIG_LEDS_NS2)			+= leds-ns2.o
+ obj-$(CONFIG_LEDS_NETXBIG)		+= leds-netxbig.o
+ obj-$(CONFIG_LEDS_ASIC3)		+= leds-asic3.o
++obj-$(CONFIG_LEDS_MAX77650)		+= leds-max77650.o
+ obj-$(CONFIG_LEDS_MAX77693)		+= leds-max77693.o
+ obj-$(CONFIG_LEDS_MAX8997)		+= leds-max8997.o
+ obj-$(CONFIG_LEDS_LM355x)		+= leds-lm355x.o
+diff --git a/drivers/leds/leds-max77650.c b/drivers/leds/leds-max77650.c
 new file mode 100644
-index 000000000000..7a6c0a5cf602
+index 000000000000..6b74ce9cac12
 --- /dev/null
-+++ b/drivers/mfd/max77650.c
-@@ -0,0 +1,234 @@
++++ b/drivers/leds/leds-max77650.c
+@@ -0,0 +1,147 @@
 +// SPDX-License-Identifier: GPL-2.0
 +//
 +// Copyright (C) 2018 BayLibre SAS
 +// Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 +//
-+// Core MFD driver for MAXIM 77650/77651 charger/power-supply.
-+// Programming manual: https://pdfserv.maximintegrated.com/en/an/AN6428.pdf
++// LED driver for MAXIM 77650/77651 charger/power-supply.
 +
 +#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/mfd/core.h>
++#include <linux/leds.h>
 +#include <linux/mfd/max77650.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
++#include <linux/platform_device.h>
 +#include <linux/regmap.h>
 +
-+#define MAX77650_INT_GPI_F_MSK		BIT(0)
-+#define MAX77650_INT_GPI_R_MSK		BIT(1)
-+#define MAX77650_INT_GPI_MSK \
-+			(MAX77650_INT_GPI_F_MSK | MAX77650_INT_GPI_R_MSK)
-+#define MAX77650_INT_nEN_F_MSK		BIT(2)
-+#define MAX77650_INT_nEN_R_MSK		BIT(3)
-+#define MAX77650_INT_TJAL1_R_MSK	BIT(4)
-+#define MAX77650_INT_TJAL2_R_MSK	BIT(5)
-+#define MAX77650_INT_DOD_R_MSK		BIT(6)
++#define MAX77650_LED_NUM_LEDS		3
 +
-+#define MAX77650_INT_THM_MSK		BIT(0)
-+#define MAX77650_INT_CHG_MSK		BIT(1)
-+#define MAX77650_INT_CHGIN_MSK		BIT(2)
-+#define MAX77650_INT_TJ_REG_MSK		BIT(3)
-+#define MAX77650_INT_CHGIN_CTRL_MSK	BIT(4)
-+#define MAX77650_INT_SYS_CTRL_MSK	BIT(5)
-+#define MAX77650_INT_SYS_CNFG_MSK	BIT(6)
++#define MAX77650_LED_A_BASE		0x40
++#define MAX77650_LED_B_BASE		0x43
 +
-+#define MAX77650_INT_GLBL_OFFSET	0
-+#define MAX77650_INT_CHG_OFFSET		1
++#define MAX77650_LED_BR_MASK		GENMASK(4, 0)
++#define MAX77650_LED_EN_MASK		GENMASK(7, 6)
 +
-+#define MAX77650_SBIA_LPM_MASK		BIT(5)
-+#define MAX77650_SBIA_LPM_DISABLED	0x00
++#define MAX77650_LED_MAX_BRIGHTNESS	MAX77650_LED_BR_MASK
 +
-+enum {
-+	MAX77650_INT_GPI,
-+	MAX77650_INT_nEN_F,
-+	MAX77650_INT_nEN_R,
-+	MAX77650_INT_TJAL1_R,
-+	MAX77650_INT_TJAL2_R,
-+	MAX77650_INT_DOD_R,
-+	MAX77650_INT_THM,
-+	MAX77650_INT_CHG,
-+	MAX77650_INT_CHGIN,
-+	MAX77650_INT_TJ_REG,
-+	MAX77650_INT_CHGIN_CTRL,
-+	MAX77650_INT_SYS_CTRL,
-+	MAX77650_INT_SYS_CNFG,
-+};
++/* Enable EN_LED_MSTR. */
++#define MAX77650_LED_TOP_DEFAULT	BIT(0)
 +
-+static const struct resource max77650_charger_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MAX77650_INT_CHG, "CHG"),
-+	DEFINE_RES_IRQ_NAMED(MAX77650_INT_CHGIN, "CHGIN"),
-+};
++#define MAX77650_LED_ENABLE		GENMASK(7, 6)
++#define MAX77650_LED_DISABLE		0x00
 +
-+static const struct resource max77650_gpio_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MAX77650_INT_GPI, "GPI"),
-+};
++#define MAX77650_LED_A_DEFAULT		MAX77650_LED_DISABLE
++/* 100% on duty */
++#define MAX77650_LED_B_DEFAULT		GENMASK(3, 0)
 +
-+static const struct resource max77650_onkey_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MAX77650_INT_nEN_F, "nEN_F"),
-+	DEFINE_RES_IRQ_NAMED(MAX77650_INT_nEN_R, "nEN_R"),
-+};
-+
-+static const struct mfd_cell max77650_cells[] = {
-+	{
-+		.name		= "max77650-regulator",
-+		.of_compatible	= "maxim,max77650-regulator",
-+	},
-+	{
-+		.name		= "max77650-charger",
-+		.of_compatible	= "maxim,max77650-charger",
-+		.resources	= max77650_charger_resources,
-+		.num_resources	= ARRAY_SIZE(max77650_charger_resources),
-+	},
-+	{
-+		.name		= "max77650-gpio",
-+		.of_compatible	= "maxim,max77650-gpio",
-+		.resources	= max77650_gpio_resources,
-+		.num_resources	= ARRAY_SIZE(max77650_gpio_resources),
-+	},
-+	{
-+		.name		= "max77650-led",
-+		.of_compatible	= "maxim,max77650-led",
-+	},
-+	{
-+		.name		= "max77650-onkey",
-+		.of_compatible	= "maxim,max77650-onkey",
-+		.resources	= max77650_onkey_resources,
-+		.num_resources	= ARRAY_SIZE(max77650_onkey_resources),
-+	},
-+};
-+
-+static const struct regmap_irq max77650_irqs[] = {
-+	[MAX77650_INT_GPI] = {
-+		.reg_offset		= MAX77650_INT_GLBL_OFFSET,
-+		.mask			= MAX77650_INT_GPI_MSK,
-+		.type = {
-+			.type_falling_val	= MAX77650_INT_GPI_F_MSK,
-+			.type_rising_val	= MAX77650_INT_GPI_R_MSK,
-+			.types_supported	= IRQ_TYPE_EDGE_BOTH,
-+		},
-+	},
-+	REGMAP_IRQ_REG(MAX77650_INT_nEN_F,
-+		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_nEN_F_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_nEN_R,
-+		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_nEN_R_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_TJAL1_R,
-+		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_TJAL1_R_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_TJAL2_R,
-+		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_TJAL2_R_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_DOD_R,
-+		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_DOD_R_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_THM,
-+		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_THM_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_CHG,
-+		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_CHG_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_CHGIN,
-+		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_CHGIN_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_TJ_REG,
-+		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_TJ_REG_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_CHGIN_CTRL,
-+		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_CHGIN_CTRL_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_SYS_CTRL,
-+		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_SYS_CTRL_MSK),
-+	REGMAP_IRQ_REG(MAX77650_INT_SYS_CNFG,
-+		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_SYS_CNFG_MSK),
-+};
-+
-+static const struct regmap_irq_chip max77650_irq_chip = {
-+	.name			= "max77650-irq",
-+	.irqs			= max77650_irqs,
-+	.num_irqs		= ARRAY_SIZE(max77650_irqs),
-+	.num_regs		= 2,
-+	.status_base		= MAX77650_REG_INT_GLBL,
-+	.mask_base		= MAX77650_REG_INTM_GLBL,
-+	.type_in_mask		= true,
-+	.type_invert		= true,
-+	.init_ack_masked	= true,
-+	.clear_on_unmask	= true,
-+};
-+
-+static const struct regmap_config max77650_regmap_config = {
-+	.name		= "max77650",
-+	.reg_bits	= 8,
-+	.val_bits	= 8,
-+};
-+
-+static int max77650_i2c_probe(struct i2c_client *i2c)
-+{
-+	struct regmap_irq_chip_data *irq_data;
-+	struct device *dev = &i2c->dev;
-+	struct irq_domain *domain;
++struct max77650_led {
++	struct led_classdev cdev;
 +	struct regmap *map;
-+	unsigned int val;
-+	int rv;
++	unsigned int regA;
++	unsigned int regB;
++};
 +
-+	map = devm_regmap_init_i2c(i2c, &max77650_regmap_config);
-+	if (IS_ERR(map)) {
-+		dev_err(dev, "unable to initialize i2c regmap\n");
-+		return PTR_ERR(map);
-+	}
-+
-+	rv = regmap_read(map, MAX77650_REG_CID, &val);
-+	if (rv) {
-+		dev_err(dev, "unable to read the CID from device\n");
-+		return rv;
-+	}
-+
-+	switch (MAX77650_CID_BITS(val)) {
-+	case MAX77650_CID_77650A:
-+	case MAX77650_CID_77650C:
-+	case MAX77650_CID_77651A:
-+	case MAX77650_CID_77651B:
-+		break;
-+	default:
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * This IC has a low-power mode which reduces the quiescent current
-+	 * consumption to ~5.6uA but is only suitable for systems consuming
-+	 * less than ~2mA. Since this is not likely the case even on
-+	 * linux-based wearables - keep the chip in normal power mode.
-+	 */
-+	rv = regmap_update_bits(map,
-+				MAX77650_REG_CNFG_GLBL,
-+				MAX77650_SBIA_LPM_MASK,
-+				MAX77650_SBIA_LPM_DISABLED);
-+	if (rv) {
-+		dev_err(dev, "unable to change the power mode\n");
-+		return rv;
-+	}
-+
-+	rv = devm_regmap_add_irq_chip(dev, map, i2c->irq,
-+				      IRQF_ONESHOT | IRQF_SHARED, 0,
-+				      &max77650_irq_chip, &irq_data);
-+	if (rv) {
-+		dev_err(dev, "unable to add the regmap irq chip\n");
-+		return rv;
-+	}
-+
-+	domain = regmap_irq_get_domain(irq_data);
-+
-+	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-+				    max77650_cells, ARRAY_SIZE(max77650_cells),
-+				    NULL, 0, domain);
++static struct max77650_led *max77650_to_led(struct led_classdev *cdev)
++{
++	return container_of(cdev, struct max77650_led, cdev);
 +}
 +
-+static const struct of_device_id max77650_of_match[] = {
-+	{ .compatible = "maxim,max77650" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max77650_of_match);
++static int max77650_led_brightness_set(struct led_classdev *cdev,
++				       enum led_brightness brightness)
++{
++	struct max77650_led *led = max77650_to_led(cdev);
++	int val, mask;
 +
-+static struct i2c_driver max77650_i2c_driver = {
++	mask = MAX77650_LED_BR_MASK | MAX77650_LED_EN_MASK;
++
++	if (brightness == LED_OFF)
++		val = MAX77650_LED_DISABLE;
++	else
++		val = MAX77650_LED_ENABLE | brightness;
++
++	return regmap_update_bits(led->map, led->regA, mask, val);
++}
++
++static int max77650_led_probe(struct platform_device *pdev)
++{
++	struct device_node *of_node, *child;
++	struct max77650_led *leds, *led;
++	struct device *parent;
++	struct device *dev;
++	struct regmap *map;
++	const char *label;
++	int rv, num_leds;
++	u32 reg;
++
++	dev = &pdev->dev;
++	parent = dev->parent;
++	of_node = dev->of_node;
++
++	if (!of_node)
++		return -ENODEV;
++
++	leds = devm_kcalloc(dev, sizeof(*leds),
++			    MAX77650_LED_NUM_LEDS, GFP_KERNEL);
++	if (!leds)
++		return -ENOMEM;
++
++	map = dev_get_regmap(dev->parent, NULL);
++	if (!map)
++		return -ENODEV;
++
++	num_leds = of_get_child_count(of_node);
++	if (!num_leds || num_leds > MAX77650_LED_NUM_LEDS)
++		return -ENODEV;
++
++	for_each_child_of_node(of_node, child) {
++		rv = of_property_read_u32(child, "reg", &reg);
++		if (rv || reg >= MAX77650_LED_NUM_LEDS)
++			return -EINVAL;
++
++		led = &leds[reg];
++		led->map = map;
++		led->regA = MAX77650_LED_A_BASE + reg;
++		led->regB = MAX77650_LED_B_BASE + reg;
++		led->cdev.brightness_set_blocking = max77650_led_brightness_set;
++		led->cdev.max_brightness = MAX77650_LED_MAX_BRIGHTNESS;
++
++		label = of_get_property(child, "label", NULL);
++		if (!label) {
++			led->cdev.name = "max77650::";
++		} else {
++			led->cdev.name = devm_kasprintf(dev, GFP_KERNEL,
++							"max77650:%s", label);
++			if (!led->cdev.name)
++				return -ENOMEM;
++		}
++
++		of_property_read_string(child, "linux,default-trigger",
++					&led->cdev.default_trigger);
++
++		rv = devm_of_led_classdev_register(dev, child, &led->cdev);
++		if (rv)
++			return rv;
++
++		rv = regmap_write(map, led->regA, MAX77650_LED_A_DEFAULT);
++		if (rv)
++			return rv;
++
++		rv = regmap_write(map, led->regB, MAX77650_LED_B_DEFAULT);
++		if (rv)
++			return rv;
++	}
++
++	return regmap_write(map,
++			    MAX77650_REG_CNFG_LED_TOP,
++			    MAX77650_LED_TOP_DEFAULT);
++}
++
++static struct platform_driver max77650_led_driver = {
 +	.driver = {
-+		.name = "max77650",
-+		.of_match_table = of_match_ptr(max77650_of_match),
++		.name = "max77650-led",
 +	},
-+	.probe_new = max77650_i2c_probe,
++	.probe = max77650_led_probe,
 +};
-+module_i2c_driver(max77650_i2c_driver);
++module_platform_driver(max77650_led_driver);
 +
-+MODULE_DESCRIPTION("MAXIM 77650/77651 multi-function core driver");
++MODULE_DESCRIPTION("MAXIM 77650/77651 LED driver");
 +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
 +MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/max77650.h b/include/linux/mfd/max77650.h
-new file mode 100644
-index 000000000000..c809e211a8cd
---- /dev/null
-+++ b/include/linux/mfd/max77650.h
-@@ -0,0 +1,59 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2018 BayLibre SAS
-+ * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+ *
-+ * Common definitions for MAXIM 77650/77651 charger/power-supply.
-+ */
-+
-+#ifndef MAX77650_H
-+#define MAX77650_H
-+
-+#include <linux/bits.h>
-+
-+#define MAX77650_REG_INT_GLBL		0x00
-+#define MAX77650_REG_INT_CHG		0x01
-+#define MAX77650_REG_STAT_CHG_A		0x02
-+#define MAX77650_REG_STAT_CHG_B		0x03
-+#define MAX77650_REG_ERCFLAG		0x04
-+#define MAX77650_REG_STAT_GLBL		0x05
-+#define MAX77650_REG_INTM_GLBL		0x06
-+#define MAX77650_REG_INTM_CHG		0x07
-+#define MAX77650_REG_CNFG_GLBL		0x10
-+#define MAX77650_REG_CID		0x11
-+#define MAX77650_REG_CNFG_GPIO		0x12
-+#define MAX77650_REG_CNFG_CHG_A		0x18
-+#define MAX77650_REG_CNFG_CHG_B		0x19
-+#define MAX77650_REG_CNFG_CHG_C		0x1a
-+#define MAX77650_REG_CNFG_CHG_D		0x1b
-+#define MAX77650_REG_CNFG_CHG_E		0x1c
-+#define MAX77650_REG_CNFG_CHG_F		0x1d
-+#define MAX77650_REG_CNFG_CHG_G		0x1e
-+#define MAX77650_REG_CNFG_CHG_H		0x1f
-+#define MAX77650_REG_CNFG_CHG_I		0x20
-+#define MAX77650_REG_CNFG_SBB_TOP	0x28
-+#define MAX77650_REG_CNFG_SBB0_A	0x29
-+#define MAX77650_REG_CNFG_SBB0_B	0x2a
-+#define MAX77650_REG_CNFG_SBB1_A	0x2b
-+#define MAX77650_REG_CNFG_SBB1_B	0x2c
-+#define MAX77650_REG_CNFG_SBB2_A	0x2d
-+#define MAX77650_REG_CNFG_SBB2_B	0x2e
-+#define MAX77650_REG_CNFG_LDO_A		0x38
-+#define MAX77650_REG_CNFG_LDO_B		0x39
-+#define MAX77650_REG_CNFG_LED0_A	0x40
-+#define MAX77650_REG_CNFG_LED1_A	0x41
-+#define MAX77650_REG_CNFG_LED2_A	0x42
-+#define MAX77650_REG_CNFG_LED0_B	0x43
-+#define MAX77650_REG_CNFG_LED1_B	0x44
-+#define MAX77650_REG_CNFG_LED2_B	0x45
-+#define MAX77650_REG_CNFG_LED_TOP	0x46
-+
-+#define MAX77650_CID_MASK		GENMASK(3, 0)
-+#define MAX77650_CID_BITS(_reg)		(_reg & MAX77650_CID_MASK)
-+
-+#define MAX77650_CID_77650A		0x03
-+#define MAX77650_CID_77650C		0x0a
-+#define MAX77650_CID_77651A		0x06
-+#define MAX77650_CID_77651B		0x08
-+
-+#endif /* MAX77650_H */
 -- 
 2.20.1
 
