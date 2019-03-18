@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C57BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3902FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC9620989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A32320879
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552920741;
-	bh=4XP3sXj34XrLx93D1e0tpDmWZlbipkrLAZdoM8xwFgA=;
+	s=default; t=1552920744;
+	bh=if6JtsqHDTEFBHjUMc7Ukrpwynu9Lsgs+B0RaKXToY0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=1YqB1z5ulUkohnBvsBIBqKx+fFT6b0cLZIWdXupIAcfyKXaxCpe5MkFcDWrqGW6c6
-	 WgJLSVBvRN9OGfORQH3VVGGBGtOmKvMyAi1XxPQy7RStotrBWRAX5QszTpQndnB8VX
-	 r3XjbaWTZUWpfAsnAYxDX+wJqEimyamalJBuH6d8=
+	b=h7dQ+LmE86vr6mPIcPP5ZOA+nWnDmgd+GQOYveW2yWhQhXBB+0uERgKAlulhLXXKg
+	 PCirWJnMngxqwGVp54+vfe9TnxO3e0QtiXcdqoBmsbwR73czEwwy/RyFWFSFz3DNn4
+	 klamKqXVbR1G6eFTdsa3nmFl44JPmUd6fFEK5ysc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbfCROwT (ORCPT
+        id S1728057AbfCROwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:52:19 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56164 "EHLO
+        Mon, 18 Mar 2019 10:52:23 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56406 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727895AbfCROwP (ORCPT
+        with ESMTP id S1727895AbfCROwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:52:15 -0400
+        Mon, 18 Mar 2019 10:52:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=IdJrFav9067uu5CqV0sAdGesXJ+zmb/e30HNpuUiMOM=; b=Gy0dKrTgUans
-        qTYXt8eGJB6QmSqtkPr0iHeZhnhdRc+Qror4IkfwgKGws1p9j2mdb6ZZvwgeexDG3RwJhLmVpZb/q
-        h8YCg1hqSU4YRlpgbaLawyCnQIgxw1+i9RJoV4a4lmLWA9SgX9GNzJbuFARVdemVD4muUFBipnJ2w
-        CTW5s=;
+        List-Archive; bh=7TOQnIcSbWPn68z9sBmv0UlyPdn8vRjOQnlrpxPAJmI=; b=Sm6XGh2Uh+Kk
+        4wWd4J8M3Rjz7yLgfu0ukYsXuha4sPsK9yOjOnINmkVIOBVN5D7yPqT/Ko+1FF4l+4IfFIkHZnHnH
+        K+q8qN68tIh1RWfh1TC9C7OmtZAAfTxW3hoDGe/aqPTYWKmvYuMiTaXgqIY+tyO20vKhFPwYtlI+J
+        RozLo=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h5tcU-0005pl-5z; Mon, 18 Mar 2019 14:52:06 +0000
+        id 1h5tch-0005qI-8T; Mon, 18 Mar 2019 14:52:19 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id BBDB01128874; Mon, 18 Mar 2019 14:52:05 +0000 (GMT)
+        id 99E09112887B; Mon, 18 Mar 2019 14:52:18 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Clark Wang <xiaoning.wang@nxp.com>
 Cc:     Mark Brown <broonie@kernel.org>,
@@ -51,11 +51,11 @@ Cc:     Mark Brown <broonie@kernel.org>,
         "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         linux-spi@vger.kernel.org
-Subject: Applied "spi: lpspi: Code cleanup" to the spi tree
-In-Reply-To:  <20190306063020.793-9-xiaoning.wang@nxp.com>
+Subject: Applied "doc: lpspi: Document DT bindings for LPSPI clocks" to the spi tree
+In-Reply-To:  <20190306063020.793-3-xiaoning.wang@nxp.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190318145205.BBDB01128874@debutante.sirena.org.uk>
-Date:   Mon, 18 Mar 2019 14:52:05 +0000 (GMT)
+Message-Id: <20190318145218.99E09112887B@debutante.sirena.org.uk>
+Date:   Mon, 18 Mar 2019 14:52:18 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: lpspi: Code cleanup
+   doc: lpspi: Document DT bindings for LPSPI clocks
 
 has been applied to the spi tree at
 
@@ -88,32 +88,46 @@ to this mail.
 Thanks,
 Mark
 
-From 4e3891a55f671a4e641d2ef4e5ec0e27e56b20d9 Mon Sep 17 00:00:00 2001
+From addb32866d99068307f8eddb282ebb325d18446f Mon Sep 17 00:00:00 2001
 From: Clark Wang <xiaoning.wang@nxp.com>
-Date: Wed, 6 Mar 2019 06:30:49 +0000
-Subject: [PATCH] spi: lpspi: Code cleanup
+Date: Wed, 6 Mar 2019 06:30:36 +0000
+Subject: [PATCH] doc: lpspi: Document DT bindings for LPSPI clocks
 
-Delete the extra space.
+Add introductions of clocks and clock-names strings.
 
 Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-fsl-lpspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/spi/spi-fsl-lpspi.txt          | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 2ac3ac5ea50a..1860f066f838 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -345,7 +345,7 @@ static int fsl_lpspi_set_bitrate(struct fsl_lpspi_data *fsl_lpspi)
- 	writel(scldiv | (scldiv << 8) | ((scldiv >> 1) << 16),
- 					fsl_lpspi->base + IMX7ULP_CCR);
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
+index 6cc3c6fe25a3..e71b81a41ac0 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
+@@ -7,7 +7,11 @@ Required properties:
+ - reg : address and length of the lpspi master registers
+ - interrupt-parent : core interrupt controller
+ - interrupts : lpspi interrupt
+-- clocks : lpspi clock specifier
++- clocks : lpspi clock specifier. Its number and order need to correspond to the
++	   value in clock-names.
++- clock-names : Corresponding to per clock and ipg clock in "clocks"
++		respectively. In i.MX7ULP, it only has per clk, so use CLK_DUMMY
++		to fill the "ipg" blank.
+ - spi-slave : spi slave mode support. In slave mode, add this attribute without
+ 	      value. In master mode, remove it.
  
--	dev_dbg(fsl_lpspi->dev, "perclk=%d, speed=%d, prescale =%d, scldiv=%d\n",
-+	dev_dbg(fsl_lpspi->dev, "perclk=%d, speed=%d, prescale=%d, scldiv=%d\n",
- 		perclk_rate, config.speed_hz, prescale, scldiv);
- 
- 	return 0;
+@@ -18,6 +22,8 @@ lpspi2: lpspi@40290000 {
+ 	reg = <0x40290000 0x10000>;
+ 	interrupt-parent = <&intc>;
+ 	interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&clks IMX7ULP_CLK_LPSPI2>;
++	clocks = <&clks IMX7ULP_CLK_LPSPI2>,
++		 <&clks IMX7ULP_CLK_DUMMY>;
++	clock-names = "per", "ipg";
+ 	spi-slave;
+ };
 -- 
 2.20.1
 
