@@ -2,121 +2,172 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E98EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E6BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2927720854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCF720854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfCRPjb (ORCPT
+        id S1727473AbfCRPji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:39:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54432 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727134AbfCRPja (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:39:30 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IFdQhj018200
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:39:28 -0400
-Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2radn3skfr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:39:27 -0400
-Received: from localhost
-        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 18 Mar 2019 15:38:41 -0000
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 18 Mar 2019 15:38:37 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2IFcaau19529912
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Mar 2019 15:38:36 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE44EB2067;
-        Mon, 18 Mar 2019 15:38:36 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA355B2066;
-        Mon, 18 Mar 2019 15:38:36 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 18 Mar 2019 15:38:36 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 36C3716C33E6; Mon, 18 Mar 2019 08:39:25 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 08:39:25 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Nikos Tsironis <ntsironis@arrikto.com>
-Cc:     snitzer@redhat.com, agk@redhat.com, dm-devel@redhat.com,
-        mpatocka@redhat.com, hch@infradead.org, iliastsi@arrikto.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] list: Don't use WRITE_ONCE() in hlist_add_behind()
-Reply-To: paulmck@linux.ibm.com
-References: <20190317122258.21760-1-ntsironis@arrikto.com>
- <20190317122258.21760-2-ntsironis@arrikto.com>
+        Mon, 18 Mar 2019 11:39:38 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3163 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727017AbfCRPjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 11:39:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 08:39:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="153416287"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Mar 2019 08:39:32 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id A7F00FA; Mon, 18 Mar 2019 17:39:31 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] dmaengine: idma64: Use actual device for DMA transfers
+Date:   Mon, 18 Mar 2019 18:39:30 +0300
+Message-Id: <20190318153930.25641-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190317122258.21760-2-ntsironis@arrikto.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19031815-0040-0000-0000-000004D3CA71
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010780; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01176181; UDB=6.00606765; IPR=6.00956865;
- MB=3.00026033; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-18 15:38:39
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031815-0041-0000-0000-000008DEE42B
-Message-Id: <20190318153925.GH4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903180116
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 02:22:53PM +0200, Nikos Tsironis wrote:
-> Commit 1c97be677f72b3 ("list: Use WRITE_ONCE() when adding to lists and
-> hlists") introduced the use of WRITE_ONCE() to atomically write the list
-> head's ->next pointer.
-> 
-> hlist_add_behind() doesn't touch the hlist head's ->first pointer so
-> there is no reason to use WRITE_ONCE() in this case.
-> 
-> Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
-> Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
+Intel IOMMU, when enabled, tries to find the domain of the device,
+assuming it's a PCI one, during DMA operations, such as mapping or
+unmapping. Since we are splitting the actual PCI device to couple of
+children via MFD framework (see drivers/mfd/intel-lpss.c for details),
+the DMA device appears to be a platform one, and thus not an actual one
+that performs DMA. In a such situation IOMMU can't find or allocate
+a proper domain for its operations. As a result, all DMA operations are
+failed.
 
-Reviewed-by: Paul E. McKenney <paulmck@linux.ibm.com>
+In order to fix this, supply parent of the platform device
+to the DMA engine framework and fix filter functions accordingly.
 
-> ---
->  include/linux/list.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/list.h b/include/linux/list.h
-> index edb7628e46ed..b68d2a85859b 100644
-> --- a/include/linux/list.h
-> +++ b/include/linux/list.h
-> @@ -743,7 +743,7 @@ static inline void hlist_add_behind(struct hlist_node *n,
->  				    struct hlist_node *prev)
->  {
->  	n->next = prev->next;
-> -	WRITE_ONCE(prev->next, n);
-> +	prev->next = n;
->  	n->pprev = &prev->next;
->  
->  	if (n->next)
-> -- 
-> 2.11.0
-> 
+We may rely on the fact that parent is a real PCI device, because no
+other configuration is present in the wild.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/dma/idma64.c              | 6 ++++--
+ drivers/dma/idma64.h              | 2 ++
+ drivers/spi/spi-pxa2xx.c          | 7 +------
+ drivers/tty/serial/8250/8250_dw.c | 4 ++--
+ 4 files changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
+index 0baf9797cc09..83796a33dc16 100644
+--- a/drivers/dma/idma64.c
++++ b/drivers/dma/idma64.c
+@@ -592,7 +592,7 @@ static int idma64_probe(struct idma64_chip *chip)
+ 	idma64->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+ 	idma64->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 
+-	idma64->dma.dev = chip->dev;
++	idma64->dma.dev = chip->sysdev;
+ 
+ 	dma_set_max_seg_size(idma64->dma.dev, IDMA64C_CTLH_BLOCK_TS_MASK);
+ 
+@@ -632,6 +632,7 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ {
+ 	struct idma64_chip *chip;
+ 	struct device *dev = &pdev->dev;
++	struct device *sysdev = dev->parent;
+ 	struct resource *mem;
+ 	int ret;
+ 
+@@ -648,11 +649,12 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ 	if (IS_ERR(chip->regs))
+ 		return PTR_ERR(chip->regs);
+ 
+-	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	ret = dma_coerce_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
+ 	if (ret)
+ 		return ret;
+ 
+ 	chip->dev = dev;
++	chip->sysdev = sysdev;
+ 
+ 	ret = idma64_probe(chip);
+ 	if (ret)
+diff --git a/drivers/dma/idma64.h b/drivers/dma/idma64.h
+index 6b816878e5e7..baa32e1425de 100644
+--- a/drivers/dma/idma64.h
++++ b/drivers/dma/idma64.h
+@@ -216,12 +216,14 @@ static inline void idma64_writel(struct idma64 *idma64, int offset, u32 value)
+ /**
+  * struct idma64_chip - representation of iDMA 64-bit controller hardware
+  * @dev:		struct device of the DMA controller
++ * @sysdev:		struct device of the physical device that does DMA
+  * @irq:		irq line
+  * @regs:		memory mapped I/O space
+  * @idma64:		struct idma64 that is filed by idma64_probe()
+  */
+ struct idma64_chip {
+ 	struct device	*dev;
++	struct device	*sysdev;
+ 	int		irq;
+ 	void __iomem	*regs;
+ 	struct idma64	*idma64;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index b6ddba833d02..5ea70f7d12e7 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1487,12 +1487,7 @@ static int pxa2xx_spi_get_port_id(struct acpi_device *adev)
+ 
+ static bool pxa2xx_spi_idma_filter(struct dma_chan *chan, void *param)
+ {
+-	struct device *dev = param;
+-
+-	if (dev != chan->device->dev->parent)
+-		return false;
+-
+-	return true;
++	return param == chan->device->dev;
+ }
+ 
+ #endif /* CONFIG_PCI */
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index d31b975dd3fd..284e8d052fc3 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -365,7 +365,7 @@ static bool dw8250_fallback_dma_filter(struct dma_chan *chan, void *param)
+ 
+ static bool dw8250_idma_filter(struct dma_chan *chan, void *param)
+ {
+-	return param == chan->device->dev->parent;
++	return param == chan->device->dev;
+ }
+ 
+ /*
+@@ -434,7 +434,7 @@ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
+ 		data->uart_16550_compatible = true;
+ 	}
+ 
+-	/* Platforms with iDMA */
++	/* Platforms with iDMA 64-bit */
+ 	if (platform_get_resource_byname(to_platform_device(p->dev),
+ 					 IORESOURCE_MEM, "lpss_priv")) {
+ 		data->dma.rx_param = p->dev->parent;
+-- 
+2.20.1
 
