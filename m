@@ -2,126 +2,88 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0DAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0941FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651482063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB882063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:25:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dATTkLqy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfCRJZY (ORCPT
+        id S1727407AbfCRJZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:25:24 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:42171 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfCRJZX (ORCPT
+        Mon, 18 Mar 2019 05:25:50 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44612 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbfCRJZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:25:23 -0400
-X-Originating-IP: 90.88.22.102
-Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 756D820004;
-        Mon, 18 Mar 2019 09:25:20 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 10:25:19 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/6] nvmem: sunxi_sid: Read out data in native format
-Message-ID: <20190318092519.g2rvdjiunti2ev7p@flea>
-References: <20190318073354.12151-1-wens@kernel.org>
- <20190318073354.12151-5-wens@kernel.org>
- <20190318084212.lv2lorskizl65uzg@flea>
- <CAGb2v67H9FkjKjSE5a7fUCb_t95Zfuk1p0bjWYJxjMqhMN-hfg@mail.gmail.com>
- <20190318085751.kziqzxnadtho4kdb@flea>
- <CAGb2v64pq5V0_nZ7f0ZPwuNxNU8HbY0A6CqeC6TMd2z2xhJHwg@mail.gmail.com>
+        Mon, 18 Mar 2019 05:25:50 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a3so10842542pff.11;
+        Mon, 18 Mar 2019 02:25:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pa4DPAFOWnQ6zUYOSkNYharZDJQ2FJza0ph8uXudwuE=;
+        b=dATTkLqyv+NrAwgrUWnEOgW/B/2iztIxXgUBPHmFMFd6QaYTPW1cq43RDJV/oLTjQ3
+         5nDzdaExS/HKiRAXbclgSykNFUSQKXaP826W+Y5zwMzkuLL1GaeEUGeX6lF4YOK9c2s3
+         hD/I1zYi9zHvhqsvo3Ax7PjMzPzWV/WAlpnLoQkfQHDuU3J6Qs6tgkPQkVmfj7JYG3xy
+         dI0qGcz/6Ku6HBBDjPKSklSl5d0mGw+phMnpVsi97+FAGiS1KGdINeE8DdLVvJ0digI0
+         hSVi8bpYPJpUikA5dDnnbpthDq+pAU0C7lkvhWZZN12zsGMlViorJNF1AmtGsIBYHvzL
+         M6KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pa4DPAFOWnQ6zUYOSkNYharZDJQ2FJza0ph8uXudwuE=;
+        b=oPDz4BwZiuKv6Nxz7LMd0vMvU2aoQCxx+3YPPBcCZeaqqKKPxNA6jkFjHBDarBwQfn
+         ivDTqRh56eMWHxqRTDNTjgTY6x9aHCG4ylYSnnYh4dMV1TgZQIDuvMFWw3jQ2xCeWAhl
+         kVRiICp8Z1QF0HHr8xtPzm1Me/mxFOzIutjfXrrn75aD/7HLX8xeft9Li8UpZFx7qg10
+         53R2aW8reCjrTT1XNVQWLgFQ+qhn/eOH8/yYHJpHc3pxb2e3iuLmOZeZnB95wINrzBHq
+         qLV+z5lbJ+iuVpzPboOWN6g9iHCe2IEVxsx3KzDsd6RiPCsF/kgB0SeIelAuGHktwQ0R
+         A1oQ==
+X-Gm-Message-State: APjAAAWtj7YEP0GX5t58yuN4w31pJ4zZfca/QzKPar1tHZmELB5c+mg/
+        EawHS2dz975aeu7lsH8YSar0C6COW7sjOtWqT9pGbCYN
+X-Google-Smtp-Source: APXvYqwZo/4GcBP/jpQtgqsrtI5qxYE0w18rO6SFBjtJkOLg624GhHhuIBWBr9Hgj+skT9BM0Q9+5EKb5U2l/gyGPWw=
+X-Received: by 2002:aa7:914f:: with SMTP id 15mr11532527pfi.49.1552901149220;
+ Mon, 18 Mar 2019 02:25:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fgqxvk5pq25ezuac"
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64pq5V0_nZ7f0ZPwuNxNU8HbY0A6CqeC6TMd2z2xhJHwg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
+ <20190315165800.5058-8-heikki.krogerus@linux.intel.com> <CAHp75VfMyyPEPg8VkmrbF6CeL0_+pPw+KrT5e+aGLsx0rwm=5g@mail.gmail.com>
+In-Reply-To: <CAHp75VfMyyPEPg8VkmrbF6CeL0_+pPw+KrT5e+aGLsx0rwm=5g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 Mar 2019 11:25:38 +0200
+Message-ID: <CAHp75Vfb97GtfqCmim7L1K_oJ4JvpNVuGvc4LYwwV5Qz8X7-6A@mail.gmail.com>
+Subject: Re: [PATCH 07/12] platform/x86: intel_cht_int33fe: Provide software
+ node for all components
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 17, 2019 at 10:36 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, Mar 15, 2019 at 6:58 PM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
 
---fgqxvk5pq25ezuac
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I don't see any problems with code (*), though I hope Hans will have
+> chance to test this.
 
-On Mon, Mar 18, 2019 at 05:09:44PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Mar 18, 2019 at 4:57 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Mon, Mar 18, 2019 at 04:45:19PM +0800, Chen-Yu Tsai wrote:
-> > > On Mon, Mar 18, 2019 at 4:42 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Mon, Mar 18, 2019 at 03:33:52PM +0800, Chen-Yu Tsai wrote:
-> > > > > From: Chen-Yu Tsai <wens@csie.org>
-> > > > >
-> > > > > Originally the SID e-fuses were thought to be in big-endian format.
-> > > > > Later sources show that they are in fact native or little-endian.
-> > > > > The most compelling evidence is the thermal sensor calibration data,
-> > > > > which is a set of one to three 16-bit values. In native-endian they
-> > > > > are in 16-bit cells with increasing offsets, whereas with big-endian
-> > > > > they are in the wrong order, and a gap with no data will show if there
-> > > > > are one or three cells.
-> > > > >
-> > > > > Switch to a native endian representation for the nvmem device. For the
-> > > > > H3, the register read-out method was already returning data in native
-> > > > > endian. This only affects the other SoCs.
-> > > > >
-> > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > > >
-> > > > I thought only the newer SoCs were impacted by this issue?
-> > >
-> > > It is noticable on the newer SoCs. The old ones only have the 128-bit SID,
-> > > which could be read either way, as AFAIK it's just a serial number.
-> > >
-> > > If you think we should leave the old ones alone I can factor that in.
-> >
-> > IIRC, there was also the SoC ID in the SID on those SoCs as well,
-> > which we might have to use in the future so we'll want to make sure it
-> > is correct.
->
-> We'll need to ask Allwinner about this then.
->
-> FWIW, the fel command in sunxi-tools reads them out in little endian. I
-> believe this and the SID page on the linux-sunxi wiki predate the sunxi_sid
-> driver.
+> (*) Means all patches touching PDx86 in this series
 
-Yeah, and the driver has a readl as well:
-https://github.com/linux-sunxi/linux-sunxi/blob/sunxi-3.4/arch/arm/plat-sunxi/soc-detect.c#L92
+To be clear, I implied here Rb or Ab tag on your choice.
 
-For the whole series,
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---fgqxvk5pq25ezuac
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXI9j/wAKCRDj7w1vZxhR
-xS7XAP9B2IrcCTutwMbeq6c6gSWtVaxQ8rvMhwZa9c93cMXH2wEAtHfL5acaNqfB
-wZm7JMgJzsCxg6lUHmJNCLp/QtuOeAA=
-=6OsT
------END PGP SIGNATURE-----
-
---fgqxvk5pq25ezuac--
+-- 
+With Best Regards,
+Andy Shevchenko
