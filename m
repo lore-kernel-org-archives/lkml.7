@@ -2,209 +2,124 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDEEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF52C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B44E2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C875A2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:54:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="jdWfvxfx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfCRJx4 (ORCPT
+        id S1727764AbfCRJyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:53:56 -0400
-Received: from mga09.intel.com ([134.134.136.24]:33424 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbfCRJxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:53:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 02:53:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,493,1544515200"; 
-   d="scan'208";a="123573618"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 18 Mar 2019 02:53:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3B8CC17F; Mon, 18 Mar 2019 11:53:51 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] platform/x86: Add support for Basin Cove power button
-Date:   Mon, 18 Mar 2019 12:53:51 +0300
-Message-Id: <20190318095351.69343-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 18 Mar 2019 05:54:02 -0400
+Received: from mail-eopbgr730075.outbound.protection.outlook.com ([40.107.73.75]:17376
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727169AbfCRJyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:54:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector1-synaptics-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VlDmh5ePIbNZPBL+IgT3EwX/R9HbEjvFeuVZYROQgJE=;
+ b=jdWfvxfxwWGgWZVZYG1dQTRImFg2AgmMMNwF6CukXbLm79s+tc+OleVDSyIrFiMwCFaWvCTwu67QM1jZF10hnuF4u6ymRFErzHWCWuofKEPKZ7x1K5OdoyIMccdTTzw8vdKwTf5BQjo5uYyKaXsWK0nBYFuU0koSnKEKSoInyK4=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3928.namprd03.prod.outlook.com (20.177.124.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Mon, 18 Mar 2019 09:53:58 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::1a8:1bc4:174b:472b]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::1a8:1bc4:174b:472b%2]) with mapi id 15.20.1709.015; Mon, 18 Mar 2019
+ 09:53:58 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v3 1/5] PCI: dwc: Fix dw_pcie_free_msi() if msi_irq is invalid
+Thread-Topic: [PATCH v3 1/5] PCI: dwc: Fix dw_pcie_free_msi() if msi_irq is
+ invalid
+Thread-Index: AQHU3XCBU3uwzE9WGUSd1tZpXYixvQ==
+Date:   Mon, 18 Mar 2019 09:53:58 +0000
+Message-ID: <20190318174633.0c274139@xhacker.debian>
+References: <20190318174415.74fd25a5@xhacker.debian>
+In-Reply-To: <20190318174415.74fd25a5@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [199.33.119.15]
+x-clientproxiedby: TY2PR01CA0033.jpnprd01.prod.outlook.com
+ (2603:1096:404:ce::21) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 229742a1-4efe-48ea-3b04-08d6ab87a404
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR03MB3928;
+x-ms-traffictypediagnostic: BYAPR03MB3928:
+x-microsoft-antispam-prvs: <BYAPR03MB39288A2B74BD3056722EE7FDED470@BYAPR03MB3928.namprd03.prod.outlook.com>
+x-forefront-prvs: 098076C36C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(396003)(346002)(136003)(366004)(189003)(199004)(476003)(11346002)(97736004)(6436002)(3846002)(6116002)(6486002)(71200400001)(71190400001)(256004)(486006)(446003)(26005)(8676002)(5660300002)(68736007)(7736002)(86362001)(102836004)(4326008)(316002)(110136005)(2906002)(99286004)(54906003)(105586002)(25786009)(6506007)(386003)(52116002)(76176011)(81166006)(81156014)(186003)(106356001)(14454004)(53936002)(6512007)(9686003)(50226002)(72206003)(66066001)(8936002)(478600001)(4744005)(1076003)(305945005)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3928;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ccpHDM39++MylEVwt8a6f0aKg00R4KN4/syV5OD+UUPHsDqk41z4J29BWvCqKTHoIiUh8LH5L+Q8uC+d+WB5EEz/Ok4/FFpPWSi/h5H+rh1hGwpQ3le9Mgf/IXW/qOxrAyXe/zQgb+ogEJbaH6xBiTOtkpvaI1GxphgxLqxlCSKSdy4Vi8teH+y48ysEZF9ZsAl56s8MPg3tgVxpMJx1KW6X5d5ZE7Mcs8uE1NYfis0Q0GaXcP94l+gxc2iGEzgpa4qqdOZgzCz5SCnZzcf2Ernr2KI83f/tWrXwHircz3kvV6zeSjZDBiBcCXcgNs0EreVw6UbIW+Gurhn8ZMvI7gr+QRDq4Fl8FK8EA6cPoOGFpS1APfOS6BtPGEuDKToEbWhRG+dMWTa10vL0XlpPJBTRJ7lFwhSCS3y5TsLfQEw=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <53329CAEE770B34EBA1A7B7036C3A00F@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 229742a1-4efe-48ea-3b04-08d6ab87a404
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 09:53:58.2851
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3928
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This provides a new input driver for supporting the power button on
-Basin Cove PMIC, found on Intel Merrifield-based devices.
+We should check msi_irq before calling irq_set_chained_handler() and
+irq_set_handler_data().
 
-The driver follows the design used in intel_chtdc_ti_pwrbtn.c module.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- drivers/platform/x86/Kconfig              |  11 +++
- drivers/platform/x86/Makefile             |   1 +
- drivers/platform/x86/intel_mrfld_pwrbtn.c | 107 ++++++++++++++++++++++
- 3 files changed, 119 insertions(+)
- create mode 100644 drivers/platform/x86/intel_mrfld_pwrbtn.c
+ drivers/pci/controller/dwc/pcie-designware-host.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index a1ed13183559..85b92a95e4c8 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1263,6 +1263,17 @@ config INTEL_CHTDC_TI_PWRBTN
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_chtdc_ti_pwrbtn.
- 
-+config INTEL_MRFLD_PWRBTN
-+	tristate "Intel Merrifield Basin Cove power button driver"
-+	depends on INTEL_SOC_PMIC_MRFLD
-+	depends on INPUT
-+	---help---
-+	  This option adds a power button driver for Basin Cove PMIC
-+	  on Intel Merrifield devices.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_mrfld_pwrbtn.
-+
- config I2C_MULTI_INSTANTIATE
- 	tristate "I2C multi instantiate pseudo device driver"
- 	depends on I2C && ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 86cb76677bc8..87b0069bd781 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -94,6 +94,7 @@ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
- obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
-+obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
- obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
- obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
- obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
-diff --git a/drivers/platform/x86/intel_mrfld_pwrbtn.c b/drivers/platform/x86/intel_mrfld_pwrbtn.c
-new file mode 100644
-index 000000000000..b1b367d261cb
---- /dev/null
-+++ b/drivers/platform/x86/intel_mrfld_pwrbtn.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Power-button driver for Basin Cove PMIC
-+ *
-+ * Copyright (c) 2018, Intel Corporation.
-+ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-+ */
-+
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/device.h>
-+#include <linux/mfd/intel_soc_pmic.h>
-+#include <linux/mfd/intel_soc_pmic_mrfld.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/slab.h>
-+
-+#define BCOVE_PBSTATUS		0x27
-+#define BCOVE_PBSTATUS_PBLVL	BIT(4)	/* 1 - release, 0 - press */
-+
-+static irqreturn_t mrfld_pwrbtn_interrupt(int irq, void *dev_id)
-+{
-+	struct input_dev *input = dev_id;
-+	struct device *dev = input->dev.parent;
-+	struct regmap *regmap = dev_get_drvdata(dev);
-+	unsigned int state;
-+	int ret;
-+
-+	ret = regmap_read(regmap, BCOVE_PBSTATUS, &state);
-+	if (ret)
-+		return IRQ_NONE;
-+
-+	dev_dbg(dev, "PBSTATUS=0x%x\n", state);
-+	input_report_key(input, KEY_POWER, !(state & BCOVE_PBSTATUS_PBLVL));
-+	input_sync(input);
-+
-+	regmap_update_bits(regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
-+	return IRQ_HANDLED;
-+}
-+
-+static int mrfld_pwrbtn_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
-+	struct input_dev *input;
-+	int irq, ret;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input)
-+		return -ENOMEM;
-+	input->name = pdev->name;
-+	input->phys = "power-button/input0";
-+	input->id.bustype = BUS_HOST;
-+	input->dev.parent = dev;
-+	input_set_capability(input, EV_KEY, KEY_POWER);
-+	ret = input_register_device(input);
-+	if (ret)
-+		return ret;
-+
-+	dev_set_drvdata(dev, pmic->regmap);
-+
-+	ret = devm_request_threaded_irq(dev, irq, NULL, mrfld_pwrbtn_interrupt,
-+					IRQF_ONESHOT | IRQF_SHARED, pdev->name,
-+					input);
-+	if (ret)
-+		return ret;
-+
-+	regmap_update_bits(pmic->regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
-+	regmap_update_bits(pmic->regmap, BCOVE_MPBIRQ, BCOVE_PBIRQ_PBTN, 0);
-+
-+	device_init_wakeup(dev, true);
-+	dev_pm_set_wake_irq(dev, irq);
-+	return 0;
-+}
-+
-+static int mrfld_pwrbtn_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	dev_pm_clear_wake_irq(dev);
-+	device_init_wakeup(dev, false);
-+	return 0;
-+}
-+
-+static const struct platform_device_id mrfld_pwrbtn_id_table[] = {
-+	{ .name = "mrfld_bcove_pwrbtn" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(platform, mrfld_pwrbtn_id_table);
-+
-+static struct platform_driver mrfld_pwrbtn_driver = {
-+	.driver = {
-+		.name	= KBUILD_MODNAME,
-+	},
-+	.probe		= mrfld_pwrbtn_probe,
-+	.remove		= mrfld_pwrbtn_remove,
-+	.id_table	= mrfld_pwrbtn_id_table,
-+};
-+module_platform_driver(mrfld_pwrbtn_driver);
-+
-+MODULE_DESCRIPTION("Power-button driver for Basin Cove PMIC");
-+MODULE_LICENSE("GPL v2");
--- 
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pc=
+i/controller/dwc/pcie-designware-host.c
+index 25087d3c9a82..1040939f45b4 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -298,8 +298,10 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+=20
+ void dw_pcie_free_msi(struct pcie_port *pp)
+ {
+-	irq_set_chained_handler(pp->msi_irq, NULL);
+-	irq_set_handler_data(pp->msi_irq, NULL);
++	if (pp->msi_irq) {
++		irq_set_chained_handler(pp->msi_irq, NULL);
++		irq_set_handler_data(pp->msi_irq, NULL);
++	}
+=20
+ 	irq_domain_remove(pp->msi_domain);
+ 	irq_domain_remove(pp->irq_domain);
+--=20
 2.20.1
 
