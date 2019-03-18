@@ -2,223 +2,109 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240D3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5743C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40A42085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:00:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9rJGLTi"
+	by mail.kernel.org (Postfix) with ESMTP id 72AA520857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfCRMAi (ORCPT
+        id S1727066AbfCRMGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 08:00:38 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33099 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfCRMAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 08:00:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q1so1047476wrp.0;
-        Mon, 18 Mar 2019 05:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=RWLvj6BvmRHa+gfXxUxVZaw138Eds7RyjO9653Aw53U=;
-        b=Y9rJGLTig/2aIPazRnMZLBAz71HpyVLzMOYf5efxOt9UYS67K8ZOpjWWTIPdOP1LDN
-         8k/wYSqNi3p18er8wRLmwKVge5xcgb2aYDnaKknX3cxPW1O40OQDlCwJDXyPIInW+SnZ
-         UkYzHGj597RY3hy2kOFvbl9QK3uFNS61iX9Ccj4lTyTMnrRjK/urUluta3PXcz0k1mGF
-         z2i0Vv2lVN2wMtcifYmbCLJMdcOEruqNQq2jlJcTbCoX6H0F05qgdWiM4mMNNMRpAMhp
-         AfSGC3FumdAzxgwFYKrO7eZPv4WNbD8y3QOGhAAGqHuMfVbSvf12rtezjmg5yq/OHYqN
-         XrzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=RWLvj6BvmRHa+gfXxUxVZaw138Eds7RyjO9653Aw53U=;
-        b=oQTD5kAsWgZGHjlJuH7khWstawM9KVw5NUNvsaDhvJ67Bg+T9mgfF6AgDtE6eiTNbL
-         zoYZ3T6nX+pfIT98JDwQF9xcU3lQt32mQOeA3I4M4sPB3TIsph1+jpMPuwsiQYutSSRW
-         Qc3JciiILbBjXRzXhVLtOU6Ai0I7Vr7xK9uSwbSnzh6Tq/k9N7mU8dP0VOZaHE2aL5GT
-         FFCL5eOYLPhrxm6FN5qp/cvH315uMY8x2O3Li04R0Wx8XLoIIOA/1PzP2QIYbBfCkQ0o
-         TzsBMYufQk0gtomMxbk6Cm27A/E1sCvhxBqO8u3fDtsAxOgCFPKr0xN3THPNtZgQCb2I
-         1yiw==
-X-Gm-Message-State: APjAAAUwV/5Y5VL6uAJDRuoQSYhgv3H7zNmwNvfn430JRs8DEz9ZoBv6
-        f8/Oo9gm1BkmcuTPrB90NHc=
-X-Google-Smtp-Source: APXvYqzG89SWJzfYW93CAjsIUGJOCbcRQ1J3UwPM3irSPqrkrsDFYZQNh0lfPkMrywmgncZ9CGLH+g==
-X-Received: by 2002:adf:ebce:: with SMTP id v14mr11440202wrn.69.1552910434915;
-        Mon, 18 Mar 2019 05:00:34 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id e12sm3969079wrt.94.2019.03.18.05.00.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 05:00:33 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 13:00:32 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Renato Soma <renatoys08@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        mistave@countermail.com
-Subject: Re: [PATCH 0/1] platform/x86: dell-wmi: Uncomment events that were
-Message-ID: <20190318120032.nynbshqudmlslxxz@pali>
-References: <20190316010942.6448-1-renatoys08@gmail.com>
- <20190316091756.2zfccpnhfnjogktp@pali>
- <20190317183049.GA5989@rys-Inspiron-5420>
+        Mon, 18 Mar 2019 08:06:13 -0400
+Received: from foss.arm.com ([217.140.101.70]:32918 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726504AbfCRMGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 08:06:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCCFD1650;
+        Mon, 18 Mar 2019 05:06:12 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64A7D3F614;
+        Mon, 18 Mar 2019 05:06:11 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 12:06:06 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     "Zhang, Lei" <zhang.lei@jp.fujitsu.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     "Okamoto, Takayuki" <tokamoto@jp.fujitsu.com>,
+        Will Deacon <will.deacon@arm.com>,
+        James Morse <james.morse@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH] Make Fujitsu Erratum 010001 patch can be applied
+ on A64FX v1r0
+Message-ID: <20190318120454.GA3697@lakrids.cambridge.arm.com>
+References: <5FA513F682BE7F4EAAB8EE035D5B08E44E9363CC@G01JPEXMBKW02>
+ <20190315151241.GC48314@lakrids.cambridge.arm.com>
+ <8898674D84E3B24BA3A2D289B872026A6A35627D@G01JPEXMBKW03>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190317183049.GA5989@rys-Inspiron-5420>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <8898674D84E3B24BA3A2D289B872026A6A35627D@G01JPEXMBKW03>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Mon, Mar 18, 2019 at 03:05:09AM +0000, Zhang, Lei wrote:
+> Thanks for your comments.
+> I also have considered to use MIDR_CPU_VAR_REV macro,
+> but the implication of (~MIDR_CPU_VAR_REV(1, 0)) is "NOT v1r0".
+> I think it may cause confusion, so I choose the
+> simple way (~(0x1 << MIDR_VARIANT_SHIFT)).
 
-On Sunday 17 March 2019 15:30:49 Renato Soma wrote:
-> Hello,
-> 
-> On Sat, Mar 16, 2019 at 10:17:56AM +0100, Pali Rohár wrote:
-> > 
-> > Looks like that those keys are not as obvious as you wrote. Look at my
-> > email with some investigation about Dell Audio With Preset Switch key:
-> > https://www.spinics.net/lists/platform-driver-x86/msg15593.html
-> > 
-> > Also there is another user who wrote about 0xe02c key generated by
-> > Inspirion 7520: https://ubuntuforum-br.org/index.php?topic=105434.0
-> > 
-> > You can a testing machine 5420, can you prove that behavior described in
-> > my previous email match also your machine?
-> > 
-> 
-> Thanks for the feedback, I was unaware of this issue.
-> I've performed some tests in my machine and this is what I've found so far:
-> 
-> =====================================================================
-> 
-> ----------------------------------------
-> Left WMI key: Windows Mobility Center
-> Press:    'x'
-> Hold:     -
-> Release:  -
-> 
-> In my machine (Inspiron 5420), whenever I press this key, the key
-> outputs the character "x". I've seen nothing on dmesg even if I
-> keep this key pressed for longer amounts of time. I'm still trying
-> to understand why this is hapenning.
+I think that either way is just as confusing, and the fact we're
+assigning it to a mask (of bits to preserve) should make this clear. For
+consistency, I'd prefer to use MIDR_CPU_VAR_REV().
 
-This is strange. Is not also some Alt/Meta/Ctrl or other modifier sent
-too? Because Meta+X could be some windows shortcut...
+Catalin, are you happy to take the below as a fix for v5.1?
 
-> 
-> ----------------------------------------
-> Middle WMI key: Dell Audio With Preset Switch
-> Press:    Key with type 0x0000 and code 0xe02a pressed
-> Hold:     -
-> Release:  Key with type 0x0000 and code 0xe02b pressed
-> 
-> Differently from what you saw on a Inspiron 7520, I could not
-> reproduce the behavior that you reported on the first link above.
-> In my case, when I press the key, the code 0xe02a is shown at dmesg
-> only once. Also, even though I keep it pressed for longer than ~30
-> seconds or so, I could not see the entry 0xe02c apper. More on that
-> behavior later on. When releasing the key, I can see the code 0xe02b
-> show up at dmesg.
-> 
-> ----------------------------------------
-> Right WMI key: Dell Instant Launch
-> Press:    -
-> Hold:     -
-> Release:  -
-> 
-> This key is with a really weird behavior on my machine.
-> When testing, I would normally press and relase so that the following
-> messages would pop-up:
-> 
-> [ 2830.499420] atkbd serio0: Unknown key pressed (translated set 2,
-> code 0x60 on isa0060/serio0).
-> [ 2830.499422] atkbd serio0: Use 'setkeycodes 60 <keycode>'
-> to make it known.
+Thanks,
+Mark.
 
-This means that you have not configured atkbd keycodes yet. Run
-setkeycodecs and assign some keycode for that scancode 60. After that
-kernel atkbd (PS/2 keyboard) starts sending events to userspace.
+---->8----
+From 6439e9c0b1525e9d4c7be65552e6f2b1f9d1dbe0 Mon Sep 17 00:00:00 2001
+From: "Okamoto, Takayuki" <tokamoto@jp.fujitsu.com>
+Date: Fri, 15 Mar 2019 12:22:36 +0000
+Subject: [PATCH] arm64: apply workaround on A64FX v1r0
 
-> But what I realized was that, if I kept this button pressed for about
-> ~3 seconds or so (like when your experiment in the link above), dmesg
+Fujitsu erratum 010001 applies to A64FX v0r0 and v1r0, and we try to
+handle either by masking MIDR with MIDR_FUJITSU_ERRATUM_010001_MASK
+before comparing it to MIDR_FUJITSU_ERRATUM_010001.
 
-That experiment is not my, Mistave did it. Now I'm CCing.
+Unfortunately, MIDR_FUJITSU_ERRATUM_010001 is constructed incorrectly
+using MIDR_VARIANT(), which is intended to extract the variant field
+from MIDR_EL1, rather than generate the field in-place. This results in
+MIDR_FUJITSU_ERRATUM_010001 being all-ones, and we only match A64FX
+v0r0.
 
-> would not ouput anything untill those ~3 seconds elapsed. When they
-> did, then dmesg log would have the following entries:
-> 
-> [ 3058.494003] atkbd serio0: Unknown key pressed (translated set 2,
-> code 0x60 on isa0060/serio0).
-> [ 3058.494008] atkbd serio0: Use 'setkeycodes 60 <keycode>'
-> to make it known.
-> [ 3058.501494] dell_wmi: Unknown key with type 0x0000 and code
-> 0xe028 pressed
-> 
-> The last message being the weirdest, It would seem that only after
-> about 3 seconds or so, the driver is being notified of it.
+This patch uses MIDR_CPU_VAR_REV() to generate an in-place mask for the
+variant field, ensuring the we match both v0r0 and v1r0.
 
-There are two ways how Dell firmware can inform operating system that
-key was pressed. Notebook keyboard is connected to motherboard via
-classic PS/2 port (of PS/2 port is emulated for OS). So operating system
-sees PS/2 keyboard and key pressed are received by PS/2 atkbd driver.
-For some (unknown/strange?) reasons firmware send some keys not via PS/2
-keyboard port, but via ACPI interface, hence needs for dell_wmi driver
-which handle them.
+Fixes: 3e32131abc311a5c ("arm64: Add workaround for Fujitsu A64FX erratum 010001")
+Signed-off-by: Zhang Lei <zhang.lei@jp.fujitsu.com>
+[Mark: use MIDR_CPU_VAR_REV(), reword commit message]
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+---
+ arch/arm64/include/asm/cputype.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So some keypress events come via PS/2, some via ACPI-WMI. Linux kernel
-then send all keypress events to userspace.
-
-When debugging problems with hot keys, you always need to look at all
-possible sources...
-
-> =====================================================================
-> 
-> Anyway, It's clear now that this patch trully makes no sense since the
-> hardwares (Inspiron 7520 x Inspiron 5420) are behaving somewhat
-> differently on these keys.
-> 
-> Either way, It seems that at both of them, there are three behaviors
-> that are strange. I'm still trying to learn kernel development (I'm a
-> newbie) so could you please point out whether this is worth it to
-> investigate, or if should I leave this as is?
-
-dell-wmi.c is a driver for receiving APCI-WMI events; atkbd.c is a PS/2
-keyboard driver.
-
-In dell-wmi.c is a function dell_wmi_events_set_enabled which is needed
-to call on some Dell machines to start receiving those ACPI-WMI events.
-You can try to call it for your laptop, maybe it is needed too.
-Currently it is called only for two laptop models, see table
-dell_wmi_smbios_list.
-
-> In the meantime, I'll try to find out why the first button is outputting
-> an "x" character on my machine.
-
-Check that you caught all keypresses. X11 tools just print keys known to
-X server, not all which are supported by Linux kernel.
-
-You can use e.g. input-events utility. And also check all input devices,
-as wrote some keys are send via PS/2 keyboard input device, some via
-ACPI-WMI input device.
-
-> Thanks!
-> Renato
-
-Also I added Mario from Dell to list of receivers, maybe he could have
-more details about this problem...
-
+diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+index 2afb1338b48a..f3b659587a36 100644
+--- a/arch/arm64/include/asm/cputype.h
++++ b/arch/arm64/include/asm/cputype.h
+@@ -129,7 +129,7 @@
+ 
+ /* Fujitsu Erratum 010001 affects A64FX 1.0 and 1.1, (v0r0 and v1r0) */
+ #define MIDR_FUJITSU_ERRATUM_010001		MIDR_FUJITSU_A64FX
+-#define MIDR_FUJITSU_ERRATUM_010001_MASK	(~MIDR_VARIANT(1))
++#define MIDR_FUJITSU_ERRATUM_010001_MASK	(~MIDR_CPU_VAR_REV(1, 0))
+ #define TCR_CLEAR_FUJITSU_ERRATUM_010001	(TCR_NFD1 | TCR_NFD0)
+ 
+ #ifndef __ASSEMBLY__
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+2.11.0
+
