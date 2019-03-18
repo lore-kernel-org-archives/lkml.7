@@ -2,137 +2,168 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5175CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5E6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1FD2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918112175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="HA0ukVji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfCRTSr (ORCPT
+        id S1727662AbfCRTSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 15:18:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34822 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfCRTSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 15:18:47 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F1F7C307CDEA;
-        Mon, 18 Mar 2019 19:18:46 +0000 (UTC)
-Received: from redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3DE0919C67;
-        Mon, 18 Mar 2019 19:18:45 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 15:18:43 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Joao Moreira <jmoreira@suse.de>
-Cc:     live-patching@vger.kernel.org, mbenes@suse.cz, pmladek@suse.cz,
-        jikos@suse.cz, nstange@suse.de, jpoimboe@redhat.com,
-        khlebnikov@yandex-team.ru, jeyu@kernel.org, matz@suse.de,
-        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
-        linux-kbuild@vger.kernel.org, michal.lkml@markovi.net
-Subject: Re: [PATCH v2 0/8] klp-convert
-Message-ID: <20190318191843.GA22702@redhat.com>
-References: <20190301141313.15057-1-jmoreira@suse.de>
+        Mon, 18 Mar 2019 15:18:53 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41185 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfCRTSw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 15:18:52 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v7so4268234oie.8
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:18:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HdcqDhfG82EUtvlrw0QZap1nbV6uDvfkm3HpJPlo97k=;
+        b=HA0ukVjiSGM6vCoGTnAtHewjy1IKBeDEzqSTN1EmJ95+CzZq/5EhXwxcXIM1NCXMD+
+         /glsGYlV9UmtivBFLjqHV9QQ7GbWth9DaDm6QVAQvcnZb4Web1OX4FvMsRhreUX7yWiB
+         tiKRh/rWHh6ng45fia/UHsCEOK/ICnP10V0Tbwyjt1FSk6lXLMpMAeu0v43+pPnPjQ0Z
+         mDRwaFnDiUKDMQ2Ve/woF66FzHi32Ii41XcAIHZ8wwC0is2+hWyNfpKSy/Li8lYAPkSe
+         mGbHwoBJ3VASRZK55VUpotTvzJhUuLsrfVKNTrpDb4bYLRqpdYTo+pdfuhT2LKaxo3+b
+         3QFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HdcqDhfG82EUtvlrw0QZap1nbV6uDvfkm3HpJPlo97k=;
+        b=CKb37Ns7IqV9fL2wrRyvynNwrhzaeM6n7YeoUWveV2/U0T/1I2gvIPmayoSYYXNP5+
+         Owd4MLYvCjp4KDuBuNhRZTiBeLwXW6iMFFu9NAGURVTXAqXghv4N3VmNjVpT1Y8xqaIP
+         tL6RYnTvvh+io6l9pG40s9T4uuXOw3l647fySsHdYoov83P0SELNN7GGDYFcqUR1EF2m
+         0QH+ykWoYO8efJeyfhfTlbxDRnHDH7fpl3rChlNm+cSlRY/RT0KzwvNy/jkKEeotopKd
+         RGCtBcJgqvicam5wx3RITfz8CGWWF/eUi4atS/40j972ebzWag6y/ER5wzNFptu3BXPu
+         hVsQ==
+X-Gm-Message-State: APjAAAVKi5kso1AXJ/6wY2bimmr5ZbSHfAlHSlJi8r8yfAlx+WeoJSei
+        JNxxN9lQwZzYEVhRapjgawMiQYqOK4eMo5lepMFvpMSCIo8=
+X-Google-Smtp-Source: APXvYqz7JAxUnYYpq/Ry6NBbJEYOU/U1LZttzyxvhYmzm/bgoSYx9C0fzZGd0naQO8DLSWZ5tbhTBO/4DzFlpDz4/4Y=
+X-Received: by 2002:aca:aa57:: with SMTP id t84mr293447oie.149.1552936731407;
+ Mon, 18 Mar 2019 12:18:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190301141313.15057-1-jmoreira@suse.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 18 Mar 2019 19:18:47 +0000 (UTC)
+References: <20190129165428.3931-1-jglisse@redhat.com> <20190313012706.GB3402@redhat.com>
+ <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
+ <20190318170404.GA6786@redhat.com> <CAPcyv4geu34vgZszALiDxJWR8itK+A3qSmpR+_jOq29whGngNg@mail.gmail.com>
+ <20190318185437.GB6786@redhat.com>
+In-Reply-To: <20190318185437.GB6786@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 18 Mar 2019 12:18:38 -0700
+Message-ID: <CAPcyv4gLyKkboZ-ucHubiHgdpF4i9w+XKhPujjJ=dwU9Vox=Bg@mail.gmail.com>
+Subject: Re: [PATCH 00/10] HMM updates for 5.1
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 11:13:05AM -0300, Joao Moreira wrote:
-> Livepatches may use symbols which are not contained in its own scope,
-> and, because of that, may end up compiled with relocations that will
-> only be resolved during module load. Yet, when the referenced symbols are
-> not exported, solving this relocation requires information on the object
-> that holds the symbol (either vmlinux or modules) and its position inside
-> the object, as an object may contain multiple symbols with the same name.
-> Providing such information must be done accordingly to what is specified
-> in Documentation/livepatch/module-elf-format.txt.
-> 
-> Currently, there is no trivial way to embed the required information as
-> requested in the final livepatch elf object. klp-convert solves this
-> problem in two different forms: (i) by relying on a symbol map, which is
-> built during kernel compilation, to automatically infers the relocation
-> targeted symbol, and, when such inference is not possible (ii) by using
-> annotations in the elf object to convert the relocation accordingly to
-> the specification, enabling it to be handled by the livepatch loader.
-> 
-> Given the above, add support for symbol mapping in the form of
-> Symbols.list file; add klp-convert tool; integrate klp-convert tool into
-> kbuild; make livepatch modules discernible during kernel compilation
-> pipeline; add data-structure and macros to enable users to annotate
-> livepatch source code; make modpost stage compatible with livepatches;
-> update livepatch-sample and update documentation.
-> 
-> The patch was tested under three use-cases:
-> 
-> use-case 1: There is a relocation in the lp that can be automatically
-> resolved by klp-convert (tested by removing the annotations from
-> samples/livepatch/livepatch-annotated-sample.c)
-> 
-> use-case 2: There is a relocation in the lp that cannot be automatically
-> resolved, as the name of the respective symbol appears in multiple
-> objects. The livepatch contains an annotation to enable a correct
-> relocation - reproducible with this livepatch sample:
-> www.livewire.com.br/suse/klp/livepatch-sample.1.c
-> 
-> use-case 3: There is a relocation in the lp that cannot be automatically
-> resolved similarly as 2, but no annotation was provided in the livepatch,
-> triggering an error during compilation - reproducible with this livepatch
-> sample: www.livewire.com.br/suse/klp/livepatch-sample.2.c
-> 
-> In comparison with v1, this version of the patch-set:
-> - was rebased to kernel 4.19
-> - adds a Symbols.list versioning information
-> - brings bug fixes and code improvements to klp-convert sources
-> 
-> This is a patch-set repost, given that a typo in a mail address prevented
-> the original submission from being posted to lkml.
-> 
-> [ ... snip ... ]
+On Mon, Mar 18, 2019 at 11:55 AM Jerome Glisse <jglisse@redhat.com> wrote:
+>
+> On Mon, Mar 18, 2019 at 11:30:15AM -0700, Dan Williams wrote:
+> > On Mon, Mar 18, 2019 at 10:04 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > >
+> > > On Wed, Mar 13, 2019 at 09:10:04AM -0700, Andrew Morton wrote:
+> > > > On Tue, 12 Mar 2019 21:27:06 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
+> > > >
+> > > > > Andrew you will not be pushing this patchset in 5.1 ?
+> > > >
+> > > > I'd like to.  It sounds like we're converging on a plan.
+> > > >
+> > > > It would be good to hear more from the driver developers who will be
+> > > > consuming these new features - links to patchsets, review feedback,
+> > > > etc.  Which individuals should we be asking?  Felix, Christian and
+> > > > Jason, perhaps?
+> > > >
+> > >
+> > > So i am guessing you will not send this to Linus ? Should i repost ?
+> > > This patchset has 2 sides, first side is just reworking the HMM API
+> > > to make something better in respect to process lifetime. AMD folks
+> > > did find that helpful [1]. This rework is also necessary to ease up
+> > > the convertion of ODP to HMM [2] and Jason already said that he is
+> > > interested in seing that happening [3]. By missing 5.1 it means now
+> > > that i can not push ODP to HMM in 5.2 and it will be postpone to 5.3
+> > > which is also postoning other work ...
+> > >
+> > > The second side is it adds 2 new helper dma map and dma unmap both
+> > > are gonna be use by ODP and latter by nouveau (after some other
+> > > nouveau changes are done). This new functions just do dma_map ie:
+> > >     hmm_dma_map() {
+> > >         existing_hmm_api()
+> > >         for_each_page() {
+> > >             dma_map_page()
+> > >         }
+> > >     }
+> > >
+> > > Do you want to see anymore justification than that ?
+> >
+> > Yes, why does hmm needs its own dma mapping apis? It seems to
+> > perpetuate the perception that hmm is something bolted onto the side
+> > of the core-mm rather than a native capability.
+>
+> Seriously ?
 
-Hi Joao,
+Yes.
 
-Apologies for taking so long to get to this patchset, but I finally
-spent last week reviewing and testing.  My goal was to write a klp
-self-test based on the implementation and your sample module.  Along the
-way I spotted a few minor bugs and other small suggestions.  Instead of
-dumping a bunch of code or patch content in my replies, I posted my
-rebase and modified branch here:
+> Kernel is fill with example where common code pattern that are not
+> device specific are turn into helpers and here this is exactly what
+> it is. A common pattern that all device driver will do which is turn
+> into a common helper.
 
-  https://github.com/joe-lawrence/linux/tree/klp-convert-v2-rebase-review
+Yes, but we also try not to introduce thin wrappers around existing
+apis. If the current dma api does not understand some hmm constraint
+I'm questioning why not teach the dma api that constraint and make it
+a native capability rather than asking the driver developer to
+understand the rules about when to use dma_map_page() vs
+hmm_dma_map().
 
-I added subject line [squash] tags to individual commits that should be
-considered fixups for patches in this set.  Those commit logs also
-contain [joe: description] tags and my sign-offs for that purpose as
-well.
+For example I don't think we want to end up with more headers like
+include/linux/pci-dma-compat.h.
 
-Hopefully this form of feedback will be easy to digest.  I'll reply to
-the individual patchs here with high-level comments and a pointer to the
-corresponding github patch.  Let me know if there are any questions.  If
-it is easier to simply repost as a v3 with those changes, I can do that
-as well -- whichever method is easier for you.
+> Moreover this allow to share the same error code handling accross
+> driver when mapping one page fails. So this avoid the needs to
+> duplicate same boiler plate code accross different drivers.
+>
+> Is code factorization not a good thing ? Should i duplicate every-
+> thing in every single driver ?
 
-I'll also take comments on my work-in-progress self-test for
-klp-convert:
+I did not ask for duplication, I asked why is it not more deeply integrated.
 
-  [new] livepatch/selftests: add klp-convert 
-  https://github.com/torvalds/linux/commit/b0d858b9356d3c909096509a0f18e092b739b44f
+> If that's not enough, this will also allow to handle peer to peer
+> and i posted patches for that [1] and again this is to avoid
+> duplicating common code accross different drivers.
 
-At the moment, it consists of two livepatch modules (I'd prefer to
-consolidate, but ran into an issue with klp-convert and multiple object
-files) and verifies that livepatch can correctly resolve sympos of 0/1,
-2 for unique/non-uniquely named strings and functions.
+I went looking for the hmm_dma_map() patches on the list but could not
+find them, so I was reacting to the "This new functions just do
+dma_map", and wondered if that was the full extent of the
+justification.
 
--- Joe
+> It does feel that you oppose everything with HMM in its name just
+> because you do not like it. It is your prerogative to not like some-
+> thing but you should propose something that achieve the same result
+> instead of constantly questioning every single comma.
+
+I respect what you're trying to do, if I didn't I wouldn't bother
+responding. Please don't put words in my mouth. I think it was
+Churchill who said "if two people agree all the time, one of them is
+redundant". You're raising questions with HMM that identify real gaps
+in Linux memory management relative to new hardware capabilities, I
+also think it is reasonable to question how the gaps are filled.
