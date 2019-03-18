@@ -2,57 +2,59 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAF7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70E1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE0FC21841
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACB920989
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pKH3YWLU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DReQPySj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfCRTkz (ORCPT
+        id S1727744AbfCRTk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 15:40:55 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55153 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfCRTky (ORCPT
+        Mon, 18 Mar 2019 15:40:59 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39792 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbfCRTk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 15:40:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f3so14430544wmj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:40:54 -0700 (PDT)
+        Mon, 18 Mar 2019 15:40:56 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j9so4282179wrn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ahIMuoESdMu5R38KiM1/7f8+T+ghV4vTUmrgse54dwM=;
-        b=pKH3YWLUlw4OZuBixmTJ9AO8g9yutoaF3pjWe/mrnCF29bCAO6LUrJNVZqWFf7HS6c
-         FaSOzf+HBm4diSAXXarb2tJe4oHjnQx1fuSyl8+e71GXh5gWaBG6VVSzkV9Q2gI8EfDv
-         uLv2eXbfUJR1tozBQcXJVkzU3oLmAusWJ6fnNPJX8HJGtSwhseCPcuQMVyrJt3Ok2tu0
-         zTzV8UmzFOUwzqg+bEujFcmUoR6cylZSkZ8t2+z/08/kYAjfcybU2dUHLX+6yrMdm3Bu
-         Ql+OEiIjRN+LTn9nOcOOeaH1V4GbIeUU8rFKtK/tQj+MMsbjfbvwAdXC1s6jtpyZ7NPF
-         UJuQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2JfdqFXp8iuXVye70C9d3w4ZqFPTHaTQ8J8t0YbTu9k=;
+        b=DReQPySjh1iT14vrYdRq4k3rIyvb6ERMHn3nqWL0HTq09GVLAv0G0gIjD3mxbB5Dit
+         qCApTZeJ+pGl5N2sdueVX8z3nbxMFb3ltjhLZ/rYxJK239l0nmJNea86Cwr5A8XFcM9m
+         SvwzHiEaAXmps68lAl2cxzYxdKnShZ2M+7UEzig1iGpBmVJWulrTs6WJJUEB4SbKFtGV
+         oMvk6Zr6Yuz0Jji0hhfCUgcR/xYUR32T5AQ/wRSLpwGjLrKbefgjQ+NfzuN8bNGzlhuv
+         JDDXZkAubo30r1UZ9AuybQjawrtlU5xuic0VyQ1pALbcXmvQHr2dfauKwxr8mizI3FUQ
+         28PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ahIMuoESdMu5R38KiM1/7f8+T+ghV4vTUmrgse54dwM=;
-        b=ImsEG/8U41Y+u+B9JD6pnjj+pEoxZ7kyoQbtvIXHS14G/Tlf75xYg4gNE83YVNNXl+
-         z07mQrrU6+BU/EPpFHKX2yAMPvM5DxHoWc2lB3B+rx1W9JoDcxhT3eAJ4mxfUDMRz+M+
-         hidyd7CiCpnTWylDnG1xVIuhF04ntQhvoBGdkZTJYUTh1HOg/X9LSZMa/1qbEeI5jsya
-         gml7sr2fUlCHmptzkFarT81IWop+ouw0lZ0HCSMeB7lInHIfHbsPFNXdORWwUgA4nfbz
-         X0gfv4f81feLToLZ+le88nHK1KLnAJyqXWohnkccW1R5N5QAyq7BoASfSlmgjGRoe/iW
-         Z0KQ==
-X-Gm-Message-State: APjAAAX3Aa4RJZFYm1Cnbofj3epwFktlkOanHmcvoVqDYE6oVFg2mAF4
-        04ky9xowsLtA91iuXhjHjCdn9g==
-X-Google-Smtp-Source: APXvYqwMnl6/oFPYIByWun0v1IvE8rYmnA7Af3sT1KvNyg0ca+6RXPfTxfw1x9N/MolkfPd2bYmU/w==
-X-Received: by 2002:a1c:152:: with SMTP id 79mr417492wmb.152.1552938053739;
-        Mon, 18 Mar 2019 12:40:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2JfdqFXp8iuXVye70C9d3w4ZqFPTHaTQ8J8t0YbTu9k=;
+        b=FB1otWwlrLYO2CUR0ekSlYK9xtAhuSA8G/Exr6lSygRSWcW1YDiB0oH8dG2w8mG7Z0
+         XFSFAVK/fLEsqFcWhaBu4fzllsL/F/+H233+rgdfbP5JngIHkKLNsJ57pCeXvd+o6AAH
+         GMptXlL2C71DndEz2ntraYRGYcpS7r24TjE7tVDtzOmkk+CyBbHE+piF2sTP7FZstLi1
+         Mnv0swEEJLfKxh/XJGwqodEdD2BQ6+c9SboKStvAIKwYKMSY/M1T2L/+b52L2jOfB++X
+         tGuT2Opgr5e7B6WlKbOx9kZWg/gVOjhINUzbtQmhT6Ei3R7STK6plpvreNVCJGjI0K3q
+         utlg==
+X-Gm-Message-State: APjAAAUNFh6i0bgVaFRNPUGm0fkcuNXz+91gcZoIEH8ybXLioooK4IHV
+        8x2AhY1zMilElTAtvMVM1JzBuA==
+X-Google-Smtp-Source: APXvYqxtxld460gm3Iezg2jFI+vIsB9NvFYgb/CFpti9a13qJNEW/TIzlkiMMuX4yFJh5Bjdh3OKYQ==
+X-Received: by 2002:adf:f846:: with SMTP id d6mr14198160wrq.53.1552938054999;
+        Mon, 18 Mar 2019 12:40:54 -0700 (PDT)
 Received: from localhost.localdomain (cpc89244-aztw30-2-0-cust4998.18-1.cable.virginm.net. [86.31.179.135])
-        by smtp.gmail.com with ESMTPSA id s10sm4583941wrv.56.2019.03.18.12.40.52
+        by smtp.gmail.com with ESMTPSA id s10sm4583941wrv.56.2019.03.18.12.40.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 18 Mar 2019 12:40:53 -0700 (PDT)
+        Mon, 18 Mar 2019 12:40:54 -0700 (PDT)
 From:   Peter Griffin <peter.griffin@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
@@ -61,42 +63,48 @@ To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 Cc:     john.stultz@linaro.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         yuq825@gmail.com
-Subject: `From c152138a8ec2bcd8faaac8db01dbb9be547fd021 Mon Sep 17 00:00:00 2001
-Date:   Mon, 18 Mar 2019 19:38:45 +0000
-Message-Id: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v1 1/6] dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
+Date:   Mon, 18 Mar 2019 19:38:46 +0000
+Message-Id: <1552937931-23050-2-git-send-email-peter.griffin@linaro.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
+References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+The Hisilicon hi6220 uses a Mali-450MP4 with 4 PPs, so add
+a compatible for it.
 
-This series adds support for the Mali450 MP4 GPU found on the
-hi6220 SoC from HiSilicon. It has been tested with the out
-of tree lima drm/mesa driver hosted on freedesktop.org gitlab,
-and validated using Weston and kmscube.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-regards,
-
-Peter.
-
-Peter Griffin (6):
-  dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
-  dt-bindings: reset: hisilicon: Update compatible documentation
-  arm64: dts: hisilicon: Add Mali-450 MP4 GPU DT entry
-  reset: hi6220: Add support for AO reset controller
-  dt-bindings: reset: hisilicon: Add ao reset controller
-  clk: hi6220: use CLK_OF_DECLARE_DRIVER
-
- .../devicetree/bindings/gpu/arm,mali-utgard.txt    |  5 +++
- .../bindings/reset/hisilicon,hi6220-reset.txt      |  1 +
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 38 ++++++++++++++++
- drivers/clk/hisilicon/clk-hi6220.c                 |  2 +-
- drivers/reset/hisilicon/hi6220_reset.c             | 51 +++++++++++++++++++++-
- include/dt-bindings/reset/hisi,hi6220-resets.h     |  7 +++
- 6 files changed, 102 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index ae63f09..936a20a 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+@@ -23,6 +23,7 @@ Required properties:
+       + rockchip,rk3228-mali
+       + rockchip,rk3328-mali
+       + stericsson,db8500-mali
++      + hisilicon,hi6220-mali
+ 
+   - reg: Physical base address and length of the GPU registers
+ 
+@@ -97,6 +98,10 @@ to specify one more vendor-specific compatible, among:
+       * interrupt-names and interrupts:
+         + combined: combined interrupt of all of the above lines
+ 
++  - hisilicon,hi6220-mali
++    Required properties:
++      * resets: phandles to the reset lines for the GPU
++
+ Example:
+ 
+ mali: gpu@1c40000 {
 -- 
 2.7.4
 
