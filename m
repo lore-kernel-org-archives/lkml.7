@@ -2,54 +2,51 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7081AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2BDC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBC12075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136B62075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901996;
-	bh=1Y5Ed4vc1HYqTE+Cm/sl54qPzYxJ6ZrXvnQyRt9XtCo=;
+	s=default; t=1552902009;
+	bh=u5IVvzXGqPIhzKQOMUSaGZFSjHllED9buaPoSgR9D+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CwApMihpYOY1xlkIcg5douTqEJL5cO7/0SGIm+FHKLZeAMSc6+BzszCpTVn1MDHgx
-	 HhQszVC5/dGpPb1FXfXc3sQ7EqaC/DEKhmBCp5NqR8BK/KTmAuZo8zLDJh+OucyRVs
-	 jpCUAZd3UiFXGNXU9eboGaO4aizqnbLDHD5eVenI=
+	b=C0BRKT2dcTKmxxVA+6f8Q1oruyNHoKFmswLiNiIXVH5t/0iAywD0aun5szy/Yt4/4
+	 fJzXiSEbFECUO7EHGsUaS6SPMSpWq8Az6cvA24fQA4dzpb7vGlBL7C1/g2ICBcSB+/
+	 wzd94XRbzOt6ftpgpcUpLupU7IUhwq2WKManApi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfCRJjz (ORCPT
+        id S2387453AbfCRJfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:39:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44132 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:35:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728174AbfCRJfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:35:44 -0400
+        id S1728678AbfCRJf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:35:26 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD372083D;
-        Mon, 18 Mar 2019 09:35:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28FE221773;
+        Mon, 18 Mar 2019 09:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901744;
-        bh=1Y5Ed4vc1HYqTE+Cm/sl54qPzYxJ6ZrXvnQyRt9XtCo=;
+        s=default; t=1552901725;
+        bh=u5IVvzXGqPIhzKQOMUSaGZFSjHllED9buaPoSgR9D+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZBFZedzYZepXLLGsMCc8VCSrb+VhdBADCXdZNw+NCAnKsnNLWb2xkaSzWB4P3/E/
-         pcenTeuL1cFgNZUzyotYv7rvN5RDAOzxnst6gXeJ05/ocAPdD84z0hUOBl+GChN37v
-         eepNKxS5ER6glxBnLAt850YzCwVlmX5ZYiOGQYjg=
+        b=CZJzn+DzZUYyeKDOp3tCAJeAWD+nR2Ifk+iu5R6oKH9WregReMEuKtFpeZ2ScNf+4
+         lPsF07GZk/d4gKHV7LJnHOVa4oBjsgf6cZD2ymk6JxyUs5LpfQvR9+X1RZrb4tsGjL
+         7Wb/LJYSA0nyr5TaSFGa1CJBUAk+NY2Yb6b6JxxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zha Bin <zhabin@linux.alibaba.com>,
-        Liu Jiang <gerry@linux.alibaba.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, Shengjing Zhu <i@zhsj.me>
-Subject: [PATCH 4.14 34/34] vhost/vsock: fix vhost vsock cid hashing inconsistent
-Date:   Mon, 18 Mar 2019 10:25:58 +0100
-Message-Id: <20190318084149.786582053@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 29/34] ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O against Liquid Saffire 56
+Date:   Mon, 18 Mar 2019 10:25:53 +0100
+Message-Id: <20190318084148.838042547@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -68,59 +65,180 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zha Bin <zhabin@linux.alibaba.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 7fbe078c37aba3088359c9256c1a1d0c3e39ee81 upstream.
+commit 7dc661bd8d3261053b69e4e2d0050cd1ee540fc1 upstream.
 
-The vsock core only supports 32bit CID, but the Virtio-vsock spec define
-CID (dst_cid and src_cid) as u64 and the upper 32bits is reserved as
-zero. This inconsistency causes one bug in vhost vsock driver. The
-scenarios is:
+ALSA bebob driver has an entry for Focusrite Saffire Pro 10 I/O. The
+entry matches vendor_id in root directory and model_id in unit
+directory of configuration ROM for IEEE 1394 bus.
 
-  0. A hash table (vhost_vsock_hash) is used to map an CID to a vsock
-  object. And hash_min() is used to compute the hash key. hash_min() is
-  defined as:
-  (sizeof(val) <= 4 ? hash_32(val, bits) : hash_long(val, bits)).
-  That means the hash algorithm has dependency on the size of macro
-  argument 'val'.
-  0. In function vhost_vsock_set_cid(), a 64bit CID is passed to
-  hash_min() to compute the hash key when inserting a vsock object into
-  the hash table.
-  0. In function vhost_vsock_get(), a 32bit CID is passed to hash_min()
-  to compute the hash key when looking up a vsock for an CID.
+On the other hand, configuration ROM of Focusrite Liquid Saffire 56
+has the same vendor_id and model_id. This device is an application of
+TCAT Dice (TCD2220 a.k.a Dice Jr.) however ALSA bebob driver can be
+bound to it randomly instead of ALSA dice driver. At present, drivers
+in ALSA firewire stack can not handle this situation appropriately.
 
-Because the different size of the CID, hash_min() returns different hash
-key, thus fails to look up the vsock object for an CID.
+This commit uses more identical mod_alias for Focusrite Saffire Pro 10
+I/O in ALSA bebob driver.
 
-To fix this bug, we keep CID as u64 in the IOCTLs and virtio message
-headers, but explicitly convert u64 to u32 when deal with the hash table
-and vsock core.
+$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  042a829d  bus_info_length 4, crc_length 42, crc 33437
+404  31333934  bus_name "1394"
+408  f0649222  irmc 1, cmc 1, isc 1, bmc 1, pmc 0, cyc_clk_acc 100,
+               max_rec 9 (1024), max_rom 2, gen 2, spd 2 (S400)
+40c  00130e01  company_id 00130e     |
+410  000606e0  device_id 01000606e0  | EUI-64 00130e01000606e0
 
-Fixes: 834e772c8db0 ("vhost/vsock: fix use-after-free in network stack callers")
-Link: https://github.com/stefanha/virtio/blob/vsock/trunk/content.tex
-Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
-Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Shengjing Zhu <i@zhsj.me>
+               root directory
+               -----------------------------------------------------------------
+414  0009d31c  directory_length 9, crc 54044
+418  04000014  hardware version
+41c  0c0083c0  node capabilities per IEEE 1394
+420  0300130e  vendor
+424  81000012  --> descriptor leaf at 46c
+428  17000006  model
+42c  81000016  --> descriptor leaf at 484
+430  130120c2  version
+434  d1000002  --> unit directory at 43c
+438  d4000006  --> dependent info directory at 450
+
+               unit directory at 43c
+               -----------------------------------------------------------------
+43c  0004707c  directory_length 4, crc 28796
+440  1200a02d  specifier id: 1394 TA
+444  13010001  version: AV/C
+448  17000006  model
+44c  81000013  --> descriptor leaf at 498
+
+               dependent info directory at 450
+               -----------------------------------------------------------------
+450  000637c7  directory_length 6, crc 14279
+454  120007f5  specifier id
+458  13000001  version
+45c  3affffc7  (immediate value)
+460  3b100000  (immediate value)
+464  3cffffc7  (immediate value)
+468  3d600000  (immediate value)
+
+               descriptor leaf at 46c
+               -----------------------------------------------------------------
+46c  00056f3b  leaf_length 5, crc 28475
+470  00000000  textual descriptor
+474  00000000  minimal ASCII
+478  466f6375  "Focu"
+47c  73726974  "srit"
+480  65000000  "e"
+
+               descriptor leaf at 484
+               -----------------------------------------------------------------
+484  0004a165  leaf_length 4, crc 41317
+488  00000000  textual descriptor
+48c  00000000  minimal ASCII
+490  50726f31  "Pro1"
+494  30494f00  "0IO"
+
+               descriptor leaf at 498
+               -----------------------------------------------------------------
+498  0004a165  leaf_length 4, crc 41317
+49c  00000000  textual descriptor
+4a0  00000000  minimal ASCII
+4a4  50726f31  "Pro1"
+4a8  30494f00  "0IO"
+
+$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  040442e4  bus_info_length 4, crc_length 4, crc 17124
+404  31333934  bus_name "1394"
+408  e0ff8112  irmc 1, cmc 1, isc 1, bmc 0, pmc 0, cyc_clk_acc 255,
+               max_rec 8 (512), max_rom 1, gen 1, spd 2 (S400)
+40c  00130e04  company_id 00130e     |
+410  018001e9  device_id 04018001e9  | EUI-64 00130e04018001e9
+
+               root directory
+               -----------------------------------------------------------------
+414  00065612  directory_length 6, crc 22034
+418  0300130e  vendor
+41c  8100000a  --> descriptor leaf at 444
+420  17000006  model
+424  8100000e  --> descriptor leaf at 45c
+428  0c0087c0  node capabilities per IEEE 1394
+42c  d1000001  --> unit directory at 430
+
+               unit directory at 430
+               -----------------------------------------------------------------
+430  000418a0  directory_length 4, crc 6304
+434  1200130e  specifier id
+438  13000001  version
+43c  17000006  model
+440  8100000f  --> descriptor leaf at 47c
+
+               descriptor leaf at 444
+               -----------------------------------------------------------------
+444  00056f3b  leaf_length 5, crc 28475
+448  00000000  textual descriptor
+44c  00000000  minimal ASCII
+450  466f6375  "Focu"
+454  73726974  "srit"
+458  65000000  "e"
+
+               descriptor leaf at 45c
+               -----------------------------------------------------------------
+45c  000762c6  leaf_length 7, crc 25286
+460  00000000  textual descriptor
+464  00000000  minimal ASCII
+468  4c495155  "LIQU"
+46c  49445f53  "ID_S"
+470  41464649  "AFFI"
+474  52455f35  "RE_5"
+478  36000000  "6"
+
+               descriptor leaf at 47c
+               -----------------------------------------------------------------
+47c  000762c6  leaf_length 7, crc 25286
+480  00000000  textual descriptor
+484  00000000  minimal ASCII
+488  4c495155  "LIQU"
+48c  49445f53  "ID_S"
+490  41464649  "AFFI"
+494  52455f35  "RE_5"
+498  36000000  "6"
+
+Cc: <stable@vger.kernel.org> # v3.16+
+Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/vhost/vsock.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/firewire/bebob/bebob.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -642,7 +642,7 @@ static int vhost_vsock_set_cid(struct vh
- 		hash_del_rcu(&vsock->hash);
- 
- 	vsock->guest_cid = guest_cid;
--	hash_add_rcu(vhost_vsock_hash, &vsock->hash, guest_cid);
-+	hash_add_rcu(vhost_vsock_hash, &vsock->hash, vsock->guest_cid);
- 	spin_unlock_bh(&vhost_vsock_lock);
- 
- 	return 0;
+--- a/sound/firewire/bebob/bebob.c
++++ b/sound/firewire/bebob/bebob.c
+@@ -474,7 +474,19 @@ static const struct ieee1394_device_id b
+ 	/* Focusrite, SaffirePro 26 I/O */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000003, &saffirepro_26_spec),
+ 	/* Focusrite, SaffirePro 10 I/O */
+-	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000006, &saffirepro_10_spec),
++	{
++		// The combination of vendor_id and model_id is the same as the
++		// same as the one of Liquid Saffire 56.
++		.match_flags	= IEEE1394_MATCH_VENDOR_ID |
++				  IEEE1394_MATCH_MODEL_ID |
++				  IEEE1394_MATCH_SPECIFIER_ID |
++				  IEEE1394_MATCH_VERSION,
++		.vendor_id	= VEN_FOCUSRITE,
++		.model_id	= 0x000006,
++		.specifier_id	= 0x00a02d,
++		.version	= 0x010001,
++		.driver_data	= (kernel_ulong_t)&saffirepro_10_spec,
++	},
+ 	/* Focusrite, Saffire(no label and LE) */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, MODEL_FOCUSRITE_SAFFIRE_BOTH,
+ 			    &saffire_spec),
 
 
