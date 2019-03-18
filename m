@@ -2,106 +2,152 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E390C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F30C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218EB2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C132082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uHDf5aT5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CJxuGH3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfCRKwb (ORCPT
+        id S1726911AbfCRKyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:52:31 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44678 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbfCRKwa (ORCPT
+        Mon, 18 Mar 2019 06:54:14 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55300 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfCRKyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:52:30 -0400
-Received: by mail-vs1-f65.google.com with SMTP id b8so9134421vsq.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:52:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uMGLx+XnQCwq3JDW1LJu67KVkTGjDODmGRosoQaGcBs=;
-        b=uHDf5aT58Hd6jknm8JWZWmU6V+lDmYJ3uBMyokXPWYYjktZd2mI8d/GwAdQYUzoUDp
-         oTDy3BesMtPN8PmmaWDfELHJddp+wvbF882MN4HW2pgl0iUO6yAzxJ/rfm+0COsmhF4r
-         2fuoSNQqN5/ae2TdA9IOFIhnmEI/vqSMpLi1y222VBKdHOInbzcc2F2zbwrK6ywVH0cx
-         zyH5O+LWYtBuAhk2zRe7ZOFdiUnk0B4V3qA0i7M8aOBf3llGfnnJpHBRJAl9wpdd9Wij
-         N2EPuLiovAZ416xTJhMN65y/hcvvdvOUp2osaVm+Dz3tLzhQN+pO0o5THhew5cHnikZL
-         6c0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uMGLx+XnQCwq3JDW1LJu67KVkTGjDODmGRosoQaGcBs=;
-        b=ttrGzsPiOmozktIBIFDMtaddCD/PBhnrltjcjP4sT/+0hDsqNZs3eGics/H57hvWw8
-         0dUdp9HueH15dlvW7Xf/gYzfa4VviMQfZcB0NTGR1H/QeCrB+WCrexYoMwybasNMvx2u
-         APblSBcvpEVPoRfpjeg1X7eyPEddYjlE4H3gVYL+ENm5Q/S0yLcePNO3fTi3VS0J7fdr
-         P7T2BBKhLr5FgXy3WzaZrcc7RM81lAIExe8dbkRQBTHyVpXFPHpGVnLBBI8dISf1di2L
-         jwVeV9PhIJovp5T60dr0Kns4JVpxJ1yN7lWbW8BPOpq/P7AiJ9MkUOVowbDtU9zDHpen
-         kvfA==
-X-Gm-Message-State: APjAAAWpndD6scoO0T+oRWmG8x1dhFnlsMRSWuUBmQ32wzSMT1CHdi4K
-        NGuDFFamFN+haxLvZGxGdOLbzq3ZBX1A5V5DgXdQ3g==
-X-Google-Smtp-Source: APXvYqzWM6CQx6z/nEGkapi+ilEsu4pWfStGxsB3RnzL7MzaqSMC/OUvvgAvzc88bMXZYWe3TlOLoYHPaOImubUO5rQ=
-X-Received: by 2002:a67:fd17:: with SMTP id f23mr8667443vsr.35.1552906349751;
- Mon, 18 Mar 2019 03:52:29 -0700 (PDT)
+        Mon, 18 Mar 2019 06:54:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EmfkXywzIOkf0D6HSDgi0wJad6afB3/adOnOGAbu1P4=; b=CJxuGH3ngTVu9+lNNzZP8Ag80
+        twczCsDbFMgRn5Kc0tigyFy0eLImnkoSBBQXR2WlrB04GTGZqppfOBzVgwwXrEKyP/YlGBENvhRIM
+        LNvFPWIVNiBvWtc8tfAA1c+XBUiKAuvQ7ZGWAM6nmol7UpzC3fmCq9XfEmDw4+/h1OxKKvWdivCmm
+        aM14n4imVNWxMDKA1b3gHlToynNfnZkhgAyrBKGy4r11EjOcKax+hq62WnqoqD7+FH1LHpJQU1A5R
+        f0se4CNeyTD4slJH4/pKvhVpX1Glq31pto3Ok9Ioa+VPfUlMIdstRbi1nItaKckd1PjNyB5LJfwRE
+        m2RH+tQkg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h5pu1-0001oT-UO; Mon, 18 Mar 2019 10:53:58 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8CFFE20A0FF8B; Mon, 18 Mar 2019 11:53:56 +0100 (CET)
+Date:   Mon, 18 Mar 2019 11:53:56 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sparclinux@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH V2] cpufreq: Call transition notifier only once for each
+ policy
+Message-ID: <20190318105356.GM6058@hirez.programming.kicks-ass.net>
+References: <e2b56be446eeb67f1905d2ac6f8d82dd4389d0c5.1552640968.git.viresh.kumar@linaro.org>
+ <20190315122952.GF6058@hirez.programming.kicks-ass.net>
+ <20190318023514.67gxypb4w7llcmha@vireshk-i7>
 MIME-Version: 1.0
-References: <20190311055334.13670-1-kjlu@umn.edu>
-In-Reply-To: <20190311055334.13670-1-kjlu@umn.edu>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 18 Mar 2019 11:51:53 +0100
-Message-ID: <CAPDyKFojFP=vrd6+bC6t1qwRgesGvci3U9cQnUWwtcN4Ya2aZA@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc_spi: add a status check for spi_sync_locked
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318023514.67gxypb4w7llcmha@vireshk-i7>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 at 06:53, Kangjie Lu <kjlu@umn.edu> wrote:
->
-> In case spi_sync_locked fails, the fix reports the error and
-> returns the error code upstream.
->
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+On Mon, Mar 18, 2019 at 08:05:14AM +0530, Viresh Kumar wrote:
+> On 15-03-19, 13:29, Peter Zijlstra wrote:
+> > On Fri, Mar 15, 2019 at 02:43:07PM +0530, Viresh Kumar wrote:
+> > > diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> > > index 3fae23834069..cff8779fc0d2 100644
+> > > --- a/arch/x86/kernel/tsc.c
+> > > +++ b/arch/x86/kernel/tsc.c
+> > > @@ -956,28 +956,38 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+> > >  				void *data)
+> > >  {
+> > >  	struct cpufreq_freqs *freq = data;
+> > > -	unsigned long *lpj;
+> > > -
+> > > -	lpj = &boot_cpu_data.loops_per_jiffy;
+> > > -#ifdef CONFIG_SMP
+> > > -	if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+> > > -		lpj = &cpu_data(freq->cpu).loops_per_jiffy;
+> > > -#endif
+> > > +	struct cpumask *cpus = freq->policy->cpus;
+> > > +	bool boot_cpu = !IS_ENABLED(CONFIG_SMP) || freq->flags & CPUFREQ_CONST_LOOPS;
+> > > +	unsigned long lpj;
+> > > +	int cpu;
+> > >  
+> > >  	if (!ref_freq) {
+> > >  		ref_freq = freq->old;
+> > > -		loops_per_jiffy_ref = *lpj;
+> > >  		tsc_khz_ref = tsc_khz;
+> > > +
+> > > +		if (boot_cpu)
+> > > +			loops_per_jiffy_ref = boot_cpu_data.loops_per_jiffy;
+> > > +		else
+> > > +			loops_per_jiffy_ref = cpu_data(cpumask_first(cpus)).loops_per_jiffy;
+> > >  	}
+> > > +
+> > >  	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
+> > >  			(val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
+> > > -		*lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+> > > -
+> > > +		lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+> > >  		tsc_khz = cpufreq_scale(tsc_khz_ref, ref_freq, freq->new);
+> > > +
+> > >  		if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+> > >  			mark_tsc_unstable("cpufreq changes");
+> > >  
+> > > -		set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
+> > > +		if (boot_cpu) {
+> > > +			boot_cpu_data.loops_per_jiffy = lpj;
+> > > +		} else {
+> > > +			for_each_cpu(cpu, cpus)
+> > > +				cpu_data(cpu).loops_per_jiffy = lpj;
+> > > +		}
+> > > +
+> > > +		for_each_cpu(cpu, cpus)
+> > > +			set_cyc2ns_scale(tsc_khz, cpu, rdtsc());
+> > 
+> > This code doesn't make sense, the rdtsc() _must_ be called on the CPU in
+> > question.
+> 
+> You mean rdtsc() must be locally on that CPU? The cpufreq core never guaranteed
+> that and it was left for the notifier to do. This patch doesn't change the
+> behavior at all, just that it moves the for-loop to the notifier instead of the
+> cpufreq core.
 
-Applied for next, thanks!
+Yuck..
 
-Kind regards
-Uffe
+Rafael; how does this work in practise? Earlier you said that on x86 the
+policies typically have a single cpu in them anyway. Is the freq change
+also notified from _that_ cpu?
+
+I don't think I have old enough hardware around anymore to test any of
+this. This was truly ancient p6 era stuff IIRC.
+
+Because in that case, I'm all for not doing the changes to this notifier
+Viresh is proposing but simply adding something like:
 
 
-> ---
->  drivers/mmc/host/mmc_spi.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-> index 1b1498805972..a3533935e282 100644
-> --- a/drivers/mmc/host/mmc_spi.c
-> +++ b/drivers/mmc/host/mmc_spi.c
-> @@ -819,6 +819,10 @@ mmc_spi_readblock(struct mmc_spi_host *host, struct spi_transfer *t,
->         }
->
->         status = spi_sync_locked(spi, &host->m);
-> +       if (status < 0) {
-> +               dev_dbg(&spi->dev, "read error %d\n", status);
-> +               return status;
-> +       }
->
->         if (host->dma_dev) {
->                 dma_sync_single_for_cpu(host->dma_dev,
-> --
-> 2.17.1
->
+	WARN_ON_ONCE(cpumask_weight(cpuc) != 1);
+	WARN_ON_ONCE(cpumask_first(cpuc) != smp_processor_id());
+
+And leave it at that.
+
