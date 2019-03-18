@@ -2,255 +2,161 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F21EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF41C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A23A20693
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF7220879
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:08:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OcrOtKYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfCRKIN (ORCPT
+        id S1728102AbfCRKIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:08:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46844 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfCRKIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:08:09 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 626A787622;
-        Mon, 18 Mar 2019 10:08:08 +0000 (UTC)
-Received: from krava (unknown [10.43.17.124])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 89FBA5D9D3;
-        Mon, 18 Mar 2019 10:08:05 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 11:08:05 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>, rostedt@goodmis.org,
-        Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 07/16] perf: top: fix heap-use-after-free issue
-Message-ID: <20190318100805.GB28556@krava>
-References: <20190316080556.3075-1-changbin.du@gmail.com>
- <20190316080556.3075-8-changbin.du@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190316080556.3075-8-changbin.du@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 18 Mar 2019 10:08:08 +0000 (UTC)
+        Mon, 18 Mar 2019 06:08:15 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:64603 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbfCRKIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 06:08:12 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190318100809epoutp042be2a13bbce0460769bf80a1c53976d7~NBa15p7IH0506205062epoutp04j;
+        Mon, 18 Mar 2019 10:08:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190318100809epoutp042be2a13bbce0460769bf80a1c53976d7~NBa15p7IH0506205062epoutp04j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1552903689;
+        bh=fiThL1Y11fyQdiY7/DpqTvb0WisTIffM0l2ZRE/FwCY=;
+        h=Subject:To:Cc:From:Date:In-reply-to:References:From;
+        b=OcrOtKYl2nqDdx/RQAewkyY02wZnnHDnDaJ5CIQSZ/XlLu3XitqN1Qqqxthi7SLBi
+         +7Jm58uXnEQ8hDFsBPauUo11+qrH+dfcCnD/Co+fgX+y/NaXeVDEOgooL2kA2xWOXo
+         kzR6N6vWidSRMxmNo3O1Hvd1fkXIaHimMRKY2vec=
+Received: from epsmges1p3.samsung.com (unknown [182.195.42.55]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190318100808epcas1p39be17f1ff8c3cb9169066ca4493bba6c~NBa1fY-ZE0496704967epcas1p3F;
+        Mon, 18 Mar 2019 10:08:08 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A1.EE.04143.80E6F8C5; Mon, 18 Mar 2019 19:08:08 +0900 (KST)
+Received: from epsmgms2p1new.samsung.com (unknown [182.195.42.142]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190318100808epcas1p4e571b1ed461506b1037bd277e29ec07e~NBa1L8GxY2314623146epcas1p4O;
+        Mon, 18 Mar 2019 10:08:08 +0000 (GMT)
+X-AuditID: b6c32a37-f19ff7000000102f-59-5c8f6e082d33
+Received: from epmmp2 ( [203.254.227.17]) by epsmgms2p1new.samsung.com
+        (Symantec Messaging Gateway) with SMTP id 74.A7.03598.80E6F8C5; Mon, 18 Mar
+        2019 19:08:08 +0900 (KST)
+Received: from [106.116.147.40] by mmp2.samsung.com (Oracle Communications
+        Messaging Server 7.0.5.31.0 64bit (built May  5 2014)) with ESMTPA id
+        <0POK000FI45H1280@mmp2.samsung.com>; Mon, 18 Mar 2019 19:08:08 +0900 (KST)
+Subject: Re: linux-next: Fixes tag needs some work in the sound-asoc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-id: <7d368c6e-3816-14fb-da32-2aeb9c076db6@samsung.com>
+Date:   Mon, 18 Mar 2019 11:08:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.5.1
+MIME-version: 1.0
+In-reply-to: <20190317122851.2cf734bf@canb.auug.org.au>
+Content-type: text/plain; charset="windows-1252"
+Content-language: en-GB
+Content-transfer-encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNIsWRmVeSWpSXmKPExsWy7bCmri5HXn+MwbR7ahZTHz5hs/h2pYPJ
+        4vKuOWwWBxe2MVps3XuV3YHVo/HGDTaPnbPusntsWtXJ5vF5k1wASxSXTUpqTmZZapG+XQJX
+        xqP72QUr+Cpav59lbGD8xtXFyMkhIWAi0bBkPVMXIxeHkMAORolrT06zgySEBL4zSmz+JAZT
+        9KP3PSNE0QZGibNrfzBDOPcZJR6eeAHWISzgKXHuwDe2LkYODhGBYolfjxVAwswCJRKfVu9m
+        BbHZBAwleo/2MYLYvAJ2Eh/mL2MBsVkEVCU+TbsEZosKREi8f7qbBaJGUOLH5HtgNqeAucTs
+        izOZIGYaSMyYchjKFpc4dv8mI4QtL7F5zVuw2yQEdrBJHHi/ngniAxeJ+T8PM4PcJiEgLXHp
+        qC1ETTOjxI7n19ghnAmMEhPmTGaDaLCWOHz8IivEVD6Jd197WCGaeSU62oQgSjwk9r57yQIJ
+        iC5Gie4Zx9gnMMrMQnL4LCTHzkJy7Cwkxy5gZFnFKJZaUJybnlpsWGCsV5yYW1yal66XnJ+7
+        iRGcBLTMdzBuOOdziFGAg1GJh/fGtL4YIdbEsuLK3EOMEhzMSiK89p79MUK8KYmVValF+fFF
+        pTmpxYcYpTlYlMR51zs4xwgJpCeWpGanphakFsFkmTg4pRoY06fui71bschLxlrPqe/8zuvy
+        jHe+sC7T4p94P2aHz5251c9+Lp3iea1Xa5v0K4/lDQqsgU4dYS4HU99Z52tn/Fkc67zjb+zq
+        bTa/jwVdXSRwM87jjcDrrdd/vFrG92jO6qeVVtOmScz11as1erp8TpX1D7EFYdt65XZpKUh+
+        fNx4q1GH1+3ATiWW4oxEQy3mouJEABnHaIj+AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsVy+t9jQV2OvP4Yg0cLRC2mPnzCZvHtSgeT
+        xeVdc9gsDi5sY7TYuvcquwOrR+ONG2weO2fdZffYtKqTzePzJrkAligum5TUnMyy1CJ9uwSu
+        jEf3swtW8FW0fj/L2MD4jauLkZNDQsBE4kfve8YuRi4OIYF1jBKHV/ZDOQ8ZJSb/2c8KUiUs
+        4Clx7sA3NhBbRKBY4sCCC+wgNrNAicS0GTtZIRp6GCW2nd8MlmATMJToPdrHCGLzCthJfJi/
+        jAXEZhFQlfg07RKYLSoQIXH34gsWiBpBiR+T74HZnALmErMvzmTqYuQAWqAncf+iFsQucYlj
+        928yQtjyEpvXvGWewCgwC0n3LISOWUg6ZiHpWMDIsopRMrWgODc9t9iowDAvtVyvODG3uDQv
+        XS85P3cTIzDItx3W6tvBeH9J/CFGAQ5GJR7ehil9MUKsiWXFlbmHGCU4mJVEeO09+2OEeFMS
+        K6tSi/Lji0pzUosPMUpzsCiJ897OOxYpJJCeWJKanZpakFoEk2Xi4JRqYHQw53rYeN7v++PS
+        62LxZ/49rjbPNhGcqHMyrnjyEgON8/yny8tnP8hsuTnBTvQx917LX6bWR8Nevdvk27b9kO9R
+        p7/1tqIrzplXbv637m/oQwGJvKdcsjHeEzVcw4SWtgZNvR+2V8Pm+Il3k5rrZn7km66zk03s
+        5on2nAuHbvumfJ6+Ifz7vrdKLMUZiYZazEXFiQAUtG3mbgIAAA==
+X-CMS-MailID: 20190318100808epcas1p4e571b1ed461506b1037bd277e29ec07e
+CMS-TYPE: 101P
+X-CMS-RootMailID: 20190317012907epcas3p129240b3dcef7d974c2fea23c26a76f2a
+References: <CGME20190317012907epcas3p129240b3dcef7d974c2fea23c26a76f2a@epcas3p1.samsung.com>
+        <20190317122851.2cf734bf@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 04:05:47PM +0800, Changbin Du wrote:
-> The evlist should be destroyed before the perf session.
+On 3/17/19 02:28, Stephen Rothwell wrote:
+> In commit
 > 
-> =================================================================
-> ==27350==ERROR: AddressSanitizer: heap-use-after-free on address 0x62b000002e38 at pc 0x5611da276999 bp 0x7ffce8f1d1a0 sp 0x7ffce8f1d190
-> WRITE of size 8 at 0x62b000002e38 thread T0
->     #0 0x5611da276998 in __list_del /home/work/linux/tools/include/linux/list.h:89
->     #1 0x5611da276d4a in __list_del_entry /home/work/linux/tools/include/linux/list.h:102
->     #2 0x5611da276e77 in list_del_init /home/work/linux/tools/include/linux/list.h:145
->     #3 0x5611da2781cd in thread__put util/thread.c:130
+>   2b13bee38849 ("ASoC: samsung: odroid: Fix clock configuration for 44100 sample rate")
+> 
+> Fixes tag
+> 
+>   Fixes: fbeec965b8d1c ("ASoC: samsung: odroid: Fix 32000 sample rate handling")
+> 
+> has these problem(s):
+> 
+>   - Target SHA1 does not exist
+> 
+> Did you mean:
+> 
+>   1d22c337dc8f ("ASoC: samsung: odroid: Fix 32000 sample rate handling"
 
-ah, because thread is on the machine's list.. which is inside session
-looks like we could use refference counts in machine in future
 
-thanks,
-jirka
+Yes, I unfortunately used erroneously hash from this -stable commit:
+ 
 
->     #4 0x5611da2cc0a8 in __thread__zput util/thread.h:68
->     #5 0x5611da2d2dcb in hist_entry__delete util/hist.c:1148
->     #6 0x5611da2cdf91 in hists__delete_entry util/hist.c:337
->     #7 0x5611da2ce19e in hists__delete_entries util/hist.c:365
->     #8 0x5611da2db2ab in hists__delete_all_entries util/hist.c:2639
->     #9 0x5611da2db325 in hists_evsel__exit util/hist.c:2651
->     #10 0x5611da1c5352 in perf_evsel__exit util/evsel.c:1304
->     #11 0x5611da1c5390 in perf_evsel__delete util/evsel.c:1309
->     #12 0x5611da1b35f0 in perf_evlist__purge util/evlist.c:124
->     #13 0x5611da1b38e2 in perf_evlist__delete util/evlist.c:148
->     #14 0x5611da069781 in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1645
->     #15 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
->     #16 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
->     #17 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
->     #18 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
->     #19 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
->     #20 0x5611d9ff35c9 in _start (/home/work/linux/tools/perf/perf+0x3e95c9)
-> 
-> 0x62b000002e38 is located 11320 bytes inside of 27448-byte region [0x62b000000200,0x62b000006d38)
-> freed by thread T0 here:
->     #0 0x7fdccb04ab70 in free (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedb70)
->     #1 0x5611da260df4 in perf_session__delete util/session.c:201
->     #2 0x5611da063de5 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1300
->     #3 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
->     #4 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
->     #5 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
->     #6 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
->     #7 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
->     #8 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
-> 
-> previously allocated by thread T0 here:
->     #0 0x7fdccb04b138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
->     #1 0x5611da26010c in zalloc util/util.h:23
->     #2 0x5611da260824 in perf_session__new util/session.c:118
->     #3 0x5611da0633a6 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1192
->     #4 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
->     #5 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
->     #6 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
->     #7 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
->     #8 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
->     #9 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
-> 
-> SUMMARY: AddressSanitizer: heap-use-after-free /home/work/linux/tools/include/linux/list.h:89 in __list_del
-> Shadow bytes around the buggy address:
->   0x0c567fff8570: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->   0x0c567fff8580: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->   0x0c567fff8590: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->   0x0c567fff85a0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->   0x0c567fff85b0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-> =>0x0c567fff85c0: fd fd fd fd fd fd fd[fd]fd fd fd fd fd fd fd fd
->   0x0c567fff85d0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->   0x0c567fff85e0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->   0x0c567fff85f0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->   0x0c567fff8600: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->   0x0c567fff8610: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-> Shadow byte legend (one shadow byte represents 8 application bytes):
->   Addressable:           00
->   Partially addressable: 01 02 03 04 05 06 07
->   Heap left redzone:       fa
->   Freed heap region:       fd
->   Stack left redzone:      f1
->   Stack mid redzone:       f2
->   Stack right redzone:     f3
->   Stack after return:      f5
->   Stack use after scope:   f8
->   Global redzone:          f9
->   Global init order:       f6
->   Poisoned by user:        f7
->   Container overflow:      fc
->   Array cookie:            ac
->   Intra object redzone:    bb
->   ASan internal:           fe
->   Left alloca redzone:     ca
->   Right alloca redzone:    cb
-> ==27350==ABORTING
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  tools/perf/builtin-top.c | 42 ++++++++++++++++++----------------------
->  1 file changed, 19 insertions(+), 23 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 231a90daa958..614f278235fa 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1189,23 +1189,19 @@ static int __cmd_top(struct perf_top *top)
->  	pthread_t thread, thread_process;
->  	int ret;
->  
-> -	top->session = perf_session__new(NULL, false, NULL);
-> -	if (top->session == NULL)
-> -		return -1;
-> -
->  	if (!top->annotation_opts.objdump_path) {
->  		ret = perf_env__lookup_objdump(&top->session->header.env,
->  					       &top->annotation_opts.objdump_path);
->  		if (ret)
-> -			goto out_delete;
-> +			return ret;
->  	}
->  
->  	ret = callchain_param__setup_sample_type(&callchain_param);
->  	if (ret)
-> -		goto out_delete;
-> +		return ret;
->  
->  	if (perf_session__register_idle_thread(top->session) < 0)
-> -		goto out_delete;
-> +		return ret;
->  
->  	if (top->nr_threads_synthesize > 1)
->  		perf_set_multithreaded();
-> @@ -1227,13 +1223,18 @@ static int __cmd_top(struct perf_top *top)
->  
->  	if (perf_hpp_list.socket) {
->  		ret = perf_env__read_cpu_topology_map(&perf_env);
-> -		if (ret < 0)
-> -			goto out_err_cpu_topo;
-> +		if (ret < 0) {
-> +			char errbuf[BUFSIZ];
-> +			const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
-> +
-> +			ui__error("Could not read the CPU topology map: %s\n", err);
-> +			return ret;
-> +		}
->  	}
->  
->  	ret = perf_top__start_counters(top);
->  	if (ret)
-> -		goto out_delete;
-> +		return ret;
->  
->  	top->session->evlist = top->evlist;
->  	perf_session__set_id_hdr_size(top->session);
-> @@ -1252,7 +1253,7 @@ static int __cmd_top(struct perf_top *top)
->  	ret = -1;
->  	if (pthread_create(&thread_process, NULL, process_thread, top)) {
->  		ui__error("Could not create process thread.\n");
-> -		goto out_delete;
-> +		return ret;
->  	}
->  
->  	if (pthread_create(&thread, NULL, (use_browser > 0 ? display_thread_tui :
-> @@ -1296,19 +1297,7 @@ static int __cmd_top(struct perf_top *top)
->  out_join_thread:
->  	pthread_cond_signal(&top->qe.cond);
->  	pthread_join(thread_process, NULL);
-> -out_delete:
-> -	perf_session__delete(top->session);
-> -	top->session = NULL;
-> -
->  	return ret;
-> -
-> -out_err_cpu_topo: {
-> -	char errbuf[BUFSIZ];
-> -	const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
-> -
-> -	ui__error("Could not read the CPU topology map: %s\n", err);
-> -	goto out_delete;
-> -}
->  }
->  
->  static int
-> @@ -1639,10 +1628,17 @@ int cmd_top(int argc, const char **argv)
->  		signal(SIGWINCH, winch_sig);
->  	}
->  
-> +	top.session = perf_session__new(NULL, false, NULL);
-> +	if (top.session == NULL) {
-> +		status = -1;
-> +		goto out_delete_evlist;
-> +	}
-> +
->  	status = __cmd_top(&top);
->  
->  out_delete_evlist:
->  	perf_evlist__delete(top.evlist);
-> +	perf_session__delete(top.session);
->  
->  	return status;
->  }
-> -- 
-> 2.19.1
-> 
+commit fbeec965b8d1ca4005f2b63f70fd6ed54a147027
+Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date:   Wed Mar 14 17:41:13 2018 +0100
+
+    ASoC: samsung: odroid: Fix 32000 sample rate handling
+    
+    [ Upstream commit 1d22c337dc8f3a25638f7262e7bcb5729a34d140 ]
+    
+    In case of sample rates lower than 44100 currently there is too low MCLK
+    frequency set for the CODEC. Playback fails with following errors:
+    
+    $ speaker-test -c2 -t sine -f 1500 -l2 -r 32000
+    
+    Sine wave rate is 1500.0000Hz
+    Rate set to 32000Hz (requested 32000Hz)
+    Buffer size range from 128 to 131072
+    Period size range from 64 to 65536
+    Using max buffer size 131072
+    Periods = 4
+    Unable to set hw params for playback: Invalid argument
+    Setting of hwparams failed: Invalid argument
+    
+    [  497.883700] max98090 1-0010: Invalid master clock frequency
+    
+    To fix this the I2S root clock's frequency is increased, depending
+    on sampling rate.
+    
+    Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+    Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+    Signed-off-by: Mark Brown <broonie@kernel.org>
+    Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
+-- 
+Thanks,
+Sylwester
