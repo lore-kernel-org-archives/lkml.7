@@ -2,100 +2,107 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F70EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A7AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F49A204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:10:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QG3kAGNL"
+	by mail.kernel.org (Postfix) with ESMTP id 8C23C20850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfCSIKi (ORCPT
+        id S1727469AbfCSIMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:10:38 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39807 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCSIKh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:10:37 -0400
-Received: by mail-io1-f66.google.com with SMTP id e13so6739917ioq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 01:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=55JpN7h5Cm1wdHGXAMw2S4e/Hdymfa+JelMv9Ti/sbE=;
-        b=QG3kAGNLbyq85ujdMaXiqMwjfehuwZ81+bJ8I9c/6v053fzGoNFXQ0ufhaMfDj0z1t
-         vQYBqbPlPuYDziKjUNgLZq5aeCc8/zsFCKebyzSVf4sMamzJGWc5IsNNpLKAf5fBRFUA
-         nCAJi5ULyolQX2LJ+2g9jbLk0yD+DfhRdHgvo0pDgBLrLJFHcyA5Y6z4p1KTjticyrWG
-         MLSO4XJjsV4NpyHHIEQ7UFkghKgRNM7TbCoUI/g3ZSpsuQxFogoY2VL+KgG+zqXkOgAa
-         5bvQ88aSvIK3P0AEtu5UFurBuCST9/+EMdTvqHGPrfYhgEyIJ0Owzg9W8YpEAl/Y7e1P
-         oL8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=55JpN7h5Cm1wdHGXAMw2S4e/Hdymfa+JelMv9Ti/sbE=;
-        b=TQ+Njz5RIvCURUo12Xbm3Z1ez5gsi3kjAUz4MtwqcdxCOlVMhzXHUuq4UlbuAkW1wF
-         5A5ab0BYyDMWJb6WRYTC2LAZqjMq22pw+WTWZyz4e/UOADXWW0cOVhaihU3OXc5GVb2F
-         owWGpdGvRaZA+TqhaMItl1HQPbjp9c/HEJ3bXQWsep+vSdZIMYnPCDcKug/JkSgqbX12
-         VS+jIqEmiU1luuDW9zLZMd1t+ufQ4TD0Z2fXXCOLjsZUXL8mwpEi3DlzaNdxag/VSBT5
-         GSkNQ00/24pTfn0n1AnKl8W0aP3TcLAumnwe7a+syjEdBjesbc+F2qensI8mqsD3MqJp
-         7z3Q==
-X-Gm-Message-State: APjAAAUmNN1LYEd1V+yymVuvKGY/T3GoH7ejglz3i9Xmd6tU0PzeBtiX
-        7omFFK5WjyoMYHFKf3JM/IolXuE0JJ0HCZZaaKUiMQ==
-X-Google-Smtp-Source: APXvYqz0I8yoSsJxT+RbjlzMYlv9ljXdxfdfr5YpAA4VQrUGhsoR8/0d1i8nTKGaDIjcB9urAVgrBwDD2z8iqLeox24=
-X-Received: by 2002:a5d:834a:: with SMTP id q10mr562496ior.271.1552983036690;
- Tue, 19 Mar 2019 01:10:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <2a48dee7-b649-65a4-be5d-8b3374013cee@i-love.sakura.ne.jp>
- <CACT4Y+ay7nuT-7y2JARozV1s0VisuLdN6VT+w9OsEDs1PeBRoA@mail.gmail.com>
- <201903180527.x2I5RQVp009981@www262.sakura.ne.jp> <CACT4Y+bosgWpJ=s9_hQ-Jg_XJoSHR9S-zC3es-2F=FTRppEncA@mail.gmail.com>
- <CACT4Y+aM0P-G-Oza-oYbyq2firAjvb-nJ0NX21p8U9TL3-FExQ@mail.gmail.com>
- <20190318125019.GA2686@tigerII.localdomain> <CACT4Y+ZedhD+=-YyvphZvLCcCF3FM0YAjXX54K2kMkhNmV4axw@mail.gmail.com>
- <20190318140937.GA29374@tigerII.localdomain>
-In-Reply-To: <20190318140937.GA29374@tigerII.localdomain>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 19 Mar 2019 09:10:25 +0100
-Message-ID: <CACT4Y+Z_+H09iOPzSzJfs=_D=dczk22gL02FjuZ6HXO+p0kRyA@mail.gmail.com>
-Subject: Re: [syzbot? printk?] no WARN_ON() messages printed before "Kernel
- panic - not syncing: panic_on_warn set ..."
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 19 Mar 2019 04:12:05 -0400
+Received: from mga07.intel.com ([134.134.136.100]:44015 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfCSIMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 04:12:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 01:12:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,497,1544515200"; 
+   d="scan'208";a="308418003"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2019 01:12:02 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     pbonzini@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, yu-cheng.yu@intel.com
+Cc:     Yang Weijiang <weijiang.yang@intel.com>
+Subject: [RFC PATCH v4 0/8] This patch-set is to enable Guest CET support
+Date:   Mon, 18 Mar 2019 23:03:43 +0800
+Message-Id: <20190318150351.15550-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 3:09 PM Sergey Senozhatsky
-<sergey.senozhatsky@gmail.com> wrote:
->
-> On (03/18/19 14:42), Dmitry Vyukov wrote:
-> > > There is also SYSLOG_ACTION_CONSOLE_OFF, which disables logging.
-> >
-> > That one I somehow figured earlier, here is the exact check:
-> > https://github.com/google/syzkaller/blob/61f9c92f3a465025d2b9d91f429aaec968aeaa2a/sys/linux/init.go#L152-L155
->
-> OK, cool.
-> You probably would also want to add SYSLOG_ACTION_CLEAR to the list.
+Control-flow Enforcement Technology (CET) provides protection against
+return/jump-oriented programming (ROP) attacks. To make kvm Guest OS own
+the capability, this patch-set is required. It enables CET related CPUID
+report, xsaves/xrstors, vmx entry configuration etc. for Guest OS.
 
-It's not hard to add, but I would like to understand why exactly.
-syzkaller reads out console output from qemu, GCE VM, android phone
-all the time. So if something was already written and we read it out
-right away, it seems that clearing won't affect things. Does
-SYSLOG_ACTION_CLEAR affect only reading output via syslog syscall,
-/dev/something?
+PATCH 1    : Define CET VMCS fields and bits.
+PATCH 2/3  : Report CET feature support in CPUID.
+PATCH 4    : Fix xsaves size calculation issue.
+PATCH 5    : Pass through CET MSRs to Guest.
+PATCH 6    : Set Guest CET state auto loading bit.
+PATCH 7    : Load Guest fpu state when accessing CET XSAVES managed MSRs.
+PATCH 8    : Add CET MSR user space access interface.
 
-In some setups we read out output with "dmesg -w" (should stream
-output as well) in absence of a better solution. Will this be affected
-by SYSLOG_ACTION_CLEAR?
+Changelog:
+
+ v4:
+ - Add Sean's patch for loading Guest fpu state before access XSAVES
+   managed CET MSRs.
+ - Melt down CET bits setting into CPUID configuration patch.
+ - Add VMX interface to query Host XSS.
+ - Check Host and Guest XSS support bits before set Guest XSS.
+ - Make Guest SHSTK and IBT feature enabling independent.
+ - Do not report CET support to Guest when Host CET feature is
+   Disabled.
+
+ v3:
+ - Modified patches to make Guest CET independent to Host enabling.
+ - Added patch 8 to add user space access for Guest CET MSR access.
+ - Modified code comments and patch description to reflect changes.
+
+ v2:
+ - Re-ordered patch sequence, combined one patch.
+ - Added more description for CET related VMCS fields.
+ - Added Host CET capability check while enabling Guest CET loading bit.
+ - Added Host CET capability check while reporting Guest CPUID(EAX=7,
+   EXC=0).
+ - Modified code in reporting Guest CPUID(EAX=D,ECX>=1), make it clearer.
+ - Added Host and Guest XSS mask check while setting bits for Guest XSS.
+
+
+Sean Christopherson (1):
+  KVM:x86: load guest fpu state when accessing MSRs managed by XSAVES
+
+Yang Weijiang (7):
+  KVM:VMX: Define CET VMCS fields and bits
+  KVM:CPUID: Add CET CPUID support for Guest
+  KVM:CPUID: Fix xsaves area size calculation for CPUID.(EAX=0xD,ECX=1).
+  KVM:VMX: Pass through host CET related MSRs to Guest.
+  KVM:VMX: Load Guest CET via VMCS when CET is enabled in Guest
+  KVM:x86: Allow Guest to set supported bits in XSS
+  KVM:x86: Add user-space read/write interface for CET MSRs
+
+ arch/x86/include/asm/kvm_host.h  |  5 +-
+ arch/x86/include/asm/msr-index.h |  2 +
+ arch/x86/include/asm/vmx.h       |  8 +++
+ arch/x86/kvm/cpuid.c             | 53 ++++++++++++++------
+ arch/x86/kvm/vmx.c               | 86 ++++++++++++++++++++++++++++++--
+ arch/x86/kvm/x86.c               | 32 +++++++++++-
+ arch/x86/kvm/x86.h               |  4 ++
+ 7 files changed, 167 insertions(+), 23 deletions(-)
+
+-- 
+2.17.1
+
