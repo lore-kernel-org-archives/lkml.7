@@ -2,104 +2,129 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C77DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11837C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EA52085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552919165;
-	bh=gZ8Mof6ISO1nC7frmfKgkkA7j0ooP+xCx2C348k9ABI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mlGwde78BrkV6Y5r/rWoTkcQlIxK3IZdY95oLnhFJ9MSwXXz+umS2imLPz7Gbznyh
-	 /8gmxK+3LmjIQ0ZdIurntv5VIAKEWkyQVx6k5na9mnnbAu7J3PFHv8uEPwyy+iALyW
-	 r2CvXDvBBICaTd+ekPzN1YTSgD4ZSV//an7sOMeg=
+	by mail.kernel.org (Postfix) with ESMTP id E11922085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfCRO0E (ORCPT
+        id S1727703AbfCRO0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:26:04 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40224 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbfCRO0D (ORCPT
+        Mon, 18 Mar 2019 10:26:22 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:35800 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbfCRO0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:26:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qM+I/Z8m4vYCeqOi1XBCWMu980/aAomV4nvWYfSQj5k=; b=ni87JUQbu7xFk95XxmAkhwFcL
-        CnSK4zQxOiNizdw0Ys1gBtt0a3Imd/P53Z3XjUURUGo4MLQYZkC4WdTLlO8LpTL3DychoZ4f/KQV2
-        tE700HI4PLiwLM1Bn/7dGuBR+/OVBk2AXZPjzOaPGrMp8ve7n33aGeiaRNeyi5rm9pGdU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h5tDD-0005ks-LR; Mon, 18 Mar 2019 14:25:59 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id F07801128874; Mon, 18 Mar 2019 14:25:58 +0000 (GMT)
-Date:   Mon, 18 Mar 2019 14:25:58 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Steve Twiss <stwiss.opensource@diasemi.com>
-Cc:     Axel Lin <axel.lin@ingics.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] regulator: da9055: Convert to regulator core's
- simplified DT parsing code
-Message-ID: <20190318142558.GF6221@sirena.org.uk>
-References: <20190312154759.13774-1-axel.lin@ingics.com>
- <20190312154759.13774-2-axel.lin@ingics.com>
- <VI1PR10MB2352F3E21A79E28D0F0EDA85FE470@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+        Mon, 18 Mar 2019 10:26:21 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 830F972CC53;
+        Mon, 18 Mar 2019 17:26:18 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 5A5E57CC74C; Mon, 18 Mar 2019 17:26:18 +0300 (MSK)
+Date:   Mon, 18 Mar 2019 17:26:18 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2 4/6] powerpc: use common ptrace_syscall_enter hook to
+ handle _TIF_SYSCALL_EMU
+Message-ID: <20190318142618.GA27941@altlinux.org>
+References: <20190318104925.16600-1-sudeep.holla@arm.com>
+ <20190318104925.16600-5-sudeep.holla@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kR3zbvD4cgoYnS/6"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
 Content-Disposition: inline
-In-Reply-To: <VI1PR10MB2352F3E21A79E28D0F0EDA85FE470@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-X-Cookie: Linux is obsolete
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190318104925.16600-5-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---kR3zbvD4cgoYnS/6
+--HcAYCG3uE/tztfnV
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 18, 2019 at 01:56:21PM +0000, Steve Twiss wrote:
+On Mon, Mar 18, 2019 at 10:49:23AM +0000, Sudeep Holla wrote:
+> Now that we have a new hook ptrace_syscall_enter that can be called from
+> syscall entry code and it handles PTRACE_SYSEMU in generic code, we
+> can do some cleanup using the same in do_syscall_trace_enter.
+>=20
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  arch/powerpc/kernel/ptrace.c | 48 ++++++++++++++++--------------------
+>  1 file changed, 21 insertions(+), 27 deletions(-)
+>=20
+> diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
+> index 2e2183b800a8..05579a5dcb12 100644
+> --- a/arch/powerpc/kernel/ptrace.c
+> +++ b/arch/powerpc/kernel/ptrace.c
+> @@ -3278,35 +3278,29 @@ long do_syscall_trace_enter(struct pt_regs *regs)
+> =20
+>  	user_exit();
+> =20
+> -	flags =3D READ_ONCE(current_thread_info()->flags) &
+> -		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
+> -
+> -	if (flags) {
+> -		int rc =3D tracehook_report_syscall_entry(regs);
+> +	if (unlikely(ptrace_syscall_enter(regs))) {
+> +		/*
+> +		 * A nonzero return code from tracehook_report_syscall_entry()
+> +		 * tells us to prevent the syscall execution, but we are not
+> +		 * going to execute it anyway.
+> +		 *
+> +		 * Returning -1 will skip the syscall execution. We want to
+> +		 * avoid clobbering any registers, so we don't goto the skip
+> +		 * label below.
+> +		 */
+> +		return -1;
+> +	}
 
-> But it does seem that around 97% of this driver has not has not changed since
-> 2014, so we are happy here at Dialog to remove our support from this DA9055
-> device.
+This comment is out of sync with the changed code.
 
-> Is there a Linux device driver retirement plan for obsoleted products? :)
 
-Well, we can delete stuff but personally I don't see a big concern with
-leaving things sitting there so long as they're not getting in anyone's
-way - it's more effort to figure out if there's any users (like with
-this if there's people with old boards somewhere even if the product
-isn't being sold yet) than it is just to leave things sitting there.  If
-you don't want to do any support on it that's fine though.
+--=20
+ldv
 
---kR3zbvD4cgoYnS/6
+--HcAYCG3uE/tztfnV
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyPqnYACgkQJNaLcl1U
-h9CPSQf+LvA5V6UG8ZKxC3r8A/5EgBwWTOVaABPtRBzgAtixEA385KqJ2Tim+GPd
-9QiPV9eXPZCgLMBGJeUiW4waz0f/ZYTYB/upbkss3oE806YOMoOIE7BcLdk0VUL3
-nApGH5/E860WElA23phS8yHezzxbTsuXSTBNsuxRVLM7Lfzx4hH51pRJSkGfxDPw
-OWZo+K21KpHTpyM7VJ/tspvvJjW7sbujhN+dlAEUNv60uQuSsIPM7yXE1L6xMfCr
-nfceSKe7ZhADtNYq0icIZ0g9kjzR8p42bCvSfxGgDKO1pKuHZm6LHiilh3sI4g81
-3usP3lrodC7BCrOK97x42we19oAstA==
-=0Q/m
+iQIcBAEBCAAGBQJcj6qKAAoJEAVFT+BVnCUIpOUP/j1ZfG80n/XTu6EimciHcs9e
+nhN3qmFqVCDXeuvQh8I/xncM25fHK+ftwsUQOij1bT2iecbY/yLxpFpfBcru1bho
+Gp0hMlMCEQcxJ/2ArUKjL3HWIaeh8/ut63nLEgGARp0C4Zd14vnjNEZsJBtnZDvZ
+/pKKGNKENgMzx/LH/8pouPQoLTLcTctLjpg7QCHhVgyf+cEjkcTPB2z7ityUXUGG
+4WlGjWyo6qL9fMmUKrhQ+w1B2FyjsffRv0zKAyOG+p2edHGHEjfqw+Z4s2h8rJLL
+nol9SN00msn5wFH83YJmkKolNAIVdDC3seGM2tiX4HROIqKK13MBr4ZqX37mQP7r
+DClvWfuvCCH/NaIoyaq6f4YkkSboox2YDZVTjPQ9NPInoRUXZG3MuvL92eGh8wuZ
+2sjwMWvBU1a+l+C8u0+U2Q/7FMWG8wYwkARiq5AqkNZmIV8dxhyXtY2+X8G3LIDe
+/W1yzi2cYAlMU1oisoA4uYwrFHvUvd2K2jQYHXWvTX6tV7QFdiJNRv9DHdlOqmSL
+cnMyjhOXPKL7bxsh39VvHQJHBP1hru9+IuGqGuLUgeF1nSDIbaFY5RsvwzTqzazJ
+6z8f+gK+Odmt2B6n5zZnSFqCvzOiyQ3XYuRa9Xbfh8DSaDR5BwzqUp3MQZs6QbRI
+DsJJJSfcDOCFdWJIYv+6
+=JQDW
 -----END PGP SIGNATURE-----
 
---kR3zbvD4cgoYnS/6--
+--HcAYCG3uE/tztfnV--
