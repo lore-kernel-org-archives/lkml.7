@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C55C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AB3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043D02083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BFF621738
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901420;
-	bh=9kQ6HOeyD2H6qsaYinfpovhWXY6TQ9mJID5vVpXXplA=;
+	s=default; t=1552901423;
+	bh=mweR0CGlG4MLqD0x7Hx07+cPyhF0kODykpoasnof+jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E7YH8JQf4R1TjZVxopCl6QY/8omYv11PV6nFJL/SNtA6A/V6uV3BMEylogz7XC9sj
-	 mIFwUYtSzItSGhUB4O9DvkJe1idj9wVknxgnbZa7rZ55DT7NdXBFgywU/b8KRRpkKE
-	 pTudB2KdMIAWfvNodWF89xT6V3D1UjS6Cn+eBmow=
+	b=LR8zrwTt6n72tXsgNG1lP7YjWQIcMkDbk/WLyAtlaImasROMX0klR/32bWPUYxU9E
+	 YfXhR8APTgo+bXodBHQLposoyNMx09jw1/iUml7OBWQqclND151YVhuTqNRT0HzT4o
+	 FIKbtxG5icEpXpZHEiRwZRG8XCeeyWPPXMUNrRXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfCRJaT (ORCPT
+        id S1728381AbfCRJaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37278 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbfCRJaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:30:17 -0400
+        id S1728025AbfCRJaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:30:20 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06CB2214AF;
-        Mon, 18 Mar 2019 09:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CB952075C;
+        Mon, 18 Mar 2019 09:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901416;
-        bh=9kQ6HOeyD2H6qsaYinfpovhWXY6TQ9mJID5vVpXXplA=;
+        s=default; t=1552901419;
+        bh=mweR0CGlG4MLqD0x7Hx07+cPyhF0kODykpoasnof+jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A7rgzbbMoOJu5+wA2TXjKA94ztx28mATQh3wn+268dPMsdJmvxP/yJdNWlhBul7ye
-         //KXoSjnFvHA4rP9PtulHYoCC/HKUXNvTcxl/hBPPH9PW4LgTWmBCyEzsU0sOhQ/+5
-         wAuK7bzRrsz00oy5pk4YlzIbpCMS25Eoem/s5j+4=
+        b=EoPtWfO7+qQ5UvtXbqbirKVvCMZ7ksEo1KSKQAHLOUWRXb6C9yMS/jFGOmzAU1iaZ
+         NneUZ9XSY3Y7sKLB0uNA0Wj0b3h0N2bFZB49JOjlrXr+fmk25hY3oTWndo8X3nvZiF
+         iHDmYU3bz/a+z9SaduvltMcjGcUbbVjOG9+GVdIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 37/52] net/smc: fix smc_poll in SMC_INIT state
-Date:   Mon, 18 Mar 2019 10:25:24 +0100
-Message-Id: <20190318083847.666498466@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH 4.20 38/52] missing barriers in some of unix_sock ->addr and ->path accesses
+Date:   Mon, 18 Mar 2019 10:25:25 +0100
+Message-Id: <20190318083847.777178513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -65,40 +66,233 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit d7cf4a3bf3a83c977a29055e1c4ffada7697b31f ]
+[ Upstream commit ae3b564179bfd06f32d051b9e5d72ce4b2a07c37 ]
 
-smc_poll() returns with mask bit EPOLLPRI if the connection urg_state
-is SMC_URG_VALID. Since SMC_URG_VALID is zero, smc_poll signals
-EPOLLPRI errorneously if called in state SMC_INIT before the connection
-is created, for instance in a non-blocking connect scenario.
+Several u->addr and u->path users are not holding any locks in
+common with unix_bind().  unix_state_lock() is useless for those
+purposes.
 
-This patch switches to non-zero values for the urg states.
+u->addr is assign-once and *(u->addr) is fully set up by the time
+we set u->addr (all under unix_table_lock).  u->path is also
+set in the same critical area, also before setting u->addr, and
+any unix_sock with ->path filled will have non-NULL ->addr.
 
-Reviewed-by: Karsten Graul <kgraul@linux.ibm.com>
-Fixes: de8474eb9d50 ("net/smc: urgent data support")
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+So setting ->addr with smp_store_release() is all we need for those
+"lockless" users - just have them fetch ->addr with smp_load_acquire()
+and don't even bother looking at ->path if they see NULL ->addr.
+
+Users of ->addr and ->path fall into several classes now:
+    1) ones that do smp_load_acquire(u->addr) and access *(u->addr)
+and u->path only if smp_load_acquire() has returned non-NULL.
+    2) places holding unix_table_lock.  These are guaranteed that
+*(u->addr) is seen fully initialized.  If unix_sock is in one of the
+"bound" chains, so's ->path.
+    3) unix_sock_destructor() using ->addr is safe.  All places
+that set u->addr are guaranteed to have seen all stores *(u->addr)
+while holding a reference to u and unix_sock_destructor() is called
+when (atomic) refcount hits zero.
+    4) unix_release_sock() using ->path is safe.  unix_bind()
+is serialized wrt unix_release() (normally - by struct file
+refcount), and for the instances that had ->path set by unix_bind()
+unix_release_sock() comes from unix_release(), so they are fine.
+Instances that had it set in unix_stream_connect() either end up
+attached to a socket (in unix_accept()), in which case the call
+chain to unix_release_sock() and serialization are the same as in
+the previous case, or they never get accept'ed and unix_release_sock()
+is called when the listener is shut down and its queue gets purged.
+In that case the listener's queue lock provides the barriers needed -
+unix_stream_connect() shoves our unix_sock into listener's queue
+under that lock right after having set ->path and eventual
+unix_release_sock() caller picks them from that queue under the
+same lock right before calling unix_release_sock().
+    5) unix_find_other() use of ->path is pointless, but safe -
+it happens with successful lookup by (abstract) name, so ->path.dentry
+is guaranteed to be NULL there.
+
+earlier-variant-reviewed-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/smc/smc.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/unix/af_unix.c   |   57 +++++++++++++++++++++++++++++----------------------
+ net/unix/diag.c      |    3 +-
+ security/lsm_audit.c |   10 +++++---
+ 3 files changed, 41 insertions(+), 29 deletions(-)
 
---- a/net/smc/smc.h
-+++ b/net/smc/smc.h
-@@ -113,9 +113,9 @@ struct smc_host_cdc_msg {		/* Connection
- } __aligned(8);
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -890,7 +890,7 @@ retry:
+ 	addr->hash ^= sk->sk_type;
  
- enum smc_urg_state {
--	SMC_URG_VALID,			/* data present */
--	SMC_URG_NOTYET,			/* data pending */
--	SMC_URG_READ			/* data was already read */
-+	SMC_URG_VALID	= 1,			/* data present */
-+	SMC_URG_NOTYET	= 2,			/* data pending */
-+	SMC_URG_READ	= 3,			/* data was already read */
- };
+ 	__unix_remove_socket(sk);
+-	u->addr = addr;
++	smp_store_release(&u->addr, addr);
+ 	__unix_insert_socket(&unix_socket_table[addr->hash], sk);
+ 	spin_unlock(&unix_table_lock);
+ 	err = 0;
+@@ -1060,7 +1060,7 @@ static int unix_bind(struct socket *sock
  
- struct smc_connection {
+ 	err = 0;
+ 	__unix_remove_socket(sk);
+-	u->addr = addr;
++	smp_store_release(&u->addr, addr);
+ 	__unix_insert_socket(list, sk);
+ 
+ out_unlock:
+@@ -1331,15 +1331,29 @@ restart:
+ 	RCU_INIT_POINTER(newsk->sk_wq, &newu->peer_wq);
+ 	otheru = unix_sk(other);
+ 
+-	/* copy address information from listening to new sock*/
+-	if (otheru->addr) {
+-		refcount_inc(&otheru->addr->refcnt);
+-		newu->addr = otheru->addr;
+-	}
++	/* copy address information from listening to new sock
++	 *
++	 * The contents of *(otheru->addr) and otheru->path
++	 * are seen fully set up here, since we have found
++	 * otheru in hash under unix_table_lock.  Insertion
++	 * into the hash chain we'd found it in had been done
++	 * in an earlier critical area protected by unix_table_lock,
++	 * the same one where we'd set *(otheru->addr) contents,
++	 * as well as otheru->path and otheru->addr itself.
++	 *
++	 * Using smp_store_release() here to set newu->addr
++	 * is enough to make those stores, as well as stores
++	 * to newu->path visible to anyone who gets newu->addr
++	 * by smp_load_acquire().  IOW, the same warranties
++	 * as for unix_sock instances bound in unix_bind() or
++	 * in unix_autobind().
++	 */
+ 	if (otheru->path.dentry) {
+ 		path_get(&otheru->path);
+ 		newu->path = otheru->path;
+ 	}
++	refcount_inc(&otheru->addr->refcnt);
++	smp_store_release(&newu->addr, otheru->addr);
+ 
+ 	/* Set credentials */
+ 	copy_peercred(sk, other);
+@@ -1453,7 +1467,7 @@ out:
+ static int unix_getname(struct socket *sock, struct sockaddr *uaddr, int peer)
+ {
+ 	struct sock *sk = sock->sk;
+-	struct unix_sock *u;
++	struct unix_address *addr;
+ 	DECLARE_SOCKADDR(struct sockaddr_un *, sunaddr, uaddr);
+ 	int err = 0;
+ 
+@@ -1468,19 +1482,15 @@ static int unix_getname(struct socket *s
+ 		sock_hold(sk);
+ 	}
+ 
+-	u = unix_sk(sk);
+-	unix_state_lock(sk);
+-	if (!u->addr) {
++	addr = smp_load_acquire(&unix_sk(sk)->addr);
++	if (!addr) {
+ 		sunaddr->sun_family = AF_UNIX;
+ 		sunaddr->sun_path[0] = 0;
+ 		err = sizeof(short);
+ 	} else {
+-		struct unix_address *addr = u->addr;
+-
+ 		err = addr->len;
+ 		memcpy(sunaddr, addr->name, addr->len);
+ 	}
+-	unix_state_unlock(sk);
+ 	sock_put(sk);
+ out:
+ 	return err;
+@@ -2073,11 +2083,11 @@ static int unix_seqpacket_recvmsg(struct
+ 
+ static void unix_copy_addr(struct msghdr *msg, struct sock *sk)
+ {
+-	struct unix_sock *u = unix_sk(sk);
++	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
+ 
+-	if (u->addr) {
+-		msg->msg_namelen = u->addr->len;
+-		memcpy(msg->msg_name, u->addr->name, u->addr->len);
++	if (addr) {
++		msg->msg_namelen = addr->len;
++		memcpy(msg->msg_name, addr->name, addr->len);
+ 	}
+ }
+ 
+@@ -2581,15 +2591,14 @@ static int unix_open_file(struct sock *s
+ 	if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
+ 		return -EPERM;
+ 
+-	unix_state_lock(sk);
++	if (!smp_load_acquire(&unix_sk(sk)->addr))
++		return -ENOENT;
++
+ 	path = unix_sk(sk)->path;
+-	if (!path.dentry) {
+-		unix_state_unlock(sk);
++	if (!path.dentry)
+ 		return -ENOENT;
+-	}
+ 
+ 	path_get(&path);
+-	unix_state_unlock(sk);
+ 
+ 	fd = get_unused_fd_flags(O_CLOEXEC);
+ 	if (fd < 0)
+@@ -2830,7 +2839,7 @@ static int unix_seq_show(struct seq_file
+ 			(s->sk_state == TCP_ESTABLISHED ? SS_CONNECTING : SS_DISCONNECTING),
+ 			sock_i_ino(s));
+ 
+-		if (u->addr) {
++		if (u->addr) {	// under unix_table_lock here
+ 			int i, len;
+ 			seq_putc(seq, ' ');
+ 
+--- a/net/unix/diag.c
++++ b/net/unix/diag.c
+@@ -10,7 +10,8 @@
+ 
+ static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
+ {
+-	struct unix_address *addr = unix_sk(sk)->addr;
++	/* might or might not have unix_table_lock */
++	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
+ 
+ 	if (!addr)
+ 		return 0;
+--- a/security/lsm_audit.c
++++ b/security/lsm_audit.c
+@@ -321,6 +321,7 @@ static void dump_common_audit_data(struc
+ 		if (a->u.net->sk) {
+ 			struct sock *sk = a->u.net->sk;
+ 			struct unix_sock *u;
++			struct unix_address *addr;
+ 			int len = 0;
+ 			char *p = NULL;
+ 
+@@ -351,14 +352,15 @@ static void dump_common_audit_data(struc
+ #endif
+ 			case AF_UNIX:
+ 				u = unix_sk(sk);
++				addr = smp_load_acquire(&u->addr);
++				if (!addr)
++					break;
+ 				if (u->path.dentry) {
+ 					audit_log_d_path(ab, " path=", &u->path);
+ 					break;
+ 				}
+-				if (!u->addr)
+-					break;
+-				len = u->addr->len-sizeof(short);
+-				p = &u->addr->name->sun_path[0];
++				len = addr->len-sizeof(short);
++				p = &addr->name->sun_path[0];
+ 				audit_log_format(ab, " path=");
+ 				if (*p)
+ 					audit_log_untrustedstring(ab, p);
 
 
