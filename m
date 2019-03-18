@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84971C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CF3C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545E22063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4410214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:59:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uqGZrz2R"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KDA6I3JJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727748AbfCRJ7E (ORCPT
+        id S1727779AbfCRJ7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:59:04 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37632 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727271AbfCRJ7B (ORCPT
+        Mon, 18 Mar 2019 05:59:06 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53967 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbfCRJ7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:59:01 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y15so16270801wro.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 02:59:00 -0700 (PDT)
+        Mon, 18 Mar 2019 05:59:03 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e74so12262609wmg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 02:59:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9EioP8T7LI4Uy8dBmKG3aC7DgMQWG+51HGznOMhw3V4=;
-        b=uqGZrz2R/fewUc9eUMs4QTydVILxyq5+7yIo5wzVdwaLCPO0kCCcqSBFWQX52mYb9I
-         EUc5YykPPxSQUc5nvP7JPsBhJ3VkJYWZ3XMv7a6WhoTUiiLZaeYcCrv/QK8CgQ6XD4oH
-         YSEK7tFBw4d7HZMMVmvve1HwaPlaHYK1qR+fLqIEtgiHLqNBgPTaqlEDBHx1R9XCKGgX
-         fBlOnrJ0wHPGfzFVnQe7qDWnI52R1tBlZL8gqhkzV2ImNBK/e1pTXvEmnbmydoo6UJj2
-         lkQ7zBwWdKvH9Awm9XAE0CgILaE8nhjzgUpiM6hKNAeSpylM/kzcnAhp+uBre+tbNijo
-         /t/A==
+        bh=J4oym53pblyH4Djmv5JFN5gdbf5/Syr9K8b694MhuuQ=;
+        b=KDA6I3JJ0yggd8VeyhJeVkFB6JTH4Fj5XQOxFBIP9G01WbWaT9IAGA29p1kvpkEuK6
+         ZZ2xaTyaNAL20TqVqFwq1wJowqH2CajW6T6+xkE8EWjMZkG+eOWdL36Rlh+GKwwsDyxl
+         IBS/wbV/ejN4NZJFcNvEnl5WGcynvE7gwBJ2S0rOOEU1k9KCrCufA2CKrsa0TbLtH20i
+         z+fbFygMtkjkzEKyMdLRAK3YjbUJ3/PPFkc5o1fLb7yKX/N4dLe6PA8Lkh88FHB7SQJP
+         pf1/EsjuOljAGxQJoyajg8HShosDjlGF4lYVrIFVGkF1ahQXlqgoFt+uEBvgJdRRLtJN
+         FySw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9EioP8T7LI4Uy8dBmKG3aC7DgMQWG+51HGznOMhw3V4=;
-        b=MElgMouFQ0j7NBiMoaIrknmy1qvt1PbkGt+RNC9EL8AhrpkRGewEBeo2tzsy8Rl5xN
-         hM6qHa3TEyEa9NZPcRlqr7GXRrGVMgwhZxFVrhP+mXlFavpjbve7jA0Ss6RxhG9JzwEB
-         rWjNz00TUYaqnbJHusfnxsin71FyMLJPyLjkUE0fWmPtHeS3ppajHGoWnIN0CcEZAXAQ
-         rRyk0YtZMAK17EO1YF3eqdynyE2bQYuwIKyPk2JVb634Qb2rWEAGvbz8I9b/PLa+0eY7
-         ecnLn9t1UHEauWgGNT0dZzzazp6j+F3jmpBsPXH8XOMUv9UyxNWya6iQZOMMrG5Grb5g
-         IjLg==
-X-Gm-Message-State: APjAAAVUBL4rYnaP3qw4M6+K/egtEsEUkM0t3p/RzYT68Dbgwx/qFQAL
-        ygZ1POto8UPDRS5a9JNq7UNAbw==
-X-Google-Smtp-Source: APXvYqw2j8aVz8JHkcIL7kul6LNskzjeo7tEIM8Qx9ypPmyjqNydMuFGNQcfAkqQs9VeB4K9VUvk2A==
-X-Received: by 2002:adf:d4c6:: with SMTP id w6mr11236056wrk.65.1552903139357;
-        Mon, 18 Mar 2019 02:58:59 -0700 (PDT)
+        bh=J4oym53pblyH4Djmv5JFN5gdbf5/Syr9K8b694MhuuQ=;
+        b=oQppcOzUF/Pw43OkGclmkfUyayZ5LVxunCWeyK2dw4aGoiVNxLmCA0rQDORJumPZcq
+         yfLsXOm5MgSLNVC4jZ3eJbBRLzYRcDhL1U1GYVLInssnLkbvMmU0vHBg/z2dDgQrdpNN
+         kSnmep7eO8rdU3+LV3K/r/Fty2FY3iRDkeRJZsxzZMM1rhciDFyUG27i/8h4FOV4oKMt
+         qPUq+pLlqtDs0u5mQzpli6FKeq5BsP4iHZLezJaqsNlhskdQEyxpI2Ye2qZTIzmdXjsH
+         EjkASWMMIZuT8wDP7o7rEol0n5NA5QUUjnRIUVkZ93YnZtTEnr5r6nkWk65kKUgntNyq
+         EF+w==
+X-Gm-Message-State: APjAAAXfUWlcNRS+7oWdU+cGO71NWp9FCEUyTZcT1/6jM9ZO1aPf3pEj
+        /0cJ1MwuJKvlhNMCKjfiMkvg9g==
+X-Google-Smtp-Source: APXvYqxaWk0/0w17XD/AhJmmutHpp4wR7SWU4kIs3KdaNwnpOFXQx289H2hcogU5/TLtRHcJvIq1wA==
+X-Received: by 2002:a1c:7c0c:: with SMTP id x12mr10424150wmc.38.1552903141803;
+        Mon, 18 Mar 2019 02:59:01 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id g8sm5459034wro.77.2019.03.18.02.58.58
+        by smtp.gmail.com with ESMTPSA id g8sm5459034wro.77.2019.03.18.02.59.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 18 Mar 2019 02:58:58 -0700 (PDT)
+        Mon, 18 Mar 2019 02:59:01 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/8] arm64: dts: meson: g12a: Add UART A, B & C nodes and pins
-Date:   Mon, 18 Mar 2019 10:58:48 +0100
-Message-Id: <20190318095851.4062-6-narmstrong@baylibre.com>
+Subject: [PATCH v2 7/8] arm64: dts: meson: g12a: Add G12A USB nodes
+Date:   Mon, 18 Mar 2019 10:58:50 +0100
+Message-Id: <20190318095851.4062-8-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190318095851.4062-1-narmstrong@baylibre.com>
 References: <20190318095851.4062-1-narmstrong@baylibre.com>
@@ -74,104 +74,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the 3 UART nodes in the EE power domain with the corresponding
-pinctrl nodes.
+This patch adds the nodes for the USB Complex found in the Amlogic
+G12A SoC.
+
+It includes the :
+- 2 USB2 PHYs
+- 1 USB3 + PCIE Combo PHY
+- the USB Glue with it's DWC2 and DWC3 sub-nodes
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 72 +++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 75 +++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index cefd6e27c7a7..992751024366 100644
+index a99c13ee724a..ce681aef8d5b 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -114,6 +114,51 @@
- 						#gpio-cells = <2>;
- 						gpio-ranges = <&periphs_pinctrl 0 0 86>;
- 					};
-+
-+					uart_a_pins: uart-a {
-+						mux {
-+							groups = "uart_a_tx",
-+								 "uart_a_rx";
-+							function = "uart_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_a_cts_rts_pins: uart-a-cts-rts {
-+						mux {
-+							groups = "uart_a_cts",
-+								 "uart_a_rts";
-+							function = "uart_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_b_pins: uart-b {
-+						mux {
-+							groups = "uart_b_tx",
-+								 "uart_b_rx";
-+							function = "uart_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_c_pins: uart-c {
-+						mux {
-+							groups = "uart_c_tx",
-+								 "uart_c_rx";
-+							function = "uart_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_c_cts_rts_pins: uart-c-cts-rts {
-+						mux {
-+							groups = "uart_c_cts",
-+								 "uart_c_rts";
-+							function = "uart_c";
-+							bias-disable;
-+						};
-+					};
+@@ -3,11 +3,13 @@
+  * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+  */
+ 
++#include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/clock/g12a-clkc.h>
+ #include <dt-bindings/clock/g12a-aoclkc.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
+ 
+ / {
+ 	compatible = "amlogic,g12a";
+@@ -163,6 +165,26 @@
  				};
  			};
  
-@@ -258,6 +303,33 @@
- 				compatible = "amlogic,meson-g12a-clk-measure";
- 				reg = <0x0 0x18000 0x0 0x10>;
++			usb2_phy0: phy@36000 {
++				compatible = "amlogic,g12a-usb2-phy";
++				reg = <0x0 0x36000 0x0 0x2000>;
++				clocks = <&xtal>;
++				clock-names = "xtal";
++				resets = <&reset RESET_USB_PHY20>;
++				reset-names = "phy";
++				#phy-cells = <0>;
++			};
++
++			usb2_phy1: phy@3a000 {
++				compatible = "amlogic,g12a-usb2-phy";
++				reg = <0x0 0x3a000 0x0 0x2000>;
++				clocks = <&xtal>;
++				clock-names = "xtal";
++				resets = <&reset RESET_USB_PHY21>;
++				reset-names = "phy";
++				#phy-cells = <0>;
++			};
++
+ 			hiu: bus@3c000 {
+ 				compatible = "simple-bus";
+ 				reg = <0x0 0x3c000 0x0 0x1400>;
+@@ -183,6 +205,18 @@
+ 					};
+ 				};
  			};
 +
-+			uart_C: serial@22000 {
-+				compatible = "amlogic,meson-gx-uart";
-+				reg = <0x0 0x22000 0x0 0x18>;
-+				interrupts = <GIC_SPI 93 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+
-+			uart_B: serial@23000 {
-+				compatible = "amlogic,meson-gx-uart";
-+				reg = <0x0 0x23000 0x0 0x18>;
-+				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+
-+			uart_A: serial@24000 {
-+				compatible = "amlogic,meson-gx-uart";
-+				reg = <0x0 0x24000 0x0 0x18>;
-+				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
++			usb3_pcie_phy: phy@46000 {
++				compatible = "amlogic,g12a-usb3-pcie-phy";
++				reg = <0x0 0x46000 0x0 0x2000>;
++				clocks = <&clkc CLKID_PCIE_PLL>;
++				clock-names = "ref_clk";
++				resets = <&reset RESET_PCIE_PHY>;
++				reset-names = "phy";
++				assigned-clocks = <&clkc CLKID_PCIE_PLL>;
++				assigned-clock-rates = <100000000>;
++				#phy-cells = <1>;
 +			};
  		};
+ 
+ 		aobus: bus@ff800000 {
+@@ -346,6 +380,47 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		usb: usb@ffe09000 {
++			status = "disabled";
++			compatible = "amlogic,meson-g12a-usb-ctrl";
++			reg = <0x0 0xffe09000 0x0 0xa0>;
++			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			clocks = <&clkc CLKID_USB>;
++			resets = <&reset RESET_USB>;
++
++			dr_mode = "otg";
++
++			phys = <&usb2_phy0>, <&usb2_phy1>,
++			       <&usb3_pcie_phy PHY_TYPE_USB3>;
++			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
++
++			dwc2: usb@ff400000 {
++				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
++				reg = <0x0 0xff400000 0x0 0x40000>;
++				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
++				clock-names = "ddr";
++				phys = <&usb2_phy1>;
++				dr_mode = "peripheral";
++				g-rx-fifo-size = <192>;
++				g-np-tx-fifo-size = <128>;
++				g-tx-fifo-size = <128 128 16 16 16>;
++			};
++
++			dwc3: usb@ff500000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0xff500000 0x0 0x100000>;
++				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++				dr_mode = "host";
++				snps,dis_u2_susphy_quirk;
++				snps,quirk-frame-length-adjustment;
++			};
++		};
  	};
  
+ 	timer {
 -- 
 2.20.1
 
