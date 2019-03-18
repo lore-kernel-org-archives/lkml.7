@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9410DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05008C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D152083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA727204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902288;
-	bh=4wnLEChiXVWzMJMpnRk5C4VblCkXoB3BuUIDJZLrIEo=;
+	s=default; t=1552902302;
+	bh=/lEMIxScnSCzRkIXQ+wldYYVIuwm5MQ5iCcDZ1hVCuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TMAXMB8/0YiaL/tX6bSFs64lgZAn7QdThL8GIey0YxYt5pWHlf81K/p3vtFmz3DQx
-	 YS6pJCZbmUGfRV++ILcJ+FC01IsI2+joGIlmcbPwmohLOM07UtFlpvIYcMOeVcQjmc
-	 FoZr0oVkMgnDOQuhZ1Xl5hVR1qHogWgoWbHX3oOI=
+	b=NMhyigxc1ROnKMGW1nyWpQIQAra1aB34U8udVII1M7ykR4mCoIUC9RRPwPc9FBF1O
+	 9oDe6piuA0DLrK01fWZmvqqDcDymNgeBhJn8cAiRMG/2kYb/FSDtO8XlsdIwxRMoGi
+	 f0IG1a7/FXTUMmjpCmJ29PBq90qSg8603m3o5+28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbfCRJoq (ORCPT
+        id S1728363AbfCRJaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:44:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37978 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:30:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728435AbfCRJan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:30:43 -0400
+        id S1727948AbfCRJaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:30:14 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6C732087C;
-        Mon, 18 Mar 2019 09:30:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45A062083D;
+        Mon, 18 Mar 2019 09:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901443;
-        bh=4wnLEChiXVWzMJMpnRk5C4VblCkXoB3BuUIDJZLrIEo=;
+        s=default; t=1552901413;
+        bh=/lEMIxScnSCzRkIXQ+wldYYVIuwm5MQ5iCcDZ1hVCuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cvn5Mg5D2wvoIVNBe4dPxSwihov9bNxjGH1x2SAhfNsz5vs3MtSUJ5zSwduSBxwDD
-         yGIIhAxcGZZI97cJHEMNR8QZY6CNbg8azm0NBeMqKgJoaom3nm3mzznyIqnZIqWgYS
-         aj5KNy2poRPf0j81uHOPMO2a8I/akQh64VElwOTk=
+        b=VHip9KQfkpchTtfHmsojBxKXWq98DznCoNMDWsILyC4JZCpqK+bZ9YfQKOkiQ07bU
+         ELDbb6CNPP+W67b1syk6huBLKNUUvwiQcyyn9sihM9/eRtA9MwuARbGdTyyAaArHVM
+         0W+T3sLqSb9lp1SkuE4oz72Pj3AH87zip34hakaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Ming Shuo Chiu <chiu@endlessm.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.20 45/52] ALSA: hda/realtek: Enable audio jacks of ASUS UX362FA with ALC294
-Date:   Mon, 18 Mar 2019 10:25:32 +0100
-Message-Id: <20190318083849.204227053@linuxfoundation.org>
+        stable@vger.kernel.org, Vincent Bernat <vincent@bernat.ch>,
+        Michal Soltys <soltys@ziu.info>,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.20 36/52] bonding: fix PACKET_ORIGDEV regression
+Date:   Mon, 18 Mar 2019 10:25:23 +0100
+Message-Id: <20190318083847.588994226@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -66,50 +67,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Michal Soltys <soltys@ziu.info>
 
-commit 8bb37a2a4d7c02affef554f5dc05f6d2e39c31f9 upstream.
+[ Upstream commit 3c963a3306eada999be5ebf4f293dfa3d3945487 ]
 
-The ASUS UX362FA with ALC294 cannot detect the headset MIC and outputs
-through the internal speaker and the headphone.  This issue can be fixed
-by the quirk in the commit 4e0511067 ALSA: hda/realtek: Enable audio
-jacks of ASUS UX533FD with ALC294.
+This patch fixes a subtle PACKET_ORIGDEV regression which was a side
+effect of fixes introduced by:
 
-Besides, ASUS UX362FA and UX533FD have the same audio initial pin config
-values.  So, this patch replaces SND_PCI_QUIRK of UX533FD with a new
-SND_HDA_PIN_QUIRK which benefits both UX362FA and UX533FD.
+6a9e461f6fe4 bonding: pass link-local packets to bonding master also.
 
-Fixes: 4e051106730d ("ALSA: hda/realtek: Enable audio jacks of ASUS UX533FD with ALC294")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Ming Shuo Chiu <chiu@endlessm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+... to:
+
+b89f04c61efe bonding: deliver link-local packets with skb->dev set to link that packets arrived on
+
+While 6a9e461f6fe4 restored pre-b89f04c61efe presence of link-local
+packets on bonding masters (which is required e.g. by linux bridges
+participating in spanning tree or needed for lab-like setups created
+with group_fwd_mask) it also caused the originating device
+information to be lost due to cloning.
+
+Maciej Żenczykowski proposed another solution that doesn't require
+packet cloning and retains original device information - instead of
+returning RX_HANDLER_PASS for all link-local packets it's now limited
+only to packets from inactive slaves.
+
+At the same time, packets passed to bonding masters retain correct
+information about the originating device and PACKET_ORIGDEV can be used
+to determine it.
+
+This elegantly solves all issues so far:
+
+- link-local packets that were removed from bonding masters
+- LLDP daemons being forced to explicitly bind to slave interfaces
+- PACKET_ORIGDEV having no effect on bond interfaces
+
+Fixes: 6a9e461f6fe4 (bonding: pass link-local packets to bonding master also.)
+Reported-by: Vincent Bernat <vincent@bernat.ch>
+Signed-off-by: Michal Soltys <soltys@ziu.info>
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/patch_realtek.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c |   35 ++++++++++++++---------------------
+ 1 file changed, 14 insertions(+), 21 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6692,7 +6692,6 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1043, 0x12e0, "ASUS X541SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x13b0, "ASUS Z550SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
--	SND_PCI_QUIRK(0x1043, 0x14a1, "ASUS UX533FD", ALC294_FIXUP_ASUS_SPK),
- 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
- 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
- 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
-@@ -7308,6 +7307,10 @@ static const struct snd_hda_pin_quirk al
- 	SND_HDA_PIN_QUIRK(0x10ec0294, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
- 		{0x12, 0x90a60130},
- 		{0x17, 0x90170110},
-+		{0x21, 0x03211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0294, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
-+		{0x12, 0x90a60130},
-+		{0x17, 0x90170110},
- 		{0x21, 0x04211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		ALC295_STANDARD_PINS,
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1172,29 +1172,22 @@ static rx_handler_result_t bond_handle_f
+ 		}
+ 	}
+ 
+-	/* Link-local multicast packets should be passed to the
+-	 * stack on the link they arrive as well as pass them to the
+-	 * bond-master device. These packets are mostly usable when
+-	 * stack receives it with the link on which they arrive
+-	 * (e.g. LLDP) they also must be available on master. Some of
+-	 * the use cases include (but are not limited to): LLDP agents
+-	 * that must be able to operate both on enslaved interfaces as
+-	 * well as on bonds themselves; linux bridges that must be able
+-	 * to process/pass BPDUs from attached bonds when any kind of
+-	 * STP version is enabled on the network.
++	/*
++	 * For packets determined by bond_should_deliver_exact_match() call to
++	 * be suppressed we want to make an exception for link-local packets.
++	 * This is necessary for e.g. LLDP daemons to be able to monitor
++	 * inactive slave links without being forced to bind to them
++	 * explicitly.
++	 *
++	 * At the same time, packets that are passed to the bonding master
++	 * (including link-local ones) can have their originating interface
++	 * determined via PACKET_ORIGDEV socket option.
+ 	 */
+-	if (is_link_local_ether_addr(eth_hdr(skb)->h_dest)) {
+-		struct sk_buff *nskb = skb_clone(skb, GFP_ATOMIC);
+-
+-		if (nskb) {
+-			nskb->dev = bond->dev;
+-			nskb->queue_mapping = 0;
+-			netif_rx(nskb);
+-		}
+-		return RX_HANDLER_PASS;
+-	}
+-	if (bond_should_deliver_exact_match(skb, slave, bond))
++	if (bond_should_deliver_exact_match(skb, slave, bond)) {
++		if (is_link_local_ether_addr(eth_hdr(skb)->h_dest))
++			return RX_HANDLER_PASS;
+ 		return RX_HANDLER_EXACT;
++	}
+ 
+ 	skb->dev = bond->dev;
+ 
 
 
