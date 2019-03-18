@@ -2,66 +2,74 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F160BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CADDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C422075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C70C2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfCRJYg (ORCPT
+        id S1727366AbfCRJZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:24:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50840 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726763AbfCRJYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:24:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E0CDDAD93;
-        Mon, 18 Mar 2019 09:24:33 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
-        <mvmimwotn60.fsf@suse.de>
-        <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
-X-Yow:  Are you still an ALCOHOLIC?
-Date:   Mon, 18 Mar 2019 10:24:33 +0100
-In-Reply-To: <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
-        (Yash Shah's message of "Fri, 15 Mar 2019 17:19:59 +0530")
-Message-ID: <mvmbm28r0vi.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 18 Mar 2019 05:25:11 -0400
+Received: from albireo.enyo.de ([5.158.152.32]:51904 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726763AbfCRJZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:25:09 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1h5oVx-0000eE-QH; Mon, 18 Mar 2019 09:25:01 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.89)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1h5oSW-0007fc-Oe; Mon, 18 Mar 2019 10:21:28 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Willem de Bruijn <willemb@google.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Law <law@redhat.com>
+Subject: Re: [PATCH] y2038: fix socket.h header inclusion
+References: <20190311153857.563743-1-arnd@arndb.de>
+        <87k1h1fgkk.fsf@mid.deneb.enyo.de>
+        <CAK8P3a1r8GRC7GTHHqWY-PUn=9rWB-7+Qo=7txanbEjGZ-wppw@mail.gmail.com>
+        <87a7hvded7.fsf@mid.deneb.enyo.de>
+        <CABeXuvrEecSAkBuN-SmAbGwhLWNCC+bA1=X78fm8xMyw8=hm6Q@mail.gmail.com>
+        <CAK8P3a22n5L45Gknqd=2zinVGqRovkk0OABmGLJbGcmg8xXd+A@mail.gmail.com>
+Date:   Mon, 18 Mar 2019 10:21:28 +0100
+In-Reply-To: <CAK8P3a22n5L45Gknqd=2zinVGqRovkk0OABmGLJbGcmg8xXd+A@mail.gmail.com>
+        (Arnd Bergmann's message of "Mon, 18 Mar 2019 09:27:46 +0100")
+Message-ID: <87o968y1uv.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mär 15 2019, Yash Shah <yash.shah@sifive.com> wrote:
+* Arnd Bergmann:
 
-> Use the open-source FSBL from:
-> https://github.com/sifive/freedom-u540-c000-bootloader
->
-> Modify the fsbl/ux00_fsbl.dts file and re-build the fsbl.bin
+> Should we just remove __kernel_fd_set from the exported headers and
+> define the internal fd_set directly in include/linux/types.h? (Adding the
+> folks from the old thread to Cc).
 
-That doesn't even compile.
+The type is used in the sanitizers, but incorrectly.  They assume that
+FD_SETSIZE is always 1024.  (The existence of __kernel_fd_set is
+itself somewhat questionable because it leads to such bugs.)  Moving
+around the type could cause a build failure in the sanitizers, but I'm
+not entirely clear how the UAPI headers are included there.
 
-Andreas.
-
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Otherwise, I couldn't find any uses.
