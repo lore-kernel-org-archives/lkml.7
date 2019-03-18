@@ -2,112 +2,102 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A41DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D12AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3AC8205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:00:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ELqlztEL"
+	by mail.kernel.org (Postfix) with ESMTP id 0332E20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfCRRAe (ORCPT
+        id S1727847AbfCRRAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:00:34 -0400
-Received: from mail-eopbgr800070.outbound.protection.outlook.com ([40.107.80.70]:28704
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727368AbfCRRAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:00:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QFbFbEYwsQCyxKHZO6PmPfj0v0y7Eg7FCl5WI5qkq2E=;
- b=ELqlztELh2pIkGBSeXrkx32wsSchOeiwkARu3eOV7RKDiug4lnjdB63f3xGiE4s8MlcG5YZoYYNvuV6v8pN0rgRJDy8hNNYv94dTI78ikAIZ9zC+fXQ41rnVtiTEodsre1OH+G0JWUQnTJjntgpWur5NjZ7WbG6zlbNgu/4Ly48=
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com (20.179.92.82) by
- BYAPR12MB2918.namprd12.prod.outlook.com (20.179.91.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Mon, 18 Mar 2019 17:00:25 +0000
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::e073:d670:f97c:3eb8]) by BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::e073:d670:f97c:3eb8%6]) with mapi id 15.20.1709.015; Mon, 18 Mar 2019
- 17:00:25 +0000
-From:   "Kuehling, Felix" <Felix.Kuehling@amd.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jerome Glisse <jglisse@redhat.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Yang, Philip" <Philip.Yang@amd.com>
-Subject: Re: [PATCH 00/10] HMM updates for 5.1
-Thread-Topic: [PATCH 00/10] HMM updates for 5.1
-Thread-Index: AQHUt/NUFcw+4aF5pk+3POENbm0onKYJB9YAgAD2swCAB+mkgA==
-Date:   Mon, 18 Mar 2019 17:00:25 +0000
-Message-ID: <37e4baa7-715f-d231-c56a-b525be92daa6@amd.com>
-References: <20190129165428.3931-1-jglisse@redhat.com>
- <20190313012706.GB3402@redhat.com>
- <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
-In-Reply-To: <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [212.121.133.36]
-user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
-x-clientproxiedby: LO2P265CA0175.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a::19) To BYAPR12MB3176.namprd12.prod.outlook.com
- (2603:10b6:a03:133::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Felix.Kuehling@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 47701b2d-e9d4-4c0e-2ab4-08d6abc3371c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:BYAPR12MB2918;
-x-ms-traffictypediagnostic: BYAPR12MB2918:
-x-microsoft-antispam-prvs: <BYAPR12MB2918DF603A85DD306F429F9192470@BYAPR12MB2918.namprd12.prod.outlook.com>
-x-forefront-prvs: 098076C36C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(366004)(396003)(39860400002)(189003)(199004)(106356001)(31686004)(14454004)(305945005)(53546011)(8676002)(4326008)(105586002)(11346002)(72206003)(54906003)(58126008)(110136005)(102836004)(55236004)(81166006)(2616005)(6506007)(386003)(26005)(478600001)(81156014)(186003)(25786009)(486006)(99286004)(7736002)(476003)(4744005)(446003)(229853002)(53936002)(65826007)(6436002)(71200400001)(71190400001)(97736004)(6246003)(6512007)(68736007)(6486002)(36756003)(8936002)(31696002)(2906002)(76176011)(3846002)(52116002)(66066001)(65806001)(65956001)(5660300002)(64126003)(316002)(86362001)(256004)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2918;H:BYAPR12MB3176.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IqUQ7BBOliPYdkrhimmujiO3hOP6DkLE8rlfzbSqdh5gtix4I9fm49xF8dO7tKfI1wCAJm8IVoogIO8oZkDGkh7ImF3QGAZq7qT9uWahNQTSJWZA2P8TJt6F9+urckK0sff8tuI4KGtpbYtv4WBe8pfWxfJGRhkpaexVUmi0MZ+jHVZulwhe+VXV0CkaUj8nRuD7xJPA2vmzomGHOaXOOpm2GNdU+zrqIXCruQBzNXp27Yvl+u4a+Id+p9iVCUZYlown1VL9lC5qHEwCpPkV7J6pW7r+X3HuFDLz7MBJALIcqYv48vNV03eHYmjcNYhZ15fe/JwsgsMgKovDbv4Q4/f9ufHU3SrdoR1POp68heQczCf82jibVH/uCi7L8ML62jdeLmkYicZ9AFfpdOOgL0stLqhrr0wjZVZb/qzx0Tk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8B857C01D75B584580973B095D0FD089@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 18 Mar 2019 13:00:37 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37872 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727142AbfCRRAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:00:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B3F01650;
+        Mon, 18 Mar 2019 10:00:35 -0700 (PDT)
+Received: from arrakis.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E7E473F614;
+        Mon, 18 Mar 2019 10:00:33 -0700 (PDT)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, stable@vger.kernel.org,
+        NeilBrown <neilb@suse.com>
+Subject: [PATCH] NFS: Fix nfs4_lock_state refcounting in nfs4_alloc_{lock,unlock}data()
+Date:   Mon, 18 Mar 2019 17:00:28 +0000
+Message-Id: <20190318170028.61423-1-catalin.marinas@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47701b2d-e9d4-4c0e-2ab4-08d6abc3371c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 17:00:25.4251
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2918
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rm9yIGFtZGdwdSBJIGxvb2tlZCBvdmVyIHRoZSBjaGFuZ2VzIGFuZCB0aGV5IGxvb2sgcmVhc29u
-YWJsZSB0byBtZS4gDQpQaGlsaXAgWWFuZyAoQ0NlZCkgYWxyZWFkeSByZWJhc2VkIGFtZGdwdSBv
-biB0b3Agb2YgSmVyb21lJ3MgcGF0Y2hlcyBhbmQgDQppcyBsb29raW5nIGZvcndhcmQgdG8gdXNp
-bmcgdGhlIG5ldyBoZWxwZXJzIGFuZCBzaW1wbGlmeWluZyBvdXIgZHJpdmVyIGNvZGUuDQoNCkZl
-ZWwgZnJlZSB0byBhZGQgbXkgQWNrZWQtYnkgdG8gdGhlIHBhdGNoZXMuDQoNClJlZ2FyZHMsDQog
-wqAgRmVsaXgNCg0KT24gMy8xMy8yMDE5IDEyOjEwIFBNLCBBbmRyZXcgTW9ydG9uIHdyb3RlOg0K
-PiBPbiBUdWUsIDEyIE1hciAyMDE5IDIxOjI3OjA2IC0wNDAwIEplcm9tZSBHbGlzc2UgPGpnbGlz
-c2VAcmVkaGF0LmNvbT4gd3JvdGU6DQo+DQo+PiBBbmRyZXcgeW91IHdpbGwgbm90IGJlIHB1c2hp
-bmcgdGhpcyBwYXRjaHNldCBpbiA1LjEgPw0KPiBJJ2QgbGlrZSB0by4gIEl0IHNvdW5kcyBsaWtl
-IHdlJ3JlIGNvbnZlcmdpbmcgb24gYSBwbGFuLg0KPg0KPiBJdCB3b3VsZCBiZSBnb29kIHRvIGhl
-YXIgbW9yZSBmcm9tIHRoZSBkcml2ZXIgZGV2ZWxvcGVycyB3aG8gd2lsbCBiZQ0KPiBjb25zdW1p
-bmcgdGhlc2UgbmV3IGZlYXR1cmVzIC0gbGlua3MgdG8gcGF0Y2hzZXRzLCByZXZpZXcgZmVlZGJh
-Y2ssDQo+IGV0Yy4gIFdoaWNoIGluZGl2aWR1YWxzIHNob3VsZCB3ZSBiZSBhc2tpbmc/ICBGZWxp
-eCwgQ2hyaXN0aWFuIGFuZA0KPiBKYXNvbiwgcGVyaGFwcz8NCj4NCg==
+Commit 7b587e1a5a6c ("NFS: use locks_copy_lock() to copy locks.")
+changed the lock copying from memcpy() to the dedicated
+locks_copy_lock() function. The latter correctly increments the
+nfs4_lock_state.ls_count via nfs4_fl_copy_lock(), however, this refcount
+has already been incremented in the nfs4_alloc_{lock,unlock}data().
+Kmemleak subsequently reports an unreferenced nfs4_lock_state object as
+below (arm64 platform):
+
+unreferenced object 0xffff8000fce0b000 (size 256):
+  comm "systemd-sysuser", pid 1608, jiffies 4294892825 (age 32.348s)
+  hex dump (first 32 bytes):
+    20 57 4c fb 00 80 ff ff 20 57 4c fb 00 80 ff ff   WL..... WL.....
+    00 57 4c fb 00 80 ff ff 01 00 00 00 00 00 00 00  .WL.............
+  backtrace:
+    [<000000000d15010d>] kmem_cache_alloc+0x178/0x208
+    [<00000000d7c1d264>] nfs4_set_lock_state+0x124/0x1f0
+    [<000000009c867628>] nfs4_proc_lock+0x90/0x478
+    [<000000001686bd74>] do_setlk+0x64/0xe8
+    [<00000000e01500d4>] nfs_lock+0xe8/0x1f0
+    [<000000004f387d8d>] vfs_lock_file+0x18/0x40
+    [<00000000656ab79b>] do_lock_file_wait+0x68/0xf8
+    [<00000000f17c4a4b>] fcntl_setlk+0x224/0x280
+    [<0000000052a242c6>] do_fcntl+0x418/0x730
+    [<000000004f47291a>] __arm64_sys_fcntl+0x84/0xd0
+    [<00000000d6856e01>] el0_svc_common+0x80/0xf0
+    [<000000009c4bd1df>] el0_svc_handler+0x2c/0x80
+    [<00000000b1a0d479>] el0_svc+0x8/0xc
+    [<0000000056c62a0f>] 0xffffffffffffffff
+
+This patch removes the original refcount_inc(&lsp->ls_count) that was
+paired with the memcpy() lock copying.
+
+Fixes: 7b587e1a5a6c ("NFS: use locks_copy_lock() to copy locks.")
+Cc: <stable@vger.kernel.org> # 5.0.x-
+Cc: NeilBrown <neilb@suse.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+ fs/nfs/nfs4proc.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 4dbb0ee23432..6d2812a39287 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6301,7 +6301,6 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
+ 	p->arg.seqid = seqid;
+ 	p->res.seqid = seqid;
+ 	p->lsp = lsp;
+-	refcount_inc(&lsp->ls_count);
+ 	/* Ensure we don't close file until we're done freeing locks! */
+ 	p->ctx = get_nfs_open_context(ctx);
+ 	p->l_ctx = nfs_get_lock_context(ctx);
+@@ -6526,7 +6525,6 @@ static struct nfs4_lockdata *nfs4_alloc_lockdata(struct file_lock *fl,
+ 	p->res.lock_seqid = p->arg.lock_seqid;
+ 	p->lsp = lsp;
+ 	p->server = server;
+-	refcount_inc(&lsp->ls_count);
+ 	p->ctx = get_nfs_open_context(ctx);
+ 	locks_init_lock(&p->fl);
+ 	locks_copy_lock(&p->fl, fl);
