@@ -2,88 +2,252 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0941FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396C7C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB882063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:25:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dATTkLqy"
+	by mail.kernel.org (Postfix) with ESMTP id ED6082087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552901178;
+	bh=9euArBOs1dwKba+eWL1qPdffxaaSGiqjAwoX8zoe550=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VaMAu3fuShdjOswJKxEO+AyAYW+UNuV/UZaH2VHoHVjGjgEgvYsN+krRD//aZAmmp
+	 fP9HdAOwIctCxqjJ22fkmNdp35Mm35VepthK1H2MMv+jzqoHfmeMA7XbXNMsVDGgL9
+	 aCuIVMJdGrJOd72E3a42u++4Sk6zRrYyRffsZCMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfCRJZu (ORCPT
+        id S1727418AbfCRJ0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:25:50 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44612 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbfCRJZu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:25:50 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a3so10842542pff.11;
-        Mon, 18 Mar 2019 02:25:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pa4DPAFOWnQ6zUYOSkNYharZDJQ2FJza0ph8uXudwuE=;
-        b=dATTkLqyv+NrAwgrUWnEOgW/B/2iztIxXgUBPHmFMFd6QaYTPW1cq43RDJV/oLTjQ3
-         5nDzdaExS/HKiRAXbclgSykNFUSQKXaP826W+Y5zwMzkuLL1GaeEUGeX6lF4YOK9c2s3
-         hD/I1zYi9zHvhqsvo3Ax7PjMzPzWV/WAlpnLoQkfQHDuU3J6Qs6tgkPQkVmfj7JYG3xy
-         dI0qGcz/6Ku6HBBDjPKSklSl5d0mGw+phMnpVsi97+FAGiS1KGdINeE8DdLVvJ0digI0
-         hSVi8bpYPJpUikA5dDnnbpthDq+pAU0C7lkvhWZZN12zsGMlViorJNF1AmtGsIBYHvzL
-         M6KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pa4DPAFOWnQ6zUYOSkNYharZDJQ2FJza0ph8uXudwuE=;
-        b=oPDz4BwZiuKv6Nxz7LMd0vMvU2aoQCxx+3YPPBcCZeaqqKKPxNA6jkFjHBDarBwQfn
-         ivDTqRh56eMWHxqRTDNTjgTY6x9aHCG4ylYSnnYh4dMV1TgZQIDuvMFWw3jQ2xCeWAhl
-         kVRiICp8Z1QF0HHr8xtPzm1Me/mxFOzIutjfXrrn75aD/7HLX8xeft9Li8UpZFx7qg10
-         53R2aW8reCjrTT1XNVQWLgFQ+qhn/eOH8/yYHJpHc3pxb2e3iuLmOZeZnB95wINrzBHq
-         qLV+z5lbJ+iuVpzPboOWN6g9iHCe2IEVxsx3KzDsd6RiPCsF/kgB0SeIelAuGHktwQ0R
-         A1oQ==
-X-Gm-Message-State: APjAAAWtj7YEP0GX5t58yuN4w31pJ4zZfca/QzKPar1tHZmELB5c+mg/
-        EawHS2dz975aeu7lsH8YSar0C6COW7sjOtWqT9pGbCYN
-X-Google-Smtp-Source: APXvYqwZo/4GcBP/jpQtgqsrtI5qxYE0w18rO6SFBjtJkOLg624GhHhuIBWBr9Hgj+skT9BM0Q9+5EKb5U2l/gyGPWw=
-X-Received: by 2002:aa7:914f:: with SMTP id 15mr11532527pfi.49.1552901149220;
- Mon, 18 Mar 2019 02:25:49 -0700 (PDT)
+        Mon, 18 Mar 2019 05:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726449AbfCRJ0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:26:16 -0400
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E3082063F;
+        Mon, 18 Mar 2019 09:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552901174;
+        bh=9euArBOs1dwKba+eWL1qPdffxaaSGiqjAwoX8zoe550=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ets8UhkveKwsooQ1VW2AmS9TfB8I/XuqS5x3sjE2u83gHQtUO+vuGPK/dkmlalilI
+         CoWA2opuXOWS6r9pKfc156JjXCpV0mXMigvMVtI7x3eQCFgqd1JB1moOcOBMtATT0y
+         hM+iCDw6HJ9jArU4VidJZBcE9a3FHCx1PF539v+Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Zhang Yu <zhangyu31@baidu.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 01/43] connector: fix unsafe usage of ->real_parent
+Date:   Mon, 18 Mar 2019 10:23:53 +0100
+Message-Id: <20190318083715.919807057@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
+References: <20190318083715.877441740@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
- <20190315165800.5058-8-heikki.krogerus@linux.intel.com> <CAHp75VfMyyPEPg8VkmrbF6CeL0_+pPw+KrT5e+aGLsx0rwm=5g@mail.gmail.com>
-In-Reply-To: <CAHp75VfMyyPEPg8VkmrbF6CeL0_+pPw+KrT5e+aGLsx0rwm=5g@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 Mar 2019 11:25:38 +0200
-Message-ID: <CAHp75Vfb97GtfqCmim7L1K_oJ4JvpNVuGvc4LYwwV5Qz8X7-6A@mail.gmail.com>
-Subject: Re: [PATCH 07/12] platform/x86: intel_cht_int33fe: Provide software
- node for all components
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 10:36 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Mar 15, 2019 at 6:58 PM Heikki Krogerus
-> <heikki.krogerus@linux.intel.com> wrote:
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-> I don't see any problems with code (*), though I hope Hans will have
-> chance to test this.
+------------------
 
-> (*) Means all patches touching PDx86 in this series
+From: Li RongQing <lirongqing@baidu.com>
 
-To be clear, I implied here Rb or Ab tag on your choice.
+[ Upstream commit 6d2b0f02f5a07a4bf02e4cbc90d7eaa85cac2986 ]
 
--- 
-With Best Regards,
-Andy Shevchenko
+proc_exit_connector() uses ->real_parent lockless. This is not
+safe that its parent can go away at any moment, so use RCU to
+protect it, and ensure that this task is not released.
+
+[  747.624551] ==================================================================
+[  747.632946] BUG: KASAN: use-after-free in proc_exit_connector+0x1f7/0x310
+[  747.640686] Read of size 4 at addr ffff88a0276988e0 by task sshd/2882
+[  747.648032]
+[  747.649804] CPU: 11 PID: 2882 Comm: sshd Tainted: G            E     4.19.26-rc2 #11
+[  747.658629] Hardware name: IBM x3550M4 -[7914OFV]-/00AM544, BIOS -[D7E142BUS-1.71]- 07/31/2014
+[  747.668419] Call Trace:
+[  747.671269]  dump_stack+0xf0/0x19b
+[  747.675186]  ? show_regs_print_info+0x5/0x5
+[  747.679988]  ? kmsg_dump_rewind_nolock+0x59/0x59
+[  747.685302]  print_address_description+0x6a/0x270
+[  747.691162]  kasan_report+0x258/0x380
+[  747.695835]  ? proc_exit_connector+0x1f7/0x310
+[  747.701402]  proc_exit_connector+0x1f7/0x310
+[  747.706767]  ? proc_coredump_connector+0x2d0/0x2d0
+[  747.712715]  ? _raw_write_unlock_irq+0x29/0x50
+[  747.718270]  ? _raw_write_unlock_irq+0x29/0x50
+[  747.723820]  ? ___preempt_schedule+0x16/0x18
+[  747.729193]  ? ___preempt_schedule+0x16/0x18
+[  747.734574]  do_exit+0xa11/0x14f0
+[  747.738880]  ? mm_update_next_owner+0x590/0x590
+[  747.744525]  ? debug_show_all_locks+0x3c0/0x3c0
+[  747.761448]  ? ktime_get_coarse_real_ts64+0xeb/0x1c0
+[  747.767589]  ? lockdep_hardirqs_on+0x1a6/0x290
+[  747.773154]  ? check_chain_key+0x139/0x1f0
+[  747.778345]  ? check_flags.part.35+0x240/0x240
+[  747.783908]  ? __lock_acquire+0x2300/0x2300
+[  747.789171]  ? _raw_spin_unlock_irqrestore+0x59/0x70
+[  747.795316]  ? _raw_spin_unlock_irqrestore+0x59/0x70
+[  747.801457]  ? do_raw_spin_unlock+0x10f/0x1e0
+[  747.806914]  ? do_raw_spin_trylock+0x120/0x120
+[  747.812481]  ? preempt_count_sub+0x14/0xc0
+[  747.817645]  ? _raw_spin_unlock+0x2e/0x50
+[  747.822708]  ? __handle_mm_fault+0x12db/0x1fa0
+[  747.828367]  ? __pmd_alloc+0x2d0/0x2d0
+[  747.833143]  ? check_noncircular+0x50/0x50
+[  747.838309]  ? match_held_lock+0x7f/0x340
+[  747.843380]  ? check_noncircular+0x50/0x50
+[  747.848561]  ? handle_mm_fault+0x21a/0x5f0
+[  747.853730]  ? check_flags.part.35+0x240/0x240
+[  747.859290]  ? check_chain_key+0x139/0x1f0
+[  747.864474]  ? __do_page_fault+0x40f/0x760
+[  747.869655]  ? __audit_syscall_entry+0x4b/0x1f0
+[  747.875319]  ? syscall_trace_enter+0x1d5/0x7b0
+[  747.880877]  ? trace_raw_output_preemptirq_template+0x90/0x90
+[  747.887895]  ? trace_raw_output_sys_exit+0x80/0x80
+[  747.893860]  ? up_read+0x3b/0x90
+[  747.898142]  ? stop_critical_timings+0x260/0x260
+[  747.903909]  do_group_exit+0xe0/0x1c0
+[  747.908591]  ? __x64_sys_exit+0x30/0x30
+[  747.913460]  ? trace_raw_output_preemptirq_template+0x90/0x90
+[  747.920485]  ? tracer_hardirqs_on+0x270/0x270
+[  747.925956]  __x64_sys_exit_group+0x28/0x30
+[  747.931214]  do_syscall_64+0x117/0x400
+[  747.935988]  ? syscall_return_slowpath+0x2f0/0x2f0
+[  747.941931]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[  747.947788]  ? trace_hardirqs_on_caller+0x1d0/0x1d0
+[  747.953838]  ? lockdep_sys_exit+0x16/0x8e
+[  747.958915]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[  747.964784]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  747.971021] RIP: 0033:0x7f572f154c68
+[  747.975606] Code: Bad RIP value.
+[  747.979791] RSP: 002b:00007ffed2dfaa58 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+[  747.989324] RAX: ffffffffffffffda RBX: 00007f572f431840 RCX: 00007f572f154c68
+[  747.997910] RDX: 0000000000000001 RSI: 000000000000003c RDI: 0000000000000001
+[  748.006495] RBP: 0000000000000001 R08: 00000000000000e7 R09: fffffffffffffee0
+[  748.015079] R10: 00007f572f4387e8 R11: 0000000000000246 R12: 00007f572f431840
+[  748.023664] R13: 000055a7f90f2c50 R14: 000055a7f96e2310 R15: 000055a7f96e2310
+[  748.032287]
+[  748.034509] Allocated by task 2300:
+[  748.038982]  kasan_kmalloc+0xa0/0xd0
+[  748.043562]  kmem_cache_alloc_node+0xf5/0x2e0
+[  748.049018]  copy_process+0x1781/0x4790
+[  748.053884]  _do_fork+0x166/0x9a0
+[  748.058163]  do_syscall_64+0x117/0x400
+[  748.062943]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  748.069180]
+[  748.071405] Freed by task 15395:
+[  748.075591]  __kasan_slab_free+0x130/0x180
+[  748.080752]  kmem_cache_free+0xc2/0x310
+[  748.085619]  free_task+0xea/0x130
+[  748.089901]  __put_task_struct+0x177/0x230
+[  748.095063]  finish_task_switch+0x51b/0x5d0
+[  748.100315]  __schedule+0x506/0xfa0
+[  748.104791]  schedule+0xca/0x260
+[  748.108978]  futex_wait_queue_me+0x27e/0x420
+[  748.114333]  futex_wait+0x251/0x550
+[  748.118814]  do_futex+0x75b/0xf80
+[  748.123097]  __x64_sys_futex+0x231/0x2a0
+[  748.128065]  do_syscall_64+0x117/0x400
+[  748.132835]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  748.139066]
+[  748.141289] The buggy address belongs to the object at ffff88a027698000
+[  748.141289]  which belongs to the cache task_struct of size 12160
+[  748.156589] The buggy address is located 2272 bytes inside of
+[  748.156589]  12160-byte region [ffff88a027698000, ffff88a02769af80)
+[  748.171114] The buggy address belongs to the page:
+[  748.177055] page:ffffea00809da600 count:1 mapcount:0 mapping:ffff888107d01e00 index:0x0 compound_mapcount: 0
+[  748.189136] flags: 0x57ffffc0008100(slab|head)
+[  748.194688] raw: 0057ffffc0008100 ffffea00809a3200 0000000300000003 ffff888107d01e00
+[  748.204424] raw: 0000000000000000 0000000000020002 00000001ffffffff 0000000000000000
+[  748.214146] page dumped because: kasan: bad access detected
+[  748.220976]
+[  748.223197] Memory state around the buggy address:
+[  748.229128]  ffff88a027698780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.238271]  ffff88a027698800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.247414] >ffff88a027698880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.256564]                                                        ^
+[  748.264267]  ffff88a027698900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.273493]  ffff88a027698980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  748.282630] ==================================================================
+
+Fixes: b086ff87251b4a4 ("connector: add parent pid and tgid to coredump and exit events")
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Acked-by: Evgeniy Polyakov <zbr@ioremap.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/connector/cn_proc.c |   22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
+
+--- a/drivers/connector/cn_proc.c
++++ b/drivers/connector/cn_proc.c
+@@ -250,6 +250,7 @@ void proc_coredump_connector(struct task
+ {
+ 	struct cn_msg *msg;
+ 	struct proc_event *ev;
++	struct task_struct *parent;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+@@ -262,8 +263,14 @@ void proc_coredump_connector(struct task
+ 	ev->what = PROC_EVENT_COREDUMP;
+ 	ev->event_data.coredump.process_pid = task->pid;
+ 	ev->event_data.coredump.process_tgid = task->tgid;
+-	ev->event_data.coredump.parent_pid = task->real_parent->pid;
+-	ev->event_data.coredump.parent_tgid = task->real_parent->tgid;
++
++	rcu_read_lock();
++	if (pid_alive(task)) {
++		parent = rcu_dereference(task->real_parent);
++		ev->event_data.coredump.parent_pid = parent->pid;
++		ev->event_data.coredump.parent_tgid = parent->tgid;
++	}
++	rcu_read_unlock();
+ 
+ 	memcpy(&msg->id, &cn_proc_event_id, sizeof(msg->id));
+ 	msg->ack = 0; /* not used */
+@@ -276,6 +283,7 @@ void proc_exit_connector(struct task_str
+ {
+ 	struct cn_msg *msg;
+ 	struct proc_event *ev;
++	struct task_struct *parent;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+@@ -290,8 +298,14 @@ void proc_exit_connector(struct task_str
+ 	ev->event_data.exit.process_tgid = task->tgid;
+ 	ev->event_data.exit.exit_code = task->exit_code;
+ 	ev->event_data.exit.exit_signal = task->exit_signal;
+-	ev->event_data.exit.parent_pid = task->real_parent->pid;
+-	ev->event_data.exit.parent_tgid = task->real_parent->tgid;
++
++	rcu_read_lock();
++	if (pid_alive(task)) {
++		parent = rcu_dereference(task->real_parent);
++		ev->event_data.exit.parent_pid = parent->pid;
++		ev->event_data.exit.parent_tgid = parent->tgid;
++	}
++	rcu_read_unlock();
+ 
+ 	memcpy(&msg->id, &cn_proc_event_id, sizeof(msg->id));
+ 	msg->ack = 0; /* not used */
+
+
