@@ -2,100 +2,106 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E856AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB94BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30B720863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A384520850
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfCRO63 (ORCPT
+        id S1727844AbfCRO7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:58:29 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:54122 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726731AbfCRO63 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:58:29 -0400
-Received: (qmail 4435 invoked by uid 2102); 18 Mar 2019 10:58:28 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 18 Mar 2019 10:58:28 -0400
-Date:   Mon, 18 Mar 2019 10:58:28 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] usb: hub: use non-removable-ports DT property
-In-Reply-To: <yw1xlg1c1c3i.fsf@mansr.com>
-Message-ID: <Pine.LNX.4.44L0.1903181055310.1533-100000@iolanthe.rowland.org>
+        Mon, 18 Mar 2019 10:59:18 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35844 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726731AbfCRO7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 10:59:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01F531650;
+        Mon, 18 Mar 2019 07:59:17 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DE063F59C;
+        Mon, 18 Mar 2019 07:59:13 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 14:59:11 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2 4/6] powerpc: use common ptrace_syscall_enter hook to
+ handle _TIF_SYSCALL_EMU
+Message-ID: <20190318145911.GC18196@e107155-lin>
+References: <20190318104925.16600-1-sudeep.holla@arm.com>
+ <20190318104925.16600-5-sudeep.holla@arm.com>
+ <20190318142618.GA27941@altlinux.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318142618.GA27941@altlinux.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019, [iso-8859-1] Måns Rullgård wrote:
-
-> Mans Rullgard <mans@mansr.com> writes:
-> 
-> > Mark any ports listed in the non-removable-ports DT property as
-> > hardwired. This is useful for boards with built-in USB devices
-> > that cannot be (or have not been) marked as fixed in hardware.
-> >
-> > Signed-off-by: Mans Rullgard <mans@mansr.com>
+On Mon, Mar 18, 2019 at 05:26:18PM +0300, Dmitry V. Levin wrote:
+> On Mon, Mar 18, 2019 at 10:49:23AM +0000, Sudeep Holla wrote:
+> > Now that we have a new hook ptrace_syscall_enter that can be called from
+> > syscall entry code and it handles PTRACE_SYSEMU in generic code, we
+> > can do some cleanup using the same in do_syscall_trace_enter.
+> > 
+> > Cc: Oleg Nesterov <oleg@redhat.com>
+> > Cc: Paul Mackerras <paulus@samba.org>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > > ---
-> >  drivers/usb/core/hub.c | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> 
-> Any comments on these patches?
-> 
-> > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> > index 3adff4da2ee1..44ac49a30be1 100644
-> > --- a/drivers/usb/core/hub.c
-> > +++ b/drivers/usb/core/hub.c
-> > @@ -1328,6 +1328,9 @@ static int hub_configure(struct usb_hub *hub,
-> >  	unsigned unit_load;
-> >  	unsigned full_load;
-> >  	unsigned maxchild;
-> > +	struct property *prop;
-> > +	const __be32 *cur;
-> > +	u32 val;
-> >
-> >  	hub->buffer = kmalloc(sizeof(*hub->buffer), GFP_KERNEL);
-> >  	if (!hub->buffer) {
-> > @@ -1629,6 +1632,17 @@ static int hub_configure(struct usb_hub *hub,
-> >  		}
-> >  	}
-> >
-> > +	of_property_for_each_u32(hub_dev->of_node, "non-removable-ports",
-> > +				 prop, cur, val) {
-> > +		if (val < 1 || val > hdev->maxchild) {
-> > +			dev_warn(hub_dev, "port number %u out of range\n", val);
-> > +			continue;
-> > +		}
-> > +
-> > +		hub->ports[val - 1]->connect_type =
-> > +			USB_PORT_CONNECT_TYPE_HARD_WIRED;
+> >  arch/powerpc/kernel/ptrace.c | 48 ++++++++++++++++--------------------
+> >  1 file changed, 21 insertions(+), 27 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
+> > index 2e2183b800a8..05579a5dcb12 100644
+> > --- a/arch/powerpc/kernel/ptrace.c
+> > +++ b/arch/powerpc/kernel/ptrace.c
+> > @@ -3278,35 +3278,29 @@ long do_syscall_trace_enter(struct pt_regs *regs)
+> >  
+> >  	user_exit();
+> >  
+> > -	flags = READ_ONCE(current_thread_info()->flags) &
+> > -		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
+> > -
+> > -	if (flags) {
+> > -		int rc = tracehook_report_syscall_entry(regs);
+> > +	if (unlikely(ptrace_syscall_enter(regs))) {
+> > +		/*
+> > +		 * A nonzero return code from tracehook_report_syscall_entry()
+> > +		 * tells us to prevent the syscall execution, but we are not
+> > +		 * going to execute it anyway.
+> > +		 *
+> > +		 * Returning -1 will skip the syscall execution. We want to
+> > +		 * avoid clobbering any registers, so we don't goto the skip
+> > +		 * label below.
+> > +		 */
+> > +		return -1;
 > > +	}
-> > +
-> >  	usb_hub_adjust_deviceremovable(hdev, hub->descriptor);
-> >
-> >  	hub_activate(hub, HUB_INIT);
-> > -- 
-> > 2.20.1
+> 
+> This comment is out of sync with the changed code.
 
-This seems like a reasonable thing to do.  However, you should improve
-the warning message; people who encounter it will have no idea what it
-refers to.
+Still applicable indirectly as ptrace_syscall_enter just executes
+tracehook_report_syscall_entry, but I agree needs rewording, will update.
 
-Alan Stern
-
+--
+Regards,
+Sudeep
