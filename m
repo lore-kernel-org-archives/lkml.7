@@ -2,344 +2,115 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B133AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A345DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5E22075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731DD2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="j7DmoFmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfCRJxU (ORCPT
+        id S1727404AbfCRJxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:53:20 -0400
-Received: from mga05.intel.com ([192.55.52.43]:18129 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbfCRJxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Mar 2019 05:53:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 02:53:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,493,1544515200"; 
-   d="scan'208";a="127898182"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2019 02:53:17 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 6D58817F; Mon, 18 Mar 2019 11:53:16 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] mfd: Add support for Merrifield Basin Cove PMIC
-Date:   Mon, 18 Mar 2019 12:53:16 +0300
-Message-Id: <20190318095316.69278-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+Received: from mail-eopbgr730059.outbound.protection.outlook.com ([40.107.73.59]:30368
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726271AbfCRJxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:53:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector1-synaptics-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EgXW6R6ZYto+zjrZzvVxw87aXRyQvwcGFg09aq9EKkQ=;
+ b=j7DmoFmRhoqK5+25s/CWWuct5/jt5sc2JxAPmRnDOEliMemmxUl5maB/BHefc+iABi6Uuama09/AWuLTBNnMVV/iTJEtQ1nNsfXCXZFO2oLKdKh9OIgmx9C1+D6vmAWe3SLyL+SvGYUk1jD1VE0tan7LLE8isJT72yXnKwrzIR8=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3928.namprd03.prod.outlook.com (20.177.124.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Mon, 18 Mar 2019 09:53:10 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::1a8:1bc4:174b:472b]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::1a8:1bc4:174b:472b%2]) with mapi id 15.20.1709.015; Mon, 18 Mar 2019
+ 09:53:10 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v3 0/5] PCI: dwc: Support remove
+Thread-Topic: [PATCH v3 0/5] PCI: dwc: Support remove
+Thread-Index: AQHU3XBkYEd/0BSihUOeRk7wuVv8zA==
+Date:   Mon, 18 Mar 2019 09:53:09 +0000
+Message-ID: <20190318174415.74fd25a5@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [199.33.119.15]
+x-clientproxiedby: TY2PR01CA0057.jpnprd01.prod.outlook.com
+ (2603:1096:404:10a::21) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2b4c5f87-78af-468f-aeff-08d6ab878732
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR03MB3928;
+x-ms-traffictypediagnostic: BYAPR03MB3928:
+x-microsoft-antispam-prvs: <BYAPR03MB39280900C1D4DD16A42AB4D8ED470@BYAPR03MB3928.namprd03.prod.outlook.com>
+x-forefront-prvs: 098076C36C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(396003)(346002)(136003)(366004)(189003)(199004)(476003)(97736004)(6436002)(3846002)(6116002)(6486002)(71200400001)(71190400001)(256004)(486006)(26005)(8676002)(5660300002)(68736007)(7736002)(86362001)(102836004)(4326008)(316002)(110136005)(2906002)(99286004)(54906003)(105586002)(25786009)(6506007)(386003)(52116002)(81166006)(81156014)(186003)(106356001)(14454004)(53936002)(6512007)(9686003)(50226002)(72206003)(66066001)(8936002)(478600001)(4744005)(1076003)(305945005)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3928;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZxduKIL7/i+JQYdisj9XXGjLpcM+de+g3pVQ0Ai/+B62iPCoShLgdOn06FI5bxRbDkz1GnRgsREQmuWCVPrW0e9d8kDbszVpSVbzDom8QK1k8JdR9Sic4BDSldxnxbNxcfAtcIY3fujpzrQkZOsF8fDWZdDPUmc70LDzY3D0gG7tb5bBnDSQb0aats75oE2gJBq0HBgGi5MRrrzfV+1vrVEmIbhNCmTd+thRtfSDfcoq9+RwwyYVk2/yIxclq4eWLVx4w2YuUDIHRmiCetdcvmHoelUXAzjkimLCZjgiq+As6yBWpBphmHTCd/Tcg+WgfZ19I8l0BrmKQQgHONDA8Sv1kJfpOy/gQignxOyZgU72Vym/h0AW0q06px52Xgi1mxZ/QN23LqBRPnbTxkHSs54OsKh9+loYutma0HeFGrE=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9CB828CC152A354AA7DCD91EE7F43EF6@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b4c5f87-78af-468f-aeff-08d6ab878732
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 09:53:09.9065
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3928
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an mfd driver for Intel Merrifield Basin Cove PMIC.
+Currently, the PCI dwc host users don't support the remove, but nothing
+prevent us from supporting it. To achieve this goal, we need to ensure
+we can do necessary clean up work.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/mfd/Kconfig                      |  11 ++
- drivers/mfd/Makefile                     |   1 +
- drivers/mfd/intel_soc_pmic_mrfld.c       | 157 +++++++++++++++++++++++
- include/linux/mfd/intel_soc_pmic_mrfld.h |  81 ++++++++++++
- 4 files changed, 250 insertions(+)
- create mode 100644 drivers/mfd/intel_soc_pmic_mrfld.c
- create mode 100644 include/linux/mfd/intel_soc_pmic_mrfld.h
+Changes since v2:
+  - address all Gustavo's comments
+  - add Gustavo's ACK to patch1, patch3, patch4
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 0ce2d8dfc5f1..2adf9d393029 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -572,6 +572,17 @@ config INTEL_SOC_PMIC_CHTDC_TI
- 	  Select this option for supporting Dollar Cove (TI version) PMIC
- 	  device that is found on some Intel Cherry Trail systems.
- 
-+config INTEL_SOC_PMIC_MRFLD
-+	tristate "Support for Intel Merrifield Basin Cove PMIC"
-+	depends on GPIOLIB
-+	depends on ACPI
-+	depends on INTEL_SCU_IPC
-+	select MFD_CORE
-+	select REGMAP_IRQ
-+	help
-+	  Select this option for supporting Basin Cove PMIC device
-+	  that is found on Intel Merrifield systems.
-+
- config MFD_INTEL_LPSS
- 	tristate
- 	select COMMON_CLK
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index b4569ed7f3f3..1b746bd01ac5 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -234,6 +234,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
- obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
- obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
- obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
-+obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
- obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
- 
- obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
-new file mode 100644
-index 000000000000..bbee89c0c25b
---- /dev/null
-+++ b/drivers/mfd/intel_soc_pmic_mrfld.c
-@@ -0,0 +1,157 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device access for Basin Cove PMIC
-+ *
-+ * Copyright (c) 2018, Intel Corporation.
-+ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/intel_soc_pmic.h>
-+#include <linux/mfd/intel_soc_pmic_mrfld.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <asm/intel_scu_ipc.h>
-+
-+/*
-+ * Level 2 IRQs
-+ *
-+ * Firmware on the systems with Basin Cove PMIC services Level 1 IRQs
-+ * without an assistance. Thus, each of the Level 1 IRQ is represented
-+ * as a separate RTE in IOAPIC.
-+ */
-+static struct resource irq_level2_resources[] = {
-+	DEFINE_RES_IRQ(0), /* power button */
-+	DEFINE_RES_IRQ(0), /* TMU */
-+	DEFINE_RES_IRQ(0), /* thermal */
-+	DEFINE_RES_IRQ(0), /* BCU */
-+	DEFINE_RES_IRQ(0), /* ADC */
-+	DEFINE_RES_IRQ(0), /* charger */
-+	DEFINE_RES_IRQ(0), /* GPIO */
-+};
-+
-+static const struct mfd_cell bcove_dev[] = {
-+	{
-+		.name = "mrfld_bcove_pwrbtn",
-+		.num_resources = 1,
-+		.resources = &irq_level2_resources[0],
-+	}, {
-+		.name = "mrfld_bcove_tmu",
-+		.num_resources = 1,
-+		.resources = &irq_level2_resources[1],
-+	}, {
-+		.name = "mrfld_bcove_thermal",
-+		.num_resources = 1,
-+		.resources = &irq_level2_resources[2],
-+	}, {
-+		.name = "mrfld_bcove_bcu",
-+		.num_resources = 1,
-+		.resources = &irq_level2_resources[3],
-+	}, {
-+		.name = "mrfld_bcove_adc",
-+		.num_resources = 1,
-+		.resources = &irq_level2_resources[4],
-+	}, {
-+		.name = "mrfld_bcove_charger",
-+		.num_resources = 1,
-+		.resources = &irq_level2_resources[5],
-+	}, {
-+		.name = "mrfld_bcove_extcon",
-+		.num_resources = 1,
-+		.resources = &irq_level2_resources[5],
-+	}, {
-+		.name = "mrfld_bcove_gpio",
-+		.num_resources = 1,
-+		.resources = &irq_level2_resources[6],
-+	},
-+	{	.name = "mrfld_bcove_region", },
-+};
-+
-+static int regmap_ipc_byte_reg_read(void *context, unsigned int reg,
-+				    unsigned int *val)
-+{
-+	u8 ipc_out;
-+	int ret;
-+
-+	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
-+	if (ret)
-+		return ret;
-+
-+	*val = ipc_out;
-+	return 0;
-+}
-+
-+static int regmap_ipc_byte_reg_write(void *context, unsigned int reg,
-+				     unsigned int val)
-+{
-+	u8 ipc_in = val;
-+	int ret;
-+
-+	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct regmap_config bcove_regmap_config = {
-+	.reg_bits = 16,
-+	.val_bits = 8,
-+	.max_register = 0xff,
-+	.reg_write = regmap_ipc_byte_reg_write,
-+	.reg_read = regmap_ipc_byte_reg_read,
-+};
-+
-+static int bcove_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_soc_pmic *pmic;
-+	unsigned int i;
-+	int ret;
-+
-+	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
-+	if (!pmic)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, pmic);
-+	pmic->dev = &pdev->dev;
-+
-+	pmic->regmap = devm_regmap_init(dev, NULL, pmic, &bcove_regmap_config);
-+	if (IS_ERR(pmic->regmap))
-+		return PTR_ERR(pmic->regmap);
-+
-+	for (i = 0; i < ARRAY_SIZE(irq_level2_resources); i++) {
-+		ret = platform_get_irq(pdev, i);
-+		if (ret < 0)
-+			return ret;
-+
-+		irq_level2_resources[i].start = ret;
-+		irq_level2_resources[i].end = ret;
-+	}
-+
-+	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-+				    bcove_dev, ARRAY_SIZE(bcove_dev),
-+				    NULL, 0, NULL);
-+}
-+
-+static const struct acpi_device_id bcove_acpi_ids[] = {
-+	{ "INTC100E" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, bcove_acpi_ids);
-+
-+static struct platform_driver bcove_driver = {
-+	.driver = {
-+		.name = "intel_soc_pmic_mrfld",
-+		.acpi_match_table = bcove_acpi_ids,
-+	},
-+	.probe = bcove_probe,
-+};
-+module_platform_driver(bcove_driver);
-+
-+MODULE_DESCRIPTION("IPC driver for Intel SoC Basin Cove PMIC");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/intel_soc_pmic_mrfld.h b/include/linux/mfd/intel_soc_pmic_mrfld.h
-new file mode 100644
-index 000000000000..00feed7c2787
---- /dev/null
-+++ b/include/linux/mfd/intel_soc_pmic_mrfld.h
-@@ -0,0 +1,81 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Header file for Intel Merrifield Basin Cove PMIC
-+ *
-+ * Copyright (C) 2018 Intel Corporation. All rights reserved.
-+ */
-+
-+#ifndef __INTEL_SOC_PMIC_MRFLD_H__
-+#define __INTEL_SOC_PMIC_MRFLD_H__
-+
-+#include <linux/bits.h>
-+
-+#define BCOVE_ID		0x00
-+
-+#define BCOVE_ID_MINREV0	GENMASK(2, 0)
-+#define BCOVE_ID_MAJREV0	GENMASK(5, 3)
-+#define BCOVE_ID_VENDID0	GENMASK(7, 6)
-+
-+#define BCOVE_MINOR(x)		(unsigned int)(((x) & BCOVE_ID_MINREV0) >> 0)
-+#define BCOVE_MAJOR(x)		(unsigned int)(((x) & BCOVE_ID_MAJREV0) >> 3)
-+#define BCOVE_VENDOR(x)		(unsigned int)(((x) & BCOVE_ID_VENDID0) >> 6)
-+
-+#define BCOVE_IRQLVL1		0x01
-+
-+#define BCOVE_PBIRQ		0x02
-+#define BCOVE_TMUIRQ		0x03
-+#define BCOVE_THRMIRQ		0x04
-+#define BCOVE_BCUIRQ		0x05
-+#define BCOVE_ADCIRQ		0x06
-+#define BCOVE_CHGRIRQ0		0x07
-+#define BCOVE_CHGRIRQ1		0x08
-+#define BCOVE_GPIOIRQ		0x09
-+#define BCOVE_CRITIRQ		0x0B
-+
-+#define BCOVE_MIRQLVL1		0x0C
-+
-+#define BCOVE_MPBIRQ		0x0D
-+#define BCOVE_MTMUIRQ		0x0E
-+#define BCOVE_MTHRMIRQ		0x0F
-+#define BCOVE_MBCUIRQ		0x10
-+#define BCOVE_MADCIRQ		0x11
-+#define BCOVE_MCHGRIRQ0		0x12
-+#define BCOVE_MCHGRIRQ1		0x13
-+#define BCOVE_MGPIOIRQ		0x14
-+#define BCOVE_MCRITIRQ		0x16
-+
-+#define BCOVE_SCHGRIRQ0		0x4E
-+#define BCOVE_SCHGRIRQ1		0x4F
-+
-+/* Level 1 IRQs */
-+#define BCOVE_LVL1_PWRBTN	BIT(0)	/* power button */
-+#define BCOVE_LVL1_TMU		BIT(1)	/* time management unit */
-+#define BCOVE_LVL1_THRM		BIT(2)	/* thermal */
-+#define BCOVE_LVL1_BCU		BIT(3)	/* burst control unit */
-+#define BCOVE_LVL1_ADC		BIT(4)	/* ADC */
-+#define BCOVE_LVL1_CHGR		BIT(5)	/* charger */
-+#define BCOVE_LVL1_GPIO		BIT(6)	/* GPIO */
-+#define BCOVE_LVL1_CRIT		BIT(7)	/* critical event */
-+
-+/* Level 2 IRQs: power button */
-+#define BCOVE_PBIRQ_PBTN	BIT(0)
-+#define BCOVE_PBIRQ_UBTN	BIT(1)
-+
-+/* Level 2 IRQs: ADC */
-+#define BCOVE_ADCIRQ_BATTEMP	BIT(2)
-+#define BCOVE_ADCIRQ_SYSTEMP	BIT(3)
-+#define BCOVE_ADCIRQ_BATTID	BIT(4)
-+#define BCOVE_ADCIRQ_VIBATT	BIT(5)
-+#define BCOVE_ADCIRQ_CCTICK	BIT(7)
-+
-+/* Level 2 IRQs: charger */
-+#define BCOVE_CHGRIRQ_BAT0ALRT	BIT(4)
-+#define BCOVE_CHGRIRQ_BAT1ALRT	BIT(5)
-+#define BCOVE_CHGRIRQ_BATCRIT	BIT(6)
-+
-+#define BCOVE_CHGRIRQ_VBUSDET	BIT(0)
-+#define BCOVE_CHGRIRQ_DCDET	BIT(1)
-+#define BCOVE_CHGRIRQ_BATTDET	BIT(2)
-+#define BCOVE_CHGRIRQ_USBIDDET	BIT(3)
-+
-+#endif	/* __INTEL_SOC_PMIC_MRFLD_H__ */
--- 
+Changes since v1:
+  - address Bjorn's comments, I.E Capitalize, s/irq/IRQ/, s/msi/MSI/
+
+Jisheng Zhang (5):
+  PCI: dwc: Fix dw_pcie_free_msi() if msi_irq is invalid
+  PCI: dwc: Free the page for MSI IRQ in dw_pcie_free_msi()
+  PCI: dwc: Free MSI in the error code path of dw_pcie_host_init()
+  PCI: dwc: Use devm_pci_alloc_host_bridge() to simplify the code
+  PCI: dwc: Save root bus for driver remove
+
+ .../pci/controller/dwc/pcie-designware-host.c | 59 ++++++++++---------
+ drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+ 2 files changed, 34 insertions(+), 27 deletions(-)
+
+--=20
 2.20.1
 
