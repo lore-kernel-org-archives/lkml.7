@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8765C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D52FC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F292087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598BB2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901661;
-	bh=mf1sE9iSj2d1ziRFJzgB9dLl5KDPY/dNlG+hIdK8/XY=;
+	s=default; t=1552901665;
+	bh=HsMpy/exkMe1ChZH1w7xKKtx0SBHz2WdCXzlcNMmjc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oRcN410dY5iPGyNi2WSdg6c1/wCy6xAUhoVUmnQqSC4PKvUiaLGja8AZBDKIAC1el
-	 mom54cYrqLYKO4M9ZGcY2eCb5UhFt+d73G1PQwqYuJvL77xTKvRZlFPcjKqtzoXJLM
-	 E5TPrFOZJSUQ+Yhn+PHpr24nILGql27+nyR+RCKU=
+	b=IBQEM7WPc+ZQLiFFM/XdKtj8Zfr4TJgGZJesGAkClCgNbwVI9WgYxk3WogbFFbXmn
+	 cixZDVeqg8gTXsVKv8i/eysF2UvPfzf+XpDfGQ2KjIgtd7yBPxY/NGZML79QpuWLuo
+	 rwCtwrw6Y1CqSHXjoUjm9GoO2wkCzkaS0YmG3Bi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbfCRJeU (ORCPT
+        id S1728741AbfCRJeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:34:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42674 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:34:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729000AbfCRJeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:17 -0400
+        id S1728704AbfCRJeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:34:20 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5952E2064A;
-        Mon, 18 Mar 2019 09:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C0F72083D;
+        Mon, 18 Mar 2019 09:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901656;
-        bh=mf1sE9iSj2d1ziRFJzgB9dLl5KDPY/dNlG+hIdK8/XY=;
+        s=default; t=1552901659;
+        bh=HsMpy/exkMe1ChZH1w7xKKtx0SBHz2WdCXzlcNMmjc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7UICeX+gdtTN2fcRcxysL8+B59G7LNVh73ZC+o9edP1u9OPTXey/IMA8fGyFuk38
-         bfVT+NpSdaSzYxMGaaDeKyhPG9IGvPHajxsUVnMh1u71dzsOf0uDhOlIVl4jCjaAFS
-         UMLAJZwobu8qaAAnDJiBlbNojoI6zbY12dYsrW2s=
+        b=QDbOBQtR1rTyhqFMiVkUl9pZIoV7x2CGUhLTeOFyNWYAEh9I0AZjsaB6p5AWD9Ntj
+         QBx0DxN/ITYsiyEea9k6ePtNd9J+UvgYA6uF7uegChtOlWCSanmGRabOtUxhN1zFs7
+         St3lbJ9cTuvlb7bYmr5Cx7u4yqVO7NTLzT0fQpGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH 4.14 01/34] ACPICA: Reference Counts: increase max to 0x4000 for large servers
-Date:   Mon, 18 Mar 2019 10:25:25 +0100
-Message-Id: <20190318084144.840998639@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        andrew hendry <andrew.hendry@gmail.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 10/34] net/x25: reset state in x25_connect()
+Date:   Mon, 18 Mar 2019 10:25:34 +0100
+Message-Id: <20190318084146.087718905@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -70,37 +67,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Erik Schmauss <erik.schmauss@intel.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 8b23570ab001c1982c8a068cde468ff067255314 upstream.
+[ Upstream commit ee74d0bd4325efb41e38affe5955f920ed973f23 ]
 
-Increase the reference count limit to 0x4000 as the current one is
-not sufficient for some large server systems.
+In case x25_connect() fails and frees the socket neighbour,
+we also need to undo the change done to x25->state.
 
-Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-Tested-by: Russ Anderson <russ.anderson@hpe.com>
-Reported-by: Mike Travis <mike.travis@hpe.com>
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
-[ rjw: Changelog ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Frank van der Linden <fllinden@amazon.com>
+Before my last bug fix, we had use-after-free so this
+patch fixes a latent bug.
+
+syzbot report :
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 16137 Comm: syz-executor.1 Not tainted 5.0.0+ #117
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:x25_write_internal+0x1e8/0xdf0 net/x25/x25_subr.c:173
+Code: 00 40 88 b5 e0 fe ff ff 0f 85 01 0b 00 00 48 8b 8b 80 04 00 00 48 ba 00 00 00 00 00 fc ff df 48 8d 79 1c 48 89 fe 48 c1 ee 03 <0f> b6 34 16 48 89 fa 83 e2 07 83 c2 03 40 38 f2 7c 09 40 84 f6 0f
+RSP: 0018:ffff888076717a08 EFLAGS: 00010207
+RAX: ffff88805f2f2292 RBX: ffff8880a0ae6000 RCX: 0000000000000000
+kobject: 'loop5' (0000000018d0d0ee): kobject_uevent_env
+RDX: dffffc0000000000 RSI: 0000000000000003 RDI: 000000000000001c
+RBP: ffff888076717b40 R08: ffff8880950e0580 R09: ffffed100be5e46d
+R10: ffffed100be5e46c R11: ffff88805f2f2363 R12: ffff888065579840
+kobject: 'loop5' (0000000018d0d0ee): fill_kobj_path: path = '/devices/virtual/block/loop5'
+R13: 1ffff1100ece2f47 R14: 0000000000000013 R15: 0000000000000013
+FS:  00007fb88cf43700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9a42a41028 CR3: 0000000087a67000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ x25_release+0xd0/0x340 net/x25/af_x25.c:658
+ __sock_release+0xd3/0x2b0 net/socket.c:579
+ sock_close+0x1b/0x30 net/socket.c:1162
+ __fput+0x2df/0x8d0 fs/file_table.c:278
+ ____fput+0x16/0x20 fs/file_table.c:309
+ task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+ get_signal+0x1961/0x1d50 kernel/signal.c:2388
+ do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
+ exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
+ prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+ do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x457f29
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb88cf42c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: fffffffffffffe00 RBX: 0000000000000003 RCX: 0000000000457f29
+RDX: 0000000000000012 RSI: 0000000020000080 RDI: 0000000000000004
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb88cf436d4
+R13: 00000000004be462 R14: 00000000004cec98 R15: 00000000ffffffff
+Modules linked in:
+
+Fixes: 95d6ebd53c79 ("net/x25: fix use-after-free in x25_device_event()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: andrew hendry <andrew.hendry@gmail.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- include/acpi/acconfig.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/x25/af_x25.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/acpi/acconfig.h
-+++ b/include/acpi/acconfig.h
-@@ -123,7 +123,7 @@
- 
- /* Maximum object reference count (detects object deletion issues) */
- 
--#define ACPI_MAX_REFERENCE_COUNT        0x1000
-+#define ACPI_MAX_REFERENCE_COUNT        0x4000
- 
- /* Default page size for use in mapping memory for operation regions */
- 
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -817,6 +817,7 @@ out_put_neigh:
+ 		x25_neigh_put(x25->neighbour);
+ 		x25->neighbour = NULL;
+ 		read_unlock_bh(&x25_list_lock);
++		x25->state = X25_STATE_0;
+ 	}
+ out_put_route:
+ 	x25_route_put(rt);
 
 
