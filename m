@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01D7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191DCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C81A2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF9B214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901682;
-	bh=RI+GfF52Hgb5adQNymfyqm42Z3L5Wo4va+TqPcXVqcM=;
+	s=default; t=1552901689;
+	bh=PKf/J9o5eX5viLjngfPrixCKEt111pOMnrPtBq2t6Cw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F9Th/n6GjGbyZ4sGJj2S94WdAHhso8IaaiCePNkL2RXwTB9ndPsycf0qnINlWZiNC
-	 hmgNZ5Gfj/Z8FxA+zON4tUYegRi+qtanzL0ruOctt0GR2MWluNr9tWCeaFr39vkQLB
-	 EAnNKRkIXih90dJiAwcUX7Mf8Zti20Pi2LIWLmxE=
+	b=OsBY4vepG0iuwsqgC+ywWE6WfQ6RDPfssd9dT0MCjjuyc4ajprFE9GYEDo2ihutcL
+	 uu2TkmmkzzAQUMVhtO76IfCN46f2n557SxQMkl14sIFZ3t11sXwpOuseqrVkXLG+Qd
+	 AETxX1ZA2uyFvBOZmCahF8YlrafKT9rfgKEsow9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbfCRJek (ORCPT
+        id S1729059AbfCRJer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:34:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:34:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728720AbfCRJeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:37 -0400
+        id S1729040AbfCRJeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:34:44 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06A5B21738;
-        Mon, 18 Mar 2019 09:34:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB2882075C;
+        Mon, 18 Mar 2019 09:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901676;
-        bh=RI+GfF52Hgb5adQNymfyqm42Z3L5Wo4va+TqPcXVqcM=;
+        s=default; t=1552901683;
+        bh=PKf/J9o5eX5viLjngfPrixCKEt111pOMnrPtBq2t6Cw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kHrj86L8XdmArmf3MUd48n2ki0Gs0GrWY5Xp1txm+nOvdi/yJ9xeouSh0ZdF23eDL
-         VwNb4FGxrfkO/fMhPWXR6jfNojr/Uf6UEdkIsNbtNF2VZ3DeMYufOSQu8BiApOSnRS
-         TMKHOQEDIFj57fL7MwaV88xTfibT09gHr0y+PnT0=
+        b=rwxjdnsYACa1dtW6GMdJ4RKJjbHHG/eO2trNsfKIyQ/0zwCT5gXrcadgdkgkuB3t1
+         uOUrwTf9HEeYcpzNkJHD9YxFjQbI9wfemDkuvkWZXHZ1AfSpHv5XHSeNLaVfsTOrSj
+         Ghpm5/iK0U8XOf/JWLGpQvwAc55MjwHNrXsg6ISw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 15/34] tcp: Dont access TCP_SKB_CB before initializing it
-Date:   Mon, 18 Mar 2019 10:25:39 +0100
-Message-Id: <20190318084146.777565077@linuxfoundation.org>
+Subject: [PATCH 4.14 17/34] vxlan: Fix GRO cells race condition between receive and link delete
+Date:   Mon, 18 Mar 2019 10:25:41 +0100
+Message-Id: <20190318084147.070998629@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -66,52 +68,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christoph Paasch <cpaasch@apple.com>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit f2feaefdabb0a6253aa020f65e7388f07a9ed47c ]
+[ Upstream commit ad6c9986bcb627c7c22b8f9e9a934becc27df87c ]
 
-Since commit eeea10b83a13 ("tcp: add
-tcp_v4_fill_cb()/tcp_v4_restore_cb()"), tcp_vX_fill_cb is only called
-after tcp_filter(). That means, TCP_SKB_CB(skb)->end_seq still points to
-the IP-part of the cb.
+If we receive a packet while deleting a VXLAN device, there's a chance
+vxlan_rcv() is called at the same time as vxlan_dellink(). This is fine,
+except that vxlan_dellink() should never ever touch stuff that's still in
+use, such as the GRO cells list.
 
-We thus should not mock with it, as this can trigger bugs (thanks
-syzkaller):
-[   12.349396] ==================================================================
-[   12.350188] BUG: KASAN: slab-out-of-bounds in ip6_datagram_recv_specific_ctl+0x19b3/0x1a20
-[   12.351035] Read of size 1 at addr ffff88006adbc208 by task test_ip6_datagr/1799
+Otherwise, vxlan_rcv() crashes while queueing packets via
+gro_cells_receive().
 
-Setting end_seq is actually no more necessary in tcp_filter as it gets
-initialized later on in tcp_vX_fill_cb.
+Move the gro_cells_destroy() to vxlan_uninit(), which runs after the RCU
+grace period is elapsed and nothing needs the gro_cells anymore.
 
-Cc: Eric Dumazet <edumazet@google.com>
-Fixes: eeea10b83a13 ("tcp: add tcp_v4_fill_cb()/tcp_v4_restore_cb()")
-Signed-off-by: Christoph Paasch <cpaasch@apple.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+This is now done in the same way as commit 8e816df87997 ("geneve: Use GRO
+cells infrastructure.") originally implemented for GENEVE.
+
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_ipv4.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ drivers/net/vxlan.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1578,15 +1578,8 @@ EXPORT_SYMBOL(tcp_add_backlog);
- int tcp_filter(struct sock *sk, struct sk_buff *skb)
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2462,6 +2462,8 @@ static void vxlan_uninit(struct net_devi
  {
- 	struct tcphdr *th = (struct tcphdr *)skb->data;
--	unsigned int eaten = skb->len;
--	int err;
+ 	struct vxlan_dev *vxlan = netdev_priv(dev);
  
--	err = sk_filter_trim_cap(sk, skb, th->doff * 4);
--	if (!err) {
--		eaten -= skb->len;
--		TCP_SKB_CB(skb)->end_seq -= eaten;
--	}
--	return err;
-+	return sk_filter_trim_cap(sk, skb, th->doff * 4);
++	gro_cells_destroy(&vxlan->gro_cells);
++
+ 	vxlan_fdb_delete_default(vxlan, vxlan->cfg.vni);
+ 
+ 	free_percpu(dev->tstats);
+@@ -3523,7 +3525,6 @@ static void vxlan_dellink(struct net_dev
+ 
+ 	vxlan_flush(vxlan, true);
+ 
+-	gro_cells_destroy(&vxlan->gro_cells);
+ 	list_del(&vxlan->next);
+ 	unregister_netdevice_queue(dev, head);
  }
- EXPORT_SYMBOL(tcp_filter);
- 
 
 
