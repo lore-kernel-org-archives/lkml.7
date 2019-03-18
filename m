@@ -2,170 +2,137 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C0DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA3AC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13DB2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8B62085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:26:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cn59wRrA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWON7Ab8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfCRDXD (ORCPT
+        id S1727834AbfCRD03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 23:23:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35699 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727699AbfCRDXD (ORCPT
+        Sun, 17 Mar 2019 23:26:29 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35735 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727699AbfCRD02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 23:23:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j5so10300746pfa.2;
-        Sun, 17 Mar 2019 20:23:02 -0700 (PDT)
+        Sun, 17 Mar 2019 23:26:28 -0400
+Received: by mail-qk1-f193.google.com with SMTP id z13so8840603qki.2;
+        Sun, 17 Mar 2019 20:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7p//1PR5F/sgyDj76MSBQjRYE5FlynCqfv62Ie5Gow8=;
-        b=cn59wRrAp5A+zB8KgE+uWFKMDkFIDNuj5W9La9KiX3AWNv0YbpN4J28/uT3K90s14W
-         kQyOL9AAscoPfFUqRa+Kg7sTjQ0Kcje+pEx6kBGE8Qx/yY2Iqa4T7bvs3joS6CEtWA5n
-         ohtumfXYqI6yjgZJalWSVoV/8/3v438c9wzsjDACAkW7gqQrUXvSdaH/tmAGkzFEDXvv
-         VLeVQz+NdqlzSyB1VaIChVZr1cCRq++nk581Ni4Lxb7ZB9P/UrGnMvCE5u0hIrhy0Qav
-         Jch/aOf0V67zX7R97cGG8p+7WexQ6E3QbKTFn/ESRSoFS1uNCUU+u0tw7TUBI9Qnf5g0
-         HpXg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pWreJHc2NYzyVo4TqtOSjg0yztt5GvwwXMC5xzBD3uo=;
+        b=eWON7Ab8XxYsxTpdI50uWhQ7Krrk/YTCbD/HCDux6fBwbTgVzHThD3+4UQLJJjJArW
+         NkqZ2t+Q3185P5MSkJBZbUZ+5qQyv/WamOjDBxYAywHpruR6+6daAb1E+GKbTysN5iap
+         IsEk8FpZSbb3PjezkCMJPYnC3mUqxY4agw31lrNZFTnJ9tW/L6JAUdL0c07+trMusqND
+         rtWGPgN4bNRxBJwbf3BkbTGSfYKyVSWY80nTjA1UsxGYfLD9oynZq3IzWEtdwLfM6B9F
+         r2JhiqRLcofbZw90Bixt+sgcSyOH3/UFQnXd/DBnGMKW4Gxc5fK3iAKVLskCgQmXhqBt
+         eR1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7p//1PR5F/sgyDj76MSBQjRYE5FlynCqfv62Ie5Gow8=;
-        b=IMeiKhItNb0ImCaVO21WHCFDirOeoZjnkYCo9Ko+Sz1YcirOdOvQtIwj9XO+qN8GcU
-         GPtJUdryy7TWaFRO4iVBGjuxHGqIpqmb6s27xaItL+Gl7T+Xxx8JxeMjb16ENBM/J29X
-         ktg2C2jnJP4ICaiy0VPnI+kfVy5f0IX866HCZoL1XyGX5KoAlvvAgfMxtjNHrvJivK3J
-         CsLgYWXXZzu5/xXeWAXZdqmBFdPYXFqgCmEzezgvuxvOJnLZ1szpz9MD7TF9eGaY3LRD
-         SQlx6vWJUuyW4al913dx3UWbRw8QAsaZXsWc4DYc3F2D6Ly6zKfIfeLqm9eqL8TupKC8
-         GxNw==
-X-Gm-Message-State: APjAAAUAUGpsDTZhez2x4LKEyN3DsIa089L3UC2emo8IRNTnQq+rW+NV
-        5V1Dj6xe8Tc7uWhu1ziuhQ==
-X-Google-Smtp-Source: APXvYqxSrI436CjuM8FHWOSocoMZyZrHUlYdFoW3Pw9MUYq7V+yB3sCzEYzONmvgmd567KtR0W3jhQ==
-X-Received: by 2002:a17:902:56a:: with SMTP id 97mr17410615plf.320.1552879381789;
-        Sun, 17 Mar 2019 20:23:01 -0700 (PDT)
-Received: from localhost (2.172.220.35.bc.googleusercontent.com. [35.220.172.2])
-        by smtp.gmail.com with ESMTPSA id d3sm8994197pfc.125.2019.03.17.20.22.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 Mar 2019 20:23:00 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 11:22:56 +0800
-From:   Jacky Hu <hengqing.hu@gmail.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, jacky.hu@walmart.com, jason.niesz@walmart.com,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Julian Anastasov <ja@ssi.bg>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH v4] ipvs: allow tunneling with gue encapsulation
-Message-ID: <20190318032256.GA21124@i716>
-References: <20190317155200.16586-1-hengqing.hu@gmail.com>
- <201903181001.7czsRhlB%lkp@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pWreJHc2NYzyVo4TqtOSjg0yztt5GvwwXMC5xzBD3uo=;
+        b=HAt7XEktDAycqDW43xW+d0TN9QOjLMDLb+wWBSRk7vLNs/ZQH9D5iAqa7gWNQssVCX
+         wTEgyDdIPxlFHV6dt9R7GlqSHhLv1e0noRQPGf7Fitgsnq3rI2rShV2IVU4RQUJfi5rf
+         E6odqTi3+QOcRiBIO2iC5Afe/BoGPbm+JoFooAZMd6lwdPt9DeU18b0/jNbhusP9AtWN
+         Edx7JGZMPu0SEkpQfG9MrQ2mLLP0B3iISbNFQHbitt7y4wnoRftY3jWBckYfx7tzXHFP
+         JUBq5LvVpKtPjDsPqyfS1habs9K6pm67llEipNze6rRMLOrYNIXDWR2fPYHD8oNvGZKT
+         CH5A==
+X-Gm-Message-State: APjAAAWEOZiCPK1L2ne2r/dIQFqCgPoucRlcxdthpTJrNuHGlUchHxSX
+        dcwzRZR47GaTcpwawpna9tqCdYAqIstkKNpsE5+Tzzcp2/Vk+g==
+X-Google-Smtp-Source: APXvYqymbrbH72wqvL/UF11y455o8r2b60MTXqPhLx+pGZ10hOJ3pHLk4bsmck2MIPM1o2MoqTzckx/A/iR5w+LiXqs=
+X-Received: by 2002:a05:620a:1348:: with SMTP id c8mr11479013qkl.246.1552879586774;
+ Sun, 17 Mar 2019 20:26:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <201903181001.7czsRhlB%lkp@intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190315111107.15154-1-lhenriques@suse.com>
+In-Reply-To: <20190315111107.15154-1-lhenriques@suse.com>
+From:   "Yan, Zheng" <ukernel@gmail.com>
+Date:   Mon, 18 Mar 2019 11:26:15 +0800
+Message-ID: <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
+Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 10:10:20AM +0800, kbuild test robot wrote:
-> Hi Jacky,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on ipvs-next/master]
-> [also build test WARNING on v5.1-rc1 next-20190306]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Jacky-Hu/ipvs-allow-tunneling-with-gue-encapsulation/20190318-070156
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/horms/ipvs-next.git master
-> reproduce:
->         # apt-get install sparse
->         make ARCH=x86_64 allmodconfig
->         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-> 
-> 
-> sparse warnings: (new ones prefixed by >>)
-> 
->    net/netfilter/ipvs/ip_vs_ctl.c:835:42: sparse: incorrect type in argument 2 (different base types) @@    expected int [signed] i @@    got restricted __be1int [signed] i @@
->    net/netfilter/ipvs/ip_vs_ctl.c:835:42:    expected int [signed] i
->    net/netfilter/ipvs/ip_vs_ctl.c:835:42:    got restricted __be16 [usertype] tun_port
->    net/netfilter/ipvs/ip_vs_ctl.c:1197:44: sparse: expression using sizeof(void)
-> >> net/netfilter/ipvs/ip_vs_ctl.c:3207:37: sparse: incorrect type in argument 3 (different base types) @@    expected restricted __be16 [usertype] value @@    got e] value @@
->    net/netfilter/ipvs/ip_vs_ctl.c:3207:37:    expected restricted __be16 [usertype] value
->    net/netfilter/ipvs/ip_vs_ctl.c:3207:37:    got int
->    net/netfilter/ipvs/ip_vs_ctl.c:1313:27: sparse: dereference of noderef expression
-> 
-> vim +3207 net/netfilter/ipvs/ip_vs_ctl.c
-> 
->   3187	
->   3188	static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
->   3189	{
->   3190		struct nlattr *nl_dest;
->   3191		struct ip_vs_kstats kstats;
->   3192	
->   3193		nl_dest = nla_nest_start(skb, IPVS_CMD_ATTR_DEST);
->   3194		if (!nl_dest)
->   3195			return -EMSGSIZE;
->   3196	
->   3197		if (nla_put(skb, IPVS_DEST_ATTR_ADDR, sizeof(dest->addr), &dest->addr) ||
->   3198		    nla_put_be16(skb, IPVS_DEST_ATTR_PORT, dest->port) ||
->   3199		    nla_put_u32(skb, IPVS_DEST_ATTR_FWD_METHOD,
->   3200				(atomic_read(&dest->conn_flags) &
->   3201				 IP_VS_CONN_F_FWD_MASK)) ||
->   3202		    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
->   3203				atomic_read(&dest->weight)) ||
->   3204		    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
->   3205			       atomic_read(&dest->tun_type)) ||
->   3206		    nla_put_be16(skb, IPVS_DEST_ATTR_TUN_PORT,
-> > 3207				 atomic_read(&dest->tun_port)) ||
-
-    Should I change the type of tun_port from __be16 to u16?
-    Looks like kbuild bugs a lot on this.
-
->   3208		    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
->   3209		    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
->   3210		    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
->   3211				atomic_read(&dest->activeconns)) ||
->   3212		    nla_put_u32(skb, IPVS_DEST_ATTR_INACT_CONNS,
->   3213				atomic_read(&dest->inactconns)) ||
->   3214		    nla_put_u32(skb, IPVS_DEST_ATTR_PERSIST_CONNS,
->   3215				atomic_read(&dest->persistconns)) ||
->   3216		    nla_put_u16(skb, IPVS_DEST_ATTR_ADDR_FAMILY, dest->af))
->   3217			goto nla_put_failure;
->   3218		ip_vs_copy_stats(&kstats, &dest->stats);
->   3219		if (ip_vs_genl_fill_stats(skb, IPVS_DEST_ATTR_STATS, &kstats))
->   3220			goto nla_put_failure;
->   3221		if (ip_vs_genl_fill_stats64(skb, IPVS_DEST_ATTR_STATS64, &kstats))
->   3222			goto nla_put_failure;
->   3223	
->   3224		nla_nest_end(skb, nl_dest);
->   3225	
->   3226		return 0;
->   3227	
->   3228	nla_put_failure:
->   3229		nla_nest_cancel(skb, nl_dest);
->   3230		return -EMSGSIZE;
->   3231	}
->   3232	
-> 
+On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
+>
+> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
+>
+> unreferenced object 0xffff8881fccca940 (size 32):
+>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
+>   hex dump (first 32 bytes):
+>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
+>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
+>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
+>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
+>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
+>     [<00000000fc287b83>] dispatch+0x362/0x176c
+>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
+>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
+>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
+>     [<00000000b593e4b3>] kthread+0x112/0x130
+>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
+>     [<00000000ba1c9c1d>] 0xffffffffffffffff
+>
+> It looks like it is possible that we miss a flush_ack from the MDS when,
+> for example, umounting the filesystem.  In that case, we can simply drop
+> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
+>
+> Link: https://tracker.ceph.com/issues/38224
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>  fs/ceph/caps.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> index 36a8dc699448..208f4dc6f574 100644
+> --- a/fs/ceph/caps.c
+> +++ b/fs/ceph/caps.c
+> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
+>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>  {
+>         struct ceph_snap_realm *realm = ci->i_snap_realm;
+> +
+>         spin_lock(&realm->inodes_with_caps_lock);
+>         list_del_init(&ci->i_snap_realm_item);
+>         ci->i_snap_realm_counter++;
+> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>         spin_unlock(&realm->inodes_with_caps_lock);
+>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
+>                             realm);
+> +       /*
+> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
+> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
+> +        * ceph_snap_context and we need to drop it.
+> +        */
+> +       ceph_put_snap_context(ci->i_head_snapc);
+>  }
+>
+>  /*
+
+This does not seem right.  i_head_snapc is cleared when
+(ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
+ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
+Did you see 'reconnect denied' during the test? If you did, the fix
+should be in iterate_session_caps()
