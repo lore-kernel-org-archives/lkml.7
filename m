@@ -2,60 +2,88 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD598C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4274C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781412085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5BA2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:38:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="SqpMUmIU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dE9C1kNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfCRUhY (ORCPT
+        id S1727685AbfCRUil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:37:24 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41192 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfCRUhY (ORCPT
+        Mon, 18 Mar 2019 16:38:41 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:44203 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727502AbfCRUik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:37:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1552941440; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gYjy5LKS0Law5aIlcxzHUTYXl4BsMI2KDc7KYiS67X4=;
-        b=SqpMUmIUe+xT4JF2GK7EzRUJXkULFSLq8QYuoOCRRccQ7+rVun34LLJbJxFyBXx+xeJIIM
-        paBca9Q/FxitEaGDlRv0UU1O32yqio0lCUPTGpCrT6Ty57c1haqQfe4u6pQv6hBQVnTFIv
-        XPALu6JYPSayK3eWDAE/jtLtBj5zD3M=
-Date:   Mon, 18 Mar 2019 21:37:09 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v5 09/12] mtd: rawnand: ingenic: Make use of ecc-engine
- property
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>, od@zcrc.me,
-        Mathieu Malaterre <malat@debian.org>,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1552941429.1495.0@crapouillou.net>
-In-Reply-To: <1552660654.1727.0@crapouillou.net>
-References: <20190313222259.28704-1-paul@crapouillou.net>
-        <20190313222259.28704-9-paul@crapouillou.net>
-        <20190315094009.66b91ad5@xps13> <1552660654.1727.0@crapouillou.net>
+        Mon, 18 Mar 2019 16:38:40 -0400
+Received: by mail-vk1-f193.google.com with SMTP id q189so4111572vkq.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xFsMmX/k0i1rBGaGSCpX1BTyFqBPFztwdG/wsbG1D2M=;
+        b=dE9C1kNEFUMCBqguAAFAp4qeOodfL1P1AzX66kHRB8TW9+ML51qhd5t+mpf8CHFo7J
+         Aa23FWwlvQbh7onhMray0Xw4EXgGGcM0vjrAr+g6cRhgWgF0/ZZjlDJft5iH9vMUSp1G
+         cloxRLwPBjpDBGzmuEINAMr3TccbD35vtMMH0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xFsMmX/k0i1rBGaGSCpX1BTyFqBPFztwdG/wsbG1D2M=;
+        b=Ep/CcUG4dYfAA7g7yY81qkcQALqwvI5IWf84M231djb62qfumUSrGeM0h3RmlPRtJU
+         1ZiVwFSMSF0f+MrZA6tzq1OTTBVO88RujvYJxMS21UtlTG4M93axAYwhsc5/FCVA1bpr
+         krO2YRpgNOocBHRgcgMqm2laPcbHMN5JRGvgZ7TSat1BNnO69AVnIjrNlZ/OG3ksPpYI
+         UN/eK+ouVU+saVZWZ+eltMrWyhUdmOhtPzjHqa+NzCjQEdYOSW5QTjY5nxNyeEQkPy4Q
+         rxp8yUGSDreNiD7+dWUZNQQfLWPrT0/axreawFZB7kxKYW7dnmxO7A5nd3pFpK1ud6Wc
+         ZryQ==
+X-Gm-Message-State: APjAAAWPgEO0gzQe/AWSjuHKcYeQt+m2fT+vfK54UOVXUIlvHVmcfZSU
+        avyhAS/EnUUJq2V+4yiyn3sJNtk0wBI=
+X-Google-Smtp-Source: APXvYqywSN/Cdq95EbPCHa9d3wfxiVl4ANSXWsHeIJRHfIBuTebzeKz1/bdIFyaa+iDfMMyQpG7aMw==
+X-Received: by 2002:a1f:ad10:: with SMTP id w16mr9905139vke.49.1552941519570;
+        Mon, 18 Mar 2019 13:38:39 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id k202sm3347533vke.50.2019.03.18.13.38.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 13:38:38 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id i207so1833513vsd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:38:38 -0700 (PDT)
+X-Received: by 2002:a67:bc01:: with SMTP id t1mr3234954vsn.149.1552941517745;
+ Mon, 18 Mar 2019 13:38:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20190116184623.77136-1-dianders@chromium.org> <20190116184623.77136-2-dianders@chromium.org>
+In-Reply-To: <20190116184623.77136-2-dianders@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 18 Mar 2019 13:38:26 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UaaHtXEut=zZBOvdsS-14Emmnyos84ONup8FkBexzcMQ@mail.gmail.com>
+Message-ID: <CAD=FV=UaaHtXEut=zZBOvdsS-14Emmnyos84ONup8FkBexzcMQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] drm/msm: Cleanup A6XX opp-level reading
+To:     Rob Clark <robdclark@gmail.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Kristian H . Kristensen" <hoegsberg@chromium.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        David Airlie <airlied@linux.ie>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,94 +91,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-Le ven. 15 mars 2019 =E0 15:37, Paul Cercueil <paul@crapouillou.net> a=20
-=E9crit :
-> Hi,
->=20
-> Le ven. 15 mars 2019 =E0 9:40, Miquel Raynal=20
-> <miquel.raynal@bootlin.com> a =E9crit :
->> Hi Paul,
->>=20
->> Paul Cercueil <paul@crapouillou.net> wrote on Wed, 13 Mar 2019=20
->> =7F23:22:56
->> +0100:
->>=20
->>>  Use the 'ecc-engine' standard property instead of the custom
->>>  'ingenic,bch-controller' custom property, which is now deprecated.
->>>=20
->>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>  ---
->>>=20
->>>  Notes:
->>>      v5: New patch
->>>=20
->>>   drivers/mtd/nand/raw/ingenic/ingenic_ecc.c | 13 ++++++++++---
->>>   1 file changed, 10 insertions(+), 3 deletions(-)
->>>=20
->>>  diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c=20
->>> =7F=7Fb/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
->>>  index d7f3a8c3abea..30436ca6628a 100644
->>>  --- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
->>>  +++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
->>>  @@ -82,9 +82,9 @@ static struct ingenic_ecc=20
->>> *ingenic_ecc_get(struct =7F=7Fdevice_node *np)
->>>=20
->>>   /**
->>>    * of_ingenic_ecc_get() - get the ECC controller from a DT node
->>>  - * @of_node: the node that contains a bch-controller property.
->>>  + * @of_node: the node that contains a ecc-engine property.
->>=20
->> Would "contains an ecc-engine property" be better English?
->>=20
->> I am not sure what is the rule when it comes to plain English with
->> variable names. However if you agree, no need to re-send the series,=20
->> I
->> can fix it when applying.
->=20
-> Yes, that's better.
->=20
->> BTW, I added hw ECC engines support to my generic ECC engine
->> implementation, but migrating the whole raw NAND subsystem (using I/O
->> requests like in the SPI-NAND core, adding prepare/finish_io_req=20
->> =7Fhooks)
->> is going to be much more invasive than initially expected, so I am=20
->> not
->> sure I will finish the migration any time soon.
->=20
-> Ok, I will follow the development then.
->=20
->> Thanks,
->> Miqu=E8l
->=20
-> One thing I notice with my patchset: it works perfectly on top of=20
-> 4.20,
-> but on top of 5.0 I am unable to erase any eraseblock with=20
-> flash_erase.
-> I get -EIO every time. I'm trying to debug it but didn't go very far,
-> it looks like nand_status_op() gives me a status of 0xff. Do you know
-> what could have changed between 4.20 and 5.0 that could trigger this=20
-> bug?
+On Wed, Jan 16, 2019 at 10:46 AM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> The patch ("OPP: Add support for parsing the 'opp-level' property")
+> adds an API enabling a cleaner way to read the opp-level.  Let's use
+> the new API.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> Obviously this can't land until we have a tree that contains the patch
+> adding the API.  I believe that means we'll want to target this patch
+> for 5.2.  Luckily it's fine to wait since this patch has no functional
+> changes--it's all cleanup.
+>
+> Changes in v2:
+> - Split into two patches to facilitate landing.
+>
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
 
-Nevermind. It works now.
+FWIW I think this patch is ready to land any time.  That commit
+5b93ac542301 ("OPP: Add support for parsing the 'opp-level' property")
+is now in linux/master.
 
-> Second thing, everytime I reboot it fails to find the BBT. That's=20
-> because
-> the BBT marker is overwritten by the ECC data as they occupy the same=20
-> area
-> in the OOB space. Is there a way to move the BBT marker? Or should I=20
-> use
-> NAND_BBT_NO_OOB then? Since the eraseblocks where the BBTs are located
-> is used in my system partition, won't that conflict with the data?
 
-Response to myself: It's possible to move the BBT marker. But in my=20
-case I
-have to deal with three possible layouts, so it's simpler to just use
-NAND_BBT_NO_OOB then. The BBT pages are marked so that they're not used
-for data in the partitions.
-
-I'll send a V6 then.
-
-Thanks,
--Paul
-=
-
+-Doug
