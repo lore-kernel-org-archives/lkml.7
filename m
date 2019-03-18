@@ -2,128 +2,156 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7D7C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C1FC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD7520880
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:21:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWC4/3S+"
+	by mail.kernel.org (Postfix) with ESMTP id 8D44D20872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfCRQVc (ORCPT
+        id S1727643AbfCRQW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:21:32 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37252 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfCRQVc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:21:32 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 8so8194857pfr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=CgwRVS2Q+Iae+lbffdt/SU+OjpN+MyifpJVYq7Y3K8k=;
-        b=MWC4/3S+X+/VHhs7voniM9phy/o7yqCWtKuyosSnpIUCAAnZP/Mn/DsNv3XRJweEef
-         jZRIeMihSOp1ASm83jxCAnAw3ViWzpZEBFUOSHzcpfJkGeBaG6F/TBcR6Kz4BH0AIqBf
-         Gzh9PBQPZ8pr/EcJVjRnUxjFWMrNxn3irZNRu3wMiyf1wognYBMph+ebK+gbMx7LhXoJ
-         oV0M9D36FS81wHAnGWahxYbcx4RxJ7lvr83vXwqLdwO4IYJZouer23ny/kJ1LkOP6sHP
-         AVVxXnLoumIaK6WbT6AKyhnGkge0WKU7awH8NUq8MTaMAlpkjQHFIeNFGlDycX5EI5GY
-         xXFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=CgwRVS2Q+Iae+lbffdt/SU+OjpN+MyifpJVYq7Y3K8k=;
-        b=hG6hU3dmw5daPCp3QT3bSZf9cDiWfjHgw/1VVXSrhSj7OLGwfke/fHOLQjGOcL7FNX
-         jV27byybGkA7Ing6YRzA+Es5xwOkvb3yi7n2xqfFlz/qlOf5SjZj0AnV0tv0O4mGCCwF
-         TL+ExadxqskB5bRAQ2IJFC7ayY/uwvpD507zsLaz5XgdWL/Utvidj0fBOuLHo7esMkM6
-         WJAgHiT96Hgs0RGjENSLVJgRFegjljLXIiOaIjWK0S27/pR35+Tcg08MD4YHZhtJxJhd
-         EuAj3tG+CMs7TKAhYgvpMx3rf4e+NOL2PZjb3jZ36mpZMSvKpLMwN+WKTjElSbE4s515
-         lbMg==
-X-Gm-Message-State: APjAAAVmfNkjeyAvLGy26dMW8Aei0ozPMu7jcARtoLQ9HNMhuSSEJiHx
-        FVCDZJq7FYvtnACzsfigJDg=
-X-Google-Smtp-Source: APXvYqyw1Bx/onz96XVk/VzfT2P30uQI4lOEdkGn1FqYErJitQaCHsJU2FF6AK2yAnsDrfL2aeQc4A==
-X-Received: by 2002:a65:52c9:: with SMTP id z9mr5436469pgp.227.1552926091321;
-        Mon, 18 Mar 2019 09:21:31 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC ([106.51.18.188])
-        by smtp.gmail.com with ESMTPSA id h184sm24617707pfc.78.2019.03.18.09.21.29
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 18 Mar 2019 09:21:30 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 21:56:05 +0530
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     akpm@linux-foundation.org, mike.kravetz@oracle.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org
-Subject: [PATCH] include/linux/hugetlb.h: Convert to use vm_fault_t
-Message-ID: <20190318162604.GA31553@jordon-HP-15-Notebook-PC>
+        Mon, 18 Mar 2019 12:22:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51024 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726719AbfCRQW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:22:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E7205AFAC;
+        Mon, 18 Mar 2019 16:22:26 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     "Yan\, Zheng" <ukernel@gmail.com>
+Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
+References: <20190315111107.15154-1-lhenriques@suse.com>
+        <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
+        <87r2b4zd2q.fsf@suse.com>
+        <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
+Date:   Mon, 18 Mar 2019 16:22:25 +0000
+In-Reply-To: <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
+        (Zheng Yan's message of "Mon, 18 Mar 2019 19:42:51 +0800")
+Message-ID: <87lg1c17b2.fsf@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kbuild produces the below warning ->
+"Yan, Zheng" <ukernel@gmail.com> writes:
 
-tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   5453a3df2a5eb49bc24615d4cf0d66b2aae05e5f
-commit 3d3539018d2c ("mm: create the new vm_fault_t type")
-reproduce:
-        # apt-get install sparse
-        git checkout 3d3539018d2cbd12e5af4a132636ee7fd8d43ef0
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
+>>
+>> "Yan, Zheng" <ukernel@gmail.com> writes:
+>>
+>> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
+>> >>
+>> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
+>> >>
+>> >> unreferenced object 0xffff8881fccca940 (size 32):
+>> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
+>> >>   hex dump (first 32 bytes):
+>> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+>> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>> >>   backtrace:
+>> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
+>> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
+>> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
+>> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
+>> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
+>> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
+>> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
+>> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
+>> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
+>> >>     [<00000000b593e4b3>] kthread+0x112/0x130
+>> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
+>> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
+>> >>
+>> >> It looks like it is possible that we miss a flush_ack from the MDS when,
+>> >> for example, umounting the filesystem.  In that case, we can simply drop
+>> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
+>> >>
+>> >> Link: https://tracker.ceph.com/issues/38224
+>> >> Cc: stable@vger.kernel.org
+>> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>> >> ---
+>> >>  fs/ceph/caps.c | 7 +++++++
+>> >>  1 file changed, 7 insertions(+)
+>> >>
+>> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+>> >> index 36a8dc699448..208f4dc6f574 100644
+>> >> --- a/fs/ceph/caps.c
+>> >> +++ b/fs/ceph/caps.c
+>> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
+>> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>> >>  {
+>> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
+>> >> +
+>> >>         spin_lock(&realm->inodes_with_caps_lock);
+>> >>         list_del_init(&ci->i_snap_realm_item);
+>> >>         ci->i_snap_realm_counter++;
+>> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>> >>         spin_unlock(&realm->inodes_with_caps_lock);
+>> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
+>> >>                             realm);
+>> >> +       /*
+>> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
+>> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
+>> >> +        * ceph_snap_context and we need to drop it.
+>> >> +        */
+>> >> +       ceph_put_snap_context(ci->i_head_snapc);
+>> >>  }
+>> >>
+>> >>  /*
+>> >
+>> > This does not seem right.  i_head_snapc is cleared when
+>> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
+>> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
+>> > Did you see 'reconnect denied' during the test? If you did, the fix
+>> > should be in iterate_session_caps()
+>> >
+>>
+>> No, I didn't saw any 'reconnect denied' in the test.  The test actually
+>> seems to execute fine, except from the memory leak.
+>>
+>> It's very difficult to reproduce this issue, but last time I managed to
+>> get this memory leak to trigger I actually had some debugging code in
+>> drop_inode_snap_realm, something like:
+>>
+>>   if (ci->i_head_snapc)
+>>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
+>
+> please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
+> i_flushing_caps. and try reproducing it again.
+>
 
->> mm/memory.c:3968:21: sparse: incorrect type in assignment (different
->> base types) @@    expected restricted vm_fault_t [usertype] ret @@
->> got e] ret @@
-   mm/memory.c:3968:21:    expected restricted vm_fault_t [usertype] ret
-   mm/memory.c:3968:21:    got int
+Ok, it took me a few hours, but I managed to reproduce the bug, with
+those extra printks.  All those values are set to 0 when the bug
+triggers (and i_head_snapc != NULL).
 
-This patch will convert to return vm_fault_t type for hugetlb_fault()
-when CONFIG_HUGETLB_PAGE =n.
-
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- include/linux/hugetlb.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 087fd5f4..0ee502a 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -203,7 +203,6 @@ static inline void hugetlb_show_meminfo(void)
- #define pud_huge(x)	0
- #define is_hugepage_only_range(mm, addr, len)	0
- #define hugetlb_free_pgd_range(tlb, addr, end, floor, ceiling) ({BUG(); 0; })
--#define hugetlb_fault(mm, vma, addr, flags)	({ BUG(); 0; })
- #define hugetlb_mcopy_atomic_pte(dst_mm, dst_pte, dst_vma, dst_addr, \
- 				src_addr, pagep)	({ BUG(); 0; })
- #define huge_pte_offset(mm, address, sz)	0
-@@ -234,6 +233,13 @@ static inline void __unmap_hugepage_range(struct mmu_gather *tlb,
- {
- 	BUG();
- }
-+static inline vm_fault_t hugetlb_fault(struct mm_struct *mm,
-+				struct vm_area_struct *vma, unsigned long address,
-+				unsigned int flags)
-+{
-+	BUG();
-+	return 0;
-+}
- 
- #endif /* !CONFIG_HUGETLB_PAGE */
- /*
+Cheers,
 -- 
-1.9.1
+Luis
 
+
+>
+>>
+>> This printk was only executed when the bug triggered (during a
+>> filesystem umount) and the address shown was the same as in the kmemleak
+>> warning.
+>>
+>> After spending some time looking, I assumed this to be a missing call to
+>> handle_cap_flush_ack, which would do the i_head_snapc cleanup.
+>>
+>> Cheers,
+>> --
+>> Luis
+>
