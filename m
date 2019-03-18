@@ -2,37 +2,37 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62BEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD705C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD8720872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED5E205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfCRPtF (ORCPT
+        id S1727570AbfCRPtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:49:05 -0400
-Received: from sauhun.de ([88.99.104.3]:36836 "EHLO pokefinder.org"
+        Mon, 18 Mar 2019 11:49:03 -0400
+Received: from sauhun.de ([88.99.104.3]:36870 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727390AbfCRPs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:48:59 -0400
+        id S1727513AbfCRPtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 11:49:01 -0400
 Received: from localhost (p54B330C6.dip0.t-ipconnect.de [84.179.48.198])
-        by pokefinder.org (Postfix) with ESMTPSA id B43834A1348;
-        Mon, 18 Mar 2019 16:48:57 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 2220D4A134E;
+        Mon, 18 Mar 2019 16:49:00 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-renesas-soc@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         Mark Brown <broonie@kernel.org>,
         Support Opensource <support.opensource@diasemi.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 3/6] mfd: da9063: remove platform_data support
-Date:   Mon, 18 Mar 2019 16:47:55 +0100
-Message-Id: <20190318154759.21978-4-wsa+renesas@sang-engineering.com>
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: [PATCH 6/6] regulator: da9063: platform_data is gone, depend on OF
+Date:   Mon, 18 Mar 2019 16:47:58 +0100
+Message-Id: <20190318154759.21978-7-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
 References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
@@ -41,86 +41,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no in-kernel users anymore, so remove this outdated interface.
+With OF being the only configuration possibility left, depend on it to
+simplify some code.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/mfd/da9063-core.c | 20 ++------------------
- drivers/mfd/da9063-i2c.c  |  1 -
- drivers/mfd/da9063-irq.c  |  1 -
- 3 files changed, 2 insertions(+), 20 deletions(-)
+ drivers/regulator/Kconfig            |  2 +-
+ drivers/regulator/da9063-regulator.c | 10 ----------
+ 2 files changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
-index 6e4ce49b4405..65ca288b0c90 100644
---- a/drivers/mfd/da9063-core.c
-+++ b/drivers/mfd/da9063-core.c
-@@ -26,7 +26,6 @@
- #include <linux/regmap.h>
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index b7f249ee5e68..6663cd6cb96c 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -256,7 +256,7 @@ config REGULATOR_DA9062
  
- #include <linux/mfd/da9063/core.h>
--#include <linux/mfd/da9063/pdata.h>
- #include <linux/mfd/da9063/registers.h>
+ config REGULATOR_DA9063
+ 	tristate "Dialog Semiconductor DA9063 regulators"
+-	depends on MFD_DA9063
++	depends on MFD_DA9063 && OF
+ 	help
+ 	  Say y here to support the BUCKs and LDOs regulators found on
+ 	  DA9063 PMICs.
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index c05859ad63d8..2eda8d985756 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -681,7 +681,6 @@ static const struct regulator_init_data *da9063_get_regulator_initdata(
+ 	return NULL;
+ }
  
- #include <linux/proc_fs.h>
-@@ -165,7 +164,6 @@ static int da9063_clear_fault_log(struct da9063 *da9063)
+-#ifdef CONFIG_OF
+ static struct of_regulator_match da9063_matches[] = {
+ 	[DA9063_ID_BCORE1]           = { .name = "bcore1"           },
+ 	[DA9063_ID_BCORE2]           = { .name = "bcore2"           },
+@@ -759,15 +758,6 @@ static struct da9063_regulators_pdata *da9063_parse_regulators_dt(
+ 	*da9063_reg_matches = da9063_matches;
+ 	return pdata;
+ }
+-#else
+-static struct da9063_regulators_pdata *da9063_parse_regulators_dt(
+-		struct platform_device *pdev,
+-		struct of_regulator_match **da9063_reg_matches)
+-{
+-	*da9063_reg_matches = NULL;
+-	return ERR_PTR(-ENODEV);
+-}
+-#endif
  
- int da9063_device_init(struct da9063 *da9063, unsigned int irq)
+ static int da9063_regulator_probe(struct platform_device *pdev)
  {
--	struct da9063_pdata *pdata = da9063->dev->platform_data;
- 	int model, variant_id, variant_code;
- 	int ret;
- 
-@@ -173,24 +171,10 @@ int da9063_device_init(struct da9063 *da9063, unsigned int irq)
- 	if (ret < 0)
- 		dev_err(da9063->dev, "Cannot clear fault log\n");
- 
--	if (pdata) {
--		da9063->flags = pdata->flags;
--		da9063->irq_base = pdata->irq_base;
--	} else {
--		da9063->flags = 0;
--		da9063->irq_base = -1;
--	}
-+	da9063->flags = 0;
-+	da9063->irq_base = -1;
- 	da9063->chip_irq = irq;
- 
--	if (pdata && pdata->init != NULL) {
--		ret = pdata->init(da9063);
--		if (ret != 0) {
--			dev_err(da9063->dev,
--				"Platform initialization failed.\n");
--			return ret;
--		}
--	}
--
- 	ret = regmap_read(da9063->regmap, DA9063_REG_CHIP_ID, &model);
- 	if (ret < 0) {
- 		dev_err(da9063->dev, "Cannot read chip model id.\n");
-diff --git a/drivers/mfd/da9063-i2c.c b/drivers/mfd/da9063-i2c.c
-index 50a24b1921d0..5f707b100e69 100644
---- a/drivers/mfd/da9063-i2c.c
-+++ b/drivers/mfd/da9063-i2c.c
-@@ -22,7 +22,6 @@
- 
- #include <linux/mfd/core.h>
- #include <linux/mfd/da9063/core.h>
--#include <linux/mfd/da9063/pdata.h>
- #include <linux/mfd/da9063/registers.h>
- 
- #include <linux/of.h>
-diff --git a/drivers/mfd/da9063-irq.c b/drivers/mfd/da9063-irq.c
-index ecc0c8ce6c58..ac02c31c5802 100644
---- a/drivers/mfd/da9063-irq.c
-+++ b/drivers/mfd/da9063-irq.c
-@@ -19,7 +19,6 @@
- #include <linux/interrupt.h>
- #include <linux/regmap.h>
- #include <linux/mfd/da9063/core.h>
--#include <linux/mfd/da9063/pdata.h>
- 
- #define	DA9063_REG_EVENT_A_OFFSET	0
- #define	DA9063_REG_EVENT_B_OFFSET	1
 -- 
 2.11.0
 
