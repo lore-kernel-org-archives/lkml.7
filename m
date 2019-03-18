@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC50C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D0AC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED052083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F65920854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902207;
-	bh=6tLv82KEJ9OuMlFVTebC4chr8lYSCl3kFdZA+YiqpiE=;
+	s=default; t=1552902215;
+	bh=opGQAHE+OdsYRrNylD4oRsqc4EsomVR/Y7YO9dzfPE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jfrV7o47T1QkiGKl/mcQxPJlmwAq8/uhP5B4xXGCURw3FaM2N9RpmyEy+U7j34uVK
-	 Jf4lpIA+3gmJycmJ55YQEY5fOGlL8FJ37rtbeRtQJJbTOvjWkfU/+2dr0f1Bkvr2Nr
-	 l2jgL7m18UZFKiIlsOpn1t3K5VEYp7JpaB5f62pU=
+	b=1gIkn92P1XX66nBokfxP5ayS095ylUm1G8PERr5UT1imnIgcsNs/T9YTXlNjR6r3n
+	 d0XRnSfwpcakPqXk5+O1pXgqGV/+2NVfheTtql/+2hfY2W6FjEAQ14OJo5GWupkz/7
+	 Z+uWOXn5jhpjS4C+680JheyK2mHSjUkw/efWaa9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfCRJn0 (ORCPT
+        id S1728641AbfCRJbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39930 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:31:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbfCRJb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:31:59 -0400
+        id S1727896AbfCRJbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:48 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93EDB21734;
-        Mon, 18 Mar 2019 09:31:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F405E2083D;
+        Mon, 18 Mar 2019 09:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901519;
-        bh=6tLv82KEJ9OuMlFVTebC4chr8lYSCl3kFdZA+YiqpiE=;
+        s=default; t=1552901507;
+        bh=opGQAHE+OdsYRrNylD4oRsqc4EsomVR/Y7YO9dzfPE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IL7zZFuVOQ5uQ/2jnRiiUgMdh4DX8vo1pUrz5aSEaJf/CNjHgl0h7pN3pjdrHvBKu
-         5K4TELJ0o7KPGxH6ce0ONBCjUvg2SO0lrFhT5mNK1pQNA3tuxSB+dWqBrd8JEwxPPu
-         uDNN/5TOZ3c/ebE7pysEgEGUYrjbcGQsLS29AtsU=
+        b=Ps1BlF4NI4D0L1O/jlwQ3SkePKUQxJKFGyqILdIEaSvhNDX3pATA7fvNnXxkHblJ+
+         JgVEC5NC75Jmz2bDJ1vetxiGOLeBYgY1vTQdYrLfA6rkOnq1SD7s0vamrNY/lR8oAo
+         vW0Nmg7T/ghjZ6CXhdnEWUnHhiLosXU3OeJ2s7qM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 19/52] tcp: handle inet_csk_reqsk_queue_add() failures
-Date:   Mon, 18 Mar 2019 10:25:16 +0100
-Message-Id: <20190318084015.824760648@linuxfoundation.org>
+Subject: [PATCH 4.19 15/52] rxrpc: Fix client call queueing, waiting for channel
+Date:   Mon, 18 Mar 2019 10:25:12 +0100
+Message-Id: <20190318084015.354651851@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -66,66 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Guillaume Nault <gnault@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-[  Upstream commit 9d3e1368bb45893a75a5dfb7cd21fdebfa6b47af ]
+[ Upstream commit 69ffaebb90369ce08657b5aea4896777b9d6e8fc ]
 
-Commit 7716682cc58e ("tcp/dccp: fix another race at listener
-dismantle") let inet_csk_reqsk_queue_add() fail, and adjusted
-{tcp,dccp}_check_req() accordingly. However, TFO and syncookies
-weren't modified, thus leaking allocated resources on error.
+rxrpc_get_client_conn() adds a new call to the front of the waiting_calls
+queue if the connection it's going to use already exists.  This is bad as
+it allows calls to get starved out.
 
-Contrary to tcp_check_req(), in both syncookies and TFO cases,
-we need to drop the request socket. Also, since the child socket is
-created with inet_csk_clone_lock(), we have to unlock it and drop an
-extra reference (->sk_refcount is initially set to 2 and
-inet_csk_reqsk_queue_add() drops only one ref).
+Fix this by adding to the tail instead.
 
-For TFO, we also need to revert the work done by tcp_try_fastopen()
-(with reqsk_fastopen_remove()).
+Also change the other enqueue point in the same function to put it on the
+front (ie. when we have a new connection).  This makes the point that in
+the case of a new connection the new call goes at the front (though it
+doesn't actually matter since the queue should be unoccupied).
 
-Fixes: 7716682cc58e ("tcp/dccp: fix another race at listener dismantle")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/syncookies.c |    7 ++++++-
- net/ipv4/tcp_input.c  |    8 +++++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ net/rxrpc/conn_client.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -216,7 +216,12 @@ struct sock *tcp_get_cookie_sock(struct
- 		refcount_set(&req->rsk_refcnt, 1);
- 		tcp_sk(child)->tsoffset = tsoff;
- 		sock_rps_save_rxhash(child, skb);
--		inet_csk_reqsk_queue_add(sk, req, child);
-+		if (!inet_csk_reqsk_queue_add(sk, req, child)) {
-+			bh_unlock_sock(child);
-+			sock_put(child);
-+			child = NULL;
-+			reqsk_put(req);
-+		}
- 	} else {
- 		reqsk_free(req);
- 	}
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6514,7 +6514,13 @@ int tcp_conn_request(struct request_sock
- 		af_ops->send_synack(fastopen_sk, dst, &fl, req,
- 				    &foc, TCP_SYNACK_FASTOPEN);
- 		/* Add the child socket directly into the accept queue */
--		inet_csk_reqsk_queue_add(sk, req, fastopen_sk);
-+		if (!inet_csk_reqsk_queue_add(sk, req, fastopen_sk)) {
-+			reqsk_fastopen_remove(fastopen_sk, req, false);
-+			bh_unlock_sock(fastopen_sk);
-+			sock_put(fastopen_sk);
-+			reqsk_put(req);
-+			goto drop;
-+		}
- 		sk->sk_data_ready(sk);
- 		bh_unlock_sock(fastopen_sk);
- 		sock_put(fastopen_sk);
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -353,7 +353,7 @@ static int rxrpc_get_client_conn(struct
+ 	 * normally have to take channel_lock but we do this before anyone else
+ 	 * can see the connection.
+ 	 */
+-	list_add_tail(&call->chan_wait_link, &candidate->waiting_calls);
++	list_add(&call->chan_wait_link, &candidate->waiting_calls);
+ 
+ 	if (cp->exclusive) {
+ 		call->conn = candidate;
+@@ -432,7 +432,7 @@ found_extant_conn:
+ 	call->conn = conn;
+ 	call->security_ix = conn->security_ix;
+ 	call->service_id = conn->service_id;
+-	list_add(&call->chan_wait_link, &conn->waiting_calls);
++	list_add_tail(&call->chan_wait_link, &conn->waiting_calls);
+ 	spin_unlock(&conn->channel_lock);
+ 	_leave(" = 0 [extant %d]", conn->debug_id);
+ 	return 0;
 
 
