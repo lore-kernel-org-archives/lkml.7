@@ -2,176 +2,88 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255AEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76745C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B9C20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B07B2133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfCRQ1o (ORCPT
+        id S1727530AbfCRQ1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:27:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37298 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726719AbfCRQ1o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:27:44 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IGKOqY066648
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:27:43 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2racc3qv6v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:27:42 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Mon, 18 Mar 2019 16:27:38 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 18 Mar 2019 16:27:35 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2IGRZ4K36110512
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Mar 2019 16:27:35 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB06A42041;
-        Mon, 18 Mar 2019 16:27:35 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6F7242042;
-        Mon, 18 Mar 2019 16:27:34 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.205.228])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 18 Mar 2019 16:27:34 +0000 (GMT)
-Date:   Mon, 18 Mar 2019 18:27:33 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] RISC-V: Allow booting kernel from any 4KB aligned
- address
-References: <20190312220752.128141-4-anup.patel@wdc.com>
- <20190313183121.GB28630@rapoport-lnx>
- <CAAhSdy1mrV2CakS0cfOY8F1B7uH_yXjO3W-CiMUcYonkRnVbeQ@mail.gmail.com>
- <20190314065311.GC24380@rapoport-lnx>
- <CAAhSdy2uEgyvs=5NdoZ3H208qeDGJ9OrTOeaz6HQ+1va+R3dUA@mail.gmail.com>
- <20190315155828.GB920@rapoport-lnx>
- <CAAhSdy0HoTTccyy203Y9m3kdAjCOzjjMdrb670huU71pjOMw4A@mail.gmail.com>
- <CAAhSdy0D6JpySExCG7ziSSDmQ_88=paiMwjjXTTR1gbKCEOs3g@mail.gmail.com>
- <20190318071829.GF21385@rapoport-lnx>
- <CAAhSdy20gXURgLqRfN6N74Qfk5d2rNBYSq0ZVwNGSXAYJD6iMg@mail.gmail.com>
+        Mon, 18 Mar 2019 12:27:49 -0400
+Received: from mout.gmx.net ([212.227.15.19]:59977 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726719AbfCRQ1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:27:49 -0400
+Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx002
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0MMT1y-1h6UOv0f1y-008MEv; Mon, 18
+ Mar 2019 17:27:43 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     virtualization@lists.linux-foundation.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND] tools/virtio/ringtest: Remove bogus definition of BUG_ON()
+Date:   Mon, 18 Mar 2019 17:27:34 +0100
+Message-Id: <20190318162735.20706-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhSdy20gXURgLqRfN6N74Qfk5d2rNBYSq0ZVwNGSXAYJD6iMg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19031816-0012-0000-0000-000003045A51
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031816-0013-0000-0000-0000213B6537
-Message-Id: <20190318162732.GB4408@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903180121
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:XX0Ang4KROrA4VDaUcOTj9GArUG8RsEmzn+XZAkLuEiqmbMCvIo
+ D63Q6hziPgy2b1Nz+gcmWi8sbpb23PFwy8Icgjpo8BQnfKdBR/xOJq/l3XPyl5gJfWFwrOh
+ zczenhZxg1lryIaXdIdCb3Y3BK4eOEaxPy5jZ40K/I5V1HynLgZ4jzcsRoJGRRstlwW4Llk
+ SWf/PiIZfwI45CDDDwlrg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BEjiwPB241A=:Ky59Y7+g/JwuoRWDZmkiR2
+ duwQAZDw0YktCPZ5rZ0V7gwGF3RmVMNsfiAvAqYzUtZesW9yNiwLU967yhVeoNE420R1ljfMo
+ mzMmyjLgSADTzQDSBesvfbRdjCqiZIQg3T/urMdEY6lQEFD3oNITLOCKrHNQ/VVbiwTYXh87K
+ G2bixbUGm94AJJkVEraGaPWs4G13zYqOgjCkLd+AcIJNcyGZlsXpjaJ6AWPtUU0yIqiuACksh
+ GfudV8VwCzgH2AUKskq4PrLEjq4+Y96JmawrjtQ7o+nwG+898dQKL2cAoPd4QIlaJR3k4kaPs
+ Ea9QIR9mXyUQawTtLYr3bCFR8hibJkoWGFO7xh7kBItGr5wBcZ8sxGCkhNlPq3y8opA0UYYWr
+ 50Am5h6VTcFA/QJYM2aRcmN8ILeERL7cYxgnQCjBvYHv/411Nqf9YroR0cqyOOdPuwYIMuctn
+ gMCnrH3qmjUGGdspoTCn6EePFZm91wk5N9cVzB1uclWHmxI/Z5YRHPCMfSruunRCqKiLqHdhr
+ w3dxMgCOuXFphKoL6q6c3O7qDX6yVRWdT/MESsD9PwR4K+SH8RoLxWcxV7aR3MSH308A0/2mY
+ oS5qS1fRtB4JKCfKQpbzhVN4qau3dKzOa4R5knNG8tuEm4imb4gq0IJi6W8o5OJBcrFoRaaCk
+ E0mfPV7ZMUQcl6rnh0N4QETaSf5qjHCc2bJQ/lXUznmz9QfYPjxxedZuP5ltBW8zA9n4BMyLY
+ wmzIwY9OfpntQU+AXt8dm0/5atgB5i4/70+sV7aHCTxQpeiEUIlQSVEePhWrzXZ4L+SHKQcRJ
+ U9wimDJBbt7i6YwE1pZ20efxdn8Xcimtiz9gZbl788v08N6l5WysAfqZ1UbcTMWZ5g5zsnN1n
+ grdQHwyCulGimmjqANIyxgtYwWeI2mpUFUlnk8xAgXaYDl0yImijFxe5RbgZplnHDOg0cd+4e
+ Ri1oTsbLoLw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 06:46:18PM +0530, Anup Patel wrote:
-> On Mon, Mar 18, 2019 at 12:48 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> >
-> > On Sat, Mar 16, 2019 at 04:55:30AM +0530, Anup Patel wrote:
-> > > On Fri, Mar 15, 2019 at 9:52 PM Anup Patel <anup@brainfault.org> wrote:
-> > > >
-> > > > On Fri, Mar 15, 2019 at 9:28 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > > > >
-> > > > > I still don't get why it is that important to relax alignment of the kernel
-> > > > > load address. Provided you can use the memory below the kernel, it really
-> > > > > should not matter.
-> > > >
-> > > > Irrespective to constraint on kernel load address, we certainly need
-> > > > to allow memory below kernel to be usable but that's a separate change.
-> > > >
-> > > > Currently, the memory below kernel is ignored by
-> > > > early_init_dt_add_memory_arch() in
-> > > > drivers/of/fdt.c
-> > > >
-> > >
-> > > I explored the possibility of re-claiming memory below kernel but then
-> > > we have an issue in this case.
-> > >
-> > > For RISC-V kernel, PAGE_OFFSET is mapped to kernel load address
-> > > (i.e. load_pa in this code). The va_pa_offset is based on load_pa so linear
-> > > conversion of VA-to-PA and PA-to-VA won't be possible on the memory
-> > > below kernel. I guess this is why early_init_dt_add_memory_arch() is
-> > > marking memory below kernel as reserved. Is there better way to do it??
-> > >
-> > > We started exploring ways to re-claim memory below kernel because
-> > > we are trying to get Linux working on Kendryte K210 board
-> > > (https://kendryte.com/). This board has dual-core 64bit RISC-V but it
-> > > only has 8MB RAM.
-> >
-> > Huh, 8MB of RAM is tough...
-> >
-> > It is possible to use the memory below the kernel, e.g x86-64 does that.
-> > But it is definitely a separate change and with such RAM diet using 4K
-> > pages seems unavoidable.
-> >
-> > I still have concern about using 4K pages whenever the load address is not
-> > 2M (4M) aligned. People tend to not pay enough attention to such details
-> > and they would load the kernel at an arbitrary address and get the
-> > performance hit.
-> >
-> > I think the default should remain as is and the ability to map the kernel
-> > with 4K pages (and use 4K aligned load address) should be a Kconfig option.
-> 
-> I agree people will tend to not pay attention on the load address alignment
-> but this is also possible with current approach. Currently, if user boots kernel
-> form any non-2M aligned address then we don't see any prints at all which
-> let's users think it to be kernel bug. In fact, I have done same mistake couple
-> of times.
-> 
-> Another approach (apart from kconfig option) would be to throw big-fat
-> warning when users boot kernel form 4K aligned load address this way
-> atleast kernel boots instead of no prints. Your thoughts??
+BUG_ON(x) should raise an error if x is true, but assert(x) raises an
+error if x is false. Remove this bogus definition of BUG_ON(), which
+isn't used anyway.
 
-That should be panic() rather than warning. If the trampoline_pg_dir will
-map everything, it can be emitted during the initialization of
-swapper_pg_dir.
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+---
+
+Previous copy of v1:
+https://lore.kernel.org/lkml/20190129140443.31161-1-j.neuschaefer@gmx.net/
+---
+ tools/virtio/ringtest/ptr_ring.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/tools/virtio/ringtest/ptr_ring.c b/tools/virtio/ringtest/ptr_ring.c
+index 2d566fbd236b..c9b26335f891 100644
+--- a/tools/virtio/ringtest/ptr_ring.c
++++ b/tools/virtio/ringtest/ptr_ring.c
+@@ -18,7 +18,6 @@
+ #define ALIGN(x, a) (((x) + (a) - 1) / (a) * (a))
+ #define SIZE_MAX        (~(size_t)0)
+ #define KMALLOC_MAX_SIZE SIZE_MAX
+-#define BUG_ON(x) assert(x)
  
-> >
-> > Another thing I'd like to suggest is to completely split swapper_pg_dir
-> > initialization from setup_vm() and keep this function solely for
-> > initialization of the trampoline_pg_dir. The trampoline_pg_dir can use
-> > large pages and the memory below the kernel start can be mapped there
-> > simply by mapping the entire large page containing the kernel start.
-> > Then, the swapper_pg_dir setup can run with virtual memory enabled and can
-> > have much more flexibility.
-> 
-> Sure, this is a good suggestion. I will add this as separate patch in this
-> series.
-
-> Regards,
-> Anup
-> 
-
+ typedef pthread_spinlock_t  spinlock_t;
+ 
 -- 
-Sincerely yours,
-Mike.
+2.20.1
 
