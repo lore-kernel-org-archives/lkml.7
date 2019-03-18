@@ -2,155 +2,107 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38705C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5014C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F216B20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D4F20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="u+z5hMth"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Doq4FbmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfCRQaC (ORCPT
+        id S1727614AbfCRQaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:30:02 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37830 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbfCRQaB (ORCPT
+        Mon, 18 Mar 2019 12:30:18 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46393 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbfCRQaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:30:01 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a17so14652258ljd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:30:00 -0700 (PDT)
+        Mon, 18 Mar 2019 12:30:17 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a22so11716890pgg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:30:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OokwICR1EaMWxSspcBrfTFPwSLwxOUmEBWakGxJZAeM=;
-        b=u+z5hMthuOFWRC0ETyNeEsu/8cMIWgAeFK21iQsly94vMe5cqovPCTWUYFIB9x2ALb
-         4BT/XOdfojAeow+1lk9aLElY+hPqyDq4yJbkzfr7+lmzygZeBYNZDWMrjQli5LDFP6bu
-         L2D4DiCUdE4+Drhpkeu4qEBA7Z178HdJoeBa+MVojG+OD6rPMWEUeynGH0mWJPlcgDDf
-         T2O+YKXD9WpbrYthSFxrooxO87PXNy9M7KFzzQrHAtJFrxM61i8D7vDSY9kXE/TyIg9P
-         kONxW6Vwsf0H2Q233cyjXrFxOFGJ358VN/skTOgQPMCRryasdBMyTGnECoc5lu0OP4aW
-         G7PQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZjJCSLoV0IV7bvoksjMQJg9kvOj0Yf0kTeZm0+Inl/g=;
+        b=Doq4FbmRxGlDjExFYdZTH1rZHFxiKHAszlhARZuWH+yzCyj57zREC7jJhtPOa2wgmt
+         +Cy3Om5hys3dQE/XJmFcaW61lb49K9P4lEA0MzbjQWkoziXReWFPK7Aak5sNLJ4tkRZv
+         ZuWToKpWTOS3fkSFMobAr0nxvel3sKqqbOvFGrYNx2DIAW1qJskJLhjENG887F56F8Sc
+         +NBKwY07wSrMn2Q1JO37bC3i4uGlQFqRVL+IWi0yPxjp7Vn4lJkJrTL8mfQdAFhr5nlr
+         oHcsntXbfV9Y9NHSwWTanQ/vGKkubCjIJuDXvT8MsDkhCjV2TR0JXsObW+3wchuaErRo
+         uZwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OokwICR1EaMWxSspcBrfTFPwSLwxOUmEBWakGxJZAeM=;
-        b=lfumG+29l2ifON9VFsUX0lKHf3ba4R8cinR/vmZoq9xfpuTbHkM7/UcbjiP64Yy4hg
-         +NKBhMnBm4A9KQPZF9B3JtxApOSnsFGv29IFgRPqmPjIc983dOqhUKfio0XBfgGofqzA
-         0U57VOyXgSNF9lI2PnyOcLHJjB1Z1K/OKuX42ih1++ZD2LXVDJPBOzSVadxSzE28mILa
-         TUMwtKCJm6GfNbbXTiDGrq7LvnVj+bRhKuPjYTA4Tlq9oDga2VK95n4/T8FxwnmD08SD
-         ot2m7MmU2bovJb3Xta1fUDWl3JGjUiMY78OGm+PU8NSZbJt+BVfM6tvb3amKxh7Yvk4k
-         3+aA==
-X-Gm-Message-State: APjAAAULxx+DIz7lMT0OnDjSnuqA98pNHcjcDbt10bXUqImL9n/hspto
-        zgIsVLU/S8/RCv5s6VfsLw9B4SsCMCVmgyuyxp+g
-X-Google-Smtp-Source: APXvYqxy02BwkfP0ynSz3MUJUgC3Lc9lYU951CuozLyYfifV3mTJv4jUb0EBd8UXKohL9C4zuw2R/Y8A5S+d5wK/ctA=
-X-Received: by 2002:a2e:500d:: with SMTP id e13mr8141965ljb.169.1552926599221;
- Mon, 18 Mar 2019 09:29:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZjJCSLoV0IV7bvoksjMQJg9kvOj0Yf0kTeZm0+Inl/g=;
+        b=e1KmApGKE+9WLOXerQa/15+J1Iy0ok5WHgXXcQnyGjLLF6hN6QVnD/b+IB4OyUTwvk
+         7/Ts0XRWVjCP4YPIruetoTxvDJ533s+jk8qJ55C7RnZq7AR1nAOGo0W4cmwj930Q79Vq
+         XFV9Pm4Fo6UdNqZ/OVk9VqDl6O66/2wYrG8N0uBkkNt67FZ2tXRSxE55tylds24jqrHb
+         cJUKZY0pMf/ErNcL8RyQ6tkjCR2TkDlzLcdgojyXuL+3Ecr+pgjCLiBZuwMzpnqT6p0J
+         VY/ca2C8sRWRbo6YO2OFPf8GQQI1AgsdKx5Vrc6x7uEQl9R0dXGtDGX/g7KPt8IOokIL
+         6v+A==
+X-Gm-Message-State: APjAAAX1YyulC/0o8N/byqlnPC8q/cW61oW7ekmE+Cks/+785VxHkOVY
+        x1p6DzGP7jAF4idvfIDr1bvNRyEy
+X-Google-Smtp-Source: APXvYqyEZnt/dgg82echlzuAfUtAMwq+4wApj1ie6dYBBBbX19HkHECwI8ljE+YeAOTZ8mq3jWPpWA==
+X-Received: by 2002:a63:f412:: with SMTP id g18mr18541105pgi.444.1552926617052;
+        Mon, 18 Mar 2019 09:30:17 -0700 (PDT)
+Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
+        by smtp.gmail.com with ESMTPSA id k27sm21926727pgb.70.2019.03.18.09.30.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 09:30:15 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id 99A3F2010E7; Tue, 19 Mar 2019 01:30:13 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] ARM: dts: imx6qdl: Fix typo in imx6qdl-icore-rqs.dtsi
+Date:   Tue, 19 Mar 2019 01:30:09 +0900
+Message-Id: <20190318163009.5093-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.21.0.135.g6e0cc6776106
 MIME-Version: 1.0
-References: <20190317134653.26824-1-omosnace@redhat.com>
-In-Reply-To: <20190317134653.26824-1-omosnace@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 18 Mar 2019 12:29:48 -0400
-Message-ID: <CAHC9VhSkXF+u+k9b3=753GrFyhfjJNdZ0Mh8uT4j5_iJWyNTbQ@mail.gmail.com>
-Subject: Re: [PATCH] selinux: fix NULL dereference in policydb_destroy()
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     selinux@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot+a57b2aff60832666fc28@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 9:47 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> The conversion to kvmalloc() forgot to account for the possibility that
-> p->type_attr_map_array might be null in policydb_destroy().
->
-> Fix this by destroying its contents only if it is not NULL.
->
-> Also make sure ebitmap_init() is called on all entries before
-> policydb_destroy() can be called. Right now this is a no-op, because
-> both kvcalloc() and ebitmap_init() just zero out the whole struct, but
-> let's rather not rely on a specific implementation.
->
-> Reported-by: syzbot+a57b2aff60832666fc28@syzkaller.appspotmail.com
-> Fixes: acdf52d97f82 ("selinux: convert to kvmalloc")
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> ---
->  security/selinux/ss/policydb.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->
-> NOTE: This applies directly on top of current Linus' tree, since the
-> problematic commit is not present in the selinux/stable-5.1 branch.
+This patch fixes a spelling typo.
 
-Thanks for fixing this; I was busy getting the libseccomp v2.4 release
-out towards the end of last week and hadn't had a chance to look at
-this yet.
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+---
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The patch looks good to me.  I just merged it into selinux/stable-5.1
-and I'll send that up to Linus later this week once I've finished
-merging/testing stuff that was waiting on the merge window to close.
-
-For those on the To/CC line who haven't followed this very closely;
-the kvmalloc() patches were posted a while ago, but I never merged the
-SELinux portions as I there were some concerns brought up that were
-never addressed (concerns around small systems and difficulty in an
-RCU conversion).  Evidently the higher ups felt these concerns were
-not significant enough and they merged the kvmalloc() changes anyway;
-this is why a non-trivial SELinux patch ended up in Linus' tree
-without going through the SELinux tree.  I'm not sure I feel strongly
-enough about the kvmalloc() change and the objections at this point to
-object to the kvmalloc() conversion now that it is in Linus' tree, so
-this is really just a FYI.
-
-> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policydb.c
-> index 6b576e588725..daecdfb15a9c 100644
-> --- a/security/selinux/ss/policydb.c
-> +++ b/security/selinux/ss/policydb.c
-> @@ -828,9 +828,11 @@ void policydb_destroy(struct policydb *p)
->         hashtab_map(p->range_tr, range_tr_destroy, NULL);
->         hashtab_destroy(p->range_tr);
->
-> -       for (i = 0; i < p->p_types.nprim; i++)
-> -               ebitmap_destroy(&p->type_attr_map_array[i]);
-> -       kvfree(p->type_attr_map_array);
-> +       if (p->type_attr_map_array) {
-> +               for (i = 0; i < p->p_types.nprim; i++)
-> +                       ebitmap_destroy(&p->type_attr_map_array[i]);
-> +               kvfree(p->type_attr_map_array);
-> +       }
->
->         ebitmap_destroy(&p->filename_trans_ttypes);
->         ebitmap_destroy(&p->policycaps);
-> @@ -2496,10 +2498,13 @@ int policydb_read(struct policydb *p, void *fp)
->         if (!p->type_attr_map_array)
->                 goto bad;
->
-> +       /* just in case ebitmap_init() becomes more than just a memset(0): */
-> +       for (i = 0; i < p->p_types.nprim; i++)
-> +               ebitmap_init(&p->type_attr_map_array[i]);
-> +
->         for (i = 0; i < p->p_types.nprim; i++) {
->                 struct ebitmap *e = &p->type_attr_map_array[i];
->
-> -               ebitmap_init(e);
->                 if (p->policyvers >= POLICYDB_VERSION_AVTAB) {
->                         rc = ebitmap_read(e, fp);
->                         if (rc)
-> --
-> 2.20.1
->
-
-
+diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+index 1d1b4bd0670f..a4217f564a53 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+@@ -264,7 +264,7 @@
+ 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
+ 	vmcc-supply = <&reg_sd3_vmmc>;
+ 	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+-	bus-witdh = <4>;
++	bus-width = <4>;
+ 	no-1-8-v;
+ 	status = "okay";
+ };
+@@ -275,7 +275,7 @@
+ 	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
+ 	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
+ 	vmcc-supply = <&reg_sd4_vmmc>;
+-	bus-witdh = <8>;
++	bus-width = <8>;
+ 	no-1-8-v;
+ 	non-removable;
+ 	status = "okay";
 -- 
-paul moore
-www.paul-moore.com
+2.21.0.135.g6e0cc6776106
+
