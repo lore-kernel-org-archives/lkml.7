@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC523C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87C9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7A320685
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF212173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 23:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552950971;
-	bh=D9a5mfXIH6A0vc9AUxpi0w/qwtFkZJa+fjFzX9poOag=;
+	s=default; t=1552950979;
+	bh=D5Mhm75a0ACku7LlVhVgdv7HU8LrtuNOISgMLZbCyno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UazbwNT2ZW26rVIJIqEpWaWK0fHY7x290BN6/ZT6qnn2hakz/m9kqV6JHxHirAH1a
-	 4vShhJmPP2OzHC8n6C2gZp81UuIht/Ck/qPYCXRPg/LpoLOVg7DnAWW/+Jw2AmKCHd
-	 otnWgKCRZygY59va77LWVkeMJYt58p4vRJwUM1ys=
+	b=vbMuz7OqoqvWLaXgf4ujLmbaX+4q4Z6gF/LLXf/mSRKxaK9Po35ixc2kS7smigxN0
+	 FATZAQsIDI3B37yXZPS76qOUs6grjzfrCPxvpnJWM3MLASjB2l2cgPv59HzAhe5Zjd
+	 DkO627tJ2rdEgnLSbtwdiNdGOaqq0Rn0lCgBy22k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387416AbfCRXQK (ORCPT
+        id S1727972AbfCRXQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 19:16:10 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:56153 "EHLO
+        Mon, 18 Mar 2019 19:16:17 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:42311 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727929AbfCRXQC (ORCPT
+        by vger.kernel.org with ESMTP id S1727887AbfCRXP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 19:16:02 -0400
+        Mon, 18 Mar 2019 19:15:58 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id B25462225D;
-        Mon, 18 Mar 2019 19:16:00 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 47E00220E0;
+        Mon, 18 Mar 2019 19:15:57 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 18 Mar 2019 19:16:00 -0400
+  by compute3.internal (MEProxy); Mon, 18 Mar 2019 19:15:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=wO87VhxlCRKJ6UZlTZ7CZPC3aFH+ZWg+1lDNDo6jzTY=; b=rj5LEI8w
-        3oY1HSnHFAAy1aECihxdSO4BhYbR3a7m4h8aZVZyiSnRrHpvDwL7jULer2aIOK1Z
-        usqY5sOx72yCP903jHAVEVB/Avnibesl+2dUC1hYkvuDcH4cQcohrUqz+I3oZOQm
-        UrP5otMzKLvl/10Ke7IXlQoKxzriKFC/WUjDUzVcPXkpmMxr9il3SblpYS4LcHCN
-        c64nfdrh7ezm437Rzu181/gY3iih9gOQz/bp0N3E3D0jbvqlPutPTUT7M0cbd2O4
-        pJeOFPl70EIQmgM2TU/jJk3WaU1b/oFiiyPXNBnTcHXsIKdoANBUjuhwC4BbdH09
-        xok9eiwaQWlFIg==
-X-ME-Sender: <xms:sCaQXD1HKUltEkRci5I-OjP3UUQJu7xVTeqaqDkJKMhMwYIpjVl9UQ>
+        fm2; bh=ZOz+dCigQD6M+16i89y5WGkd95DnyEE3MY9Cf6JzaU4=; b=KE8i+4CQ
+        bu6KwoB2LS2/2YMSEPnVIIO0KwKDQ91kCAO2PX+v6RKv5DYTobWEAWGmx7XRrW9C
+        2UOcGZnGOWzCpNCT9TSnp6tXiiNfhLGf/XUlFHCCbaOtP4TozEsHRe7JzxYRylEn
+        /cP5xT9CS3b+grgcIG+aR4ClvON3KcyV56LuZkj2gOOAy+Ebb7VMqT7pLT8kZhTT
+        G27MjG0VZi+Jvsxpj22LeHSOA9sacLqFBH5qcSR6LxAInZilMLMP4Jy/qetsXS8w
+        w3pKmN7IkpRi4iSz5pr+jfB+FgMl++zY5iA1Uiw7RL0b3LyrfzRd4rEpXZHcMgZm
+        esx77Y2OTubhCw==
+X-ME-Sender: <xms:rSaQXOtIgMaJBI31quK8nalZW-_-pI0A5CQhrfnryHyCuAyGiSmlPQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddriedvgddtfecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -51,22 +51,22 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddriedvgddtfecutefuodetggdote
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvgedrudeiledrudegledrgedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
     ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeduud
-X-ME-Proxy: <xmx:sCaQXGUY9W9cHeRX8axAOtPy6Xdc1T4GCX_2cxYFmM2DuZQBB6CYJQ>
-    <xmx:sCaQXO4NDbQagNqawC0tuTT6TP8rVCMKLcMu0qwnkXJEhEcC-xVunA>
-    <xmx:sCaQXNLLea7OaNHOdFniYNDDe3tbuVb9L6tpW3PsNwXvPvYQsAlnhw>
-    <xmx:sCaQXFPSuzsQJF1tucUl0Ex_XiI1fX3-T-P17Z0XccRW8PVqdQqLlA>
+X-ME-Proxy: <xmx:rSaQXPmSnuL_7O6Y2IYUzPYF0hGMK4Dj5Z2hZSAnY3yCUrFrsYEQTw>
+    <xmx:rSaQXF690c7ajnpP_l3JVa7WWZQvZp3Q9IJHcbsPK-uJx2iZusHcGQ>
+    <xmx:rSaQXN0Ixt-NMfCWd7sceFr_IONraOx_dPBsfl2_pN8Em8N3ufmacg>
+    <xmx:rSaQXGyCCH00-gyu4Az4qDlMFtbHCHXUBbSor7V4kLp3vf42hWm7kA>
 Received: from eros.localdomain (124-169-149-40.dyn.iinet.net.au [124.169.149.40])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1C70910311;
-        Mon, 18 Mar 2019 19:15:57 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id B17B310317;
+        Mon, 18 Mar 2019 19:15:54 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/13] docs: filesystems: vfs: Use backticks to guard star
-Date:   Tue, 19 Mar 2019 10:14:37 +1100
-Message-Id: <20190318231437.1666-14-tobin@kernel.org>
+Subject: [PATCH v2 12/13] docs: filesystems: vfs: Do minor grammar fixes
+Date:   Tue, 19 Mar 2019 10:14:36 +1100
+Message-Id: <20190318231437.1666-13-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318231437.1666-1-tobin@kernel.org>
 References: <20190318231437.1666-1-tobin@kernel.org>
@@ -77,40 +77,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sphinx emits a warning because of the use of a * (C pointer construct)
-within the document.  We can prevent this by guarding the C source code
-with back ticks.
+While converting to RST a few minor grammar mistakes were noticed.  Fix
+these now the conversion is done.
 
-Use backticks to guard star (C pointer).
+Fix minor grammar mistakes.
 
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- Documentation/filesystems/vfs.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/filesystems/vfs.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index 12b8e90403eb..8ad2507b3df6 100644
+index bd8f7891f44b..12b8e90403eb 100644
 --- a/Documentation/filesystems/vfs.rst
 +++ b/Documentation/filesystems/vfs.rst
-@@ -355,7 +355,7 @@ Extended attributes are name:value pairs.
+@@ -1111,13 +1111,13 @@ defined:
+ - ``d_dname``: called when the pathname of a dentry should be generated.
+   Useful for some pseudo filesystems (sockfs, pipefs, ...) to delay
+   pathname generation.  (Instead of doing it when dentry is created,
+-  it's done only when the path is needed.).  Real filesystems probably
+-  dont want to use it, because their dentries are present in global
++  it's done only when the path is needed.)  Real filesystems probably
++  don't want to use it, because their dentries are present in global
+   dcache hash, so their hash should be an invariant.  As no lock is
+   held, d_dname() should not try to modify the dentry itself, unless
+   appropriate SMP safety is used.  CAUTION : d_path() logic is quite
+   tricky.  The correct way to return for example "Hello" is to put it at
+-  the end of the buffer, and returns a pointer to the first char.
++  the end of the buffer, and return a pointer to the first char.
+   dynamic_dname() helper function is provided to take care of this.
  
- When none of the xattr handlers of a filesystem match the specified
- attribute name or when a filesystem doesn't support extended attributes,
--the various *xattr(2) system calls return -EOPNOTSUPP.
-+the various ``*xattr(2)`` system calls return -EOPNOTSUPP.
+   .. code-block:: c
+@@ -1211,7 +1211,7 @@ manipulate dentries:
+   d_instantiate().
  
- 
- The Inode Object
-@@ -722,7 +722,7 @@ cache in your filesystem.  The following members are defined:
-   out properly.
- 
-   The filesystem must return the locked pagecache page for the specified
--  offset, in *pagep, for the caller to write into.
-+  offset, in ``*pagep``, for the caller to write into.
- 
-   It must be able to cope with short writes (where the length passed to
-   write_begin is greater than the number of bytes copied into the page).
+ - ``d_instantiate``: add a dentry to the alias hash list for the inode and
+-  updates the "d_inode" member.  The "i_count" member in the inode
++  update the "d_inode" member.  The "i_count" member in the inode
+   structure should be set/incremented.  If the inode pointer is NULL, the
+   dentry is called a "negative dentry".  This function is commonly called
+   when an inode is created for an existing negative dentry.
 -- 
 2.21.0
 
