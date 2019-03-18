@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194ACC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF32C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCDCA21738
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564BA21738
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901413;
-	bh=vUTFL7kcYu2OurL96qK3bzB6YqcGSp6d//Kgsjc/SVk=;
+	s=default; t=1552901416;
+	bh=ro1Xtcj9HfzBPgdoCDOFixRpgXl1J3d8CV8CVeofE54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LqwI/Z4zn4x+Ox+SNujlOp334GD4EOf6GiVdnHENsCBzEPfnrJQWBVkDSmpH9/xbU
-	 DLL+qdh3W1UuMUITpt1AueOcIOOM0eLoBVHD4PYm2LAl1sd9SCrs+OXL8gpT+A4P9Y
-	 lqgoD4z98nWcaten3E2BlzoBW+poBhaZX7YSjAnE=
+	b=TUMM8WixFpU9AkCfT4Mgtwcl71hG0wfYjPHGZaMkpkSoYWQMREdFAjcHthVEDYtbL
+	 NnvqGWoUW3nQAmCMdFMumkw+iRizgQSSjVhLJ21oOAOkCVZ+Cj6vtMlkwWEGvqZbFo
+	 LCKKGoYuUxhLtbRTwpHoCBwtGmlWMYx21MoUO+Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfCRJaM (ORCPT
+        id S1728350AbfCRJaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37114 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:30:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728006AbfCRJaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727672AbfCRJaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Mar 2019 05:30:10 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4C03214AF;
-        Mon, 18 Mar 2019 09:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E2472083D;
+        Mon, 18 Mar 2019 09:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901410;
-        bh=vUTFL7kcYu2OurL96qK3bzB6YqcGSp6d//Kgsjc/SVk=;
+        s=default; t=1552901407;
+        bh=ro1Xtcj9HfzBPgdoCDOFixRpgXl1J3d8CV8CVeofE54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yg47ldgA/Jq0qQj+aU6SETbC6M/F15d6YN8o8mT+CdNtVHVVzmOu4eth6XmvL/Kb0
-         jhXocZFMdd9V3Dwb/5akASaHA+sfhTbbX1/XQRjWjVgPoNtxnkGs+YK2f725Fw/t8d
-         xjqhgVF75dUWMceBRUFuy44WpF8x8arrc9J89Vlg=
+        b=OPwJLrctrVSEj2aWzDgGU9a+dFaXsga2/IA3YxL0E2Ha/gkYVi1uX2FxcX5v7rqGJ
+         PLV9S4iT8BvJQbcU8/7HC2o2C3d8U/deBhKcDw4zf375L2+aVbWYwNmh8H+JBi/v00
+         SgK20/V9Lm7NhgXkHbtqSR2TvP9uTFD19SbYeD5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 35/52] ipv6: route: enforce RCU protection in ip6_route_check_nh_onlink()
-Date:   Mon, 18 Mar 2019 10:25:22 +0100
-Message-Id: <20190318083847.480216970@linuxfoundation.org>
+Subject: [PATCH 4.20 08/52] net: hsr: fix memory leak in hsr_dev_finalize()
+Date:   Mon, 18 Mar 2019 10:24:55 +0100
+Message-Id: <20190318083844.401518713@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -66,49 +66,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit bf1dc8bad1d42287164d216d8efb51c5cd381b18 ]
+[ Upstream commit 3dc6da493a29dbeda9f13b637bd9c02c414b2261 ]
 
-We need a RCU critical section around rt6_info->from deference, and
-proper annotation.
+If hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER) failed to
+add port, it directly returns res and forgets to free the node
+that allocated in hsr_create_self_node(), and forgets to delete
+the node->mac_list linked in hsr->self_node_db.
 
-Fixes: 4ed591c8ab44 ("net/ipv6: Allow onlink routes to have a device mismatch if it is the default route")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+BUG: memory leak
+unreferenced object 0xffff8881cfa0c780 (size 64):
+  comm "syz-executor.0", pid 2077, jiffies 4294717969 (age 2415.377s)
+  hex dump (first 32 bytes):
+    e0 c7 a0 cf 81 88 ff ff 00 02 00 00 00 00 ad de  ................
+    00 e6 49 cd 81 88 ff ff c0 9b 87 d0 81 88 ff ff  ..I.............
+  backtrace:
+    [<00000000e2ff5070>] hsr_dev_finalize+0x736/0x960 [hsr]
+    [<000000003ed2e597>] hsr_newlink+0x2b2/0x3e0 [hsr]
+    [<000000003fa8c6b6>] __rtnl_newlink+0xf1f/0x1600 net/core/rtnetlink.c:3182
+    [<000000001247a7ad>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3240
+    [<00000000e7d1b61d>] rtnetlink_rcv_msg+0x54e/0xb90 net/core/rtnetlink.c:5130
+    [<000000005556bd3a>] netlink_rcv_skb+0x129/0x340 net/netlink/af_netlink.c:2477
+    [<00000000741d5ee6>] netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+    [<00000000741d5ee6>] netlink_unicast+0x49a/0x650 net/netlink/af_netlink.c:1336
+    [<000000009d56f9b7>] netlink_sendmsg+0x88b/0xdf0 net/netlink/af_netlink.c:1917
+    [<0000000046b35c59>] sock_sendmsg_nosec net/socket.c:621 [inline]
+    [<0000000046b35c59>] sock_sendmsg+0xc3/0x100 net/socket.c:631
+    [<00000000d208adc9>] __sys_sendto+0x33e/0x560 net/socket.c:1786
+    [<00000000b582837a>] __do_sys_sendto net/socket.c:1798 [inline]
+    [<00000000b582837a>] __se_sys_sendto net/socket.c:1794 [inline]
+    [<00000000b582837a>] __x64_sys_sendto+0xdd/0x1b0 net/socket.c:1794
+    [<00000000c866801d>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+    [<00000000fea382d9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e01dacb3>] 0xffffffffffffffff
+
+Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/hsr/hsr_device.c   |    4 +++-
+ net/hsr/hsr_framereg.c |   12 ++++++++++++
+ net/hsr/hsr_framereg.h |    1 +
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -2752,20 +2752,24 @@ static int ip6_route_check_nh_onlink(str
- 	u32 tbid = l3mdev_fib_table(dev) ? : RT_TABLE_MAIN;
- 	const struct in6_addr *gw_addr = &cfg->fc_gateway;
- 	u32 flags = RTF_LOCAL | RTF_ANYCAST | RTF_REJECT;
-+	struct fib6_info *from;
- 	struct rt6_info *grt;
- 	int err;
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -486,7 +486,7 @@ int hsr_dev_finalize(struct net_device *
  
- 	err = 0;
- 	grt = ip6_nh_lookup_table(net, cfg, gw_addr, tbid, 0);
- 	if (grt) {
-+		rcu_read_lock();
-+		from = rcu_dereference(grt->from);
- 		if (!grt->dst.error &&
- 		    /* ignore match if it is the default route */
--		    grt->from && !ipv6_addr_any(&grt->from->fib6_dst.addr) &&
-+		    from && !ipv6_addr_any(&from->fib6_dst.addr) &&
- 		    (grt->rt6i_flags & flags || dev != grt->dst.dev)) {
- 			NL_SET_ERR_MSG(extack,
- 				       "Nexthop has invalid gateway or device mismatch");
- 			err = -EINVAL;
- 		}
-+		rcu_read_unlock();
+ 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
+ 	if (res)
+-		return res;
++		goto err_add_port;
  
- 		ip6_rt_put(grt);
- 	}
+ 	res = register_netdevice(hsr_dev);
+ 	if (res)
+@@ -506,6 +506,8 @@ int hsr_dev_finalize(struct net_device *
+ fail:
+ 	hsr_for_each_port(hsr, port)
+ 		hsr_del_port(port);
++err_add_port:
++	hsr_del_node(&hsr->self_node_db);
+ 
+ 	return res;
+ }
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -124,6 +124,18 @@ int hsr_create_self_node(struct list_hea
+ 	return 0;
+ }
+ 
++void hsr_del_node(struct list_head *self_node_db)
++{
++	struct hsr_node *node;
++
++	rcu_read_lock();
++	node = list_first_or_null_rcu(self_node_db, struct hsr_node, mac_list);
++	rcu_read_unlock();
++	if (node) {
++		list_del_rcu(&node->mac_list);
++		kfree(node);
++	}
++}
+ 
+ /* Allocate an hsr_node and add it to node_db. 'addr' is the node's AddressA;
+  * seq_out is used to initialize filtering of outgoing duplicate frames
+--- a/net/hsr/hsr_framereg.h
++++ b/net/hsr/hsr_framereg.h
+@@ -16,6 +16,7 @@
+ 
+ struct hsr_node;
+ 
++void hsr_del_node(struct list_head *self_node_db);
+ struct hsr_node *hsr_add_node(struct list_head *node_db, unsigned char addr[],
+ 			      u16 seq_out);
+ struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
 
 
