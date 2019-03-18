@@ -2,77 +2,119 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC25C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78451C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A11204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3A3204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552902325;
+	bh=RE2TTe+ki30jktSvsh7vggaJ2pvVVu1pzsfa6BPAJpI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f5JgBAYONLS11IjuZ9SuwEO0I8+bx81b0s2WzvPWtLYRWYSRextrqy8aeRwvTMwRd
+	 AS9wClkLL5YL5wcBvJYvA2acauA4bBBdcYM1c5lK3fyYbA1a1ecNPtUwoWARvN5E0n
+	 9wiFNjkjU26Ji/EtXHzQpDkZ3iguUp9NQ8an8M7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbfCRJpL (ORCPT
+        id S1728318AbfCRJaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:45:11 -0400
-Received: from smtprelay0102.hostedemail.com ([216.40.44.102]:36818 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727358AbfCRJpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:45:09 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id A8E10180A68B8;
-        Mon, 18 Mar 2019 09:45:07 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: swing88_2c9538ef6284e
-X-Filterd-Recvd-Size: 1753
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 18 Mar 2019 09:45:06 +0000 (UTC)
-Message-ID: <494746a793619dd9b43fb152de811a6e7de77cce.camel@perches.com>
-Subject: Re: [PATCH v2 01/19] locking/lockdep: Change all print_*() return
- type to void
-From:   Joe Perches <joe@perches.com>
-To:     Yuyang Du <duyuyang@gmail.com>, peterz@infradead.org,
-        will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 18 Mar 2019 02:45:05 -0700
-In-Reply-To: <20190318085733.3143-2-duyuyang@gmail.com>
-References: <20190318085733.3143-1-duyuyang@gmail.com>
-         <20190318085733.3143-2-duyuyang@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 18 Mar 2019 05:30:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727093AbfCRJaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:30:04 -0400
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CACC2083D;
+        Mon, 18 Mar 2019 09:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552901403;
+        bh=RE2TTe+ki30jktSvsh7vggaJ2pvVVu1pzsfa6BPAJpI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IVgCl1SwvmWh6ArFprgFNakB7bxPwTnuFkl67JOzuAlQrssEkUV63EAqLYPIoc/Gu
+         ptOBit6hFtFwnk1ZWj/4Oo3PElOmJhA3Qgy8n1ljG50b0/6y1Fqt2NNbv/exuvdOlX
+         /A3wl59HBAhEUAcYJOaUHV4QBpOTQrW7H42myINI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.20 34/52] ipv6: route: enforce RCU protection in rt6_update_exception_stamp_rt()
+Date:   Mon, 18 Mar 2019 10:25:21 +0100
+Message-Id: <20190318083847.372147753@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
+References: <20190318083843.398913295@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-18 at 16:57 +0800, Yuyang Du wrote:
-> Since none of the print_*() function's return value is necessary, change
-> their return type to void. No functional change.
-> 
-> In cases where an invariable return value is used, this change slightly
-> improves readability, i.e.:
-[]
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-[]
-> @@ -1430,23 +1430,20 @@ static inline int __bfs_backwards(struct lock_list *src_entry,
-[]
-> -static void
-> -print_circular_lock_scenario(struct held_lock *src,
-> -			     struct held_lock *tgt,
-> -			     struct lock_list *prt)
-> +static void print_circular_lock_scenario(struct held_lock *src,
-> +					 struct held_lock *tgt,
-> +					 struct lock_list *prt)
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
-trivia:
+------------------
 
-This style change seems superfluous as many
-other existing functions use the previous style.
+From: Paolo Abeni <pabeni@redhat.com>
+
+[ Upstream commit 193f3685d0546b0cea20c99894aadb70098e47bf ]
+
+We must access rt6_info->from under RCU read lock: move the
+dereference under such lock, with proper annotation.
+
+v1 -> v2:
+ - avoid using multiple, racy, fetch operations for rt->from
+
+Fixes: a68886a69180 ("net/ipv6: Make from in rt6_info rcu protected")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv6/route.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -1608,15 +1608,15 @@ static int rt6_remove_exception_rt(struc
+ static void rt6_update_exception_stamp_rt(struct rt6_info *rt)
+ {
+ 	struct rt6_exception_bucket *bucket;
+-	struct fib6_info *from = rt->from;
+ 	struct in6_addr *src_key = NULL;
+ 	struct rt6_exception *rt6_ex;
+-
+-	if (!from ||
+-	    !(rt->rt6i_flags & RTF_CACHE))
+-		return;
++	struct fib6_info *from;
+ 
+ 	rcu_read_lock();
++	from = rcu_dereference(rt->from);
++	if (!from || !(rt->rt6i_flags & RTF_CACHE))
++		goto unlock;
++
+ 	bucket = rcu_dereference(from->rt6i_exception_bucket);
+ 
+ #ifdef CONFIG_IPV6_SUBTREES
+@@ -1635,6 +1635,7 @@ static void rt6_update_exception_stamp_r
+ 	if (rt6_ex)
+ 		rt6_ex->stamp = jiffies;
+ 
++unlock:
+ 	rcu_read_unlock();
+ }
+ 
 
 
