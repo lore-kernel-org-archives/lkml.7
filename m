@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D922C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A84DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0D52087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A39C2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901594;
-	bh=h/n/E1j4Vm6JxjLBeHhDqsWf2DoPXbCgCLfxkbqWvjc=;
+	s=default; t=1552901596;
+	bh=a0akCjYTQSVDNa0Nd7fb0DETN+Uw+1d/nEiDnhLuPEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3/ezdsvcV92R5SMbfba0F4BvEhMyrsPz4p+mszdgLsU4YHxOT5hXM05TfcLXd0bM
-	 QSbocmdRXUnFxo67jIwc02H49aaH7NjVDB0pvj94/0WvyWHWuNaFrRw5enNI45pxf3
-	 NStG4jYVjCcHYyysMhFNWA7mQpo5837MZGRmsiRU=
+	b=i1TcX4/UfK9CRjmC89ET22TJJHs9pRtDI/IV1AR9xtUQd2oVu+n/6hA1zqIuEBeS5
+	 4hpbuYl1jeSEEgjn32/+GulwkjjI+v83Us+iuYQjpod/2kGb7JhHe3lMTjmwuzwwR1
+	 +5BtRwqq3X5YdATAHrtGA50UQ6V3CYCM07vLcADg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbfCRJdL (ORCPT
+        id S1728841AbfCRJdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:33:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:33:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727907AbfCRJdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:08 -0400
+        id S1728829AbfCRJdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:33:12 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3CBA2075C;
-        Mon, 18 Mar 2019 09:33:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CBCA2075C;
+        Mon, 18 Mar 2019 09:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901587;
-        bh=h/n/E1j4Vm6JxjLBeHhDqsWf2DoPXbCgCLfxkbqWvjc=;
+        s=default; t=1552901590;
+        bh=a0akCjYTQSVDNa0Nd7fb0DETN+Uw+1d/nEiDnhLuPEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s0kUHILRZ8zOVus+sGgToBt1GQ92KP5m5hPaYHijizLr5MDsqjMB9c77ScXcYbMJj
-         TYpHVSLQt5QPs9j1HoqpEoLFgWFAufBlbYex1ZP3r1Q2C/nqXMPzBYw8IjS2IBCH4V
-         TkmNBYO6Wa5sBwGgiUE3JeeOIU2xHRHOc8GO7UoQ=
+        b=GloGmnKV2Uub2ZphhLJvbssETCTab1kNSbvCGiZQefHI+2u1yLkYdBJgmLNlxit4R
+         PyEGUL6Bb96lcHZvW6UZaf8Ti/MGG4jvNP3XJssqAwQZvZl13+fY45pL8pmQUZpnOV
+         DTewsdskO69Xc4dkTXZGCaVEu/6NWv24fyxzTegk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bryan Whitehead <Bryan.Whitehead@microchip.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 06/52] lan743x: Fix TX Stall Issue
-Date:   Mon, 18 Mar 2019 10:25:03 +0100
-Message-Id: <20190318084014.310908126@linuxfoundation.org>
+Subject: [PATCH 4.19 07/52] net: hsr: fix memory leak in hsr_dev_finalize()
+Date:   Mon, 18 Mar 2019 10:25:04 +0100
+Message-Id: <20190318084014.437638694@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -66,67 +66,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bryan Whitehead <Bryan.Whitehead@microchip.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit deb6bfabdbb634e91f36a4e9cb00a7137d72d886 ]
+[ Upstream commit 3dc6da493a29dbeda9f13b637bd9c02c414b2261 ]
 
-It has been observed that tx queue may stall while downloading
-from certain web sites (example www.speedtest.net)
+If hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER) failed to
+add port, it directly returns res and forgets to free the node
+that allocated in hsr_create_self_node(), and forgets to delete
+the node->mac_list linked in hsr->self_node_db.
 
-The cause has been tracked down to a corner case where
-the tx interrupt vector was disabled automatically, but
-was not re enabled later.
+BUG: memory leak
+unreferenced object 0xffff8881cfa0c780 (size 64):
+  comm "syz-executor.0", pid 2077, jiffies 4294717969 (age 2415.377s)
+  hex dump (first 32 bytes):
+    e0 c7 a0 cf 81 88 ff ff 00 02 00 00 00 00 ad de  ................
+    00 e6 49 cd 81 88 ff ff c0 9b 87 d0 81 88 ff ff  ..I.............
+  backtrace:
+    [<00000000e2ff5070>] hsr_dev_finalize+0x736/0x960 [hsr]
+    [<000000003ed2e597>] hsr_newlink+0x2b2/0x3e0 [hsr]
+    [<000000003fa8c6b6>] __rtnl_newlink+0xf1f/0x1600 net/core/rtnetlink.c:3182
+    [<000000001247a7ad>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3240
+    [<00000000e7d1b61d>] rtnetlink_rcv_msg+0x54e/0xb90 net/core/rtnetlink.c:5130
+    [<000000005556bd3a>] netlink_rcv_skb+0x129/0x340 net/netlink/af_netlink.c:2477
+    [<00000000741d5ee6>] netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+    [<00000000741d5ee6>] netlink_unicast+0x49a/0x650 net/netlink/af_netlink.c:1336
+    [<000000009d56f9b7>] netlink_sendmsg+0x88b/0xdf0 net/netlink/af_netlink.c:1917
+    [<0000000046b35c59>] sock_sendmsg_nosec net/socket.c:621 [inline]
+    [<0000000046b35c59>] sock_sendmsg+0xc3/0x100 net/socket.c:631
+    [<00000000d208adc9>] __sys_sendto+0x33e/0x560 net/socket.c:1786
+    [<00000000b582837a>] __do_sys_sendto net/socket.c:1798 [inline]
+    [<00000000b582837a>] __se_sys_sendto net/socket.c:1794 [inline]
+    [<00000000b582837a>] __x64_sys_sendto+0xdd/0x1b0 net/socket.c:1794
+    [<00000000c866801d>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+    [<00000000fea382d9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e01dacb3>] 0xffffffffffffffff
 
-The lan743x has two mechanisms to enable/disable individual
-interrupts. Interrupts can be enabled/disabled by individual
-source, and they can also be enabled/disabled by individual
-vector which has been mapped to the source. Both must be
-enabled for interrupts to work properly.
-
-The TX code path, primarily uses the interrupt enable/disable of
-the TX source bit, while leaving the vector enabled all the time.
-
-However, while investigating this issue it was noticed that
-the driver requested the use of the vector auto clear feature.
-
-The test above revealed a case where the vector enable was
-cleared unintentionally.
-
-This patch fixes the issue by deleting the lines that request
-the vector auto clear feature to be used.
-
-Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
-Signed-off-by: Bryan Whitehead <Bryan.Whitehead@microchip.com>
+Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/microchip/lan743x_main.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ net/hsr/hsr_device.c   |    4 +++-
+ net/hsr/hsr_framereg.c |   12 ++++++++++++
+ net/hsr/hsr_framereg.h |    1 +
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -585,8 +585,7 @@ static int lan743x_intr_open(struct lan7
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -486,7 +486,7 @@ int hsr_dev_finalize(struct net_device *
  
- 		if (adapter->csr.flags &
- 		   LAN743X_CSR_FLAG_SUPPORTS_INTR_AUTO_SET_CLR) {
--			flags = LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_CLEAR |
--				LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_SET |
-+			flags = LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_SET |
- 				LAN743X_VECTOR_FLAG_SOURCE_ENABLE_AUTO_SET |
- 				LAN743X_VECTOR_FLAG_SOURCE_ENABLE_AUTO_CLEAR |
- 				LAN743X_VECTOR_FLAG_SOURCE_STATUS_AUTO_CLEAR;
-@@ -599,12 +598,6 @@ static int lan743x_intr_open(struct lan7
- 			/* map TX interrupt to vector */
- 			int_vec_map1 |= INT_VEC_MAP1_TX_VEC_(index, vector);
- 			lan743x_csr_write(adapter, INT_VEC_MAP1, int_vec_map1);
--			if (flags &
--			    LAN743X_VECTOR_FLAG_VECTOR_ENABLE_AUTO_CLEAR) {
--				int_vec_en_auto_clr |= INT_VEC_EN_(vector);
--				lan743x_csr_write(adapter, INT_VEC_EN_AUTO_CLR,
--						  int_vec_en_auto_clr);
--			}
+ 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
+ 	if (res)
+-		return res;
++		goto err_add_port;
  
- 			/* Remove TX interrupt from shared mask */
- 			intr->vector_list[0].int_mask &= ~int_bit;
+ 	res = register_netdevice(hsr_dev);
+ 	if (res)
+@@ -506,6 +506,8 @@ int hsr_dev_finalize(struct net_device *
+ fail:
+ 	hsr_for_each_port(hsr, port)
+ 		hsr_del_port(port);
++err_add_port:
++	hsr_del_node(&hsr->self_node_db);
+ 
+ 	return res;
+ }
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -124,6 +124,18 @@ int hsr_create_self_node(struct list_hea
+ 	return 0;
+ }
+ 
++void hsr_del_node(struct list_head *self_node_db)
++{
++	struct hsr_node *node;
++
++	rcu_read_lock();
++	node = list_first_or_null_rcu(self_node_db, struct hsr_node, mac_list);
++	rcu_read_unlock();
++	if (node) {
++		list_del_rcu(&node->mac_list);
++		kfree(node);
++	}
++}
+ 
+ /* Allocate an hsr_node and add it to node_db. 'addr' is the node's AddressA;
+  * seq_out is used to initialize filtering of outgoing duplicate frames
+--- a/net/hsr/hsr_framereg.h
++++ b/net/hsr/hsr_framereg.h
+@@ -16,6 +16,7 @@
+ 
+ struct hsr_node;
+ 
++void hsr_del_node(struct list_head *self_node_db);
+ struct hsr_node *hsr_add_node(struct list_head *node_db, unsigned char addr[],
+ 			      u16 seq_out);
+ struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
 
 
