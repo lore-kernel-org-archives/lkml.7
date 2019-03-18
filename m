@@ -2,109 +2,101 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C40FC10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B48C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE9520685
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="lQE2W46i"
+	by mail.kernel.org (Postfix) with ESMTP id CB3E920685
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552938180;
+	bh=jU0Hvq4xla+ij8ejd0tcj9NnaSuDFRrX9qP2lKseDPg=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=G/I/7khAeReusLFn58PbQXr8YDIFzUcs+HCExVPyu2THS+oZ3taGKxAsRI7GLLsLR
+	 iFLOImnKwKDzQqmf5PJKx7+DHblijhbiSqS/rLbZYqIt+ajfnxxwx4xK1i3wietKtr
+	 IvxuXtNSTfFvBnK4h4jXBdUClWhrh/IQX5HlPqzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbfCRTlv (ORCPT
+        id S1727665AbfCRTm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 15:41:51 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34838 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfCRTlu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 15:41:50 -0400
-Received: by mail-oi1-f193.google.com with SMTP id j132so11076533oib.2;
-        Mon, 18 Mar 2019 12:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M139LBtlkNrQR6u9V/xwOU9GjCtoAeXlSSkK8+ntcTE=;
-        b=lQE2W46iJf0QnJmPvkcAeS0bcn8HU/eQoU1uYCSye2F1xkagCnvS/qmLd1nUPmUjx1
-         f28ns82LbDnNl8T/l/tw/UbWhHr0oSQpfTGjFm5CZvUWt9mkvpYIvFSDsxPBO8ug82jl
-         4f9+C7uMOawkm4xGdgyjgDF8ZAUlA+vRRpGPz52n7+/CbmWQPCEJvnaxsA7MbfpeuHFk
-         2+mDVMA6ugFYOGrxcF0jWmKz5h2MkD4Nif1zdoB79reTVDvfIEGYnCCP45M+rySGSvXI
-         qAMOH7V6imNTVxhjJj9vHtin+jMWEVeh/Z90FcxfIY8GbTA8Q2GA7L2rcJktZ8uVn/Kd
-         Uh3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M139LBtlkNrQR6u9V/xwOU9GjCtoAeXlSSkK8+ntcTE=;
-        b=iTIKb8wqzGNtSaa7tR+IBy8txkecgCKUgR9fJSD1xDQsqjRHcv4+MBkr+pgR4X80Zx
-         G5/0mBmPG8frvmelJof077HAXe865aisxpn8hKJGwGkbgkPGx6BwYrE4FQ+fQ2ndoKg5
-         XXiSDwQGtZn/kAfb6HgZgI5CYDtJNiIPnvwo/ezwIMwvgs42nubcYTKXdYNAUTwAXF7s
-         ZAqUuX2st9eCoNzFO4krhbwjvYJCGn3GuWFkjIwreFWxxZsoeS1vw529XHnzO+J30fDG
-         /d+LOVf3PC1mo7VVspLJIFy3SfolFo85rvnq4eimqnKAWGXcVtKTLN2kFmrA03F8bQrT
-         JdYw==
-X-Gm-Message-State: APjAAAUccM/JNe2UcEwiGtb/GyQRUztSvk+zOzv9lYFAfhkfMB0o9Bwi
-        CVL548BREDF4RsRiISOEu+sZY8OFoUGuL1W6KyA=
-X-Google-Smtp-Source: APXvYqzPsZ08jUobF4l6lHBcenCpjNvX5aFGpPo6j6bHgO/RsRvZ7GknFMisfezHgYoA2gNtyKtHGyoGo5PQ9cl5U9g=
-X-Received: by 2002:aca:a9ce:: with SMTP id s197mr361423oie.129.1552938108945;
- Mon, 18 Mar 2019 12:41:48 -0700 (PDT)
+        Mon, 18 Mar 2019 15:42:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727028AbfCRTm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 15:42:58 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B90AF20685;
+        Mon, 18 Mar 2019 19:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552938177;
+        bh=jU0Hvq4xla+ij8ejd0tcj9NnaSuDFRrX9qP2lKseDPg=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=qVQlr9BsdYS76JtNhqSj3QIOxFKXc2z2VQs4TpCU1moyxOUfWM5U4IRjctLCKZUDZ
+         Vu1L9U9Ak+RPqaSFOoYctYHU9ideR7weDasoC6n6rMwTkPjfqjmgE/Ba4TI+5UArKj
+         ybH9dl6JzPXd8Z+mN6oUnWO/2qlJrXZvedq3ddec=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190318101153.7531-1-narmstrong@baylibre.com> <bb77c909-c19c-00e5-c5e1-25215b5a4c3a@baylibre.com>
-In-Reply-To: <bb77c909-c19c-00e5-c5e1-25215b5a4c3a@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 18 Mar 2019 20:41:38 +0100
-Message-ID: <CAFBinCB-pLk+U1EWJ0PpdJTRteHQvrRVDpNY+QZ+2N72kKVKGg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] arm64: meson: Add support for USB on Amlogic G12A
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
-        kishon@ti.com, linux-amlogic@lists.infradead.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <15f0f82f-0607-4cf5-f5a5-5edd7c5321bc@xilinx.com>
+References: <1551742066-10825-1-git-send-email-jollys@xilinx.com> <15f0f82f-0607-4cf5-f5a5-5edd7c5321bc@xilinx.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] drivers: clk: zynqmp: Allow zero divisor value
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jollys@xilinx.com>
+To:     Jolly Shah <jolly.shah@xilinx.com>, linux-clk@vger.kernel.org,
+        michal.simek@xilinx.com, mturquette@baylibre.com,
+        sboyd@codeaurora.org
+Message-ID: <155293817691.20095.7275560826051843640@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Mon, 18 Mar 2019 12:42:56 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+Quoting Michal Simek (2019-03-18 05:48:52)
+> On 05. 03. 19 0:27, Jolly Shah wrote:
+> > From: Rajan Vaja <rajan.vaja@xilinx.com>
+> >=20
+> > Zero divider is valid and default for some of ZynqMP
+> > clocks. Allow zero divisor when CLK_DIVIDER_ALLOW_ZERO
+> > for the clock is set.
+> >=20
+> > Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> > ---
+> >  drivers/clk/zynqmp/divider.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >=20
+> > diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+> > index a371c66..e146b6f 100644
+> > --- a/drivers/clk/zynqmp/divider.c
+> > +++ b/drivers/clk/zynqmp/divider.c
+> > @@ -76,6 +76,13 @@ static unsigned long zynqmp_clk_divider_recalc_rate(=
+struct clk_hw *hw,
+> >       else
+> >               value =3D div >> 16;
+> > =20
+> > +     if (!value) {
+> > +             WARN(!(divider->flags & CLK_DIVIDER_ALLOW_ZERO),
+> > +                  "%s: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set=
+\n",
+> > +                  clk_name);
+> > +             return parent_rate;
+> > +     }
+> > +
+> >       return DIV_ROUND_UP_ULL(parent_rate, value);
+> >  }
+> > =20
+> >=20
+>=20
+> Stephen: Do you want to take it via your tree?
+>=20
 
-On Mon, Mar 18, 2019 at 2:29 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 18/03/2019 11:11, Neil Armstrong wrote:
-> > This patchset adds support for USB on Amlogic G12A SoCs.
-> >
-> > This patchset is composed with :
-> > - bindings of the PHYs
-> > - bindings of the USB Control Glue
-> > - PHY Drivers
-> > - USB Control Glue driver
-> >
-> > Device Tree nodes will be added in a separate patchset.
-> >
-> > The Amlogic G12A USB Complex is composed of :
-> > - 2 USB Controllers :
-> >  * DWC3 for USB2 and USB3 Host functionality
-> >  * DWC2 for USB2 Peripheral functionality
-> > - 2 USB2 OTG PHYs, only a single one will be routed to either DWC2 to DWC3
-> > - 1 USB3 PHY shared with PCIE funcionnality
-> > - A Glue to control PHY routing, setup and OTG detection
-> >
-> > The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
-> > routing of the OTG PHY between the DWC3 and DWC2 controllers, and
-> > setups the on-chip OTG mode selection for this PHY.
-> >
-> > This drivers supports the on-probe setup of the OTG mode, and manually
-> > via the USB Role interface. The IRQ mode change detect is yet to be added
-> > in a future patchset, mainly due to lack of hardware to validate on.
-> >
->
-> Resent with USB2 PHY registers documented
-awesome, thank you very much for this!
+Sure.
 
-
-Regards
-Martin
