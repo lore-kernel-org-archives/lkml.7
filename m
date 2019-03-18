@@ -2,65 +2,70 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81713C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F3CC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574D320857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C0A2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfCRH3w (ORCPT
+        id S1727089AbfCRHbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 03:29:52 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:50525 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbfCRH3w (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Mon, 18 Mar 2019 03:29:52 -0400
-Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Mon, 18 Mar 2019 08:29:51 +0100
-Received: from d104.suse.de (nwb-a10-snat.microfocus.com [10.120.13.201])
-        by emea4-mta.ukb.novell.com with ESMTP (NOT encrypted); Mon, 18 Mar 2019 07:29:44 +0000
+        Mon, 18 Mar 2019 03:31:36 -0400
+Received: from nat.nue.novell.com ([195.135.221.2]:21253 "EHLO suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726135AbfCRHbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 03:31:36 -0400
+Received: by suse.de (Postfix, from userid 1000)
+        id B626C45E0; Mon, 18 Mar 2019 08:31:34 +0100 (CET)
+Date:   Mon, 18 Mar 2019 08:31:34 +0100
 From:   Oscar Salvador <osalvador@suse.de>
 To:     akpm@linux-foundation.org
-Cc:     mhocko@suse.com, anshuman.khandual@arm.com,
-        william.kucharski@oracle.com, hughd@google.com, jack@suse.cz,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v2] mm: Fix __dump_page when mapping->host is not set
-Date:   Mon, 18 Mar 2019 08:29:31 +0100
-Message-Id: <20190318072931.29094-1-osalvador@suse.de>
-X-Mailer: git-send-email 2.13.7
+Cc:     mhocko@suse.com, david@redhat.com, mike.kravetz@oracle.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 0/2] Unlock 1GB-hugetlb on x86_64
+Message-ID: <20190318073130.mgqvtwbxw23hpdok@d104.suse.de>
+References: <20190304085147.556-1-osalvador@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304085147.556-1-osalvador@suse.de>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Swap mapping->host is NULL, so let us protect __dump_page() for such cases.
+On Mon, Mar 04, 2019 at 09:51:45AM +0100, Oscar Salvador wrote:
+> RFC -> V1:
+> 	- Split up the patch
+> 	- Added Michal's Acked-by
+> 
+> The RFC version of this patch was discussed here [1], and it did not find any
+> objection.
+> I decided to split up the former patch because one of the changes enables
+> offlining operation for 1GB-hugetlb pages, while the other change is a mere
+> cleanup.
+> 
+> Patch1 contains all the information regarding 1GB-hugetlb pages change.
+> 
+> [1] https://lore.kernel.org/linux-mm/20190221094212.16906-1-osalvador@suse.de/
+> 
+> Oscar Salvador (2):
+>   mm,memory_hotplug: Unlock 1GB-hugetlb on x86_64
+>   mm,memory_hotplug: Drop redundant hugepage_migration_supported check
+> 
+>  mm/memory_hotplug.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 
-Fixes: 1c6fb1d89e73c ("mm: print more information about mapping in __dump_page")
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
- mm/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Andrew, now that the merge window is closed, do you want me to re-base and
+re-send this, or will you pick it up as is?
 
-diff --git a/mm/debug.c b/mm/debug.c
-index c0b31b6c3877..7759f12a8fbb 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -79,7 +79,7 @@ void __dump_page(struct page *page, const char *reason)
- 		pr_warn("ksm ");
- 	else if (mapping) {
- 		pr_warn("%ps ", mapping->a_ops);
--		if (mapping->host->i_dentry.first) {
-+		if (mapping->host && mapping->host->i_dentry.first) {
- 			struct dentry *dentry;
- 			dentry = container_of(mapping->host->i_dentry.first, struct dentry, d_u.d_alias);
- 			pr_warn("name:\"%pd\" ", dentry);
+Thanks
+
 -- 
-2.13.7
-
+Oscar Salvador
+SUSE L3
