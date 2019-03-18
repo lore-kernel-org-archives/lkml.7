@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99DEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FB0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B1F2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E362075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901380;
-	bh=k0q/G9OWExDQH4v4PNlTr5ef+YtWGj6crlzvvdg4yKg=;
+	s=default; t=1552901384;
+	bh=Fx5ZOmlCRhZS+0XL4m+orrxmjLXfrNjwMmPA0HzuEe8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o6bIB0Ud/r3bB+EbYhv0UajTXSk41evS9vrWQ5RXbmgEXxJhoGsVWaPoaVGeVFts4
-	 CCElM2lmolOyIzry+Hgifet/CDrJP7BJBpd1VQRNXIIL4WBg8EL4DIGHyvCCQI9bC/
-	 iVdUwESaOZt0+r4tEvcNJVzIO+FHxtSWgiywRViY=
+	b=rsFVvXBYsGY9wQZnpgXj0OvnQQgEbVlDn9c9ps0yhhm+PsHtj10hrXoK4MG4Pv8Tp
+	 U5o2Mu5uF/LTmJqsuuPA4zWyaMCKLZ6JyD98teWQfemBCHmz/SNTZZcYPHr9O9Icfb
+	 T0a2sMlDAIlpEZ3At/n1Lxkw8btXByxiOjVIIrQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfCRJ3j (ORCPT
+        id S1728277AbfCRJ3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36002 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbfCRJ3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:29:32 -0400
+        id S1727890AbfCRJ3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:29:38 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BA042075C;
-        Mon, 18 Mar 2019 09:29:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DD272075C;
+        Mon, 18 Mar 2019 09:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901371;
-        bh=k0q/G9OWExDQH4v4PNlTr5ef+YtWGj6crlzvvdg4yKg=;
+        s=default; t=1552901377;
+        bh=Fx5ZOmlCRhZS+0XL4m+orrxmjLXfrNjwMmPA0HzuEe8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mJ5QGHxFkfESJSOwpltqfhbgnhcztUHegFrMyMZnWCxQIQffqcFxszCaYA8fdeaVP
-         OhpTpMhYp65CndXzLlcM283Icj4kKV5baFDW9FiJhW9cfDm5EXKfceCNgCMEK+DV1F
-         g13pSJDCFnlhKgInbBOtUl1dypIh2kkqu3ZVChsc=
+        b=wXIo25H98qGsX8MsHBGWE9LIGZbw7F5Z52q/U16HFELfbbrqjWYTdbAVv1QWAqsmN
+         SHyU7zmvX2yqiHV2PWSdePCYsCM6aQX1Rmh3vcVRuhdIXQBXBPMDRySGPrdSeuSiFe
+         DIhXcBt1lDj162tGrXvr+XDjS+DrFa30W9tDDsUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 07/52] net: hns3: add dma_rmb() for rx description
-Date:   Mon, 18 Mar 2019 10:24:54 +0100
-Message-Id: <20190318083844.286915272@linuxfoundation.org>
+Subject: [PATCH 4.20 26/52] net: sched: flower: insert new filter to idr after setting its mask
+Date:   Mon, 18 Mar 2019 10:25:13 +0100
+Message-Id: <20190318083846.541755610@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -66,34 +66,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit d394d33bee22421b39a0bcdc51ca6d68ba308625 ]
+[ Upstream commit ecb3dea400d3beaf611ce76ac7a51d4230492cf2 ]
 
-HW can not guarantee complete write desc->rx.size, even though
-HNS3_RXD_VLD_B has been set. Driver needs to add dma_rmb()
-instruction to make sure desc->rx.size is always valid.
+When adding new filter to flower classifier, fl_change() inserts it to
+handle_idr before initializing filter extensions and assigning it a mask.
+Normally this ordering doesn't matter because all flower classifier ops
+callbacks assume rtnl lock protection. However, when filter has an action
+that doesn't have its kernel module loaded, rtnl lock is released before
+call to request_module(). During this time the filter can be accessed bu
+concurrent task before its initialization is completed, which can lead to a
+crash.
 
-Fixes: e55970950556 ("net: hns3: Add handling of GRO Pkts not fully RX'ed in NAPI poll")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Example case of NULL pointer dereference in concurrent dump:
+
+Task 1                           Task 2
+
+tc_new_tfilter()
+ fl_change()
+  idr_alloc_u32(fnew)
+  fl_set_parms()
+   tcf_exts_validate()
+    tcf_action_init()
+     tcf_action_init_1()
+      rtnl_unlock()
+      request_module()
+      ...                        rtnl_lock()
+      				 tc_dump_tfilter()
+      				  tcf_chain_dump()
+				   fl_walk()
+				    idr_get_next_ul()
+				    tcf_node_dump()
+				     tcf_fill_node()
+				      fl_dump()
+				       mask = &f->mask->key; <- NULL ptr
+      rtnl_lock()
+
+Extension initialization and mask assignment don't depend on fnew->handle
+that is allocated by idr_alloc_u32(). Move idr allocation code after action
+creation and mask assignment in fl_change() to prevent concurrent access
+to not fully initialized filter when rtnl lock is released to load action
+module.
+
+Fixes: 01683a146999 ("net: sched: refactor flower walk to iterate over idr")
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/sched/cls_flower.c |   43 ++++++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2373,6 +2373,9 @@ static int hns3_handle_rx_bd(struct hns3
- 	length = le16_to_cpu(desc->rx.size);
- 	bd_base_info = le32_to_cpu(desc->rx.bd_base_info);
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -1213,46 +1213,46 @@ static int fl_change(struct net *net, st
+ 	if (err < 0)
+ 		goto errout;
  
-+	/* make sure HW write desc complete */
-+	dma_rmb();
+-	if (!handle) {
+-		handle = 1;
+-		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
+-				    INT_MAX, GFP_KERNEL);
+-	} else if (!fold) {
+-		/* user specifies a handle and it doesn't exist */
+-		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
+-				    handle, GFP_KERNEL);
+-	}
+-	if (err)
+-		goto errout;
+-	fnew->handle = handle;
+-
+ 	if (tb[TCA_FLOWER_FLAGS]) {
+ 		fnew->flags = nla_get_u32(tb[TCA_FLOWER_FLAGS]);
+ 
+ 		if (!tc_flags_valid(fnew->flags)) {
+ 			err = -EINVAL;
+-			goto errout_idr;
++			goto errout;
+ 		}
+ 	}
+ 
+ 	err = fl_set_parms(net, tp, fnew, mask, base, tb, tca[TCA_RATE], ovr,
+ 			   tp->chain->tmplt_priv, extack);
+ 	if (err)
+-		goto errout_idr;
++		goto errout;
+ 
+ 	err = fl_check_assign_mask(head, fnew, fold, mask);
+ 	if (err)
+-		goto errout_idr;
++		goto errout;
 +
- 	/* Check valid BD */
- 	if (unlikely(!hnae3_get_bit(bd_base_info, HNS3_RXD_VLD_B)))
- 		return -EFAULT;
++	if (!handle) {
++		handle = 1;
++		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
++				    INT_MAX, GFP_KERNEL);
++	} else if (!fold) {
++		/* user specifies a handle and it doesn't exist */
++		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
++				    handle, GFP_KERNEL);
++	}
++	if (err)
++		goto errout_mask;
++	fnew->handle = handle;
+ 
+ 	if (!fold && fl_lookup(fnew->mask, &fnew->mkey)) {
+ 		err = -EEXIST;
+-		goto errout_mask;
++		goto errout_idr;
+ 	}
+ 
+ 	err = rhashtable_insert_fast(&fnew->mask->ht, &fnew->ht_node,
+ 				     fnew->mask->filter_ht_params);
+ 	if (err)
+-		goto errout_mask;
++		goto errout_idr;
+ 
+ 	if (!tc_skip_hw(fnew->flags)) {
+ 		err = fl_hw_replace_filter(tp, fnew, extack);
+@@ -1291,12 +1291,13 @@ errout_mask_ht:
+ 	rhashtable_remove_fast(&fnew->mask->ht, &fnew->ht_node,
+ 			       fnew->mask->filter_ht_params);
+ 
+-errout_mask:
+-	fl_mask_put(head, fnew->mask, false);
+-
+ errout_idr:
+ 	if (!fold)
+ 		idr_remove(&head->handle_idr, fnew->handle);
++
++errout_mask:
++	fl_mask_put(head, fnew->mask, false);
++
+ errout:
+ 	tcf_exts_destroy(&fnew->exts);
+ 	kfree(fnew);
 
 
