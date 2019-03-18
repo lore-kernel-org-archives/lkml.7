@@ -2,114 +2,102 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4095BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56A7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068452133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07902133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LC0eWcDs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gcUsFJxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfCRVIO (ORCPT
+        id S1727478AbfCRVKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 17:08:14 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:46658 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbfCRVIO (ORCPT
+        Mon, 18 Mar 2019 17:10:07 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40426 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfCRVKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 17:08:14 -0400
-Received: by mail-vs1-f68.google.com with SMTP id w26so7922008vsk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 14:08:13 -0700 (PDT)
+        Mon, 18 Mar 2019 17:10:06 -0400
+Received: by mail-yw1-f66.google.com with SMTP id p64so10834039ywg.7
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 14:10:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ewue4iLQcqCU/D+3xpcgmp49XIxCEkCpFULXlCGIWEc=;
-        b=LC0eWcDsrQESkH+odyGHuaL+lmflxcBH7qIQ9x6gQISH5E07dD84iwjAQ2pEkpolsa
-         yHnodbzKBVRzB66kgAc2/uz9WzUphHHMdDmXSMb4CzOsb2e6G+CX74QVV8iO4Ac766mc
-         lgQ0dGvL9eYmqFZzxBZdl/ohGu21kOYKf0uaU=
+        h=from:mime-version:date:message-id:subject:to:cc;
+        bh=1OBzRxbq45MhxmYJZgYt4Mvsa34RcIxjDNusHwtkkv0=;
+        b=gcUsFJxTSM1wKN21LmYugvJKSXvsGO5kOXoF8UyH9gG9jiVeZvgktr5r0B0xuI8pvf
+         SMUxPMiZGYVFYZ48uLsUMb92HLyvrTFy+XxwfCeJLqPPeAlKP7A58vaMgYjQW7ccQKBr
+         5oamPVbuWwgmWJo9sap5tdjsQKQFHABCSR9Z0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ewue4iLQcqCU/D+3xpcgmp49XIxCEkCpFULXlCGIWEc=;
-        b=IqRiAgaNpaXc1XbQygE5VB6yXQqs59agUuBbh7hrMi6t12IW33ivt12eJivVKH70ib
-         aFmR4mhDNJLeMfH7Ns/oCdyZZ4kcJ5bfHQqfZpvq+LWzy82LUKrh2mmRU1Vw5cdhPshr
-         /xDM2jDi6lj8qX8rpxHWvhHBL0lNYk4CRaESRAuXF5Yxpm1NTYfvyQdopqJsuawbd7wd
-         +DTXjYFrDLfP+oyJRL1N9kA+2vrX/mfvMP8TxF9Zz+KPuNwcb2qVqFOZrW/MX6FrY1/m
-         HpSZAdJiaHn3fLD81cmCERzUjyJ8+Bi5U8/LpTbsbFnkVJQfPTjFqUKf8JFqwGFuf1r2
-         geeQ==
-X-Gm-Message-State: APjAAAUIvHc9wBINzc1F9fwAdwzuCLz/bPRVNSOqlK+8j0laQ+r83nyt
-        DaS+YDFeYWx9sNHGj1uDSAzv/Bgo5wk=
-X-Google-Smtp-Source: APXvYqwyJhRAEi3KelZADIuS05Uu7kc013A6a1MJjfaLO7FF3FGZRVLbu3l61IB1NTO0nJv0Sba06g==
-X-Received: by 2002:a67:76d7:: with SMTP id r206mr6263962vsc.25.1552943291796;
-        Mon, 18 Mar 2019 14:08:11 -0700 (PDT)
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
-        by smtp.gmail.com with ESMTPSA id b186sm4029346vke.17.2019.03.18.14.08.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 14:08:10 -0700 (PDT)
-Received: by mail-vk1-f169.google.com with SMTP id k64so4135485vke.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 14:08:09 -0700 (PDT)
-X-Received: by 2002:a1f:2acb:: with SMTP id q194mr9920042vkq.92.1552943289236;
- Mon, 18 Mar 2019 14:08:09 -0700 (PDT)
+        h=x-gm-message-state:from:mime-version:date:message-id:subject:to:cc;
+        bh=1OBzRxbq45MhxmYJZgYt4Mvsa34RcIxjDNusHwtkkv0=;
+        b=ElbEGYi6EQIbvY6fGvl+SI2rZdL0vq/Kf6jRKdILyI0zajthf/u2nxX41jls6vJ/zl
+         e2vO5ReO0dsn2fN7gTRx3kMlsNdWfuaJQUQ1cH2ROJ4n23VFTABb3RKe7kfJhSyNzvZv
+         rWryqIyMs2/AzhKK1mIdr8Ru3LER2L+fMl/rvOmn2rtf850y19JZAXhMF88g3Vfp7CYB
+         +Hf8mA/6OCQK5J/yeWwV05LXOeF272oAzxlRei8ooH/Ms5GF4r35Uz/RyhmNVJ2BstUK
+         Uz2mWUKMpvqw7KTMCkfapSkAc6b0z8zb0yQCGWX2piPWxQx1zXOPwfqdwgDluxD4NuMe
+         A5fg==
+X-Gm-Message-State: APjAAAUxobhgHAQYWQwQ7ZeJ4c7Al/dzx5jlEMs5dGQrp7SvdOpFxeym
+        erV9aa/+kqjL8iSeOrR+zie6YErfwKwOipcyJG3wQwMC
+X-Google-Smtp-Source: APXvYqzlMa55s7tT1p3mN2NmihYAypU7eFmPj9padX14399ugbtVzb1L0yI11z4Ojbcz+Yc1otPAME21+5AaQpN+Zx8=
+X-Received: by 2002:a81:32c3:: with SMTP id y186mr15873975ywy.144.1552943406087;
+ Mon, 18 Mar 2019 14:10:06 -0700 (PDT)
+Received: from 764776645087 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 18 Mar 2019 17:10:05 -0400
+From:   Matthias Kaehlcke <mka@chromium.org>
+X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
 MIME-Version: 1.0
-References: <20190318094128.1488-1-elena.reshetova@intel.com> <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
-In-Reply-To: <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Mon, 18 Mar 2019 14:07:57 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
-Message-ID: <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Elena Reshetova <elena.reshetova@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
+Date:   Mon, 18 Mar 2019 17:10:05 -0400
+Message-ID: <CAG5bF+RvumzKK0E-GAT223jnBvkRe1RN_0J9cGpfPOqCBvfWyw@mail.gmail.com>
+Subject: [PATCH] Revert "kbuild: use -Oz instead of -Os when using clang"
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Behan Webster <behanw@converseincode.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Manoj Gupta <manojgupta@chromium.org>,
+        Tiancong Wang <tcwang@chromium.org>,
+        Stephen Hines <srhines@google.com>,
+        clang-built-linux@googlegroups.com,
+        Matthias Kaehlcke <mka@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 1:16 PM Andy Lutomirski <luto@kernel.org> wrote:
-> On Mon, Mar 18, 2019 at 2:41 AM Elena Reshetova
-> <elena.reshetova@intel.com> wrote:
-> > Performance:
-> >
-> > 1) lmbench: ./lat_syscall -N 1000000 null
-> >     base:                     Simple syscall: 0.1774 microseconds
-> >     random_offset (rdtsc):     Simple syscall: 0.1803 microseconds
-> >     random_offset (rdrand): Simple syscall: 0.3702 microseconds
-> >
-> > 2)  Andy's tests, misc-tests: ./timing_test_64 10M sys_enosys
-> >     base:                     10000000 loops in 1.62224s = 162.22 nsec / loop
-> >     random_offset (rdtsc):     10000000 loops in 1.64660s = 164.66 nsec / loop
-> >     random_offset (rdrand): 10000000 loops in 3.51315s = 351.32 nsec / loop
-> >
->
-> Egads!  RDTSC is nice and fast but probably fairly easy to defeat.
-> RDRAND is awful.  I had hoped for better.
+The clang option -Oz enables *aggressive* optimization for size,
+which doesn't necessarily result in smaller images, but can have
+negative impact on performance. Switch back to the less aggressive
+-Os.
 
-RDRAND can also fail.
+This reverts commit 6748cb3c299de1ffbe56733647b01dbcc398c419.
 
-> So perhaps we need a little percpu buffer that collects 64 bits of
-> randomness at a time, shifts out the needed bits, and refills the
-> buffer when we run out.
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'd like to avoid saving the _exact_ details of where the next offset
-will be, but if nothing else works, this should be okay. We can use 8
-bits at a time and call prandom_u32() every 4th call. Something like
-prandom_bytes(), but where it doesn't throw away the unused bytes.
+diff --git a/Makefile b/Makefile
+index 9ef547fc7ffe..191f3ce3cb5e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -667,7 +667,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, int-in-bool-context)
 
+ ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+-KBUILD_CFLAGS	+= $(call cc-option,-Oz,-Os)
++KBUILD_CFLAGS	+= -Os
+ else
+ KBUILD_CFLAGS   += -O2
+ endif
 -- 
-Kees Cook
+2.21.0.225.g810b269d1ac-goog
