@@ -2,133 +2,142 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614A6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BE5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C2620863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0D720863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oxnKC1Tg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5y/fWrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfCRQJC (ORCPT
+        id S1727551AbfCRQKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:09:02 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36146 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfCRQJA (ORCPT
+        Mon, 18 Mar 2019 12:10:34 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44059 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfCRQKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:09:00 -0400
-Received: by mail-pg1-f194.google.com with SMTP id r124so11723218pgr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:08:59 -0700 (PDT)
+        Mon, 18 Mar 2019 12:10:33 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h34so11686801pgh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:10:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4jnBV7KXAwRH/SBiWunplsgAO5XC9ZDTjIPOKm8iM+g=;
-        b=oxnKC1TgVy0AfRUFzdhntQ4TnaWjo/dHSXwb/USSzN9iByb1J8qb9RNkXwR6mHS+mw
-         U0ldrfn6mRkKtGFn2Svuia32YqyzgHr8lgGpA8Ip0euwMX1zgcj9IEez46oWi1IBddSU
-         gwBvQTSUaqVbn9YXiSr6jTBOA8Xv5UO8CN9pXByf2+OfL6o1mjVRgyqe5P+Xg2G+PiCf
-         NrrQ0yX3K59cnkolhi014Qa1wO07CtueVQk+/0EtrVmsp+hp6aDS9QuNbVuDWXjtk1vJ
-         lpuGAyImKDa6JNaKflwTKUzEOC9JqWe+LJv/B30MBc7OlHCI7rVxIEK1sErhlvMqw4PK
-         B6tw==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YIhFIKs9el8j4hsLgwZPPQzsqFgxi9CCkwroXgIH/9M=;
+        b=H5y/fWrhJ8CUuu3ZQwAI2HU4xEuhAC+4HrZUlSOvBKFSTZkUnylfiXszr7uJhr0FDK
+         DMaw8/oALs88yoM8a63/MpI6bVM46oIs7iwdKG0AohB0l/RB6VSEF8Im5waolXk7wB8r
+         Ya17B2Ndyg/9tvs4+oJtd69z3GTE5nJzNNwz4r7zOGpfq00u5Or+zndAZUHKGO1gn8ws
+         39XIUyeRBXo7KFvjLFXIqax6waEHcwwFY/TNvf+sB4EjmpwhctvyrDFtYNoP6RSsIvg0
+         VRbCEvrGdkicz3ovf/StnTCYTPlwygehzfoU3AfXaZ15p245VmINWF8DpCE7VfEt0aja
+         m55Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4jnBV7KXAwRH/SBiWunplsgAO5XC9ZDTjIPOKm8iM+g=;
-        b=tFEiwsNVg6kuOhLAU7wIC2V2Nlin1P6Zg406KHwEFUl8nrkYR3hpuwVV33s5C3Sq/a
-         vr2yUFJ5KgYxy2pqmSIpFU2y3MUKr4rR5cIh1HYAt+bOsvfQbvRN6H1pl2fqHM0PAwHw
-         UabskdU7HcBoEveC3r2uS034WHy082HK+nH3ZPx9PW1AUoZW21iMSZrMI9PM0OPqRHLO
-         DZHVBmuj4CE0y1z8dWp/lJi90cHKH0tDhoRIFvGbPO274UQTQ+4AWaPxl9O2uXZnRpe7
-         6yHIcKAXaDb1iPYEmLDRsbcGz/SFW1ItQo1M6D7BFG0QXrCd8zYOyiQv65iAoZfDOdEF
-         k+eA==
-X-Gm-Message-State: APjAAAVBv5d/PY/d7JSZjSzglTdfkILYY+KuaObZ72b/ftU1TOArfPck
-        TMGC0JFPX1pkQ2eP3BCp56UJLMX4+Cn4gRLV/qXZxA==
-X-Google-Smtp-Source: APXvYqz4X+86iXGnn3Nho9z6FaNxwbl9pQbIbD8Gz0QIEPwnGUaSMpR4psZ3WXMcGuMVMNFbcG/Runz5qQVKQSjPXF0=
-X-Received: by 2002:a62:4299:: with SMTP id h25mr19703730pfd.165.1552925338999;
- Mon, 18 Mar 2019 09:08:58 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YIhFIKs9el8j4hsLgwZPPQzsqFgxi9CCkwroXgIH/9M=;
+        b=LZdgsfvJnKnLvmS3c3gqiduhXk2rokQ+5AypXnx2qbUCVsDtSefp3/zFvh1hXLVnPi
+         nrrkSCKWaOEGsC0aDEWjubhBMeNeJB83+JiAgb0b8wC0nAPZQpcy1bztlCqGwVey18K0
+         DANmOgArg7Px5bRjCj+urc7DZ1x3piZG5pcwMPJBuMFGHZRhG/4lOWVIuXxMYA57v2xP
+         Wj7Oxw0Xt9GgwQ0rrPtBsGIfPOWxdss2bH5rP6isgMsG+2FwJLWYECTZFAGgfy6RmNHp
+         31hfUGbKkZ3EiHHemfiwgYJxigx/8UxHHf0aRel7f11S3OvoZioBGT4I9URokwHlxDxm
+         6prw==
+X-Gm-Message-State: APjAAAU+IDFWqVOa3AlAIUzq762bglcApD0rk7IrPMbz7eQK3DGIWFIG
+        +1s+gxcUD/k5twVWsY+MaFU=
+X-Google-Smtp-Source: APXvYqzHKasaXjHYtTYAzojmBjVom9G6nX6MM/FzU2QbX/ktmgVNDCNbgvJfEMwW9eBfPoOLiv4FUw==
+X-Received: by 2002:a17:902:547:: with SMTP id 65mr20691370plf.242.1552925432769;
+        Mon, 18 Mar 2019 09:10:32 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-37-86.pppoe.spdop.ru. [94.29.37.86])
+        by smtp.googlemail.com with ESMTPSA id m8sm22805463pgr.82.2019.03.18.09.10.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 09:10:31 -0700 (PDT)
+Subject: Re: [PATCH] regulator: core: fix error path for
+ regulator_set_voltage_unlocked
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Steve Twiss <stwiss.opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Maciej Purski <m.purski@samsubg.com>,
+        Support Opensource <support.opensource@diasemi.com>
+References: <20190318155054.59B483FBD8@swsrvapps-01.diasemi.com>
+ <513a7028-b972-a821-7bf1-0e105bf71305@gmail.com>
+Message-ID: <e8cc2027-2705-6175-f88b-cc630978a520@gmail.com>
+Date:   Mon, 18 Mar 2019 19:10:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <cover.1552679409.git.andreyknvl@google.com> <56d3373c1c5007d776fcd5de4523f4b9da341fb6.1552679409.git.andreyknvl@google.com>
- <04c5b2de-7fde-7625-9d42-228160879ea0@gmail.com> <CAAeHK+xXLypBpF1EE73KuzQAo0E6Y=apS46wo+swo2AB6cy3YA@mail.gmail.com>
- <CAAeHK+yxcG=KBjG0A5BicBA7Zwu6LR6t=g5b-9EAPXA8_Dfm2g@mail.gmail.com> <CANn89iJfjhNcDS_eHg-OUiGui-hyRL5iWQuu_U+BW_N9iSNbeA@mail.gmail.com>
-In-Reply-To: <CANn89iJfjhNcDS_eHg-OUiGui-hyRL5iWQuu_U+BW_N9iSNbeA@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 18 Mar 2019 17:08:48 +0100
-Message-ID: <CAAeHK+w+koPnKP2=3yQsj5wCVY-c6+NLBnkKWQP8Q6M6pzO4dA@mail.gmail.com>
-Subject: Re: [PATCH v11 08/14] net, arm64: untag user pointers in tcp_zerocopy_receive
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <513a7028-b972-a821-7bf1-0e105bf71305@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 3:45 PM Eric Dumazet <edumazet@google.com> wrote:
->
-> On Mon, Mar 18, 2019 at 6:17 AM Andrey Konovalov <andreyknvl@google.com> wrote:
-> >
->
-> > Looking at the code, what's the point of this address != zc->address
-> > check? Should I just remove it?
->
-> No you must not remove it.
->
-> The test detects if a u64 ->unsigned long  conversion might have truncated bits.
->
-> Quite surprisingly some people still use 32bit kernels.
->
-> The ABI is 64bit only, because we did not want to have yet another compat layer.
->
-> struct tcp_zerocopy_receive {
->     __u64 address; /* in: address of mapping */
->     __u32 length; /* in/out: number of bytes to map/mapped */
->     __u32 recv_skip_hint; /* out: amount of bytes to skip */
-> };
+18.03.2019 19:03, Dmitry Osipenko пишет:
+> 18.03.2019 18:32, Steve Twiss пишет:
+>> During several error paths in the function
+>> regulator_set_voltage_unlocked() the value of 'ret' can take on negative
+>> error values. However, in calls that go through the 'goto out' statement,
+>> this return value is lost and return 0 is used instead, indicating a
+>> 'pass'.
+>>
+>> There are several cases where this function should legitimately return a
+>> fail instead of a pass: one such case includes constraints check during
+>> voltage selection in the call to regulator_check_voltage(), which can
+>> have -EINVAL for the case when an unsupported voltage is incorrectly
+>> requested. In that case, -22 is expected as the return value, not 0.
+>>
+>> Fixes: 9243a195be7a ("regulator: core: Change voltage setting path")
+>> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+>> ---
+>>  drivers/regulator/core.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+>> index 68473d0..caf8743 100644
+>> --- a/drivers/regulator/core.c
+>> +++ b/drivers/regulator/core.c
+>> @@ -3326,7 +3326,7 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+>>  		goto out2;
+>>  
+>>  out:
+>> -	return 0;
+>> +	return ret;
+>>  out2:
+>>  	voltage->min_uV = old_min_uV;
+>>  	voltage->max_uV = old_max_uV;
+>>
+> 
+> Looks like a good catch.
+> 
+> Probably will be a bit better to write this as:
+> 
+>         /* for not coupled regulators this will just set the voltage */
+>         ret = regulator_balance_voltage(rdev, state);
+> -       if (ret < 0)
+> -               goto out2;
+> -
+> +       if (ret < 0) {
+> +               voltage->min_uV = old_min_uV;
+> +               voltage->max_uV = old_max_uV;
+> +       }
+>  out:
+> -       return 0;
+> -out2:
+> -       voltage->min_uV = old_min_uV;
+> -       voltage->max_uV = old_max_uV;
+> -
+>         return ret;
+>  }
+> 
 
-Ah, got it, thanks! I'll add a comment here then, otherwise this looks
-confusing.
+Also, probably won't hurt to add a stable tag "Cc: stable <stable@vger.kernel.org>" to get the fix backported.
