@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE26C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56169C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4301D2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259092075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902123;
-	bh=x+kC1OEIt1L2YBCLpo16nz0Tll3Vd7dpPtOIuXjZGwE=;
+	s=default; t=1552902137;
+	bh=tC4zUYAlSWI1jr4bBz4nrZIyi6OoDa4m6sT7kveR68w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nWWeDQT8ypS8Nu9j0/JvH6xmOTWk62tHGHNNHTJU7h0igRaNtEzQKY5ksQrLn9TKt
-	 yXKb88bS+rcakr0wf2DUf5QE/VBp4jMTQ5QgTdNimR5HDjhNwRWhg7pMzrQVmQeTJ3
-	 nZ0ZRWRnXxDG3vMVAFjlg72SM4g9Pw7UJ3CFo78M=
+	b=Ckitz1fPnAjBSAgqtGuwc00foM7qRVaOeCAevLmmWUTCAON6xM/pUZaCsARd54krs
+	 3GneETecthVkFn9YfJb5YQ0wzSIutN6FiZseI6hu+sGlwDhPUxNJXlM880RY0QkeaS
+	 NyEHDCIBkNtvHXlZvw3RNwN5ixgsprhTP9oRwf3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfCRJmB (ORCPT
+        id S1728704AbfCRJmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:42:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41746 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbfCRJd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:28 -0400
+        id S1728498AbfCRJdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:33:18 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6D3D2175B;
-        Mon, 18 Mar 2019 09:33:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD3012075C;
+        Mon, 18 Mar 2019 09:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901608;
-        bh=x+kC1OEIt1L2YBCLpo16nz0Tll3Vd7dpPtOIuXjZGwE=;
+        s=default; t=1552901597;
+        bh=tC4zUYAlSWI1jr4bBz4nrZIyi6OoDa4m6sT7kveR68w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BavhWlwe/Q6OuJeRLtc7ElQLFgMookGy1tNq+AhoVR10QWojz16Ad+TI2drJzeyEr
-         Upupoy61Y1txKdplPhehcG6C9GLA3L5l+zwufMSumlxoR6uCUgXHncX4Tnvx0b6YgD
-         hYpVbJRRZL2kC5DrWcTe35teN5C1+FP2muwIa/Zs=
+        b=cSTr4L9Qst3IFp1MzpbXF8WrGf5yiJInHk0j8GOFRPm+TGoe33A7v/uGrrDq42peB
+         KUPrWmhQZ3kTjD4BDkvXU5BZtJL2Lf7XQtQi/fNEsPqcbyLkHqNMcY0Ks735VL1KbC
+         RY9WxNaU7xqfmS4Kequa8EUpBnt1yj1k96xTQvm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, kbuild-all@01.org,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 4.19 47/52] perf/x86/intel: Make dev_attr_allow_tsx_force_abort static
-Date:   Mon, 18 Mar 2019 10:25:44 +0100
-Message-Id: <20190318084019.078727631@linuxfoundation.org>
+        stable@vger.kernel.org, linmiaohe <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 09/52] net: sit: fix UBSAN Undefined behaviour in check_6rd
+Date:   Mon, 18 Mar 2019 10:25:06 +0100
+Message-Id: <20190318084014.668006411@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -70,38 +65,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: kbuild test robot <lkp@intel.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit c634dc6bdedeb0b2c750fc611612618a85639ab2 upstream.
+[ Upstream commit a843dc4ebaecd15fca1f4d35a97210f72ea1473b ]
 
-Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
-Signed-off-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: kbuild-all@01.org
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190313184243.GA10820@lkp-sb-ep06
+In func check_6rd,tunnel->ip6rd.relay_prefixlen may equal to
+32,so UBSAN complain about it.
+
+UBSAN: Undefined behaviour in net/ipv6/sit.c:781:47
+shift exponent 32 is too large for 32-bit type 'unsigned int'
+CPU: 6 PID: 20036 Comm: syz-executor.0 Not tainted 4.19.27 #2
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
+04/01/2014
+Call Trace:
+__dump_stack lib/dump_stack.c:77 [inline]
+dump_stack+0xca/0x13e lib/dump_stack.c:113
+ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
+__ubsan_handle_shift_out_of_bounds+0x293/0x2e8 lib/ubsan.c:425
+check_6rd.constprop.9+0x433/0x4e0 net/ipv6/sit.c:781
+try_6rd net/ipv6/sit.c:806 [inline]
+ipip6_tunnel_xmit net/ipv6/sit.c:866 [inline]
+sit_tunnel_xmit+0x141c/0x2720 net/ipv6/sit.c:1033
+__netdev_start_xmit include/linux/netdevice.h:4300 [inline]
+netdev_start_xmit include/linux/netdevice.h:4309 [inline]
+xmit_one net/core/dev.c:3243 [inline]
+dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
+__dev_queue_xmit+0x1656/0x2500 net/core/dev.c:3829
+neigh_output include/net/neighbour.h:501 [inline]
+ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
+ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
+NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
+dst_output include/net/dst.h:444 [inline]
+ip6_local_out+0x99/0x170 net/ipv6/output_core.c:176
+ip6_send_skb+0x9d/0x2f0 net/ipv6/ip6_output.c:1697
+ip6_push_pending_frames+0xc0/0x100 net/ipv6/ip6_output.c:1717
+rawv6_push_pending_frames net/ipv6/raw.c:616 [inline]
+rawv6_sendmsg+0x2435/0x3530 net/ipv6/raw.c:946
+inet_sendmsg+0xf8/0x5c0 net/ipv4/af_inet.c:798
+sock_sendmsg_nosec net/socket.c:621 [inline]
+sock_sendmsg+0xc8/0x110 net/socket.c:631
+___sys_sendmsg+0x6cf/0x890 net/socket.c:2114
+__sys_sendmsg+0xf0/0x1b0 net/socket.c:2152
+do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: linmiaohe <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/events/intel/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/sit.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3989,7 +3989,7 @@ static struct attribute *intel_pmu_caps_
-        NULL
- };
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -778,8 +778,9 @@ static bool check_6rd(struct ip_tunnel *
+ 		pbw0 = tunnel->ip6rd.prefixlen >> 5;
+ 		pbi0 = tunnel->ip6rd.prefixlen & 0x1f;
  
--DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
-+static DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
+-		d = (ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
+-		    tunnel->ip6rd.relay_prefixlen;
++		d = tunnel->ip6rd.relay_prefixlen < 32 ?
++			(ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
++		    tunnel->ip6rd.relay_prefixlen : 0;
  
- static struct attribute *intel_pmu_attrs[] = {
- 	&dev_attr_freeze_on_smi.attr,
+ 		pbi1 = pbi0 - tunnel->ip6rd.relay_prefixlen;
+ 		if (pbi1 > 0)
 
 
