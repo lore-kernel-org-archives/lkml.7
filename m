@@ -2,137 +2,89 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD589C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF98EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A883C2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F352085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:42:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="larDYdNz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfCRNlo (ORCPT
+        id S1727430AbfCRNmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 09:41:44 -0400
-Received: from mout02.posteo.de ([185.67.36.142]:36951 "EHLO mout02.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbfCRNlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 09:41:44 -0400
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id 88ED82400E5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 14:41:41 +0100 (CET)
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 44NHQq2zpLz9rxR;
-        Mon, 18 Mar 2019 14:41:38 +0100 (CET)
-Subject: Re: [PATCH 1/2] tty/serial: atmel: Add is_half_duplex helper
-To:     Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     Gil Weber <webergil@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190315092334.13246-1-razvan.stefanescu@microchip.com>
- <20190315092334.13246-2-razvan.stefanescu@microchip.com>
-From:   Richard Genoud <richard.genoud@gmail.com>
-Message-ID: <c8ee3b11-e674-4992-c24f-b0434887a21e@sorico.fr>
-Date:   Mon, 18 Mar 2019 14:41:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 09:42:22 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33517 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbfCRNmV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 09:42:21 -0400
+Received: by mail-io1-f67.google.com with SMTP id b6so14624467iog.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 06:42:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2VSmuZ9cLLShOpzVwst3Yyx8BYdTKgmbABJWYUhy6YE=;
+        b=larDYdNz6IxmvZ++Fge205s8PLhnkAT4wCvkx9OJPKnSwbBBBB9v5W3vF1voOBVJwE
+         gOc2gkts5VEs9syB5QnJus6Ta4t/bvcbO/H3xEXAspD+QWh5f+YDijhtQx+Ntq43ukPN
+         yVMocn37SVrAhUwOQ/PIshwkgnQxXhkVK0DqeTW7pwzyQYWscZzhLp1jPJD9vkCzwJzF
+         E7WGaFl0KigAqiTkzRuwtrVR+Ds1lfwASsYqKSlTH/TmX206rbTCX0Ed8iHOvVI2XvGa
+         ncem0ZpQ8lWe5r08ZH7KBLznIyxXPuyMEAQsFNuazoP7kaGmVrDeTQXQt6XnEyNJEy6U
+         Af3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2VSmuZ9cLLShOpzVwst3Yyx8BYdTKgmbABJWYUhy6YE=;
+        b=pB6ObpPrIJA/3NiUZVdFS+aRm07ZHGEUg8aH5EGLqmVurgBqpTXi94k2A/7FOebv2d
+         2YYfuJ5OFAp6pczeSiQsFI5WiLmMnTKsg0rROZNy2engMyBuVqBDYKWI776i+TIeXxaA
+         LrLSbIXkXNS4LEduEJSRZD6HKWcLybDA5+hA/Yp+pKyRE/D7ysl9ao/EPjPt1wZfjraR
+         N306O75AsXD83Pr372TlGwEBIHdHaRG9/6HZjV5MH/sbQ9qb4wp/M21jPtocAqq+AlTN
+         OPatrpSQBGuQ9XC8Garh5sH96fBnyZPk0L+sFxPXiKA065Tw8KyV+mYyNz5StNkbRQNy
+         YL7w==
+X-Gm-Message-State: APjAAAUfZ7eg/IicclBrwf8Tj9mQdGXy16emH91YRYLg66qD8T+ewBNa
+        hLv1BdG/PnVzGLnTCJ1IusezC8duQLkUaqM111D0VA==
+X-Google-Smtp-Source: APXvYqwN/AMBPCtfMmbANSrM3SJj8OndSRAWbN6a6UdukIDjvgw91i81kpNC7o7aWasjHqjs+pyYsTZeQzKBl0c13is=
+X-Received: by 2002:a6b:c3cc:: with SMTP id t195mr11408587iof.11.1552916540769;
+ Mon, 18 Mar 2019 06:42:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190315092334.13246-2-razvan.stefanescu@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <2a48dee7-b649-65a4-be5d-8b3374013cee@i-love.sakura.ne.jp>
+ <CACT4Y+ay7nuT-7y2JARozV1s0VisuLdN6VT+w9OsEDs1PeBRoA@mail.gmail.com>
+ <201903180527.x2I5RQVp009981@www262.sakura.ne.jp> <CACT4Y+bosgWpJ=s9_hQ-Jg_XJoSHR9S-zC3es-2F=FTRppEncA@mail.gmail.com>
+ <CACT4Y+aM0P-G-Oza-oYbyq2firAjvb-nJ0NX21p8U9TL3-FExQ@mail.gmail.com> <20190318125019.GA2686@tigerII.localdomain>
+In-Reply-To: <20190318125019.GA2686@tigerII.localdomain>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 18 Mar 2019 14:42:09 +0100
+Message-ID: <CACT4Y+ZedhD+=-YyvphZvLCcCF3FM0YAjXX54K2kMkhNmV4axw@mail.gmail.com>
+Subject: Re: [syzbot? printk?] no WARN_ON() messages printed before "Kernel
+ panic - not syncing: panic_on_warn set ..."
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ adding Gil Weber in Cc: ]
+On Mon, Mar 18, 2019 at 1:50 PM Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
+>
+> On (03/18/19 13:32), Dmitry Vyukov wrote:
+> > Wait, but isn't SYSLOG_ACTION_CONSOLE_LEVEL what we are looking for?
+> > syzkaller knows about the syslog syscall:
+>
+> There is also SYSLOG_ACTION_CONSOLE_OFF, which disables logging.
 
-Le 15/03/2019 à 10:23, Razvan Stefanescu a écrit :
-> Use a helper function to check that a port needs to use half duplex
-> communication, replacing several occurrences of multi-line bit checking.
-> 
-> Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-> ---
->  drivers/tty/serial/atmel_serial.c | 27 ++++++++++++++-------------
->  1 file changed, 14 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> index 05147fe24343..a6577b1c4461 100644
-> --- a/drivers/tty/serial/atmel_serial.c
-> +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -231,6 +231,13 @@ static inline void atmel_uart_write_char(struct uart_port *port, u8 value)
->  	__raw_writeb(value, port->membase + ATMEL_US_THR);
->  }
->  
-> +static inline int atmel_uart_is_half_duplex(struct uart_port *port)
-> +{
-> +	return ((port->rs485.flags & SER_RS485_ENABLED) &&
-> +		!(port->rs485.flags & SER_RS485_RX_DURING_TX)) ||
-> +		(port->iso7816.flags & SER_ISO7816_ENABLED);
-> +}
-> +
->  #ifdef CONFIG_SERIAL_ATMEL_PDC
->  static bool atmel_use_pdc_rx(struct uart_port *port)
->  {
-> @@ -608,10 +615,10 @@ static void atmel_stop_tx(struct uart_port *port)
->  	/* Disable interrupts */
->  	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
->  
-> -	if (((port->rs485.flags & SER_RS485_ENABLED) &&
-> -	     !(port->rs485.flags & SER_RS485_RX_DURING_TX)) ||
-> -	    port->iso7816.flags & SER_ISO7816_ENABLED)
-> -		atmel_start_rx(port);
-> +	if (atmel_uart_is_half_duplex(port))
-> +		if (!atomic_read(&atmel_port->tasklet_shutdown))
-This check wasn't there before.
-If it's really needed, please insert it in another patch and explain why
-it's needed.
+That one I somehow figured earlier, here is the exact check:
+https://github.com/google/syzkaller/blob/61f9c92f3a465025d2b9d91f429aaec968aeaa2a/sys/linux/init.go#L152-L155
 
-> +			atmel_start_rx(port);
-> +
->  }
->  
->  /*
-> @@ -628,9 +635,7 @@ static void atmel_start_tx(struct uart_port *port)
->  		return;
->  
->  	if (atmel_use_pdc_tx(port) || atmel_use_dma_tx(port))
-> -		if (((port->rs485.flags & SER_RS485_ENABLED) &&
-> -		     !(port->rs485.flags & SER_RS485_RX_DURING_TX)) ||
-> -		    port->iso7816.flags & SER_ISO7816_ENABLED)
-> +		if (atmel_uart_is_half_duplex(port))
->  			atmel_stop_rx(port);
->  
->  	if (atmel_use_pdc_tx(port))
-> @@ -928,9 +933,7 @@ static void atmel_complete_tx_dma(void *arg)
->  	 */
->  	if (!uart_circ_empty(xmit))
->  		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
-> -	else if (((port->rs485.flags & SER_RS485_ENABLED) &&
-> -		  !(port->rs485.flags & SER_RS485_RX_DURING_TX)) ||
-> -		 port->iso7816.flags & SER_ISO7816_ENABLED) {
-> +	else if (atmel_uart_is_half_duplex(port)) {
->  		/* DMA done, stop TX, start RX for RS485 */
->  		atmel_start_rx(port);
->  	}
-> @@ -1508,9 +1511,7 @@ static void atmel_tx_pdc(struct uart_port *port)
->  		atmel_uart_writel(port, ATMEL_US_IER,
->  				  atmel_port->tx_done_mask);
->  	} else {
-> -		if (((port->rs485.flags & SER_RS485_ENABLED) &&
-> -		     !(port->rs485.flags & SER_RS485_RX_DURING_TX)) ||
-> -		    port->iso7816.flags & SER_ISO7816_ENABLED) {
-> +		if (atmel_uart_is_half_duplex(port)) {
->  			/* DMA done, stop TX, start RX for RS485 */
->  			atmel_start_rx(port);
->  		}
-> 
-
+But thanks for pointing it out.
