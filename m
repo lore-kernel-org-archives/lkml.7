@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5AAC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F82AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29050217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38722217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 21:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfCRVoN (ORCPT
+        id S1727714AbfCRVoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 17:44:13 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57586 "EHLO mga04.intel.com"
+        Mon, 18 Mar 2019 17:44:20 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57594 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727405AbfCRVoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 17:44:12 -0400
+        id S1727515AbfCRVoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 17:44:16 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 14:44:11 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 14:44:15 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,495,1544515200"; 
-   d="scan'208";a="308301773"
+   d="scan'208";a="308301784"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2019 14:44:11 -0700
+  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2019 14:44:15 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 02/22] perf/x86/intel: Extract memory code PEBS parser for reuse
-Date:   Mon, 18 Mar 2019 14:41:24 -0700
-Message-Id: <20190318214144.4639-3-kan.liang@linux.intel.com>
+Subject: [PATCH 04/22] perf/x86/lbr: Avoid reading the LBRs when adaptive PEBS handles them
+Date:   Mon, 18 Mar 2019 14:41:26 -0700
+Message-Id: <20190318214144.4639-5-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190318214144.4639-1-kan.liang@linux.intel.com>
 References: <20190318214144.4639-1-kan.liang@linux.intel.com>
@@ -47,135 +47,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Extract some code related to memory profiling from the PEBS record
-parser into separate functions. It can be reused by the upcoming
-adaptive PEBS parser. No functional changes.
+With adaptive PEBS the CPU can directly supply the LBR information,
+so we don't need to read it again. But the LBRs still need to be
+enabled. Add a special count to the cpuc that distinguishes these
+two cases, and avoid reading the LBRs unnecessarily when PEBS is
+active.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/ds.c | 63 ++++++++++++++++++++------------------
- 1 file changed, 34 insertions(+), 29 deletions(-)
+ arch/x86/events/intel/lbr.c  | 13 ++++++++++++-
+ arch/x86/events/perf_event.h |  1 +
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 10c99ce1fead..4a2206876baa 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1125,34 +1125,50 @@ static int intel_pmu_pebs_fixup_ip(struct pt_regs *regs)
- 	return 0;
- }
- 
--static inline u64 intel_hsw_weight(struct pebs_record_skl *pebs)
-+static inline u64 intel_hsw_weight(u64 tsx_tuning)
- {
--	if (pebs->tsx_tuning) {
--		union hsw_tsx_tuning tsx = { .value = pebs->tsx_tuning };
-+	if (tsx_tuning) {
-+		union hsw_tsx_tuning tsx = { .value = tsx_tuning };
- 		return tsx.cycles_last_block;
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 58889f952959..b8cac31f089c 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -488,6 +488,8 @@ void intel_pmu_lbr_add(struct perf_event *event)
+ 	 * be 'new'. Conversely, a new event can get installed through the
+ 	 * context switch path for the first time.
+ 	 */
++	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
++		cpuc->lbr_pebs_users++;
+ 	perf_sched_cb_inc(event->ctx->pmu);
+ 	if (!cpuc->lbr_users++ && !event->total_time_running)
+ 		intel_pmu_lbr_reset();
+@@ -507,8 +509,11 @@ void intel_pmu_lbr_del(struct perf_event *event)
+ 		task_ctx->lbr_callstack_users--;
  	}
- 	return 0;
+ 
++	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
++		cpuc->lbr_pebs_users--;
+ 	cpuc->lbr_users--;
+ 	WARN_ON_ONCE(cpuc->lbr_users < 0);
++	WARN_ON_ONCE(cpuc->lbr_pebs_users < 0);
+ 	perf_sched_cb_dec(event->ctx->pmu);
  }
  
--static inline u64 intel_hsw_transaction(struct pebs_record_skl *pebs)
-+static u64 intel_hsw_transaction(u64 tsx_tuning, u64 ax)
+@@ -658,7 +663,13 @@ void intel_pmu_lbr_read(void)
  {
--	u64 txn = (pebs->tsx_tuning & PEBS_HSW_TSX_FLAGS) >> 32;
-+	u64 txn = (tsx_tuning & PEBS_HSW_TSX_FLAGS) >> 32;
- 
- 	/* For RTM XABORTs also log the abort code from AX */
--	if ((txn & PERF_TXN_TRANSACTION) && (pebs->ax & 1))
--		txn |= ((pebs->ax >> 24) & 0xff) << PERF_TXN_ABORT_SHIFT;
-+	if ((txn & PERF_TXN_TRANSACTION) && (ax & 1))
-+		txn |= ((ax >> 24) & 0xff) << PERF_TXN_ABORT_SHIFT;
- 	return txn;
- }
- 
-+#define PERF_X86_EVENT_PEBS_HSW_PREC \
-+		(PERF_X86_EVENT_PEBS_ST_HSW | \
-+		 PERF_X86_EVENT_PEBS_LD_HSW | \
-+		 PERF_X86_EVENT_PEBS_NA_HSW)
-+
-+static u64 get_data_src(struct perf_event *event, u64 aux)
-+{
-+	u64 val = PERF_MEM_NA;
-+	int fl = event->hw.flags;
-+	bool fst = fl & (PERF_X86_EVENT_PEBS_ST | PERF_X86_EVENT_PEBS_HSW_PREC);
-+
-+	if (fl & PERF_X86_EVENT_PEBS_LDLAT)
-+		val = load_latency_data(aux);
-+	else if (fst && (fl & PERF_X86_EVENT_PEBS_HSW_PREC))
-+		val = precise_datala_hsw(event, aux);
-+	else if (fst)
-+		val = precise_store_data(aux);
-+	return val;
-+}
-+
- static void setup_pebs_sample_data(struct perf_event *event,
- 				   struct pt_regs *iregs, void *__pebs,
- 				   struct perf_sample_data *data,
- 				   struct pt_regs *regs)
- {
--#define PERF_X86_EVENT_PEBS_HSW_PREC \
--		(PERF_X86_EVENT_PEBS_ST_HSW | \
--		 PERF_X86_EVENT_PEBS_LD_HSW | \
--		 PERF_X86_EVENT_PEBS_NA_HSW)
- 	/*
- 	 * We cast to the biggest pebs_record but are careful not to
- 	 * unconditionally access the 'extra' entries.
-@@ -1160,17 +1176,13 @@ static void setup_pebs_sample_data(struct perf_event *event,
  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct pebs_record_skl *pebs = __pebs;
- 	u64 sample_type;
--	int fll, fst, dsrc;
--	int fl = event->hw.flags;
-+	int fll;
  
- 	if (pebs == NULL)
+-	if (!cpuc->lbr_users)
++	/*
++	 * Don't read when all LBRs users are using adaptive PEBS.
++	 *
++	 * This could be smarter and actually check the event,
++	 * but this simple approach seems to work for now.
++	 */
++	if (!cpuc->lbr_users || cpuc->lbr_users == cpuc->lbr_pebs_users)
  		return;
  
- 	sample_type = event->attr.sample_type;
--	dsrc = sample_type & PERF_SAMPLE_DATA_SRC;
--
--	fll = fl & PERF_X86_EVENT_PEBS_LDLAT;
--	fst = fl & (PERF_X86_EVENT_PEBS_ST | PERF_X86_EVENT_PEBS_HSW_PREC);
-+	fll = event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT;
- 
- 	perf_sample_data_init(data, 0, event->hw.last_period);
- 
-@@ -1185,16 +1197,8 @@ static void setup_pebs_sample_data(struct perf_event *event,
- 	/*
- 	 * data.data_src encodes the data source
+ 	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_32)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index db3b622265fa..27c7945b5174 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -216,6 +216,7 @@ struct cpu_hw_events {
+ 	 * Intel LBR bits
  	 */
--	if (dsrc) {
--		u64 val = PERF_MEM_NA;
--		if (fll)
--			val = load_latency_data(pebs->dse);
--		else if (fst && (fl & PERF_X86_EVENT_PEBS_HSW_PREC))
--			val = precise_datala_hsw(event, pebs->dse);
--		else if (fst)
--			val = precise_store_data(pebs->dse);
--		data->data_src.val = val;
--	}
-+	if (sample_type & PERF_SAMPLE_DATA_SRC)
-+		data->data_src.val = get_data_src(event, pebs->dse);
- 
- 	/*
- 	 * We must however always use iregs for the unwinder to stay sane; the
-@@ -1281,10 +1285,11 @@ static void setup_pebs_sample_data(struct perf_event *event,
- 	if (x86_pmu.intel_cap.pebs_format >= 2) {
- 		/* Only set the TSX weight when no memory weight. */
- 		if ((sample_type & PERF_SAMPLE_WEIGHT) && !fll)
--			data->weight = intel_hsw_weight(pebs);
-+			data->weight = intel_hsw_weight(pebs->tsx_tuning);
- 
- 		if (sample_type & PERF_SAMPLE_TRANSACTION)
--			data->txn = intel_hsw_transaction(pebs);
-+			data->txn = intel_hsw_transaction(pebs->tsx_tuning,
-+				pebs->ax);
- 	}
- 
- 	/*
+ 	int				lbr_users;
++	int				lbr_pebs_users;
+ 	struct perf_branch_stack	lbr_stack;
+ 	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+ 	struct er_account		*lbr_sel;
 -- 
 2.17.1
 
