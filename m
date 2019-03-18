@@ -2,112 +2,306 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED729C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82D7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5448204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B712204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902374;
-	bh=p1GXDvGApxDZIFTHE/uaoEC7UFcdhT/bqkm0dK0l21U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k+A6UOxkUwZhVffTLFotSr4fnzGS/+9LfaTE5W+qQsARocH/YgnqkfkGcg2SNi0M4
-	 YLq3M4eZUBc9njN4q6IRcR3Zcl7jr+KKOyTkpNQ7kHQgzLDa1fEqCCjD16DBNbcBX4
-	 PdqWmWaAfEH3EmqQjfLLJNvXP6dKgw2IDxnLIlgg=
+	s=default; t=1552902383;
+	bh=gS5u7sq5BTQ2tKbuufBMdz0GP6gu0yU63+Q7Y4WWcfw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=etJKHbnsxlXaSSNgocTb+cA/00XHl/UDFPEo256rNWmgBJwzmSrz8rFKAYDChO5Fu
+	 emFFTnMw0Fqg4ZyTzpQrXtPhAt2ZHDPo0fzjPh822cdWt8/fcfPimFn9vuzDirGbK9
+	 B7Bidd1egYu7HorlpFsr3trNJjKFGc8T8VdPRe+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfCRJqN (ORCPT
+        id S1728164AbfCRJ27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:46:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35366 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbfCRJ3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:29:09 -0400
+        id S1728120AbfCRJ2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:28:53 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B191214D8;
-        Mon, 18 Mar 2019 09:29:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5687C2087C;
+        Mon, 18 Mar 2019 09:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901348;
-        bh=p1GXDvGApxDZIFTHE/uaoEC7UFcdhT/bqkm0dK0l21U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8q2EfqgvoKTbOeiTPaeII0qETqmIJZohA+hhg9MhRRS6XCJvGtli6/9JZns0qWjS
-         JGZ9CrUECmPDhHCXCeEF3x/8X+CpCFIQ7r5HEsK9ei9NUT2Y82V4GDhNNvchqZx7QG
-         kBZcoQcRmpZvP/G+rRx2D0r381cA/z2thKAyGHSc=
+        s=default; t=1552901331;
+        bh=gS5u7sq5BTQ2tKbuufBMdz0GP6gu0yU63+Q7Y4WWcfw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=duzFDE7o1urBVTG5p1PgMewPKGjSgZfmcjoEYXX/5zGuDxLFKmyVPauk8qKbCotEV
+         aRMpilFwFvV6lGwupEkbm4r0H9CZPFJSL6nB2Pq9dRaGx8J9PPXNTx1qkEZTigEvDs
+         +KDX+5G3KsymoFRe5+xAnJwvPUIT5nFcMizhEaM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Soheil Hassas Yeganeh <soheil@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 18/52] tcp: do not report TCP_CM_INQ of 0 for closed connections
-Date:   Mon, 18 Mar 2019 10:25:05 +0100
-Message-Id: <20190318083845.610451195@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.20 00/52] 4.20.17-stable review
+Date:   Mon, 18 Mar 2019 10:24:47 +0100
+Message-Id: <20190318083843.398913295@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
-References: <20190318083843.398913295@linuxfoundation.org>
+MIME-Version: 1.0
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.20.17-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.20.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.20.17-rc1
+X-KernelTest-Deadline: 2019-03-20T08:38+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
-
+------------------
+NOTE, this is going to be the LAST 4.20.y release.  After this one, 4.20
+will be end-of-life.  Please move to the 5.0.y tree at this point in
+time, or let me know why that is not possible.
 ------------------
 
-From: Soheil Hassas Yeganeh <soheil@google.com>
+This is the start of the stable review cycle for the 4.20.17 release.
+There are 52 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 6466e715651f9f358e60c5ea4880e4731325827f ]
+Responses should be made by Wed Mar 20 08:38:27 UTC 2019.
+Anything received after that time might be too late.
 
-Returning 0 as inq to userspace indicates there is no more data to
-read, and the application needs to wait for EPOLLIN. For a connection
-that has received FIN from the remote peer, however, the application
-must continue reading until getting EOF (return value of 0
-from tcp_recvmsg) or an error, if edge-triggered epoll (EPOLLET) is
-being used. Otherwise, the application will never receive a new
-EPOLLIN, since there is no epoll edge after the FIN.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.20.17-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.20.y
+and the diffstat can be found below.
 
-Return 1 when there is no data left on the queue but the
-connection has received FIN, so that the applications continue
-reading.
+thanks,
 
-Fixes: b75eba76d3d72 (tcp: send in-queue bytes in cmsg upon read)
-Signed-off-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/tcp.c |    5 +++++
- 1 file changed, 5 insertions(+)
+greg k-h
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1914,6 +1914,11 @@ static int tcp_inq_hint(struct sock *sk)
- 		inq = tp->rcv_nxt - tp->copied_seq;
- 		release_sock(sk);
- 	}
-+	/* After receiving a FIN, tell the user-space to continue reading
-+	 * by returning a non-zero inq.
-+	 */
-+	if (inq == 0 && sock_flag(sk, SOCK_DONE))
-+		inq = 1;
- 	return inq;
- }
- 
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.20.17-rc1
+
+Zha Bin <zhabin@linux.alibaba.com>
+    vhost/vsock: fix vhost vsock cid hashing inconsistent
+
+Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+    drm: Block fb changes for async plane updates
+
+Xiao Ni <xni@redhat.com>
+    It's wrong to add len to sector_nr in raid10 reshape twice
+
+kbuild test robot <lkp@intel.com>
+    perf/x86/intel: Make dev_attr_allow_tsx_force_abort static
+
+Peter Zijlstra <peterz@infradead.org>
+    perf/x86/intel: Fix memory corruption
+
+Jian-Hong Pan <jian-hong@endlessm.com>
+    ALSA: hda/realtek: Enable headset MIC of Acer TravelMate X514-51T with ALC255
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek - Reduce click noise on Dell Precision 5820 headphone
+
+Jian-Hong Pan <jian-hong@endlessm.com>
+    ALSA: hda/realtek: Enable audio jacks of ASUS UX362FA with ALC294
+
+Jaroslav Kysela <perex@perex.cz>
+    ALSA: hda - add more quirks for HP Z2 G4 and HP Z240
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda: Extend i915 component bind timeout
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: firewire-motu: fix construction of PCM frame for capture direction
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O against Liquid Saffire 56
+
+Peter Zijlstra <peterz@infradead.org>
+    perf/x86: Fixup typo in stub functions
+
+Jaegeuk Kim <jaegeuk@kernel.org>
+    f2fs: wait on atomic writes to count F2FS_CP_WB_DATA
+
+Al Viro <viro@zeniv.linux.org.uk>
+    missing barriers in some of unix_sock ->addr and ->path accesses
+
+Ursula Braun <ubraun@linux.ibm.com>
+    net/smc: fix smc_poll in SMC_INIT state
+
+Michal Soltys <soltys@ziu.info>
+    bonding: fix PACKET_ORIGDEV regression
+
+Paolo Abeni <pabeni@redhat.com>
+    ipv6: route: enforce RCU protection in ip6_route_check_nh_onlink()
+
+Paolo Abeni <pabeni@redhat.com>
+    ipv6: route: enforce RCU protection in rt6_update_exception_stamp_rt()
+
+Daniel Borkmann <daniel@iogearbox.net>
+    ipvlan: disallow userns cap_net_admin to change global mode/flags
+
+George Wilkie <gwilkie@vyatta.att-mail.com>
+    team: use operstate consistently for linkup
+
+Paolo Abeni <pabeni@redhat.com>
+    ipv6: route: purge exception on removal
+
+Kalash Nainwal <kalash@arista.com>
+    net: Set rtm_table to RT_TABLE_COMPAT for ipv6 for tables > 255
+
+YueHaibing <yuehaibing@huawei.com>
+    mdio_bus: Fix use-after-free on device_register fails
+
+Eric Dumazet <edumazet@google.com>
+    net/x25: fix a race in x25_bind()
+
+Eric Dumazet <edumazet@google.com>
+    tcp: repaired skbs must init their tso_segs
+
+Vlad Buslov <vladbu@mellanox.com>
+    net: sched: flower: insert new filter to idr after setting its mask
+
+Jack Morgenstein <jackm@dev.mellanox.co.il>
+    net/mlx4_core: Fix qp mtt size calculation
+
+Jack Morgenstein <jackm@dev.mellanox.co.il>
+    net/mlx4_core: Fix locking in SRIOV mode when switching between events and polling
+
+Jack Morgenstein <jackm@dev.mellanox.co.il>
+    net/mlx4_core: Fix reset flow when in command polling mode
+
+Eric Dumazet <edumazet@google.com>
+    vxlan: test dev->flags & IFF_UP before calling gro_cells_receive()
+
+Stefano Brivio <sbrivio@redhat.com>
+    vxlan: Fix GRO cells race condition between receive and link delete
+
+Guillaume Nault <gnault@redhat.com>
+    tcp: handle inet_csk_reqsk_queue_add() failures
+
+Christoph Paasch <cpaasch@apple.com>
+    tcp: Don't access TCP_SKB_CB before initializing it
+
+Soheil Hassas Yeganeh <soheil@google.com>
+    tcp: do not report TCP_CM_INQ of 0 for closed connections
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: remove sched init from sctp_stream_init
+
+David Howells <dhowells@redhat.com>
+    rxrpc: Fix client call queueing, waiting for channel
+
+Xin Long <lucien.xin@gmail.com>
+    route: set the deleted fnhe fnhe_daddr to 0 in ip_del_fnhe to fix a race
+
+Masaru Nagai <masaru.nagai.vx@renesas.com>
+    ravb: Decrease TxFIFO depth of Q3 and Q2 to one
+
+Xin Long <lucien.xin@gmail.com>
+    pptp: dst_release sk_dst_cache in pptp_sock_destruct
+
+Eric Dumazet <edumazet@google.com>
+    net/x25: reset state in x25_connect()
+
+Eric Dumazet <edumazet@google.com>
+    net/x25: fix use-after-free in x25_device_event()
+
+Miaohe Lin <linmiaohe@huawei.com>
+    net: sit: fix UBSAN Undefined behaviour in check_6rd
+
+Eric Dumazet <edumazet@google.com>
+    net/hsr: fix possible crash in add_timer()
+
+Mao Wenan <maowenan@huawei.com>
+    net: hsr: fix memory leak in hsr_dev_finalize()
+
+Jian Shen <shenjian15@huawei.com>
+    net: hns3: add dma_rmb() for rx description
+
+Bryan Whitehead <Bryan.Whitehead@microchip.com>
+    lan743x: Fix TX Stall Issue
+
+Bryan Whitehead <Bryan.Whitehead@microchip.com>
+    lan743x: Fix RX Kernel Panic
+
+Eric Dumazet <edumazet@google.com>
+    l2tp: fix infoleak in l2tp_ip6_recvmsg()
+
+Paolo Abeni <pabeni@redhat.com>
+    ipv4/route: fail early when inet dev is missing
+
+Eric Dumazet <edumazet@google.com>
+    gro_cells: make sure device is up in gro_cells_receive()
+
+Li RongQing <lirongqing@baidu.com>
+    connector: fix unsafe usage of ->real_parent
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/x86/events/intel/core.c                       |  4 +-
+ arch/x86/events/perf_event.h                       |  4 +-
+ drivers/connector/cn_proc.c                        | 22 ++++--
+ drivers/gpu/drm/drm_atomic_helper.c                |  9 +++
+ drivers/md/raid10.c                                |  1 -
+ drivers/net/bonding/bond_main.c                    | 35 ++++------
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  3 +
+ drivers/net/ethernet/mellanox/mlx4/cmd.c           |  9 +++
+ .../net/ethernet/mellanox/mlx4/resource_tracker.c  |  6 +-
+ drivers/net/ethernet/microchip/lan743x_main.c      | 55 +++++++++------
+ drivers/net/ethernet/renesas/ravb_main.c           |  2 +-
+ drivers/net/ipvlan/ipvlan_main.c                   |  4 ++
+ drivers/net/phy/mdio_bus.c                         |  1 -
+ drivers/net/ppp/pptp.c                             |  1 +
+ drivers/net/team/team.c                            |  4 +-
+ drivers/net/vxlan.c                                | 14 +++-
+ drivers/vhost/vsock.c                              |  2 +-
+ fs/f2fs/file.c                                     | 12 ++--
+ net/core/gro_cells.c                               | 22 ++++--
+ net/hsr/hsr_device.c                               | 18 ++---
+ net/hsr/hsr_framereg.c                             | 12 ++++
+ net/hsr/hsr_framereg.h                             |  1 +
+ net/ipv4/route.c                                   | 13 ++--
+ net/ipv4/syncookies.c                              |  7 +-
+ net/ipv4/tcp.c                                     |  5 ++
+ net/ipv4/tcp_input.c                               |  8 ++-
+ net/ipv4/tcp_ipv4.c                                |  9 +--
+ net/ipv4/tcp_output.c                              |  1 +
+ net/ipv6/route.c                                   | 32 ++++++---
+ net/ipv6/sit.c                                     |  5 +-
+ net/l2tp/l2tp_ip6.c                                |  4 +-
+ net/rxrpc/conn_client.c                            |  4 +-
+ net/sched/cls_flower.c                             | 43 ++++++------
+ net/sctp/stream.c                                  |  2 -
+ net/smc/smc.h                                      |  6 +-
+ net/unix/af_unix.c                                 | 57 ++++++++-------
+ net/unix/diag.c                                    |  3 +-
+ net/x25/af_x25.c                                   | 20 ++++--
+ security/lsm_audit.c                               | 10 +--
+ sound/firewire/bebob/bebob.c                       | 14 +++-
+ sound/firewire/motu/amdtp-motu.c                   |  4 +-
+ sound/hda/hdac_i915.c                              |  4 +-
+ sound/pci/hda/patch_conexant.c                     |  3 +
+ sound/pci/hda/patch_realtek.c                      | 80 +++++++++++++++-------
+ 45 files changed, 378 insertions(+), 201 deletions(-)
 
 
