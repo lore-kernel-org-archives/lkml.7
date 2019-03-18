@@ -2,101 +2,118 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF7EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD50AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1EF2133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:15:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWCkJK/g"
+	by mail.kernel.org (Postfix) with ESMTP id 89BF12133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552932979;
+	bh=97+1z+W0PfAEKdmw06EjN1wb9ginIoM6Tfu15347rUI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NFNqbRbOtVBk+YnLNMZLfv9+bZ+DF6fb887u2XKfrz0hh+ZsAgio4EqBH91XCGwnC
+	 hAJ0JflGZgMLIvx9quWYLNx/lr5tfUpVmIwWGWwQMQEK1jmv0V7oBDyu709XiuBsus
+	 TPY4LHaoiAw6D0smLKcgwh/HjKsU8NNiZpgqXBb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfCRSPm (ORCPT
+        id S1727163AbfCRSQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:15:42 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41302 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfCRSPl (ORCPT
+        Mon, 18 Mar 2019 14:16:17 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35841 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfCRSQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:15:41 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w30so13754404qta.8
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:15:41 -0700 (PDT)
+        Mon, 18 Mar 2019 14:16:17 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v10so14961805lji.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:16:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kV8a2UbDLeRMV1l0U03pVIZ4VzZ3DURcOYS7fGVegr0=;
-        b=BWCkJK/gvpssxBCk5bWXsfGSPRCNi1hxHsDyw70dfTyidqSpP5i77qeZQjSk+goYsX
-         utglR5XTDD64yae5/sYaZyQAcCPnK5iWH3Jh4z9kmDbODvLAW7rJXZ3lkIgsnirk3gTV
-         V9uemvPQ/L1wfZu9vviX/uGA8tCGXV3ffXMcTo7KJGMY7gB1GCrS+9TX2YvV58pjIDD6
-         7LPXDqT4hP5wUeRbPdWl9Nv4yIKuXXx1+5jls5/FMnJsfVjlayFG3GC167FQXH8vlHwZ
-         kyYPGF7HAGnsZjKjkqr7+k7aMzrwFRvghY1LKPLlWOlxBGnXGhmVRpSZf0voAy+DfGcd
-         q6NA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UdsCkIVdw68rRdzVGZvJmOdhvTueF9O0zaboX1ty06E=;
+        b=gVjbBeGaRuXWfxnw2PgJLqcu+kZy5YrsflyzciEpWRf5FWI1cwc4L4k8UVi45ePpPU
+         2Fx+Q4epYVLypb0XS1Ex2jC8QOPFr2sHCVkudEy/b+qYvx3nibrpXxje5Reb+zobWh/U
+         vPNpujfuyYJN4DBJKwMUuDYSrNpQRZQUsWgCY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kV8a2UbDLeRMV1l0U03pVIZ4VzZ3DURcOYS7fGVegr0=;
-        b=qWpXmFLvhUVz9bh3pSKAVtfYkTKBHP4s4GOEE/Y0jP06pZTKP8J5Fy7p1g4kLdgu1i
-         mTw25GAb6jK6oIp1SmXF2k0HNFdxq632ZgcCdwLk/oHejWun6mpSFBf56Rd4vPPK3yse
-         Anbtm4v3+uzzDG9bbn+spT4f4hc5GmpHYT5DEXn52OB//i05O9tAMiVXrsKHSFQjpaUu
-         6snh7RO9kAxswZ6ZiygIhTuFS2T9KX7himxkcQ7k0Kxj9JY6adPDCu5bP6/IAZA45icw
-         cqLnldE6XdcvvCzD5CN3TUlHqh7UqjNoSh/NbcM9g16QAell5e5O1W/Jknmr+SfBm+0J
-         6PoA==
-X-Gm-Message-State: APjAAAUA28/9ZGt7PXFbazt936trSOKbfZS6q3Q0JJ80D5yO/cHBRAVX
-        QKTwfxsnhgoac6T0JJP0I5U=
-X-Google-Smtp-Source: APXvYqx/XLudeIvB8qu6BiXnB24oy2jyFa1Y5BKSmH8LMnfMJkxkae1Cyg5JP2KUrv6NUBG+0rohKA==
-X-Received: by 2002:a0c:c607:: with SMTP id v7mr14170280qvi.188.1552932940694;
-        Mon, 18 Mar 2019 11:15:40 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.179.85.138])
-        by smtp.gmail.com with ESMTPSA id z190sm5744304qkb.9.2019.03.18.11.15.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 11:15:40 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 59E6A4039C; Mon, 18 Mar 2019 15:14:30 -0300 (-03)
-Date:   Mon, 18 Mar 2019 15:14:30 -0300
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        peterz@infradead.org, mpe@ellerman.id.au,
-        alexander.shishkin@linux.intel.com, mingo@redhat.com,
-        namhyung@kernel.org, jolsa@redhat.com
-Subject: Re: [PATCH]perf:Remove P8 HW events which are not supported
-Message-ID: <20190318181430.GA3967@kernel.org>
-References: <154953186583.11022.14819560028300370163.stgit@localhost.localdomain>
- <d185d075-8589-5ec0-f3d7-4d5c79d12aed@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UdsCkIVdw68rRdzVGZvJmOdhvTueF9O0zaboX1ty06E=;
+        b=aT8NYkTkHpVfbrK2VHAFcNhxvnzi4cSNsmGXzYG07MBlJqPfx1yJPMMA/cHq6X2EvI
+         VRPV8ImFD7CsZNMKSO5UXWOrwkXUMkI0wdRxGbPryLmt8MLQRIdr34RhNOaD1fDSTYgD
+         kVoiGaJ+podqyoUrEtJSeJec6Ll5v+0wvNPhU+BrDqgBM9hPVxscFnze2bPHp31YiG9Z
+         hCbywPQwlln+pO8OLpy+NOlW3Owr73SzSuZ81tlJlVjVyBeh0iP8igwhaqsxYdeZ53Yv
+         Xt9cJ1Ff48zzgzp7wyVclNqb+Dsl39QsCcO9qgu5Mj4+PUXQclsYQRATKO1qOePXOPFe
+         Ji7A==
+X-Gm-Message-State: APjAAAXC0tPWgftvHHFd04DB1ELQh/uVJ2EyGaFEZLTaCeK+JP0sYB/q
+        cRwbaUnHBo5bGYM2+Oo6zVDmRmFdy84=
+X-Google-Smtp-Source: APXvYqzqHNoTFndSaP+yi63WHsXXaOHr8iDVzNkf+ac7QxEGZtDLpcm1Ea1mg6Gi8c09lK+hJr0tqA==
+X-Received: by 2002:a2e:8508:: with SMTP id j8mr2801735lji.26.1552932974942;
+        Mon, 18 Mar 2019 11:16:14 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id q9sm2139319lfk.40.2019.03.18.11.16.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 11:16:14 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id 5so466930lft.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:16:14 -0700 (PDT)
+X-Received: by 2002:ac2:424c:: with SMTP id m12mr11243580lfl.62.1552932638336;
+ Mon, 18 Mar 2019 11:10:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d185d075-8589-5ec0-f3d7-4d5c79d12aed@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190318153840.906404905@infradead.org> <20190318155139.963285969@infradead.org>
+ <CAHk-=wgYUTJ33ANOF5=5AKafzgqCi4Xe9iRCdgUV4s05HrH_Pw@mail.gmail.com>
+ <20190318173657.GV6058@hirez.programming.kicks-ass.net> <20190318175135.GE6521@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190318175135.GE6521@hirez.programming.kicks-ass.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 18 Mar 2019 11:10:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wguWBY_W8-M0vSCae538mAY2vQtkrdNbZX4T8rvAYxPxg@mail.gmail.com>
+Message-ID: <CAHk-=wguWBY_W8-M0vSCae538mAY2vQtkrdNbZX4T8rvAYxPxg@mail.gmail.com>
+Subject: Re: [PATCH 01/25] x86: Make SMAP 64-bit only
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Feb 26, 2019 at 09:25:40AM +0530, Ravi Bangoria escreveu:
-> 
-> 
-> On 2/7/19 3:09 PM, Mamatha Inamdar wrote:
-> > This patch is to remove following hardware events 
-> > from JSON file which are not supported on POWER8
-> > 
-> 
-> Acked-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+On Mon, Mar 18, 2019 at 10:51 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> How about I do a patch that schedules EFLAGS for both 32bit and 64bit,
+> mark this for backporting to infinity.
+>
+> And then at the end, after the objtool-ac bits land, I do a patch
+> removing the EFLAGS scheduling for x86_64.
 
-I'm applying but next time please add a Fixes: tag for the cset where
-those events that shouldn't have been, this way the stable@ guys can get
-this fix, also, something like "According to documentation
-http://somewhere.ibm.com/DATA-sheet, etc
+Sounds sane to me.
 
-I'm trying to do the Fixes part.
+And we can make it AC-conditional if it's actually shown to be visible
+from a performance standpoint.
 
-- Arnaldo
+But iirc pushf/popf isn't really that expensive - in fact I think it's
+pretty cheap when system flags don't change. Which would be the common
+case unless you'd also make the popf do the irq restore part and
+simply make finish_lock_switch() re-enable irq's by doing an
+irqrestore?
+
+I think popf is like 20 cycles or something (and pushf is just single
+cycles). Probably not worth worrying about in the task switch context.
+
+                 Linus
