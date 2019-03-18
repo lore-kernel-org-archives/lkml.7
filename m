@@ -2,110 +2,84 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC49C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FE0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBDC2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:43:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=tu-dortmund.de header.i=@tu-dortmund.de header.b="m4PycWOT"
+	by mail.kernel.org (Postfix) with ESMTP id CCB622077B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfCRSnR (ORCPT
+        id S1727118AbfCRSqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:43:17 -0400
-Received: from mx1.hrz.uni-dortmund.de ([129.217.128.51]:59758 "EHLO
-        unimail.uni-dortmund.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbfCRSnR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:43:17 -0400
-Received: from ios.cs.uni-dortmund.de (ios.cs.uni-dortmund.de [129.217.43.100])
-        (authenticated bits=0)
-        by unimail.uni-dortmund.de (8.16.0.29/8.16.0.41) with ESMTPSA id x2IIgbsb013809
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 18 Mar 2019 19:42:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tu-dortmund.de;
-        s=unimail; t=1552934561;
-        bh=dS+Iu0nU7v8R5JF6Pu8kqpuUTNJYAEvRwGOMhzRBqPQ=;
-        h=From:To:Cc:Subject:Date;
-        b=m4PycWOTX+zaMfX/QktT5IPL7j5snUs2DFAbkWAGFpl6sHLH3RTrUoGqxSMedOCxg
-         dmisCnSHmz6HCs1moLBT+cHp9pQL5NWBa0jadUIwysSWtSlugndCYrhH6jEVkB2ZK/
-         mdcgIAeC5KofZkai1LWjaBg9Zp+t2UYFf46PaKxE=
-From:   Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
-Cc:     Alexander Lochmann <alexander.lochmann@tu-dortmund.de>,
-        Horst Schirmeier <horst.schirmeier@tu-dortmund.de>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.com>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Updated locking documentation for transaction_t
-Date:   Mon, 18 Mar 2019 19:42:37 +0100
-Message-Id: <20190318184237.20677-1-alexander.lochmann@tu-dortmund.de>
-X-Mailer: git-send-email 2.20.1
+        Mon, 18 Mar 2019 14:46:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50904 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726839AbfCRSqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 14:46:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AEB38AF0C;
+        Mon, 18 Mar 2019 18:46:05 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 29C1DDA829; Mon, 18 Mar 2019 19:47:21 +0100 (CET)
+Date:   Mon, 18 Mar 2019 19:47:20 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Andrea Righi <andrea.righi@canonical.com>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] btrfs: raid56: properly unmap parity page in
+ finish_parity_scrub()
+Message-ID: <20190318184720.GF3516@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Andrea Righi <andrea.righi@canonical.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190313101703.GA9155@xps-13>
+ <20190314075628.GA11282@xps-13>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314075628.GA11282@xps-13>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We used LockDoc to derive locking rules for each member
-of struct transaction_t.
-Based on those results, we extended the existing documentation
-by more members of struct inode, and updated the existing
-documentation.
+On Thu, Mar 14, 2019 at 08:56:28AM +0100, Andrea Righi wrote:
+> Parity page is incorrectly unmapped in finish_parity_scrub(), triggering
+> a reference counter bug on i386, i.e.:
+> 
+>  [ 157.662401] kernel BUG at mm/highmem.c:349!
+>  [ 157.666725] invalid opcode: 0000 [#1] SMP PTI
+> 
+> The reason is that kunmap(p_page) was completely left out, so we never
+> did an unmap for the p_page and the loop unmapping the rbio page was
+> iterating over the wrong number of stripes: unmapping should be done
+> with nr_data instead of rbio->real_stripes.
+> 
+> Test case to reproduce the bug:
+> 
+>  - create a raid5 btrfs filesystem:
+>    # mkfs.btrfs -m raid5 -d raid5 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+> 
+>  - mount it:
+>    # mount /dev/sdb /mnt
+> 
+>  - run btrfs scrub in a loop:
+>    # while :; do btrfs scrub start -BR /mnt; done
+> 
+> BugLink: https://bugs.launchpad.net/bugs/1812845
+> Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
 
-Signed-off-by: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
-Signed-off-by: Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
----
- include/linux/jbd2.h | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Reviewed-by: David Sterba <dsterba@suse.com>
 
-diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-index 0f919d5fe84f..72f689746340 100644
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -534,6 +534,7 @@ struct transaction_chp_stats_s {
-  * The transaction keeps track of all of the buffers modified by a
-  * running transaction, and all of the buffers committed but not yet
-  * flushed to home for finished transactions.
-+ * (Locking Documentation improved by LockDoc)
-  */
- 
- /*
-@@ -585,7 +586,8 @@ struct transaction_s
- 	}			t_state;
- 
- 	/*
--	 * Where in the log does this transaction's commit start? [no locking]
-+	 * Where in the log does this transaction's commit start?
-+	 * [journal_t.j_state_lock]
- 	 */
- 	unsigned long		t_log_start;
- 
-@@ -647,17 +649,17 @@ struct transaction_s
- 	unsigned long		t_max_wait;
- 
- 	/*
--	 * When transaction started
-+	 * When transaction started [journal_t.j_state_lock]
- 	 */
- 	unsigned long		t_start;
- 
- 	/*
--	 * When commit was requested
-+	 * When commit was requested [journal_t.j_state_lock]
- 	 */
- 	unsigned long		t_requested;
- 
- 	/*
--	 * Checkpointing stats [j_checkpoint_sem]
-+	 * Checkpointing stats [journal_t.j_list_lock]
- 	 */
- 	struct transaction_chp_stats_s t_chp_stats;
- 
--- 
-2.20.1
-
+Thanks.
