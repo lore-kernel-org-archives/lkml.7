@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966EDC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CB6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726F520693
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC7820693
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfCRKGu (ORCPT
+        id S1728010AbfCRKHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:06:50 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:46675 "EHLO
+        Mon, 18 Mar 2019 06:07:13 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30921 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727575AbfCRKGt (ORCPT
+        by vger.kernel.org with ESMTP id S1727714AbfCRKHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:06:49 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IA11d5025027;
-        Mon, 18 Mar 2019 11:06:26 +0100
+        Mon, 18 Mar 2019 06:07:12 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IA1Jhu012116;
+        Mon, 18 Mar 2019 11:06:30 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r8qsxb4wy-1
+        by mx07-00178001.pphosted.com with ESMTP id 2r8qg4b79b-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 18 Mar 2019 11:06:26 +0100
+        Mon, 18 Mar 2019 11:06:30 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1F9AB41;
-        Mon, 18 Mar 2019 10:06:25 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A6DE638;
+        Mon, 18 Mar 2019 10:06:28 +0000 (GMT)
 Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D60D62AAA;
-        Mon, 18 Mar 2019 10:06:24 +0000 (GMT)
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 875C12AAA;
+        Mon, 18 Mar 2019 10:06:28 +0000 (GMT)
 Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
  (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 18 Mar
- 2019 11:06:24 +0100
+ 2019 11:06:28 +0100
 Received: from localhost (10.201.20.122) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 18 Mar 2019 11:06:24
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 18 Mar 2019 11:06:28
  +0100
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <broonie@kernel.org>, <robh@kernel.org>, <arnd@arndb.de>,
@@ -48,9 +48,9 @@ CC:     <linux-kernel@vger.kernel.org>, <loic.pallardy@st.com>,
         <linux-imx@nxp.com>, <linux-arm-kernel@lists.infradead.org>,
         <gregkh@linuxfoundation.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [RESEND PATCH 1/7] devicetree: bindings: Document domains controller bindings
-Date:   Mon, 18 Mar 2019 11:05:59 +0100
-Message-ID: <20190318100605.29120-2-benjamin.gaignard@st.com>
+Subject: [RESEND PATCH 4/7] devicetree: bindings: domainsctrl: Add STM32 ETZPC bindings
+Date:   Mon, 18 Mar 2019 11:06:02 +0100
+Message-ID: <20190318100605.29120-5-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20190318100605.29120-1-benjamin.gaignard@st.com>
 References: <20190318100605.29120-1-benjamin.gaignard@st.com>
@@ -64,76 +64,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document commons domains controller bindings for controller
-and client devices.
+Describe STM32 Extended TrustZone Protection bindings.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- .../bindings/bus/domains/domainsctrl.txt           | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/domains/domainsctrl.txt
+ .../devicetree/bindings/bus/domains/st,stm32-etzpc.txt     | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/domains/st,stm32-etzpc.txt
 
-diff --git a/Documentation/devicetree/bindings/bus/domains/domainsctrl.txt b/Documentation/devicetree/bindings/bus/domains/domainsctrl.txt
+diff --git a/Documentation/devicetree/bindings/bus/domains/st,stm32-etzpc.txt b/Documentation/devicetree/bindings/bus/domains/st,stm32-etzpc.txt
 new file mode 100644
-index 000000000000..f82e5e11ea64
+index 000000000000..8f0a990ab59c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/domains/domainsctrl.txt
-@@ -0,0 +1,55 @@
-+Common Domains Controller bindings properties
-+
-+Bus domains controllers allow to divided system on chip into multiple domains
-+that can be used to select by who hardware blocks could be accessed.
-+A domain could be a cluster of CPUs (or coprocessors), a range of addresses or
-+a group of hardware blocks.
-+
-+This device tree bindings can be used to bind bus domain consumer devices with
-+their bus domains provided by bus domains controllers. A bus domain provider
-+can be represented by any node in the device tree and can provide one or more
-+bus domains. A consumer node can refer to the provider by a phandle and a set
-+of phandle arguments of length specified by the #domainctrl-cells property in
-+the bus domain provider node.
-+
-+==Bus domain provider==
++++ b/Documentation/devicetree/bindings/bus/domains/st,stm32-etzpc.txt
+@@ -0,0 +1,14 @@
++STMicroelectronics STM32 Extended TrustZone Protection driver
 +
 +Required properties:
-+- #domainctrl-cells	: Number of cells in a bus domain specifier;
-+			  Can be any value as specified by device tree binding
-+			  documentation of a particular provider.
++ - compatible : must be "st,stm32-etzpc"
++ - reg : physical base address of the IP registers and length of memory
++         mapped region.
++ - #domainctrl-cells : must be 2
 +
-+==Bus domain consumer==
-+
-+Required properties:
-+- domainsctrl-X		: A list of bus domain specifiers, as defined by
-+			  bindings of the bus domain controller that is the
-+			  bus domain provider.
-+
-+Optional properties:
-+- domainsctrl-names	: A list of bus domain name string sorted in the same
-+			  order as the domainsctrl-X proprerties. Consumer
-+			  drivers will use domainsctrl-names to match bus
-+			  domains with bus domains specifiers.
-+			  Note that "default" and "unbind" are reserved names
-+			  used by the framework.
-+
-+Example of usage with:
-+- a domains controller with a 2 parameters cell
-+- a domains controller with a 3 parameters cell
-+- a client device node using the both controllers and 2 configurations
-+  named "default" and "unbind"
-+
-+ctrl0: ctrl@0 {
-+	#domainctrl-cells = <2>;
-+};
-+
-+ctrl1: ctrl@1 {
-+	#domainctrl-cells = <3>;
-+};
-+
-+foo@0 {
-+	domains-names = "default", "unbind";
-+	domainctrl-0 = <&ctrl0 1 2>, <&ctrl1 3 4 5>;
-+	domainctrl-1 = <&ctrl0 6 7>, <&ctrl1 8 9 0>;
-+};
++Example:
++	etzpc@5c007000 {
++		compatible = "st,stm32-etzpc";
++		reg = <0x5c007000 0x400>;
++		#domainctrl-cells = <2>;
++	};
 -- 
 2.15.0
 
