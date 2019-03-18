@@ -2,158 +2,136 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43618C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7816AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1992C2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3BF2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 15:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfCRPPg convert rfc822-to-8bit (ORCPT
+        id S1727017AbfCRPTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 11:15:36 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:43785 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbfCRPPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 11:15:35 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 51FA76BFF3;
-        Mon, 18 Mar 2019 15:15:26 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 23:15:18 +0800
-In-Reply-To: <ea4f86798466bd9680f064f663a50450452509bc.camel@bootlin.com>
-References: <20190312152256.35574-1-icenowy@aosc.io> <20190312152256.35574-12-icenowy@aosc.io> <ea4f86798466bd9680f064f663a50450452509bc.camel@bootlin.com>
+        Mon, 18 Mar 2019 11:19:07 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:36138 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726730AbfCRPTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 11:19:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FE851650;
+        Mon, 18 Mar 2019 08:19:06 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24BFD3F59C;
+        Mon, 18 Mar 2019 08:19:03 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 15:19:00 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 10/15] sched/fair: uclamp: Add uclamp support to
+ energy_compute()
+Message-ID: <20190318151900.p2lm2ys4qx7yfjhs@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-11-patrick.bellasi@arm.com>
+ <20190306172124.tpr32k6hawos7a3g@queper01-lin>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [linux-sunxi] [PATCH 11/14] ARM: sunxi: dts: s3/s3l/v3: add DTSI files for S3/S3L/V3 SoCs
-To:     linux-arm-kernel@lists.infradead.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jagan Teki <jagan@amarulasolutions.com>
-CC:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-clk@vger.kernel.org
-From:   Icenowy Zheng <icenowy@aosc.io>
-Message-ID: <86A3A1C2-323E-439D-9615-530E2AD9E199@aosc.io>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190306172124.tpr32k6hawos7a3g@queper01-lin>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06-Mar 17:21, Quentin Perret wrote:
 
+[...]
 
-于 2019年3月18日 GMT+08:00 下午8:41:32, Paul Kocialkowski <paul.kocialkowski@bootlin.com> 写到:
->Hi,
->
->Le mardi 12 mars 2019 à 23:22 +0800, Icenowy Zheng a écrit :
->> The Allwinner S3/S3L/V3 SoCs all share the same die with the V3s SoC,
->> but with more GPIO wired out of the package.
->> 
->> Add DTSI files for these SoCs. The DTSI file for V3 just replaces the
->> pinctrl compatible string, and the S3/S3L DTSI files just include the
->V3
->> DTSI file.
->
->Note that the V3 has a NMI controller at 1c000d0, that is required for
->handling the AXP209 interrupts IIRQ. I have no idea whether it's also
->the case on the V3s/S3/S3L though but it would be good to know.
+> > Since we are at that:
+> >  - rename schedutil_freq_util() into schedutil_cpu_util(),
+> >    since it's not only used for frequency selection.
+> >  - use "unsigned int" instead of "unsigned long" whenever the tracked
+> >    utilization value is not expected to overflow 32bit.
+> 
+> We use unsigned long all over the place right ? All the task_util*()
+> functions return unsigned long, the capacity-related functions too, and
+> util_avg is an unsigned long in sched_avg. So I'm not sure if we want to
+> do this TBH.
 
-It's not mentioned on the datasheet.
+For utilization we never need more then an "unsigned int" as storage
+class. Even at RQ level, 32bits allows +4mln tasks.
 
-If it's present, please send a patch.
+However we started with long and keep going on with that, this was
+just an attempt to incrementally fix that whenever we do some
+changes or we add some new code.
+But, perhaps a single whole sale update patch would fit better this
+job in case we really wanna do it at some point.
 
-BTW all V3 series chip share the same die (sun8iw8).
+I'll drop this change in v8 and keep this patch focused on functional
+bits, don't want to risk to sidetrack the discussion again.
 
-Thanks
+[...]
 
->
->Note that I can totally add support for it when adding support for my
->V3 device that uses the AXP209 this way.
->
->Also, could we get proper compatibles and config options for these new
->SoCs, since they are distinct from the V3S?
->
->Cheers,
->
->Paul
->
->> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> ---
->>  arch/arm/boot/dts/sun8i-s3.dtsi  |  6 ++++++
->>  arch/arm/boot/dts/sun8i-s3l.dtsi |  6 ++++++
->>  arch/arm/boot/dts/sun8i-v3.dtsi  | 14 ++++++++++++++
->>  3 files changed, 26 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/sun8i-s3.dtsi
->>  create mode 100644 arch/arm/boot/dts/sun8i-s3l.dtsi
->>  create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
->> 
->> diff --git a/arch/arm/boot/dts/sun8i-s3.dtsi
->b/arch/arm/boot/dts/sun8i-s3.dtsi
->> new file mode 100644
->> index 000000000000..0f41a25ecb30
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun8i-s3.dtsi
->> @@ -0,0 +1,6 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
->> + */
->> +
->> +#include "sun8i-v3.dtsi"
->> diff --git a/arch/arm/boot/dts/sun8i-s3l.dtsi
->b/arch/arm/boot/dts/sun8i-s3l.dtsi
->> new file mode 100644
->> index 000000000000..0f41a25ecb30
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun8i-s3l.dtsi
->> @@ -0,0 +1,6 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
->> + */
->> +
->> +#include "sun8i-v3.dtsi"
->> diff --git a/arch/arm/boot/dts/sun8i-v3.dtsi
->b/arch/arm/boot/dts/sun8i-v3.dtsi
->> new file mode 100644
->> index 000000000000..6ae8645ade50
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun8i-v3.dtsi
->> @@ -0,0 +1,14 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
->> + */
->> +
->> +#include "sun8i-v3s.dtsi"
->> +
->> +&ccu {
->> +	compatible = "allwinner,sun8i-v3-ccu";
->> +};
->> +
->> +&pio {
->> +	compatible = "allwinner,sun8i-v3-pinctrl";
->> +};
->> -- 
->> 2.18.1
->> 
->-- 
->Paul Kocialkowski, Bootlin
->Embedded Linux and kernel engineering
->https://bootlin.com
->
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > @@ -283,13 +284,14 @@ unsigned long schedutil_freq_util(int cpu, unsigned long util_cfs,
+> >  static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
+> >  {
+> >  	struct rq *rq = cpu_rq(sg_cpu->cpu);
+> > -	unsigned long util = cpu_util_cfs(rq);
+> > -	unsigned long max = arch_scale_cpu_capacity(NULL, sg_cpu->cpu);
+> > +	unsigned int util_cfs = cpu_util_cfs(rq);
+> > +	unsigned int cpu_cap = arch_scale_cpu_capacity(NULL, sg_cpu->cpu);
+> 
+> Do you really need this one ? What's wrong with 'max' :-) ?
+
+Being a pretty "generic" and thus confusing name is not enough? :)
+
+Anyway, same reasoning as above and same conclusions: I'll drop the
+renaming so that we don't sidetrack the discussion on v8.
+
+[...]
+
+> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> > index de181b8a3a2a..b9acef080d99 100644
+> > --- a/kernel/sched/sched.h
+> > +++ b/kernel/sched/sched.h
+> > @@ -2335,6 +2335,7 @@ static inline unsigned long capacity_orig_of(int cpu)
+> >  #endif
+> > 
+> >  #ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+> > +
+> >  /**
+> >   * enum schedutil_type - CPU utilization type
+> 
+> Since you're using this enum unconditionally in fair.c, you should to
+> move it out of the #ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL block, I think.
+> 
+> >   * @FREQUENCY_UTIL:	Utilization used to select frequency
+> > @@ -2350,15 +2351,9 @@ enum schedutil_type {
+> >  	ENERGY_UTIL,
+> >  };
+
+Good point, will do!
+
+Cheers,
+Patrick
 
 -- 
-使用 K-9 Mail 发送自我的Android设备。
+#include <best/regards.h>
+
+Patrick Bellasi
