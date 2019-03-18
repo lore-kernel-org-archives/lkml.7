@@ -2,172 +2,157 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7345EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58833C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA1E2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:03:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JOuFAqfr"
+	by mail.kernel.org (Postfix) with ESMTP id 3112C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfCRDDk (ORCPT
+        id S1727801AbfCRDFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 23:03:40 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37186 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfCRDDk (ORCPT
+        Sun, 17 Mar 2019 23:05:14 -0400
+Received: from mgwkm03.jp.fujitsu.com ([202.219.69.170]:43485 "EHLO
+        mgwkm03.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbfCRDFO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 23:03:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v14so2602641wmf.2
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 20:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TAiXdoCs8qghvuz4sYi+xTo3LDM0q7EKdHUQZzCQKD0=;
-        b=JOuFAqfrtPgPb9upPW9fngQEknEHZVnQRB78OpDoL9QoiTCGal17v+iK/1dAaEgX64
-         BPbwTlpCIf5p4xDcJVETM0kF0npq4Woo9ECsWvk1roeLsaom9g4mTbhTjducQ5gbGt5Z
-         7ZOAaeKsPZLHPETkpZIX1OfCfGF0Vbrs3t1VkYNC/5i8Jx4XmcSyqttvIbWKTbYP9hlv
-         VOtHIS17SxhEbA62J9aeE6N1pVMs5QxF1gY2VsYVy6yWEzirNQYiaTkE2GQLPKEsTun9
-         EQopOrLO2/zRMYZf/G3VamyJBKvsGiJ+BAPQRlhRXHe5qfbeaM+9ebgK/3FRK4DSm1+D
-         2XdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TAiXdoCs8qghvuz4sYi+xTo3LDM0q7EKdHUQZzCQKD0=;
-        b=WEgAjb7FCo95E8SfFGh7oVnHjvglQWfeAaUvPu6GAOSkL23YS8zs8Vq5uuDhnNOTl6
-         y0KyE8XjfJCnrjSBiJmVhFCCrpwFVIQ6Jt00eXakR7zVm19IxMHJzFVMHjrXhTbzAC/D
-         Ajw/xT0L9AyVCMvuyLTv7euqz95N7GycUHemOwcqGcEffvUDm6pNoZ8RYrVwyGNEJ+Rp
-         KNQAtMSS0ltcKzJDtipschOo7WhfBU4vc95H3OP2jQ4Bl0QBcyOYRihKID6wrFkjxgpC
-         anKlZQNylbVddlVxKz6HLc/eYxutp2GaV1t8bg9DNCiU7LgeGstjpWUmEMSjdpKnd+r5
-         gt0w==
-X-Gm-Message-State: APjAAAVCwC5miS5oxGs1L1b680yIyhpwVcZ4eGKkmp0Dbo/tFh2z6I3u
-        BVwh2XS301ZfrkoYnjdj1/Tvtw==
-X-Google-Smtp-Source: APXvYqx3F1Q9lg4kU1mer3Pnu+62sQa7Kn2wfqzhzU2T3nyxLPsSZOtdi7W94UErExtNU6UkNxK5vA==
-X-Received: by 2002:a1c:14e:: with SMTP id 75mr8989973wmb.48.1552878218630;
-        Sun, 17 Mar 2019 20:03:38 -0700 (PDT)
-Received: from oak.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 16sm32280508wrb.19.2019.03.17.20.03.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 Mar 2019 20:03:37 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 03:03:36 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Brian Norris <briannorris@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] tracing: kdb: The skip_lines parameter should
- have been skip_entries
-Message-ID: <20190318030336.GE27232@oak.lan>
-References: <20190315230906.250598-1-dianders@chromium.org>
+        Sun, 17 Mar 2019 23:05:14 -0400
+Received: from kw-mxoi2.gw.nic.fujitsu.com (unknown [192.168.231.133]) by mgwkm03.jp.fujitsu.com with smtp
+         id 7aff_2ae6_0457e3c2_6e84_414c_9436_52e0c1940dbe;
+        Mon, 18 Mar 2019 12:05:11 +0900
+Received: from g01jpfmpwkw01.exch.g01.fujitsu.local (g01jpfmpwkw01.exch.g01.fujitsu.local [10.0.193.38])
+        by kw-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id 147D6AC00AA
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 12:05:11 +0900 (JST)
+Received: from G01JPEXCHKW16.g01.fujitsu.local (G01JPEXCHKW16.g01.fujitsu.local [10.0.194.55])
+        by g01jpfmpwkw01.exch.g01.fujitsu.local (Postfix) with ESMTP id EB4866923F5;
+        Mon, 18 Mar 2019 12:05:09 +0900 (JST)
+Received: from G01JPEXMBKW03.g01.fujitsu.local ([10.0.194.67]) by
+ g01jpexchkw16 ([10.0.194.55]) with mapi id 14.03.0439.000; Mon, 18 Mar 2019
+ 12:05:09 +0900
+From:   "Zhang, Lei" <zhang.lei@jp.fujitsu.com>
+To:     'Mark Rutland' <mark.rutland@arm.com>,
+        "Okamoto, Takayuki" <tokamoto@jp.fujitsu.com>
+CC:     'Catalin Marinas' <catalin.marinas@arm.com>,
+        'Will Deacon' <will.deacon@arm.com>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        'James Morse' <james.morse@arm.com>,
+        "'linux-arm-kernel@lists.infradead.org'" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [RESEND PATCH] Make Fujitsu Erratum 010001 patch can be applied
+ on A64FX v1r0
+Thread-Topic: [RESEND PATCH] Make Fujitsu Erratum 010001 patch can be
+ applied on A64FX v1r0
+Thread-Index: AdTbJFde57o7xnMQR9OpSdZTOYeW4///o4KA//uP4VA=
+Date:   Mon, 18 Mar 2019 03:05:09 +0000
+Message-ID: <8898674D84E3B24BA3A2D289B872026A6A35627D@G01JPEXMBKW03>
+References: <5FA513F682BE7F4EAAB8EE035D5B08E44E9363CC@G01JPEXMBKW02>
+ <20190315151241.GC48314@lakrids.cambridge.arm.com>
+In-Reply-To: <20190315151241.GC48314@lakrids.cambridge.arm.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-securitypolicycheck: OK by SHieldMailChecker v2.2.3
+x-shieldmailcheckerpolicyversion: FJ-ISEC-20140219
+x-originating-ip: [10.18.70.198]
+Content-Type: text/plain; charset="iso-2022-jp"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315230906.250598-1-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SecurityPolicyCheck-GC: OK by FENCE-Mail
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 04:09:04PM -0700, Douglas Anderson wrote:
-> The things skipped by kdb's "ftdump" command when you pass it a
-> parameter has always been entries, not lines.  The difference usually
-> doesn't matter but when the trace buffer has multi-line entries (like
-> a stack dump) it can matter.
-> 
-> Let's fix this both in the help text for ftdump and also in the local
-> variable names.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Hi guys,
 
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> -----Original Message-----
+> From: linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org> On
+> Behalf Of Mark Rutland
+> Sent: Saturday, March 16, 2019 12:13 AM
+> To: Okamoto, Takayuki/岡本 高幸 <tokamoto@jp.fujitsu.com>
+> Cc: 'Catalin Marinas' <catalin.marinas@arm.com>; 'Will Deacon'
+> <will.deacon@arm.com>; 'linux-kernel@vger.kernel.org'
+> <linux-kernel@vger.kernel.org>; Zhang, Lei/張 雷 <zhang.lei@jp.fujitsu.com>;
+> 'James Morse' <james.morse@arm.com>; hange-folder>?
+> <toggle-mailboxes@lakrids.cambridge.arm.com>;
+> 'linux-arm-kernel@lists.infradead.org' <linux-arm-kernel@lists.infradead.org>
+> Subject: Re: [RESEND PATCH] Make Fujitsu Erratum 010001 patch can be
+> applied on A64FX v1r0
+> 
+> On Fri, Mar 15, 2019 at 12:22:36PM +0000, Okamoto, Takayuki wrote:
+> > I resend the patch due to whitespace munging.
+> >
+> > > -----Original Message-----
+> > > From: James Morse <james.morse@arm.com>
+> > > Sent: Wednesday, February 27, 2019 3:44 AM
+> > > To: james.morse@arm.com; linux-arm-kernel@lists.infradead.org
+> > > Cc: linux-kernel@vger.kernel.org; Catalin Marinas
+> > > <catalin.marinas@arm.com>; Mark Rutland <mark.rutland@arm.com>; Will
+> > > Deacon <will.deacon@arm.com>; Zhang, Lei <zhang.lei@jp.fujitsu.com>
+> > > Subject: [PATCH v5] arm64: Add workaround for Fujitsu A64FX erratum
+> > > 010001
+> > >
+> > > +/* Fujitsu Erratum 010001 affects A64FX 1.0 and 1.1, (v0r0 and
+> > > +v1r0) */ #define MIDR_FUJITSU_ERRATUM_010001
+> > > 	MIDR_FUJITSU_A64FX
+> > > +#define MIDR_FUJITSU_ERRATUM_010001_MASK
+> > > 	(~MIDR_VARIANT(1))
+> >
+> > This workaround for the erratum should be applied for both A64FX v1r0
+> > and v0r0, however, the patch v5 is only enabled on A64FX
+> > v0r0(MIDR.Variant == 0 && MIDR.Revision == 0).
+> > This issue is caused by the macro MIDR_FUJITSU_ERRATUM_010001_MASK.
+> >
+> > I have tested on both A64FX v1r0 and v0r0. This new patch will effect
+> > only for A64FX.
+> >
+> > --
+> > Changed to be applied for not only A64FX v0r0 but also v1r0.
+> >
+> > Signed-off-by: Zhang Lei <zhang.lei@jp.fujitsu.com>
+> > ---
+> >  arch/arm64/include/asm/cputype.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/include/asm/cputype.h
+> > b/arch/arm64/include/asm/cputype.h
+> > index 2afb133..1fb47b5 100644
+> > --- a/arch/arm64/include/asm/cputype.h
+> > +++ b/arch/arm64/include/asm/cputype.h
+> > @@ -129,7 +129,7 @@
+> >
+> >  /* Fujitsu Erratum 010001 affects A64FX 1.0 and 1.1, (v0r0 and v1r0) */
+> >  #define MIDR_FUJITSU_ERRATUM_010001
+> 	MIDR_FUJITSU_A64FX
+> > -#define MIDR_FUJITSU_ERRATUM_010001_MASK
+> 	(~MIDR_VARIANT(1))
+> 
+> The bug is is that MIDR_VARIANT() is meant to extract the variant from a full
+> MIDR value, not generate an in-place field value.
+> 
+> > +#define MIDR_FUJITSU_ERRATUM_010001_MASK	(~(0x1 <<
+> MIDR_VARIANT_SHIFT))
+> 
+> I beleive this can be:
+> 
+> #define MIDR_FUJITSU_ERRATUM_010001_MASK	(~MIDR_VAR_REV(1,
+> 0))
 
-> ---
-> 
-> Changes in v4:
-> - skip_lines => skip_entries new for v4.
-> 
-> Changes in v3: None
-> 
->  kernel/trace/trace_kdb.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-> index 810d78a8d14c..4b666643d69f 100644
-> --- a/kernel/trace/trace_kdb.c
-> +++ b/kernel/trace/trace_kdb.c
-> @@ -17,7 +17,7 @@
->  #include "trace.h"
->  #include "trace_output.h"
->  
-> -static void ftrace_dump_buf(int skip_lines, long cpu_file)
-> +static void ftrace_dump_buf(int skip_entries, long cpu_file)
->  {
->  	/* use static because iter can be a bit big for the stack */
->  	static struct trace_iterator iter;
-> @@ -70,11 +70,11 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
->  			kdb_printf("---------------------------------\n");
->  		cnt++;
->  
-> -		if (!skip_lines) {
-> +		if (!skip_entries) {
->  			print_trace_line(&iter);
->  			trace_printk_seq(&iter.seq);
->  		} else {
-> -			skip_lines--;
-> +			skip_entries--;
->  		}
->  
->  		if (KDB_FLAG(CMD_INTERRUPT))
-> @@ -106,7 +106,7 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
->   */
->  static int kdb_ftdump(int argc, const char **argv)
->  {
-> -	int skip_lines = 0;
-> +	int skip_entries = 0;
->  	long cpu_file;
->  	char *cp;
->  
-> @@ -114,9 +114,9 @@ static int kdb_ftdump(int argc, const char **argv)
->  		return KDB_ARGCOUNT;
->  
->  	if (argc) {
-> -		skip_lines = simple_strtol(argv[1], &cp, 0);
-> +		skip_entries = simple_strtol(argv[1], &cp, 0);
->  		if (*cp)
-> -			skip_lines = 0;
-> +			skip_entries = 0;
->  	}
->  
->  	if (argc == 2) {
-> @@ -129,7 +129,7 @@ static int kdb_ftdump(int argc, const char **argv)
->  	}
->  
->  	kdb_trap_printk++;
-> -	ftrace_dump_buf(skip_lines, cpu_file);
-> +	ftrace_dump_buf(skip_entries, cpu_file);
->  	kdb_trap_printk--;
->  
->  	return 0;
-> @@ -137,7 +137,7 @@ static int kdb_ftdump(int argc, const char **argv)
->  
->  static __init int kdb_ftrace_register(void)
->  {
-> -	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#lines] [cpu]",
-> +	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#entries] [cpu]",
->  			    "Dump ftrace log", 0, KDB_ENABLE_ALWAYS_SAFE);
->  	return 0;
->  }
-> -- 
-> 2.21.0.360.g471c308f928-goog
-> 
+Thanks for your comments.
+I also have considered to use MIDR_CPU_VAR_REV macro,
+but the implication of (~MIDR_CPU_VAR_REV(1, 0)) is "NOT v1r0".
+I think it may cause confusion, so I choose the
+simple way (~(0x1 << MIDR_VARIANT_SHIFT)).
+
+> But otherwise this looks fine to me.
+
+Will this patch be merged to v5.1?
+
+Thanks,
+Zhang Lei
+
+
