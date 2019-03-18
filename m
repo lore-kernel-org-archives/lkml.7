@@ -2,93 +2,67 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA2CC10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EFDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05A620850
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AE320850
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552940492;
-	bh=NQLOYggsPXkWqj3UsTopKS4lKB8iUyd7s/a8ypYs0wM=;
+	s=default; t=1552940550;
+	bh=rYkYvizLYaF4Tp6HqpglWg5ijSOqjSQJk/SUsx+zXyg=;
 	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=HzJAplwvd8AG2l9lEdnrD8HubgSTLT+2tkWK62J+FdtsDPWmHsqe0F9SO31n4qrc1
-	 cEbQJafiKwnmfPT/SIIJa4Wcs3bkDuXbcLvSgfq/AroFS32Ii761Taz//hspfcugXE
-	 LNPgtzhCDV4nweCrDw1QQaSpuGmdYHs0XQE+1McM=
+	b=pNgY7Q2w+j1pProvCphf6EIEEiWveRpGyPvfLTM4OjFPciDC2K08CvdedoJRLHwMM
+	 MoNjkDvM1fgKIwo/hZO+e048nPM775A6J1s5VQ/AVc5938D27fRLDSlS0lPDqWJsu4
+	 HcSNmqTypk+7shwEStioR7hPEymaP11zK4G6CDJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfCRUVb (ORCPT
+        id S1727682AbfCRUW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:21:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48878 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 16:22:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbfCRUVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:21:31 -0400
+        id S1726959AbfCRUW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 16:22:28 -0400
 Received: from localhost (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BC7B20828;
-        Mon, 18 Mar 2019 20:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0005320850;
+        Mon, 18 Mar 2019 20:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552940490;
-        bh=NQLOYggsPXkWqj3UsTopKS4lKB8iUyd7s/a8ypYs0wM=;
+        s=default; t=1552940548;
+        bh=rYkYvizLYaF4Tp6HqpglWg5ijSOqjSQJk/SUsx+zXyg=;
         h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=SufvF/IsUztt/+hqtcuryfnMKdupBNtR+FL5keTM3ma19HgKkeQnf1wN6t7loLZOU
-         8PrLmrj7DkX1IS0fD7xnUcxzU2BYv3cPDIdovqQmLuobtYzCAmv1BcWCuzmVw8yYQA
-         wkM1Ud6/2OeIj592Z6QDFVl+Ak94QU20ZhtN9DYg=
+        b=JCBAjZn5rt1D8h37i+FvS/gXXfEumBOOXUPjK0pFghbu/Y+2Yw+SbgZm2vbdF0Y+z
+         qkXlgKZwoXx6ahLpwZwjdA9J6t8zI1ZG9OS6bwMcMY5yiCP6CZGwqgwYhGzM3bWYhJ
+         cKIGY32k0Y3sBA9aye5DRiDdwG6pnSqrrABJ4a+Q=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1552937931-23050-7-git-send-email-peter.griffin@linaro.org>
-References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org> <1552937931-23050-7-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <20190313135503.3198-1-narmstrong@baylibre.com>
+References: <20190313135503.3198-1-narmstrong@baylibre.com>
 From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v1 6/6] clk: hi6220: use CLK_OF_DECLARE_DRIVER
-Cc:     john.stultz@linaro.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        yuq825@gmail.com
-To:     Peter Griffin <peter.griffin@linaro.org>, airlied@linux.ie,
-        daniel@ffwll.ch, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, xuwei5@hisilicon.com
-Message-ID: <155294048956.20095.14072308972262767231@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH] clk: meson-g12a: fix VPU clock parents
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com
+Message-ID: <155294054725.20095.14218989036413639726@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.8
-Date:   Mon, 18 Mar 2019 13:21:29 -0700
+Date:   Mon, 18 Mar 2019 13:22:27 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Peter Griffin (2019-03-18 12:38:51)
-> As now we also need to probe in the reset driver as well.
+Quoting Neil Armstrong (2019-03-13 06:55:03)
+> First two VPU clock parents are wrong, fix it here.
 >=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  drivers/clk/hisilicon/clk-hi6220.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Doesn't this need to be squashed with the reset driver bits so we don't
-have a bisection hole?
-
->=20
-> diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/c=
-lk-hi6220.c
-> index a87809d..952ffe2 100644
-> --- a/drivers/clk/hisilicon/clk-hi6220.c
-> +++ b/drivers/clk/hisilicon/clk-hi6220.c
-> @@ -89,7 +89,7 @@ static void __init hi6220_clk_ao_init(struct device_nod=
-e *np)
->         hisi_clk_register_gate_sep(hi6220_separated_gate_clks_ao,
->                                 ARRAY_SIZE(hi6220_separated_gate_clks_ao)=
-, clk_data_ao);
->  }
-> -CLK_OF_DECLARE(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_clk_ao_i=
-nit);
-> +CLK_OF_DECLARE_DRIVER(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_c=
-lk_ao_init);
-
-Can you also add a comment indicating why/what is the other driver that
-is probing the same device node?
+Are you going to send this as a PR later? Or I can pick this directly to
+clk-fixes now?
 
