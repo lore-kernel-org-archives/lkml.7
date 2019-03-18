@@ -2,96 +2,114 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4623C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F163C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763432075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902425;
-	bh=JICbOFyrnmYgVMHxZwjXs+JLmqZGf1nzeJml192eNoo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B93/tQONUkPPLU5A96VcSNPMKe+GoonSScd3Y+6bQfF8APhRPHFgkohJWetsEVD63
-	 j4EWcs4sbRaxmLwDCkikIisOA0A72jVEHlBbuCuo2mxFLA470cI1QYKHIRbkUHuSfO
-	 BPmYzntwQ2LzShP+sZEp9oILexx+dDAs+Vfb2Wko=
+	by mail.kernel.org (Postfix) with ESMTP id 5851B217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfCRJrE (ORCPT
+        id S1727000AbfCRJrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:47:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33918 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:47:02 -0400
+Received: from relay.sw.ru ([185.231.240.75]:41486 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727502AbfCRJ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726835AbfCRJ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Mar 2019 05:28:13 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 364CE2087C;
-        Mon, 18 Mar 2019 09:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901292;
-        bh=JICbOFyrnmYgVMHxZwjXs+JLmqZGf1nzeJml192eNoo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z9nut9isvrZ6u9n6u0K/9h4K9f607zXJMM1nIg5MzGXIDIaUyXbLTtZug2dPbb81V
-         IfxjBclTec2eAeRFcBA9pHGX0udtnXfs39F797ayoJAsMERdw8Qo/sBtvIX96L3UP+
-         iLVfbQQ0Xt40RMUR3CsXAh+W0aFf75gFKDhwxMwU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.0 42/43] Its wrong to add len to sector_nr in raid10 reshape twice
-Date:   Mon, 18 Mar 2019 10:24:34 +0100
-Message-Id: <20190318083717.104587588@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
-References: <20190318083715.877441740@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+Received: from [172.16.25.169] (helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1h5oZ1-00055N-4M; Mon, 18 Mar 2019 12:28:11 +0300
+Subject: [PATCH REBASED 3/4] mm: Remove pages_to_free argument of
+ move_active_pages_to_lru()
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     akpm@linux-foundation.org, daniel.m.jordan@oracle.com,
+        mhocko@suse.com, ktkhai@virtuozzo.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 18 Mar 2019 12:28:10 +0300
+Message-ID: <155290129079.31489.16180612694090502942.stgit@localhost.localdomain>
+In-Reply-To: <155290113594.31489.16711525148390601318.stgit@localhost.localdomain>
+References: <155290113594.31489.16711525148390601318.stgit@localhost.localdomain>
+User-Agent: StGit/0.18
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+We may use input argument list as output argument too.
+This makes the function more similar to putback_inactive_pages().
 
-------------------
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-From: Xiao Ni <xni@redhat.com>
-
-commit b761dcf1217760a42f7897c31dcb649f59b2333e upstream.
-
-In reshape_request it already adds len to sector_nr already. It's wrong to add len to
-sector_nr again after adding pages to bio. If there is bad block it can't copy one chunk
-at a time, it needs to goto read_more. Now the sector_nr is wrong. It can cause data
-corruption.
-
-Cc: stable@vger.kernel.org # v3.16+
-Signed-off-by: Xiao Ni <xni@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+v2: Fix comment spelling.
 ---
- drivers/md/raid10.c |    1 -
- 1 file changed, 1 deletion(-)
+ mm/vmscan.c |   19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -4670,7 +4670,6 @@ read_more:
- 	atomic_inc(&r10_bio->remaining);
- 	read_bio->bi_next = NULL;
- 	generic_make_request(read_bio);
--	sector_nr += nr_sectors;
- 	sectors_done += nr_sectors;
- 	if (sector_nr <= last)
- 		goto read_more;
-
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index d2adabe4457d..1794ec7b21d8 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2004,10 +2004,10 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
+ 
+ static unsigned move_active_pages_to_lru(struct lruvec *lruvec,
+ 				     struct list_head *list,
+-				     struct list_head *pages_to_free,
+ 				     enum lru_list lru)
+ {
+ 	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
++	LIST_HEAD(pages_to_free);
+ 	struct page *page;
+ 	int nr_pages;
+ 	int nr_moved = 0;
+@@ -2034,12 +2034,17 @@ static unsigned move_active_pages_to_lru(struct lruvec *lruvec,
+ 				(*get_compound_page_dtor(page))(page);
+ 				spin_lock_irq(&pgdat->lru_lock);
+ 			} else
+-				list_add(&page->lru, pages_to_free);
++				list_add(&page->lru, &pages_to_free);
+ 		} else {
+ 			nr_moved += nr_pages;
+ 		}
+ 	}
+ 
++	/*
++	 * To save our caller's stack, now use input list for pages to free.
++	 */
++	list_splice(&pages_to_free, list);
++
+ 	return nr_moved;
+ }
+ 
+@@ -2129,8 +2134,10 @@ static void shrink_active_list(unsigned long nr_to_scan,
+ 	 */
+ 	reclaim_stat->recent_rotated[file] += nr_rotated;
+ 
+-	nr_activate = move_active_pages_to_lru(lruvec, &l_active, &l_hold, lru);
+-	nr_deactivate = move_active_pages_to_lru(lruvec, &l_inactive, &l_hold, lru - LRU_ACTIVE);
++	nr_activate = move_active_pages_to_lru(lruvec, &l_active, lru);
++	nr_deactivate = move_active_pages_to_lru(lruvec, &l_inactive, lru - LRU_ACTIVE);
++	/* Keep all free pages in l_active list */
++	list_splice(&l_inactive, &l_active);
+ 
+ 	__count_vm_events(PGDEACTIVATE, nr_deactivate);
+ 	__count_memcg_events(lruvec_memcg(lruvec), PGDEACTIVATE, nr_deactivate);
+@@ -2138,8 +2145,8 @@ static void shrink_active_list(unsigned long nr_to_scan,
+ 	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, -nr_taken);
+ 	spin_unlock_irq(&pgdat->lru_lock);
+ 
+-	mem_cgroup_uncharge_list(&l_hold);
+-	free_unref_page_list(&l_hold);
++	mem_cgroup_uncharge_list(&l_active);
++	free_unref_page_list(&l_active);
+ 	trace_mm_vmscan_lru_shrink_active(pgdat->node_id, nr_taken, nr_activate,
+ 			nr_deactivate, nr_rotated, sc->priority, file);
+ }
 
