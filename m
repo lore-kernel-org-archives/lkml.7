@@ -2,112 +2,189 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942C6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D177C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB0420854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2005C20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:25:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfCRRZE (ORCPT
+        id S1727371AbfCRRZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:25:04 -0400
-Received: from foss.arm.com ([217.140.101.70]:38514 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbfCRRZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:25:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37CCA1650;
-        Mon, 18 Mar 2019 10:25:03 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 683063F614;
-        Mon, 18 Mar 2019 10:25:00 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 17:24:57 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
-        Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2 4/6] powerpc: use common ptrace_syscall_enter hook to
- handle _TIF_SYSCALL_EMU
-Message-ID: <20190318172457.GD18196@e107155-lin>
-References: <20190318104925.16600-1-sudeep.holla@arm.com>
- <20190318104925.16600-5-sudeep.holla@arm.com>
- <20190318172024.GB23521@redhat.com>
+        Mon, 18 Mar 2019 13:25:49 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46761 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfCRRZt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:25:49 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h5w13-0003KF-JO; Mon, 18 Mar 2019 18:25:37 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h5w11-0001XZ-NR; Mon, 18 Mar 2019 18:25:35 +0100
+Date:   Mon, 18 Mar 2019 18:25:35 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V4 2/5] pwm: Add i.MX TPM PWM driver support
+Message-ID: <20190318172535.2yxokxwu52yjf6xf@pengutronix.de>
+References: <1552610505-13568-1-git-send-email-Anson.Huang@nxp.com>
+ <1552610505-13568-3-git-send-email-Anson.Huang@nxp.com>
+ <20190315093532.xw5ivfkxrwvrkvix@pengutronix.de>
+ <DB3PR0402MB39161B062231C59842595374F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190318080743.xumj6e72bzumszvp@pengutronix.de>
+ <DB3PR0402MB391627A8C741C84A2057E576F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190318172024.GB23521@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB3PR0402MB39161A9884D5768F7280024FF5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 06:20:24PM +0100, Oleg Nesterov wrote:
-> On 03/18, Sudeep Holla wrote:
-> >
-> > --- a/arch/powerpc/kernel/ptrace.c
-> > +++ b/arch/powerpc/kernel/ptrace.c
-> > @@ -3278,35 +3278,29 @@ long do_syscall_trace_enter(struct pt_regs *regs)
-> >
-> >  	user_exit();
-> >
-> > -	flags = READ_ONCE(current_thread_info()->flags) &
-> > -		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
-> > -
-> > -	if (flags) {
-> > -		int rc = tracehook_report_syscall_entry(regs);
-> > +	if (unlikely(ptrace_syscall_enter(regs))) {
-> > +		/*
-> > +		 * A nonzero return code from tracehook_report_syscall_entry()
-> > +		 * tells us to prevent the syscall execution, but we are not
-> > +		 * going to execute it anyway.
-> > +		 *
-> > +		 * Returning -1 will skip the syscall execution. We want to
-> > +		 * avoid clobbering any registers, so we don't goto the skip
-> > +		 * label below.
-> > +		 */
-> > +		return -1;
-> > +	}
-> >
-> > -		if (unlikely(flags & _TIF_SYSCALL_EMU)) {
-> > -			/*
-> > -			 * A nonzero return code from
-> > -			 * tracehook_report_syscall_entry() tells us to prevent
-> > -			 * the syscall execution, but we are not going to
-> > -			 * execute it anyway.
-> > -			 *
-> > -			 * Returning -1 will skip the syscall execution. We want
-> > -			 * to avoid clobbering any registers, so we don't goto
-> > -			 * the skip label below.
-> > -			 */
-> > -			return -1;
-> > -		}
-> > +	flags = READ_ONCE(current_thread_info()->flags) & _TIF_SYSCALL_TRACE;
->
-> Why do we need READ_ONCE() with this change?
->
-> And now that we change a single bit "flags" doesn't look like a good name.
->
-> Again, to me this patch just makes the code look worse. Honestly, I don't
-> think that the new (badly named) ptrace_syscall_enter() hook makes any sense.
->
+Hello,
 
-Worse because we end up reading current_thread_info->flags twice ?
+On Mon, Mar 18, 2019 at 02:04:00PM +0000, Anson Huang wrote:
+> > > On Mon, Mar 18, 2019 at 07:41:02AM +0000, Anson Huang wrote:
+> > > > > > +	val &= ~PWM_IMX_TPM_SC_CMOD;
+> > > > > > +	writel(val, tpm->base + PWM_IMX_TPM_SC);
+> > > > >
+> > > > > As this interrupts the output, please only do it if necessary.
+> > > >
+> > > > OK, will do it ONLY when it is enabled previously.
+> > >
+> > > I think you only need to do that when the value actually changes.
+> > 
+> > OK, I will save the period/div count and ONLY do it when the value actually
+> > changes.
+> 
+> After further think, I added below tpm->period to save the current period settings,
+> ONLY when the new period to be set is different from the current period, then the 
+> pwm_imx_tpm_config_counter() is called, so I think no need to care about the value
+> changes, the value is always changed when pwm_imx_tpm_config_counter() is called.
+> 
+>                  if (tpm->user_count != 1 && state->period != tpm->period)
+>                          return -EBUSY;
+>                  ret = pwm_imx_tpm_config_counter(chip, state->period);
+>                  if (ret)
+>                          return ret;
 
---
-Regards,
-Sudeep
+This is still not the optimal thing to do. What you really want is:
+
+	p = round_period_according_to_hw_caps(state->period);
+	if (p != actually_configured_period && tpm->user_count != 1)
+		return -EBUSY;
+
+
+> > > > > > +	/* set duty counter */
+> > > > > > +	tmp = readl(tpm->base + PWM_IMX_TPM_MOD) &
+> > > > > > +PWM_IMX_TPM_MOD_MOD_MASK;
+> > > > >
+> > > > > I recommend storing this value in driver data.
+> > > >
+> > > > NOT quite understand, as we did NOT use it in other places except
+> > > > the get_state, just reading the register once should be OK there.
+> > >
+> > > I had the impression it is used more than once. Will look again in the
+> > > next iteration. But also note that shadowing the value might already
+> > > be beneficial for a single call site as driver data might occupy more
+> > > RAM than necessary anyhow and reading from RAM is faster than from the
+> > > hardware's register.
+> > > Probably this is not a fast path, so not worth the optimisation?!
+> > 
+> > OK, will save it in driver data and avoid accessing register again.
+
+please apply some thought before following my advices. If this is not a
+fast path and it hurts readability, don't shadow the register in driver
+data.
+
+> > > > > > +		/* disable channel */
+> > > > > > +		writel(PWM_IMX_TPM_CnSC_CHF,
+> > > > > > +			tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> > > > >
+> > > > > Clearing CHF doens't disable the channel as I read the manual.
+> > > >
+> > > > This write clears CHF as well as writing other bits 0, to disable
+> > > > the output. Maybe I can explicitly clear MSA/MSB/ELSA/ELSB to avoid
+> > > > confusion.
+> > >
+> > > Ah, I misinterpreted the value written.
+> > >
+> > > > > > +static int pwm_imx_tpm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > > > +			     struct pwm_state *state) {
+> > > > > > +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+> > > > > > +	struct pwm_state curstate;
+> > > > > > +	u32 duty_cycle = state->duty_cycle;
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	pwm_imx_tpm_get_state(chip, pwm, &curstate);
+> > > > > > +
+> > > > > > +	mutex_lock(&tpm->lock);
+> > > > >
+> > > > > What should this lock protect? Does it hurt if the state changes
+> > > > > between pwm_imx_tpm_get_state releasing the lock and
+> > > > > pwm_imx_tpm_apply taking it?
+> > > >
+> > > > The idea is to protect the share resourced by multiple channels, but
+> > > > I think I can make the mutex_lock includes get_state and remove the
+> > > > lock in get_state function.
+> > >
+> > > You might need it in .get_state to return a consistent state to the
+> > > caller. In this case just introduce an unlocked variant of .get_state
+> > > to share code between the two functions.
+> > >
+> > > And BTW the question was honest. I'm not entirely sure that you need
+> > > to hold the lock.
+> > 
+> > Agreed, if the different channel configuration ONLY access its own register,
+> > NOT any shared registers, then I think this lock is unnecessary.
+> 
+> Since all the functions in .apply function will need to access registers and these
+> registers are shared by different channels, so I think the lock is necessary. 
+
+I think so, too, but didn't thought it to the end. I can invest some
+time here in the next review round.
+
+BTW, one thing that I think is missing is, that .apply must only return
+when the newly configured setting is already active.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
