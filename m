@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9077EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51569C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C59214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23AC3217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901733;
-	bh=CNLwqg3dGfwNMjC673cknqKZ8t9seXBKUzvDyfHCp8E=;
+	s=default; t=1552901736;
+	bh=iQf7QXMcYGyirz9ERm0ut/OhgOuuGocUCo/B+/ympFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KTlKgZCU7EDo2T8uEs/D4p2gmuzWvpP9AAyF4tarpVItdH6668SvTPS/57er1OgH4
-	 OlHVoKi20Tv3EWauHfAEp4XbRNahVpSmrhtU7jV4rDfofIavX6tamQc+34I10Xw48A
-	 fDg3LKOZMcVlwSBVVk1K6dd0oPfoDvj7fzFZ9SQk=
+	b=narlxIm/4FDtl2oSujUAe+iVvNZS5m60ZTf9TX158VNbVnnEZbZeGenriLGHJwBQL
+	 /gJPXVmI8DVC2jJunAfVEMdtwsu1YTfS4YcMyHXDLm+hpH3+rdmlvF1dPAbvmmEu0L
+	 t+qkfFCsO6P3ALKr5e42TJutQ6Jv9CGXzKxpye9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387464AbfCRJfb (ORCPT
+        id S2387477AbfCRJfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:35:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:35:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387447AbfCRJf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:35:29 -0400
+        id S2387447AbfCRJfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:35:32 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D946B2087C;
-        Mon, 18 Mar 2019 09:35:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E99DE2087C;
+        Mon, 18 Mar 2019 09:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901728;
-        bh=CNLwqg3dGfwNMjC673cknqKZ8t9seXBKUzvDyfHCp8E=;
+        s=default; t=1552901731;
+        bh=iQf7QXMcYGyirz9ERm0ut/OhgOuuGocUCo/B+/ympFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=udCmy+QRRP0u89aFegypWCaOGiiFXwzc3xZdOvn4iPXGlUJq6vitSu2vf5yJnyRvB
-         tOumdzUNho0iADLnxIyU21Ojg7klwSHyYD6kQs/XPrJlRMJ4Vr24HhVzeBcuWy2gRo
-         4VrxKxWMkFe7onw6kBPU3PR7hHKrGuPmvDhBaMjI=
+        b=ynYqq8mtGprSmO+0EYZNz0jQ6p4Fvq28weFXB/pI5afYi7WoHUjYHU1M2UJVWaxDe
+         +dk9oWS36DGngW1f60FGR7caJdFSvSB7hsyJraSEGQNjIiQ39xtcEWy7RSUGCPU0cU
+         Qmc8srmsKOZjqCy3vPFuUp/FNbjmCHbKV50q/q1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 03/34] gro_cells: make sure device is up in gro_cells_receive()
-Date:   Mon, 18 Mar 2019 10:25:27 +0100
-Message-Id: <20190318084145.109052398@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Peter=20Sj=C3=B6berg?= <autopeter@gmail.com>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 30/34] ALSA: firewire-motu: fix construction of PCM frame for capture direction
+Date:   Mon, 18 Mar 2019 10:25:54 +0100
+Message-Id: <20190318084149.097681097@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -66,130 +66,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit 2a5ff07a0eb945f291e361aa6f6becca8340ba46 ]
+commit f97a0944a72b26a2bece72516294e112a890f98a upstream.
 
-We keep receiving syzbot reports [1] that show that tunnels do not play
-the rcu/IFF_UP rules properly.
+In data blocks of common isochronous packet for MOTU devices, PCM
+frames are multiplexed in a shape of '24 bit * 4 Audio Pack', described
+in IEC 61883-6. The frames are not aligned to quadlet.
 
-At device dismantle phase, gro_cells_destroy() will be called
-only after a full rcu grace period is observed after IFF_UP
-has been cleared.
+For capture PCM substream, ALSA firewire-motu driver constructs PCM
+frames by reading data blocks byte-by-byte. However this operation
+includes bug for lower byte of the PCM sample. This brings invalid
+content of the PCM samples.
 
-This means that IFF_UP needs to be tested before queueing packets
-into netif_rx() or gro_cells.
+This commit fixes the bug.
 
-This patch implements the test in gro_cells_receive() because
-too many callers do not seem to bother enough.
-
-[1]
-BUG: unable to handle kernel paging request at fffff4ca0b9ffffe
-PGD 0 P4D 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.0.0+ #97
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
-RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
-RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
-RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
-RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
-Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
-RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
-RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
-RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
-RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
-R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
-R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
-kobject: 'loop2' (000000004bd7d84a): kobject_uevent_env
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
-Call Trace:
-kobject: 'loop2' (000000004bd7d84a): fill_kobj_path: path = '/devices/virtual/block/loop2'
- ip_tunnel_dev_free+0x19/0x60 net/ipv4/ip_tunnel.c:1010
- netdev_run_todo+0x51c/0x7d0 net/core/dev.c:8970
- rtnl_unlock+0xe/0x10 net/core/rtnetlink.c:116
- ip_tunnel_delete_nets+0x423/0x5f0 net/ipv4/ip_tunnel.c:1124
- vti_exit_batch_net+0x23/0x30 net/ipv4/ip_vti.c:495
- ops_exit_list.isra.0+0x105/0x160 net/core/net_namespace.c:156
- cleanup_net+0x3fb/0x960 net/core/net_namespace.c:551
- process_one_work+0x98e/0x1790 kernel/workqueue.c:2173
- worker_thread+0x98/0xe40 kernel/workqueue.c:2319
- kthread+0x357/0x430 kernel/kthread.c:246
- ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
-CR2: fffff4ca0b9ffffe
-   [ end trace 513fc9c1338d1cb3 ]
-RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
-RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
-RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
-RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
-RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
-Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
-RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
-RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
-RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
-RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
-R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
-kobject: 'loop3' (00000000e4ee57a6): kobject_uevent_env
-R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
-
-Fixes: c9e6bc644e55 ("net: add gro_cells infrastructure")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Peter Sjöberg <autopeter@gmail.com>
+Cc: <stable@vger.kernel.org> # v4.12+
+Fixes: 4641c9394010 ("ALSA: firewire-motu: add MOTU specific protocol layer")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/gro_cells.c |   22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
 
---- a/net/core/gro_cells.c
-+++ b/net/core/gro_cells.c
-@@ -13,22 +13,36 @@ int gro_cells_receive(struct gro_cells *
- {
- 	struct net_device *dev = skb->dev;
- 	struct gro_cell *cell;
-+	int res;
+---
+ sound/firewire/motu/amdtp-motu.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/sound/firewire/motu/amdtp-motu.c
++++ b/sound/firewire/motu/amdtp-motu.c
+@@ -136,7 +136,9 @@ static void read_pcm_s32(struct amdtp_st
+ 		byte = (u8 *)buffer + p->pcm_byte_offset;
  
--	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev))
--		return netif_rx(skb);
-+	rcu_read_lock();
-+	if (unlikely(!(dev->flags & IFF_UP)))
-+		goto drop;
-+
-+	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev)) {
-+		res = netif_rx(skb);
-+		goto unlock;
-+	}
- 
- 	cell = this_cpu_ptr(gcells->cells);
- 
- 	if (skb_queue_len(&cell->napi_skbs) > netdev_max_backlog) {
-+drop:
- 		atomic_long_inc(&dev->rx_dropped);
- 		kfree_skb(skb);
--		return NET_RX_DROP;
-+		res = NET_RX_DROP;
-+		goto unlock;
- 	}
- 
- 	__skb_queue_tail(&cell->napi_skbs, skb);
- 	if (skb_queue_len(&cell->napi_skbs) == 1)
- 		napi_schedule(&cell->napi);
--	return NET_RX_SUCCESS;
-+
-+	res = NET_RX_SUCCESS;
-+
-+unlock:
-+	rcu_read_unlock();
-+	return res;
- }
- EXPORT_SYMBOL(gro_cells_receive);
- 
+ 		for (c = 0; c < channels; ++c) {
+-			*dst = (byte[0] << 24) | (byte[1] << 16) | byte[2];
++			*dst = (byte[0] << 24) |
++			       (byte[1] << 16) |
++			       (byte[2] << 8);
+ 			byte += 3;
+ 			dst++;
+ 		}
 
 
