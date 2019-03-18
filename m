@@ -2,169 +2,172 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FC2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0EAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C558520872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAB720880
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:24:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y3qkyJ7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfCRQX6 convert rfc822-to-8bit (ORCPT
+        id S1727764AbfCRQYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:23:58 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:57406 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbfCRQX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:23:58 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 405CA1562F; Mon, 18 Mar 2019 16:23:56 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/sun4i: hdmi: add support for ddc-i2c-bus property
-References: <20190311134713.25876-1-mans@mansr.com>
-        <20190311154702.eslw5ccol44vxcmy@flea> <yw1xef7d4cit.fsf@mansr.com>
-        <20190314154105.o6r7hzeuiyajxh7v@flea> <yw1xk1h130ba.fsf@mansr.com>
-        <20190318155013.lge2x2cp5hvyz52f@flea>
-Date:   Mon, 18 Mar 2019 16:23:56 +0000
-In-Reply-To: <20190318155013.lge2x2cp5hvyz52f@flea> (Maxime Ripard's message
-        of "Mon, 18 Mar 2019 16:50:13 +0100")
-Message-ID: <yw1xh8c0178j.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Mon, 18 Mar 2019 12:24:02 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44927 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfCRQYB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:24:01 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u9so12078499lfe.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SiqMnfm5TZ2LmVE8Ai51nyuWZVO7BZO00d5xRd/aP0k=;
+        b=Y3qkyJ7awtnQx8XjVr6NiOdtQ0ATgDHnC+1yX7TqVcHN3daq99lf/G3Ed+75paUF/l
+         12jpYS3ZY+K9CFXmMFrtw8Lj2U7bxSxCY234Afa0Gj6WXOm2TTnRTwenknz1YvHoT0ii
+         R9OjTPp3bpFv1K69ZyKBvtai0/UG4eOKIUAL3kG+gIrv+7+Nvic7Fjp4llB1xKm94Yz1
+         EamHaVLptPzBIY8kSnyc+80WlqYzH4xTnhEnnzisXKqKt90A69cmmCeKp0C8509ecAk3
+         FwH30BXElalSaGZZNgXD/7MpTY1yrey8N5odgbKLBpcVDa+txNQVmr1k3Jm1kaoT0PcS
+         nxDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SiqMnfm5TZ2LmVE8Ai51nyuWZVO7BZO00d5xRd/aP0k=;
+        b=U8mtS6qgvmxU3KcBVoflyuMJtmEP4ob1tzmr7dUx2XAzQVKeEX0n6XXOeczwH5/mGd
+         gazd05SIAzqP635/fe6BrSSrAxR8tCu6wTHePOhjYjMwz+9mfMolmehFhLlQgVax8SUB
+         wwZ1TUKAMSZ9TVO+XMiNJ79c4MA8AKKkOwWzg0z80e4Nle0zKJYwlZbTCOeiuSmiJraK
+         kcDV/sCc6sOA5YE2u8UCYmP8AQLcyhTMFAtu4kJg6agZJC2ip9PjgqVjNxeLd/S+E20n
+         zhcOVCjt8sGbbEtdIdpx+XdCrOOGSgkIsuYee6EkxWzTM80CEgHzdSuY+Nwwyvu1Mg54
+         pBhA==
+X-Gm-Message-State: APjAAAXxiGhbVsm7qZ/L1n6DoaByqaSLVrO0snujI+W2aS0xovQlWiZI
+        EWKZvt80cd+ijKDPUrIMd9ECUhLPSSTmr6dfMaLi1A==
+X-Google-Smtp-Source: APXvYqzsQtKMdknuILbv+s+Oqkrv1ygbOV0xZuDKFxI2EeETkwiqObqT29Px5Xl64PnmsvQ0nOhxfiRQLCYKZ35wB/U=
+X-Received: by 2002:a19:ef19:: with SMTP id n25mr11172682lfh.0.1552926239532;
+ Mon, 18 Mar 2019 09:23:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+References: <20190318084210.397476003@linuxfoundation.org>
+In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 18 Mar 2019 21:53:48 +0530
+Message-ID: <CA+G9fYufPYYGHZNA7vcU3Be9_Rw2RO4HSf_s4ebXXe098t1tVA@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/31] 4.9.164-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxime Ripard <maxime.ripard@bootlin.com> writes:
-
-> On Thu, Mar 14, 2019 at 04:09:13PM +0000, Måns Rullgård wrote:
->> Maxime Ripard <maxime.ripard@bootlin.com> writes:
->>
->> > On Mon, Mar 11, 2019 at 04:11:06PM +0000, Måns Rullgård wrote:
->> >> Maxime Ripard <maxime.ripard@bootlin.com> writes:
->> >>
->> >> > Hi!
->> >> >
->> >> > On Mon, Mar 11, 2019 at 01:47:13PM +0000, Mans Rullgard wrote:
->> >> >> Sometimes it is desirabled to use a separate i2c controller for ddc
->> >> >> access.  This adds support for the ddc-i2c-bus property of the
->> >> >> hdmi-connector node, using the specified controller if provided.
->> >> >>
->> >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> >> >> ---
->> >> >>  drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  1 +
->> >> >>  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 37 +++++++++++++++++++++++---
->> >> >>  2 files changed, 35 insertions(+), 3 deletions(-)
->> >> >>
->> >> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> >> >> index b685ee11623d..b08c4453d47c 100644
->> >> >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> >> >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> >> >> @@ -269,6 +269,7 @@ struct sun4i_hdmi {
->> >> >>  	struct clk		*tmds_clk;
->> >> >>
->> >> >>  	struct i2c_adapter	*i2c;
->> >> >> +	struct i2c_adapter	*ddc_i2c;
->> >> >>
->> >> >>  	/* Regmap fields for I2C adapter */
->> >> >>  	struct regmap_field	*field_ddc_en;
->> >> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> >> >> index 061d2e0d9011..5b2fac79f5d6 100644
->> >> >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> >> >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> >> >> @@ -212,7 +212,7 @@ static int sun4i_hdmi_get_modes(struct drm_connector *connector)
->> >> >>  	struct edid *edid;
->> >> >>  	int ret;
->> >> >>
->> >> >> -	edid = drm_get_edid(connector, hdmi->i2c);
->> >> >> +	edid = drm_get_edid(connector, hdmi->ddc_i2c ?: hdmi->i2c);
->> >> >
->> >> > You can't test whether ddc_i2c is NULL or not...
->> >> >
->> >> >>  	if (!edid)
->> >> >>  		return 0;
->> >> >>
->> >> >> @@ -228,6 +228,28 @@ static int sun4i_hdmi_get_modes(struct drm_connector *connector)
->> >> >>  	return ret;
->> >> >>  }
->> >> >>
->> >> >> +static struct i2c_adapter *sun4i_hdmi_get_ddc(struct device *dev)
->> >> >> +{
->> >> >> +	struct device_node *phandle, *remote;
->> >> >> +	struct i2c_adapter *ddc;
->> >> >> +
->> >> >> +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
->> >> >> +	if (!remote)
->> >> >> +		return ERR_PTR(-EINVAL);
->> >> >> +
->> >> >> +	phandle = of_parse_phandle(remote, "ddc-i2c-bus", 0);
->> >> >> +	of_node_put(remote);
->> >> >> +	if (!phandle)
->> >> >> +		return NULL;
->> >> >> +
->> >> >> +	ddc = of_get_i2c_adapter_by_node(phandle);
->> >> >> +	of_node_put(phandle);
->> >> >> +	if (!ddc)
->> >> >> +		return ERR_PTR(-EPROBE_DEFER);
->> >> >> +
->> >> >> +	return ddc;
->> >> >
->> >> > ... Since even in (most) error cases you're returning a !NULL pointer.
->> >> >
->> >> >> +}
->> >> >> +
->> >> >>  static const struct drm_connector_helper_funcs sun4i_hdmi_connector_helper_funcs = {
->> >> >>  	.get_modes	= sun4i_hdmi_get_modes,
->> >> >>  };
->> >> >> @@ -575,6 +597,12 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
->> >> >>  		goto err_disable_mod_clk;
->> >> >>  	}
->> >> >>
->> >> >> +	hdmi->ddc_i2c = sun4i_hdmi_get_ddc(dev);
->> >> >> +	if (IS_ERR(hdmi->ddc_i2c)) {
->> >>
->> >> ... which is checked here.
->> >>
->> >> The property is optional, so the idea was to return null in that case
->> >> and use the built-in controller.  If the property exists but some error
->> >> occurs, we want to abort rather than proceed with the fallback which
->> >> almost certainly won't work.
->> >>
->> >> Maybe I got something wrong in that logic.
->> >
->> > Indeed, I just got confused. I guess returning ENODEV in such a case,
->> > and testing for that, would make things more obvious.
->>
->> There's also a case I hadn't thought of: property exists but isn't a
->> valid phandle.  What do you think is the correct action in that case?
+On Mon, 18 Mar 2019 at 15:07, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> I think we would have that one covered. of_parse_phandle will return
-> !NULL, but then of_get_i2c_adapter_by_node will return NULL since we
-> wouldn't have an associated i2c adapter to the bogus phandle, and you
-> are checking for that already.
+> This is the start of the stable review cycle for the 4.9.164 release.
+> There are 31 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed Mar 20 08:42:01 UTC 2019.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.164-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-of_parse_phandle() doesn't differentiate between a missing property and
-an existing non-phandle value.  The following cases are possible with
-this patch:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-- ddc-i2c-bus points to valid i2c controller node: use this for ddc
-- no ddc-i2c-bus property: return NULL, use internal i2c
-- ddc-i2c-bus exists but isn't a phandle: likewise
-- ddc-i2c-bus points to a non-i2c-controller node: EPROBE_DEFER
+Summary
+------------------------------------------------------------------------
 
-The last two cases obviously mean the devicetree is invalid, so perhaps
-it doesn't matter much what happens then.  I don't think it's possible
-to distinguish between a well-formed phandle pointing to some bogus node
-and a good one where the i2c driver hasn't been probed yet.
+kernel: 4.9.164-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 631b5fe18b599ae5cdcb38801e9581e46fcccd76
+git describe: v4.9.163-32-g631b5fe18b59
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.163-32-g631b5fe18b59
 
--- 
-Måns Rullgård
+
+No regressions (compared to build v4.9.163)
+
+No fixes (compared to build v4.9.163)
+
+
+Ran 22693 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* boot
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* spectre-meltdown-checker-test
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
