@@ -2,118 +2,183 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3E8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD3CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B50220879
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="epck0kG/"
+	by mail.kernel.org (Postfix) with ESMTP id 56C8720854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbfCRLBM (ORCPT
+        id S1727139AbfCRLBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:01:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52634 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfCRLBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:01:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=I2jZQE4p0ocZ8Gt1+1FMX/1VX471V6PZLd8l2yOC92M=; b=epck0kG/FC/lkfgyHthFmNoWc
-        cRQE95sp4clUyx2+/xxS0dZuuPDQViLieKmFTpKmuhp13InkhdFYwGkVHrM+HZuxI4Sgm0w/sjAAu
-        NdqH4r7hBpkAqbsMuar+iRfv4UbEHgnJYbe6KXpzlFWlojckiyQpyoQWYvLYIHW7j4ouJfwR7naM8
-        sSrzpn5K0hHsoL1q8e10Hh38teDmb9XyjHL849+8NaHG+dnfgmOJtwu380RjbEjwhUo2VaYvaOLlP
-        Q52+3UjqsiQfNAGW6C/i8TUTuK4pb/sppq5+nK/xCbeorHjLVwlwkAJu8LHncpxh4E9wXGovoACUg
-        jJU4FQovA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5q0s-0000c1-Rz; Mon, 18 Mar 2019 11:01:03 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D191120A0FF8A; Mon, 18 Mar 2019 12:01:00 +0100 (CET)
-Date:   Mon, 18 Mar 2019 12:01:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        sparclinux@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH V2] cpufreq: Call transition notifier only once for each
- policy
-Message-ID: <20190318110100.GN6058@hirez.programming.kicks-ass.net>
-References: <e2b56be446eeb67f1905d2ac6f8d82dd4389d0c5.1552640968.git.viresh.kumar@linaro.org>
- <20190315122952.GF6058@hirez.programming.kicks-ass.net>
- <CAJZ5v0g=VYSKAHuncceD-8a1AY+isR7-TMX2dbdMzpZgVkRfBg@mail.gmail.com>
+        Mon, 18 Mar 2019 07:01:43 -0400
+Received: from foss.arm.com ([217.140.101.70]:60120 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726753AbfCRLBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 07:01:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2416A80D;
+        Mon, 18 Mar 2019 04:01:42 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 412D03F614;
+        Mon, 18 Mar 2019 04:01:39 -0700 (PDT)
+Subject: Re: [PATCH v5 05/22] iommu: Introduce cache_invalidate API
+To:     Auger Eric <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "yi.l.liu@linux.intel.com" <yi.l.liu@linux.intel.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        Christoffer Dall <Christoffer.Dall@arm.com>,
+        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        Vincent Stehle <Vincent.Stehle@arm.com>
+References: <20190315160906.12900-1-eric.auger@redhat.com>
+ <20190315160906.12900-6-eric.auger@redhat.com>
+ <20190315113702.1184d162@jacob-builder>
+ <281167f1-c046-3077-e954-d1f510c27d61@redhat.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <71bec2ed-97ed-d543-7ebd-9fb03c093e77@arm.com>
+Date:   Mon, 18 Mar 2019 11:01:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0g=VYSKAHuncceD-8a1AY+isR7-TMX2dbdMzpZgVkRfBg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <281167f1-c046-3077-e954-d1f510c27d61@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 11:45:00AM +0100, Rafael J. Wysocki wrote:
-> On Fri, Mar 15, 2019 at 1:30 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > On Fri, Mar 15, 2019 at 02:43:07PM +0530, Viresh Kumar wrote:
+On 17/03/2019 16:43, Auger Eric wrote:
+>>> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+>>> index 532a64075f23..e4c6a447e85a 100644
+>>> --- a/include/uapi/linux/iommu.h
+>>> +++ b/include/uapi/linux/iommu.h
+>>> @@ -159,4 +159,75 @@ struct iommu_pasid_table_config {
+>>>  	};
+>>>  };
+>>>  
+>>> +/* defines the granularity of the invalidation */
+>>> +enum iommu_inv_granularity {
+>>> +	IOMMU_INV_GRANU_DOMAIN,	/* domain-selective
+>>> invalidation */
+>>> +	IOMMU_INV_GRANU_PASID,	/* pasid-selective
+>>> invalidation */
+>>> +	IOMMU_INV_GRANU_ADDR,	/* page-selective invalidation
+>>> */ +};
+>>> +
+>>> +/**
+>>> + * Address Selective Invalidation Structure
+>>> + *
+>>> + * @flags indicates the granularity of the address-selective
+>>> invalidation
+>>> + * - if PASID bit is set, @pasid field is populated and the
+>>> invalidation
+>>> + *   relates to cache entries tagged with this PASID and matching the
+>>> + *   address range.
+>>> + * - if ARCHID bit is set, @archid is populated and the invalidation
+>>> relates
+>>> + *   to cache entries tagged with this architecture specific id and
+>>> matching
+>>> + *   the address range.
+>>> + * - Both PASID and ARCHID can be set as they may tag different
+>>> caches.
+>>> + * - if neither PASID or ARCHID is set, global addr invalidation
+>>> applies
+>>> + * - LEAF flag indicates whether only the leaf PTE caching needs to
+>>> be
+>>> + *   invalidated and other paging structure caches can be preserved.
+>>> + * @pasid: process address space id
+>>> + * @archid: architecture-specific id
+>>> + * @addr: first stage/level input address
+>>> + * @granule_size: page/block size of the mapping in bytes
+>>> + * @nb_granules: number of contiguous granules to be invalidated
+>>> + */
+>>> +struct iommu_inv_addr_info {
+>>> +#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
+>>> +#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
+>>> +#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
+>>> +	__u32	flags;
+>>> +	__u32	archid;
+>>> +	__u64	pasid;
+>>> +	__u64	addr;
+>>> +	__u64	granule_size;
+>>> +	__u64	nb_granules;
+>>> +};
+>>> +
+>>> +/**
+>>> + * First level/stage invalidation information
+>>> + * @cache: bitfield that allows to select which caches to invalidate
+>>> + * @granularity: defines the lowest granularity used for the
+>>> invalidation:
+>>> + *     domain > pasid > addr
+>>> + *
+>>> + * Not all the combinations of cache/granularity make sense:
+>>> + *
+>>> + *         type |   DEV_IOTLB   |     IOTLB     |      PASID    |
+>>> + * granularity	|		|		|
+>>> cache	|
+>>> + * -------------+---------------+---------------+---------------+
+>>> + * DOMAIN	|	N/A	|       Y	|
+>>> Y	|
+>>> + * PASID	|	Y	|       Y	|
+>>> Y	|
+>>> + * ADDR		|       Y	|       Y	|
+>>> N/A	|
+>>> + */
+>>> +struct iommu_cache_invalidate_info {
+>>> +#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+>>> +	__u32	version;
+>>> +/* IOMMU paging structure cache */
+>>> +#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
+>>> +#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device
+>>> IOTLB */ +#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID
+>>> cache */
+>>> +	__u8	cache;
+>>> +	__u8	granularity;
+>>> +	__u8	padding[2];
+>>> +	union {
+>>> +		__u64	pasid;
+>> just realized there is already a pasid field in the addr_info, do we
+>> still need this?
+> I think so. Either you do a PASID based invalidation and you directly
+> use the pasid field or you do an address based invalidation and you use
+> the addr_info where the pasid may or not be passed.
 
-> > > +             for_each_cpu(cpu, cpus)
-> > > +                     set_cyc2ns_scale(tsc_khz, cpu, rdtsc());
-> >
-> > This code doesn't make sense, the rdtsc() _must_ be called on the CPU in
-> > question.
-> 
-> Well, strictly speaking the TSC value here comes from the CPU running the code.
-> 
-> The original code has this problem too, though (as Viresh said), so
-> the patch really doesn't make it worse in that respect. :-)
-> 
-> I'm not going to defend the original code (I ldidn't invent it
-> anyway), but it clearly assumes that different CPUs cannot run at
-> different frequencies and that kind of explains what happens in it.
+I guess a comment would be useful?
 
-The assumption was always that if CPUs ran at different frequencies, the
-notifier would run on the affected CPU. After all, only that CPU would
-know its frequency changed.
+    - Invalidations by %IOMMU_INV_GRANU_ADDR use field @addr_info.
+    - Invalidations by %IOMMU_INV_GRANU_PASID use field @pasid.
+    - Invalidations by %IOMMU_INV_GRANU_DOMAIN don't take an argument.
 
-> > That's part of the whole problem here, TSC isn't sync'ed when
-> > it's subject to CPUFREQ.
-> 
-> So what would you recommend us to do here?
-> 
-> Obviously, this won't run on any new hardware.  Frankly, I'm not even
-> sure what the most recent HW where this hack would make a difference
-> is (the comment talking about Opterons suggests early 2000s), so this
-> clearly falls into the "legacy" bucket to me.
-> 
-> Does it make sense to try to preserve it, or can we simply make
-> cpufreq init fail on the systems where the TSC rate depends on the
-> frequency?
+Thanks,
+Jean
 
-I'm all for deleting this and basically dropping support for anything
-that needs this, but I suspect some people digging their legacy systems
-(*cough* Pavel *cough*) might object to that.
+> 
+> Thanks
+> 
+> Eric
+>>> +		struct iommu_inv_addr_info addr_info;
+>>> +	};
+>>> +};
+>>> +
+>>> +
+>>>  #endif /* _UAPI_IOMMU_H */
+>>
+>> [Jacob Pan]
+>>
 
-Heck, I'm even ok with just calling panic() when TSC goes wobbly :-) I'm
-fed up with all that broken crap. And yes, I know, that's systems sold
-today :-(
