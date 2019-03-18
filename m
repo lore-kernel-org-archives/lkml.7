@@ -2,192 +2,171 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBC2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D44C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C724A20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 087692085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 12:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="elFN+5hc"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="XNoXjBkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfCRMIF (ORCPT
+        id S1727357AbfCRMLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 08:08:05 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45478 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfCRMIC (ORCPT
+        Mon, 18 Mar 2019 08:11:14 -0400
+Received: from mail-wm1-f43.google.com ([209.85.128.43]:35491 "EHLO
+        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbfCRMLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 08:08:02 -0400
-Received: by mail-io1-f68.google.com with SMTP id x9so14131664iog.12
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 05:08:02 -0700 (PDT)
+        Mon, 18 Mar 2019 08:11:14 -0400
+Received: by mail-wm1-f43.google.com with SMTP id 81so5237783wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 05:11:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pgMq4kSF7AJCXsw0h1AN0keHFBk6j94wEh+uaN+IV6s=;
-        b=elFN+5hcMTxTdkwGRKhElE1anRf4ueX+tpZ6EYF8hZkMd05OlZnad7HqI77yg9tHDU
-         es47Aqg80TiqBbmP7uNZVp0b8ebi4uH+AlsQ6S1UACMxdJh54w0hne/ADwK3udtYb9z/
-         XKbGO4H+MaUXU8Z/3Ryzqc/7N9e0cKfKqv91ZaKe05xEBWMlkyQjYPR7xtx4MRlCbOfR
-         7C90Q+jiA/4+6tfEtYqHsid6T3ZVOsIEQUkGgZv2/+p/8bOPIgyVBWv2FK1aVDm6O3cc
-         35+4oG+aK3ynwnCGlPVLP/DI+bVzrHXR1K6wGXdo1ba+dDs7PA5GKGaM1eOyuedtfsc8
-         W8jQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OATtkI/guzwk7jff6aAB4UFhNL1u85hJ22zQ1YU1uSA=;
+        b=XNoXjBkp0etDY4WhFdw1whuLV90MuRzlKtSf0qq/AkGb6ZeVCiAxzka5XrTTOmAuOT
+         b68Qia6rKCIPY6kfTzfQLhxLkmzqtZsYWS/UQc7Beeh8sCiUFe/kn6jl+4b+9eFWBRPq
+         n5rZWJcEFctMgHS2GvUlZa3Hnb2ZSf7vhYM3leTkHF8yeNhg2K1RgPTbUfekyRJvKVdw
+         4IfV2eDvnCjRH2hXH9cJYFkAnnfeNcklrfr0nSLgeVdDFP8O87/+I1HvvTvLN4unbZqX
+         Ujl5v5BMJUEmDAuKZ1TBb7MfqhjKWh3s4e0LDC19dyloKtjKdO4GkS2ZACdFp7uixukB
+         82bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pgMq4kSF7AJCXsw0h1AN0keHFBk6j94wEh+uaN+IV6s=;
-        b=Ywx14POIObWcAb6OxhlxuZXKzzw2JqG0FygphbCYKMR02R0cZx+9S13PYp1ectLPn9
-         bsf2ttVC/4ZkseXQ4ZWl/35FkFFQ8K51VxkLkpOqmdWgv4xIcMmib0Ij1uN0Pn9OD2Bh
-         NxaJcwKFwA3CZUMH6y1Nbpsps7bKrCNM+MjK3duhlODI/QXW7i2qdceIFKh9SbajA4Yz
-         9xJYwJ2sKzBb3RDefh6Ol52xZOF4O7dCEVW+w1UQhuvM5t7VWIlgOqMCTv/TpJWCd1Oi
-         uCEVDpsp8dHzN4Vl5lFwKAjON7a1Gm5i1ly6HZFc7z5dOTm1121rSGUQR5kgCVqiTzn0
-         WCpQ==
-X-Gm-Message-State: APjAAAUoMEFuCFq5BCfz/jc9B6ZQDx/8RDSByzZHVdxfcxeLP3UvBxzf
-        wP1Va5jQNgq+gYQS9VtrN2KgnL+R7O9Fwa44PW2mMA==
-X-Google-Smtp-Source: APXvYqwbXZgu7cwGSJHBv9oe6XxXrHhroBBsvIe5ifOZiwEPXlPunl43GbZSdXt7IMmzx8QsvnF3gG33C5dwZsB3cxY=
-X-Received: by 2002:a5d:834a:: with SMTP id q10mr10197004ior.271.1552910881669;
- Mon, 18 Mar 2019 05:08:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OATtkI/guzwk7jff6aAB4UFhNL1u85hJ22zQ1YU1uSA=;
+        b=bIpPOFzJMtyY+Py0Xqk/8uTCGGOFAVfGWHJ0VNQGdrBYOQ52UJcRLyBB4wVUozMxgH
+         Bdl3QNW1s/uOSP6fjySPXEhIi8H99oRgXpHdRg0amVlulR0BrKLOg+rcuxIbj1KbidQy
+         qOYANcJCFY33malHwoDNRnoojAZn0SGjHqKLQ/DDNB4Q9mXZ0K0hVhri0a3n7qS1a7Cc
+         bqzs1wCSucXSLkVo4BDcNISurVBgQY/Yz24xcARLwunEmrVk8WI24wKqihFFVZYPmQuf
+         a7hCWoEiBhPVUeqDDfDG21Sbk/77rnp2NpwqMRsG5i4CYJra6O6a86LrNcxBbIqQfaMF
+         Q+3Q==
+X-Gm-Message-State: APjAAAVIj114ZiUBIdTs/6eHcJVkOboqnLQJ0EI4F/2kewc6LHL3xGVm
+        IxXwi6y0mmvOXFFBhkDgH3nkquE24ss=
+X-Google-Smtp-Source: APXvYqxW+wJsvAosJf6tVOvPTR5HCUoLirthnQ9X1WlhTGu/98/dVGesoWtoymJBUuRzGel0n2T2zw==
+X-Received: by 2002:a1c:6042:: with SMTP id u63mr10800672wmb.92.1552911070693;
+        Mon, 18 Mar 2019 05:11:10 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id n13sm8220132wrw.67.2019.03.18.05.11.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 05:11:09 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Lechner <david@lechnology.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 00/11] ARM: davinci: modernize the timer support
+Date:   Mon, 18 Mar 2019 13:10:49 +0100
+Message-Id: <20190318121100.28132-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <2a48dee7-b649-65a4-be5d-8b3374013cee@i-love.sakura.ne.jp>
- <CACT4Y+ay7nuT-7y2JARozV1s0VisuLdN6VT+w9OsEDs1PeBRoA@mail.gmail.com> <201903180527.x2I5RQVp009981@www262.sakura.ne.jp>
-In-Reply-To: <201903180527.x2I5RQVp009981@www262.sakura.ne.jp>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 18 Mar 2019 13:07:49 +0100
-Message-ID: <CACT4Y+bosgWpJ=s9_hQ-Jg_XJoSHR9S-zC3es-2F=FTRppEncA@mail.gmail.com>
-Subject: Re: [syzbot? printk?] no WARN_ON() messages printed before "Kernel
- panic - not syncing: panic_on_warn set ..."
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 6:27 AM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> Dmitry Vyukov wrote:
-> > > Then, we need to find what test is changing console_loglevel.
-> > > Maybe add debug BUG_ON() in linux-next.git using CONFIG_DEBUG_AID_FOR_SYZBOT ?
-> >
-> > Is there a single place to catch this? I could run syzkaller locally
-> > first with the check.
-> >
->
-> There is no such place. But not so many places change permanently.
-> For x86, you can test with below patch applied.
->
-> ---
->  drivers/tty/sysrq.c    |  1 +
->  kernel/printk/printk.c |  3 +++
->  kernel/sysctl.c        | 23 ++++++++++++++++++++++-
->  3 files changed, 26 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index fa0ce7d..ad73520 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -91,6 +91,7 @@ static void sysrq_handle_loglevel(int key)
->         i = key - '0';
->         console_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
->         pr_info("Loglevel set to %d\n", i);
-> +       WARN_ONCE(i < CONSOLE_LOGLEVEL_DEFAULT, "Reducing console_loglevel to %d", i);
->         console_loglevel = i;
->  }
->  static struct sysrq_key_op sysrq_loglevel_op = {
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 02ca827..70d1f8c 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -1533,11 +1533,13 @@ int do_syslog(int type, char __user *buf, int len, int source)
->         case SYSLOG_ACTION_CONSOLE_OFF:
->                 if (saved_console_loglevel == LOGLEVEL_DEFAULT)
->                         saved_console_loglevel = console_loglevel;
-> +               WARN_ONCE(minimum_console_loglevel < CONSOLE_LOGLEVEL_DEFAULT, "Reducing console_loglevel to %d", minimum_console_loglevel);
->                 console_loglevel = minimum_console_loglevel;
->                 break;
->         /* Enable logging to console */
->         case SYSLOG_ACTION_CONSOLE_ON:
->                 if (saved_console_loglevel != LOGLEVEL_DEFAULT) {
-> +                       WARN_ONCE(saved_console_loglevel < CONSOLE_LOGLEVEL_DEFAULT, "Reducing console_loglevel to %d", saved_console_loglevel);
->                         console_loglevel = saved_console_loglevel;
->                         saved_console_loglevel = LOGLEVEL_DEFAULT;
->                 }
-> @@ -1548,6 +1550,7 @@ int do_syslog(int type, char __user *buf, int len, int source)
->                         return -EINVAL;
->                 if (len < minimum_console_loglevel)
->                         len = minimum_console_loglevel;
-> +               WARN_ONCE(len < CONSOLE_LOGLEVEL_DEFAULT, "Reducing console_loglevel to %d", len);
->                 console_loglevel = len;
->                 /* Implicitly re-enable logging to console */
->                 saved_console_loglevel = LOGLEVEL_DEFAULT;
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index b3df3ab..2170421 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -273,6 +273,27 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
->  int sysctl_legacy_va_layout;
->  #endif
->
-> +static int proc_dointvec_loglevel(struct ctl_table *table, int write,
-> +                                 void __user *buffer, size_t *lenp, loff_t *ppos)
-> +{
-> +       if (write && buffer && *lenp) {
-> +               size_t len = *lenp;
-> +               char *kbuf, *p;
-> +
-> +               if (len > PAGE_SIZE - 1)
-> +                       len = PAGE_SIZE - 1;
-> +               p = kbuf = memdup_user_nul(buffer, len);
-> +               if (IS_ERR(kbuf))
-> +                       return PTR_ERR(kbuf);
-> +               while (*p && (*p < '0' || *p > '9'))
-> +                       p++;
-> +               len = *p ? strtoul(p, &p, 10) : CONSOLE_LOGLEVEL_DEFAULT;
-> +               WARN_ONCE(len < CONSOLE_LOGLEVEL_DEFAULT, "Reducing console_loglevel to %d", (int) len);
-> +               kfree(kbuf);
-> +       }
-> +       return proc_dointvec(table, write, buffer, lenp, ppos);
-> +}
-> +
->  /* The default sysctl tables: */
->
->  static struct ctl_table sysctl_base_table[] = {
-> @@ -839,7 +860,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
->                 .data           = &console_loglevel,
->                 .maxlen         = 4*sizeof(int),
->                 .mode           = 0644,
-> -               .proc_handler   = proc_dointvec,
-> +               .proc_handler   = proc_dointvec_loglevel,
->         },
->         {
->                 .procname       = "printk_ratelimit",
-> --
-> 1.8.3.1
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
+This series removes the legacy timer code from mach-davinci in favor of
+a new clocksource driver it introduces.
 
-Thanks.
-Running this for 10 mins I only got a bunch of these, so at least none
-of these WARNs does not trigger immediately. But I will continue
-running it.
+Patch 1 adds a new clocksource driver for davinci.
 
-WARNING in schedule_bh
-kernel BUG at ./include/linux/mm.h:LINE!
-WARNING in vkms_vblank_simulate
-general protection fault in xfrmi_decode_session
-INFO: task hung in corrupted
-kernel BUG at drivers/android/binder_alloc.c:LINE!
-BUG: unable to handle kernel NULL pointer dereference in
-drm_atomic_helper_commit_modeset_disables
-INFO: task hung in __rq_qos_throttle
-WARNING in sk_stream_kill_queues
+Patch 2 enables the new driver for device-tree based systems.
+
+Patch 3 adds a WARN_ON() to the machine code of all davinci boards
+which is triggered if clk_get() for the timer clock fails. This is needed
+as the new driver expects the clock to be functional and doesn't check it.
+
+Patches 4-5 and 7-10 switch the board files to using the new
+clocksource driver while patch 6 moves some necessary defines to
+a different place since we'll be removing the file that contains them.
+
+Patch 11 removes legacy timer code.
+
+v1 -> v2:
+
+- changed the license to GPL-only
+- dropped regmap usage due to the additional code paths making the
+  code too slow
+- minor code rearrangement
+- fixed the da830 timer configuration
+- correctly assign the timer halves to clocksource and clockevent
+- sqashed the commits adding WARN() when clk_get() fails
+- used WARN_ON() and added a return when clk_get() fails to avoid
+  entering the timer driver without a valid clock
+- request the register range before iomapping it
+- simplified the configuration structure (dropped the additional
+  cmp struct)
+
+v2 -> v3:
+
+- use readl/writel_relaxed() instead of __raw variants in the clocksource
+  driver
+- request the memory region before remapping it
+- add explanatory comments
+- fixed licensing
+- used pr_fmt macro
+- correctly assign the clocksource name
+- use DEFINE_RES_x macros when defining resources to avoid off-by-one
+  bugs in resource's size
+- tweak the commit messages
+- don't delete the comments describing the timer usage
+- other minor improvements
+- rebased on top of Sekhar's soc branch
+- dropped patch fixing the clocksource interrupts in device tree (already
+  upstream)
+
+v3 -> v4:
+- fixed formatting of error messages
+- fixed comments all around the place
+- rebased on top of v5.1-rc1
+
+Bartosz Golaszewski (11):
+  clocksource: davinci-timer: new driver
+  ARM: davinci: enable the clocksource driver for DT mode
+  ARM: davinci: WARN_ON() if clk_get() fails
+  ARM: davinci: da850: switch to using the clocksource driver
+  ARM: davinci: da830: switch to using the clocksource driver
+  ARM: davinci: move timer definitions to davinci.h
+  ARM: davinci: dm355: switch to using the clocksource driver
+  ARM: davinci: dm365: switch to using the clocksource driver
+  ARM: davinci: dm644x: switch to using the clocksource driver
+  ARM: davinci: dm646x: switch to using the clocksource driver
+  ARM: davinci: remove legacy timer support
+
+ arch/arm/Kconfig                            |   1 +
+ arch/arm/mach-davinci/Makefile              |   3 +-
+ arch/arm/mach-davinci/da830.c               |  45 +-
+ arch/arm/mach-davinci/da850.c               |  50 +--
+ arch/arm/mach-davinci/davinci.h             |   3 +
+ arch/arm/mach-davinci/devices-da8xx.c       |   1 -
+ arch/arm/mach-davinci/devices.c             |  19 -
+ arch/arm/mach-davinci/dm355.c               |  28 +-
+ arch/arm/mach-davinci/dm365.c               |  26 +-
+ arch/arm/mach-davinci/dm644x.c              |  28 +-
+ arch/arm/mach-davinci/dm646x.c              |  28 +-
+ arch/arm/mach-davinci/include/mach/common.h |  17 -
+ arch/arm/mach-davinci/include/mach/time.h   |  35 --
+ arch/arm/mach-davinci/time.c                | 414 ------------------
+ drivers/clocksource/Kconfig                 |   5 +
+ drivers/clocksource/Makefile                |   1 +
+ drivers/clocksource/timer-davinci.c         | 438 ++++++++++++++++++++
+ include/clocksource/timer-davinci.h         |  44 ++
+ 18 files changed, 598 insertions(+), 588 deletions(-)
+ delete mode 100644 arch/arm/mach-davinci/include/mach/time.h
+ delete mode 100644 arch/arm/mach-davinci/time.c
+ create mode 100644 drivers/clocksource/timer-davinci.c
+ create mode 100644 include/clocksource/timer-davinci.h
+
+-- 
+2.20.1
+
