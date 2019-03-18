@@ -2,95 +2,85 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BE4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 00:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1820CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 00:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BE12085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 00:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0B02085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 00:16:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KJ4n1fsC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfCRAPM (ORCPT
+        id S1727649AbfCRAQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 20:15:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54220 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726735AbfCRAPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 20:15:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CBFE6ACFB;
-        Mon, 18 Mar 2019 00:15:10 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Mon, 18 Mar 2019 11:15:02 +1100
-Cc:     Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Network Development <netdev@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] rhashtable: rename rht_for_each*continue as *from.
-In-Reply-To: <CANiq72ncNHCrE+YRePDCPGgKoKYCSL0mwJXP0jBjYP6W4CVSKA@mail.gmail.com>
-References: <155253979234.5022.1840929790507376038.stgit@noble.brown> <155253992833.5022.6459847129731180970.stgit@noble.brown> <CANiq72ncNHCrE+YRePDCPGgKoKYCSL0mwJXP0jBjYP6W4CVSKA@mail.gmail.com>
-Message-ID: <87mult82d5.fsf@notabene.neil.brown.name>
+        Sun, 17 Mar 2019 20:16:38 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:51524 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfCRAQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 20:16:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=PNC+yOc9qLOR+abq/u69TbFgVOPDMoWfP8uSYfFe5f4=; b=KJ4n1fsCdjTUR/uoQWKyabs8Qa
+        phJbX/V/Emq7X6qBpclFx5gSE1lpIYY3TVVeyOdN5xC/qvEjxexpveFXqbPg7bZ3psI+01XFVjZa1
+        Wh03Y7EW/3BzM3I6uOD/2gmyDS3YccPDGK0qdMcg6SSv4s6IxUeJuS4dxukanp1TFfXHc32QCsQNR
+        ainDgqos5S+ekUe6Bx5IKbJsmxtud/bBoyhoKjxbgbuhjHLU7rtsLoM3kasC688EYbYsJ5wYfnkdK
+        b60QmcZL0/RjKUcI7Tr4eAYY8aV69dlYd4m21WZyW92gMka0oOF3mv2VpAwqJotBNLkGElatye5DN
+        n29vj33w==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h5fx7-00061D-BU; Mon, 18 Mar 2019 00:16:29 +0000
+To:     Linux MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] list.h: fix list_is_first() kernel-doc
+Message-ID: <ddce8b80-9a8a-d52d-3546-87b2211c089a@infradead.org>
+Date:   Sun, 17 Mar 2019 17:16:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+From: Randy Dunlap <rdunlap@infradead.org>
 
-On Sun, Mar 17 2019, Miguel Ojeda wrote:
+Fix typo of kernel-doc parameter notation (there should be
+no space between '@' and the parameter name).
 
-> On Thu, Mar 14, 2019 at 6:10 AM NeilBrown <neilb@suse.com> wrote:
->>
->> The pattern set by list.h is that for_each..continue()
->> iterators start at the next entry after the given one,
->> while for_each..from() iterators start at the given
->> entry.
->>
->> The rht_for_each*continue() iterators are documented as though the
->> start at the 'next' entry, but actually start at the given entry,
->> and they are used expecting that behaviour.
->> So fix the documentation and change the names to *from for consistency
->> with list.h
->
-> Thank you for taking care of the .clang-format changes!
+Also fixes bogus kernel-doc notation output formatting.
 
-:-) that's what "git grep" is for!
+Fixes: 70b44595eafe9 ("mm, compaction: use free lists to quickly locate a migration source")
 
->
-> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+---
+ include/linux/list.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-NeilBrown
+--- lnx-51-rc1.orig/include/linux/list.h
++++ lnx-51-rc1/include/linux/list.h
+@@ -207,7 +207,7 @@ static inline void list_bulk_move_tail(s
+ }
+ 
+ /**
+- * list_is_first -- tests whether @ list is the first entry in list @head
++ * list_is_first -- tests whether @list is the first entry in list @head
+  * @list: the entry to test
+  * @head: the head of the list
+  */
 
->
-> Cheers,
-> Miguel
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlyO4wYACgkQOeye3VZi
-gbna7w/8CVyrkuv82s4gF4DictBH4yMYEU5QogIvIwUi5Nk9UKLMHPI8ABfzbiWW
-rzvTQigIIf1O4E5J1vb0LgDwuFQ8PqLseCPFdZlUWJvY4uEmcfsJJNFKVxFD4a2b
-cX7TXfLFGr6mnozc+mxrd1o/V2z+YTTmt1+Xy/1BQsh0imrB3neUIix9ed5SuxcM
-Wt9LmJAXzcUo+A8T+OaDEgp7racON2M9puvxYwqnw//rbMSu4x85u4Y/r+xd+rur
-jMuWCwYGtL6xxmKLkh5iGnSw8vflCFKXg8P9qb5SBhlhdH69PdBQiGu7n9fQryZP
-TmJAe+Q7bzUz4YtZdb9NJpG56SPa0DOZT4zgirCC2uIpZi+F1nFtd7KnBmh8cD/U
-pds0hhetXmAORuheITATAsNV2z9WsMPTOF80mmNIVlMeuIECipOO9+LLqaWD31+Z
-HH6nvR6hMhn0tKyJ3yCEDlgHAvEGmgTkkk8AIw97WeF3WNbLRSUzy4nQbdVBHH8t
-rVkruNUKn0KOSQ3NcdSkrb9hRmDjvRvOegfcpX0sLDN9277q9F/jjeMRvXrjAGZ3
-aF3Ww0HucZQJgo0wss2XbqbFq+6dFJ2JC7NnX6zCYU485Zwpt+sC9BZMRsDwujse
-yzPDYGdp37M/2lCnaKeNQyBy9cF62jFepuzjq4hMXlIDP4bGy7s=
-=HODk
------END PGP SIGNATURE-----
---=-=-=--
