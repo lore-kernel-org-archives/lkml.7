@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A84DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4540C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A39C2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E9E21741
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901596;
-	bh=a0akCjYTQSVDNa0Nd7fb0DETN+Uw+1d/nEiDnhLuPEM=;
+	s=default; t=1552901600;
+	bh=UxOM12PoqltA4Lo/Se1h/S3tA5krksiXIxRd20wPwxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1TcX4/UfK9CRjmC89ET22TJJHs9pRtDI/IV1AR9xtUQd2oVu+n/6hA1zqIuEBeS5
-	 4hpbuYl1jeSEEgjn32/+GulwkjjI+v83Us+iuYQjpod/2kGb7JhHe3lMTjmwuzwwR1
-	 +5BtRwqq3X5YdATAHrtGA50UQ6V3CYCM07vLcADg=
+	b=ANGJHfGQynCRnIheTnbA8/3PD3h943v7QCKVvZPLcFLmBAUkcs6WfUpzOHT8K+rUQ
+	 KkvzwqTp8WWDxuip0e2MZrUpNkC8vo5mBILBIq3JW7vD/3L07sFBpwKDqQy2O45XNe
+	 faFOep+s3q3a07r3KEjx+OxG75U0NTaaG/YX2sGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbfCRJdP (ORCPT
+        id S1728849AbfCRJdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41318 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:33:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbfCRJdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:12 -0400
+        id S1728836AbfCRJdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:33:14 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CBCA2075C;
-        Mon, 18 Mar 2019 09:33:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A302083D;
+        Mon, 18 Mar 2019 09:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901590;
-        bh=a0akCjYTQSVDNa0Nd7fb0DETN+Uw+1d/nEiDnhLuPEM=;
+        s=default; t=1552901593;
+        bh=UxOM12PoqltA4Lo/Se1h/S3tA5krksiXIxRd20wPwxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GloGmnKV2Uub2ZphhLJvbssETCTab1kNSbvCGiZQefHI+2u1yLkYdBJgmLNlxit4R
-         PyEGUL6Bb96lcHZvW6UZaf8Ti/MGG4jvNP3XJssqAwQZvZl13+fY45pL8pmQUZpnOV
-         DTewsdskO69Xc4dkTXZGCaVEu/6NWv24fyxzTegk=
+        b=EYOJ98KpTmCR9TwJk2ed38PKgPI+8aM/cTPp3ELo//9sr1F0AN+gZP16O/f4vpE7p
+         emmFW0l4QFVKeTQr968gmVB4ahnBft5yvYaA4FguUiiz0O0iZjXk1OwZJbXGFwT0T3
+         hbabugJwKux68h2IcbjrcJ57ZlMvKLVYaTqvWUdo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Arvid Brodin <arvid.brodin@alten.se>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/52] net: hsr: fix memory leak in hsr_dev_finalize()
-Date:   Mon, 18 Mar 2019 10:25:04 +0100
-Message-Id: <20190318084014.437638694@linuxfoundation.org>
+Subject: [PATCH 4.19 08/52] net/hsr: fix possible crash in add_timer()
+Date:   Mon, 18 Mar 2019 10:25:05 +0100
+Message-Id: <20190318084014.546137177@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -66,102 +66,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 3dc6da493a29dbeda9f13b637bd9c02c414b2261 ]
+[ Upstream commit 1e027960edfaa6a43f9ca31081729b716598112b ]
 
-If hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER) failed to
-add port, it directly returns res and forgets to free the node
-that allocated in hsr_create_self_node(), and forgets to delete
-the node->mac_list linked in hsr->self_node_db.
+syzbot found another add_timer() issue, this time in net/hsr [1]
 
-BUG: memory leak
-unreferenced object 0xffff8881cfa0c780 (size 64):
-  comm "syz-executor.0", pid 2077, jiffies 4294717969 (age 2415.377s)
-  hex dump (first 32 bytes):
-    e0 c7 a0 cf 81 88 ff ff 00 02 00 00 00 00 ad de  ................
-    00 e6 49 cd 81 88 ff ff c0 9b 87 d0 81 88 ff ff  ..I.............
-  backtrace:
-    [<00000000e2ff5070>] hsr_dev_finalize+0x736/0x960 [hsr]
-    [<000000003ed2e597>] hsr_newlink+0x2b2/0x3e0 [hsr]
-    [<000000003fa8c6b6>] __rtnl_newlink+0xf1f/0x1600 net/core/rtnetlink.c:3182
-    [<000000001247a7ad>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3240
-    [<00000000e7d1b61d>] rtnetlink_rcv_msg+0x54e/0xb90 net/core/rtnetlink.c:5130
-    [<000000005556bd3a>] netlink_rcv_skb+0x129/0x340 net/netlink/af_netlink.c:2477
-    [<00000000741d5ee6>] netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
-    [<00000000741d5ee6>] netlink_unicast+0x49a/0x650 net/netlink/af_netlink.c:1336
-    [<000000009d56f9b7>] netlink_sendmsg+0x88b/0xdf0 net/netlink/af_netlink.c:1917
-    [<0000000046b35c59>] sock_sendmsg_nosec net/socket.c:621 [inline]
-    [<0000000046b35c59>] sock_sendmsg+0xc3/0x100 net/socket.c:631
-    [<00000000d208adc9>] __sys_sendto+0x33e/0x560 net/socket.c:1786
-    [<00000000b582837a>] __do_sys_sendto net/socket.c:1798 [inline]
-    [<00000000b582837a>] __se_sys_sendto net/socket.c:1794 [inline]
-    [<00000000b582837a>] __x64_sys_sendto+0xdd/0x1b0 net/socket.c:1794
-    [<00000000c866801d>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
-    [<00000000fea382d9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e01dacb3>] 0xffffffffffffffff
+Let's use mod_timer() which is safe.
 
-Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+[1]
+kernel BUG at kernel/time/timer.c:1136!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 15909 Comm: syz-executor.3 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+kobject: 'loop2' (00000000f5629718): kobject_uevent_env
+RIP: 0010:add_timer kernel/time/timer.c:1136 [inline]
+RIP: 0010:add_timer+0x654/0xbe0 kernel/time/timer.c:1134
+Code: 0f 94 c5 31 ff 44 89 ee e8 09 61 0f 00 45 84 ed 0f 84 77 fd ff ff e8 bb 5f 0f 00 e8 07 10 a0 ff e9 68 fd ff ff e8 ac 5f 0f 00 <0f> 0b e8 a5 5f 0f 00 0f 0b e8 9e 5f 0f 00 4c 89 b5 58 ff ff ff e9
+RSP: 0018:ffff8880656eeca0 EFLAGS: 00010246
+kobject: 'loop2' (00000000f5629718): fill_kobj_path: path = '/devices/virtual/block/loop2'
+RAX: 0000000000040000 RBX: 1ffff1100caddd9a RCX: ffffc9000c436000
+RDX: 0000000000040000 RSI: ffffffff816056c4 RDI: ffff88806a2f6cc8
+RBP: ffff8880656eed58 R08: ffff888067f4a300 R09: ffff888067f4abc8
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff88806a2f6cc0
+R13: dffffc0000000000 R14: 0000000000000001 R15: ffff8880656eed30
+FS:  00007fc2019bf700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000738000 CR3: 0000000067e8e000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ hsr_check_announce net/hsr/hsr_device.c:99 [inline]
+ hsr_check_carrier_and_operstate+0x567/0x6f0 net/hsr/hsr_device.c:120
+ hsr_netdev_notify+0x297/0xa00 net/hsr/hsr_main.c:51
+ notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
+ __raw_notifier_call_chain kernel/notifier.c:394 [inline]
+ raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
+ call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
+ call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
+ call_netdevice_notifiers net/core/dev.c:1765 [inline]
+ dev_open net/core/dev.c:1436 [inline]
+ dev_open+0x143/0x160 net/core/dev.c:1424
+ team_port_add drivers/net/team/team.c:1203 [inline]
+ team_add_slave+0xa07/0x15d0 drivers/net/team/team.c:1933
+ do_set_master net/core/rtnetlink.c:2358 [inline]
+ do_set_master+0x1d4/0x230 net/core/rtnetlink.c:2332
+ do_setlink+0x966/0x3510 net/core/rtnetlink.c:2493
+ rtnl_setlink+0x271/0x3b0 net/core/rtnetlink.c:2747
+ rtnetlink_rcv_msg+0x465/0xb00 net/core/rtnetlink.c:5192
+ netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5210
+ netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+ netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
+ netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
+ sock_sendmsg_nosec net/socket.c:622 [inline]
+ sock_sendmsg+0xdd/0x130 net/socket.c:632
+ sock_write_iter+0x27c/0x3e0 net/socket.c:923
+ call_write_iter include/linux/fs.h:1869 [inline]
+ do_iter_readv_writev+0x5e0/0x8e0 fs/read_write.c:680
+ do_iter_write fs/read_write.c:956 [inline]
+ do_iter_write+0x184/0x610 fs/read_write.c:937
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1001
+ do_writev+0xf6/0x290 fs/read_write.c:1036
+ __do_sys_writev fs/read_write.c:1109 [inline]
+ __se_sys_writev fs/read_write.c:1106 [inline]
+ __x64_sys_writev+0x75/0xb0 fs/read_write.c:1106
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x457f29
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc2019bec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000457f29
+RDX: 0000000000000001 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc2019bf6d4
+R13: 00000000004c4a60 R14: 00000000004dd218 R15: 00000000ffffffff
+
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Arvid Brodin <arvid.brodin@alten.se>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_device.c   |    4 +++-
- net/hsr/hsr_framereg.c |   12 ++++++++++++
- net/hsr/hsr_framereg.h |    1 +
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ net/hsr/hsr_device.c |   14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
 --- a/net/hsr/hsr_device.c
 +++ b/net/hsr/hsr_device.c
-@@ -486,7 +486,7 @@ int hsr_dev_finalize(struct net_device *
+@@ -94,9 +94,8 @@ static void hsr_check_announce(struct ne
+ 			&& (old_operstate != IF_OPER_UP)) {
+ 		/* Went up */
+ 		hsr->announce_count = 0;
+-		hsr->announce_timer.expires = jiffies +
+-				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
+-		add_timer(&hsr->announce_timer);
++		mod_timer(&hsr->announce_timer,
++			  jiffies + msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL));
+ 	}
  
- 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
- 	if (res)
--		return res;
-+		goto err_add_port;
+ 	if ((hsr_dev->operstate != IF_OPER_UP) && (old_operstate == IF_OPER_UP))
+@@ -332,6 +331,7 @@ static void hsr_announce(struct timer_li
+ {
+ 	struct hsr_priv *hsr;
+ 	struct hsr_port *master;
++	unsigned long interval;
  
- 	res = register_netdevice(hsr_dev);
- 	if (res)
-@@ -506,6 +506,8 @@ int hsr_dev_finalize(struct net_device *
- fail:
- 	hsr_for_each_port(hsr, port)
- 		hsr_del_port(port);
-+err_add_port:
-+	hsr_del_node(&hsr->self_node_db);
+ 	hsr = from_timer(hsr, t, announce_timer);
  
- 	return res;
+@@ -343,18 +343,16 @@ static void hsr_announce(struct timer_li
+ 				hsr->protVersion);
+ 		hsr->announce_count++;
+ 
+-		hsr->announce_timer.expires = jiffies +
+-				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
++		interval = msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
+ 	} else {
+ 		send_hsr_supervision_frame(master, HSR_TLV_LIFE_CHECK,
+ 				hsr->protVersion);
+ 
+-		hsr->announce_timer.expires = jiffies +
+-				msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
++		interval = msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
+ 	}
+ 
+ 	if (is_admin_up(master->dev))
+-		add_timer(&hsr->announce_timer);
++		mod_timer(&hsr->announce_timer, jiffies + interval);
+ 
+ 	rcu_read_unlock();
  }
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -124,6 +124,18 @@ int hsr_create_self_node(struct list_hea
- 	return 0;
- }
- 
-+void hsr_del_node(struct list_head *self_node_db)
-+{
-+	struct hsr_node *node;
-+
-+	rcu_read_lock();
-+	node = list_first_or_null_rcu(self_node_db, struct hsr_node, mac_list);
-+	rcu_read_unlock();
-+	if (node) {
-+		list_del_rcu(&node->mac_list);
-+		kfree(node);
-+	}
-+}
- 
- /* Allocate an hsr_node and add it to node_db. 'addr' is the node's AddressA;
-  * seq_out is used to initialize filtering of outgoing duplicate frames
---- a/net/hsr/hsr_framereg.h
-+++ b/net/hsr/hsr_framereg.h
-@@ -16,6 +16,7 @@
- 
- struct hsr_node;
- 
-+void hsr_del_node(struct list_head *self_node_db);
- struct hsr_node *hsr_add_node(struct list_head *node_db, unsigned char addr[],
- 			      u16 seq_out);
- struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
 
 
