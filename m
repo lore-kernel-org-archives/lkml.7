@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB3FC10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA21C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E482175B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFAAB2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901273;
-	bh=+CjhHb8SQhX+plNQVuO3dTQxUS+wXRh32UDx0Y7hVOA=;
+	s=default; t=1552901277;
+	bh=Q1Js/oD88Jj02/jyeE6wgh83VXIjwO6YY7BtMroI90Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b6I7uobeLcupz8ssHy6Jbv96RhpnGONZg8eNyBq6aVD7tybMEL0pGS8GFKEbCqmFl
-	 c1BgCrzftT1bt8BUbbvBIwdKVyVgSQ9KxXbUWX0acjWwvUIsi5YttOz3WvJwGf588t
-	 r2EfVl5DIM4qIepDzPEZCPW3Ar3VD+9YdikvCV4Q=
+	b=SChHDqtpKijTPkFNNGhclxf/EwnYag9u2pDpGD81RxYG2iQZ3SSN7YfOF+9fIWrcw
+	 jt7xceGyu5G00RCf9cl2vs7ON/PltroLgSmx3UIZ1TLACLNRXGOxv90jWZbT4U9c/A
+	 1a8f9mMfCKAV2+wzEiT7chNN7sgW1SzvgPBkRhXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfCRJ1v (ORCPT
+        id S1727953AbfCRJ14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33256 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbfCRJ1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:27:46 -0400
+        id S1727935AbfCRJ1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:27:53 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B80D214D8;
-        Mon, 18 Mar 2019 09:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 589432083D;
+        Mon, 18 Mar 2019 09:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901266;
-        bh=+CjhHb8SQhX+plNQVuO3dTQxUS+wXRh32UDx0Y7hVOA=;
+        s=default; t=1552901272;
+        bh=Q1Js/oD88Jj02/jyeE6wgh83VXIjwO6YY7BtMroI90Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qO7WNshogJdPf9/ZCXl4GT3W5uPchz6Y/+TKPLKW/Yxp025QJnXJr9CKbtfITRz3i
-         +Owo1Um1S4twZuVyf1WA8YnY+VEen2UZC4QrruMeOEhn9dUKv+DCAKBBJH2mFA6n8H
-         L3Dx+DcMs19JEaBey5+UKCgT3c6f8ZHELeVMrJ4w=
+        b=2jzcnj/6y38a5MrXtrukK03qskQYPb5pYH2T8vQZebzDhm38SZ0Xo+EtdjhQNn1Ke
+         1DS/NDduTlI0iXI1GLXeZwfK1R155L+mA6NAB2Iy3ZnGCd5S6KLt+9qwnFqsOjrgMN
+         XzCR9jz2nCr6V2DOGAqi6TttoeMIW0pI567ph6Aw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Menzel <pmenzel+alsa-devel@molgen.mpg.de>,
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Ming Shuo Chiu <chiu@endlessm.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 35/43] ALSA: hda: Extend i915 component bind timeout
-Date:   Mon, 18 Mar 2019 10:24:27 +0100
-Message-Id: <20190318083716.902789445@linuxfoundation.org>
+Subject: [PATCH 5.0 37/43] ALSA: hda/realtek: Enable audio jacks of ASUS UX362FA with ALC294
+Date:   Mon, 18 Mar 2019 10:24:29 +0100
+Message-Id: <20190318083716.965457751@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -66,43 +65,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit cfc35f9c128cea8fce6a5513b1de50d36f3b209f upstream.
+commit 8bb37a2a4d7c02affef554f5dc05f6d2e39c31f9 upstream.
 
-I set 10 seconds for the timeout of the i915 audio component binding
-with a hope that recent machines are fast enough to handle all probe
-tasks in that period, but I was too optimistic.  The binding may take
-longer than that, and this caused a problem on the machine with both
-audio and graphics driver modules loaded in parallel, as Paul Menzel
-experienced.  This problem haven't hit so often just because the KMS
-driver is loaded in initrd on most machines.
+The ASUS UX362FA with ALC294 cannot detect the headset MIC and outputs
+through the internal speaker and the headphone.  This issue can be fixed
+by the quirk in the commit 4e0511067 ALSA: hda/realtek: Enable audio
+jacks of ASUS UX533FD with ALC294.
 
-As a simple workaround, extend the timeout to 60 seconds.
+Besides, ASUS UX362FA and UX533FD have the same audio initial pin config
+values.  So, this patch replaces SND_PCI_QUIRK of UX533FD with a new
+SND_HDA_PIN_QUIRK which benefits both UX362FA and UX533FD.
 
-Fixes: f9b54e1961c7 ("ALSA: hda/i915: Allow delayed i915 audio component binding")
-Reported-by: Paul Menzel <pmenzel+alsa-devel@molgen.mpg.de>
+Fixes: 4e051106730d ("ALSA: hda/realtek: Enable audio jacks of ASUS UX533FD with ALC294")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Ming Shuo Chiu <chiu@endlessm.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/hda/hdac_i915.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/sound/hda/hdac_i915.c
-+++ b/sound/hda/hdac_i915.c
-@@ -144,9 +144,9 @@ int snd_hdac_i915_init(struct hdac_bus *
- 		return -ENODEV;
- 	if (!acomp->ops) {
- 		request_module("i915");
--		/* 10s timeout */
-+		/* 60s timeout */
- 		wait_for_completion_timeout(&bind_complete,
--					    msecs_to_jiffies(10 * 1000));
-+					    msecs_to_jiffies(60 * 1000));
- 	}
- 	if (!acomp->ops) {
- 		dev_info(bus->dev, "couldn't bind with audio component\n");
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6773,7 +6773,6 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1043, 0x12e0, "ASUS X541SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x13b0, "ASUS Z550SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
+-	SND_PCI_QUIRK(0x1043, 0x14a1, "ASUS UX533FD", ALC294_FIXUP_ASUS_SPK),
+ 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
+ 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+@@ -7393,6 +7392,10 @@ static const struct snd_hda_pin_quirk al
+ 	SND_HDA_PIN_QUIRK(0x10ec0294, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
+ 		{0x12, 0x90a60130},
+ 		{0x17, 0x90170110},
++		{0x21, 0x03211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0294, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
++		{0x12, 0x90a60130},
++		{0x17, 0x90170110},
+ 		{0x21, 0x04211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 		ALC295_STANDARD_PINS,
 
 
