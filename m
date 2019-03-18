@@ -2,141 +2,253 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EFCC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD817C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1972620863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B22F20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="nxnWk90M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KaW5wUdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfCRRLO (ORCPT
+        id S1727251AbfCRRLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:11:14 -0400
-Received: from mail-eopbgr710127.outbound.protection.outlook.com ([40.107.71.127]:34944
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726777AbfCRRLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:11:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OqAjRpyzDY8LNY98Ify/oJ+tQz7duPHzYFDxT7uYPaw=;
- b=nxnWk90MAelLaaM/22wOL2PEPZYGlF/PnAiUDaCdMnZFWdHc8G9VtFXDuj4gLaW5N92W4Metw9qVNAeWKrZnNfASHnXq+1ibrExt54+cxZH+brXcX68zD9+gEYi/jojf7IdvrLFd1d7suRf7zvQfr1gqJL8cnwlWTiAFGXGgE5U=
-Received: from SN6PR13MB2494.namprd13.prod.outlook.com (52.135.95.148) by
- SN6PR13MB2429.namprd13.prod.outlook.com (52.135.94.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.9; Mon, 18 Mar 2019 17:11:09 +0000
-Received: from SN6PR13MB2494.namprd13.prod.outlook.com
- ([fe80::d1d6:9683:8c9b:3dcb]) by SN6PR13MB2494.namprd13.prod.outlook.com
- ([fe80::d1d6:9683:8c9b:3dcb%3]) with mapi id 15.20.1730.003; Mon, 18 Mar 2019
- 17:11:09 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "neilb@suse.com" <neilb@suse.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] NFS: Fix nfs4_lock_state refcounting in
- nfs4_alloc_{lock,unlock}data()
-Thread-Topic: [PATCH] NFS: Fix nfs4_lock_state refcounting in
- nfs4_alloc_{lock,unlock}data()
-Thread-Index: AQHU3awd9iQEYbfPS0GRAmU5BTgR16YRn86A
-Date:   Mon, 18 Mar 2019 17:11:09 +0000
-Message-ID: <9cee20976d23acb18c4925b3cc55d34c1369ae83.camel@hammerspace.com>
-References: <20190318170028.61423-1-catalin.marinas@arm.com>
-In-Reply-To: <20190318170028.61423-1-catalin.marinas@arm.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b6a79034-af5b-472c-9a71-08d6abc4b74b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SN6PR13MB2429;
-x-ms-traffictypediagnostic: SN6PR13MB2429:
-x-microsoft-antispam-prvs: <SN6PR13MB24293C3B0EC744908CB953CAB8470@SN6PR13MB2429.namprd13.prod.outlook.com>
-x-forefront-prvs: 098076C36C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(376002)(39830400003)(346002)(189003)(199004)(53936002)(6436002)(229853002)(6512007)(8936002)(68736007)(478600001)(8676002)(81156014)(81166006)(14454004)(86362001)(3846002)(6486002)(256004)(14444005)(6116002)(36756003)(97736004)(99286004)(25786009)(5660300002)(106356001)(105586002)(76176011)(476003)(186003)(6246003)(102836004)(71190400001)(446003)(11346002)(486006)(6506007)(118296001)(2501003)(4326008)(316002)(6346003)(110136005)(305945005)(54906003)(7736002)(2906002)(66066001)(2616005)(26005)(71200400001)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR13MB2429;H:SN6PR13MB2494.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AwSk8y0nKDnaSkzu08lfgyHEJFJkR6BHo+TMh1nBz3LN9qcp2ua7f8Ke7s0VJo77UqI9HlZZfsvr3yWKClDhVlOdpSjzd9jwmrkLmVagGLiwFKwUF08kOWXFyi/IUHPDGkZACjHfw4rF0+7DluNtYsvgGL/vXixNUJzbJ0LCqtw+gvv9fNmCPowakWu5k2zocm9IKntrmAKWQeG8EGhZbTROysr5EDryfP77nqo6etPHRPPRbPRLoyG/F/UUveimufZNs1pFFb5RhzMApy/Rd4FRJpjvTFE7yRys4cc7G8DXulvZH4KF13fH+J0VTmWoo8z73U6WlWqWNw7kLEPQ9SXPMCZmjmf1SXFl39rNQYhsnF4UBlQ8zBHRmrcYh+B19bY3wyaKDa0s13RRwg4ZHAIxEBQA5gdHBbByt2JTEbc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F6DD1B6E4B8D5348A7F1C42F3B0F6210@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 18 Mar 2019 13:11:24 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46625 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfCRRLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:11:23 -0400
+Received: by mail-io1-f65.google.com with SMTP id b9so8470349iot.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:11:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qmsKlMINnNX7iCDOOC3ZV2uV5fqjU3HdWfrDImNjpeI=;
+        b=KaW5wUdmOGHMeuwsm6jqRW2i/uirgv6Vkf2PUe16tusqmqx4+VsmhnsdWGssBPaBAl
+         2DUxDOv965sFWFV2kH/To8SfbVM918FcKcZwnor9CKTBCIALmlUsv5BFbqhf/pYDq9qM
+         1wdhY/Iwvk9WIG0TKwEJStC5Ic1to+Os1RJNkIbLwI8nQvB7goUsUGlCl3zALN5NPfdY
+         WaM008jhvvSK6hEd6wk2yNmpqc60MlCp+IBJCib1AwFrbfrIOMyvbEHfzCmMFDOEZ1bE
+         rc5LkKojGwgDyC+5M5ua//24jivXtMqnd5fff1Hce88h0iYdepWFtn9+caYFuCqGNMm4
+         JVwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qmsKlMINnNX7iCDOOC3ZV2uV5fqjU3HdWfrDImNjpeI=;
+        b=RCy5b/Uop8HKXO+I1wRWT3ZsofwxcdoIWnq2cMZsQXas+6RrWTS+u+Nzg1xjhEouZm
+         h0URx7kShT2b9s+iKBuuUHnPxwlc0Uo7qLE9k6+E4jUFK0f1Q8V91/cDPhsARAoDl2uX
+         lnCH48HYfoqStA6d/RlaN17+iQr1v1shLVsXcbIbz/ddnGcjnd7UqLD1g9rXfC6R6WHc
+         eJWRHbfyY0kZPIGc0ZRwj/VtX6ou/uswsJhT3ZmHp1aarv58BzsAptnXpcwR6Ra7HV94
+         tX8rJH9Lplg3i/NBpJu4EEnNa3LUh8TPZ3UVhkcXE8KucYI2NMk+x7gpldmHBdaxQIVS
+         H+0Q==
+X-Gm-Message-State: APjAAAVkfoThpZ5CHlhhCa74WHIPbnGOEJRSzouAWUIi3xl7+qoDe8TA
+        rh3gviZ5eimhJDXwg4zZThVFIV8WmLwZBZjAtT+Jeg==
+X-Google-Smtp-Source: APXvYqyBnUx912/cWCEh3MtY5d2UXAj5C3262QDsGYeOn9pPIGIIIGRelyxszhVTBY490x+SmHZ22tSwcg7jiUefsvA=
+X-Received: by 2002:a5e:8418:: with SMTP id h24mr11607457ioj.170.1552929082490;
+ Mon, 18 Mar 2019 10:11:22 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6a79034-af5b-472c-9a71-08d6abc4b74b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 17:11:09.4967
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR13MB2429
+References: <68b71c15f32341468a868f6418e4fcb375bc49ba.camel@gmail.com>
+ <20190211105755.GB30880@fuggles.cambridge.arm.com> <38d8965a-cd41-17cf-1b95-8dd58c079be4@arm.com>
+ <874c702b8af760aa8fae38d478c79e3ecba00515.camel@gmail.com>
+ <235d20ef-3054-69d9-975d-25aebf32aad3@arm.com> <20190223181254.GC572@tuxbook-pro>
+ <86zhqm8i6d.wl-marc.zyngier@arm.com> <20190224035356.GD572@tuxbook-pro>
+ <33d765b5-1807-fa6c-1ceb-99f09f7c8d5a@free.fr> <8eb4f446-6152-ffb6-9529-77fb0bcc307f@arm.com>
+ <20190318170041.qu4x2565fmno6sei@shell.armlinux.org.uk>
+In-Reply-To: <20190318170041.qu4x2565fmno6sei@shell.armlinux.org.uk>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 18 Mar 2019 18:11:10 +0100
+Message-ID: <CAKv+Gu9ddTYEVA=HNgc6Lbk5S03C12vXFewhqkWE1=gfOKjmXA@mail.gmail.com>
+Subject: Re: [PATCH] arm64/io: Don't use WZR in writel
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Jens Axboe <axboe@kernel.dk>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTAzLTE4IGF0IDE3OjAwICswMDAwLCBDYXRhbGluIE1hcmluYXMgd3JvdGU6
-DQo+IENvbW1pdCA3YjU4N2UxYTVhNmMgKCJORlM6IHVzZSBsb2Nrc19jb3B5X2xvY2soKSB0byBj
-b3B5IGxvY2tzLiIpDQo+IGNoYW5nZWQgdGhlIGxvY2sgY29weWluZyBmcm9tIG1lbWNweSgpIHRv
-IHRoZSBkZWRpY2F0ZWQNCj4gbG9ja3NfY29weV9sb2NrKCkgZnVuY3Rpb24uIFRoZSBsYXR0ZXIg
-Y29ycmVjdGx5IGluY3JlbWVudHMgdGhlDQo+IG5mczRfbG9ja19zdGF0ZS5sc19jb3VudCB2aWEg
-bmZzNF9mbF9jb3B5X2xvY2soKSwgaG93ZXZlciwgdGhpcw0KPiByZWZjb3VudA0KPiBoYXMgYWxy
-ZWFkeSBiZWVuIGluY3JlbWVudGVkIGluIHRoZSBuZnM0X2FsbG9jX3tsb2NrLHVubG9ja31kYXRh
-KCkuDQo+IEttZW1sZWFrIHN1YnNlcXVlbnRseSByZXBvcnRzIGFuIHVucmVmZXJlbmNlZCBuZnM0
-X2xvY2tfc3RhdGUgb2JqZWN0DQo+IGFzDQo+IGJlbG93IChhcm02NCBwbGF0Zm9ybSk6DQo+IA0K
-PiB1bnJlZmVyZW5jZWQgb2JqZWN0IDB4ZmZmZjgwMDBmY2UwYjAwMCAoc2l6ZSAyNTYpOg0KPiAg
-IGNvbW0gInN5c3RlbWQtc3lzdXNlciIsIHBpZCAxNjA4LCBqaWZmaWVzIDQyOTQ4OTI4MjUgKGFn
-ZSAzMi4zNDhzKQ0KPiAgIGhleCBkdW1wIChmaXJzdCAzMiBieXRlcyk6DQo+ICAgICAyMCA1NyA0
-YyBmYiAwMCA4MCBmZiBmZiAyMCA1NyA0YyBmYiAwMCA4MCBmZiBmZiAgIFdMLi4uLi4gV0wuLi4u
-Lg0KPiAgICAgMDAgNTcgNGMgZmIgMDAgODAgZmYgZmYgMDEgMDAgMDAgMDAgMDAgMDAgMDAgMDAg
-IC5XTC4uLi4uLi4uLi4uLi4NCj4gICBiYWNrdHJhY2U6DQo+ICAgICBbPDAwMDAwMDAwMGQxNTAx
-MGQ+XSBrbWVtX2NhY2hlX2FsbG9jKzB4MTc4LzB4MjA4DQo+ICAgICBbPDAwMDAwMDAwZDdjMWQy
-NjQ+XSBuZnM0X3NldF9sb2NrX3N0YXRlKzB4MTI0LzB4MWYwDQo+ICAgICBbPDAwMDAwMDAwOWM4
-Njc2Mjg+XSBuZnM0X3Byb2NfbG9jaysweDkwLzB4NDc4DQo+ICAgICBbPDAwMDAwMDAwMTY4NmJk
-NzQ+XSBkb19zZXRsaysweDY0LzB4ZTgNCj4gICAgIFs8MDAwMDAwMDBlMDE1MDBkND5dIG5mc19s
-b2NrKzB4ZTgvMHgxZjANCj4gICAgIFs8MDAwMDAwMDA0ZjM4N2Q4ZD5dIHZmc19sb2NrX2ZpbGUr
-MHgxOC8weDQwDQo+ICAgICBbPDAwMDAwMDAwNjU2YWI3OWI+XSBkb19sb2NrX2ZpbGVfd2FpdCsw
-eDY4LzB4ZjgNCj4gICAgIFs8MDAwMDAwMDBmMTdjNGE0Yj5dIGZjbnRsX3NldGxrKzB4MjI0LzB4
-MjgwDQo+ICAgICBbPDAwMDAwMDAwNTJhMjQyYzY+XSBkb19mY250bCsweDQxOC8weDczMA0KPiAg
-ICAgWzwwMDAwMDAwMDRmNDcyOTFhPl0gX19hcm02NF9zeXNfZmNudGwrMHg4NC8weGQwDQo+ICAg
-ICBbPDAwMDAwMDAwZDY4NTZlMDE+XSBlbDBfc3ZjX2NvbW1vbisweDgwLzB4ZjANCj4gICAgIFs8
-MDAwMDAwMDA5YzRiZDFkZj5dIGVsMF9zdmNfaGFuZGxlcisweDJjLzB4ODANCj4gICAgIFs8MDAw
-MDAwMDBiMWEwZDQ3OT5dIGVsMF9zdmMrMHg4LzB4Yw0KPiAgICAgWzwwMDAwMDAwMDU2YzYyYTBm
-Pl0gMHhmZmZmZmZmZmZmZmZmZmZmDQo+IA0KPiBUaGlzIHBhdGNoIHJlbW92ZXMgdGhlIG9yaWdp
-bmFsIHJlZmNvdW50X2luYygmbHNwLT5sc19jb3VudCkgdGhhdCB3YXMNCj4gcGFpcmVkIHdpdGgg
-dGhlIG1lbWNweSgpIGxvY2sgY29weWluZy4NCj4gDQo+IEZpeGVzOiA3YjU4N2UxYTVhNmMgKCJO
-RlM6IHVzZSBsb2Nrc19jb3B5X2xvY2soKSB0byBjb3B5IGxvY2tzLiIpDQo+IENjOiA8c3RhYmxl
-QHZnZXIua2VybmVsLm9yZz4gIyA1LjAueC0NCj4gQ2M6IE5laWxCcm93biA8bmVpbGJAc3VzZS5j
-b20+DQo+IFNpZ25lZC1vZmYtYnk6IENhdGFsaW4gTWFyaW5hcyA8Y2F0YWxpbi5tYXJpbmFzQGFy
-bS5jb20+DQo+IC0tLQ0KPiAgZnMvbmZzL25mczRwcm9jLmMgfCAyIC0tDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNHByb2Mu
-YyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+IGluZGV4IDRkYmIwZWUyMzQzMi4uNmQyODEyYTM5Mjg3
-IDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvbmZzNHByb2MuYw0KPiArKysgYi9mcy9uZnMvbmZzNHBy
-b2MuYw0KPiBAQCAtNjMwMSw3ICs2MzAxLDYgQEAgc3RhdGljIHN0cnVjdCBuZnM0X3VubG9ja2Rh
-dGENCj4gKm5mczRfYWxsb2NfdW5sb2NrZGF0YShzdHJ1Y3QgZmlsZV9sb2NrICpmbCwNCj4gIAlw
-LT5hcmcuc2VxaWQgPSBzZXFpZDsNCj4gIAlwLT5yZXMuc2VxaWQgPSBzZXFpZDsNCj4gIAlwLT5s
-c3AgPSBsc3A7DQo+IC0JcmVmY291bnRfaW5jKCZsc3AtPmxzX2NvdW50KTsNCj4gIAkvKiBFbnN1
-cmUgd2UgZG9uJ3QgY2xvc2UgZmlsZSB1bnRpbCB3ZSdyZSBkb25lIGZyZWVpbmcgbG9ja3MhDQo+
-ICovDQo+ICAJcC0+Y3R4ID0gZ2V0X25mc19vcGVuX2NvbnRleHQoY3R4KTsNCj4gIAlwLT5sX2N0
-eCA9IG5mc19nZXRfbG9ja19jb250ZXh0KGN0eCk7DQo+IEBAIC02NTI2LDcgKzY1MjUsNiBAQCBz
-dGF0aWMgc3RydWN0IG5mczRfbG9ja2RhdGENCj4gKm5mczRfYWxsb2NfbG9ja2RhdGEoc3RydWN0
-IGZpbGVfbG9jayAqZmwsDQo+ICAJcC0+cmVzLmxvY2tfc2VxaWQgPSBwLT5hcmcubG9ja19zZXFp
-ZDsNCj4gIAlwLT5sc3AgPSBsc3A7DQo+ICAJcC0+c2VydmVyID0gc2VydmVyOw0KPiAtCXJlZmNv
-dW50X2luYygmbHNwLT5sc19jb3VudCk7DQo+ICAJcC0+Y3R4ID0gZ2V0X25mc19vcGVuX2NvbnRl
-eHQoY3R4KTsNCj4gIAlsb2Nrc19pbml0X2xvY2soJnAtPmZsKTsNCj4gIAlsb2Nrc19jb3B5X2xv
-Y2soJnAtPmZsLCBmbCk7DQoNClRoYW5rcyBDYXRhbGluISBHb29kIGNhdGNoLi4uDQoNCkknbSBh
-cHBseWluZyB0aGlzIHRvIG15IGxpbnV4LW5leHQgYnJhbmNoLg0KDQotLSANClRyb25kIE15a2xl
-YnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlr
-bGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Mon, 18 Mar 2019 at 18:01, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Mar 18, 2019 at 04:04:03PM +0000, Robin Murphy wrote:
+> > On 12/03/2019 12:36, Marc Gonzalez wrote:
+> > > On 24/02/2019 04:53, Bjorn Andersson wrote:
+> > >
+> > > > On Sat 23 Feb 10:37 PST 2019, Marc Zyngier wrote:
+> > > >
+> > > > > On Sat, 23 Feb 2019 18:12:54 +0000, Bjorn Andersson wrote:
+> > > > > >
+> > > > > > On Mon 11 Feb 06:59 PST 2019, Marc Zyngier wrote:
+> > > > > >
+> > > > > > > On 11/02/2019 14:29, AngeloGioacchino Del Regno wrote:
+> > > > > > >
+> > > > > > > > Also, just one more thing: yes this thing is going ARM64-wide and
+> > > > > > > > - from my findings - it's targeting certain Qualcomm SoCs, but...
+> > > > > > > > I'm not sure that only QC is affected by that, others may as well
+> > > > > > > > have the same stupid bug.
+> > > > > > >
+> > > > > > > At the moment, only QC SoCs seem to be affected, probably because
+> > > > > > > everyone else has debugged their hypervisor (or most likely doesn't
+> > > > > > > bother with shipping one).
+> > > > > > >
+> > > > > > > In all honesty, we need some information from QC here: which SoCs are
+> > > > > > > affected, what is the exact nature of the bug, can it be triggered from
+> > > > > > > EL0. Randomly papering over symptoms is not something I really like
+> > > > > > > doing, and is likely to generate problems on unaffected systems.
+> > > > > >
+> > > > > > The bug at hand is that the XZR is not deemed a valid source in the
+> > > > > > virtualization of the SMMU registers. It was identified and fixed for
+> > > > > > all platforms that are shipping kernels based on v4.9 or later.
+> > > > >
+> > > > > When you say "fixed": Do you mean fixed in the firmware? Or by adding
+> > > > > a workaround in the shipped kernel?
+> > > >
+> > > > I mean that it's fixed in the firmware.
+> > > >
+> > > > > If the former, is this part of an official QC statement, with an
+> > > > > associated erratum number?
+> > > >
+> > > > I don't know, will get back to you on this one.
+> > > >
+> > > > > Is this really limited to the SMMU accesses?
+> > > >
+> > > > Yes.
+> > > >
+> > > > > > As such Angelo's list of affected platforms covers the high-profile
+> > > > > > ones. In particular MSM8996 and MSM8998 is getting pretty good support
+> > > > > > upstream, if we can figure out a way around this issue.
+> > > > >
+> > > > > We'd need an exhaustive list of the affected SoCs, and work out if we
+> > > > > can limit the hack to the SMMU driver (cc'ing Robin, who's the one
+> > > > > who'd know about it).
+> > > >
+> > > > I will try to compose a list.
+> > >
+> > > FWIW, I have just been bitten by this issue. I needed to enable an SMMU to
+> > > filter PCIe EP accesses to system RAM (or something). I'm using an APQ8098
+> > > MEDIABOX dev board. My system hangs in arm_smmu_device_reset() doing:
+> > >
+> > >     /* Invalidate the TLB, just in case */
+> > >     writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+> > >     writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+> > >
+> > >
+> > > With the 'Z' constraint, gcc generates:
+> > >
+> > >     str wzr, [x0]
+> > >
+> > > without the 'Z' constraint, gcc generates:
+> > >
+> > >     mov     w1, 0
+> > >     str w1, [x0]
+> > >
+> > >
+> > > I can work around the problem using the following patch:
+> > >
+> > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > > index 045d93884164..93117519aed8 100644
+> > > --- a/drivers/iommu/arm-smmu.c
+> > > +++ b/drivers/iommu/arm-smmu.c
+> > > @@ -59,6 +59,11 @@
+> > >   #include "arm-smmu-regs.h"
+> > > +static inline void qcom_writel(u32 val, volatile void __iomem *addr)
+> > > +{
+> > > +   asm volatile("str %w0, [%1]" : : "r" (val), "r" (addr));
+> > > +}
+> > > +
+> > >   #define ARM_MMU500_ACTLR_CPRE             (1 << 1)
+> > >   #define ARM_MMU500_ACR_CACHE_LOCK (1 << 26)
+> > > @@ -422,7 +427,7 @@ static void __arm_smmu_tlb_sync(struct arm_smmu_device *smmu,
+> > >   {
+> > >     unsigned int spin_cnt, delay;
+> > > -   writel_relaxed(0, sync);
+> > > +   qcom_writel(0, sync);
+> > >     for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
+> > >             for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+> > >                     if (!(readl_relaxed(status) & sTLBGSTATUS_GSACTIVE))
+> > > @@ -1760,8 +1765,8 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
+> > >     }
+> > >     /* Invalidate the TLB, just in case */
+> > > -   writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+> > > -   writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+> > > +   qcom_writel(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+> > > +   qcom_writel(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+> > >     reg = readl_relaxed(ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+> > >
+> > >
+> > >
+> > > Can a quirk be used to work around the issue?
+> > > Or can we just "pessimize" the 3 writes for everybody?
+> > > (Might be cheaper than a test anyway)
+> >
+> > If it really is just the SMMU driver which is affected, we can work around
+> > it for free (not counting the 'cost' of slightly-weird-looking code, of
+> > course). If the diff below works as expected, I'll write it up properly.
+> >
+> > Robin.
+> > ----->8-----
+> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > index 045d93884164..7ff29e33298f 100644
+> > --- a/drivers/iommu/arm-smmu.c
+> > +++ b/drivers/iommu/arm-smmu.c
+> > @@ -422,7 +422,7 @@ static void __arm_smmu_tlb_sync(struct arm_smmu_device
+> > *smmu,
+> >  {
+> >       unsigned int spin_cnt, delay;
+> >
+> > -     writel_relaxed(0, sync);
+> > +     writel_relaxed((unsigned long)sync, sync);
+> >       for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
+> >               for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+> >                       if (!(readl_relaxed(status) & sTLBGSTATUS_GSACTIVE))
+> > @@ -681,7 +681,12 @@ static void arm_smmu_write_context_bank(struct
+> > arm_smmu_device *smmu, int idx)
+> >
+> >       /* Unassigned context banks only need disabling */
+> >       if (!cfg) {
+> > -             writel_relaxed(0, cb_base + ARM_SMMU_CB_SCTLR);
+> > +             /*
+> > +              * For Qualcomm reasons, we want to guarantee that we write a
+> > +              * zero from a register which is not WZR. Fortunately, the cfg
+> > +              * logic here plays right into our hands...
+> > +              */
+> > +             writel_relaxed((unsigned long)cfg, cb_base + ARM_SMMU_CB_SCTLR);
+> >               return;
+> >       }
+> >
+> > @@ -1760,8 +1765,8 @@ static void arm_smmu_device_reset(struct
+> > arm_smmu_device *smmu)
+> >       }
+> >
+> >       /* Invalidate the TLB, just in case */
+> > -     writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+> > -     writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+> > +     writel_relaxed(reg, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+> > +     writel_relaxed(reg, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+> >
+> >       reg = readl_relaxed(ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+> >
+>
+> Given what we've seen from Clang for futex stuff in 32-bit ARM, are
+> you really sure that the above will not result in Clang still spotting
+> that the value is zero and using a wzr for all these cases?
+>
+
+Yeah, it seems to me that even GCC would still be likely to treat cfg
+as a constant zero when fulfilling the asm constraints if it occurs
+inside a 'if (!cfg) {}' block.
