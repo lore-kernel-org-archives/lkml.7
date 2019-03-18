@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC42C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A73C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91A2214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76ADB2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901250;
-	bh=MZJT+BqMCk+xUgSlG6ecV5ROVtc5ZPTb1QTgutH7FIo=;
+	s=default; t=1552901254;
+	bh=bACvmnHqpjdiM0WNpuRegXcDV/r7bpbC6dzlm5dR2Ro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qLJq2q5p4L1+ej/1XMQjX4gZwuCRByNlxOJcDITPxd0fCfGdgM1QKOSfIbGlDhwpX
-	 vs0Z8Gb/GtFoihsmzg1gg0kMqxur8vujTkimjdIpeqLEK/+kbxHMJZTUwsWJzU4q1o
-	 7mg1OsSA6bOSeP+ti2PMAUrsGc/za6WAqfgLYpKo=
+	b=keIIHnxBdq60vupJk1ksfZRuIt3yQOB84djaAaK9/vlqEuSFfYkBpGOYOENPf2O+w
+	 iVkiAP2Te+M4nh4zwm+P1MLNgf2uViGbxlwlHAOs1K1h/oK4LnIFWG1HNbaZWskMxZ
+	 tWa8rrwwFBSV5uz5Ii0K8mCC2HIrnRVUqB60rdGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbfCRJ13 (ORCPT
+        id S1727378AbfCRJ1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:27:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:27:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbfCRJ11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:27:27 -0400
+        id S1727148AbfCRJ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:27:31 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01B0421741;
-        Mon, 18 Mar 2019 09:27:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 071EB2075C;
+        Mon, 18 Mar 2019 09:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901246;
-        bh=MZJT+BqMCk+xUgSlG6ecV5ROVtc5ZPTb1QTgutH7FIo=;
+        s=default; t=1552901250;
+        bh=bACvmnHqpjdiM0WNpuRegXcDV/r7bpbC6dzlm5dR2Ro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=06WW5f8TR7s4y2GxTlPuX5a+/XbiS3mFvr2jQIJIwuJFRlCsTu37lhQ8XCiUbIUUV
-         HYx+PeWCmHpzXS3EeoXdsLznk/oQBT8FCxt090PYHSHuzJ/u87wryVXTCK+RbiWJNB
-         GV/Y05PzRhjbmLVhPsbs8of0zF1bOcv3v/1Gy8rI=
+        b=WZCmwWHPCCsC7YQnljKE2EqrgUEFjBetYmwnR2NGdM/AedYHAkIzK9M7Jm8Bq6ApN
+         zVZZYevTDrlE5b1fbXvr6NnmG2isIB28L2ukRsj+6PIH/YB4y1Uuwy2udd652MvJ28
+         mHMYBkOI2ERKUzMCE4SeuYXz9e+fERJnju70Iypo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 03/43] gro_cells: make sure device is up in gro_cells_receive()
-Date:   Mon, 18 Mar 2019 10:23:55 +0100
-Message-Id: <20190318083715.977711479@linuxfoundation.org>
+Subject: [PATCH 5.0 30/43] net: sched: flower: insert new filter to idr after setting its mask
+Date:   Mon, 18 Mar 2019 10:24:22 +0100
+Message-Id: <20190318083716.755134580@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -66,130 +66,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit 2a5ff07a0eb945f291e361aa6f6becca8340ba46 ]
+[ Upstream commit ecb3dea400d3beaf611ce76ac7a51d4230492cf2 ]
 
-We keep receiving syzbot reports [1] that show that tunnels do not play
-the rcu/IFF_UP rules properly.
+When adding new filter to flower classifier, fl_change() inserts it to
+handle_idr before initializing filter extensions and assigning it a mask.
+Normally this ordering doesn't matter because all flower classifier ops
+callbacks assume rtnl lock protection. However, when filter has an action
+that doesn't have its kernel module loaded, rtnl lock is released before
+call to request_module(). During this time the filter can be accessed bu
+concurrent task before its initialization is completed, which can lead to a
+crash.
 
-At device dismantle phase, gro_cells_destroy() will be called
-only after a full rcu grace period is observed after IFF_UP
-has been cleared.
+Example case of NULL pointer dereference in concurrent dump:
 
-This means that IFF_UP needs to be tested before queueing packets
-into netif_rx() or gro_cells.
+Task 1                           Task 2
 
-This patch implements the test in gro_cells_receive() because
-too many callers do not seem to bother enough.
+tc_new_tfilter()
+ fl_change()
+  idr_alloc_u32(fnew)
+  fl_set_parms()
+   tcf_exts_validate()
+    tcf_action_init()
+     tcf_action_init_1()
+      rtnl_unlock()
+      request_module()
+      ...                        rtnl_lock()
+      				 tc_dump_tfilter()
+      				  tcf_chain_dump()
+				   fl_walk()
+				    idr_get_next_ul()
+				    tcf_node_dump()
+				     tcf_fill_node()
+				      fl_dump()
+				       mask = &f->mask->key; <- NULL ptr
+      rtnl_lock()
 
-[1]
-BUG: unable to handle kernel paging request at fffff4ca0b9ffffe
-PGD 0 P4D 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.0.0+ #97
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
-RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
-RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
-RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
-RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
-Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
-RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
-RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
-RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
-RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
-R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
-R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
-kobject: 'loop2' (000000004bd7d84a): kobject_uevent_env
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
-Call Trace:
-kobject: 'loop2' (000000004bd7d84a): fill_kobj_path: path = '/devices/virtual/block/loop2'
- ip_tunnel_dev_free+0x19/0x60 net/ipv4/ip_tunnel.c:1010
- netdev_run_todo+0x51c/0x7d0 net/core/dev.c:8970
- rtnl_unlock+0xe/0x10 net/core/rtnetlink.c:116
- ip_tunnel_delete_nets+0x423/0x5f0 net/ipv4/ip_tunnel.c:1124
- vti_exit_batch_net+0x23/0x30 net/ipv4/ip_vti.c:495
- ops_exit_list.isra.0+0x105/0x160 net/core/net_namespace.c:156
- cleanup_net+0x3fb/0x960 net/core/net_namespace.c:551
- process_one_work+0x98e/0x1790 kernel/workqueue.c:2173
- worker_thread+0x98/0xe40 kernel/workqueue.c:2319
- kthread+0x357/0x430 kernel/kthread.c:246
- ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
-CR2: fffff4ca0b9ffffe
-   [ end trace 513fc9c1338d1cb3 ]
-RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
-RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
-RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
-RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
-RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
-Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
-RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
-RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
-RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
-RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
-R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
-kobject: 'loop3' (00000000e4ee57a6): kobject_uevent_env
-R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
+Extension initialization and mask assignment don't depend on fnew->handle
+that is allocated by idr_alloc_u32(). Move idr allocation code after action
+creation and mask assignment in fl_change() to prevent concurrent access
+to not fully initialized filter when rtnl lock is released to load action
+module.
 
-Fixes: c9e6bc644e55 ("net: add gro_cells infrastructure")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 01683a146999 ("net: sched: refactor flower walk to iterate over idr")
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/gro_cells.c |   22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ net/sched/cls_flower.c |   43 ++++++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/net/core/gro_cells.c
-+++ b/net/core/gro_cells.c
-@@ -13,22 +13,36 @@ int gro_cells_receive(struct gro_cells *
- {
- 	struct net_device *dev = skb->dev;
- 	struct gro_cell *cell;
-+	int res;
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -1327,46 +1327,46 @@ static int fl_change(struct net *net, st
+ 	if (err < 0)
+ 		goto errout;
  
--	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev))
--		return netif_rx(skb);
-+	rcu_read_lock();
-+	if (unlikely(!(dev->flags & IFF_UP)))
-+		goto drop;
-+
-+	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev)) {
-+		res = netif_rx(skb);
-+		goto unlock;
-+	}
+-	if (!handle) {
+-		handle = 1;
+-		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
+-				    INT_MAX, GFP_KERNEL);
+-	} else if (!fold) {
+-		/* user specifies a handle and it doesn't exist */
+-		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
+-				    handle, GFP_KERNEL);
+-	}
+-	if (err)
+-		goto errout;
+-	fnew->handle = handle;
+-
+ 	if (tb[TCA_FLOWER_FLAGS]) {
+ 		fnew->flags = nla_get_u32(tb[TCA_FLOWER_FLAGS]);
  
- 	cell = this_cpu_ptr(gcells->cells);
- 
- 	if (skb_queue_len(&cell->napi_skbs) > netdev_max_backlog) {
-+drop:
- 		atomic_long_inc(&dev->rx_dropped);
- 		kfree_skb(skb);
--		return NET_RX_DROP;
-+		res = NET_RX_DROP;
-+		goto unlock;
+ 		if (!tc_flags_valid(fnew->flags)) {
+ 			err = -EINVAL;
+-			goto errout_idr;
++			goto errout;
+ 		}
  	}
  
- 	__skb_queue_tail(&cell->napi_skbs, skb);
- 	if (skb_queue_len(&cell->napi_skbs) == 1)
- 		napi_schedule(&cell->napi);
--	return NET_RX_SUCCESS;
-+
-+	res = NET_RX_SUCCESS;
-+
-+unlock:
-+	rcu_read_unlock();
-+	return res;
- }
- EXPORT_SYMBOL(gro_cells_receive);
+ 	err = fl_set_parms(net, tp, fnew, mask, base, tb, tca[TCA_RATE], ovr,
+ 			   tp->chain->tmplt_priv, extack);
+ 	if (err)
+-		goto errout_idr;
++		goto errout;
  
+ 	err = fl_check_assign_mask(head, fnew, fold, mask);
+ 	if (err)
+-		goto errout_idr;
++		goto errout;
++
++	if (!handle) {
++		handle = 1;
++		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
++				    INT_MAX, GFP_KERNEL);
++	} else if (!fold) {
++		/* user specifies a handle and it doesn't exist */
++		err = idr_alloc_u32(&head->handle_idr, fnew, &handle,
++				    handle, GFP_KERNEL);
++	}
++	if (err)
++		goto errout_mask;
++	fnew->handle = handle;
+ 
+ 	if (!fold && __fl_lookup(fnew->mask, &fnew->mkey)) {
+ 		err = -EEXIST;
+-		goto errout_mask;
++		goto errout_idr;
+ 	}
+ 
+ 	err = rhashtable_insert_fast(&fnew->mask->ht, &fnew->ht_node,
+ 				     fnew->mask->filter_ht_params);
+ 	if (err)
+-		goto errout_mask;
++		goto errout_idr;
+ 
+ 	if (!tc_skip_hw(fnew->flags)) {
+ 		err = fl_hw_replace_filter(tp, fnew, extack);
+@@ -1405,12 +1405,13 @@ errout_mask_ht:
+ 	rhashtable_remove_fast(&fnew->mask->ht, &fnew->ht_node,
+ 			       fnew->mask->filter_ht_params);
+ 
+-errout_mask:
+-	fl_mask_put(head, fnew->mask, false);
+-
+ errout_idr:
+ 	if (!fold)
+ 		idr_remove(&head->handle_idr, fnew->handle);
++
++errout_mask:
++	fl_mask_put(head, fnew->mask, false);
++
+ errout:
+ 	tcf_exts_destroy(&fnew->exts);
+ 	kfree(fnew);
 
 
