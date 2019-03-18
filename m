@@ -2,110 +2,109 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7986C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C40FC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E47320685
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE9520685
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:41:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="lQE2W46i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfCRTlp (ORCPT
+        id S1727918AbfCRTlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 15:41:45 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:59213 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727610AbfCRTlp (ORCPT
+        Mon, 18 Mar 2019 15:41:51 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34838 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfCRTlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 15:41:45 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h5y8f-0000mt-Co; Mon, 18 Mar 2019 15:41:39 -0400
-Date:   Mon, 18 Mar 2019 15:41:09 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V5 07/10] audit: add containerid support for user
- records
-Message-ID: <20190318194109.GD4111@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <e724de2037db0fd72fef7154c83615a742417d31.1552665316.git.rgb@redhat.com>
+        Mon, 18 Mar 2019 15:41:50 -0400
+Received: by mail-oi1-f193.google.com with SMTP id j132so11076533oib.2;
+        Mon, 18 Mar 2019 12:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M139LBtlkNrQR6u9V/xwOU9GjCtoAeXlSSkK8+ntcTE=;
+        b=lQE2W46iJf0QnJmPvkcAeS0bcn8HU/eQoU1uYCSye2F1xkagCnvS/qmLd1nUPmUjx1
+         f28ns82LbDnNl8T/l/tw/UbWhHr0oSQpfTGjFm5CZvUWt9mkvpYIvFSDsxPBO8ug82jl
+         4f9+C7uMOawkm4xGdgyjgDF8ZAUlA+vRRpGPz52n7+/CbmWQPCEJvnaxsA7MbfpeuHFk
+         2+mDVMA6ugFYOGrxcF0jWmKz5h2MkD4Nif1zdoB79reTVDvfIEGYnCCP45M+rySGSvXI
+         qAMOH7V6imNTVxhjJj9vHtin+jMWEVeh/Z90FcxfIY8GbTA8Q2GA7L2rcJktZ8uVn/Kd
+         Uh3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M139LBtlkNrQR6u9V/xwOU9GjCtoAeXlSSkK8+ntcTE=;
+        b=iTIKb8wqzGNtSaa7tR+IBy8txkecgCKUgR9fJSD1xDQsqjRHcv4+MBkr+pgR4X80Zx
+         G5/0mBmPG8frvmelJof077HAXe865aisxpn8hKJGwGkbgkPGx6BwYrE4FQ+fQ2ndoKg5
+         XXiSDwQGtZn/kAfb6HgZgI5CYDtJNiIPnvwo/ezwIMwvgs42nubcYTKXdYNAUTwAXF7s
+         ZAqUuX2st9eCoNzFO4krhbwjvYJCGn3GuWFkjIwreFWxxZsoeS1vw529XHnzO+J30fDG
+         /d+LOVf3PC1mo7VVspLJIFy3SfolFo85rvnq4eimqnKAWGXcVtKTLN2kFmrA03F8bQrT
+         JdYw==
+X-Gm-Message-State: APjAAAUccM/JNe2UcEwiGtb/GyQRUztSvk+zOzv9lYFAfhkfMB0o9Bwi
+        CVL548BREDF4RsRiISOEu+sZY8OFoUGuL1W6KyA=
+X-Google-Smtp-Source: APXvYqzPsZ08jUobF4l6lHBcenCpjNvX5aFGpPo6j6bHgO/RsRvZ7GknFMisfezHgYoA2gNtyKtHGyoGo5PQ9cl5U9g=
+X-Received: by 2002:aca:a9ce:: with SMTP id s197mr361423oie.129.1552938108945;
+ Mon, 18 Mar 2019 12:41:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e724de2037db0fd72fef7154c83615a742417d31.1552665316.git.rgb@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190318101153.7531-1-narmstrong@baylibre.com> <bb77c909-c19c-00e5-c5e1-25215b5a4c3a@baylibre.com>
+In-Reply-To: <bb77c909-c19c-00e5-c5e1-25215b5a4c3a@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 18 Mar 2019 20:41:38 +0100
+Message-ID: <CAFBinCB-pLk+U1EWJ0PpdJTRteHQvrRVDpNY+QZ+2N72kKVKGg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] arm64: meson: Add support for USB on Amlogic G12A
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
+        kishon@ti.com, linux-amlogic@lists.infradead.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 02:29:55PM -0400, Richard Guy Briggs wrote:
-> Add audit container identifier auxiliary record to user event standalone
-> records.
-> 
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  kernel/audit.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index cfa659b3f6c4..cf448599ef34 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -1142,12 +1142,6 @@ static void audit_log_common_recv_msg(struct audit_context *context,
->  	audit_log_task_context(*ab);
->  }
->  
-> -static inline void audit_log_user_recv_msg(struct audit_buffer **ab,
-> -					   u16 msg_type)
-> -{
-> -	audit_log_common_recv_msg(NULL, ab, msg_type);
-> -}
-> -
->  int is_audit_feature_set(int i)
->  {
->  	return af.features & AUDIT_FEATURE_TO_MASK(i);
-> @@ -1409,13 +1403,16 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->  
->  		err = audit_filter(msg_type, AUDIT_FILTER_USER);
->  		if (err == 1) { /* match or error */
-> +			struct audit_context *context;
-> +
->  			err = 0;
->  			if (msg_type == AUDIT_USER_TTY) {
->  				err = tty_audit_push();
->  				if (err)
->  					break;
->  			}
-> -			audit_log_user_recv_msg(&ab, msg_type);
-> +			context = audit_alloc_local(GFP_KERNEL);
-> +			audit_log_common_recv_msg(context, &ab, msg_type);
->  			if (msg_type != AUDIT_USER_TTY)
->  				audit_log_format(ab, " msg='%.*s'",
->  						 AUDIT_MESSAGE_TEXT_MAX,
-> @@ -1431,6 +1428,8 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->  				audit_log_n_untrustedstring(ab, data, size);
->  			}
->  			audit_log_end(ab);
-> +			audit_log_contid(context, audit_get_contid(current));
-> +			audit_free_context(context);
->  		}
->  		break;
->  	case AUDIT_ADD_RULE:
-> -- 
-> 1.8.3.1
-> 
-> 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Hi Neil,
 
+On Mon, Mar 18, 2019 at 2:29 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On 18/03/2019 11:11, Neil Armstrong wrote:
+> > This patchset adds support for USB on Amlogic G12A SoCs.
+> >
+> > This patchset is composed with :
+> > - bindings of the PHYs
+> > - bindings of the USB Control Glue
+> > - PHY Drivers
+> > - USB Control Glue driver
+> >
+> > Device Tree nodes will be added in a separate patchset.
+> >
+> > The Amlogic G12A USB Complex is composed of :
+> > - 2 USB Controllers :
+> >  * DWC3 for USB2 and USB3 Host functionality
+> >  * DWC2 for USB2 Peripheral functionality
+> > - 2 USB2 OTG PHYs, only a single one will be routed to either DWC2 to DWC3
+> > - 1 USB3 PHY shared with PCIE funcionnality
+> > - A Glue to control PHY routing, setup and OTG detection
+> >
+> > The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
+> > routing of the OTG PHY between the DWC3 and DWC2 controllers, and
+> > setups the on-chip OTG mode selection for this PHY.
+> >
+> > This drivers supports the on-probe setup of the OTG mode, and manually
+> > via the USB Role interface. The IRQ mode change detect is yet to be added
+> > in a future patchset, mainly due to lack of hardware to validate on.
+> >
+>
+> Resent with USB2 PHY registers documented
+awesome, thank you very much for this!
+
+
+Regards
+Martin
