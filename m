@@ -2,252 +2,133 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB0AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614A6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1781720854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C2620863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="QVRF2D/b";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="RiOBGNC9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oxnKC1Tg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfCRQFB (ORCPT
+        id S1727495AbfCRQJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:05:01 -0400
-Received: from node.akkea.ca ([192.155.83.177]:40008 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbfCRQFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:05:01 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 956C44E204E;
-        Mon, 18 Mar 2019 16:05:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1552925100; bh=Y4s3rTi45hYW1BAwIm13E+o6Xq2NadakOYNOH8Yg6LE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=QVRF2D/bw8KYDvB8JjGhaffCHdm8QfBammBjJggTiY9cKw3JczTvas+AnkfbNRgeL
-         dnZ2qqPoQtLMFJGXpROgfbmlPzCAuGRdWp+7gyud0akuEncSstBXIcMc+Aj9KK5mNE
-         jx9MA3TmsNQaj65JqiJI1KV3WvX58AEX2ppSowoI=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id N2gzWnvMTJTR; Mon, 18 Mar 2019 16:05:00 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id 5246F4E204B;
-        Mon, 18 Mar 2019 16:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1552925099; bh=Y4s3rTi45hYW1BAwIm13E+o6Xq2NadakOYNOH8Yg6LE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=RiOBGNC9smM76SBxiHHDsLsXt4nKyKHqXb1LZzHYYVdUzUXS006/dB4GzcVGSRekI
-         vRHazOZw31q6K3CZw/fiFJ+HuzcU4ld/eH4NNCfFJVu7UzDhZYZ0Xhr9sjyxIFmlPE
-         w4wasQopSwPW8+Z0P9/EKgNrm2bogcEt4mNvye8c=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus@akkea.ca, andrew.smirnov@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 18 Mar 2019 12:09:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36146 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfCRQJA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:09:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r124so11723218pgr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4jnBV7KXAwRH/SBiWunplsgAO5XC9ZDTjIPOKm8iM+g=;
+        b=oxnKC1TgVy0AfRUFzdhntQ4TnaWjo/dHSXwb/USSzN9iByb1J8qb9RNkXwR6mHS+mw
+         U0ldrfn6mRkKtGFn2Svuia32YqyzgHr8lgGpA8Ip0euwMX1zgcj9IEez46oWi1IBddSU
+         gwBvQTSUaqVbn9YXiSr6jTBOA8Xv5UO8CN9pXByf2+OfL6o1mjVRgyqe5P+Xg2G+PiCf
+         NrrQ0yX3K59cnkolhi014Qa1wO07CtueVQk+/0EtrVmsp+hp6aDS9QuNbVuDWXjtk1vJ
+         lpuGAyImKDa6JNaKflwTKUzEOC9JqWe+LJv/B30MBc7OlHCI7rVxIEK1sErhlvMqw4PK
+         B6tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4jnBV7KXAwRH/SBiWunplsgAO5XC9ZDTjIPOKm8iM+g=;
+        b=tFEiwsNVg6kuOhLAU7wIC2V2Nlin1P6Zg406KHwEFUl8nrkYR3hpuwVV33s5C3Sq/a
+         vr2yUFJ5KgYxy2pqmSIpFU2y3MUKr4rR5cIh1HYAt+bOsvfQbvRN6H1pl2fqHM0PAwHw
+         UabskdU7HcBoEveC3r2uS034WHy082HK+nH3ZPx9PW1AUoZW21iMSZrMI9PM0OPqRHLO
+         DZHVBmuj4CE0y1z8dWp/lJi90cHKH0tDhoRIFvGbPO274UQTQ+4AWaPxl9O2uXZnRpe7
+         6yHIcKAXaDb1iPYEmLDRsbcGz/SFW1ItQo1M6D7BFG0QXrCd8zYOyiQv65iAoZfDOdEF
+         k+eA==
+X-Gm-Message-State: APjAAAVBv5d/PY/d7JSZjSzglTdfkILYY+KuaObZ72b/ftU1TOArfPck
+        TMGC0JFPX1pkQ2eP3BCp56UJLMX4+Cn4gRLV/qXZxA==
+X-Google-Smtp-Source: APXvYqz4X+86iXGnn3Nho9z6FaNxwbl9pQbIbD8Gz0QIEPwnGUaSMpR4psZ3WXMcGuMVMNFbcG/Runz5qQVKQSjPXF0=
+X-Received: by 2002:a62:4299:: with SMTP id h25mr19703730pfd.165.1552925338999;
+ Mon, 18 Mar 2019 09:08:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1552679409.git.andreyknvl@google.com> <56d3373c1c5007d776fcd5de4523f4b9da341fb6.1552679409.git.andreyknvl@google.com>
+ <04c5b2de-7fde-7625-9d42-228160879ea0@gmail.com> <CAAeHK+xXLypBpF1EE73KuzQAo0E6Y=apS46wo+swo2AB6cy3YA@mail.gmail.com>
+ <CAAeHK+yxcG=KBjG0A5BicBA7Zwu6LR6t=g5b-9EAPXA8_Dfm2g@mail.gmail.com> <CANn89iJfjhNcDS_eHg-OUiGui-hyRL5iWQuu_U+BW_N9iSNbeA@mail.gmail.com>
+In-Reply-To: <CANn89iJfjhNcDS_eHg-OUiGui-hyRL5iWQuu_U+BW_N9iSNbeA@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 18 Mar 2019 17:08:48 +0100
+Message-ID: <CAAeHK+w+koPnKP2=3yQsj5wCVY-c6+NLBnkKWQP8Q6M6pzO4dA@mail.gmail.com>
+Subject: Re: [PATCH v11 08/14] net, arm64: untag user pointers in tcp_zerocopy_receive
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: fsl: imx8mq: enable the multi sensor TMU
-Date:   Mon, 18 Mar 2019 09:04:48 -0700
-Message-Id: <20190318160448.28964-1-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190311213124.29325-1-angus@akkea.ca>
-References: <20190311213124.29325-1-angus@akkea.ca>
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the imx8mq TMU (Thermal mannagement unit) nodes for CPU,
-GPU, and VPU.
+On Mon, Mar 18, 2019 at 3:45 PM Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Mon, Mar 18, 2019 at 6:17 AM Andrey Konovalov <andreyknvl@google.com> wrote:
+> >
+>
+> > Looking at the code, what's the point of this address != zc->address
+> > check? Should I just remove it?
+>
+> No you must not remove it.
+>
+> The test detects if a u64 ->unsigned long  conversion might have truncated bits.
+>
+> Quite surprisingly some people still use 32bit kernels.
+>
+> The ABI is 64bit only, because we did not want to have yet another compat layer.
+>
+> struct tcp_zerocopy_receive {
+>     __u64 address; /* in: address of mapping */
+>     __u32 length; /* in/out: number of bytes to map/mapped */
+>     __u32 recv_skip_hint; /* out: amount of bytes to skip */
+> };
 
-This patch requires that the multi sensor patch is already applied
-
-https://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git/patch/?id=7797ff424818c975b59c35880dbc90fe08350204
-
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 118 ++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 9155bd4784eb..885395e74452 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/power/imx8mq-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
- #include "imx8mq-pinfunc.h"
- 
- / {
-@@ -89,6 +90,7 @@
- 			reg = <0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_1: cpu@1 {
-@@ -97,6 +99,7 @@
- 			reg = <0x1>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_2: cpu@2 {
-@@ -105,6 +108,7 @@
- 			reg = <0x2>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_3: cpu@3 {
-@@ -113,6 +117,7 @@
- 			reg = <0x3>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_L2: l2-cache0 {
-@@ -210,6 +215,119 @@
- 				#interrupt-cells = <2>;
- 			};
- 
-+			tmu: tmu@30260000 {
-+				compatible = "fsl,imx8mq-tmu";
-+				reg = <0x30260000 0x10000>;
-+				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				little-endian;
-+				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
-+				fsl,tmu-calibration = <0x00000000 0x00000023
-+						       0x00000001 0x00000029
-+						       0x00000002 0x0000002f
-+						       0x00000003 0x00000035
-+						       0x00000004 0x0000003d
-+						       0x00000005 0x00000043
-+						       0x00000006 0x0000004b
-+						       0x00000007 0x00000051
-+						       0x00000008 0x00000057
-+						       0x00000009 0x0000005f
-+						       0x0000000a 0x00000067
-+						       0x0000000b 0x0000006f
-+
-+						       0x00010000 0x0000001b
-+						       0x00010001 0x00000023
-+						       0x00010002 0x0000002b
-+						       0x00010003 0x00000033
-+						       0x00010004 0x0000003b
-+						       0x00010005 0x00000043
-+						       0x00010006 0x0000004b
-+						       0x00010007 0x00000055
-+						       0x00010008 0x0000005d
-+						       0x00010009 0x00000067
-+						       0x0001000a 0x00000070
-+
-+						       0x00020000 0x00000017
-+						       0x00020001 0x00000023
-+						       0x00020002 0x0000002d
-+						       0x00020003 0x00000037
-+						       0x00020004 0x00000041
-+						       0x00020005 0x0000004b
-+						       0x00020006 0x00000057
-+						       0x00020007 0x00000063
-+						       0x00020008 0x0000006f
-+
-+						       0x00030000 0x00000015
-+						       0x00030001 0x00000021
-+						       0x00030002 0x0000002d
-+						       0x00030003 0x00000039
-+						       0x00030004 0x00000045
-+						       0x00030005 0x00000053
-+						       0x00030006 0x0000005f
-+						       0x00030007 0x00000071>;
-+				#thermal-sensor-cells =  <1>;
-+			};
-+
-+			thermal-zones {
-+				cpu-thermal {
-+					polling-delay-passive = <250>;
-+					polling-delay = <2000>;
-+					thermal-sensors = <&tmu 0>;
-+
-+					trips {
-+						cpu_alert: cpu-alert {
-+							temperature = <85000>;
-+							hysteresis = <2000>;
-+							type = "passive";
-+						};
-+
-+						cpu_crit {
-+							temperature = <95000>;
-+							hysteresis = <2000>;
-+							type = "critical";
-+						};
-+					};
-+
-+					cooling-maps {
-+						map0 {
-+							trip = <&cpu_alert>;
-+							cooling-device =
-+								<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+								<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+								<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+								<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						};
-+					};
-+				};
-+
-+				gpu-thermal {
-+					polling-delay-passive = <250>;
-+					polling-delay = <2000>;
-+					thermal-sensors = <&tmu 1>;
-+
-+					trips {
-+						cpu-crit {
-+							temperature = <95000>;
-+							hysteresis = <2000>;
-+							type = "critical";
-+						};
-+					};
-+				};
-+
-+				vpu-thermal {
-+					polling-delay-passive = <250>;
-+					polling-delay = <2000>;
-+					thermal-sensors = <&tmu 2>;
-+
-+					trips {
-+						cpu-crit {
-+							temperature = <95000>;
-+							hysteresis = <2000>;
-+							type = "critical";
-+						};
-+					};
-+				};
-+			};
-+
- 			wdog1: watchdog@30280000 {
- 				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
- 				reg = <0x30280000 0x10000>;
--- 
-2.17.1
-
+Ah, got it, thanks! I'll add a comment here then, otherwise this looks
+confusing.
