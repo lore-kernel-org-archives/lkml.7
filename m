@@ -2,146 +2,130 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFB6C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C988C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBAAE2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901887;
-	bh=GrV9C3xVM3x4DVkNI01T4Q7+yrIACjCNSIwfQfLiOXc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=feUP6OCAQy+FY/kRTU/+yDA90RCDLoyPMNMzrO9/QkDCJsD/17yGFetVxsVDzEDY8
-	 1xM6BKYzx4yoPhWaRN1yCW8ZyKA3+ea3HPiIFk+lApPMllA7V8i7qQada3Xw5nN+Jw
-	 uXN7gItHEDAcwXCaOBnamwQJbsBIORZhujU/K9ys=
+	by mail.kernel.org (Postfix) with ESMTP id DDC152083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YoCWDAW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387914AbfCRJhi (ORCPT
+        id S1728624AbfCRJiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:37:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387901AbfCRJhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:37:34 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8DDC214AF;
-        Mon, 18 Mar 2019 09:37:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901853;
-        bh=GrV9C3xVM3x4DVkNI01T4Q7+yrIACjCNSIwfQfLiOXc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rBasJav8BMk9HlLtXcWJE0y8LSQyn2y/2qLe/8ejJTokYzRzSV30784KLkeVH/FFE
-         STOa+8ZOP3RQz7S2ECiQfqceOzSjnVzGrwXnLS65t2F803fERby+cPkhm/7eE6nYj0
-         quVO5DSmYStVUBXd2b1L5IDDb4LqGLaRNKprIK5U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        andrew hendry <andrew.hendry@gmail.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 08/31] net/x25: reset state in x25_connect()
-Date:   Mon, 18 Mar 2019 10:25:43 +0100
-Message-Id: <20190318084210.731183354@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
-References: <20190318084210.397476003@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Mon, 18 Mar 2019 05:38:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55800 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387910AbfCRJhg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:37:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Y3NiwwRe/QDvRzEhR0UQDgHYLh/EGideUmQY76n5dxg=; b=YoCWDAW0kjG6izfCRgmyjPHTy
+        1KK6LSYcm3Gf4l+2PBbvCnoyAHHrlb/GWRRJXfQK/3CZOTzFakw4q/A3+xp9hcUl2vSsTLBeI0/Ia
+        XqTByWB6ZDqZr+eMGJeLW2UBgg+cTw06CaQjQLgYzkFBqgynVwFJk5NFlbfrK/Mzq+SL5BUBm6Zai
+        pKgGqROmSHcHn8vOdikeF6KRvFPwNz7gIxhB2Q/yGl6Ykm82zWhTaewHyv/XjN52yuVzV8K4QJyWl
+        s4oRun254CK/1/1fVAeoaRz/9uCqlbi/abyZl77eYqJ03Ioo+Qbqt/BATbcVHygfqUdR8fZcXRdBv
+        4oktorCiA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h5oi1-0003L2-AC; Mon, 18 Mar 2019 09:37:29 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 298A1202194ED; Mon, 18 Mar 2019 10:37:25 +0100 (CET)
+Date:   Mon, 18 Mar 2019 10:37:25 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [RFC PATCH v2 1/2] x86/perf/amd: Resolve race condition when
+ disabling PMC
+Message-ID: <20190318093725.GJ6058@hirez.programming.kicks-ass.net>
+References: <155268244291.14761.3432013617741218607.stgit@tlendack-t1.amdoffice.net>
+ <155268245032.14761.7748666703519081877.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155268245032.14761.7748666703519081877.stgit@tlendack-t1.amdoffice.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+On Fri, Mar 15, 2019 at 08:40:53PM +0000, Lendacky, Thomas wrote:
+> +void amd_pmu_disable_all(void)
+> +{
+> +	unsigned long overflow_check[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
+> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	int idx;
+> +
+> +	bitmap_zero(overflow_check, X86_PMC_IDX_MAX);
+> +
+> +	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+> +		u64 val;
+> +
+> +		if (!test_bit(idx, cpuc->active_mask))
+> +			continue;
+> +
+> +		rdmsrl(x86_pmu_config_addr(idx), val);
+> +		if (!(val & ARCH_PERFMON_EVENTSEL_ENABLE))
+> +			continue;
+> +
+> +		val &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
+> +		wrmsrl(x86_pmu_config_addr(idx), val);
+> +
+> +		/*
+> +		 * If the interrupt is enabled, this counter must be checked
+> +		 * for an overflow condition to avoid possibly changing the
+> +		 * counter value before the NMI handler runs.
+> +		 */
+> +		if (val & ARCH_PERFMON_EVENTSEL_INT)
+> +			__set_bit(idx, overflow_check);
+> +	}
 
-------------------
+I think you can ditch overflow_check and directly call
+x86_pmu_disable_all() here.
 
-From: Eric Dumazet <edumazet@google.com>
+> +
+> +	/*
+> +	 * This shouldn't be called from NMI context, but add a safeguard here
+> +	 * to return, since if we're in NMI context we can't wait for an NMI
+> +	 * to reset an overflowed counter value.
+> +	 */
+> +	if (in_nmi())
+> +		return;
+> +
+> +	/*
+> +	 * Check each counter for overflow and wait for it to be reset by the
+> +	 * NMI if it has overflowed.
+> +	 */
+> +	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+> +		if (!test_bit(idx, overflow_check))
 
-[ Upstream commit ee74d0bd4325efb41e38affe5955f920ed973f23 ]
+And simply iterate cpuc->active_mask again here.
 
-In case x25_connect() fails and frees the socket neighbour,
-we also need to undo the change done to x25->state.
+> +			continue;
+> +
+> +		amd_pmu_wait_on_overflow(idx);
+> +	}
+> +}
 
-Before my last bug fix, we had use-after-free so this
-patch fixes a latent bug.
-
-syzbot report :
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 16137 Comm: syz-executor.1 Not tainted 5.0.0+ #117
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:x25_write_internal+0x1e8/0xdf0 net/x25/x25_subr.c:173
-Code: 00 40 88 b5 e0 fe ff ff 0f 85 01 0b 00 00 48 8b 8b 80 04 00 00 48 ba 00 00 00 00 00 fc ff df 48 8d 79 1c 48 89 fe 48 c1 ee 03 <0f> b6 34 16 48 89 fa 83 e2 07 83 c2 03 40 38 f2 7c 09 40 84 f6 0f
-RSP: 0018:ffff888076717a08 EFLAGS: 00010207
-RAX: ffff88805f2f2292 RBX: ffff8880a0ae6000 RCX: 0000000000000000
-kobject: 'loop5' (0000000018d0d0ee): kobject_uevent_env
-RDX: dffffc0000000000 RSI: 0000000000000003 RDI: 000000000000001c
-RBP: ffff888076717b40 R08: ffff8880950e0580 R09: ffffed100be5e46d
-R10: ffffed100be5e46c R11: ffff88805f2f2363 R12: ffff888065579840
-kobject: 'loop5' (0000000018d0d0ee): fill_kobj_path: path = '/devices/virtual/block/loop5'
-R13: 1ffff1100ece2f47 R14: 0000000000000013 R15: 0000000000000013
-FS:  00007fb88cf43700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9a42a41028 CR3: 0000000087a67000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- x25_release+0xd0/0x340 net/x25/af_x25.c:658
- __sock_release+0xd3/0x2b0 net/socket.c:579
- sock_close+0x1b/0x30 net/socket.c:1162
- __fput+0x2df/0x8d0 fs/file_table.c:278
- ____fput+0x16/0x20 fs/file_table.c:309
- task_work_run+0x14a/0x1c0 kernel/task_work.c:113
- get_signal+0x1961/0x1d50 kernel/signal.c:2388
- do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
- exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
- prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
- do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x457f29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb88cf42c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: fffffffffffffe00 RBX: 0000000000000003 RCX: 0000000000457f29
-RDX: 0000000000000012 RSI: 0000000020000080 RDI: 0000000000000004
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb88cf436d4
-R13: 00000000004be462 R14: 00000000004cec98 R15: 00000000ffffffff
-Modules linked in:
-
-Fixes: 95d6ebd53c79 ("net/x25: fix use-after-free in x25_device_event()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: andrew hendry <andrew.hendry@gmail.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/x25/af_x25.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -817,6 +817,7 @@ out_put_neigh:
- 		x25_neigh_put(x25->neighbour);
- 		x25->neighbour = NULL;
- 		read_unlock_bh(&x25_list_lock);
-+		x25->state = X25_STATE_0;
- 	}
- out_put_route:
- 	x25_route_put(rt);
+Because, per x86_pmu_hw_config() we _always_ have EVENTSEL_INT set, even
+for !sampling events -- such that we can deal with overflow, and we
+should 'always' have EVENTSEL_ENABLE set when 'active', see
+x86_pmu_enable_all().
 
 
