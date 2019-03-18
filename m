@@ -2,205 +2,201 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24099C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809E2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99512070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:24:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aBl9D8JI"
+	by mail.kernel.org (Postfix) with ESMTP id 3E6B12070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552904784;
+	bh=1lWAI09ZU/BhDjj4WsNNy50wthYI4f2l8IVfVOr8y8g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0kVJZ9fL9eWywsn50ZyUYM2+MmNI0kVO+kwv23hJ1zTHT6q1UChzt3clxzCcamoQV
+	 wTMYRaZu7gkdW4NP+8O6Oa4DhbN0P2EagDCVcSSuIzEJZ8GLV1PcqI0qIKe5yWCeQq
+	 9HuJHc/1Gjk6c9nvM1tDeVr5ayTeURQe7VsebTTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfCRKYO (ORCPT
+        id S1727494AbfCRK0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:24:14 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51883 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbfCRKYN (ORCPT
+        Mon, 18 Mar 2019 06:26:22 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46526 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbfCRK0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:24:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n19so12376037wmi.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LO3S3X4XvXbiE5N8LKTKOeln1nnCy75dy5K2i/8V7jg=;
-        b=aBl9D8JIAlDScjr1YBJH9PM3vufbd2j4o+0gdPqxx66QOCjRCkXk1hoypI9qjS6x6d
-         AyGhjNLHkuBErqbCgt2ZFab7jwrmWEUDZzsPQEuvhJYw80HblVn45huiJhoU3hr7bCJN
-         5GGn1InAIpY4NH78bGw9/KJF/lTvoSzPeGlE7ItyOX0KwmlI83iAyXAgVjQVlTrn0XDE
-         qJ9R98wRwJhgCRP+ER5UraaMtZrrxjUAFXv809ptZRjh7QAuN4Er9eQO8o3w2zGtvGfA
-         HXVpo1vjjXHnFgCZflYTec+BSREcf1zQu0YxgFKTVscdZSq/KqSc7qN4dhqv9iBd9HUe
-         QFSQ==
+        Mon, 18 Mar 2019 06:26:22 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c18so13889716otl.13;
+        Mon, 18 Mar 2019 03:26:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LO3S3X4XvXbiE5N8LKTKOeln1nnCy75dy5K2i/8V7jg=;
-        b=gbiQ7DKzGr21oE4MQtwhQUY9GvoCBV/7X64i+uDMkhIV8JARmVkvZXgZPxFSOvruXZ
-         j9VwybBp2973IcybxFuwQM6bJJYviJINv96TEnhno9jfU0BAHscqSFVZaWqFO3Efj8OV
-         fbDzIPG3hdfD45oXEIps0MbvPxARaVmr70gUarNVGXPNXGNfe9WUKE3PZNvjccT+or4X
-         vBG5y7SdMuXHnPmND+4WZsj1xfoPCLevD4IRUvUlJCxs7wyZti3hYsTS8rC3K65IvXUk
-         GlMI0H8e/GwTP7SgXIRdQENufrJQ4LOVjTQOUciInm+W0cMEEx+K2cJRTrzGdpBN+E4M
-         fMtQ==
-X-Gm-Message-State: APjAAAU8dmLEDleTJtNMz1RXi7H0Wp+Y1USP0bYhdY418SDUdG1nhqjs
-        AEbpuTNBLyVxsbJVZNm3yVw=
-X-Google-Smtp-Source: APXvYqwvFhiWWUhkbdnyE/9Ndjpxe+KOswVU0UiCBRD3IVNw746ZCneylvhHQifEFcxHGr7sudJ5vA==
-X-Received: by 2002:a1c:f50d:: with SMTP id t13mr10601968wmh.81.1552904651481;
-        Mon, 18 Mar 2019 03:24:11 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5abba7.dynamic.kabel-deutschland.de. [95.90.187.167])
-        by smtp.gmail.com with ESMTPSA id v12sm7158722wml.29.2019.03.18.03.24.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 03:24:10 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: remove unused defines from wifi.h
-Date:   Mon, 18 Mar 2019 11:23:59 +0100
-Message-Id: <20190318102359.21859-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UB5+VDaMkJ6XffH9lcsh5IN6zc7Cp893+Z5eIvmeNgw=;
+        b=dlC28rqkR01p5LSrHfDyptRNr9fikd80nBguEBBMwYYOAzCVzjumM+vngXUhFArPia
+         IxpQ/+iCuOHq5bInnXoisXMCRuuXEKtd18iR5myDTWSypv5SkVMa5f1jJ33TpI9eHDrK
+         O8FJfrLpiP5itdaEI1KjOC/pEhpN69GDWZIR+deS+9+6N/t4x050lxXQ/QqhFdVQ1uxV
+         6ei3EwlF9ygnkUq7NftpDmOgPFws/LCh6mSucb7joKXZ283CS0+buKqJhiPD2Y6NemMc
+         lmxjFrLm/YkuKxLhPEDSXZfrFACNDf2UddNPF7Nb9xYYhFH1CqGcJ8o6Bszafhraw3F+
+         p4hQ==
+X-Gm-Message-State: APjAAAUh5Y9XJcsc2bWk4P1piAAFy+SNNK7qeI+/edhEwrDegA8mxPjz
+        nfTXOHwBVIfLxpC01ipRshn1QzBdHOm3YqD84jI=
+X-Google-Smtp-Source: APXvYqzn7Nvured89JQCuRJ6QkJBCyEqQ1EC88wXX8Nsd03tgM1nf0dutCh8fwEj7XpXAZFd6DmtwDp9koyyl/oAovc=
+X-Received: by 2002:a9d:36a:: with SMTP id 97mr217490otv.124.1552904781212;
+ Mon, 18 Mar 2019 03:26:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <6369897.qxlu8PgE1t@house> <CAJZ5v0h3zLrqqMXzt_cqGV1rBR0muosZwy1Zu3fV9O1kqGc6gw@mail.gmail.com>
+ <2947538.dvgdW3vLlg@house>
+In-Reply-To: <2947538.dvgdW3vLlg@house>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 18 Mar 2019 11:26:10 +0100
+Message-ID: <CAJZ5v0jS=9+O1J9w=a1K4U5UbXPKegVM-xKKwZN9XY4ObkQJkQ@mail.gmail.com>
+Subject: Re: [PATCH] [RESEND] Do not modify perf bias performance setting by
+ default at boot
+To:     Thomas Renninger <trenn@suse.de>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, Hannes Reinecke <hare@suse.de>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Simon Schricker <sschricker@suse.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Len Brown <len.brown@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All defined P2P* in wifi.h are unused in the driver code,
-so remove them.
+On Fri, Mar 15, 2019 at 4:36 PM Thomas Renninger <trenn@suse.de> wrote:
+>
+> Hi Rafael,
+>
+> On Thursday, March 14, 2019 11:08:03 PM CET Rafael J. Wysocki wrote:
+> > On Thu, Mar 14, 2019 at 3:42 PM Thomas Renninger <trenn@suse.de> wrote:
+> > > This is a revert of mainline git commits:
+> > > commit b51ef52df71cb28e9d90cd1d48b79bf19f0bab06
+> > > commit 17edf2d79f1ea6dfdb4c444801d928953b9f98d6
+> > > commit abe48b108247e9b90b4c6739662a2e5c765ed114
+> >
+> > I'm not quite convinced that reverting these is the right thing to do here.
+>
+> Ok, I try harder.
+>
+> > > It is about this kernel message showing up on quite a lot servers:
+> > > [    0.072652] ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
+> > > [    0.076003] ENERGY_PERF_BIAS: View and update with
+> > > x86_energy_perf_policy(8)
+> > What happens on boot is a matter of convention and the convention by
+> > which the EPB is set to "neutral" at that point has been used for
+> > quite a while.  Changing it now may confuse some users or even worse.
+>
+> SUSE has this patch included for quite a while (in all kind of
+> SLE 12 SP flavors), possibly other distributions as well.
+> Unfortunately the patch got removed recently, because my commit (this one)
+> was ignored by Len a while ago.
+>
+> I also like to see more examples of BIOSes not initializing this value.
+> This message is rare (so the setting back does not happen often, probably
+> only wrongly with latest BIOSes overriding intended BIOS performance settings
+> on servers).
+>
+> On my workstation the BIOS initializes perf bias to:
+> cpupower info
+> analyzing CPU 0:
+> perf-bias: 7
+>
+> I could grep through quite some dozens of machines..., but these are mostly
+> servers and probably show either "zero"/"performance" or "6"/"normal" because
+> the Linux kernel overrides the INTENDED performance perf bias value to 6.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/include/wifi.h | 110 -----------------------
- 1 file changed, 110 deletions(-)
+The perf bias Intended by whom?
 
-diff --git a/drivers/staging/rtl8188eu/include/wifi.h b/drivers/staging/rtl8188eu/include/wifi.h
-index 5e91b9428c16..5f6b04b5016c 100644
---- a/drivers/staging/rtl8188eu/include/wifi.h
-+++ b/drivers/staging/rtl8188eu/include/wifi.h
-@@ -667,116 +667,6 @@ enum ht_cap_ampdu_factor {
- #define WPS_ASSOC_STATE_ASSOCIATION_FAILURE	0x03
- #define WPS_ASSOC_STATE_IP_FAILURE		0x04
- 
--/*	=====================P2P Section===================== */
--/*	For P2P */
--#define	P2POUI					0x506F9A09
--
--/*	P2P Attribute ID */
--#define	P2P_ATTR_STATUS				0x00
--#define	P2P_ATTR_MINOR_REASON_CODE		0x01
--#define	P2P_ATTR_CAPABILITY			0x02
--#define	P2P_ATTR_DEVICE_ID			0x03
--#define	P2P_ATTR_GO_INTENT			0x04
--#define	P2P_ATTR_CONF_TIMEOUT			0x05
--#define	P2P_ATTR_LISTEN_CH			0x06
--#define	P2P_ATTR_GROUP_BSSID			0x07
--#define	P2P_ATTR_EX_LISTEN_TIMING		0x08
--#define	P2P_ATTR_INTENTED_IF_ADDR		0x09
--#define	P2P_ATTR_MANAGEABILITY			0x0A
--#define	P2P_ATTR_CH_LIST			0x0B
--#define	P2P_ATTR_NOA				0x0C
--#define	P2P_ATTR_DEVICE_INFO			0x0D
--#define	P2P_ATTR_GROUP_INFO			0x0E
--#define	P2P_ATTR_GROUP_ID			0x0F
--#define	P2P_ATTR_INTERFACE			0x10
--#define	P2P_ATTR_OPERATING_CH			0x11
--#define	P2P_ATTR_INVITATION_FLAGS		0x12
--
--/*	Value of Status Attribute */
--#define	P2P_STATUS_SUCCESS				0x00
--#define	P2P_STATUS_FAIL_INFO_UNAVAILABLE		0x01
--#define	P2P_STATUS_FAIL_INCOMPATIBLE_PARAM		0x02
--#define	P2P_STATUS_FAIL_LIMIT_REACHED			0x03
--#define	P2P_STATUS_FAIL_INVALID_PARAM			0x04
--#define	P2P_STATUS_FAIL_REQUEST_UNABLE			0x05
--#define	P2P_STATUS_FAIL_PREVOUS_PROTO_ERR		0x06
--#define	P2P_STATUS_FAIL_NO_COMMON_CH			0x07
--#define	P2P_STATUS_FAIL_UNKNOWN_P2PGROUP		0x08
--#define	P2P_STATUS_FAIL_BOTH_GOINTENT_15		0x09
--#define	P2P_STATUS_FAIL_INCOMPATIBLE_PROVSION		0x0A
--#define	P2P_STATUS_FAIL_USER_REJECT			0x0B
--
--/*	Value of Invitation Flags Attribute */
--
--/*	Value of Device Capability Bitmap */
--#define	P2P_DEVCAP_SERVICE_DISCOVERY		BIT(0)
--#define	P2P_DEVCAP_CLIENT_DISCOVERABILITY	BIT(1)
--#define	P2P_DEVCAP_CONCURRENT_OPERATION		BIT(2)
--#define	P2P_DEVCAP_INFRA_MANAGED		BIT(3)
--#define	P2P_DEVCAP_DEVICE_LIMIT			BIT(4)
--#define	P2P_DEVCAP_INVITATION_PROC		BIT(5)
--
--/*	Value of Group Capability Bitmap */
--#define	P2P_GRPCAP_GO				BIT(0)
--#define	P2P_GRPCAP_PERSISTENT_GROUP		BIT(1)
--#define	P2P_GRPCAP_GROUP_LIMIT			BIT(2)
--#define	P2P_GRPCAP_INTRABSS			BIT(3)
--#define	P2P_GRPCAP_CROSS_CONN			BIT(4)
--#define	P2P_GRPCAP_PERSISTENT_RECONN		BIT(5)
--#define	P2P_GRPCAP_GROUP_FORMATION		BIT(6)
--
--/*	P2P Public Action Frame (Management Frame) */
--#define	P2P_PUB_ACTION_ACTION			0x09
--
--/*	P2P Public Action Frame Type */
--#define	P2P_GO_NEGO_REQ				0
--#define	P2P_GO_NEGO_RESP			1
--#define	P2P_GO_NEGO_CONF			2
--#define	P2P_INVIT_REQ				3
--#define	P2P_INVIT_RESP				4
--#define	P2P_DEVDISC_REQ				5
--#define	P2P_DEVDISC_RESP			6
--#define	P2P_PROVISION_DISC_REQ			7
--#define	P2P_PROVISION_DISC_RESP			8
--
--/*	P2P Action Frame Type */
--#define	P2P_NOTICE_OF_ABSENCE			0
--#define	P2P_PRESENCE_REQUEST			1
--#define	P2P_PRESENCE_RESPONSE			2
--#define	P2P_GO_DISC_REQUEST			3
--
--#define	P2P_PROVISIONING_SCAN_CNT		3
--
--/* default value, used when: (1)p2p disabled or (2)p2p enabled
-- * but only do 1 scan phase
-- */
--#define	P2P_FINDPHASE_EX_NONE		0
--/*  used when p2p enabled and want to do 1 scan phase and
-- *  P2P_FINDPHASE_EX_MAX-1 find phase
-- */
--#define	P2P_FINDPHASE_EX_FULL		1
--#define	P2P_FINDPHASE_EX_SOCIAL_FIRST	(P2P_FINDPHASE_EX_FULL+1)
--#define	P2P_FINDPHASE_EX_MAX		4
--#define	P2P_FINDPHASE_EX_SOCIAL_LAST	P2P_FINDPHASE_EX_MAX
--
--/* 5 seconds timeout for sending the provision discovery request */
--#define	P2P_PROVISION_TIMEOUT		5000
--/* 3 seconds timeout for sending the prov disc request concurrent mode */
--#define	P2P_CONCURRENT_PROVISION_TIME	3000
--/* 5 seconds timeout for receiving the group negotiation response */
--#define	P2P_GO_NEGO_TIMEOUT		5000
--/* 3 seconds timeout for sending the negotiation request under concurrent mode */
--#define	P2P_CONCURRENT_GO_NEGO_TIME	3000
--/* 100ms */
--#define	P2P_TX_PRESCAN_TIMEOUT		100
--/* 5 seconds timeout for sending the invitation request */
--#define	P2P_INVITE_TIMEOUT		5000
--/* 3 seconds timeout for sending the invitation request under concurrent mode */
--#define	P2P_CONCURRENT_INVITE_TIME	3000
--/* 25 seconds timeout to reset the scan channel (based on channel plan) */
--#define	P2P_RESET_SCAN_CH		25000
--#define	P2P_MAX_INTENT			15
--
- /*	WPS Configuration Method */
- #define	WPS_CM_NONE			0x0000
- #define	WPS_CM_LABEL			0x0004
--- 
-2.21.0
+Yes, the kernel replaces whatever the original BIOS setting is with
+its own one.  It may not match every setup perfectly, but at least it
+is consistent.  Why exactly is it worse than whatever the BIOS has
+set?
 
+> So we (SUSE) are going with this patch forever.
+>
+> Otherwise we would run into a similar support nightmare we ran into, when
+> Intel decided to ignore CPU idle states as exported by BIOS through ACPI.
+> BIOS documentation of all big server vendors mentioned "performance" settings.
+> With a kernel update these BIOS C states settings have been ignored (some long
+> latency once were not exported on purpose).
+>
+> The list of breaking conventions and specifications is long...
+> People mostly blame the "bad BIOS developer". In this case things have been
+> broke by the kernel.
+
+I agree that the kernel should not modify the EPB on system-wide
+resume and on CPU online, but I don't see why changing the BIOS
+setting at init time is a problem really.
+
+> It's now (with the resume patch) broken in way, that "performance" setting
+
+So the point seems to be that the BIOS setting should be preserved or
+people are not able to configure the systems for performance through
+setting things in the BIOS.  However, that only means that setting
+things in the BIOS is not sufficient to configure a system for
+performance and that has always been the case AFAICS, with or without
+the EPB.
+
+If you want to configure a system for performance, you need to do that
+not just in the BIOS, but also in the OS (and, quite arguably, I would
+expect the latter to be sufficient).
+
+> in the mainline kernel is unusable for years already.
+>
+> Can we please get this finally properly fixed!
+>
+> > That is a bug.  There is no reason to change the EPB on CPU
+> > offline/online and I agree that this needs to be fixed.  The reverts
+> > would make this problem go away, but that's not the only possible way
+> > to fix it.
+>
+> It is the only proper way to fix this.
+
+I beg to differ.
+
+The system-wide resume part will still not be working properly after
+the reverts.
+
+> > Moreover, what is done during system-wide resume appears to be a bug
+> > too.  Whatever EPB value is there during suspend should be saved and
+> > it should be restored during resume. Reverting the commits above will
+> > not fix that particular issue.
+>
+> Someone could have a look what happens on a recent system
+> after suspend (with this patch on top).
+> I do not have laptops to test suspend/resume with latest kernels.
+> These broken patches have been added a bit too quickly.
+>
+> I doubt much BIOSes "forgot to initialize this value" and I have my doubts
+> that resume let's the CPU fall back to "uninitialized" value.
+> I more expect BIOS resets performance value after resume and the kernel is
+> doing it all wrong.
+> Hm, in fact this could be proofed by modifying perf bias value, do a suspend
+> resume cyle. If the value is kept we should avoid another try of complicating
+> things and simply reverting touching perf bias value altogether, correct?
+
+No, AFAICS.
+
+If the EPB value has been modified from user space after initializing
+the system, that new value should be preserved across system-side
+suspend/resume (and hibernation) and also (arguably) across CPU
+online/offline.  Not the BIOS-set value, but the new one set by user
+space.  The only way to guarantee the preservation of it across
+suspend/resume is to save it at suspend time and restore it during
+resume.  Relying on the BIOS to avoid touching it may be a bit overly
+optimistic.
+
+> BIOS probably does not store perf BIAS value and re-applies it after
+> suspend resume. Some might re-set it to the intial value (performance...,
+> D'oh).
+
+Right.
+
+Thanks,
+Rafael
