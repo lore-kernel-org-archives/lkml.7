@@ -2,54 +2,54 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8051EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC0FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507492087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97122083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901870;
-	bh=ypJJn01gMRjjKeUyvp9ufl+JsxCCee5pDObArSMRdWE=;
+	s=default; t=1552901874;
+	bh=uOA9lL3mVFgdVj1Q1bOs+YYELgl4ONn90jrWRebbc0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=htRA9Z5xPqz0yKjvkPhgnE777qIT7IJr29796nHwabj4705ea/MU7mH9+1fLeT8H/
-	 U7aRNkm77h3KVfaRW74aVIrB0KZ+nf62Rs7SOKYWYKhSIgIV89DBy2FEcSat+VwQu4
-	 kdy0yoLFkW/XOAU14TcbDMqaTPIMWcJdAQeuu0So=
+	b=OaUmhryGT4LgF4wKnkmhomLOcGUsOWyqC6z440FSZvk8xJl5lSA8Z4QwydMM1dcGA
+	 NCDgSPYabpdwuk6rkzClXR5gwBpq6mfhLkRYIKkGxMUGVy5qsA0SSpaletwY0seIbR
+	 ekG8xwY+wKZj7XInKsJXUBlGUWQKefjOFJNKVsT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387958AbfCRJht (ORCPT
+        id S2387970AbfCRJhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:37:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46128 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387941AbfCRJhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:37:47 -0400
+        id S2387941AbfCRJhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:37:51 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 439EF2083D;
-        Mon, 18 Mar 2019 09:37:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0EB62083D;
+        Mon, 18 Mar 2019 09:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901866;
-        bh=ypJJn01gMRjjKeUyvp9ufl+JsxCCee5pDObArSMRdWE=;
+        s=default; t=1552901870;
+        bh=uOA9lL3mVFgdVj1Q1bOs+YYELgl4ONn90jrWRebbc0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HN3cxW98GkRF46AUsJgiCBLcC7cK1COAz2fQ6un3RFL7d1z/Iia0oQ3Oy6f59MSbC
-         K0dkMXs3Lr7gHQVMYb5bS66dJ3AC2LS8kEmO+G5wixQ2ARbZrgJ3EbQdkZdDU3eeYl
-         8ht8qHTMvLHlgZSkASbKGAwZOkMS3PuF400wYzuA=
+        b=E7ND+JfJ3zZyVi349zJsdGkQFz381ItLvBtGwffzhmNnUxmEIvQl/EB9dApRn0TdJ
+         GqGCUuLpzHunTnkRigS7sb3ZLEQO5qzQ/k7fdEghFCujkjVeTjj/MyFRXZyCToFTeT
+         6dTcC50PdpaGSiw6rFVWbUhHVajXWKXTn/V+uSKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zha Bin <zhabin@linux.alibaba.com>,
-        Liu Jiang <gerry@linux.alibaba.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, Shengjing Zhu <i@zhsj.me>
-Subject: [PATCH 4.9 31/31] vhost/vsock: fix vhost vsock cid hashing inconsistent
-Date:   Mon, 18 Mar 2019 10:26:06 +0100
-Message-Id: <20190318084211.685272490@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 29/31] mmc: tmio_mmc_core: dont claim spurious interrupts
+Date:   Mon, 18 Mar 2019 10:26:04 +0100
+Message-Id: <20190318084211.600714459@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
 References: <20190318084210.397476003@linuxfoundation.org>
@@ -68,59 +68,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zha Bin <zhabin@linux.alibaba.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-commit 7fbe078c37aba3088359c9256c1a1d0c3e39ee81 upstream.
+commit 5c27ff5db1491a947264d6d4e4cbe43ae6535bae upstream.
 
-The vsock core only supports 32bit CID, but the Virtio-vsock spec define
-CID (dst_cid and src_cid) as u64 and the upper 32bits is reserved as
-zero. This inconsistency causes one bug in vhost vsock driver. The
-scenarios is:
+I have encountered an interrupt storm during the eMMC chip probing (and
+the chip finally didn't get detected).  It turned out that U-Boot left
+the DMAC interrupts enabled while the Linux driver  didn't use those.
+The SDHI driver's interrupt handler somehow assumes that, even if an
+SDIO interrupt didn't happen, it should return IRQ_HANDLED.  I think
+that if none of the enabled interrupts happened and got handled, we
+should return IRQ_NONE -- that way the kernel IRQ code recoginizes
+a spurious interrupt and masks it off pretty quickly...
 
-  0. A hash table (vhost_vsock_hash) is used to map an CID to a vsock
-  object. And hash_min() is used to compute the hash key. hash_min() is
-  defined as:
-  (sizeof(val) <= 4 ? hash_32(val, bits) : hash_long(val, bits)).
-  That means the hash algorithm has dependency on the size of macro
-  argument 'val'.
-  0. In function vhost_vsock_set_cid(), a 64bit CID is passed to
-  hash_min() to compute the hash key when inserting a vsock object into
-  the hash table.
-  0. In function vhost_vsock_get(), a 32bit CID is passed to hash_min()
-  to compute the hash key when looking up a vsock for an CID.
-
-Because the different size of the CID, hash_min() returns different hash
-key, thus fails to look up the vsock object for an CID.
-
-To fix this bug, we keep CID as u64 in the IOCTLs and virtio message
-headers, but explicitly convert u64 to u32 when deal with the hash table
-and vsock core.
-
-Fixes: 834e772c8db0 ("vhost/vsock: fix use-after-free in network stack callers")
-Link: https://github.com/stefanha/virtio/blob/vsock/trunk/content.tex
-Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
-Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Shengjing Zhu <i@zhsj.me>
+Fixes: 7729c7a232a9 ("mmc: tmio: Provide separate interrupt handlers")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/vhost/vsock.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/tmio_mmc_pio.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -640,7 +640,7 @@ static int vhost_vsock_set_cid(struct vh
- 		hash_del_rcu(&vsock->hash);
+--- a/drivers/mmc/host/tmio_mmc_pio.c
++++ b/drivers/mmc/host/tmio_mmc_pio.c
+@@ -675,7 +675,7 @@ static bool __tmio_mmc_sdcard_irq(struct
+ 	return false;
+ }
  
- 	vsock->guest_cid = guest_cid;
--	hash_add_rcu(vhost_vsock_hash, &vsock->hash, guest_cid);
-+	hash_add_rcu(vhost_vsock_hash, &vsock->hash, vsock->guest_cid);
- 	spin_unlock_bh(&vhost_vsock_lock);
+-static void tmio_mmc_sdio_irq(int irq, void *devid)
++static bool tmio_mmc_sdio_irq(int irq, void *devid)
+ {
+ 	struct tmio_mmc_host *host = devid;
+ 	struct mmc_host *mmc = host->mmc;
+@@ -684,7 +684,7 @@ static void tmio_mmc_sdio_irq(int irq, v
+ 	unsigned int sdio_status;
  
- 	return 0;
+ 	if (!(pdata->flags & TMIO_MMC_SDIO_IRQ))
+-		return;
++		return false;
+ 
+ 	status = sd_ctrl_read16(host, CTL_SDIO_STATUS);
+ 	ireg = status & TMIO_SDIO_MASK_ALL & ~host->sdcard_irq_mask;
+@@ -697,6 +697,8 @@ static void tmio_mmc_sdio_irq(int irq, v
+ 
+ 	if (mmc->caps & MMC_CAP_SDIO_IRQ && ireg & TMIO_SDIO_STAT_IOIRQ)
+ 		mmc_signal_sdio_irq(mmc);
++
++	return ireg;
+ }
+ 
+ irqreturn_t tmio_mmc_irq(int irq, void *devid)
+@@ -718,9 +720,10 @@ irqreturn_t tmio_mmc_irq(int irq, void *
+ 	if (__tmio_mmc_sdcard_irq(host, ireg, status))
+ 		return IRQ_HANDLED;
+ 
+-	tmio_mmc_sdio_irq(irq, devid);
++	if (tmio_mmc_sdio_irq(irq, devid))
++		return IRQ_HANDLED;
+ 
+-	return IRQ_HANDLED;
++	return IRQ_NONE;
+ }
+ EXPORT_SYMBOL(tmio_mmc_irq);
+ 
 
 
