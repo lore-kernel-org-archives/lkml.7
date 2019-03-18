@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BD4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C943FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB47F21773
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B3362087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901214;
-	bh=W5SFEZPxOTQPzXxAV8/j/585/kbV1W/Clh9hGQA7fts=;
+	s=default; t=1552901218;
+	bh=R6/Ne2IEmeXYnowOgOxSZS6tJZzR7gyGIniSTuBC+8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ujR1vbVh/rAolmUTT//H6oAfyK4lyVQpl4Nkc/jPIrahRRA+lZcGB1v3U61kUxPPb
-	 Rfw41cc299SjhKYJiM4+LJq9AKHSnjbXOjDF0uElPb1DCYANaIh8CcYUQMykx4yHFl
-	 EvcDNAPbZZt+gjJnC2LpHS8S3/jsarYscAiA0lnA=
+	b=jhT6rG6WvaXKGbMRORVn13Mv0pTIPacHMRhSJWy6Xi6N/OkU4EvJ6Xr0ZBHEfiw5z
+	 GAK63ZjlZT7nnYM9T/fbZl2v5Imrr7WGZujGoJUX+mIaoy8nKqddDus3yI3xOXGfUX
+	 AtoUomh/zvNOJ5EeSKHWxCGUsV7pSHZCksrIAdwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfCRJ0x (ORCPT
+        id S1727650AbfCRJ05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59976 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:26:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727360AbfCRJ0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:26:52 -0400
+        id S1727634AbfCRJ0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:26:54 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 750C021773;
-        Mon, 18 Mar 2019 09:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BC572087C;
+        Mon, 18 Mar 2019 09:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901211;
-        bh=W5SFEZPxOTQPzXxAV8/j/585/kbV1W/Clh9hGQA7fts=;
+        s=default; t=1552901213;
+        bh=R6/Ne2IEmeXYnowOgOxSZS6tJZzR7gyGIniSTuBC+8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVkJlFZu0cij8531/Oayy28xbLYfTdR6QGK+06xjnafH1KDZp8iRBbbYGKvnm51A6
-         gI1VQsi+GJk1+szW2vFGx/mBCCjoIsobpQWGhSyrXg/jCphq8Iqqk/HprD13e6QzQV
-         d4LAqTk/dUejY5Xo+/3UFEZdqqvmfGCix1QcPnug=
+        b=AZgWGLPtm+MQuuJoMLbgHmhdjV19deUmRNJZwt4ruHO3lDEFkc9S4Wzo5qAjtONXd
+         EzHnyJVc0LkLcExRQy61yyuxzClBPxUSltHmQDRjN+EvtG93VTGpBTmQKqIjWfby3N
+         6v/egd5eJfPIBhuqHTqJIhFCcNnxnXLkqpx3CdEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
+        Christoph Paasch <cpaasch@apple.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 02/43] fou, fou6: avoid uninit-value in gue_err() and gue6_err()
-Date:   Mon, 18 Mar 2019 10:23:54 +0100
-Message-Id: <20190318083715.948264239@linuxfoundation.org>
+Subject: [PATCH 5.0 20/43] tcp: Dont access TCP_SKB_CB before initializing it
+Date:   Mon, 18 Mar 2019 10:24:12 +0100
+Message-Id: <20190318083716.456347852@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -67,165 +66,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Christoph Paasch <cpaasch@apple.com>
 
-[ Upstream commit 5355ed6388e23b69a00d48398a68d022135e6486 ]
+[ Upstream commit f2feaefdabb0a6253aa020f65e7388f07a9ed47c ]
 
-My prior commit missed the fact that these functions
-were using udp_hdr() (aka skb_transport_header())
-to get access to GUE header.
+Since commit eeea10b83a13 ("tcp: add
+tcp_v4_fill_cb()/tcp_v4_restore_cb()"), tcp_vX_fill_cb is only called
+after tcp_filter(). That means, TCP_SKB_CB(skb)->end_seq still points to
+the IP-part of the cb.
 
-Since pskb_transport_may_pull() does not exist yet, we have to add
-transport_offset to our pskb_may_pull() calls.
+We thus should not mock with it, as this can trigger bugs (thanks
+syzkaller):
+[   12.349396] ==================================================================
+[   12.350188] BUG: KASAN: slab-out-of-bounds in ip6_datagram_recv_specific_ctl+0x19b3/0x1a20
+[   12.351035] Read of size 1 at addr ffff88006adbc208 by task test_ip6_datagr/1799
 
-BUG: KMSAN: uninit-value in gue_err+0x514/0xfa0 net/ipv4/fou.c:1032
-CPU: 1 PID: 10648 Comm: syz-executor.1 Not tainted 5.0.0+ #11
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x173/0x1d0 lib/dump_stack.c:113
- kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
- __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:313
- gue_err+0x514/0xfa0 net/ipv4/fou.c:1032
- __udp4_lib_err_encap_no_sk net/ipv4/udp.c:571 [inline]
- __udp4_lib_err_encap net/ipv4/udp.c:626 [inline]
- __udp4_lib_err+0x12e6/0x1d40 net/ipv4/udp.c:665
- udp_err+0x74/0x90 net/ipv4/udp.c:737
- icmp_socket_deliver net/ipv4/icmp.c:767 [inline]
- icmp_unreach+0xb65/0x1070 net/ipv4/icmp.c:884
- icmp_rcv+0x11a1/0x1950 net/ipv4/icmp.c:1066
- ip_protocol_deliver_rcu+0x584/0xbb0 net/ipv4/ip_input.c:208
- ip_local_deliver_finish net/ipv4/ip_input.c:234 [inline]
- NF_HOOK include/linux/netfilter.h:289 [inline]
- ip_local_deliver+0x624/0x7b0 net/ipv4/ip_input.c:255
- dst_input include/net/dst.h:450 [inline]
- ip_rcv_finish net/ipv4/ip_input.c:414 [inline]
- NF_HOOK include/linux/netfilter.h:289 [inline]
- ip_rcv+0x6bd/0x740 net/ipv4/ip_input.c:524
- __netif_receive_skb_one_core net/core/dev.c:4973 [inline]
- __netif_receive_skb net/core/dev.c:5083 [inline]
- process_backlog+0x756/0x10e0 net/core/dev.c:5923
- napi_poll net/core/dev.c:6346 [inline]
- net_rx_action+0x78b/0x1a60 net/core/dev.c:6412
- __do_softirq+0x53f/0x93a kernel/softirq.c:293
- invoke_softirq kernel/softirq.c:375 [inline]
- irq_exit+0x214/0x250 kernel/softirq.c:416
- exiting_irq+0xe/0x10 arch/x86/include/asm/apic.h:536
- smp_apic_timer_interrupt+0x48/0x70 arch/x86/kernel/apic/apic.c:1064
- apic_timer_interrupt+0x2e/0x40 arch/x86/entry/entry_64.S:814
- </IRQ>
-RIP: 0010:finish_lock_switch+0x2b/0x40 kernel/sched/core.c:2597
-Code: 48 89 e5 53 48 89 fb e8 63 e7 95 00 8b b8 88 0c 00 00 48 8b 00 48 85 c0 75 12 48 89 df e8 dd db 95 00 c6 00 00 c6 03 00 fb 5b <5d> c3 e8 4e e6 95 00 eb e7 66 90 66 2e 0f 1f 84 00 00 00 00 00 55
-RSP: 0018:ffff888081a0fc80 EFLAGS: 00000296 ORIG_RAX: ffffffffffffff13
-RAX: ffff88821fd6bd80 RBX: ffff888027898000 RCX: ccccccccccccd000
-RDX: ffff88821fca8d80 RSI: ffff888000000000 RDI: 00000000000004a0
-RBP: ffff888081a0fc80 R08: 0000000000000002 R09: ffff888081a0fb08
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffff88811130e388 R14: ffff88811130da00 R15: ffff88812fdb7d80
- finish_task_switch+0xfc/0x2d0 kernel/sched/core.c:2698
- context_switch kernel/sched/core.c:2851 [inline]
- __schedule+0x6cc/0x800 kernel/sched/core.c:3491
- schedule+0x15b/0x240 kernel/sched/core.c:3535
- freezable_schedule include/linux/freezer.h:172 [inline]
- do_nanosleep+0x2ba/0x980 kernel/time/hrtimer.c:1679
- hrtimer_nanosleep kernel/time/hrtimer.c:1733 [inline]
- __do_sys_nanosleep kernel/time/hrtimer.c:1767 [inline]
- __se_sys_nanosleep+0x746/0x960 kernel/time/hrtimer.c:1754
- __x64_sys_nanosleep+0x3e/0x60 kernel/time/hrtimer.c:1754
- do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x4855a0
-Code: 00 00 48 c7 c0 d4 ff ff ff 64 c7 00 16 00 00 00 31 c0 eb be 66 0f 1f 44 00 00 83 3d b1 11 5d 00 00 75 14 b8 23 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 04 e2 f8 ff c3 48 83 ec 08 e8 3a 55 fd ff
-RSP: 002b:0000000000a4fd58 EFLAGS: 00000246 ORIG_RAX: 0000000000000023
-RAX: ffffffffffffffda RBX: 0000000000085780 RCX: 00000000004855a0
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000a4fd60
-RBP: 00000000000007ec R08: 0000000000000001 R09: 0000000000ceb940
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
-R13: 0000000000a4fdb0 R14: 0000000000085711 R15: 0000000000a4fdc0
+Setting end_seq is actually no more necessary in tcp_filter as it gets
+initialized later on in tcp_vX_fill_cb.
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
- kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:159
- kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:176
- kmsan_slab_alloc+0xe/0x10 mm/kmsan/kmsan_hooks.c:185
- slab_post_alloc_hook mm/slab.h:445 [inline]
- slab_alloc_node mm/slub.c:2773 [inline]
- __kmalloc_node_track_caller+0xe9e/0xff0 mm/slub.c:4398
- __kmalloc_reserve net/core/skbuff.c:140 [inline]
- __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
- alloc_skb include/linux/skbuff.h:1012 [inline]
- alloc_skb_with_frags+0x186/0xa60 net/core/skbuff.c:5287
- sock_alloc_send_pskb+0xafd/0x10a0 net/core/sock.c:2091
- sock_alloc_send_skb+0xca/0xe0 net/core/sock.c:2108
- __ip_append_data+0x34cd/0x5000 net/ipv4/ip_output.c:998
- ip_append_data+0x324/0x480 net/ipv4/ip_output.c:1220
- icmp_push_reply+0x23d/0x7e0 net/ipv4/icmp.c:375
- __icmp_send+0x2ea3/0x30f0 net/ipv4/icmp.c:737
- icmp_send include/net/icmp.h:47 [inline]
- ipv4_link_failure+0x6d/0x230 net/ipv4/route.c:1190
- dst_link_failure include/net/dst.h:427 [inline]
- arp_error_report+0x106/0x1a0 net/ipv4/arp.c:297
- neigh_invalidate+0x359/0x8e0 net/core/neighbour.c:992
- neigh_timer_handler+0xdf2/0x1280 net/core/neighbour.c:1078
- call_timer_fn+0x285/0x600 kernel/time/timer.c:1325
- expire_timers kernel/time/timer.c:1362 [inline]
- __run_timers+0xdb4/0x11d0 kernel/time/timer.c:1681
- run_timer_softirq+0x2e/0x50 kernel/time/timer.c:1694
- __do_softirq+0x53f/0x93a kernel/softirq.c:293
-
-Fixes: 26fc181e6cac ("fou, fou6: do not assume linear skbs")
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: eeea10b83a13 ("tcp: add tcp_v4_fill_cb()/tcp_v4_restore_cb()")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Stefano Brivio <sbrivio@redhat.com>
-Cc: Sabrina Dubroca <sd@queasysnail.net>
-Acked-by: Stefano Brivio <sbrivio@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/fou.c  |    4 ++--
- net/ipv6/fou6.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ net/ipv4/tcp_ipv4.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/net/ipv4/fou.c
-+++ b/net/ipv4/fou.c
-@@ -1024,7 +1024,7 @@ static int gue_err(struct sk_buff *skb,
- 	int ret;
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1734,15 +1734,8 @@ EXPORT_SYMBOL(tcp_add_backlog);
+ int tcp_filter(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct tcphdr *th = (struct tcphdr *)skb->data;
+-	unsigned int eaten = skb->len;
+-	int err;
  
- 	len = sizeof(struct udphdr) + sizeof(struct guehdr);
--	if (!pskb_may_pull(skb, len))
-+	if (!pskb_may_pull(skb, transport_offset + len))
- 		return -EINVAL;
+-	err = sk_filter_trim_cap(sk, skb, th->doff * 4);
+-	if (!err) {
+-		eaten -= skb->len;
+-		TCP_SKB_CB(skb)->end_seq -= eaten;
+-	}
+-	return err;
++	return sk_filter_trim_cap(sk, skb, th->doff * 4);
+ }
+ EXPORT_SYMBOL(tcp_filter);
  
- 	guehdr = (struct guehdr *)&udp_hdr(skb)[1];
-@@ -1059,7 +1059,7 @@ static int gue_err(struct sk_buff *skb,
- 
- 	optlen = guehdr->hlen << 2;
- 
--	if (!pskb_may_pull(skb, len + optlen))
-+	if (!pskb_may_pull(skb, transport_offset + len + optlen))
- 		return -EINVAL;
- 
- 	guehdr = (struct guehdr *)&udp_hdr(skb)[1];
---- a/net/ipv6/fou6.c
-+++ b/net/ipv6/fou6.c
-@@ -94,7 +94,7 @@ static int gue6_err(struct sk_buff *skb,
- 	int ret;
- 
- 	len = sizeof(struct udphdr) + sizeof(struct guehdr);
--	if (!pskb_may_pull(skb, len))
-+	if (!pskb_may_pull(skb, transport_offset + len))
- 		return -EINVAL;
- 
- 	guehdr = (struct guehdr *)&udp_hdr(skb)[1];
-@@ -129,7 +129,7 @@ static int gue6_err(struct sk_buff *skb,
- 
- 	optlen = guehdr->hlen << 2;
- 
--	if (!pskb_may_pull(skb, len + optlen))
-+	if (!pskb_may_pull(skb, transport_offset + len + optlen))
- 		return -EINVAL;
- 
- 	guehdr = (struct guehdr *)&udp_hdr(skb)[1];
 
 
