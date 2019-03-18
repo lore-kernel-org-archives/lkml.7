@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C66BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD104C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6091C214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824BD2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901816;
-	bh=jZ5q1h2jAax77BXoxN9DVPCT3gU0zmBQbhS7Ph7hEac=;
+	s=default; t=1552901818;
+	bh=ROo6eG9GeE9wyu/DsS1dnF+7N0H6Yy+HIimteABslKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zNnMdy7lfnRQLQvyzzUUay/K9Qga7iKWbHV40nxuck70NY7pAWK4bOgULnPBUnQyL
-	 lXRSxpuqlDF6+EVIzEcMFO3IbpYI03mOm/FzgQszVAMnvGYFtA18WUgZ8/43JHx01y
-	 G2jAy2wggOHjwbJ2vw53YxY5vYCId/GI66gCxvhU=
+	b=TLn+/iuwpYLUvU1XSa4tPQgKGJVrq20eDIpAzssuZfGoM3s3m+gT+AhMbHYm8dI3I
+	 eZ2kWo93si6Scj93qL5TYj+56O33mQuaZcYpJfC7Zlbf4rzGBpcmOJjF4E0SW2gm1n
+	 2Ffr+PjJgaDmwJ3e1toJcLZ3gehnTBYyOXWBlQZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387740AbfCRJgy (ORCPT
+        id S2387750AbfCRJg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbfCRJgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:36:52 -0400
+        id S2387733AbfCRJgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:36:54 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65DDB2075C;
-        Mon, 18 Mar 2019 09:36:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 272572083D;
+        Mon, 18 Mar 2019 09:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901810;
-        bh=jZ5q1h2jAax77BXoxN9DVPCT3gU0zmBQbhS7Ph7hEac=;
+        s=default; t=1552901813;
+        bh=ROo6eG9GeE9wyu/DsS1dnF+7N0H6Yy+HIimteABslKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1JmisGabm1vtUFpmqmci6h3ubetFLPC263nS0dYUesXfsU01WXbKmN7IQ01CO+PC9
-         xEVhpJvxEgBCUFFGnxrWkoyp2VsNSiP250EQDkH+dm5MWRSuVIm2Q8CguEawsGapsb
-         auBjmZ/RJqzy1K/Iq5kXF2SuY9ZyTCtrVFL9Hl9U=
+        b=K4Yxwmt3XKuWbf6CI1jB5yC8jJohIEM6rklsZa1qQ5EDnrLzW1GwMvyFzHzvW/x+0
+         plqQw0+yjKrCklt58D9ZMvjyF9e/8jPDX7XoH+lkjx25irMwjdOosQjR/0WgqatV7R
+         VGVtM+GBZQKPQt9fSkRQnukrcz3P4kllWKqvjvqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH 4.9 20/31] missing barriers in some of unix_sock ->addr and ->path accesses
-Date:   Mon, 18 Mar 2019 10:25:55 +0100
-Message-Id: <20190318084211.215549694@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Mahesh Bandewar <maheshb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 21/31] ipvlan: disallow userns cap_net_admin to change global mode/flags
+Date:   Mon, 18 Mar 2019 10:25:56 +0100
+Message-Id: <20190318084211.256507031@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
 References: <20190318084210.397476003@linuxfoundation.org>
@@ -66,213 +66,134 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-[ Upstream commit ae3b564179bfd06f32d051b9e5d72ce4b2a07c37 ]
+[ Upstream commit 7cc9f7003a969d359f608ebb701d42cafe75b84a ]
 
-Several u->addr and u->path users are not holding any locks in
-common with unix_bind().  unix_state_lock() is useless for those
-purposes.
+When running Docker with userns isolation e.g. --userns-remap="default"
+and spawning up some containers with CAP_NET_ADMIN under this realm, I
+noticed that link changes on ipvlan slave device inside that container
+can affect all devices from this ipvlan group which are in other net
+namespaces where the container should have no permission to make changes
+to, such as the init netns, for example.
 
-u->addr is assign-once and *(u->addr) is fully set up by the time
-we set u->addr (all under unix_table_lock).  u->path is also
-set in the same critical area, also before setting u->addr, and
-any unix_sock with ->path filled will have non-NULL ->addr.
+This effectively allows to undo ipvlan private mode and switch globally to
+bridge mode where slaves can communicate directly without going through
+hostns, or it allows to switch between global operation mode (l2/l3/l3s)
+for everyone bound to the given ipvlan master device. libnetwork plugin
+here is creating an ipvlan master and ipvlan slave in hostns and a slave
+each that is moved into the container's netns upon creation event.
 
-So setting ->addr with smp_store_release() is all we need for those
-"lockless" users - just have them fetch ->addr with smp_load_acquire()
-and don't even bother looking at ->path if they see NULL ->addr.
+* In hostns:
 
-Users of ->addr and ->path fall into several classes now:
-    1) ones that do smp_load_acquire(u->addr) and access *(u->addr)
-and u->path only if smp_load_acquire() has returned non-NULL.
-    2) places holding unix_table_lock.  These are guaranteed that
-*(u->addr) is seen fully initialized.  If unix_sock is in one of the
-"bound" chains, so's ->path.
-    3) unix_sock_destructor() using ->addr is safe.  All places
-that set u->addr are guaranteed to have seen all stores *(u->addr)
-while holding a reference to u and unix_sock_destructor() is called
-when (atomic) refcount hits zero.
-    4) unix_release_sock() using ->path is safe.  unix_bind()
-is serialized wrt unix_release() (normally - by struct file
-refcount), and for the instances that had ->path set by unix_bind()
-unix_release_sock() comes from unix_release(), so they are fine.
-Instances that had it set in unix_stream_connect() either end up
-attached to a socket (in unix_accept()), in which case the call
-chain to unix_release_sock() and serialization are the same as in
-the previous case, or they never get accept'ed and unix_release_sock()
-is called when the listener is shut down and its queue gets purged.
-In that case the listener's queue lock provides the barriers needed -
-unix_stream_connect() shoves our unix_sock into listener's queue
-under that lock right after having set ->path and eventual
-unix_release_sock() caller picks them from that queue under the
-same lock right before calling unix_release_sock().
-    5) unix_find_other() use of ->path is pointless, but safe -
-it happens with successful lookup by (abstract) name, so ->path.dentry
-is guaranteed to be NULL there.
+  # ip -d a
+  [...]
+  8: cilium_host@bond0: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+     link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+     ipvlan  mode l3 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+     inet 10.41.0.1/32 scope link cilium_host
+       valid_lft forever preferred_lft forever
+  [...]
 
-earlier-variant-reviewed-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+* Spawn container & change ipvlan mode setting inside of it:
+
+  # docker run -dt --cap-add=NET_ADMIN --network cilium-net --name client -l app=test cilium/netperf
+  9fff485d69dcb5ce37c9e33ca20a11ccafc236d690105aadbfb77e4f4170879c
+
+  # docker exec -ti client ip -d a
+  [...]
+  10: cilium0@if4: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l3 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.197.43/32 brd 10.41.197.43 scope global cilium0
+         valid_lft forever preferred_lft forever
+
+  # docker exec -ti client ip link change link cilium0 name cilium0 type ipvlan mode l2
+
+  # docker exec -ti client ip -d a
+  [...]
+  10: cilium0@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.197.43/32 brd 10.41.197.43 scope global cilium0
+         valid_lft forever preferred_lft forever
+
+* In hostns (mode switched to l2):
+
+  # ip -d a
+  [...]
+  8: cilium_host@bond0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.0.1/32 scope link cilium_host
+         valid_lft forever preferred_lft forever
+  [...]
+
+Same l3 -> l2 switch would also happen by creating another slave inside
+the container's network namespace when specifying the existing cilium0
+link to derive the actual (bond0) master:
+
+  # docker exec -ti client ip link add link cilium0 name cilium1 type ipvlan mode l2
+
+  # docker exec -ti client ip -d a
+  [...]
+  2: cilium1@if4: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+  10: cilium0@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.197.43/32 brd 10.41.197.43 scope global cilium0
+         valid_lft forever preferred_lft forever
+
+* In hostns:
+
+  # ip -d a
+  [...]
+  8: cilium_host@bond0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+      link/ether 0c:c4:7a:e1:3d:cc brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 65535
+      ipvlan  mode l2 bridge numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+      inet 10.41.0.1/32 scope link cilium_host
+         valid_lft forever preferred_lft forever
+  [...]
+
+One way to mitigate it is to check CAP_NET_ADMIN permissions of
+the ipvlan master device's ns, and only then allow to change
+mode or flags for all devices bound to it. Above two cases are
+then disallowed after the patch.
+
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Mahesh Bandewar <maheshb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/unix/af_unix.c   |   48 +++++++++++++++++++++++++++++-------------------
- net/unix/diag.c      |    3 ++-
- security/lsm_audit.c |   10 ++++++----
- 3 files changed, 37 insertions(+), 24 deletions(-)
+ drivers/net/ipvlan/ipvlan_main.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -891,7 +891,7 @@ retry:
- 	addr->hash ^= sk->sk_type;
- 
- 	__unix_remove_socket(sk);
--	u->addr = addr;
-+	smp_store_release(&u->addr, addr);
- 	__unix_insert_socket(&unix_socket_table[addr->hash], sk);
- 	spin_unlock(&unix_table_lock);
- 	err = 0;
-@@ -1061,7 +1061,7 @@ static int unix_bind(struct socket *sock
- 
- 	err = 0;
- 	__unix_remove_socket(sk);
--	u->addr = addr;
-+	smp_store_release(&u->addr, addr);
- 	__unix_insert_socket(list, sk);
- 
- out_unlock:
-@@ -1332,15 +1332,29 @@ restart:
- 	RCU_INIT_POINTER(newsk->sk_wq, &newu->peer_wq);
- 	otheru = unix_sk(other);
- 
--	/* copy address information from listening to new sock*/
--	if (otheru->addr) {
--		atomic_inc(&otheru->addr->refcnt);
--		newu->addr = otheru->addr;
--	}
-+	/* copy address information from listening to new sock
-+	 *
-+	 * The contents of *(otheru->addr) and otheru->path
-+	 * are seen fully set up here, since we have found
-+	 * otheru in hash under unix_table_lock.  Insertion
-+	 * into the hash chain we'd found it in had been done
-+	 * in an earlier critical area protected by unix_table_lock,
-+	 * the same one where we'd set *(otheru->addr) contents,
-+	 * as well as otheru->path and otheru->addr itself.
-+	 *
-+	 * Using smp_store_release() here to set newu->addr
-+	 * is enough to make those stores, as well as stores
-+	 * to newu->path visible to anyone who gets newu->addr
-+	 * by smp_load_acquire().  IOW, the same warranties
-+	 * as for unix_sock instances bound in unix_bind() or
-+	 * in unix_autobind().
-+	 */
- 	if (otheru->path.dentry) {
- 		path_get(&otheru->path);
- 		newu->path = otheru->path;
- 	}
-+	atomic_inc(&otheru->addr->refcnt);
-+	smp_store_release(&newu->addr, otheru->addr);
- 
- 	/* Set credentials */
- 	copy_peercred(sk, other);
-@@ -1453,7 +1467,7 @@ out:
- static int unix_getname(struct socket *sock, struct sockaddr *uaddr, int *uaddr_len, int peer)
- {
- 	struct sock *sk = sock->sk;
--	struct unix_sock *u;
-+	struct unix_address *addr;
- 	DECLARE_SOCKADDR(struct sockaddr_un *, sunaddr, uaddr);
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -463,7 +463,12 @@ static int ipvlan_nl_changelink(struct n
+ 	struct ipvl_port *port = ipvlan_port_get_rtnl(ipvlan->phy_dev);
  	int err = 0;
  
-@@ -1468,19 +1482,15 @@ static int unix_getname(struct socket *s
- 		sock_hold(sk);
- 	}
+-	if (data && data[IFLA_IPVLAN_MODE]) {
++	if (!data)
++		return 0;
++	if (!ns_capable(dev_net(ipvlan->phy_dev)->user_ns, CAP_NET_ADMIN))
++		return -EPERM;
++
++	if (data[IFLA_IPVLAN_MODE]) {
+ 		u16 nmode = nla_get_u16(data[IFLA_IPVLAN_MODE]);
  
--	u = unix_sk(sk);
--	unix_state_lock(sk);
--	if (!u->addr) {
-+	addr = smp_load_acquire(&unix_sk(sk)->addr);
-+	if (!addr) {
- 		sunaddr->sun_family = AF_UNIX;
- 		sunaddr->sun_path[0] = 0;
- 		*uaddr_len = sizeof(short);
- 	} else {
--		struct unix_address *addr = u->addr;
--
- 		*uaddr_len = addr->len;
- 		memcpy(sunaddr, addr->name, *uaddr_len);
- 	}
--	unix_state_unlock(sk);
- 	sock_put(sk);
- out:
- 	return err;
-@@ -2094,11 +2104,11 @@ static int unix_seqpacket_recvmsg(struct
+ 		err = ipvlan_set_port_mode(port, nmode);
+@@ -530,6 +535,8 @@ static int ipvlan_link_new(struct net *s
+ 		struct ipvl_dev *tmp = netdev_priv(phy_dev);
  
- static void unix_copy_addr(struct msghdr *msg, struct sock *sk)
- {
--	struct unix_sock *u = unix_sk(sk);
-+	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
- 
--	if (u->addr) {
--		msg->msg_namelen = u->addr->len;
--		memcpy(msg->msg_name, u->addr->name, u->addr->len);
-+	if (addr) {
-+		msg->msg_namelen = addr->len;
-+		memcpy(msg->msg_name, addr->name, addr->len);
- 	}
- }
- 
-@@ -2814,7 +2824,7 @@ static int unix_seq_show(struct seq_file
- 			(s->sk_state == TCP_ESTABLISHED ? SS_CONNECTING : SS_DISCONNECTING),
- 			sock_i_ino(s));
- 
--		if (u->addr) {
-+		if (u->addr) {	// under unix_table_lock here
- 			int i, len;
- 			seq_putc(seq, ' ');
- 
---- a/net/unix/diag.c
-+++ b/net/unix/diag.c
-@@ -10,7 +10,8 @@
- 
- static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
- {
--	struct unix_address *addr = unix_sk(sk)->addr;
-+	/* might or might not have unix_table_lock */
-+	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
- 
- 	if (!addr)
- 		return 0;
---- a/security/lsm_audit.c
-+++ b/security/lsm_audit.c
-@@ -321,6 +321,7 @@ static void dump_common_audit_data(struc
- 		if (a->u.net->sk) {
- 			struct sock *sk = a->u.net->sk;
- 			struct unix_sock *u;
-+			struct unix_address *addr;
- 			int len = 0;
- 			char *p = NULL;
- 
-@@ -351,14 +352,15 @@ static void dump_common_audit_data(struc
- #endif
- 			case AF_UNIX:
- 				u = unix_sk(sk);
-+				addr = smp_load_acquire(&u->addr);
-+				if (!addr)
-+					break;
- 				if (u->path.dentry) {
- 					audit_log_d_path(ab, " path=", &u->path);
- 					break;
- 				}
--				if (!u->addr)
--					break;
--				len = u->addr->len-sizeof(short);
--				p = &u->addr->name->sun_path[0];
-+				len = addr->len-sizeof(short);
-+				p = &addr->name->sun_path[0];
- 				audit_log_format(ab, " path=");
- 				if (*p)
- 					audit_log_untrustedstring(ab, p);
+ 		phy_dev = tmp->phy_dev;
++		if (!ns_capable(dev_net(phy_dev)->user_ns, CAP_NET_ADMIN))
++			return -EPERM;
+ 	} else if (!netif_is_ipvlan_port(phy_dev)) {
+ 		err = ipvlan_port_create(phy_dev);
+ 		if (err < 0)
 
 
