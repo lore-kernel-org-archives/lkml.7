@@ -2,245 +2,143 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDCFC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AC0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A515320854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:44:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnKkgE0x"
+	by mail.kernel.org (Postfix) with ESMTP id 17B6820854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfCRQoF (ORCPT
+        id S1727239AbfCRQsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:44:05 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33606 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfCRQoE (ORCPT
+        Mon, 18 Mar 2019 12:48:17 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52087 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfCRQsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:44:04 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k14so12992240qtb.0;
-        Mon, 18 Mar 2019 09:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o6tihzV6srRLGZrjmZ6N3mNeLuyQerB3dWs4LV2a63w=;
-        b=MnKkgE0xUaR33CWJ40KvfJBKT7Oq+k659B7Z57htQTVGDrg0ULy8AKTy3wcJ1J2tXo
-         PnOsDj9mOBJGIm99UHIlN5tAmNeFakQ24zTJocdPSf7edcqpB4QpDzVseOmnrcOY0mIT
-         VGu+yWkQSVLQppGxrJEeEzKyS1Dtow3t9Gvii9XLBhRrNo6++zjeF6eQ0CLMWhSB31fR
-         MNr9ywhWfwBqCTLsTqxuNSOJf4Dpurm4u2n3sDGLJ1GzbDYH28m4VNIw14wRx2jHfHnt
-         LosxWWZkUiDQ3ROnFtxjnDUhK/mb0YNYws38aRevJTaRFUGj4p+FSXsHkqPsde6UrFhK
-         Rb7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o6tihzV6srRLGZrjmZ6N3mNeLuyQerB3dWs4LV2a63w=;
-        b=r4b5kqec3BYWAbJnh8Kji54+aTWia9RCSt0uO9SdEsQ6MFUabOEhAn0axD7HoQJxK5
-         A4IU1pt5vCr8LG4r36P0FDx65bMLONB9ElUH6HQxV+YNLveFJrDTFkRFEB0UdVxwz1ad
-         u7RNYF7R0fhvKPry9OyCgnsjP6edh6hT8LHgKMhErmowxagAN8taQVnfTW+/zk35mD0a
-         6I8Up0zi9BaeOkr6Aw8EtQ8YgvGnP6zQtKaB5lnAKtYEvnSErXt/Qc41iWY2DKmGBr3t
-         48HiIFhcVrOX2ah9v3BsJJEY6M+aRlA1aHEVMmAq4rjzQR5ab/iklnAD5i3NM9SPPC0J
-         7alQ==
-X-Gm-Message-State: APjAAAWTNfelvvK6yS+XTHkfdC0G1t+c8rv4k1709AaKmOyfjvlS68t7
-        aaDJG2A/ohLJY2pOLJl9MFE=
-X-Google-Smtp-Source: APXvYqxWddcdz2IqALMkYlj9tlRNew3snH+EJlXk8ES5v20bwpkjRr0WKv3pfnDXYdy5uNvCpNYrhg==
-X-Received: by 2002:aed:2314:: with SMTP id h20mr9759518qtc.24.1552927443387;
-        Mon, 18 Mar 2019 09:44:03 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id x14sm2420645qtc.44.2019.03.18.09.44.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 09:44:02 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 320514039C; Mon, 18 Mar 2019 13:43:58 -0300 (-03)
-Date:   Mon, 18 Mar 2019 13:43:58 -0300
-To:     Song Liu <songliubraving@fb.com>
-Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kernel-team@fb.com, peterz@infradead.org, acme@redhat.com,
-        jolsa@kernel.org, namhyung@kernel.org, sdf@fomichev.me
-Subject: Re: [PATCH v9 perf,bpf 12/15] perf, bpf: enable annotation of bpf
- program
-Message-ID: <20190318164358.GF22548@kernel.org>
-References: <20190312053051.2690567-1-songliubraving@fb.com>
- <20190312053051.2690567-13-songliubraving@fb.com>
- <20190318163848.GE22548@kernel.org>
+        Mon, 18 Mar 2019 12:48:16 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1h5vQp-00071e-Uc; Mon, 18 Mar 2019 17:48:11 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1h5vQp-0008RY-5b; Mon, 18 Mar 2019 17:48:11 +0100
+Date:   Mon, 18 Mar 2019 17:48:11 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Richard Leitner <richard.leitner@skidata.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: usb251xb: Remove unnecessary comparison of unsigned
+ integer with >= 0
+Message-ID: <20190318164811.quofap3b5mjlj5tc@pengutronix.de>
+References: <20190318145024.GA572@embeddedor>
+ <20190318153425.rxx3fwq2hi6tfocr@pengutronix.de>
+ <f8785dc1-fa14-4e01-b89a-088cffdc350f@skidata.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190318163848.GE22548@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f8785dc1-fa14-4e01-b89a-088cffdc350f@skidata.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:43:29 up 58 days, 21:25, 51 users,  load average: 0.05, 0.05,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 18, 2019 at 01:38:48PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Mar 11, 2019 at 10:30:48PM -0700, Song Liu escreveu:
-> > This patch enables the annotation of bpf program.
+Hi Richard,
+
+On 19-03-18 16:46, Richard Leitner wrote:
+> Hi Marco, Hi Gustavo,
+> thanks for the fix, please feel free to add
+> 
+> 	Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
+> 
+> On 18/03/2019 16:34, Marco Felsch wrote:
+> > Hi Silva,
 > > 
-> > A new dso type DSO_BINARY_TYPE__BPF_PROG_INFO is introduced to for BPF
-> > programs. In symbol__disassemble(), DSO_BINARY_TYPE__BPF_PROG_INFO dso
-> > calls into a new function symbol__disassemble_bpf(), where annotation
-> > line information is filled based bpf_prog_info and btf saved in given
-> > perf_env.
+> > On 19-03-18 09:50, Gustavo A. R. Silva wrote:
+> > > There is no need to compare *port* with >= 0 because such comparison
+> > > of an unsigned value is always true.
 > > 
-> > symbol__disassemble_bpf() uses libbfd to disassemble bpf programs.
+> > Absolutly.. It seems that it was an copy'n'paste failure. Thanks for
+> > fixing that.
+> 
+> A small note on further improvement from my side:
+> 
+> According the datasheet, when you set swap-dx-lanes to 0 (-> setting port to
+> 0 -> setting bit 0 of PRTSP) "   the upstream port DP/DM is swapped".
+
+Yes I know that's not intuitve and may confuses the users.
+
+> IMHO this is not straight-forward, so maybe we want to additionally
+> 
+> 	a) mention it somewhere in the documentation
+
+IMHO this is the correct place.
+
+> 	b) check on port >= 1
+
+I think this isn't doable since we shouldn't break the existing dt.
+
+Regards,
+Marco
+
+> 	c) something else?
+> 
+> Any opinions on that from your side? ... I'd prefer "a"...
+> 
+> regards;Richard.L
+> 
 > > 
-> > Signed-off-by: Song Liu <songliubraving@fb.com>
-> > ---
-> >  tools/build/Makefile.feature |   6 +-
-> >  tools/perf/Makefile.config   |   4 +
+> > Regards,
+> > Marco
+> > 
+> > > Fix this by removing such comparison.
+> > > 
+> > > Addresses-Coverity-ID: 1443949 ("Unsigned compared against 0")
+> > > Fixes: 02a50b875046 ("usb: usb251xb: add usb data lane port swap feature")
+> > > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > > ---
+> > >   drivers/usb/misc/usb251xb.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> > > index 4d72b7d1d383..2c8e2cad7e10 100644
+> > > --- a/drivers/usb/misc/usb251xb.c
+> > > +++ b/drivers/usb/misc/usb251xb.c
+> > > @@ -547,7 +547,7 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+> > >   	 */
+> > >   	hub->port_swap = USB251XB_DEF_PORT_SWAP;
+> > >   	of_property_for_each_u32(np, "swap-dx-lanes", prop, p, port) {
+> > > -		if ((port >= 0) && (port <= data->port_cnt))
+> > > +		if (port <= data->port_cnt)
+> > >   			hub->port_swap |= BIT(port);
+> > >   	}
+> > > -- 
+> > > 2.21.0
+> > > 
+> > > 
+> > 
 > 
-> I see the changes to these two files, but I can't see the feature test
-> that it triggers, forgot to do a git-add? Or is it in an upcoming patch
-> in this series?
-> 
-> After applying this test it "works":
-> 
->   make: Entering directory '/home/acme/git/perf/tools/perf'
->     BUILD:   Doing 'make -j8' parallel build
-> 
->   Auto-detecting system features:
->   ...                         dwarf: [ on  ]
->   ...            dwarf_getlocations: [ on  ]
->   <SNIP>
->   ...                           bpf: [ on  ]
->   ...                        libaio: [ on  ]
->   ...        disassembler-four-args: [ on  ]
-> 
-> Because you added it to FEATURE_TESTS_BASIC, and this means that if
-> tools/build/feature/test-all.c builds, then what is in
-> FEATURE_TESTS_BASIC is set to 'on', but you didn't add anything to
-> tools/build/feature/test-all.c, so it works because all the other
-> features are present.
-> 
-> Take a look at:
-> 
->   2a07d814747b ("tools build feature: Check if libaio is available")
-> 
-> To see what needs to be done.
-> 
-> Either way, its interesting to break this patch in two, one adding the
-> feature test and another to use it, i.e. the second patch out of this
-> should have the commit log message in this patch.
-> 
-> I've applied the patches up to before this one and will continue
-> processing other patches while you address this.
 
-Ok, to continue processing the other patches I chunked out the part
-below into a 3rd patch from the above one and have it applied already.
-
-commit f326de312abc3657b0397817c66cd7e1540655f7
-Author: Song Liu <songliubraving@fb.com>
-Date:   Mon Mar 11 22:30:48 2019 -0700
-
-    perf symbols: Introduce DSO_BINARY_TYPE__BPF_PROG_INFO
-    
-    Introduce a new dso type DSO_BINARY_TYPE__BPF_PROG_INFO for BPF programs. In
-    symbol__disassemble(), DSO_BINARY_TYPE__BPF_PROG_INFO dso will call into a new
-    function symbol__disassemble_bpf() in an upcoming patch, where annotation line
-    information is filled based bpf_prog_info and btf saved in given perf_env.
-    
-    Signed-off-by: Song Liu <songliubraving@fb.com>
-    Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-    Cc: Alexei Starovoitov <ast@kernel.org>
-    Cc: Daniel Borkmann <daniel@iogearbox.net>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Stanislav Fomichev <sdf@google.com>
-    Cc: kernel-team@fb.com
-    Link: http://lkml.kernel.org/r/20190312053051.2690567-13-songliubraving@fb.com
-    [ split from a larger patch ]
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index ba58ba603b69..58547c468c65 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -184,6 +184,7 @@ int dso__read_binary_type_filename(const struct dso *dso,
- 	case DSO_BINARY_TYPE__KALLSYMS:
- 	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
- 	case DSO_BINARY_TYPE__JAVA_JIT:
-+	case DSO_BINARY_TYPE__BPF_PROG_INFO:
- 	case DSO_BINARY_TYPE__NOT_FOUND:
- 		ret = -1;
- 		break;
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index bb417c54c25a..c274b5aa839d 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -14,6 +14,7 @@
- 
- struct machine;
- struct map;
-+struct perf_env;
- 
- enum dso_binary_type {
- 	DSO_BINARY_TYPE__KALLSYMS = 0,
-@@ -35,6 +36,7 @@ enum dso_binary_type {
- 	DSO_BINARY_TYPE__KCORE,
- 	DSO_BINARY_TYPE__GUEST_KCORE,
- 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-+	DSO_BINARY_TYPE__BPF_PROG_INFO,
- 	DSO_BINARY_TYPE__NOT_FOUND,
- };
- 
-@@ -178,17 +180,25 @@ struct dso {
- 	struct auxtrace_cache *auxtrace_cache;
- 	int		 comp;
- 
--	/* dso data file */
--	struct {
--		struct rb_root	 cache;
--		int		 fd;
--		int		 status;
--		u32		 status_seen;
--		size_t		 file_size;
--		struct list_head open_entry;
--		u64		 debug_frame_offset;
--		u64		 eh_frame_hdr_offset;
--	} data;
-+	union {
-+		/* dso data file */
-+		struct {
-+			struct rb_root	 cache;
-+			int		 fd;
-+			int		 status;
-+			u32		 status_seen;
-+			size_t		 file_size;
-+			struct list_head open_entry;
-+			u64		 debug_frame_offset;
-+			u64		 eh_frame_hdr_offset;
-+		} data;
-+		/* bpf prog information */
-+		struct {
-+			u32		id;
-+			u32		sub_id;
-+			struct perf_env	*env;
-+		} bpf_prog;
-+	};
- 
- 	union { /* Tool specific area */
- 		void	 *priv;
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 58442ca5e3c4..5cbad55cd99d 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1455,6 +1455,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
- 	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
- 		return true;
- 
-+	case DSO_BINARY_TYPE__BPF_PROG_INFO:
- 	case DSO_BINARY_TYPE__NOT_FOUND:
- 	default:
- 		return false;
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
