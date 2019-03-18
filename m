@@ -2,100 +2,393 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B18C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9C7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F522070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64B52070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfCRRjz (ORCPT
+        id S1727235AbfCRRkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:39:55 -0400
-Received: from gateway36.websitewelcome.com ([192.185.192.36]:46727 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726626AbfCRRjy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:39:54 -0400
-X-Greylist: delayed 1487 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 Mar 2019 13:39:54 EDT
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 2AE08400C9030
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:31:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 5vqshpzSI2PzO5vqshBI3r; Mon, 18 Mar 2019 12:15:06 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=42324 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h5vqr-0016am-U8; Mon, 18 Mar 2019 12:15:06 -0500
-Date:   Mon, 18 Mar 2019 12:15:05 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] scsi: lpfc_nvme: Fix wrong sizeof argument
-Message-ID: <20190318171505.GA8748@embeddedor>
+        Mon, 18 Mar 2019 13:40:31 -0400
+Received: from mga05.intel.com ([192.55.52.43]:47731 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbfCRRkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:40:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:40:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="156082586"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Mar 2019 10:40:29 -0700
+Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
+        by linux.intel.com (Postfix) with ESMTP id 448DB58052E;
+        Mon, 18 Mar 2019 10:40:27 -0700 (PDT)
+Subject: [PATCH v10 02/12] perf record: implement --mmap-flush=<number> option
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <f6600d72-ecfa-2eb7-7e51-f6954547d500@linux.intel.com>
+Date:   Mon, 18 Mar 2019 20:40:26 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.39
-X-Source-L: No
-X-Exim-ID: 1h5vqr-0016am-U8
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.104.39]:42324
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sizeof() is currently using the wrong argument when used in a call to
-memset().  Notice that wqe is a pointer to union lpfc_wqe128, not to
-union lpfc_wqe.
 
-Fix this by using union lpfc_wqe128 instead of lpfc_wqe as argument
-of sizeof().
+Implemented --mmap-flush option that specifies minimal number of bytes
+that is extracted from mmaped kernel buffer to store into a trace. The
+default option value is 1 byte what means every time trace writing
+thread finds some new data in the mmaped buffer the data is extracted,
+possibly compressed and written to a trace.
 
-Addresses-Coverity-ID: 1443938 ("Wrong sizeof argument")
-Fixes: 5fd1108517d9 ("scsi: lpfc: Streamline NVME Initiator WQE setup")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+  $ tools/perf/perf record --mmap-flush 1024 -e cycles -- matrix.gcc
+  $ tools/perf/perf record --aio --mmap-flush 1K -e cycles -- matrix.gcc
+
+The option is independent from -z setting, doesn't vary with compression
+level and can serve two purposes.
+
+The first purpose is to increase the compression ratio of a trace data.
+Larger data chunks are compressed more effectively so the implemented
+option allows specifying data chunk size to compress. Also at some cases
+executing more write syscalls with smaller data size can take longer
+than executing less write syscalls with bigger data size due to syscall
+overhead so extracting bigger data chunks specified by the option value
+could additionally decrease runtime overhead.
+
+The second purpose is to avoid self monitoring live-lock issue in system
+wide (-a) profiling mode. Profiling in system wide mode with compression
+(-a -z) can additionally induce data into the kernel buffers along with
+the data from monitored processes. If performance data rate and volume
+from the monitored processes is high then trace streaming and compression
+activity in the tool is also high. High tool process activity can lead
+to subtle live-lock effect when compression of single new byte from some
+of mmaped kernel buffer leads to generation of the next single byte at
+some mmaped buffer. So perf tool process ends up in endless self
+monitoring.
+
+Implemented sync parameter is the mean to force data move independently
+from the specified flush threshold value. Despite the provided flush
+value the tool needs capability to unconditionally drain memory buffers,
+at least in the end of the collection.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/perf-record.txt | 12 +++++
+ tools/perf/builtin-record.c              | 65 +++++++++++++++++++++---
+ tools/perf/perf.h                        |  1 +
+ tools/perf/util/evlist.c                 |  6 +--
+ tools/perf/util/evlist.h                 |  3 +-
+ tools/perf/util/mmap.c                   |  4 +-
+ tools/perf/util/mmap.h                   |  3 +-
+ 7 files changed, 82 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index d16ca413110d..3dc0c85c7d50 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -1981,7 +1981,7 @@ lpfc_get_nvme_buf(struct lpfc_hba *phba, struct lpfc_nodelist *ndlp,
- 		/* Fill in word 3 / sgl_len during cmd submission */
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 8f0c2be34848..18fceb49434e 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -459,6 +459,18 @@ Set affinity mask of trace reading thread according to the policy defined by 'mo
+   node - thread affinity mask is set to NUMA node cpu mask of the processed mmap buffer
+   cpu  - thread affinity mask is set to cpu of the processed mmap buffer
  
- 		/* Initialize WQE */
--		memset(wqe, 0, sizeof(union lpfc_wqe));
-+		memset(wqe, 0, sizeof(union lpfc_wqe128));
++--mmap-flush=number::
++Specify minimal number of bytes that is extracted from mmap data pages and stored
++into a trace. The number specification is possible using B/K/M/G suffixes. Maximal allowed
++value is a quarter of the size of mmaped data pages. The default option value is 1 byte
++what means that every time trace writing thread finds some new data in the mmaped buffer
++the data is extracted, possibly compressed (-z) and written to a trace. Larger data chunks
++are compressed more effectively in comparison to smaller chunks so extraction of larger
++chunks from the mmap data pages is preferable from perspective of trace size reduction.
++Also at some cases executing less trace write syscalls with bigger data size can take
++shorter than executing more trace write syscalls with smaller data size thus lowering
++runtime profiling overhead.
++
+ --all-kernel::
+ Configure all used events to run in kernel space.
  
- 		if (lpfc_ndlp_check_qdepth(phba, ndlp)) {
- 			atomic_inc(&ndlp->cmd_pending);
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index a468d882e74f..f55302dec440 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -334,6 +334,41 @@ static int record__aio_enabled(struct record *rec)
+ 	return rec->opts.nr_cblocks > 0;
+ }
+ 
++#define MMAP_FLUSH_DEFAULT 1
++static int record__mmap_flush_parse(const struct option *opt,
++				    const char *str,
++				    int unset)
++{
++	int flush_max;
++	struct record_opts *opts = (struct record_opts *)opt->value;
++	static struct parse_tag tags[] = {
++			{ .tag  = 'B', .mult = 1       },
++			{ .tag  = 'K', .mult = 1 << 10 },
++			{ .tag  = 'M', .mult = 1 << 20 },
++			{ .tag  = 'G', .mult = 1 << 30 },
++			{ .tag  = 0 },
++	};
++
++	if (unset)
++		return 0;
++
++	if (str) {
++		opts->mmap_flush = parse_tag_value(str, tags);
++		if (opts->mmap_flush == (int)-1)
++			opts->mmap_flush = strtol(str, NULL, 0);
++	}
++
++	if (!opts->mmap_flush)
++		opts->mmap_flush = MMAP_FLUSH_DEFAULT;
++
++	flush_max = perf_evlist__mmap_size(opts->mmap_pages);
++	flush_max /= 4;
++	if (opts->mmap_flush > flush_max)
++		opts->mmap_flush = flush_max;
++
++	return 0;
++}
++
+ static int process_synthesized_event(struct perf_tool *tool,
+ 				     union perf_event *event,
+ 				     struct perf_sample *sample __maybe_unused,
+@@ -543,7 +578,8 @@ static int record__mmap_evlist(struct record *rec,
+ 	if (perf_evlist__mmap_ex(evlist, opts->mmap_pages,
+ 				 opts->auxtrace_mmap_pages,
+ 				 opts->auxtrace_snapshot_mode,
+-				 opts->nr_cblocks, opts->affinity) < 0) {
++				 opts->nr_cblocks, opts->affinity,
++				 opts->mmap_flush) < 0) {
+ 		if (errno == EPERM) {
+ 			pr_err("Permission error mapping pages.\n"
+ 			       "Consider increasing "
+@@ -733,7 +769,7 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
+ }
+ 
+ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+-				    bool overwrite)
++				    bool overwrite, bool sync)
+ {
+ 	u64 bytes_written = rec->bytes_written;
+ 	int i;
+@@ -756,12 +792,19 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 		off = record__aio_get_pos(trace_fd);
+ 
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
++		u64 flush = 0;
+ 		struct perf_mmap *map = &maps[i];
+ 
+ 		if (map->base) {
+ 			record__adjust_affinity(rec, map);
++			if (sync) {
++				flush = map->flush;
++				map->flush = 1;
++			}
+ 			if (!record__aio_enabled(rec)) {
+ 				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
++					if (sync)
++						map->flush = flush;
+ 					rc = -1;
+ 					goto out;
+ 				}
+@@ -774,10 +817,14 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				idx = record__aio_sync(map, false);
+ 				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
+ 					record__aio_set_pos(trace_fd, off);
++					if (sync)
++						map->flush = flush;
+ 					rc = -1;
+ 					goto out;
+ 				}
+ 			}
++			if (sync)
++				map->flush = flush;
+ 		}
+ 
+ 		if (map->auxtrace_mmap.base && !rec->opts.auxtrace_snapshot_mode &&
+@@ -803,15 +850,15 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	return rc;
+ }
+ 
+-static int record__mmap_read_all(struct record *rec)
++static int record__mmap_read_all(struct record *rec, bool sync)
+ {
+ 	int err;
+ 
+-	err = record__mmap_read_evlist(rec, rec->evlist, false);
++	err = record__mmap_read_evlist(rec, rec->evlist, false, sync);
+ 	if (err)
+ 		return err;
+ 
+-	return record__mmap_read_evlist(rec, rec->evlist, true);
++	return record__mmap_read_evlist(rec, rec->evlist, true, sync);
+ }
+ 
+ static void record__init_features(struct record *rec)
+@@ -1312,7 +1359,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		if (trigger_is_hit(&switch_output_trigger) || done || draining)
+ 			perf_evlist__toggle_bkw_mmap(rec->evlist, BKW_MMAP_DATA_PENDING);
+ 
+-		if (record__mmap_read_all(rec) < 0) {
++		if (record__mmap_read_all(rec, false) < 0) {
+ 			trigger_error(&auxtrace_snapshot_trigger);
+ 			trigger_error(&switch_output_trigger);
+ 			err = -1;
+@@ -1413,6 +1460,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		record__synthesize_workload(rec, true);
+ 
+ out_child:
++	record__mmap_read_all(rec, true);
+ 	record__aio_mmap_read_sync(rec);
+ 
+ 	if (forks) {
+@@ -1815,6 +1863,7 @@ static struct record record = {
+ 			.uses_mmap   = true,
+ 			.default_per_cpu = true,
+ 		},
++		.mmap_flush          = MMAP_FLUSH_DEFAULT,
+ 	},
+ 	.tool = {
+ 		.sample		= process_sample_event,
+@@ -1881,6 +1930,9 @@ static struct option __record_options[] = {
+ 	OPT_CALLBACK('m', "mmap-pages", &record.opts, "pages[,pages]",
+ 		     "number of mmap data pages and AUX area tracing mmap pages",
+ 		     record__parse_mmap_pages),
++	OPT_CALLBACK(0, "mmap-flush", &record.opts, "number",
++		     "Minimal number of bytes that is extracted from mmap data pages (default: 1)",
++		     record__mmap_flush_parse),
+ 	OPT_BOOLEAN(0, "group", &record.opts.group,
+ 		    "put the counters into a counter group"),
+ 	OPT_CALLBACK_NOOPT('g', NULL, &callchain_param,
+@@ -2184,6 +2236,7 @@ int cmd_record(int argc, const char **argv)
+ 		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
+ 
+ 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
++	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
+ 
+ 	err = __cmd_record(&record, argc, argv);
+ out:
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index b120e547ddc7..7886cc9771cf 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -85,6 +85,7 @@ struct record_opts {
+ 	u64          clockid_res_ns;
+ 	int	     nr_cblocks;
+ 	int	     affinity;
++	int	     mmap_flush;
+ };
+ 
+ enum perf_affinity {
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index ed20f4379956..8858d829983b 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1037,7 +1037,7 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
+  */
+ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+-			 bool auxtrace_overwrite, int nr_cblocks, int affinity)
++			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush)
+ {
+ 	struct perf_evsel *evsel;
+ 	const struct cpu_map *cpus = evlist->cpus;
+@@ -1047,7 +1047,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 	 * Its value is decided by evsel's write_backward.
+ 	 * So &mp should not be passed through const pointer.
+ 	 */
+-	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity };
++	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush };
+ 
+ 	if (!evlist->mmap)
+ 		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
+@@ -1079,7 +1079,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 
+ int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages)
+ {
+-	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS);
++	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1);
+ }
+ 
+ int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 744906dd4887..edf18811e39f 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -165,7 +165,8 @@ unsigned long perf_event_mlock_kb_in_pages(void);
+ 
+ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+-			 bool auxtrace_overwrite, int nr_cblocks, int affinity);
++			 bool auxtrace_overwrite, int nr_cblocks,
++			 int affinity, int flush);
+ int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages);
+ void perf_evlist__munmap(struct perf_evlist *evlist);
+ 
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index cdc7740fc181..ef3d79b2c90b 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -440,6 +440,8 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd, int c
+ 
+ 	perf_mmap__setup_affinity_mask(map, mp);
+ 
++	map->flush = mp->flush;
++
+ 	if (auxtrace_mmap__mmap(&map->auxtrace_mmap,
+ 				&mp->auxtrace_mp, map->base, fd))
+ 		return -1;
+@@ -492,7 +494,7 @@ static int __perf_mmap__read_init(struct perf_mmap *md)
+ 	md->start = md->overwrite ? head : old;
+ 	md->end = md->overwrite ? old : head;
+ 
+-	if (md->start == md->end)
++	if ((md->end - md->start) < md->flush)
+ 		return -EAGAIN;
+ 
+ 	size = md->end - md->start;
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index e566c19b242b..b82f8c2d55c4 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -39,6 +39,7 @@ struct perf_mmap {
+ 	} aio;
+ #endif
+ 	cpu_set_t	affinity_mask;
++	u64		flush;
+ };
+ 
+ /*
+@@ -70,7 +71,7 @@ enum bkw_mmap_state {
+ };
+ 
+ struct mmap_params {
+-	int			    prot, mask, nr_cblocks, affinity;
++	int			    prot, mask, nr_cblocks, affinity, flush;
+ 	struct auxtrace_mmap_params auxtrace_mp;
+ };
+ 
 -- 
-2.21.0
+2.20.1
 
