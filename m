@@ -2,262 +2,174 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E010FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36456C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A644C21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:38:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B6ydHxaz"
+	by mail.kernel.org (Postfix) with ESMTP id 05F5420854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfCRQiU (ORCPT
+        id S1727650AbfCRQid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:38:20 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33864 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfCRQiT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:38:19 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v12so11800693pgq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:38:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sRUrL3chxqebXkM+sBPvfyP4wLwfp+u5Gaca9ioMO9I=;
-        b=B6ydHxaz5oEYv0h8+JdrJVggAOaZ66YVaw9o0gRJcpv2RHWxQlUk453g1YzgKluDRc
-         qohmme8UKwPQpHH8MB6Qz4qTi2s6wHUnvMtW1F/025pwhs4LsEy9xati8dLpzH5DQCHL
-         TTrFkcZMQBqZY/4UeoewLYBVYj11rQOKf9/z0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sRUrL3chxqebXkM+sBPvfyP4wLwfp+u5Gaca9ioMO9I=;
-        b=tOTaZgVyY6HxFLJsyijBshZSPC4wGs/g4rCSccKbXWcYzc/A5HPXX+COZIevlZMD8c
-         zejZCpHQLCIR/gqmKO0/x3xzGAA2NoxrhOLokKBpaJ/3WNfkE8OwvaOfw1KuOglD8ig0
-         TEM0dSzXT2pEOzY4Q8XqyFq54SwcJEsYGBMKxeg8wpgmP1BUqDDcG3j//PCkG+QWP1yU
-         K1Tf2YxKjwvtp8vooVxskRMuCAiGVik9cFdY0Y2RrPeiIN5L1a1B0+lDUHg1R0+eFUG4
-         qjVb+Gzh7I6k+LEzbsyms4doOqlLDZu9xxxlxewheSQz6GT957ATjngpTLgQjijW3WZG
-         2fTQ==
-X-Gm-Message-State: APjAAAUk6Y99H5O+5QFJhzy1ktTdkzxDrwmDvy/OAwZs0YskeHKdkhOP
-        sUoIQVjhw4hQ4PLVE6nHMptHGA==
-X-Google-Smtp-Source: APXvYqzgDbJYkvnETHI+KINxyWQoiaJZN+I9GqHXgS/gxwK50OlvkE16xbXZPg5xi7zBrBQLiCSlEQ==
-X-Received: by 2002:a65:620e:: with SMTP id d14mr10160332pgv.28.1552927097637;
-        Mon, 18 Mar 2019 09:38:17 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id r86sm17553831pfa.82.2019.03.18.09.38.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Mar 2019 09:38:16 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 09:38:16 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     hpa@zytor.com
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Mon, 18 Mar 2019 12:38:33 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21640 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727062AbfCRQid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:38:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 09:38:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="329693164"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Mar 2019 09:38:32 -0700
+Date:   Mon, 18 Mar 2019 09:38:32 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Manoj Gupta <manojgupta@chromium.org>,
-        Tiancong Wang <tcwang@chromium.org>,
-        Stephen Hines <srhines@google.com>,
-        clang-built-linux@googlegroups.com,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: Re: [PATCH] lib: Add shared copy of __lshrti3 from libgcc
-Message-ID: <20190318163816.GG112750@google.com>
-References: <CAG5bF+S6OvBnsaR6UpMCqjDR9_hMo6qRMHGiW+iCaRYQW4C3YA@mail.gmail.com>
- <CAKwvOdkfb_DT2p2vvxK2ye6JpGYB4qqCc8yECU_JEkrc+6HXDA@mail.gmail.com>
- <18F0D032-4FC4-4194-A2F4-B7ED68C2C5F2@zytor.com>
- <20190315234701.GF112750@google.com>
- <FC1F7BFD-36DF-4002-A21C-1BB421080CCE@zytor.com>
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        chao.gao@intel.com
+Subject: Re: [PATCH v2 2/2] kvm/vmx: Using hardware cpuid faulting to avoid
+ emulation overhead
+Message-ID: <20190318163832.GB13528@linux.intel.com>
+References: <20190318114324.14198-1-xiaoyao.li@linux.intel.com>
+ <20190318114324.14198-3-xiaoyao.li@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <FC1F7BFD-36DF-4002-A21C-1BB421080CCE@zytor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190318114324.14198-3-xiaoyao.li@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 04:53:40PM -0700, hpa@zytor.com wrote:
-> On March 15, 2019 4:47:01 PM PDT, Matthias Kaehlcke <mka@chromium.org> wrote:
-> >On Fri, Mar 15, 2019 at 03:12:08PM -0700, hpa@zytor.com wrote:
-> >> On March 15, 2019 3:06:37 PM PDT, Nick Desaulniers
-> ><ndesaulniers@google.com> wrote:
-> >> >On Fri, Mar 15, 2019 at 1:54 PM Matthias Kaehlcke <mka@chromium.org>
-> >> >wrote:
-> >> >>
-> >> >> The compiler may emit calls to __lshrti3 from the compiler runtime
-> >> >> library, which results in undefined references:
-> >> >>
-> >> >> arch/x86/kvm/x86.o: In function `mul_u64_u64_shr':
-> >> >>   include/linux/math64.h:186: undefined reference to `__lshrti3'
-> >> >
-> >> >Looks like Clang will emit this at -Oz (but not -O2):
-> >> >https://godbolt.org/z/w1_2YC
-> >> >
-> >> >>
-> >> >> Add a copy of the __lshrti3 libgcc routine (from gcc v4.9.2).
-> >> >
-> >> >Has it changed since? If so why not a newer version of libgcc_s?
-> >> >
-> >> >>
-> >> >> Include the function for x86 builds with clang, which is the
-> >> >> environment where the above error was observed.
-> >> >>
-> >> >> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> >> >> ---
-> >> >>  arch/x86/Kconfig       |  1 +
-> >> >>  include/linux/libgcc.h | 16 ++++++++++++++++
-> >> >>  lib/Kconfig            |  3 +++
-> >> >>  lib/Makefile           |  1 +
-> >> >>  lib/lshrti3.c          | 31 +++++++++++++++++++++++++++++++
-> >> >>  5 files changed, 52 insertions(+)
-> >> >>  create mode 100644 lib/lshrti3.c
-> >> >>
-> >> >> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> >> >> index c1f9b3cf437c..a5e0d923845d 100644
-> >> >> --- a/arch/x86/Kconfig
-> >> >> +++ b/arch/x86/Kconfig
-> >> >> @@ -105,6 +105,7 @@ config X86
-> >> >>         select GENERIC_IRQ_PROBE
-> >> >>         select GENERIC_IRQ_RESERVATION_MODE
-> >> >>         select GENERIC_IRQ_SHOW
-> >> >> +       select GENERIC_LIB_LSHRTI3              if CC_IS_CLANG
-> >> >>         select GENERIC_PENDING_IRQ              if SMP
-> >> >>         select GENERIC_SMP_IDLE_THREAD
-> >> >>         select GENERIC_STRNCPY_FROM_USER
-> >> >> diff --git a/include/linux/libgcc.h b/include/linux/libgcc.h
-> >> >> index 32e1e0f4b2d0..a71036471838 100644
-> >> >> --- a/include/linux/libgcc.h
-> >> >> +++ b/include/linux/libgcc.h
-> >> >> @@ -22,15 +22,26 @@
-> >> >>  #include <asm/byteorder.h>
-> >> >>
-> >> >>  typedef int word_type __attribute__ ((mode (__word__)));
-> >> >> +typedef int TItype __attribute__ ((mode (TI)));
-> >> >
-> >> >Well that's an interesting new compiler attribute.
-> >>
-> >>https://stackoverflow.com/questions/4559025/what-does-gcc-attribute-modexx-actually-do
-> >> >Please use `__mode(TI)` from include/linux/compiler_attributes.h ex.
-> >> >typedef int TItype __mode(TI);
-> >> >
-> >> >>
-> >> >>  #ifdef __BIG_ENDIAN
-> >> >>  struct DWstruct {
-> >> >>         int high, low;
-> >> >>  };
-> >> >> +
-> >> >> +struct DWstruct128 {
-> >> >> +       long long high, low;
-> >> >> +};
-> >> >> +
-> >> >>  #elif defined(__LITTLE_ENDIAN)
-> >> >>  struct DWstruct {
-> >> >>         int low, high;
-> >> >>  };
-> >> >> +
-> >> >> +struct DWstruct128 {
-> >> >> +       long long low, high;
-> >> >> +};
-> >> >> +
-> >> >>  #else
-> >> >>  #error I feel sick.
-> >> >>  #endif
-> >> >> @@ -40,4 +51,9 @@ typedef union {
-> >> >>         long long ll;
-> >> >>  } DWunion;
-> >> >>
-> >> >> +typedef union {
-> >> >> +       struct DWstruct128 s;
-> >> >> +       TItype ll;
-> >> >> +} DWunion128;
-> >> >> +
-> >> >>  #endif /* __ASM_LIBGCC_H */
-> >> >> diff --git a/lib/Kconfig b/lib/Kconfig
-> >> >> index a9e56539bd11..369e10259ea6 100644
-> >> >> --- a/lib/Kconfig
-> >> >> +++ b/lib/Kconfig
-> >> >> @@ -624,6 +624,9 @@ config GENERIC_LIB_ASHRDI3
-> >> >>  config GENERIC_LIB_LSHRDI3
-> >> >>         bool
-> >> >>
-> >> >> +config GENERIC_LIB_LSHRTI3
-> >> >> +       bool
-> >> >> +
-> >> >>  config GENERIC_LIB_MULDI3
-> >> >>         bool
-> >> >>
-> >> >> diff --git a/lib/Makefile b/lib/Makefile
-> >> >> index 4e066120a0d6..42648411f451 100644
-> >> >> --- a/lib/Makefile
-> >> >> +++ b/lib/Makefile
-> >> >> @@ -277,6 +277,7 @@ obj-$(CONFIG_PARMAN) += parman.o
-> >> >>  obj-$(CONFIG_GENERIC_LIB_ASHLDI3) += ashldi3.o
-> >> >>  obj-$(CONFIG_GENERIC_LIB_ASHRDI3) += ashrdi3.o
-> >> >>  obj-$(CONFIG_GENERIC_LIB_LSHRDI3) += lshrdi3.o
-> >> >> +obj-$(CONFIG_GENERIC_LIB_LSHRTI3) += lshrti3.o
-> >> >>  obj-$(CONFIG_GENERIC_LIB_MULDI3) += muldi3.o
-> >> >>  obj-$(CONFIG_GENERIC_LIB_CMPDI2) += cmpdi2.o
-> >> >>  obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
-> >> >> diff --git a/lib/lshrti3.c b/lib/lshrti3.c
-> >> >> new file mode 100644
-> >> >> index 000000000000..2d2123bb3030
-> >> >> --- /dev/null
-> >> >> +++ b/lib/lshrti3.c
-> >> >> @@ -0,0 +1,31 @@
-> >> >> +// SPDX-License-Identifier: GPL-2.0
-> >> >> +
-> >> >> +#include <linux/export.h>
-> >> >> +#include <linux/libgcc.h>
-> >> >> +
-> >> >> +long long __lshrti3(long long u, word_type b)
-> >> >> +{
-> >> >> +       DWunion128 uu, w;
-> >> >> +       word_type bm;
-> >> >> +
-> >> >> +       if (b == 0)
-> >> >> +               return u;
-> >> >> +
-> >> >> +       uu.ll = u;
-> >> >> +       bm = 64 - b;
-> >> >> +
-> >> >> +       if (bm <= 0) {
-> >> >> +               w.s.high = 0;
-> >> >> +               w.s.low = (unsigned long long) uu.s.high >> -bm;
-> >> >> +       } else {
-> >> >> +               const unsigned long long carries =
-> >> >> +                       (unsigned long long) uu.s.high << bm;
-> >> >> +               w.s.high = (unsigned long long) uu.s.high >> b;
-> >> >> +               w.s.low = ((unsigned long long) uu.s.low >> b) |
-> >> >carries;
-> >> >> +       }
-> >> >> +
-> >> >> +       return w.ll;
-> >> >> +}
-> >> >> +#ifndef BUILD_VDSO
-> >> >> +EXPORT_SYMBOL(__lshrti3);
-> >> >> +#endif
-> >> >
-> >> >I don't think you want this.  Maybe that was carried over from
-> >> >https://lkml.org/lkml/2019/3/15/669
-> >> >by accident?  The above linkage error mentions arch/x86/kvm/x86.o
-> >> >which I wouldn't expect to be linked into the VDSO image?
-> >> 
-> >> Or just "u64"...
-> >
-> >Are you referring to TItype? It currenty is a 128-bit value.
+On Mon, Mar 18, 2019 at 07:43:24PM +0800, Xiaoyao Li wrote:
+> Current cpuid faulting of guest is purely emulated in kvm, which exploits
+> CPUID vm exit to inject #GP to guest. However, if host hardware cpu has
+> X86_FEATURE_CPUID_FAULT, we can just use the hardware cpuid faulting for
+> guest to avoid the vm exit overhead.
+
+Heh, I obviously didn't look at this patch before responding to patch 1/2.
+
+> Note: cpuid faulting takes higher priority over CPUID instruction vm
+> exit (Intel SDM vol3.25.1.1).
 > 
-> You're right, so "unsigned __int128"...
+> Since cpuid faulting only exists on some Intel's cpu, just apply this
+> optimization to vmx.
+> 
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  2 ++
+>  arch/x86/kvm/vmx/vmx.c          | 19 +++++++++++++++----
+>  arch/x86/kvm/x86.c              | 15 ++++++++++++---
+>  3 files changed, 29 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index ce79d7bfe1fd..14cad587b804 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1339,6 +1339,8 @@ void kvm_lmsw(struct kvm_vcpu *vcpu, unsigned long msw);
+>  void kvm_get_cs_db_l_bits(struct kvm_vcpu *vcpu, int *db, int *l);
+>  int kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr);
+>  
+> +int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64 data);
+> +
+>  int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
+>  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 2c59e0209e36..6b413e471dca 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1037,7 +1037,7 @@ static void pt_guest_exit(struct vcpu_vmx *vmx)
+>  
+>  static void vmx_save_host_cpuid_fault(struct vcpu_vmx *vmx)
+>  {
+> -	u64 host_val;
+> +	u64 host_val, guest_val;
+>  
+>  	if (!boot_cpu_has(X86_FEATURE_CPUID_FAULT))
+>  		return;
+> @@ -1045,10 +1045,12 @@ static void vmx_save_host_cpuid_fault(struct vcpu_vmx *vmx)
+>  	rdmsrl(MSR_MISC_FEATURES_ENABLES, host_val);
+>  	vmx->host_msr_misc_features_enables = host_val;
+>  
+> -	/* clear cpuid fault bit to avoid it leak to guest */
+> -	if (host_val & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
+> +	guest_val = vmx->vcpu.arch.msr_misc_features_enables;
+> +
+> +	/* we can use the hardware cpuid faulting to avoid emulation overhead */
+> +	if ((host_val ^ guest_val) & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) {
+>  		wrmsrl(MSR_MISC_FEATURES_ENABLES,
+> -		       host_val & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
+> +		       host_val ^ MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
+>  	}
+>  }
+>  
+> @@ -2057,6 +2059,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		else
+>  			vmx->pt_desc.guest.addr_a[index / 2] = data;
+>  		break;
+> +	case MSR_MISC_FEATURES_ENABLES:
+> +		if (!kvm_supported_msr_misc_features_enables(vcpu, data))
+> +			return 1;
+> +		if (boot_cpu_has(X86_FEATURE_CPUID_FAULT)) {
+> +			if (vmx->loaded_cpu_state)
 
-I liked the idea, however __int128 isn't supported by all platforms:
+No need for two separate if statements.  And assuming we're checking the
+existing shadow value when loading guest/host state, the WRMSR should
+only be done if the host's value is non-zero.
 
-include/linux/libgcc.h:57:11: error: __int128 is not supported on this target
-        unsigned __int128 ll;
-
-That's from building the 32-bit VDSO for x86.
+> +				wrmsrl(MSR_MISC_FEATURES_ENABLES, data);
+> +		}
+> +		vcpu->arch.msr_misc_features_enables = data;
+> +		break;
+>  	case MSR_TSC_AUX:
+>  		if (!msr_info->host_initiated &&
+>  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 434ec113cc79..33a8c95b2f2e 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2449,6 +2449,17 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
+>  		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
+>  }
+>  
+> +int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64 data)
+> +{
+> +	if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
+> +	    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
+> +	     !supports_cpuid_fault(vcpu)))
+> +		return 0;
+> +	else
+> +		return 1;
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_supported_msr_misc_features_enables);
+> +
+>  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  {
+>  	bool pr = false;
+> @@ -2669,9 +2680,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		vcpu->arch.msr_platform_info = data;
+>  		break;
+>  	case MSR_MISC_FEATURES_ENABLES:
+> -		if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
+> -		    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
+> -		     !supports_cpuid_fault(vcpu)))
+> +		if (!kvm_supported_msr_misc_features_enables(vcpu, data))
+>  			return 1;
+>  		vcpu->arch.msr_misc_features_enables = data;
+>  		break;
+> -- 
+> 2.19.1
+> 
