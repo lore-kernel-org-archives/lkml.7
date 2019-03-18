@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E9EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D2FC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F2E21738
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B182E2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901785;
-	bh=mrXYVe6TgS2bQEakmJR8OqIO/LznBe7/86IrKCC/0Rs=;
+	s=default; t=1552901788;
+	bh=nE4breZ1fDAjkkvVa23aW/Jw+X7zhpcL+uiLMazSm9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hpkeNX9totycCavdkUNywpbNFco0M/5tWylvaG00oIagsZmXzxtqMYXj7yYiuOUck
-	 FAGKDz+IcXIRiXSl2olwcr+R1uYaoKbEYyLGgFhpJK9H0VaE92UszV0HmSeSbe+clq
-	 5HNsI+GWjSYnnCjj1pe2feA/rm4FM5USJg75O7po=
+	b=q8m4t+gDIvSj4ApYb1hWMgH+TNIFX3WfEhGDupXzK5EcczaINd2LlBLrmNH8eTvjj
+	 caeCluNCV9mLaP7qNPc2WP10/ioyOMK+N3PsdhlK/9K9pdMo/COeeQ0Sskw1BZyoO/
+	 0fV+Fq1XTK48FMwYC+DoYTkcYX2IAnaT5eLiKb4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387653AbfCRJgX (ORCPT
+        id S2387666AbfCRJg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:36:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44666 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:36:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387628AbfCRJgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:36:20 -0400
+        id S2387628AbfCRJgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:36:24 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAB5D2075C;
-        Mon, 18 Mar 2019 09:36:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B00252075C;
+        Mon, 18 Mar 2019 09:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901780;
-        bh=mrXYVe6TgS2bQEakmJR8OqIO/LznBe7/86IrKCC/0Rs=;
+        s=default; t=1552901784;
+        bh=nE4breZ1fDAjkkvVa23aW/Jw+X7zhpcL+uiLMazSm9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c5j/HPNssOmiW9lRTMOjts/iBIwEL+I+dMlpCeu60CMcxBoLAbbDL16+7DjZSBGj1
-         HEF+yOZRX0NummLMCXz//LZ5T0o4EWRG0nNWzoJJntLysx3eHXqEnYJXYS+E4K1Ili
-         sCYJehQo5cPTeR6ZpMlaREuJ0uChuE/orfQQByg4=
+        b=Chshkrwshv2/1hG+ew8998ekEKpDesnYE+icdxracDjSesSbPRyrjo2ZyijmhGk/f
+         9E0vJyFQjN4vXt9ygtj1zf1JIl/uR47UClPwohDFddFaQfHcimw8Zaw60q/sVjjTyI
+         iBXwa2PuSBujSlrtYnLuB2FEtYn6cJcUOpVU2GhU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 12/31] tcp: handle inet_csk_reqsk_queue_add() failures
-Date:   Mon, 18 Mar 2019 10:25:47 +0100
-Message-Id: <20190318084210.889365634@linuxfoundation.org>
+Subject: [PATCH 4.9 13/31] vxlan: test dev->flags & IFF_UP before calling gro_cells_receive()
+Date:   Mon, 18 Mar 2019 10:25:48 +0100
+Message-Id: <20190318084210.932034496@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
 References: <20190318084210.397476003@linuxfoundation.org>
@@ -66,66 +65,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[  Upstream commit 9d3e1368bb45893a75a5dfb7cd21fdebfa6b47af ]
+[ Upstream commit 59cbf56fcd98ba2a715b6e97c4e43f773f956393 ]
 
-Commit 7716682cc58e ("tcp/dccp: fix another race at listener
-dismantle") let inet_csk_reqsk_queue_add() fail, and adjusted
-{tcp,dccp}_check_req() accordingly. However, TFO and syncookies
-weren't modified, thus leaking allocated resources on error.
+Same reasons than the ones explained in commit 4179cb5a4c92
+("vxlan: test dev->flags & IFF_UP before calling netif_rx()")
 
-Contrary to tcp_check_req(), in both syncookies and TFO cases,
-we need to drop the request socket. Also, since the child socket is
-created with inet_csk_clone_lock(), we have to unlock it and drop an
-extra reference (->sk_refcount is initially set to 2 and
-inet_csk_reqsk_queue_add() drops only one ref).
+netif_rx() or gro_cells_receive() must be called under a strict contract.
 
-For TFO, we also need to revert the work done by tcp_try_fastopen()
-(with reqsk_fastopen_remove()).
+At device dismantle phase, core networking clears IFF_UP
+and flush_all_backlogs() is called after rcu grace period
+to make sure no incoming packet might be in a cpu backlog
+and still referencing the device.
 
-Fixes: 7716682cc58e ("tcp/dccp: fix another race at listener dismantle")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
+A similar protocol is used for gro_cells infrastructure, as
+gro_cells_destroy() will be called only after a full rcu
+grace period is observed after IFF_UP has been cleared.
+
+Most drivers call netif_rx() from their interrupt handler,
+and since the interrupts are disabled at device dismantle,
+netif_rx() does not have to check dev->flags & IFF_UP
+
+Virtual drivers do not have this guarantee, and must
+therefore make the check themselves.
+
+Otherwise we risk use-after-free and/or crashes.
+
+Fixes: d342894c5d2f ("vxlan: virtual extensible lan")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/syncookies.c |    7 ++++++-
- net/ipv4/tcp_input.c  |    8 +++++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ drivers/net/vxlan.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -225,7 +225,12 @@ struct sock *tcp_get_cookie_sock(struct
- 	if (child) {
- 		atomic_set(&req->rsk_refcnt, 1);
- 		sock_rps_save_rxhash(child, skb);
--		inet_csk_reqsk_queue_add(sk, req, child);
-+		if (!inet_csk_reqsk_queue_add(sk, req, child)) {
-+			bh_unlock_sock(child);
-+			sock_put(child);
-+			child = NULL;
-+			reqsk_put(req);
-+		}
- 	} else {
- 		reqsk_free(req);
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1380,6 +1380,14 @@ static int vxlan_rcv(struct sock *sk, st
+ 		goto drop;
  	}
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6479,7 +6479,13 @@ int tcp_conn_request(struct request_sock
- 		af_ops->send_synack(fastopen_sk, dst, &fl, req,
- 				    &foc, TCP_SYNACK_FASTOPEN);
- 		/* Add the child socket directly into the accept queue */
--		inet_csk_reqsk_queue_add(sk, req, fastopen_sk);
-+		if (!inet_csk_reqsk_queue_add(sk, req, fastopen_sk)) {
-+			reqsk_fastopen_remove(fastopen_sk, req, false);
-+			bh_unlock_sock(fastopen_sk);
-+			sock_put(fastopen_sk);
-+			reqsk_put(req);
-+			goto drop;
-+		}
- 		sk->sk_data_ready(sk);
- 		bh_unlock_sock(fastopen_sk);
- 		sock_put(fastopen_sk);
+ 
++	rcu_read_lock();
++
++	if (unlikely(!(vxlan->dev->flags & IFF_UP))) {
++		rcu_read_unlock();
++		atomic_long_inc(&vxlan->dev->rx_dropped);
++		goto drop;
++	}
++
+ 	stats = this_cpu_ptr(vxlan->dev->tstats);
+ 	u64_stats_update_begin(&stats->syncp);
+ 	stats->rx_packets++;
+@@ -1387,6 +1395,9 @@ static int vxlan_rcv(struct sock *sk, st
+ 	u64_stats_update_end(&stats->syncp);
+ 
+ 	gro_cells_receive(&vxlan->gro_cells, skb);
++
++	rcu_read_unlock();
++
+ 	return 0;
+ 
+ drop:
 
 
