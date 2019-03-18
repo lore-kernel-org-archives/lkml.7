@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA39C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36BAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0FC2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38D62083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901697;
-	bh=1sWrHCNmxVfJI95nB5UKrV6LdQp8oio9h65LtjMIrKo=;
+	s=default; t=1552901702;
+	bh=JnLhwcZY6raWV65FCiKlnWeBel6RPAlvcNYE8qE3fXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vG+HP2Y3gmhU52pzPnAHxAl8WA0tGh8DWP7yGqsD5qPOkMt+PRVUBWLAjNIwPFEPr
-	 R+WMXot6Xn9enaGGUus5fQ5+TUOR8jNnzRgbreGbnr9d/WDlbU7WGsl/6b5+Q51XeI
-	 JXObkE79yzGImbLqNF3LWIrsfACPwL9c3ykAEx7g=
+	b=q5WyTUnn9TOp97roxx+VXqiqkT1KzEzPZobi9krdLriPLNIhTKBi6KdcaEW97rzLb
+	 3vRF6PQcx25926mZuMAqYkMQaaZeOatsoPxPxh0op2mTpZZAojKO/d44AKUtR6jpI7
+	 x24JLXWEimNrqSHk03EeTCaoK8LGByE4UifCdR84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbfCRJez (ORCPT
+        id S2387425AbfCRJfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:35:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729062AbfCRJex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:53 -0400
+        id S1728609AbfCRJe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:34:59 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1571F214AF;
-        Mon, 18 Mar 2019 09:34:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A01FF2083D;
+        Mon, 18 Mar 2019 09:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901692;
-        bh=1sWrHCNmxVfJI95nB5UKrV6LdQp8oio9h65LtjMIrKo=;
+        s=default; t=1552901698;
+        bh=JnLhwcZY6raWV65FCiKlnWeBel6RPAlvcNYE8qE3fXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ja1M798NgffMqfSgS9LX0hPxu4EtSCtYzwBhGtxL4eneJgTxktFnMXbF+YjwAzL5Y
-         /crrZi9RukP/iqu/TtAr3q072GzJ8G2wOxYmd0Jg24mDCJzhxgZm85egVMTlUz6hFh
-         jJRzxl9ZNLc85nLmOzslGzQFvh6iGiMT8ftHlaLU=
+        b=LAcQ8ffemrMDr5DT355RbodcTkqcThugptB4fZi8wACGmXuWkn1PuGEeDFJj3f0Ji
+         d6x8DmEJoYD+haAGA3VbPNWc2Kt2QyCjxeT/HsS47o/SjF4fMWLdMHr7PurCojp8Jo
+         0IeQjf5M0EJaGt2f88/4Hd/4umkXCZW9P7WhHiBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>
-Subject: [PATCH 4.14 02/34] perf tools: Fix compile error with libunwind x86
-Date:   Mon, 18 Mar 2019 10:25:26 +0100
-Message-Id: <20190318084144.978483715@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 20/34] net/mlx4_core: Fix locking in SRIOV mode when switching between events and polling
+Date:   Mon, 18 Mar 2019 10:25:44 +0100
+Message-Id: <20190318084147.497646192@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -66,49 +67,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wang Nan <wangnan0@huawei.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-commit 44df1afdb174fd6038e419f80efd914c0b5f2f85 upstream.
+[ Upstream commit c07d27927f2f2e96fcd27bb9fb330c9ea65612d0 ]
 
-Fix a compile error:
+In procedures mlx4_cmd_use_events() and mlx4_cmd_use_polling(), we need to
+guarantee that there are no FW commands in progress on the comm channel
+(for VFs) or wrapped FW commands (on the PF) when SRIOV is active.
 
- ...
-   CC       util/libunwind/x86_32.o
- In file included from util/libunwind/x86_32.c:33:0:
- util/libunwind/../../arch/x86/util/unwind-libunwind.c: In function 'libunwind__x86_reg_id':
- util/libunwind/../../arch/x86/util/unwind-libunwind.c:110:11: error: 'EINVAL' undeclared (first use in this function)
-    return -EINVAL;
-            ^
- util/libunwind/../../arch/x86/util/unwind-libunwind.c:110:11: note: each undeclared identifier is reported only once for each function it appears in
- mv: cannot stat 'util/libunwind/.x86_32.o.tmp': No such file or directory
- make[4]: *** [util/libunwind/x86_32.o] Error 1
- make[3]: *** [util] Error 2
- make[2]: *** [libperf-in.o] Error 2
- make[1]: *** [sub-make] Error 2
- make: *** [all] Error 2
+We do this by also taking the slave_cmd_mutex when SRIOV is active.
 
-It happens when libunwind-x86 feature is detected.
+This is especially important when switching from event to polling, since we
+free the command-context array during the switch.  If there are FW commands
+in progress (e.g., waiting for a completion event), the completion event
+handler will access freed memory.
 
-Signed-off-by: Wang Nan <wangnan0@huawei.com>
-Link: http://lkml.kernel.org/r/20171206015040.114574-1-wangnan0@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Daniel Díaz <daniel.diaz@linaro.org>
+Since the decision to use comm_wait or comm_poll is taken before grabbing
+the event_sem/poll_sem in mlx4_comm_cmd_wait/poll, we must take the
+slave_cmd_mutex as well (to guarantee that the decision to use events or
+polling and the call to the appropriate cmd function are atomic).
+
+Fixes: a7e1f04905e5 ("net/mlx4_core: Fix deadlock when switching between polling and event fw commands")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/perf/arch/x86/util/unwind-libunwind.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx4/cmd.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/tools/perf/arch/x86/util/unwind-libunwind.c
-+++ b/tools/perf/arch/x86/util/unwind-libunwind.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
+--- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
+@@ -2642,6 +2642,8 @@ int mlx4_cmd_use_events(struct mlx4_dev
+ 	if (!priv->cmd.context)
+ 		return -ENOMEM;
  
--#ifndef REMOTE_UNWIND_LIBUNWIND
- #include <errno.h>
-+#ifndef REMOTE_UNWIND_LIBUNWIND
- #include <libunwind.h>
- #include "perf_regs.h"
- #include "../../util/unwind.h"
++	if (mlx4_is_mfunc(dev))
++		mutex_lock(&priv->cmd.slave_cmd_mutex);
+ 	down_write(&priv->cmd.switch_sem);
+ 	for (i = 0; i < priv->cmd.max_cmds; ++i) {
+ 		priv->cmd.context[i].token = i;
+@@ -2667,6 +2669,8 @@ int mlx4_cmd_use_events(struct mlx4_dev
+ 	down(&priv->cmd.poll_sem);
+ 	priv->cmd.use_events = 1;
+ 	up_write(&priv->cmd.switch_sem);
++	if (mlx4_is_mfunc(dev))
++		mutex_unlock(&priv->cmd.slave_cmd_mutex);
+ 
+ 	return err;
+ }
+@@ -2679,6 +2683,8 @@ void mlx4_cmd_use_polling(struct mlx4_de
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+ 	int i;
+ 
++	if (mlx4_is_mfunc(dev))
++		mutex_lock(&priv->cmd.slave_cmd_mutex);
+ 	down_write(&priv->cmd.switch_sem);
+ 	priv->cmd.use_events = 0;
+ 
+@@ -2690,6 +2696,8 @@ void mlx4_cmd_use_polling(struct mlx4_de
+ 
+ 	up(&priv->cmd.poll_sem);
+ 	up_write(&priv->cmd.switch_sem);
++	if (mlx4_is_mfunc(dev))
++		mutex_unlock(&priv->cmd.slave_cmd_mutex);
+ }
+ 
+ struct mlx4_cmd_mailbox *mlx4_alloc_cmd_mailbox(struct mlx4_dev *dev)
 
 
