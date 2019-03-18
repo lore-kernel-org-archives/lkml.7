@@ -3,38 +3,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D044C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF01C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C762133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194CB2133D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 19:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfCRTPb (ORCPT
+        id S1727699AbfCRTPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 15:15:31 -0400
-Received: from mga05.intel.com ([192.55.52.43]:54512 "EHLO mga05.intel.com"
+        Mon, 18 Mar 2019 15:15:38 -0400
+Received: from mga18.intel.com ([134.134.136.126]:38405 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727485AbfCRTPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727479AbfCRTPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Mar 2019 15:15:07 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 12:15:07 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 12:15:05 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
-   d="scan'208";a="156107038"
+   d="scan'208";a="156107028"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Mar 2019 12:15:05 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 18 Mar 2019 12:15:04 -0700
 From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     jikos@kernel.org, benjamin.tissoires@redhat.com
 Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 10/10] HID: intel-ish-hid: Add interface function for PCI device pointer
-Date:   Mon, 18 Mar 2019 12:14:28 -0700
-Message-Id: <20190318191428.6527-11-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2 04/10] HID: intel-ish-hid: Move driver registry functions
+Date:   Mon, 18 Mar 2019 12:14:22 -0700
+Message-Id: <20190318191428.6527-5-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190318191428.6527-1-srinivas.pandruvada@linux.intel.com>
 References: <20190318191428.6527-1-srinivas.pandruvada@linux.intel.com>
@@ -43,52 +43,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of directly accessing PCI device poitner via struct ishtp_cl,
-create interface function for same. This is required for DMA transfer.
+Move the driver registry with the ishtp bus to the common interface
+file, which clients can include.
+Also rename __ishtp_cl_driver_register() to ishtp_cl_driver_register()
+and removed define for ishtp_cl_driver_register.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/hid/intel-ish-hid/ishtp/bus.c | 13 +++++++++++++
- include/linux/intel-ish-client-if.h   |  2 ++
- 2 files changed, 15 insertions(+)
+ drivers/hid/intel-ish-hid/ishtp-hid-client.c |  2 +-
+ drivers/hid/intel-ish-hid/ishtp/bus.c        |  8 +++---
+ drivers/hid/intel-ish-hid/ishtp/bus.h        | 27 +-------------------
+ include/linux/intel-ish-client-if.h          | 25 ++++++++++++++++++
+ 4 files changed, 31 insertions(+), 31 deletions(-)
 
+diff --git a/drivers/hid/intel-ish-hid/ishtp-hid-client.c b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
+index 94a00ffeb09b..4afb39713213 100644
+--- a/drivers/hid/intel-ish-hid/ishtp-hid-client.c
++++ b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
+@@ -953,7 +953,7 @@ static int __init ish_hid_init(void)
+ 	int	rv;
+ 
+ 	/* Register ISHTP client device driver with ISHTP Bus */
+-	rv = ishtp_cl_driver_register(&hid_ishtp_cl_driver);
++	rv = ishtp_cl_driver_register(&hid_ishtp_cl_driver, THIS_MODULE);
+ 
+ 	return rv;
+ 
 diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
-index 66a485a41481..fb8ca12955b4 100644
+index 308853eab91c..95a97534fcda 100644
 --- a/drivers/hid/intel-ish-hid/ishtp/bus.c
 +++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
-@@ -855,6 +855,19 @@ struct device *ishtp_device(struct ishtp_cl_device *device)
+@@ -485,7 +485,7 @@ static void ishtp_bus_remove_device(struct ishtp_cl_device *device)
  }
- EXPORT_SYMBOL(ishtp_device);
  
-+/**
-+ * ishtp_get_pci_device() - Return PCI device dev pointer
-+ * This interface is used to return PCI device pointer
-+ * from ishtp_cl_device instance.
-+ *
-+ * Return: device *.
-+ */
-+struct device *ishtp_get_pci_device(struct ishtp_cl_device *device)
-+{
-+	return device->ishtp_dev->devc;
-+}
-+EXPORT_SYMBOL(ishtp_get_pci_device);
-+
  /**
-  * ishtp_trace_callback() - Return trace callback
+- * __ishtp_cl_driver_register() - Client driver register
++ * ishtp_cl_driver_register() - Client driver register
+  * @driver:	the client driver instance
+  * @owner:	Owner of this driver module
   *
+@@ -494,8 +494,8 @@ static void ishtp_bus_remove_device(struct ishtp_cl_device *device)
+  *
+  * Return: Return value of driver_register or -ENODEV if not ready
+  */
+-int __ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
+-			       struct module *owner)
++int ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
++			     struct module *owner)
+ {
+ 	int err;
+ 
+@@ -512,7 +512,7 @@ int __ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(__ishtp_cl_driver_register);
++EXPORT_SYMBOL(ishtp_cl_driver_register);
+ 
+ /**
+  * ishtp_cl_driver_unregister() - Client driver unregister
+diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.h b/drivers/hid/intel-ish-hid/ishtp/bus.h
+index c96e7fb42f01..4aed195719de 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/bus.h
++++ b/drivers/hid/intel-ish-hid/ishtp/bus.h
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/intel-ish-client-if.h>
+ 
+ struct ishtp_cl;
+ struct ishtp_cl_device;
+@@ -52,26 +53,6 @@ struct ishtp_cl_device {
+ 	void (*event_cb)(struct ishtp_cl_device *device);
+ };
+ 
+-/**
+- * struct ishtp_cl_device - ISHTP device handle
+- * @driver:	driver instance on a bus
+- * @name:	Name of the device for probe
+- * @probe:	driver callback for device probe
+- * @remove:	driver callback on device removal
+- *
+- * Client drivers defines to get probed/removed for ISHTP client device.
+- */
+-struct ishtp_cl_driver {
+-	struct device_driver driver;
+-	const char *name;
+-	const guid_t *guid;
+-	int (*probe)(struct ishtp_cl_device *dev);
+-	int (*remove)(struct ishtp_cl_device *dev);
+-	int (*reset)(struct ishtp_cl_device *dev);
+-	const struct dev_pm_ops *pm;
+-};
+-
+-
+ int	ishtp_bus_new_client(struct ishtp_device *dev);
+ void	ishtp_remove_all_clients(struct ishtp_device *dev);
+ int	ishtp_cl_device_bind(struct ishtp_cl *cl);
+@@ -105,12 +86,6 @@ void	ishtp_get_device(struct ishtp_cl_device *);
+ void	ishtp_set_drvdata(struct ishtp_cl_device *cl_device, void *data);
+ void	*ishtp_get_drvdata(struct ishtp_cl_device *cl_device);
+ 
+-int	__ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
+-				   struct module *owner);
+-#define ishtp_cl_driver_register(driver)		\
+-	__ishtp_cl_driver_register(driver, THIS_MODULE)
+-void	ishtp_cl_driver_unregister(struct ishtp_cl_driver *driver);
+-
+ int	ishtp_register_event_cb(struct ishtp_cl_device *device,
+ 				void (*read_cb)(struct ishtp_cl_device *));
+ int	ishtp_fw_cl_by_uuid(struct ishtp_device *dev, const guid_t *cuuid);
 diff --git a/include/linux/intel-ish-client-if.h b/include/linux/intel-ish-client-if.h
-index e98bfbb1e07e..16255c2ca2f4 100644
+index 11e285172735..abc0b8122f07 100644
 --- a/include/linux/intel-ish-client-if.h
 +++ b/include/linux/intel-ish-client-if.h
-@@ -77,6 +77,8 @@ int ishtp_register_event_cb(struct ishtp_cl_device *device,
+@@ -10,6 +10,31 @@
+ 
+ struct ishtp_cl_device;
+ 
++/**
++ * struct ishtp_cl_device - ISHTP device handle
++ * @driver:	driver instance on a bus
++ * @name:	Name of the device for probe
++ * @probe:	driver callback for device probe
++ * @remove:	driver callback on device removal
++ *
++ * Client drivers defines to get probed/removed for ISHTP client device.
++ */
++struct ishtp_cl_driver {
++	struct device_driver driver;
++	const char *name;
++	const guid_t *guid;
++	int (*probe)(struct ishtp_cl_device *dev);
++	int (*remove)(struct ishtp_cl_device *dev);
++	int (*reset)(struct ishtp_cl_device *dev);
++	const struct dev_pm_ops *pm;
++};
++
++int ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
++			     struct module *owner);
++void ishtp_cl_driver_unregister(struct ishtp_cl_driver *driver);
++int ishtp_register_event_cb(struct ishtp_cl_device *device,
++			    void (*read_cb)(struct ishtp_cl_device *));
++
+ /* Get the device * from ishtp device instance */
  struct device *ishtp_device(struct ishtp_cl_device *cl_device);
  /* Trace interface for clients */
- void *ishtp_trace_callback(struct ishtp_cl_device *cl_device);
-+/* Get device pointer of PCI device for DMA acces */
-+struct device *ishtp_get_pci_device(struct ishtp_cl_device *cl_device);
- 
- struct ishtp_cl *ishtp_cl_allocate(struct ishtp_cl_device *cl_device);
- void ishtp_cl_free(struct ishtp_cl *cl);
 -- 
 2.17.2
 
