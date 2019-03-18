@@ -2,257 +2,183 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DD5C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1470CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85A020872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 02:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA682086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FhxpR5O+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UUl8BYH4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfCRC7C (ORCPT
+        id S1727766AbfCRDCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 22:59:02 -0400
-Received: from mail-eopbgr40088.outbound.protection.outlook.com ([40.107.4.88]:30016
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726828AbfCRC7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 22:59:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IyGrU0YGcgoBdG+3GGrvVlFZUMrh7tdX/I3Mm0JvmSs=;
- b=FhxpR5O+Kx58tTDTMuYYB7toTubJjjYiMX3Ww1S3xDlL4zZ6Y7NZNTBJT+HtKzvWZCIZYkKXtyWiBepIYFHmMi0V2d4KFYfNQDid8jC0p1CjhqNPqjpBjYb6gPj256jurhhBM8kUfzL2xypXqCvwZYOdhHZH2Z7buZ9f5RBkI0c=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3690.eurprd04.prod.outlook.com (52.134.70.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Mon, 18 Mar 2019 02:58:53 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%6]) with mapi id 15.20.1709.015; Mon, 18 Mar 2019
- 02:58:53 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V4 2/4] firmware: imx: enable imx scu general irq function
-Thread-Topic: [PATCH V4 2/4] firmware: imx: enable imx scu general irq
- function
-Thread-Index: AQHUycaLw3da++dFN02n8A3i94XTEqYMqmoAgAQYUYA=
-Date:   Mon, 18 Mar 2019 02:58:53 +0000
-Message-ID: <DB3PR0402MB3916116510F829C020B275D0F5470@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
- <1550740354-2701-2-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB421142B1C681A0F4F991C7CB80440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB421142B1C681A0F4F991C7CB80440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2c4bf6cf-89d6-422d-c98f-08d6ab4da7d3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3690;
-x-ms-traffictypediagnostic: DB3PR0402MB3690:
-x-microsoft-antispam-prvs: <DB3PR0402MB3690288681ACB1960751A8DEF5470@DB3PR0402MB3690.eurprd04.prod.outlook.com>
-x-forefront-prvs: 098076C36C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(376002)(396003)(346002)(13464003)(189003)(199004)(186003)(53936002)(6116002)(7696005)(76176011)(26005)(3846002)(446003)(68736007)(2501003)(316002)(105586002)(14454004)(81156014)(81166006)(6436002)(8676002)(25786009)(71200400001)(229853002)(8936002)(102836004)(71190400001)(5660300002)(9686003)(2906002)(55016002)(52536014)(33656002)(53546011)(6506007)(14444005)(256004)(97736004)(74316002)(66066001)(4326008)(478600001)(86362001)(2201001)(476003)(6246003)(106356001)(7416002)(486006)(99286004)(11346002)(305945005)(44832011)(110136005)(7736002)(21314003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3690;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hIIM9d4cEnaXMehjl+8aInL7qBKMKBsd0W6lse2EvNWOy1nkAX+wTDx6w7eRPAvXMzjpDFH6qaX5Zzq5YgvbHFWeualkfb5aQYjM49zRzGtDIxiLQGhZGU9LtrY3jQWybalyMft1TRRZ6lpxuple594aXTYwvczbI4EVUgE+jNhLpKDDb1hw8/0J1KjdxoVo6LDRWfurj6FkUIrK9L1//hYy+9rhr/GD+JSG3HLKXIy5JdsR7hWiWgiUug3w3uR9eVp7xeqyPH7rHX31NNDJCKPwv6eUe3h7NT7ENej7IMzP0d2dwOTuwcBvTJia6TY/QK3GALkb4l8djiMrl/+X4Szhsx88EYLpHikGffBrnHfIBwHAaR3F9u75Ua7HckIqiT81RsAMcAxSqyhx9xH8F0A4KWokmF0hE22oLqiJXZY=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Sun, 17 Mar 2019 23:02:43 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39249 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfCRDCm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Mar 2019 23:02:42 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t124so11098550wma.4
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2019 20:02:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fZnDLc28KwM4M8LbQEF8uqIX16CVSEwDbjI+S4Ud2PA=;
+        b=UUl8BYH4blelcEBifxiXclFdhpoM8CBjGOsgR2N75p2EVcoU+0mJ0zG3wjLW2ydjVi
+         nWwspEUJcqK18egd0+KsEdcIERt1tWk2VshIlxwuMq/pgYKtg5+oKCMEE3ZTNLhvDzxz
+         m8XtBaZb/B8SnJ3Cwq+t/+X7CxbRMqxcS1xqRU71xnOeDaJ/LP9KDwRYLTkPPTJt4tk5
+         fL0KVw3cPibAybm8Va77pH3NPZGCm1wJNDqCR7/kCnB2WouzXK2+FtRlTPOO+OEMb531
+         kdAj+EL9ufY47G3lZ63W1Yf369OqqTwN6Hv2EmPnM4lBBKPgCjvdwA0d6k5RchhYUqKy
+         yu1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fZnDLc28KwM4M8LbQEF8uqIX16CVSEwDbjI+S4Ud2PA=;
+        b=bb8uI5/881dlxCQKvV1Yge/MipnI73SzlcQxmpvWdZ4go7FIw1dP7BkYluhcesXINN
+         uDHaZYFAgzgIsJUTfwEhHK6WVnNZDQTHpICgjxnlPi4I9CBCLX0rv0cPMiBk2uKw2/n9
+         l2UP5X3r5o/scD5T++Qt4iOKqXCziv7O0UKpHDo2l7Jp+XRE1uawgekMsgzMla3dSqYw
+         4imZLqlI8Q5hBPk+hfPcCpg0ab+Cee+OV7E1JokpYfzCn6S+PkZGwOF57c3/QX3B3FKA
+         7Hj9ljxhScuoaluyfm+OZYNmTfAqlQ7liLMPgYKEt+ncWpVgJY5iRUwEj5ZVsjZWzq/9
+         VyVw==
+X-Gm-Message-State: APjAAAW1g97cpaoM5ukWiyX9qGNcFQ8xuIOQUyn0euDHZK4Pnz2nii+Z
+        TeXkdAy57mCojUCx39HqwFHvAQ==
+X-Google-Smtp-Source: APXvYqz30bwTOSk5dsEdGMHkMfB2EweGTVyjQLxxYvqMwwUp8qfKxNurGzwSTRwrPLfeegSsj0Bbbw==
+X-Received: by 2002:a7b:c34d:: with SMTP id l13mr9131538wmj.37.1552878161077;
+        Sun, 17 Mar 2019 20:02:41 -0700 (PDT)
+Received: from oak.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id c10sm1380953wrt.65.2019.03.17.20.02.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 17 Mar 2019 20:02:40 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 03:02:38 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Brian Norris <briannorris@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] tracing: kdb: Allow ftdump to skip all but the
+ last few entries
+Message-ID: <20190318030238.GD27232@oak.lan>
+References: <20190315230906.250598-1-dianders@chromium.org>
+ <20190315230906.250598-3-dianders@chromium.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c4bf6cf-89d6-422d-c98f-08d6ab4da7d3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 02:58:53.4288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3690
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190315230906.250598-3-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogQWlzaGVuZyBEb25nDQo+IFNlbnQ6IDIwMTnE6jPUwjE1yNUgMTk6MDUN
-Cj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwu
-b3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVl
-ckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFp
-bC5jb207IGEuenVtbW9AdG93ZXJ0ZWNoLml0Ow0KPiBhbGV4YW5kcmUuYmVsbG9uaUBib290bGlu
-LmNvbTsgdWxmLmhhbnNzb25AbGluYXJvLm9yZzsgRGFuaWVsIEJhbHV0YQ0KPiA8ZGFuaWVsLmJh
-bHV0YUBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-IGxpbnV4LQ0KPiBydGNAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4
-LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSRTogW1BBVENIIFY0IDIvNF0gZmlybXdhcmU6IGlt
-eDogZW5hYmxlIGlteCBzY3UgZ2VuZXJhbCBpcnENCj4gZnVuY3Rpb24NCj4gDQo+ID4gRnJvbTog
-QW5zb24gSHVhbmcNCj4gPg0KPiA+IFRoZSBTeXN0ZW0gQ29udHJvbGxlciBGaXJtd2FyZSAoU0NG
-VykgY29udHJvbHMgUlRDLCB0aGVybWFsIGFuZCBXRE9HDQo+ID4gZXRjLiwgdGhlc2UgcmVzb3Vy
-Y2VzJyBpbnRlcnJ1cHQgZnVuY3Rpb24gYXJlIG1hbmFnZWQgYnkgU0NVLiBXaGVuIGFueQ0KPiA+
-IElSUSBwZW5kaW5nLCBTQ1Ugd2lsbCBub3RpZnkgTGludXggdmlhIE1VIGdlbmVyYWwgaW50ZXJy
-dXB0IGNoYW5uZWwNCj4gPiAjMywgYW5kIExpbnV4IGtlcm5lbCBuZWVkcyB0byBjYWxsIFNDVSBB
-UElzIHRvIGdldCBJUlEgc3RhdHVzIGFuZA0KPiA+IG5vdGlmeSBlYWNoIG1vZHVsZSB0byBoYW5k
-bGUgdGhlIGludGVycnVwdC4NCj4gPg0KPiA+IFNpbmNlIHRoZXJlIGlzIG5vIGRhdGEgdHJhbnNt
-aXNzaW9uIGZvciBTQ1UgSVJRIG5vdGlmaWNhdGlvbiwgc28NCj4gPiBkb29yYmVsbCBtb2RlIGlz
-IHVzZWQgZm9yIHRoaXMgTVUgY2hhbm5lbCwgYW5kIFNDVSBkcml2ZXIgd2lsbCB1c2UNCj4gPiBu
-b3RpZmllciBtZWNoYW5pc20gdG8gYnJvYWRjYXN0IHRvIGV2ZXJ5IG1vZHVsZSB3aGljaCByZWdp
-c3RlcnMgdGhlIFNDVQ0KPiBibG9jayBub3RpZmllci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXMg
-c2luY2UgVjM6DQo+ID4gCS0gdXNlIGFsaWFzIHRvIGdldCBnZW5lcmFsIE1VIGludGVycnVwdCBj
-aGFubmVsIGlkIGFuZCB0aGVuIGdldA0KPiA+IHJlc291cmNlIElELA0KPiA+IAkgIHRoaXMgaXMg
-dG8gc3VwcG9ydCBkaWZmZXJlbnQgTVUgaW5zdGFuY2U7DQo+ID4gCS0gYWRkIHJldHVybiB2YWx1
-ZSBjaGVjayBmb3IgaW14X3NjdV9lbmFibGVfZ2VuZXJhbF9pcnFfY2hhbm5lbCgpLg0KPiA+IC0t
-LQ0KPiA+ICBkcml2ZXJzL2Zpcm13YXJlL2lteC9pbXgtc2N1LmMgICB8IDExNg0KPiA+ICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiANCj4gR2VuZXJhbGx5IEkgd291
-bGQgc3VnZ2VzdCB0byBwdXQgc2N1IGlycSBzdXBwb3J0IGludG8gYW5vdGhlciBzZXBhcmF0ZSBm
-aWxlDQo+IHVuZGVyIFRoZSBzYW1lIGZvbGRlciB0byBtYWtlIGNvZGUgY2xlYW4gZnJvbSBmdW5j
-dGlvbiBwb2ludCBvZiB2aWV3Lg0KDQpPSywgSSB3aWxsIGFkZCBhIGlteC1zY3UtaXJxLmMgZmls
-ZSB0byBzdXBwb3J0IFNDVSBpcnEgZnVuY3Rpb24uDQoNCj4gDQo+ID4gIGluY2x1ZGUvbGludXgv
-ZmlybXdhcmUvaW14L3NjaS5oIHwgICAzICsNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAxMTkgaW5z
-ZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvaW14L2lt
-eC1zY3UuYw0KPiA+IGIvZHJpdmVycy9maXJtd2FyZS9pbXgvaW14LXNjdS5jIGluZGV4IDJiYjFh
-MTkuLjFkY2Q3YjMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9pbXgvaW14LXNj
-dS5jDQo+ID4gKysrIGIvZHJpdmVycy9maXJtd2FyZS9pbXgvaW14LXNjdS5jDQo+ID4gQEAgLTcs
-NiArNyw3IEBADQo+ID4gICAqDQo+ID4gICAqLw0KPiA+DQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5k
-aW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvZXJyLmg+DQo+
-ID4gICNpbmNsdWRlIDxsaW51eC9maXJtd2FyZS9pbXgvdHlwZXMuaD4gICNpbmNsdWRlDQo+ID4g
-PGxpbnV4L2Zpcm13YXJlL2lteC9pcGMuaD4gQEAgLTIxLDYgKzIyLDggQEANCj4gPg0KPiA+ICAj
-ZGVmaW5lIFNDVV9NVV9DSEFOX05VTQkJOA0KPiA+ICAjZGVmaW5lIE1BWF9SWF9USU1FT1VUCQko
-bXNlY3NfdG9famlmZmllcygzMCkpDQo+ID4gKyNkZWZpbmUgSU1YX1NDX0lSUV9GVU5DX1NUQVRV
-UwkyDQo+ID4gKyNkZWZpbmUgSU1YX1NDX0lSUV9OVU1fR1JPVVAJNg0KPiA+DQo+ID4gIHN0cnVj
-dCBpbXhfc2NfY2hhbiB7DQo+ID4gIAlzdHJ1Y3QgaW14X3NjX2lwYyAqc2NfaXBjOw0KPiA+IEBA
-IC00MSw2ICs0NCw3IEBAIHN0cnVjdCBpbXhfc2NfaXBjIHsNCj4gPiAgCXUzMiAqbXNnOw0KPiA+
-ICAJdTggcnhfc2l6ZTsNCj4gPiAgCXU4IGNvdW50Ow0KPiA+ICsJdTMyIG11X3Jlc291cmNlX2lk
-Ow0KPiANCj4gSSBmZWVsIGl0IGEgYml0IHN0cmFuZ2UgdG8gcHV0IHRoaXMgbXUgaWQgaW4gc3Ry
-dWN0IGlteF9zY19pcGMuDQoNClNpbmNlIEkgd2lsbCBjcmVhdGUgbmV3IGZpbGUgaW14LXNjLWly
-cS5jLCBJIHdpbGwgbW92ZSB0aGlzIG91dCBvZiB0aGUgc3RydWN0IGFuZA0KdXNlIGRlZmluZSBh
-IHN0YXRpYyB2YXJpYWJsZSBmb3IgaXQuDQoNCj4gDQo+ID4gIH07DQo+ID4NCj4gPiAgLyoNCj4g
-PiBAQCAtNzcsNyArODEsMjMgQEAgc3RhdGljIGludCBpbXhfc2NfbGludXhfZXJybWFwW0lNWF9T
-Q19FUlJfTEFTVF0gPQ0KPiB7DQo+ID4gIAktRUlPLAkgLyogSU1YX1NDX0VSUl9GQUlMICovDQo+
-ID4gIH07DQo+ID4NCj4gPiArc3RydWN0IGlteF9zY19tc2dfaXJxX2dldF9zdGF0dXMgew0KPiA+
-ICsJc3RydWN0IGlteF9zY19ycGNfbXNnIGhkcjsNCj4gPiArCXVuaW9uIHsNCj4gPiArCQlzdHJ1
-Y3Qgew0KPiA+ICsJCQl1MTYgcmVzb3VyY2U7DQo+ID4gKwkJCXU4IGdyb3VwOw0KPiA+ICsJCQl1
-OCByZXNlcnZlZDsNCj4gPiArCQl9IF9fcGFja2VkIHJlcTsNCj4gPiArCQlzdHJ1Y3Qgew0KPiA+
-ICsJCQl1MzIgc3RhdHVzOw0KPiA+ICsJCX0gX19wYWNrZWQgcmVzcDsNCj4gDQo+IE5vIHBhY2tl
-ZCBuZWVkZWQgZm9yIHRoaXMgb25lDQoNCk9LDQoNCj4gDQo+ID4gKwl9IGRhdGE7DQo+ID4gK307
-DQo+ID4gKw0KPiA+ICBzdGF0aWMgc3RydWN0IGlteF9zY19pcGMgKmlteF9zY19pcGNfaGFuZGxl
-Ow0KPiA+ICtzdGF0aWMgc3RydWN0IHdvcmtfc3RydWN0IGlteF9zY19nZW5lcmFsX2lycV93b3Jr
-OyBzdGF0aWMNCj4gPiArQkxPQ0tJTkdfTk9USUZJRVJfSEVBRChpbXhfc2N1X25vdGlmaWVyX2No
-YWluKTsNCj4gDQo+IElteF9zY3VfaXJxX3h4eA0KDQpPSw0KDQo+IA0KPiA+DQo+ID4gIHN0YXRp
-YyBpbmxpbmUgaW50IGlteF9zY190b19saW51eF9lcnJubyhpbnQgZXJybm8pICB7IEBAIC0xOTQs
-OQ0KPiA+ICsyMTQsOTAgQEAgaW50IGlteF9zY3VfY2FsbF9ycGMoc3RydWN0IGlteF9zY19pcGMg
-KnNjX2lwYywgdm9pZCAqbXNnLA0KPiA+IGJvb2wgaGF2ZV9yZXNwKSAgfSBFWFBPUlRfU1lNQk9M
-KGlteF9zY3VfY2FsbF9ycGMpOw0KPiA+DQo+ID4gK2ludCBpbXhfc2N1X3JlZ2lzdGVyX25vdGlm
-aWVyKHN0cnVjdCBub3RpZmllcl9ibG9jayAqbmIpIHsNCj4gPiArCXJldHVybiBibG9ja2luZ19u
-b3RpZmllcl9jaGFpbl9yZWdpc3RlcigmaW14X3NjdV9ub3RpZmllcl9jaGFpbiwNCj4gPiArbmIp
-OyB9IEVYUE9SVF9TWU1CT0woaW14X3NjdV9yZWdpc3Rlcl9ub3RpZmllcik7DQo+ID4gKw0KPiA+
-ICtpbnQgaW14X3NjdV91bnJlZ2lzdGVyX25vdGlmaWVyKHN0cnVjdCBub3RpZmllcl9ibG9jayAq
-bmIpIHsNCj4gPiArCXJldHVybiBibG9ja2luZ19ub3RpZmllcl9jaGFpbl91bnJlZ2lzdGVyKCZp
-bXhfc2N1X25vdGlmaWVyX2NoYWluLA0KPiA+ICtuYik7IH0gRVhQT1JUX1NZTUJPTChpbXhfc2N1
-X3VucmVnaXN0ZXJfbm90aWZpZXIpOw0KPiA+ICsNCj4gPiArc3RhdGljIGludCBpbXhfc2N1X25v
-dGlmaWVyX2NhbGxfY2hhaW4odW5zaWduZWQgbG9uZyBzdGF0dXMsIHU4DQo+ID4gKypncm91cCkg
-ew0KPiA+ICsJcmV0dXJuIGJsb2NraW5nX25vdGlmaWVyX2NhbGxfY2hhaW4oJmlteF9zY3Vfbm90
-aWZpZXJfY2hhaW4sDQo+ID4gKwkJCQkJICAgIHN0YXR1cywgKHZvaWQgKilncm91cCk7DQo+ID4g
-K30NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIGlteF9zY3VfZ2VuZXJhbF9pcnFfd29ya19oYW5k
-bGVyKHN0cnVjdCB3b3JrX3N0cnVjdA0KPiA+ICsqd29yaykgew0KPiA+ICsJc3RydWN0IGlteF9z
-Y19tc2dfaXJxX2dldF9zdGF0dXMgbXNnOw0KPiA+ICsJc3RydWN0IGlteF9zY19ycGNfbXNnICpo
-ZHIgPSAmbXNnLmhkcjsNCj4gPiArCXUzMiBpcnFfc3RhdHVzOw0KPiA+ICsJaW50IHJldDsNCj4g
-PiArCXU4IGk7DQo+ID4gKw0KPiA+ICsJZm9yIChpID0gMDsgaSA8IElNWF9TQ19JUlFfTlVNX0dS
-T1VQOyBpKyspIHsNCj4gDQo+IERvIHdlIG5lZWQgdG8gc3VwcG9ydCBhbGwgaXJxIGdyb3VwPw0K
-DQpBZnRlciBmdXJ0aGVyIGNoZWNrLCBtYXliZSB3ZSBjYW4gY2hhbmdlIHRoZSBncm91cCBudW1i
-ZXIgdG8gNCwgT05MWSBzdXBwb3J0aW5nIHRob3NlDQprZXJuZWwgcmVsYXRlZCBmZWF0dXJlcywg
-b3RoZXJzIGFyZSBOT1QgbmVlZGVkIGluIGtlcm5lbCBub3cuDQoNCjM0ICNkZWZpbmUgU0NfSVJR
-X0dST1VQX1RFTVAgICAgICAgMFUgICAvKiBUZW1wIGludGVycnVwdHMgKi8NCiAzNSAjZGVmaW5l
-IFNDX0lSUV9HUk9VUF9XRE9HICAgICAgIDFVICAgLyogV2F0Y2hkb2cgaW50ZXJydXB0cyAqLw0K
-IDM2ICNkZWZpbmUgU0NfSVJRX0dST1VQX1JUQyAgICAgICAgMlUgICAvKiBSVEMgaW50ZXJydXB0
-cyAqLw0KIDM3ICNkZWZpbmUgU0NfSVJRX0dST1VQX1dBS0UgICAgICAgM1UgICAvKiBXYWtldXAg
-aW50ZXJydXB0cyAqLw0KIDM4ICNkZWZpbmUgU0NfSVJRX0dST1VQX1NZU0NUUiAgICAgNFUgICAv
-KiBTeXN0ZW0gY291bnRlciBpbnRlcnJ1cHRzICovDQogMzkgI2RlZmluZSBTQ19JUlFfR1JPVVBf
-UkVCT09URUQgICA1VSAgIC8qIFBhcnRpdGlvbiByZWJvb3QgY29tcGxldGUgKi8NCiA0MCAjZGVm
-aW5lIFNDX0lSUV9HUk9VUF9SRUJPT1QgICAgIDZVICAgLyogUGFydGl0aW9uIHJlYm9vdCBzdGFy
-dGluZyAqLw0KDQo+IA0KPiA+ICsJCWhkci0+dmVyID0gSU1YX1NDX1JQQ19WRVJTSU9OOw0KPiA+
-ICsJCWhkci0+c3ZjID0gSU1YX1NDX1JQQ19TVkNfSVJROw0KPiA+ICsJCWhkci0+ZnVuYyA9IElN
-WF9TQ19JUlFfRlVOQ19TVEFUVVM7DQo+ID4gKwkJaGRyLT5zaXplID0gMjsNCj4gPiArDQo+ID4g
-KwkJbXNnLmRhdGEucmVxLnJlc291cmNlID0gaW14X3NjX2lwY19oYW5kbGUtDQo+ID5tdV9yZXNv
-dXJjZV9pZDsNCj4gPiArCQltc2cuZGF0YS5yZXEuZ3JvdXAgPSBpOw0KPiA+ICsNCj4gPiArCQly
-ZXQgPSBpbXhfc2N1X2NhbGxfcnBjKGlteF9zY19pcGNfaGFuZGxlLCAmbXNnLCB0cnVlKTsNCj4g
-PiArCQlpZiAocmV0KSB7DQo+ID4gKwkJCXByX2VycigiZ2V0IGlycSBzdGF0dXMgZmFpbGVkLCBy
-ZXQgJWRcbiIsIHJldCk7DQo+IA0KPiBDYW4gdGhlIGVycm9yIG91dHB1dCBtb3JlIHVzZWZ1bCBp
-bmZvcm1hdGlvbj8NCg0KWWVzLCBJIHdpbGwgYWRkIGdyb3VwIG51bWJlciBpbiB0aGUgZXJyb3Ig
-bWVzc2FnZS4NCg0KPiANCj4gPiArCQkJcmV0dXJuOw0KPiA+ICsJCX0NCj4gPiArDQo+ID4gKwkJ
-aXJxX3N0YXR1cyA9IG1zZy5kYXRhLnJlc3Auc3RhdHVzOw0KPiA+ICsJCWlmICghaXJxX3N0YXR1
-cykNCj4gPiArCQkJY29udGludWU7DQo+ID4gKw0KPiA+ICsJCWlteF9zY3Vfbm90aWZpZXJfY2Fs
-bF9jaGFpbihpcnFfc3RhdHVzLCAmaSk7DQo+ID4gKwl9DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0
-YXRpYyB2b2lkIGlteF9zY3VfcnhkYl9jYWxsYmFjayhzdHJ1Y3QgbWJveF9jbGllbnQgKmMsIHZv
-aWQgKm1zZykgew0KPiANCj4gSW14X3NjdV9pcnFfY2FsbGJhY2sNCg0KT0sNCg0KPiANCj4gPiAr
-CXNjaGVkdWxlX3dvcmsoJmlteF9zY19nZW5lcmFsX2lycV93b3JrKTsNCj4gPiArfQ0KPiA+ICsN
-Cj4gPiArc3RhdGljIGludCBpbXhfc2N1X2VuYWJsZV9nZW5lcmFsX2lycV9jaGFubmVsKHN0cnVj
-dCBkZXZpY2UgKmRldikgew0KPiA+ICsJc3RydWN0IG1ib3hfY2xpZW50ICpjbDsNCj4gPiArCXN0
-cnVjdCBtYm94X2NoYW4gKmNoOw0KPiA+ICsJaW50IHJldCA9IDA7DQo+ID4gKw0KPiA+ICsJY2wg
-PSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKmNsKSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAo
-IWNsKQ0KPiA+ICsJCXJldHVybiAtRU5PTUVNOw0KPiA+ICsNCj4gPiArCWNsLT5kZXYgPSBkZXY7
-DQo+ID4gKwljbC0+cnhfY2FsbGJhY2sgPSBpbXhfc2N1X3J4ZGJfY2FsbGJhY2s7DQo+ID4gKw0K
-PiA+ICsJLyogU0NVIGdlbmVyYWwgSVJRIHVzZXMgZ2VuZXJhbCBpbnRlcnJ1cHQgY2hhbm5lbCAz
-ICovDQo+ID4gKwljaCA9IG1ib3hfcmVxdWVzdF9jaGFubmVsX2J5bmFtZShjbCwgImdpcDMiKTsN
-Cj4gPiArCWlmIChJU19FUlIoY2gpKSB7DQo+ID4gKwkJcmV0ID0gUFRSX0VSUihjaCk7DQo+ID4g
-KwkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBtYm94IGNoYW4gZ2lwMywgcmV0ICVk
-XG4iLA0KPiByZXQpOw0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJ
-SU5JVF9XT1JLKCZpbXhfc2NfZ2VuZXJhbF9pcnFfd29yaywNCj4gPiBpbXhfc2N1X2dlbmVyYWxf
-aXJxX3dvcmtfaGFuZGxlcik7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIHJldDsNCj4gPiArfQ0KPiA+
-ICsNCj4gPiAgc3RhdGljIGludCBpbXhfc2N1X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpICB7DQo+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ICsJ
-c3RydWN0IG9mX3BoYW5kbGVfYXJncyBzcGVjOw0KPiA+ICAJc3RydWN0IGlteF9zY19pcGMgKnNj
-X2lwYzsNCj4gPiAgCXN0cnVjdCBpbXhfc2NfY2hhbiAqc2NfY2hhbjsNCj4gPiAgCXN0cnVjdCBt
-Ym94X2NsaWVudCAqY2w7DQo+ID4gQEAgLTI0Niw2ICszNDcsMjEgQEAgc3RhdGljIGludCBpbXhf
-c2N1X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gPiAqcGRldikNCj4gPg0KPiA+ICAJ
-aW14X3NjX2lwY19oYW5kbGUgPSBzY19pcGM7DQo+ID4NCj4gPiArCXJldCA9IGlteF9zY3VfZW5h
-YmxlX2dlbmVyYWxfaXJxX2NoYW5uZWwoZGV2KTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJZGV2
-X3dhcm4oZGV2LA0KPiA+ICsJCQkiZmFpbGVkIHRvIGVuYWJsZSBnZW5lcmFsIGlycSBjaGFubmVs
-OiAlZFxuIiwgcmV0KTsNCj4gPiArDQo+IA0KPiBJdCBkb2VzIG5vdCBtYWtlIHNlbnNlIHRvIHBh
-cnNlIGFnYWluIGlmIGZhaWxlZC4gUGxzIHB1dCB0aGVtIGludG8gb25lIGZ1bmN0aW9uLg0KDQpX
-aWxsIHB1dCB0aGUgbXUgaWQgcGFyc2UgaW50byBpbXhfc2N1X2VuYWJsZV9nZW5lcmFsX2lycV9j
-aGFubmVsIGZ1bmN0aW9uIGFuZA0KT05MWSBwYXJzZSBpdCB3aGVuIGlycSBjaGFubmVsIGVuYWJs
-ZWQgc3VjY2Vzc2Z1bGx5Lg0KDQo+IA0KPiA+ICsJaWYgKCFvZl9wYXJzZV9waGFuZGxlX3dpdGhf
-YXJncyhkZXYtPm9mX25vZGUsICJtYm94ZXMiLA0KPiA+ICsJCQkJICAgICAgICIjbWJveC1jZWxs
-cyIsIDAsICZzcGVjKSkNCj4gPiArCQlpID0gb2ZfYWxpYXNfZ2V0X2lkKHNwZWMubnAsICJtdSIp
-Ow0KPiANCj4gVGhpcyBuZWVkcyBhIGJpbmRpbmcgZG9jIGZvciBtYWlsYm94IChtdSkuDQoNCldp
-bGwgYWRkIGl0Lg0KDQo+IA0KPiA+ICsNCj4gPiArCS8qIHVzZSBtdTEgYXMgZ2VuZXJhbCBtdSBp
-cnEgY2hhbm5lbCBpZiBmYWlsZWQgKi8NCj4gPiArCWlmIChpIDwgMCkNCj4gPiArCQlpID0gMTsN
-Cj4gPiArDQo+ID4gKwlpbXhfc2NfaXBjX2hhbmRsZS0+bXVfcmVzb3VyY2VfaWQgPSBJTVhfU0Nf
-Ul9NVV8wQSArIGk7DQo+ID4gKw0KPiA+ICAJZGV2X2luZm8oZGV2LCAiTlhQIGkuTVggU0NVIElu
-aXRpYWxpemVkXG4iKTsNCj4gPg0KPiA+ICAJcmV0dXJuIGRldm1fb2ZfcGxhdGZvcm1fcG9wdWxh
-dGUoZGV2KTsgZGlmZiAtLWdpdA0KPiA+IGEvaW5jbHVkZS9saW51eC9maXJtd2FyZS9pbXgvc2Np
-LmggYi9pbmNsdWRlL2xpbnV4L2Zpcm13YXJlL2lteC9zY2kuaA0KPiA+IGluZGV4IGViYzU1MDku
-LjlkNjA4ZGIgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9maXJtd2FyZS9pbXgvc2Np
-LmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2Zpcm13YXJlL2lteC9zY2kuaA0KPiA+IEBAIC0x
-NSw0ICsxNSw3IEBADQo+ID4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2Zpcm13YXJlL2lteC9zdmMv
-bWlzYy5oPiAgI2luY2x1ZGUNCj4gPiA8bGludXgvZmlybXdhcmUvaW14L3N2Yy9wbS5oPg0KPiA+
-ICsNCj4gPiAraW50IGlteF9zY3VfcmVnaXN0ZXJfbm90aWZpZXIoc3RydWN0IG5vdGlmaWVyX2Js
-b2NrICpuYik7IGludA0KPiA+ICtpbXhfc2N1X3VucmVnaXN0ZXJfbm90aWZpZXIoc3RydWN0IG5v
-dGlmaWVyX2Jsb2NrICpuYik7DQo+IA0KPiBpbXhfc2N1X2lycV94eHgNCg0KT0sNCg0KVGhhbmtz
-LA0KQW5zb24uDQoNCj4gDQo+IFJlZ2FyZHMNCj4gRG9uZyBBaXNoZW5nDQo+IA0KPiA+ICAjZW5k
-aWYgLyogX1NDX1NDSV9IICovDQo+ID4gLS0NCj4gPiAyLjcuNA0KDQo=
+On Fri, Mar 15, 2019 at 04:09:06PM -0700, Douglas Anderson wrote:
+> The 'ftdump' command in kdb is currently a bit of a last resort, at
+> least if you have lots of traces turned on.  It's going to print a
+> whole boatload of data out your serial port which is probably running
+> at 115200.  This could easily take many, many minutes.
+> 
+> Usually you're most interested in what's at the _end_ of the ftrace
+> buffer, AKA what happened most recently.  That means you've got to
+> wait the full time for the dump.  The 'ftdump' command does attempt to
+> help you a little bit by allowing you to skip a fixed number of
+> entries.  Unfortunately it provides no way for you to know how many
+> entries you should skip.
+> 
+> Let's do similar to python and allow you to use a negative number to
+> indicate that you want to skip all entries except the last few.  This
+> allows you to quickly see what you want.
+> 
+> Note that we also change the printout in ftdump to print the
+> (positive) number of entries actually skipped since that could be
+> helpful to know when you've specified a negative skip count.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+There's a small nitpick below but otherwise:
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+
+> ---
+> 
+> Changes in v4:
+> - Now uses trace_total_entries() / trace_total_entries_cpu().
+> - Based upon new patch that renames "lines" to "entries".
+> 
+> Changes in v3:
+> - Optimize counting as per Steven Rostedt.
+> - Down to 1 patch since patch #1 from v2 landed.
+> 
+>  kernel/trace/trace_kdb.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+> index 4b666643d69f..996e1e9cd9a6 100644
+> --- a/kernel/trace/trace_kdb.c
+> +++ b/kernel/trace/trace_kdb.c
+> @@ -39,7 +39,8 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
+>  	/* don't look at user memory in panic mode */
+>  	tr->trace_flags &= ~TRACE_ITER_SYM_USEROBJ;
+>  
+> -	kdb_printf("Dumping ftrace buffer:\n");
+> +	kdb_printf("Dumping ftrace buffer (skipping %d entries):\n",
+> +		   skip_entries);
+
+If someone *doesn't* need to skip any entries I'm not a fan of telling
+them we are "skipping 0 entries"; it is more unnerving than helpful
+("huh? what does it need to tell me that no entried were skipped?
+what makes the tracer skip entries?... Doh... I get it").
+
+
+Daniel.
+
+
+>  
+>  	/* reset all but tr, trace, and overruns */
+>  	memset(&iter.seq, 0,
+> @@ -109,6 +110,7 @@ static int kdb_ftdump(int argc, const char **argv)
+>  	int skip_entries = 0;
+>  	long cpu_file;
+>  	char *cp;
+> +	int cnt;
+>  
+>  	if (argc > 2)
+>  		return KDB_ARGCOUNT;
+> @@ -129,6 +131,16 @@ static int kdb_ftdump(int argc, const char **argv)
+>  	}
+>  
+>  	kdb_trap_printk++;
+> +
+> +	/* A negative skip_entries means skip all but the last entries */
+> +	if (skip_entries < 0) {
+> +		if (cpu_file == RING_BUFFER_ALL_CPUS)
+> +			cnt = trace_total_entries(NULL);
+> +		else
+> +			cnt = trace_total_entries_cpu(NULL, cpu_file);
+> +		skip_entries = max(cnt + skip_entries, 0);
+> +	}
+> +
+>  	ftrace_dump_buf(skip_entries, cpu_file);
+>  	kdb_trap_printk--;
+>  
+> @@ -138,7 +150,8 @@ static int kdb_ftdump(int argc, const char **argv)
+>  static __init int kdb_ftrace_register(void)
+>  {
+>  	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#entries] [cpu]",
+> -			    "Dump ftrace log", 0, KDB_ENABLE_ALWAYS_SAFE);
+> +			    "Dump ftrace log; -skip dumps last #entries", 0,
+> +			    KDB_ENABLE_ALWAYS_SAFE);
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.21.0.360.g471c308f928-goog
+> 
