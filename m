@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAA2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AF6C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9452075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0051B2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902187;
-	bh=GIfycHLdSDZ3fqtuRd9yzpgJYkAmbWpVG0nWllr/nEE=;
+	s=default; t=1552902194;
+	bh=O3yJCF0MKkbWFiJt+pEr92/wp61dMXLpXg3MexuNoDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XpnPqr1hJIQAaD6afza7mfHSDN6yr/592Wq4ogOlsio+R5faSoQ5DbGwP3q8wXWgR
-	 g6QOklzVax8mT58S1LWWqsxSf2YhSfC17GHt8NNlXY/ibFHJeIHya6NSOEsahemVZ4
-	 jmei7wLRTSQQVrfNTsXInfq0A8UqtIXevz08y16E=
+	b=o8Y8yk0e8VZShF5VX/tnlDgOAgk9arv4MfYsQN5XJd3NHMIJSb4OVm+HAbPf1ytgf
+	 XxBc86CezBeaL1Ovkf3zqxMOBVI8G+ZCNSy52uY2DvE0bwkmK9hsKDBFRexw7ZNTgw
+	 +7xN405e27kO5pHhqgokh5jJAM8zcePsIHMaPciQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbfCRJcR (ORCPT
+        id S1728142AbfCRJcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40230 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:32:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbfCRJcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:32:13 -0400
+        id S1728676AbfCRJcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:32:06 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D8C32087C;
-        Mon, 18 Mar 2019 09:32:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9183214D8;
+        Mon, 18 Mar 2019 09:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901531;
-        bh=GIfycHLdSDZ3fqtuRd9yzpgJYkAmbWpVG0nWllr/nEE=;
+        s=default; t=1552901525;
+        bh=O3yJCF0MKkbWFiJt+pEr92/wp61dMXLpXg3MexuNoDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UtezU6v5TDbXdp/Q8My2Fq2Yy02I6DXhRTtkudcPjsnP8DscKGlhLXffyUaYr5aw+
-         xC01VSE0BWta9r/9tyPryE7WzoewjFScqJJgesp7syapwFTwuemusDdMofa0esVe1+
-         JyeS2ewFd0PGkZcX+ujTwEZ31KxAgMVXikcqytYo=
+        b=o5IOA7y9+VQj/0o8zfqOmO/3eQ1XdtfTZDYk5PQ5A3MT3/nNadcYNZY8FSBrdPzNP
+         WgATFAGC2wnam+ksvN2dyi0JbWJ+ADnTDNJc6QE+o1OOL8YhbmRw8l9R9rhgnOBDMs
+         CphptYB8hgGf1FOFsaeyHbySlqqmYEIPmcag6/xM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Tariq Toukan <tariqt@mellanox.com>,
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 22/52] net/mlx4_core: Fix reset flow when in command polling mode
-Date:   Mon, 18 Mar 2019 10:25:19 +0100
-Message-Id: <20190318084016.174962163@linuxfoundation.org>
+Subject: [PATCH 4.19 20/52] vxlan: Fix GRO cells race condition between receive and link delete
+Date:   Mon, 18 Mar 2019 10:25:17 +0100
+Message-Id: <20190318084015.950944030@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -67,85 +67,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit e15ce4b8d11227007577e6dc1364d288b8874fbe ]
+[ Upstream commit ad6c9986bcb627c7c22b8f9e9a934becc27df87c ]
 
-As part of unloading a device, the driver switches from
-FW command event mode to FW command polling mode.
+If we receive a packet while deleting a VXLAN device, there's a chance
+vxlan_rcv() is called at the same time as vxlan_dellink(). This is fine,
+except that vxlan_dellink() should never ever touch stuff that's still in
+use, such as the GRO cells list.
 
-Part of switching over to polling mode is freeing the command context array
-memory (unfortunately, currently, without NULLing the command context array
-pointer).
+Otherwise, vxlan_rcv() crashes while queueing packets via
+gro_cells_receive().
 
-The reset flow calls "complete" to complete all outstanding fw commands
-(if we are in event mode). The check for event vs. polling mode here
-is to test if the command context array pointer is NULL.
+Move the gro_cells_destroy() to vxlan_uninit(), which runs after the RCU
+grace period is elapsed and nothing needs the gro_cells anymore.
 
-If the reset flow is activated after the switch to polling mode, it will
-attempt (incorrectly) to complete all the commands in the context array --
-because the pointer was not NULLed when the driver switched over to polling
-mode.
+This is now done in the same way as commit 8e816df87997 ("geneve: Use GRO
+cells infrastructure.") originally implemented for GENEVE.
 
-As a result, we have a use-after-free situation, which results in a
-kernel crash.
-
-For example:
-BUG: unable to handle kernel NULL pointer dereference at           (null)
-IP: [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
-PGD 0
-Oops: 0000 [#1] SMP
-Modules linked in: netconsole nfsv3 nfs_acl nfs lockd grace ...
-CPU: 2 PID: 940 Comm: kworker/2:3 Kdump: loaded Not tainted 3.10.0-862.el7.x86_64 #1
-Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090006  04/28/2016
-Workqueue: events hv_eject_device_work [pci_hyperv]
-task: ffff8d1734ca0fd0 ti: ffff8d17354bc000 task.ti: ffff8d17354bc000
-RIP: 0010:[<ffffffff876c4a8e>]  [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
-RSP: 0018:ffff8d17354bfa38  EFLAGS: 00010082
-RAX: 0000000000000000 RBX: ffff8d17362d42c8 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: 0000000000000003 RDI: ffff8d17362d42c8
-RBP: ffff8d17354bfa70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000298 R11: ffff8d173610e000 R12: ffff8d17362d42d0
-R13: 0000000000000246 R14: 0000000000000000 R15: 0000000000000003
-FS:  0000000000000000(0000) GS:ffff8d1802680000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 00000000f16d8000 CR4: 00000000001406e0
-Call Trace:
- [<ffffffff876c7adc>] complete+0x3c/0x50
- [<ffffffffc04242f0>] mlx4_cmd_wake_completions+0x70/0x90 [mlx4_core]
- [<ffffffffc041e7b1>] mlx4_enter_error_state+0xe1/0x380 [mlx4_core]
- [<ffffffffc041fa4b>] mlx4_comm_cmd+0x29b/0x360 [mlx4_core]
- [<ffffffffc041ff51>] __mlx4_cmd+0x441/0x920 [mlx4_core]
- [<ffffffff877f62b1>] ? __slab_free+0x81/0x2f0
- [<ffffffff87951384>] ? __radix_tree_lookup+0x84/0xf0
- [<ffffffffc043a8eb>] mlx4_free_mtt_range+0x5b/0xb0 [mlx4_core]
- [<ffffffffc043a957>] mlx4_mtt_cleanup+0x17/0x20 [mlx4_core]
- [<ffffffffc04272c7>] mlx4_free_eq+0xa7/0x1c0 [mlx4_core]
- [<ffffffffc042803e>] mlx4_cleanup_eq_table+0xde/0x130 [mlx4_core]
- [<ffffffffc0433e08>] mlx4_unload_one+0x118/0x300 [mlx4_core]
- [<ffffffffc0434191>] mlx4_remove_one+0x91/0x1f0 [mlx4_core]
-
-The fix is to set the command context array pointer to NULL after freeing
-the array.
-
-Fixes: f5aef5aa3506 ("net/mlx4_core: Activate reset flow upon fatal command cases")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/cmd.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/vxlan.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
-@@ -2689,6 +2689,7 @@ void mlx4_cmd_use_polling(struct mlx4_de
- 		down(&priv->cmd.event_sem);
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2460,6 +2460,8 @@ static void vxlan_uninit(struct net_devi
+ {
+ 	struct vxlan_dev *vxlan = netdev_priv(dev);
  
- 	kfree(priv->cmd.context);
-+	priv->cmd.context = NULL;
++	gro_cells_destroy(&vxlan->gro_cells);
++
+ 	vxlan_fdb_delete_default(vxlan, vxlan->cfg.vni);
  
- 	up(&priv->cmd.poll_sem);
- 	up_write(&priv->cmd.switch_sem);
+ 	free_percpu(dev->tstats);
+@@ -3526,7 +3528,6 @@ static void vxlan_dellink(struct net_dev
+ 
+ 	vxlan_flush(vxlan, true);
+ 
+-	gro_cells_destroy(&vxlan->gro_cells);
+ 	list_del(&vxlan->next);
+ 	unregister_netdevice_queue(dev, head);
+ }
 
 
