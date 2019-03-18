@@ -2,328 +2,155 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278B6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEF1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D50832085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D7420835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 07:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfCRHBC (ORCPT
+        id S1726973AbfCRHSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 03:01:02 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:59065 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbfCRHBB (ORCPT
+        Mon, 18 Mar 2019 03:18:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39408 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726135AbfCRHSm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 03:01:01 -0400
-X-Originating-IP: 79.86.19.127
-Received: from [192.168.0.11] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 59B641C0007;
-        Mon, 18 Mar 2019 07:00:48 +0000 (UTC)
-Subject: Re: [PATCH v7 4/4] hugetlb: allow to free gigantic pages regardless
- of the configuration
-To:     christophe leroy <christophe.leroy@c-s.fr>,
-        aneesh.kumar@linux.ibm.com, mpe@ellerman.id.au,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190317162847.14107-1-alex@ghiti.fr>
- <20190317162847.14107-5-alex@ghiti.fr>
- <f434892d-80b2-f09d-31d6-754a1be0b97a@c-s.fr>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <525d6c00-012f-c6dd-abf0-fa5e1ffc12be@ghiti.fr>
-Date:   Mon, 18 Mar 2019 03:00:47 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 18 Mar 2019 03:18:42 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2I7GNkZ046579
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:18:40 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ra44twknp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:18:40 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 18 Mar 2019 07:18:36 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 18 Mar 2019 07:18:33 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2I7IXGc26935510
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Mar 2019 07:18:33 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B99FFA4054;
+        Mon, 18 Mar 2019 07:18:33 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC798A4068;
+        Mon, 18 Mar 2019 07:18:32 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.205.203])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 18 Mar 2019 07:18:32 +0000 (GMT)
+Date:   Mon, 18 Mar 2019 09:18:31 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] RISC-V: Allow booting kernel from any 4KB aligned
+ address
+References: <20190312220752.128141-1-anup.patel@wdc.com>
+ <20190312220752.128141-4-anup.patel@wdc.com>
+ <20190313183121.GB28630@rapoport-lnx>
+ <CAAhSdy1mrV2CakS0cfOY8F1B7uH_yXjO3W-CiMUcYonkRnVbeQ@mail.gmail.com>
+ <20190314065311.GC24380@rapoport-lnx>
+ <CAAhSdy2uEgyvs=5NdoZ3H208qeDGJ9OrTOeaz6HQ+1va+R3dUA@mail.gmail.com>
+ <20190315155828.GB920@rapoport-lnx>
+ <CAAhSdy0HoTTccyy203Y9m3kdAjCOzjjMdrb670huU71pjOMw4A@mail.gmail.com>
+ <CAAhSdy0D6JpySExCG7ziSSDmQ_88=paiMwjjXTTR1gbKCEOs3g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <f434892d-80b2-f09d-31d6-754a1be0b97a@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: sv-FI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhSdy0D6JpySExCG7ziSSDmQ_88=paiMwjjXTTR1gbKCEOs3g@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19031807-0012-0000-0000-0000030425B1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031807-0013-0000-0000-0000213B2E09
+Message-Id: <20190318071829.GF21385@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903180056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/19 2:31 PM, christophe leroy wrote:
->
->
-> Le 17/03/2019 à 17:28, Alexandre Ghiti a écrit :
->> On systems without CONTIG_ALLOC activated but that support gigantic 
->> pages,
->> boottime reserved gigantic pages can not be freed at all. This patch
->> simply enables the possibility to hand back those pages to memory
->> allocator.
->>
->> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
->> Acked-by: David S. Miller <davem@davemloft.net> [sparc]
->> ---
->>   arch/arm64/Kconfig                           |  2 +-
->>   arch/arm64/include/asm/hugetlb.h             |  4 --
->>   arch/powerpc/include/asm/book3s/64/hugetlb.h |  7 ---
->>   arch/powerpc/platforms/Kconfig.cputype       |  2 +-
->>   arch/s390/Kconfig                            |  2 +-
->>   arch/s390/include/asm/hugetlb.h              |  3 --
->>   arch/sh/Kconfig                              |  2 +-
->>   arch/sparc/Kconfig                           |  2 +-
->>   arch/x86/Kconfig                             |  2 +-
->>   arch/x86/include/asm/hugetlb.h               |  4 --
->>   include/asm-generic/hugetlb.h                | 14 +++++
->>   include/linux/gfp.h                          |  2 +-
->>   mm/hugetlb.c                                 | 54 ++++++++++++++------
->>   mm/page_alloc.c                              |  4 +-
->>   14 files changed, 61 insertions(+), 43 deletions(-)
->>
->
-> [...]
->
->> diff --git a/include/asm-generic/hugetlb.h 
->> b/include/asm-generic/hugetlb.h
->> index 71d7b77eea50..aaf14974ee5f 100644
->> --- a/include/asm-generic/hugetlb.h
->> +++ b/include/asm-generic/hugetlb.h
->> @@ -126,4 +126,18 @@ static inline pte_t huge_ptep_get(pte_t *ptep)
->>   }
->>   #endif
->>   +#ifndef __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED
->> +#ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
->> +static inline bool gigantic_page_runtime_supported(void)
->> +{
->> +    return true;
->> +}
->> +#else
->> +static inline bool gigantic_page_runtime_supported(void)
->> +{
->> +    return false;
->> +}
->> +#endif /* CONFIG_ARCH_HAS_GIGANTIC_PAGE */
->
-> What about the following instead:
->
-> static inline bool gigantic_page_runtime_supported(void)
-> {
->     return IS_ENABLED(CONFIG_ARCH_HAS_GIGANTIC_PAGE);
-> }
->
+On Sat, Mar 16, 2019 at 04:55:30AM +0530, Anup Patel wrote:
+> On Fri, Mar 15, 2019 at 9:52 PM Anup Patel <anup@brainfault.org> wrote:
+> >
+> > On Fri, Mar 15, 2019 at 9:28 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > >
+> > > I still don't get why it is that important to relax alignment of the kernel
+> > > load address. Provided you can use the memory below the kernel, it really
+> > > should not matter.
+> >
+> > Irrespective to constraint on kernel load address, we certainly need
+> > to allow memory below kernel to be usable but that's a separate change.
+> >
+> > Currently, the memory below kernel is ignored by
+> > early_init_dt_add_memory_arch() in
+> > drivers/of/fdt.c
+> >
+> 
+> I explored the possibility of re-claiming memory below kernel but then
+> we have an issue in this case.
+> 
+> For RISC-V kernel, PAGE_OFFSET is mapped to kernel load address
+> (i.e. load_pa in this code). The va_pa_offset is based on load_pa so linear
+> conversion of VA-to-PA and PA-to-VA won't be possible on the memory
+> below kernel. I guess this is why early_init_dt_add_memory_arch() is
+> marking memory below kernel as reserved. Is there better way to do it??
+> 
+> We started exploring ways to re-claim memory below kernel because
+> we are trying to get Linux working on Kendryte K210 board
+> (https://kendryte.com/). This board has dual-core 64bit RISC-V but it
+> only has 8MB RAM.
 
-Totally, it already was like that in v2 or v3...
+Huh, 8MB of RAM is tough...
 
+It is possible to use the memory below the kernel, e.g x86-64 does that.
+But it is definitely a separate change and with such RAM diet using 4K
+pages seems unavoidable.
 
->
->> +#endif /* __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED */
->> +
->>   #endif /* _ASM_GENERIC_HUGETLB_H */
->> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
->> index 1f1ad9aeebb9..58ea44bf75de 100644
->> --- a/include/linux/gfp.h
->> +++ b/include/linux/gfp.h
->> @@ -589,8 +589,8 @@ static inline bool pm_suspended_storage(void)
->>   /* The below functions must be run on a range from a single zone. */
->>   extern int alloc_contig_range(unsigned long start, unsigned long end,
->>                     unsigned migratetype, gfp_t gfp_mask);
->> -extern void free_contig_range(unsigned long pfn, unsigned nr_pages);
->>   #endif
->> +extern void free_contig_range(unsigned long pfn, unsigned int 
->> nr_pages);
->
-> 'extern' is unneeded and should be avoided (iaw checkpatch)
->
+I still have concern about using 4K pages whenever the load address is not
+2M (4M) aligned. People tend to not pay enough attention to such details
+and they would load the kernel at an arbitrary address and get the
+performance hit.
 
-Ok, I did fix a checkpatch warning here, but did not notice the 'extern' 
-one.
+I think the default should remain as is and the ability to map the kernel
+with 4K pages (and use 4K aligned load address) should be a Kconfig option.
 
+Another thing I'd like to suggest is to completely split swapper_pg_dir
+initialization from setup_vm() and keep this function solely for
+initialization of the trampoline_pg_dir. The trampoline_pg_dir can use
+large pages and the memory below the kernel start can be mapped there
+simply by mapping the entire large page containing the kernel start.
+Then, the swapper_pg_dir setup can run with virtual memory enabled and can
+have much more flexibility.
 
-Thanks for your time,
+> 
+> Regards,
+> Anup
+> 
 
+-- 
+Sincerely yours,
+Mike.
 
-Alex
-
-
-> Christophe
->
->>     #ifdef CONFIG_CMA
->>   /* CMA stuff */
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index afef61656c1e..4e55aa38704f 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -1058,6 +1058,7 @@ static void free_gigantic_page(struct page 
->> *page, unsigned int order)
->>       free_contig_range(page_to_pfn(page), 1 << order);
->>   }
->>   +#ifdef CONFIG_CONTIG_ALLOC
->>   static int __alloc_gigantic_page(unsigned long start_pfn,
->>                   unsigned long nr_pages, gfp_t gfp_mask)
->>   {
->> @@ -1142,11 +1143,20 @@ static struct page 
->> *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
->>     static void prep_new_huge_page(struct hstate *h, struct page 
->> *page, int nid);
->>   static void prep_compound_gigantic_page(struct page *page, unsigned 
->> int order);
->> +#else /* !CONFIG_CONTIG_ALLOC */
->> +static struct page *alloc_gigantic_page(struct hstate *h, gfp_t 
->> gfp_mask,
->> +                    int nid, nodemask_t *nodemask)
->> +{
->> +    return NULL;
->> +}
->> +#endif /* CONFIG_CONTIG_ALLOC */
->>     #else /* !CONFIG_ARCH_HAS_GIGANTIC_PAGE */
->> -static inline bool gigantic_page_supported(void) { return false; }
->>   static struct page *alloc_gigantic_page(struct hstate *h, gfp_t 
->> gfp_mask,
->> -        int nid, nodemask_t *nodemask) { return NULL; }
->> +                    int nid, nodemask_t *nodemask)
->> +{
->> +    return NULL;
->> +}
->>   static inline void free_gigantic_page(struct page *page, unsigned 
->> int order) { }
->>   static inline void destroy_compound_gigantic_page(struct page *page,
->>                           unsigned int order) { }
->> @@ -1156,7 +1166,7 @@ static void update_and_free_page(struct hstate 
->> *h, struct page *page)
->>   {
->>       int i;
->>   -    if (hstate_is_gigantic(h) && !gigantic_page_supported())
->> +    if (hstate_is_gigantic(h) && !gigantic_page_runtime_supported())
->>           return;
->>         h->nr_huge_pages--;
->> @@ -2276,13 +2286,27 @@ static int adjust_pool_surplus(struct hstate 
->> *h, nodemask_t *nodes_allowed,
->>   }
->>     #define persistent_huge_pages(h) (h->nr_huge_pages - 
->> h->surplus_huge_pages)
->> -static unsigned long set_max_huge_pages(struct hstate *h, unsigned 
->> long count,
->> -                        nodemask_t *nodes_allowed)
->> +static int set_max_huge_pages(struct hstate *h, unsigned long count,
->> +                  nodemask_t *nodes_allowed)
->>   {
->>       unsigned long min_count, ret;
->>   -    if (hstate_is_gigantic(h) && !gigantic_page_supported())
->> -        return h->max_huge_pages;
->> +    spin_lock(&hugetlb_lock);
->> +
->> +    /*
->> +     * Gigantic pages runtime allocation depend on the capability 
->> for large
->> +     * page range allocation.
->> +     * If the system does not provide this feature, return an error 
->> when
->> +     * the user tries to allocate gigantic pages but let the user 
->> free the
->> +     * boottime allocated gigantic pages.
->> +     */
->> +    if (hstate_is_gigantic(h) && !IS_ENABLED(CONFIG_CONTIG_ALLOC)) {
->> +        if (count > persistent_huge_pages(h)) {
->> +            spin_unlock(&hugetlb_lock);
->> +            return -EINVAL;
->> +        }
->> +        /* Fall through to decrease pool */
->> +    }
->>         /*
->>        * Increase the pool size
->> @@ -2295,7 +2319,6 @@ static unsigned long set_max_huge_pages(struct 
->> hstate *h, unsigned long count,
->>        * pool might be one hugepage larger than it needs to be, but
->>        * within all the constraints specified by the sysctls.
->>        */
->> -    spin_lock(&hugetlb_lock);
->>       while (h->surplus_huge_pages && count > 
->> persistent_huge_pages(h)) {
->>           if (!adjust_pool_surplus(h, nodes_allowed, -1))
->>               break;
->> @@ -2350,9 +2373,10 @@ static unsigned long set_max_huge_pages(struct 
->> hstate *h, unsigned long count,
->>               break;
->>       }
->>   out:
->> -    ret = persistent_huge_pages(h);
->> +    h->max_huge_pages = persistent_huge_pages(h);
->>       spin_unlock(&hugetlb_lock);
->> -    return ret;
->> +
->> +    return 0;
->>   }
->>     #define HSTATE_ATTR_RO(_name) \
->> @@ -2404,7 +2428,7 @@ static ssize_t __nr_hugepages_store_common(bool 
->> obey_mempolicy,
->>       int err;
->>       NODEMASK_ALLOC(nodemask_t, nodes_allowed, GFP_KERNEL | 
->> __GFP_NORETRY);
->>   -    if (hstate_is_gigantic(h) && !gigantic_page_supported()) {
->> +    if (hstate_is_gigantic(h) && !gigantic_page_runtime_supported()) {
->>           err = -EINVAL;
->>           goto out;
->>       }
->> @@ -2428,15 +2452,13 @@ static ssize_t 
->> __nr_hugepages_store_common(bool obey_mempolicy,
->>       } else
->>           nodes_allowed = &node_states[N_MEMORY];
->>   -    h->max_huge_pages = set_max_huge_pages(h, count, nodes_allowed);
->> +    err = set_max_huge_pages(h, count, nodes_allowed);
->>   +out:
->>       if (nodes_allowed != &node_states[N_MEMORY])
->>           NODEMASK_FREE(nodes_allowed);
->>   -    return len;
->> -out:
->> -    NODEMASK_FREE(nodes_allowed);
->> -    return err;
->> +    return err ? err : len;
->>   }
->>     static ssize_t nr_hugepages_store_common(bool obey_mempolicy,
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index ac9c45ffb344..a4547d90fa7a 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -8234,8 +8234,9 @@ int alloc_contig_range(unsigned long start, 
->> unsigned long end,
->>                   pfn_max_align_up(end), migratetype);
->>       return ret;
->>   }
->> +#endif /* CONFIG_CONTIG_ALLOC */
->>   -void free_contig_range(unsigned long pfn, unsigned nr_pages)
->> +void free_contig_range(unsigned long pfn, unsigned int nr_pages)
->>   {
->>       unsigned int count = 0;
->>   @@ -8247,7 +8248,6 @@ void free_contig_range(unsigned long pfn, 
->> unsigned nr_pages)
->>       }
->>       WARN(count != 0, "%d pages are still in use!\n", count);
->>   }
->> -#endif
->>     #ifdef CONFIG_MEMORY_HOTPLUG
->>   /*
->>
->
-> ---
-> L'absence de virus dans ce courrier électronique a été vérifiée par le 
-> logiciel antivirus Avast.
-> https://www.avast.com/antivirus
->
