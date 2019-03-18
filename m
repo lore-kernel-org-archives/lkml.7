@@ -2,59 +2,64 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4540C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEA5C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E9E21741
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A6C2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901600;
-	bh=UxOM12PoqltA4Lo/Se1h/S3tA5krksiXIxRd20wPwxw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANGJHfGQynCRnIheTnbA8/3PD3h943v7QCKVvZPLcFLmBAUkcs6WfUpzOHT8K+rUQ
-	 KkvzwqTp8WWDxuip0e2MZrUpNkC8vo5mBILBIq3JW7vD/3L07sFBpwKDqQy2O45XNe
-	 faFOep+s3q3a07r3KEjx+OxG75U0NTaaG/YX2sGo=
+	s=default; t=1552901603;
+	bh=k1zj/GapHblnrAS6xSfMQXODr2gzQHvb98FQH5EFHys=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NUs4lSnNn3gdxXMxiTLqOq+zdbxEqKi64/URTFzLty2g1VeRsQJqbkLnXTVbwamzp
+	 GD5F9dqD2eTDy2nx+vgnNILsXdioxD+oNQk1vhQPUXJEvSSeqxkbRd0Y46IJw9+O6s
+	 NDqzw5NdbbGtYa5QOg6WfIyixrahRhEHBwZaGFvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbfCRJdT (ORCPT
+        id S1728858AbfCRJdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41356 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:33:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728836AbfCRJdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:14 -0400
+        id S1728085AbfCRJdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:33:21 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A302083D;
-        Mon, 18 Mar 2019 09:33:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D0D42083D;
+        Mon, 18 Mar 2019 09:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901593;
-        bh=UxOM12PoqltA4Lo/Se1h/S3tA5krksiXIxRd20wPwxw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EYOJ98KpTmCR9TwJk2ed38PKgPI+8aM/cTPp3ELo//9sr1F0AN+gZP16O/f4vpE7p
-         emmFW0l4QFVKeTQr968gmVB4ahnBft5yvYaA4FguUiiz0O0iZjXk1OwZJbXGFwT0T3
-         hbabugJwKux68h2IcbjrcJ57ZlMvKLVYaTqvWUdo=
+        s=default; t=1552901600;
+        bh=k1zj/GapHblnrAS6xSfMQXODr2gzQHvb98FQH5EFHys=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vjz2vCivm1DLKKAHAo7/ML08ryCLx6UDhq3/+YswLAUGgF46SSIqTYZytcilo8RUF
+         flSKv/iLkaXNijNbkLdS8/55/tUXgNwvgLAs9avpiyXx7JXVFybPxEBvbHTaxaKcn7
+         N0/z1g6daRdIMMLyWgX41zVHYo3aoLSH/Y/X+wYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Arvid Brodin <arvid.brodin@alten.se>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 08/52] net/hsr: fix possible crash in add_timer()
-Date:   Mon, 18 Mar 2019 10:25:05 +0100
-Message-Id: <20190318084014.546137177@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 00/52] 4.19.30-stable review
+Date:   Mon, 18 Mar 2019 10:24:57 +0100
+Message-Id: <20190318084013.532280682@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
-References: <20190318084013.532280682@linuxfoundation.org>
+MIME-Version: 1.0
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
-MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.30-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.30-rc1
+X-KernelTest-Deadline: 2019-03-20T08:40+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,139 +67,237 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+This is the start of the stable review cycle for the 4.19.30 release.
+There are 52 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-------------------
+Responses should be made by Wed Mar 20 08:39:59 UTC 2019.
+Anything received after that time might be too late.
 
-From: Eric Dumazet <edumazet@google.com>
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.30-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-[ Upstream commit 1e027960edfaa6a43f9ca31081729b716598112b ]
+thanks,
 
-syzbot found another add_timer() issue, this time in net/hsr [1]
+greg k-h
 
-Let's use mod_timer() which is safe.
+-------------
+Pseudo-Shortlog of commits:
 
-[1]
-kernel BUG at kernel/time/timer.c:1136!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 15909 Comm: syz-executor.3 Not tainted 5.0.0+ #97
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-kobject: 'loop2' (00000000f5629718): kobject_uevent_env
-RIP: 0010:add_timer kernel/time/timer.c:1136 [inline]
-RIP: 0010:add_timer+0x654/0xbe0 kernel/time/timer.c:1134
-Code: 0f 94 c5 31 ff 44 89 ee e8 09 61 0f 00 45 84 ed 0f 84 77 fd ff ff e8 bb 5f 0f 00 e8 07 10 a0 ff e9 68 fd ff ff e8 ac 5f 0f 00 <0f> 0b e8 a5 5f 0f 00 0f 0b e8 9e 5f 0f 00 4c 89 b5 58 ff ff ff e9
-RSP: 0018:ffff8880656eeca0 EFLAGS: 00010246
-kobject: 'loop2' (00000000f5629718): fill_kobj_path: path = '/devices/virtual/block/loop2'
-RAX: 0000000000040000 RBX: 1ffff1100caddd9a RCX: ffffc9000c436000
-RDX: 0000000000040000 RSI: ffffffff816056c4 RDI: ffff88806a2f6cc8
-RBP: ffff8880656eed58 R08: ffff888067f4a300 R09: ffff888067f4abc8
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff88806a2f6cc0
-R13: dffffc0000000000 R14: 0000000000000001 R15: ffff8880656eed30
-FS:  00007fc2019bf700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000738000 CR3: 0000000067e8e000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- hsr_check_announce net/hsr/hsr_device.c:99 [inline]
- hsr_check_carrier_and_operstate+0x567/0x6f0 net/hsr/hsr_device.c:120
- hsr_netdev_notify+0x297/0xa00 net/hsr/hsr_main.c:51
- notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
- __raw_notifier_call_chain kernel/notifier.c:394 [inline]
- raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
- call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
- call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
- call_netdevice_notifiers net/core/dev.c:1765 [inline]
- dev_open net/core/dev.c:1436 [inline]
- dev_open+0x143/0x160 net/core/dev.c:1424
- team_port_add drivers/net/team/team.c:1203 [inline]
- team_add_slave+0xa07/0x15d0 drivers/net/team/team.c:1933
- do_set_master net/core/rtnetlink.c:2358 [inline]
- do_set_master+0x1d4/0x230 net/core/rtnetlink.c:2332
- do_setlink+0x966/0x3510 net/core/rtnetlink.c:2493
- rtnl_setlink+0x271/0x3b0 net/core/rtnetlink.c:2747
- rtnetlink_rcv_msg+0x465/0xb00 net/core/rtnetlink.c:5192
- netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
- rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5210
- netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
- netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
- netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
- sock_sendmsg_nosec net/socket.c:622 [inline]
- sock_sendmsg+0xdd/0x130 net/socket.c:632
- sock_write_iter+0x27c/0x3e0 net/socket.c:923
- call_write_iter include/linux/fs.h:1869 [inline]
- do_iter_readv_writev+0x5e0/0x8e0 fs/read_write.c:680
- do_iter_write fs/read_write.c:956 [inline]
- do_iter_write+0x184/0x610 fs/read_write.c:937
- vfs_writev+0x1b3/0x2f0 fs/read_write.c:1001
- do_writev+0xf6/0x290 fs/read_write.c:1036
- __do_sys_writev fs/read_write.c:1109 [inline]
- __se_sys_writev fs/read_write.c:1106 [inline]
- __x64_sys_writev+0x75/0xb0 fs/read_write.c:1106
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x457f29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc2019bec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000457f29
-RDX: 0000000000000001 RSI: 00000000200000c0 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc2019bf6d4
-R13: 00000000004c4a60 R14: 00000000004dd218 R15: 00000000ffffffff
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.30-rc1
 
-Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Arvid Brodin <arvid.brodin@alten.se>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/hsr/hsr_device.c |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+Zha Bin <zhabin@linux.alibaba.com>
+    vhost/vsock: fix vhost vsock cid hashing inconsistent
 
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -94,9 +94,8 @@ static void hsr_check_announce(struct ne
- 			&& (old_operstate != IF_OPER_UP)) {
- 		/* Went up */
- 		hsr->announce_count = 0;
--		hsr->announce_timer.expires = jiffies +
--				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
--		add_timer(&hsr->announce_timer);
-+		mod_timer(&hsr->announce_timer,
-+			  jiffies + msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL));
- 	}
- 
- 	if ((hsr_dev->operstate != IF_OPER_UP) && (old_operstate == IF_OPER_UP))
-@@ -332,6 +331,7 @@ static void hsr_announce(struct timer_li
- {
- 	struct hsr_priv *hsr;
- 	struct hsr_port *master;
-+	unsigned long interval;
- 
- 	hsr = from_timer(hsr, t, announce_timer);
- 
-@@ -343,18 +343,16 @@ static void hsr_announce(struct timer_li
- 				hsr->protVersion);
- 		hsr->announce_count++;
- 
--		hsr->announce_timer.expires = jiffies +
--				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
-+		interval = msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
- 	} else {
- 		send_hsr_supervision_frame(master, HSR_TLV_LIFE_CHECK,
- 				hsr->protVersion);
- 
--		hsr->announce_timer.expires = jiffies +
--				msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
-+		interval = msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
- 	}
- 
- 	if (is_admin_up(master->dev))
--		add_timer(&hsr->announce_timer);
-+		mod_timer(&hsr->announce_timer, jiffies + interval);
- 
- 	rcu_read_unlock();
- }
+Björn Töpel <bjorn.topel@intel.com>
+    i40e: report correct statistics when XDP is enabled
+
+Gao Xiang <gaoxiang25@huawei.com>
+    staging: erofs: fix race when the managed cache is enabled
+
+Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+    drm: Block fb changes for async plane updates
+
+Xiao Ni <xni@redhat.com>
+    It's wrong to add len to sector_nr in raid10 reshape twice
+
+kbuild test robot <lkp@intel.com>
+    perf/x86/intel: Make dev_attr_allow_tsx_force_abort static
+
+Peter Zijlstra <peterz@infradead.org>
+    perf/x86/intel: Fix memory corruption
+
+Jian-Hong Pan <jian-hong@endlessm.com>
+    ALSA: hda/realtek: Enable headset MIC of Acer TravelMate X514-51T with ALC255
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek - Reduce click noise on Dell Precision 5820 headphone
+
+Jian-Hong Pan <jian-hong@endlessm.com>
+    ALSA: hda/realtek: Enable audio jacks of ASUS UX362FA with ALC294
+
+Jaroslav Kysela <perex@perex.cz>
+    ALSA: hda - add more quirks for HP Z2 G4 and HP Z240
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda: Extend i915 component bind timeout
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: firewire-motu: fix construction of PCM frame for capture direction
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O against Liquid Saffire 56
+
+Peter Zijlstra <peterz@infradead.org>
+    perf/x86: Fixup typo in stub functions
+
+Jaegeuk Kim <jaegeuk@kernel.org>
+    f2fs: wait on atomic writes to count F2FS_CP_WB_DATA
+
+Vlad Buslov <vladbu@mellanox.com>
+    net: sched: flower: insert new filter to idr after setting its mask
+
+Al Viro <viro@zeniv.linux.org.uk>
+    missing barriers in some of unix_sock ->addr and ->path accesses
+
+Ursula Braun <ubraun@linux.ibm.com>
+    net/smc: fix smc_poll in SMC_INIT state
+
+Michal Soltys <soltys@ziu.info>
+    bonding: fix PACKET_ORIGDEV regression
+
+Paolo Abeni <pabeni@redhat.com>
+    ipv6: route: enforce RCU protection in ip6_route_check_nh_onlink()
+
+Paolo Abeni <pabeni@redhat.com>
+    ipv6: route: enforce RCU protection in rt6_update_exception_stamp_rt()
+
+Daniel Borkmann <daniel@iogearbox.net>
+    ipvlan: disallow userns cap_net_admin to change global mode/flags
+
+George Wilkie <gwilkie@vyatta.att-mail.com>
+    team: use operstate consistently for linkup
+
+Paolo Abeni <pabeni@redhat.com>
+    ipv6: route: purge exception on removal
+
+Kalash Nainwal <kalash@arista.com>
+    net: Set rtm_table to RT_TABLE_COMPAT for ipv6 for tables > 255
+
+YueHaibing <yuehaibing@huawei.com>
+    mdio_bus: Fix use-after-free on device_register fails
+
+Eric Dumazet <edumazet@google.com>
+    net/x25: fix a race in x25_bind()
+
+Jack Morgenstein <jackm@dev.mellanox.co.il>
+    net/mlx4_core: Fix qp mtt size calculation
+
+Jack Morgenstein <jackm@dev.mellanox.co.il>
+    net/mlx4_core: Fix locking in SRIOV mode when switching between events and polling
+
+Jack Morgenstein <jackm@dev.mellanox.co.il>
+    net/mlx4_core: Fix reset flow when in command polling mode
+
+Eric Dumazet <edumazet@google.com>
+    vxlan: test dev->flags & IFF_UP before calling gro_cells_receive()
+
+Stefano Brivio <sbrivio@redhat.com>
+    vxlan: Fix GRO cells race condition between receive and link delete
+
+Guillaume Nault <gnault@redhat.com>
+    tcp: handle inet_csk_reqsk_queue_add() failures
+
+Christoph Paasch <cpaasch@apple.com>
+    tcp: Don't access TCP_SKB_CB before initializing it
+
+Soheil Hassas Yeganeh <soheil@google.com>
+    tcp: do not report TCP_CM_INQ of 0 for closed connections
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: remove sched init from sctp_stream_init
+
+David Howells <dhowells@redhat.com>
+    rxrpc: Fix client call queueing, waiting for channel
+
+Xin Long <lucien.xin@gmail.com>
+    route: set the deleted fnhe fnhe_daddr to 0 in ip_del_fnhe to fix a race
+
+Masaru Nagai <masaru.nagai.vx@renesas.com>
+    ravb: Decrease TxFIFO depth of Q3 and Q2 to one
+
+Xin Long <lucien.xin@gmail.com>
+    pptp: dst_release sk_dst_cache in pptp_sock_destruct
+
+Eric Dumazet <edumazet@google.com>
+    net/x25: reset state in x25_connect()
+
+Eric Dumazet <edumazet@google.com>
+    net/x25: fix use-after-free in x25_device_event()
+
+Miaohe Lin <linmiaohe@huawei.com>
+    net: sit: fix UBSAN Undefined behaviour in check_6rd
+
+Eric Dumazet <edumazet@google.com>
+    net/hsr: fix possible crash in add_timer()
+
+Mao Wenan <maowenan@huawei.com>
+    net: hsr: fix memory leak in hsr_dev_finalize()
+
+Bryan Whitehead <Bryan.Whitehead@microchip.com>
+    lan743x: Fix TX Stall Issue
+
+Bryan Whitehead <Bryan.Whitehead@microchip.com>
+    lan743x: Fix RX Kernel Panic
+
+Eric Dumazet <edumazet@google.com>
+    l2tp: fix infoleak in l2tp_ip6_recvmsg()
+
+Paolo Abeni <pabeni@redhat.com>
+    ipv4/route: fail early when inet dev is missing
+
+Eric Dumazet <edumazet@google.com>
+    gro_cells: make sure device is up in gro_cells_receive()
+
+Li RongQing <lirongqing@baidu.com>
+    connector: fix unsafe usage of ->real_parent
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/x86/events/intel/core.c                       |   4 +-
+ arch/x86/events/perf_event.h                       |   4 +-
+ drivers/connector/cn_proc.c                        |  22 +++-
+ drivers/gpu/drm/drm_atomic_helper.c                |   9 ++
+ drivers/md/raid10.c                                |   1 -
+ drivers/net/bonding/bond_main.c                    |  35 +++---
+ drivers/net/ethernet/intel/i40e/i40e_main.c        |  24 ++--
+ drivers/net/ethernet/mellanox/mlx4/cmd.c           |   9 ++
+ .../net/ethernet/mellanox/mlx4/resource_tracker.c  |   6 +-
+ drivers/net/ethernet/microchip/lan743x_main.c      |  55 ++++----
+ drivers/net/ethernet/renesas/ravb_main.c           |   2 +-
+ drivers/net/ipvlan/ipvlan_main.c                   |   4 +
+ drivers/net/phy/mdio_bus.c                         |   1 -
+ drivers/net/ppp/pptp.c                             |   1 +
+ drivers/net/team/team.c                            |   4 +-
+ drivers/net/vxlan.c                                |  14 ++-
+ drivers/staging/erofs/internal.h                   |   1 +
+ drivers/staging/erofs/utils.c                      | 139 +++++++++++++++------
+ drivers/vhost/vsock.c                              |   2 +-
+ fs/f2fs/file.c                                     |  12 +-
+ net/core/gro_cells.c                               |  22 +++-
+ net/hsr/hsr_device.c                               |  18 +--
+ net/hsr/hsr_framereg.c                             |  12 ++
+ net/hsr/hsr_framereg.h                             |   1 +
+ net/ipv4/route.c                                   |  13 +-
+ net/ipv4/syncookies.c                              |   7 +-
+ net/ipv4/tcp.c                                     |   5 +
+ net/ipv4/tcp_input.c                               |   8 +-
+ net/ipv4/tcp_ipv4.c                                |   9 +-
+ net/ipv6/route.c                                   |  32 +++--
+ net/ipv6/sit.c                                     |   5 +-
+ net/l2tp/l2tp_ip6.c                                |   4 +-
+ net/rxrpc/conn_client.c                            |   4 +-
+ net/sched/cls_flower.c                             |  43 +++----
+ net/sctp/stream.c                                  |   2 -
+ net/smc/smc.h                                      |   6 +-
+ net/unix/af_unix.c                                 |  57 +++++----
+ net/unix/diag.c                                    |   3 +-
+ net/x25/af_x25.c                                   |  20 ++-
+ security/lsm_audit.c                               |  10 +-
+ sound/firewire/bebob/bebob.c                       |  14 ++-
+ sound/firewire/motu/amdtp-motu.c                   |   4 +-
+ sound/hda/hdac_i915.c                              |   4 +-
+ sound/pci/hda/patch_conexant.c                     |   3 +
+ sound/pci/hda/patch_realtek.c                      |  80 ++++++++----
+ 46 files changed, 488 insertions(+), 251 deletions(-)
 
 
