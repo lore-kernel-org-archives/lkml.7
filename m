@@ -2,103 +2,87 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CDEC10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AFBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC31D2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552898743;
-	bh=oE2VmK1dMwj4JPqbgny69BjkrG8/fAdvi0FJW8YH9hQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=UUjHXRXn+EnzLxzQkd+8J6n+C9FKosz1n/atGQO7s37oP5qtpNvfL0Bs+sKlWFsHB
-	 OxKEmvzWG7YgUD2zqqKzlyy9VZyiJtFVXMB2KvJ9CsiZ1Sr9hzEv9IgX0hv4r5FhWl
-	 Z+mG+Ey/yBVb3Jnh3NbwNheKYaQ0JfT+wXq6nngc=
+	by mail.kernel.org (Postfix) with ESMTP id B00C02070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:46:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Ul+mcer0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfCRIpl (ORCPT
+        id S1727079AbfCRIq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 04:45:41 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:41002 "EHLO
-        wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbfCRIpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 04:45:38 -0400
-Received: by wens.csie.org (Postfix, from userid 1000)
-        id 38A945FD14; Mon, 18 Mar 2019 16:45:36 +0800 (CST)
-Date:   Mon, 18 Mar 2019 16:45:36 +0800
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [BUG] USB (EHCI/OHCI) broken on Allwinner SoCs
-Message-ID: <20190318084536.GA27150@wens.csie.org>
+        Mon, 18 Mar 2019 04:46:26 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:48378 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfCRIqZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 04:46:25 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x2I8kNhJ012649;
+        Mon, 18 Mar 2019 17:46:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x2I8kNhJ012649
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1552898783;
+        bh=4aJXQpfl5m7EvV+6vGuVHXG5iYnhuCzBqVEkWn3iFtM=;
+        h=From:Date:Subject:To:Cc:From;
+        b=Ul+mcer0WjQBNXCU8O/gqs7TKf0ZRTMkw0Y8rN3P91My3iVCO7yNn9qm67RyG4xUT
+         1xdN2EeGZxF/lCf/H/gdX4TOd4K30LMg6e/2Bdv3Vc1vCTBiq/26dWnkQV8FeWnPf6
+         QXLse530kToWwMeea9FNFnBLYuu1WYpZ+zagR7inh/o5+Z3sDyVyILUZo4eLR+uATE
+         VZDE78QmOUsjccpbjdvSewDzKmefnnDnyL/h/uu4yVESRSM+OvFYKmdHt1EbY/B8xJ
+         FZ3R7drB0CPdKtFyduNj1TWRTMtz64L2aUgfWIVeugB28Z5a+0kEQLxy+MpViXvz2D
+         QmYjbMy8dMdGA==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id d4so5029851uap.5;
+        Mon, 18 Mar 2019 01:46:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAXjMjQHyeU4z3bQfCtgs7dMpB05YPemwpvk8TotnFpkKMosa0hb
+        3yDy6uQNwylBvoSJWOPqmpLrDKwvHQS5uVG+jr8=
+X-Google-Smtp-Source: APXvYqykN7a5OssXfWYlpsPdwRkY1elTLUFvvoJG6P0QmIjjVwUtzeNa+KanyAbcu7KaVzccSaDvFYQ2ezHtVQjlGhA=
+X-Received: by 2002:ab0:2b16:: with SMTP id e22mr5384895uar.113.1552898782442;
+ Mon, 18 Mar 2019 01:46:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 18 Mar 2019 17:45:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS5-e6QcJqSg_c2NBS=11ZZ-KFWLqDZYxWTu0wPFHg=cQ@mail.gmail.com>
+Message-ID: <CAK7LNAS5-e6QcJqSg_c2NBS=11ZZ-KFWLqDZYxWTu0wPFHg=cQ@mail.gmail.com>
+Subject: Enabling -Wint-in-bool-context
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        masahiroy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone,
+Hi Arnd,
 
-USB EHCI/OHCI hosts are broken on Allwinner SoCs on v5.1-rc1. I believe
-this is partially triggered by commit b97a31348379 ("usb: core: comply
-to PHY framework"), and partially due to how the Allwinner USB PHY
-driver handles phy_set_mode for non-OTG PHYs. Note this is not from a
-bisect.
+I saw several commits from you
+fixing -Wint-in-bool-context warnings.
+Thanks!
 
-The following changes fix this.
 
-Hunk 1 makes our PHY driver accept PHY_MODE_USB_HOST for the non-OTG
-PHYs as a no-op.
+I guess we are almost ready to remove
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 5163097b43df..4bbd9ede38c8 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -485,8 +485,11 @@ static int sun4i_usb_phy_set_mode(struct phy *_phy,
- 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
- 	int new_mode;
- 
--	if (phy->index != 0)
-+	if (phy->index != 0) {
-+		if (mode == PHY_MODE_USB_HOST)
-+			return 0;
- 		return -EINVAL;
-+	}
- 
- 	switch (mode) {
- 	case PHY_MODE_USB_HOST:
----
+KBUILD_CFLAGS   += $(call cc-disable-warning, int-in-bool-context)
 
-Hunk 2 makes the USB core call phy_set_mode with PHY_MODE_USB_HOST
-instead of PHY_MODE_USB_HOST_SS. Not sure why PHY_MODE_USB_HOST_SS was
-used here, but I believe only a small set of hardware actually support
-SuperSpeed, so it might be better to use the more encompasing
-PHY_MODE_USB_HOST. That or the core code would have to check which speed
-class the port is for and pass in the appropriate mode. The Allwinner
-PHYs do not support SuperSpeed.
 
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index 3189181bb628..7f25e384144d 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -2740,7 +2740,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
- 			return retval;
- 
- 		retval = usb_phy_roothub_set_mode(hcd->phy_roothub,
--						  PHY_MODE_USB_HOST_SS);
-+						  PHY_MODE_USB_HOST);
- 		if (retval)
- 			goto err_usb_phy_roothub_power_on;
- 
----
+In there any concern about re-enabling
+this warning?
 
-If the two changes make sense I'll send them out as actual patches.
+
+When I asked 0-day bot to test it some days ago,
+I just got a report
+for drivers/net/ethernet/mellanox/mlxsw/.
+
+Perhaps, you may have better test coverage
+and have noticed more warnings, though.
+
+--
+Best Regards
+Masahiro Yamada
