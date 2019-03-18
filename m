@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8EAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1FCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29472075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0217C2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902086;
-	bh=CNRdJesMUkkC2LY4GqMPLCKRncWFesSSQaR6UYqpwm8=;
+	s=default; t=1552902092;
+	bh=Vk72O5DYFAVSTrsAcH51hTc2Z+mVy4QsRfQZO57rIfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=edqJzEQdLN4l7MJfjTt2f2kePJKb162uibqHeJbxMn5KIEIdAI3dnq4gouBenDjkF
-	 GcZQb4MwmC9lW9UXK2wSuIDuPGsFojTEZbFRzTGQYXR+TpFTEpnvARj59tBWeLwFI7
-	 9YOhwAXAJki2d4S42DL06tdpwwp2kHouMVu/mEHk=
+	b=tWAPCe/pdsbD4neR105KOgwPg8DdDP5eCSEiYjUANAI5/pVEVxXHZv9iiCvzhXw3j
+	 l2GIbJZL2UDyU0CXWWz6Bh4860u3n9OZJ8XPhTySYbDd55et7kys2/Vjhq5AkmXqSG
+	 GXywThf0MBeK7CpA4uE5Our/OluGgjCDtquNlcHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbfCRJeG (ORCPT
+        id S1728928AbfCRJdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42388 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:33:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbfCRJeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:04 -0400
+        id S1728906AbfCRJdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:33:51 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF6DC2087C;
-        Mon, 18 Mar 2019 09:34:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E49842087C;
+        Mon, 18 Mar 2019 09:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901643;
-        bh=CNRdJesMUkkC2LY4GqMPLCKRncWFesSSQaR6UYqpwm8=;
+        s=default; t=1552901630;
+        bh=Vk72O5DYFAVSTrsAcH51hTc2Z+mVy4QsRfQZO57rIfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z2Lva46mPINGaz9VoIL4/CjcxBHREBj9EJP6UT819zEtAZICYoYZ8znHxDMP7UTbm
-         9fSgD26TEV49nz1ryKN4TBA99qZe22CK9uw8Asm/Id4v/jHnqdxF1Tzg+cmeZINnoK
-         eDEDwhakCSOsb2ekAGRVSzq1MGFPpZDk9RyD9Zgk=
+        b=GboU+vV7xZISbX379DmVlUoXp37/euPvaOu7kRV/+xDX5AyxP6E08+ICkeHMM9Fwj
+         ffggTfCyByvayRDC0GnOE4wbqIcM2V9THevENp6NdZUPYdounmk33dDoHkizqSZBP0
+         YEndlwmYnDEE7fChlQJAiINRGyPziPWeFqg4aATs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Ming Shuo Chiu <chiu@endlessm.com>,
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 43/52] ALSA: hda/realtek: Enable audio jacks of ASUS UX362FA with ALC294
-Date:   Mon, 18 Mar 2019 10:25:40 +0100
-Message-Id: <20190318084018.604227408@linuxfoundation.org>
+Subject: [PATCH 4.19 39/52] ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O against Liquid Saffire 56
+Date:   Mon, 18 Mar 2019 10:25:36 +0100
+Message-Id: <20190318084018.117586152@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -66,50 +65,180 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 8bb37a2a4d7c02affef554f5dc05f6d2e39c31f9 upstream.
+commit 7dc661bd8d3261053b69e4e2d0050cd1ee540fc1 upstream.
 
-The ASUS UX362FA with ALC294 cannot detect the headset MIC and outputs
-through the internal speaker and the headphone.  This issue can be fixed
-by the quirk in the commit 4e0511067 ALSA: hda/realtek: Enable audio
-jacks of ASUS UX533FD with ALC294.
+ALSA bebob driver has an entry for Focusrite Saffire Pro 10 I/O. The
+entry matches vendor_id in root directory and model_id in unit
+directory of configuration ROM for IEEE 1394 bus.
 
-Besides, ASUS UX362FA and UX533FD have the same audio initial pin config
-values.  So, this patch replaces SND_PCI_QUIRK of UX533FD with a new
-SND_HDA_PIN_QUIRK which benefits both UX362FA and UX533FD.
+On the other hand, configuration ROM of Focusrite Liquid Saffire 56
+has the same vendor_id and model_id. This device is an application of
+TCAT Dice (TCD2220 a.k.a Dice Jr.) however ALSA bebob driver can be
+bound to it randomly instead of ALSA dice driver. At present, drivers
+in ALSA firewire stack can not handle this situation appropriately.
 
-Fixes: 4e051106730d ("ALSA: hda/realtek: Enable audio jacks of ASUS UX533FD with ALC294")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Ming Shuo Chiu <chiu@endlessm.com>
-Cc: <stable@vger.kernel.org>
+This commit uses more identical mod_alias for Focusrite Saffire Pro 10
+I/O in ALSA bebob driver.
+
+$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  042a829d  bus_info_length 4, crc_length 42, crc 33437
+404  31333934  bus_name "1394"
+408  f0649222  irmc 1, cmc 1, isc 1, bmc 1, pmc 0, cyc_clk_acc 100,
+               max_rec 9 (1024), max_rom 2, gen 2, spd 2 (S400)
+40c  00130e01  company_id 00130e     |
+410  000606e0  device_id 01000606e0  | EUI-64 00130e01000606e0
+
+               root directory
+               -----------------------------------------------------------------
+414  0009d31c  directory_length 9, crc 54044
+418  04000014  hardware version
+41c  0c0083c0  node capabilities per IEEE 1394
+420  0300130e  vendor
+424  81000012  --> descriptor leaf at 46c
+428  17000006  model
+42c  81000016  --> descriptor leaf at 484
+430  130120c2  version
+434  d1000002  --> unit directory at 43c
+438  d4000006  --> dependent info directory at 450
+
+               unit directory at 43c
+               -----------------------------------------------------------------
+43c  0004707c  directory_length 4, crc 28796
+440  1200a02d  specifier id: 1394 TA
+444  13010001  version: AV/C
+448  17000006  model
+44c  81000013  --> descriptor leaf at 498
+
+               dependent info directory at 450
+               -----------------------------------------------------------------
+450  000637c7  directory_length 6, crc 14279
+454  120007f5  specifier id
+458  13000001  version
+45c  3affffc7  (immediate value)
+460  3b100000  (immediate value)
+464  3cffffc7  (immediate value)
+468  3d600000  (immediate value)
+
+               descriptor leaf at 46c
+               -----------------------------------------------------------------
+46c  00056f3b  leaf_length 5, crc 28475
+470  00000000  textual descriptor
+474  00000000  minimal ASCII
+478  466f6375  "Focu"
+47c  73726974  "srit"
+480  65000000  "e"
+
+               descriptor leaf at 484
+               -----------------------------------------------------------------
+484  0004a165  leaf_length 4, crc 41317
+488  00000000  textual descriptor
+48c  00000000  minimal ASCII
+490  50726f31  "Pro1"
+494  30494f00  "0IO"
+
+               descriptor leaf at 498
+               -----------------------------------------------------------------
+498  0004a165  leaf_length 4, crc 41317
+49c  00000000  textual descriptor
+4a0  00000000  minimal ASCII
+4a4  50726f31  "Pro1"
+4a8  30494f00  "0IO"
+
+$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  040442e4  bus_info_length 4, crc_length 4, crc 17124
+404  31333934  bus_name "1394"
+408  e0ff8112  irmc 1, cmc 1, isc 1, bmc 0, pmc 0, cyc_clk_acc 255,
+               max_rec 8 (512), max_rom 1, gen 1, spd 2 (S400)
+40c  00130e04  company_id 00130e     |
+410  018001e9  device_id 04018001e9  | EUI-64 00130e04018001e9
+
+               root directory
+               -----------------------------------------------------------------
+414  00065612  directory_length 6, crc 22034
+418  0300130e  vendor
+41c  8100000a  --> descriptor leaf at 444
+420  17000006  model
+424  8100000e  --> descriptor leaf at 45c
+428  0c0087c0  node capabilities per IEEE 1394
+42c  d1000001  --> unit directory at 430
+
+               unit directory at 430
+               -----------------------------------------------------------------
+430  000418a0  directory_length 4, crc 6304
+434  1200130e  specifier id
+438  13000001  version
+43c  17000006  model
+440  8100000f  --> descriptor leaf at 47c
+
+               descriptor leaf at 444
+               -----------------------------------------------------------------
+444  00056f3b  leaf_length 5, crc 28475
+448  00000000  textual descriptor
+44c  00000000  minimal ASCII
+450  466f6375  "Focu"
+454  73726974  "srit"
+458  65000000  "e"
+
+               descriptor leaf at 45c
+               -----------------------------------------------------------------
+45c  000762c6  leaf_length 7, crc 25286
+460  00000000  textual descriptor
+464  00000000  minimal ASCII
+468  4c495155  "LIQU"
+46c  49445f53  "ID_S"
+470  41464649  "AFFI"
+474  52455f35  "RE_5"
+478  36000000  "6"
+
+               descriptor leaf at 47c
+               -----------------------------------------------------------------
+47c  000762c6  leaf_length 7, crc 25286
+480  00000000  textual descriptor
+484  00000000  minimal ASCII
+488  4c495155  "LIQU"
+48c  49445f53  "ID_S"
+490  41464649  "AFFI"
+494  52455f35  "RE_5"
+498  36000000  "6"
+
+Cc: <stable@vger.kernel.org> # v3.16+
+Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/firewire/bebob/bebob.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6692,7 +6692,6 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1043, 0x12e0, "ASUS X541SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x13b0, "ASUS Z550SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
--	SND_PCI_QUIRK(0x1043, 0x14a1, "ASUS UX533FD", ALC294_FIXUP_ASUS_SPK),
- 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
- 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
- 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
-@@ -7308,6 +7307,10 @@ static const struct snd_hda_pin_quirk al
- 	SND_HDA_PIN_QUIRK(0x10ec0294, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
- 		{0x12, 0x90a60130},
- 		{0x17, 0x90170110},
-+		{0x21, 0x03211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0294, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
-+		{0x12, 0x90a60130},
-+		{0x17, 0x90170110},
- 		{0x21, 0x04211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		ALC295_STANDARD_PINS,
+--- a/sound/firewire/bebob/bebob.c
++++ b/sound/firewire/bebob/bebob.c
+@@ -474,7 +474,19 @@ static const struct ieee1394_device_id b
+ 	/* Focusrite, SaffirePro 26 I/O */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000003, &saffirepro_26_spec),
+ 	/* Focusrite, SaffirePro 10 I/O */
+-	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000006, &saffirepro_10_spec),
++	{
++		// The combination of vendor_id and model_id is the same as the
++		// same as the one of Liquid Saffire 56.
++		.match_flags	= IEEE1394_MATCH_VENDOR_ID |
++				  IEEE1394_MATCH_MODEL_ID |
++				  IEEE1394_MATCH_SPECIFIER_ID |
++				  IEEE1394_MATCH_VERSION,
++		.vendor_id	= VEN_FOCUSRITE,
++		.model_id	= 0x000006,
++		.specifier_id	= 0x00a02d,
++		.version	= 0x010001,
++		.driver_data	= (kernel_ulong_t)&saffirepro_10_spec,
++	},
+ 	/* Focusrite, Saffire(no label and LE) */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, MODEL_FOCUSRITE_SAFFIRE_BOTH,
+ 			    &saffire_spec),
 
 
