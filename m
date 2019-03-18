@@ -2,284 +2,154 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58ABC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13759C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FADA2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="oAc6hSZm"
+	by mail.kernel.org (Postfix) with ESMTP id E16332070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 17:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfCRRod (ORCPT
+        id S1727985AbfCRRor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 13:44:33 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:38439 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfCRRoa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 13:44:30 -0400
-Received: by mail-it1-f196.google.com with SMTP id m18so5110835ita.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=90d1PiIl0chi1J7EpBoGQUU4QtkFjeVvq9GIx5ZTBR8=;
-        b=oAc6hSZmIR3fZy8c87immg80IiLB0F8viDpDn4lO5yGxhixUEOUx+/LykC0uvVIots
-         +GDOSaYkCmC8uJxmJBWYxFaqkEoW+tML5bAzUmojvKwtjRUdUTd3FsB6KI7+Ug0PkrvK
-         oqhcJxkqjG0C15Rl3bxjiYKdXXDMS0ewdSojFuYvYT6MZn7grFMXqrOcFSLtnUwKii0t
-         QC9nY6Z8LNR+rAlz2TJOzZY0EkybQ2RSMvmHUBb/dGnCIxOflPofLJa48oiNVxBxdVRV
-         zUvOPkxbZxCpc6TKD3FeZOZf/6RUWijnjTUyeK5HCM+WBV5ICh5g/C6VGHwa/HOv53Ya
-         MFgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=90d1PiIl0chi1J7EpBoGQUU4QtkFjeVvq9GIx5ZTBR8=;
-        b=el9TnUtaqwEkTGz8CDUOsBw1FYyRFe0SbR/FWhpKcV40TipkoJWo22eXrpWk2T73VN
-         NjrMUMX+d7v0v5KagoLnov/KyRGAnDWL/PkbDJu07ZGPx8Qa7Ol9p5epsju9nEAEi3qT
-         t3EQ1/pCrPQWUJ5qq1//az04am1gEAy0/DPNiYRRUPOg9zsRdVZpAdbz7bDwxs2bym5g
-         JsGYXfHKcEC7lup7fYxHZCRieK30Y/igz2ZjwixfixfncdjxuwEdGA7RKrQZlApifYyW
-         dd1lGKvJVdbGvrm8Kh73DOG5/mjQi47bzlKIhBIWsDDrGflcBFSH1inVgcjznRMlBkSg
-         lvSw==
-X-Gm-Message-State: APjAAAXEI2cw4m2cASCWHrzw1fMBHxb2Jn3jQNbmjayTeTsG3SS6nho8
-        +/Gm1pb7ntZS3qt0gO4jKYLAMUUFcDZBpd832jJOjg==
-X-Google-Smtp-Source: APXvYqyM6cHR2qquFIkGq3HUXWRWQUWrSzy4xuc3KHw/QEGxC2/Amr0+8s4okJLL71lr24tR5wQ34/Db1abjYV8rjoU=
-X-Received: by 2002:a02:1185:: with SMTP id 127mr12422259jaf.136.1552931069331;
- Mon, 18 Mar 2019 10:44:29 -0700 (PDT)
+        Mon, 18 Mar 2019 13:44:47 -0400
+Received: from mga17.intel.com ([192.55.52.151]:30879 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbfCRRoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 13:44:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 10:44:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="135342967"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 18 Mar 2019 10:44:46 -0700
+Received: from [10.251.91.19] (abudanko-mobl.ccr.corp.intel.com [10.251.91.19])
+        by linux.intel.com (Postfix) with ESMTP id 9979E5805FC;
+        Mon, 18 Mar 2019 10:44:43 -0700 (PDT)
+Subject: [PATCH v10 09/12] perf record: implement -z,--compression_level[=<n>]
+ option
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <9ff06518-ae63-a908-e44d-5d9e56dd66d9@linux.intel.com>
+Date:   Mon, 18 Mar 2019 20:44:42 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190318174040.17899-1-brgl@bgdev.pl>
-In-Reply-To: <20190318174040.17899-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 18 Mar 2019 18:44:18 +0100
-Message-ID: <CAMRc=Mf5itrBMdgAUaMLJ8tWKByPSstZbdKvEhw=_qnsKXdKAg@mail.gmail.com>
-Subject: Re: [RESEND PATCH v6 00/11] mfd: add support for max77650 PMIC
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 18 mar 2019 o 18:40 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
-a):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> This series missed the last merge window so resending rebased on top
-> of v5.1-rc1 with no functional changes.
->
-> ---
->
-> This series adds support for max77650 ultra low-power PMIC. It provides
-> the core mfd driver and a set of five sub-drivers for the regulator,
-> power supply, gpio, leds and input subsystems.
->
-> Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_devic=
-es().
-> Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for thi=
-s
-> device.
->
-> The regulator part is already upstream.
->
-> v1 -> v2:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - use C++ style comments for the SPDX license identifier and the
->   copyright header
-> - s/MODULE_LICENSE("GPL")/MODULE_LICENSE("GPL v2")/
-> - lookup the virtual interrupt numbers in the MFD driver, setup
->   resources for child devices and use platform_get_irq_byname()
->   in sub-drivers
-> - picked up review tags
-> - use devm_request_any_context_irq() for interrupt requests
->
-> LEDs:
-> - changed the max77650_leds_ prefix to max77650_led_
-> - drop the max77650_leds structure as the only field it held was the
->   regmap pointer, move said pointer to struct max77650_led
-> - change the driver name to "max77650-led"
-> - drop the last return value check and return the result of
->   regmap_write() directly
-> - change the labeling scheme to one consistent with other LED drivers
->
-> ONKEY:
-> - drop the key reporting helper and call the input functions directly
->   from interrupt handlers
-> - rename the rv local variable to error
-> - drop parent device asignment
->
-> Regulator:
-> - drop the unnecessary init_data lookup from the driver code
-> - drop unnecessary include
->
-> Charger:
-> - disable the charger on driver remove
-> - change the power supply type to POWER_SUPPLY_TYPE_USB
->
-> GPIO:
-> - drop interrupt support until we have correct implementation of hierarch=
-ical
->   irqs in gpiolib
->
-> v2 -> v3:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - dropped regulator patches as they're already in Mark Brown's branch
->
-> LED:
-> - fix the compatible string in the DT binding example
-> - use the max_brightness property
-> - use a common prefix ("MAX77650_LED") for all defines in the driver
->
-> MFD:
-> - add the MODULE_DEVICE_TABLE()
-> - add a sentinel to the of_device_id array
-> - constify the pointers to irq names
-> - use an enum instead of defines for interrupt indexes
->
-> v3 -> v4:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> GPIO:
-> - as discussed with Linus Walleij: the gpio-controller is now part of
->   the core mfd module (we don't spawn a sub-node anymore), the binding
->   document for GPIO has been dropped, the GPIO properties have been
->   defined in the binding document for the mfd core, the interrupt
->   functionality has been reintroduced with the irq directly passed from
->   the mfd part
-> - due to the above changes the Reviewed-by tag from Linus was dropped
->
-> v4 -> v5:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> General:
-> - add a patch documenting mfd_add_devices()
->
-> MFD:
-> - pass the regmap irq_chip irq domain to mfd over mfd_add_devices so that
->   the hw interrupts from resources can be correctly mapped to virtual irq=
-s
-> - remove the enum listing cell indexes
-> - extend Kconfig help
-> - add a link to the programming manual
-> - use REGMAP_IRQ_REG() for regmap interrupts (except for GPI which has
->   is composed of two hw interrupts for rising and falling edge)
-> - add error messages in probe
-> - use PLATFORM_DEVID_NONE constant in devm_mfd_add_devices()
-> - set irq_base to 0 in regmap_add_irq_chip() as other users to, it's only
->   relevant if it's > 0
->
-> Charger:
-> - use non-maxim specific property names for minimum input voltage and cur=
-rent
->   limit
-> - code shrink by using the enable/disable charger helpers everywhere
-> - use more descriptive names for constants
->
-> Onkey:
-> - use EV_SW event type for slide mode
->
-> LED:
-> - remove stray " from Kconfig help
->
-> v5 -> v6:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> MFD:
-> - remove stray spaces in the binding document
-> - rename the example dt node
-> - remove unnecessary interrupt-parent property from the bindings
->
-> LED:
-> - add a missing dependency on LEDS_CLASS to Kconfig
->
-> Onkey:
-> - use boolean for the slide button property
->
-> Charger:
-> - fix the property names in DT example
-> - make constants even more readable
->
-> Bartosz Golaszewski (11):
->   dt-bindings: mfd: add DT bindings for max77650
->   dt-bindings: power: supply: add DT bindings for max77650
->   dt-bindings: leds: add DT bindings for max77650
->   dt-bindings: input: add DT bindings for max77650
->   mfd: core: document mfd_add_devices()
->   mfd: max77650: new core mfd driver
->   power: supply: max77650: add support for battery charger
->   gpio: max77650: add GPIO support
->   leds: max77650: add LEDs support
->   input: max77650: add onkey support
->   MAINTAINERS: add an entry for max77650 mfd driver
->
->  .../bindings/input/max77650-onkey.txt         |  26 ++
->  .../bindings/leds/leds-max77650.txt           |  57 +++
->  .../devicetree/bindings/mfd/max77650.txt      |  46 +++
->  .../power/supply/max77650-charger.txt         |  27 ++
->  MAINTAINERS                                   |  14 +
->  drivers/gpio/Kconfig                          |   7 +
->  drivers/gpio/Makefile                         |   1 +
->  drivers/gpio/gpio-max77650.c                  | 190 +++++++++
->  drivers/input/misc/Kconfig                    |   9 +
->  drivers/input/misc/Makefile                   |   1 +
->  drivers/input/misc/max77650-onkey.c           | 121 ++++++
->  drivers/leds/Kconfig                          |   6 +
->  drivers/leds/Makefile                         |   1 +
->  drivers/leds/leds-max77650.c                  | 147 +++++++
->  drivers/mfd/Kconfig                           |  14 +
->  drivers/mfd/Makefile                          |   1 +
->  drivers/mfd/max77650.c                        | 234 +++++++++++
->  drivers/mfd/mfd-core.c                        |  14 +
->  drivers/power/supply/Kconfig                  |   7 +
->  drivers/power/supply/Makefile                 |   1 +
->  drivers/power/supply/max77650-charger.c       | 366 ++++++++++++++++++
->  include/linux/mfd/max77650.h                  |  59 +++
->  22 files changed, 1349 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/max77650-onke=
-y.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.=
-txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max776=
-50-charger.txt
->  create mode 100644 drivers/gpio/gpio-max77650.c
->  create mode 100644 drivers/input/misc/max77650-onkey.c
->  create mode 100644 drivers/leds/leds-max77650.c
->  create mode 100644 drivers/mfd/max77650.c
->  create mode 100644 drivers/power/supply/max77650-charger.c
->  create mode 100644 include/linux/mfd/max77650.h
->
-> --
-> 2.20.1
->
 
-Sorry for spamming - I got a strange error from git send-email:
+Implemented -z,--compression_level[=<n>] option that enables compression
+of mmaped kernel data buffers content in runtime during perf record
+mode collection. Default option value is 1 (fastest compression).
 
-Died at /<snip!>libexec/git-core/git-send-email line 1542.
+Compression overhead has been measured for serial and AIO streaming
+when profiling matrix multiplication workload:
 
-Bart
+    -------------------------------------------------------------
+    | SERIAL			  | AIO-1                       |
+----------------------------------------------------------------|
+|-z | OVH(x) | ratio(x) size(MiB) | OVH(x) | ratio(x) size(MiB) |
+|---------------------------------------------------------------|
+| 0 | 1,00   | 1,000    179,424   | 1,00   | 1,000    187,527   |
+| 1 | 1,04   | 8,427    181,148   | 1,01   | 8,474    188,562   |
+| 2 | 1,07   | 8,055    186,953   | 1,03   | 7,912    191,773   |
+| 3 | 1,04   | 8,283    181,908   | 1,03   | 8,220    191,078   |
+| 5 | 1,09   | 8,101    187,705   | 1,05   | 7,780    190,065   |
+| 8 | 1,05   | 9,217    179,191   | 1,12   | 6,111    193,024   |
+-----------------------------------------------------------------
+
+OVH = (Execution time with -z N) / (Execution time with -z 0)
+
+ratio - compression ratio
+size  - number of bytes that was compressed
+
+	size ~= trace size x ratio
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-record.txt |  5 +++++
+ tools/perf/builtin-record.c              | 25 ++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 18fceb49434e..0567bacc2ae6 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -471,6 +471,11 @@ Also at some cases executing less trace write syscalls with bigger data size can
+ shorter than executing more trace write syscalls with smaller data size thus lowering
+ runtime profiling overhead.
+ 
++-z::
++--compression-level[=n]::
++Produce compressed trace using specified level n (default: 1 - fastest compression,
++22 - smallest trace)
++
+ --all-kernel::
+ Configure all used events to run in kernel space.
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 2e083891affa..7258f2964a3b 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -440,6 +440,26 @@ static int record__mmap_flush_parse(const struct option *opt,
+ 	return 0;
+ }
+ 
++#ifdef HAVE_ZSTD_SUPPORT
++static unsigned int comp_level_default = 1;
++static int record__parse_comp_level(const struct option *opt,
++				    const char *str,
++				    int unset)
++{
++	struct record_opts *opts = (struct record_opts *)opt->value;
++
++	if (unset) {
++		opts->comp_level = 0;
++	} else {
++		if (str)
++			opts->comp_level = strtol(str, NULL, 0);
++		if (!opts->comp_level)
++			opts->comp_level = comp_level_default;
++	}
++
++	return 0;
++}
++#endif
+ static unsigned int comp_level_max = 22;
+ 
+ static int record__comp_enabled(struct record *rec)
+@@ -2169,6 +2189,11 @@ static struct option __record_options[] = {
+ 	OPT_CALLBACK(0, "affinity", &record.opts, "node|cpu",
+ 		     "Set affinity mask of trace reading thread to NUMA node cpu mask or cpu of processed mmap buffer",
+ 		     record__parse_affinity),
++#ifdef HAVE_ZSTD_SUPPORT
++	OPT_CALLBACK_OPTARG('z', "compression-level", &record.opts, &comp_level_default,
++		     "n", "Produce compressed trace using specified level (default: 1 - fastest compression, 22 - smallest trace)",
++		     record__parse_comp_level),
++#endif
+ 	OPT_END()
+ };
+ 
+-- 
+2.20.1
+
