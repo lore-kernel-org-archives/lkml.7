@@ -2,53 +2,54 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338E8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C657C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C59214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008192087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901484;
-	bh=9TO5CNIG4xUkqxZA8kwyeGfw22DO1AHtYJF8mFtBftg=;
+	s=default; t=1552901489;
+	bh=+6+pyXTVuDkzZV0Q0wQADuekcAeHexVsRIAXln6cTn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p6AfADvWu21fN9KRV62KBa7c0KLnSuoDc2iQ0cS7928e+16Lg32hMxea8HsB/TNW1
-	 nZoBa3RTOwbDjUsutf3NlujXjWi5joU4IH21ALwbKuOj9q0Z9Udq76JvwANwR6gAFx
-	 /8sXMOxMJfvdCFwPjL5NtGp/AzRPuLPH/MhX1J58=
+	b=NAeAjydNtqoNsxMZSh42tc2bJjkdMujAF7Mp595CSTl1U8DX5c1u0LA7y+e6CSsoi
+	 CxLc2QGZAIGj/O2GmhYp12RzmjIRmYencST9gtslBgPJQsLjRDbOlgIdPZp/oFwPNl
+	 RRd9rJYHigN6frLREKspkeZhW7OL13GahmVF+s3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbfCRJbW (ORCPT
+        id S1728024AbfCRJb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:31:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38808 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:31:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728543AbfCRJbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:31:16 -0400
+        id S1728168AbfCRJbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:22 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39C7A2087C;
-        Mon, 18 Mar 2019 09:31:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A24EB2087C;
+        Mon, 18 Mar 2019 09:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901475;
-        bh=9TO5CNIG4xUkqxZA8kwyeGfw22DO1AHtYJF8mFtBftg=;
+        s=default; t=1552901482;
+        bh=+6+pyXTVuDkzZV0Q0wQADuekcAeHexVsRIAXln6cTn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7TGJWkAIZw4ijdm8hFflGy5dvt16mrO0TidFEiEFgj3KKpaF91zb3REVnVFjiyWS
-         RBV3HzRo8X7iFkjpGgqTXxBLE3DGH0TjloLtYUZXWQkCcI65IbYwAt8ckT2q+0lzqI
-         RXnJXtDP6hpGTE8c/Fvvhn7sYDI2E3CeWi7EXbaI=
+        b=qkJq17kCnWttQ/A9soMn9bkTClvNIeloKxdrq0gfQrmT02uIPGhYoiusWBM9QvzdI
+         /+7OygsAiLRfyAw2mD0MCmwZZNXgNmXAw6A4qebUBs7s8FC+rObgjnsfnvfICT0AFh
+         5/MNWMFMFDaQqJ0xkPmHRfN7U7oRKeFJRVPssB0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masaru Nagai <masaru.nagai.vx@renesas.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 14/52] ravb: Decrease TxFIFO depth of Q3 and Q2 to one
-Date:   Mon, 18 Mar 2019 10:25:01 +0100
-Message-Id: <20190318083845.107485810@linuxfoundation.org>
+        stable@vger.kernel.org, Zha Bin <zhabin@linux.alibaba.com>,
+        Liu Jiang <gerry@linux.alibaba.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>, Shengjing Zhu <i@zhsj.me>
+Subject: [PATCH 4.20 52/52] vhost/vsock: fix vhost vsock cid hashing inconsistent
+Date:   Mon, 18 Mar 2019 10:25:39 +0100
+Message-Id: <20190318083849.999692539@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -67,43 +68,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masaru Nagai <masaru.nagai.vx@renesas.com>
+From: Zha Bin <zhabin@linux.alibaba.com>
 
-[ Upstream commit ae9819e339b451da7a86ab6fe38ecfcb6814e78a ]
+commit 7fbe078c37aba3088359c9256c1a1d0c3e39ee81 upstream.
 
-Hardware has the CBS (Credit Based Shaper) which affects only Q3
-and Q2. When updating the CBS settings, even if the driver does so
-after waiting for Tx DMA finished, there is a possibility that frame
-data still remains in TxFIFO.
+The vsock core only supports 32bit CID, but the Virtio-vsock spec define
+CID (dst_cid and src_cid) as u64 and the upper 32bits is reserved as
+zero. This inconsistency causes one bug in vhost vsock driver. The
+scenarios is:
 
-To avoid this, decrease TxFIFO depth of Q3 and Q2 to one.
+  0. A hash table (vhost_vsock_hash) is used to map an CID to a vsock
+  object. And hash_min() is used to compute the hash key. hash_min() is
+  defined as:
+  (sizeof(val) <= 4 ? hash_32(val, bits) : hash_long(val, bits)).
+  That means the hash algorithm has dependency on the size of macro
+  argument 'val'.
+  0. In function vhost_vsock_set_cid(), a 64bit CID is passed to
+  hash_min() to compute the hash key when inserting a vsock object into
+  the hash table.
+  0. In function vhost_vsock_get(), a 32bit CID is passed to hash_min()
+  to compute the hash key when looking up a vsock for an CID.
 
-This patch has been exercised this using netperf TCP_MAERTS, TCP_STREAM
-and UDP_STREAM tests run on an Ebisu board. No performance change was
-detected, outside of noise in the tests, both in terms of throughput and
-CPU utilisation.
+Because the different size of the CID, hash_min() returns different hash
+key, thus fails to look up the vsock object for an CID.
 
-Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
-Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
-Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-[simon: updated changelog]
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+To fix this bug, we keep CID as u64 in the IOCTLs and virtio message
+headers, but explicitly convert u64 to u32 when deal with the hash table
+and vsock core.
+
+Fixes: 834e772c8db0 ("vhost/vsock: fix use-after-free in network stack callers")
+Link: https://github.com/stefanha/virtio/blob/vsock/trunk/content.tex
+Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
+Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Shengjing Zhu <i@zhsj.me>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
 ---
- drivers/net/ethernet/renesas/ravb_main.c |    2 +-
+ drivers/vhost/vsock.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -467,7 +467,7 @@ static int ravb_dmac_init(struct net_dev
- 		   RCR_EFFS | RCR_ENCF | RCR_ETS0 | RCR_ESF | 0x18000000, RCR);
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -642,7 +642,7 @@ static int vhost_vsock_set_cid(struct vh
+ 		hash_del_rcu(&vsock->hash);
  
- 	/* Set FIFO size */
--	ravb_write(ndev, TGC_TQP_AVBMODE1 | 0x00222200, TGC);
-+	ravb_write(ndev, TGC_TQP_AVBMODE1 | 0x00112200, TGC);
+ 	vsock->guest_cid = guest_cid;
+-	hash_add_rcu(vhost_vsock_hash, &vsock->hash, guest_cid);
++	hash_add_rcu(vhost_vsock_hash, &vsock->hash, vsock->guest_cid);
+ 	spin_unlock_bh(&vhost_vsock_lock);
  
- 	/* Timestamp enable */
- 	ravb_write(ndev, TCCR_TFEN, TCCR);
+ 	return 0;
 
 
