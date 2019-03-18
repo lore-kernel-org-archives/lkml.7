@@ -2,140 +2,220 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7195C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC4FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8463A20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109B020854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AcYbXBeK"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="VdKIqVxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfCRKkV (ORCPT
+        id S1727442AbfCRKl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:40:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55026 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727336AbfCRKkU (ORCPT
+        Mon, 18 Mar 2019 06:41:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37114 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfCRKl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:40:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=r5Bk6YCZR9p14DU7vum0FGMqw1wDEe2/Bu7Z8JYNbCs=; b=AcYbXBeKj2590UUCP5KCNLECb
-        tkCuJNI61u+/SSiHwMyPynMtLSqYJbK7/0dPd/4WmZjFMEG0ZCGYS3At9Jdr+URw5t6HHFcSdMpZv
-        EppOQyC3ocLMq2Nme1lIZwxu6Q6kgL8HUonYp2jSBJirpe7JbrUWWBpeH77jphm7iJr7JHUSBsIW2
-        mhxGGe8Qlp+YYJC+l/FidiSygrp/nsA5AjZl+kvxLmFw1VWwTlfWDkTEAO2WEoMAR0cLchw5usTOc
-        GNk7i0Ce4wad4SBfYKzQwCXejBhXmShvaJDj8t8SEDxaH1yeUW8DT/+jiKJ1cMgC+0GNnnQ+lphnD
-        MufggtUwQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5pgk-0007DJ-Eo; Mon, 18 Mar 2019 10:40:14 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 95486202194F5; Mon, 18 Mar 2019 11:40:09 +0100 (CET)
-Date:   Mon, 18 Mar 2019 11:40:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [RFC PATCH v2 2/2] x86/perf/amd: Resolve NMI latency issues when
- multiple PMCs are active
-Message-ID: <20190318104009.GK6058@hirez.programming.kicks-ass.net>
-References: <155268244291.14761.3432013617741218607.stgit@tlendack-t1.amdoffice.net>
- <155268245818.14761.10443012194152751116.stgit@tlendack-t1.amdoffice.net>
+        Mon, 18 Mar 2019 06:41:56 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v14so3673240wmf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eEsIEMYV9fIymkfTlIj86KuKYvXpVBQWtTu59zEfrmg=;
+        b=VdKIqVxPeqA5JT1IzY776HiXmtFZBnBHiQk7BR3M4WhbfKjUR46hZzc9ZUAvBxJC9V
+         fCt00FZX3z13+ZlYOm+Ur9F+Lg5odaDiuMd5dIpCStDQUPdq2MyHrLM1fsI0tDNYINvo
+         NwHfMGYaVuHDa2iqPZqSxsJSoWIFSHwsGD3Rc/5LG49UQmb5IXcha1eV9jTqg08krzH0
+         3rtpniZpOrh9GRUxM/42ZASe7ky9XGD90zY14D45jJFacGOyPjyn4yyH5sp6IxHX8tbM
+         bxeLjwKdhuP84qyhxrloYq6L8ehzQgrxXuaAPPy+HpD9nsM2HzvcfoGuJydtlMW/Jf3y
+         AcWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eEsIEMYV9fIymkfTlIj86KuKYvXpVBQWtTu59zEfrmg=;
+        b=nGAV6lZuPqf3AZLxmtXUIry+YPa8uHLfhBnl7j4SwTwN07wb9ZBGisCwGu0urXCcwv
+         +hkJ+eUKVYOB0+I+uS+muvO+p1HvSjLvnCmJgm0HXRdvsnWv0NoINNIolwzGuQXV5HXU
+         yapHFe2Fk+DbGZ+K3Mb2ThYjqRvDco3VNNx9NSY/+9ndiMp13fQggGreKgbifxr20mEM
+         R7dT0hVpvDJTWQH4P+d5utCWzx20mT2z98Al4z9cl200r3N5sviUFhQW3m3rhkWRz1dT
+         Qho90d8ou+zZP2kRytSdfigyTwKWv9ebvDTg93IJIxM3Pfsb5hJGcUX1YcyJFLgQ4YPg
+         KG3w==
+X-Gm-Message-State: APjAAAXdXEQNSch9rGGg8QaZKeuAzF90jMk+Qzj6gCaLOM6TaiX5b01I
+        0Qy0SIN2Bf1P+J79XPd7132PLH+WKBThxjp1y7yD4A==
+X-Google-Smtp-Source: APXvYqwwXgH85BnaQUugIz8/p2xT5pET/t/8kV5x57VI2wZxqE1aqQmiqN+6UfRcy+KP/3PvxW3ferRYrBFase6c2eY=
+X-Received: by 2002:a1c:18d:: with SMTP id 135mr7448100wmb.12.1552905713680;
+ Mon, 18 Mar 2019 03:41:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155268245818.14761.10443012194152751116.stgit@tlendack-t1.amdoffice.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190317181532.27477-1-colin.king@canonical.com>
+In-Reply-To: <20190317181532.27477-1-colin.king@canonical.com>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Mon, 18 Mar 2019 11:41:42 +0100
+Message-ID: <CAMGffEkdcEvCDVnnqoEFBsJE_N-4be8DUiJsPSyxN-U3EM_ozA@mail.gmail.com>
+Subject: Re: [PATCH] scsi: pm8001: clean up various indentation issues
+To:     Colin King <colin.king@canonical.com>
+Cc:     Jack Wang <jinpu.wang@profitbricks.com>,
+        lindar_liu <lindar_liu@usish.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 08:41:00PM +0000, Lendacky, Thomas wrote:
-> This issue is different from a previous issue related to perf NMIs that
-> was fixed in commit:
->   63e6be6d98e1 ("perf, x86: Catch spurious interrupts after disabling counters")
-> 
-> The difference here is that the NMI latency can contribute to what appear
-> to be spurious NMIs during the handling of PMC counter overflow while the
-> counter is active as opposed to when the counter is being disabled.
+On Sun, Mar 17, 2019 at 7:15 PM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> There are several lines of code where the indentation is
+> at an incorrect level; fix these.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 
-But could we not somehow merge these two cases? The cause is similar
-IIUC. The PMI gets triggered, but then:
+Thanks, Colin
+Jack
 
-  - a previous PMI handler handled our overflow, or
-  - our event gets disabled.
+> ---
+>  drivers/scsi/pm8001/pm8001_hwi.c |  8 +++---
+>  drivers/scsi/pm8001/pm8001_sas.c |  4 +--
+>  drivers/scsi/pm8001/pm80xx_hwi.c | 44 ++++++++++++++++----------------
+>  3 files changed, 28 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
+> index d0bb357034d8..e0fee3d91d23 100644
+> --- a/drivers/scsi/pm8001/pm8001_hwi.c
+> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
+> @@ -960,9 +960,9 @@ pm8001_chip_soft_rst(struct pm8001_hba_info *pm8001_ha)
+>                 return -1;
+>         }
+>         regVal = pm8001_cr32(pm8001_ha, 2, GPIO_GPIO_0_0UTPUT_CTL_OFFSET);
+> -               PM8001_INIT_DBG(pm8001_ha,
+> -                               pm8001_printk("GPIO Output Control Register:"
+> -                               " = 0x%x\n", regVal));
+> +       PM8001_INIT_DBG(pm8001_ha,
+> +                       pm8001_printk("GPIO Output Control Register:"
+> +                       " = 0x%x\n", regVal));
+>         /* set GPIO-0 output control to tri-state */
+>         regVal &= 0xFFFFFFFC;
+>         pm8001_cw32(pm8001_ha, 2, GPIO_GPIO_0_0UTPUT_CTL_OFFSET, regVal);
+> @@ -2928,7 +2928,7 @@ mpi_smp_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
+>                 PM8001_IO_DBG(pm8001_ha, pm8001_printk("IO_SUCCESS\n"));
+>                 ts->resp = SAS_TASK_COMPLETE;
+>                 ts->stat = SAM_STAT_GOOD;
+> -       if (pm8001_dev)
+> +               if (pm8001_dev)
+>                         pm8001_dev->running_req--;
+>                 break;
+>         case IO_ABORTED:
+> diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
+> index 084f2fcced0a..88eef3b18e41 100644
+> --- a/drivers/scsi/pm8001/pm8001_sas.c
+> +++ b/drivers/scsi/pm8001/pm8001_sas.c
+> @@ -740,8 +740,8 @@ static int pm8001_exec_internal_tmf_task(struct domain_device *dev,
+>                 wait_for_completion(&task->slow_task->completion);
+>                 if (pm8001_ha->chip_id != chip_8001) {
+>                         pm8001_dev->setds_completion = &completion_setstate;
+> -                               PM8001_CHIP_DISP->set_dev_state_req(pm8001_ha,
+> -                                       pm8001_dev, 0x01);
+> +                       PM8001_CHIP_DISP->set_dev_state_req(pm8001_ha,
+> +                               pm8001_dev, 0x01);
+>                         wait_for_completion(&completion_setstate);
+>                 }
+>                 res = -TMF_RESP_FUNC_FAILED;
+> diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+> index 63e4f7d34d6c..536d2b4384f8 100644
+> --- a/drivers/scsi/pm8001/pm80xx_hwi.c
+> +++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+> @@ -1316,7 +1316,7 @@ pm80xx_chip_soft_rst(struct pm8001_hba_info *pm8001_ha)
+>
+>  static void pm80xx_hw_chip_rst(struct pm8001_hba_info *pm8001_ha)
+>  {
+> -        u32 i;
+> +       u32 i;
+>
+>         PM8001_INIT_DBG(pm8001_ha,
+>                 pm8001_printk("chip reset start\n"));
+> @@ -4381,27 +4381,27 @@ static int pm80xx_chip_sata_req(struct pm8001_hba_info *pm8001_ha,
+>                         sata_cmd.len = cpu_to_le32(task->total_xfer_len);
+>                         sata_cmd.esgl = 0;
+>                 }
+> -                       /* scsi cdb */
+> -                       sata_cmd.atapi_scsi_cdb[0] =
+> -                               cpu_to_le32(((task->ata_task.atapi_packet[0]) |
+> -                               (task->ata_task.atapi_packet[1] << 8) |
+> -                               (task->ata_task.atapi_packet[2] << 16) |
+> -                               (task->ata_task.atapi_packet[3] << 24)));
+> -                       sata_cmd.atapi_scsi_cdb[1] =
+> -                               cpu_to_le32(((task->ata_task.atapi_packet[4]) |
+> -                               (task->ata_task.atapi_packet[5] << 8) |
+> -                               (task->ata_task.atapi_packet[6] << 16) |
+> -                               (task->ata_task.atapi_packet[7] << 24)));
+> -                       sata_cmd.atapi_scsi_cdb[2] =
+> -                               cpu_to_le32(((task->ata_task.atapi_packet[8]) |
+> -                               (task->ata_task.atapi_packet[9] << 8) |
+> -                               (task->ata_task.atapi_packet[10] << 16) |
+> -                               (task->ata_task.atapi_packet[11] << 24)));
+> -                       sata_cmd.atapi_scsi_cdb[3] =
+> -                               cpu_to_le32(((task->ata_task.atapi_packet[12]) |
+> -                               (task->ata_task.atapi_packet[13] << 8) |
+> -                               (task->ata_task.atapi_packet[14] << 16) |
+> -                               (task->ata_task.atapi_packet[15] << 24)));
+> +               /* scsi cdb */
+> +               sata_cmd.atapi_scsi_cdb[0] =
+> +                       cpu_to_le32(((task->ata_task.atapi_packet[0]) |
+> +                       (task->ata_task.atapi_packet[1] << 8) |
+> +                       (task->ata_task.atapi_packet[2] << 16) |
+> +                       (task->ata_task.atapi_packet[3] << 24)));
+> +               sata_cmd.atapi_scsi_cdb[1] =
+> +                       cpu_to_le32(((task->ata_task.atapi_packet[4]) |
+> +                       (task->ata_task.atapi_packet[5] << 8) |
+> +                       (task->ata_task.atapi_packet[6] << 16) |
+> +                       (task->ata_task.atapi_packet[7] << 24)));
+> +               sata_cmd.atapi_scsi_cdb[2] =
+> +                       cpu_to_le32(((task->ata_task.atapi_packet[8]) |
+> +                       (task->ata_task.atapi_packet[9] << 8) |
+> +                       (task->ata_task.atapi_packet[10] << 16) |
+> +                       (task->ata_task.atapi_packet[11] << 24)));
+> +               sata_cmd.atapi_scsi_cdb[3] =
+> +                       cpu_to_le32(((task->ata_task.atapi_packet[12]) |
+> +                       (task->ata_task.atapi_packet[13] << 8) |
+> +                       (task->ata_task.atapi_packet[14] << 16) |
+> +                       (task->ata_task.atapi_packet[15] << 24)));
+>         }
+>
+>         /* Check for read log for failed drive and return */
+> --
+> 2.20.1
+>
 
-and when our PMI triggers it finds nothing to do.
 
-> +/*
-> + * Because of NMI latency, if multiple PMC counters are active or other sources
-> + * of NMIs are received, the perf NMI handler can handle one or more overflowed
-> + * PMC counters outside of the NMI associated with the PMC overflow. If the NMI
-> + * doesn't arrive at the LAPIC in time to become a pending NMI, then the kernel
-> + * back-to-back NMI support won't be active. This PMC handler needs to take into
-> + * account that this can occur, otherwise this could result in unknown NMI
-> + * messages being issued. Examples of this is PMC overflow while in the NMI
-> + * handler when multiple PMCs are active or PMC overflow while handling some
-> + * other source of an NMI.
-> + *
-> + * Attempt to mitigate this by using the number of active PMCs to determine
-> + * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
-> + * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
-> + * number of active PMCs or 2. The value of 2 is used in case an NMI does not
-> + * arrive at the LAPIC in time to be collapsed into an already pending NMI.
-> + */
-> +static int amd_pmu_handle_irq(struct pt_regs *regs)
-> +{
-> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +	int active, handled;
-> +
-> +	active = __bitmap_weight(cpuc->active_mask, X86_PMC_IDX_MAX);
-> +	handled = x86_pmu_handle_irq(regs);
-> +
-> +	/*
-> +	 * If no counters are active, reset perf_nmi_counter and return
-> +	 * NMI_DONE
-> +	 */
-> +	if (!active) {
-> +		this_cpu_write(perf_nmi_counter, 0);
-> +		return NMI_DONE;
-> +	}
+-- 
+Jack Wang
+Linux Kernel Developer
 
-This will actively render 63e6be6d98e1 void I think. Because that can
-return !0 while !active -- that's rather the whole point of it.
-
-> +	/*
-> +	 * If a counter was handled, record the number of possible remaining
-> +	 * NMIs that can occur.
-> +	 */
-> +	if (handled) {
-> +		this_cpu_write(perf_nmi_counter,
-> +			       min_t(unsigned int, 2, active));
-> +
-> +		return handled;
-> +	}
-> +
-> +	if (!this_cpu_read(perf_nmi_counter))
-> +		return NMI_DONE;
-> +
-> +	this_cpu_dec(perf_nmi_counter);
-> +
-> +	return NMI_HANDLED;
-> +}
+1&1 IONOS Cloud GmbH | Greifswalder Str. 207 | 10405 Berlin | Germany
+Phone: +49 30 57700-8042 | Fax: +49 30 57700-8598
+E-mail: jinpu.wang@cloud.ionos.com | Web: www.ionos.de
 
 
+Head Office: Berlin, Germany
+District Court Berlin Charlottenburg, Registration number: HRB 125506 B
+Executive Management: Christoph Steffens, Matthias Steinberg, Achim Weiss
+
+Member of United Internet
+
+This e-mail may contain confidential and/or privileged information. If
+you are not the intended recipient of this e-mail, you are hereby
+notified that saving, distribution or use of the content of this
+e-mail in any way is prohibited. If you have received this e-mail in
+error, please notify the sender and delete the e-mail.
