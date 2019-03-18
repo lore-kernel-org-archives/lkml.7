@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EA7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E283C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C914C2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF42F2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901369;
-	bh=NBkg1WJgNRDSJQ9fBCBJgUQqc5bodv1fSEWmKCWGSFo=;
+	s=default; t=1552901374;
+	bh=ucODM53MYhIx0yQbjAVYzFivSWf09l9qxNPDe8C15D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FNTZTSAqs4kz9FjlBw16nwxTAxWA5X5bfUhQjvXTbnSVWVR00AR4fpIeDj940IgeS
-	 zeKxR4+AUDSbDzjbh18ZSxjESeDGx21WEk5vSh+IyjE7pMf817EZjDm/ltFUD+dvAK
-	 Y+H4Td1qhZ4pxbh5yviLzmjKMfxb+sbwoyYESAz8=
+	b=sIxatRIUI/GIaWTK6ju7ZQMPzpOLFqbUK4TJ4tgg1M0xG7ZMnuFH6yLIei18A6arm
+	 ZcATiCbncC8LiLNSczzukGzGq8g9ZjoTRj//U4piW3A1hdbmNgvdRMskRYnG7x/JLg
+	 y54xWG5xjRaC/PUIDQ/B7n091AyBcdy71Hkr51WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfCRJ32 (ORCPT
+        id S1728247AbfCRJ3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:29:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35790 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbfCRJ3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:29:25 -0400
+        id S1728236AbfCRJ33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:29:29 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFAC9214AF;
-        Mon, 18 Mar 2019 09:29:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA12B2075C;
+        Mon, 18 Mar 2019 09:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901364;
-        bh=NBkg1WJgNRDSJQ9fBCBJgUQqc5bodv1fSEWmKCWGSFo=;
+        s=default; t=1552901368;
+        bh=ucODM53MYhIx0yQbjAVYzFivSWf09l9qxNPDe8C15D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eTAWyujqUi59CGwCpyVf0t9pW/k5oy4Ex1OXwuqWtxeDo72RctYpB4jKpDEEyjBH5
-         LVjsw4UWWauTjBHHbUjoM6VyT3liHB4zVvlEcCXKnO9YRLpKCEopTuPfrzgYICAFcj
-         0LwTO/3nGyvZcXq7kB4rlgFsIU7oUKyCanm0AH/0=
+        b=dOzQle62A4If1Skxy1erXnHYrsjwYX9piU5w15HyNPQ4pM/LXtC3qyWhuaIvy3R6u
+         mdrHqDlkO54/pWyWHI/lcnrTkBeD1WSkAN1HncWKcGULx/63d23IjXaREgibmfJfFn
+         2ekzK/sLclKxEWDyfr0pvhXstdi6VB3edvpsSQwI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jack Morgenstein <jackm@dev.mellanox.co.il>,
         Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 23/52] net/mlx4_core: Fix reset flow when in command polling mode
-Date:   Mon, 18 Mar 2019 10:25:10 +0100
-Message-Id: <20190318083846.180880754@linuxfoundation.org>
+Subject: [PATCH 4.20 24/52] net/mlx4_core: Fix locking in SRIOV mode when switching between events and polling
+Date:   Mon, 18 Mar 2019 10:25:11 +0100
+Message-Id: <20190318083846.314312550@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -69,83 +69,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit e15ce4b8d11227007577e6dc1364d288b8874fbe ]
+[ Upstream commit c07d27927f2f2e96fcd27bb9fb330c9ea65612d0 ]
 
-As part of unloading a device, the driver switches from
-FW command event mode to FW command polling mode.
+In procedures mlx4_cmd_use_events() and mlx4_cmd_use_polling(), we need to
+guarantee that there are no FW commands in progress on the comm channel
+(for VFs) or wrapped FW commands (on the PF) when SRIOV is active.
 
-Part of switching over to polling mode is freeing the command context array
-memory (unfortunately, currently, without NULLing the command context array
-pointer).
+We do this by also taking the slave_cmd_mutex when SRIOV is active.
 
-The reset flow calls "complete" to complete all outstanding fw commands
-(if we are in event mode). The check for event vs. polling mode here
-is to test if the command context array pointer is NULL.
+This is especially important when switching from event to polling, since we
+free the command-context array during the switch.  If there are FW commands
+in progress (e.g., waiting for a completion event), the completion event
+handler will access freed memory.
 
-If the reset flow is activated after the switch to polling mode, it will
-attempt (incorrectly) to complete all the commands in the context array --
-because the pointer was not NULLed when the driver switched over to polling
-mode.
+Since the decision to use comm_wait or comm_poll is taken before grabbing
+the event_sem/poll_sem in mlx4_comm_cmd_wait/poll, we must take the
+slave_cmd_mutex as well (to guarantee that the decision to use events or
+polling and the call to the appropriate cmd function are atomic).
 
-As a result, we have a use-after-free situation, which results in a
-kernel crash.
-
-For example:
-BUG: unable to handle kernel NULL pointer dereference at           (null)
-IP: [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
-PGD 0
-Oops: 0000 [#1] SMP
-Modules linked in: netconsole nfsv3 nfs_acl nfs lockd grace ...
-CPU: 2 PID: 940 Comm: kworker/2:3 Kdump: loaded Not tainted 3.10.0-862.el7.x86_64 #1
-Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090006  04/28/2016
-Workqueue: events hv_eject_device_work [pci_hyperv]
-task: ffff8d1734ca0fd0 ti: ffff8d17354bc000 task.ti: ffff8d17354bc000
-RIP: 0010:[<ffffffff876c4a8e>]  [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
-RSP: 0018:ffff8d17354bfa38  EFLAGS: 00010082
-RAX: 0000000000000000 RBX: ffff8d17362d42c8 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: 0000000000000003 RDI: ffff8d17362d42c8
-RBP: ffff8d17354bfa70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000298 R11: ffff8d173610e000 R12: ffff8d17362d42d0
-R13: 0000000000000246 R14: 0000000000000000 R15: 0000000000000003
-FS:  0000000000000000(0000) GS:ffff8d1802680000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 00000000f16d8000 CR4: 00000000001406e0
-Call Trace:
- [<ffffffff876c7adc>] complete+0x3c/0x50
- [<ffffffffc04242f0>] mlx4_cmd_wake_completions+0x70/0x90 [mlx4_core]
- [<ffffffffc041e7b1>] mlx4_enter_error_state+0xe1/0x380 [mlx4_core]
- [<ffffffffc041fa4b>] mlx4_comm_cmd+0x29b/0x360 [mlx4_core]
- [<ffffffffc041ff51>] __mlx4_cmd+0x441/0x920 [mlx4_core]
- [<ffffffff877f62b1>] ? __slab_free+0x81/0x2f0
- [<ffffffff87951384>] ? __radix_tree_lookup+0x84/0xf0
- [<ffffffffc043a8eb>] mlx4_free_mtt_range+0x5b/0xb0 [mlx4_core]
- [<ffffffffc043a957>] mlx4_mtt_cleanup+0x17/0x20 [mlx4_core]
- [<ffffffffc04272c7>] mlx4_free_eq+0xa7/0x1c0 [mlx4_core]
- [<ffffffffc042803e>] mlx4_cleanup_eq_table+0xde/0x130 [mlx4_core]
- [<ffffffffc0433e08>] mlx4_unload_one+0x118/0x300 [mlx4_core]
- [<ffffffffc0434191>] mlx4_remove_one+0x91/0x1f0 [mlx4_core]
-
-The fix is to set the command context array pointer to NULL after freeing
-the array.
-
-Fixes: f5aef5aa3506 ("net/mlx4_core: Activate reset flow upon fatal command cases")
+Fixes: a7e1f04905e5 ("net/mlx4_core: Fix deadlock when switching between polling and event fw commands")
 Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
 Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/cmd.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx4/cmd.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 --- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
 +++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
-@@ -2689,6 +2689,7 @@ void mlx4_cmd_use_polling(struct mlx4_de
- 		down(&priv->cmd.event_sem);
+@@ -2645,6 +2645,8 @@ int mlx4_cmd_use_events(struct mlx4_dev
+ 	if (!priv->cmd.context)
+ 		return -ENOMEM;
  
- 	kfree(priv->cmd.context);
-+	priv->cmd.context = NULL;
++	if (mlx4_is_mfunc(dev))
++		mutex_lock(&priv->cmd.slave_cmd_mutex);
+ 	down_write(&priv->cmd.switch_sem);
+ 	for (i = 0; i < priv->cmd.max_cmds; ++i) {
+ 		priv->cmd.context[i].token = i;
+@@ -2670,6 +2672,8 @@ int mlx4_cmd_use_events(struct mlx4_dev
+ 	down(&priv->cmd.poll_sem);
+ 	priv->cmd.use_events = 1;
+ 	up_write(&priv->cmd.switch_sem);
++	if (mlx4_is_mfunc(dev))
++		mutex_unlock(&priv->cmd.slave_cmd_mutex);
+ 
+ 	return err;
+ }
+@@ -2682,6 +2686,8 @@ void mlx4_cmd_use_polling(struct mlx4_de
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+ 	int i;
+ 
++	if (mlx4_is_mfunc(dev))
++		mutex_lock(&priv->cmd.slave_cmd_mutex);
+ 	down_write(&priv->cmd.switch_sem);
+ 	priv->cmd.use_events = 0;
+ 
+@@ -2693,6 +2699,8 @@ void mlx4_cmd_use_polling(struct mlx4_de
  
  	up(&priv->cmd.poll_sem);
  	up_write(&priv->cmd.switch_sem);
++	if (mlx4_is_mfunc(dev))
++		mutex_unlock(&priv->cmd.slave_cmd_mutex);
+ }
+ 
+ struct mlx4_cmd_mailbox *mlx4_alloc_cmd_mailbox(struct mlx4_dev *dev)
 
 
