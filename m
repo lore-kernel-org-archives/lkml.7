@@ -2,124 +2,280 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53914C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D70AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2336D2186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70B520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:03:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oe5/HP6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfCRSCo (ORCPT
+        id S1727364AbfCRSDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:02:44 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:9362 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727113AbfCRSCk (ORCPT
+        Mon, 18 Mar 2019 14:03:47 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:55599 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfCRSDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:02:40 -0400
-X-UUID: fb778ddcda1c47c6892f8acbfe23e1f8-20190319
-X-UUID: fb778ddcda1c47c6892f8acbfe23e1f8-20190319
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <sean.wang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1653476042; Tue, 19 Mar 2019 02:02:33 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 19 Mar 2019 02:02:31 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 19 Mar 2019 02:02:31 +0800
-Message-ID: <1552932151.24944.12.camel@mtkswgap22>
-Subject: Re: [PATCH] Bluetooth: mediatek: fix uninitialized symbol errors in
- btmtksdio_rx_packet
-From:   Sean Wang <sean.wang@mediatek.com>
-To:     Marcel Holtmann <marcel@holtmann.org>
-CC:     Johan Hedberg <johan.hedberg@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Tue, 19 Mar 2019 02:02:31 +0800
-In-Reply-To: <93CB6259-6FB8-4D3D-9FF3-8EB59499A6A1@holtmann.org>
-References: <8fb8e6840a39127112597963d665fbe6c21d8b91.1552509647.git.sean.wang@mediatek.com>
-         <93CB6259-6FB8-4D3D-9FF3-8EB59499A6A1@holtmann.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 8bit
+        Mon, 18 Mar 2019 14:03:47 -0400
+Received: by mail-it1-f195.google.com with SMTP id z126so19086339itd.5;
+        Mon, 18 Mar 2019 11:03:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wVsK2q9fVhn7KnAHh4OPa7X7MXz16yP43ek/dvK+DBo=;
+        b=Oe5/HP6TLFnqjxpLxISPJ52hwNyl9BUlpZLAuIYxVjakYgj51mHsvkyQA3uHtofMOS
+         KGuH2IJkL62c4gFLKJAzwJXgKRJwbn+jA0KP+r1veFmzL+gOhSJonafW4df/+EQN4UJH
+         Ax4FCeMIVZ8qMzYSz+3vbO7KdQog41uJVNvCUKLEBi3hnYZMfxAQrl8BJlnwzPRg+fv4
+         +7JeFyp4s66YJYRDZP8CGdxDiizQHTJzxI7JNuNMwAL1EN6+fCddBjPcW75wmtZwhhvh
+         a9DSOlmalpXlJ9u1L3M1IN8mZ28Fi41mnRpZQ/LCATBwJAOunglFbdKt2Pqf/iEOBkGW
+         ccDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wVsK2q9fVhn7KnAHh4OPa7X7MXz16yP43ek/dvK+DBo=;
+        b=bisIcOlYLd2uKgH0NF7+OLoyCHeZ8nkVPUuKebjWMs9bfCnAdzOZQABPssgE8ZYW+P
+         dG8yNjpeDdsV7LrGfV5OTH2c9f4pKNJR1FotY/hMJ+xGqSPFCDh7rC0g7OWEK5p4elaU
+         YcSHRe7uxGSD6UbJDEYpWh6K/TXmpdmORkslWDKYiw0Wb5pBbmYA9M//N5tMeHysgJ/a
+         aVk0VVSz4UydM5h8xnjF1YMuPiyycCe6z2dhxn0qnw6bnEuOXJGI2n1504G/8DWW6hB7
+         nPlnkyK8wd8v/X/u23ydp6a2G9B2/VjTeFA2k6q/LitZnzKIOlgi9+ttEGdITJH3LrLh
+         13Rg==
+X-Gm-Message-State: APjAAAVyjqXU6QQk+roTeUDHwB7NRM3yIOeagG4iYJxzox/32BVYC0x1
+        8hwMXLwGOgFdnsh3LmW/HpI=
+X-Google-Smtp-Source: APXvYqzndGeoZuIiKvu/maAFSyfZJZX4KQM7u/5/U69Oqbek9WEK6oM3LnAXFy4/mXzxONyEJk2dMg==
+X-Received: by 2002:a24:b701:: with SMTP id h1mr92316itf.64.1552932225564;
+        Mon, 18 Mar 2019 11:03:45 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id 76sm9956itk.40.2019.03.18.11.03.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Mar 2019 11:03:44 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     robh+dt@kernel.org, linus.walleij@linaro.org
+Cc:     lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de,
+        treding@nvidia.com, david@lechnology.com, noralf@tronnes.org,
+        johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com,
+        arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        paul.gortmaker@windriver.com,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        stuyoder@gmail.com, jan.kiszka@siemens.com,
+        maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org,
+        linux-netdev@vger.kernel.org
+Subject: [PATCH v9 0/6] Add Fieldbus subsystem + support HMS Profinet card
+Date:   Mon, 18 Mar 2019 14:03:32 -0400
+Message-Id: <20190318180338.23964-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 4B749FC33B091D298E4652708FFE71F44A75E42ED23B674999364EEAF587ABDF2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-18 at 17:55 +0100, Marcel Holtmann wrote:
-> Hi Sean,
-> 
-> > Fixed all the below warnings. They would probably cause the following
-> > error handling path would use the uninitialized value and then produce
-> > unexpected behavior.
-> > 
-> > drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_len’ may be used
-> > uninitialized in this function [-Wmaybe-uninitialized]
-> >  print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
-> >  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >          old_data, old_len, true);
-> >          ~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/bluetooth/btmtksdio.c:376:15: note: ‘old_len’ was declared here
-> >  unsigned int old_len;
-> >               ^~~~~~~
-> > drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_data’ may be used
-> > uninitialized in this function [-Wmaybe-uninitialized]
-> >  print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
-> >  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >          old_data, old_len, true);
-> >          ~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/bluetooth/btmtksdio.c:375:17: note: ‘old_data’ was declared here
-> >  unsigned char *old_data;
-> >                 ^~~~~~~~
-> > 
-> > Fixes: d74eef2834b5 ("Bluetooth: mediatek: add support for MediaTek MT7663S and MT7668S SDIO devices")
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Reported-by: Marcel Holtmann <marcel@holtmann.org>
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > ---
-> > drivers/bluetooth/btmtksdio.c | 4 ++--
-> > 1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
-> > index b4b8320f279e..23cf63888bac 100644
-> > --- a/drivers/bluetooth/btmtksdio.c
-> > +++ b/drivers/bluetooth/btmtksdio.c
-> > @@ -372,8 +372,8 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
-> > 	const struct h4_recv_pkt *pkts = mtk_recv_pkts;
-> > 	int pkts_count = ARRAY_SIZE(mtk_recv_pkts);
-> > 	struct mtkbtsdio_hdr *sdio_hdr;
-> > -	unsigned char *old_data;
-> > -	unsigned int old_len;
-> > +	unsigned char *old_data = NULL;
-> > +	unsigned int old_len = 0;
-> > 	int err, i, pad_size;
-> > 	struct sk_buff *skb;
-> > 	u16 dlen;
-> 
-> or instead just remove this whole old_len + old_data stuff anyway since it is rather pointless. Or at least introduce a proper error path for sdio_readsb since you know when it fails, there is no point in writing the SKB.
-> 
-> Regards
-> 
+This patch:
+  1. adds a Fieldbus subsystem
+  2. adds support for the HMS Industrial Networks AB Profinet card.
 
-I will remove the old_len and old_data in the next version for the issue
-because the error path for sdio_readsb seems wrong.
+1. Fieldbus subsystem
+---------------------
 
-My initial purpose is that I would like to add a error path for these
-packets which are successful at sdio_readsb but fail at packet format
-parsing. I will update the error path for packet format error in
-a separate patch.
+Fieldbus device (client) adapters allow data exchange with a PLC aka.
+"Fieldbus Controller" over a fieldbus (Profinet, FLNet, etc.)
+They are typically used when a Linux device wants to expose itself
+as an actuator, motor, console light, switch, etc. over the fieldbus.
+The framework is designed to provide a generic interface to Fieldbus
+Devices from both the Linux Kernel and the userspace.
 
-> Marcel
-> 
+2. Add support for HMS Profinet Card
+------------------------------------
 
+Profinet is an industry technical standard for data communication over
+Industrial Ethernet, designed for collecting data from, and controlling,
+equipment in industrial systems, with a particular strength in delivering data
+under tight time constraints (on the order of 1ms or less).
+
+The profinet card itself is connected to the system via an industrial bus
+called 'anybus'.
+
+I have followed the bus driver/client driver pattern, and created an anybus
+bus driver, plus a client driver for the profinet card.
+
+In case this patch set gets (eventually) accepted, drivers for other anybus
+client cards may follow: flnet, cc-link, ...
+
+The anybus slot on the host is located on an 'anybus controller', which is
+custom h/w designed by arcx. It exposes a dual anybus host implementation,
+plus a power readout unrelated to the anybus.
+
+v9:
+	Moved everything to staging/ so new userspace ABI can still be tweaked
+	Suggested cross-posting to linux-netdev to widen audience
+	Greg KH: call ida_destroy() on module exits
+	replace arcx anybus controller's reset spinlock with mutex
+		(no need for spinlock as never run in atomic context)
+		udelay() can now be replaced with usleep_range()
+	harmonized email addresses across patchset
+	various whitespace changes to silence checkpatch.pl --strict
+
+v8:
+	allow fieldbus core to be built as a module (define as tristate).
+	use IS_ENABLED() in fieldbus_dev.h to conditionally compile dummy functions.
+	anybuss_core.ko uses symbols from fieldbus_dev.ko. Use "top level kbuild
+		file" method to make this work.
+		See Documentation/kbuild/modules.txt, section 6.3
+	Confirm licence choice: GPL-v2 only. no changes.
+
+v7:
+	use %zu printf formatter to display size_t
+
+v6:
+	Randy Dunlap:
+	correctly/consistently indent Kconfig
+	spelling/punctuation improvements
+
+	Greg KH:
+	suggestion: simplify /sys/class/fieldbus_dev/fieldbus_devX/ -> /sys/class/fieldbus_dev/X/
+		can't simplify: create_device() also determines the name of the
+		associated char device. simplification would result in a char device
+		named /dev/X ?
+	applied above suggestion to arcx-controller driver, this works ok as it does not
+		have associated char device
+	class name left as-is (fieldbus_dev) to differentiate between
+		"fieldbus controller" and "fieldbus device" in the future
+	makefile clean-up
+	sysfs attributes: snprintf -> sprintf
+		except card_name, as it's externally provided and could potentially
+		be > PAGE_SIZE
+	enabled/online sysfs attributes converted to "0/1" values
+		using kstrtobool()
+
+v5:
+	Greg KH:
+		fix licence nit
+		consistent use of e-mail address
+		replaced raw sysfs attribute with kobject_uevent() call
+		keep __ATTRIBUTE_GROUPS because we need is_visible field
+	Rob Herring:
+		controller devicetree entry now requires multiple address
+			regions and interrupts
+		controller child node(s) now mapped to child devices by
+			slot/host position (using devicetree reg = <>)
+		architectural overhaul to align closely to existing pci arch:
+
+				pci			anybus			
+--------------------------------------------------------------------------------
+Common bus code (spec),		pci/pci_driver.c	anybus/dev_core.c
+  calls bus_register()		no of compatible	no of compatible
+--------------------------------------------------------------------------------
+Device on bus, calls
+  XXX_client_driver_register()	hwmon/k8temp.c		fieldbus/hms-profinet.c
+--------------------------------------------------------------------------------
+Controller, silicon driver	pci/pcie-tango.c	anybus/arcx-anybus.c
+				platform_driver calls	platform_driver calls
+				pci_host_probe()	anybus_host_common_probe()
+
+v4:
+	general
+		create fieldbus_dev subsystem, with standardized 'simple'
+			userspace interface (sysfs + cdev)
+		remove redundant __packed keywords
+		use __be16/32 types wherever values are explicitly big-endian
+	hms-profinet:
+		remove configuration code, and uapi headers: not supported (yet)
+			when registering as a fieldbus_dev.
+	anybuss-host:
+		use struct kref to reference-count tasks
+		replace busy loops with usleep_range() loop after 10 tries
+		use threaded irq so time_before_eq(jiffies, timeout) will
+			continue to work
+		allow client devices to be assigned a devicetree node,
+			in the same way as pci/mmc/...
+
+v3:
+	devicetree-bindings
+		adding the vendor prefix is now a separate commit
+	anybus-bridge:
+		moved misc driver to drivers/bus/
+		converted of_gpio_* to gpiod_* abstractions
+		can power readout is now a fixed-voltage regulator
+	anybuss-host:
+		converted refcounts from atomic_t to refcount_t
+		fixed potential use-after-free
+	hms-profinet:
+		applied minor kernel build robot suggestion
+
+v2:
+	added architecture overview comments to host driver
+	completely reworked anybus-bridge driver, it becomes a reset controller
+	anybuss-host driver now needs devicetree entry, link to reset controller
+	I will hold off on kernel-doc until the overall architecture gets
+		more validation / approval
+	fixed Kconfig, comment-style, document ioctl magic numbers
+	removed redundant pwm dependency
+	renamed enable-gpios to reset-gpios
+	stop driving reset-gpio after unloading driver
+	use interrupt-parent / interrupts method to describe interrupts
+		in the devicetree
+	convert references 'i.MX WEIM parallel bus' to 'parallel bus'
+	replace devicetree functions with more generic platform_get_resource()
+							platform_get_irq()
+	added device unique data to add_device_randomness()
+
+v1:
+	first shot
+
+Sven Van Asbroeck (6):
+  fieldbus_dev: add Fieldbus Device subsystem.
+  anybus-s: support HMS Anybus-S bus
+  anybus-s: support the Arcx anybus controller
+  dt-bindings: anybus-controller: document devicetree binding
+  dt-bindings: Add vendor prefix for arcx / Archronix
+  fieldbus_dev: support HMS Profinet IRT industrial controller
+
+ Documentation/ABI/testing/fieldbus-dev-cdev   |   31 +
+ .../ABI/testing/sysfs-class-fieldbus-dev      |   62 +
+ .../fieldbus/arcx,anybus-controller.txt       |   71 +
+ .../devicetree/bindings/vendor-prefixes.txt   |    1 +
+ Documentation/fieldbus_dev/fieldbus_dev.txt   |   66 +
+ drivers/staging/Kconfig                       |    2 +
+ drivers/staging/Makefile                      |    1 +
+ drivers/staging/fieldbus/Kconfig              |   18 +
+ drivers/staging/fieldbus/Makefile             |    7 +
+ drivers/staging/fieldbus/anybuss/Kconfig      |   39 +
+ drivers/staging/fieldbus/anybuss/Makefile     |   10 +
+ .../staging/fieldbus/anybuss/arcx-anybus.c    |  398 +++++
+ .../staging/fieldbus/anybuss/hms-profinet.c   |  224 +++
+ drivers/staging/fieldbus/anybuss/host.c       | 1459 +++++++++++++++++
+ drivers/staging/fieldbus/dev_core.c           |  349 ++++
+ include/linux/anybuss-client.h                |  102 ++
+ include/linux/anybuss-controller.h            |   47 +
+ include/linux/fieldbus_dev.h                  |  106 ++
+ 18 files changed, 2993 insertions(+)
+ create mode 100644 Documentation/ABI/testing/fieldbus-dev-cdev
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fieldbus-dev
+ create mode 100644 Documentation/devicetree/bindings/fieldbus/arcx,anybus-controller.txt
+ create mode 100644 Documentation/fieldbus_dev/fieldbus_dev.txt
+ create mode 100644 drivers/staging/fieldbus/Kconfig
+ create mode 100644 drivers/staging/fieldbus/Makefile
+ create mode 100644 drivers/staging/fieldbus/anybuss/Kconfig
+ create mode 100644 drivers/staging/fieldbus/anybuss/Makefile
+ create mode 100644 drivers/staging/fieldbus/anybuss/arcx-anybus.c
+ create mode 100644 drivers/staging/fieldbus/anybuss/hms-profinet.c
+ create mode 100644 drivers/staging/fieldbus/anybuss/host.c
+ create mode 100644 drivers/staging/fieldbus/dev_core.c
+ create mode 100644 include/linux/anybuss-client.h
+ create mode 100644 include/linux/anybuss-controller.h
+ create mode 100644 include/linux/fieldbus_dev.h
+
+-- 
+2.17.1
 
