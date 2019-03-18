@@ -2,43 +2,42 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D9BC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966EDC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA9420693
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726F520693
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfCRKGv (ORCPT
+        id S1727814AbfCRKGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:06:51 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:32615 "EHLO
+        Mon, 18 Mar 2019 06:06:50 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:46675 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727592AbfCRKGs (ORCPT
+        by vger.kernel.org with ESMTP id S1727575AbfCRKGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:06:48 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IA1LYG012169;
-        Mon, 18 Mar 2019 11:06:32 +0100
+        Mon, 18 Mar 2019 06:06:49 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IA11d5025027;
+        Mon, 18 Mar 2019 11:06:26 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r8qg4b79p-1
+        by mx07-00178001.pphosted.com with ESMTP id 2r8qsxb4wy-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 18 Mar 2019 11:06:32 +0100
+        Mon, 18 Mar 2019 11:06:26 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1F82A34;
-        Mon, 18 Mar 2019 10:06:32 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1F9AB41;
+        Mon, 18 Mar 2019 10:06:25 +0000 (GMT)
 Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EDBF92AAA;
-        Mon, 18 Mar 2019 10:06:31 +0000 (GMT)
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D60D62AAA;
+        Mon, 18 Mar 2019 10:06:24 +0000 (GMT)
 Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
  (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 18 Mar
- 2019 11:06:32 +0100
+ 2019 11:06:24 +0100
 Received: from localhost (10.201.20.122) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 18 Mar 2019 11:06:31
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 18 Mar 2019 11:06:24
  +0100
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <broonie@kernel.org>, <robh@kernel.org>, <arnd@arndb.de>,
@@ -49,9 +48,9 @@ CC:     <linux-kernel@vger.kernel.org>, <loic.pallardy@st.com>,
         <linux-imx@nxp.com>, <linux-arm-kernel@lists.infradead.org>,
         <gregkh@linuxfoundation.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [RESEND PATCH 7/7] ARM: dts: stm32: enable domains controller node on stm32mp157c-ed1
-Date:   Mon, 18 Mar 2019 11:06:05 +0100
-Message-ID: <20190318100605.29120-8-benjamin.gaignard@st.com>
+Subject: [RESEND PATCH 1/7] devicetree: bindings: Document domains controller bindings
+Date:   Mon, 18 Mar 2019 11:05:59 +0100
+Message-ID: <20190318100605.29120-2-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20190318100605.29120-1-benjamin.gaignard@st.com>
 References: <20190318100605.29120-1-benjamin.gaignard@st.com>
@@ -65,33 +64,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable ETZPC and set configuration for CEC node
+Document commons domains controller bindings for controller
+and client devices.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/bus/domains/domainsctrl.txt           | 55 ++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/domains/domainsctrl.txt
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index b6aca40b9b90..a69c171e6b69 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -6,6 +6,7 @@
- /dts-v1/;
- 
- #include "stm32mp157c-ed1.dts"
-+#include <dt-bindings/bus/domains/stm32-etzpc.h>
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
-@@ -32,6 +33,7 @@
- &cec {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&cec_pins_a>;
-+	domainctrl-0 = <&etzpc STM32_ETZPC_CEC STM32_ETZPC_NON_SECURE>;
- 	status = "okay";
- };
- 
+diff --git a/Documentation/devicetree/bindings/bus/domains/domainsctrl.txt b/Documentation/devicetree/bindings/bus/domains/domainsctrl.txt
+new file mode 100644
+index 000000000000..f82e5e11ea64
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/domains/domainsctrl.txt
+@@ -0,0 +1,55 @@
++Common Domains Controller bindings properties
++
++Bus domains controllers allow to divided system on chip into multiple domains
++that can be used to select by who hardware blocks could be accessed.
++A domain could be a cluster of CPUs (or coprocessors), a range of addresses or
++a group of hardware blocks.
++
++This device tree bindings can be used to bind bus domain consumer devices with
++their bus domains provided by bus domains controllers. A bus domain provider
++can be represented by any node in the device tree and can provide one or more
++bus domains. A consumer node can refer to the provider by a phandle and a set
++of phandle arguments of length specified by the #domainctrl-cells property in
++the bus domain provider node.
++
++==Bus domain provider==
++
++Required properties:
++- #domainctrl-cells	: Number of cells in a bus domain specifier;
++			  Can be any value as specified by device tree binding
++			  documentation of a particular provider.
++
++==Bus domain consumer==
++
++Required properties:
++- domainsctrl-X		: A list of bus domain specifiers, as defined by
++			  bindings of the bus domain controller that is the
++			  bus domain provider.
++
++Optional properties:
++- domainsctrl-names	: A list of bus domain name string sorted in the same
++			  order as the domainsctrl-X proprerties. Consumer
++			  drivers will use domainsctrl-names to match bus
++			  domains with bus domains specifiers.
++			  Note that "default" and "unbind" are reserved names
++			  used by the framework.
++
++Example of usage with:
++- a domains controller with a 2 parameters cell
++- a domains controller with a 3 parameters cell
++- a client device node using the both controllers and 2 configurations
++  named "default" and "unbind"
++
++ctrl0: ctrl@0 {
++	#domainctrl-cells = <2>;
++};
++
++ctrl1: ctrl@1 {
++	#domainctrl-cells = <3>;
++};
++
++foo@0 {
++	domains-names = "default", "unbind";
++	domainctrl-0 = <&ctrl0 1 2>, <&ctrl1 3 4 5>;
++	domainctrl-1 = <&ctrl0 6 7>, <&ctrl1 8 9 0>;
++};
 -- 
 2.15.0
 
