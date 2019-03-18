@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31723C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C63C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0602214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91504217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901202;
-	bh=QF8UI1Hhc1Ep9BM0QE4gKzPTu2ONnyxuxC7oV/D4F/E=;
+	s=default; t=1552901204;
+	bh=36crICflqFe8teZoKxPwOF27wFe3EOBzGjd5uIt0dII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EOaTtjlwbzhvdrAV2ZGMBVJWId3+BtLa/JHrXTQ/iGVWfpEqvDN/wIbnkyqatTgej
-	 Glysh9khZxpW5AYDDkS4tsq1BmXqx8eYtQUbnzPRfTX1kPGgH/HPENtSp/Bv10R5bJ
-	 yhZDI5zWmn3m93e+IxaAuHNEIHsXOHyxcXVH0vl4=
+	b=XvRJMEuNyvDpi9mIDnQ7fgQJhx5OwJeoQIKi9Ww4eTlAqvTVNWsdniw+egJkkMhxT
+	 nhFwWuq54vf4grBxkVYusPv1dLqF6UW8Pm/CJweFkwUb44JVViQm58R30dlxqLWX5i
+	 Exmgvn9+X1qNsG2fMJs6pS/iyptfgSttAEjnNsYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfCRJ0k (ORCPT
+        id S1727592AbfCRJ0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:26:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59628 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:26:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727514AbfCRJ0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:26:38 -0400
+        id S1727558AbfCRJ0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:26:41 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 424062075C;
-        Mon, 18 Mar 2019 09:26:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 109E12075C;
+        Mon, 18 Mar 2019 09:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901197;
-        bh=QF8UI1Hhc1Ep9BM0QE4gKzPTu2ONnyxuxC7oV/D4F/E=;
+        s=default; t=1552901200;
+        bh=36crICflqFe8teZoKxPwOF27wFe3EOBzGjd5uIt0dII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lN2yPWJmvQE/FxmIzbFukUYRIrrh1YdrPtecoNwsSDcAX0om9YwAOOEaA3qlQWnfU
-         VOxQmhaHUQaT8kAQ6vPsujBr8l32mAlp7wKe3Re+dRZX754RJNbXVJ/7W6DlD1mWdi
-         CVZFXmykcLaTAOm4guLNKpJLwFKZYO5O7eGQUe0k=
+        b=lbfErTlR9cbDtaHeQOYo1dLfAKiTuWMzsvXAdEoo5oyQ7wbmEzfCDAiBYBs/NcVuV
+         iwFYYFihZBi+LvZ0Y6mrAOodoJVHVve3E5pjwgr/AlKRuxHuPR4AdMrfwYMmoI9Mm5
+         OifIxnHbFiTGBNtMjg+vZcjHW5v6VzEfVawbVd4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Maxwell <jmaxwell37@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 16/43] route: set the deleted fnhe fnhe_daddr to 0 in ip_del_fnhe to fix a race
-Date:   Mon, 18 Mar 2019 10:24:08 +0100
-Message-Id: <20190318083716.348107136@linuxfoundation.org>
+Subject: [PATCH 5.0 17/43] rxrpc: Fix client call queueing, waiting for channel
+Date:   Mon, 18 Mar 2019 10:24:09 +0100
+Message-Id: <20190318083716.376382033@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -66,55 +65,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit ee60ad219f5c7c4fb2f047f88037770063ef785f ]
+[ Upstream commit 69ffaebb90369ce08657b5aea4896777b9d6e8fc ]
 
-The race occurs in __mkroute_output() when 2 threads lookup a dst:
+rxrpc_get_client_conn() adds a new call to the front of the waiting_calls
+queue if the connection it's going to use already exists.  This is bad as
+it allows calls to get starved out.
 
-  CPU A                 CPU B
-  find_exception()
-                        find_exception() [fnhe expires]
-                        ip_del_fnhe() [fnhe is deleted]
-  rt_bind_exception()
+Fix this by adding to the tail instead.
 
-In rt_bind_exception() it will bind a deleted fnhe with the new dst, and
-this dst will get no chance to be freed. It causes a dev defcnt leak and
-consecutive dmesg warnings:
+Also change the other enqueue point in the same function to put it on the
+front (ie. when we have a new connection).  This makes the point that in
+the case of a new connection the new call goes at the front (though it
+doesn't actually matter since the queue should be unoccupied).
 
-  unregister_netdevice: waiting for ethX to become free. Usage count = 1
-
-Especially thanks Jon to identify the issue.
-
-This patch fixes it by setting fnhe_daddr to 0 in ip_del_fnhe() to stop
-binding the deleted fnhe with a new dst when checking fnhe's fnhe_daddr
-and daddr in rt_bind_exception().
-
-It works as both ip_del_fnhe() and rt_bind_exception() are protected by
-fnhe_lock and the fhne is freed by kfree_rcu().
-
-Fixes: deed49df7390 ("route: check and remove route cache when we get route")
-Signed-off-by: Jon Maxwell <jmaxwell37@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/route.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/rxrpc/conn_client.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -1303,6 +1303,10 @@ static void ip_del_fnhe(struct fib_nh *n
- 		if (fnhe->fnhe_daddr == daddr) {
- 			rcu_assign_pointer(*fnhe_p, rcu_dereference_protected(
- 				fnhe->fnhe_next, lockdep_is_held(&fnhe_lock)));
-+			/* set fnhe_daddr to 0 to ensure it won't bind with
-+			 * new dsts in rt_bind_exception().
-+			 */
-+			fnhe->fnhe_daddr = 0;
- 			fnhe_flush_routes(fnhe);
- 			kfree_rcu(fnhe, rcu);
- 			break;
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -353,7 +353,7 @@ static int rxrpc_get_client_conn(struct
+ 	 * normally have to take channel_lock but we do this before anyone else
+ 	 * can see the connection.
+ 	 */
+-	list_add_tail(&call->chan_wait_link, &candidate->waiting_calls);
++	list_add(&call->chan_wait_link, &candidate->waiting_calls);
+ 
+ 	if (cp->exclusive) {
+ 		call->conn = candidate;
+@@ -432,7 +432,7 @@ found_extant_conn:
+ 	call->conn = conn;
+ 	call->security_ix = conn->security_ix;
+ 	call->service_id = conn->service_id;
+-	list_add(&call->chan_wait_link, &conn->waiting_calls);
++	list_add_tail(&call->chan_wait_link, &conn->waiting_calls);
+ 	spin_unlock(&conn->channel_lock);
+ 	_leave(" = 0 [extant %d]", conn->debug_id);
+ 	return 0;
 
 
