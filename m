@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C36FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA437C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F3F214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B68A2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901534;
-	bh=gIPrQ/M3ZA2nK1Mo5PbuxPEpH1KwJVaVzxO/Xu3KmzI=;
+	s=default; t=1552901540;
+	bh=JV25F5xPTDbeY/M+JQtAasZYUF3C18K1RyW6tfhdyPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ifmytuO+0+OFDgMxbM+Om92Wv2Mavy3QWiP7Syrgh1/oCoR0a2Y4o8VPnDPytE/kw
-	 usJQyGzcvo41CcJN4Xax9SHbuM8hxU6vTihK9odQBVHvYLJ24s7q1zXfVdemX6iJfc
-	 AsyZ1onhw6f0mDH85S3kBfmnj/eoTt8cd7dIF1CY=
+	b=QowMOPFBpJHHC6/EjBKQb753EaG87AqIrG1ySwhhUfQEFt+EO39+lK4mp0x/oPgfQ
+	 4bVzrySXoclvagMwQiWTeK8WdBGhz46VlS2F4B+YvnpZZKwr8y3xiLDl9cnOZzH4Sc
+	 J17QGr7397JspJJvuOsZhh/h52pUc9uIA52VZT8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbfCRJcN (ORCPT
+        id S1728711AbfCRJcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:32:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40132 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbfCRJcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:32:08 -0400
+        id S1727962AbfCRJcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:32:15 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CEAC2083D;
-        Mon, 18 Mar 2019 09:32:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ED452083D;
+        Mon, 18 Mar 2019 09:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901528;
-        bh=gIPrQ/M3ZA2nK1Mo5PbuxPEpH1KwJVaVzxO/Xu3KmzI=;
+        s=default; t=1552901534;
+        bh=JV25F5xPTDbeY/M+JQtAasZYUF3C18K1RyW6tfhdyPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a3wYbaN5m15NbaoHNtTLxXIV8NCoXBGqTS037q5sKDwAfaQXc4Ww4vdg/3WCdMD5t
-         eDcwW9WeoQbfgSLJ1B1ht2nrrMvGAYjx8za8VIarKoxPchihQOAaCGn5b5Gcu+svVe
-         YRHcljkV/6X8d4oVftLLofr230D0y/gaF/UlaEOE=
+        b=ZSpq37UDDxOiKzmp/zj+WkOe14pfBfYwgpZtUAhIW8gjlEeohIoYhcW/TiIvrwuMW
+         2rIC1mxKr3kI2OfnRkwUM0l0l6vddES9PDezccCE0PA4ZuY4NAl3jKHbokghTtG2eH
+         CGAWQGHV1ypUaiUNuvvxZdvnoFSaswY+NsqyP0Fk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 21/52] vxlan: test dev->flags & IFF_UP before calling gro_cells_receive()
-Date:   Mon, 18 Mar 2019 10:25:18 +0100
-Message-Id: <20190318084016.064100121@linuxfoundation.org>
+Subject: [PATCH 4.19 23/52] net/mlx4_core: Fix locking in SRIOV mode when switching between events and polling
+Date:   Mon, 18 Mar 2019 10:25:20 +0100
+Message-Id: <20190318084016.277744284@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -65,67 +67,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 59cbf56fcd98ba2a715b6e97c4e43f773f956393 ]
+[ Upstream commit c07d27927f2f2e96fcd27bb9fb330c9ea65612d0 ]
 
-Same reasons than the ones explained in commit 4179cb5a4c92
-("vxlan: test dev->flags & IFF_UP before calling netif_rx()")
+In procedures mlx4_cmd_use_events() and mlx4_cmd_use_polling(), we need to
+guarantee that there are no FW commands in progress on the comm channel
+(for VFs) or wrapped FW commands (on the PF) when SRIOV is active.
 
-netif_rx() or gro_cells_receive() must be called under a strict contract.
+We do this by also taking the slave_cmd_mutex when SRIOV is active.
 
-At device dismantle phase, core networking clears IFF_UP
-and flush_all_backlogs() is called after rcu grace period
-to make sure no incoming packet might be in a cpu backlog
-and still referencing the device.
+This is especially important when switching from event to polling, since we
+free the command-context array during the switch.  If there are FW commands
+in progress (e.g., waiting for a completion event), the completion event
+handler will access freed memory.
 
-A similar protocol is used for gro_cells infrastructure, as
-gro_cells_destroy() will be called only after a full rcu
-grace period is observed after IFF_UP has been cleared.
+Since the decision to use comm_wait or comm_poll is taken before grabbing
+the event_sem/poll_sem in mlx4_comm_cmd_wait/poll, we must take the
+slave_cmd_mutex as well (to guarantee that the decision to use events or
+polling and the call to the appropriate cmd function are atomic).
 
-Most drivers call netif_rx() from their interrupt handler,
-and since the interrupts are disabled at device dismantle,
-netif_rx() does not have to check dev->flags & IFF_UP
-
-Virtual drivers do not have this guarantee, and must
-therefore make the check themselves.
-
-Otherwise we risk use-after-free and/or crashes.
-
-Fixes: d342894c5d2f ("vxlan: virtual extensible lan")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: a7e1f04905e5 ("net/mlx4_core: Fix deadlock when switching between polling and event fw commands")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vxlan.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/cmd.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -1469,6 +1469,14 @@ static int vxlan_rcv(struct sock *sk, st
- 		goto drop;
- 	}
+--- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
+@@ -2645,6 +2645,8 @@ int mlx4_cmd_use_events(struct mlx4_dev
+ 	if (!priv->cmd.context)
+ 		return -ENOMEM;
  
-+	rcu_read_lock();
-+
-+	if (unlikely(!(vxlan->dev->flags & IFF_UP))) {
-+		rcu_read_unlock();
-+		atomic_long_inc(&vxlan->dev->rx_dropped);
-+		goto drop;
-+	}
-+
- 	stats = this_cpu_ptr(vxlan->dev->tstats);
- 	u64_stats_update_begin(&stats->syncp);
- 	stats->rx_packets++;
-@@ -1476,6 +1484,9 @@ static int vxlan_rcv(struct sock *sk, st
- 	u64_stats_update_end(&stats->syncp);
++	if (mlx4_is_mfunc(dev))
++		mutex_lock(&priv->cmd.slave_cmd_mutex);
+ 	down_write(&priv->cmd.switch_sem);
+ 	for (i = 0; i < priv->cmd.max_cmds; ++i) {
+ 		priv->cmd.context[i].token = i;
+@@ -2670,6 +2672,8 @@ int mlx4_cmd_use_events(struct mlx4_dev
+ 	down(&priv->cmd.poll_sem);
+ 	priv->cmd.use_events = 1;
+ 	up_write(&priv->cmd.switch_sem);
++	if (mlx4_is_mfunc(dev))
++		mutex_unlock(&priv->cmd.slave_cmd_mutex);
  
- 	gro_cells_receive(&vxlan->gro_cells, skb);
-+
-+	rcu_read_unlock();
-+
- 	return 0;
+ 	return err;
+ }
+@@ -2682,6 +2686,8 @@ void mlx4_cmd_use_polling(struct mlx4_de
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+ 	int i;
  
- drop:
++	if (mlx4_is_mfunc(dev))
++		mutex_lock(&priv->cmd.slave_cmd_mutex);
+ 	down_write(&priv->cmd.switch_sem);
+ 	priv->cmd.use_events = 0;
+ 
+@@ -2693,6 +2699,8 @@ void mlx4_cmd_use_polling(struct mlx4_de
+ 
+ 	up(&priv->cmd.poll_sem);
+ 	up_write(&priv->cmd.switch_sem);
++	if (mlx4_is_mfunc(dev))
++		mutex_unlock(&priv->cmd.slave_cmd_mutex);
+ }
+ 
+ struct mlx4_cmd_mailbox *mlx4_alloc_cmd_mailbox(struct mlx4_dev *dev)
 
 
