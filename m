@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31776C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250EFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED882075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2D32083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901710;
-	bh=M8Sdg8o5/DikcXhW36dJtcawuj6o7bDy/giUV+c0fLs=;
+	s=default; t=1552901714;
+	bh=cyyc5je4CCluYCEGfFnYXqn6y2IU9ru8C/fMZ5DV/aE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=auluB++A4Zcv2Q5DYQ8+jBvvU7sQZmAAWvKLZzd1OmaLLNNUnBqDBtvjeEByO/gPj
-	 JjiVjIQ0oHsUjVrLQJkbHaj6kM3btR2qz3R9kme9BeHxlFGTZuT8cbkbBDHG8EWai0
-	 cJgDcM2hVA6uvDGNhMifGYJfk1sSSstDq1AcmQto=
+	b=eE6wHYI1if+m/jtxhqihsT49bSH/UXMvE311HS6PXvbV13dsFBTOygNe4Hq+uyZDT
+	 cuaEiSfGZkxDlz6wtweXgGTPhzAnqrdcM9a8hPvwyyZ2JLRTTWFuj1otj82akAo5d+
+	 WydGdPrdWazJm/ncPXnh4y4gzxDX3z2HgARxpeLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbfCRJfI (ORCPT
+        id S1729092AbfCRJfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:35:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43450 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:35:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbfCRJfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:35:05 -0400
+        id S1729077AbfCRJfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:35:07 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D70672083D;
-        Mon, 18 Mar 2019 09:35:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95D042075C;
+        Mon, 18 Mar 2019 09:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901704;
-        bh=M8Sdg8o5/DikcXhW36dJtcawuj6o7bDy/giUV+c0fLs=;
+        s=default; t=1552901707;
+        bh=cyyc5je4CCluYCEGfFnYXqn6y2IU9ru8C/fMZ5DV/aE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LShji8/ZBpLYtjiNytg71RKSdSknrAJkke1JOdPzBRUaLJFOmwtTYZvbYrr3kZDNa
-         uwFbsGfUFaklJF+HCbLzjTGhcd+d4EbYYPn6iCOG9/1RMJ4jkLLcOiNfOpRxDR8KjJ
-         0ugkcATUFzCchvNPnY3VIR2MT/V7aJTRRSReCmJk=
+        b=tDmulJg5LVuXu8NS5Rxe8Z9DDINDSzmDQ0q8KmMbSCbYok4c0FV2U8lM+2tWZtF0y
+         YyEnr4UqWQYxdQRgRPb9nwOrNGzREBMyxtbmio1pTIZuu1m7jFhab1jH9TrOSpHm5X
+         3QPT5KGHZc5EH9dVoMmZRMBHV/3QmMn15e/0Bxb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        andrew hendry <andrew.hendry@gmail.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 22/34] net/x25: fix a race in x25_bind()
-Date:   Mon, 18 Mar 2019 10:25:46 +0100
-Message-Id: <20190318084147.802955850@linuxfoundation.org>
+Subject: [PATCH 4.14 23/34] mdio_bus: Fix use-after-free on device_register fails
+Date:   Mon, 18 Mar 2019 10:25:47 +0100
+Message-Id: <20190318084147.955847630@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -65,133 +66,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 797a22bd5298c2674d927893f46cadf619dad11d ]
+[ Upstream commit 6ff7b060535e87c2ae14dd8548512abfdda528fb ]
 
-syzbot was able to trigger another soft lockup [1]
+KASAN has found use-after-free in fixed_mdio_bus_init,
+commit 0c692d07842a ("drivers/net/phy/mdio_bus.c: call
+put_device on device_register() failure") call put_device()
+while device_register() fails,give up the last reference
+to the device and allow mdiobus_release to be executed
+,kfreeing the bus. However in most drives, mdiobus_free
+be called to free the bus while mdiobus_register fails.
+use-after-free occurs when access bus again, this patch
+revert it to let mdiobus_free free the bus.
 
-I first thought it was the O(N^2) issue I mentioned in my
-prior fix (f657d22ee1f "net/x25: do not hold the cpu
-too long in x25_new_lci()"), but I eventually found
-that x25_bind() was not checking SOCK_ZAPPED state under
-socket lock protection.
+KASAN report details as below:
 
-This means that multiple threads can end up calling
-x25_insert_socket() for the same socket, and corrupt x25_list
+BUG: KASAN: use-after-free in mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
+Read of size 4 at addr ffff8881dc824d78 by task syz-executor.0/3524
 
-[1]
-watchdog: BUG: soft lockup - CPU#0 stuck for 123s! [syz-executor.2:10492]
-Modules linked in:
-irq event stamp: 27515
-hardirqs last  enabled at (27514): [<ffffffff81006673>] trace_hardirqs_on_thunk+0x1a/0x1c
-hardirqs last disabled at (27515): [<ffffffff8100668f>] trace_hardirqs_off_thunk+0x1a/0x1c
-softirqs last  enabled at (32): [<ffffffff8632ee73>] x25_get_neigh+0xa3/0xd0 net/x25/x25_link.c:336
-softirqs last disabled at (34): [<ffffffff86324bc3>] x25_find_socket+0x23/0x140 net/x25/af_x25.c:341
-CPU: 0 PID: 10492 Comm: syz-executor.2 Not tainted 5.0.0-rc7+ #88
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__sanitizer_cov_trace_pc+0x4/0x50 kernel/kcov.c:97
-Code: f4 ff ff ff e8 11 9f ea ff 48 c7 05 12 fb e5 08 00 00 00 00 e9 c8 e9 ff ff 90 90 90 90 90 90 90 90 90 90 90 90 90 55 48 89 e5 <48> 8b 75 08 65 48 8b 04 25 40 ee 01 00 65 8b 15 38 0c 92 7e 81 e2
-RSP: 0018:ffff88806e94fc48 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffff1100d84dac5 RBX: 0000000000000001 RCX: ffffc90006197000
-RDX: 0000000000040000 RSI: ffffffff86324bf3 RDI: ffff88806c26d628
-RBP: ffff88806e94fc48 R08: ffff88806c1c6500 R09: fffffbfff1282561
-R10: fffffbfff1282560 R11: ffffffff89412b03 R12: ffff88806c26d628
-R13: ffff888090455200 R14: dffffc0000000000 R15: 0000000000000000
-FS:  00007f3a107e4700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f3a107e3db8 CR3: 00000000a5544000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+CPU: 1 PID: 3524 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
 Call Trace:
- __x25_find_socket net/x25/af_x25.c:327 [inline]
- x25_find_socket+0x7d/0x140 net/x25/af_x25.c:342
- x25_new_lci net/x25/af_x25.c:355 [inline]
- x25_connect+0x380/0xde0 net/x25/af_x25.c:784
- __sys_connect+0x266/0x330 net/socket.c:1662
- __do_sys_connect net/socket.c:1673 [inline]
- __se_sys_connect net/socket.c:1670 [inline]
- __x64_sys_connect+0x73/0xb0 net/socket.c:1670
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
+ fixed_mdio_bus_init+0x283/0x1000 [fixed_phy]
+ ? 0xffffffffc0e40000
+ ? 0xffffffffc0e40000
+ ? 0xffffffffc0e40000
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x457e29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f3a107e3c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000457e29
-RDX: 0000000000000012 RSI: 0000000020000200 RDI: 0000000000000005
-RBP: 000000000073c040 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f3a107e46d4
-R13: 00000000004be362 R14: 00000000004ceb98 R15: 00000000ffffffff
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 10493 Comm: syz-executor.3 Not tainted 5.0.0-rc7+ #88
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__read_once_size include/linux/compiler.h:193 [inline]
-RIP: 0010:queued_write_lock_slowpath+0x143/0x290 kernel/locking/qrwlock.c:86
-Code: 4c 8d 2c 01 41 83 c7 03 41 0f b6 45 00 41 38 c7 7c 08 84 c0 0f 85 0c 01 00 00 8b 03 3d 00 01 00 00 74 1a f3 90 41 0f b6 55 00 <41> 38 d7 7c eb 84 d2 74 e7 48 89 df e8 cc aa 4e 00 eb dd be 04 00
-RSP: 0018:ffff888085c47bd8 EFLAGS: 00000206
-RAX: 0000000000000300 RBX: ffffffff89412b00 RCX: 1ffffffff1282560
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffffff89412b00
-RBP: ffff888085c47c70 R08: 1ffffffff1282560 R09: fffffbfff1282561
-R10: fffffbfff1282560 R11: ffffffff89412b03 R12: 00000000000000ff
-R13: fffffbfff1282560 R14: 1ffff11010b88f7d R15: 0000000000000003
-FS:  00007fdd04086700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fdd04064db8 CR3: 0000000090be0000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- queued_write_lock include/asm-generic/qrwlock.h:104 [inline]
- do_raw_write_lock+0x1d6/0x290 kernel/locking/spinlock_debug.c:203
- __raw_write_lock_bh include/linux/rwlock_api_smp.h:204 [inline]
- _raw_write_lock_bh+0x3b/0x50 kernel/locking/spinlock.c:312
- x25_insert_socket+0x21/0xe0 net/x25/af_x25.c:267
- x25_bind+0x273/0x340 net/x25/af_x25.c:703
- __sys_bind+0x23f/0x290 net/socket.c:1481
- __do_sys_bind net/socket.c:1492 [inline]
- __se_sys_bind net/socket.c:1490 [inline]
- __x64_sys_bind+0x73/0xb0 net/socket.c:1490
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x457e29
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6215c19c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
+RBP: 00007f6215c19c70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6215c1a6bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
 
-Fixes: 90c27297a9bf ("X.25 remove bkl in bind")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: andrew hendry <andrew.hendry@gmail.com>
+Allocated by task 3524:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ mdiobus_alloc_size+0x54/0x1b0 drivers/net/phy/mdio_bus.c:143
+ fixed_mdio_bus_init+0x163/0x1000 [fixed_phy]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 3524:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
+ slab_free_hook mm/slub.c:1409 [inline]
+ slab_free_freelist_hook mm/slub.c:1436 [inline]
+ slab_free mm/slub.c:2986 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3938
+ device_release+0x78/0x200 drivers/base/core.c:919
+ kobject_cleanup lib/kobject.c:662 [inline]
+ kobject_release lib/kobject.c:691 [inline]
+ kref_put include/linux/kref.h:67 [inline]
+ kobject_put+0x146/0x240 lib/kobject.c:708
+ put_device+0x1c/0x30 drivers/base/core.c:2060
+ __mdiobus_register+0x483/0x560 drivers/net/phy/mdio_bus.c:382
+ fixed_mdio_bus_init+0x26b/0x1000 [fixed_phy]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881dc824c80
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 248 bytes inside of
+ 2048-byte region [ffff8881dc824c80, ffff8881dc825480)
+The buggy address belongs to the page:
+page:ffffea0007720800 count:1 mapcount:0 mapping:ffff8881f6c02800 index:0x0 compound_mapcount: 0
+flags: 0x2fffc0000010200(slab|head)
+raw: 02fffc0000010200 0000000000000000 0000000500000001 ffff8881f6c02800
+raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881dc824c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881dc824c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881dc824d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                                ^
+ ffff8881dc824d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881dc824e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Fixes: 0c692d07842a ("drivers/net/phy/mdio_bus.c: call put_device on device_register() failure")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/x25/af_x25.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/net/phy/mdio_bus.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -678,8 +678,7 @@ static int x25_bind(struct socket *sock,
- 	struct sockaddr_x25 *addr = (struct sockaddr_x25 *)uaddr;
- 	int len, i, rc = 0;
- 
--	if (!sock_flag(sk, SOCK_ZAPPED) ||
--	    addr_len != sizeof(struct sockaddr_x25) ||
-+	if (addr_len != sizeof(struct sockaddr_x25) ||
- 	    addr->sx25_family != AF_X25) {
- 		rc = -EINVAL;
- 		goto out;
-@@ -694,9 +693,13 @@ static int x25_bind(struct socket *sock,
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -347,7 +347,6 @@ int __mdiobus_register(struct mii_bus *b
+ 	err = device_register(&bus->dev);
+ 	if (err) {
+ 		pr_err("mii_bus %s failed to register\n", bus->id);
+-		put_device(&bus->dev);
+ 		return -EINVAL;
  	}
  
- 	lock_sock(sk);
--	x25_sk(sk)->source_addr = addr->sx25_addr;
--	x25_insert_socket(sk);
--	sock_reset_flag(sk, SOCK_ZAPPED);
-+	if (sock_flag(sk, SOCK_ZAPPED)) {
-+		x25_sk(sk)->source_addr = addr->sx25_addr;
-+		x25_insert_socket(sk);
-+		sock_reset_flag(sk, SOCK_ZAPPED);
-+	} else {
-+		rc = -EINVAL;
-+	}
- 	release_sock(sk);
- 	SOCK_DEBUG(sk, "x25_bind: socket is bound\n");
- out:
 
 
