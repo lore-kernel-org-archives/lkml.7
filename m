@@ -2,142 +2,159 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BE5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3C4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0D720863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B55320863
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:12:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5y/fWrh"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="XFXX2Xf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfCRQKe (ORCPT
+        id S1727658AbfCRQMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:10:34 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44059 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbfCRQKd (ORCPT
+        Mon, 18 Mar 2019 12:12:15 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.113]:57252 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726663AbfCRQMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:10:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h34so11686801pgh.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:10:33 -0700 (PDT)
+        Mon, 18 Mar 2019 12:12:14 -0400
+Received: from [85.158.142.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-b.eu-central-1.aws.symcld.net id 67/1C-06417-F43CF8C5; Mon, 18 Mar 2019 16:11:59 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1VSe0hTcRT2t3vvdg1vXTdlx5FBg6KiLUcPtiI
+  qCBLsBf1TUdlVb9tgTtuuuFWEFuUjwt6PlVouHGhkjughvbRGLzRdZaksG66s5avXKDHp3t31
+  +ufHd873nXO+8+OQmLxdqiJZB8farIxFLZ2Am+aQBs2aexWb0jqOTNcfD4ak+vpPfUgfeV4q0
+  T9rOivVV3S4iKVE+g1XQJburSuTpr/7vl+a/sU7ZS2+kTBbs/IcWwlTu68dz7+ocgyN9aMiVK
+  QqRxNInG7AYLz0qEwI5PQhCXR6fFIx6EXw8duYpBzFk1JaB1UDw0ggkugaBCXuMlwIMHovgjP
+  +L0hQKej1cKv+Ni7gJHoDFLUNYCJeCGX7PDyW8QOnwed1QpaiN4MvfJ8QsJy2wc99J2UCjqcX
+  Q6j3SbQLolPha3F9tAtGK6E7VB31AzQNF24+xUScDB/6xglRnwkldwZlYn42tL4MIRGrofaVi
+  xBxKvirD8Tyq+De5c7owkB3I3Dd3hMTzYKrvvcxkQWOvOiJDZ4Mzx6el4gF7wkIfK+QiBtkw0
+  hla2zyFKg7GMRFUTsGkdeveBHJrzATGprmiNtMhWMHgrJDaIbrn+Vcf1Wuf1Su6H8lwqPTIfw
+  cwuuQIctmNpq4XMZs0ejS0jQ63VzNPI3OsEDL7NBkadkCTTZr5WwMz2qZQrvW7szNtuRorSzn
+  RfxF5WzH719HwyXGFpRCStTJ1NcbFZvkE7Pycpwmxm7KtBVYWHsLmkySaqBWtPBcoo01so5tZ
+  gt/lr9pIBPUSVRXM09T9nwm1242itRjZCDv1gQrMXKwuZ9/z3WNVmFy3JpnZVVKihUKaKHAVG
+  D90+73oftRqkpBobi4OHlCPmvLNXP/82GkJJFaQa0TXCWYrdyfqWHekIQ3dKkqaohj/lKqIlQ
+  /8OTH6pQ1nsCyWso9qY98u+P0lYyjQe7UEvVOVfG1ut098z88P9a2K+JpHsUCkQJHuHDbyEhG
+  OFKNkv0t2887Vx4u3/KGeOENedHmMYXv1sHlxUpn4p2BykXuBzUdgcRBd/kJo0LZOCPzUkZKL
+  TeeOvQtxdlYu1UlO+t81LRejdtNjG4WZrMzvwBSjYkQ4wMAAA==
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-19.tower-239.messagelabs.com!1552925519!2732681!1
+X-Originating-IP: [104.47.8.57]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 4544 invoked from network); 18 Mar 2019 16:11:59 -0000
+Received: from mail-am5eur03lp2057.outbound.protection.outlook.com (HELO EUR03-AM5-obe.outbound.protection.outlook.com) (104.47.8.57)
+  by server-19.tower-239.messagelabs.com with AES256-SHA256 encrypted SMTP; 18 Mar 2019 16:11:59 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YIhFIKs9el8j4hsLgwZPPQzsqFgxi9CCkwroXgIH/9M=;
-        b=H5y/fWrhJ8CUuu3ZQwAI2HU4xEuhAC+4HrZUlSOvBKFSTZkUnylfiXszr7uJhr0FDK
-         DMaw8/oALs88yoM8a63/MpI6bVM46oIs7iwdKG0AohB0l/RB6VSEF8Im5waolXk7wB8r
-         Ya17B2Ndyg/9tvs4+oJtd69z3GTE5nJzNNwz4r7zOGpfq00u5Or+zndAZUHKGO1gn8ws
-         39XIUyeRBXo7KFvjLFXIqax6waEHcwwFY/TNvf+sB4EjmpwhctvyrDFtYNoP6RSsIvg0
-         VRbCEvrGdkicz3ovf/StnTCYTPlwygehzfoU3AfXaZ15p245VmINWF8DpCE7VfEt0aja
-         m55Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YIhFIKs9el8j4hsLgwZPPQzsqFgxi9CCkwroXgIH/9M=;
-        b=LZdgsfvJnKnLvmS3c3gqiduhXk2rokQ+5AypXnx2qbUCVsDtSefp3/zFvh1hXLVnPi
-         nrrkSCKWaOEGsC0aDEWjubhBMeNeJB83+JiAgb0b8wC0nAPZQpcy1bztlCqGwVey18K0
-         DANmOgArg7Px5bRjCj+urc7DZ1x3piZG5pcwMPJBuMFGHZRhG/4lOWVIuXxMYA57v2xP
-         Wj7Oxw0Xt9GgwQ0rrPtBsGIfPOWxdss2bH5rP6isgMsG+2FwJLWYECTZFAGgfy6RmNHp
-         31hfUGbKkZ3EiHHemfiwgYJxigx/8UxHHf0aRel7f11S3OvoZioBGT4I9URokwHlxDxm
-         6prw==
-X-Gm-Message-State: APjAAAU+IDFWqVOa3AlAIUzq762bglcApD0rk7IrPMbz7eQK3DGIWFIG
-        +1s+gxcUD/k5twVWsY+MaFU=
-X-Google-Smtp-Source: APXvYqzHKasaXjHYtTYAzojmBjVom9G6nX6MM/FzU2QbX/ktmgVNDCNbgvJfEMwW9eBfPoOLiv4FUw==
-X-Received: by 2002:a17:902:547:: with SMTP id 65mr20691370plf.242.1552925432769;
-        Mon, 18 Mar 2019 09:10:32 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-37-86.pppoe.spdop.ru. [94.29.37.86])
-        by smtp.googlemail.com with ESMTPSA id m8sm22805463pgr.82.2019.03.18.09.10.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 09:10:31 -0700 (PDT)
-Subject: Re: [PATCH] regulator: core: fix error path for
- regulator_set_voltage_unlocked
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Steve Twiss <stwiss.opensource@diasemi.com>,
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9qBBR9Q9JdWBkHGFDEPqutzMbjKZDcWBcsYwieMev0Q=;
+ b=XFXX2Xf/rzFhwWnqb/Xv7zMqsFvRH5+mPAItLr6SQaKPnWqNjiWvXlpiQlPBKf75hyFhcKeG/KW50GpvgFsDlyTG75C8nhh4Q0kXq8zEBXH7m/3jIKsrVlDWWN2RgNLkdZp0ckqVTnkaXmjiUv7CbGqiT9/t8MwMELUTNqa9IPI=
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
+ VI1PR10MB2720.EURPRD10.PROD.OUTLOOK.COM (20.178.127.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Mon, 18 Mar 2019 16:11:58 +0000
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e426:c8bc:d222:5cd7]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e426:c8bc:d222:5cd7%4]) with mapi id 15.20.1709.015; Mon, 18 Mar 2019
+ 16:11:58 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
         Maciej Purski <m.purski@samsubg.com>,
-        Support Opensource <support.opensource@diasemi.com>
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: RE: [PATCH] regulator: core: fix error path for
+ regulator_set_voltage_unlocked
+Thread-Topic: [PATCH] regulator: core: fix error path for
+ regulator_set_voltage_unlocked
+Thread-Index: AQHU3aJihjsaU6EEr0CeM4yEgE+XmqYRjPCAgAAAOnA=
+Date:   Mon, 18 Mar 2019 16:11:58 +0000
+Message-ID: <VI1PR10MB2352D4EA677EEEA246BAFC16FE470@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
 References: <20190318155054.59B483FBD8@swsrvapps-01.diasemi.com>
  <513a7028-b972-a821-7bf1-0e105bf71305@gmail.com>
-Message-ID: <e8cc2027-2705-6175-f88b-cc630978a520@gmail.com>
-Date:   Mon, 18 Mar 2019 19:10:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
 In-Reply-To: <513a7028-b972-a821-7bf1-0e105bf71305@gmail.com>
-Content-Type: text/plain; charset=utf-8
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f20dec5-bf79-4ba6-ca3a-08d6abbc72ab
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB2720;
+x-ms-traffictypediagnostic: VI1PR10MB2720:
+x-microsoft-antispam-prvs: <VI1PR10MB2720DA5C3045A105ABC1CCF6F5470@VI1PR10MB2720.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 098076C36C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39850400004)(346002)(366004)(376002)(136003)(199004)(189003)(81166006)(99286004)(81156014)(8936002)(105586002)(71200400001)(5660300002)(316002)(6436002)(71190400001)(52536014)(26005)(110136005)(54906003)(106356001)(102836004)(14454004)(7696005)(33656002)(97736004)(6506007)(53546011)(86362001)(76176011)(229853002)(446003)(256004)(9686003)(66066001)(68736007)(2906002)(478600001)(11346002)(305945005)(186003)(7736002)(14444005)(476003)(4326008)(53936002)(74316002)(55016002)(486006)(6246003)(3846002)(107886003)(6116002)(25786009)(8676002)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB2720;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hjTIMNZzB/0KfOdm06uVBvg3+OSd4rSCpRZwLHZj4qtTwmLRef9i8j9Xxqu5mAQVdZ/wXCH+m4h1AMV2FMbaxhec/z/qRr1sDYFfJB81zGKTN+uK65VVyNM4rSBID/5OqyuRTj9CFabrRvNx8P+mMJGJjgg06qmBHCwhBvMWI1gJKs8VYAVV8UgLGZRVol2ePuR/2Ywxgz+jbaPUShj2y0l7/WUaVNC4DArkDnjIe5nvYUervF8Jnr8GtgzxxyMrm/lvYiWmJ9JeUASlZfdePQXc56iJt4/93IbzdPWsTYFOALqdiTLWrzkNBmE5GL1LUs+14JThOCM8f7PfKj8ixYkI7TU3FDvQRf1wRDHCXt4IgIgP6qSoGN415RK8xpIAUXqMCKWZKljkgBv61Mod30POs42kEDx3xip4Y+sJ2Qw=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f20dec5-bf79-4ba6-ca3a-08d6abbc72ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 16:11:58.4565
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2720
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.03.2019 19:03, Dmitry Osipenko пишет:
-> 18.03.2019 18:32, Steve Twiss пишет:
->> During several error paths in the function
->> regulator_set_voltage_unlocked() the value of 'ret' can take on negative
->> error values. However, in calls that go through the 'goto out' statement,
->> this return value is lost and return 0 is used instead, indicating a
->> 'pass'.
->>
->> There are several cases where this function should legitimately return a
->> fail instead of a pass: one such case includes constraints check during
->> voltage selection in the call to regulator_check_voltage(), which can
->> have -EINVAL for the case when an unsupported voltage is incorrectly
->> requested. In that case, -22 is expected as the return value, not 0.
->>
->> Fixes: 9243a195be7a ("regulator: core: Change voltage setting path")
->> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
->> ---
->>  drivers/regulator/core.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
->> index 68473d0..caf8743 100644
->> --- a/drivers/regulator/core.c
->> +++ b/drivers/regulator/core.c
->> @@ -3326,7 +3326,7 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
->>  		goto out2;
->>  
->>  out:
->> -	return 0;
->> +	return ret;
->>  out2:
->>  	voltage->min_uV = old_min_uV;
->>  	voltage->max_uV = old_max_uV;
->>
-> 
-> Looks like a good catch.
-> 
-> Probably will be a bit better to write this as:
-> 
->         /* for not coupled regulators this will just set the voltage */
->         ret = regulator_balance_voltage(rdev, state);
-> -       if (ret < 0)
-> -               goto out2;
-> -
-> +       if (ret < 0) {
-> +               voltage->min_uV = old_min_uV;
-> +               voltage->max_uV = old_max_uV;
-> +       }
->  out:
-> -       return 0;
-> -out2:
-> -       voltage->min_uV = old_min_uV;
-> -       voltage->max_uV = old_max_uV;
-> -
->         return ret;
->  }
-> 
-
-Also, probably won't hurt to add a stable tag "Cc: stable <stable@vger.kernel.org>" to get the fix backported.
+SGkgRG1pdHJ5LA0KDQpUaGFua3MsDQoNCk9uIDE4IE1hcmNoIDIwMTkgMTY6MDMsIERtaXRyeSBP
+c2lwZW5rbyB3cm90ZToNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSByZWd1bGF0b3I6IGNvcmU6
+IGZpeCBlcnJvciBwYXRoIGZvcg0KPiByZWd1bGF0b3Jfc2V0X3ZvbHRhZ2VfdW5sb2NrZWQNCj4g
+DQo+IDE4LjAzLjIwMTkgMTg6MzIsIFN0ZXZlIFR3aXNzINC/0LjRiNC10YI6DQo+ID4gRHVyaW5n
+IHNldmVyYWwgZXJyb3IgcGF0aHMgaW4gdGhlIGZ1bmN0aW9uDQo+ID4gcmVndWxhdG9yX3NldF92
+b2x0YWdlX3VubG9ja2VkKCkgdGhlIHZhbHVlIG9mICdyZXQnIGNhbiB0YWtlIG9uIG5lZ2F0aXZl
+DQo+ID4gZXJyb3IgdmFsdWVzLiBIb3dldmVyLCBpbiBjYWxscyB0aGF0IGdvIHRocm91Z2ggdGhl
+ICdnb3RvIG91dCcgc3RhdGVtZW50LA0KPiA+IHRoaXMgcmV0dXJuIHZhbHVlIGlzIGxvc3QgYW5k
+IHJldHVybiAwIGlzIHVzZWQgaW5zdGVhZCwgaW5kaWNhdGluZyBhDQo+ID4gJ3Bhc3MnLg0KPiA+
+DQo+ID4gVGhlcmUgYXJlIHNldmVyYWwgY2FzZXMgd2hlcmUgdGhpcyBmdW5jdGlvbiBzaG91bGQg
+bGVnaXRpbWF0ZWx5IHJldHVybiBhDQo+ID4gZmFpbCBpbnN0ZWFkIG9mIGEgcGFzczogb25lIHN1
+Y2ggY2FzZSBpbmNsdWRlcyBjb25zdHJhaW50cyBjaGVjayBkdXJpbmcNCj4gPiB2b2x0YWdlIHNl
+bGVjdGlvbiBpbiB0aGUgY2FsbCB0byByZWd1bGF0b3JfY2hlY2tfdm9sdGFnZSgpLCB3aGljaCBj
+YW4NCj4gPiBoYXZlIC1FSU5WQUwgZm9yIHRoZSBjYXNlIHdoZW4gYW4gdW5zdXBwb3J0ZWQgdm9s
+dGFnZSBpcyBpbmNvcnJlY3RseQ0KPiA+IHJlcXVlc3RlZC4gSW4gdGhhdCBjYXNlLCAtMjIgaXMg
+ZXhwZWN0ZWQgYXMgdGhlIHJldHVybiB2YWx1ZSwgbm90IDAuDQo+ID4NCj4gPiBGaXhlczogOTI0
+M2ExOTViZTdhICgicmVndWxhdG9yOiBjb3JlOiBDaGFuZ2Ugdm9sdGFnZSBzZXR0aW5nIHBhdGgi
+KQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFN0ZXZlIFR3aXNzIDxzdHdpc3Mub3BlbnNvdXJjZUBkaWFz
+ZW1pLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9yZWd1bGF0b3IvY29yZS5jIHwgMiArLQ0K
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3JlZ3VsYXRvci9jb3JlLmMgYi9kcml2ZXJzL3JlZ3Vs
+YXRvci9jb3JlLmMNCj4gPiBpbmRleCA2ODQ3M2QwLi5jYWY4NzQzIDEwMDY0NA0KPiA+IC0tLSBh
+L2RyaXZlcnMvcmVndWxhdG9yL2NvcmUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcmVndWxhdG9yL2Nv
+cmUuYw0KPiA+IEBAIC0zMzI2LDcgKzMzMjYsNyBAQCBzdGF0aWMgaW50IHJlZ3VsYXRvcl9zZXRf
+dm9sdGFnZV91bmxvY2tlZChzdHJ1Y3QNCj4gcmVndWxhdG9yICpyZWd1bGF0b3IsDQo+ID4gIAkJ
+Z290byBvdXQyOw0KPiA+DQo+ID4gIG91dDoNCj4gPiAtCXJldHVybiAwOw0KPiA+ICsJcmV0dXJu
+IHJldDsNCj4gPiAgb3V0MjoNCj4gPiAgCXZvbHRhZ2UtPm1pbl91ViA9IG9sZF9taW5fdVY7DQo+
+ID4gIAl2b2x0YWdlLT5tYXhfdVYgPSBvbGRfbWF4X3VWOw0KPiA+DQo+IA0KPiBMb29rcyBsaWtl
+IGEgZ29vZCBjYXRjaC4NCj4gDQo+IFByb2JhYmx5IHdpbGwgYmUgYSBiaXQgYmV0dGVyIHRvIHdy
+aXRlIHRoaXMgYXM6DQo+IA0KPiAgICAgICAgIC8qIGZvciBub3QgY291cGxlZCByZWd1bGF0b3Jz
+IHRoaXMgd2lsbCBqdXN0IHNldCB0aGUgdm9sdGFnZSAqLw0KPiAgICAgICAgIHJldCA9IHJlZ3Vs
+YXRvcl9iYWxhbmNlX3ZvbHRhZ2UocmRldiwgc3RhdGUpOw0KPiAtICAgICAgIGlmIChyZXQgPCAw
+KQ0KPiAtICAgICAgICAgICAgICAgZ290byBvdXQyOw0KPiAtDQo+ICsgICAgICAgaWYgKHJldCA8
+IDApIHsNCj4gKyAgICAgICAgICAgICAgIHZvbHRhZ2UtPm1pbl91ViA9IG9sZF9taW5fdVY7DQo+
+ICsgICAgICAgICAgICAgICB2b2x0YWdlLT5tYXhfdVYgPSBvbGRfbWF4X3VWOw0KPiArICAgICAg
+IH0NCj4gIG91dDoNCj4gLSAgICAgICByZXR1cm4gMDsNCj4gLW91dDI6DQo+IC0gICAgICAgdm9s
+dGFnZS0+bWluX3VWID0gb2xkX21pbl91VjsNCj4gLSAgICAgICB2b2x0YWdlLT5tYXhfdVYgPSBv
+bGRfbWF4X3VWOw0KPiAtDQo+ICAgICAgICAgcmV0dXJuIHJldDsNCj4gIH0NCg0KSSd2ZSBqdXN0
+IGhhZCBhIHZlcnkgc2ltaWxhciBjb252ZXJzYXRpb24gd2l0aCBBZGFtIFRob21zb24gd2hvIHNp
+dHMgbmVhciBtZSBhbmQgYWxzbyANCnNhaWQgdGhlIHR3byBnb3RvcyBtYWtlIGl0IGxvb2sgY29u
+ZnVzaW5nLg0KDQpIb25lc3RseSAtLSBJIHdhc24ndCBjb252aW5jZWQgYmVjYXVzZSBpdCBsb29r
+ZWQgb2J2aW91cyB0byBtZSwgYnV0IHlvdSBhcmUgdGhlIHNlY29uZA0KcGVyc29uIHRvIHNheSBp
+dCAuLiANCkNDOiBBZGFtIFRob21zb24NCg0KU28sIG9rLiBBZ3JlZWQuIDopDQpJJ2xsIG1ha2Ug
+dGhlIGNoYW5nZSBhbmQgcmVzZW5kLg0KDQpSZWdhcmRzLA0KU3RldmUNCg==
