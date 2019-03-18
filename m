@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801A4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1E7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50DC62075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA5621741
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901228;
-	bh=xuGhrMhVz3zaaYtF5wWqhDEOrMlAGjbRM44hQ9EneKY=;
+	s=default; t=1552901232;
+	bh=BJLw9R7rnF+VYYodHoQtV0BgC9AeUWsaDnvrQI0jrxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwsi9kDgHZYJpNYC+qnBC3c7ZUQThU8I1cf3EI8qddvRSNrjryYU/pAKAE3kkpVI0
-	 OzPtXmrdwtbMAO0xuH4b/qcUknC6GsGKUzu59+3D+LmbUK5UmDjUm+J333DOTanhsd
-	 X9pgN900eY+ajCagOL9AxbmpKTWMwqHQyKAajnBo=
+	b=FHBG6+3NjrjZHsr7nZiuRrDVYHRrmX0geMvd4vKXgojvBz00ZqcQMJiYN//DuiXF1
+	 p/yLDirjyWQbIYh7aMTl6NGM6Ps1iOE256AG+SrjAiydAJXXa6M9/QK6WJgMKr4LcW
+	 mCThgT9XVHzltUTUb/hzftgQxcrpnO2f/P8Fg+iA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfCRJ1G (ORCPT
+        id S1727716AbfCRJ1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:27:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60336 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727381AbfCRJ1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:27:04 -0400
+        id S1727703AbfCRJ1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:27:07 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AFC02063F;
-        Mon, 18 Mar 2019 09:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 277C421741;
+        Mon, 18 Mar 2019 09:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901223;
-        bh=xuGhrMhVz3zaaYtF5wWqhDEOrMlAGjbRM44hQ9EneKY=;
+        s=default; t=1552901226;
+        bh=BJLw9R7rnF+VYYodHoQtV0BgC9AeUWsaDnvrQI0jrxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y9wcgMpMj8GjCbC6wRBwOvEjNgNwUgR6nFNlo6sKKWVn0QFWFgIUVbpKPDXE2PRLK
-         7iuDxxXHfFhuIjIjCNdlWlvNJMUW9R2vaf5kqt5kIGjHuj2OAfz2qi3obvPttCMyLY
-         BGJUaswUf0jPVBRpnfkrIs3CFHIsy1NXfY+1gmq4=
+        b=PGuzRgUB/T/gP2vW6cXeSPRc583o+we1Hlq4oWrDL64ru6W5B4Ds5qieFh5vs0wRL
+         9Ruq2LTh7EuQEdCIUCQrUuKCEew6gu/NFLsIA9FFFB0voDo/a375tpEQMNVQ8Zmab7
+         y8yW5BzbRLT8cnerwkqOMFokFiFt0ekYhx4iKyAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 23/43] vxlan: test dev->flags & IFF_UP before calling gro_cells_receive()
-Date:   Mon, 18 Mar 2019 10:24:15 +0100
-Message-Id: <20190318083716.551338675@linuxfoundation.org>
+Subject: [PATCH 5.0 24/43] net/mlx4_core: Fix reset flow when in command polling mode
+Date:   Mon, 18 Mar 2019 10:24:16 +0100
+Message-Id: <20190318083716.581985752@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -64,67 +67,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 59cbf56fcd98ba2a715b6e97c4e43f773f956393 ]
+[ Upstream commit e15ce4b8d11227007577e6dc1364d288b8874fbe ]
 
-Same reasons than the ones explained in commit 4179cb5a4c92
-("vxlan: test dev->flags & IFF_UP before calling netif_rx()")
+As part of unloading a device, the driver switches from
+FW command event mode to FW command polling mode.
 
-netif_rx() or gro_cells_receive() must be called under a strict contract.
+Part of switching over to polling mode is freeing the command context array
+memory (unfortunately, currently, without NULLing the command context array
+pointer).
 
-At device dismantle phase, core networking clears IFF_UP
-and flush_all_backlogs() is called after rcu grace period
-to make sure no incoming packet might be in a cpu backlog
-and still referencing the device.
+The reset flow calls "complete" to complete all outstanding fw commands
+(if we are in event mode). The check for event vs. polling mode here
+is to test if the command context array pointer is NULL.
 
-A similar protocol is used for gro_cells infrastructure, as
-gro_cells_destroy() will be called only after a full rcu
-grace period is observed after IFF_UP has been cleared.
+If the reset flow is activated after the switch to polling mode, it will
+attempt (incorrectly) to complete all the commands in the context array --
+because the pointer was not NULLed when the driver switched over to polling
+mode.
 
-Most drivers call netif_rx() from their interrupt handler,
-and since the interrupts are disabled at device dismantle,
-netif_rx() does not have to check dev->flags & IFF_UP
+As a result, we have a use-after-free situation, which results in a
+kernel crash.
 
-Virtual drivers do not have this guarantee, and must
-therefore make the check themselves.
+For example:
+BUG: unable to handle kernel NULL pointer dereference at           (null)
+IP: [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
+PGD 0
+Oops: 0000 [#1] SMP
+Modules linked in: netconsole nfsv3 nfs_acl nfs lockd grace ...
+CPU: 2 PID: 940 Comm: kworker/2:3 Kdump: loaded Not tainted 3.10.0-862.el7.x86_64 #1
+Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090006  04/28/2016
+Workqueue: events hv_eject_device_work [pci_hyperv]
+task: ffff8d1734ca0fd0 ti: ffff8d17354bc000 task.ti: ffff8d17354bc000
+RIP: 0010:[<ffffffff876c4a8e>]  [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
+RSP: 0018:ffff8d17354bfa38  EFLAGS: 00010082
+RAX: 0000000000000000 RBX: ffff8d17362d42c8 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: 0000000000000003 RDI: ffff8d17362d42c8
+RBP: ffff8d17354bfa70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000298 R11: ffff8d173610e000 R12: ffff8d17362d42d0
+R13: 0000000000000246 R14: 0000000000000000 R15: 0000000000000003
+FS:  0000000000000000(0000) GS:ffff8d1802680000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000f16d8000 CR4: 00000000001406e0
+Call Trace:
+ [<ffffffff876c7adc>] complete+0x3c/0x50
+ [<ffffffffc04242f0>] mlx4_cmd_wake_completions+0x70/0x90 [mlx4_core]
+ [<ffffffffc041e7b1>] mlx4_enter_error_state+0xe1/0x380 [mlx4_core]
+ [<ffffffffc041fa4b>] mlx4_comm_cmd+0x29b/0x360 [mlx4_core]
+ [<ffffffffc041ff51>] __mlx4_cmd+0x441/0x920 [mlx4_core]
+ [<ffffffff877f62b1>] ? __slab_free+0x81/0x2f0
+ [<ffffffff87951384>] ? __radix_tree_lookup+0x84/0xf0
+ [<ffffffffc043a8eb>] mlx4_free_mtt_range+0x5b/0xb0 [mlx4_core]
+ [<ffffffffc043a957>] mlx4_mtt_cleanup+0x17/0x20 [mlx4_core]
+ [<ffffffffc04272c7>] mlx4_free_eq+0xa7/0x1c0 [mlx4_core]
+ [<ffffffffc042803e>] mlx4_cleanup_eq_table+0xde/0x130 [mlx4_core]
+ [<ffffffffc0433e08>] mlx4_unload_one+0x118/0x300 [mlx4_core]
+ [<ffffffffc0434191>] mlx4_remove_one+0x91/0x1f0 [mlx4_core]
 
-Otherwise we risk use-after-free and/or crashes.
+The fix is to set the command context array pointer to NULL after freeing
+the array.
 
-Fixes: d342894c5d2f ("vxlan: virtual extensible lan")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: f5aef5aa3506 ("net/mlx4_core: Activate reset flow upon fatal command cases")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vxlan.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/cmd.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -1657,6 +1657,14 @@ static int vxlan_rcv(struct sock *sk, st
- 		goto drop;
- 	}
+--- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
+@@ -2689,6 +2689,7 @@ void mlx4_cmd_use_polling(struct mlx4_de
+ 		down(&priv->cmd.event_sem);
  
-+	rcu_read_lock();
-+
-+	if (unlikely(!(vxlan->dev->flags & IFF_UP))) {
-+		rcu_read_unlock();
-+		atomic_long_inc(&vxlan->dev->rx_dropped);
-+		goto drop;
-+	}
-+
- 	stats = this_cpu_ptr(vxlan->dev->tstats);
- 	u64_stats_update_begin(&stats->syncp);
- 	stats->rx_packets++;
-@@ -1664,6 +1672,9 @@ static int vxlan_rcv(struct sock *sk, st
- 	u64_stats_update_end(&stats->syncp);
+ 	kfree(priv->cmd.context);
++	priv->cmd.context = NULL;
  
- 	gro_cells_receive(&vxlan->gro_cells, skb);
-+
-+	rcu_read_unlock();
-+
- 	return 0;
- 
- drop:
+ 	up(&priv->cmd.poll_sem);
+ 	up_write(&priv->cmd.switch_sem);
 
 
