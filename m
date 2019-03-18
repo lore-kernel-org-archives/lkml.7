@@ -2,66 +2,81 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D87FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 05:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55950C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA0020700
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 05:59:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552888759;
-	bh=2OHqeb8dRoPu1gwZpFHyPbay6SLmWnXesGXHIopE2/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BIEy5QPJiO+Hhmre9H9HNbX+LakWqaIUQdSRZqYFPjt5Z215ZjOmvWRz86ssTFypQ
-	 WQBXU/fPueRX9xpwWAeaPbbiCJDiCpAG/AbXEQq2ZzHlx0mRwa/rbZdnhNmgbjudmS
-	 Sgxu6+70K2mibeUBoIP/RiThlnUx43TGRIJ+9uN8=
+	by mail.kernel.org (Postfix) with ESMTP id 208922077B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfCRF7R (ORCPT
+        id S1727804AbfCRGV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 01:59:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57440 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 02:21:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48450 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726003AbfCRF7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 01:59:16 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726646AbfCRGV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 02:21:59 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82C8920700;
-        Mon, 18 Mar 2019 05:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552888232;
-        bh=2OHqeb8dRoPu1gwZpFHyPbay6SLmWnXesGXHIopE2/E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eF1zevv1GzJF9b7h6IJLPJgRLZGJuxCBpVHGDo9nP4tmf0CNo4x2cEQsjMFVaB4/G
-         LkdYh6mupYXJT8CLuJu1SgfYSkal9LxiVx9RBIb2cVQOCedM3p2xcVkm/TT/eBv47v
-         f1VXJ6CFer7FJcUyBmrKuYVZK1T1n/uR0PinRLbs=
-Date:   Mon, 18 Mar 2019 06:50:29 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ignacio Losiggio <iglosiggio@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Ignacio Losiggio <iglosiggio@dc.uba.ar>
-Subject: Re: [PATCH v2 1/2] staging: gdm724x: Clean long function calls
-Message-ID: <20190318055029.GA5323@kroah.com>
-References: <20190318011534.7400-1-iglosiggio@gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 09387308219C;
+        Mon, 18 Mar 2019 06:21:59 +0000 (UTC)
+Received: from xz-x1 (dhcp-14-116.nay.redhat.com [10.66.14.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D32BC5D9C8;
+        Mon, 18 Mar 2019 06:21:52 +0000 (UTC)
+Date:   Mon, 18 Mar 2019 14:21:50 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Wang <jasowang@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Virtio-scsi multiqueue irq affinity
+Message-ID: <20190318062150.GC6654@xz-x1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190318011534.7400-1-iglosiggio@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 18 Mar 2019 06:21:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 10:15:34PM -0300, Ignacio Losiggio wrote:
-> Signed-off-by: Ignacio Losiggio <iglosiggio@dc.uba.ar>
-> ---
->  drivers/staging/gdm724x/gdm_mux.c | 28 ++++++----------------------
->  1 file changed, 6 insertions(+), 22 deletions(-)
+Hi, Christoph & all,
 
-I can not take patches without any changelog text, sorry.
+I noticed that starting from commit 0d9f0a52c8b9 ("virtio_scsi: use
+virtio IRQ affinity", 2017-02-27) the virtio scsi driver is using a
+new way (via irq_create_affinity_masks()) to automatically initialize
+IRQ affinities for the multi-queues, which is different comparing to
+all the other virtio devices (like virtio-net, which still uses
+virtqueue_set_affinity(), which is actually, irq_set_affinity_hint()).
 
-greg k-h
+Firstly, it will definitely broke some of the userspace programs with
+that when the scripts wanted to do the bindings explicitly like before
+and they could simply fail with -EIO now every time when echoing to
+/proc/irq/N/smp_affinity of any of the multi-queues (see
+write_irq_affinity()).
+
+Is there any specific reason to do it with the new way?  Since AFAIU
+we should still allow the system admins to decide what to do for such
+configurations, .e.g., what if we only want to provision half of the
+CPU resources to handle IRQs for a specific virtio-scsi controller?
+We won't be able to achieve that with current policy.  Or, could this
+be a question for the IRQ system (irq_create_affinity_masks()) in
+general?  Any special considerations behind the big picture?
+
+I believe I must have missed some contexts here and there... but I'd
+like to raise the question up.  Say, if the new way is preferred and
+attempted, maybe it would worth it to spread the idea to the rest of
+the virtio drivers who support multi-queues as well.
+
+Thanks,
+
+-- 
+Peter Xu
