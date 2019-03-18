@@ -2,66 +2,65 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF04C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ED7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89EF20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5957520828
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 20:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="FkxCn4Rc"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="mAKFJFqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfCRUN3 (ORCPT
+        id S1727487AbfCRUNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 16:13:29 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37596 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfCRUN2 (ORCPT
+        Mon, 18 Mar 2019 16:13:53 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34339 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfCRUNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 16:13:28 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v84so7805477oif.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:13:28 -0700 (PDT)
+        Mon, 18 Mar 2019 16:13:52 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r19so15647612otn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 13:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JX7zqHaIu/f/4WJ+moXDPr6XWTpIHVkf/YKVmDEyBQE=;
-        b=FkxCn4Rci7k/IG1yg+mVFwx3nbStmUAu7To1o6ypuvQhJOTj92rQ/P8aj1HxNcQv5n
-         B4XJB1jKVcvs0OKe87146WNXH5iew/LbN6t3aFsyBLIjRNLStkYrREzIaZcIaxjsNgJD
-         UnPBfYfqYougvtcZl1/D/hJXwohtFGxubsL0/9r05ob9H23MwFE7hDzFv/iJ/Zba3ozn
-         edmcPTMjStHtOX5nR2BywAFHxgu+KpGFYPESzbyVy/+TgV63CwfotaF4XPMgdqhsb3O4
-         6DtPnZU3t0zzuF50kffrb98/ujzgaeVC/CLHK7F3AZqydOixi5b7aefk7r4pJEfApzTN
-         Kjog==
+        bh=ley2nh3GFrfpOpGk4n030KPLgXgEmt/2h5lDf9s9dEA=;
+        b=mAKFJFqiDQc+2hXNhQknOvDGq/lAvfTgO/Cv1Rcjlkeu0J4FjsyYMe8yHw8gA8NhTu
+         5eqjN7en5Fbh7jAv0DM7ACjhxH3W+/VrJToVd9Vckyykk3SlvrpJbuomNKTnaXJjIY6e
+         Z9r8nOwJ7xLWg90QT85pHCMBUXXs2jYMm727cfN+KV5YmMcK9l/v09GMO/z1Wg03B6Ve
+         0E+vC+25J9IsXZmDu5izvIbfaUrU9+tf4dmBEBosVN32wdXzUmUQ0zZzk9nn0MWz45n2
+         9IisliRQp8IOdwjcmdoBG9oGTPUHxj5tW9GIkGV5JCAEZ4c/+LIJR8DZ0FNenTDVGE5V
+         wc9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JX7zqHaIu/f/4WJ+moXDPr6XWTpIHVkf/YKVmDEyBQE=;
-        b=bQFVHw3y4SPyPHGKdfU8ke3VRvIe7MBGa2ZsIyhdOGHYEq2HHs2uet/kdH2KpPuVXp
-         ou3L+ZsVQ/cphPW6TCLzPMpVbS8Khjls2I8h3YRKekSM8gRjHczXN176A+H/TAjUnenX
-         TRfJ+JjEYW55jFCYmMSsMnwfEQGjjsmHR1if0tdA6cDZFvYAg3146tm3VmFddqPf1GQ7
-         9VJNi3rZX2WiR9y36dGMr3HTtgBLKxQQtivYEhMWowBGOIQnSRRgmyki1WAM13/2DIhy
-         VtekrmS5UD8F+5oJ8XbqV0uxCjm8cE/jFQvIjJIzAW1B08/UUhfFV6fJGY/zaCYVaQB2
-         b36g==
-X-Gm-Message-State: APjAAAUCOm3+GUytFNe3VzoaiFED1C/UlUGVX7foSSQng9DsATgq+52p
-        POg7wgVkQQ2cpJ9bCbKYiAv9xvRzmYO23b7xQ9dFEKt8
-X-Google-Smtp-Source: APXvYqxK+mqOGTY75gVcQ00WrMF7FJmWZKnkJnEyR3CkSIhW78B4iNPZdaUyWb8dTm0JNUkx/QsUX8/7amy4g4tgpIU=
-X-Received: by 2002:a54:4e02:: with SMTP id a2mr469676oiy.140.1552940007949;
- Mon, 18 Mar 2019 13:13:27 -0700 (PDT)
+        bh=ley2nh3GFrfpOpGk4n030KPLgXgEmt/2h5lDf9s9dEA=;
+        b=EshG1hZJ0QUD+7/yJY6rsNBy1mpSc2mj9aY4k4oDZPq35Ag7I2yYKpgpVsui8g6ssr
+         g8cVVnaGEYc1eiqpbVA325FmISkY8L4UApLTmJux46i4dmJuFSMPMTzOq2uX6/mPio8S
+         QLrPWWmfPxyy+iIotnmrbEjuz69sKD4KuHetYXEJWt8ug/SQme7A9B46gs8lut1I+SXk
+         OUppSrzyFy/VCorEBdkCheEHnOs91W6dB5WMdly6SXPW/8lnNN+H5Ex7OVColTKqdMvc
+         B3sADKINViVWtCXNXWKiyaOMsa8nP7Po2/sbgVOoq5fPJBETPB57UECpLh9Jyq+FuAJ+
+         Hq3A==
+X-Gm-Message-State: APjAAAV+bGat55I/rLr7k5O5id2SLa6HYarOVdnFIXQO7ujvJyw+ZN/4
+        mz4YTKjkYwvGtvtGnbEEgq/iuVDfKib4dM7DGvw=
+X-Google-Smtp-Source: APXvYqyIJ/fJ5Ryl95uXVYFDfnRiMR7/LOMVdYNZaZZYH6o5h3HY63Tkwz9uvRiWvUKtKlVKSQB0Iw3FmweksseRz+Q=
+X-Received: by 2002:a9d:7441:: with SMTP id p1mr12227529otk.148.1552940031770;
+ Mon, 18 Mar 2019 13:13:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190318100458.5619-1-narmstrong@baylibre.com> <20190318100458.5619-7-narmstrong@baylibre.com>
-In-Reply-To: <20190318100458.5619-7-narmstrong@baylibre.com>
+References: <20190318100458.5619-1-narmstrong@baylibre.com> <20190318100458.5619-12-narmstrong@baylibre.com>
+In-Reply-To: <20190318100458.5619-12-narmstrong@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 18 Mar 2019 21:13:17 +0100
-Message-ID: <CAFBinCCSKh145--5EAPQyJjbuefRgWm57G+05so28-WiZjqNYg@mail.gmail.com>
-Subject: Re: [PATCH v2 06/11] arm64: dts: meson-g12a-x96-max: add regulators
+Date:   Mon, 18 Mar 2019 21:13:40 +0100
+Message-ID: <CAFBinCC_+KWZW0p-HGRzjsYZGHN_FkU9DicR6Z4+J3KfzPKbUw@mail.gmail.com>
+Subject: Re: [PATCH v2 11/11] arm64: dts: meson-g12a-x96-max: Enable USB
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        Guillaume La Roque <glaroque@baylibre.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,42 +68,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
-
-On Mon, Mar 18, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Mon, Mar 18, 2019 at 11:07 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> From: Guillaume La Roque <glaroque@baylibre.com>
+> Enable the USB2 and USB3 Host ports on the X96 Max Set-Top-Box.
 >
-> Add system regulators for the X96 Max Set-Top-Box.
->
-> Still missing
-> * VDD_EE (0.8V - PWM controlled)
-> * VDD_CPU (PWM controlled)
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-> index 0edbd00b358f..5c37930b09e2 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-[...]
-> +       vcc_5v: regulator-vcc_5v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VCC_5V";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +               vin-supply = <&dc_in>;
-> +
-> +               gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
-> +               enable-active-high;
-is there any way to test whether this GPIO is the right one?
-I couldn't find a reference to a GPIOH_8 regulator in
-buildroot_openlinux_kernel_4.9_fbdev_20180706
-
-
-Regards
-Martin
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
