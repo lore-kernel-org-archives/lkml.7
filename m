@@ -2,136 +2,168 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FF6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A5EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509512085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D902084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 11:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552907361;
+	bh=O4eddPFSsuPYV16k56jD73MPm+GLhqSJoHPrJ6Kf2NQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DQrB6xXf5sCXfeEdToz5HLSsPFe3eCe8apV/B2G/FYmb4/4pmxIUqsB8Lk6NQrvRW
+	 qxZlAwgugylkx5ilJ+WfGM/eZYEHrqS4PL9kw4GMDolf0m2HpekdnwE5tTsjFpvBPf
+	 5yvDGw5FxVTJVOFioIi1mgO+7OJ/u8DfbuEeuqS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfCRLGV (ORCPT
+        id S1726857AbfCRLJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 07:06:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43482 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbfCRLGV (ORCPT
+        Mon, 18 Mar 2019 07:09:20 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41290 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbfCRLJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 07:06:21 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IB4ERm092014
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 07:06:20 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2raa1c0ev9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 07:06:19 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Mon, 18 Mar 2019 11:06:17 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 18 Mar 2019 11:06:14 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2IB6Ej135455214
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Mar 2019 11:06:14 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22AB811C05B;
-        Mon, 18 Mar 2019 11:06:14 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2517B11C04C;
-        Mon, 18 Mar 2019 11:06:11 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon, 18 Mar 2019 11:06:10 +0000 (GMT)
-Date:   Mon, 18 Mar 2019 16:36:10 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Laurent Vivier <lvivier@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC v3] sched/topology: fix kernel crash when a CPU is
- hotplugged in a memoryless node
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20190304195952.16879-1-lvivier@redhat.com>
- <77b142fe-0886-1510-28bd-d432ea2c796a@redhat.com>
+        Mon, 18 Mar 2019 07:09:19 -0400
+Received: by mail-ot1-f65.google.com with SMTP id t7so14004716otk.8;
+        Mon, 18 Mar 2019 04:09:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qRH2Rvk2U18hLgWBdLBa0Fcr0HlfRCY0laF/qDg9QIQ=;
+        b=QG79kBCiA8kbuYPF/96QQHzO8DliHzhbO1pQUsXG8cGKsH9MOgTBWNRubNaQf3xWSx
+         EAG3/dgFBg6A67R+rmSrQmCDx8xvy/bpRjNxqMGRJnw2p3FuIellUgVA+ed2Ibp5DJ1s
+         4iObE0sLasE7YXfFkTrusmwIXG0h1wJHBHQ/DotePGJWT0csjTrUj/35fcPIklto+MBw
+         bw0rfZusid//98fcmlR1XGFVpaeZ0IvHFHG1FO6W6zx/HKiEP3HQ/g1yDSypwc9cqp8c
+         mASHO3xguqyhesuwG621Wy2XOvGHUxDnsqAcydzsrrv0iI3bWA1x1xsC0rrroQIzbmnz
+         Xl3A==
+X-Gm-Message-State: APjAAAW3EUFvddsEPMXASqrDTUPfyrqGpXdA5IP1aLzluwtRc056u+oV
+        1h7CiAla7BQCs3JEiLQq00AKUok42PDA/w9smww=
+X-Google-Smtp-Source: APXvYqwEqMC1kv+/UY//omIf65qdUIVsIg1jdboi//WIHKIFLGVpkGylX57DrjgFCt0WY6P+oBe94NhW7P/OQzvV580=
+X-Received: by 2002:a9d:6498:: with SMTP id g24mr10653457otl.343.1552907358650;
+ Mon, 18 Mar 2019 04:09:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <77b142fe-0886-1510-28bd-d432ea2c796a@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19031811-0028-0000-0000-0000035561FD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031811-0029-0000-0000-00002413F9B0
-Message-Id: <20190318110610.GB4450@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903180085
+References: <e2b56be446eeb67f1905d2ac6f8d82dd4389d0c5.1552640968.git.viresh.kumar@linaro.org>
+ <20190315122952.GF6058@hirez.programming.kicks-ass.net> <20190318023514.67gxypb4w7llcmha@vireshk-i7>
+ <20190318105356.GM6058@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190318105356.GM6058@hirez.programming.kicks-ass.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 18 Mar 2019 12:09:07 +0100
+Message-ID: <CAJZ5v0h5k72Oer0v6iaqfzNU6fNfoPK+YLsKxi6ZE14P_rWD1Q@mail.gmail.com>
+Subject: Re: [PATCH V2] cpufreq: Call transition notifier only once for each policy
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        sparclinux@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Laurent Vivier <lvivier@redhat.com> [2019-03-15 12:12:45]:
+On Mon, Mar 18, 2019 at 11:54 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Mon, Mar 18, 2019 at 08:05:14AM +0530, Viresh Kumar wrote:
+> > On 15-03-19, 13:29, Peter Zijlstra wrote:
+> > > On Fri, Mar 15, 2019 at 02:43:07PM +0530, Viresh Kumar wrote:
+> > > > diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> > > > index 3fae23834069..cff8779fc0d2 100644
+> > > > --- a/arch/x86/kernel/tsc.c
+> > > > +++ b/arch/x86/kernel/tsc.c
+> > > > @@ -956,28 +956,38 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
+> > > >                           void *data)
+> > > >  {
+> > > >   struct cpufreq_freqs *freq = data;
+> > > > - unsigned long *lpj;
+> > > > -
+> > > > - lpj = &boot_cpu_data.loops_per_jiffy;
+> > > > -#ifdef CONFIG_SMP
+> > > > - if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+> > > > -         lpj = &cpu_data(freq->cpu).loops_per_jiffy;
+> > > > -#endif
+> > > > + struct cpumask *cpus = freq->policy->cpus;
+> > > > + bool boot_cpu = !IS_ENABLED(CONFIG_SMP) || freq->flags & CPUFREQ_CONST_LOOPS;
+> > > > + unsigned long lpj;
+> > > > + int cpu;
+> > > >
+> > > >   if (!ref_freq) {
+> > > >           ref_freq = freq->old;
+> > > > -         loops_per_jiffy_ref = *lpj;
+> > > >           tsc_khz_ref = tsc_khz;
+> > > > +
+> > > > +         if (boot_cpu)
+> > > > +                 loops_per_jiffy_ref = boot_cpu_data.loops_per_jiffy;
+> > > > +         else
+> > > > +                 loops_per_jiffy_ref = cpu_data(cpumask_first(cpus)).loops_per_jiffy;
+> > > >   }
+> > > > +
+> > > >   if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
+> > > >                   (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
+> > > > -         *lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+> > > > -
+> > > > +         lpj = cpufreq_scale(loops_per_jiffy_ref, ref_freq, freq->new);
+> > > >           tsc_khz = cpufreq_scale(tsc_khz_ref, ref_freq, freq->new);
+> > > > +
+> > > >           if (!(freq->flags & CPUFREQ_CONST_LOOPS))
+> > > >                   mark_tsc_unstable("cpufreq changes");
+> > > >
+> > > > -         set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
+> > > > +         if (boot_cpu) {
+> > > > +                 boot_cpu_data.loops_per_jiffy = lpj;
+> > > > +         } else {
+> > > > +                 for_each_cpu(cpu, cpus)
+> > > > +                         cpu_data(cpu).loops_per_jiffy = lpj;
+> > > > +         }
+> > > > +
+> > > > +         for_each_cpu(cpu, cpus)
+> > > > +                 set_cyc2ns_scale(tsc_khz, cpu, rdtsc());
+> > >
+> > > This code doesn't make sense, the rdtsc() _must_ be called on the CPU in
+> > > question.
+> >
+> > You mean rdtsc() must be locally on that CPU? The cpufreq core never guaranteed
+> > that and it was left for the notifier to do. This patch doesn't change the
+> > behavior at all, just that it moves the for-loop to the notifier instead of the
+> > cpufreq core.
+>
+> Yuck..
+>
+> Rafael; how does this work in practise? Earlier you said that on x86 the
+> policies typically have a single cpu in them anyway.
 
-> 
-> Another way to avoid the nodes overlapping for the offline nodes at
-> startup is to ensure the default values don't define a distance that
-> merge all offline nodes into node 0.
-> 
-> A powerpc specific patch can workaround the kernel crash by doing this:
-> 
-> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-> index 87f0dd0..3ba29bb 100644
-> --- a/arch/powerpc/mm/numa.c
-> +++ b/arch/powerpc/mm/numa.c
-> @@ -623,6 +623,7 @@ static int __init parse_numa_properties(void)
->         struct device_node *memory;
->         int default_nid = 0;
->         unsigned long i;
-> +       int nid, dist;
-> 
->         if (numa_enabled == 0) {
->                 printk(KERN_WARNING "NUMA disabled by user\n");
-> @@ -636,6 +637,10 @@ static int __init parse_numa_properties(void)
-> 
->         dbg("NUMA associativity depth for CPU/Memory: %d\n",
-> min_common_depth);
-> 
-> +       for (nid = 0; nid < MAX_NUMNODES; nid ++)
-> +               for (dist = 0; dist < MAX_DISTANCE_REF_POINTS; dist++)
-> +                       distance_lookup_table[nid][dist] = nid;
-> +
+Yes.
 
-The only reason, this would have worked in the specific case, is because we
-are overriding the distance_lookup_table with a unique distance.
-So node_distance for any other node other than itself will return max
-distance which is 40 in this case. (since distance_ref_points_depth is 2)
+> Is the freq change also notified from _that_ cpu?
 
-I am not sure if  this will work if the node distance between the two nodes
-happens to be 20.
+May not be, depending on what CPU runs the work item/thread changing
+the freq.  It generally is not guaranteed to always be the same as the
+target CPU.
 
->         /*
->          * Even though we connect cpus to numa domains later in SMP
->          * init, we need to know the node ids now. This is because
-> 
+> I don't think I have old enough hardware around anymore to test any of
+> this. This was truly ancient p6 era stuff IIRC.
+>
+> Because in that case, I'm all for not doing the changes to this notifier
+> Viresh is proposing but simply adding something like:
+>
+>
+>         WARN_ON_ONCE(cpumask_weight(cpuc) != 1);
+>         WARN_ON_ONCE(cpumask_first(cpuc) != smp_processor_id());
+>
+> And leave it at that.
 
--- 
-Thanks and Regards
-Srikar Dronamraju
-
+That may not work I'm afraid.
