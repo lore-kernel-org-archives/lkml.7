@@ -2,129 +2,153 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11837C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46ACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11922085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F372085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfCRO0W (ORCPT
+        id S1727756AbfCRO0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:26:22 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:35800 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfCRO0V (ORCPT
+        Mon, 18 Mar 2019 10:26:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60974 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727709AbfCRO0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:26:21 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 830F972CC53;
-        Mon, 18 Mar 2019 17:26:18 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 5A5E57CC74C; Mon, 18 Mar 2019 17:26:18 +0300 (MSK)
-Date:   Mon, 18 Mar 2019 17:26:18 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
-        Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2 4/6] powerpc: use common ptrace_syscall_enter hook to
- handle _TIF_SYSCALL_EMU
-Message-ID: <20190318142618.GA27941@altlinux.org>
-References: <20190318104925.16600-1-sudeep.holla@arm.com>
- <20190318104925.16600-5-sudeep.holla@arm.com>
+        Mon, 18 Mar 2019 10:26:31 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IEPoKh089038
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:26:30 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ractyrtbv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:26:29 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 18 Mar 2019 14:26:28 -0000
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 18 Mar 2019 14:26:24 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2IEQOns18219232
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Mar 2019 14:26:24 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8F20B2065;
+        Mon, 18 Mar 2019 14:26:23 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CBA4FB2064;
+        Mon, 18 Mar 2019 14:26:23 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 18 Mar 2019 14:26:23 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 44E8216C340C; Mon, 18 Mar 2019 07:27:12 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 07:27:12 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Eial Czerwacki <eial@scalemp.com>
+Cc:     Tejun Heo <tj@kernel.org>, Barret Rhoden <brho@google.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
+        Shai Fultheim <shai@scalemp.com>, Oren Twaig <oren@scalemp.com>
+Subject: Re: [PATCH] percpu/module resevation: change resevation size iff
+ X86_VSMP is set
+Reply-To: paulmck@linux.ibm.com
+References: <c72402f2-967e-cd56-99d8-9139c9e7f267@google.com>
+ <010001693b404440-248fa987-624c-4587-940b-56e2ed4226d9-000000@email.amazonses.com>
+ <85726648-82f3-6b6b-a749-03c4159e78f3@google.com>
+ <20190313202640.GJ50184@devbig004.ftw2.facebook.com>
+ <20190313212255.GY13351@linux.ibm.com>
+ <20190313212912.GK50184@devbig004.ftw2.facebook.com>
+ <20190313231155.GC13351@linux.ibm.com>
+ <20190314173619.GL50184@devbig004.ftw2.facebook.com>
+ <20190314221943.GQ4102@linux.ibm.com>
+ <f44f1d5f-67b4-6ffd-80c1-28c48828f85b@scalemp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190318104925.16600-5-sudeep.holla@arm.com>
+In-Reply-To: <f44f1d5f-67b4-6ffd-80c1-28c48828f85b@scalemp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19031814-0060-0000-0000-0000031E11B4
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010780; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01176157; UDB=6.00615167; IPR=6.00956842;
+ MB=3.00026032; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-18 14:26:26
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031814-0061-0000-0000-000048A60B3A
+Message-Id: <20190318142712.GF4102@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903180107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 18, 2019 at 10:18:48AM +0200, Eial Czerwacki wrote:
+> Greetings Paul,
+> 
+> On 3/15/19 12:19 AM, Paul E. McKenney wrote:
+> > On Thu, Mar 14, 2019 at 10:36:19AM -0700, Tejun Heo wrote:
+> >> On Wed, Mar 13, 2019 at 04:11:55PM -0700, Paul E. McKenney wrote:
+> >>> commit 34f67df09cc0c6bf082a7cfca435373caeeb8d82
+> >>> Author: Paul E. McKenney <paulmck@linux.ibm.com>
+> >>> Date:   Wed Mar 13 16:06:22 2019 -0700
+> >>>
+> >>>     srcu: Forbid DEFINE{,_STATIC}_SRCU() from modules
+> >>>     
+> >>>     Adding DEFINE_SRCU() or DEFINE_STATIC_SRCU() to a loadable module
+> >>>     requires that the size of the reserved region be increased, which is
+> >>>     not something we want to be doing all that often.  Instead, loadable
+> >>>     modules should define an srcu_struct and invoke init_srcu_struct()
+> >>>     from their module_init function and cleanup_srcu_struct() from their
+> >>>     module_exit function.  Note that modules using call_srcu() will also
+> >>>     need to invoke srcu_barrier() from their module_exit function.
+> >>>     
+> >>>     This commit enforces this advice by refusing to define DEFINE_SRCU()
+> >>>     and DEFINE_STATIC_SRCU() within loadable modules.
+> >>>     
+> >>>     Suggested-by: Barret Rhoden <brho@google.com>
+> >>>     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> >>
+> >> Looks-great-to-me-by: Tejun Heo <tj@kernel.org>
+> > 
+> > Applied.  ;-)
+> > 
+> > 							Thanx, Paul
+> > 
+> >> Thanks. :)
+> >>
+> >> -- 
+> >> tejun
+> >>
+> > 
+> > 
+> 
+> when can this patch be found in the kernel mainline git repo? I'd like
+> to test and see if the patch that started this mail thread still occurs.
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for your interest!
 
-On Mon, Mar 18, 2019 at 10:49:23AM +0000, Sudeep Holla wrote:
-> Now that we have a new hook ptrace_syscall_enter that can be called from
-> syscall entry code and it handles PTRACE_SYSEMU in generic code, we
-> can do some cleanup using the same in do_syscall_trace_enter.
->=20
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  arch/powerpc/kernel/ptrace.c | 48 ++++++++++++++++--------------------
->  1 file changed, 21 insertions(+), 27 deletions(-)
->=20
-> diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
-> index 2e2183b800a8..05579a5dcb12 100644
-> --- a/arch/powerpc/kernel/ptrace.c
-> +++ b/arch/powerpc/kernel/ptrace.c
-> @@ -3278,35 +3278,29 @@ long do_syscall_trace_enter(struct pt_regs *regs)
-> =20
->  	user_exit();
-> =20
-> -	flags =3D READ_ONCE(current_thread_info()->flags) &
-> -		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
-> -
-> -	if (flags) {
-> -		int rc =3D tracehook_report_syscall_entry(regs);
-> +	if (unlikely(ptrace_syscall_enter(regs))) {
-> +		/*
-> +		 * A nonzero return code from tracehook_report_syscall_entry()
-> +		 * tells us to prevent the syscall execution, but we are not
-> +		 * going to execute it anyway.
-> +		 *
-> +		 * Returning -1 will skip the syscall execution. We want to
-> +		 * avoid clobbering any registers, so we don't goto the skip
-> +		 * label below.
-> +		 */
-> +		return -1;
-> +	}
+It is a3f5f4fae725 ("srcu: Forbid DEFINE{,_STATIC}_SRCU() from modules")
+in my -rcu tree.  If all goes well, I will submit it to the v5.2 merge
+window.  I do not expect it to be submitted to -stable.
 
-This comment is out of sync with the changed code.
+And -rcu is here:
 
+	git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
 
---=20
-ldv
+							Thanx, Paul
 
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJcj6qKAAoJEAVFT+BVnCUIpOUP/j1ZfG80n/XTu6EimciHcs9e
-nhN3qmFqVCDXeuvQh8I/xncM25fHK+ftwsUQOij1bT2iecbY/yLxpFpfBcru1bho
-Gp0hMlMCEQcxJ/2ArUKjL3HWIaeh8/ut63nLEgGARp0C4Zd14vnjNEZsJBtnZDvZ
-/pKKGNKENgMzx/LH/8pouPQoLTLcTctLjpg7QCHhVgyf+cEjkcTPB2z7ityUXUGG
-4WlGjWyo6qL9fMmUKrhQ+w1B2FyjsffRv0zKAyOG+p2edHGHEjfqw+Z4s2h8rJLL
-nol9SN00msn5wFH83YJmkKolNAIVdDC3seGM2tiX4HROIqKK13MBr4ZqX37mQP7r
-DClvWfuvCCH/NaIoyaq6f4YkkSboox2YDZVTjPQ9NPInoRUXZG3MuvL92eGh8wuZ
-2sjwMWvBU1a+l+C8u0+U2Q/7FMWG8wYwkARiq5AqkNZmIV8dxhyXtY2+X8G3LIDe
-/W1yzi2cYAlMU1oisoA4uYwrFHvUvd2K2jQYHXWvTX6tV7QFdiJNRv9DHdlOqmSL
-cnMyjhOXPKL7bxsh39VvHQJHBP1hru9+IuGqGuLUgeF1nSDIbaFY5RsvwzTqzazJ
-6z8f+gK+Odmt2B6n5zZnSFqCvzOiyQ3XYuRa9Xbfh8DSaDR5BwzqUp3MQZs6QbRI
-DsJJJSfcDOCFdWJIYv+6
-=JQDW
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
