@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07172C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCB4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5B32075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40AC2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902043;
-	bh=+SEbrTykt3WSChnilwTKQ9FEIo6V/W2G/JduYL505Fs=;
+	s=default; t=1552902052;
+	bh=YT7A7BZguh/YyoTLGnlCyDKzsqkqj6bNczYoi5krGXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=it2WC+FiRmvBd5+kpiGRGTCFN4uUxRI/VmGnkrFg8Pmy0pHqenVM8LCGdHZ03ZZav
-	 dkvBhxvmFRQJ67ILQovJ4+WICC5BWK6kY2ALNP+2rhTMSnuqesCug0rDEukgQlWLtc
-	 tPEzKYwR/dQPR1mNX6S2vL6HZk+PUUqDjdYTC0Ys=
+	b=gvsNpO+MaydQopCvHIsjXzoYZ3NpwSuyzcS0HDDwvKbU2rms3tcWCC/a0duzN8x67
+	 mhKSKha7yrfIcK0PAVvIk44J1oAWvd34rVhO59okddcdx6HjEEdnyyBwzltMeA68F6
+	 FQBjxoLILCurAMYv4GczBwivNFQNo6YCIToVvTMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfCRJep (ORCPT
+        id S2387406AbfCRJeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:34:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43080 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:34:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729033AbfCRJej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:39 -0400
+        id S1728682AbfCRJe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:34:27 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA3632175B;
-        Mon, 18 Mar 2019 09:34:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA95321734;
+        Mon, 18 Mar 2019 09:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901679;
-        bh=+SEbrTykt3WSChnilwTKQ9FEIo6V/W2G/JduYL505Fs=;
+        s=default; t=1552901666;
+        bh=YT7A7BZguh/YyoTLGnlCyDKzsqkqj6bNczYoi5krGXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XvvVdOLV2I8jR/sx3q+fX+6qmfVpenk421ACOSIX31MBS79MZAHO/fkwfPDxLZpPj
-         VY2587h+awF0iDZgXQp+eKUJvggeL1BZmx6fWiyZI5e70voRKaRN4Zkyw5Tdy8oLAr
-         tziw25oIvU2IYwc8A0Wx6xbmqbhN7JUHZA7Oms+w=
+        b=nXT989ZHnegzdz6IOP8bEqCqUc92zQBqTGMdvx9brunioe1Gb/wk133qW+qrEG3Lk
+         HEQfd1uY3dFFZNmYzFRpR7E9PBrW1Adt/mgIRH8hx+zVOtMKMn8lSyGJDxIGi7pLse
+         qK5K95brqCyWaXpupvIsSOju/KAFBVJgv2mRFHC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Masaru Nagai <masaru.nagai.vx@renesas.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 16/34] tcp: handle inet_csk_reqsk_queue_add() failures
-Date:   Mon, 18 Mar 2019 10:25:40 +0100
-Message-Id: <20190318084146.917722087@linuxfoundation.org>
+Subject: [PATCH 4.14 12/34] ravb: Decrease TxFIFO depth of Q3 and Q2 to one
+Date:   Mon, 18 Mar 2019 10:25:36 +0100
+Message-Id: <20190318084146.360353506@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -66,66 +67,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Masaru Nagai <masaru.nagai.vx@renesas.com>
 
-[  Upstream commit 9d3e1368bb45893a75a5dfb7cd21fdebfa6b47af ]
+[ Upstream commit ae9819e339b451da7a86ab6fe38ecfcb6814e78a ]
 
-Commit 7716682cc58e ("tcp/dccp: fix another race at listener
-dismantle") let inet_csk_reqsk_queue_add() fail, and adjusted
-{tcp,dccp}_check_req() accordingly. However, TFO and syncookies
-weren't modified, thus leaking allocated resources on error.
+Hardware has the CBS (Credit Based Shaper) which affects only Q3
+and Q2. When updating the CBS settings, even if the driver does so
+after waiting for Tx DMA finished, there is a possibility that frame
+data still remains in TxFIFO.
 
-Contrary to tcp_check_req(), in both syncookies and TFO cases,
-we need to drop the request socket. Also, since the child socket is
-created with inet_csk_clone_lock(), we have to unlock it and drop an
-extra reference (->sk_refcount is initially set to 2 and
-inet_csk_reqsk_queue_add() drops only one ref).
+To avoid this, decrease TxFIFO depth of Q3 and Q2 to one.
 
-For TFO, we also need to revert the work done by tcp_try_fastopen()
-(with reqsk_fastopen_remove()).
+This patch has been exercised this using netperf TCP_MAERTS, TCP_STREAM
+and UDP_STREAM tests run on an Ebisu board. No performance change was
+detected, outside of noise in the tests, both in terms of throughput and
+CPU utilisation.
 
-Fixes: 7716682cc58e ("tcp/dccp: fix another race at listener dismantle")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
+Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+[simon: updated changelog]
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/syncookies.c |    7 ++++++-
- net/ipv4/tcp_input.c  |    8 +++++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/renesas/ravb_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -216,7 +216,12 @@ struct sock *tcp_get_cookie_sock(struct
- 		refcount_set(&req->rsk_refcnt, 1);
- 		tcp_sk(child)->tsoffset = tsoff;
- 		sock_rps_save_rxhash(child, skb);
--		inet_csk_reqsk_queue_add(sk, req, child);
-+		if (!inet_csk_reqsk_queue_add(sk, req, child)) {
-+			bh_unlock_sock(child);
-+			sock_put(child);
-+			child = NULL;
-+			reqsk_put(req);
-+		}
- 	} else {
- 		reqsk_free(req);
- 	}
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6406,7 +6406,13 @@ int tcp_conn_request(struct request_sock
- 		af_ops->send_synack(fastopen_sk, dst, &fl, req,
- 				    &foc, TCP_SYNACK_FASTOPEN);
- 		/* Add the child socket directly into the accept queue */
--		inet_csk_reqsk_queue_add(sk, req, fastopen_sk);
-+		if (!inet_csk_reqsk_queue_add(sk, req, fastopen_sk)) {
-+			reqsk_fastopen_remove(fastopen_sk, req, false);
-+			bh_unlock_sock(fastopen_sk);
-+			sock_put(fastopen_sk);
-+			reqsk_put(req);
-+			goto drop;
-+		}
- 		sk->sk_data_ready(sk);
- 		bh_unlock_sock(fastopen_sk);
- 		sock_put(fastopen_sk);
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -458,7 +458,7 @@ static int ravb_dmac_init(struct net_dev
+ 		   RCR_EFFS | RCR_ENCF | RCR_ETS0 | RCR_ESF | 0x18000000, RCR);
+ 
+ 	/* Set FIFO size */
+-	ravb_write(ndev, TGC_TQP_AVBMODE1 | 0x00222200, TGC);
++	ravb_write(ndev, TGC_TQP_AVBMODE1 | 0x00112200, TGC);
+ 
+ 	/* Timestamp enable */
+ 	ravb_write(ndev, TCCR_TFEN, TCCR);
 
 
