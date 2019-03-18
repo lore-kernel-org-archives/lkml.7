@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F72BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F7DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8AF204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CB1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902478;
-	bh=WUSb7oeTZx0tLp7OqO0UhO3lFp2g3IDXPxl7CRxg7LA=;
+	s=default; t=1552902485;
+	bh=cRlaDhRa7RBSNml4+iECnCAnOXAQhakOmm9IR4QGoq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZP7dmWMLgwhiGtG0T8RzYBTcuhIbUxfExLE/qKgBInJzoVJ+nkibr18a8ZfuHi14
-	 yAbw+XT6YpiVCHZ/44t+eqYuVlznlPkX1zkXEap/X3fimLY4SYdFG7svwr81skJhhF
-	 82GcaWYvfn3Hc8gRDW0ElzvTQOkbxhNX+rbUgct0=
+	b=NpX0Avh6ZaM8W2qdrRlwtUlgyut9yK1cVtGOknaLG6ujPXnr+p1lnhNhpLsa5gYZC
+	 N3M4BYLun+gPgE6XJHh3W7rzeQVlhrTln9j5spKcYpJaH0yt+UTEjwa2ROXxh19jyv
+	 aWiWUwQy4Gd+j7VK9OeivNxwqeYIPPjyOm6QU4dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfCRJr4 (ORCPT
+        id S1727943AbfCRJ1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727959AbfCRJ2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:28:00 -0400
+        id S1727915AbfCRJ1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:27:51 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B1E2083D;
-        Mon, 18 Mar 2019 09:27:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A637A21738;
+        Mon, 18 Mar 2019 09:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901279;
-        bh=WUSb7oeTZx0tLp7OqO0UhO3lFp2g3IDXPxl7CRxg7LA=;
+        s=default; t=1552901270;
+        bh=cRlaDhRa7RBSNml4+iECnCAnOXAQhakOmm9IR4QGoq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tf6B5G4WSyGrme9edVlRR4iWogNS6XMD0ZDYBH82EVtUifNv5nuCnX5JTeD1jLdZH
-         VQguMLnZwIK4pm/jtj/I5p/oVfGoBdEPRXvYccVauHNDA7g8r9jP6rXB+d4WL5DAAw
-         9c9Hw8nuTdl6kybVLoHuJsgO3dyfBqRr9FMgiuF8=
+        b=kr6zVOnzkB2FtriwiWJihn9Q8LJpnr+DX4HshoMx5P/ZKoLAtEbTdBqOPLEgrBizV
+         eFB1pGp/mgsYE9p5nubnCbtlyE9Bnk8gF/GBUZReRYFl9AnugcdL/MH1nIybx8dU3P
+         s4rVG+q4ftL94D5oEbZPuT6w/4FXOcpkvCywpkrQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 39/43] ALSA: hda/realtek: Enable headset MIC of Acer TravelMate X514-51T with ALC255
-Date:   Mon, 18 Mar 2019 10:24:31 +0100
-Message-Id: <20190318083717.022702979@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Burrell <jeff.burrell@hp.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 36/43] ALSA: hda - add more quirks for HP Z2 G4 and HP Z240
+Date:   Mon, 18 Mar 2019 10:24:28 +0100
+Message-Id: <20190318083716.934782987@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -66,59 +65,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Jaroslav Kysela <perex@perex.cz>
 
-commit cbc05fd6708c1744ee6a61cb4c461ff956d30524 upstream.
+commit 167897f4b32c2bc18b3b6183029a33fb420a114e upstream.
 
-The Acer TravelMate X514-51T with ALC255 cannot detect the headset MIC
-until ALC255_FIXUP_ACER_HEADSET_MIC quirk applied.  Although, the
-internal DMIC uses another module - snd_soc_skl as the driver.  We still
-need the NID 0x1a in the quirk to enable the headset MIC.
+Apply the HP_MIC_NO_PRESENCE fixups for the more HP Z2 G4 and
+HP Z240 models.
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Kailang Yang <kailang@realtek.com>
+Reported-by: Jeff Burrell <jeff.burrell@hp.com>
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ sound/pci/hda/patch_conexant.c |    3 +++
+ sound/pci/hda/patch_realtek.c  |    6 ++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -936,6 +936,9 @@ static const struct snd_pci_quirk cxt506
+ 	SND_PCI_QUIRK(0x103c, 0x8299, "HP 800 G3 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x829a, "HP 800 G3 DM", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x8455, "HP Z2 G4", CXT_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x8456, "HP Z2 G4 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x8457, "HP Z2 G4 mini", CXT_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x8458, "HP Z2 G4 mini premium", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x138d, "Asus", CXT_FIXUP_HEADPHONE_MIC_PIN),
+ 	SND_PCI_QUIRK(0x152d, 0x0833, "OLPC XO-1.5", CXT_FIXUP_OLPC_XO),
+ 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Lenovo T400", CXT_PINCFG_LENOVO_TP410),
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -5671,6 +5671,7 @@ enum {
- 	ALC225_FIXUP_HEADSET_JACK,
- 	ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE,
- 	ALC285_FIXUP_LENOVO_PC_BEEP_IN_NOISE,
-+	ALC255_FIXUP_ACER_HEADSET_MIC,
- };
- 
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6637,6 +6638,16 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC285_FIXUP_LENOVO_HEADPHONE_NOISE
- 	},
-+	[ALC255_FIXUP_ACER_HEADSET_MIC] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x19, 0x03a11130 },
-+			{ 0x1a, 0x90a60140 }, /* use as internal mic */
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC255_FIXUP_HEADSET_MODE_NO_HP_MIC
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -6656,6 +6667,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
- 	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
- 	SND_PCI_QUIRK(0x1028, 0x05bd, "Dell Latitude E6440", ALC292_FIXUP_DELL_E7X),
+@@ -6751,11 +6751,13 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x103c, 0x2336, "HP", ALC269_FIXUP_HP_MUTE_LED_MIC1),
+ 	SND_PCI_QUIRK(0x103c, 0x2337, "HP", ALC269_FIXUP_HP_MUTE_LED_MIC1),
+ 	SND_PCI_QUIRK(0x103c, 0x221c, "HP EliteBook 755 G2", ALC280_FIXUP_HP_HEADSET_MIC),
++	SND_PCI_QUIRK(0x103c, 0x802e, "HP Z240 SFF", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x802f, "HP Z240", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x820d, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x8256, "HP", ALC221_FIXUP_HP_FRONT_MIC),
+ 	SND_PCI_QUIRK(0x103c, 0x827e, "HP x360", ALC295_FIXUP_HP_X360),
+-	SND_PCI_QUIRK(0x103c, 0x82bf, "HP", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x103c, 0x82c0, "HP", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x82bf, "HP G3 mini", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x82c0, "HP G3 mini premium", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
 
 
