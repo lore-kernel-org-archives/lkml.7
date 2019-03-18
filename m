@@ -2,82 +2,118 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F48C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8612EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D58A20850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C13320850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfCSINI (ORCPT
+        id S1727701AbfCSIMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:13:08 -0400
-Received: from mga06.intel.com ([134.134.136.31]:17178 "EHLO mga06.intel.com"
+        Tue, 19 Mar 2019 04:12:19 -0400
+Received: from mga07.intel.com ([134.134.136.100]:44031 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727395AbfCSINI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:13:08 -0400
+        id S1727590AbfCSIMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 04:12:17 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 01:13:07 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2019 01:12:17 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,497,1544515200"; 
-   d="scan'208";a="123866441"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
-  by orsmga007.jf.intel.com with ESMTP; 19 Mar 2019 01:13:05 -0700
-Subject: Re: [PATCH] usb: xhci: add Immediate Data Transfer support
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     felipe.balbi@linux.intel.com, oneukum@suse.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190219162945.22889-1-nsaenzjulienne@suse.de>
- <31a3530dbd75771c82bfb41a357370b90d7981d2.camel@suse.de>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <1fe79a10-16d4-8d06-4c9b-7e5a3d3807cf@linux.intel.com>
-Date:   Tue, 19 Mar 2019 10:15:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <31a3530dbd75771c82bfb41a357370b90d7981d2.camel@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+   d="scan'208";a="308418064"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2019 01:12:15 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     pbonzini@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, yu-cheng.yu@intel.com
+Cc:     Yang Weijiang <weijiang.yang@intel.com>,
+        Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: [RFC PATCH v4 6/8] KVM:x86: Allow Guest to set supported bits in XSS
+Date:   Mon, 18 Mar 2019 23:03:49 +0800
+Message-Id: <20190318150351.15550-7-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190318150351.15550-1-weijiang.yang@intel.com>
+References: <20190318150351.15550-1-weijiang.yang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.3.2019 14.51, Nicolas Saenz Julienne wrote:
-> On Tue, 2019-02-19 at 17:29 +0100, Nicolas Saenz Julienne wrote:
->> Immediate data transfers (IDT) allow the HCD to copy small chunks of
->> data (up to 8bytes) directly into its output transfer TRBs. This avoids
->> the somewhat expensive DMA mappings that are performed by default on
->> most URBs submissions.
->>
->> In the case an URB was suitable for IDT. The data is directly copied
->> into the "Data Buffer Pointer" region of the TRB and the IDT flag is
->> set. Instead of triggering memory accesses the HC will use the data
->> directly.
->>
->> The implementation could cover all kind of output endpoints. Yet
->> Isochronous endpoints are bypassed as I was unable to find one that
->> matched IDT's constraints. As we try to bypass the default DMA mappings
->> on URB buffers we'd need to find a Isochronous device with an
->> urb->transfer_buffer_length <= 8 bytes.
->>
->> The implementation takes into account that the 8 byte buffers provided
->> by the URB will never cross a 64KB boundary.
->>
->> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> 
-> 
-> Friendly ping, any more comments on this? :)
-> 
+Now that KVM supports setting CET related bits.
+Previously, KVM did not support setting any bits in XSS
+and so hardcoded its check to inject a #GP if Guest
+attempted to write a non-zero value to IA32_XSS.
 
-Looks good, adding to queue, thanks
+Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+---
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/cpuid.c            | 13 ++++++++++---
+ arch/x86/kvm/vmx.c              |  7 ++-----
+ 3 files changed, 13 insertions(+), 8 deletions(-)
 
--Mathias
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index fc038bf1924a..30dfb5a65d1b 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -616,6 +616,7 @@ struct kvm_vcpu_arch {
+ 
+ 	u64 xcr0;
+ 	u64 guest_supported_xcr0;
++	u64 guest_supported_xss;
+ 	u32 guest_xstate_size;
+ 
+ 	struct kvm_pio_request pio;
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 29d6a5cdc746..e66a0557899c 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -125,9 +125,16 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+-	if (best && (best->eax & (F(XSAVES) | F(XSAVEC))))
+-		best->ebx = xstate_required_size(vcpu->arch.xcr0 |
+-			    kvm_supported_xss(), true);
++	if (best) {
++		if (best->eax & (F(XSAVES) | F(XSAVEC)))
++			best->ebx = xstate_required_size(vcpu->arch.xcr0 |
++				    kvm_supported_xss(), true);
++
++		vcpu->arch.guest_supported_xss = best->ecx &
++			kvm_supported_xss();
++	} else {
++		vcpu->arch.guest_supported_xss = 0;
++	}
+ 
+ 	/*
+ 	 * The existing code assumes virtual address is 48-bit or 57-bit in the
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 246467c12930..816e11a66557 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -4327,12 +4327,9 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	case MSR_IA32_XSS:
+ 		if (!vmx_xsaves_supported())
+ 			return 1;
+-		/*
+-		 * The only supported bit as of Skylake is bit 8, but
+-		 * it is not supported on KVM.
+-		 */
+-		if (data != 0)
++		if (data & ~vcpu->arch.guest_supported_xss)
+ 			return 1;
++
+ 		vcpu->arch.ia32_xss = data;
+ 		if (vcpu->arch.ia32_xss != host_xss)
+ 			add_atomic_switch_msr(vmx, MSR_IA32_XSS,
+-- 
+2.17.1
+
