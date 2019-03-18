@@ -2,137 +2,226 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009ABC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D82C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B4720854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:03:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NfdPy5h5"
+	by mail.kernel.org (Postfix) with ESMTP id 4438E20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 16:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfCRQDa (ORCPT
+        id S1727551AbfCRQEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 12:03:30 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33032 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfCRQDa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 12:03:30 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i7so8482513pgq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 09:03:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G25m8+9f1ygSfASWU0CeM8DWXCHa+R6w3/Ew9+fOBT4=;
-        b=NfdPy5h5vrXvbG3AasrACo8iuyrXTHLtVT7H6CgVhSF7Xzqn1DZWHQqe3F/V/eN/FV
-         tFzUUr20nk1koe0Z2W+MNxvGbsX5CaHeVwx28iXKV5Rzw2zyWNW4cYK4wJX93l1nmZUD
-         K515rzXeXGhq5JY7aGrAVjbPxSqdA6Js2/1tshV92OWsk/M2d4UeEW8aGswq0UJ+zVxk
-         4bvizxX7oWL1RYnL0yTIDEyWipZkFDjwLoVgeFAlQZOK1C5Fx/syiXdH+HhNaRX6WnVq
-         kHNEhZyutcfJD1MZizdxoRVVljTo4y1s+iks+LyQnYrlaJgBrsGNNP66mT9jHuxVzQQK
-         do7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G25m8+9f1ygSfASWU0CeM8DWXCHa+R6w3/Ew9+fOBT4=;
-        b=seZMcHDUGiT7v/u3O4NosKjXoT4KmPcVDygHR9qICtNHbM0Kozv7zlYZ3BVCd0FEXV
-         CJX8sRC0F4Y4RYepyoNp/35ztv4wnriDm3Jx04EN7dTpeKTSkHtQ/ql9KJVvWF+sAzlH
-         hj7YQDfMnVz2hw3laTvxPbFxNnK2M97oSYk/6sXWnaRLuQ78v5KRDA5UU3gLmQfVHxEI
-         CL6ap+MBAwar5gzCTlfP5s2Rr2x7VdyvT3DqcO8iiaKU3dJd08yVTWE97L5bWa1Rwty/
-         NTwTrHmVo5ddtZyUrQdFY1xY2OZCdSRVxTW+81jQJXpTjHySo62DiYU2OWG7Q/Bsci75
-         tEyA==
-X-Gm-Message-State: APjAAAVMhj4eXV2YwJmmiIbEv/AIE497h3v/ipvVDi1mK1Kdyym/tdov
-        zfFLOaATgR/TIXp24fwDNfk=
-X-Google-Smtp-Source: APXvYqw8B20zW65+JN52/0GUAGCvHv2qeDsPt7pH8ThbS7n+0XApZsLEIoQW6hyO06SPMZyTHdtXqw==
-X-Received: by 2002:a65:6299:: with SMTP id f25mr18449831pgv.376.1552925008812;
-        Mon, 18 Mar 2019 09:03:28 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-37-86.pppoe.spdop.ru. [94.29.37.86])
-        by smtp.googlemail.com with ESMTPSA id j14sm16204886pfn.77.2019.03.18.09.03.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Mar 2019 09:03:28 -0700 (PDT)
-Subject: Re: [PATCH] regulator: core: fix error path for
- regulator_set_voltage_unlocked
-To:     Steve Twiss <stwiss.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Maciej Purski <m.purski@samsubg.com>,
-        Support Opensource <support.opensource@diasemi.com>
-References: <20190318155054.59B483FBD8@swsrvapps-01.diasemi.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <513a7028-b972-a821-7bf1-0e105bf71305@gmail.com>
-Date:   Mon, 18 Mar 2019 19:03:19 +0300
+        Mon, 18 Mar 2019 12:04:08 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:36852 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726719AbfCRQEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 12:04:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E51F1650;
+        Mon, 18 Mar 2019 09:04:07 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FC8F3F59C;
+        Mon, 18 Mar 2019 09:04:05 -0700 (PDT)
+Subject: Re: [PATCH] arm64/io: Don't use WZR in writel
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+References: <68b71c15f32341468a868f6418e4fcb375bc49ba.camel@gmail.com>
+ <20190211105755.GB30880@fuggles.cambridge.arm.com>
+ <38d8965a-cd41-17cf-1b95-8dd58c079be4@arm.com>
+ <874c702b8af760aa8fae38d478c79e3ecba00515.camel@gmail.com>
+ <235d20ef-3054-69d9-975d-25aebf32aad3@arm.com>
+ <20190223181254.GC572@tuxbook-pro> <86zhqm8i6d.wl-marc.zyngier@arm.com>
+ <20190224035356.GD572@tuxbook-pro>
+ <33d765b5-1807-fa6c-1ceb-99f09f7c8d5a@free.fr>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <8eb4f446-6152-ffb6-9529-77fb0bcc307f@arm.com>
+Date:   Mon, 18 Mar 2019 16:04:03 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190318155054.59B483FBD8@swsrvapps-01.diasemi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <33d765b5-1807-fa6c-1ceb-99f09f7c8d5a@free.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.03.2019 18:32, Steve Twiss пишет:
-> During several error paths in the function
-> regulator_set_voltage_unlocked() the value of 'ret' can take on negative
-> error values. However, in calls that go through the 'goto out' statement,
-> this return value is lost and return 0 is used instead, indicating a
-> 'pass'.
+On 12/03/2019 12:36, Marc Gonzalez wrote:
+> On 24/02/2019 04:53, Bjorn Andersson wrote:
 > 
-> There are several cases where this function should legitimately return a
-> fail instead of a pass: one such case includes constraints check during
-> voltage selection in the call to regulator_check_voltage(), which can
-> have -EINVAL for the case when an unsupported voltage is incorrectly
-> requested. In that case, -22 is expected as the return value, not 0.
+>> On Sat 23 Feb 10:37 PST 2019, Marc Zyngier wrote:
+>>
+>>> On Sat, 23 Feb 2019 18:12:54 +0000, Bjorn Andersson wrote:
+>>>>
+>>>> On Mon 11 Feb 06:59 PST 2019, Marc Zyngier wrote:
+>>>>
+>>>>> On 11/02/2019 14:29, AngeloGioacchino Del Regno wrote:
+>>>>>
+>>>>>> Also, just one more thing: yes this thing is going ARM64-wide and
+>>>>>> - from my findings - it's targeting certain Qualcomm SoCs, but...
+>>>>>> I'm not sure that only QC is affected by that, others may as well
+>>>>>> have the same stupid bug.
+>>>>>
+>>>>> At the moment, only QC SoCs seem to be affected, probably because
+>>>>> everyone else has debugged their hypervisor (or most likely doesn't
+>>>>> bother with shipping one).
+>>>>>
+>>>>> In all honesty, we need some information from QC here: which SoCs are
+>>>>> affected, what is the exact nature of the bug, can it be triggered from
+>>>>> EL0. Randomly papering over symptoms is not something I really like
+>>>>> doing, and is likely to generate problems on unaffected systems.
+>>>>
+>>>> The bug at hand is that the XZR is not deemed a valid source in the
+>>>> virtualization of the SMMU registers. It was identified and fixed for
+>>>> all platforms that are shipping kernels based on v4.9 or later.
+>>>
+>>> When you say "fixed": Do you mean fixed in the firmware? Or by adding
+>>> a workaround in the shipped kernel?
+>>
+>> I mean that it's fixed in the firmware.
+>>
+>>> If the former, is this part of an official QC statement, with an
+>>> associated erratum number?
+>>
+>> I don't know, will get back to you on this one.
+>>
+>>> Is this really limited to the SMMU accesses?
+>>
+>> Yes.
+>>
+>>>> As such Angelo's list of affected platforms covers the high-profile
+>>>> ones. In particular MSM8996 and MSM8998 is getting pretty good support
+>>>> upstream, if we can figure out a way around this issue.
+>>>
+>>> We'd need an exhaustive list of the affected SoCs, and work out if we
+>>> can limit the hack to the SMMU driver (cc'ing Robin, who's the one
+>>> who'd know about it).
+>>
+>> I will try to compose a list.
 > 
-> Fixes: 9243a195be7a ("regulator: core: Change voltage setting path")
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> ---
->  drivers/regulator/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> FWIW, I have just been bitten by this issue. I needed to enable an SMMU to
+> filter PCIe EP accesses to system RAM (or something). I'm using an APQ8098
+> MEDIABOX dev board. My system hangs in arm_smmu_device_reset() doing:
 > 
-> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> index 68473d0..caf8743 100644
-> --- a/drivers/regulator/core.c
-> +++ b/drivers/regulator/core.c
-> @@ -3326,7 +3326,7 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
->  		goto out2;
->  
->  out:
-> -	return 0;
-> +	return ret;
->  out2:
->  	voltage->min_uV = old_min_uV;
->  	voltage->max_uV = old_max_uV;
+> 	/* Invalidate the TLB, just in case */
+> 	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+> 	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
 > 
+> 
+> With the 'Z' constraint, gcc generates:
+> 
+> 	str wzr, [x0]
+> 
+> without the 'Z' constraint, gcc generates:
+> 
+> 	mov	w1, 0
+> 	str w1, [x0]
+> 
+> 
+> I can work around the problem using the following patch:
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 045d93884164..93117519aed8 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -59,6 +59,11 @@
+>   
+>   #include "arm-smmu-regs.h"
+>   
+> +static inline void qcom_writel(u32 val, volatile void __iomem *addr)
+> +{
+> +	asm volatile("str %w0, [%1]" : : "r" (val), "r" (addr));
+> +}
+> +
+>   #define ARM_MMU500_ACTLR_CPRE		(1 << 1)
+>   
+>   #define ARM_MMU500_ACR_CACHE_LOCK	(1 << 26)
+> @@ -422,7 +427,7 @@ static void __arm_smmu_tlb_sync(struct arm_smmu_device *smmu,
+>   {
+>   	unsigned int spin_cnt, delay;
+>   
+> -	writel_relaxed(0, sync);
+> +	qcom_writel(0, sync);
+>   	for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
+>   		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+>   			if (!(readl_relaxed(status) & sTLBGSTATUS_GSACTIVE))
+> @@ -1760,8 +1765,8 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
+>   	}
+>   
+>   	/* Invalidate the TLB, just in case */
+> -	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+> -	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+> +	qcom_writel(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+> +	qcom_writel(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+>   
+>   	reg = readl_relaxed(ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+>   
+> 
+> 
+> 
+> Can a quirk be used to work around the issue?
+> Or can we just "pessimize" the 3 writes for everybody?
+> (Might be cheaper than a test anyway)
 
-Looks like a good catch.
+If it really is just the SMMU driver which is affected, we can work 
+around it for free (not counting the 'cost' of slightly-weird-looking 
+code, of course). If the diff below works as expected, I'll write it up 
+properly.
 
-Probably will be a bit better to write this as:
+Robin.
+----->8-----
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 045d93884164..7ff29e33298f 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -422,7 +422,7 @@ static void __arm_smmu_tlb_sync(struct 
+arm_smmu_device *smmu,
+  {
+  	unsigned int spin_cnt, delay;
 
-        /* for not coupled regulators this will just set the voltage */
-        ret = regulator_balance_voltage(rdev, state);
--       if (ret < 0)
--               goto out2;
--
-+       if (ret < 0) {
-+               voltage->min_uV = old_min_uV;
-+               voltage->max_uV = old_max_uV;
-+       }
- out:
--       return 0;
--out2:
--       voltage->min_uV = old_min_uV;
--       voltage->max_uV = old_max_uV;
--
-        return ret;
- }
+-	writel_relaxed(0, sync);
++	writel_relaxed((unsigned long)sync, sync);
+  	for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
+  		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+  			if (!(readl_relaxed(status) & sTLBGSTATUS_GSACTIVE))
+@@ -681,7 +681,12 @@ static void arm_smmu_write_context_bank(struct 
+arm_smmu_device *smmu, int idx)
+
+  	/* Unassigned context banks only need disabling */
+  	if (!cfg) {
+-		writel_relaxed(0, cb_base + ARM_SMMU_CB_SCTLR);
++		/*
++		 * For Qualcomm reasons, we want to guarantee that we write a
++		 * zero from a register which is not WZR. Fortunately, the cfg
++		 * logic here plays right into our hands...
++		 */
++		writel_relaxed((unsigned long)cfg, cb_base + ARM_SMMU_CB_SCTLR);
+  		return;
+  	}
+
+@@ -1760,8 +1765,8 @@ static void arm_smmu_device_reset(struct 
+arm_smmu_device *smmu)
+  	}
+
+  	/* Invalidate the TLB, just in case */
+-	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+-	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
++	writel_relaxed(reg, gr0_base + ARM_SMMU_GR0_TLBIALLH);
++	writel_relaxed(reg, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+
+  	reg = readl_relaxed(ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+
