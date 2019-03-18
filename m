@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A40BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9077EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690C8214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C59214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901727;
-	bh=NLkWyw9edgdl60/DApYV6CRfLdRyP0f2mtET1H9rKwY=;
+	s=default; t=1552901733;
+	bh=CNLwqg3dGfwNMjC673cknqKZ8t9seXBKUzvDyfHCp8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pVrPwMUk0eZP9QoF04ZVqpbaS4+G5FbbhPb/Hu8PA9vbFZmKi+sJckUGOAppUZ6ZE
-	 /BMDp3pIZAn9NzH9CVSQJmF9wv09aFjK5knfxWy026CvT0AblOe0qnJ/tUsi/TwnKD
-	 jAs3c4FS4gA2MRIr76PpVs+8U7OrRDp4+erUo6QE=
+	b=KTlKgZCU7EDo2T8uEs/D4p2gmuzWvpP9AAyF4tarpVItdH6668SvTPS/57er1OgH4
+	 OlHVoKi20Tv3EWauHfAEp4XbRNahVpSmrhtU7jV4rDfofIavX6tamQc+34I10Xw48A
+	 fDg3LKOZMcVlwSBVVk1K6dd0oPfoDvj7fzFZ9SQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfCRJfY (ORCPT
+        id S2387464AbfCRJfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:35:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43746 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:35:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387435AbfCRJfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:35:23 -0400
+        id S2387447AbfCRJf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:35:29 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3588C214AF;
-        Mon, 18 Mar 2019 09:35:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D946B2087C;
+        Mon, 18 Mar 2019 09:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901722;
-        bh=NLkWyw9edgdl60/DApYV6CRfLdRyP0f2mtET1H9rKwY=;
+        s=default; t=1552901728;
+        bh=CNLwqg3dGfwNMjC673cknqKZ8t9seXBKUzvDyfHCp8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pDDXzMMS5yr0hyyjEiN8Hz83VPrs/tdSh5Vtln2BV3kLjjviewH+vIJL5xsR8IPd9
-         rdpNXle+2T9Ak/aQ08inLx57XI8ePZsokzzFWGxlz6q/YcgANtZcMzKNs5ggvc3HzP
-         ibMv5epcBbkeCV/0zLGeR8Z3m666I1sJ1UMVA5r0=
+        b=udCmy+QRRP0u89aFegypWCaOGiiFXwzc3xZdOvn4iPXGlUJq6vitSu2vf5yJnyRvB
+         tOumdzUNho0iADLnxIyU21Ojg7klwSHyYD6kQs/XPrJlRMJ4Vr24HhVzeBcuWy2gRo
+         4VrxKxWMkFe7onw6kBPU3PR7hHKrGuPmvDhBaMjI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 28/34] perf/x86: Fixup typo in stub functions
-Date:   Mon, 18 Mar 2019 10:25:52 +0100
-Message-Id: <20190318084148.691353334@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 03/34] gro_cells: make sure device is up in gro_cells_receive()
+Date:   Mon, 18 Mar 2019 10:25:27 +0100
+Message-Id: <20190318084145.109052398@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -68,53 +66,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit f764c58b7faa26f5714e6907f892abc2bc0de4f8 upstream.
+[ Upstream commit 2a5ff07a0eb945f291e361aa6f6becca8340ba46 ]
 
-Guenter reported a build warning for CONFIG_CPU_SUP_INTEL=n:
+We keep receiving syzbot reports [1] that show that tunnels do not play
+the rcu/IFF_UP rules properly.
 
-  > With allmodconfig-CONFIG_CPU_SUP_INTEL, this patch results in:
-  >
-  > In file included from arch/x86/events/amd/core.c:8:0:
-  > arch/x86/events/amd/../perf_event.h:1036:45: warning: ‘struct cpu_hw_event’ declared inside parameter list will not be visible outside of this definition or declaration
-  >  static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
+At device dismantle phase, gro_cells_destroy() will be called
+only after a full rcu grace period is observed after IFF_UP
+has been cleared.
 
-While harmless (an unsed pointer is an unused pointer, no matter the type)
-it needs fixing.
+This means that IFF_UP needs to be tested before queueing packets
+into netif_rx() or gro_cells.
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: d01b1f96a82e ("perf/x86/intel: Make cpuc allocations consistent")
-Link: http://lkml.kernel.org/r/20190315081410.GR5996@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+This patch implements the test in gro_cells_receive() because
+too many callers do not seem to bother enough.
+
+[1]
+BUG: unable to handle kernel paging request at fffff4ca0b9ffffe
+PGD 0 P4D 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
+RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
+RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
+RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
+RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
+Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
+RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
+RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
+RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
+RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
+R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
+kobject: 'loop2' (000000004bd7d84a): kobject_uevent_env
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
+Call Trace:
+kobject: 'loop2' (000000004bd7d84a): fill_kobj_path: path = '/devices/virtual/block/loop2'
+ ip_tunnel_dev_free+0x19/0x60 net/ipv4/ip_tunnel.c:1010
+ netdev_run_todo+0x51c/0x7d0 net/core/dev.c:8970
+ rtnl_unlock+0xe/0x10 net/core/rtnetlink.c:116
+ ip_tunnel_delete_nets+0x423/0x5f0 net/ipv4/ip_tunnel.c:1124
+ vti_exit_batch_net+0x23/0x30 net/ipv4/ip_vti.c:495
+ ops_exit_list.isra.0+0x105/0x160 net/core/net_namespace.c:156
+ cleanup_net+0x3fb/0x960 net/core/net_namespace.c:551
+ process_one_work+0x98e/0x1790 kernel/workqueue.c:2173
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2319
+ kthread+0x357/0x430 kernel/kthread.c:246
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Modules linked in:
+CR2: fffff4ca0b9ffffe
+   [ end trace 513fc9c1338d1cb3 ]
+RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
+RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
+RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
+RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
+RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
+Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
+RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
+RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
+RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
+RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
+R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
+kobject: 'loop3' (00000000e4ee57a6): kobject_uevent_env
+R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
+
+Fixes: c9e6bc644e55 ("net: add gro_cells infrastructure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/events/perf_event.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/core/gro_cells.c |   22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1021,12 +1021,12 @@ static inline int intel_pmu_init(void)
- 	return 0;
- }
- 
--static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
-+static inline int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
+--- a/net/core/gro_cells.c
++++ b/net/core/gro_cells.c
+@@ -13,22 +13,36 @@ int gro_cells_receive(struct gro_cells *
  {
- 	return 0;
- }
+ 	struct net_device *dev = skb->dev;
+ 	struct gro_cell *cell;
++	int res;
  
--static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
-+static inline void intel_cpuc_finish(struct cpu_hw_events *cpuc)
- {
+-	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev))
+-		return netif_rx(skb);
++	rcu_read_lock();
++	if (unlikely(!(dev->flags & IFF_UP)))
++		goto drop;
++
++	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev)) {
++		res = netif_rx(skb);
++		goto unlock;
++	}
+ 
+ 	cell = this_cpu_ptr(gcells->cells);
+ 
+ 	if (skb_queue_len(&cell->napi_skbs) > netdev_max_backlog) {
++drop:
+ 		atomic_long_inc(&dev->rx_dropped);
+ 		kfree_skb(skb);
+-		return NET_RX_DROP;
++		res = NET_RX_DROP;
++		goto unlock;
+ 	}
+ 
+ 	__skb_queue_tail(&cell->napi_skbs, skb);
+ 	if (skb_queue_len(&cell->napi_skbs) == 1)
+ 		napi_schedule(&cell->napi);
+-	return NET_RX_SUCCESS;
++
++	res = NET_RX_SUCCESS;
++
++unlock:
++	rcu_read_unlock();
++	return res;
  }
+ EXPORT_SYMBOL(gro_cells_receive);
  
 
 
