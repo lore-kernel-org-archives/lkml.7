@@ -2,143 +2,95 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDB4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8744C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB11B20872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A28A22085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:34:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRAwBlTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfCROel convert rfc822-to-8bit (ORCPT
+        id S1727766AbfCROex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:34:41 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35117 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfCROek (ORCPT
+        Mon, 18 Mar 2019 10:34:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44888 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfCROex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:34:40 -0400
-Received: by mail-qk1-f196.google.com with SMTP id z13so9735837qki.2;
-        Mon, 18 Mar 2019 07:34:39 -0700 (PDT)
+        Mon, 18 Mar 2019 10:34:53 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h34so11499530pgh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 07:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oNe+B0p7D+d5WR49jlZ/vcloKG63Et3my9JV/mFWf0Y=;
+        b=cRAwBlTZnjjGHQI4lF59YPu7bOM8YYp5HOXA/bDkQwSAlXRxN4aIJtEebiUbErE+q3
+         J8jQkAhNtCVpzMvMDFkrA40GajYtGRjnL14+9nsb/MXiKgFzV0ShHTiAFOTCFtHMep9s
+         QA76YdYwFjgx5SIcOYo/JXsBxzPSwDE8+SRnmjv53LD+XzcRB+B5CqhN4E2MewjvsBJG
+         yt2h97+yWlUjA7CYgEPvL/iHtaFpmqBJtg+2Y14OnMJE8ZlCq6wuDBcWPtlHZy2CjPWc
+         IU0UgJG1QQIe4L71N4IhJoIu8SZNt6YtQz9UWW/JIN8HiAUw9kUFW90J1PpOwVA9zsdh
+         Attw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=I0Ws5Ly+Mdf4A6QH49pa/XLERe2q+ZBCSRe5rPGf/pg=;
-        b=t2lw6H+v9g/t99z/86ntCOndV1lRwifCXHr/U7ZUiMGIaUF3rvPuOHyJRnugEOzn8I
-         TidT1CS2ur3szd23HLRkUpJBJ3X3zLrjIevZCtBV9JBMCKO2pVAg8wQ2IfCx4/9dIlIZ
-         RNLmKbg+eEh8zVRdYIxRl1Jwv9t72PDP8YOwnM5EIAcZR50+UMj4B+EJzjXXpZ279aB0
-         JKrSZaaQi1osYMuw42/CkmkE/pDhqj9iti5CQpBqtBjLQbiu9NtspsCBtaL77NgLSTD8
-         phLYr03e6OoHDffsRriSaZYUVKnPBnCM+fQWRJD6b6KoALbZKvkTr5qJBFlGa9acqR0l
-         bgOQ==
-X-Gm-Message-State: APjAAAUVYACgVN2+oO73hx2VoV4mLGXnNxc+l3VWHVDuUtwqCYp4v2BA
-        I98ZnW7dKSWj+5hK0RGSx7rDEqPZOONC0HycU/o=
-X-Google-Smtp-Source: APXvYqzchpNIvlcBZpgL+vwWoS2dH5czUw7fEzGafZ76KL0gS+8oXYY4krH+C4S2CGUPhi/c/jAbnkRlciISDm6Qp80=
-X-Received: by 2002:a05:620a:153b:: with SMTP id n27mr6045177qkk.343.1552919678198;
- Mon, 18 Mar 2019 07:34:38 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oNe+B0p7D+d5WR49jlZ/vcloKG63Et3my9JV/mFWf0Y=;
+        b=oqlIjnOsha/s532wfCNS5Pw0R0T/ZhehoEqOCfJcU48wxCeFguyix5klGkZUa537+h
+         bLz50XpwN0MMzzMwe38zre1R8Jw0Lpm+cTOUm4IoM493jBRjUOeZaZGZT2nAlQzfAkp3
+         wW1XSFU0g2+/OHq3FkutOTXL4PdcW92WC/85Xv231mUDHFip6R+en0k39wZz76PsvOxA
+         v6uOT99Koi45Hr6PNVAl5RuU6YZh2ay9LU5YOBoEdlanbPDWn0Oj5DKmyJpNQxxflAQn
+         uhh73WXV6ly7QhtncDm52ZCPgUp3VORUQwpHwX84Ymhda+mQeZ/80pKORWVwlhIGzUzT
+         5NAQ==
+X-Gm-Message-State: APjAAAW9E5hewTBhwDCFbmImvvLoihHrrO5wMLOSAtvZtY3tEs8kg5ab
+        qa6WHa6Ex9HjHOqqOhdgdpI=
+X-Google-Smtp-Source: APXvYqzskAJv79kQDMUTMC79yL6/+6tgjEe6BamCbss0CBUNNZeWil64AUz9ZIICuJpulPf3VrXe5A==
+X-Received: by 2002:a17:902:a704:: with SMTP id w4mr19638834plq.251.1552919692274;
+        Mon, 18 Mar 2019 07:34:52 -0700 (PDT)
+Received: from localhost ([121.137.63.184])
+        by smtp.gmail.com with ESMTPSA id y8sm20123068pge.35.2019.03.18.07.34.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Mar 2019 07:34:51 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Mon, 18 Mar 2019 23:34:21 +0900
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] printk: Remove no longer used console_silent().
+Message-ID: <20190318143421.GB29374@tigerII.localdomain>
+References: <1552917923-16601-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
 MIME-Version: 1.0
-References: <20190311153857.563743-1-arnd@arndb.de> <87k1h1fgkk.fsf@mid.deneb.enyo.de>
- <CAK8P3a1r8GRC7GTHHqWY-PUn=9rWB-7+Qo=7txanbEjGZ-wppw@mail.gmail.com>
- <87a7hvded7.fsf@mid.deneb.enyo.de> <CABeXuvrEecSAkBuN-SmAbGwhLWNCC+bA1=X78fm8xMyw8=hm6Q@mail.gmail.com>
- <CAK8P3a22n5L45Gknqd=2zinVGqRovkk0OABmGLJbGcmg8xXd+A@mail.gmail.com>
- <87o968y1uv.fsf@mid.deneb.enyo.de> <CAK8P3a1DzRhiuNxBeQaTYSX1NhCaN6+B0Ya7aeGfxUGj35LFhw@mail.gmail.com>
- <877ecwwckm.fsf@mid.deneb.enyo.de>
-In-Reply-To: <877ecwwckm.fsf@mid.deneb.enyo.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 18 Mar 2019 15:34:17 +0100
-Message-ID: <CAK8P3a3X26niT8Y8mWCNXgcRkWhT=ADK-Tt2vjYz6SLj90shCQ@mail.gmail.com>
-Subject: Re: [PATCH] y2038: fix socket.h header inclusion
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Willem de Bruijn <willemb@google.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Josh Boyer <jwboyer@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeff Law <law@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552917923-16601-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 2:12 PM Florian Weimer <fw@deneb.enyo.de> wrote:
-> > On Mon, Mar 18, 2019 at 10:25 AM Florian Weimer <fw@deneb.enyo.de> wrote:
-> >>
-> >> * Arnd Bergmann:
-> >>
-> >> > Should we just remove __kernel_fd_set from the exported headers and
-> >> > define the internal fd_set directly in include/linux/types.h? (Adding the
-> >> > folks from the old thread to Cc).
-> >>
-> >> The type is used in the sanitizers, but incorrectly.  They assume that
-> >> FD_SETSIZE is always 1024.  (The existence of __kernel_fd_set is
-> >> itself somewhat questionable because it leads to such bugs.)
-> >> Moving around the type could cause a build failure in the sanitizers, but I'm
-> >> not entirely clear how the UAPI headers are included there.
-> >
-> > It looks like sanitizer_platform_limits_posix.cc includes
-> > linux/posix_types.h to ensure that __kernel_fd_set is the same
-> > size as __sanitizer___kernel_fd_set, and then it uses the
-> > latter afterwards.
-> >
-> > What I don't see here is what kind of operation is actually done
-> > on the data, I only see a cast to void.
->
-> I think it is used to assert that the select family of system calls
-> writes to the 1024 bits for each of the passed pointers.
+On (03/18/19 23:05), Tetsuo Handa wrote:
+> console_silent() is no longer used after the removal of
+> arch/mn10300/kernel/mn10300-watchdog.c in Linux 4.17-rc1.
 
-Yes, that is what I expected to see in libsanitizer, I just couldn't
-find any code that actually does this check.
+[..]
 
-> Which is not actually true—the write size is controlled by the
-> file descriptor count argument.
+> -static inline void console_silent(void)
+> -{
+> -	console_loglevel = CONSOLE_LOGLEVEL_SILENT;
+> -}
 
-Yes, of course. In fact, I see multiple possible problems that
+I would keep it, I guess, and would instead covert
 
-- kernel reading uninitialized data if 'FD_ZERO()' was
-  used with a shorter size than the count argument.
-- kernel writing beyond the fd_set data on stack
-  when the declaration had a shorter size than the count
-  argument.
+kernel/debug/kdb/kdb_io.c:              console_loglevel = CONSOLE_LOGLEVEL_SILENT
 
-Each one could happen either because __FD_SETSIZE
-is smaller than 'count', or because kernel and user space
-disagree on the element size (32 vs 64 bit on x32).
+to use proper API (console_silent()).
 
-> > If libsanitizer actually does
-> > anything interesting here, we should definitely fix it to use the
-> > correct size, especially since this is actually something that
-> > can trigger a buffer overflow in subtle ways when used carelessly.
-> > See for example [1], which we still have not addressed
->
-> The footnote is missing.
-
-Sorry, I meant [1] https://patchwork.kernel.org/patch/10245053/
-
-> > For this specific use (and probably others like it), renaming the
-> > fds_bits member to __kernel_fds_bits or something like that
-> > would keep user space still compiling. That would only break
-> > if someone was using __kernel_fd_set, and actually doing
-> > bit operations on it. glibc uses '__fds_bits' unless __USE_XOPEN
-> > is set, so maybe we should use use that name unconditionally.
->
-> Please use something that is more obviously Linux-specific.
-
-Ok, so not '__fds_bits'.
-
-Is '__kernel_fds_bits' ok? I would prefer to keep at least the
-name __kernel_ namespace that we have for typedefs and the
-occasional struct tag.
-
-        Arnd
+	-ss
