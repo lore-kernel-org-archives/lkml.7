@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309E8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290BEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0088620850
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E688F2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LfHXM4sl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DM1QWjIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfCRKwD (ORCPT
+        id S1726898AbfCRKwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:52:03 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:34397 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbfCRKwD (ORCPT
+        Mon, 18 Mar 2019 06:52:08 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:39554 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfCRKwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:52:03 -0400
-Received: by mail-ua1-f65.google.com with SMTP id c6so2635585uan.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:52:02 -0700 (PDT)
+        Mon, 18 Mar 2019 06:52:06 -0400
+Received: by mail-vs1-f67.google.com with SMTP id g127so2072144vsd.6
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:52:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NBVJIce5DakwzoiXVSQ5+lEX7UhvtkC0Ee/wHdQ8nGc=;
-        b=LfHXM4slujme97ITPmx5wAypWTMHwIY1r4hbX/AcsouDotB2egBhskalOJpqgPBVuf
-         KuejdtLvRfjbs1tYDOCZRP1UBeweFb0o8ivYsKf481tl/Vcg1LQ97A8pu4lhMFdhNl4b
-         uvJXkv0CuQ/fz9gLT1JmFlEFn5UQoQ7D8vXql4FC1bKlFvF/J7KxxbnQeoQUqsxQuQ0D
-         dwGGl5P+qmH+KBySc0D01Qs0HSB3nRqhga4WdFAa/8+cbtiiaqMzQQe2Fl73YUgeFey9
-         LCZK9cxb1EqHwo82/6aKARsh7KVEWGE/dVwwYf4cp3l/eJnHDkxdI2H4lvIjNk0+2gr/
-         ax0Q==
+        bh=TVuSGUYdtpkK18asX48WwKR5v7JHAbgLC86VlSQYuzs=;
+        b=DM1QWjIJICXdTJH2MY72WblxsOBLXIQS5Ufzfq8W84LWlEfUlrTLXd10cqE+13hrM6
+         QQYMXdgX/1H/XUpiLXw5ISVpsO91rmVPcy10Xnvrmw6kqy4dc9F7RciqR3vD5AHfQmxi
+         d0KV7lKv1XO075sidMrwcSfgdOZYvwP6z+sHZzPfn1zR4ZhGYu5BZL8ZRn61WYztsjpm
+         PzZZAte+Cimh9+xMXJLpCajmXlFf8Bpcym69pu5gqGPt7CJ6uQM3Akf2X1qVZJfw1SQB
+         CifbaDVmMa7miZNLl4vvNdyiK+9KWovxLHYVU1Q7uNP++mzpKvQ4mwLFLjkfGMy1hrwq
+         QA5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NBVJIce5DakwzoiXVSQ5+lEX7UhvtkC0Ee/wHdQ8nGc=;
-        b=SgwEXujhl5ZKnqU9sC0/0GGSTovkQ57eyJ8kPo3EiyRIs9UW8F6VrXd95XPHpXbemV
-         6sTMvfzAXwGLXCB1f661MLX0cEbRFVVzU0OE28EDd+vA4967Wjh4YeqrUYhOLLkspVIG
-         4C4+vl9/uBEl/K0SQWMIPzVbJSd+5dpL1N503E1edrtxLy7/u8x/nQYU3FZ/0p9yyRmR
-         b9EgH9zc4T+mVEg/HMRWlb4oANGBTShLIFB97kgJboqmV869HFhho7UkCzrNSoqNnJpN
-         DKbnU4JsxlsFHT8FdrV6ZQEiwTh8i3nSsxgThXj/nEF8IAqT9VVb9QakOTVWzmDA3eG7
-         onHg==
-X-Gm-Message-State: APjAAAWCK7NMgAQHnjRB9C22ZdXP5dGw0OubyOzwqx7Igg7oalTHY/DJ
-        hwqiRGLJQQ/vzyJ8hwfxC2cW5XR6kvRbJxEGP/ZoHg==
-X-Google-Smtp-Source: APXvYqwayf1C41aII9GGjem1SSILqp0B4owNq6T45CpTbJHPNzCAvHiRblPPeu7gLL8RbRmlHwH14LbQe6TOY5Jk57Q=
-X-Received: by 2002:ab0:6819:: with SMTP id z25mr5850110uar.0.1552906322061;
- Mon, 18 Mar 2019 03:52:02 -0700 (PDT)
+        bh=TVuSGUYdtpkK18asX48WwKR5v7JHAbgLC86VlSQYuzs=;
+        b=C8ywhWalUYUPId0YjGBdg0/wbU+Nzx3TjXcgDq2I4zfa+6Fv1mRWQGaCHQN2KrvoxZ
+         lniIvBZR5k1FnoGxKz0ZJAoa97NfEUUiaG0+SvLVuvG3QDx8u3rrIaC24U+5jgabDKHB
+         8vH0k9OZicfn5FNOHqGqQpAoZ9rYXSKzeIFSQfzYXRJsQrVNdilFnfTOwHw99LKWo5+9
+         9xrwNm0O5mvJ25TqpMTbVYn9hDZxSc7CUqk+0UiyOlei6oRHRncJGAXpf2gL3+OKZ0S2
+         Ij3o4pqlWTzo1qX1C8cuwK4dFZ/nfc/gTi4rAzHqqG6YuHG1CmoQJKWzHmSlRBnavrKI
+         nruA==
+X-Gm-Message-State: APjAAAW9wTfxex+q+LgOhLUTK1HiqMLDaBZ9Aby5rIGsNSCOVWrnubYR
+        7TtRVZPKh5oL3x4O3dxDS/XjA6eeNbIPVzyCd1eZ+A==
+X-Google-Smtp-Source: APXvYqwtuuIHA05WlMsM3fakhU6fJYClg2oPx3tINNpyw57GmjZsApwePIQGvU7+z5wCuHUmeSYZw4LNVTBhNSGyedo=
+X-Received: by 2002:a67:c902:: with SMTP id w2mr8707335vsk.191.1552906325627;
+ Mon, 18 Mar 2019 03:52:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190307100948.570006-1-arnd@arndb.de>
-In-Reply-To: <20190307100948.570006-1-arnd@arndb.de>
+References: <20190307101024.594587-1-arnd@arndb.de>
+In-Reply-To: <20190307101024.594587-1-arnd@arndb.de>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 18 Mar 2019 11:51:26 +0100
-Message-ID: <CAPDyKFq00AV6bhR0M-ZA5D0tO5S-cTx2bK=0w4DEGttb8khcOw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: pxamci: fix enum type confusion
+Date:   Mon, 18 Mar 2019 11:51:29 +0100
+Message-ID: <CAPDyKFpod7t4T46Ag6SzLgzRPr3T_XDhrDfRGTuJ0Ru5_0MQ2Q@mail.gmail.com>
+Subject: Re: [PATCH] mmc: davinci: remove extraneous __init annotation
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Daniel Mack <daniel@zonque.org>,
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -71,49 +70,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Mar 2019 at 11:09, Arnd Bergmann <arnd@arndb.de> wrote:
+On Thu, 7 Mar 2019 at 11:10, Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> clang points out several instances of mismatched types in this drivers,
-> all coming from a single declaration:
+> Building with clang finds a mistaken __init tag:
 >
-> drivers/mmc/host/pxamci.c:193:15: error: implicit conversion from enumeration type 'enum dma_transfer_direction' to
->       different enumeration type 'enum dma_data_direction' [-Werror,-Wenum-conversion]
->                 direction = DMA_DEV_TO_MEM;
->                           ~ ^~~~~~~~~~~~~~
-> drivers/mmc/host/pxamci.c:212:62: error: implicit conversion from enumeration type 'enum dma_data_direction' to
->       different enumeration type 'enum dma_transfer_direction' [-Werror,-Wenum-conversion]
->         tx = dmaengine_prep_slave_sg(chan, data->sg, host->dma_len, direction,
+> WARNING: vmlinux.o(.text+0x5e4250): Section mismatch in reference from the function davinci_mmcsd_probe() to the function .init.text:init_mmcsd_host()
+> The function davinci_mmcsd_probe() references
+> the function __init init_mmcsd_host().
+> This is often because davinci_mmcsd_probe lacks a __init
+> annotation or the annotation of init_mmcsd_host is wrong.
 >
-> The behavior is correct, so this must be a simply typo from
-> dma_data_direction and dma_transfer_direction being similarly named
-> types with a similar purpose.
->
-> Fixes: 6464b7140951 ("mmc: pxamci: switch over to dmaengine use")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Applied for fixes and by adding a stable tag, thanks!
+Applied for fixes, thanks!
 
 Kind regards
 Uffe
 
 
 > ---
->  drivers/mmc/host/pxamci.c | 2 +-
+>  drivers/mmc/host/davinci_mmc.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-> index c907bf502a12..c1d3f0e38921 100644
-> --- a/drivers/mmc/host/pxamci.c
-> +++ b/drivers/mmc/host/pxamci.c
-> @@ -162,7 +162,7 @@ static void pxamci_dma_irq(void *param);
->  static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
+> diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
+> index 49e0daf2ef5e..f37003df1e01 100644
+> --- a/drivers/mmc/host/davinci_mmc.c
+> +++ b/drivers/mmc/host/davinci_mmc.c
+> @@ -1117,7 +1117,7 @@ static inline void mmc_davinci_cpufreq_deregister(struct mmc_davinci_host *host)
 >  {
->         struct dma_async_tx_descriptor *tx;
-> -       enum dma_data_direction direction;
-> +       enum dma_transfer_direction direction;
->         struct dma_slave_config config;
->         struct dma_chan *chan;
->         unsigned int nob = data->blocks;
+>  }
+>  #endif
+> -static void __init init_mmcsd_host(struct mmc_davinci_host *host)
+> +static void init_mmcsd_host(struct mmc_davinci_host *host)
+>  {
+>
+>         mmc_davinci_reset_ctrl(host, 1);
 > --
 > 2.20.0
 >
