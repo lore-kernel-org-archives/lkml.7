@@ -2,125 +2,151 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67910C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E454C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3106921734
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:18:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=scalemp.com header.i=@scalemp.com header.b="hiP3Cy11"
+	by mail.kernel.org (Postfix) with ESMTP id 5918E2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 08:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfCRISz (ORCPT
+        id S1726891AbfCRI2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 04:18:55 -0400
-Received: from www.scalemp.com ([169.44.78.149]:45930 "EHLO scalemp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbfCRISv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 04:18:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=scalemp.com
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CIQLRgXhEYZ+LxBRASvoXCmRz/2o6wCcqEisJk24XyE=; b=hiP3Cy110mH6C+q7Qlpkid1uYT
-        hyAPCrqNzaDxADwOl3rVgLBHjZijHdbE7VFTtOBvk1wBFTXbgIp44LUaXXryxmcDZ48eAiihPjqh7
-        jwMqKbHDB3hDmIW1fJTKFBbamDvMNuC7rPoxD4NoYRNjpqG8Y9KV7goTBI/RrTscKyKU=;
-Received: from bzq-80-45-146.static.bezeqint.net ([82.80.45.146]:30257 helo=[10.100.0.120])
-        by hosting.virtualsmp.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <eial@scalemp.com>)
-        id 1h5nTu-000gmN-JY; Mon, 18 Mar 2019 04:18:50 -0400
-Subject: Re: [PATCH] percpu/module resevation: change resevation size iff
- X86_VSMP is set
-To:     paulmck@linux.ibm.com
-Cc:     Tejun Heo <tj@kernel.org>, Barret Rhoden <brho@google.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
-        Shai Fultheim <shai@scalemp.com>, Oren Twaig <oren@scalemp.com>
-References: <a7eff2ed-0e80-edae-2a97-a3fdab2d05f5@google.com>
- <20190301203455.GA97188@dennisz-mbp.dhcp.thefacebook.com>
- <c72402f2-967e-cd56-99d8-9139c9e7f267@google.com>
- <010001693b404440-248fa987-624c-4587-940b-56e2ed4226d9-000000@email.amazonses.com>
- <85726648-82f3-6b6b-a749-03c4159e78f3@google.com>
- <20190313202640.GJ50184@devbig004.ftw2.facebook.com>
- <20190313212255.GY13351@linux.ibm.com>
- <20190313212912.GK50184@devbig004.ftw2.facebook.com>
- <20190313231155.GC13351@linux.ibm.com>
- <20190314173619.GL50184@devbig004.ftw2.facebook.com>
- <20190314221943.GQ4102@linux.ibm.com>
-From:   Eial Czerwacki <eial@scalemp.com>
-Organization: ScaleMP
-Message-ID: <f44f1d5f-67b4-6ffd-80c1-28c48828f85b@scalemp.com>
-Date:   Mon, 18 Mar 2019 10:18:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 18 Mar 2019 04:28:06 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46600 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbfCRI2F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 04:28:05 -0400
+Received: by mail-qk1-f196.google.com with SMTP id i5so9076143qkd.13;
+        Mon, 18 Mar 2019 01:28:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4f6/vJQVu39aS3HwEd/+DTkaIedt/YxrIiDh3jSmPPU=;
+        b=G/2HiBBP51Wx+i6cZzL4Kma65mwyvW/Wti2dBq/BcGSCX8JLWngXcxErw3Ae8GuyuB
+         dWLczHlbEXvYU2/iNBu3Bk27tWaML6HpWBy+TrEKxBH8iZf2nu08kYx3inJOxAqK5A1Z
+         2akZidEELTtajejniATIqeMB0zHhuDFAOFkxmMomTWw5wYcxisMhABTuSJOTdsTwpdjt
+         ZAFrB9Ft5xcngP93euSCpSCasTI2cQHQYENpHeSZfCkoyGotCYihLv/aFWOYH3/CQxb8
+         xOSjNMClWebdx3jxNwnJU6w5rtu90ON+Sh4yLXxP+34bLBw82RntrWGvjs6T2G92PvqA
+         gXLQ==
+X-Gm-Message-State: APjAAAXc64NXnqHT3V9GlGRf7os4PZu7T8YXqm+1rkWvkMxr2n+Iv8Dh
+        Wyx8fshv9GrrjNN4aBQcG6oXuRzCfLT+j0VA0XU=
+X-Google-Smtp-Source: APXvYqzb4rCEkUy8eoJYN2wGHxZP2NpImAXELe/n7exQV5Ooh3XZck7qbTxo47ibm3r8LNQXBiBGGps9q+YCScFhfJY=
+X-Received: by 2002:a05:620a:133b:: with SMTP id p27mr11956706qkj.173.1552897683269;
+ Mon, 18 Mar 2019 01:28:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190314221943.GQ4102@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hosting.virtualsmp.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - scalemp.com
-X-Get-Message-Sender-Via: hosting.virtualsmp.com: authenticated_id: eial@scalemp.com
-X-Authenticated-Sender: hosting.virtualsmp.com: eial@scalemp.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20190311153857.563743-1-arnd@arndb.de> <87k1h1fgkk.fsf@mid.deneb.enyo.de>
+ <CAK8P3a1r8GRC7GTHHqWY-PUn=9rWB-7+Qo=7txanbEjGZ-wppw@mail.gmail.com>
+ <87a7hvded7.fsf@mid.deneb.enyo.de> <CABeXuvrEecSAkBuN-SmAbGwhLWNCC+bA1=X78fm8xMyw8=hm6Q@mail.gmail.com>
+In-Reply-To: <CABeXuvrEecSAkBuN-SmAbGwhLWNCC+bA1=X78fm8xMyw8=hm6Q@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 18 Mar 2019 09:27:46 +0100
+Message-ID: <CAK8P3a22n5L45Gknqd=2zinVGqRovkk0OABmGLJbGcmg8xXd+A@mail.gmail.com>
+Subject: Re: [PATCH] y2038: fix socket.h header inclusion
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Florian Weimer <fw@deneb.enyo.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Willem de Bruijn <willemb@google.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Law <law@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greetings Paul,
+On Sun, Mar 17, 2019 at 7:20 PM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> On Fri, Mar 15, 2019 at 2:20 PM Florian Weimer <fw@deneb.enyo.de> wrote:
+> > > On Thu, Mar 14, 2019 at 7:41 PM Florian Weimer <fw@deneb.enyo.de> wrote:
+> > >> > diff --git a/arch/alpha/include/uapi/asm/socket.h
+> > >> > b/arch/alpha/include/uapi/asm/socket.h
+> > >> > index 0d0fddb7e738..976e89b116e5 100644
+> > >> > --- a/arch/alpha/include/uapi/asm/socket.h
+> > >> > +++ b/arch/alpha/include/uapi/asm/socket.h
+> > >> > @@ -2,8 +2,8 @@
+> > >> >  #ifndef _UAPI_ASM_SOCKET_H
+> > >> >  #define _UAPI_ASM_SOCKET_H
+> > >> >
+> > >> > +#include <linux/posix_types.h>
+> > >> >  #include <asm/sockios.h>
+> > >> > -#include <asm/bitsperlong.h>
+> > >>
+> > >> This breaks POSIX conformance in glibc because the
+> > >> <linux/posix_types.h> header is not namespace clean.  It contains the
+> > >> identifiers fds_bits and val:
+> > >>
+> > >>         unsigned long fds_bits[__FD_SETSIZE / (8 * sizeof(long))];
+> > >>
+> > >>         int     val[2];
+> > >
+> > > What is problematic about the struct members here? I had thought that
+> > > only the struct names have to be in a namespace to be usable here,
+> > > but not the members.
+> >
+> > According POSIX, a user can do this:
+> >
+> > #define fds_bits 1024
+> >
+> > before including the <sys/socket.h> header file.  Similarly for val.
+> >
+> > Since glibc pulls in <asm/socket.h> indirectly, the result is a parse
+> > error, even though the programmer did nothing wrong (fds_bits is not
+> > an identifier used by POSIX, nor is it in the implementation
+> > namespace, ans <sys/socket.h> is a POSIX header).
 
-On 3/15/19 12:19 AM, Paul E. McKenney wrote:
-> On Thu, Mar 14, 2019 at 10:36:19AM -0700, Tejun Heo wrote:
->> On Wed, Mar 13, 2019 at 04:11:55PM -0700, Paul E. McKenney wrote:
->>> commit 34f67df09cc0c6bf082a7cfca435373caeeb8d82
->>> Author: Paul E. McKenney <paulmck@linux.ibm.com>
->>> Date:   Wed Mar 13 16:06:22 2019 -0700
->>>
->>>     srcu: Forbid DEFINE{,_STATIC}_SRCU() from modules
->>>     
->>>     Adding DEFINE_SRCU() or DEFINE_STATIC_SRCU() to a loadable module
->>>     requires that the size of the reserved region be increased, which is
->>>     not something we want to be doing all that often.  Instead, loadable
->>>     modules should define an srcu_struct and invoke init_srcu_struct()
->>>     from their module_init function and cleanup_srcu_struct() from their
->>>     module_exit function.  Note that modules using call_srcu() will also
->>>     need to invoke srcu_barrier() from their module_exit function.
->>>     
->>>     This commit enforces this advice by refusing to define DEFINE_SRCU()
->>>     and DEFINE_STATIC_SRCU() within loadable modules.
->>>     
->>>     Suggested-by: Barret Rhoden <brho@google.com>
->>>     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
->>
->> Looks-great-to-me-by: Tejun Heo <tj@kernel.org>
-> 
-> Applied.  ;-)
-> 
-> 							Thanx, Paul
-> 
->> Thanks. :)
->>
->> -- 
->> tejun
->>
-> 
-> 
+Ok, I see. Thanks for the explanation!
 
-when can this patch be found in the kernel mainline git repo? I'd like
-to test and see if the patch that started this mail thread still occurs.
+> > > We could use asm/posix_types.h instead of linux/posix_types.h,
+> > > would that address your concern?
+> >
+> > It should fix the fds_bits case, I think.  But
+> > <asm-generic/posix_types.h> still uses val, so that part of the issue
+> > remains.
+>
+> Would moving kernel namespace types(__kernel prefix) to a different
+> header file(kernel_types.h?) and then including this from
+> linux/posix_types.h.
+> And, for socket.h just including kernel_types.h make sense?
 
-Thanks,
+I fear we have considered linux/posix_types.h to be something that
+can be included anywhere for a long time, so it may be better to
+ensure that this is actually the case, and avoid the problem with those
+two structures but leave the rest untouched.
 
-Eial.
+I think we can move  __kernel_fsid_t into include/uapi/asm-generic/statfs.h,
+which is the only thing that needs it anyway. We have two definitions of
+it today, the non-generic one being for mips32, but incidentally there was
+a patch the other day to remove that and use the generic one instead.
+
+With that done, we can change asm/socket.h to just use asm/posix_types.h.
+
+I would still prefer to solve the problem for linux/posix_types.h as well,
+but I'm not sure even how __kernel_fd_set  is used today in
+user space, if at all. Commit 8ded2bbc1845 ("posix_types.h: Cleanup
+stale __NFDBITS and related definitions") removed most of the fd_set
+definition after a long discussion [1], and since then it has been
+basically impossible to use 'struct fd_set'  from the kernel in a
+meaningful way without including the libc headers or duplicating
+them.
+
+Should we just remove __kernel_fd_set from the exported headers and
+define the internal fd_set directly in include/linux/types.h? (Adding the
+folks from the old thread to Cc).
+
+      Arnd
+
+[1] https://lore.kernel.org/lkml/20120724181209.GA10534@zod.bos.redhat.com/t/
