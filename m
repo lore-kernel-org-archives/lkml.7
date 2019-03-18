@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D0AC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89ADC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F65920854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795972075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552902215;
-	bh=opGQAHE+OdsYRrNylD4oRsqc4EsomVR/Y7YO9dzfPE8=;
+	s=default; t=1552902244;
+	bh=VxGKjELqylB1CafHCRrZjCUSaDH9kfRY+hF08Yi31vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1gIkn92P1XX66nBokfxP5ayS095ylUm1G8PERr5UT1imnIgcsNs/T9YTXlNjR6r3n
-	 d0XRnSfwpcakPqXk5+O1pXgqGV/+2NVfheTtql/+2hfY2W6FjEAQ14OJo5GWupkz/7
-	 Z+uWOXn5jhpjS4C+680JheyK2mHSjUkw/efWaa9M=
+	b=ny2V4JF6Vae0AKluMIn4qieF7qFN8wdvJ81741LKSXHTgXHuN2m20qcS55p1I3Rf7
+	 q4D/PL2v6JQaqR59mCT14bWjrUaeke5D45oICYFBSmPgCT2gRKqK2MQwfYCHYZgzaj
+	 yKE84WesNXdV1KgiZ3KJhZkGccGFCwLZfEssJFNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfCRJbv (ORCPT
+        id S1728322AbfCRJoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:31:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39652 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727896AbfCRJbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:31:48 -0400
+        id S1727722AbfCRJbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:20 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F405E2083D;
-        Mon, 18 Mar 2019 09:31:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EACF42087C;
+        Mon, 18 Mar 2019 09:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901507;
-        bh=opGQAHE+OdsYRrNylD4oRsqc4EsomVR/Y7YO9dzfPE8=;
+        s=default; t=1552901479;
+        bh=VxGKjELqylB1CafHCRrZjCUSaDH9kfRY+hF08Yi31vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ps1BlF4NI4D0L1O/jlwQ3SkePKUQxJKFGyqILdIEaSvhNDX3pATA7fvNnXxkHblJ+
-         JgVEC5NC75Jmz2bDJ1vetxiGOLeBYgY1vTQdYrLfA6rkOnq1SD7s0vamrNY/lR8oAo
-         vW0Nmg7T/ghjZ6CXhdnEWUnHhiLosXU3OeJ2s7qM=
+        b=bT8qlDiCDOy/dbhP3wOYbo9zbpUeAGFCugH+Dgw98dB4RU01Ms396El9cdw5ZdCc5
+         t7hVlcQqGuG/fTYAKzuABIZKUhxn3LK70OnRVo8B9LowswHo0qCBLMztLTedleeBte
+         hyfmj/Wivo93zmQQYGwgyvV9CKw+17jHwlVZpkTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
+        stable@vger.kernel.org,
+        Bryan Whitehead <Bryan.Whitehead@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 15/52] rxrpc: Fix client call queueing, waiting for channel
-Date:   Mon, 18 Mar 2019 10:25:12 +0100
-Message-Id: <20190318084015.354651851@linuxfoundation.org>
+Subject: [PATCH 4.20 05/52] lan743x: Fix RX Kernel Panic
+Date:   Mon, 18 Mar 2019 10:24:52 +0100
+Message-Id: <20190318083844.043670554@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
-References: <20190318084013.532280682@linuxfoundation.org>
+In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
+References: <20190318083843.398913295@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -62,53 +62,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: David Howells <dhowells@redhat.com>
+From: Bryan Whitehead <Bryan.Whitehead@microchip.com>
 
-[ Upstream commit 69ffaebb90369ce08657b5aea4896777b9d6e8fc ]
+[ Upstream commit dd9d9f5907bb475f8b1796c47d4ecc7fb9b72136 ]
 
-rxrpc_get_client_conn() adds a new call to the front of the waiting_calls
-queue if the connection it's going to use already exists.  This is bad as
-it allows calls to get starved out.
+It has been noticed that running the speed test at
+www.speedtest.net occasionally causes a kernel panic.
 
-Fix this by adding to the tail instead.
+Investigation revealed that under this test RX buffer allocation
+sometimes fails and returns NULL. But the lan743x driver did
+not handle this case.
 
-Also change the other enqueue point in the same function to put it on the
-front (ie. when we have a new connection).  This makes the point that in
-the case of a new connection the new call goes at the front (though it
-doesn't actually matter since the queue should be unoccupied).
+This patch fixes this issue by attempting to allocate a buffer
+before sending the new rx packet to the OS. If the allocation
+fails then the new rx packet is dropped and the existing buffer
+is reused in the DMA ring.
 
-Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Updates for v2:
+    Additional 2 locations where allocation was not checked,
+        has been changed to reuse existing buffer.
+
+Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
+Signed-off-by: Bryan Whitehead <Bryan.Whitehead@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/conn_client.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/microchip/lan743x_main.c |   46 ++++++++++++++++++--------
+ 1 file changed, 32 insertions(+), 14 deletions(-)
 
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -353,7 +353,7 @@ static int rxrpc_get_client_conn(struct
- 	 * normally have to take channel_lock but we do this before anyone else
- 	 * can see the connection.
- 	 */
--	list_add_tail(&call->chan_wait_link, &candidate->waiting_calls);
-+	list_add(&call->chan_wait_link, &candidate->waiting_calls);
+--- a/drivers/net/ethernet/microchip/lan743x_main.c
++++ b/drivers/net/ethernet/microchip/lan743x_main.c
+@@ -1902,7 +1902,17 @@ static int lan743x_rx_next_index(struct
+ 	return ((++index) % rx->ring_size);
+ }
  
- 	if (cp->exclusive) {
- 		call->conn = candidate;
-@@ -432,7 +432,7 @@ found_extant_conn:
- 	call->conn = conn;
- 	call->security_ix = conn->security_ix;
- 	call->service_id = conn->service_id;
--	list_add(&call->chan_wait_link, &conn->waiting_calls);
-+	list_add_tail(&call->chan_wait_link, &conn->waiting_calls);
- 	spin_unlock(&conn->channel_lock);
- 	_leave(" = 0 [extant %d]", conn->debug_id);
- 	return 0;
+-static int lan743x_rx_allocate_ring_element(struct lan743x_rx *rx, int index)
++static struct sk_buff *lan743x_rx_allocate_skb(struct lan743x_rx *rx)
++{
++	int length = 0;
++
++	length = (LAN743X_MAX_FRAME_SIZE + ETH_HLEN + 4 + RX_HEAD_PADDING);
++	return __netdev_alloc_skb(rx->adapter->netdev,
++				  length, GFP_ATOMIC | GFP_DMA);
++}
++
++static int lan743x_rx_init_ring_element(struct lan743x_rx *rx, int index,
++					struct sk_buff *skb)
+ {
+ 	struct lan743x_rx_buffer_info *buffer_info;
+ 	struct lan743x_rx_descriptor *descriptor;
+@@ -1911,9 +1921,7 @@ static int lan743x_rx_allocate_ring_elem
+ 	length = (LAN743X_MAX_FRAME_SIZE + ETH_HLEN + 4 + RX_HEAD_PADDING);
+ 	descriptor = &rx->ring_cpu_ptr[index];
+ 	buffer_info = &rx->buffer_info[index];
+-	buffer_info->skb = __netdev_alloc_skb(rx->adapter->netdev,
+-					      length,
+-					      GFP_ATOMIC | GFP_DMA);
++	buffer_info->skb = skb;
+ 	if (!(buffer_info->skb))
+ 		return -ENOMEM;
+ 	buffer_info->dma_ptr = dma_map_single(&rx->adapter->pdev->dev,
+@@ -2060,8 +2068,19 @@ static int lan743x_rx_process_packet(str
+ 		/* packet is available */
+ 		if (first_index == last_index) {
+ 			/* single buffer packet */
++			struct sk_buff *new_skb = NULL;
+ 			int packet_length;
+ 
++			new_skb = lan743x_rx_allocate_skb(rx);
++			if (!new_skb) {
++				/* failed to allocate next skb.
++				 * Memory is very low.
++				 * Drop this packet and reuse buffer.
++				 */
++				lan743x_rx_reuse_ring_element(rx, first_index);
++				goto process_extension;
++			}
++
+ 			buffer_info = &rx->buffer_info[first_index];
+ 			skb = buffer_info->skb;
+ 			descriptor = &rx->ring_cpu_ptr[first_index];
+@@ -2081,7 +2100,7 @@ static int lan743x_rx_process_packet(str
+ 			skb_put(skb, packet_length - 4);
+ 			skb->protocol = eth_type_trans(skb,
+ 						       rx->adapter->netdev);
+-			lan743x_rx_allocate_ring_element(rx, first_index);
++			lan743x_rx_init_ring_element(rx, first_index, new_skb);
+ 		} else {
+ 			int index = first_index;
+ 
+@@ -2094,26 +2113,23 @@ static int lan743x_rx_process_packet(str
+ 			if (first_index <= last_index) {
+ 				while ((index >= first_index) &&
+ 				       (index <= last_index)) {
+-					lan743x_rx_release_ring_element(rx,
+-									index);
+-					lan743x_rx_allocate_ring_element(rx,
+-									 index);
++					lan743x_rx_reuse_ring_element(rx,
++								      index);
+ 					index = lan743x_rx_next_index(rx,
+ 								      index);
+ 				}
+ 			} else {
+ 				while ((index >= first_index) ||
+ 				       (index <= last_index)) {
+-					lan743x_rx_release_ring_element(rx,
+-									index);
+-					lan743x_rx_allocate_ring_element(rx,
+-									 index);
++					lan743x_rx_reuse_ring_element(rx,
++								      index);
+ 					index = lan743x_rx_next_index(rx,
+ 								      index);
+ 				}
+ 			}
+ 		}
+ 
++process_extension:
+ 		if (extension_index >= 0) {
+ 			descriptor = &rx->ring_cpu_ptr[extension_index];
+ 			buffer_info = &rx->buffer_info[extension_index];
+@@ -2290,7 +2306,9 @@ static int lan743x_rx_ring_init(struct l
+ 
+ 	rx->last_head = 0;
+ 	for (index = 0; index < rx->ring_size; index++) {
+-		ret = lan743x_rx_allocate_ring_element(rx, index);
++		struct sk_buff *new_skb = lan743x_rx_allocate_skb(rx);
++
++		ret = lan743x_rx_init_ring_element(rx, index, new_skb);
+ 		if (ret)
+ 			goto cleanup;
+ 	}
 
 
