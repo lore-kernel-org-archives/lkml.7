@@ -2,130 +2,166 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C988C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E98C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC152083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YoCWDAW0"
+	by mail.kernel.org (Postfix) with ESMTP id 3381F2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552901904;
+	bh=YZsw8B000PZK+uDvPHjnQq70104DKD/Y+ZIG5z1+s5s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RHWXwhGtRVBlQluXu8+W2KlIqmuZvFzvf8w3vcRO4huFjsgoDPN/2IrvtTztp96NY
+	 g2LrMQRLPUxCYW/ADFUZn4VVFgvA5RKsSqMC88bHjX5WeUGr25n2JNe2QXhQZPbMbI
+	 RLj/eNIBRwKHLFGFkl6zH9mFlrSo697fvK4+Y9ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfCRJiL (ORCPT
+        id S2387865AbfCRJhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:38:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55800 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387910AbfCRJhg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:37:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Y3NiwwRe/QDvRzEhR0UQDgHYLh/EGideUmQY76n5dxg=; b=YoCWDAW0kjG6izfCRgmyjPHTy
-        1KK6LSYcm3Gf4l+2PBbvCnoyAHHrlb/GWRRJXfQK/3CZOTzFakw4q/A3+xp9hcUl2vSsTLBeI0/Ia
-        XqTByWB6ZDqZr+eMGJeLW2UBgg+cTw06CaQjQLgYzkFBqgynVwFJk5NFlbfrK/Mzq+SL5BUBm6Zai
-        pKgGqROmSHcHn8vOdikeF6KRvFPwNz7gIxhB2Q/yGl6Ykm82zWhTaewHyv/XjN52yuVzV8K4QJyWl
-        s4oRun254CK/1/1fVAeoaRz/9uCqlbi/abyZl77eYqJ03Ioo+Qbqt/BATbcVHygfqUdR8fZcXRdBv
-        4oktorCiA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h5oi1-0003L2-AC; Mon, 18 Mar 2019 09:37:29 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 298A1202194ED; Mon, 18 Mar 2019 10:37:25 +0100 (CET)
-Date:   Mon, 18 Mar 2019 10:37:25 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [RFC PATCH v2 1/2] x86/perf/amd: Resolve race condition when
- disabling PMC
-Message-ID: <20190318093725.GJ6058@hirez.programming.kicks-ass.net>
-References: <155268244291.14761.3432013617741218607.stgit@tlendack-t1.amdoffice.net>
- <155268245032.14761.7748666703519081877.stgit@tlendack-t1.amdoffice.net>
+        Mon, 18 Mar 2019 05:37:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387824AbfCRJhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:37:23 -0400
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D017214D8;
+        Mon, 18 Mar 2019 09:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552901841;
+        bh=YZsw8B000PZK+uDvPHjnQq70104DKD/Y+ZIG5z1+s5s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PEQXPSeqFYv5fXNCDM8wd6zenEdQCmEfCX12UN8dKk7PYuJm0rNQeosFeXLlToTuO
+         uoRPeyNgXfA1MT9guH/SzlgBHeHK9lenkZH2+E45IMeINHt2VXGoNGnObuUmNqjLJn
+         1n2/cELlTgMr/3wzPH/SjZlTtEE9fJ8BeHGBJh+I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 04/31] net: hsr: fix memory leak in hsr_dev_finalize()
+Date:   Mon, 18 Mar 2019 10:25:39 +0100
+Message-Id: <20190318084210.569003826@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190318084210.397476003@linuxfoundation.org>
+References: <20190318084210.397476003@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155268245032.14761.7748666703519081877.stgit@tlendack-t1.amdoffice.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 08:40:53PM +0000, Lendacky, Thomas wrote:
-> +void amd_pmu_disable_all(void)
-> +{
-> +	unsigned long overflow_check[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
-> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +	int idx;
-> +
-> +	bitmap_zero(overflow_check, X86_PMC_IDX_MAX);
-> +
-> +	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
-> +		u64 val;
-> +
-> +		if (!test_bit(idx, cpuc->active_mask))
-> +			continue;
-> +
-> +		rdmsrl(x86_pmu_config_addr(idx), val);
-> +		if (!(val & ARCH_PERFMON_EVENTSEL_ENABLE))
-> +			continue;
-> +
-> +		val &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
-> +		wrmsrl(x86_pmu_config_addr(idx), val);
-> +
-> +		/*
-> +		 * If the interrupt is enabled, this counter must be checked
-> +		 * for an overflow condition to avoid possibly changing the
-> +		 * counter value before the NMI handler runs.
-> +		 */
-> +		if (val & ARCH_PERFMON_EVENTSEL_INT)
-> +			__set_bit(idx, overflow_check);
-> +	}
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-I think you can ditch overflow_check and directly call
-x86_pmu_disable_all() here.
+------------------
 
-> +
-> +	/*
-> +	 * This shouldn't be called from NMI context, but add a safeguard here
-> +	 * to return, since if we're in NMI context we can't wait for an NMI
-> +	 * to reset an overflowed counter value.
-> +	 */
-> +	if (in_nmi())
-> +		return;
-> +
-> +	/*
-> +	 * Check each counter for overflow and wait for it to be reset by the
-> +	 * NMI if it has overflowed.
-> +	 */
-> +	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
-> +		if (!test_bit(idx, overflow_check))
+From: Mao Wenan <maowenan@huawei.com>
 
-And simply iterate cpuc->active_mask again here.
+[ Upstream commit 3dc6da493a29dbeda9f13b637bd9c02c414b2261 ]
 
-> +			continue;
-> +
-> +		amd_pmu_wait_on_overflow(idx);
-> +	}
-> +}
+If hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER) failed to
+add port, it directly returns res and forgets to free the node
+that allocated in hsr_create_self_node(), and forgets to delete
+the node->mac_list linked in hsr->self_node_db.
 
-Because, per x86_pmu_hw_config() we _always_ have EVENTSEL_INT set, even
-for !sampling events -- such that we can deal with overflow, and we
-should 'always' have EVENTSEL_ENABLE set when 'active', see
-x86_pmu_enable_all().
+BUG: memory leak
+unreferenced object 0xffff8881cfa0c780 (size 64):
+  comm "syz-executor.0", pid 2077, jiffies 4294717969 (age 2415.377s)
+  hex dump (first 32 bytes):
+    e0 c7 a0 cf 81 88 ff ff 00 02 00 00 00 00 ad de  ................
+    00 e6 49 cd 81 88 ff ff c0 9b 87 d0 81 88 ff ff  ..I.............
+  backtrace:
+    [<00000000e2ff5070>] hsr_dev_finalize+0x736/0x960 [hsr]
+    [<000000003ed2e597>] hsr_newlink+0x2b2/0x3e0 [hsr]
+    [<000000003fa8c6b6>] __rtnl_newlink+0xf1f/0x1600 net/core/rtnetlink.c:3182
+    [<000000001247a7ad>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3240
+    [<00000000e7d1b61d>] rtnetlink_rcv_msg+0x54e/0xb90 net/core/rtnetlink.c:5130
+    [<000000005556bd3a>] netlink_rcv_skb+0x129/0x340 net/netlink/af_netlink.c:2477
+    [<00000000741d5ee6>] netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+    [<00000000741d5ee6>] netlink_unicast+0x49a/0x650 net/netlink/af_netlink.c:1336
+    [<000000009d56f9b7>] netlink_sendmsg+0x88b/0xdf0 net/netlink/af_netlink.c:1917
+    [<0000000046b35c59>] sock_sendmsg_nosec net/socket.c:621 [inline]
+    [<0000000046b35c59>] sock_sendmsg+0xc3/0x100 net/socket.c:631
+    [<00000000d208adc9>] __sys_sendto+0x33e/0x560 net/socket.c:1786
+    [<00000000b582837a>] __do_sys_sendto net/socket.c:1798 [inline]
+    [<00000000b582837a>] __se_sys_sendto net/socket.c:1794 [inline]
+    [<00000000b582837a>] __x64_sys_sendto+0xdd/0x1b0 net/socket.c:1794
+    [<00000000c866801d>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+    [<00000000fea382d9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e01dacb3>] 0xffffffffffffffff
+
+Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/hsr/hsr_device.c   |    4 +++-
+ net/hsr/hsr_framereg.c |   12 ++++++++++++
+ net/hsr/hsr_framereg.h |    1 +
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -485,7 +485,7 @@ int hsr_dev_finalize(struct net_device *
+ 
+ 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
+ 	if (res)
+-		return res;
++		goto err_add_port;
+ 
+ 	res = register_netdevice(hsr_dev);
+ 	if (res)
+@@ -505,6 +505,8 @@ int hsr_dev_finalize(struct net_device *
+ fail:
+ 	hsr_for_each_port(hsr, port)
+ 		hsr_del_port(port);
++err_add_port:
++	hsr_del_node(&hsr->self_node_db);
+ 
+ 	return res;
+ }
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -124,6 +124,18 @@ int hsr_create_self_node(struct list_hea
+ 	return 0;
+ }
+ 
++void hsr_del_node(struct list_head *self_node_db)
++{
++	struct hsr_node *node;
++
++	rcu_read_lock();
++	node = list_first_or_null_rcu(self_node_db, struct hsr_node, mac_list);
++	rcu_read_unlock();
++	if (node) {
++		list_del_rcu(&node->mac_list);
++		kfree(node);
++	}
++}
+ 
+ /* Allocate an hsr_node and add it to node_db. 'addr' is the node's AddressA;
+  * seq_out is used to initialize filtering of outgoing duplicate frames
+--- a/net/hsr/hsr_framereg.h
++++ b/net/hsr/hsr_framereg.h
+@@ -16,6 +16,7 @@
+ 
+ struct hsr_node;
+ 
++void hsr_del_node(struct list_head *self_node_db);
+ struct hsr_node *hsr_add_node(struct list_head *node_db, unsigned char addr[],
+ 			      u16 seq_out);
+ struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
 
 
