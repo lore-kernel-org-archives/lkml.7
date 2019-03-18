@@ -2,361 +2,281 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35BAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 05:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3CFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 05:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811A2206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 05:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D620D2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 05:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EEwvwN0W"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Cys+zMai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfCRFeO (ORCPT
+        id S1727802AbfCRFeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 01:34:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38418 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbfCRFeO (ORCPT
+        Mon, 18 Mar 2019 01:34:44 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:57066 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbfCRFen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 01:34:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2I5XuXE075250;
-        Mon, 18 Mar 2019 00:33:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552887236;
-        bh=ZFrcS1d09axsCJTNWx/Y+0Q9SNCU2f3RMGE5RCefvuc=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=EEwvwN0WlVlwi/4H5vqEersd1zdjanbuuJ4XrszcS3Ym5CqoldvENN91+7ruMTegQ
-         RMpFcTPtRguqKme6/FVVoEV1uuQ121l8hb1zJGlz81hgIsY8HpIQHgjDqlf3TqNzAv
-         dwvEsQNj2Wu1nrL/sPrVAGE4+mU5z19oXHr73a9g=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2I5XtKx020968
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Mar 2019 00:33:55 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 18
- Mar 2019 00:33:55 -0500
-Received: from dlep32.itg.ti.com (157.170.170.100) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 18 Mar 2019 00:33:55 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2I5XqWB008669;
-        Mon, 18 Mar 2019 00:33:52 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 3/9] PCI: keystone: Convert to using hierarchy domain
- for legacy interrupts
-To:     Marc Zyngier <marc.zyngier@arm.com>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190221101518.22604-1-kishon@ti.com>
- <20190221101518.22604-4-kishon@ti.com>
- <20190221162413.GA5815@e107981-ln.cambridge.arm.com>
- <20190223121143.14c1f150@why.wild-wind.fr.eu.org>
- <4c55487d-213f-f5f5-6d67-93a417d2a0d7@ti.com>
- <867eda28qh.wl-marc.zyngier@arm.com>
-Message-ID: <73780998-919e-1a1c-7b8d-0bf8e33df015@ti.com>
-Date:   Mon, 18 Mar 2019 11:03:07 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <867eda28qh.wl-marc.zyngier@arm.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 18 Mar 2019 01:34:43 -0400
+X-IronPort-AV: E=Sophos;i="5.58,492,1544511600"; 
+   d="scan'208";a="28007183"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 17 Mar 2019 22:34:42 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.107) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Sun, 17 Mar 2019 22:34:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qVN5NhOE0bTofil7UlCJL9UEqxWTNmxjWc2NvUcFKwQ=;
+ b=Cys+zMaiEjPuhqXSRMKDpy3HJM9HnOo4VA8s1V2PH1nlvhFi4ZL8lxRJ7kiBzwFqrwEpBvu/xs4dLTrsHAXZAfctPMKfVo17Dlb9diqWQvzpVJd2CV4nL+Q3C4rm4KuhCKwv9TP7iezzRIklSGpsDiyj8MIS2v4ny+bGx0WEqJo=
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
+ BN6PR11MB1298.namprd11.prod.outlook.com (10.173.32.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Mon, 18 Mar 2019 05:34:38 +0000
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::85a9:6cf6:d651:128e]) by BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::85a9:6cf6:d651:128e%10]) with mapi id 15.20.1709.015; Mon, 18 Mar
+ 2019 05:34:38 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <nagasure@xilinx.com>, <bbrezillon@kernel.org>,
+        <broonie@kernel.org>
+CC:     <richard@nod.at>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <marek.vasut@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <nagasuresh12@gmail.com>,
+        <dwmw2@infradead.org>, <michals@xilinx.com>,
+        <liu.xiang6@zte.com.cn>
+Subject: Re: 4-Byte addressing issue with IS25WP256D nor flash
+Thread-Topic: 4-Byte addressing issue with IS25WP256D nor flash
+Thread-Index: AdTZgzps1dokp2Q3SSmhxyFZkToq1ADyQRIA
+Date:   Mon, 18 Mar 2019 05:34:38 +0000
+Message-ID: <e1e2f867-8a28-c74b-7f01-5f798e37c81d@microchip.com>
+References: <MWHPR02MB2623388725B13BB7B133B98BAF4A0@MWHPR02MB2623.namprd02.prod.outlook.com>
+In-Reply-To: <MWHPR02MB2623388725B13BB7B133B98BAF4A0@MWHPR02MB2623.namprd02.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR08CA0260.eurprd08.prod.outlook.com
+ (2603:10a6:803:dc::33) To BN6PR11MB1842.namprd11.prod.outlook.com
+ (2603:10b6:404:101::18)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 38b37266-66c4-4e6a-8309-08d6ab636959
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:BN6PR11MB1298;
+x-ms-traffictypediagnostic: BN6PR11MB1298:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BN6PR11MB1298C6A1DE473882E5E51AA8F0470@BN6PR11MB1298.namprd11.prod.outlook.com>
+x-forefront-prvs: 098076C36C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(396003)(366004)(376002)(189003)(199004)(6346003)(6512007)(53936002)(99286004)(6306002)(386003)(305945005)(7416002)(52116002)(71190400001)(8936002)(81166006)(53546011)(8676002)(6506007)(105586002)(81156014)(7736002)(6436002)(4326008)(229853002)(478600001)(26005)(6246003)(186003)(36756003)(31696002)(66066001)(6486002)(86362001)(2616005)(3846002)(446003)(11346002)(14454004)(486006)(6116002)(476003)(5660300002)(72206003)(14444005)(2906002)(256004)(25786009)(102836004)(106356001)(54906003)(316002)(2501003)(68736007)(71200400001)(110136005)(31686004)(966005)(97736004)(76176011)(505234006);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1298;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tudor.Ambarus@microchip.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: a7GvPV7LyXcPSpx+VtUC5B9yw/BXYF0PmnfnytjJb/BNTdBPUVFCuMpRuvlqOYIaxH27eu/14LDRhRGr1c/RHOVzcTMZVMnNfhQ0OVbvKw/FPBMhHotRclKqHvIrYAW9VAJS2ib8WceFSv9ZI4doOODtxcETVmp1qCZvE47dWX7pIlEz8R5vuS9hPOqghjUwu1y2ymreDIsCllthCNA8UKjLdbzsHviR8gsCpBJTCudOKs+JQL8RB3IH9rYaylvbej0Qt6LtKIFz5HPokDrt3UECJ/73r4PMh0blwxOPbmDI/8zWZXqgBdBrcKoYb5GeTt20AAdNocPEYrAZWSxLd/Qd/eTYgBMBh22l9ILZdP/feKpUmkzi4WQENz4F1kO5s0bRVU1CxKKyshE/LAUliRHgbAh6Vcw/WAQDfb3KILE=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <1E5CEF06750F3A46B3B3EBB9B732392A@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38b37266-66c4-4e6a-8309-08d6ab636959
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2019 05:34:38.1193
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1298
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi, Naga,
 
-On 07/03/19 5:32 PM, Marc Zyngier wrote:
-> On Thu, 07 Mar 2019 09:12:30 +0000,
-> Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi,
->>
->> On 23/02/19 5:41 PM, Marc Zyngier wrote:
->>> On Thu, 21 Feb 2019 16:24:14 +0000
->>> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
->>>
->>>> On Thu, Feb 21, 2019 at 03:45:12PM +0530, Kishon Vijay Abraham I wrote:
->>>>> K2G provides separate IRQ lines for each of the four legacy interrupts.
->>>>> Model this using hierarchy domain instead of linear domain with chained
->>>>> IRQ handler.
->>>>>
->>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>> ---
->>>>>  drivers/pci/controller/dwc/pci-keystone.c | 205 +++++++++++++---------
->>>>>  1 file changed, 118 insertions(+), 87 deletions(-)  
->>>>
->>>> Hi Kishon,
->>>>
->>>> I CC'ed Marc because you are actually re-writing an interrupt controller
->>>> driver so I would be happier to merge this refactoring if Marc can have
->>>> a look and he is satisfied with it - more so because most of the code can
->>>> be reused by other host bridge drivers with similar behaviour.
->>>
->>> Cheers Lorenzo.
->>>
->>> It doesn't look too bad, but there is a couple of points I'd like to see
->>> clarified. Comments below.
->>>
->>>>
->>>> I will have a look too, unfortunately it is becoming a bit tight for
->>>> v5.1 but let's see how it goes.
->>>>
->>>> Thanks,
->>>> Lorenzo
->>>>
->>>>> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
->>>>> index 47f0dcf638f2..7f1648453f54 100644
->>>>> --- a/drivers/pci/controller/dwc/pci-keystone.c
->>>>> +++ b/drivers/pci/controller/dwc/pci-keystone.c
->>>>> @@ -61,6 +61,7 @@
->>>>>  
->>>>>  #define IRQ_STATUS(n)			(0x184 + ((n) << 4))
->>>>>  #define IRQ_ENABLE_SET(n)		(0x188 + ((n) << 4))
->>>>> +#define IRQ_ENABLE_CLR(n)		(0x18C + ((n) << 4))
->>>>>  #define INTx_EN				BIT(0)
->>>>>  
->>>>>  #define ERR_IRQ_STATUS			0x1c4
->>>>> @@ -87,7 +88,6 @@ struct keystone_pcie {
->>>>>  	struct dw_pcie		*pci;
->>>>>  	/* PCI Device ID */
->>>>>  	u32			device_id;
->>>>> -	int			legacy_host_irqs[PCI_NUM_INTX];
->>>>>  	struct			device_node *legacy_intc_np;
->>>>>  
->>>>>  	int			msi_host_irqs[MAX_MSI_HOST_IRQS];
->>>>> @@ -96,7 +96,6 @@ struct keystone_pcie {
->>>>>  	struct phy		**phy;
->>>>>  	struct device_link	**link;
->>>>>  	struct			device_node *msi_intc_np;
->>>>> -	struct irq_domain	*legacy_irq_domain;
->>>>>  	struct device_node	*np;
->>>>>  
->>>>>  	int error_irq;
->>>>> @@ -199,26 +198,6 @@ static int ks_pcie_msi_host_init(struct pcie_port *pp)
->>>>>  	return dw_pcie_allocate_domains(pp);
->>>>>  }
->>>>>  
->>>>> -static void ks_pcie_handle_legacy_irq(struct keystone_pcie *ks_pcie,
->>>>> -				      int offset)
->>>>> -{
->>>>> -	struct dw_pcie *pci = ks_pcie->pci;
->>>>> -	struct device *dev = pci->dev;
->>>>> -	u32 pending;
->>>>> -	int virq;
->>>>> -
->>>>> -	pending = ks_pcie_app_readl(ks_pcie, IRQ_STATUS(offset));
->>>>> -
->>>>> -	if (BIT(0) & pending) {
->>>>> -		virq = irq_linear_revmap(ks_pcie->legacy_irq_domain, offset);
->>>>> -		dev_dbg(dev, ": irq: irq_offset %d, virq %d\n", offset, virq);
->>>>> -		generic_handle_irq(virq);
->>>>> -	}
->>>>> -
->>>>> -	/* EOI the INTx interrupt */
->>>>> -	ks_pcie_app_writel(ks_pcie, IRQ_EOI, offset);
->>>>> -}
->>>>> -
->>>>>  static void ks_pcie_enable_error_irq(struct keystone_pcie *ks_pcie)
->>>>>  {
->>>>>  	ks_pcie_app_writel(ks_pcie, ERR_IRQ_ENABLE_SET, ERR_IRQ_ALL);
->>>>> @@ -256,39 +235,117 @@ static irqreturn_t ks_pcie_handle_error_irq(struct keystone_pcie *ks_pcie)
->>>>>  	return IRQ_HANDLED;
->>>>>  }
->>>>>  
->>>>> -static void ks_pcie_ack_legacy_irq(struct irq_data *d)
->>>>> +void ks_pcie_irq_eoi(struct irq_data *data)
->>>>>  {
->>>>> +	struct keystone_pcie *ks_pcie = irq_data_get_irq_chip_data(data);
->>>>> +	irq_hw_number_t hwirq = data->hwirq;
->>>>> +
->>>>> +	ks_pcie_app_writel(ks_pcie, IRQ_EOI, hwirq);
->>>>> +	irq_chip_eoi_parent(data);
->>>>>  }
->>>>>  
->>>>> -static void ks_pcie_mask_legacy_irq(struct irq_data *d)
->>>>> +void ks_pcie_irq_enable(struct irq_data *data)
->>>>>  {
->>>>> +	struct keystone_pcie *ks_pcie = irq_data_get_irq_chip_data(data);
->>>>> +	irq_hw_number_t hwirq = data->hwirq;
->>>>> +
->>>>> +	ks_pcie_app_writel(ks_pcie, IRQ_ENABLE_SET(hwirq), INTx_EN);
->>>>> +	irq_chip_enable_parent(data);
->>>>>  }
->>>>>  
->>>>> -static void ks_pcie_unmask_legacy_irq(struct irq_data *d)
->>>>> +void ks_pcie_irq_disable(struct irq_data *data)
->>>>>  {
->>>>> +	struct keystone_pcie *ks_pcie = irq_data_get_irq_chip_data(data);
->>>>> +	irq_hw_number_t hwirq = data->hwirq;
->>>>> +
->>>>> +	ks_pcie_app_writel(ks_pcie, IRQ_ENABLE_CLR(hwirq), INTx_EN);
->>>>> +	irq_chip_disable_parent(data);
->>>>>  }
->>>>>  
->>>>>  static struct irq_chip ks_pcie_legacy_irq_chip = {
->>>>> -	.name = "Keystone-PCI-Legacy-IRQ",
->>>>> -	.irq_ack = ks_pcie_ack_legacy_irq,
->>>>> -	.irq_mask = ks_pcie_mask_legacy_irq,
->>>>> -	.irq_unmask = ks_pcie_unmask_legacy_irq,
->>>>> +	.name			= "Keystone-PCI-Legacy-IRQ",
->>>>> +	.irq_enable		= ks_pcie_irq_enable,
->>>>> +	.irq_disable		= ks_pcie_irq_disable,
->>>>> +	.irq_eoi		= ks_pcie_irq_eoi,
->>>>> +	.irq_mask		= irq_chip_mask_parent,
->>>>> +	.irq_unmask		= irq_chip_unmask_parent,
->>>>> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
->>>>> +	.irq_set_type		= irq_chip_set_type_parent,
->>>>> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
->>>>>  };
->>>>>  
->>>>> -static int ks_pcie_init_legacy_irq_map(struct irq_domain *d,
->>>>> -				       unsigned int irq,
->>>>> -				       irq_hw_number_t hw_irq)
->>>>> +static int ks_pcie_legacy_irq_domain_alloc(struct irq_domain *domain,
->>>>> +					   unsigned int virq,
->>>>> +					   unsigned int nr_irqs, void *data)
->>>>>  {
->>>>> -	irq_set_chip_and_handler(irq, &ks_pcie_legacy_irq_chip,
->>>>> -				 handle_level_irq);
->>>>> -	irq_set_chip_data(irq, d->host_data);
->>>>> +	struct keystone_pcie *ks_pcie = domain->host_data;
->>>>> +	struct device_node *np = ks_pcie->legacy_intc_np;
->>>>> +	struct irq_fwspec parent_fwspec, *fwspec = data;
->>>>> +	struct of_phandle_args out_irq;
->>>>> +	int ret, i;
->>>>> +
->>>>> +	if (nr_irqs != 1)
->>>>> +		return -EINVAL;
->>>>> +
->>>>> +	ret = of_irq_parse_one(np, fwspec->param[0], &out_irq);
->>>>> +	if (ret < 0) {
->>>>> +		pr_err("Failed to parse interrupt node\n");
->>>>> +		return ret;
->>>>> +	}
->>>
->>> What it this trying to do? Fishing out the interrupts from DT based on
->>> the legacy pin? This looks at best obscure. I wonder why you don't do
->>> that at probe time instead. Anyway, this requires documenting.
->>
->> The device-tree of PCIe node looks something like below.
->>
->> interrupt-map = <0 0 0 1 &pcie_intc0 0 IRQ_TYPE_EDGE_RISING>, /* INT A */
->> 		<0 0 0 2 &pcie_intc0 1 IRQ_TYPE_EDGE_RISING>, /* INT B */
->> 		<0 0 0 3 &pcie_intc0 2 IRQ_TYPE_EDGE_RISING>, /* INT C */
->> 		<0 0 0 4 &pcie_intc0 3 IRQ_TYPE_EDGE_RISING>; /* INT D */
->> pcie_intc0: legacy-interrupt-controller {
->> 	interrupt-controller;
->> 	#interrupt-cells = <2>;
->> 	interrupt-parent = <&gic>;
->> 	interrupts = <GIC_SPI 48 IRQ_TYPE_EDGE_RISING>,
->> 		     <GIC_SPI 49 IRQ_TYPE_EDGE_RISING>,
->> 		     <GIC_SPI 50 IRQ_TYPE_EDGE_RISING>,
->> 		     <GIC_SPI 51 IRQ_TYPE_EDGE_RISING>;
->> };
->>
->> INTA corresponds to HWIRQ '0' of the hierarchy irq domain we create in this
->> driver which in turn corresponds to GIC_SPI '48' of GIC.
->>
->> We could create an array of parent_fwspec for each of the four interrupt lines
->> in legacy-interrupt-controller during probe and use it directly here while
->> invoking irq_domain_alloc_irqs_parent. I think you want me to do that instead
->> of using of_irq_parse_one here?
-> 
-> Up to you. I don't mind either way, but it is the lack of
-> documentation that annoys me the most here.
+On 03/13/2019 12:30 PM, Naga Sureshkumar Relli wrote:
+> Hi,
+>=20
+> =A0
+>=20
+> Currently I am facing an issue with is25wp256d part.
+>=20
+>  1. With u-boot the data integrity is working(erase, write, read and veri=
+fy)
+>     with out any issues
+>  2. Don=92t probe the qspi at u-boot, and boot Linux and do data integrit=
+y
+>     (erase, write, read and verify) =A0and verification done successfully=
+.
+>  3. At u-boot, do sf probe and after booting Linux, check for data integr=
+ity
+>=20
+> =A0=A0=A0=A0=A0 (erase, write, read and verify) and verify is failing.
+>=20
+> And here are my observations.
+>=20
+> When we do sf probe at u-boot, as per the device size, u-boot is changing
+>=20
+> The flash device addressing mode from 3 byte to 4 byte
+>=20
+> =A0
+>=20
+> But Linux spi-nor frame work is using 3 byte commands with 3 Byte address=
+ing(because
+>=20
+> Of wrong sfdp information from the is25wp256d part). Hence data verificat=
+ion is failing.
+>=20
+> i.e. sfdp information is saying that it supports only 3-Byte addressing.
+>=20
+> that means, sfdp table for is25wp256d is wrong.
+>=20
 
-Okay, I'll add a comment before invoking of_irq_parse_one.
-> 
-> The more worrying part is that you are using an EDGE signalling in
-> these bindings, and that's wrong. PCI legacy interrupts are level,
-> always.
+I couldn't find the sfdp table described in the datasheet. I would like to =
+check
+if bfpt is not entirely wrong. Can you please hexdump the entire sfdp table=
+?
 
-Agreed. But the HW uses pulse signal whenever it sees an Assert_Intx message.
-> 
-> [...]
-> 
->>> From the DT binding:
->>>
->>> pcie_intc: Interrupt controller device node for Legacy IRQ chip
->>>         interrupt-cells: should be set to 1
->>>
->>> So why do we have 2 cells here?
->>
->> With '1' cells, it's not possible to specify irq trigger type. DT
->> binding has to be fixed. I'll fix this in the next revision of the
->> patch series.
-> 
-> As I said above, this is wrong. Legacy interrupts are always level, by
-> definition. Why are you making them edge-triggered
-> 
->>>
->>>>> +
->>>>> +		if (fwspec->param[0] >= PCI_NUM_INTX)
->>>>> +			return -EINVAL;
->>>
->>> Most of the OF code assumes that the pin number describing the legacy
->>> interrupt is 1-based, while you obviously treat it as 0-based. How does
->>> it work?
->>
->> INTA corresponds to '0' of the hierarchy interrupt domain (using
->> interrupt-map).
-> 
-> I'm not disputing this. It is more that the DT code does number the
-> pin from 1, if memory serves well. Can you please verify this (see
-> of_irq_parse_pci).
+> =A0
+>=20
+> Here are the steps that I am running.
+>=20
+> Write data using u-boot =A0like below
+>=20
+> 1. sf probe 0 0 0
+>=20
+> 2. mw.b 0x100000 11 0x100
+>=20
+> 3. sf write 0x100000 0x0 0x100
+>=20
+> 4. sf read 0x200000 0x0 0x100
+>=20
+> 5. md.b 0x200000 0x100
+>=20
+> 00200000: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 00200010: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 00200020: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 00200030: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 00200040: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 00200050: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 00200060: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 00200070: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 00200080: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 00200090: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 002000a0: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 002000b0: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 002000c0: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 002000d0: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 002000e0: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> 002000f0: 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11=A0=A0=A0 ......=
+..........
+>=20
+> And in Linux just try reading the data,
+>=20
+> root# mtd_debug read /dev/mtd0 0x0 0x100 test.bin
+>=20
+> root#hexdump -C -n 50 test.bin
+>=20
+> 0000000 ffff ffff =A01111 1111 1111 1111 1111 1111
+>=20
+> 0000010 1111 1111 1111 1111 1111 1111 1111
+>=20
+> *
+>=20
+> 0000100
+>=20
+> =A0
+>=20
+> I did the below change in spi-nor.c
+>=20
+> iff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+>=20
+> index 4216ce0..f8603ff 100644
+>=20
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+>=20
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+>=20
+> @@ -2890,6 +2890,11 @@ static int spi_nor_init_params(struct spi_nor *nor=
+,
+>=20
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 nor=
+->addr_width =3D 0;
+>=20
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 nor=
+->mtd.erasesize =3D 0;
+>=20
+> =A0 =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0} else {
+>=20
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if ((=
+JEDEC_MFR(info) =3D=3D SNOR_MFR_ISSI) &&
+Does all issi flashes have this problem?
 
-Yes it does number from '1'. However I use interrupt-map property to map from
-legacy interrupt pin to a interrupt number of the legacy interrupt controller
-which starts from '0'.
-> 
->>>
->>>>> +
->>>>> +		*hwirq = fwspec->param[0];
->>>>> +		*type = fwspec->param[1];
->>>
->>> As far as I remember, PCI legacy interrupts are level triggered, so
->>> there should be no need to advertise the trigger (which is consistent
->>> with the way the binding is written).
->>
->> It is pulse triggered at subsystem level. Quoting the TRM
->> "The interrupt request signal at the PCIe SS boundary is a pulse signal that is
->> triggered each time an assert interrupt message is received." The PCIe
->> subsystem also has a level signal (interrupt pending signal) but the interrupt
->> request signal is the one that is connected to GIC.
-> 
-> This looks completely wrong. MSIs are always edge, and legacy always
-> level, end of story. If your HW is any different, then it doesn't seem
-> to be compliant with PCI.
+>=20
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 params->size >=A0 OFFSET_16_MB) {
+>=20
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 nor->addr_width =3D 4;
+>=20
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 set_4byte(nor, info, 1);
+>=20
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
+>=20
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mem=
+cpy(params, &sfdp_params, sizeof(*params));
+>=20
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
+>=20
+> =A0=A0=A0=A0=A0=A0=A0 }
+>=20
+> Any further suggestions?
 
-Agree that Legacy interrupts ought to be level-triggered. I checked this with
-HW team and I've copy-pasted the response.
+We should implement this as a post_bfpt fixup hook.
 
-"The legacy interrupts from the PCIe controller are still level. The PCIe
-controller will hold the legacy interrupt lines high until a de-assert message
-is sent back. The pulse interrupt is only to send the interrupt from the PCIe
-sub-system to the SoC interrupt controller. This should not impact the
-operation of the legacy interrupt on the PCIe side."
+>=20
+> I have gone through https://lkml.org/lkml/2018/11/14/599.
+>=20
+> But I didn=92t see any further mails after that.
 
-Looks like the interrupts are propagated multiple levels and only the last
-level to the interrupt controller is pulse.
+Sorry, I forgot about it :(
 
-Thanks
-Kishon
+Cheers,
+ta
