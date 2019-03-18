@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AB3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F405C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFF621738
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11112083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901423;
-	bh=mweR0CGlG4MLqD0x7Hx07+cPyhF0kODykpoasnof+jo=;
+	s=default; t=1552901425;
+	bh=VfOIRlScPlw+U+QJlD6irIGQkWMMIXaRm61RkhSsQgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LR8zrwTt6n72tXsgNG1lP7YjWQIcMkDbk/WLyAtlaImasROMX0klR/32bWPUYxU9E
-	 YfXhR8APTgo+bXodBHQLposoyNMx09jw1/iUml7OBWQqclND151YVhuTqNRT0HzT4o
-	 FIKbtxG5icEpXpZHEiRwZRG8XCeeyWPPXMUNrRXY=
+	b=2B6Uhv9og+bG7ceB6HcgLX7eGZHjwBcsWI1aGSBSvbJ5PnXdUfM/J3wDPycjHdakK
+	 FM2My5xpdVSc/wMtiOzfxiEcVMYiPuYeWoM3IbKZP53kQTmwFDp25rMscs+UJ73Ha9
+	 x5AEc/3b8/9yqCL/WijxZPcxGUhmua2lNF/Be0yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfCRJaW (ORCPT
+        id S1728393AbfCRJaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37338 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:30:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbfCRJaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:30:20 -0400
+        id S1728025AbfCRJaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:30:22 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CB952075C;
-        Mon, 18 Mar 2019 09:30:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D301D2083D;
+        Mon, 18 Mar 2019 09:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901419;
-        bh=mweR0CGlG4MLqD0x7Hx07+cPyhF0kODykpoasnof+jo=;
+        s=default; t=1552901422;
+        bh=VfOIRlScPlw+U+QJlD6irIGQkWMMIXaRm61RkhSsQgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EoPtWfO7+qQ5UvtXbqbirKVvCMZ7ksEo1KSKQAHLOUWRXb6C9yMS/jFGOmzAU1iaZ
-         NneUZ9XSY3Y7sKLB0uNA0Wj0b3h0N2bFZB49JOjlrXr+fmk25hY3oTWndo8X3nvZiF
-         iHDmYU3bz/a+z9SaduvltMcjGcUbbVjOG9+GVdIE=
+        b=Hme4MGhJ2Ifb9iKVPKFkduLbidwbQ0ZlFg+gYbSvzqIP3nV3UC71VF1Q2rp1CpIEi
+         V99/3kKeldoYSxlVNwE0QLH92PiXyJKo0s1xHv5aPe5jDaoeScyRNPjYyyTM4JlsSi
+         AC+nABoznTI6JsjtStps0YeixY63sPYwPIP9VcLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH 4.20 38/52] missing barriers in some of unix_sock ->addr and ->path accesses
-Date:   Mon, 18 Mar 2019 10:25:25 +0100
-Message-Id: <20190318083847.777178513@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 4.20 39/52] f2fs: wait on atomic writes to count F2FS_CP_WB_DATA
+Date:   Mon, 18 Mar 2019 10:25:26 +0100
+Message-Id: <20190318083847.881394513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083843.398913295@linuxfoundation.org>
 References: <20190318083843.398913295@linuxfoundation.org>
@@ -66,233 +64,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit ae3b564179bfd06f32d051b9e5d72ce4b2a07c37 ]
+commit 31867b23d7d1ee3535136c6a410a6cf56f666bfc upstream.
 
-Several u->addr and u->path users are not holding any locks in
-common with unix_bind().  unix_state_lock() is useless for those
-purposes.
+Otherwise, we can get wrong counts incurring checkpoint hang.
 
-u->addr is assign-once and *(u->addr) is fully set up by the time
-we set u->addr (all under unix_table_lock).  u->path is also
-set in the same critical area, also before setting u->addr, and
-any unix_sock with ->path filled will have non-NULL ->addr.
+IO_W (CP:  -24, Data:   24, Flush: (   0    0    1), Discard: (   0    0))
 
-So setting ->addr with smp_store_release() is all we need for those
-"lockless" users - just have them fetch ->addr with smp_load_acquire()
-and don't even bother looking at ->path if they see NULL ->addr.
+Thread A                        Thread B
+- f2fs_write_data_pages
+ -  __write_data_page
+  - f2fs_submit_page_write
+   - inc_page_count(F2FS_WB_DATA)
+     type is F2FS_WB_DATA due to file is non-atomic one
+- f2fs_ioc_start_atomic_write
+ - set_inode_flag(FI_ATOMIC_FILE)
+                                - f2fs_write_end_io
+                                 - dec_page_count(F2FS_WB_CP_DATA)
+                                   type is F2FS_WB_DATA due to file becomes
+                                   atomic one
 
-Users of ->addr and ->path fall into several classes now:
-    1) ones that do smp_load_acquire(u->addr) and access *(u->addr)
-and u->path only if smp_load_acquire() has returned non-NULL.
-    2) places holding unix_table_lock.  These are guaranteed that
-*(u->addr) is seen fully initialized.  If unix_sock is in one of the
-"bound" chains, so's ->path.
-    3) unix_sock_destructor() using ->addr is safe.  All places
-that set u->addr are guaranteed to have seen all stores *(u->addr)
-while holding a reference to u and unix_sock_destructor() is called
-when (atomic) refcount hits zero.
-    4) unix_release_sock() using ->path is safe.  unix_bind()
-is serialized wrt unix_release() (normally - by struct file
-refcount), and for the instances that had ->path set by unix_bind()
-unix_release_sock() comes from unix_release(), so they are fine.
-Instances that had it set in unix_stream_connect() either end up
-attached to a socket (in unix_accept()), in which case the call
-chain to unix_release_sock() and serialization are the same as in
-the previous case, or they never get accept'ed and unix_release_sock()
-is called when the listener is shut down and its queue gets purged.
-In that case the listener's queue lock provides the barriers needed -
-unix_stream_connect() shoves our unix_sock into listener's queue
-under that lock right after having set ->path and eventual
-unix_release_sock() caller picks them from that queue under the
-same lock right before calling unix_release_sock().
-    5) unix_find_other() use of ->path is pointless, but safe -
-it happens with successful lookup by (abstract) name, so ->path.dentry
-is guaranteed to be NULL there.
-
-earlier-variant-reviewed-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/unix/af_unix.c   |   57 +++++++++++++++++++++++++++++----------------------
- net/unix/diag.c      |    3 +-
- security/lsm_audit.c |   10 +++++---
- 3 files changed, 41 insertions(+), 29 deletions(-)
 
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -890,7 +890,7 @@ retry:
- 	addr->hash ^= sk->sk_type;
+---
+ fs/f2fs/file.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1749,10 +1749,12 @@ static int f2fs_ioc_start_atomic_write(s
  
- 	__unix_remove_socket(sk);
--	u->addr = addr;
-+	smp_store_release(&u->addr, addr);
- 	__unix_insert_socket(&unix_socket_table[addr->hash], sk);
- 	spin_unlock(&unix_table_lock);
- 	err = 0;
-@@ -1060,7 +1060,7 @@ static int unix_bind(struct socket *sock
+ 	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
  
- 	err = 0;
- 	__unix_remove_socket(sk);
--	u->addr = addr;
-+	smp_store_release(&u->addr, addr);
- 	__unix_insert_socket(list, sk);
- 
- out_unlock:
-@@ -1331,15 +1331,29 @@ restart:
- 	RCU_INIT_POINTER(newsk->sk_wq, &newu->peer_wq);
- 	otheru = unix_sk(other);
- 
--	/* copy address information from listening to new sock*/
--	if (otheru->addr) {
--		refcount_inc(&otheru->addr->refcnt);
--		newu->addr = otheru->addr;
--	}
-+	/* copy address information from listening to new sock
-+	 *
-+	 * The contents of *(otheru->addr) and otheru->path
-+	 * are seen fully set up here, since we have found
-+	 * otheru in hash under unix_table_lock.  Insertion
-+	 * into the hash chain we'd found it in had been done
-+	 * in an earlier critical area protected by unix_table_lock,
-+	 * the same one where we'd set *(otheru->addr) contents,
-+	 * as well as otheru->path and otheru->addr itself.
-+	 *
-+	 * Using smp_store_release() here to set newu->addr
-+	 * is enough to make those stores, as well as stores
-+	 * to newu->path visible to anyone who gets newu->addr
-+	 * by smp_load_acquire().  IOW, the same warranties
-+	 * as for unix_sock instances bound in unix_bind() or
-+	 * in unix_autobind().
-+	 */
- 	if (otheru->path.dentry) {
- 		path_get(&otheru->path);
- 		newu->path = otheru->path;
- 	}
-+	refcount_inc(&otheru->addr->refcnt);
-+	smp_store_release(&newu->addr, otheru->addr);
- 
- 	/* Set credentials */
- 	copy_peercred(sk, other);
-@@ -1453,7 +1467,7 @@ out:
- static int unix_getname(struct socket *sock, struct sockaddr *uaddr, int peer)
- {
- 	struct sock *sk = sock->sk;
--	struct unix_sock *u;
-+	struct unix_address *addr;
- 	DECLARE_SOCKADDR(struct sockaddr_un *, sunaddr, uaddr);
- 	int err = 0;
- 
-@@ -1468,19 +1482,15 @@ static int unix_getname(struct socket *s
- 		sock_hold(sk);
- 	}
- 
--	u = unix_sk(sk);
--	unix_state_lock(sk);
--	if (!u->addr) {
-+	addr = smp_load_acquire(&unix_sk(sk)->addr);
-+	if (!addr) {
- 		sunaddr->sun_family = AF_UNIX;
- 		sunaddr->sun_path[0] = 0;
- 		err = sizeof(short);
- 	} else {
--		struct unix_address *addr = u->addr;
+-	if (!get_dirty_pages(inode))
+-		goto skip_flush;
 -
- 		err = addr->len;
- 		memcpy(sunaddr, addr->name, addr->len);
+-	f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
++	/*
++	 * Should wait end_io to count F2FS_WB_CP_DATA correctly by
++	 * f2fs_is_atomic_file.
++	 */
++	if (get_dirty_pages(inode))
++		f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
+ 		"Unexpected flush for atomic writes: ino=%lu, npages=%u",
+ 					inode->i_ino, get_dirty_pages(inode));
+ 	ret = filemap_write_and_wait_range(inode->i_mapping, 0, LLONG_MAX);
+@@ -1760,7 +1762,7 @@ static int f2fs_ioc_start_atomic_write(s
+ 		up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 		goto out;
  	}
--	unix_state_unlock(sk);
- 	sock_put(sk);
- out:
- 	return err;
-@@ -2073,11 +2083,11 @@ static int unix_seqpacket_recvmsg(struct
- 
- static void unix_copy_addr(struct msghdr *msg, struct sock *sk)
- {
--	struct unix_sock *u = unix_sk(sk);
-+	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
- 
--	if (u->addr) {
--		msg->msg_namelen = u->addr->len;
--		memcpy(msg->msg_name, u->addr->name, u->addr->len);
-+	if (addr) {
-+		msg->msg_namelen = addr->len;
-+		memcpy(msg->msg_name, addr->name, addr->len);
- 	}
- }
- 
-@@ -2581,15 +2591,14 @@ static int unix_open_file(struct sock *s
- 	if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
- 		return -EPERM;
- 
--	unix_state_lock(sk);
-+	if (!smp_load_acquire(&unix_sk(sk)->addr))
-+		return -ENOENT;
+-skip_flush:
 +
- 	path = unix_sk(sk)->path;
--	if (!path.dentry) {
--		unix_state_unlock(sk);
-+	if (!path.dentry)
- 		return -ENOENT;
--	}
- 
- 	path_get(&path);
--	unix_state_unlock(sk);
- 
- 	fd = get_unused_fd_flags(O_CLOEXEC);
- 	if (fd < 0)
-@@ -2830,7 +2839,7 @@ static int unix_seq_show(struct seq_file
- 			(s->sk_state == TCP_ESTABLISHED ? SS_CONNECTING : SS_DISCONNECTING),
- 			sock_i_ino(s));
- 
--		if (u->addr) {
-+		if (u->addr) {	// under unix_table_lock here
- 			int i, len;
- 			seq_putc(seq, ' ');
- 
---- a/net/unix/diag.c
-+++ b/net/unix/diag.c
-@@ -10,7 +10,8 @@
- 
- static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
- {
--	struct unix_address *addr = unix_sk(sk)->addr;
-+	/* might or might not have unix_table_lock */
-+	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
- 
- 	if (!addr)
- 		return 0;
---- a/security/lsm_audit.c
-+++ b/security/lsm_audit.c
-@@ -321,6 +321,7 @@ static void dump_common_audit_data(struc
- 		if (a->u.net->sk) {
- 			struct sock *sk = a->u.net->sk;
- 			struct unix_sock *u;
-+			struct unix_address *addr;
- 			int len = 0;
- 			char *p = NULL;
- 
-@@ -351,14 +352,15 @@ static void dump_common_audit_data(struc
- #endif
- 			case AF_UNIX:
- 				u = unix_sk(sk);
-+				addr = smp_load_acquire(&u->addr);
-+				if (!addr)
-+					break;
- 				if (u->path.dentry) {
- 					audit_log_d_path(ab, " path=", &u->path);
- 					break;
- 				}
--				if (!u->addr)
--					break;
--				len = u->addr->len-sizeof(short);
--				p = &u->addr->name->sun_path[0];
-+				len = addr->len-sizeof(short);
-+				p = &addr->name->sun_path[0];
- 				audit_log_format(ab, " path=");
- 				if (*p)
- 					audit_log_untrustedstring(ab, p);
+ 	set_inode_flag(inode, FI_ATOMIC_FILE);
+ 	clear_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
+ 	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
 
 
