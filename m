@@ -2,153 +2,127 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46ACC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D4BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F372085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 981D52085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfCRO0c (ORCPT
+        id S1727711AbfCRO2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:26:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60974 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727709AbfCRO0b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:26:31 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IEPoKh089038
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:26:30 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ractyrtbv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 10:26:29 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 18 Mar 2019 14:26:28 -0000
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 18 Mar 2019 14:26:24 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2IEQOns18219232
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Mar 2019 14:26:24 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8F20B2065;
-        Mon, 18 Mar 2019 14:26:23 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CBA4FB2064;
-        Mon, 18 Mar 2019 14:26:23 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 18 Mar 2019 14:26:23 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 44E8216C340C; Mon, 18 Mar 2019 07:27:12 -0700 (PDT)
-Date:   Mon, 18 Mar 2019 07:27:12 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Eial Czerwacki <eial@scalemp.com>
-Cc:     Tejun Heo <tj@kernel.org>, Barret Rhoden <brho@google.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
-        Shai Fultheim <shai@scalemp.com>, Oren Twaig <oren@scalemp.com>
-Subject: Re: [PATCH] percpu/module resevation: change resevation size iff
- X86_VSMP is set
-Reply-To: paulmck@linux.ibm.com
-References: <c72402f2-967e-cd56-99d8-9139c9e7f267@google.com>
- <010001693b404440-248fa987-624c-4587-940b-56e2ed4226d9-000000@email.amazonses.com>
- <85726648-82f3-6b6b-a749-03c4159e78f3@google.com>
- <20190313202640.GJ50184@devbig004.ftw2.facebook.com>
- <20190313212255.GY13351@linux.ibm.com>
- <20190313212912.GK50184@devbig004.ftw2.facebook.com>
- <20190313231155.GC13351@linux.ibm.com>
- <20190314173619.GL50184@devbig004.ftw2.facebook.com>
- <20190314221943.GQ4102@linux.ibm.com>
- <f44f1d5f-67b4-6ffd-80c1-28c48828f85b@scalemp.com>
+        Mon, 18 Mar 2019 10:28:32 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:49352 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727183AbfCRO2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 10:28:31 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 0837420846;
+        Mon, 18 Mar 2019 15:28:29 +0100 (CET)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id E04C02082C;
+        Mon, 18 Mar 2019 15:28:28 +0100 (CET)
+Subject: [PATCH v3] PCI: qcom: Use default config space read function
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
+ <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
+ <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
+ <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
+ <7d3d788a-d6a3-a70b-adab-6c65771cacc4@free.fr>
+ <3c76613e-e60d-94b8-dd6f-b8f4e1928263@linaro.org>
+ <2f901228-52db-7661-8257-ca8fd2ff2a46@free.fr>
+ <29664b43-535c-c4b1-a93d-18f49687f929@linaro.org>
+ <b0e0dc68-4be9-1b0f-7528-fb7d143fea2b@free.fr>
+ <9c5a7620-e9ed-82d6-0708-34fe33e39030@linaro.org>
+ <29d33e81-fe8d-7fd9-843d-cc53ea6c9586@free.fr>
+Message-ID: <a53911a5-198a-5073-59cf-a61ba067bfd8@free.fr>
+Date:   Mon, 18 Mar 2019 15:28:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f44f1d5f-67b4-6ffd-80c1-28c48828f85b@scalemp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19031814-0060-0000-0000-0000031E11B4
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010780; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01176157; UDB=6.00615167; IPR=6.00956842;
- MB=3.00026032; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-18 14:26:26
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031814-0061-0000-0000-000048A60B3A
-Message-Id: <20190318142712.GF4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-18_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903180107
+In-Reply-To: <29d33e81-fe8d-7fd9-843d-cc53ea6c9586@free.fr>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Mar 18 15:28:29 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 10:18:48AM +0200, Eial Czerwacki wrote:
-> Greetings Paul,
-> 
-> On 3/15/19 12:19 AM, Paul E. McKenney wrote:
-> > On Thu, Mar 14, 2019 at 10:36:19AM -0700, Tejun Heo wrote:
-> >> On Wed, Mar 13, 2019 at 04:11:55PM -0700, Paul E. McKenney wrote:
-> >>> commit 34f67df09cc0c6bf082a7cfca435373caeeb8d82
-> >>> Author: Paul E. McKenney <paulmck@linux.ibm.com>
-> >>> Date:   Wed Mar 13 16:06:22 2019 -0700
-> >>>
-> >>>     srcu: Forbid DEFINE{,_STATIC}_SRCU() from modules
-> >>>     
-> >>>     Adding DEFINE_SRCU() or DEFINE_STATIC_SRCU() to a loadable module
-> >>>     requires that the size of the reserved region be increased, which is
-> >>>     not something we want to be doing all that often.  Instead, loadable
-> >>>     modules should define an srcu_struct and invoke init_srcu_struct()
-> >>>     from their module_init function and cleanup_srcu_struct() from their
-> >>>     module_exit function.  Note that modules using call_srcu() will also
-> >>>     need to invoke srcu_barrier() from their module_exit function.
-> >>>     
-> >>>     This commit enforces this advice by refusing to define DEFINE_SRCU()
-> >>>     and DEFINE_STATIC_SRCU() within loadable modules.
-> >>>     
-> >>>     Suggested-by: Barret Rhoden <brho@google.com>
-> >>>     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> >>
-> >> Looks-great-to-me-by: Tejun Heo <tj@kernel.org>
-> > 
-> > Applied.  ;-)
-> > 
-> > 							Thanx, Paul
-> > 
-> >> Thanks. :)
-> >>
-> >> -- 
-> >> tejun
-> >>
-> > 
-> > 
-> 
-> when can this patch be found in the kernel mainline git repo? I'd like
-> to test and see if the patch that started this mail thread still occurs.
+We don't need to fudge the device class in qcom_pcie_rd_own_conf()
+because dw_pcie_setup_rc() already does the right thing:
 
-Thank you for your interest!
+	/* Program correct class for RC */
+	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
 
-It is a3f5f4fae725 ("srcu: Forbid DEFINE{,_STATIC}_SRCU() from modules")
-in my -rcu tree.  If all goes well, I will submit it to the v5.2 merge
-window.  I do not expect it to be submitted to -stable.
+However, the above has no effect on 8064, thus a fixup is required.
 
-And -rcu is here:
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+Changes from v2 to v3: Add fixup for 8064 quirk
+Changes from v1 to v2: Completely drop qcom_pcie_rd_own_conf
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
+Stanimir, could you test this submission and send a Tested-by if it works?
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 23 ++++++-----------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
 
-							Thanx, Paul
-
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index d185ea5fe996..6fefff106b87 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1129,25 +1129,8 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+ 	return ret;
+ }
+ 
+-static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+-				 u32 *val)
+-{
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-
+-	/* the device class is not reported correctly from the register */
+-	if (where == PCI_CLASS_REVISION && size == 4) {
+-		*val = readl(pci->dbi_base + PCI_CLASS_REVISION);
+-		*val &= 0xff;	/* keep revision id */
+-		*val |= PCI_CLASS_BRIDGE_PCI << 16;
+-		return PCIBIOS_SUCCESSFUL;
+-	}
+-
+-	return dw_pcie_read(pci->dbi_base + where, size, val);
+-}
+-
+ static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+ 	.host_init = qcom_pcie_host_init,
+-	.rd_own_conf = qcom_pcie_rd_own_conf,
+ };
+ 
+ /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
+@@ -1299,6 +1282,12 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static void qcom_fixup_class(struct pci_dev *dev)
++{
++	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class); // 8064
++
+ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
+ 	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
+-- 
+2.17.1
