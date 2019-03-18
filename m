@@ -2,269 +2,114 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8393C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8EAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E822214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:40:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nA+f4fl/"
+	by mail.kernel.org (Postfix) with ESMTP id F29472075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552902086;
+	bh=CNRdJesMUkkC2LY4GqMPLCKRncWFesSSQaR6UYqpwm8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=edqJzEQdLN4l7MJfjTt2f2kePJKb162uibqHeJbxMn5KIEIdAI3dnq4gouBenDjkF
+	 GcZQb4MwmC9lW9UXK2wSuIDuPGsFojTEZbFRzTGQYXR+TpFTEpnvARj59tBWeLwFI7
+	 9YOhwAXAJki2d4S42DL06tdpwwp2kHouMVu/mEHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387590AbfCRJk4 (ORCPT
+        id S1728473AbfCRJeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:40:56 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:40611 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbfCRJea (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:30 -0400
-Received: by mail-ua1-f68.google.com with SMTP id b8so3418224uaq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 02:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/2ATsNhSt5TrNVesCNg1T9hqD0EtXNi7xhAlDxDKVH4=;
-        b=nA+f4fl/6muzsU9wfei4x1eeLqLuO7l3w1m4iiEDmtlI5DUczKnuslLDsE3NEo9cDT
-         5acqO/bgyFYd8PBojNPcQEBlmtad+krRAX7eWviwgYS4mOjr1d+IIJC/msTFSP0WcqGO
-         fMcpWW+t2WZNOU/XkX8tGa/CR0KpKxlM0jM6ST+/4rlXteK17ZcTo/0JSuE1Oe80O2B1
-         M2weKvxdyktIRO+t4WBuHaSpIh2ejNvUkSiWaLO/X/pgQB5kZ26hYkttmjNKD2PE0t4H
-         otXggHqhEZur72plWiLSTRBJPSoaFwEfIN2cv5T0NeZqDxx1hLqbeusV9Lhz6URjD8y9
-         Kxig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/2ATsNhSt5TrNVesCNg1T9hqD0EtXNi7xhAlDxDKVH4=;
-        b=Z7B83YN8HkxsNVfT7ifCpPSEXB50xX1Yv8EPQJWWZ4MScRjFbdaqC4vfXHmmYZ9PQF
-         5g/t/FqewPGO8LeMRcNorF2ARvn7sR7Wv1OWvTJhaYIFgguOHzoxps/DPvhdbrS67GaY
-         h9TT++Inaz8Iwm4IfLmcTw3kReuqpDDo9+qzIVO6dmLiaxFllGkXxfZBxbIjFVdNoRtC
-         YV01wWn4Q0QUtsLMDwTRFilR9IPSrSxdYpQIFswoQqK0OvYmIv70KRhyzQOsPnfAeKXG
-         DaMoEK4SBvUA4xOrETNpqY2e+o7KwjXIkLrQYqnmM+wNUcOjpIy88iPnUBeZn5KQe5Vr
-         nfgQ==
-X-Gm-Message-State: APjAAAWeMRLyRrepPiMOh/WnPR+q+vkbWs5BwZMhDAyPkG8dgf06PfiO
-        V5F5qj2X+ZfVXbAYaLwRPYmqUjNtF6Gr0t8oKeOIOw==
-X-Google-Smtp-Source: APXvYqyP/ftteQHYX/fD+nQQ6YNJWgJQMRujb5JD7w31Kjie02h+5EuCGvYvJBvMbGLzvafy3m0ajVp2EAKUZ/AYsig=
-X-Received: by 2002:ab0:4812:: with SMTP id b18mr5853944uad.24.1552901668679;
- Mon, 18 Mar 2019 02:34:28 -0700 (PDT)
+        Mon, 18 Mar 2019 05:34:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726982AbfCRJeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:34:04 -0400
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF6DC2087C;
+        Mon, 18 Mar 2019 09:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552901643;
+        bh=CNRdJesMUkkC2LY4GqMPLCKRncWFesSSQaR6UYqpwm8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z2Lva46mPINGaz9VoIL4/CjcxBHREBj9EJP6UT819zEtAZICYoYZ8znHxDMP7UTbm
+         9fSgD26TEV49nz1ryKN4TBA99qZe22CK9uw8Asm/Id4v/jHnqdxF1Tzg+cmeZINnoK
+         eDEDwhakCSOsb2ekAGRVSzq1MGFPpZDk9RyD9Zgk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Ming Shuo Chiu <chiu@endlessm.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 43/52] ALSA: hda/realtek: Enable audio jacks of ASUS UX362FA with ALC294
+Date:   Mon, 18 Mar 2019 10:25:40 +0100
+Message-Id: <20190318084018.604227408@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
+References: <20190318084013.532280682@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20190215192033.24203-1-faiz_abbas@ti.com> <20190215192033.24203-2-faiz_abbas@ti.com>
-In-Reply-To: <20190215192033.24203-2-faiz_abbas@ti.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 18 Mar 2019 10:33:52 +0100
-Message-ID: <CAPDyKFqN4s1CZa9z5C3YzCUO01V-=Xhtao5352Pmytd-Tusv9A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
-To:     Faiz Abbas <faiz_abbas@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, Kishon <kishon@ti.com>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Arnd, Grygorii
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-On Fri, 15 Feb 2019 at 20:17, Faiz Abbas <faiz_abbas@ti.com> wrote:
->
-> sdhci.c has two bottom halves implemented. A threaded_irq for handling
-> card insert/remove operations and a tasklet for finishing mmc requests.
-> With the addition of external dma support, dmaengine APIs need to
-> terminate in non-atomic context before unmapping the dma buffers.
->
-> To facilitate this, remove the finish_tasklet and move the call of
-> sdhci_request_done() to the threaded_irq() callback. Also move the
-> interrupt result variable to sdhci_host so it can be populated from
-> anywhere inside the sdhci_irq handler.
->
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+------------------
 
-Adrian, I think it makes sense to apply this patch, even if there is
-very minor negative impact throughput wise.
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-To me, it doesn't seems like MMC/SD/SDIO has good justification for
-using tasklets, besides from the legacy point of view, of course.
-Instead, I think we should try to move all mmc hosts into using
-threaded IRQs.
+commit 8bb37a2a4d7c02affef554f5dc05f6d2e39c31f9 upstream.
 
-So, what do you think? Can you overlook the throughput drop and
-instead we can try to recover this on top with other optimizations?
+The ASUS UX362FA with ALC294 cannot detect the headset MIC and outputs
+through the internal speaker and the headphone.  This issue can be fixed
+by the quirk in the commit 4e0511067 ALSA: hda/realtek: Enable audio
+jacks of ASUS UX533FD with ALC294.
 
-Kind regards
-Uffe
+Besides, ASUS UX362FA and UX533FD have the same audio initial pin config
+values.  So, this patch replaces SND_PCI_QUIRK of UX533FD with a new
+SND_HDA_PIN_QUIRK which benefits both UX362FA and UX533FD.
 
-> ---
->  drivers/mmc/host/sdhci.c | 43 +++++++++++++++-------------------------
->  drivers/mmc/host/sdhci.h |  2 +-
->  2 files changed, 17 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index eba9bcc92ad3..20ed09b896d7 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1232,7 +1232,7 @@ static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
->
->         WARN_ON(i >= SDHCI_MAX_MRQS);
->
-> -       tasklet_schedule(&host->finish_tasklet);
-> +       host->result = IRQ_WAKE_THREAD;
->  }
->
->  static void sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
-> @@ -2705,14 +2705,6 @@ static bool sdhci_request_done(struct sdhci_host *host)
->         return false;
->  }
->
-> -static void sdhci_tasklet_finish(unsigned long param)
-> -{
-> -       struct sdhci_host *host = (struct sdhci_host *)param;
-> -
-> -       while (!sdhci_request_done(host))
-> -               ;
-> -}
-> -
->  static void sdhci_timeout_timer(struct timer_list *t)
->  {
->         struct sdhci_host *host;
-> @@ -2995,11 +2987,12 @@ static void sdhci_data_irq(struct sdhci_host *host, u32 intmask)
->
->  static irqreturn_t sdhci_irq(int irq, void *dev_id)
->  {
-> -       irqreturn_t result = IRQ_NONE;
->         struct sdhci_host *host = dev_id;
->         u32 intmask, mask, unexpected = 0;
->         int max_loops = 16;
->
-> +       host->result = IRQ_NONE;
-> +
->         spin_lock(&host->lock);
->
->         if (host->runtime_suspended && !sdhci_sdio_irq_enabled(host)) {
-> @@ -3009,7 +3002,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->
->         intmask = sdhci_readl(host, SDHCI_INT_STATUS);
->         if (!intmask || intmask == 0xffffffff) {
-> -               result = IRQ_NONE;
-> +               host->result = IRQ_NONE;
->                 goto out;
->         }
->
-> @@ -3054,7 +3047,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->
->                         host->thread_isr |= intmask & (SDHCI_INT_CARD_INSERT |
->                                                        SDHCI_INT_CARD_REMOVE);
-> -                       result = IRQ_WAKE_THREAD;
-> +                       host->result = IRQ_WAKE_THREAD;
->                 }
->
->                 if (intmask & SDHCI_INT_CMD_MASK)
-> @@ -3074,7 +3067,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->                     (host->ier & SDHCI_INT_CARD_INT)) {
->                         sdhci_enable_sdio_irq_nolock(host, false);
->                         host->thread_isr |= SDHCI_INT_CARD_INT;
-> -                       result = IRQ_WAKE_THREAD;
-> +                       host->result = IRQ_WAKE_THREAD;
->                 }
->
->                 intmask &= ~(SDHCI_INT_CARD_INSERT | SDHCI_INT_CARD_REMOVE |
-> @@ -3087,8 +3080,8 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->                         sdhci_writel(host, intmask, SDHCI_INT_STATUS);
->                 }
->  cont:
-> -               if (result == IRQ_NONE)
-> -                       result = IRQ_HANDLED;
-> +               if (host->result == IRQ_NONE)
-> +                       host->result = IRQ_HANDLED;
->
->                 intmask = sdhci_readl(host, SDHCI_INT_STATUS);
->         } while (intmask && --max_loops);
-> @@ -3101,7 +3094,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->                 sdhci_dumpregs(host);
->         }
->
-> -       return result;
-> +       return host->result;
->  }
->
->  static irqreturn_t sdhci_thread_irq(int irq, void *dev_id)
-> @@ -3131,6 +3124,12 @@ static irqreturn_t sdhci_thread_irq(int irq, void *dev_id)
->                 spin_unlock_irqrestore(&host->lock, flags);
->         }
->
-> +       if (!isr) {
-> +               do {
-> +                       isr = !sdhci_request_done(host);
-> +               } while (isr);
-> +       }
-> +
->         return isr ? IRQ_HANDLED : IRQ_NONE;
->  }
->
-> @@ -4212,12 +4211,6 @@ int __sdhci_add_host(struct sdhci_host *host)
->         struct mmc_host *mmc = host->mmc;
->         int ret;
->
-> -       /*
-> -        * Init tasklets.
-> -        */
-> -       tasklet_init(&host->finish_tasklet,
-> -               sdhci_tasklet_finish, (unsigned long)host);
-> -
->         timer_setup(&host->timer, sdhci_timeout_timer, 0);
->         timer_setup(&host->data_timer, sdhci_timeout_data_timer, 0);
->
-> @@ -4230,7 +4223,7 @@ int __sdhci_add_host(struct sdhci_host *host)
->         if (ret) {
->                 pr_err("%s: Failed to request IRQ %d: %d\n",
->                        mmc_hostname(mmc), host->irq, ret);
-> -               goto untasklet;
-> +               return ret;
->         }
->
->         ret = sdhci_led_register(host);
-> @@ -4263,8 +4256,6 @@ int __sdhci_add_host(struct sdhci_host *host)
->         sdhci_writel(host, 0, SDHCI_INT_ENABLE);
->         sdhci_writel(host, 0, SDHCI_SIGNAL_ENABLE);
->         free_irq(host->irq, host);
-> -untasklet:
-> -       tasklet_kill(&host->finish_tasklet);
->
->         return ret;
->  }
-> @@ -4326,8 +4317,6 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
->         del_timer_sync(&host->timer);
->         del_timer_sync(&host->data_timer);
->
-> -       tasklet_kill(&host->finish_tasklet);
-> -
->         if (!IS_ERR(mmc->supply.vqmmc))
->                 regulator_disable(mmc->supply.vqmmc);
->
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 6cc9a3c2ac66..624d5aa01995 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -554,7 +554,7 @@ struct sdhci_host {
->
->         unsigned int desc_sz;   /* ADMA descriptor size */
->
-> -       struct tasklet_struct finish_tasklet;   /* Tasklet structures */
-> +       irqreturn_t result;     /* Result of IRQ handler */
->
->         struct timer_list timer;        /* Timer for timeouts */
->         struct timer_list data_timer;   /* Timer for data timeouts */
-> --
-> 2.19.2
->
+Fixes: 4e051106730d ("ALSA: hda/realtek: Enable audio jacks of ASUS UX533FD with ALC294")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Ming Shuo Chiu <chiu@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/pci/hda/patch_realtek.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6692,7 +6692,6 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1043, 0x12e0, "ASUS X541SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x13b0, "ASUS Z550SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
+-	SND_PCI_QUIRK(0x1043, 0x14a1, "ASUS UX533FD", ALC294_FIXUP_ASUS_SPK),
+ 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
+ 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+@@ -7308,6 +7307,10 @@ static const struct snd_hda_pin_quirk al
+ 	SND_HDA_PIN_QUIRK(0x10ec0294, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
+ 		{0x12, 0x90a60130},
+ 		{0x17, 0x90170110},
++		{0x21, 0x03211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0294, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
++		{0x12, 0x90a60130},
++		{0x17, 0x90170110},
+ 		{0x21, 0x04211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 		ALC295_STANDARD_PINS,
+
+
