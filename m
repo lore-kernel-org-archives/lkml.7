@@ -2,162 +2,148 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4FAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329FAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A7B2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A4B2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 01:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u4mgO0BM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfCRBmV (ORCPT
+        id S1727638AbfCRBqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 21:42:21 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:62762 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfCRBmU (ORCPT
+        Sun, 17 Mar 2019 21:46:45 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:51706 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfCRBqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 21:42:20 -0400
-Received: from ALA-HCB.corp.ad.wrs.com ([147.11.189.41])
-        by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x2I1fTpb022619
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Sun, 17 Mar 2019 18:41:29 -0700 (PDT)
-Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.68]) by
- ALA-HCB.corp.ad.wrs.com ([147.11.189.41]) with mapi id 14.03.0439.000; Sun,
- 17 Mar 2019 18:41:11 -0700
-From:   "Liu, Yongxin" <Yongxin.Liu@windriver.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "pagupta@redhat.com" <pagupta@redhat.com>,
-        "Gortmaker, Paul" <Paul.Gortmaker@windriver.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Subject: RE: [PATCH RT] nvdimm: make lane acquirement RT aware
-Thread-Topic: [PATCH RT] nvdimm: make lane acquirement RT aware
-Thread-Index: AQHU1AQaa42orSwEx0mmBzBs0WZNkaYAw5wAgAAVVLCAAStcgIADmlcQgAfK3QCAA0RWUA==
-Date:   Mon, 18 Mar 2019 01:41:10 +0000
-Message-ID: <597B109EC20B76429F71A8A97770610D12A63C81@ALA-MBD.corp.ad.wrs.com>
-References: <20190306095709.23138-1-yongxin.liu@windriver.com>
- <20190307143344.ytsnbmot5tjzjhip@linutronix.de>
- <597B109EC20B76429F71A8A97770610D12A52669@ALA-MBD.corp.ad.wrs.com>
- <20190308094131.ge4wbsvz4p6xikdf@linutronix.de>
- <597B109EC20B76429F71A8A97770610D12A5643B@ALA-MBD.corp.ad.wrs.com>
- <20190315164236.rzbwe7reeprjv3um@linutronix.de>
-In-Reply-To: <20190315164236.rzbwe7reeprjv3um@linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [128.224.162.171]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 17 Mar 2019 21:46:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=02cVkekljglMdv9XutCx6KGjpwnrK1lV4p5gvuApm1s=; b=u4mgO0BMYzCruRkMt0W48unwMC
+        /L/qoukS8Ygujs5qMIWiyUKDL5iRpPnaJo41eEzL9JuC2FdJFtGxItdzSogh2II8kMD/n3chEbfJN
+        JHAd8migCduhhRWV5bVlswWAT83h2d743hvng+Tsbk2ECGVfA2F8/LjsCCSXB/lSQbgUQIgXc7GpY
+        9AibQmfE6vqIYXwmbiyIrsUTN5ZGWvq1nxJmRaB/h/KOd9cjaiY9jBD04TwVtG36xt6rzONBlh3kh
+        xa4Y7bq5sYt1JPms+rOSKhypB/w/1EoHKT7/oXxEHeQQiogtgPPOJnMOVZxac78UunpYJY1b8B6j7
+        zK6iKZEA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h5hMQ-0006D3-MF; Mon, 18 Mar 2019 01:46:43 +0000
+Subject: Re: [PATCH 00/13] Convert vfs.txt to vfs.rst
+To:     "Tobin C. Harding" <tobin@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190313040919.6937-1-tobin@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <821449c9-e1f7-caa1-ff18-0cc1cc625596@infradead.org>
+Date:   Sun, 17 Mar 2019 18:46:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190313040919.6937-1-tobin@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LWtlcm5lbC1vd25l
-ckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpsaW51eC1rZXJuZWwtDQo+IG93bmVyQHZnZXIua2Vy
-bmVsLm9yZ10gT24gQmVoYWxmIE9mIFNlYmFzdGlhbiBBbmRyemVqIFNpZXdpb3INCj4gU2VudDog
-U2F0dXJkYXksIE1hcmNoIDE2LCAyMDE5IDAwOjQzDQo+IFRvOiBMaXUsIFlvbmd4aW4NCj4gQ2M6
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXJ0LXVzZXJzQHZnZXIua2VybmVs
-Lm9yZzsNCj4gdGdseEBsaW51dHJvbml4LmRlOyByb3N0ZWR0QGdvb2RtaXMub3JnOyBkYW4uai53
-aWxsaWFtc0BpbnRlbC5jb207DQo+IHBhZ3VwdGFAcmVkaGF0LmNvbTsgR29ydG1ha2VyLCBQYXVs
-OyBsaW51eC1udmRpbW1AbGlzdHMuMDEub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUlRdIG52
-ZGltbTogbWFrZSBsYW5lIGFjcXVpcmVtZW50IFJUIGF3YXJlDQo+IA0KPiBPbiAyMDE5LTAzLTEx
-IDAwOjQ0OjU4IFsrMDAwMF0sIExpdSwgWW9uZ3hpbiB3cm90ZToNCj4gPiA+IGJ1dCB5b3Ugc3Rp
-bGwgaGF2ZSB0aGUgbmRsX2xvY2stPmxvY2sgd2hpY2ggcHJvdGVjdHMgdGhlIHJlc291cmNlLiBT
-bw0KPiBpbg0KPiA+ID4gdGhlIHVubGlrZWx5IChidXQgcG9zc2libGUgZXZlbnQpIHRoYXQgeW91
-IHN3aXRjaCBDUFVzIGFmdGVyDQo+IG9idGFpbmluZw0KPiA+ID4gdGhlIENQVSBudW1iZXIgeW91
-IGJsb2NrIG9uIHRoZSBsb2NrLiBObyBoYXJtIGlzIGRvbmUsIHJpZ2h0Pw0KPiA+DQo+ID4gVGhl
-IHJlc291cmNlICJsYW5lIiBjYW4gYmUgYWNxdWlyZWQgcmVjdXJzaXZlbHksIHNvICJuZGxfbG9j
-ay0+bG9jayIgaXMNCj4gYSBjb25kaXRpb25hbCBsb2NrLg0KPiA+DQo+ID4gbmRsX2NvdW50LT5j
-b3VudCBpcyBwZXIgQ1BVLg0KPiA+IG5kbF9sb2NrLT5sb2NrIGlzIHBlciBsYW5lLg0KPiA+DQo+
-ID4gSGVyZSBpcyBhbiBleGFtcGxlOg0KPiA+IFRocmVhZCBBICBvbiBDUFUgNSAtLT4gbmRfcmVn
-aW9uX2FjcXVpcmVfbGFuZSAtLT4gbGFuZSMgNSAtLT4gZ2V0DQo+ICJuZGxfbG9jay0+bG9jayIN
-Cj4gPiAtLT4gbmRfcmVnaW9uX2FjcXVpcmVfbGFuZSAtLT4gbGFuZSMgNSAtLT4gYnlwYXNzICJu
-ZGxfbG9jay0+bG9jayIgZHVlDQo+IHRvICJuZGxfY291bnQtPmNvdW50KysiLg0KPiA+DQo+ID4g
-VGhyZWFkIEIgb24gQ1BVIDUgLS0+IG5kX3JlZ2lvbl9hY3F1aXJlX2xhbmUgLS0+IGxhbmUjIDUg
-LS0+IGJ5cGFzcw0KPiAibmRsX2xvY2stPmxvY2siICgibmRsX2NvdW50LT5jb3VudCINCj4gPiB3
-YXMgY2hhbmdlZCBieSBUaHJlYWQgQSkNCj4gPg0KPiA+IElmIHdlIHVzZSByYXdfc21wX3Byb2Nl
-c3Nvcl9pZCgpLCBubyBtYXR0ZXIgd2hpY2ggQ1BVIHRoZSB0aHJlYWQgd2FzDQo+IG1pZ3JhdGVk
-IHRvLA0KPiA+IGlmIHRoZXJlIGlzIGFub3RoZXIgdGhyZWFkIHJ1bm5pbmcgb24gdGhlIG9sZCBD
-UFUsIHRoZXJlIHdpbGwgYmUgcmFjZQ0KPiBjb25kaXRpb24NCj4gPiBkdWUgdG8gcGVyIENQVSB2
-YXJpYWJsZSAibmRsX2NvdW50LT5jb3VudCIuDQo+IA0KPiBzbyBJJ3ZlIGJlZW4gbG9va2luZyBh
-dCBpdCBhZ2Fpbi4gVGhlIHJlY3Vyc2l2ZSBsb2NraW5nIGNvdWxkIGhhdmUgYmVlbg0KPiBzb2x2
-ZWQgYmV0dGVyLiBMaWtlIHRoZSBsb2NhbF9sb2NrKCkgb24gLVJUIGlzIGRvaW5nIGl0Lg0KPiBH
-aXZlbiB0aGF0IHlvdSBsb2NrIHdpdGggcHJlZW1wdF9kaXNhYmxlKCkgdGhlcmUgc2hvdWxkIGJl
-IG5vIGluLUlSUQ0KPiB1c2FnZS4NCj4gQnV0IGluIHRoZSAibmRfcmVnaW9uLT5udW1fbGFuZXMg
-Pj0gbnJfY3B1X2lkcyIgY2FzZSB5b3UgZG9uJ3QgdGFrZSBhbnkNCj4gbG9ja3MuIFRoYXQgd291
-bGQgYmUgYSBwcm9ibGVtIHdpdGggcmF3X3NtcF9wcm9jZXNzb3JfaWQoKSBhcHByb2FjaC4NCj4g
-DQo+IFNvIHdoYXQgYWJvdXQgdGhlIGNvbXBsZXRlbHkgdW50ZXN0ZWQgcGF0Y2ggaGVyZToNCj4g
-DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL252ZGltbS9uZC5oIGIvZHJpdmVycy9udmRpbW0vbmQu
-aA0KPiBpbmRleCAzNzliZjQzMDVlNjE1Li45OGMyZTlkZjRiMmU0IDEwMDY0NA0KPiAtLS0gYS9k
-cml2ZXJzL252ZGltbS9uZC5oDQo+ICsrKyBiL2RyaXZlcnMvbnZkaW1tL25kLmgNCj4gQEAgLTEw
-OSw3ICsxMDksOCBAQCB1bnNpZ25lZCBzaXplb2ZfbmFtZXNwYWNlX2xhYmVsKHN0cnVjdCBudmRp
-bW1fZHJ2ZGF0YQ0KPiAqbmRkKTsNCj4gIAkJCXJlczsgcmVzID0gbmV4dCwgbmV4dCA9IG5leHQg
-PyBuZXh0LT5zaWJsaW5nIDogTlVMTCkNCj4gDQo+ICBzdHJ1Y3QgbmRfcGVyY3B1X2xhbmUgew0K
-PiAtCWludCBjb3VudDsNCj4gKwlzdHJ1Y3QgdGFza19zdHJ1Y3QgKm93bmVyOw0KPiArCWludCBu
-ZXN0Y250Ow0KPiAgCXNwaW5sb2NrX3QgbG9jazsNCj4gIH07DQo+IA0KPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9udmRpbW0vcmVnaW9uX2RldnMuYyBiL2RyaXZlcnMvbnZkaW1tL3JlZ2lvbl9kZXZz
-LmMNCj4gaW5kZXggZTI4MThmOTRmMjkyOC4uOGE2MmY5ODMzNTEzZiAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy9udmRpbW0vcmVnaW9uX2RldnMuYw0KPiArKysgYi9kcml2ZXJzL252ZGltbS9yZWdp
-b25fZGV2cy5jDQo+IEBAIC05NDYsMTkgKzk0NiwxNyBAQCBpbnQgbmRfYmxrX3JlZ2lvbl9pbml0
-KHN0cnVjdCBuZF9yZWdpb24gKm5kX3JlZ2lvbikNCj4gICAqLw0KPiAgdW5zaWduZWQgaW50IG5k
-X3JlZ2lvbl9hY3F1aXJlX2xhbmUoc3RydWN0IG5kX3JlZ2lvbiAqbmRfcmVnaW9uKQ0KPiAgew0K
-PiArCXN0cnVjdCBuZF9wZXJjcHVfbGFuZSAqbmRsX2xvY2s7DQo+ICAJdW5zaWduZWQgaW50IGNw
-dSwgbGFuZTsNCj4gDQo+IC0JY3B1ID0gZ2V0X2NwdSgpOw0KPiAtCWlmIChuZF9yZWdpb24tPm51
-bV9sYW5lcyA8IG5yX2NwdV9pZHMpIHsNCj4gLQkJc3RydWN0IG5kX3BlcmNwdV9sYW5lICpuZGxf
-bG9jaywgKm5kbF9jb3VudDsNCj4gLQ0KPiAtCQlsYW5lID0gY3B1ICUgbmRfcmVnaW9uLT5udW1f
-bGFuZXM7DQo+IC0JCW5kbF9jb3VudCA9IHBlcl9jcHVfcHRyKG5kX3JlZ2lvbi0+bGFuZSwgY3B1
-KTsNCj4gLQkJbmRsX2xvY2sgPSBwZXJfY3B1X3B0cihuZF9yZWdpb24tPmxhbmUsIGxhbmUpOw0K
-PiAtCQlpZiAobmRsX2NvdW50LT5jb3VudCsrID09IDApDQo+IC0JCQlzcGluX2xvY2soJm5kbF9s
-b2NrLT5sb2NrKTsNCj4gLQl9IGVsc2UNCj4gLQkJbGFuZSA9IGNwdTsNCj4gKwljcHUgPSByYXdf
-c21wX3Byb2Nlc3Nvcl9pZCgpOw0KPiArCWxhbmUgPSBjcHUgJSBuZF9yZWdpb24tPm51bV9sYW5l
-czsNCj4gKwluZGxfbG9jayAgPSBwZXJfY3B1X3B0cihuZF9yZWdpb24tPmxhbmUsIGxhbmUpOw0K
-PiArCWlmIChuZGxfbG9jay0+b3duZXIgIT0gY3VycmVudCkgew0KPiArCQlzcGluX2xvY2soJm5k
-bF9sb2NrLT5sb2NrKTsNCj4gKwkJbmRsX2xvY2stPm93bmVyID0gY3VycmVudDsNCj4gKwl9DQo+
-ICsJbmRsX2xvY2stPm5lc3RjbnQrKzsNCj4gDQo+ICAJcmV0dXJuIGxhbmU7DQo+ICB9DQo+IEBA
-IC05NjYsMTcgKzk2NCwxNiBAQCBFWFBPUlRfU1lNQk9MKG5kX3JlZ2lvbl9hY3F1aXJlX2xhbmUp
-Ow0KPiANCj4gIHZvaWQgbmRfcmVnaW9uX3JlbGVhc2VfbGFuZShzdHJ1Y3QgbmRfcmVnaW9uICpu
-ZF9yZWdpb24sIHVuc2lnbmVkIGludA0KPiBsYW5lKQ0KPiAgew0KPiAtCWlmIChuZF9yZWdpb24t
-Pm51bV9sYW5lcyA8IG5yX2NwdV9pZHMpIHsNCj4gLQkJdW5zaWduZWQgaW50IGNwdSA9IGdldF9j
-cHUoKTsNCj4gLQkJc3RydWN0IG5kX3BlcmNwdV9sYW5lICpuZGxfbG9jaywgKm5kbF9jb3VudDsN
-Cj4gKwlzdHJ1Y3QgbmRfcGVyY3B1X2xhbmUgKm5kbF9sb2NrOw0KPiANCj4gLQkJbmRsX2NvdW50
-ID0gcGVyX2NwdV9wdHIobmRfcmVnaW9uLT5sYW5lLCBjcHUpOw0KPiAtCQluZGxfbG9jayA9IHBl
-cl9jcHVfcHRyKG5kX3JlZ2lvbi0+bGFuZSwgbGFuZSk7DQo+IC0JCWlmICgtLW5kbF9jb3VudC0+
-Y291bnQgPT0gMCkNCj4gLQkJCXNwaW5fdW5sb2NrKCZuZGxfbG9jay0+bG9jayk7DQo+IC0JCXB1
-dF9jcHUoKTsNCj4gLQl9DQo+IC0JcHV0X2NwdSgpOw0KPiArCW5kbF9sb2NrID0gcGVyX2NwdV9w
-dHIobmRfcmVnaW9uLT5sYW5lLCBsYW5lKTsNCj4gKwlXQVJOX09OKG5kbF9sb2NrLT5uZXN0Y250
-ID09IDApOw0KPiArCVdBUk5fT04obmRsX2xvY2stPm93bmVyICE9IGN1cnJlbnQpOw0KPiArCWlm
-ICgtLW5kbF9sb2NrLT5uZXN0Y250KQ0KPiArCQlyZXR1cm47DQo+ICsNCj4gKwluZGxfbG9jay0+
-b3duZXIgPSBOVUxMOw0KPiArCXNwaW5fdW5sb2NrKCZuZGxfbG9jay0+bG9jayk7DQo+ICB9DQo+
-ICBFWFBPUlRfU1lNQk9MKG5kX3JlZ2lvbl9yZWxlYXNlX2xhbmUpOw0KPiANCj4gQEAgLTEwNDIs
-NyArMTAzOSw4IEBAIHN0YXRpYyBzdHJ1Y3QgbmRfcmVnaW9uICpuZF9yZWdpb25fY3JlYXRlKHN0
-cnVjdA0KPiBudmRpbW1fYnVzICpudmRpbW1fYnVzLA0KPiANCj4gIAkJbmRsID0gcGVyX2NwdV9w
-dHIobmRfcmVnaW9uLT5sYW5lLCBpKTsNCj4gIAkJc3Bpbl9sb2NrX2luaXQoJm5kbC0+bG9jayk7
-DQo+IC0JCW5kbC0+Y291bnQgPSAwOw0KPiArCQluZGwtPm93bmVyID0gTlVMTDsNCj4gKwkJbmRs
-LT5uZXN0Y250ID0gMDsNCj4gIAl9DQo+IA0KPiAgCWZvciAoaSA9IDA7IGkgPCBuZHJfZGVzYy0+
-bnVtX21hcHBpbmdzOyBpKyspIHsNCj4gDQo+ID4gVGhhbmtzLA0KPiA+IFlvbmd4aW4NCj4gDQoN
-CkNvbnNpZGVyIHRoZSByZWN1cnNpdmUgY2FsbCB0byBuZF9yZWdpb25fYWNxdWlyZV9sYW5lKCkg
-aW4gdGhlIGZvbGxvd2luZyBzaXR1YXRpb24uDQpXaWxsIHRoZXJlIGJlIGEgZGVhZCBsb2NrPw0K
-DQoNCiAgICBUaHJlYWQgQSAgICAgICAgICAgICAgICAgICAgVGhyZWFkIEINCiAgICAgICB8ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgfA0KICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB8DQogICAgIENQVSAxICAgICAgICAgICAgICAgICAgICAgICBDUFUgMg0KICAgICAgIHwg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8DQogICAgICAgfCAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHwNCiBnZXQgbG9jayBmb3IgTGFuZSAxICAgICAgICAgZ2V0IGxvY2sgZm9yIExhbmUg
-Mg0KICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQogICAgICAgfCAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwNCiBtaWdyYXRlIHRvIENQVSAyICAgICAgICAgICAgbWlncmF0
-ZSB0byBDUFUgMQ0KICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQogICAgICAg
-fCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwNCiB3YWl0IGxvY2sgZm9yIExhbmUgMiAgICAg
-ICAgd2FpdCBsb2NrIGZvciBMYW5lIDEgDQogICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwNCiAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KICAgICAgIF9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fDQogICAgICAgICAgICAgICAgICAgfA0KICAgICAgICAg
-ICAgICAgIGRlYWQgbG9jayA/DQoNCg0KVGhhbmtzLA0KWW9nbnhpbg0KDQoNCj4gU2ViYXN0aWFu
-DQo=
+On 3/12/19 9:09 PM, Tobin C. Harding wrote:
+> Hi,
+> 
+> This set converts the VFS overview documentation to RST format.  I think
+> I'm slowly getting better at structuring these conversions to ease
+> review, if you disagree or you notice any way to further improve please
+> say so.
+
+Hi Tobin,
+
+What does this patch set apply to?  Maybe Jon's git tree?
+
+I applied it to 5.1-rc1 with some forceful (minor) editing and ran
+'make htmldocs' successfully, so
+
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+although there is at least one new field in struct file_operations: iopoll.
+
+cheers.
+
+> Patch set introduces no new warnings/errors to the html docs build
+> 
+>       $ make htmldocs 2> ../docs-pre-vfs.stderr	
+> 
+> Apply patch set
+> 
+>       $ make cleandocs
+>       $ make htmldocs 2> ../docs-post-vfs.stderr
+>       $ diff ../docs-pre-vfs.stderr ../docs-post-vfs.stderr
+> 
+> 
+> Patch 1-4 - Whitespace fixes.
+> Patch 5 - Adds the document title adornments (above and below)
+> Patch 6 - Adds a SPDX license identifier
+> Patch 7 - Fixes some custom indentation at the top of the file that will
+>     	  cause Sphinx to warn when we switch to .rst
+> Patch 8 - Converts custom list format to use RST formatted lists, this
+>           is in preparation for switching to .rst 
+> Patch 9 - Adds '.. code-block:: c' and fixes indentation of code
+> 	  blocks.  We rename the file to .rst in this patch (introducing
+> 	  some new warnings).
+> Patch 10 - Adds back ticks to all the list items.  This is in
+> 	   preparation for fixing the indentation in the next patch.
+> 	   This was found to help when reading both plain text and HTML.
+> Patch 11 - Cleans up the lists, indentation and missing periods.  This
+> 	   was kept separate to assist review.  This patch is benign,
+> 	   the less meticulous reviewer could safely skip over this one
+> 	   quickly (this was the intention of separating these changes).
+> Patch 12 - Fixes a few minor grammar mistakes I notice while reading the
+> 	   file, I'm taking bonus points for actually reading every word
+> 	   of the file and not just trying to haphazardly do the
+> 	   conversion like I have previously done :)
+> Patch 13 - Fixes two remaining Sphinx warnings.
+> 
+> If/when this goes in perhaps I, or someone else, will update the content
+> to document a newer kernel version.
+> 
+> 
+> thanks,
+> Tobin.
+> 
+> 
+> Tobin C. Harding (13):
+>   docs: filesystems: vfs: Remove space before tab
+>   docs: filesystems: vfs: Use uniform space after period.
+>   docs: filesystems: vfs: Use 72 character column width
+>   docs: filesystems: vfs: Use uniform spacing around headings
+>   docs: filesystems: vfs: Use correct initial heading
+>   docs: filesystems: vfs: Use SPDX identifier
+>   docs: filesystems: vfs: Fix pre-amble indentation
+>   docs: filesystems: vfs: Use list character for lists
+>   docs: filesystems: vfs: Add code-block and txt->RST
+>   docs: filesystems: vfs: Use ticks for listed items
+>   docs: filesystems: vfs: Clean up lists
+>   docs: filesystems: vfs: Do minor grammar fixes
+>   docs: filesystems: vfs: Use backticks to guard star
+> 
+>  Documentation/filesystems/index.rst |    1 +
+>  Documentation/filesystems/vfs.rst   | 1279 +++++++++++++++++++++++++++
+>  Documentation/filesystems/vfs.txt   | 1261 --------------------------
+>  3 files changed, 1280 insertions(+), 1261 deletions(-)
+>  create mode 100644 Documentation/filesystems/vfs.rst
+>  delete mode 100644 Documentation/filesystems/vfs.txt
+> 
+
+
+-- 
+~Randy
