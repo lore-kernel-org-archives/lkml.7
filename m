@@ -6,149 +6,115 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD6BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893F0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE402085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD402085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 14:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfCRObz (ORCPT
+        id S1727890AbfCROcQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 10:31:55 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:42854 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbfCRObv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 10:31:51 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id EA69172CC8C;
-        Mon, 18 Mar 2019 17:31:47 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id C662E7CC74C; Mon, 18 Mar 2019 17:31:47 +0300 (MSK)
-Date:   Mon, 18 Mar 2019 17:31:47 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
-        Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2 2/6] ptrace: introduce ptrace_syscall_enter to
- consolidate PTRACE_SYSEMU handling
-Message-ID: <20190318143147.GB27941@altlinux.org>
-References: <20190318104925.16600-1-sudeep.holla@arm.com>
- <20190318104925.16600-3-sudeep.holla@arm.com>
+        Mon, 18 Mar 2019 10:32:16 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:56320 "EHLO unicorn.mansr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727673AbfCROcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 10:32:15 -0400
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 528ED15060; Mon, 18 Mar 2019 14:32:14 +0000 (GMT)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: option: set driver_info for SIM5218 and compatibles
+References: <20190226170710.12709-1-mans@mansr.com>
+        <20190227083342.GJ4747@localhost> <yw1xpnrdv3z7.fsf@mansr.com>
+        <20190227131315.GO4747@localhost> <yw1xlg21uwrp.fsf@mansr.com>
+Date:   Mon, 18 Mar 2019 14:32:14 +0000
+In-Reply-To: <yw1xlg21uwrp.fsf@mansr.com> (=?iso-8859-1?Q?=22M=E5ns_Rullg?=
+ =?iso-8859-1?Q?=E5rd=22's?= message of "Wed,
+        27 Feb 2019 14:32:58 +0000")
+Message-ID: <yw1xsgvk1cep.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="98e8jtXdkpgskNou"
-Content-Disposition: inline
-In-Reply-To: <20190318104925.16600-3-sudeep.holla@arm.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Måns Rullgård <mans@mansr.com> writes:
 
---98e8jtXdkpgskNou
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Johan Hovold <johan@kernel.org> writes:
+>
+>> Adding Bjørn.
+>>
+>> On Wed, Feb 27, 2019 at 11:57:16AM +0000, Måns Rullgård wrote:
+>>> Johan Hovold <johan@kernel.org> writes:
+>>> 
+>>> > On Tue, Feb 26, 2019 at 05:07:10PM +0000, Mans Rullgard wrote:
+>>> >> The SIMCom SIM5218 and compatible devices have 5 USB interfaces, only 4
+>>> >> of which are serial ports.  The fifth is a network interface supported
+>>> >> by the qmi-wwan driver.  Furthermore, the serial ports do not support
+>>> >> modem control signals.  Add driver_info flags to reflect this.
+>>> >> 
+>>> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+>>> >> ---
+>>> >>  drivers/usb/serial/option.c | 3 ++-
+>>> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>> >> 
+>>> >> diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+>>> >> index fb544340888b..af4cbfecc3ff 100644
+>>> >> --- a/drivers/usb/serial/option.c
+>>> >> +++ b/drivers/usb/serial/option.c
+>>> >> @@ -1066,7 +1066,8 @@ static const struct usb_device_id option_ids[] = {
+>>> >>  	  .driver_info = RSVD(3) },
+>>> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x6613)}, /* Onda H600/ZTE MF330 */
+>>> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x0023)}, /* ONYX 3G device */
+>>> >> -	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000)}, /* SIMCom SIM5218 */
+>>> >> +	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000), /* SIMCom SIM5218 */
+>>> >> +	  .driver_info = NCTRL(0) | NCTRL(1) | NCTRL(2) | NCTRL(3) | RSVD(4) },
+>>> >>  	/* Quectel products using Qualcomm vendor ID */
+>>> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC15)},
+>>> >>  	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC20),
+>>> >
+>>> > Could you please provide the output of usb-devices (or lsusb -v) for
+>>> > this device?
+>>> 
+>>> lsusb -v:
+>>> [...]
+>
+>> So the patch looks fine to me. The fifth interface is QMI, but hasn't
+>> been available for use until now then, and this seems to have been the
+>> vendors idea from the start:
+>>
+>> 	http://www.microchip.ua/simcom/WCDMA/APPNOTES/SIMCom_3G_Linux_driver_Application%20Note_V1.00.pdf
+>
+> That document predates the qmi-wwan driver in the kernel.  Note that
+> this driver has an ID table entry for interface 4 of this device.  Right
+> now, whichever driver is probed first claims that interface.  I haven't
+> actually tried using the QMI interface, though.
+>
+>> And you're seeing errors when opening ports 0-3 due to the DTR calls
+>> which I guess no one noticed or cared about before?
+>
+> Right, some userspace tools complain about this.
+>
+>> Before you sent me the lsusb I searched for it and came across the below
+>> thread where Bjørn's having a go at SIMCom. In it there's output from a
+>> second device using the same id but with entirely different descriptors.
+>>
+>> 	https://forum.openwrt.org/t/lte-wireless-module-support-by-openwrt-led-on-tplink/13586?page=3
+>>
+>> If this is a common theme with this vendor we may need to be extra
+>> careful when making changes.
+>
+> Isn't this a common theme with most USB vendors, especially wireless things?
+>
+> Regardless, setting the NCTRL flag should be harmless.
 
-On Mon, Mar 18, 2019 at 10:49:21AM +0000, Sudeep Holla wrote:
-> Currently each architecture handles PTRACE_SYSEMU in very similar way.
-> It's completely arch independent and can be handled in the code helping
-> to consolidate PTRACE_SYSEMU handling.
->=20
-> Let's introduce a hook 'ptrace_syscall_enter' that arch specific syscall
-> entry code can call.
->=20
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  include/linux/ptrace.h |  1 +
->  kernel/ptrace.c        | 22 ++++++++++++++++++++++
->  2 files changed, 23 insertions(+)
->=20
-> diff --git a/include/linux/ptrace.h b/include/linux/ptrace.h
-> index edb9b040c94c..e30f51e3363e 100644
-> --- a/include/linux/ptrace.h
-> +++ b/include/linux/ptrace.h
-> @@ -407,6 +407,7 @@ static inline void user_single_step_report(struct pt_=
-regs *regs)
->  #define current_user_stack_pointer() user_stack_pointer(current_pt_regs(=
-))
->  #endif
-> =20
-> +extern long ptrace_syscall_enter(struct pt_regs *regs);
->  extern int task_current_syscall(struct task_struct *target, long *callno,
->  				unsigned long args[6], unsigned int maxargs,
->  				unsigned long *sp, unsigned long *pc);
-> diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-> index 4fa3b7f4c3c7..c9c505c483df 100644
-> --- a/kernel/ptrace.c
-> +++ b/kernel/ptrace.c
-> @@ -29,6 +29,7 @@
->  #include <linux/hw_breakpoint.h>
->  #include <linux/cn_proc.h>
->  #include <linux/compat.h>
-> +#include <linux/tracehook.h>
-> =20
->  /*
->   * Access another process' address space via ptrace.
-> @@ -557,6 +558,27 @@ static int ptrace_detach(struct task_struct *child, =
-unsigned int data)
->  	return 0;
->  }
-> =20
-> +/*
-> + * Hook to check and report for PTRACE_SYSEMU, can be called from arch
-> + * arch syscall entry code
-> + */
-> +long ptrace_syscall_enter(struct pt_regs *regs)
-> +{
-> +#ifdef TIF_SYSCALL_EMU
-> +	if (test_thread_flag(TIF_SYSCALL_EMU)) {
-> +		if (tracehook_report_syscall_entry(regs))
-> +			/*
-> +			 * We can ignore the return code here as we need
-> +			 * return -1 always for syscall emulation irrespective
-> +			 * of whether the tracehook report fails or succeed.
-> +			 */
-> +			;
+Any further comments on this?
 
-This is problematic as it causes build errors with -Werror=3Dempty-body,
-see https://lore.kernel.org/lkml/20181218205305.26647-1-malat@debian.org/
-
-
---=20
-ldv
-
---98e8jtXdkpgskNou
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJcj6vTAAoJEAVFT+BVnCUIZdoQAMNcDIAbaXHLJT0H192POtdF
-rRwlBaKZeLHo9YKsCNI0YJWD5L6mrw6pzKrIb+O7w3fkel4k/BYhKJj0VKMriGWv
-ZhB0qOsRMRj8ytIGzBP+g0EjB+OVO0KBDrR9aKa1Kh3lRIL95sECaoZkcI4xv3dw
-5Gs46YNIHaKzXg/0kdAmKb6/FmTqC+0x7dB1KdvuIP8uKFNKOAaLwopTS6fmTVvd
-SZPBuzeOhTvSvm73avmwwsLf2agniq9nFRiw1Q/3JWPxoRcJToRSozwudkm64z7J
-OClyRZiOsFTvtXd/tiPZVPr17YhNR2f6XQYtqpWCMzSsbLpvO86cTFJcFIzpWfJr
-ly+oeURC24KQK2jPjVLBeisugW074Kva0CqGYu/tKAUScWcvoXs6miNYv5/VoiIe
-yZWr4WlJ5God4Tnk5Y/BFvm3fhwShy+u56VpLy1hX8QaEZUC+jSp0N9YrS5ufx7U
-WMhdEHfXwfuoMtyAUSINxINFabH15RfC9P818lXmBs4tbKJs51OUQZ5OsyPF0MQn
-+iPj1Ups+D+1m788lrQE6RsyC4/3piJNehIt7S+5K73UeMek/f2LA5rq+BSjjzBO
-iJD6xpWwvqLg5mpAAn7Jdq0Wzz7g16auC2m+6F5pXeTA/a5Ju7qrPh1i1Xwx6qqH
-osPsh+YtCIqvfsZn9TSQ
-=fKg4
------END PGP SIGNATURE-----
-
---98e8jtXdkpgskNou--
+-- 
+Måns Rullgård
