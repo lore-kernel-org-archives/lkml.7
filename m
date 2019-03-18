@@ -2,42 +2,42 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007B4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ACEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF03D20693
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36BC217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfCRKGq (ORCPT
+        id S1727903AbfCRKGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:06:46 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30885 "EHLO
+        Mon, 18 Mar 2019 06:06:51 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30878 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726872AbfCRKGp (ORCPT
+        by vger.kernel.org with ESMTP id S1727600AbfCRKGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:06:45 -0400
+        Mon, 18 Mar 2019 06:06:49 -0400
 Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IA11d4025027;
-        Mon, 18 Mar 2019 11:06:25 +0100
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2IA10ck025009;
+        Mon, 18 Mar 2019 11:06:32 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r8qsxb4ww-1
+        by mx07-00178001.pphosted.com with ESMTP id 2r8qsxb4xk-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 18 Mar 2019 11:06:25 +0100
+        Mon, 18 Mar 2019 11:06:32 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 03C053A;
-        Mon, 18 Mar 2019 10:06:23 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EE33031;
+        Mon, 18 Mar 2019 10:06:30 +0000 (GMT)
 Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 98C892AB3;
-        Mon, 18 Mar 2019 10:06:23 +0000 (GMT)
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C69942AAA;
+        Mon, 18 Mar 2019 10:06:30 +0000 (GMT)
 Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
  (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 18 Mar
- 2019 11:06:23 +0100
+ 2019 11:06:30 +0100
 Received: from localhost (10.201.20.122) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 18 Mar 2019 11:06:23
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 18 Mar 2019 11:06:30
  +0100
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <broonie@kernel.org>, <robh@kernel.org>, <arnd@arndb.de>,
@@ -48,10 +48,12 @@ CC:     <linux-kernel@vger.kernel.org>, <loic.pallardy@st.com>,
         <linux-imx@nxp.com>, <linux-arm-kernel@lists.infradead.org>,
         <gregkh@linuxfoundation.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [RESEND PATCH 0/7] Introduce bus domains controller framework
-Date:   Mon, 18 Mar 2019 11:05:58 +0100
-Message-ID: <20190318100605.29120-1-benjamin.gaignard@st.com>
+Subject: [RESEND PATCH 6/7] ARM: dts: stm32: Add domainsctrl node for stm32mp157 SoC
+Date:   Mon, 18 Mar 2019 11:06:04 +0100
+Message-ID: <20190318100605.29120-7-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20190318100605.29120-1-benjamin.gaignard@st.com>
+References: <20190318100605.29120-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.201.20.122]
@@ -62,67 +64,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bus domains controllers allow to divided system on chip into multiple domains
-that can be used to select by who hardware blocks could be accessed.
-A domain could be a cluster of CPUs (or coprocessors), a range of addresses or
-a group of hardware blocks.
+Declare ETZPC device as a domains controller node for stm32mp157 SoC
 
-Framework architecture is inspirated by pinctrl framework:
-- a default configuration could be applied before bind the driver
-- configurations could be apllied dynamically by drivers
-- device node provides the bus domains configurations
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-An example of bus domains controller is STM32 ETZPC hardware block
-which got 3 domains:
-- secure: hardware blocks are only accessible by software running on trust
-  zone.
-- non-secure: hardware blocks are accessible by non-secure software (i.e.
-  linux kernel).
-- coprocessor: hardware blocks are only accessible by the corpocessor.
-Up to 94 hardware blocks of the soc could be managed by ETZPC and 
-assigned to one of the three domains.
-
-At least two other hardware blocks can take benefits of this:
-- ARM TZC-400: http://infocenter.arm.com/help/topic/com.arm.doc.100325_0001_02_en/arm_corelink_tzc400_trustzone_address_space_controller_trm_100325_0001_02_en.pdf
-  which is able to manage up to 8 regions in address space.
-- IMX Ressource Domain Controller (RDC): supports four domains and up to eight regions 
-
-This version has been rebased on top of v5.1-rc1.
-
-Benjamin
-
-Benjamin Gaignard (7):
-  devicetree: bindings: Document domains controller bindings
-  domainsctrl: Introduce domains controller framework
-  base: Add calls to domains controller
-  devicetree: bindings: domainsctrl: Add STM32 ETZPC bindings
-  bus: domainsctrl: Add driver for STM32 ETZPC controller
-  ARM: dts: stm32: Add domainsctrl node for stm32mp157 SoC
-  ARM: dts: stm32: enable domains controller node on stm32mp157c-ed1
-
- .../bindings/bus/domains/domainsctrl.txt           |  55 +++++
- .../bindings/bus/domains/st,stm32-etzpc.txt        |  14 ++
- arch/arm/boot/dts/stm32mp157c-ev1.dts              |   2 +
- arch/arm/boot/dts/stm32mp157c.dtsi                 |   7 +
- drivers/base/dd.c                                  |   9 +
- drivers/bus/Kconfig                                |   2 +
- drivers/bus/Makefile                               |   2 +
- drivers/bus/domains/Kconfig                        |  14 ++
- drivers/bus/domains/Makefile                       |   2 +
- drivers/bus/domains/domainsctrl.c                  | 234 +++++++++++++++++++++
- drivers/bus/domains/stm32-etzpc.c                  | 140 ++++++++++++
- include/dt-bindings/bus/domains/stm32-etzpc.h      |  25 +++
- include/linux/domainsctrl.h                        |  70 ++++++
- 13 files changed, 576 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/domains/domainsctrl.txt
- create mode 100644 Documentation/devicetree/bindings/bus/domains/st,stm32-etzpc.txt
- create mode 100644 drivers/bus/domains/Kconfig
- create mode 100644 drivers/bus/domains/Makefile
- create mode 100644 drivers/bus/domains/domainsctrl.c
- create mode 100644 drivers/bus/domains/stm32-etzpc.c
- create mode 100644 include/dt-bindings/bus/domains/stm32-etzpc.h
- create mode 100644 include/linux/domainsctrl.h
-
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index f8bbfff5950b..7b68e18ed2c8 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -1199,6 +1199,13 @@
+ 			status = "disabled";
+ 		};
+ 
++		etzpc: etzpc@5c007000 {
++			compatible = "st,stm32-etzpc";
++			reg = <0x5c007000 0x400>;
++			#domainctrl-cells = <2>;
++			status = "okay";
++		};
++
+ 		i2c6: i2c@5c009000 {
+ 			compatible = "st,stm32f7-i2c";
+ 			reg = <0x5c009000 0x400>;
 -- 
 2.15.0
 
