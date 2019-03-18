@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCB8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EB9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7D12083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0742083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901503;
-	bh=a5JaC/CmSDQ4dX6iPSAPCrBs0D0K0/hablsVAnB2c0I=;
+	s=default; t=1552901505;
+	bh=mBdfUgfkAj2ue9t7XB1tpf/Pj/rHjk5X+07uVAGI82Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nCnq/GHaIZ51RzXmhz5SdtL07XJOxJluTTiXLEZDz8TaH+ggHwCY7gO4Mu23aA0dG
-	 wjCfJfkS3dou2g/q1cFD2iecdB+ESHJA76ZNmreGjilP8FWLD3LmD6s+j9SEriF2sw
-	 8rwIhSEeIzuApsqWWQI+ZkOU0YvFv0Y7lHP/Xpng=
+	b=sgc0BbdXTGklLI18m3Bz7hKNCUoDt5U9rhvlyvpZb1wDyBsMb6Hve7e5QacH6c3ht
+	 UMQDG8Z3ikkGhPuULEz+TInjHG4X01mtykk5B2Xj4hc3fd347z63+31ACK55OnAhW+
+	 uM+7dVmp4QtoW74RhnuwwSN7RGtq19jdzLch/xPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbfCRJbm (ORCPT
+        id S1728620AbfCRJbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:31:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39414 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:31:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728240AbfCRJbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:31:39 -0400
+        id S1728611AbfCRJbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:42 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64A6E2075C;
-        Mon, 18 Mar 2019 09:31:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D2DF2075C;
+        Mon, 18 Mar 2019 09:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901498;
-        bh=a5JaC/CmSDQ4dX6iPSAPCrBs0D0K0/hablsVAnB2c0I=;
+        s=default; t=1552901501;
+        bh=mBdfUgfkAj2ue9t7XB1tpf/Pj/rHjk5X+07uVAGI82Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=de/88kxaEK/2T3RyPUba+T9t4izoNkZ+RJb0rM/5r244vZlBxD2IEfo53/pz+vw6a
-         LhxHS5BTxYFrno6OQ+whxM0PrFDggc9K61WxcOskpb5f21B1SiO/1cDmzcsfacE2aK
-         vPRyH2QlOCxdR7X6muTtElFhpMwbDt+E1072Mrp4=
+        b=lpQQWTmI/z807zPNj+hkcuc6akR99Eny0BCfEKChAzF4+JtEeg2BzQgH8RxvI3Khu
+         dAEEJfJ3BfWo406aBCP3+wBpdCLVfhKpqaUBFHMTt691EhB71Vgl2JWaQ+xOfWXo7+
+         nqzGKyUFPekwV0vO/FH3y0rMpy33m1okK1nn4Klo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Masaru Nagai <masaru.nagai.vx@renesas.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 12/52] pptp: dst_release sk_dst_cache in pptp_sock_destruct
-Date:   Mon, 18 Mar 2019 10:25:09 +0100
-Message-Id: <20190318084015.017573482@linuxfoundation.org>
+Subject: [PATCH 4.19 13/52] ravb: Decrease TxFIFO depth of Q3 and Q2 to one
+Date:   Mon, 18 Mar 2019 10:25:10 +0100
+Message-Id: <20190318084015.134213551@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -65,46 +67,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Masaru Nagai <masaru.nagai.vx@renesas.com>
 
-[ Upstream commit 9417d81f4f8adfe20a12dd1fadf73a618cbd945d ]
+[ Upstream commit ae9819e339b451da7a86ab6fe38ecfcb6814e78a ]
 
-sk_setup_caps() is called to set sk->sk_dst_cache in pptp_connect,
-so we have to dst_release(sk->sk_dst_cache) in pptp_sock_destruct,
-otherwise, the dst refcnt will leak.
+Hardware has the CBS (Credit Based Shaper) which affects only Q3
+and Q2. When updating the CBS settings, even if the driver does so
+after waiting for Tx DMA finished, there is a possibility that frame
+data still remains in TxFIFO.
 
-It can be reproduced by this syz log:
+To avoid this, decrease TxFIFO depth of Q3 and Q2 to one.
 
-  r1 = socket$pptp(0x18, 0x1, 0x2)
-  bind$pptp(r1, &(0x7f0000000100)={0x18, 0x2, {0x0, @local}}, 0x1e)
-  connect$pptp(r1, &(0x7f0000000000)={0x18, 0x2, {0x3, @remote}}, 0x1e)
+This patch has been exercised this using netperf TCP_MAERTS, TCP_STREAM
+and UDP_STREAM tests run on an Ebisu board. No performance change was
+detected, outside of noise in the tests, both in terms of throughput and
+CPU utilisation.
 
-Consecutive dmesg warnings will occur:
-
-  unregister_netdevice: waiting for lo to become free. Usage count = 1
-
-v1->v2:
-  - use rcu_dereference_protected() instead of rcu_dereference_check(),
-    as suggested by Eric.
-
-Fixes: 00959ade36ac ("PPTP: PPP over IPv4 (Point-to-Point Tunneling Protocol)")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
+Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+[simon: updated changelog]
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ppp/pptp.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/renesas/ravb_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ppp/pptp.c
-+++ b/drivers/net/ppp/pptp.c
-@@ -537,6 +537,7 @@ static void pptp_sock_destruct(struct so
- 		pppox_unbind_sock(sk);
- 	}
- 	skb_queue_purge(&sk->sk_receive_queue);
-+	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
- }
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -459,7 +459,7 @@ static int ravb_dmac_init(struct net_dev
+ 		   RCR_EFFS | RCR_ENCF | RCR_ETS0 | RCR_ESF | 0x18000000, RCR);
  
- static int pptp_create(struct net *net, struct socket *sock, int kern)
+ 	/* Set FIFO size */
+-	ravb_write(ndev, TGC_TQP_AVBMODE1 | 0x00222200, TGC);
++	ravb_write(ndev, TGC_TQP_AVBMODE1 | 0x00112200, TGC);
+ 
+ 	/* Timestamp enable */
+ 	ravb_write(ndev, TCCR_TFEN, TCCR);
 
 
