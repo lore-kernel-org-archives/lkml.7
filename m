@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690C8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CFBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D63217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46A3214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901521;
-	bh=XJVg4AUyhz5QxPfNQ5Xrl7LNngDcd29gbFX+DjF1byw=;
+	s=default; t=1552901523;
+	bh=21tUjb5O++lanmUd78C4+0GudE3oKD6E0pgKzCgZsCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXOo7Y52Z+tbE9CJQDe4Wx9v/U222vkGD+NVOMiLmHAHZ3/pQf8bPjj3Js0aT0KUK
-	 aoyyl5dWLCu6Ca27FHDLs+n39DUtk0M5gzZpgLAMsAaDS/j9GhxObMplqfPbVNnWji
-	 LsIeR5fDXKwibJktBlNzD28jvR+OyNh5Gnoc7g1s=
+	b=2H3bNJ9jfdFwciGw7Kuy2wu2DlGcbFKqAm0J0SWXreFKc8jUI5+71YIjuwt85ViyM
+	 dIwS6w3zcQphM7BX76K9w/jBY2E5nyWn8oZDNKHJDfaH7yYOuyJv4FGJSpUzcnfW+P
+	 SRJ0JpY5hzPdRDZh93Wb8jqdf2HzdVJPKoccq5WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfCRJb7 (ORCPT
+        id S1728672AbfCRJcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:31:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39808 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:32:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728278AbfCRJby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:31:54 -0400
+        id S1727391AbfCRJb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:31:57 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 701A921734;
-        Mon, 18 Mar 2019 09:31:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 086212175B;
+        Mon, 18 Mar 2019 09:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901513;
-        bh=XJVg4AUyhz5QxPfNQ5Xrl7LNngDcd29gbFX+DjF1byw=;
+        s=default; t=1552901516;
+        bh=21tUjb5O++lanmUd78C4+0GudE3oKD6E0pgKzCgZsCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ND3sO1ShKwL4uFsh/epyg/BUej61/30zpuqh5KcpaFSKUXGCWVW05TWsKZwGaq5Vx
-         z4XM90kWp5w9sN+FAA+kw+gZrch2lWJGTjPaIWrbD3Vh83EgIVzy+w1OFZ27qiL5Lk
-         ftoe95cyuCLdXMgFdUZ399uQ5zmubVvEsjk2o95Y=
+        b=SL5EkFY1Cw+L83Y7KgGj7wWd9ocqGPe5bN5QzBw4QmdtyPNWasSCx4qx9/nJBk2Fd
+         8RN065Rc9MI+aa73FTp+344cSF7HbSgGDEBt+ff6RT3z7dcnoA6U2eYrybLBnZN1/7
+         b3z/MpgbhIYlH8GE0RuwDkdtK1KDFI3MdzQzO3MQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Soheil Hassas Yeganeh <soheil@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 17/52] tcp: do not report TCP_CM_INQ of 0 for closed connections
-Date:   Mon, 18 Mar 2019 10:25:14 +0100
-Message-Id: <20190318084015.595388165@linuxfoundation.org>
+Subject: [PATCH 4.19 18/52] tcp: Dont access TCP_SKB_CB before initializing it
+Date:   Mon, 18 Mar 2019 10:25:15 +0100
+Message-Id: <20190318084015.707602556@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -67,46 +66,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Soheil Hassas Yeganeh <soheil@google.com>
+From: Christoph Paasch <cpaasch@apple.com>
 
-[ Upstream commit 6466e715651f9f358e60c5ea4880e4731325827f ]
+[ Upstream commit f2feaefdabb0a6253aa020f65e7388f07a9ed47c ]
 
-Returning 0 as inq to userspace indicates there is no more data to
-read, and the application needs to wait for EPOLLIN. For a connection
-that has received FIN from the remote peer, however, the application
-must continue reading until getting EOF (return value of 0
-from tcp_recvmsg) or an error, if edge-triggered epoll (EPOLLET) is
-being used. Otherwise, the application will never receive a new
-EPOLLIN, since there is no epoll edge after the FIN.
+Since commit eeea10b83a13 ("tcp: add
+tcp_v4_fill_cb()/tcp_v4_restore_cb()"), tcp_vX_fill_cb is only called
+after tcp_filter(). That means, TCP_SKB_CB(skb)->end_seq still points to
+the IP-part of the cb.
 
-Return 1 when there is no data left on the queue but the
-connection has received FIN, so that the applications continue
-reading.
+We thus should not mock with it, as this can trigger bugs (thanks
+syzkaller):
+[   12.349396] ==================================================================
+[   12.350188] BUG: KASAN: slab-out-of-bounds in ip6_datagram_recv_specific_ctl+0x19b3/0x1a20
+[   12.351035] Read of size 1 at addr ffff88006adbc208 by task test_ip6_datagr/1799
 
-Fixes: b75eba76d3d72 (tcp: send in-queue bytes in cmsg upon read)
-Signed-off-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
+Setting end_seq is actually no more necessary in tcp_filter as it gets
+initialized later on in tcp_vX_fill_cb.
+
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: eeea10b83a13 ("tcp: add tcp_v4_fill_cb()/tcp_v4_restore_cb()")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ net/ipv4/tcp_ipv4.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1901,6 +1901,11 @@ static int tcp_inq_hint(struct sock *sk)
- 		inq = tp->rcv_nxt - tp->copied_seq;
- 		release_sock(sk);
- 	}
-+	/* After receiving a FIN, tell the user-space to continue reading
-+	 * by returning a non-zero inq.
-+	 */
-+	if (inq == 0 && sock_flag(sk, SOCK_DONE))
-+		inq = 1;
- 	return inq;
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1646,15 +1646,8 @@ EXPORT_SYMBOL(tcp_add_backlog);
+ int tcp_filter(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct tcphdr *th = (struct tcphdr *)skb->data;
+-	unsigned int eaten = skb->len;
+-	int err;
+ 
+-	err = sk_filter_trim_cap(sk, skb, th->doff * 4);
+-	if (!err) {
+-		eaten -= skb->len;
+-		TCP_SKB_CB(skb)->end_seq -= eaten;
+-	}
+-	return err;
++	return sk_filter_trim_cap(sk, skb, th->doff * 4);
  }
+ EXPORT_SYMBOL(tcp_filter);
  
 
 
