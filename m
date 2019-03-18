@@ -2,129 +2,177 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FDCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EBFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7562133D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B6420989
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfCRSym (ORCPT
+        id S1727432AbfCRSzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:54:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:7409 "EHLO mx1.redhat.com"
+        Mon, 18 Mar 2019 14:55:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:19125 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726812AbfCRSyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:54:41 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1726806AbfCRSzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 14:55:02 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 16C704E92A;
-        Mon, 18 Mar 2019 18:54:41 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C4DE25DD97;
-        Mon, 18 Mar 2019 18:54:39 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 14:54:38 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: Re: [PATCH 00/10] HMM updates for 5.1
-Message-ID: <20190318185437.GB6786@redhat.com>
-References: <20190129165428.3931-1-jglisse@redhat.com>
- <20190313012706.GB3402@redhat.com>
- <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org>
- <20190318170404.GA6786@redhat.com>
- <CAPcyv4geu34vgZszALiDxJWR8itK+A3qSmpR+_jOq29whGngNg@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 627D813A4D;
+        Mon, 18 Mar 2019 18:55:01 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-22.phx2.redhat.com [10.3.112.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 084045D705;
+        Mon, 18 Mar 2019 18:54:48 +0000 (UTC)
+Date:   Mon, 18 Mar 2019 14:54:46 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com
+Subject: Re: [PATCH ghak90 V5 03/10] audit: read container ID of a process
+Message-ID: <20190318185446.s2gqxmtnxxxkdeis@madcap2.tricolour.ca>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <25543e3db4d8f3853119f92c09a60664555249a2.1552665316.git.rgb@redhat.com>
+ <20190318111003.GA7364@hmswarspite.think-freely.org>
+ <20190318181721.6e5jxqwvmifduzvq@madcap2.tricolour.ca>
+ <20190318184856.GA4111@hmswarspite.think-freely.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPcyv4geu34vgZszALiDxJWR8itK+A3qSmpR+_jOq29whGngNg@mail.gmail.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 18 Mar 2019 18:54:41 +0000 (UTC)
+In-Reply-To: <20190318184856.GA4111@hmswarspite.think-freely.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 18 Mar 2019 18:55:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 11:30:15AM -0700, Dan Williams wrote:
-> On Mon, Mar 18, 2019 at 10:04 AM Jerome Glisse <jglisse@redhat.com> wrote:
-> >
-> > On Wed, Mar 13, 2019 at 09:10:04AM -0700, Andrew Morton wrote:
-> > > On Tue, 12 Mar 2019 21:27:06 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
-> > >
-> > > > Andrew you will not be pushing this patchset in 5.1 ?
-> > >
-> > > I'd like to.  It sounds like we're converging on a plan.
-> > >
-> > > It would be good to hear more from the driver developers who will be
-> > > consuming these new features - links to patchsets, review feedback,
-> > > etc.  Which individuals should we be asking?  Felix, Christian and
-> > > Jason, perhaps?
-> > >
-> >
-> > So i am guessing you will not send this to Linus ? Should i repost ?
-> > This patchset has 2 sides, first side is just reworking the HMM API
-> > to make something better in respect to process lifetime. AMD folks
-> > did find that helpful [1]. This rework is also necessary to ease up
-> > the convertion of ODP to HMM [2] and Jason already said that he is
-> > interested in seing that happening [3]. By missing 5.1 it means now
-> > that i can not push ODP to HMM in 5.2 and it will be postpone to 5.3
-> > which is also postoning other work ...
-> >
-> > The second side is it adds 2 new helper dma map and dma unmap both
-> > are gonna be use by ODP and latter by nouveau (after some other
-> > nouveau changes are done). This new functions just do dma_map ie:
-> >     hmm_dma_map() {
-> >         existing_hmm_api()
-> >         for_each_page() {
-> >             dma_map_page()
-> >         }
-> >     }
-> >
-> > Do you want to see anymore justification than that ?
+On 2019-03-18 14:48, Neil Horman wrote:
+> On Mon, Mar 18, 2019 at 02:17:21PM -0400, Richard Guy Briggs wrote:
+> > On 2019-03-18 07:10, Neil Horman wrote:
+> > > On Fri, Mar 15, 2019 at 02:29:51PM -0400, Richard Guy Briggs wrote:
+> > > > Add support for reading the audit container identifier from the proc
+> > > > filesystem.
+> > > > 
+> > > > This is a read from the proc entry of the form
+> > > > /proc/PID/audit_containerid where PID is the process ID of the task
+> > > > whose audit container identifier is sought.
+> > > > 
+> > > > The read expects up to a u64 value (unset: 18446744073709551615).
+> > > > 
+> > > > This read requires CAP_AUDIT_CONTROL.
+> > > > 
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > > > ---
+> > > >  fs/proc/base.c | 23 +++++++++++++++++++++--
+> > > >  1 file changed, 21 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > > > index 2505c46c8701..0b833cbdf5b6 100644
+> > > > --- a/fs/proc/base.c
+> > > > +++ b/fs/proc/base.c
+> > > > @@ -1295,6 +1295,24 @@ static ssize_t proc_sessionid_read(struct file * file, char __user * buf,
+> > > >  	.llseek		= generic_file_llseek,
+> > > >  };
+> > > >  
+> > > > +static ssize_t proc_contid_read(struct file *file, char __user *buf,
+> > > > +				  size_t count, loff_t *ppos)
+> > > > +{
+> > > > +	struct inode *inode = file_inode(file);
+> > > > +	struct task_struct *task = get_proc_task(inode);
+> > > > +	ssize_t length;
+> > > > +	char tmpbuf[TMPBUFLEN*2];
+> > > > +
+> > > Sorry, didn't notice this previously, but..
+> > > Why *2 here?  Its not wrong per-se, but would it be better to just change
+> > > TMPBUFLEN to be 22 bytes unilaterally?  Its only ever used on stack calls that
+> > > arent that deep, and then you won't have to think about adjusting this call site
+> > > if you ever change the value of TMPBUFLEN in the future.
+> > 
+> > TMPBUFLEN is 11 to accomodate a decimal representation of a u32 with
+> > terminating NULL.  Since the contid is a u64, it was least disruptive
+> > and made sense to me to just double it.  I could define a TMPBUFLEN2 to
+> > be 21 if you prefer?
+> > 
+> I'm not adamant on any particular change, just noticing the inconsistency.  I
+> usually write macro buffer sizes to accomodate the largest string I plan to
+> hold, so it can be used ubiquitously when the overage is small and transiently
+> allocated, but if you feel like the space would be better conserved a TMPBUFLEN/
+> TMPBUFLEN2 approach would be fine (or a TMPBUFLENU32 / TMPBUFLENU64 macro set).
+
+Ok, I see your point about it being transient.  I'll fix it up if there
+is a respin.
+
+> Its not anything that needs fixing now, just an observation for clean up at some
+> future point.
+> Neil
 > 
-> Yes, why does hmm needs its own dma mapping apis? It seems to
-> perpetuate the perception that hmm is something bolted onto the side
-> of the core-mm rather than a native capability.
+> > > I'm fine with doing this in another patch later, but it seems like a worthwhile
+> > > cleanup
+> > > 
+> > > functionality looks good beyond that nit.
+> > > 
+> > > > +	if (!task)
+> > > > +		return -ESRCH;
+> > > > +	/* if we don't have caps, reject */
+> > > > +	if (!capable(CAP_AUDIT_CONTROL))
+> > > > +		return -EPERM;
+> > > > +	length = scnprintf(tmpbuf, TMPBUFLEN*2, "%llu", audit_get_contid(task));
+> > > > +	put_task_struct(task);
+> > > > +	return simple_read_from_buffer(buf, count, ppos, tmpbuf, length);
+> > > > +}
+> > > > +
+> > > >  static ssize_t proc_contid_write(struct file *file, const char __user *buf,
+> > > >  				   size_t count, loff_t *ppos)
+> > > >  {
+> > > > @@ -1325,6 +1343,7 @@ static ssize_t proc_contid_write(struct file *file, const char __user *buf,
+> > > >  }
+> > > >  
+> > > >  static const struct file_operations proc_contid_operations = {
+> > > > +	.read		= proc_contid_read,
+> > > >  	.write		= proc_contid_write,
+> > > >  	.llseek		= generic_file_llseek,
+> > > >  };
+> > > > @@ -3039,7 +3058,7 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
+> > > >  #ifdef CONFIG_AUDIT
+> > > >  	REG("loginuid",   S_IWUSR|S_IRUGO, proc_loginuid_operations),
+> > > >  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
+> > > > -	REG("audit_containerid", S_IWUSR, proc_contid_operations),
+> > > > +	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
+> > > >  #endif
+> > > >  #ifdef CONFIG_FAULT_INJECTION
+> > > >  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
+> > > > @@ -3428,7 +3447,7 @@ static int proc_tid_comm_permission(struct inode *inode, int mask)
+> > > >  #ifdef CONFIG_AUDIT
+> > > >  	REG("loginuid",  S_IWUSR|S_IRUGO, proc_loginuid_operations),
+> > > >  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
+> > > > -	REG("audit_containerid", S_IWUSR, proc_contid_operations),
+> > > > +	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
+> > > >  #endif
+> > > >  #ifdef CONFIG_FAULT_INJECTION
+> > > >  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
+> > > > -- 
+> > > > 1.8.3.1
+> > > > 
+> > > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > 
+> > - RGB
 
-Seriously ?
+- RGB
 
-Kernel is fill with example where common code pattern that are not
-device specific are turn into helpers and here this is exactly what
-it is. A common pattern that all device driver will do which is turn
-into a common helper.
-
-Moreover this allow to share the same error code handling accross
-driver when mapping one page fails. So this avoid the needs to
-duplicate same boiler plate code accross different drivers.
-
-Is code factorization not a good thing ? Should i duplicate every-
-thing in every single driver ?
-
-
-If that's not enough, this will also allow to handle peer to peer
-and i posted patches for that [1] and again this is to avoid
-duplicating common code accross different drivers.
-
-
-It does feel that you oppose everything with HMM in its name just
-because you do not like it. It is your prerogative to not like some-
-thing but you should propose something that achieve the same result
-instead of constantly questioning every single comma.
-
-Cheers,
-Jérôme
-
-[1] https://lwn.net/ml/linux-kernel/20190129174728.6430-1-jglisse@redhat.com/
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
