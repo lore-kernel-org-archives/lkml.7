@@ -2,129 +2,114 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE762C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70ACAC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78EF620811
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422CC20811
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 18:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="V1LLkucl"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Ti6WT1kE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfCRS2x (ORCPT
+        id S1727135AbfCRSa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 14:28:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39823 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfCRS2w (ORCPT
+        Mon, 18 Mar 2019 14:30:28 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46914 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfCRSa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 14:28:52 -0400
-Received: by mail-io1-f67.google.com with SMTP id e13so5167637ioq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:28:52 -0700 (PDT)
+        Mon, 18 Mar 2019 14:30:28 -0400
+Received: by mail-oi1-f193.google.com with SMTP id x188so1676007oia.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 11:30:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3/DdqKbtFvuc9cTXnJsuN9afWQ363mq88qv0O2AXh2Y=;
-        b=V1LLkuclIbUa++qGwdC3rAtieG5/WINQIWhfTRnl9clYDfhRsnLTiV2ZHue/u0hBj4
-         h+VQIf0xOWknG46QHcKC0cjKxVkthG4ME7+pPL/pNYJqTBK+a9ryG6m8fTKjFZcmTuI8
-         SWIAlLNXIL84+q6ENILdrwNelff7MolfXgqRQ=
+        bh=sbsTYKGPUf22VNUHUiDumPSMR3YTxTtHfk3y04Q51PI=;
+        b=Ti6WT1kEvz5706AzrASGb3DEtp+m8ZO+QEXN5wFB+65Dn64vkucYPUtl275qzWQcDL
+         OkR0bul4zxaYW6XYbh4PIZpjS8+i0ejH1t92P0sHeChDtCDzOuJwwPbk3tbyqGkr1I1s
+         /CRlBL/qG+BRneir31rdy3ywTvLqDjVal2nUrrGHjc5tnTc+oLaAJ6w17FESSUFhpTTz
+         H6oRDlE3nXOpY32QB6p7bgx5T6ZDi3cQ8pYGtpdtYPnvfTmVg+492QO6Dtkv7FhmtV2l
+         RHN/0nkQsymYJPOLXNo9xYLbxTdMNX/84V7RB/qzEBmNsVk3fEoiZOuBtFYjxosXSVAa
+         No3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3/DdqKbtFvuc9cTXnJsuN9afWQ363mq88qv0O2AXh2Y=;
-        b=S+O6R+kys0yg8p3HV1nQFqLEAP3k+xfVwpDLi/n0o1StohC4BF/eqlgQbFGXQXN6lG
-         3G1V28zIjkGYC+pDRghaM7Gxi1c0wz2vsPEaGWXbZ/89++xssGQNv/qPvcJwrZftNXqi
-         PK0y+A+t097gTedGFaqn/aXJ5KFN7U+v7FzQcUuyAvPX6sx+bfLA8KRcmIVHAQu6Zr1r
-         jA0g/vQ2A2v/M6FqzsYS0EdmSicbmRhgEu3XXqe0RQ+bePEMTYyZI/Dunsvy03ieIva/
-         oY49VGxkBMhpR3DW+Vk2+98jQWIGl7k+1ondA1VDPWFQ+O+KEdQMq4CJW9ccFIDDPZfE
-         kjBg==
-X-Gm-Message-State: APjAAAXF4N0TXj/QdPicX28zS4QVQXbPuAfVWW0CyOi4c4J8EEIUcjSx
-        lVJrMyMXjzjyJlsnNuOLpeJUxDvfNUMPFbUovJm1yQ==
-X-Google-Smtp-Source: APXvYqx8jGmg+6HZGkY8O8bNMdSPwB9DydFpcXM7sspX3D5Ey244ur356hhJrzmg4WhGPL2LrnR7yHgCBS5FKwL2jh4=
-X-Received: by 2002:a6b:d80a:: with SMTP id y10mr11539801iob.114.1552933731792;
- Mon, 18 Mar 2019 11:28:51 -0700 (PDT)
+        bh=sbsTYKGPUf22VNUHUiDumPSMR3YTxTtHfk3y04Q51PI=;
+        b=GG7sGAqU7ljEiKNYTi4zf6U/cjCi0R4wF63UW1lCHWHhWywamRDqUIBkDTHbCxMqqg
+         80hvvMKZ7GjJYWTydURSgOHYXVk3sRu6c3PxO5IUHKCzG02/4sCX2wJ/P3Xv9b/sTWQg
+         R39YhZghCN2sQ7TdMQa6rR347AlnOJVPzgs1XBBZHPk8nbQ1LcZ7J1G/xB+03DIAgcX1
+         p4ERfZmCcLco3mVxLZzHbr5/OH2I5Y8VglAWQUu0iGjhn2M7cSZHAkLLq0/H1ptNkqa4
+         cPBXL0y1CQacCu2Fe0hjG3SLZ8gI2cTaCCLON3/rQUSKfJb60rEgWwsrvcDmybK8znFw
+         U/Dg==
+X-Gm-Message-State: APjAAAUO4BhhExSukqCicfVY9rsEtYFEd3InPwj7Anucokr2dabprC2V
+        7U6fAIIMn4muiQLMQKdRAIJ9j/1m5eVyQqjF3fLKkg==
+X-Google-Smtp-Source: APXvYqy38RzGaS6GmKEWk8AVCslWmyO1VRMUjt3IiqPFlac6gvhzxAIrS42qy+DE9houQ7j4yhnpSI2lrBv5oKHke9g=
+X-Received: by 2002:aca:f581:: with SMTP id t123mr198768oih.0.1552933827507;
+ Mon, 18 Mar 2019 11:30:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190303173527.31055-1-jagan@amarulasolutions.com>
-In-Reply-To: <20190303173527.31055-1-jagan@amarulasolutions.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Mon, 18 Mar 2019 23:58:39 +0530
-Message-ID: <CAMty3ZAGvCOuqcTUozBm-uR4z=jR18bfOSyN5=jfT85HGWR_1A@mail.gmail.com>
-Subject: Re: [PATCH v9 0/5] drm/sun4i: sun6i_mipi_dsi: Fixes/updates
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula@amarulasolutions.com,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
+References: <20190129165428.3931-1-jglisse@redhat.com> <20190313012706.GB3402@redhat.com>
+ <20190313091004.b748502871ba0aa839b924e9@linux-foundation.org> <20190318170404.GA6786@redhat.com>
+In-Reply-To: <20190318170404.GA6786@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 18 Mar 2019 11:30:15 -0700
+Message-ID: <CAPcyv4geu34vgZszALiDxJWR8itK+A3qSmpR+_jOq29whGngNg@mail.gmail.com>
+Subject: Re: [PATCH 00/10] HMM updates for 5.1
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Mar 18, 2019 at 10:04 AM Jerome Glisse <jglisse@redhat.com> wrote:
+>
+> On Wed, Mar 13, 2019 at 09:10:04AM -0700, Andrew Morton wrote:
+> > On Tue, 12 Mar 2019 21:27:06 -0400 Jerome Glisse <jglisse@redhat.com> wrote:
+> >
+> > > Andrew you will not be pushing this patchset in 5.1 ?
+> >
+> > I'd like to.  It sounds like we're converging on a plan.
+> >
+> > It would be good to hear more from the driver developers who will be
+> > consuming these new features - links to patchsets, review feedback,
+> > etc.  Which individuals should we be asking?  Felix, Christian and
+> > Jason, perhaps?
+> >
+>
+> So i am guessing you will not send this to Linus ? Should i repost ?
+> This patchset has 2 sides, first side is just reworking the HMM API
+> to make something better in respect to process lifetime. AMD folks
+> did find that helpful [1]. This rework is also necessary to ease up
+> the convertion of ODP to HMM [2] and Jason already said that he is
+> interested in seing that happening [3]. By missing 5.1 it means now
+> that i can not push ODP to HMM in 5.2 and it will be postpone to 5.3
+> which is also postoning other work ...
+>
+> The second side is it adds 2 new helper dma map and dma unmap both
+> are gonna be use by ODP and latter by nouveau (after some other
+> nouveau changes are done). This new functions just do dma_map ie:
+>     hmm_dma_map() {
+>         existing_hmm_api()
+>         for_each_page() {
+>             dma_map_page()
+>         }
+>     }
+>
+> Do you want to see anymore justification than that ?
 
-On Sun, Mar 3, 2019 at 11:06 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> Unfortunately due to various reasons[3] the previous fixes[1] and burst[2]
-> changes are failed to apply.
->
-> So, this series is filtered version of previous [1] and [2] changes on top
-> of drm-misc.
->
-> patch-1: Fix for burst mode instruction delay computation
->
-> patch-2: Fix for TCOn DRQ set bits
->
-> patch-3: Support vblk timing for 4-lane devices
->
-> patch-4: GENERIC_SHORT_WRITE_2 dsi transfer support
->
-> patch-5: Code simplification for dsi timings
->
-> Changes for v9:
-> - rebase on drm-misc
-> - update commit messages
-> - add hsync_porch overflow patch
-> Changes for v8:
-> - rebase on master
-> - rework on commit messages
-> - rework video start delay
-> - include drq changes from previous version
-> Changes for v7:
-> - rebase on master
-> - collect Merlijn Wajer Tested-by credits.
-> Changes for v6:
-> - fixed all burst mode patches as per previous version comments
-> - rebase on master
-> - update proper commit message
-> - dropped unneeded comments
-> - order the patches that make review easy
-> Changes for v5, v4, v3, v2:
-> - use existing driver code construct for hblk computation
-> - create separate function for vblk computation
-> - cleanup commit messages
-> - update proper commit messages
-> - fixed checkpatch warnings/errors
-> - use proper return value for tcon0 probe
-> - add logic to get tcon0 divider values
-> - simplify timings code to support burst mode
-> - fix drq computation return values
-> - rebase on master
->
-> [1] https://patchwork.kernel.org/cover/10813573/
-> [2] https://patchwork.kernel.org/cover/10813623/
-> [3] https://patchwork.kernel.org/cover/10805995/
->
-> Any inputs?
-> Jagan.
-
-Any further comments on this series? Can I send next version with some changes?
+Yes, why does hmm needs its own dma mapping apis? It seems to
+perpetuate the perception that hmm is something bolted onto the side
+of the core-mm rather than a native capability.
