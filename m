@@ -2,220 +2,80 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC4FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21293C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109B020854
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="VdKIqVxP"
+	by mail.kernel.org (Postfix) with ESMTP id E9F3520854
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 10:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfCRKl4 (ORCPT
+        id S1727268AbfCRKnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 06:41:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37114 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbfCRKl4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 06:41:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v14so3673240wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 03:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eEsIEMYV9fIymkfTlIj86KuKYvXpVBQWtTu59zEfrmg=;
-        b=VdKIqVxPeqA5JT1IzY776HiXmtFZBnBHiQk7BR3M4WhbfKjUR46hZzc9ZUAvBxJC9V
-         fCt00FZX3z13+ZlYOm+Ur9F+Lg5odaDiuMd5dIpCStDQUPdq2MyHrLM1fsI0tDNYINvo
-         NwHfMGYaVuHDa2iqPZqSxsJSoWIFSHwsGD3Rc/5LG49UQmb5IXcha1eV9jTqg08krzH0
-         3rtpniZpOrh9GRUxM/42ZASe7ky9XGD90zY14D45jJFacGOyPjyn4yyH5sp6IxHX8tbM
-         bxeLjwKdhuP84qyhxrloYq6L8ehzQgrxXuaAPPy+HpD9nsM2HzvcfoGuJydtlMW/Jf3y
-         AcWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eEsIEMYV9fIymkfTlIj86KuKYvXpVBQWtTu59zEfrmg=;
-        b=nGAV6lZuPqf3AZLxmtXUIry+YPa8uHLfhBnl7j4SwTwN07wb9ZBGisCwGu0urXCcwv
-         +hkJ+eUKVYOB0+I+uS+muvO+p1HvSjLvnCmJgm0HXRdvsnWv0NoINNIolwzGuQXV5HXU
-         yapHFe2Fk+DbGZ+K3Mb2ThYjqRvDco3VNNx9NSY/+9ndiMp13fQggGreKgbifxr20mEM
-         R7dT0hVpvDJTWQH4P+d5utCWzx20mT2z98Al4z9cl200r3N5sviUFhQW3m3rhkWRz1dT
-         Qho90d8ou+zZP2kRytSdfigyTwKWv9ebvDTg93IJIxM3Pfsb5hJGcUX1YcyJFLgQ4YPg
-         KG3w==
-X-Gm-Message-State: APjAAAXdXEQNSch9rGGg8QaZKeuAzF90jMk+Qzj6gCaLOM6TaiX5b01I
-        0Qy0SIN2Bf1P+J79XPd7132PLH+WKBThxjp1y7yD4A==
-X-Google-Smtp-Source: APXvYqwwXgH85BnaQUugIz8/p2xT5pET/t/8kV5x57VI2wZxqE1aqQmiqN+6UfRcy+KP/3PvxW3ferRYrBFase6c2eY=
-X-Received: by 2002:a1c:18d:: with SMTP id 135mr7448100wmb.12.1552905713680;
- Mon, 18 Mar 2019 03:41:53 -0700 (PDT)
+        Mon, 18 Mar 2019 06:43:52 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59512 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726771AbfCRKnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 06:43:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D228680D;
+        Mon, 18 Mar 2019 03:43:51 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 779343F614;
+        Mon, 18 Mar 2019 03:43:49 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 10:43:43 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     broonie@kernel.org, robh@kernel.org, arnd@arndb.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, fabio.estevam@nxp.com,
+        benjamin.gaignard@linaro.org, loic.pallardy@st.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH 0/7] Introduce bus domains controller framework
+Message-ID: <20190318104343.GA15574@e107155-lin>
+References: <20190318100605.29120-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-References: <20190317181532.27477-1-colin.king@canonical.com>
-In-Reply-To: <20190317181532.27477-1-colin.king@canonical.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Mon, 18 Mar 2019 11:41:42 +0100
-Message-ID: <CAMGffEkdcEvCDVnnqoEFBsJE_N-4be8DUiJsPSyxN-U3EM_ozA@mail.gmail.com>
-Subject: Re: [PATCH] scsi: pm8001: clean up various indentation issues
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jack Wang <jinpu.wang@profitbricks.com>,
-        lindar_liu <lindar_liu@usish.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318100605.29120-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 7:15 PM Colin King <colin.king@canonical.com> wrote:
+On Mon, Mar 18, 2019 at 11:05:58AM +0100, Benjamin Gaignard wrote:
+> Bus domains controllers allow to divided system on chip into multiple domains
+> that can be used to select by who hardware blocks could be accessed.
+> A domain could be a cluster of CPUs (or coprocessors), a range of addresses or
+> a group of hardware blocks.
 >
-> From: Colin Ian King <colin.king@canonical.com>
+> Framework architecture is inspirated by pinctrl framework:
+> - a default configuration could be applied before bind the driver
+> - configurations could be apllied dynamically by drivers
+> - device node provides the bus domains configurations
 >
-> There are several lines of code where the indentation is
-> at an incorrect level; fix these.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-
-Thanks, Colin
-Jack
-
-> ---
->  drivers/scsi/pm8001/pm8001_hwi.c |  8 +++---
->  drivers/scsi/pm8001/pm8001_sas.c |  4 +--
->  drivers/scsi/pm8001/pm80xx_hwi.c | 44 ++++++++++++++++----------------
->  3 files changed, 28 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
-> index d0bb357034d8..e0fee3d91d23 100644
-> --- a/drivers/scsi/pm8001/pm8001_hwi.c
-> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
-> @@ -960,9 +960,9 @@ pm8001_chip_soft_rst(struct pm8001_hba_info *pm8001_ha)
->                 return -1;
->         }
->         regVal = pm8001_cr32(pm8001_ha, 2, GPIO_GPIO_0_0UTPUT_CTL_OFFSET);
-> -               PM8001_INIT_DBG(pm8001_ha,
-> -                               pm8001_printk("GPIO Output Control Register:"
-> -                               " = 0x%x\n", regVal));
-> +       PM8001_INIT_DBG(pm8001_ha,
-> +                       pm8001_printk("GPIO Output Control Register:"
-> +                       " = 0x%x\n", regVal));
->         /* set GPIO-0 output control to tri-state */
->         regVal &= 0xFFFFFFFC;
->         pm8001_cw32(pm8001_ha, 2, GPIO_GPIO_0_0UTPUT_CTL_OFFSET, regVal);
-> @@ -2928,7 +2928,7 @@ mpi_smp_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
->                 PM8001_IO_DBG(pm8001_ha, pm8001_printk("IO_SUCCESS\n"));
->                 ts->resp = SAS_TASK_COMPLETE;
->                 ts->stat = SAM_STAT_GOOD;
-> -       if (pm8001_dev)
-> +               if (pm8001_dev)
->                         pm8001_dev->running_req--;
->                 break;
->         case IO_ABORTED:
-> diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
-> index 084f2fcced0a..88eef3b18e41 100644
-> --- a/drivers/scsi/pm8001/pm8001_sas.c
-> +++ b/drivers/scsi/pm8001/pm8001_sas.c
-> @@ -740,8 +740,8 @@ static int pm8001_exec_internal_tmf_task(struct domain_device *dev,
->                 wait_for_completion(&task->slow_task->completion);
->                 if (pm8001_ha->chip_id != chip_8001) {
->                         pm8001_dev->setds_completion = &completion_setstate;
-> -                               PM8001_CHIP_DISP->set_dev_state_req(pm8001_ha,
-> -                                       pm8001_dev, 0x01);
-> +                       PM8001_CHIP_DISP->set_dev_state_req(pm8001_ha,
-> +                               pm8001_dev, 0x01);
->                         wait_for_completion(&completion_setstate);
->                 }
->                 res = -TMF_RESP_FUNC_FAILED;
-> diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-> index 63e4f7d34d6c..536d2b4384f8 100644
-> --- a/drivers/scsi/pm8001/pm80xx_hwi.c
-> +++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-> @@ -1316,7 +1316,7 @@ pm80xx_chip_soft_rst(struct pm8001_hba_info *pm8001_ha)
->
->  static void pm80xx_hw_chip_rst(struct pm8001_hba_info *pm8001_ha)
->  {
-> -        u32 i;
-> +       u32 i;
->
->         PM8001_INIT_DBG(pm8001_ha,
->                 pm8001_printk("chip reset start\n"));
-> @@ -4381,27 +4381,27 @@ static int pm80xx_chip_sata_req(struct pm8001_hba_info *pm8001_ha,
->                         sata_cmd.len = cpu_to_le32(task->total_xfer_len);
->                         sata_cmd.esgl = 0;
->                 }
-> -                       /* scsi cdb */
-> -                       sata_cmd.atapi_scsi_cdb[0] =
-> -                               cpu_to_le32(((task->ata_task.atapi_packet[0]) |
-> -                               (task->ata_task.atapi_packet[1] << 8) |
-> -                               (task->ata_task.atapi_packet[2] << 16) |
-> -                               (task->ata_task.atapi_packet[3] << 24)));
-> -                       sata_cmd.atapi_scsi_cdb[1] =
-> -                               cpu_to_le32(((task->ata_task.atapi_packet[4]) |
-> -                               (task->ata_task.atapi_packet[5] << 8) |
-> -                               (task->ata_task.atapi_packet[6] << 16) |
-> -                               (task->ata_task.atapi_packet[7] << 24)));
-> -                       sata_cmd.atapi_scsi_cdb[2] =
-> -                               cpu_to_le32(((task->ata_task.atapi_packet[8]) |
-> -                               (task->ata_task.atapi_packet[9] << 8) |
-> -                               (task->ata_task.atapi_packet[10] << 16) |
-> -                               (task->ata_task.atapi_packet[11] << 24)));
-> -                       sata_cmd.atapi_scsi_cdb[3] =
-> -                               cpu_to_le32(((task->ata_task.atapi_packet[12]) |
-> -                               (task->ata_task.atapi_packet[13] << 8) |
-> -                               (task->ata_task.atapi_packet[14] << 16) |
-> -                               (task->ata_task.atapi_packet[15] << 24)));
-> +               /* scsi cdb */
-> +               sata_cmd.atapi_scsi_cdb[0] =
-> +                       cpu_to_le32(((task->ata_task.atapi_packet[0]) |
-> +                       (task->ata_task.atapi_packet[1] << 8) |
-> +                       (task->ata_task.atapi_packet[2] << 16) |
-> +                       (task->ata_task.atapi_packet[3] << 24)));
-> +               sata_cmd.atapi_scsi_cdb[1] =
-> +                       cpu_to_le32(((task->ata_task.atapi_packet[4]) |
-> +                       (task->ata_task.atapi_packet[5] << 8) |
-> +                       (task->ata_task.atapi_packet[6] << 16) |
-> +                       (task->ata_task.atapi_packet[7] << 24)));
-> +               sata_cmd.atapi_scsi_cdb[2] =
-> +                       cpu_to_le32(((task->ata_task.atapi_packet[8]) |
-> +                       (task->ata_task.atapi_packet[9] << 8) |
-> +                       (task->ata_task.atapi_packet[10] << 16) |
-> +                       (task->ata_task.atapi_packet[11] << 24)));
-> +               sata_cmd.atapi_scsi_cdb[3] =
-> +                       cpu_to_le32(((task->ata_task.atapi_packet[12]) |
-> +                       (task->ata_task.atapi_packet[13] << 8) |
-> +                       (task->ata_task.atapi_packet[14] << 16) |
-> +                       (task->ata_task.atapi_packet[15] << 24)));
->         }
->
->         /* Check for read log for failed drive and return */
-> --
-> 2.20.1
+> An example of bus domains controller is STM32 ETZPC hardware block
+> which got 3 domains:
+> - secure: hardware blocks are only accessible by software running on trust
+>   zone.
+> - non-secure: hardware blocks are accessible by non-secure software (i.e.
+>   linux kernel).
+> - coprocessor: hardware blocks are only accessible by the corpocessor.
+> Up to 94 hardware blocks of the soc could be managed by ETZPC and
+> assigned to one of the three domains.
 >
 
+You fail to explain why do we need this in non-secure Linux ?
+You need to have solid reasons as why this can't be done in secure
+firmware. And yes I mean even on arm32. On platforms with such hardware
+capabilities you will need some secure firmware to be running and these
+things can be done there. I don't want this enabled for ARM64 at all,
+firmware *has to deal* with this.
 
--- 
-Jack Wang
-Linux Kernel Developer
-
-1&1 IONOS Cloud GmbH | Greifswalder Str. 207 | 10405 Berlin | Germany
-Phone: +49 30 57700-8042 | Fax: +49 30 57700-8598
-E-mail: jinpu.wang@cloud.ionos.com | Web: www.ionos.de
-
-
-Head Office: Berlin, Germany
-District Court Berlin Charlottenburg, Registration number: HRB 125506 B
-Executive Management: Christoph Steffens, Matthias Steinberg, Achim Weiss
-
-Member of United Internet
-
-This e-mail may contain confidential and/or privileged information. If
-you are not the intended recipient of this e-mail, you are hereby
-notified that saving, distribution or use of the content of this
-e-mail in any way is prohibited. If you have received this e-mail in
-error, please notify the sender and delete the e-mail.
+--
+Regards,
+Sudeep
