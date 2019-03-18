@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396C7C10F00
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D4EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6082087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896C82063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901178;
-	bh=9euArBOs1dwKba+eWL1qPdffxaaSGiqjAwoX8zoe550=;
+	s=default; t=1552901182;
+	bh=cU170nNzFIgcanZcMULEKuY8IgyL1SgL1q2P7taX4Jw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VaMAu3fuShdjOswJKxEO+AyAYW+UNuV/UZaH2VHoHVjGjgEgvYsN+krRD//aZAmmp
-	 fP9HdAOwIctCxqjJ22fkmNdp35Mm35VepthK1H2MMv+jzqoHfmeMA7XbXNMsVDGgL9
-	 aCuIVMJdGrJOd72E3a42u++4Sk6zRrYyRffsZCMo=
+	b=R9hPvGwvKBPs7yudzQAxry5hwMMPU9XNlcQqTTi66c5WsHsI8UgpX6UvMcm7cfD/b
+	 ujuqcqTg0iXfwJGA4qKdXqpvG9YBMnQN4D074tGb/2PKvDRnCa5UGv9XXhv1zcYKNP
+	 fykdh3ZiKJBJL8L3dS31n2ukBy8i8/pXgXEMaISQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfCRJ0Q (ORCPT
+        id S1727440AbfCRJ0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:26:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59024 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbfCRJ0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:26:16 -0400
+        id S1726449AbfCRJ0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:26:19 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E3082063F;
-        Mon, 18 Mar 2019 09:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BA7F2075C;
+        Mon, 18 Mar 2019 09:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901174;
-        bh=9euArBOs1dwKba+eWL1qPdffxaaSGiqjAwoX8zoe550=;
+        s=default; t=1552901178;
+        bh=cU170nNzFIgcanZcMULEKuY8IgyL1SgL1q2P7taX4Jw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ets8UhkveKwsooQ1VW2AmS9TfB8I/XuqS5x3sjE2u83gHQtUO+vuGPK/dkmlalilI
-         CoWA2opuXOWS6r9pKfc156JjXCpV0mXMigvMVtI7x3eQCFgqd1JB1moOcOBMtATT0y
-         hM+iCDw6HJ9jArU4VidJZBcE9a3FHCx1PF539v+Q=
+        b=CLniG9RMm+0WroKg1ceAuZ7l8UpC/yNjC7eJTPMHYZaW8t2byzSWD7itAdJ90s21O
+         s91YcBhGI68NVHz4IJ7HHvN2+UtlaWYMiYE6XBq9CR0iL+XsSihR45+yPjAVFnDnW2
+         itz7vhYTkhvwLDlhs5TC2OOFat4lgeVwRfidp4/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Yu <zhangyu31@baidu.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Arvid Brodin <arvid.brodin@alten.se>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 01/43] connector: fix unsafe usage of ->real_parent
-Date:   Mon, 18 Mar 2019 10:23:53 +0100
-Message-Id: <20190318083715.919807057@linuxfoundation.org>
+Subject: [PATCH 5.0 10/43] net/hsr: fix possible crash in add_timer()
+Date:   Mon, 18 Mar 2019 10:24:02 +0100
+Message-Id: <20190318083716.174848223@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
 References: <20190318083715.877441740@linuxfoundation.org>
@@ -67,187 +66,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 6d2b0f02f5a07a4bf02e4cbc90d7eaa85cac2986 ]
+[ Upstream commit 1e027960edfaa6a43f9ca31081729b716598112b ]
 
-proc_exit_connector() uses ->real_parent lockless. This is not
-safe that its parent can go away at any moment, so use RCU to
-protect it, and ensure that this task is not released.
+syzbot found another add_timer() issue, this time in net/hsr [1]
 
-[  747.624551] ==================================================================
-[  747.632946] BUG: KASAN: use-after-free in proc_exit_connector+0x1f7/0x310
-[  747.640686] Read of size 4 at addr ffff88a0276988e0 by task sshd/2882
-[  747.648032]
-[  747.649804] CPU: 11 PID: 2882 Comm: sshd Tainted: G            E     4.19.26-rc2 #11
-[  747.658629] Hardware name: IBM x3550M4 -[7914OFV]-/00AM544, BIOS -[D7E142BUS-1.71]- 07/31/2014
-[  747.668419] Call Trace:
-[  747.671269]  dump_stack+0xf0/0x19b
-[  747.675186]  ? show_regs_print_info+0x5/0x5
-[  747.679988]  ? kmsg_dump_rewind_nolock+0x59/0x59
-[  747.685302]  print_address_description+0x6a/0x270
-[  747.691162]  kasan_report+0x258/0x380
-[  747.695835]  ? proc_exit_connector+0x1f7/0x310
-[  747.701402]  proc_exit_connector+0x1f7/0x310
-[  747.706767]  ? proc_coredump_connector+0x2d0/0x2d0
-[  747.712715]  ? _raw_write_unlock_irq+0x29/0x50
-[  747.718270]  ? _raw_write_unlock_irq+0x29/0x50
-[  747.723820]  ? ___preempt_schedule+0x16/0x18
-[  747.729193]  ? ___preempt_schedule+0x16/0x18
-[  747.734574]  do_exit+0xa11/0x14f0
-[  747.738880]  ? mm_update_next_owner+0x590/0x590
-[  747.744525]  ? debug_show_all_locks+0x3c0/0x3c0
-[  747.761448]  ? ktime_get_coarse_real_ts64+0xeb/0x1c0
-[  747.767589]  ? lockdep_hardirqs_on+0x1a6/0x290
-[  747.773154]  ? check_chain_key+0x139/0x1f0
-[  747.778345]  ? check_flags.part.35+0x240/0x240
-[  747.783908]  ? __lock_acquire+0x2300/0x2300
-[  747.789171]  ? _raw_spin_unlock_irqrestore+0x59/0x70
-[  747.795316]  ? _raw_spin_unlock_irqrestore+0x59/0x70
-[  747.801457]  ? do_raw_spin_unlock+0x10f/0x1e0
-[  747.806914]  ? do_raw_spin_trylock+0x120/0x120
-[  747.812481]  ? preempt_count_sub+0x14/0xc0
-[  747.817645]  ? _raw_spin_unlock+0x2e/0x50
-[  747.822708]  ? __handle_mm_fault+0x12db/0x1fa0
-[  747.828367]  ? __pmd_alloc+0x2d0/0x2d0
-[  747.833143]  ? check_noncircular+0x50/0x50
-[  747.838309]  ? match_held_lock+0x7f/0x340
-[  747.843380]  ? check_noncircular+0x50/0x50
-[  747.848561]  ? handle_mm_fault+0x21a/0x5f0
-[  747.853730]  ? check_flags.part.35+0x240/0x240
-[  747.859290]  ? check_chain_key+0x139/0x1f0
-[  747.864474]  ? __do_page_fault+0x40f/0x760
-[  747.869655]  ? __audit_syscall_entry+0x4b/0x1f0
-[  747.875319]  ? syscall_trace_enter+0x1d5/0x7b0
-[  747.880877]  ? trace_raw_output_preemptirq_template+0x90/0x90
-[  747.887895]  ? trace_raw_output_sys_exit+0x80/0x80
-[  747.893860]  ? up_read+0x3b/0x90
-[  747.898142]  ? stop_critical_timings+0x260/0x260
-[  747.903909]  do_group_exit+0xe0/0x1c0
-[  747.908591]  ? __x64_sys_exit+0x30/0x30
-[  747.913460]  ? trace_raw_output_preemptirq_template+0x90/0x90
-[  747.920485]  ? tracer_hardirqs_on+0x270/0x270
-[  747.925956]  __x64_sys_exit_group+0x28/0x30
-[  747.931214]  do_syscall_64+0x117/0x400
-[  747.935988]  ? syscall_return_slowpath+0x2f0/0x2f0
-[  747.941931]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[  747.947788]  ? trace_hardirqs_on_caller+0x1d0/0x1d0
-[  747.953838]  ? lockdep_sys_exit+0x16/0x8e
-[  747.958915]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[  747.964784]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  747.971021] RIP: 0033:0x7f572f154c68
-[  747.975606] Code: Bad RIP value.
-[  747.979791] RSP: 002b:00007ffed2dfaa58 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-[  747.989324] RAX: ffffffffffffffda RBX: 00007f572f431840 RCX: 00007f572f154c68
-[  747.997910] RDX: 0000000000000001 RSI: 000000000000003c RDI: 0000000000000001
-[  748.006495] RBP: 0000000000000001 R08: 00000000000000e7 R09: fffffffffffffee0
-[  748.015079] R10: 00007f572f4387e8 R11: 0000000000000246 R12: 00007f572f431840
-[  748.023664] R13: 000055a7f90f2c50 R14: 000055a7f96e2310 R15: 000055a7f96e2310
-[  748.032287]
-[  748.034509] Allocated by task 2300:
-[  748.038982]  kasan_kmalloc+0xa0/0xd0
-[  748.043562]  kmem_cache_alloc_node+0xf5/0x2e0
-[  748.049018]  copy_process+0x1781/0x4790
-[  748.053884]  _do_fork+0x166/0x9a0
-[  748.058163]  do_syscall_64+0x117/0x400
-[  748.062943]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  748.069180]
-[  748.071405] Freed by task 15395:
-[  748.075591]  __kasan_slab_free+0x130/0x180
-[  748.080752]  kmem_cache_free+0xc2/0x310
-[  748.085619]  free_task+0xea/0x130
-[  748.089901]  __put_task_struct+0x177/0x230
-[  748.095063]  finish_task_switch+0x51b/0x5d0
-[  748.100315]  __schedule+0x506/0xfa0
-[  748.104791]  schedule+0xca/0x260
-[  748.108978]  futex_wait_queue_me+0x27e/0x420
-[  748.114333]  futex_wait+0x251/0x550
-[  748.118814]  do_futex+0x75b/0xf80
-[  748.123097]  __x64_sys_futex+0x231/0x2a0
-[  748.128065]  do_syscall_64+0x117/0x400
-[  748.132835]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  748.139066]
-[  748.141289] The buggy address belongs to the object at ffff88a027698000
-[  748.141289]  which belongs to the cache task_struct of size 12160
-[  748.156589] The buggy address is located 2272 bytes inside of
-[  748.156589]  12160-byte region [ffff88a027698000, ffff88a02769af80)
-[  748.171114] The buggy address belongs to the page:
-[  748.177055] page:ffffea00809da600 count:1 mapcount:0 mapping:ffff888107d01e00 index:0x0 compound_mapcount: 0
-[  748.189136] flags: 0x57ffffc0008100(slab|head)
-[  748.194688] raw: 0057ffffc0008100 ffffea00809a3200 0000000300000003 ffff888107d01e00
-[  748.204424] raw: 0000000000000000 0000000000020002 00000001ffffffff 0000000000000000
-[  748.214146] page dumped because: kasan: bad access detected
-[  748.220976]
-[  748.223197] Memory state around the buggy address:
-[  748.229128]  ffff88a027698780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  748.238271]  ffff88a027698800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  748.247414] >ffff88a027698880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  748.256564]                                                        ^
-[  748.264267]  ffff88a027698900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  748.273493]  ffff88a027698980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  748.282630] ==================================================================
+Let's use mod_timer() which is safe.
 
-Fixes: b086ff87251b4a4 ("connector: add parent pid and tgid to coredump and exit events")
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Acked-by: Evgeniy Polyakov <zbr@ioremap.net>
+[1]
+kernel BUG at kernel/time/timer.c:1136!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 15909 Comm: syz-executor.3 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+kobject: 'loop2' (00000000f5629718): kobject_uevent_env
+RIP: 0010:add_timer kernel/time/timer.c:1136 [inline]
+RIP: 0010:add_timer+0x654/0xbe0 kernel/time/timer.c:1134
+Code: 0f 94 c5 31 ff 44 89 ee e8 09 61 0f 00 45 84 ed 0f 84 77 fd ff ff e8 bb 5f 0f 00 e8 07 10 a0 ff e9 68 fd ff ff e8 ac 5f 0f 00 <0f> 0b e8 a5 5f 0f 00 0f 0b e8 9e 5f 0f 00 4c 89 b5 58 ff ff ff e9
+RSP: 0018:ffff8880656eeca0 EFLAGS: 00010246
+kobject: 'loop2' (00000000f5629718): fill_kobj_path: path = '/devices/virtual/block/loop2'
+RAX: 0000000000040000 RBX: 1ffff1100caddd9a RCX: ffffc9000c436000
+RDX: 0000000000040000 RSI: ffffffff816056c4 RDI: ffff88806a2f6cc8
+RBP: ffff8880656eed58 R08: ffff888067f4a300 R09: ffff888067f4abc8
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff88806a2f6cc0
+R13: dffffc0000000000 R14: 0000000000000001 R15: ffff8880656eed30
+FS:  00007fc2019bf700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000738000 CR3: 0000000067e8e000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ hsr_check_announce net/hsr/hsr_device.c:99 [inline]
+ hsr_check_carrier_and_operstate+0x567/0x6f0 net/hsr/hsr_device.c:120
+ hsr_netdev_notify+0x297/0xa00 net/hsr/hsr_main.c:51
+ notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
+ __raw_notifier_call_chain kernel/notifier.c:394 [inline]
+ raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
+ call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
+ call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
+ call_netdevice_notifiers net/core/dev.c:1765 [inline]
+ dev_open net/core/dev.c:1436 [inline]
+ dev_open+0x143/0x160 net/core/dev.c:1424
+ team_port_add drivers/net/team/team.c:1203 [inline]
+ team_add_slave+0xa07/0x15d0 drivers/net/team/team.c:1933
+ do_set_master net/core/rtnetlink.c:2358 [inline]
+ do_set_master+0x1d4/0x230 net/core/rtnetlink.c:2332
+ do_setlink+0x966/0x3510 net/core/rtnetlink.c:2493
+ rtnl_setlink+0x271/0x3b0 net/core/rtnetlink.c:2747
+ rtnetlink_rcv_msg+0x465/0xb00 net/core/rtnetlink.c:5192
+ netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5210
+ netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+ netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
+ netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
+ sock_sendmsg_nosec net/socket.c:622 [inline]
+ sock_sendmsg+0xdd/0x130 net/socket.c:632
+ sock_write_iter+0x27c/0x3e0 net/socket.c:923
+ call_write_iter include/linux/fs.h:1869 [inline]
+ do_iter_readv_writev+0x5e0/0x8e0 fs/read_write.c:680
+ do_iter_write fs/read_write.c:956 [inline]
+ do_iter_write+0x184/0x610 fs/read_write.c:937
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1001
+ do_writev+0xf6/0x290 fs/read_write.c:1036
+ __do_sys_writev fs/read_write.c:1109 [inline]
+ __se_sys_writev fs/read_write.c:1106 [inline]
+ __x64_sys_writev+0x75/0xb0 fs/read_write.c:1106
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x457f29
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc2019bec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000457f29
+RDX: 0000000000000001 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc2019bf6d4
+R13: 00000000004c4a60 R14: 00000000004dd218 R15: 00000000ffffffff
+
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Arvid Brodin <arvid.brodin@alten.se>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/connector/cn_proc.c |   22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ net/hsr/hsr_device.c |   14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
---- a/drivers/connector/cn_proc.c
-+++ b/drivers/connector/cn_proc.c
-@@ -250,6 +250,7 @@ void proc_coredump_connector(struct task
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -94,9 +94,8 @@ static void hsr_check_announce(struct ne
+ 			&& (old_operstate != IF_OPER_UP)) {
+ 		/* Went up */
+ 		hsr->announce_count = 0;
+-		hsr->announce_timer.expires = jiffies +
+-				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
+-		add_timer(&hsr->announce_timer);
++		mod_timer(&hsr->announce_timer,
++			  jiffies + msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL));
+ 	}
+ 
+ 	if ((hsr_dev->operstate != IF_OPER_UP) && (old_operstate == IF_OPER_UP))
+@@ -332,6 +331,7 @@ static void hsr_announce(struct timer_li
  {
- 	struct cn_msg *msg;
- 	struct proc_event *ev;
-+	struct task_struct *parent;
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 	struct hsr_priv *hsr;
+ 	struct hsr_port *master;
++	unsigned long interval;
  
- 	if (atomic_read(&proc_event_num_listeners) < 1)
-@@ -262,8 +263,14 @@ void proc_coredump_connector(struct task
- 	ev->what = PROC_EVENT_COREDUMP;
- 	ev->event_data.coredump.process_pid = task->pid;
- 	ev->event_data.coredump.process_tgid = task->tgid;
--	ev->event_data.coredump.parent_pid = task->real_parent->pid;
--	ev->event_data.coredump.parent_tgid = task->real_parent->tgid;
-+
-+	rcu_read_lock();
-+	if (pid_alive(task)) {
-+		parent = rcu_dereference(task->real_parent);
-+		ev->event_data.coredump.parent_pid = parent->pid;
-+		ev->event_data.coredump.parent_tgid = parent->tgid;
-+	}
-+	rcu_read_unlock();
+ 	hsr = from_timer(hsr, t, announce_timer);
  
- 	memcpy(&msg->id, &cn_proc_event_id, sizeof(msg->id));
- 	msg->ack = 0; /* not used */
-@@ -276,6 +283,7 @@ void proc_exit_connector(struct task_str
- {
- 	struct cn_msg *msg;
- 	struct proc_event *ev;
-+	struct task_struct *parent;
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+@@ -343,18 +343,16 @@ static void hsr_announce(struct timer_li
+ 				hsr->protVersion);
+ 		hsr->announce_count++;
  
- 	if (atomic_read(&proc_event_num_listeners) < 1)
-@@ -290,8 +298,14 @@ void proc_exit_connector(struct task_str
- 	ev->event_data.exit.process_tgid = task->tgid;
- 	ev->event_data.exit.exit_code = task->exit_code;
- 	ev->event_data.exit.exit_signal = task->exit_signal;
--	ev->event_data.exit.parent_pid = task->real_parent->pid;
--	ev->event_data.exit.parent_tgid = task->real_parent->tgid;
-+
-+	rcu_read_lock();
-+	if (pid_alive(task)) {
-+		parent = rcu_dereference(task->real_parent);
-+		ev->event_data.exit.parent_pid = parent->pid;
-+		ev->event_data.exit.parent_tgid = parent->tgid;
-+	}
-+	rcu_read_unlock();
+-		hsr->announce_timer.expires = jiffies +
+-				msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
++		interval = msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
+ 	} else {
+ 		send_hsr_supervision_frame(master, HSR_TLV_LIFE_CHECK,
+ 				hsr->protVersion);
  
- 	memcpy(&msg->id, &cn_proc_event_id, sizeof(msg->id));
- 	msg->ack = 0; /* not used */
+-		hsr->announce_timer.expires = jiffies +
+-				msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
++		interval = msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
+ 	}
+ 
+ 	if (is_admin_up(master->dev))
+-		add_timer(&hsr->announce_timer);
++		mod_timer(&hsr->announce_timer, jiffies + interval);
+ 
+ 	rcu_read_unlock();
+ }
 
 
