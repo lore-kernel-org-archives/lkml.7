@@ -3,80 +3,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2B4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD344C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDC2520863
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F296020857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 13:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfCRNyj (ORCPT
+        id S1727545AbfCRN4g convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 09:54:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37644 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 09:56:36 -0400
+Received: from mga17.intel.com ([192.55.52.151]:14074 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfCRNyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 09:54:39 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44D5B20857;
-        Mon, 18 Mar 2019 13:54:38 +0000 (UTC)
-Date:   Mon, 18 Mar 2019 09:54:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Brian Norris <briannorris@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] tracing: kdb: Allow ftdump to skip all but the
- last few entries
-Message-ID: <20190318095436.7f09a371@gandalf.local.home>
-In-Reply-To: <20190318030238.GD27232@oak.lan>
-References: <20190315230906.250598-1-dianders@chromium.org>
-        <20190315230906.250598-3-dianders@chromium.org>
-        <20190318030238.GD27232@oak.lan>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726626AbfCRN4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 09:56:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Mar 2019 06:56:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,494,1544515200"; 
+   d="scan'208";a="308184534"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2019 06:56:35 -0700
+Received: from fmsmsx122.amr.corp.intel.com (10.18.125.37) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 18 Mar 2019 06:56:34 -0700
+Received: from fmsmsx124.amr.corp.intel.com ([169.254.8.86]) by
+ fmsmsx122.amr.corp.intel.com ([169.254.5.36]) with mapi id 14.03.0415.000;
+ Mon, 18 Mar 2019 06:56:34 -0700
+From:   "Saleem, Shiraz" <shiraz.saleem@intel.com>
+To:     Kangjie Lu <kjlu@umn.edu>
+CC:     "Latif, Faisal" <faisal.latif@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] infiniband: i40iw: fix potential NULL pointer
+ dereferences
+Thread-Topic: [PATCH v2] infiniband: i40iw: fix potential NULL pointer
+ dereferences
+Thread-Index: AQHU2vxkzdhE0Y3As0aAX3uS/2M7W6YRbOyQ
+Date:   Mon, 18 Mar 2019 13:56:34 +0000
+Message-ID: <9DD61F30A802C4429A01CA4200E302A7A5A75387@fmsmsx124.amr.corp.intel.com>
+References: <9DD61F30A802C4429A01CA4200E302A7A5A6FAA8@fmsmsx124.amr.corp.intel.com>
+ <20190315065715.18249-1-kjlu@umn.edu>
+In-Reply-To: <20190315065715.18249-1-kjlu@umn.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.1.200.107]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019 03:02:38 +0000
-Daniel Thompson <daniel.thompson@linaro.org> wrote:
+>Subject: [PATCH v2] infiniband: i40iw: fix potential NULL pointer dereferences
 
-> > diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-> > index 4b666643d69f..996e1e9cd9a6 100644
-> > --- a/kernel/trace/trace_kdb.c
-> > +++ b/kernel/trace/trace_kdb.c
-> > @@ -39,7 +39,8 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
-> >  	/* don't look at user memory in panic mode */
-> >  	tr->trace_flags &= ~TRACE_ITER_SYM_USEROBJ;
-> >  
-> > -	kdb_printf("Dumping ftrace buffer:\n");
-> > +	kdb_printf("Dumping ftrace buffer (skipping %d entries):\n",
-> > +		   skip_entries);  
-> 
-> If someone *doesn't* need to skip any entries I'm not a fan of telling
-> them we are "skipping 0 entries"; it is more unnerving than helpful
-> ("huh? what does it need to tell me that no entried were skipped?
-> what makes the tracer skip entries?... Doh... I get it").
+Something like "RDMA/i40iw: Handle workqueue allocation failure" is a more appropriate subject line. 
+>
+>alloc_ordered_workqueue may fail and return NULL.
+>The fix captures the failure and handles it properly to avoid potential NULL pointer
+>dereferences.
+>
+>Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+>---
+>V2: add return value to capture the error code
+>---
+> drivers/infiniband/hw/i40iw/i40iw.h      |  2 +-
+> drivers/infiniband/hw/i40iw/i40iw_cm.c   | 19 ++++++++++++++++---
+> drivers/infiniband/hw/i40iw/i40iw_main.c |  5 ++++-
+> 3 files changed, 21 insertions(+), 5 deletions(-)
+>
+The patch itself looks ok to me now. Thanks!
 
-I agree.
-
-Probably best to have this:
-
-	kdb_printf("Dumping ftrace buffer:\n");
-	if (skip_entries)
-		kdb_printf("(skipping %d entries)\n", skip_entries);
-
-No reason to inject that skipping line in the first line.
-
--- Steve
+Shiraz
