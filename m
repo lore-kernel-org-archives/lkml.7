@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489B2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01D7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164242175B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C81A2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901678;
-	bh=vZziSGpGjuq7EcDtYDJvNMZrSXCU9weoJlzObpLLZb8=;
+	s=default; t=1552901682;
+	bh=RI+GfF52Hgb5adQNymfyqm42Z3L5Wo4va+TqPcXVqcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eKaAb10kKr44M4ajKVBeoR85hb7zLBpGRKK6ZApmbye0jlhNWN9rBNO7B1Dqut2JM
-	 52qMHgr4XnyeLgtCC3jiBuDtB+6ye19WIO8656/tqDJll97VYwmJqV5LwcnAQP2aPU
-	 v6xUAHpt2egLwQWyApI/hFvpp4PnUNfSjkNYodfk=
+	b=F9Th/n6GjGbyZ4sGJj2S94WdAHhso8IaaiCePNkL2RXwTB9ndPsycf0qnINlWZiNC
+	 hmgNZ5Gfj/Z8FxA+zON4tUYegRi+qtanzL0ruOctt0GR2MWluNr9tWCeaFr39vkQLB
+	 EAnNKRkIXih90dJiAwcUX7Mf8Zti20Pi2LIWLmxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbfCRJeg (ORCPT
+        id S1729038AbfCRJek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:34:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42974 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:34:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728720AbfCRJed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:33 -0400
+        id S1728720AbfCRJeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:34:37 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A1332083D;
-        Mon, 18 Mar 2019 09:34:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06A5B21738;
+        Mon, 18 Mar 2019 09:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901672;
-        bh=vZziSGpGjuq7EcDtYDJvNMZrSXCU9weoJlzObpLLZb8=;
+        s=default; t=1552901676;
+        bh=RI+GfF52Hgb5adQNymfyqm42Z3L5Wo4va+TqPcXVqcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rjCSpwDE8KTc6Bl9xte4iK675Hi7sJY8NULV4QlOkfXQ64wmiXu1kwYyfBuTV8SQS
-         8YJo0kAzn6PUVzpBTypM6dzupcnHpZjzCurTSy2nGbMLIEzydqtkTje+E1o2i2PP1L
-         8+xk0YpXOFrPl9tSZVUHoYHJ5rp84nxMNiTNNHtM=
+        b=kHrj86L8XdmArmf3MUd48n2ki0Gs0GrWY5Xp1txm+nOvdi/yJ9xeouSh0ZdF23eDL
+         VwNb4FGxrfkO/fMhPWXR6jfNojr/Uf6UEdkIsNbtNF2VZ3DeMYufOSQu8BiApOSnRS
+         TMKHOQEDIFj57fL7MwaV88xTfibT09gHr0y+PnT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 14/34] rxrpc: Fix client call queueing, waiting for channel
-Date:   Mon, 18 Mar 2019 10:25:38 +0100
-Message-Id: <20190318084146.644842685@linuxfoundation.org>
+Subject: [PATCH 4.14 15/34] tcp: Dont access TCP_SKB_CB before initializing it
+Date:   Mon, 18 Mar 2019 10:25:39 +0100
+Message-Id: <20190318084146.777565077@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084144.657740413@linuxfoundation.org>
 References: <20190318084144.657740413@linuxfoundation.org>
@@ -66,49 +66,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: David Howells <dhowells@redhat.com>
+From: Christoph Paasch <cpaasch@apple.com>
 
-[ Upstream commit 69ffaebb90369ce08657b5aea4896777b9d6e8fc ]
+[ Upstream commit f2feaefdabb0a6253aa020f65e7388f07a9ed47c ]
 
-rxrpc_get_client_conn() adds a new call to the front of the waiting_calls
-queue if the connection it's going to use already exists.  This is bad as
-it allows calls to get starved out.
+Since commit eeea10b83a13 ("tcp: add
+tcp_v4_fill_cb()/tcp_v4_restore_cb()"), tcp_vX_fill_cb is only called
+after tcp_filter(). That means, TCP_SKB_CB(skb)->end_seq still points to
+the IP-part of the cb.
 
-Fix this by adding to the tail instead.
+We thus should not mock with it, as this can trigger bugs (thanks
+syzkaller):
+[   12.349396] ==================================================================
+[   12.350188] BUG: KASAN: slab-out-of-bounds in ip6_datagram_recv_specific_ctl+0x19b3/0x1a20
+[   12.351035] Read of size 1 at addr ffff88006adbc208 by task test_ip6_datagr/1799
 
-Also change the other enqueue point in the same function to put it on the
-front (ie. when we have a new connection).  This makes the point that in
-the case of a new connection the new call goes at the front (though it
-doesn't actually matter since the queue should be unoccupied).
+Setting end_seq is actually no more necessary in tcp_filter as it gets
+initialized later on in tcp_vX_fill_cb.
 
-Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: eeea10b83a13 ("tcp: add tcp_v4_fill_cb()/tcp_v4_restore_cb()")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/conn_client.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/tcp_ipv4.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -351,7 +351,7 @@ static int rxrpc_get_client_conn(struct
- 	 * normally have to take channel_lock but we do this before anyone else
- 	 * can see the connection.
- 	 */
--	list_add_tail(&call->chan_wait_link, &candidate->waiting_calls);
-+	list_add(&call->chan_wait_link, &candidate->waiting_calls);
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1578,15 +1578,8 @@ EXPORT_SYMBOL(tcp_add_backlog);
+ int tcp_filter(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct tcphdr *th = (struct tcphdr *)skb->data;
+-	unsigned int eaten = skb->len;
+-	int err;
  
- 	if (cp->exclusive) {
- 		call->conn = candidate;
-@@ -430,7 +430,7 @@ found_extant_conn:
- 	call->conn = conn;
- 	call->security_ix = conn->security_ix;
- 	call->service_id = conn->service_id;
--	list_add(&call->chan_wait_link, &conn->waiting_calls);
-+	list_add_tail(&call->chan_wait_link, &conn->waiting_calls);
- 	spin_unlock(&conn->channel_lock);
- 	_leave(" = 0 [extant %d]", conn->debug_id);
- 	return 0;
+-	err = sk_filter_trim_cap(sk, skb, th->doff * 4);
+-	if (!err) {
+-		eaten -= skb->len;
+-		TCP_SKB_CB(skb)->end_seq -= eaten;
+-	}
+-	return err;
++	return sk_filter_trim_cap(sk, skb, th->doff * 4);
+ }
+ EXPORT_SYMBOL(tcp_filter);
+ 
 
 
