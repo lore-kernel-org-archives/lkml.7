@@ -2,147 +2,249 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC44C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89426C10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8562075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901304;
-	bh=z9f8MVws3sl9tZw1AS8apLdEmUZwiCGkdWUemVrpMlI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ITPUOvxbcMCocfqSdsvmS2era4jE7qENN85MazQDhRdpTzXLfUPh3lLKom4k1QMv2
-	 zcActO6OK/i2VrS4IeATRND7wNOvtp2KlxP1R8H9alaMsPYIToJJzZyjXjHe2xBtKE
-	 PuG+C1Eb0+fzFOXl+Q7OlMxPRf+P+weNn/NSXezQ=
+	by mail.kernel.org (Postfix) with ESMTP id 56CC02087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfCRJ2W (ORCPT
+        id S1727540AbfCRJ2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34094 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:28:24 -0400
+Received: from relay.sw.ru ([185.231.240.75]:41504 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728034AbfCRJ2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:28:20 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D10421734;
-        Mon, 18 Mar 2019 09:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901299;
-        bh=z9f8MVws3sl9tZw1AS8apLdEmUZwiCGkdWUemVrpMlI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j52WLJe6S3t5NRdZznx1o0hsswe2f7q/xuqKtdCTV7WpYqAZ+Bjw0is1c+Ek47PaU
-         qxCz2fhtUmL+ZkPJqNfT7e2mGzlUXUn9UaHAW9iWuuSAWW08hLyDwoa1aoXXKJPIcp
-         QtkqFlMs7e8LY80OB4KnL1o0RqRNOsiL0RA1Mc7U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 05/43] l2tp: fix infoleak in l2tp_ip6_recvmsg()
-Date:   Mon, 18 Mar 2019 10:23:57 +0100
-Message-Id: <20190318083716.035989522@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318083715.877441740@linuxfoundation.org>
-References: <20190318083715.877441740@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        id S1727521AbfCRJ2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:28:22 -0400
+Received: from [172.16.25.169] (helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1h5oZ7-00055e-3U; Mon, 18 Mar 2019 12:28:17 +0300
+Subject: [PATCH REBASED 4/4] mm: Generalize putback scan functions
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     akpm@linux-foundation.org, daniel.m.jordan@oracle.com,
+        mhocko@suse.com, ktkhai@virtuozzo.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 18 Mar 2019 12:28:16 +0300
+Message-ID: <155290129627.31489.8321971028677203248.stgit@localhost.localdomain>
+In-Reply-To: <155290113594.31489.16711525148390601318.stgit@localhost.localdomain>
+References: <155290113594.31489.16711525148390601318.stgit@localhost.localdomain>
+User-Agent: StGit/0.18
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+This combines two similar functions move_active_pages_to_lru()
+and putback_inactive_pages() into single move_pages_to_lru().
+This remove duplicate code and makes object file size smaller.
 
-------------------
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  57082	   4732	    128	  61942	   f1f6	mm/vmscan.o
+After:
+   text	   data	    bss	    dec	    hex	filename
+  55112	   4600	    128	  59840	   e9c0	mm/vmscan.o
 
-From: Eric Dumazet <edumazet@google.com>
+Note, that now we are checking for !page_evictable() coming
+from shrink_active_list(), which shouldn't change any behavior
+since that path works with evictable pages only.
 
-[ Upstream commit 163d1c3d6f17556ed3c340d3789ea93be95d6c28 ]
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-Back in 2013 Hannes took care of most of such leaks in commit
-bceaa90240b6 ("inet: prevent leakage of uninitialized memory to user in recv syscalls")
-
-But the bug in l2tp_ip6_recvmsg() has not been fixed.
-
-syzbot report :
-
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-CPU: 1 PID: 10996 Comm: syz-executor362 Not tainted 5.0.0+ #11
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x173/0x1d0 lib/dump_stack.c:113
- kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
- kmsan_internal_check_memory+0x9f4/0xb10 mm/kmsan/kmsan.c:694
- kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:601
- _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
- copy_to_user include/linux/uaccess.h:174 [inline]
- move_addr_to_user+0x311/0x570 net/socket.c:227
- ___sys_recvmsg+0xb65/0x1310 net/socket.c:2283
- do_recvmmsg+0x646/0x10c0 net/socket.c:2390
- __sys_recvmmsg net/socket.c:2469 [inline]
- __do_sys_recvmmsg net/socket.c:2492 [inline]
- __se_sys_recvmmsg+0x1d1/0x350 net/socket.c:2485
- __x64_sys_recvmmsg+0x62/0x80 net/socket.c:2485
- do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x445819
-Code: e8 6c b6 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f64453eddb8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
-RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 0000000000445819
-RDX: 0000000000000005 RSI: 0000000020002f80 RDI: 0000000000000003
-RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
-R13: 00007ffeba8f87af R14: 00007f64453ee9c0 R15: 20c49ba5e353f7cf
-
-Local variable description: ----addr@___sys_recvmsg
-Variable was created at:
- ___sys_recvmsg+0xf6/0x1310 net/socket.c:2244
- do_recvmmsg+0x646/0x10c0 net/socket.c:2390
-
-Bytes 0-31 of 32 are uninitialized
-Memory access of size 32 starts at ffff8880ae62fbb0
-Data copied to user address 0000000020000000
-
-Fixes: a32e0eec7042 ("l2tp: introduce L2TPv3 IP encapsulation support for IPv6")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+v3: Replace list_del_init() with list_del()
+v2: Move VM_BUG_ON() up.
 ---
- net/l2tp/l2tp_ip6.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ mm/vmscan.c |  122 +++++++++++++++++++----------------------------------------
+ 1 file changed, 40 insertions(+), 82 deletions(-)
 
---- a/net/l2tp/l2tp_ip6.c
-+++ b/net/l2tp/l2tp_ip6.c
-@@ -674,9 +674,6 @@ static int l2tp_ip6_recvmsg(struct sock
- 	if (flags & MSG_OOB)
- 		goto out;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 1794ec7b21d8..f6b9b45f731d 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1807,33 +1807,53 @@ static int too_many_isolated(struct pglist_data *pgdat, int file,
+ 	return isolated > inactive;
+ }
  
--	if (addr_len)
--		*addr_len = sizeof(*lsa);
+-static noinline_for_stack void
+-putback_inactive_pages(struct lruvec *lruvec, struct list_head *page_list)
++/*
++ * This moves pages from @list to corresponding LRU list.
++ *
++ * We move them the other way if the page is referenced by one or more
++ * processes, from rmap.
++ *
++ * If the pages are mostly unmapped, the processing is fast and it is
++ * appropriate to hold zone_lru_lock across the whole operation.  But if
++ * the pages are mapped, the processing is slow (page_referenced()) so we
++ * should drop zone_lru_lock around each page.  It's impossible to balance
++ * this, so instead we remove the pages from the LRU while processing them.
++ * It is safe to rely on PG_active against the non-LRU pages in here because
++ * nobody will play with that bit on a non-LRU page.
++ *
++ * The downside is that we have to touch page->_refcount against each page.
++ * But we had to alter page->flags anyway.
++ *
++ * Returns the number of pages moved to the given lruvec.
++ */
++
++static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
++						     struct list_head *list)
+ {
+ 	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
++	int nr_pages, nr_moved = 0;
+ 	LIST_HEAD(pages_to_free);
++	struct page *page;
++	enum lru_list lru;
+ 
+-	/*
+-	 * Put back any unfreeable pages.
+-	 */
+-	while (!list_empty(page_list)) {
+-		struct page *page = lru_to_page(page_list);
+-		int lru;
 -
- 	if (flags & MSG_ERRQUEUE)
- 		return ipv6_recv_error(sk, msg, len, addr_len);
++	while (!list_empty(list)) {
++		page = lru_to_page(list);
+ 		VM_BUG_ON_PAGE(PageLRU(page), page);
+-		list_del(&page->lru);
+ 		if (unlikely(!page_evictable(page))) {
++			list_del(&page->lru);
+ 			spin_unlock_irq(&pgdat->lru_lock);
+ 			putback_lru_page(page);
+ 			spin_lock_irq(&pgdat->lru_lock);
+ 			continue;
+ 		}
+-
+ 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
  
-@@ -706,6 +703,7 @@ static int l2tp_ip6_recvmsg(struct sock
- 		lsa->l2tp_conn_id = 0;
- 		if (ipv6_addr_type(&lsa->l2tp_addr) & IPV6_ADDR_LINKLOCAL)
- 			lsa->l2tp_scope_id = inet6_iif(skb);
-+		*addr_len = sizeof(*lsa);
+ 		SetPageLRU(page);
+ 		lru = page_lru(page);
+-		add_page_to_lru_list(page, lruvec, lru);
++
++		nr_pages = hpage_nr_pages(page);
++		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
++		list_move(&page->lru, &lruvec->lists[lru]);
+ 
+ 		if (put_page_testzero(page)) {
+ 			__ClearPageLRU(page);
+@@ -1847,13 +1867,17 @@ putback_inactive_pages(struct lruvec *lruvec, struct list_head *page_list)
+ 				spin_lock_irq(&pgdat->lru_lock);
+ 			} else
+ 				list_add(&page->lru, &pages_to_free);
++		} else {
++			nr_moved += nr_pages;
+ 		}
  	}
  
- 	if (np->rxopt.all)
-
+ 	/*
+ 	 * To save our caller's stack, now use input list for pages to free.
+ 	 */
+-	list_splice(&pages_to_free, page_list);
++	list_splice(&pages_to_free, list);
++
++	return nr_moved;
+ }
+ 
+ /*
+@@ -1945,7 +1969,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
+ 	reclaim_stat->recent_rotated[0] = stat.nr_activate[0];
+ 	reclaim_stat->recent_rotated[1] = stat.nr_activate[1];
+ 
+-	putback_inactive_pages(lruvec, &page_list);
++	move_pages_to_lru(lruvec, &page_list);
+ 
+ 	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, -nr_taken);
+ 
+@@ -1982,72 +2006,6 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
+ 	return nr_reclaimed;
+ }
+ 
+-/*
+- * This moves pages from the active list to the inactive list.
+- *
+- * We move them the other way if the page is referenced by one or more
+- * processes, from rmap.
+- *
+- * If the pages are mostly unmapped, the processing is fast and it is
+- * appropriate to hold pgdat->lru_lock across the whole operation.  But if
+- * the pages are mapped, the processing is slow (page_referenced()) so we
+- * should drop pgdat->lru_lock around each page.  It's impossible to balance
+- * this, so instead we remove the pages from the LRU while processing them.
+- * It is safe to rely on PG_active against the non-LRU pages in here because
+- * nobody will play with that bit on a non-LRU page.
+- *
+- * The downside is that we have to touch page->_refcount against each page.
+- * But we had to alter page->flags anyway.
+- *
+- * Returns the number of pages moved to the given lru.
+- */
+-
+-static unsigned move_active_pages_to_lru(struct lruvec *lruvec,
+-				     struct list_head *list,
+-				     enum lru_list lru)
+-{
+-	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+-	LIST_HEAD(pages_to_free);
+-	struct page *page;
+-	int nr_pages;
+-	int nr_moved = 0;
+-
+-	while (!list_empty(list)) {
+-		page = lru_to_page(list);
+-		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+-
+-		VM_BUG_ON_PAGE(PageLRU(page), page);
+-		SetPageLRU(page);
+-
+-		nr_pages = hpage_nr_pages(page);
+-		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
+-		list_move(&page->lru, &lruvec->lists[lru]);
+-
+-		if (put_page_testzero(page)) {
+-			__ClearPageLRU(page);
+-			__ClearPageActive(page);
+-			del_page_from_lru_list(page, lruvec, lru);
+-
+-			if (unlikely(PageCompound(page))) {
+-				spin_unlock_irq(&pgdat->lru_lock);
+-				mem_cgroup_uncharge(page);
+-				(*get_compound_page_dtor(page))(page);
+-				spin_lock_irq(&pgdat->lru_lock);
+-			} else
+-				list_add(&page->lru, &pages_to_free);
+-		} else {
+-			nr_moved += nr_pages;
+-		}
+-	}
+-
+-	/*
+-	 * To save our caller's stack, now use input list for pages to free.
+-	 */
+-	list_splice(&pages_to_free, list);
+-
+-	return nr_moved;
+-}
+-
+ static void shrink_active_list(unsigned long nr_to_scan,
+ 			       struct lruvec *lruvec,
+ 			       struct scan_control *sc,
+@@ -2134,8 +2092,8 @@ static void shrink_active_list(unsigned long nr_to_scan,
+ 	 */
+ 	reclaim_stat->recent_rotated[file] += nr_rotated;
+ 
+-	nr_activate = move_active_pages_to_lru(lruvec, &l_active, lru);
+-	nr_deactivate = move_active_pages_to_lru(lruvec, &l_inactive, lru - LRU_ACTIVE);
++	nr_activate = move_pages_to_lru(lruvec, &l_active);
++	nr_deactivate = move_pages_to_lru(lruvec, &l_inactive);
+ 	/* Keep all free pages in l_active list */
+ 	list_splice(&l_inactive, &l_active);
+ 
 
