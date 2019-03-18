@@ -2,115 +2,184 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64336C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3549CC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3091B2087C
+	by mail.kernel.org (Postfix) with ESMTP id E15B92087C
 	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901648;
-	bh=MWJ9JzHP3kN6wa3SIL4dpXhcPGdIY0BqUirY7m7x82I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=opHcLAwtGIC0O33Q9q60m7qLFW6sGnjus7af1MCsfaSpPWUgWM+b47gkWKcAr/7BU
-	 UTrxg/3+1qboSiDxSlyFEZ1/Igqc4/00YRhAUdcnkZjPFIuS+27CK4t7R1JGpJS7G9
-	 yeM3NAORpbMfLX6KTh9GRgOhThiLT102rk4YfvOM=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Kzvgw3Aa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbfCRJeG (ORCPT
+        id S1728974AbfCRJeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 Mar 2019 05:34:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38323 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728656AbfCRJeG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Mar 2019 05:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728650AbfCRJeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:34:00 -0400
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24EDE2075C;
-        Mon, 18 Mar 2019 09:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901639;
-        bh=MWJ9JzHP3kN6wa3SIL4dpXhcPGdIY0BqUirY7m7x82I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dK9n3Z8XuvFocN6FeWdnAlRpmgmry3ZX42HbhsKdltCAwXcZzPGGFDYQhGM9EJWpa
-         zNpJla/aksbi45airFGkgdMYb80Sl78bbH/xnrd35U1S2fgjsJxpbiksuXwpMMSlu4
-         kWS7NL7/xIOHTUK75QzVTe26QxqysV4kk4vX8Qx0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Burrell <jeff.burrell@hp.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 42/52] ALSA: hda - add more quirks for HP Z2 G4 and HP Z240
-Date:   Mon, 18 Mar 2019 10:25:39 +0100
-Message-Id: <20190318084018.488787952@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
-References: <20190318084013.532280682@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+Received: by mail-wr1-f66.google.com with SMTP id g12so16181192wrm.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2019 02:34:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=hDC7MDTy7chuvT3CYRtvVKRB25oC64BHrW8HkrSRHxM=;
+        b=Kzvgw3Aa4dx8WMMUuEI+TQXXTUuYcIsNoM5H0zoKvRWB1t40YzRv3+KmM2JlvNhI/8
+         Rclw57CZAGvJQFS/vErYEwe+gPMYYUb+x/nI+nc3aN5g+DisHoPp04AlOku3xuAT9tQm
+         mC0a52jJw2Bg/5IveR5AIqZSIwXyBnUlTm7gxbxYjf+BfEXej3zGqe9D6H5oTjykwRPP
+         JelpT2cqELZfl9/May2SBOfOyBPb/Kr8BI8KeAqWwzD9dM7bRh0AZanzK5E4xKmXKLfh
+         EGZqaqWf/wNNIxiPyr03lrTzWWVNGjx1HeON2l2OOBHu7SevvF34q6HThHcAt/g4xZFP
+         KdDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=hDC7MDTy7chuvT3CYRtvVKRB25oC64BHrW8HkrSRHxM=;
+        b=Yct8wI/2DVtZs4/WBJUNTOaccIW7eEDxs72JPO5iURzLAQG4kw7CO/KMqfMq+R8C1u
+         +NQf34T6LNtTCpPNrnk00owSidbzrCa7JoPij3pPyCMjDnnM9zO/oQEm83IOpmwUVunu
+         FYMgSKlrWZq6zm/iexDq2dU5SkEO5n3ijNN4btybSYHfyjnhwjnhKZtuRNqRvLxsxKHr
+         wBzxDYt9dz6p5I8hyZbW2ud32FqgWJqKRtBNT3en0lZ5QOukRVqNx/asfwqfCVJTbB6R
+         WGTocjJxruzNu+6ba+zPHBe2+w6mWtlqWnOHaUbYt5SLG4DIx7+efDK+9GjEJXGovDIX
+         hgqA==
+X-Gm-Message-State: APjAAAX0NoRolx95c7izJOvsX506whj1Dog859J70YbIgUX5EL7CV3lj
+        zL3mODfxkIVjQZeiUYeLsA9EOg==
+X-Google-Smtp-Source: APXvYqyZTwE2E1jAkDUHpd8/2uElbRuBSXyhbjfkplzTOPSqG6ZEC32/dpXi2yK4hLUgLs8QdO5aNg==
+X-Received: by 2002:adf:ebce:: with SMTP id v14mr10964916wrn.69.1552901644788;
+        Mon, 18 Mar 2019 02:34:04 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id o8sm2482598wmh.11.2019.03.18.02.34.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 18 Mar 2019 02:34:03 -0700 (PDT)
+Message-ID: <5b9b363f00acdcd83cce1a3e7bddda71edac9c06.camel@baylibre.com>
+Subject: Re: [PATCH net-next 2/3] net: phy: add amlogic g12a mdio mux support
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kevin Hilman <khilman@baylibre.com>, netdev@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Date:   Mon, 18 Mar 2019 10:34:02 +0100
+In-Reply-To: <20190317161402.GB22226@lunn.ch>
+References: <20190314140135.19184-1-jbrunet@baylibre.com>
+         <20190314140135.19184-3-jbrunet@baylibre.com>
+         <20190317161402.GB22226@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+On Sun, 2019-03-17 at 17:14 +0100, Andrew Lunn wrote:
+> On Thu, Mar 14, 2019 at 03:01:34PM +0100, Jerome Brunet wrote:
+> > Add support for the mdio mux and internal phy glue of the g12a SoC family
+> > 
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  drivers/net/phy/Kconfig               |  10 +
+> >  drivers/net/phy/Makefile              |   1 +
+> >  drivers/net/phy/mdio-mux-meson-g12a.c | 371 ++++++++++++++++++++++++++
+> >  3 files changed, 382 insertions(+)
+> >  create mode 100644 drivers/net/phy/mdio-mux-meson-g12a.c
+> > 
+> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> > index 071869db44cf..831aa350b1cb 100644
+> > --- a/drivers/net/phy/Kconfig
+> > +++ b/drivers/net/phy/Kconfig
+> > @@ -74,6 +74,16 @@ config MDIO_BUS_MUX_GPIO
+> >  	  several child MDIO busses to a parent bus.  Child bus
+> >  	  selection is under the control of GPIO lines.
+> >  
+> > +config MDIO_BUS_MUX_MESON_G12A
+> > +	tristate "Amlogic G12a based MDIO bus multiplexer"
+> > +	depends on ARCH_MESON || COMPILE_TEST
+> > +	depends on OF_MDIO && HAS_IOMEM
+> > +	select MDIO_BUS_MUX
+> 
+> Hi Jerome
+> 
+> Do you need some clock depends? 
 
-------------------
+I don't think we need more. ARCH_MESON already selects the necessary clock
+parts. As for the COMPILE_TEST, the clock code should be able to compile even
+if the common clock framework is disabled.
 
-From: Jaroslav Kysela <perex@perex.cz>
+> 
+> > +static int g12a_mdio_switch_fn(int current_child, int desired_child,
+> > +			       void *data)
+> > +{
+> > +	struct device *dev = data;
+> > +	struct g12a_mdio_mux *priv = dev_get_drvdata(dev);
+> 
+> David won't like that you don't have reverse Christmas tree. You need
+> to do the assignment to priv in the body of the code. Or can you pass
+> data directly to dev_get_drvdata?
+> 
+> > +static int g12a_mdio_mux_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct resource *res;
+> > +	struct g12a_mdio_mux *priv;
+> > +	int ret;
+> 
+> Reverse Christmas tree please.
 
-commit 167897f4b32c2bc18b3b6183029a33fb420a114e upstream.
+I'll fix these
 
-Apply the HP_MIC_NO_PRESENCE fixups for the more HP Z2 G4 and
-HP Z240 models.
+> 
+> 
+> > +
+> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	platform_set_drvdata(pdev, priv);
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	priv->regs = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(priv->regs))
+> > +		return PTR_ERR(priv->regs);
+> > +
+> > +	priv->pclk = devm_clk_get(dev, "pclk");
+> > +	if (IS_ERR(priv->pclk)) {
+> > +		ret = PTR_ERR(priv->pclk);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(dev, "failed to get peripheral clock\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* Make sure the device registers are clocked */
+> > +	ret = clk_prepare_enable(priv->pclk);
+> > +	if (ret) {
+> > +		dev_err(dev, "failed to enable peripheral clock");
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* Register PLL in CCF */
+> > +	ret = g12a_ephy_glue_clk_register(dev);
+> 
+> On error, you are not disabling the peripheral clock.
 
-Reported-by: Jeff Burrell <jeff.burrell@hp.com>
-Signed-off-by: Jaroslav Kysela <perex@perex.cz>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Indeed, good catch. Thx
 
----
- sound/pci/hda/patch_conexant.c |    3 +++
- sound/pci/hda/patch_realtek.c  |    6 ++++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
-
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -936,6 +936,9 @@ static const struct snd_pci_quirk cxt506
- 	SND_PCI_QUIRK(0x103c, 0x8299, "HP 800 G3 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x829a, "HP 800 G3 DM", CXT_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x8455, "HP Z2 G4", CXT_FIXUP_HP_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x103c, 0x8456, "HP Z2 G4 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x103c, 0x8457, "HP Z2 G4 mini", CXT_FIXUP_HP_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x103c, 0x8458, "HP Z2 G4 mini premium", CXT_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x138d, "Asus", CXT_FIXUP_HEADPHONE_MIC_PIN),
- 	SND_PCI_QUIRK(0x152d, 0x0833, "OLPC XO-1.5", CXT_FIXUP_OLPC_XO),
- 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Lenovo T400", CXT_PINCFG_LENOVO_TP410),
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6670,11 +6670,13 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x103c, 0x2336, "HP", ALC269_FIXUP_HP_MUTE_LED_MIC1),
- 	SND_PCI_QUIRK(0x103c, 0x2337, "HP", ALC269_FIXUP_HP_MUTE_LED_MIC1),
- 	SND_PCI_QUIRK(0x103c, 0x221c, "HP EliteBook 755 G2", ALC280_FIXUP_HP_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x103c, 0x802e, "HP Z240 SFF", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x103c, 0x802f, "HP Z240", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x820d, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x8256, "HP", ALC221_FIXUP_HP_FRONT_MIC),
- 	SND_PCI_QUIRK(0x103c, 0x827e, "HP x360", ALC295_FIXUP_HP_X360),
--	SND_PCI_QUIRK(0x103c, 0x82bf, "HP", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x103c, 0x82c0, "HP", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x103c, 0x82bf, "HP G3 mini", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x103c, 0x82c0, "HP G3 mini premium", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
+> 
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return mdio_mux_init(dev, dev->of_node, g12a_mdio_switch_fn,
+> > +			     &priv->mux_handle, dev, NULL);
+> > +}
+> 
+>   Andrew
 
 
