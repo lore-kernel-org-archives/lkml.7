@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122E6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B89C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D4B2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83AB8214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 09:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552901637;
-	bh=gl+7B0CYp/efPD69FQ6AZLrcbBbhaZ4pZjya/agZwX8=;
+	s=default; t=1552901643;
+	bh=LLnHyaca2MKAeXBvB1Lzcq/Di26rB2NMTEV68Q6s0jI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0g2IvuYz77CFxT9DxGxUYHOxlKVs4U4DaNfV3HA8tL9yYStXF3ktR3MXI/s188D9
-	 LHw+3znvtJxjFt2wquhfvtB582Jw5agAp1Ir6nUTg9i5VJulyR0GAkPTTVybNYCQHM
-	 zJGEvpbWB/o+p6kgkfWgcPQrRYi/Sjlb3yn6S/18=
+	b=aEbjSmPxrcezS+Hmuc6tPn1mc0fAcB8VgVmPTlRFrJV8jdZ+YbrmsS6sqARNRQ5rN
+	 uhRkHq2x8cPPQzO9woQ/h01cxONQdvCcNNGIG7knUOY2qfSoLKdqdQBWqb3Dv0w7ey
+	 6MNC/ejlL7VGTK8b99fU/TIZqAuWbSzhrT7295BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfCRJd4 (ORCPT
+        id S1728945AbfCRJeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 05:33:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42236 "EHLO mail.kernel.org"
+        Mon, 18 Mar 2019 05:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728921AbfCRJdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 05:33:53 -0400
+        id S1728921AbfCRJd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 05:33:57 -0400
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8446214D8;
-        Mon, 18 Mar 2019 09:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F9E82087C;
+        Mon, 18 Mar 2019 09:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552901633;
-        bh=gl+7B0CYp/efPD69FQ6AZLrcbBbhaZ4pZjya/agZwX8=;
+        s=default; t=1552901636;
+        bh=LLnHyaca2MKAeXBvB1Lzcq/Di26rB2NMTEV68Q6s0jI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zX3y/+xz6yfvHEOsViHFtifl4JJlJ8m8R8qOgfCx45hof/h596ZIs9fXqg9CtioEP
-         74jgTdERM71HmtT1wHqx0VrBdaJuh54oOATvBCw3+Dfjs94YDfFZbQcs3yE2PxakqL
-         0m/cicZaf1NaiMDkDaJH9kQrJx5FkXIYGffRZVXY=
+        b=TnYTbyz8jwT9LHre4AwtQ5QKxHEmpjrEpEgy24M9YO/iHS9K4l18+n9umPTDKewcp
+         g4WdLCXNdHbJr72Ha7eQs4Yaow8mAGARN61mqTw7hgbagj4BCXjKq3ZDxGqgcQiYHc
+         9xf4xlMIqAK5f2EC7cw8YIg23vtWOdgxzLPI6KGk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Peter=20Sj=C3=B6berg?= <autopeter@gmail.com>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Paul Menzel <pmenzel+alsa-devel@molgen.mpg.de>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 40/52] ALSA: firewire-motu: fix construction of PCM frame for capture direction
-Date:   Mon, 18 Mar 2019 10:25:37 +0100
-Message-Id: <20190318084018.228063303@linuxfoundation.org>
+Subject: [PATCH 4.19 41/52] ALSA: hda: Extend i915 component bind timeout
+Date:   Mon, 18 Mar 2019 10:25:38 +0100
+Message-Id: <20190318084018.361079067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190318084013.532280682@linuxfoundation.org>
 References: <20190318084013.532280682@linuxfoundation.org>
@@ -67,44 +65,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit f97a0944a72b26a2bece72516294e112a890f98a upstream.
+commit cfc35f9c128cea8fce6a5513b1de50d36f3b209f upstream.
 
-In data blocks of common isochronous packet for MOTU devices, PCM
-frames are multiplexed in a shape of '24 bit * 4 Audio Pack', described
-in IEC 61883-6. The frames are not aligned to quadlet.
+I set 10 seconds for the timeout of the i915 audio component binding
+with a hope that recent machines are fast enough to handle all probe
+tasks in that period, but I was too optimistic.  The binding may take
+longer than that, and this caused a problem on the machine with both
+audio and graphics driver modules loaded in parallel, as Paul Menzel
+experienced.  This problem haven't hit so often just because the KMS
+driver is loaded in initrd on most machines.
 
-For capture PCM substream, ALSA firewire-motu driver constructs PCM
-frames by reading data blocks byte-by-byte. However this operation
-includes bug for lower byte of the PCM sample. This brings invalid
-content of the PCM samples.
+As a simple workaround, extend the timeout to 60 seconds.
 
-This commit fixes the bug.
-
-Reported-by: Peter Sjöberg <autopeter@gmail.com>
-Cc: <stable@vger.kernel.org> # v4.12+
-Fixes: 4641c9394010 ("ALSA: firewire-motu: add MOTU specific protocol layer")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Fixes: f9b54e1961c7 ("ALSA: hda/i915: Allow delayed i915 audio component binding")
+Reported-by: Paul Menzel <pmenzel+alsa-devel@molgen.mpg.de>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/motu/amdtp-motu.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/hda/hdac_i915.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/firewire/motu/amdtp-motu.c
-+++ b/sound/firewire/motu/amdtp-motu.c
-@@ -136,7 +136,9 @@ static void read_pcm_s32(struct amdtp_st
- 		byte = (u8 *)buffer + p->pcm_byte_offset;
- 
- 		for (c = 0; c < channels; ++c) {
--			*dst = (byte[0] << 24) | (byte[1] << 16) | byte[2];
-+			*dst = (byte[0] << 24) |
-+			       (byte[1] << 16) |
-+			       (byte[2] << 8);
- 			byte += 3;
- 			dst++;
- 		}
+--- a/sound/hda/hdac_i915.c
++++ b/sound/hda/hdac_i915.c
+@@ -144,9 +144,9 @@ int snd_hdac_i915_init(struct hdac_bus *
+ 		return -ENODEV;
+ 	if (!acomp->ops) {
+ 		request_module("i915");
+-		/* 10s timeout */
++		/* 60s timeout */
+ 		wait_for_completion_timeout(&bind_complete,
+-					    msecs_to_jiffies(10 * 1000));
++					    msecs_to_jiffies(60 * 1000));
+ 	}
+ 	if (!acomp->ops) {
+ 		dev_info(bus->dev, "couldn't bind with audio component\n");
 
 
