@@ -2,114 +2,170 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B54C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C0DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E8020872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13DB2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 03:23:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2sXJYDd9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cn59wRrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfCRDKQ (ORCPT
+        id S1727815AbfCRDXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Mar 2019 23:10:16 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:44316 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbfCRDKP (ORCPT
+        Sun, 17 Mar 2019 23:23:03 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35699 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727699AbfCRDXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Mar 2019 23:10:15 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2I34uRM113709;
-        Mon, 18 Mar 2019 03:10:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=0eFjCXnfgt40+OHDtKFxAdJZphrqp7d2bQ6vDtLlPCU=;
- b=2sXJYDd9AvgfUOYyExYpTYQK56LYB4fAu9zel+LjZCnbEDICvJcjMuXVuY5lGQ+TOULt
- sNQk+YeC33WAZ/8i7yABFRWoCo/sCG/L7D0plwCJfQKG6MT9KqhleenTfvRLKG4NhB4B
- qasoVoTTytHYIO4o58S2I3tx5axA8CH15N0jKBKW4ah8SegT5yF7qLNKVyrX/Ccn+7gm
- 50n91f6gcxUf9Oe9idtu/kBt/m8/LvWQvuRH8mMfdzNUBYvbzw05hMf3UrgQXbEDFg3I
- Bezhdj7dJo+ohbBemOcMtXG3+jNb5qt5HdCjHYpLd31CqiFEgOvwsqEgH7s+KMa+/3jc 7A== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by aserp2130.oracle.com with ESMTP id 2r8pnec440-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Mar 2019 03:10:11 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2I3AB3G022715
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Mar 2019 03:10:11 GMT
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2I3AAsD030944;
-        Mon, 18 Mar 2019 03:10:11 GMT
-Received: from [10.182.69.118] (/10.182.69.118)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 17 Mar 2019 20:10:10 -0700
-Subject: Re: [BUG] scsi: ses: out of bound accessing in
- ses_enclosure_data_process
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>, diego.gonzalez@oracle.com
-References: <78dd3eca-7e8a-72f9-07f9-e2c7cc4569b0@oracle.com>
-From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
-Message-ID: <40646609-8298-2d76-2f0c-e732404a23d4@oracle.com>
-Date:   Mon, 18 Mar 2019 11:13:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sun, 17 Mar 2019 23:23:03 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j5so10300746pfa.2;
+        Sun, 17 Mar 2019 20:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7p//1PR5F/sgyDj76MSBQjRYE5FlynCqfv62Ie5Gow8=;
+        b=cn59wRrAp5A+zB8KgE+uWFKMDkFIDNuj5W9La9KiX3AWNv0YbpN4J28/uT3K90s14W
+         kQyOL9AAscoPfFUqRa+Kg7sTjQ0Kcje+pEx6kBGE8Qx/yY2Iqa4T7bvs3joS6CEtWA5n
+         ohtumfXYqI6yjgZJalWSVoV/8/3v438c9wzsjDACAkW7gqQrUXvSdaH/tmAGkzFEDXvv
+         VLeVQz+NdqlzSyB1VaIChVZr1cCRq++nk581Ni4Lxb7ZB9P/UrGnMvCE5u0hIrhy0Qav
+         Jch/aOf0V67zX7R97cGG8p+7WexQ6E3QbKTFn/ESRSoFS1uNCUU+u0tw7TUBI9Qnf5g0
+         HpXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7p//1PR5F/sgyDj76MSBQjRYE5FlynCqfv62Ie5Gow8=;
+        b=IMeiKhItNb0ImCaVO21WHCFDirOeoZjnkYCo9Ko+Sz1YcirOdOvQtIwj9XO+qN8GcU
+         GPtJUdryy7TWaFRO4iVBGjuxHGqIpqmb6s27xaItL+Gl7T+Xxx8JxeMjb16ENBM/J29X
+         ktg2C2jnJP4ICaiy0VPnI+kfVy5f0IX866HCZoL1XyGX5KoAlvvAgfMxtjNHrvJivK3J
+         CsLgYWXXZzu5/xXeWAXZdqmBFdPYXFqgCmEzezgvuxvOJnLZ1szpz9MD7TF9eGaY3LRD
+         SQlx6vWJUuyW4al913dx3UWbRw8QAsaZXsWc4DYc3F2D6Ly6zKfIfeLqm9eqL8TupKC8
+         GxNw==
+X-Gm-Message-State: APjAAAUAUGpsDTZhez2x4LKEyN3DsIa089L3UC2emo8IRNTnQq+rW+NV
+        5V1Dj6xe8Tc7uWhu1ziuhQ==
+X-Google-Smtp-Source: APXvYqxSrI436CjuM8FHWOSocoMZyZrHUlYdFoW3Pw9MUYq7V+yB3sCzEYzONmvgmd567KtR0W3jhQ==
+X-Received: by 2002:a17:902:56a:: with SMTP id 97mr17410615plf.320.1552879381789;
+        Sun, 17 Mar 2019 20:23:01 -0700 (PDT)
+Received: from localhost (2.172.220.35.bc.googleusercontent.com. [35.220.172.2])
+        by smtp.gmail.com with ESMTPSA id d3sm8994197pfc.125.2019.03.17.20.22.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 17 Mar 2019 20:23:00 -0700 (PDT)
+Date:   Mon, 18 Mar 2019 11:22:56 +0800
+From:   Jacky Hu <hengqing.hu@gmail.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, jacky.hu@walmart.com, jason.niesz@walmart.com,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH v4] ipvs: allow tunneling with gue encapsulation
+Message-ID: <20190318032256.GA21124@i716>
+References: <20190317155200.16586-1-hengqing.hu@gmail.com>
+ <201903181001.7czsRhlB%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <78dd3eca-7e8a-72f9-07f9-e2c7cc4569b0@oracle.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9198 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903180023
+Content-Disposition: inline
+In-Reply-To: <201903181001.7czsRhlB%lkp@intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Would anyone please give some suggestions ?
+On Mon, Mar 18, 2019 at 10:10:20AM +0800, kbuild test robot wrote:
+> Hi Jacky,
+> 
+> Thank you for the patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on ipvs-next/master]
+> [also build test WARNING on v5.1-rc1 next-20190306]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Jacky-Hu/ipvs-allow-tunneling-with-gue-encapsulation/20190318-070156
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/horms/ipvs-next.git master
+> reproduce:
+>         # apt-get install sparse
+>         make ARCH=x86_64 allmodconfig
+>         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> 
+> 
+> sparse warnings: (new ones prefixed by >>)
+> 
+>    net/netfilter/ipvs/ip_vs_ctl.c:835:42: sparse: incorrect type in argument 2 (different base types) @@    expected int [signed] i @@    got restricted __be1int [signed] i @@
+>    net/netfilter/ipvs/ip_vs_ctl.c:835:42:    expected int [signed] i
+>    net/netfilter/ipvs/ip_vs_ctl.c:835:42:    got restricted __be16 [usertype] tun_port
+>    net/netfilter/ipvs/ip_vs_ctl.c:1197:44: sparse: expression using sizeof(void)
+> >> net/netfilter/ipvs/ip_vs_ctl.c:3207:37: sparse: incorrect type in argument 3 (different base types) @@    expected restricted __be16 [usertype] value @@    got e] value @@
+>    net/netfilter/ipvs/ip_vs_ctl.c:3207:37:    expected restricted __be16 [usertype] value
+>    net/netfilter/ipvs/ip_vs_ctl.c:3207:37:    got int
+>    net/netfilter/ipvs/ip_vs_ctl.c:1313:27: sparse: dereference of noderef expression
+> 
+> vim +3207 net/netfilter/ipvs/ip_vs_ctl.c
+> 
+>   3187	
+>   3188	static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
+>   3189	{
+>   3190		struct nlattr *nl_dest;
+>   3191		struct ip_vs_kstats kstats;
+>   3192	
+>   3193		nl_dest = nla_nest_start(skb, IPVS_CMD_ATTR_DEST);
+>   3194		if (!nl_dest)
+>   3195			return -EMSGSIZE;
+>   3196	
+>   3197		if (nla_put(skb, IPVS_DEST_ATTR_ADDR, sizeof(dest->addr), &dest->addr) ||
+>   3198		    nla_put_be16(skb, IPVS_DEST_ATTR_PORT, dest->port) ||
+>   3199		    nla_put_u32(skb, IPVS_DEST_ATTR_FWD_METHOD,
+>   3200				(atomic_read(&dest->conn_flags) &
+>   3201				 IP_VS_CONN_F_FWD_MASK)) ||
+>   3202		    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
+>   3203				atomic_read(&dest->weight)) ||
+>   3204		    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
+>   3205			       atomic_read(&dest->tun_type)) ||
+>   3206		    nla_put_be16(skb, IPVS_DEST_ATTR_TUN_PORT,
+> > 3207				 atomic_read(&dest->tun_port)) ||
 
-It looks like there somethings wrong in the read-in data, 
+    Should I change the type of tun_port from __be16 to u16?
+    Looks like kbuild bugs a lot on this.
 
-	/* skip all the enclosure descriptors */
-	for (i = 0; i < num_enclosures && type_ptr < buf + len; i++) {
-		types += type_ptr[2];
-		type_ptr += type_ptr[3] + 4; ----> here
-	}
-Then the typr_ptr got out of bound of the buffer.
-
-
-Thanks
-Jianchao
-
-On 3/14/19 11:19 AM, jianchao.wang wrote:
-> Dear all
+>   3208		    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
+>   3209		    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
+>   3210		    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
+>   3211				atomic_read(&dest->activeconns)) ||
+>   3212		    nla_put_u32(skb, IPVS_DEST_ATTR_INACT_CONNS,
+>   3213				atomic_read(&dest->inactconns)) ||
+>   3214		    nla_put_u32(skb, IPVS_DEST_ATTR_PERSIST_CONNS,
+>   3215				atomic_read(&dest->persistconns)) ||
+>   3216		    nla_put_u16(skb, IPVS_DEST_ATTR_ADDR_FAMILY, dest->af))
+>   3217			goto nla_put_failure;
+>   3218		ip_vs_copy_stats(&kstats, &dest->stats);
+>   3219		if (ip_vs_genl_fill_stats(skb, IPVS_DEST_ATTR_STATS, &kstats))
+>   3220			goto nla_put_failure;
+>   3221		if (ip_vs_genl_fill_stats64(skb, IPVS_DEST_ATTR_STATS64, &kstats))
+>   3222			goto nla_put_failure;
+>   3223	
+>   3224		nla_nest_end(skb, nl_dest);
+>   3225	
+>   3226		return 0;
+>   3227	
+>   3228	nla_put_failure:
+>   3229		nla_nest_cancel(skb, nl_dest);
+>   3230		return -EMSGSIZE;
+>   3231	}
+>   3232	
 > 
-> When our customer probe the lpfc devices, they encountered odd memory corruption issues,
-> and we get 'out of bound' access warning at following position after open KASAN
-> 
-> ses_enclosure_data_process
-> 
-> for (i = 0; i < types; i++, type_ptr += 4) {
->   for (j = 0; j < type_ptr[1]; j++) {
->                    ^^^^^^^^^^^
->                    out of bound
-> 
-> With some debug log, I got following,
-> 
-> page1 ffff88042d1aad20 len 32 types 5 type_ptr ffff88042d1aad64
-> 
-> Would anyone please give some suggestions on this ?
-> 
-> Thanks
-> Jianchao
-> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
