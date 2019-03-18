@@ -2,231 +2,187 @@ Return-Path: <SRS0=xYIU=RV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFA7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D28C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13736214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaJ3d9CQ"
+	by mail.kernel.org (Postfix) with ESMTP id 90F8E20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Mar 2019 06:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552891394;
+	bh=xcysSpPm1VoUAl3aB75ov4yh8Gm4h6235GxQTM/kzlg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=K6DgiBwejMgPxrXmv4BrYOCO1ehIH3yb9J51d0vnPNRLcpkYPVgR5JpgBZjayDSVv
+	 E3bdWJcKd9XzPP8z7wzCm0UwwcIfuMQRBMpVLaqJC7ubN9L++7eZddLKBw7cpPLlAJ
+	 sYWrsW9VFPp7cFHt8rfJMvA04+h7dPxVqziBlOwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbfCRGZ3 (ORCPT
+        id S1727836AbfCRGnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Mar 2019 02:25:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37456 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfCRGZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Mar 2019 02:25:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y15so15617000wro.4;
-        Sun, 17 Mar 2019 23:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J7zbpxoUkUclB4hJSgVpMwFbV5c7MoWKL1qinbuWqZ8=;
-        b=UaJ3d9CQGVU5AGJd5AntVblzTtEQGv5b1hDSQ9zVZ2u231/gjeuEiSrw69KNWUDv5N
-         NAQ2rBRf4LmdoRapMvFwd6lzEgV/3jvoh/I+OCohKMOr2g6Nb9TJhtpK/WRi9a7bzdvN
-         mMn0GoKTRuRMBoWckYI5b+e4T3JZslhPISwtuTsJzC6ofHeoiKhNkHs052HccRUdSHkv
-         GHQZ1WtQzwBpzELoDfSerHXMiJ6DdFSwPQPEBpoV+E2C6Ha40L0De5talZS/sJj2aGKk
-         76RxViNP/9KCFLwkV9rSVrPnYJfbAishq9wZaxMfXdOd4W+H+Jnkdhu3+dLwgVU6t7ct
-         Wshw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J7zbpxoUkUclB4hJSgVpMwFbV5c7MoWKL1qinbuWqZ8=;
-        b=R7+FwmcwF6Hv5XMcQ9Oi+57B7XAK3h97h59k/ptJfsHJAT9YE9CqmjZx5CWriX2qHn
-         NqPDTL00PphkX2idTMsr6Oi2MpNfsg0t+69rviWtkrRYEW1QnQGs82M8SSAMxaZ8xq4G
-         m3RDj3bWLefA970vZJNknxQ1Db06imqLcJy34LnTCzmkVtXpWJS/WZ/qa7celpK7ItK+
-         qEsEbX/EUrgy/aCkdKiI7H+7K9cTDor0wBZjemuet+LYH0un8GVyiBqXFT7zEVt2mT8n
-         HXhevOYFCoMBZF74Zp1WAPWHqhkgOXlA3kWv3mP3pUxQYrrATIRVFGMp4cpRsEkhrv1V
-         JT+Q==
-X-Gm-Message-State: APjAAAUXa4bEsU2WLpuWNEKgM7Q+8DNqhHZbLFSxbw5rwxYFZH2HfByx
-        TCaFMVkLIn8NqKuMIhg2x5oYugO+FCszAwazvVk=
-X-Google-Smtp-Source: APXvYqyY3lmBfCAahmt8RMqfyS+DZMZM6LaUmP10ei1FbfS5L4gvunj2P6uiWI3qOjt6fu7K+LkuJQCquYumuisq/xE=
-X-Received: by 2002:adf:b3d1:: with SMTP id x17mr10825879wrd.15.1552890326265;
- Sun, 17 Mar 2019 23:25:26 -0700 (PDT)
+        Mon, 18 Mar 2019 02:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727809AbfCRGnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Mar 2019 02:43:13 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D472082F;
+        Mon, 18 Mar 2019 06:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552891391;
+        bh=xcysSpPm1VoUAl3aB75ov4yh8Gm4h6235GxQTM/kzlg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kpyuX5KEDADNYV7VOuJaF0u4oXPl2l2ulDgqD/gVx4eWbi4bf7CT4TNCl9LSKHGgD
+         rCHh8GII20sAhu1FuOplC+0DRjez4JWoAz+KrS6+zlV+7qnMsScHplxjyrnqE2rgek
+         GZnSS2k4LojyDHc/NHx2HL79se1YuajubhonVHck=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: [RFC PATCH v6 0/6] tracing/probes: uaccess: Add support user-space access
+Date:   Mon, 18 Mar 2019 15:42:55 +0900
+Message-Id: <155289137555.7218.9282784065958321058.stgit@devnote2>
+X-Mailer: git-send-email 2.17.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <00000000000089bb100583e5fe7a@google.com> <CADvbK_fVQWugki=RgNT3Di_dDcnRtL1D09AoNTTAW-9pzZ8d_w@mail.gmail.com>
- <CACT4Y+ZdYXoe3Tj5zfYEHcUg75uSv1hpggv7Z9WVnyXgWYQpTA@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZdYXoe3Tj5zfYEHcUg75uSv1hpggv7Z9WVnyXgWYQpTA@mail.gmail.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Mon, 18 Mar 2019 14:25:14 +0800
-Message-ID: <CADvbK_dLRbWHZ1uVzjm9jrtfaVzG-gnGh6pFZmJPa2G5mme1yw@mail.gmail.com>
-Subject: Re: general protection fault in sctp_assoc_rwnd_increase
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+85e0b422ff140b03672a@syzkaller.appspotmail.com>,
-        davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
-        linux-sctp@vger.kernel.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlad Yasevich <vyasevich@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 1:27 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Tue, Mar 12, 2019 at 5:30 PM Xin Long <lucien.xin@gmail.com> wrote:
-> >
-> > On Tue, Mar 12, 2019 at 9:52 PM syzbot
-> > <syzbot+85e0b422ff140b03672a@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    a089e4fe Merge tag 'linux-watchdog-5.1-rc1' of git://www.l..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=144e9ee7200000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=b613f0327d980b6b
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=85e0b422ff140b03672a
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > userspace arch: amd64
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12613b13200000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f1884d200000
-> > Not sure why I got this Call Trace with the reproducer, and it's
-> > different, is that expected?
->
-> Hi Xin,
->
-> This is no a crash. This is fault injection stack trace.
-> Fault injection subsystem prints stack whenever it injects a fault so
-> that it's possible o figure out what happened and where.
->
-> You can see a fault injection stack trace in the "console output' for
-> the crash too.
-> But if seems that your stack trace is slightly different, and that
-> most likely explains why you can't reproduce the bug.
-> This seems to be a bug that it triggered by a very particular failing
-> kmalloc. If on your kernel fault is injected into a different kmalloc,
-> you won't reproduce the bug.
-> For fault injection-triggered bugs you need precisely the same kernel.
-> You can actually see this in action: for smack and apparmor-based
-> kernels fault needs to be injected into 7-th and 8-th kmalloc in the
-> syscall respectively:
->
-> https://syzkaller.appspot.com/text?tag=ReproSyz&x=12613b13200000
-> https://syzkaller.appspot.com/text?tag=ReproSyz&x=14425577200000
->
-> Or you can play with the fault_nth parameter to target fault injection
-> into the right place... Or of course just change the kernel code to
-> fail that kmalloc explicitly.
-I could be able to reproduce it with "-fault_nth=16" in my env.
-Thanks Dmitry.
+Hi,
 
->
->
-> > [256577.101170] FAULT_INJECTION: forcing a failure.
-> > [256577.101170] name failslab, interval 1, probability 0, space 0, times 0
-> > [256577.103628] CPU: 0 PID: 2453 Comm: syz-executor Not tainted
-> > 5.0.0.test.syz #235
-> > [256577.105201] Hardware name: Red Hat KVM, BIOS seabios-1.7.5-8.el7 04/01/2014
-> > [256577.106680] Call Trace:
-> > [256577.107248]  dump_stack+0x7c/0xc0
-> > [256577.107981]  should_fail.cold.4+0x5/0x13
-> > [256577.108853]  ? fault_create_debugfs_attr+0x190/0x190
-> > [256577.109926]  ? lock_downgrade+0x5d0/0x5d0
-> > [256577.110816]  ? selinux_sk_alloc_security+0x72/0x190
-> > [256577.111878]  ? selinux_sk_alloc_security+0x72/0x190
-> > [256577.112931]  should_failslab+0xa/0x20
-> > [256577.113738]  kmem_cache_alloc_trace+0x27a/0x350
-> > [256577.114733]  selinux_sk_alloc_security+0x72/0x190
-> > [256577.115757]  ? kmem_cache_alloc+0x2dc/0x310
-> > [256577.116674]  security_sk_alloc+0x4f/0x90
-> > [256577.117543]  sk_prot_alloc+0x82/0x250
-> > [256577.118362]  sk_alloc+0x35/0xc80
-> > [256577.119100]  inet6_create+0x26e/0xec0
-> > [256577.119924]  __sock_create+0x277/0x550
-> > [256577.120804]  sctp_do_peeloff+0x162/0x3b0 [sctp]
-> > [256577.121795]  ? sched_clock+0x5/0x10
-> > [256577.122596]  ? sctp_copy_sock+0xfa0/0xfa0 [sctp]
-> > [256577.123646]  sctp_getsockopt_peeloff_common.isra.31+0x78/0x2c0 [sctp]
-> > [256577.125064]  ? sctp_do_peeloff+0x3b0/0x3b0 [sctp]
-> > [256577.126129]  sctp_getsockopt.part.32+0x2d76/0x4a90 [sctp]
-> >
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+85e0b422ff140b03672a@syzkaller.appspotmail.com
-> > >
-> > > RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 0000000000446679
-> > > RDX: 0000000000000066 RSI: 0000000000000084 RDI: 0000000000000003
-> > > RBP: 00000000006dbc30 R08: 0000000020000140 R09: 0000000000000038
-> > > R10: 0000000020000040 R11: 0000000000000246 R12: 00000000006dbc3c
-> > > R13: 00007f47f49ded90 R14: 0000000000000004 R15: 20c49ba5e353f7cf
-> > > kasan: CONFIG_KASAN_INLINE enabled
-> > > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > > CPU: 0 PID: 7680 Comm: syz-executor161 Not tainted 5.0.0+ #18
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > Google 01/01/2011
-> > > RIP: 0010:sctp_assoc_rwnd_increase+0x34/0x520 net/sctp/associola.c:1498
-> > > Code: 41 54 49 89 fc 53 89 f3 48 83 ec 10 e8 95 90 f1 fa 49 8d bc 24 60 06
-> > > 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84
-> > > c0 74 08 3c 03 0f 8e 2f 04 00 00 45 8b ac 24 60 06
-> > > RSP: 0018:ffff88808da476f8 EFLAGS: 00010203
-> > > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000001
-> > > RDX: 00000000000000cb RSI: ffffffff867ecd5b RDI: 000000000000065f
-> > > RBP: ffff88808da47730 R08: ffff88808c5d64c0 R09: ffff88808c5d6d88
-> > > R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffffffffff
-> > > R13: 0000000000000000 R14: ffff88808c4d6f00 R15: 0000000000000000
-> > > FS:  00007f47f49df700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 0000000020000044 CR3: 0000000097508000 CR4: 00000000001406f0
-> > > Call Trace:
-> > >   sctp_ulpevent_release_data net/sctp/ulpevent.c:1092 [inline]
-> > >   sctp_ulpevent_free+0x21f/0x4e0 net/sctp/ulpevent.c:1129
-> > >   sctp_queue_purge_ulpevents+0xc4/0x110 net/sctp/ulpevent.c:1146
-> > >   sctp_close+0x148/0x860 net/sctp/socket.c:1515
-> > >   inet_release+0x105/0x1f0 net/ipv4/af_inet.c:428
-> > >   inet6_release+0x53/0x80 net/ipv6/af_inet6.c:473
-> > >   __sock_release+0x1fe/0x2b0 net/socket.c:579
-> > >   sock_release+0x18/0x20 net/socket.c:599
-> > >   sctp_do_peeloff+0x38a/0x470 net/sctp/socket.c:5649
-> > >   sctp_getsockopt_peeloff_common.isra.0+0x8e/0x270 net/sctp/socket.c:5665
-> > >   sctp_getsockopt_peeloff net/sctp/socket.c:5707 [inline]
-> > >   sctp_getsockopt net/sctp/socket.c:7802 [inline]
-> > >   sctp_getsockopt+0x1ec1/0x6741 net/sctp/socket.c:7758
-> > >   sock_common_getsockopt+0x9a/0xe0 net/core/sock.c:3079
-> > >   __sys_getsockopt+0x168/0x250 net/socket.c:1960
-> > >   __do_sys_getsockopt net/socket.c:1971 [inline]
-> > >   __se_sys_getsockopt net/socket.c:1968 [inline]
-> > >   __x64_sys_getsockopt+0xbe/0x150 net/socket.c:1968
-> > >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > RIP: 0033:0x446679
-> > > Code: e8 6c b4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
-> > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> > > ff 0f 83 2b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> > > RSP: 002b:00007f47f49ded88 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-> > > RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 0000000000446679
-> > > RDX: 0000000000000066 RSI: 0000000000000084 RDI: 0000000000000003
-> > > RBP: 00000000006dbc30 R08: 0000000020000140 R09: 0000000000000038
-> > > R10: 0000000020000040 R11: 0000000000000246 R12: 00000000006dbc3c
-> > > R13: 00007f47f49ded90 R14: 0000000000000004 R15: 20c49ba5e353f7cf
-> > > Modules linked in:
-> > > ---[ end trace dfa9a15945f164b7 ]---
-> > > RIP: 0010:sctp_assoc_rwnd_increase+0x34/0x520 net/sctp/associola.c:1498
-> > > Code: 41 54 49 89 fc 53 89 f3 48 83 ec 10 e8 95 90 f1 fa 49 8d bc 24 60 06
-> > > 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84
-> > > c0 74 08 3c 03 0f 8e 2f 04 00 00 45 8b ac 24 60 06
-> > > RSP: 0018:ffff88808da476f8 EFLAGS: 00010203
-> > > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000001
-> > > RDX: 00000000000000cb RSI: ffffffff867ecd5b RDI: 000000000000065f
-> > > RBP: ffff88808da47730 R08: ffff88808c5d64c0 R09: ffff88808c5d6d88
-> > > R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffffffffff
-> > > R13: 0000000000000000 R14: ffff88808c4d6f00 R15: 0000000000000000
-> > > FS:  00007f47f49df700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 0000000020000044 CR3: 0000000097508000 CR4: 00000000001406f0
-> > >
+Here is the v6 series of probe-event to support user-space access.
+
+In this version, I replaced user_access_ok() patch with access_ok()
+enhancement, which allows user to call access_ok() in IRQ context
+if it disables pagefault. In the result of this change, I also
+removed user_access_ok() related patch.
+This version also extends perf-probe to handle user-space memory.
+This is still not automated yet, but it can be done when __user
+is encoded in debuginfo.
+
+Changes in v6:
+- [1/6]: (New) allow access_ok() in IRQ context if pagefault is
+         disabled.
+- [3/6]: Remove user_access_ok()
+- [5/6]: Add $argN availablity check
+- [6/6]: (New) extend perf-probe to handle "@user" attribute which
+         allows user to specify "user-space local variable"
+
+V5 series is here;
+
+https://lkml.kernel.org/r/155136974478.2968.3105123100519786079.stgit@devbox
+
+In summary, strncpy_from_user() should work as below
+
+ - strncpy_from_user() can access user memory with set_fs(USER_DS)
+   in task context
+
+ - strncpy_from_user() can access kernel memory with set_fs(KERNEL_DS)
+   in task context (e.g. devtmpfsd and init)
+
+ - strncpy_from_user() can access user/kernel memory (depends on DS)
+   in IRQ context if pagefault is disabled. (both verified)
+
+PeterZ, would you still have any concern about this check?
+
+====
+Kprobe event user-space memory access features:
+
+For user-space access extension, this series adds 2 features,
+"ustring" type and user-space dereference syntax. "ustring" is
+used for recording a null-terminated string in user-space from
+kprobe events.
+
+"ustring" type is easy, it is able to use instead of "string"
+type, so if you want to record a user-space string via
+"__user char *", you can use ustring type instead of string.
+For example,
+
+echo 'p do_sys_open path=+0($arg2):ustring' >> kprobe_events
+
+will record the path string from user-space.
+
+The user-space dereference syntax is also simple. Thi just
+adds 'u' prefix before an offset value.
+
+   +|-u<OFFSET>(<FETCHARG>)
+
+e.g. +u8(%ax), +u0(+0(%si))
+
+This is more generic. If you want to refer the variable in user-
+space from its address or access a field in data structure in
+user-space, you need to use this.
+
+For example, if you probe do_sched_setscheduler(pid, policy,
+param) and record param->sched_priority, you can add new
+probe as below;
+    
+   p do_sched_setscheduler priority=+u0($arg3)
+
+Actually, with this feature, "ustring" type is not absolutely
+necessary, because these are same meanings.
+
+  +0($arg2):ustring == +u0($arg2):string
+
+Note that kprobe event provides these methods, but it doesn't
+change it from kernel to user automatically because we do not
+know whether the given address is in userspace or kernel on
+some arch.
+
+
+Thank you,
+
+---
+
+Masami Hiramatsu (6):
+      x86/uaccess: Allow access_ok() in irq context if pagefault_disabled
+      uaccess: Add non-pagefault user-space read functions
+      tracing/probe: Add ustring type for user-space string
+      tracing/probe: Support user-space dereference
+      selftests/ftrace: Add user-memory access syntax testcase
+      perf-probe: Add user memory access attribute support
+
+
+ Documentation/trace/kprobetrace.rst                |   28 ++++-
+ Documentation/trace/uprobetracer.rst               |    9 +-
+ arch/x86/include/asm/uaccess.h                     |    4 +
+ include/linux/uaccess.h                            |   19 +++
+ kernel/trace/trace.c                               |    7 +
+ kernel/trace/trace_kprobe.c                        |   35 ++++++
+ kernel/trace/trace_probe.c                         |   37 +++++-
+ kernel/trace/trace_probe.h                         |    3 +
+ kernel/trace/trace_probe_tmpl.h                    |   37 +++++-
+ kernel/trace/trace_uprobe.c                        |   19 +++
+ mm/maccess.c                                       |  117 +++++++++++++++++++-
+ tools/perf/Documentation/perf-probe.txt            |    3 -
+ tools/perf/util/probe-event.c                      |   11 ++
+ tools/perf/util/probe-event.h                      |    2 
+ tools/perf/util/probe-file.c                       |    7 +
+ tools/perf/util/probe-file.h                       |    1 
+ tools/perf/util/probe-finder.c                     |   19 ++-
+ .../ftrace/test.d/kprobe/kprobe_args_user.tc       |   32 +++++
+ 18 files changed, 349 insertions(+), 41 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
