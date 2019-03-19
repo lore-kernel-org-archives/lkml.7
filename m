@@ -2,77 +2,120 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCFEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D26C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7907620811
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFA820811
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 17:24:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=lucaceresoli.net header.i=@lucaceresoli.net header.b="vhNkNqvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfCSRYC (ORCPT
+        id S1727554AbfCSRYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 13:24:02 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:39127 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbfCSRYC (ORCPT
+        Tue, 19 Mar 2019 13:24:55 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58757 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726860AbfCSRYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 13:24:02 -0400
-Received: by mail-it1-f198.google.com with SMTP id e124so5481174ita.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 10:24:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=A5/q4swmgLnBGaVhc342tSJYMVLflngDQewiKppz+44=;
-        b=ZPopxt6VcKxO5MhJvh8uPYXOGZXGCrFjEpKhVGDOVR/9V7oUTBOSfR1NsQbCpxMkgP
-         /l84fS4qUiiCgvpZbGsw2vLxLFxKZrL8VlDuZ4gDA/gdtOUvrQNZeX7sqjY4asMNNa1N
-         YKXJ6p0302ah9HJ//fqBLr7ml+l8dfzyUfQQR3Wn2lwkyWHCHKtP54mmKkeifM32k/Pz
-         BYq4d/wx0iRSv3RSk90lgX9X+4Dpzr573MiKVYBTdEKwpBENwjYwqcFhWsErypYLEoYI
-         z+8dCKf0k2obrpRfP7jaLf5jGunipJZ36kQ7bisSmrgAMjoBA5mjoPIG0NTG7LjjJtcj
-         oZGA==
-X-Gm-Message-State: APjAAAVegcYcW22bqZR551C5mHOI9y8t6peWzSn1FICeMlYDYE3FmM5q
-        TyxK7RL519uPMgxoQJR4oOOY7tuv8xqNrRUPf3Rh8oQx7V49
-X-Google-Smtp-Source: APXvYqyPRz8P22dRbTU/+gHqvKGuW+9VzG94ZuWsSXuFooGgqPabQAyRM5McH4f486X+nzSQDMyij2ngjGv/3hS2Zn8ZpxN7bEZw
+        Tue, 19 Mar 2019 13:24:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lucaceresoli.net; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:References:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vLkPqFcxJSl87h/ecNobrHWjBLalJGOJylaB9lNqgMs=; b=vhNkNqvKUQTqkhoCtmvAoADl6O
+        XvGjQQ0IcZKgQUcuzIYvjtD1JoCL8WpXdY43XD4Eb185yqzSkUMrUgU+Z5Fx5Lh3Cbk3MXdy3oJle
+        veLWhexqXrXD/oVau98WZb8ejk43rggEZ4N80SHXNtbqqxo8EJWc+mNJYAounLqxxWrs=;
+Received: from [78.134.57.171] (port=34092 helo=[192.168.77.67])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1h6ITr-00DDVH-66; Tue, 19 Mar 2019 18:24:51 +0100
+Subject: Re: [PATCH 1/2] drm/doc: fix kerneldoc syntax
+To:     dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+References: <20190313153537.22654-1-luca@lucaceresoli.net>
+ <20190314104120.GR2665@phenom.ffwll.local>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <b88a7a74-0153-54f8-20d7-40d73f2507dc@lucaceresoli.net>
+Date:   Tue, 19 Mar 2019 18:24:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-Received: by 2002:a24:4d8e:: with SMTP id l136mr2467612itb.5.1553016241037;
- Tue, 19 Mar 2019 10:24:01 -0700 (PDT)
-Date:   Tue, 19 Mar 2019 10:24:01 -0700
-In-Reply-To: <000000000000352b7e057cc0a13f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000060a659058475c57e@google.com>
-Subject: Re: general protection fault in dst_dev_put (2)
-From:   syzbot <syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dsahern@gmail.com, jon.maloy@ericsson.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190314104120.GR2665@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 14/03/19 11:41, Daniel Vetter wrote:
+> On Wed, Mar 13, 2019 at 04:35:36PM +0100, Luca Ceresoli wrote:
+>> The probe() reference renders incorrectly and without a link, fix it.
+>>
+>> Also fix a typo reported by checkpatch in the context lines.
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>> ---
+>>  drivers/gpu/drm/drm_drv.c | 14 +++++++-------
+>>  1 file changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+>> index 381581b01d48..585f5d079046 100644
+>> --- a/drivers/gpu/drm/drm_drv.c
+>> +++ b/drivers/gpu/drm/drm_drv.c
+>> @@ -264,13 +264,13 @@ void drm_minor_release(struct drm_minor *minor)
+>>   * DOC: driver instance overview
+>>   *
+>>   * A device instance for a drm driver is represented by &struct drm_device. This
+>> - * is initialized with drm_dev_init(), usually from bus-specific ->probe()
+>> - * callbacks implemented by the driver. The driver then needs to initialize all
+>> - * the various subsystems for the drm device like memory management, vblank
+>> - * handling, modesetting support and intial output configuration plus obviously
+>> - * initialize all the corresponding hardware bits. Finally when everything is up
+>> - * and running and ready for userspace the device instance can be published
+>> - * using drm_dev_register().
+>> + * is initialized with drm_dev_init(), usually from bus-specific
+>> + * &drm_driver.probe() callbacks implemented by the driver. The driver then
+> 
+> drm_driver.probe isn't a thing, and definitely not bus specific. What
+> could work here is:
 
-commit 52dfae5c85a4c1078e9f1d5e8947d4a25f73dd81
-Author: Jon Maloy <jon.maloy@ericsson.com>
-Date:   Thu Mar 22 19:42:52 2018 +0000
+You're obviously right, thanks for taking the time to correct me.
 
-     tipc: obtain node identity from interface by default
+> "... instead of a bus specific probe function like e.g.
+> &pci_driver.probe or &platform_driver.probe."
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1631fc2b200000
-start commit:   52dfae5c tipc: obtain node identity from interface by defa..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1531fc2b200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1131fc2b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8f00801d7b7c4fe6
-dashboard link: https://syzkaller.appspot.com/bug?extid=9d4c12bfd45a58738d0a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17254878c00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=171ca5df400000
+Uhm, these don't want to render as hyperlinks. I guess it's because
+these structs are not kernel-doc-annotated, nor are their .probe
+methods. Probably not worth just doing that for the sake of this humble
+patch.
 
-Reported-by: syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com
-Fixes: 52dfae5c ("tipc: obtain node identity from interface by default")
+Is it OK if I resend with just the basic syntax fix:
+- ... bus-specific ->probe()
++ ... bus-specific probe()
+?
+
+Thanks,
+-- 
+Luca
