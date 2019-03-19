@@ -2,154 +2,198 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF32C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D11C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB4B20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:23:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nv+/1orn"
+	by mail.kernel.org (Postfix) with ESMTP id 6B2F520857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbfCSQXy (ORCPT
+        id S1727898AbfCSQX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:23:54 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50206 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbfCSQXv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:23:51 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z11so9054381wmi.0;
-        Tue, 19 Mar 2019 09:23:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=fT5IiTrCD2mkBVO4SYwrgK+IBcwUUHJdMAVNHqgXqiA=;
-        b=Nv+/1ornQ92uaVZXSCgLwkVn29SPNjuYlkQE7lFisyac+uKWapyHR25wHjkjd8C1dh
-         I8DcaXN5LjDUuCisuep7YH67CwrsZEqVYSlijJJWVeyBOGG/KXfVL3N/YG1WmkmFxRoR
-         lGUTT06Jp9Z56xGWh1CX8BbPzijvWKrvKEFQyrGE9gf6KXM4Ts14jp0xHm37+R0Jt3YG
-         Mq9rBbwlI3lfieVXdypxQi8p5QQNJNqW6+I/yeW2M4G6dIhe4B1W8ZYTcAdErCBu9tGu
-         IO81LyespkSdKSlDIyRpk2/UbJXr8Q31/ohlcfZk6UEcR+SJvLXMC5MaZlLM0eCncdhO
-         ZgFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fT5IiTrCD2mkBVO4SYwrgK+IBcwUUHJdMAVNHqgXqiA=;
-        b=TwSR4HeSzsAZYO/hi5BaBKoeDsrPoU1hIta4NWY9X6ZA8i8xzI96PEWr4R7/dPweGj
-         7vgzJFJe+ialZNOE+4HbvsCxKFyJ4crTo7OnBSAs5wUg4YltMDAAUJtle1e8F1y9ID7R
-         4X2uY1k9XZPuTj5bKnAJlOO5bWD9tSyqis5cd2VzGPJVHqMmh/UWfvtyIIwcQf/jNLuJ
-         HOmosp70m991Hqc3GbkSrg1+EYq3HLO3F7ZJFuUqJz6Pgrc9DHdEV36lg6VXrcEytNa8
-         1XW1RoT7mQt+v51oiDkXzcWMu0uG+DgE8SjBkhptCySnvl9OXCIlgqHY/9elTCauQihu
-         c58A==
-X-Gm-Message-State: APjAAAVWRy7iA/KJBCdkUeU6TXYvlkzYJsMD0zyptlZ621jSpijMFFo+
-        wBlwmvsqf8L5VZGhZwNyYhVlDWUZ
-X-Google-Smtp-Source: APXvYqw/9SBSQNvAY6ve7IKFyhudKCKJi8jtlMrsA7OXeUwLkJKiV/DMUXXpHzn8TFMlRnDiN5GOiA==
-X-Received: by 2002:a7b:cb1a:: with SMTP id u26mr4601767wmj.46.1553012629985;
-        Tue, 19 Mar 2019 09:23:49 -0700 (PDT)
-Received: from [172.31.96.190] ([195.39.71.253])
-        by smtp.gmail.com with ESMTPSA id c126sm4363728wma.0.2019.03.19.09.23.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2019 09:23:47 -0700 (PDT)
-Subject: Re: WARNING: suspicious RCU usage in xfrm_alloc_userspi
-To:     syzbot <syzbot+59752237f7ab21c3f3c3@syzkaller.appspotmail.com>,
-        davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com,
-        Su Yanjun <suyj.fnst@cn.fujitsu.com>
-References: <0000000000007783a2058474a0b9@google.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <ed7fdea3-7e1a-66e1-0225-cb8ec3c16585@gmail.com>
-Date:   Tue, 19 Mar 2019 09:23:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 19 Mar 2019 12:23:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39330 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727810AbfCSQX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:23:56 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0EE593082231;
+        Tue, 19 Mar 2019 16:23:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-47.rdu2.redhat.com [10.10.120.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A07A129175;
+        Tue, 19 Mar 2019 16:23:54 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [RFC PATCH 4/4] fuse: Move the subtype parameter into fuse
+From:   David Howells <dhowells@redhat.com>
+To:     miklos@szeredi.hu, viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dhowells@redhat.com, anprice@redhat.com
+Date:   Tue, 19 Mar 2019 16:23:53 +0000
+Message-ID: <155301263386.7556.6722703415894365051.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155301260319.7556.1326405089184672936.stgit@warthog.procyon.org.uk>
+References: <155301260319.7556.1326405089184672936.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-In-Reply-To: <0000000000007783a2058474a0b9@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 19 Mar 2019 16:23:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC Su Yanjun 
+Move as much as possible of the mount subtype apparatus into the fuse
+driver.  The bits that are left involve determining whether it's permitted
+to split the filesystem type string passed in to mount(2).  Consequently,
+this means that we cannot get rid of the FS_HAS_SUBTYPE flag unless we
+define that a type string with a dot in in always indicates a subtype
+specification.
 
-On 03/19/2019 09:02 AM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    b9998194 Add linux-next specific files for 20190318
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17a2e24d200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=59cd5d43b5df6955
-> dashboard link: https://syzkaller.appspot.com/bug?extid=59752237f7ab21c3f3c3
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e70cb3200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17292127200000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+59752237f7ab21c3f3c3@syzkaller.appspotmail.com
-> 
-> =============================
-> WARNING: suspicious RCU usage
-> 5.1.0-rc1-next-20190318 #5 Not tainted
-> -----------------------------
-> net/xfrm/xfrm_user.c:1080 suspicious rcu_dereference_check() usage!
-> 
-> other info that might help us debug this:
-> 
-> 
-> rcu_scheduler_active = 2, debug_locks = 1
-> 1 lock held by syz-executor085/7946:
->  #0: 00000000a55031b5 (&net->xfrm.xfrm_cfg_mutex){+.+.}, at: xfrm_netlink_rcv+0x61/0x90 net/xfrm/xfrm_user.c:2691
-> 
-> stack backtrace:
-> CPU: 0 PID: 7946 Comm: syz-executor085 Not tainted 5.1.0-rc1-next-20190318 #5
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5162
->  xfrm_nlmsg_unicast net/xfrm/xfrm_user.c:1080 [inline]
->  xfrm_alloc_userspi+0x7d5/0xa80 net/xfrm/xfrm_user.c:1356
->  xfrm_user_rcv_msg+0x458/0x770 net/xfrm/xfrm_user.c:2684
->  netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
->  xfrm_netlink_rcv+0x70/0x90 net/xfrm/xfrm_user.c:2692
->  netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
->  netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
->  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
->  sock_sendmsg_nosec net/socket.c:651 [inline]
->  sock_sendmsg+0xdd/0x130 net/socket.c:661
->  ___sys_sendmsg+0x806/0x930 net/socket.c:2260
->  __sys_sendmsg+0x105/0x1d0 net/socket.c:2298
->  __do_sys_sendmsg net/socket.c:2307 [inline]
->  __se_sys_sendmsg net/socket.c:2305 [inline]
->  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2305
->  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x440499
-> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffcf12caf08 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440499
-> RDX: 0000000000000000 RSI: 00000000200006c0 RDI: 0000000000000003
-> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000040
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/fs_context.c            |   12 ------------
+ fs/fuse/inode.c            |   21 +++++++++++++++++++--
+ fs/super.c                 |    5 -----
+ include/linux/fs_context.h |    1 -
+ 4 files changed, 19 insertions(+), 20 deletions(-)
+
+diff --git a/fs/fs_context.c b/fs/fs_context.c
+index ea027762c0b2..3325b435cb6f 100644
+--- a/fs/fs_context.c
++++ b/fs/fs_context.c
+@@ -432,7 +432,6 @@ void put_fs_context(struct fs_context *fc)
+ 	put_net(fc->net_ns);
+ 	put_user_ns(fc->user_ns);
+ 	put_cred(fc->cred);
+-	kfree(fc->subtype);
+ 	put_filesystem(fc->fs_type);
+ 	kfree(fc->source);
+ 	kfree(fc);
+@@ -498,17 +497,6 @@ static int legacy_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 		return 0;
+ 	}
+ 
+-	if ((fc->fs_type->fs_flags & FS_HAS_SUBTYPE) &&
+-	    strcmp(param->key, "subtype") == 0) {
+-		if (param->type != fs_value_is_string)
+-			return invalf(fc, "VFS: Legacy: Non-string subtype");
+-		if (fc->subtype)
+-			return invalf(fc, "VFS: Legacy: Multiple subtype");
+-		fc->subtype = param->string;
+-		param->string = NULL;
+-		return 0;
+-	}
+-
+ 	if (ctx->param_type == LEGACY_FS_MONOLITHIC_PARAMS)
+ 		return invalf(fc, "VFS: Legacy: Can't mix monolithic and individual options");
+ 
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 3aebff5b902a..d830b20252f7 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -65,6 +65,7 @@ static struct file_system_type fuseblk_fs_type;
+ #endif
+ 
+ struct fuse_fs_context {
++	const char	*subtype;
+ 	bool		is_bdev;
+ 	int fd;
+ 	unsigned rootmode;
+@@ -455,6 +456,7 @@ static int fuse_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 
+ enum {
+ 	OPT_SOURCE,
++	OPT_SUBTYPE,
+ 	OPT_FD,
+ 	OPT_ROOTMODE,
+ 	OPT_USER_ID,
+@@ -468,6 +470,7 @@ enum {
+ 
+ static const struct fs_parameter_spec fuse_param_specs[] = {
+ 	fsparam_string	("source",		OPT_SOURCE),
++	fsparam_string	("subtype",		OPT_SUBTYPE),
+ 	fsparam_fd	("fd",			OPT_FD),
+ 	fsparam_u32oct	("rootmode",		OPT_ROOTMODE),
+ 	fsparam_u32	("user_id",		OPT_USER_ID),
+@@ -496,11 +499,19 @@ static int fuse_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 
+ 	switch (opt) {
+ 	case OPT_SOURCE:
+-		kfree(fc->source);
++		if (fc->source)
++			return invalf(fc, "fuse: Multiple sources specified");
+ 		fc->source = param->string;
+ 		param->string = NULL;
+ 		break;
+ 
++	case OPT_SUBTYPE:
++		if (ctx->subtype)
++			return invalf(fc, "fuse: Multiple subtypes specified");
++		ctx->subtype = param->string;
++		param->string = NULL;
++		return 0;
++
+ 	case OPT_FD:
+ 		ctx->fd = result.uint_32;
+ 		ctx->fd_present = 1;
+@@ -556,7 +567,10 @@ static void fuse_free_fc(struct fs_context *fc)
+ {
+ 	struct fuse_fs_context *ctx = fc->fs_private;
+ 
+-	kfree(ctx);
++	if (ctx) {
++		kfree(ctx->subtype);
++		kfree(ctx);
++	}
+ }
+ 
+ static int fuse_show_options(struct seq_file *m, struct dentry *root)
+@@ -1099,6 +1113,9 @@ static int fuse_fill_super(struct super_block *sb, struct fs_context *fsc)
+ 		sb->s_blocksize = PAGE_SIZE;
+ 		sb->s_blocksize_bits = PAGE_SHIFT;
+ 	}
++
++	sb->s_subtype = ctx->subtype;
++	ctx->subtype = NULL;
+ 	sb->s_magic = FUSE_SUPER_MAGIC;
+ 	sb->s_op = &fuse_super_operations;
+ 	sb->s_xattr = fuse_xattr_handlers;
+diff --git a/fs/super.c b/fs/super.c
+index 85851adb0f19..6d8dbf309241 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1536,11 +1536,6 @@ int vfs_get_tree(struct fs_context *fc)
+ 	sb = fc->root->d_sb;
+ 	WARN_ON(!sb->s_bdi);
+ 
+-	if (fc->subtype && !sb->s_subtype) {
+-		sb->s_subtype = fc->subtype;
+-		fc->subtype = NULL;
+-	}
+-
+ 	/*
+ 	 * Write barrier is for super_cache_count(). We place it before setting
+ 	 * SB_BORN as the data dependency between the two functions is the
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index cb49b92f02af..524963c0cedb 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -82,7 +82,6 @@ struct fs_context {
+ 	struct net		*net_ns;	/* The network namespace for this mount */
+ 	const struct cred	*cred;		/* The mounter's credentials */
+ 	const char		*source;	/* The source name (eg. dev path) */
+-	const char		*subtype;	/* The subtype to set on the superblock */
+ 	void			*security;	/* Linux S&M options */
+ 	void			*s_fs_info;	/* Proposed s_fs_info */
+ 	fmode_t			bdev_mode;	/* File open mode for bdev */
+
