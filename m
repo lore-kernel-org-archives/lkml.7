@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DE1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4349C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBED82085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B7D217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfCSV6C (ORCPT
+        id S1727822AbfCSV6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:58:02 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:56831 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727766AbfCSV56 (ORCPT
+        Tue, 19 Mar 2019 17:58:05 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:41921 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfCSV6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:57:58 -0400
+        Tue, 19 Mar 2019 17:58:01 -0400
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id EEA5A240004;
-        Tue, 19 Mar 2019 21:57:54 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 86C67100005;
+        Tue, 19 Mar 2019 21:57:57 +0000 (UTC)
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Daniel Vetter <daniel.vetter@intel.com>,
         David Airlie <airlied@linux.ie>,
@@ -38,9 +38,9 @@ Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org
-Subject: [RFC PATCH 10/20] drm/exynos: Convert to generic image format library
-Date:   Tue, 19 Mar 2019 22:57:15 +0100
-Message-Id: <c8886bfdbcc5e6b0648f45a380b75f3f7d3cf3e3.1553032382.git-series.maxime.ripard@bootlin.com>
+Subject: [RFC PATCH 11/20] drm/i915: Convert to generic image format library
+Date:   Tue, 19 Mar 2019 22:57:16 +0100
+Message-Id: <37ad4786835372353c4479065e0f17f95e2d6953.1553032382.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
 References: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
@@ -56,64 +56,46 @@ use it so that we can deprecate the old DRM one.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/gpu/drm/exynos/exynos_drm_ipp.c    | 2 +-
- drivers/gpu/drm/exynos/exynos_drm_ipp.h    | 4 +++-
- drivers/gpu/drm/exynos/exynos_drm_scaler.c | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/i915/intel_display.c | 4 ++--
+ drivers/gpu/drm/i915/intel_sprite.c  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_ipp.c b/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-index 23226a0212e8..ba012840fe07 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-@@ -562,7 +562,7 @@ static int exynos_drm_ipp_check_format(struct exynos_drm_ipp_task *task,
- 	if (buf->buf.width == 0 || buf->buf.height == 0)
- 		return -EINVAL;
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index 86febe2ee510..37c7f6bbf650 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -7997,7 +7997,7 @@ i9xx_get_initial_plane_config(struct intel_crtc *crtc,
  
--	buf->format = drm_format_info(buf->buf.fourcc);
-+	buf->format = image_format_drm_lookup(buf->buf.fourcc);
- 	for (i = 0; i < buf->format->num_planes; i++) {
- 		unsigned int width = (i == 0) ? buf->buf.width :
- 			     DIV_ROUND_UP(buf->buf.width, buf->format->hsub);
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_ipp.h b/drivers/gpu/drm/exynos/exynos_drm_ipp.h
-index 0b27d4a9bf94..c6cd21f185e6 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_ipp.h
-+++ b/drivers/gpu/drm/exynos/exynos_drm_ipp.h
-@@ -71,12 +71,14 @@ struct exynos_drm_ipp {
- 	wait_queue_head_t done_wq;
- };
+ 	pixel_format = val & DISPPLANE_PIXFORMAT_MASK;
+ 	fourcc = i9xx_format_to_fourcc(pixel_format);
+-	fb->format = drm_format_info(fourcc);
++	fb->format = image_format_drm_lookup(fourcc);
  
-+struct image_format_info;
-+
- struct exynos_drm_ipp_buffer {
- 	struct drm_exynos_ipp_task_buffer buf;
- 	struct drm_exynos_ipp_task_rect rect;
+ 	if (IS_HASWELL(dev_priv) || IS_BROADWELL(dev_priv)) {
+ 		offset = I915_READ(DSPOFFSET(i9xx_plane));
+@@ -9078,7 +9078,7 @@ skylake_get_initial_plane_config(struct intel_crtc *crtc,
  
- 	struct exynos_drm_gem *exynos_gem[MAX_FB_BUFFER];
--	const struct drm_format_info *format;
-+	const struct image_format_info *format;
- 	dma_addr_t dma_addr[MAX_FB_BUFFER];
- };
+ 	fourcc = skl_format_to_fourcc(pixel_format,
+ 				      val & PLANE_CTL_ORDER_RGBX, alpha);
+-	fb->format = drm_format_info(fourcc);
++	fb->format = image_format_drm_lookup(fourcc);
  
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_scaler.c b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-index ed1dd1aec902..c9791a2013cf 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/component.h>
- #include <linux/err.h>
-+#include <linux/image-formats.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/platform_device.h>
-@@ -301,7 +302,7 @@ static inline void scaler_set_rotation(struct scaler_context *scaler,
- }
- 
- static inline void scaler_set_csc(struct scaler_context *scaler,
--	const struct drm_format_info *fmt)
-+	const struct image_format_info *fmt)
+ 	tiling = val & PLANE_CTL_TILED_MASK;
+ 	switch (tiling) {
+diff --git a/drivers/gpu/drm/i915/intel_sprite.c b/drivers/gpu/drm/i915/intel_sprite.c
+index ee0e99b13532..aaae2bd4ed05 100644
+--- a/drivers/gpu/drm/i915/intel_sprite.c
++++ b/drivers/gpu/drm/i915/intel_sprite.c
+@@ -297,8 +297,8 @@ skl_plane_max_stride(struct intel_plane *plane,
+ 		     u32 pixel_format, u64 modifier,
+ 		     unsigned int rotation)
  {
- 	static const u32 csc_mtx[2][3][3] = {
- 		{ /* YCbCr to RGB */
+-	const struct drm_format_info *info = drm_format_info(pixel_format);
+-	int cpp = drm_format_plane_cpp(info, 0);
++	const struct image_format_info *info = image_format_drm_lookup(pixel_format);
++	int cpp = image_format_plane_cpp(info, 0);
+ 
+ 	/*
+ 	 * "The stride in bytes must not exceed the
 -- 
 git-series 0.9.1
