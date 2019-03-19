@@ -2,217 +2,135 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82446C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F620C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47AF120863
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:01:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oN2BBuMk"
+	by mail.kernel.org (Postfix) with ESMTP id 53F1920863
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfCSUBE (ORCPT
+        id S1727184AbfCSUDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:01:04 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14983 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfCSUBE (ORCPT
+        Tue, 19 Mar 2019 16:03:31 -0400
+Received: from smtp03.citrix.com ([162.221.156.55]:60580 "EHLO
+        SMTP03.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfCSUDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 16:01:04 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c914a6f0000>; Tue, 19 Mar 2019 13:00:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 19 Mar 2019 13:01:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 19 Mar 2019 13:01:02 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 Mar
- 2019 20:01:01 +0000
-Subject: Re: [PATCH v4 1/1] mm: introduce put_user_page*(), placeholder
- versions
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Jerome Glisse <jglisse@redhat.com>
-CC:     <john.hubbard@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-References: <20190308213633.28978-1-jhubbard@nvidia.com>
- <20190308213633.28978-2-jhubbard@nvidia.com>
- <20190319120417.yzormwjhaeuu7jpp@kshutemo-mobl1>
- <20190319134724.GB3437@redhat.com>
- <20190319140623.tblqyb4dcjabjn3o@kshutemo-mobl1>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <6aa32cca-d97a-a3e5-b998-c67d0a6cc52a@nvidia.com>
-Date:   Tue, 19 Mar 2019 13:01:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 19 Mar 2019 16:03:30 -0400
+X-IronPort-AV: E=Sophos;i="5.60,245,1549929600"; 
+   d="scan'208";a="81060873"
+From:   Jennifer Herbert <jennifer.herbert@citrix.com>
+To:     <x86@kernel.org>, <xen-devel@lists.xenproject.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jennifer Herbert <jennifer.herbert@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] xen/pv: Add PV specific legacy_pic struct to expose legacy IRQs.
+Date:   Tue, 19 Mar 2019 20:02:19 +0000
+Message-ID: <1553025739-92245-1-git-send-email-jennifer.herbert@citrix.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <20190319140623.tblqyb4dcjabjn3o@kshutemo-mobl1>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553025647; bh=HSpyNkpOUN54LoSVErAzdS1E1kZB+HgZS0Abyi+9vjU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=oN2BBuMkNCIXH77NHOjjmKZpQZ9GitLjMPLc2DOfX/7d7jvPcisxSIGFy4WGrRix3
-         M3o1wPgnNpS7wLfDpqv8vDHGdBJ3Jgn1qYOZS8VUalLX+wIMtxCPpfyltItaQMwleQ
-         ptCwtHyq3H4alTuMTew3Bm37SkGH4we0MK4ZFg1q8mY4s1ytDbJUzflFw/PvaCvQwq
-         +B7R0o7qjiUzOFIzZZudvjtnmC/Slf7qFeUYuCzuzGH7oTU8Xg2R7E4cNe9H4Yfb1R
-         MfGwkr7LIvwWCXBzRD2lXqk+JnXl5TLWnKHpaDRyxW9PQF+tUQJXrDQ44VAS1NWP5B
-         8cEOAcfT606Ag==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/19 7:06 AM, Kirill A. Shutemov wrote:
-> On Tue, Mar 19, 2019 at 09:47:24AM -0400, Jerome Glisse wrote:
->> On Tue, Mar 19, 2019 at 03:04:17PM +0300, Kirill A. Shutemov wrote:
->>> On Fri, Mar 08, 2019 at 01:36:33PM -0800, john.hubbard@gmail.com wrote:
->>>> From: John Hubbard <jhubbard@nvidia.com>
->>
->> [...]
->>
->>>> diff --git a/mm/gup.c b/mm/gup.c
->>>> index f84e22685aaa..37085b8163b1 100644
->>>> --- a/mm/gup.c
->>>> +++ b/mm/gup.c
->>>> @@ -28,6 +28,88 @@ struct follow_page_context {
->>>>  	unsigned int page_mask;
->>>>  };
->>>>  
->>>> +typedef int (*set_dirty_func_t)(struct page *page);
->>>> +
->>>> +static void __put_user_pages_dirty(struct page **pages,
->>>> +				   unsigned long npages,
->>>> +				   set_dirty_func_t sdf)
->>>> +{
->>>> +	unsigned long index;
->>>> +
->>>> +	for (index = 0; index < npages; index++) {
->>>> +		struct page *page = compound_head(pages[index]);
->>>> +
->>>> +		if (!PageDirty(page))
->>>> +			sdf(page);
->>>
->>> How is this safe? What prevents the page to be cleared under you?
->>>
->>> If it's safe to race clear_page_dirty*() it has to be stated explicitly
->>> with a reason why. It's not very clear to me as it is.
->>
->> The PageDirty() optimization above is fine to race with clear the
->> page flag as it means it is racing after a page_mkclean() and the
->> GUP user is done with the page so page is about to be write back
->> ie if (!PageDirty(page)) see the page as dirty and skip the sdf()
->> call while a split second after TestClearPageDirty() happens then
->> it means the racing clear is about to write back the page so all
->> is fine (the page was dirty and it is being clear for write back).
->>
->> If it does call the sdf() while racing with write back then we
->> just redirtied the page just like clear_page_dirty_for_io() would
->> do if page_mkclean() failed so nothing harmful will come of that
->> neither. Page stays dirty despite write back it just means that
->> the page might be write back twice in a row.
-> 
-> Fair enough. Should we get it into a comment here?
+The ACPI tables doesn't always contain all IRQs for legacy devices
+such as RTC.  Since no PIC controller is visible for a PV linux guest,
+under Xen, legacy_pic currently defaults to the null_legacy_pic - with
+reports no legacy IRQs.  Since the commit "rtc: cmos: Do not assume
+irq 8 for rtc when there are no legacy irqs" by Hans de Goede
+(commit id: a1e23a42f1bdc00e32fc4869caef12e4e6272f26), the rtc now
+incorrectly decides it has no irq it can use, for some hardware.
 
-How's this read to you? I reworded and slightly expanded Jerome's 
-description:
+This patch rectifies the problem by providing a xen legacy_pic
+struct, which is much like the null_legacy_pic except that it
+reports NR_IRQS_LEGACY irqs.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index d1df7b8ba973..86397ae23922 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -61,6 +61,24 @@ static void __put_user_pages_dirty(struct page **pages,
-        for (index = 0; index < npages; index++) {
-                struct page *page = compound_head(pages[index]);
+Signed-off-by: Jennifer Herbert <jennifer.herbert@citrix.com>
+---
+ arch/x86/xen/enlighten_pv.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index c54a493..7644bdf 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -33,6 +33,7 @@
+ #include <linux/gfp.h>
+ #include <linux/edd.h>
+ #include <linux/frame.h>
++#include <linux/irq.h>
  
-+               /*
-+                * Checking PageDirty at this point may race with
-+                * clear_page_dirty_for_io(), but that's OK. Two key cases:
-+                *
-+                * 1) This code sees the page as already dirty, so it skips
-+                * the call to sdf(). That could happen because
-+                * clear_page_dirty_for_io() called page_mkclean(),
-+                * followed by set_page_dirty(). However, now the page is
-+                * going to get written back, which meets the original
-+                * intention of setting it dirty, so all is well:
-+                * clear_page_dirty_for_io() goes on to call
-+                * TestClearPageDirty(), and write the page back.
-+                *
-+                * 2) This code sees the page as clean, so it calls sdf().
-+                * The page stays dirty, despite being written back, so it
-+                * gets written back again in the next writeback cycle.
-+                * This is harmless.
-+                */
-                if (!PageDirty(page))
-                        sdf(page);
-
-> 
->>>> +void put_user_pages(struct page **pages, unsigned long npages)
->>>> +{
->>>> +	unsigned long index;
->>>> +
->>>> +	for (index = 0; index < npages; index++)
->>>> +		put_user_page(pages[index]);
->>>
->>> I believe there's an room for improvement for compound pages.
->>>
->>> If there's multiple consequential pages in the array that belong to the
->>> same compound page we can get away with a single atomic operation to
->>> handle them all.
->>
->> Yes maybe just add a comment with that for now and leave this kind of
->> optimization to latter ?
-> 
-> Sounds good to me.
-> 
-
-Here's a comment for that:
-
-@@ -127,6 +145,11 @@ void put_user_pages(struct page **pages, unsigned long npages)
- {
-        unsigned long index;
+ #include <xen/xen.h>
+ #include <xen/events.h>
+@@ -49,6 +50,7 @@
+ #include <xen/acpi.h>
  
-+       /*
-+        * TODO: this can be optimized for huge pages: if a series of pages is
-+        * physically contiguous and part of the same compound page, then a
-+        * single operation to the head page should suffice.
-+        */
-        for (index = 0; index < npages; index++)
-                put_user_page(pages[index]);
+ #include <asm/paravirt.h>
++#include <asm/i8259.h>
+ #include <asm/apic.h>
+ #include <asm/page.h>
+ #include <asm/xen/pci.h>
+@@ -1188,6 +1190,41 @@ static void __init xen_dom0_set_legacy_features(void)
+ 	x86_platform.legacy.rtc = 1;
  }
-
-
-thanks,
+ 
++/*
++ * The ACPI tables doesn't always contain all IRQ's for legacy devices
++ * such as RTC.  Since no PIC controller is visible, we'd otherwise
++ * default to the null_legacy_pic - with no legacy IRQs.  To allow drivers
++ * to use these IRQs despite this, provide a xen specific legacy_pic
++ * structure, which is noop, other then reporting NR_IRQS_LEGACY irqs.
++ */
++
++static void xen_legacy_pic_noop(void) { };
++static void xen_legacy_pic_uint_noop(unsigned int unused) { };
++static void xen_legacy_pic_int_noop(int unused) { };
++static int xen_legacy_pic_irq_pending_noop(unsigned int irq)
++{
++	return 0;
++}
++
++static int xen_legacy_pic_probe(void)
++{
++	pr_info("Using Xen legacy PIC\n");
++	return nr_legacy_irqs();
++}
++
++struct legacy_pic xen_legacy_pic = {
++	.nr_legacy_irqs = NR_IRQS_LEGACY,
++	.chip = &dummy_irq_chip,
++	.mask = xen_legacy_pic_uint_noop,
++	.unmask = xen_legacy_pic_uint_noop,
++	.mask_all = xen_legacy_pic_noop,
++	.restore_mask = xen_legacy_pic_noop,
++	.init = xen_legacy_pic_int_noop,
++	.probe = xen_legacy_pic_probe,
++	.irq_pending = xen_legacy_pic_irq_pending_noop,
++	.make_irq = xen_legacy_pic_uint_noop,
++};
++
+ /* First C function to be called on Xen boot */
+ asmlinkage __visible void __init xen_start_kernel(void)
+ {
+@@ -1267,6 +1304,8 @@ asmlinkage __visible void __init xen_start_kernel(void)
+ 
+ 	xen_init_capabilities();
+ 
++	legacy_pic = &xen_legacy_pic;
++
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 	/*
+ 	 * set up the basic apic ops.
 -- 
-John Hubbard
-NVIDIA
+1.8.3.1
+
