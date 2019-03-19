@@ -2,76 +2,86 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973E4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93E6C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D4220850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B9120850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 21:13:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Wk1OHc+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfCSVNE (ORCPT
+        id S1727796AbfCSVNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 17:13:04 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:60490 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726784AbfCSVND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 17:13:03 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1h6M2Q-00059E-Qb; Tue, 19 Mar 2019 15:12:47 -0600
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Philip Derrin <philip@cog.systems>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>
-References: <20190319181357.9305-1-logang@deltatee.com>
- <20190319204253.GB17966@rapoport-lnx>
- <a9b528f1-0c4b-3894-18e1-a4999c18f4a4@deltatee.com>
- <20190319210508.GD17966@rapoport-lnx>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <7f590915-d35b-c46c-a05b-c368bf9c491c@deltatee.com>
-Date:   Tue, 19 Mar 2019 15:12:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 17:13:10 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47580 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfCSVNJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 17:13:09 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2JL9JTs006221;
+        Tue, 19 Mar 2019 21:10:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=RyJa92ww4aru1ZB9HtUoa8Bk28Pjh5j0m3RGpjd6YPU=;
+ b=Wk1OHc+4PrEBf0vUMhouO/+u2ts0xGR5N2LkbkjO2e0bvARbQYVSexPGuSJVW8r9k5DE
+ bC/4qreXTZ2SmZ53OneBZTQrxyNKTFMviTf+FNJWKhxZyXm6ARBsM6tald3Vih8+UX8B
+ HdYSqtCwDTJPz2JNx+lYtYaYSPokCkIaK223QTztSCMUrPThJPRmkEq8ZSssgemKAlZE
+ aLH3kHIqrTaDiv9KVSuO4fNXAe5pTcPWAkp5smhPqZ/dMfOje6L8dpP60qm2Bx818zTF
+ ISVTx4YVqk9UFZ1JfVrR8ZzQ4+Vw/doa7UcPB50n2Bzk6DajCNKEJE0qONuqsxUeaaZb tQ== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2r8ssrf5rw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 21:10:12 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2JLAB4j030521
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Mar 2019 21:10:11 GMT
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2JLABqO015196;
+        Tue, 19 Mar 2019 21:10:11 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Mar 2019 14:10:10 -0700
+To:     Colin King <colin.king@canonical.com>
+Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: atp870u: clean up code style and indentation issues
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190122151030.7007-1-colin.king@canonical.com>
+Date:   Tue, 19 Mar 2019 17:10:08 -0400
+In-Reply-To: <20190122151030.7007-1-colin.king@canonical.com> (Colin King's
+        message of "Tue, 22 Jan 2019 15:10:30 +0000")
+Message-ID: <yq15zsed0zz.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190319210508.GD17966@rapoport-lnx>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: nicolas.pitre@linaro.org, rostedt@goodmis.org, philip@cog.systems, keescook@chromium.org, linux@armlinux.org.uk, robh@kernel.org, f.fainelli@gmail.com, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rppt@linux.ibm.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] ARM: mm: make use of new memblocks_present() helper
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9200 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=732 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903190148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Colin,
 
-On 2019-03-19 3:05 p.m., Mike Rapoport wrote:
->> You're probably referring to [1] which was for arm64 and was redundant
->> as my patch for that architecture was already picked up by Catalin.
-> 
-> I've found the patch [1] I mentioned, and it was for ARM.
+> Clean up { brace to fix cppcheck warning. Remove some trailing spaces
+> at end of a statement.  Also clean up an indentation issue.
 
-Ah, well, I wish knew I knew ahead of time that someone was doing my
-work for me... My initial submission seemed to have been missed[1].
+Applied to 5.2/scsi-queue.
 
-> AFAIK, For ARM you'd need to put it into Russel's patch tracking system [2].
-
-Ah, I did not know this.
-
-Logan
-
-[1] https://lore.kernel.org/lkml/20190109202100.6968-2-logang@deltatee.com/
+-- 
+Martin K. Petersen	Oracle Linux Engineering
