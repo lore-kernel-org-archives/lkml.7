@@ -2,121 +2,88 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428DEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97B9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A7C204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:08:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dJg/Yu5y"
+	by mail.kernel.org (Postfix) with ESMTP id 8EEB62133D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 08:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfCSIIb (ORCPT
+        id S1727406AbfCSIJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 04:08:31 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53254 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCSIIb (ORCPT
+        Tue, 19 Mar 2019 04:09:58 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59775 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfCSIJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 04:08:31 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2J88Sue021496;
-        Tue, 19 Mar 2019 03:08:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552982908;
-        bh=ivxDbPG106JtQ/jx8liGkqiz3Yr36HsPSz4usx2ALFE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dJg/Yu5yqmeDRrGpDsmg03ByUC0MrB5GOBuqmLRMd9lizCp5M2f6vOjtVwXXm/TpE
-         yFhvRAcHnI4abnqD0WCFa9xlhCQ1zQ9pyzMl2+H6eyGXh1ETPWAZMvUgeO+RfXjeeU
-         TJs8+ug0U3wBDA+b1Ll8Z0EhMAgUFil9utN7PZ+0=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2J88SGR090335
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Mar 2019 03:08:28 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 19
- Mar 2019 03:08:28 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Tue, 19 Mar 2019 03:08:28 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2J88PO4012619;
-        Tue, 19 Mar 2019 03:08:26 -0500
-Subject: Re: [PATCH v3 2/2] mmc: sdhci-omap: Don't finish_mrq() on a command
- error during tuning
-To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <linux-omap@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>
-References: <20190319063533.12171-1-faiz_abbas@ti.com>
- <20190319063533.12171-3-faiz_abbas@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <8261c01f-fd8e-0930-fee5-793b02071542@ti.com>
-Date:   Tue, 19 Mar 2019 13:37:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 19 Mar 2019 04:09:57 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h69ok-00082l-Ul; Tue, 19 Mar 2019 09:09:50 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h69ok-0006Ko-A2; Tue, 19 Mar 2019 09:09:50 +0100
+Date:   Tue, 19 Mar 2019 09:09:50 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>, kernel@pengutronix.de
+Subject: Re: [PATCH v10 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Message-ID: <20190319080950.4nsgzvkz5iwbkb24@pengutronix.de>
+References: <1552909634-18757-1-git-send-email-yash.shah@sifive.com>
+ <1552909634-18757-3-git-send-email-yash.shah@sifive.com>
+ <20190318214640.ob2ldr3tpn2vsfkl@pengutronix.de>
+ <CAJ2_jOHqGBB=eej6KkdspTNiCU_uJ8deHN3O=BQmyu=GtrTT7w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190319063533.12171-3-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ2_jOHqGBB=eej6KkdspTNiCU_uJ8deHN3O=BQmyu=GtrTT7w@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Faiz,
-
-On 19/03/19 12:05 PM, Faiz Abbas wrote:
-> commit 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
-> callback") skips data resets during tuning operation. Because of this,
-> a data error or data finish interrupt might still arrive after a command
-> error has been handled and the mrq ended. This ends up with a "mmc0: Got
-> data interrupt 0x00000002 even though no data operation was in progress"
-> error message.
+On Tue, Mar 19, 2019 at 12:52:12PM +0530, Yash Shah wrote:
+> On Tue, Mar 19, 2019 at 3:16 AM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Mon, Mar 18, 2019 at 05:17:14PM +0530, Yash Shah wrote:
+> > > +     val = PWM_SIFIVE_PWMCFG_EN_ALWAYS |
+> > > +           FIELD_PREP(PWM_SIFIVE_PWMCFG_SCALE, scale);
+> > > +     writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
+> >
+> > Starting with this write the new period length might be active with the
+> > previous duty cycle. Is this worth a comment? I think the window where
+> > this can actually happen should be made as small as possible, so it
+> > would be great to first calculate both register values and then write
+> > them in two consecutive writels.
 > 
-> Fix this by adding a platform specific callback for sdhci_irq. Mark the
-> mrq as a failure but wait for a data interrupt instead of calling
-> finish_mrq().
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  drivers/mmc/host/sdhci-omap.c | 36 +++++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-> index b1a66ca3821a..765873dff7ca 100644
-> --- a/drivers/mmc/host/sdhci-omap.c
-> +++ b/drivers/mmc/host/sdhci-omap.c
-> @@ -797,6 +797,41 @@ void sdhci_omap_reset(struct sdhci_host *host, u8 mask)
->  	sdhci_reset(host, mask);
->  }
->  
-> +#define CMD_ERR_MASK (SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX)
-> +#define CMD_MASK (CMD_ERR_MASK | SDHCI_INT_RESPONSE)
-> +
-> +static irqreturn_t sdhci_omap_irq(struct sdhci_host *host, u32 intmask)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	if (omap_host->is_tuning && (intmask & CMD_ERR_MASK)) {
-> +
-> +		/*
-> +		 * Since we are not resetting data lines during tuning
-> +		 * operation, data error or data complete interrupts
-> +		 * might still arrive. Mark this request as a failure
-> +		 * but still wait for the data interrupt
-> +		 */
-> +		if (intmask & SDHCI_INT_TIMEOUT)
+> The comment for this scenario has already been mentioned under the
+> limitation on top of this driver.
+> Anyway, I will try to implement your suggestion of consecutive writes
 
-CMD_ERR_MASK doesn't have SDHCI_INT_TIMEOUT. So this will never be true.
+Yeah, the comment at the top is for general information about the
+shortcomings. The comment here would be to say: The problem occurs *here*.
 
-Thanks
-Kishon
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
