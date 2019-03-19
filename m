@@ -2,75 +2,201 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA2FC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D76FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBFFB213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553011485;
-	bh=58aO4WASlwepUd9usUNRB4/GTJqqmkWnqpcy7gLsJfE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Jvo+YPTJtB5uzBmTqMhPFB3XMFUi89TcEIvoV1cC51DYzuG9cX7h3xb/VC20/7lL5
-	 nO2r3t9oixo68kSaFpMigth7ZogK6upV00ChhsXZgd23zhhFawf04aEqux/qajqv9D
-	 qmCSCZYrUldcCUkfhtAupHjuQY+ja6pdgOnmg3G4=
+	by mail.kernel.org (Postfix) with ESMTP id 7658F206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 16:06:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfCSQEo (ORCPT
+        id S1727817AbfCSQGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 12:04:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfCSQEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 12:04:44 -0400
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93F602085A;
-        Tue, 19 Mar 2019 16:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553011483;
-        bh=58aO4WASlwepUd9usUNRB4/GTJqqmkWnqpcy7gLsJfE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fqeLhSixIV0EiTIrw/Sui6Kv+E8Bk2kUqHODentmu++/3+tosLQVEHraROmGJvIXN
-         /NZNX/AMTFozhjiON7fl77Eq15zceYp789ifKccqHbOr5fE86DYvzsi0iQlDoDMGUJ
-         4BqSXnWOhJIWVYJm4Ub0UmsQIZ8VzcM/B3q2NW3s=
-Received: by mail-vk1-f175.google.com with SMTP id j195so4739256vkj.9;
-        Tue, 19 Mar 2019 09:04:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAVYNup9SiR3BRJMIQAn/ce7QJ2LeCV/11nnCb/2M3nfJbzQtsdP
-        /fm/T7oAx7cnKtm27XreCakKWUjcoCuyEj/vm+Y=
-X-Google-Smtp-Source: APXvYqyARE8zU7V0s6M8u8my7OKeq0SbfqYNdwr/GvxA9tCaYO0KuZyDDp4r1khqIHM3Um2m9Qao6nP65nGDmgOOrxw=
-X-Received: by 2002:a1f:37cd:: with SMTP id e196mr1657204vka.36.1553011038250;
- Tue, 19 Mar 2019 08:57:18 -0700 (PDT)
+        Tue, 19 Mar 2019 12:06:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5709 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727184AbfCSQGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Mar 2019 12:06:01 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 19280D7E0D2EB75C8F4C;
+        Wed, 20 Mar 2019 00:05:56 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Wed, 20 Mar 2019
+ 00:05:48 +0800
+Subject: Re: [PATCH] kvm: arm: Fix handling of stage2 huge mappings
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <kvmarm@lists.cs.columbia.edu>, <will.deacon@arm.com>,
+        <catalin.marinas@arm.com>, <james.morse@arm.com>,
+        <julien.thierry@arm.com>, <wanghaibin.wang@huawei.com>,
+        <lious.lilei@hisilicon.com>, <lishuo1@hisilicon.com>,
+        <zhengxiang9@huawei.com>, Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+References: <25971fd5-3774-3389-a82a-04707480c1e0@huawei.com>
+ <1553004668-23296-1-git-send-email-suzuki.poulose@arm.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <57ffd415-a2ce-4a82-79e9-9565e1c29071@huawei.com>
+Date:   Wed, 20 Mar 2019 00:02:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-References: <53be40fc-6ec4-c714-a64e-f69c96f7058f@redhat.com>
- <0ffd0eea-ca64-0128-2835-a9856b224e07@sandeen.net> <20190319153005.GA1146@42.do-not-panic.com>
-In-Reply-To: <20190319153005.GA1146@42.do-not-panic.com>
-From:   Luis Chamberlain <mcgrof@kernel.org>
-Date:   Tue, 19 Mar 2019 09:57:06 -0600
-X-Gmail-Original-Message-ID: <CAB=NE6Xt3vkCqpODo1j8hnWLgig8Ot6d3F3OS6AysZ52mHyFsw@mail.gmail.com>
-Message-ID: <CAB=NE6Xt3vkCqpODo1j8hnWLgig8Ot6d3F3OS6AysZ52mHyFsw@mail.gmail.com>
-Subject: Re: [PATCH] sysctl: Fix proc_do_large_bitmap for large input buffers
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        fsdevel <linux-fsdevel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1553004668-23296-1-git-send-email-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 9:30 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> can you send
-> me your respective lib/test_sysctl.c changes? I don't see that they had
-> been sent.
+Hi Suzuki,
 
-Never mind, I see it now, will roll all this in.
+On 2019/3/19 22:11, Suzuki K Poulose wrote:
+> We rely on the mmu_notifier call backs to handle the split/merge
+> of huge pages and thus we are guaranteed that, while creating a
+> block mapping, either the entire block is unmapped at stage2 or it
+> is missing permission.
+> 
+> However, we miss a case where the block mapping is split for dirty
+> logging case and then could later be made block mapping, if we cancel the
+> dirty logging. This not only creates inconsistent TLB entries for
+> the pages in the the block, but also leakes the table pages for
+> PMD level.
+> 
+> Handle this corner case for the huge mappings at stage2 by
+> unmapping the non-huge mapping for the block. This could potentially
+> release the upper level table. So we need to restart the table walk
+> once we unmap the range.
+> 
+> Fixes : ad361f093c1e31d ("KVM: ARM: Support hugetlbfs backed huge pages")
+> Reported-by: Zheng Xiang <zhengxiang9@huawei.com>
+> Cc: Zheng Xiang <zhengxiang9@huawei.com>
+> Cc: Zhengui Yu <yuzenghui@huawei.com>
 
- Luis
+Sorry to bother you, but this should be "Zenghui Yu", thanks!
+
+
+zenghui
+
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>   virt/kvm/arm/mmu.c | 63 ++++++++++++++++++++++++++++++++++++++----------------
+>   1 file changed, 45 insertions(+), 18 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index fce0983..6ad6f19d 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1060,25 +1060,43 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
+>   {
+>   	pmd_t *pmd, old_pmd;
+>   
+> +retry:
+>   	pmd = stage2_get_pmd(kvm, cache, addr);
+>   	VM_BUG_ON(!pmd);
+>   
+>   	old_pmd = *pmd;
+> +	/*
+> +	 * Multiple vcpus faulting on the same PMD entry, can
+> +	 * lead to them sequentially updating the PMD with the
+> +	 * same value. Following the break-before-make
+> +	 * (pmd_clear() followed by tlb_flush()) process can
+> +	 * hinder forward progress due to refaults generated
+> +	 * on missing translations.
+> +	 *
+> +	 * Skip updating the page table if the entry is
+> +	 * unchanged.
+> +	 */
+> +	if (pmd_val(old_pmd) == pmd_val(*new_pmd))
+> +		return 0;
+> +
+>   	if (pmd_present(old_pmd)) {
+>   		/*
+> -		 * Multiple vcpus faulting on the same PMD entry, can
+> -		 * lead to them sequentially updating the PMD with the
+> -		 * same value. Following the break-before-make
+> -		 * (pmd_clear() followed by tlb_flush()) process can
+> -		 * hinder forward progress due to refaults generated
+> -		 * on missing translations.
+> +		 * If we already have PTE level mapping for this block,
+> +		 * we must unmap it to avoid inconsistent TLB state and
+> +		 * leaking the table page. We could end up in this situation
+> +		 * if the memory slot was marked for dirty logging and was
+> +		 * reverted, leaving PTE level mappings for the pages accessed
+> +		 * during the period. So, unmap the PTE level mapping for this
+> +		 * block and retry, as we could have released the upper level
+> +		 * table in the process.
+>   		 *
+> -		 * Skip updating the page table if the entry is
+> -		 * unchanged.
+> +		 * Normal THP split/merge follows mmu_notifier callbacks and do
+> +		 * get handled accordingly.
+>   		 */
+> -		if (pmd_val(old_pmd) == pmd_val(*new_pmd))
+> -			return 0;
+> -
+> +		if (!pmd_thp_or_huge(old_pmd)) {
+> +			unmap_stage2_range(kvm, addr & S2_PMD_MASK, S2_PMD_SIZE);
+> +			goto retry;
+> +		}
+>   		/*
+>   		 * Mapping in huge pages should only happen through a
+>   		 * fault.  If a page is merged into a transparent huge
+> @@ -1090,8 +1108,7 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
+>   		 * should become splitting first, unmapped, merged,
+>   		 * and mapped back in on-demand.
+>   		 */
+> -		VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
+> -
+> +		WARN_ON_ONCE(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
+>   		pmd_clear(pmd);
+>   		kvm_tlb_flush_vmid_ipa(kvm, addr);
+>   	} else {
+> @@ -1107,6 +1124,7 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
+>   {
+>   	pud_t *pudp, old_pud;
+>   
+> +retry:
+>   	pudp = stage2_get_pud(kvm, cache, addr);
+>   	VM_BUG_ON(!pudp);
+>   
+> @@ -1114,16 +1132,25 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
+>   
+>   	/*
+>   	 * A large number of vcpus faulting on the same stage 2 entry,
+> -	 * can lead to a refault due to the
+> -	 * stage2_pud_clear()/tlb_flush(). Skip updating the page
+> -	 * tables if there is no change.
+> +	 * can lead to a refault due to the stage2_pud_clear()/tlb_flush().
+> +	 * Skip updating the page tables if there is no change.
+>   	 */
+>   	if (pud_val(old_pud) == pud_val(*new_pudp))
+>   		return 0;
+>   
+>   	if (stage2_pud_present(kvm, old_pud)) {
+> -		stage2_pud_clear(kvm, pudp);
+> -		kvm_tlb_flush_vmid_ipa(kvm, addr);
+> +		/*
+> +		 * If we already have table level mapping for this block, unmap
+> +		 * the range for this block and retry.
+> +		 */
+> +		if (!stage2_pud_huge(kvm, old_pud)) {
+> +			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
+> +			goto retry;
+> +		} else {
+> +			WARN_ON_ONCE(pud_pfn(old_pud) != pud_pfn(*new_pudp));
+> +			stage2_pud_clear(kvm, pudp);
+> +			kvm_tlb_flush_vmid_ipa(kvm, addr);
+> +		}
+>   	} else {
+>   		get_page(virt_to_page(pudp));
+>   	}
+> 
+
