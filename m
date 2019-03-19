@@ -2,141 +2,112 @@ Return-Path: <SRS0=B1dt=RW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4581C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A513C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86811213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CF42146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Mar 2019 20:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cg6/9xmK"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="FFVs6T5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfCSUNP (ORCPT
+        id S1727386AbfCSUPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Mar 2019 16:13:15 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46282 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726824AbfCSUNO (ORCPT
+        Tue, 19 Mar 2019 16:15:15 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:47496 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfCSUPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Mar 2019 16:13:14 -0400
-Received: by mail-oi1-f196.google.com with SMTP id x188so4848146oia.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 13:13:14 -0700 (PDT)
+        Tue, 19 Mar 2019 16:15:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 46BEDCF6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 20:15:13 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 75rl9K5GPBMk for <linux-kernel@vger.kernel.org>;
+        Tue, 19 Mar 2019 15:15:13 -0500 (CDT)
+Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 11339CEF
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 15:15:13 -0500 (CDT)
+Received: by mail-it1-f200.google.com with SMTP id y6so120483itj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2019 13:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pChVmqBWNHh+c9JeuJAKczvnZeuFBoIGS35tMLIUbY4=;
-        b=cg6/9xmKTOJ0PR1H93EhfAuEZ4Yx3/M/+JUx2Jhh/L+5BMo7PJGWBqu27eZDHs7qLS
-         jLyZT/5z/Or1XJSu/2eMuOyycFeYtCAooQ/hQJdeKpSplJ/ht93/f+WGXH3nptplGlGE
-         kv+oLq4RH7y/LEfh9BRzxxIaGLFTggtVdWdB26wELBilEpt8j9T1W9wRIr3socNlFnYM
-         jE6VIevRtE+q5LeHsrMn0FPOeZPVZgi1k31kaSP4FJcUZLw9tfd44uk5PXo+yI3cGZn+
-         P+heNHs6CMWMlTEknaQJTuDSsyQs65XhDtftdq4MddCeQJ1snmlEQTpXxHRtpIQTipqe
-         19rQ==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=rTgvYOi0NA2nNhyovhJYwbXYNdmBOXtvCDrrXz0EgAo=;
+        b=FFVs6T5bMZZ2OM2W8BfyzO4uV5EUihfA3zC2747chU2l4SPiiaAxOpD5bQmYGPCWhp
+         UnyzcLlReVKZT3aOQuehjhmS02vD7x1lAAiNj7x3ijZPRFJuf8s+h0gxSMQXs6BuCBZ/
+         wkCJPvVOfbQRbZqsusjXAy3O/OJkR6sRibAoEx3+HO6kNfIRzdiguHS4MyOe3W+BeeSa
+         FNPNCfdP4xsEpzcEPByYRwlNN8bNkqcz+jYTv/d6loOW0R+H8iTrhISVcFmoOyYvKhwK
+         x4D7tPMwr0F2G1dsslZuoMlRFaUdhVkAUgCdbm0S6fUA1Eh/CyroDmHPHXrdQwcO/s6u
+         /BLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pChVmqBWNHh+c9JeuJAKczvnZeuFBoIGS35tMLIUbY4=;
-        b=Bm/DXmvbxfEUCCEs/D72AFPCfxF+6sUwf+YZ7lYed51cyzg0iX1nddWcNkznBHCeUE
-         OBgvDUMZV5InTXx1jZMPwX9uz+3j2IZOK+Ehmqw4fgs9VgZjSouBtq5bMPudPwwcHMPI
-         Dm5o76fVLjeHv8WiJVx2VHyMWQs5F3HkLQJw2+mUI6Q+w/cZ/8zV612Ig1kKEYviCoXy
-         L5CpHRo/eOBBbFwCLM+vtmxadjKDNe8PDA8zvK0Vv89K8QyRGzcwXyJzTDFNXIPraW/b
-         wm2LbeW2bnijBqA+HZeqkNmstxPr62iz3wbDAkOo0wp71+766TyjQ5O2iitHASMDjcoS
-         T/yw==
-X-Gm-Message-State: APjAAAWfU2XoQl32VdX485zpn7YCj9cos6pwkbEAxrxuCtoZQLVW4c+7
-        94x4RTznfMzY/frfPmqzHNHeJEOUgEFOAtMGchM=
-X-Google-Smtp-Source: APXvYqw0lsMDF11GRsRM/4MI4/qFFiwyhPyUyJKWtMj425kYyaCa0Yc2w6Rx4WiZI27Jyt+QkyWDAWrKUDmCZ7VCrLM=
-X-Received: by 2002:aca:cf07:: with SMTP id f7mr2725524oig.39.1553026393798;
- Tue, 19 Mar 2019 13:13:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190318100458.5619-1-narmstrong@baylibre.com>
- <20190318100458.5619-7-narmstrong@baylibre.com> <CAFBinCCSKh145--5EAPQyJjbuefRgWm57G+05so28-WiZjqNYg@mail.gmail.com>
- <c13bc57b-82ea-8f48-75a7-417941b08a11@baylibre.com>
-In-Reply-To: <c13bc57b-82ea-8f48-75a7-417941b08a11@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 19 Mar 2019 21:13:02 +0100
-Message-ID: <CAFBinCDj=5VpoJGKVGw5bG50EaBHgKz=WLtSwNVVWXtzfoiQ9A@mail.gmail.com>
-Subject: Re: [PATCH v2 06/11] arm64: dts: meson-g12a-x96-max: add regulators
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rTgvYOi0NA2nNhyovhJYwbXYNdmBOXtvCDrrXz0EgAo=;
+        b=Vs8S6o83/cWCG3KS1PDSE1a1yKB/3ugz1+qw/8Dfq93ecL1O4a0aHEs5aYDnArjYeI
+         iy3NZkH06EXYjhvC87vlrYA2R6w4EHHZi2aoWMMM072bHwDLrgSjmk4R2OmL68LwvXn4
+         z5l4ecr5Ks2tdYnyz7CsL3idjqFQ9OzJesl4Ol9DzMFxf8RnIul6jukxzcSczbKrsqRK
+         TqILnJ6dZtxq+ZTP5SnzDYPifhk5hl8RAPpe8E0+y6vD9xV7RqUXgy+XLNqTqoOadNfe
+         Bh01f2OiXV7D9VrSMImflNOP7WI8V86njTa8cyk1zOV/GgZRJan6T8k1KFL0qST6tK9m
+         qwEw==
+X-Gm-Message-State: APjAAAXctRwvygIwgxv/4CGtih/uW9hZ5ConY/yf3Cxj6USMPSyUbnYK
+        FSszB+LIOCRP/tFn3PhGTGWAVJfhFG2HU9MwLkelQAfogShOw3iLRgEnlpN3d7Q7VHbni2CKPAW
+        Ru2uZ792TR1KJzdkh0NLSnKsAbHpf
+X-Received: by 2002:a6b:e202:: with SMTP id z2mr3044872ioc.6.1553026513078;
+        Tue, 19 Mar 2019 13:15:13 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy3EpHmHmwX26eWudYyEOAP1u7WFvuQytZqq2ujJMo8bFAQotduXp9iHSUnUm79+x8P1tAjUg==
+X-Received: by 2002:a6b:e202:: with SMTP id z2mr3044862ioc.6.1553026512919;
+        Tue, 19 Mar 2019 13:15:12 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id y24sm6205979iol.8.2019.03.19.13.15.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Mar 2019 13:15:12 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: rtlwifi: Fix potential NULL pointer dereference of kzalloc
+Date:   Tue, 19 Mar 2019 15:15:08 -0500
+Message-Id: <20190319201509.16252-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+phydm.internal is allocated using kzalloc which is used multiple
+times without a check for NULL pointer. This patch avoids such a
+scenario.
 
-On Tue, Mar 19, 2019 at 9:29 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 18/03/2019 21:13, Martin Blumenstingl wrote:
-> > Hi Neil,
-> >
-> > On Mon, Mar 18, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>
-> >> From: Guillaume La Roque <glaroque@baylibre.com>
-> >>
-> >> Add system regulators for the X96 Max Set-Top-Box.
-> >>
-> >> Still missing
-> >> * VDD_EE (0.8V - PWM controlled)
-> >> * VDD_CPU (PWM controlled)
-> >>
-> >> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >> ---
-> >>  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 67 +++++++++++++++++++
-> >>  1 file changed, 67 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-> >> index 0edbd00b358f..5c37930b09e2 100644
-> >> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-> >> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-> > [...]
-> >> +       vcc_5v: regulator-vcc_5v {
-> >> +               compatible = "regulator-fixed";
-> >> +               regulator-name = "VCC_5V";
-> >> +               regulator-min-microvolt = <5000000>;
-> >> +               regulator-max-microvolt = <5000000>;
-> >> +               vin-supply = <&dc_in>;
-> >> +
-> >> +               gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
-> >> +               enable-active-high;
-> > is there any way to test whether this GPIO is the right one?
-> > I couldn't find a reference to a GPIOH_8 regulator in
-> > buildroot_openlinux_kernel_4.9_fbdev_20180706
->
-> The x96 is based on the U212 reference design, and the GPIOH_8 controls the 5V_EN signal,
-> but you are right, it's the wrong polarity here, it should be enable-active-low instead.
-> (FYI The SEI510 does not use this at all, 5V is always enabled)
->
-> The schematics describes :
-> VCC5V_EN (GPIOH_8-Hiz OD): 5V_EN
-> L: Enable
-> Hiz: Disable
-thank you for this explanation!
+--
+v1: Patch collision with different things, fix as per Greg
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/staging/rtlwifi/phydm/rtl_phydm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> FYI, the GPIOH_8 is Open-Drain only, this means this pin cannot pull to TTL 1, only to TTL 0
-> or set as input. We need to add a way to describe this in the pinctrl driver somehow....
-as far as I understand the pinctrl driver changes would result in an
-error when the GPIO is used with "active high" (making incompatible
-drivers or .dts easier to see). is this correct?
+diff --git a/drivers/staging/rtlwifi/phydm/rtl_phydm.c b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
+index 9930ed954abb..a7932706f286 100644
+--- a/drivers/staging/rtlwifi/phydm/rtl_phydm.c
++++ b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
+@@ -180,6 +180,8 @@ static int rtl_phydm_init_priv(struct rtl_priv *rtlpriv,
+ 
+ 	rtlpriv->phydm.internal =
+ 		kzalloc(sizeof(struct phy_dm_struct), GFP_KERNEL);
++	if (!rtlpriv->phydm.internal)
++		return -ENOMEM;
+ 
+ 	_rtl_phydm_init_com_info(rtlpriv, ic, params);
+ 
+-- 
+2.17.1
 
-> I will send a fix on v3
->
-> I didn't notice because I power the board using a Type-A to Type-A connector,
-> and the 5V from the USB port bypasses this regulator...
-this is good to know.
-I'm also powering some of my boards using a Type-A to Type-A
-connector. I'll need to remember this and this whether boards are
-still booting with the DC plug
-
-
-Regards
-Martin
